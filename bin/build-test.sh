@@ -63,7 +63,10 @@ testScriptInstalls aws "bin/build/aws-cli.sh"
 # requires docker
 if which docker >/dev/null; then
     echo "{}" >composer.json
-    testScriptInstalls composer "bin/build/composer.sh"
+    "bin/build/composer.sh"
+    if [ ! -d "vendor" ] || [ ! -f composer.lock ]; then
+        consoleError "composer failed"
+    fi
 fi
 if ! which git >/dev/null; then
     testScriptInstalls git "bin/build/git.sh"
@@ -73,7 +76,7 @@ if ! which npm >/dev/null; then
     # npm 18 installed in this image
     testScriptInstalls npm "bin/build/npm.sh"
 fi
-testScriptInstalls php-cli "bin/build/php-cli.sh"
+testScriptInstalls php "bin/build/php-cli.sh"
 testScriptInstalls prettier "bin/build/prettier.sh"
 testScriptInstalls python "bin/build/python.sh"
 testScriptInstalls docker-compose "bin/build/docker-compose.sh"
