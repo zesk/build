@@ -23,7 +23,7 @@ quietLog="./.build/$me.log"
 # shellcheck source=/dev/null
 . "./bin/build/colors.sh"
 
-if ! which aws 2>/dev/null 1>&2; then
+if ! which aws >/dev/null; then
   "./bin/build/apt-utils.sh"
 
   requireFileDirectory "$quietLog"

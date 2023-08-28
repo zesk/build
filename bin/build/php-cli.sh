@@ -8,6 +8,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+# set -x
 set -eo pipefail
 errEnv=1
 export DEBIAN_FRONTEND=noninteractive
@@ -24,7 +25,7 @@ quietLog="./.build/$me.log"
 # shellcheck source=/dev/null
 . "./bin/build/colors.sh"
 
-if ! which php 2>/dev/null 1>&2; then
+if which php >/dev/null; then
   exit 0
 fi
 
