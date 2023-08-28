@@ -13,11 +13,12 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+set -eo pipefail
 errEnv=1
 errArg=2
 
 me="$(basename "${BASH_SOURCE[0]}")"
-relTop=".."
+relTop="../.."
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
@@ -52,10 +53,14 @@ readLoop=
 if [ -z "$newVersion" ]; then
   readLoop=1
 fi
-liveVersion=$(bin/version-live.sh)
 currentVersion=$(bin/version-current.sh)
+if [ -x bin/version-live.sh ]; then
+  liveVersion=$(bin/version-live.sh)
+  echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
+else
+  liveVersion=$currentVersion
+fi
 defaultVersion=$(defaultVersion "$liveVersion")
-echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
 echo "$(consoleLabel -n "Current: ") $(consoleValue -n "$currentVersion")"
 # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
 if [ "$currentVersion" == "v$defaultVersion" ]; then

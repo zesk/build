@@ -6,8 +6,10 @@ This toolkit makes the following assumptions:
 
 - Binaries from this project installed at `./bin/build/`
 - A binary exists in your project `./bin/version-current.sh`
+- Optionally a binary exists in your project `./bin/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
 - For certain functions, your shell script should define a function `usage` for argument errors and short documentation.
-
+- Most build operations occur at the project root directory but most can be run anywhere by supplying a parameter if needed (`composer.sh` specifically)
+- A `.build` directory will be created at your project root which contains marker files as well as log files for the build. It can be deleted safely at any time, but may contain evidence of failures.
 
 To use in your pipeline:
 

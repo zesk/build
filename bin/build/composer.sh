@@ -11,7 +11,11 @@
 set -eo pipefail
 # set -x
 errEnv=1
-err_build=1000
+errArg=1
+errBuild=1000
+dockerImage=composer:latest
+composerDirectory=.
+cacheDir=.composer
 
 me=$(basename "$0")
 relTop="../.."
@@ -26,12 +30,31 @@ quietLog="./.build/$me.log"
 # shellcheck source=/dev/null
 . "./bin/build/apt-utils.sh"
 
-[ -d "./.composer" ] || mkdir "./.composer"
+usage() {
+  local rs=$1
+  shift
+  exec 1>&2
+  consoleError "$*"
+  echo
+  consoleInfo "$me [ installDirectory ]"
+  consoleInfo "Run validate and install using docker image $dockerImage"
+}
+while [ $# -gt 0 ]; do
+  case $1 in
+  *)
+    composerDirectory=$1
+    if [ ! -d "$composerDirectory" ]; then
+      usage "$errArg" "Directory does not exist: $1"
+    fi
+    ;;
+  esac
+done
 
-dockerImage=composer:latest
+[ -d $cacheDir ] || mkdir $cacheDir
+
 composerArgs=()
-composerArgs+=("-v" ".:/app")
-composerArgs+=("-v" "./.composer:/tmp")
+composerArgs+=("-v" "$composerDirectory:/app")
+composerArgs+=("-v" "$composerDirectory/$cacheDir:/tmp")
 composerArgs+=("$dockerImage")
 composerArgs+=("--ignore-platform-reqs")
 
@@ -44,13 +67,13 @@ echo Running: docker pull $dockerImage >>"$quietLog"
 if ! docker pull $dockerImage >>"$quietLog" 2>&1; then
   consoleError "Failed to pull image $dockerImage"
   failed "$quietLog"
-  exit $err_build
+  exit $errBuild
 fi
 consoleInfo -n "validating ... "
 echo Running: docker run "${composerArgs[@]}" validate >>"$quietLog"
 if ! docker run "${composerArgs[@]}" install >>"$quietLog" 2>&1; then
   failed "$quietLog"
-  exit $err_build
+  exit $errBuild
 fi
 
 composerArgs+=("install")
@@ -58,6 +81,6 @@ consoleInfo -n "installing ... "
 echo Running: docker run "${composerArgs[@]}" >>"$quietLog"
 if ! docker run "${composerArgs[@]}" >>"$quietLog" 2>&1; then
   failed "$quietLog"
-  exit $err_build
+  exit $errBuild
 fi
 reportTiming "$start" OK
