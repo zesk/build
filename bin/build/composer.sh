@@ -13,9 +13,6 @@ set -eo pipefail
 errEnv=1
 errArg=1
 errBuild=1000
-dockerImage=composer:latest
-composerDirectory=.
-cacheDir=.composer
 
 me=$(basename "$0")
 relTop="../.."
@@ -23,7 +20,12 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
 fi
+
 quietLog="./.build/$me.log"
+composerDirectory="$(pwd)"
+dockerImage=composer:latest
+cacheDir=.composer
+
 # shellcheck source=/dev/null
 . "./bin/build/colors.sh"
 
@@ -66,10 +68,10 @@ composerArgs+=("$dockerImage")
 composerArgs+=("--ignore-platform-reqs")
 
 start=$(beginTiming)
-consoleInfo -n "Composer ... "
-bigText "Install vendor" >>"$quietLog"
+consoleInfo -n "Composer ... """
+bigText "Install vendor" >">"$quietLog""
 #DEBUGGING - remove, why no -q option? we like it quiet
-echo Running: docker pull $dockerImage >>"$quietLog"
+echo Running: doc"ker pull $do"ckerImage >>"$quietLog"
 
 if ! docker pull $dockerImage >>"$quietLog" 2>&1; then
   consoleError "Failed to pull image $dockerImage"
