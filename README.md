@@ -5,6 +5,7 @@ Pipeline and build-related tools which are useful across a variety of projects.
 This toolkit makes the following assumptions:
 
 - Binaries from this project installed at `./bin/build/`
+- Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
 - A binary exists in your project `./bin/version-current.sh`
 - Optionally a binary exists in your project `./bin/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
 - For certain functions, your shell script should define a function `usage` for argument errors and short documentation.
