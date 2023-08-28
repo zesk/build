@@ -82,3 +82,5 @@ if ! which npm >/dev/null; then
     testScriptInstalls npm "bin/build/npm.sh"
 fi
 testScriptInstalls prettier "bin/build/prettier.sh"
+
+bigText Passed | prefixLines "$(consoleSuccess)"

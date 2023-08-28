@@ -21,7 +21,7 @@ if [ ! -f "$releaseNotes" ]; then
     consoleError "Missing release notes at $releaseNotes"
     exit $errEnv
 fi
-bigText "zesk/build $currentVersion" | prefixLines consoleMagenta
+bigText "$currentVersion" | prefixLines "$(consoleMagenta)"
 start=$(beginTiming)
 consoleInfo -n "Deploying a new release "
 ./bin/build/github-release.sh "docs/release/$currentVersion.md" "$currentVersion"
