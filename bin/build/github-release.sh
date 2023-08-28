@@ -8,6 +8,8 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 
+set -eo pipefail
+
 #
 #  ▞▀▖      ▗▀▖▗             ▐  ▗
 #  ▌  ▞▀▖▛▀▖▐  ▄ ▞▀▌▌ ▌▙▀▖▝▀▖▜▀ ▄ ▞▀▖▛▀▖
@@ -86,3 +88,5 @@ curl -L \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   "https://api.github.com/repos/$GITHUB_REPOSITORY_OWNER/$GITHUB_REPOSITORY_NAME/releases" \
   -d "$JSON"
+
+consoleSuccess "Release $releaseName completed"

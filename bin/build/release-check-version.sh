@@ -66,7 +66,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-consoleInfo -n "Pulling tags from origin"
+consoleInfo -n "Pulling tags from origin "
 start=$(beginTiming)
 git pull --tags origin >/dev/null
 reportTiming "$start"
@@ -116,5 +116,5 @@ done
 
 consoleInfo "Tagging $label version $tryVersion and pushing ... "
 git tag "$tryVersion"
-git push --tags
+git push --tags --quiet
 consoleSuccess OK && echo
