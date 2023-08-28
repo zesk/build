@@ -1,3 +1,13 @@
 #!/usr/bin/env bash
-echo "0.0.0"
-# Update once we know how to fetch the version from GitHub
+
+set -eo pipefail
+errEnv=1
+
+me=$(basename "$0")
+relTop=".."
+if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
+    echo "$me: Can not cd to $relTop" 1>&2
+    exit $errEnv
+fi
+
+bin/build/github-version-live.sh zesk/build
