@@ -69,9 +69,9 @@ composerArgs+=("--ignore-platform-reqs")
 
 start=$(beginTiming)
 consoleInfo -n "Composer ... """
-bigText "Install vendor" >">"$quietLog""
+bigText "Install vendor" >>"$quietLog"
 #DEBUGGING - remove, why no -q option? we like it quiet
-echo Running: doc"ker pull $do"ckerImage >>"$quietLog"
+echo Running: docker pull $dockerImage >>"$quietLog"
 
 if ! docker pull $dockerImage >>"$quietLog" 2>&1; then
   consoleError "Failed to pull image $dockerImage"
