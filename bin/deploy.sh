@@ -25,4 +25,10 @@ bigText "$currentVersion" | prefixLines "$(consoleMagenta)"
 start=$(beginTiming)
 consoleInfo -n "Deploying a new release "
 ./bin/build/github-release.sh "docs/release/$currentVersion.md" "$currentVersion"
+
+git tag -d "$currentVersion" || :
+git push --quiet origin ":$currentVersion" || :
+git tag "$currentVersion"
+git push --tags --quiet
+
 reportTiming "$start" Done
