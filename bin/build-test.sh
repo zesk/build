@@ -53,7 +53,7 @@ testScriptInstalls() {
         return $errEnv
     fi
     $script
-    if ! which "$binary"; then
+    if ! which "$binary" >/dev/null; then
         consoleError "binary $binary was not installed by $script"
         return $errEnv
     fi

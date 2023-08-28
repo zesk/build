@@ -37,6 +37,8 @@ pipelines:
       - step:
           deployment: production
           name: Build and Test
+          artifacts:
+            - .build.env
           services:
             - mariadb
             - docker
@@ -53,7 +55,7 @@ pipelines:
           services:
             - docker
           script:
-            - set -a && source .build.env && bin/deploy.sh
+            - set -eo && set -a && source .build.env && bin/deploy.sh
           caches:
             - docker
             - apt-lists
