@@ -194,7 +194,7 @@ aptUpdateOnce() {
   [ -d "./.build" ] || mkdir -p "./.build"
   name=".build/.apt-update"
   # once an hour, technically
-  older=$(find "." -name $name -mmin +60)
+  older=$(find .build -name .apt-update -mmin +60)
   if [ -n "$older" ]; then
     rm -rf "$older"
   fi
