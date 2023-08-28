@@ -20,15 +20,11 @@ fi
 # shellcheck source=/dev/null
 . "./bin/build/colors.sh"
 
-./bin/build/apt-utils.sh
+bin/build/apt-utils.sh shellcheck
 
 quietLog="./.build/$me.log"
 
 requireFileDirectory "$quietLog"
-
-if ! apt-get install -y shellcheck >>"$quietLog"; then
-    failed "$quietLog"
-fi
 
 failedScripts=()
 for f in bin/build/*.sh; do
@@ -66,6 +62,7 @@ testScriptInstalls() {
 testScriptInstalls aws "bin/build/aws-cli.sh"
 # requires docker
 if which docker >/dev/null; then
+    echo "{}" >composer.json
     testScriptInstalls composer "bin/build/composer.sh"
 fi
 if ! which git >/dev/null; then

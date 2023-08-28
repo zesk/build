@@ -28,7 +28,7 @@ quietLog="./.build/$me.log"
 . "./bin/build/colors.sh"
 
 # shellcheck source=/dev/null
-. "./bin/build/apt-utils.sh"
+bin/build/apt-utils.sh
 
 usage() {
   local rs=$1
@@ -45,15 +45,19 @@ usage() {
 while [ $# -gt 0 ]; do
   case $1 in
   *)
-    composerDirectory=$1
-    if [ ! -d "$composerDirectory" ]; then
+    if [ "$composerDirectory" != "." ]; then
+      usage "$errArg" "Unknown argument $1"
+    fi
+    if [ ! -d "$1" ]; then
       usage "$errArg" "Directory does not exist: $1"
     fi
+    composerDirectory=$1
     ;;
   esac
+  shift
 done
 
-[ -d $cacheDir ] || mkdir $cacheDir
+[ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
 
 composerArgs=()
 composerArgs+=("-v" "$composerDirectory:/app")
