@@ -204,7 +204,7 @@ aptUpdateOnce() {
     fi
     [ -d "./.build" ] || mkdir -p "./.build"
     quietLog="./.build/update.log"
-    if ! apt-get update -y >"$quietLog" 2>&1; then
+    if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
       failed "$quietLog"
     fi
     date >"./$name"

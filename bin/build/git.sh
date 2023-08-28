@@ -9,6 +9,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 errEnv=1
+export DEBIAN_FRONTEND=noninteractive
 
 me=$(basename "$0")
 relTop="../.."
@@ -26,7 +27,6 @@ if ! which git 2>/dev/null 1>&2; then
   requireFileDirectory "$quietLog"
 
   consoleInfo -n "Installing git ..."
-  export DEBIAN_FRONTEND=noninteractive
   start=$(beginTiming)
   if ! apt-get install -y git >"$quietLog" 2>&1; then
     failed "$quietLog"

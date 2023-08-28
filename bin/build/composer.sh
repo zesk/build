@@ -37,8 +37,11 @@ usage() {
   consoleError "$*"
   echo
   consoleInfo "$me [ installDirectory ]"
+  echo
   consoleInfo "Run validate and install using docker image $dockerImage"
+  exit "$rs"
 }
+
 while [ $# -gt 0 ]; do
   case $1 in
   *)
