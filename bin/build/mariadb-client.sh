@@ -10,6 +10,7 @@
 #
 set -eo pipefail
 errEnv=1
+export DEBIAN_FRONTEND=noninteractive
 
 me=$(basename "$0")
 relTop="../.."

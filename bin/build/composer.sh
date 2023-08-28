@@ -13,9 +13,6 @@ set -eo pipefail
 errEnv=1
 errArg=1
 errBuild=1000
-dockerImage=composer:latest
-composerDirectory=.
-cacheDir=.composer
 
 me=$(basename "$0")
 relTop="../.."
@@ -23,12 +20,17 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
 fi
+
 quietLog="./.build/$me.log"
+composerDirectory="$(pwd)"
+dockerImage=composer:latest
+cacheDir=.composer
+
 # shellcheck source=/dev/null
 . "./bin/build/colors.sh"
 
 # shellcheck source=/dev/null
-. "./bin/build/apt-utils.sh"
+bin/build/apt-utils.sh
 
 usage() {
   local rs=$1
@@ -37,20 +39,27 @@ usage() {
   consoleError "$*"
   echo
   consoleInfo "$me [ installDirectory ]"
+  echo
   consoleInfo "Run validate and install using docker image $dockerImage"
+  exit "$rs"
 }
+
 while [ $# -gt 0 ]; do
   case $1 in
   *)
-    composerDirectory=$1
-    if [ ! -d "$composerDirectory" ]; then
+    if [ "$composerDirectory" != "." ]; then
+      usage "$errArg" "Unknown argument $1"
+    fi
+    if [ ! -d "$1" ]; then
       usage "$errArg" "Directory does not exist: $1"
     fi
+    composerDirectory=$1
     ;;
   esac
+  shift
 done
 
-[ -d $cacheDir ] || mkdir $cacheDir
+[ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
 
 composerArgs=()
 composerArgs+=("-v" "$composerDirectory:/app")
@@ -59,7 +68,7 @@ composerArgs+=("$dockerImage")
 composerArgs+=("--ignore-platform-reqs")
 
 start=$(beginTiming)
-consoleInfo -n "Composer ... "
+consoleInfo -n "Composer ... """
 bigText "Install vendor" >>"$quietLog"
 #DEBUGGING - remove, why no -q option? we like it quiet
 echo Running: docker pull $dockerImage >>"$quietLog"

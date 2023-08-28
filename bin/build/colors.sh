@@ -191,23 +191,23 @@ usageWhich() {
 aptUpdateOnce() {
   local older name quietLog
 
-  name=.apt-update
+  [ -d "./.build" ] || mkdir -p "./.build"
+  name=".build/.apt-update"
   # once an hour, technically
-  older=$(find "." -name $name -mmin +60)
+  older=$(find .build -name .apt-update -mmin +60)
   if [ -n "$older" ]; then
     rm -rf "$older"
   fi
-  if [ ! -f "./$name" ]; then
+  if [ ! -f "$name" ]; then
     if [ -z "$(which apt-get)" ]; then
       consoleError "No apt-get available" 1>&2
       return $errEnv
     fi
-    [ -d "./.build" ] || mkdir -p "./.build"
     quietLog="./.build/update.log"
-    if ! apt-get update -y >"$quietLog" 2>&1; then
+    if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
       failed "$quietLog"
     fi
-    date >"./$name"
+    date >"$name"
   fi
 }
 
@@ -222,7 +222,7 @@ whichApt() {
     if aptUpdateOnce; then
       [ -d "./.build" ] || mkdir -p "./.build"
       quietLog="./.build/apt.log"
-      if ! apt-get install -y "$@" >>"$quietLog" 2>&1; then
+      if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" >>"$quietLog" 2>&1; then
         consoleError "Unable to install" "$@"
         failed "$quietLog"
       fi
