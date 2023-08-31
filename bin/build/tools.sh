@@ -353,8 +353,8 @@ dockerPHPExtensions() {
   local start
   start=$(beginTiming)
   consoleInfo -n "Installing PHP extensions ... "
-  [ -d "$top/.build" ] || mkdir -p "$top/.build"
-  docker-php-ext-install mysqli pcntl calendar >>"$top/.build/docker-php-ext-install.log"
+  [ -d "./.build" ] || mkdir -p "./.build"
+  docker-php-ext-install mysqli pcntl calendar >>"./.build/docker-php-ext-install.log"
   reportTiming "$start" Done
 }
 

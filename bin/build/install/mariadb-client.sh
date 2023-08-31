@@ -28,7 +28,8 @@ if [ -n "$mariadb" ]; then
   exit 0
 fi
 
-"./bin/build/install/apt-utils.sh"
+./bin/build/install/apt-utils.sh
+
 requireFileDirectory "$quietLog"
 consoleInfo -n "Install mariadb-client ... "
 start=$(beginTiming)

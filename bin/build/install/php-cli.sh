@@ -23,13 +23,13 @@ fi
 quietLog="./.build/$me.log"
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
 if which php >/dev/null; then
   exit 0
 fi
 
-"./bin/build/install/apt-utils.sh"
+./bin/build/install/apt-utils.sh
 
 requireFileDirectory "$quietLog"
 

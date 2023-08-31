@@ -19,10 +19,13 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
 fi
 quietLog="./.build/$me.log"
 
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
+
 set -eo pipefail
 
 if ! which git 2>/dev/null 1>&2; then
-  "./bin/build/install/apt-utils.sh"
+  ./bin/build/install/apt-utils.sh
 
   requireFileDirectory "$quietLog"
 

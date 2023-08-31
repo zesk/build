@@ -19,7 +19,7 @@ fi
 quietLog="./.build/$me.log"
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
 if which docker-compose 2>/dev/null 1>&2; then
   exit 0
@@ -27,7 +27,7 @@ fi
 
 requireFileDirectory "$quietLog"
 
-"./bin/build/python.sh"
+./bin/build/python.sh
 
 consoleInfo -n "Installing docker-compose ... "
 start=$(beginTiming)

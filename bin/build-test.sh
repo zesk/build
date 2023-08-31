@@ -27,7 +27,7 @@ quietLog="./.build/$me.log"
 requireFileDirectory "$quietLog"
 
 failedScripts=()
-for f in bin/build/*.sh; do
+for f in bin/build/*.sh bin/build/install/*.sh bin/build/pipeline/*.sh; do
     consoleInfo "Checking $f"
     bash -n "$f"
     if ! shellcheck "$f" >>"$quietLog"; then

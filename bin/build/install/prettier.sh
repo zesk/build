@@ -26,8 +26,8 @@ if which prettier 2>/dev/null 1>&2; then
   exit 0
 fi
 
-"./bin/build/install/apt-utils.sh"
-"./bin/build/npm.sh"
+./bin/build/install/apt-utils.sh
+./bin/build/install/npm.sh
 
 requireFileDirectory "$quietLog"
 
