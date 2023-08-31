@@ -93,8 +93,10 @@ git tag -d "$releaseName" 2>/dev/null || :
 git push origin ":$releaseName" --quiet 2>/dev/null || :
 git push github ":$releaseName" --quiet 2>/dev/null || :
 git tag "$releaseName"
-git push origin --all --tags --quiet
-git push github --all --tags --force --quiet
+git push origin --all --quiet
+git push origin --tags --quiet
+git push github --tags --force --quiet
+git push github --all --force --quiet
 consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
