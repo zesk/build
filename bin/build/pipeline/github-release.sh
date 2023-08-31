@@ -59,12 +59,6 @@ fi
 export releaseName="$1"
 shift
 
-if [ -z "$1" ]; then
-  usage "$errArg" "Pass in commitish"
-fi
-commitish="$1"
-shift
-
 #
 # Preflight our environment to make sure we have the basics defined in the calling script
 #
@@ -89,19 +83,17 @@ consoleGreen "Tagging $releaseName and pushing ... "
 consoleDecoration "$(echoBar)"
 start=$(beginTiming)
 
-git tag -d "$" 2>/dev/null || :
+git tag -d "$releaseName" 2>/dev/null || :
 git push origin ":$releaseName" 2>/dev/null || :
 git push github ":$releaseName" 2>/dev/null || :
 git tag "$releaseName"
-git push origin --all
-git push origin --tags
-git push github --all --force
-git push github --tags --force
+git push origin --all --tags
+git push github --all --tags --force
 consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
 JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish, tag_name: $name, name: $name}')"
+JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish tag_name: $name, name: $name}')"
 
 curl -L \
   -X POST \
