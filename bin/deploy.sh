@@ -29,12 +29,8 @@ fi
 bigText "$currentVersion" | prefixLines "$(consoleMagenta)"
 start=$(beginTiming)
 consoleInfo -n "Deploying a new release "
+
 APPLICATION_GIT_SHA=$(git rev-parse --short HEAD)
 ./bin/build/pipeline/github-release.sh "docs/release/$currentVersion.md" "$currentVersion" "$APPLICATION_GIT_SHA"
-
-git tag -d "$currentVersion" 2>/dev/null || :
-git push --quiet origin ":$currentVersion" 2>/dev/null || :
-git tag "$currentVersion"
-git push --tags --quiet
 
 reportTiming "$start" Done

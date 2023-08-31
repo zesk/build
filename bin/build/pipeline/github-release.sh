@@ -48,21 +48,21 @@ usage() {
 usageEnvironment "${requireEnvironment[@]}"
 
 if [ ! -f "$1" ]; then
-  usage "$errArg" "Pass in description file as first argument"
+  usage "$errArg" "Pass in description file path as first argument"
 fi
 export descriptionFile="$1"
 shift
 
 if [ -z "$1" ]; then
-  usage "$errArg" "Pass in release name"
+  usage "$errArg" "Empty releaseName"
 fi
 export releaseName="$1"
 shift
 
 if [ -z "$1" ]; then
-  usage "$errArg" "Pass in commitish"
+  usage "$errArg" "Empty commitish"
 fi
-commitish="$1"
+export commitish="$1"
 shift
 
 #
@@ -85,23 +85,21 @@ runHook github-release-before.sh
 consoleDecoration "$(echoBar)"
 bigText "$releaseName" | prefixLines "$(consoleMagenta)"
 consoleDecoration "$(echoBar)"
-consoleGreen "Tagging $releaseName and pushing ... "
+consoleGreen "Tagging $releaseName ($commitish) and pushing ... "
 consoleDecoration "$(echoBar)"
 start=$(beginTiming)
 
-git tag -d "$" 2>/dev/null || :
-git push origin ":$releaseName" 2>/dev/null || :
-git push github ":$releaseName" 2>/dev/null || :
+git tag -d "$releaseName" 2>/dev/null || :
+git push origin ":$releaseName" --quiet 2>/dev/null || :
+git push github ":$releaseName" --quiet 2>/dev/null || :
 git tag "$releaseName"
-git push origin --all
-git push origin --tags
-git push github --all --force
-git push github --tags --force
+git push origin --all --tags --quiet
+git push github --all --tags --force --quiet
 consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
 JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish, tag_name: $name, name: $name}')"
+JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish tag_name: $name, name: $name}')"
 
 curl -L \
   -X POST \
