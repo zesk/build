@@ -20,7 +20,7 @@ pipelines:
     main:
       - step:
           deployment: production
-          name: Build, Test and Deploy
+          name: Build, Test, and Deploy
           services:
             - docker
           script:
