@@ -15,7 +15,7 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
 fi
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
 if [ ! -d "./.git" ]; then
   echo "No .git directory at $(pwd), stopping" 1>&2

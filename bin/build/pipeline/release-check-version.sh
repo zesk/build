@@ -10,7 +10,7 @@ errEnv=1
 errArg=2
 
 me=$(basename "${BASH_SOURCE[0]}")
-relTop="../.."
+relTop=../../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
@@ -19,7 +19,7 @@ fi
 set -eo pipefail
 
 # shellcheck source=/dev/null
-source "./bin/build/colors.sh"
+source "./bin/build/tools.sh"
 
 "./bin/build/git.sh"
 
@@ -66,7 +66,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-consoleInfo -n "Pulling tags from origin"
+consoleInfo -n "Pulling tags from origin "
 start=$(beginTiming)
 git pull --tags origin >/dev/null
 reportTiming "$start"
@@ -116,5 +116,5 @@ done
 
 consoleInfo "Tagging $label version $tryVersion and pushing ... "
 git tag "$tryVersion"
-git push --tags
+git push --tags --quiet
 consoleSuccess OK && echo

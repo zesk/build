@@ -15,7 +15,7 @@ errArg=1
 errBuild=1000
 
 me=$(basename "$0")
-relTop="../.."
+relTop=../../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
@@ -27,10 +27,10 @@ dockerImage=composer:latest
 cacheDir=.composer
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
 # shellcheck source=/dev/null
-bin/build/apt-utils.sh
+bin/build/install/apt.sh
 
 usage() {
   local rs=$1

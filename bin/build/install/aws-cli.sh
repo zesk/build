@@ -13,7 +13,7 @@ set -eo pipefail
 errEnv=1
 
 me=$(basename "$0")
-relTop="../.."
+relTop=../../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
@@ -21,10 +21,10 @@ fi
 quietLog="./.build/$me.log"
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. ./bin/build/tools.sh
 
 if ! which aws >/dev/null; then
-  "./bin/build/apt-utils.sh"
+  ./bin/build/install/apt.sh
 
   requireFileDirectory "$quietLog"
 
