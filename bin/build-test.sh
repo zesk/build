@@ -71,7 +71,7 @@ testScriptInstalls aws "bin/build/install/aws-cli.sh"
 # requires docker
 if which docker >/dev/null; then
     echo "{}" >composer.json
-    "bin/build/composer.sh"
+    "bin/build/pipeline/composer.sh"
     if [ ! -d "vendor" ] || [ ! -f composer.lock ]; then
         consoleError "composer failed"
     fi
