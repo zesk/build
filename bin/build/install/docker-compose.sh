@@ -11,7 +11,7 @@
 set -eo pipefail
 errEnv=1
 me=$(basename "$0")
-relTop="../.."
+relTop=../../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv

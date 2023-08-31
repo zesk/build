@@ -17,7 +17,7 @@ set -eo pipefail
 
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
 me=$(basename "${BASH_SOURCE[0]}")
-relTop="../.."
+relTop=../../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     echo "$me: Can not cd to $relTop" 1>&2
     exit $errEnv
