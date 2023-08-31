@@ -7,18 +7,6 @@
 #
 image: atlassian/default-image:4
 
-definitions:
-  caches:
-    apt-lists: /var/lib/apt/lists
-    apt-cache: /var/cache/apt
-  services:
-    mariadb:
-      memory: 1024
-      image: mariadb:latest
-      variables:
-        MARIADB_ROOT_PASSWORD: hard-2-guess
-        MYSQL_ROOT_PASSWORD: hard-2-guess
-
 pipelines:
   branches:
     develop:
@@ -26,39 +14,15 @@ pipelines:
           deployment: develop
           name: Build and Test
           services:
-            - mariadb
             - docker
           script:
-            - declare -px > .build.env
             - bin/build-test.sh develop
-          caches:
-            - docker
-            - apt-lists
-            - apt-cache
     main:
       - step:
           deployment: production
-          name: Build and Test
-          artifacts:
-            - .build.env
+          name: Build, Test, and Deploy
           services:
-            - mariadb
             - docker
           script:
-            - declare -px > .build.env
             - bin/build-test.sh production
-          caches:
-            - docker
-            - apt-lists
-            - apt-cache
-      - step:
-          name: Deploy
-          trigger: manual
-          services:
-            - docker
-          script:
-            - set -eo && set -a && source .build.env && bin/deploy.sh
-          caches:
-            - docker
-            - apt-lists
-            - apt-cache
+            - bin/deploy.sh

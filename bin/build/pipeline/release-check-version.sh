@@ -71,7 +71,7 @@ start=$(beginTiming)
 git pull --tags origin >/dev/null
 reportTiming "$start"
 
-currentVersion=$("./bin/version-current.sh")
+currentVersion=$(runHook version-current)
 previousVersion=$("./bin/build/version-last.sh" "$currentVersion")
 
 if git show-ref --tags "$currentVersion" --quiet; then
