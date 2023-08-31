@@ -91,7 +91,7 @@ if ! git config --global --get safe.directory | grep -q "$(pwd)"; then
 fi
 
 # Computed
-APPLICATION_VERSION=$("./bin/version-current.sh")
+APPLICATION_VERSION=$(runHook version-current)
 APPLICATION_BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M:%S")
 APPLICATION_GIT_SHA=$(git rev-parse --short HEAD)
 BITBUCKET_COMMIT=${BITBUCKET_COMMIT:-$APPLICATION_GIT_SHA}
