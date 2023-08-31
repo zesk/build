@@ -4,8 +4,9 @@ Pipeline and build-related tools which are useful across a variety of projects.
 
 This toolkit makes the following assumptions:
 
+- You are using this with another project to help with your pipeline and build steps.
 - Binaries from this project installed at `./bin/build/`
-- Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
+- Your project: Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
 - A binary exists in your project `./bin/version-current.sh`
 - Optionally a binary exists in your project `./bin/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
 - For certain functions, your shell script should define a function `usage` for argument errors and short documentation.
@@ -17,7 +18,19 @@ To use in your pipeline:
 - copy `bin/build-setup.sh` into your project (changing `relTop` if needed)
 - run it before you need your `bin/build` directory
 
-Then invoke build scripts at `./bin/build/tool-name.sh`
+## Project structure
+
+- `bin/build/*.sh` - Build scripts and tools
+- `bin/build/pipeline/*.sh` - Tools or steps for deployment
+- `bin/build/install/*.sh` - Install dependencies in the pipeline
+
+## Local override scripts or hooks (not in this project - in your host project)
+
+- `bin/version-current.sh` - Return your current application version
+- `bin/version-live.sh` (optional)  - Return the LIVE application version
+- `bin/maintenance.sh` turn on or off maintenance
+- `bin/deploy-start.sh` (optional) Used at start of deployment on remote host (delete caches, etc.)
+- `bin/deploy-finish.sh` (optional) After new code is deployed (update local files or register server etc.)
 
 ## General usage
 
@@ -41,7 +54,7 @@ Template header for most scripts:
     # other constants here
 
     # shellcheck source=/dev/null
-    . "./bin/build/tools.sh"
+    . "./bin/build/colors.sh"
 
     requireFileDirectory "$quietLog"
     start=$(beginTiming)
@@ -56,6 +69,8 @@ Template header for most scripts:
 ## Artifacts
 
 A `./.build` directory is created at your project root where log files are generated. You can preserve this post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
+
+A `./.deploy` directory is created for the `php-build.sh` steps and contains metadata about the deployment.
 
 ## Usage function example
 
