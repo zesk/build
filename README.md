@@ -54,12 +54,12 @@ Template header for most scripts:
     # other constants here
 
     # shellcheck source=/dev/null
-    . "./bin/build/colors.sh"
+    . ./bin/build/tools.sh
 
     requireFileDirectory "$quietLog"
     start=$(beginTiming)
     consoleInfo -n "Long process ... "
-    if ! do-a-long-process.sh >> "$quietLog"; then
+    if ! do-a-long-process.sh >>"$quietLog"; then
         consoleError "long process failed"
         failed "$quietLog"
     fi

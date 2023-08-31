@@ -10,4 +10,4 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     exit $errEnv
 fi
 
-bin/build/github-version-live.sh zesk/build
+bin/build/pipeline/github-version-live.sh zesk/build
