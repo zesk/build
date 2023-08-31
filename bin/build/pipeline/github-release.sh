@@ -93,8 +93,10 @@ git tag -d "$" 2>/dev/null || :
 git push origin ":$releaseName" 2>/dev/null || :
 git push github ":$releaseName" 2>/dev/null || :
 git tag "$releaseName"
-git push origin --all --tags
-git push github --all --tags --force
+git push origin --all
+git push origin --tags
+git push github --all --force
+git push github --tags --force
 consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
