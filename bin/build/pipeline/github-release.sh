@@ -83,12 +83,12 @@ consoleGreen "Tagging $releaseName and pushing ... "
 consoleDecoration "$(echoBar)"
 start=$(beginTiming)
 
-git tag -d "$releaseName" 2>/dev/null || :
+git tag -d "$" 2>/dev/null || :
 git push origin ":$releaseName" 2>/dev/null || :
 git push github ":$releaseName" 2>/dev/null || :
 git tag "$releaseName"
-git push origin --all
-git push github --all
+git push origin --all --tags
+git push github --all --tags --force
 consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
