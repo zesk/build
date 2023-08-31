@@ -210,7 +210,7 @@ aptUpdateOnce() {
       consoleError "No apt-get available" 1>&2
       return $errEnv
     fi
-    quietLog="./.build/update.log"
+    quietLog="./.build/apt-get-update.log"
     if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
       failed "$quietLog"
     fi

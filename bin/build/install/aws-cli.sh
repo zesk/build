@@ -24,7 +24,7 @@ quietLog="./.build/$me.log"
 . ./bin/build/tools.sh
 
 if ! which aws >/dev/null; then
-  ./bin/build/install/apt-utils.sh
+  ./bin/build/install/apt.sh
 
   requireFileDirectory "$quietLog"
 

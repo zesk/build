@@ -71,13 +71,7 @@ for e in "${requireEnvironment[@]}"; do
   fi
 done
 
-if ! which curl 2>/dev/null 1>&2; then
-  ./bin/build/install/apt-utils.sh
-  if ! apt-get install -q curl >"$quietLog"; then
-    consoleError "Failed to install curl"
-    failed "$quietLog"
-  fi
-fi
+./bin/build/install/apt.sh curl
 
 JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
 JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')"

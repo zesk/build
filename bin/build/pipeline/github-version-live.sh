@@ -2,7 +2,7 @@
 #
 # github-version-live.sh
 #
-# Depends: apt-utils.sh
+# Depends: apt.sh
 #
 # Get the live version from the GitHub API
 #
@@ -24,6 +24,6 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     exit $errEnv
 fi
 
-bin/build/install/apt-utils.sh
+bin/build/install/apt.sh
 
 curl -o - -s "https://api.github.com/repos/$1/releases/latest" | jq -r .name

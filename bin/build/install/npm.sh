@@ -27,16 +27,11 @@ if which php 2>/dev/null 1>&2; then
   exit 0
 fi
 
-./bin/build/install/apt-utils.sh
+./bin/build/install/apt.sh npm
 
 requireFileDirectory "$quietLog"
 
-consoleInfo -n "Installing npm ..."
-export DEBIAN_FRONTEND=noninteractive
 start=$(beginTiming)
-if ! apt-get install -y npm >>"$quietLog" 2>&1; then
-  failed "$quietLog"
-fi
 if ! npm i -g npm@latest --force >>"$quietLog" 2>&1; then
   failed "$quietLog"
 fi

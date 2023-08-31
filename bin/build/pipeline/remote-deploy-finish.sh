@@ -24,8 +24,6 @@ $BUILD_SETUP
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
-# shellcheck source=/dev/null
-. ./bin/build/tools-pipeline.sh
 
 usage() {
     local rs
@@ -53,9 +51,10 @@ usageWhich git
 
 tarArgs=(--no-same-owner --no-same-permissions --no-xattrs)
 
-currentTar="$top/vendor.tar.gz"
-previousCommitHashFile="$top/vendor/git-commit-hash"
-deleteDirectories=("$top/cache/" "$top/vendor/")
+targetFileName=${BUILD_TARGET:=app.tar.gz}
+
+currentTar="$top/$targetFileName"
+previousCommitHashFile="$top/.deploy/git-commit-hash"
 undoFlag=
 cleanupFlag=
 argBuildSHACheck=
@@ -120,7 +119,7 @@ undoAction() {
         return 0
     fi
     previousSHA=$(cat "$previousSHAFile")
-    previousTar="$atticPath/$previousSHA.vendor.tar.gz"
+    previousTar="$atticPath/$previousSHA.$targetFileName"
     if [ ! -f "$previousTar" ]; then
         consoleError "No $previousTar - no undo"
         return 0
@@ -140,7 +139,7 @@ deployAction() {
     #  |____/ \___| .__/|_|\___/ \__, |
     #             |_|            |___/
     if [ ! -f "$currentTar" ]; then
-        usage "$errEnv" "vendor.tar.gz is not uploaded here"
+        usage "$errEnv" "$currentTar is not uploaded here"
     fi
 
     #
@@ -156,6 +155,7 @@ deployAction() {
     # extract .env alone
     tar zxf "$currentTar" "${tarArgs[@]}" ".env"
     set -a
+    # shellcheck source=/dev/null
     . "$deployTemp/.env"
     set +a
     cd "$top"
@@ -193,7 +193,7 @@ deployAction() {
         echo -n "$argBuildSHACheck" >"$atticPath/$previousCommitHash.next"
     fi
 
-    mv "$currentTar" "$atticPath/$argBuildSHACheck.vendor.tar.gz"
+    mv "$currentTar" "$atticPath/$argBuildSHACheck.$targetFileName"
 
     deployTarFile "$atticPath" "$argBuildSHACheck"
 }
@@ -207,7 +207,7 @@ deployTarFile() {
     shaPrefix=$1
     shift
 
-    vendorTar="$tarBallPath/$shaPrefix.vendor.tar.gz"
+    vendorTar="$tarBallPath/$shaPrefix.$targetFileName"
 
     [ -f "$vendorTar" ] || usage $errEnv "Missing $vendorTar"
 
@@ -216,19 +216,25 @@ deployTarFile() {
     consoleInfo -n "Resetting to $shaPrefix ... "
     git reset --hard "$shaPrefix"
 
-    consoleInfo "Removing ${deleteDirectories[*]} ... "
-    rm -rf "${deleteDirectories[@]}"
+    if [ -x ./bin/deploy-start.sh ]; then
+        consoleSuccess "No ./bin/deploy-start.sh script"
+    else
+        ./bin/deploy-start.sh
+    fi
+    [ -d ./.deploy ] && rm -rf ./.deploy
 
-    consoleInfo "Unpacking ./vendor/ ... "
+    consoleInfo "Unpacking $targetFileName ... "
     rm .env*
-    tar zxf "$tarBallPath/$shaPrefix.vendor.tar.gz" "${tarArgs[@]}"
+    tar zxf "$tarBallPath/$shaPrefix.$targetFileName" "${tarArgs[@]}"
     date >"$tarBallPath/current.date"
     cp "$tarBallPath/current.date" "$tarBallPath/$shaPrefix.date"
     echo "$shaPrefix" >"$tarBallPath/current"
 
-    consoleInfo -n "Metadata: "
-    consoleGreen "$("$top/bin/ec2-metadata.php")"
-
+    if [ -x ./bin/deploy-finish.sh ]; then
+        consoleSuccess "No ./bin/deploy-finish.sh script"
+    else
+        ./bin/deploy-finish.sh
+    fi
     bin/maintenance.sh off
 }
 

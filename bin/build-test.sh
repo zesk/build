@@ -18,9 +18,11 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
 fi
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
-bin/build/install/apt-utils.sh shellcheck
+bin/build/install/apt.sh shellcheck
+
+whichApt shellcheck shellcheck
 
 quietLog="./.build/$me.log"
 

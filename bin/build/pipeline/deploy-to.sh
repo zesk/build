@@ -27,8 +27,6 @@ SSH_KEY_TYPE=${SSH_KEY_TYPE:-rsa}
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
-# shellcheck source=/dev/null
-. ./bin/build/tools-pipeline.sh
 
 initTime=$(beginTiming)
 

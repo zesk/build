@@ -18,22 +18,12 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
 fi
-quietLog="./.build/$me.log"
-mariadb=$(which mariadb 2>/dev/null || :)
 
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
 
-if [ -n "$mariadb" ]; then
+if which mariadb >/dev/null; then
   exit 0
 fi
 
-./bin/build/install/apt-utils.sh
-
-requireFileDirectory "$quietLog"
-consoleInfo -n "Install mariadb-client ... "
-start=$(beginTiming)
-if ! apt-get install -y mariadb-client >"$quietLog" 2>&1; then
-  failed "$quietLog"
-fi
-reportTiming "$start" OK
+./bin/build/install/apt.sh mariadb-client

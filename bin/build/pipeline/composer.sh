@@ -30,7 +30,7 @@ cacheDir=.composer
 . "./bin/build/tools.sh"
 
 # shellcheck source=/dev/null
-bin/build/install/apt-utils.sh
+bin/build/install/apt.sh
 
 usage() {
   local rs=$1
