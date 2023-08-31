@@ -211,16 +211,12 @@ deployTarFile() {
 
     [ -f "$vendorTar" ] || usage $errEnv "Missing $vendorTar"
 
-    bin/maintenance.sh on
-
+    runHook maintenance on
     consoleInfo -n "Resetting to $shaPrefix ... "
     git reset --hard "$shaPrefix"
 
-    if [ -x ./bin/deploy-start.sh ]; then
-        consoleSuccess "No ./bin/deploy-start.sh script"
-    else
-        ./bin/deploy-start.sh
-    fi
+    runHook deploy-start
+
     [ -d ./.deploy ] && rm -rf ./.deploy
 
     consoleInfo "Unpacking $targetFileName ... "
@@ -230,12 +226,8 @@ deployTarFile() {
     cp "$tarBallPath/current.date" "$tarBallPath/$shaPrefix.date"
     echo "$shaPrefix" >"$tarBallPath/current"
 
-    if [ -x ./bin/deploy-finish.sh ]; then
-        consoleSuccess "No ./bin/deploy-finish.sh script"
-    else
-        ./bin/deploy-finish.sh
-    fi
-    bin/maintenance.sh off
+    runHook deploy-finish
+    runHook maintenance off
 }
 
 if test $undoFlag && test $cleanupFlag; then

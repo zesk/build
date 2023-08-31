@@ -24,6 +24,9 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     exit $errEnv
 fi
 
-bin/build/install/apt.sh
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
+
+whichApt curl curl
 
 curl -o - -s "https://api.github.com/repos/$1/releases/latest" | jq -r .name

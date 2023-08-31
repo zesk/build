@@ -21,7 +21,7 @@ set -eo pipefail
 # shellcheck source=/dev/null
 source "./bin/build/tools.sh"
 
-"./bin/build/git.sh"
+"./bin/build/install/git.sh"
 
 usage() {
   local rs

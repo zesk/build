@@ -400,3 +400,34 @@ veeGitTag() {
   git push origin "v$t" ":$t"
   git fetch -q --prune --prune-tags
 }
+
+#
+# Run a hook in the project located at ./bin/hooks/
+#
+# Available hooks:
+#   github-release-before.sh
+#   deploy-start.sh
+#   deploy-finish.sh
+#   make-env.sh
+#   version-current.sh
+#   version-live.sh
+#
+runHook() {
+  local binary=$1
+
+  shift
+  if [ -x "./bin/hooks/$binary" ]; then
+    "./bin/hooks/$binary" "$@"
+  elif [ -x "./bin/hooks/$binary.sh" ]; then
+    "./bin/hooks/$binary.sh" "$@"
+  else
+    consoleWarning "No hook for $binary with arguments: $*"
+  fi
+}
+
+#
+# Does a hook exist in the local project?
+#
+hasHook() {
+  [ -x "./bin/hooks/$binary" ] || [ -x "./bin/hooks/$binary.sh" ]
+}
