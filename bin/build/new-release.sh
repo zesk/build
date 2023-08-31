@@ -6,8 +6,11 @@
 #
 # Requires:
 #
-# - bin/version-live.sh
-# - bin/version-current.sh
+# - bin/hooks/version-current.sh
+#
+# Optional:
+#
+# - bin/hooks/version-live.sh
 #
 # Uses semantic versioning MAJOR.MINOR.PATCH
 #
@@ -23,6 +26,15 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
 fi
+
+usage() {
+  local rs=$1
+
+  shift
+  exec 1>&2
+  echo "$me $*"
+  exit "$rs"
+}
 
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
@@ -53,9 +65,18 @@ readLoop=
 if [ -z "$newVersion" ]; then
   readLoop=1
 fi
-currentVersion=$(bin/version-current.sh)
-if [ -x bin/version-live.sh ]; then
-  liveVersion=$(bin/version-live.sh)
+if ! hasHook version-current; then
+  usage $errEnv "Requires hook version-current"
+fi
+currentVersion=$(runHook version-current)
+if [ -z "$currentVersion" ]; then
+  usage $errEnv "version-current returned empty string"
+fi
+if hasHook version-live; then
+  liveVersion=$(runHook version-live)
+  if [ -z "$liveVersion" ]; then
+    usage $errEnv "version-live returned empty string"
+  fi
   echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
 else
   liveVersion=$currentVersion

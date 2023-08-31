@@ -14,7 +14,12 @@ fi
 . ./bin/build/tools.sh
 
 ./bin/build/pipeline/release-check-version.sh
-currentVersion="$(bin/version-current.sh)"
+currentVersion="$(runHook version-current)"
+if [ -z "$currentVersion" ]; then
+    exec 1>&2
+    consoleError "No current version returned by version-current.sh"
+    exit $errEnv
+fi
 releaseNotes="./docs/release/$currentVersion.md"
 if [ ! -f "$releaseNotes" ]; then
     exec 1>&2
