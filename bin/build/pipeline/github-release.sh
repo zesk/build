@@ -40,7 +40,7 @@ usage() {
   shift
   consoleRed "$*"
   echo
-  consoleInfo "$me descriptionFilePath releaseName - Generate a release on GitHub using API"
+  consoleInfo "$me descriptionFilePath releaseName commitish - Generate a release on GitHub using API"
   echo
   exit "$rs"
 }
@@ -57,6 +57,12 @@ if [ -z "$1" ]; then
   usage "$errArg" "Pass in release name"
 fi
 export releaseName="$1"
+shift
+
+if [ -z "$1" ]; then
+  usage "$errArg" "Pass in commitish"
+fi
+commitish="$1"
 shift
 
 #
@@ -93,7 +99,7 @@ consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
 JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')"
+JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish tag_name: $name, name: $name}')"
 
 curl -L \
   -X POST \
