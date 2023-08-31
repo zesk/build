@@ -48,15 +48,21 @@ usage() {
 usageEnvironment "${requireEnvironment[@]}"
 
 if [ ! -f "$1" ]; then
-  usage "$errArg" "Pass in description file as first argument"
+  usage "$errArg" "Pass in description file path as first argument"
 fi
 export descriptionFile="$1"
 shift
 
 if [ -z "$1" ]; then
-  usage "$errArg" "Pass in release name"
+  usage "$errArg" "Empty releaseName"
 fi
 export releaseName="$1"
+shift
+
+if [ -z "$1" ]; then
+  usage "$errArg" "Empty commitish"
+fi
+export commitish="$1"
 shift
 
 #
@@ -79,16 +85,16 @@ runHook github-release-before.sh
 consoleDecoration "$(echoBar)"
 bigText "$releaseName" | prefixLines "$(consoleMagenta)"
 consoleDecoration "$(echoBar)"
-consoleGreen "Tagging $releaseName and pushing ... "
+consoleGreen "Tagging $releaseName ($commitish) and pushing ... "
 consoleDecoration "$(echoBar)"
 start=$(beginTiming)
 
 git tag -d "$releaseName" 2>/dev/null || :
-git push origin ":$releaseName" 2>/dev/null || :
-git push github ":$releaseName" 2>/dev/null || :
+git push origin ":$releaseName" --quiet 2>/dev/null || :
+git push github ":$releaseName" --quiet 2>/dev/null || :
 git tag "$releaseName"
-git push origin --all --tags
-git push github --all --tags --force
+git push origin --all --tags --quiet
+git push github --all --tags --force --quiet
 consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
