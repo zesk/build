@@ -196,7 +196,7 @@ usageWhich() {
 }
 
 aptUpdateOnce() {
-  local older name quietLog
+  local older name quietLog start
 
   [ -d "./.build" ] || mkdir -p "./.build"
   name=".build/.apt-update"
@@ -211,9 +211,12 @@ aptUpdateOnce() {
       return $errEnv
     fi
     quietLog="./.build/apt-get-update.log"
+    start=$(beginTiming)
+    consoleInfo -n "apt-get update ... "
     if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
       failed "$quietLog"
     fi
+    reportTiming "$start" OK
     date >"$name"
   fi
 }

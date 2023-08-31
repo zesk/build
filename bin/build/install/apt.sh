@@ -19,6 +19,7 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
 fi
 
 quietLog="./.build/$me.log"
+installedLog="./.build/apt.packages"
 packages=(apt-utils figlet jq "$@")
 apt=$(which apt-get || :)
 
@@ -30,13 +31,24 @@ if [ -z "$apt" ]; then
   exit 0
 fi
 
-start=$(beginTiming)
-consoleInfo -n "Updating apt-get ... "
 aptUpdateOnce
-reportTiming "$start" OK
+
+touch "$installedLog"
+actualPackages=()
+for p in "${packages[@]}"; do
+  if ! grep -q -e "^$p$" "$installedLog"; then
+    actualPackages+=("$p")
+    echo "$p" >>"$installedLog"
+  fi
+done
+
+if [ "${#actualPackages[@]}" -eq 0 ]; then
+  consoleSuccess "Already installed: ${packages[*]}"
+  exit 0
+fi
 start=$(beginTiming)
-consoleInfo -n "Installing ${packages[*]} ... "
-if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "${packages[@]}" >>"$quietLog" 2>&1; then
+consoleInfo -n "Installing ${actualPackages[*]} ... "
+if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
   failed "$quietLog"
   exit $errEnv
 fi
