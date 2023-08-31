@@ -26,11 +26,11 @@ To use in your pipeline:
 
 ## Local override scripts or hooks (not in this project - in your host project)
 
-- `bin/version-current.sh` - Return your current application version
-- `bin/version-live.sh` (optional)  - Return the LIVE application version
-- `bin/maintenance.sh` turn on or off maintenance
-- `bin/deploy-start.sh` (optional) Used at start of deployment on remote host (delete caches, etc.)
-- `bin/deploy-finish.sh` (optional) After new code is deployed (update local files or register server etc.)
+- `bin/hooks/version-current.sh` - Return your current application version
+- `bin/hooks/version-live.sh` (optional)  - Return the LIVE application version
+- `bin/hooks/maintenance.sh` (optional) turn on or off maintenance
+- `bin/hooks/deploy-start.sh` (optional) Used at start of deployment on remote host (delete caches, etc.)
+- `bin/hooks/deploy-finish.sh` (optional) After new code is deployed (update local files or register server etc.)
 
 ## General usage
 

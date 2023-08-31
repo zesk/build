@@ -29,13 +29,13 @@ quietLog="./.build/$me.log"
 requireFileDirectory "$quietLog"
 
 failedScripts=()
-for f in bin/build/*.sh bin/build/install/*.sh bin/build/pipeline/*.sh; do
+while IFS= read -r -d '' f; do
     consoleInfo "Checking $f"
     bash -n "$f"
     if ! shellcheck "$f" >>"$quietLog"; then
         failedScripts+=("$f")
     fi
-done
+done < <(find . -name '*.sh' ! -path '*/.*' -print0)
 
 if [ "${#failedScripts[@]}" -gt 0 ]; then
     consoleError -n "The following scripts failed:"

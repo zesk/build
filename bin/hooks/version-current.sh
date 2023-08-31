@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
-
 set -eo pipefail
 errEnv=1
 
 me=$(basename "$0")
-relTop=".."
+relTop=../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     echo "$me: Can not cd to $relTop" 1>&2
     exit $errEnv
 fi
 
-bin/build/pipeline/github-version-live.sh zesk/build
+#shellcheck source=/dev/null
+. "./bin/build/tools.sh"
+
+cd docs/release
+for f in *.md; do
+    f=${f%.md}
+    echo "$f"
+done | versionSort -r | head -1

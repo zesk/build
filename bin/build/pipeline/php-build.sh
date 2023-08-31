@@ -87,8 +87,9 @@ consoleInfo "Installing build tools ..."
 # Add needed tools
 #
 
-if [ -x ./bin/pipeline/make-env.sh ]; then
-    ./bin/pipeline/make-env.sh "${envVars[@]}"
+if hasHook make-env; then
+    # this script usually runs ./bin/build/pipeline/make-env.sh
+    runHook make-env "${envVars[@]}"
 else
     ./bin/build/pipeline/make-env.sh "${envVars[@]}"
 fi

@@ -26,8 +26,8 @@ start=$(beginTiming)
 consoleInfo -n "Deploying a new release "
 ./bin/build/pipeline/github-release.sh "docs/release/$currentVersion.md" "$currentVersion"
 
-git tag -d "$currentVersion" || :
-git push --quiet origin ":$currentVersion" || :
+git tag -d "$currentVersion" 2>/dev/null || :
+git push --quiet origin ":$currentVersion" 2>/dev/null || :
 git tag "$currentVersion"
 git push --tags --quiet
 
