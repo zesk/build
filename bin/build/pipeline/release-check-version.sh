@@ -19,7 +19,7 @@ fi
 set -eo pipefail
 
 # shellcheck source=/dev/null
-source "./bin/build/colors.sh"
+source "./bin/build/tools.sh"
 
 "./bin/build/git.sh"
 

@@ -14,10 +14,8 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-    tempDir="bin/temp.$$"
-    git clone git@github.com:zesk/build.git "$tempDir"
-    mv "$tempDir/bin/build" bin/build
-    rm -rf "$tempDir"
+- copy `bin/build-setup.sh` into your project (changing `relTop` if needed)
+- run it before you need your `bin/build` directory
 
 Then invoke build scripts at `./bin/build/tool-name.sh`
 
@@ -43,7 +41,7 @@ Template header for most scripts:
     # other constants here
 
     # shellcheck source=/dev/null
-    . "./bin/build/colors.sh"
+    . "./bin/build/tools.sh"
 
     requireFileDirectory "$quietLog"
     start=$(beginTiming)

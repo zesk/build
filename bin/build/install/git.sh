@@ -22,7 +22,7 @@ quietLog="./.build/$me.log"
 set -eo pipefail
 
 if ! which git 2>/dev/null 1>&2; then
-  "./bin/build/apt-utils.sh"
+  "./bin/build/install/apt-utils.sh"
 
   requireFileDirectory "$quietLog"
 

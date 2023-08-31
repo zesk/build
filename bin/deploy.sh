@@ -4,16 +4,16 @@ set -eo pipefail
 errEnv=1
 
 me=$(basename "$0")
-relTop=".."
+relTop=..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     echo "$me: Can not cd to $relTop" 1>&2
     exit $errEnv
 fi
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. ./bin/build/tools.sh
 
-./bin/build/release-check-version.sh
+./bin/build/pipeline/release-check-version.sh
 currentVersion="$(bin/version-current.sh)"
 releaseNotes="./docs/release/$currentVersion.md"
 if [ ! -f "$releaseNotes" ]; then
@@ -24,7 +24,7 @@ fi
 bigText "$currentVersion" | prefixLines "$(consoleMagenta)"
 start=$(beginTiming)
 consoleInfo -n "Deploying a new release "
-./bin/build/github-release.sh "docs/release/$currentVersion.md" "$currentVersion"
+./bin/build/pipeline/github-release.sh "docs/release/$currentVersion.md" "$currentVersion"
 
 git tag -d "$currentVersion" || :
 git push --quiet origin ":$currentVersion" || :

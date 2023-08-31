@@ -22,13 +22,13 @@ quietLog="./.build/$me.log"
 mariadb=$(which mariadb 2>/dev/null || :)
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
 if [ -n "$mariadb" ]; then
   exit 0
 fi
 
-"./bin/build/apt-utils.sh"
+"./bin/build/install/apt-utils.sh"
 requireFileDirectory "$quietLog"
 consoleInfo -n "Install mariadb-client ... "
 start=$(beginTiming)

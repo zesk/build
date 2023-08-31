@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# python.sh
+# php.sh
 #
 # Depends: apt
 #
-# python3 install if needed
+# npm install if needed
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
@@ -12,31 +12,32 @@ set -eo pipefail
 errEnv=1
 export DEBIAN_FRONTEND=noninteractive
 
-me=$(basename "$0")
+me="$(basename "$0")"
 relTop="../.."
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
 fi
-
 quietLog="./.build/$me.log"
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
-if which python >/dev/null; then
+if which php 2>/dev/null 1>&2; then
   exit 0
 fi
 
-./bin/build/apt-utils.sh
+"./bin/build/install/apt-utils.sh"
 
 requireFileDirectory "$quietLog"
 
-start=$(beginTiming)
-consoleCyan -n "Installing python3 python3-pip ... "
+consoleInfo -n "Installing npm ..."
 export DEBIAN_FRONTEND=noninteractive
-if ! apt-get install -y python-is-python3 python3 python3-pip >"$quietLog" 2>&1; then
+start=$(beginTiming)
+if ! apt-get install -y npm >>"$quietLog" 2>&1; then
   failed "$quietLog"
-  exit "$errEnv"
+fi
+if ! npm i -g npm@latest --force >>"$quietLog" 2>&1; then
+  failed "$quietLog"
 fi
 reportTiming "$start" OK

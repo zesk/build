@@ -11,6 +11,7 @@
 #     github-version-live.sh owner/repo
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
+#
 
 set -eo pipefail
 
@@ -23,6 +24,6 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     exit $errEnv
 fi
 
-bin/build/apt-utils.sh
+bin/build/install/apt-utils.sh
 
 curl -o - -s "https://api.github.com/repos/$1/releases/latest" | jq -r .name

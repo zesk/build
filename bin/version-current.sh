@@ -10,7 +10,7 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
 fi
 
 #shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
 cd docs/release
 for f in *.md; do

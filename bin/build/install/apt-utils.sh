@@ -24,7 +24,7 @@ packages=(apt-utils figlet jq "$@")
 apt=$(which apt-get || :)
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
 if [ -f "$markerFile" ]; then
   exit 0

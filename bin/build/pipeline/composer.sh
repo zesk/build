@@ -27,10 +27,10 @@ dockerImage=composer:latest
 cacheDir=.composer
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
 # shellcheck source=/dev/null
-bin/build/apt-utils.sh
+bin/build/install/apt-utils.sh
 
 usage() {
   local rs=$1

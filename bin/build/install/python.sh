@@ -1,39 +1,42 @@
 #!/usr/bin/env bash
 #
-# prettier.sh
+# python.sh
 #
-# Depends: apt npm
+# Depends: apt
 #
-# prettier install if needed
+# python3 install if needed
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eo pipefail
 errEnv=1
+export DEBIAN_FRONTEND=noninteractive
 
-me="$(basename "$0")"
+me=$(basename "$0")
 relTop="../.."
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
 fi
+
 quietLog="./.build/$me.log"
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
-if which prettier 2>/dev/null 1>&2; then
+if which python >/dev/null; then
   exit 0
 fi
 
-"./bin/build/apt-utils.sh"
-"./bin/build/npm.sh"
+./bin/build/install/apt-utils.sh
 
 requireFileDirectory "$quietLog"
 
-consoleInfo -n "Installing prettier ..."
 start=$(beginTiming)
-if ! npm install -g prettier >>"$quietLog" 2>&1; then
+consoleCyan -n "Installing python3 python3-pip ... "
+export DEBIAN_FRONTEND=noninteractive
+if ! apt-get install -y python-is-python3 python3 python3-pip >"$quietLog" 2>&1; then
   failed "$quietLog"
+  exit "$errEnv"
 fi
 reportTiming "$start" OK

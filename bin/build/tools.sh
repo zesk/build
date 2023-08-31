@@ -2,11 +2,18 @@
 #
 # Shell colors
 #
-# Usage: source ./bin/build/colors.sh
+# Usage: source ./bin/build/tools.sh
 #
 # Depends: -
 #
 errEnv=1
+
+#
+# Quote sed strings for shell use
+#
+quoteSedPattern() {
+  echo -n "$1" | sed 's/\([\/.*+?]\)/\\\1/g'
+}
 
 consoleReset() {
   echo -en '\033[0m' # Reset
@@ -340,4 +347,53 @@ dotEnvConfig() {
   # shellcheck source=/dev/null
   [ -f "./.env.local" ] && . "./.env.local"
   set +a
+}
+
+dockerPHPExtensions() {
+  local start
+  start=$(beginTiming)
+  consoleInfo -n "Installing PHP extensions ... "
+  [ -d "$top/.build" ] || mkdir -p "$top/.build"
+  docker-php-ext-install mysqli pcntl calendar >>"$top/.build/docker-php-ext-install.log"
+  reportTiming "$start" Done
+}
+
+ipLookup() {
+  if ! whichApt curl curl; then
+    return $errEnv
+  fi
+  curl -s "${IP_URL:-https://www.conversionruler.com/showip/?json}"
+}
+
+awsEnvironment() {
+  local aws_credentials=$HOME/.aws/credentials
+
+  set +u
+  if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+    if [ -f "$aws_credentials" ]; then
+      eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$aws_credentials" | grep "\[${RULER_AWS_GROUP}\]" | awk '{ print $2 $3 $4 }' OFS='')"
+    fi
+    if [ -n "$aws_access_key_id" ]; then
+      export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
+
+      consoleInfo "Extracted identity from AWS credentials: ${AWS_ACCESS_KEY_ID}"
+    fi
+    if [ -n "${aws_secret_access_key}" ]; then
+      export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
+    fi
+  fi
+  set -u
+}
+
+veeGitTag() {
+  local t="$1"
+
+  if [ "$t" != "${t##v}" ]; then
+    consoleRed "Tag is already veed: $t" 1>&2
+    return 1
+  fi
+  git tag "v$t" "$t"
+  git tag -d "$t"
+  git push origin "v$t" ":$t"
+  git fetch -q --prune --prune-tags
 }

@@ -7,6 +7,7 @@
 # install docker-compose and requirements
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
+#
 
 set -eo pipefail
 
@@ -34,7 +35,7 @@ quietLog="./.build/$me.log"
 set -eo pipefail
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. "./bin/build/tools.sh"
 
 usage() {
   local rs=$1
@@ -71,7 +72,7 @@ for e in "${requireEnvironment[@]}"; do
 done
 
 if ! which curl 2>/dev/null 1>&2; then
-  "./bin/build/apt-utils.sh"
+  ./bin/build/install/apt-utils.sh
   if ! apt-get install -q curl >"$quietLog"; then
     consoleError "Failed to install curl"
     failed "$quietLog"
