@@ -43,7 +43,9 @@ for p in "${packages[@]}"; do
 done
 
 if [ "${#actualPackages[@]}" -eq 0 ]; then
-  consoleSuccess "Already installed: ${packages[*]}"
+  if [ -n "$*" ]; then
+    consoleSuccess "Already installed: $*"
+  fi
   exit 0
 fi
 start=$(beginTiming)
