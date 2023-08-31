@@ -18,16 +18,18 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
 fi
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
+. ./bin/build/tools.sh
 
-bin/build/apt-utils.sh shellcheck
+bin/build/install/apt.sh shellcheck
+
+whichApt shellcheck shellcheck
 
 quietLog="./.build/$me.log"
 
 requireFileDirectory "$quietLog"
 
 failedScripts=()
-for f in bin/build/*.sh; do
+for f in bin/build/*.sh bin/build/install/*.sh bin/build/pipeline/*.sh; do
     consoleInfo "Checking $f"
     bash -n "$f"
     if ! shellcheck "$f" >>"$quietLog"; then
@@ -60,25 +62,27 @@ testScriptInstalls() {
 }
 
 if ! which docker-compose >/dev/null; then
-    testScriptInstalls docker-compose "bin/build/docker-compose.sh"
+    testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
 fi
-testScriptInstalls php "bin/build/php-cli.sh"
-testScriptInstalls python "bin/build/python.sh"
-testScriptInstalls mariadb "bin/build/mariadb-client.sh"
-testScriptInstalls aws "bin/build/aws-cli.sh"
+testScriptInstalls php "bin/build/install/php-cli.sh"
+testScriptInstalls python "bin/build/install/python.sh"
+testScriptInstalls mariadb "bin/build/install/mariadb-client.sh"
+testScriptInstalls aws "bin/build/install/aws-cli.sh"
 # requires docker
 if which docker >/dev/null; then
     echo "{}" >composer.json
-    "bin/build/composer.sh"
+    "bin/build/pipeline/composer.sh"
     if [ ! -d "vendor" ] || [ ! -f composer.lock ]; then
         consoleError "composer failed"
     fi
 fi
 if ! which git >/dev/null; then
-    testScriptInstalls git "bin/build/git.sh"
+    testScriptInstalls git "bin/build/install/git.sh"
 fi
 if ! which npm >/dev/null; then
     # npm 18 installed in this image
-    testScriptInstalls npm "bin/build/npm.sh"
+    testScriptInstalls npm "bin/build/install/npm.sh"
 fi
-testScriptInstalls prettier "bin/build/prettier.sh"
+testScriptInstalls prettier "bin/build/install/prettier.sh"
+
+bigText Passed | prefixLines "$(consoleSuccess)"

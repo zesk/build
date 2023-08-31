@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# apt-utils.sh
+# apt.sh
 #
 # Depends: apt
 #
@@ -12,44 +12,44 @@ set -eo pipefail
 errEnv=1
 
 me=$(basename "$0")
-relTop="../.."
+relTop=../../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
   exit $errEnv
 fi
 
 quietLog="./.build/$me.log"
-markerFile="./.build/.$me.marker"
+installedLog="./.build/apt.packages"
 packages=(apt-utils figlet jq "$@")
 apt=$(which apt-get || :)
 
 # shellcheck source=/dev/null
-. "./bin/build/colors.sh"
-
-if [ -f "$markerFile" ]; then
-  exit 0
-fi
+. ./bin/build/tools.sh
 
 if [ -z "$apt" ]; then
   consoleInfo "No apt, continuing"
   exit 0
 fi
 
-export DEBIAN_FRONTEND=noninteractive
+aptUpdateOnce
 
+touch "$installedLog"
+actualPackages=()
+for p in "${packages[@]}"; do
+  if ! grep -q -e "^$p$" "$installedLog"; then
+    actualPackages+=("$p")
+    echo "$p" >>"$installedLog"
+  fi
+done
+
+if [ "${#actualPackages[@]}" -eq 0 ]; then
+  consoleSuccess "Already installed: ${packages[*]}"
+  exit 0
+fi
 start=$(beginTiming)
-consoleInfo -n "Updating apt-get ... "
-requireFileDirectory "$quietLog"
-if ! apt-get update >>"$quietLog" 2>&1; then
+consoleInfo -n "Installing ${actualPackages[*]} ... "
+if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
   failed "$quietLog"
   exit $errEnv
 fi
-reportTiming "$start" OK
-start=$(beginTiming)
-consoleInfo -n "Installing ${packages[*]} ... "
-if ! apt-get install -y "${packages[@]}" >>"$quietLog" 2>&1; then
-  failed "$quietLog"
-  exit $errEnv
-fi
-date >"$markerFile"
 reportTiming "$start" OK
