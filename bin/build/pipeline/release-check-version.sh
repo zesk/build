@@ -61,7 +61,6 @@ while [ $# -gt 0 ]; do
     ;;
   *)
     usage $errArg "Unknown argument: $1"
-    break
     ;;
   esac
 done

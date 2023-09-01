@@ -51,6 +51,8 @@ usageWhich git
 
 tarArgs=(--no-same-owner --no-same-permissions --no-xattrs)
 
+dotEnvConfig
+
 targetFileName=${BUILD_TARGET:=app.tar.gz}
 
 currentTar="$top/$targetFileName"
@@ -128,7 +130,7 @@ undoAction() {
 }
 
 deployAction() {
-    local computedSHA deployTemp previousSHA argBuildSHACheck
+    local deployTemp previousSHA argBuildSHACheck
 
     argBuildSHACheck=$1
     shift
@@ -164,10 +166,6 @@ deployAction() {
     #
     # Check things match
     #
-    computedSHA="$(git rev-parse --short HEAD)"
-    if [ "$APPLICATION_GIT_SHA" != "$computedSHA" ]; then
-        usage "$errEnv" "Mismatch .env ($APPLICATION_GIT_SHA) != computed ($computedSHA)"
-    fi
     if [ "$APPLICATION_GIT_SHA" != "$argBuildSHACheck" ]; then
         consoleRed "$deployTemp/.env"
         cat "$deployTemp/.env"
@@ -199,7 +197,7 @@ deployAction() {
 }
 
 deployTarFile() {
-    local tarBallPath shaPrefix vendorTar
+    local tarBallPath shaPrefix vendorTar oldDir newDir
 
     tarBallPath=$1
     shift
@@ -211,20 +209,28 @@ deployTarFile() {
 
     [ -f "$vendorTar" ] || usage $errEnv "Missing $vendorTar"
 
-    runHook maintenance on
-    consoleInfo -n "Resetting to $shaPrefix ... "
-    git reset --hard "$shaPrefix"
-
-    runHook deploy-start
-
-    [ -d ./.deploy ] && rm -rf ./.deploy
-
     consoleInfo "Unpacking $targetFileName ... "
-    rm .env*
-    tar zxf "$tarBallPath/$shaPrefix.$targetFileName" "${tarArgs[@]}"
+    currentDir="$(pwd)"
+    newDir="$(pwd).$$"
+    mkdir -p "$newDir"
+    cd "$newDir"
+    tar zxf "$vendorTar" "${tarArgs[@]}"
     date >"$tarBallPath/current.date"
     cp "$tarBallPath/current.date" "$tarBallPath/$shaPrefix.date"
-    echo "$shaPrefix" >"$tarBallPath/current"
+    cd "$currentDir"
+    runHook maintenance on
+    consoleInfo -n "Resetting to $shaPrefix ... "
+
+    runHook deploy-start "$newDir"
+    if hasHook deploy-move; then
+        runHook deploy-move "$newDir"
+    else
+        oldDir="$(pwd).$$.old"
+        mv "$currentDir" "$oldDir"
+        mv "$newDir" "$currentDir"
+        rm -rf "$oldDir"
+    fi
+    cd "$currentDir"
 
     runHook deploy-finish
     runHook maintenance off
