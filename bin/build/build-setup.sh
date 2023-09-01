@@ -46,6 +46,7 @@ else
 fi
 
 if ! diff -q bin/build/build-setup.sh "${BASH_SOURCE[0]}"; then
-  cp bin/build/build-setup.sh "${BASH_SOURCE[0]}"
+  replace=$(sedQuotePattern "relTop=$relTop")
+  sed -e "s/relTop=.*/$replace/" <bin/build/build-setup.sh >"${BASH_SOURCE[0]}"
   consoleInfo "Updated local ${BASH_SOURCE[0]} to latest"
 fi

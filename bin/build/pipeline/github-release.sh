@@ -100,8 +100,14 @@ git push github --all --force --quiet
 consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
+# passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github) that's good enough
+#
+# GitHub MUST have two sets of credentials enabled:
+# - The SSH key for the deployment robot should have push access to the repository on GitHub to enable releases (git handles this)
+# - The GITHUB_ACCESS_TOKEN must have the permission to create releases for this repository
+#
 JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish, tag_name: $name, name: $name}')"
+JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')"
 
 curl -L \
   -X POST \

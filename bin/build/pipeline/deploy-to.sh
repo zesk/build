@@ -215,13 +215,13 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remotePath") "
-    echo "@put vendor.tar.gz" | sftp -q "$userHost:$remotePath"
+    echo "@put app.tar.gz" | sftp -q "$userHost:$remotePath"
     reportTiming "$start" "Done."
   done
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
-    generateCommandsFile "git fetch -q; git reset --hard $APPLICATION_GIT_SHA" >"$temporaryCommandsFile"
+    generateCommandsFile "tar zxf app.tar.gz" >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
     ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     consoleInfo "<<< SSH output END"
