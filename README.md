@@ -15,7 +15,7 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-- copy `bin/build-setup.sh` into your project (changing `relTop` if needed)
+- copy `bin/build/build-setup.sh` into your project (changing `relTop` if needed) manually
 - run it before you need your `bin/build` directory
 
 ## Project structure
