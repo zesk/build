@@ -101,7 +101,7 @@ consoleDecoration "$(echoBar)"
 reportTiming "$start" OK
 
 JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish tag_name: $name, name: $name}')"
+JSON="$(echo "$JSON" | jq --arg commitish "$commitish" --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, target_commitish: $commitish, tag_name: $name, name: $name}')"
 
 curl -L \
   -X POST \
