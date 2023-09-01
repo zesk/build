@@ -23,6 +23,7 @@ consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with live smo
 
 # Some examples:
 #
-# - Put a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
+# - Enable a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
 # - Check the home page for a version number
+# - Check for a known artifact (build sha) in the server somehow
 # - etc.
