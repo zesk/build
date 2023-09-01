@@ -19,4 +19,10 @@ fi
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with a script which checks the live install for basic smoke tests (version was updated)"
+consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with live smoke tests"
+
+# Some examples:
+#
+# - Put a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
+# - Check the home page for a version number
+# - etc.
