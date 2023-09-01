@@ -109,12 +109,19 @@ reportTiming "$start" OK
 JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
 JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')"
 
-curl -L \
+resultsFile=./.build/results.json
+requireFileDirectory "$resultsFile"
+if ! curl -s -L \
   -X POST \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   "https://api.github.com/repos/$GITHUB_REPOSITORY_OWNER/$GITHUB_REPOSITORY_NAME/releases" \
-  -d "$JSON"
-
+  -d "$JSON" >"$resultsFile"; then
+  failed "$resultsFile"
+fi
+echo
+consoleSuccess "$(jq .html_url <"$resultsFile")"
+echo
 consoleSuccess "Release $releaseName completed"
+rm "$resultsFile"
