@@ -52,14 +52,72 @@ testScriptInstalls() {
     local binary=$1 script=$2
     if which "$binary" >/dev/null; then
         consoleError "binary $binary is already installed?"
-        return $errEnv
+        return "$errEnv"
     fi
     $script
     if ! which "$binary" >/dev/null; then
         consoleError "binary $binary was not installed by $script"
-        return $errEnv
+        return "$errEnv"
     fi
 }
+randomString() {
+    head --bytes=64 /dev/random | md5sum | cut -f 1 -d ' '
+}
+
+testBuildSetup() {
+    local targetDir marker testBinary testOutput
+
+    targetDir="test.$$/bin/deeper/deepest"
+    mkdir -p "$targetDir"
+    testBinary="$targetDir/build-setup.sh"
+    cp bin/build/build-setup.sh "$testBinary"
+    sed -i -e 's/^relTop=.*/relTop=..\/..\/../g' "$testBinary"
+    chmod +x "$testBinary"
+    marker=$(randomString)
+    echo "# changed $marker" >>"$testBinary"
+
+    if ! grep -q "$marker" "$testBinary"; then
+        consoleError "binary $testBinary does not contain marker?"
+        return $errEnv
+    fi
+
+    testOutput=$(mktemp)
+    if ! $testBinary >"$testOutput"; then
+        consoleError "Binary $testBinary failed"
+        return $errEnv
+    fi
+
+    if ! grep -q "was updated" "$testOutput"; then
+        consoleError "Missing was updated from $testBinary"
+        failed "$testOutput"
+    fi
+
+    if [ ! -d "test.$$/bin/build" ]; then
+        consoleError "binary $testBinary failed to do the job"
+        return $errEnv
+    fi
+    if grep -q "$marker" "$testBinary"; then
+        consoleError "binary $testBinary did not update itself as it should have"
+        return $errEnv
+    fi
+
+    if [ "$(bin/hooks/version-live.sh)" != "v0.3.2" ]; then
+        if ! $testBinary >"$testOutput"; then
+            consoleError "Binary $testBinary failed 2nd round - ok as live script is dead"
+            return $errEnv
+        fi
+
+        if ! grep -q "up to date" "$testOutput"; then
+            consoleError "Missing up to date from $testBinary"
+            failed "$testOutput"
+        fi
+    else
+        consoleWarning "First deployment of this will break, next release will test fully"
+    fi
+    consoleSuccess "build-setup.sh update was tested successfully"
+    rm -rf "$targetDir"
+}
+testBuildSetup
 
 if ! which docker-compose >/dev/null; then
     testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
