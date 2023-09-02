@@ -438,22 +438,29 @@ hasHook() {
 urlParse() {
   local url=$1 name user password host
 
-  name=${!url##*/}
+  name=${url##*/}
 
-  user=${!url##*://}
+  user=${url##*://}
   user=${user%%:*}
 
-  password=${!url%%@*}
+  password=${url%%@*}
   password=${password##*:}
 
-  host=${!url##*@}
+  host=${url##*@}
   host=${host%%/*}
+
+  port=${host##*:}
+  if [ "$port" = "$host" ]; then
+    port=
+  fi
+  host=${host%%:*}
 
   echo "url=$url"
   echo "name=$name"
   echo "user=$user"
   echo "password=$password"
   echo "host=$host"
+  echo "port=$port"
 }
 
 #

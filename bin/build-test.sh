@@ -48,6 +48,16 @@ else
     consoleSuccess "All scripts passed"
 fi
 
+assertEquals() {
+    local a=$1 b=$2
+    shift
+    shift
+    if [ "$a" != "$b" ]; then
+        consoleError "$a != $b $*"
+        exit $errEnv
+    fi
+}
+
 testScriptInstalls() {
     local binary=$1 script=$2
     if which "$binary" >/dev/null; then
@@ -116,23 +126,45 @@ testBuildSetup() {
         return $errEnv
     fi
 
-    if [ "$(bin/hooks/version-live.sh)" != "v0.3.2" ]; then
-        if ! $testBinary >"$testOutput"; then
-            consoleError "Binary $testBinary failed 2nd round - ok as live script is dead"
-            return $errEnv
-        fi
-
-        if ! grep -q "up to date" "$testOutput"; then
-            consoleError "Missing up to date from $testBinary"
-            failed "$testOutput"
-        fi
-    else
-        consoleWarning "First deployment of this will break, next release will test fully"
+    if ! $testBinary >"$testOutput"; then
+        consoleError "Binary $testBinary failed 2nd round - ok as live script is dead"
+        return $errEnv
     fi
+
+    if ! grep -q "up to date" "$testOutput"; then
+        consoleError "Missing up to date from $testBinary"
+        failed "$testOutput"
+    fi
+
     consoleSuccess "build-setup.sh update was tested successfully"
     rm -rf "$targetDir"
 }
 
+testUrlParse() {
+    local u url user name password host port
+
+    u=foo://user:hard-to-type@identity:4232/dbname
+
+    eval "$(urlParse "$u")"
+
+    assertEquals "$url" "$u"
+    assertEquals "$user" user
+    assertEquals "$name" dbname
+    assertEquals "$host" identity
+    assertEquals "$port" 4232
+    assertEquals "$password" hard-to-type
+
+    u=mysql://user:hard-to-type@identity/dbname
+
+    eval "$(urlParse "$u")"
+
+    assertEquals "$url" "$u"
+    assertEquals "$user" user
+    assertEquals "$name" dbname
+    assertEquals "$host" identity
+    assertEquals "$port" ""
+    assertEquals "$password" hard-to-type
+}
 #  _____         _
 # |_   _|__  ___| |_
 #   | |/ _ \/ __| __|
@@ -141,6 +173,8 @@ testBuildSetup() {
 #
 testEnvMap
 testBuildSetup
+testUrlParse
+
 if ! which docker-compose >/dev/null; then
     testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
 fi
