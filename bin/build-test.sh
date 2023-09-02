@@ -64,6 +64,21 @@ randomString() {
     head --bytes=64 /dev/random | md5sum | cut -f 1 -d ' '
 }
 
+testEnvMap() {
+    local result expected
+
+    export FOO=test
+    export BAR=goob
+
+    result="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | bin/build/envmap.sh)"
+
+    expected="testgoob{foo}{bar}goob"
+    if [ "$result" != "$expected" ]; then
+        consoleError "envmap.sh failed: $result != $expected"
+        exit $errEnv
+    fi
+}
+
 testBuildSetup() {
     local targetDir marker testBinary testOutput
 
@@ -117,8 +132,15 @@ testBuildSetup() {
     consoleSuccess "build-setup.sh update was tested successfully"
     rm -rf "$targetDir"
 }
-testBuildSetup
 
+#  _____         _
+# |_   _|__  ___| |_
+#   | |/ _ \/ __| __|
+#   | |  __/\__ \ |_
+#   |_|\___||___/\__|
+#
+testEnvMap
+testBuildSetup
 if ! which docker-compose >/dev/null; then
     testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
 fi
