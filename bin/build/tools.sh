@@ -431,3 +431,36 @@ runHook() {
 hasHook() {
   [ -x "./bin/hooks/$binary" ] || [ -x "./bin/hooks/$binary.sh" ]
 }
+
+#
+#  urlParse url
+#
+urlParse() {
+  local url=$1 name user password host
+
+  name=${!url##*/}
+
+  user=${!url##*://}
+  user=${user%%:*}
+
+  password=${!url%%@*}
+  password=${password##*:}
+
+  host=${!url##*@}
+  host=${host%%/*}
+
+  echo "url=$url"
+  echo "name=$name"
+  echo "user=$user"
+  echo "password=$password"
+  echo "host=$host"
+}
+
+#
+#  urlParseItem url name
+#
+urlParseItem() {
+  local name user password host
+  eval "$(parseDSN "$1")"
+  echo "${!2}"
+}
