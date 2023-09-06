@@ -102,11 +102,20 @@ consoleNoBold() {
 consoleNoUnderline() {
   echo -en '\033[24m'
 }
+repeat() {
+  local count=$((${1:-2} + 0))
+
+  shift
+  while [ $count -gt 0 ]; do
+    echo -n "$*"
+    count=$((count - 1))
+  done
+}
 #
 # Decoration
 #
 echoBar() {
-  echo "======================================================="
+  repeat 80 =
 }
 prefixLines() {
   local prefix=$1 awkLine
@@ -394,25 +403,18 @@ needAWSEnvironment() {
 }
 
 awsEnvironment() {
-  local credentials
+  local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
 
-  if ! awsCredentialsFile 1 2>/dev/null; then
-    return $errEnv
-  fi
-  credentials=$(awsCredentialsFile)
-  set +u
-  if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-    eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[${RULER_AWS_GROUP}\]" | awk '{ print $2 $3 $4 }' OFS='')"
-    if [ -n "$aws_access_key_id" ]; then
-      export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
-
-      consoleInfo "Extracted identity from AWS credentials: ${AWS_ACCESS_KEY_ID}"
-    fi
-    if [ -n "${aws_secret_access_key}" ]; then
-      export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
+  if awsCredentialsFile 1 >/dev/null; then
+    credentials=$(awsCredentialsFile)
+    eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
+    if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
+      echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
+      echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
+      return 0
     fi
   fi
-  set -u
+  return $errEnv
 }
 
 veeGitTag() {

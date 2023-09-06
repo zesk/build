@@ -28,12 +28,13 @@ usage() {
         echo
     fi
     {
-        echo "$me [ --services service0,service1 ] [ --id developerId ] [ --ip ip ] [ --revoke ] security-group0 security-group1 ... "
+        echo "$me [ --services service0,service1 ] [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] security-group0 security-group1 ... "
         echo
         echo "Register current IP address in listed security group(s) to allow for access to deployment sytstems from a specific IP."
         echo "Use this during deployment to grant temporary access to your systems during deployemnt only."
         echo "Build scripts should have a --revoke step afterwards, always."
         echo
+        echo "--profile awsProfile              Use this AWS profile when connecting using ~/.aws/credentials"
         echo "--services service0,service1,...  List of services to add or remove (maps to ports)"
         echo "--id developerId                  Specify an developer id manually (uses DEVELOPER_ID from environment by default)"
         echo "--ip ip                           Specify an IP manually (uses ipLookup tool from tools.sh by default)"
@@ -61,13 +62,21 @@ usage() {
 
 services=()
 optionRevoke=
+awsProfile=
 currentIP=
-developerId=${DEVELOPER_ID:=}
+developerId=${DEVELOPER_ID:-}
 while [ $# -gt 0 ]; do
     case $1 in
     --services)
         shift
         IFS=', ' read -r -a services <<<"$1"
+        ;;
+    --profile)
+        if [ -n "$awsProfile" ]; then
+            usage $errArgument "--profile already specified: $awsProfile"
+        fi
+        shift
+        awsProfile=$1
         ;;
     --help)
         usage 0
@@ -105,23 +114,32 @@ fi
 if [ "${#services[@]}" -eq 0 ]; then
     usage $errArgument "Supply one or more services"
 fi
+awsProfile=${awsProfile:=default}
 
 ./bin/build/install/aws-cli.sh
 
 if needAWSEnvironment; then
-    awsEnvironment
+    consoleInfo "Need AWS Environment: $awsProfile"
+    if awsEnvironment "$awsProfile" >/dev/null; then
+        export AWS_ACCESS_KEY_ID
+        export AWS_SECRET_ACCESS_KEY
+        eval "$(awsEnvironment "$awsProfile")"
+    else
+        usage $errEnv "No AWS credentials available: $awsProfile"
+    fi
 fi
 
 usageEnvironment AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION
 usageWhich aws
 
 ipRemove() {
-    local old_ip group_id port desc
+    local old_ip group_id port desc start
 
     group_id=$1
     port=$2
     desc=$3
 
+    start=$(beginTiming)
     set +o pipefail
     old_ip=$(aws ec2 describe-security-groups --region "$AWS_REGION" --group-id "$group_id" --output text --query "SecurityGroups[*].IpPermissions[*]" | grep "$desc" | head -1 | awk '{print $2}')
     set -o pipefail
@@ -132,7 +150,11 @@ ipRemove() {
         consoleValue -n "$group_id "
         consoleLabel -n "port: "
         consoleValue -n "$port "
-        aws --output json ec2 revoke-security-group-ingress --region "$AWS_REGION" --group-id "$group_id" --protocol tcp --port "$port" --cidr "$old_ip" >/dev/null
+        if ! aws --output json ec2 revoke-security-group-ingress --region "$AWS_REGION" --group-id "$group_id" --protocol tcp --port "$port" --cidr "$old_ip" >/dev/null; then
+            consoleError "FAILED $?"
+            return $errEnv
+        fi
+        reportTiming "$start" Success
     fi
 }
 
@@ -145,12 +167,13 @@ ipRemove() {
 ## service tag - http|postgres|ssh|custom
 ##
 ipAdd() {
-    local group_id port desc temp_error
+    local group_id port desc temp_error start
 
     group_id=$1
     port=$2
     desc=$3
 
+    start=$(beginTiming)
     consoleInfo -n "Adding new IP: "
     consoleGreen -n "$currentIP "
     consoleLabel -n "to group-id: "
@@ -162,17 +185,19 @@ ipAdd() {
     temp_error=/tmp/$$.ipAdd.err
     if ! aws --output json ec2 authorize-security-group-ingress --region "$AWS_REGION" --group-id "$group_id" --ip-permissions "[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$currentIP\", \"Description\": \"$desc\"}]}]" >/dev/null 2>$temp_error; then
         if grep -q "Duplicate" $temp_error; then
-            consoleYellow "duplicate found, skipping"
+            consoleYellow -n "duplicate found, skipping "
+            reportTiming "$start" Done
             rm $temp_error
             return 0
         else
-            consoleError "error"
+            consoleError -n "error "
+            reportTiming "$start" Done
             prefixLines "$(consoleCode)" <"$temp_error" 1>&2
             rm "$temp_error"
             return 2
         fi
     fi
-    consoleSuccess success
+    reportTiming "$start" Success
     return 0
 }
 registerMyIP() {

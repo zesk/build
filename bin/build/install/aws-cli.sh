@@ -30,7 +30,15 @@ if ! which aws >/dev/null; then
 
   consoleInfo -n "Installing aws-cli ... "
   start=$(beginTiming)
-  if ! curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" >>"$quietLog"; then
+  case "$HOSTTYPE" in
+  arm64 | aarch64)
+    url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
+    ;;
+  *)
+    url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    ;;
+  esac
+  if ! curl -s "$url" -o "awscliv2.zip" >>"$quietLog"; then
     failed "$quietLog"
   fi
   if ! unzip awscliv2.zip >>"$quietLog"; then
