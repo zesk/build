@@ -189,6 +189,7 @@ testAWSIPAccess() {
     fi
 
     # Work using environment variables
+    consoleInfo "CLI IP and env credentials"
     bin/build/pipeline/aws-ip-access.sh --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
     bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
 
@@ -200,6 +201,7 @@ testAWSIPAccess() {
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
 
+    consoleInfo "CLI IP and no credentials - fails"
     if bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"; then
         usage $errEnv "Should not succeed with no credentials"
     fi
@@ -211,9 +213,15 @@ testAWSIPAccess() {
         echo "aws_secret_access_key=$key"
     } >"$HOME/.aws/credentials"
 
+    consoleInfo "CLI IP and file system credentials"
     # Work using environment variables
     bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
     bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
+
+    consoleInfo "Generated IP and file system credentials"
+    # Work using environment variables
+    bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build-autoip "$TEST_AWS_SECURITY_GROUP"
+    bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,http --id robot@zesk/build-autoip "$TEST_AWS_SECURITY_GROUP"
 
     rm "$HOME/.aws/credentials"
     rmdir "$HOME/.aws"
