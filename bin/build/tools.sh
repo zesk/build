@@ -369,7 +369,7 @@ ipLookup() {
 }
 
 awsCredentialsFile() {
-  local credentials=$HOME/.aws/credentials verbose=$1
+  local credentials=$HOME/.aws/credentials verbose=${1+}
 
   if [ ! -d "$HOME" ]; then
     if test "$verbose"; then
