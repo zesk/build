@@ -77,7 +77,7 @@ while [ $# -gt 0 ]; do
         ;;
     --ip)
         shift
-        currentIP="$1/32"
+        currentIP="$1"
         ;;
     --id)
         shift
