@@ -108,9 +108,10 @@ fi
 
 ./bin/build/install/aws-cli.sh
 
-if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+if needAWSEnvironment; then
     awsEnvironment
 fi
+
 usageEnvironment AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION
 usageWhich aws
 

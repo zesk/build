@@ -6,6 +6,8 @@
             "Action": [
                 "ec2:AuthorizeSecurityGroupEgress",
                 "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:RevokeSecurityGroupEgress",
+                "ec2:RevokeSecurityGroupIngress",
                 "ec2:CreateTags"
             ],
             "Resource": "arn:aws:ec2:*:{ACCOUNT_ID}:security-group/{SECURITY_GROUP_ID}"

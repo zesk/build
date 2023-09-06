@@ -386,6 +386,13 @@ awsCredentialsFile() {
   echo "$credentials"
 }
 
+needAWSEnvironment() {
+  if [ -z ${AWS_ACCESS_KEY_ID+x} ] || [ -z ${AWS_SECRET_ACCESS_KEY+x} ]; then
+    return 0
+  fi
+  return 1
+}
+
 awsEnvironment() {
   local credentials
 
