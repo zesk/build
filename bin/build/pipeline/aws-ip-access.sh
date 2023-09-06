@@ -200,39 +200,48 @@ ipAdd() {
     reportTiming "$start" Success
     return 0
 }
+
 registerMyIP() {
     ipRemove "$@"
     ipAdd "$@"
 }
+
+simpleServicePortLookup() {
+    case $1 in
+    ssh)
+        echo 22
+        ;;
+    http)
+        echo 80
+        ;;
+    https)
+        echo 443
+        ;;
+    mysql)
+        echo 3306
+        ;;
+    postgres)
+        echo 5432
+        ;;
+    *)
+        exit $errEnv
+        ;;
+    esac
+    return 0
+
+}
+
 servicePortLookup() {
     local port
     if [ ! -f /etc/services ]; then
-        case $1 in
-        ssh)
-            echo 22
-            ;;
-        http)
-            echo 80
-            ;;
-        https)
-            echo 443
-            ;;
-        mysql)
-            echo 3306
-            ;;
-        postgres)
-            echo 5432
-            ;;
-        *)
-            exit $errEnv
-            ;;
-        esac
+        simpleServicePortLookup "$@"
+    else
+        port=$(($(grep /tcp /etc/services | grep "^$1\s" | awk '{ print $2 }' | cut -d / -f 1) + 0))
+        if [ $port -eq 0 ]; then
+            return $errEnv
+        fi
+        echo $port
     fi
-    port=$(($(grep /tcp /etc/services | grep "^$1\s" | awk '{ print $2 }' | cut -d / -f 1) + 0))
-    if [ $port -eq 0 ]; then
-        return $errEnv
-    fi
-    echo $port
 }
 
 bigText "$(test $optionRevoke && echo "Closing ..." || echo "Opening ..")" | prefixLines "$(consoleBlue)"
