@@ -106,7 +106,7 @@ if [ "${#services[@]}" -eq 0 ]; then
     usage $errArgument "Supply one or more services"
 fi
 
-./bin/build/aws-cli.sh
+./bin/build/install/aws-cli.sh
 
 awsEnvironment
 usageEnvironment AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION
