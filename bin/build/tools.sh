@@ -373,15 +373,15 @@ awsCredentialsFile() {
 
   if [ ! -d "$HOME" ]; then
     if test "$verbose"; then
-      consoleError "No $HOME directory found"
+      consoleWarning "No $HOME directory found"
     fi
-    exit $errEnv
+    return $errEnv
   fi
   if [ ! -f "$credentials" ]; then
     if test "$verbose"; then
-      consoleError "No $credentials file found"
+      consoleWarning "No $credentials file found"
     fi
-    exit $errEnv
+    return $errEnv
   fi
   echo "$credentials"
 }
@@ -390,7 +390,7 @@ awsEnvironment() {
   local credentials
 
   if ! awsCredentialsFile 1 2>/dev/null; then
-    exit 0
+    return $errEnv
   fi
   credentials=$(awsCredentialsFile)
   set +u

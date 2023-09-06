@@ -200,6 +200,10 @@ testAWSIPAccess() {
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
 
+    if bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"; then
+        usage $errEnv "Should not succeed with no credentials"
+    fi
+
     mkdir "$HOME/.aws"
     {
         echo "[default]"
