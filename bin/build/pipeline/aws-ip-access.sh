@@ -4,6 +4,7 @@
 #
 errEnv=1
 errArgument=1
+
 set -euo pipefail
 # set -x # Uncomment to enable debugging
 
@@ -43,6 +44,18 @@ usage() {
         echo
         echo "If no /etc/services matches the default values are supported within the script: mysql,postgres,ssh,http,https"
     } | prefixLines "$(consoleInfo)"
+    echo
+    consoleLabel "Required environment variables:"
+    consoleValue "    AWS_REGION"
+    echo
+    consoleLabel "Optional environment variables:"
+    consoleValue "    DEVELOPER_ID AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY"
+    echo
+    if awsCredentialsFile 2>/dev/null; then
+        echo "$(consoleInfo -n "AWS credentials are extracted from") $(consoleValue -n "$(awsCredentialsFile)")"
+    else
+        consoleInfo "AWS credentials can be extracted from \$HOME/.aws/credentials when configured)"
+    fi
     exit "$rs"
 }
 

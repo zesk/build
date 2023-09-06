@@ -368,14 +368,34 @@ ipLookup() {
   curl -s "${IP_URL:-https://www.conversionruler.com/showip/?json}"
 }
 
-awsEnvironment() {
-  local aws_credentials=$HOME/.aws/credentials
+awsCredentialsFile() {
+  local credentials=$HOME/.aws/credentials verbose=$1
 
+  if [ ! -d "$HOME" ]; then
+    if test "$verbose"; then
+      consoleError "No $HOME directory found"
+    fi
+    exit $errEnv
+  fi
+  if [ ! -f "$credentials" ]; then
+    if test "$verbose"; then
+      consoleError "No $credentials file found"
+    fi
+    exit $errEnv
+  fi
+  echo "$credentials"
+}
+
+awsEnvironment() {
+  local credentials
+
+  if ! awsCredentialsFile 1 2>/dev/null; then
+    exit 0
+  fi
+  credentials=$(awsCredentialsFile)
   set +u
   if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-    if [ -f "$aws_credentials" ]; then
-      eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$aws_credentials" | grep "\[${RULER_AWS_GROUP}\]" | awk '{ print $2 $3 $4 }' OFS='')"
-    fi
+    eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[${RULER_AWS_GROUP}\]" | awk '{ print $2 $3 $4 }' OFS='')"
     if [ -n "$aws_access_key_id" ]; then
       export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
 

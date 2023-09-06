@@ -20,6 +20,17 @@ fi
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+usage() {
+    local result
+
+    result=$1
+    shift
+    consoleError "$*"
+    echo
+    consoleInfo "$me failed"
+    exit "$result"
+}
+
 bin/build/install/apt.sh shellcheck
 
 whichApt shellcheck shellcheck
@@ -165,6 +176,49 @@ testUrlParse() {
     assertEquals "$port" ""
     assertEquals "$password" hard-to-type
 }
+
+testAWSIPAccess() {
+    local id key
+    usageEnvironment TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME
+
+    if [ ! -d "$HOME" ]; then
+        usage $errEnv "No HOME defined or exists: $HOME"
+    fi
+    if [ -d "$HOME/.aws" ]; then
+        usage $errEnv "No .aws directory should exist already"
+    fi
+
+    # Work using environment variables
+    bin/build/pipeline/aws-ip-access.sh --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
+    bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
+
+    # copy env to locals
+    id=$AWS_ACCESS_KEY_ID
+    key=$AWS_SECRET_ACCESS_KEY
+
+    # delete them
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
+
+    mkdir "$HOME/.aws"
+    {
+        echo "[default]"
+        echo "aws_access_key_id=$id"
+        echo "aws_secret_access_key=$key"
+    } >"$HOME/.aws/credentials"
+
+    # Work using environment variables
+    bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
+    bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP"
+
+    rm "$HOME/.aws/credentials"
+    rmdir "$HOME/.aws"
+
+    # restore all set for other tests
+    export AWS_ACCESS_KEY_ID=$id
+    export AWS_SECRET_ACCESS_KEY=$key
+}
+
 #  _____         _
 # |_   _|__  ___| |_
 #   | |/ _ \/ __| __|
@@ -174,6 +228,7 @@ testUrlParse() {
 testEnvMap
 testBuildSetup
 testUrlParse
+testAWSIPAccess
 
 if ! which docker-compose >/dev/null; then
     testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
