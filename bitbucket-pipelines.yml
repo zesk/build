@@ -3,7 +3,10 @@
 #
 # Copyright &copy; 2023 Market Acumen Inc.
 #
-# Test run: docker run -v $(pwd):/opt/atlassian/bitbucketci/agent/build -it atlassian/default-image:4
+# Test run:
+#
+# docker run --platform linux/arm64 -v $(pwd):/opt/atlassian/bitbucketci/agent/build -it atlassian/default-image:4
+# rm -rf .build/ test.*; set -a; source .env.prod-robot ; bin/build-test.sh
 #
 image: atlassian/default-image:4
 

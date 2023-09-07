@@ -102,11 +102,20 @@ consoleNoBold() {
 consoleNoUnderline() {
   echo -en '\033[24m'
 }
+repeat() {
+  local count=$((${1:-2} + 0))
+
+  shift
+  while [ $count -gt 0 ]; do
+    echo -n "$*"
+    count=$((count - 1))
+  done
+}
 #
 # Decoration
 #
 echoBar() {
-  echo "======================================================="
+  repeat 80 =
 }
 prefixLines() {
   local prefix=$1 awkLine
@@ -368,24 +377,44 @@ ipLookup() {
   curl -s "${IP_URL:-https://www.conversionruler.com/showip/?json}"
 }
 
+awsCredentialsFile() {
+  local credentials=$HOME/.aws/credentials verbose=${1+}
+
+  if [ ! -d "$HOME" ]; then
+    if test "$verbose"; then
+      consoleWarning "No $HOME directory found"
+    fi
+    return $errEnv
+  fi
+  if [ ! -f "$credentials" ]; then
+    if test "$verbose"; then
+      consoleWarning "No $credentials file found"
+    fi
+    return $errEnv
+  fi
+  echo "$credentials"
+}
+
+needAWSEnvironment() {
+  if [ -z ${AWS_ACCESS_KEY_ID+x} ] || [ -z ${AWS_SECRET_ACCESS_KEY+x} ]; then
+    return 0
+  fi
+  return 1
+}
+
 awsEnvironment() {
-  local aws_credentials=$HOME/.aws/credentials
+  local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
 
-  set +u
-  if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-    if [ -f "$aws_credentials" ]; then
-      eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$aws_credentials" | grep "\[${RULER_AWS_GROUP}\]" | awk '{ print $2 $3 $4 }' OFS='')"
-    fi
-    if [ -n "$aws_access_key_id" ]; then
-      export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
-
-      consoleInfo "Extracted identity from AWS credentials: ${AWS_ACCESS_KEY_ID}"
-    fi
-    if [ -n "${aws_secret_access_key}" ]; then
-      export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
+  if awsCredentialsFile 1 >/dev/null; then
+    credentials=$(awsCredentialsFile)
+    eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
+    if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
+      echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
+      echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
+      return 0
     fi
   fi
-  set -u
+  return $errEnv
 }
 
 veeGitTag() {
@@ -438,22 +467,29 @@ hasHook() {
 urlParse() {
   local url=$1 name user password host
 
-  name=${!url##*/}
+  name=${url##*/}
 
-  user=${!url##*://}
+  user=${url##*://}
   user=${user%%:*}
 
-  password=${!url%%@*}
+  password=${url%%@*}
   password=${password##*:}
 
-  host=${!url##*@}
+  host=${url##*@}
   host=${host%%/*}
+
+  port=${host##*:}
+  if [ "$port" = "$host" ]; then
+    port=
+  fi
+  host=${host%%:*}
 
   echo "url=$url"
   echo "name=$name"
   echo "user=$user"
   echo "password=$password"
   echo "host=$host"
+  echo "port=$port"
 }
 
 #

@@ -30,7 +30,12 @@ fi
 if [ ! -d bin/build ]; then
   start=$(($(date +%s) + 0))
   curl -L -s "$(curl -s https://api.github.com/repos/zesk/build/releases/latest | jq -r .tarball_url)" -o build.tar.gz
-  tar xf build.tar.gz --strip-components=1 --wildcards '*/bin/build/*'
+  if [ "$(uname)" = "Darwin" ]; then
+    tarArgs=(--include='*/bin/build/*')
+  else
+    tarArgs=(--wildcards '*/bin/build/*')
+  fi
+  tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}"
   rm build.tar.gz
   if [ ! -d bin/build ]; then
     echo "Unable to download and install bin/build" 1>&2
@@ -59,7 +64,7 @@ diffLines=$(diff "$(pwd)/bin/build/build-setup.sh" "$myBinary" | grep -v 'relTop
 if [ "$diffLines" -gt 0 ]; then
   replace=$(quoteSedPattern "relTop=$relTop")
   sed -e "s/^relTop=.*/$replace/" <bin/build/build-setup.sh >"$myBinary"
-  echo "$(consoleValue -n "$myBinary") $(consoleWarning -n " was updated.")"
+  echo "$(consoleValue -n "$myBinary") $(consoleWarning -n "was updated.")"
 else
-  echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n " is up to date.")"
+  echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n "is up to date.")"
 fi

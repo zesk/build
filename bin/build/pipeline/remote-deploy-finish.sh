@@ -53,7 +53,7 @@ tarArgs=(--no-same-owner --no-same-permissions --no-xattrs)
 
 dotEnvConfig
 
-targetFileName=${BUILD_TARGET:=app.tar.gz}
+targetFileName=${BUILD_TARGET:-app.tar.gz}
 
 currentTar="$top/$targetFileName"
 previousCommitHashFile="$top/.deploy/git-commit-hash"

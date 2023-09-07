@@ -12,7 +12,7 @@
 
 errEnv=1
 errArg=2
-targetFileName=${BUILD_TARGET:=app.tar.gz}
+targetFileName=${BUILD_TARGET:-app.tar.gz}
 
 set -eo pipefail
 # set -x # Debugging
