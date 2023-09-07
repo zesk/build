@@ -6,6 +6,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+# Test locally:
 # docker run --platform linux/arm64 -v $(pwd):/opt/atlassian/bitbucketci/agent/build -it atlassian/default-image:4
 # rm -rf .build/ test.*; set -a; source .env.prod-robot ; bin/build-test.sh
 
@@ -51,9 +52,9 @@ testSection() {
     bar="+$(echoBar)+"
     remain="$*"
     spaces=$((${#bar} - ${#remain} - 4))
-    consoleGreen "$bar"
-    echo "$(consoleGreen -n \|) $(consoleInfo -n "$remain")$(repeat $spaces " ") $(consoleMagenta -n \|)"
-    consoleMagenta "$bar"
+    consoleDecoration "$bar"
+    echo "$(consoleDecoration -n \|) $(consoleInfo -n "$remain")$(repeat $spaces " ") $(consoleDecoration -n \|)"
+    consoleDecoration "$bar"
 }
 
 testScriptInstalls() {
