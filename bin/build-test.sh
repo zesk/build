@@ -225,6 +225,52 @@ testAWSIPAccess() {
     export AWS_SECRET_ACCESS_KEY=$key
 }
 
+testAWSExpiration() {
+    local thisYear thisMonth expirationDays start
+
+    start=$(beginTiming)
+    testSection "AWS_ACCESS_KEY_DATE/isAWSKeyUpToDate testing"
+    thisYear=$(($(date +%Y) + 0))
+    thisMonth="$(date +%m)"
+    unset AWS_ACCESS_KEY_DATE
+    if isAWSKeyUpToDate; then
+        consoleError "unset AWS_ACCESS_KEY_DATE should NOT be up to date"
+        return $errEnv
+    fi
+    export AWS_ACCESS_KEY_DATE=
+    if isAWSKeyUpToDate; then
+        consoleError "blank AWS_ACCESS_KEY_DATE should NOT be up to date"
+        return $errEnv
+    fi
+    AWS_ACCESS_KEY_DATE=99999
+    if isAWSKeyUpToDate; then
+        consoleError "invalid AWS_ACCESS_KEY_DATE ($AWS_ACCESS_KEY_DATE) should NOT be up to date"
+        return $errEnv
+    fi
+    AWS_ACCESS_KEY_DATE=2020-01-01
+    if isAWSKeyUpToDate; then
+        consoleError "$AWS_ACCESS_KEY_DATE should NOT be up to date"
+        return $errEnv
+    fi
+    AWS_ACCESS_KEY_DATE="$thisYear-01-01"
+    expirationDays=366
+    if ! isAWSKeyUpToDate $expirationDays; then
+        consoleError "$AWS_ACCESS_KEY_DATE should be up to date $expirationDays"
+        return $errEnv
+    fi
+    AWS_ACCESS_KEY_DATE="$((thisYear - 1))-01-01"
+    expirationDays=365
+    if isAWSKeyUpToDate $expirationDays; then
+        consoleError "$AWS_ACCESS_KEY_DATE should NOT be up to date $expirationDays"
+        return $errEnv
+    fi
+    AWS_ACCESS_KEY_DATE="$thisYear-$thisMonth-01"
+    if ! isAWSKeyUpToDate; then
+        consoleError "$AWS_ACCESS_KEY_DATE should be up to date"
+        return $errEnv
+    fi
+    reportTiming "$start" Done
+}
 #  _____         _
 # |_   _|__  ___| |_
 #   | |/ _ \/ __| __|
@@ -266,8 +312,7 @@ fi
 testEnvMap
 testBuildSetup
 testUrlParse
-# testScriptInstalls aws "bin/build/install/aws-cli.sh"
-testAWSIPAccess
+testAWSExpiration
 
 if ! which docker-compose >/dev/null; then
     testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
@@ -283,6 +328,10 @@ if which docker >/dev/null; then
         consoleError "composer failed"
     fi
 fi
+
+# testScriptInstalls aws "bin/build/install/aws-cli.sh"
+testAWSIPAccess
+
 if ! which git >/dev/null; then
     testScriptInstalls git "bin/build/install/git.sh"
 fi
