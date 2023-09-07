@@ -204,6 +204,26 @@ usageWhich() {
   done
 }
 
+#
+# Converts a date (YYYY-MM-DD) to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)
+#
+# dateToFormat 2023-04-20 %s 1681948800
+#
+dateToFormat() {
+  if date --version 2>/dev/null 1>&2; then
+    date -u --date="$1 00:00:00" "+$2" 2>/dev/null
+  else
+    date -u -jf '%F %T' "$1 00:00:00" "+$2" 2>/dev/null
+  fi
+}
+
+#
+# Converts a date to an integer timestamp
+#
+dateToTimestamp() {
+  dateToFormat "$1" %s
+}
+
 aptUpdateOnce() {
   local older name quietLog start
 
@@ -296,7 +316,7 @@ beginTiming() {
 }
 
 plural() {
-  if [ "$1" -eq 1 ]; then
+  if [ "$(($1 + 0))" -eq 1 ]; then
     echo "$2"
   else
     echo "$3"
@@ -418,11 +438,12 @@ isAWSKeyUpToDate() {
     consoleError "isAWSKeyUpToDate $upToDateDays - negative or zero values not allowed" 1>&2
     return 1
   fi
-  if ! date --date="$AWS_ACCESS_KEY_DATE 00:00:00" +%s 2>/dev/null; then
+  if ! dateToTimestamp "$AWS_ACCESS_KEY_DATE" >/dev/null; then
     consoleError "Invalid date $AWS_ACCESS_KEY_DATE" 1>&2
     return 1
   fi
-  accessKeyTimestamp=$(($(date --date="$AWS_ACCESS_KEY_DATE 00:00:00" +%s) + 0))
+  accessKeyTimestamp=$(($(dateToTimestamp "$AWS_ACCESS_KEY_DATE") + 0))
+
   todayTimestamp=$(($(date +%s) + 0))
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))

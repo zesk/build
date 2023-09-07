@@ -74,6 +74,22 @@ randomString() {
     head --bytes=64 /dev/random | md5sum | cut -f 1 -d ' '
 }
 
+testTools() {
+    assertEquals "$(plural 0 singular plural)" "plural"
+    assertEquals "$(plural 1 singular plural)" "singular"
+    assertEquals "$(plural 2 singular plural)" "plural"
+    assertEquals "$(plural -1 singular plural)" "plural"
+    assertEquals "$(plural X singular plural)" "plural"
+
+    assertEquals "$(alignRight 20 012345)" "              012345"
+    assertEquals "$(alignRight 5 012345)" "012345"
+    assertEquals "$(alignRight 0 012345)" "012345"
+
+    assertEquals "$(dateToFormat 2023-04-20 %s)" "1681948800"
+    assertEquals "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20"
+    assertEquals "$(dateToTimestamp 2023-04-20)" "1681948800"
+}
+
 testEnvMap() {
     local result expected
 
@@ -309,6 +325,7 @@ else
     consoleSuccess "All scripts passed"
 fi
 
+testTools
 testEnvMap
 testBuildSetup
 testUrlParse
