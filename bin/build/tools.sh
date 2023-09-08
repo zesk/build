@@ -204,6 +204,26 @@ usageWhich() {
   done
 }
 
+#
+# Converts a date (YYYY-MM-DD) to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)
+#
+# dateToFormat 2023-04-20 %s 1681948800
+#
+dateToFormat() {
+  if date --version 2>/dev/null 1>&2; then
+    date -u --date="$1 00:00:00" "+$2" 2>/dev/null
+  else
+    date -u -jf '%F %T' "$1 00:00:00" "+$2" 2>/dev/null
+  fi
+}
+
+#
+# Converts a date to an integer timestamp
+#
+dateToTimestamp() {
+  dateToFormat "$1" %s
+}
+
 aptUpdateOnce() {
   local older name quietLog start
 
@@ -296,7 +316,7 @@ beginTiming() {
 }
 
 plural() {
-  if [ "$1" -eq 1 ]; then
+  if [ "$(($1 + 0))" -eq 1 ]; then
     echo "$2"
   else
     echo "$3"
@@ -393,6 +413,55 @@ awsCredentialsFile() {
     return $errEnv
   fi
   echo "$credentials"
+}
+
+#
+# For security we gotta update our keys every 90 days
+#
+# This value would be better encrypted and tied to the AWS_ACCESS_KEY_ID so developers
+# can not just update the value to avoid the security issue.
+#
+isAWSKeyUpToDate() {
+  local upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo pluralDays
+
+  if [ -z "${AWS_ACCESS_KEY_DATE:-}" ]; then
+    return 1
+  fi
+  shift
+  maxDays=366
+  upToDateDays=$((upToDateDays + 0))
+  if [ $upToDateDays -gt $maxDays ]; then
+    consoleError "isAWSKeyUpToDate $upToDateDays - values not allowed greater than $maxDays" 1>&2
+    return 1
+  fi
+  if [ $upToDateDays -le 0 ]; then
+    consoleError "isAWSKeyUpToDate $upToDateDays - negative or zero values not allowed" 1>&2
+    return 1
+  fi
+  if ! dateToTimestamp "$AWS_ACCESS_KEY_DATE" >/dev/null; then
+    consoleError "Invalid date $AWS_ACCESS_KEY_DATE" 1>&2
+    return 1
+  fi
+  accessKeyTimestamp=$(($(dateToTimestamp "$AWS_ACCESS_KEY_DATE") + 0))
+
+  todayTimestamp=$(($(date +%s) + 0))
+  deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
+  daysAgo=$((deltaDays - upToDateDays))
+  if [ $daysAgo -gt 0 ]; then
+    pluralDays=$(plural $daysAgo day days)
+    consoleError "Access key expired $AWS_ACCESS_KEY_DATE, $daysAgo $pluralDays" 1>&2
+    return 1
+  fi
+  daysAgo=$((-daysAgo))
+  pluralDays=$(plural $daysAgo day days)
+  if [ $daysAgo -lt 14 ]; then
+    bigText "$daysAgo $pluralDays" | prefixLines "$(consoleError)"
+  fi
+  if [ $daysAgo -lt 30 ]; then
+    consoleWarning "Access key expires on $AWS_ACCESS_KEY_DATE, in $daysAgo $pluralDays"
+    return 0
+  fi
+  return 0
 }
 
 needAWSEnvironment() {
