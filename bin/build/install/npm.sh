@@ -8,6 +8,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+npm_version=${BUILD_NPM_VERSION:-latest}
 set -eo pipefail
 errEnv=1
 export DEBIAN_FRONTEND=noninteractive
@@ -32,7 +33,7 @@ fi
 requireFileDirectory "$quietLog"
 
 start=$(beginTiming)
-if ! npm i -g npm@latest --force >>"$quietLog" 2>&1; then
+if ! npm i -g "npm@$npm_version" --force >>"$quietLog" 2>&1; then
   failed "$quietLog"
 fi
 reportTiming "$start" OK

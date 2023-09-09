@@ -23,7 +23,6 @@ fi
 knownHostsFile=$HOME/.ssh/known_hosts
 temporaryCommandsFile=./.temp-sftp
 deployedHostArtifact="./.deployed-hosts"
-SSH_KEY_TYPE=${SSH_KEY_TYPE:-rsa}
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
@@ -52,6 +51,10 @@ usage() {
   echo
   exit "$rs"
 }
+
+if [ ! -d "${HOME:-}" ]; then
+  usage $errEnv "No HOME defined or not a directory: $HOME"
+fi
 
 dotEnvConfig
 
