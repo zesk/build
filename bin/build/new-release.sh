@@ -119,7 +119,9 @@ if [ ! -f "$releaseNotes" ]; then
 
 EOF
   consoleSuccess "Version $newVersion ready - release notes: $releaseNotes"
+  runHook version-created "$newVersion" "$releaseNotes"
 else
   consoleWarning "Version $newVersion already - release notes: $releaseNotes"
+  runHook version-already "$newVersion" "$releaseNotes"
 fi
 git add "$releaseNotes"

@@ -6,6 +6,8 @@
 #
 # Depends: -
 #
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
 errEnv=1
 
 #

@@ -2,6 +2,10 @@
 
 Pipeline and build-related tools which are useful across a variety of projects.
 
+See [the readme installed with the build tools.](./bin/build/README.md)
+
+Pipeline and build-related tools which are useful across a variety of projects.
+
 This toolkit makes the following assumptions:
 
 - You are using this with another project to help with your pipeline and build steps.
@@ -92,3 +96,7 @@ error occurs:
         exit "$exitCode"
     }
 
+
+## Copyright &copy; 2023 Market Acumen, Inc.
+
+License is [MIT License.](LICENSE.md).

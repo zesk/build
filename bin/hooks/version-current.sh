@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#
+# Sample current version script, uses release files directory listing and versionSort.
+#
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
 set -eo pipefail
 errEnv=1
 
