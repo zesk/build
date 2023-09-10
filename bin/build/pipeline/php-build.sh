@@ -15,11 +15,7 @@ targetFileName=${BUILD_TARGET:-app.tar.gz}
 
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
 me=$(basename "${BASH_SOURCE[0]}")
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd to $relTop" 1>&2
-    exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
@@ -33,7 +29,7 @@ usage() {
         consoleError "$@"
         echo
     fi
-    consoleInfo "$me deployment [ --suffix versionSuffix ] ENV_VAR1 ENV_VAR2 ... -- file1 file2 dir3"
+    consoleInfo "$me [ --deployment deployment ] [ --suffix versionSuffix ] ENV_VAR1 ENV_VAR2 ... -- file1 file2 dir3"
     echo
     consoleInfo "Build deployment using composer, adding environment values to .env and packaging vendor and additional files into final:"
     echo
@@ -47,28 +43,18 @@ usage() {
 
 usageWhich docker tar
 
-if [ -z "$1" ]; then
-    usage "$errArg" "No deployment"
-fi
-DEPLOYMENT=$1
 export DEPLOYMENT
-shift
 
-# Save clean build environment to .build.env for other steps
-declare -px >.build.env
-
-# Sets the DEFAULT - can override with command line argument --suffix
-if [ "$DEPLOYMENT" = "production" ]; then
-    versionSuffix=rc
-elif [ "$DEPLOYMENT" = "develop" ]; then
-    versionSuffix=d
-fi
-
+DEPLOYMENT=${DEPLOYMENT:-}
 optClean=
 versionSuffix=
 envVars=()
 while [ $# -gt 0 ]; do
     case $1 in
+    --deployment)
+        shift
+        DEPLOYMENT=$1
+        ;;
     --)
         shift
         break
@@ -98,7 +84,23 @@ done
 if [ ${#missingFile[@]} -gt 0 ]; then
     usage $errEnv "Missing files: ${missingFile[*]}"
 fi
+
+# Sets the DEFAULT - can override with command line argument --suffix
+if [ "$DEPLOYMENT" = "production" ]; then
+    versionSuffix=rc
+elif [ "$DEPLOYMENT" = "develop" ]; then
+    versionSuffix=d
+elif [ -z "$DEPLOYMENT" ]; then
+    usage $errArg "DEPLOYMENT must be defined in the environment or passed as --deployment"
+fi
+if [ -z "$versionSuffix" ]; then
+    usage $errArg "No version --suffix defined - usually unknown DEPLOYMENT: $DEPLOYMENT"
+fi
 initTime=$(beginTiming)
+
+export BUILD_START_TIMESTAMP=$initTime
+# Save clean build environment to .build.env for other steps
+declare -px >.build.env
 
 bigText Build | prefixLines "$(consoleGreen)"
 
