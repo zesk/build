@@ -27,5 +27,5 @@ addNoteTo() {
 }
 addNoteTo README.md
 addNoteTo LICENSE.md
-git commit -m "updated license and readme for $currentVersion" -a || :
+git commit -m "updated license and readme for $currentVersion" -a >/dev/null || consoleSuccess Installation documentation up to date.
 git push

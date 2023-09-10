@@ -2,10 +2,6 @@
 
 Pipeline and build-related tools which are useful across a variety of projects.
 
-See [the readme installed with the build tools.](./bin/build/README.md)
-
-Pipeline and build-related tools which are useful across a variety of projects.
-
 This toolkit makes the following assumptions:
 
 - You are using this with another project to help with your pipeline and build steps.
@@ -51,13 +47,9 @@ Template header for most scripts:
     set -eo pipefail
     errEnv=1
 
-    me=$(basename "$0")
-    relTop="../.."
-    if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-        echo "$me: Can not cd to $relTop" 1>&2
-        exit $errEnv
-    fi
+    cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
+    me=$(basename "$0")
     quietLog="./.build/$me.log"
     # other constants here
 
@@ -103,4 +95,4 @@ error occurs:
 
 ## Copyright &copy; 2023 Market Acumen, Inc.
 
-License is [MIT License.](LICENSE.md).
+License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
