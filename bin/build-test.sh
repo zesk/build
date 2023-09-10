@@ -57,6 +57,37 @@ testSection() {
     consoleDecoration "$bar"
 }
 
+testScripts() {
+    local failedReasons thisYear f
+    testSection "Checking all shellcheck and bash -n"
+
+    thisYear=$(date +%Y)
+    failedReasons=()
+    while IFS= read -r -d '' f; do
+        consoleInfo "Checking $f"
+        if ! bash -n "$f"; then
+            failedReasons+=("bash -n $f failed")
+        fi
+        if ! shellcheck "$f" >>"$quietLog"; then
+            failedReasons+=("shellcheck $f failed")
+        fi
+        if ! grep -q "Copyright &copy; $thisYear" "$f"; then
+            failedReasons+=("$f missing copyright")
+        fi
+    done < <(find . -name '*.sh' ! -path '*/.*' -print0)
+
+    if [ "${#failedReasons[@]}" -gt 0 ]; then
+        consoleError -n "The following scripts failed:"
+        for f in "${failedReasons[@]}"; do
+            echo "$(consoleMagenta -n "$f")$(consoleInfo -n ", ")"
+        done
+        consoleError "done."
+        failed "$quietLog"
+    else
+        consoleSuccess "All scripts passed"
+    fi
+}
+
 testScriptInstalls() {
     local binary=$1 script=$2
     testSection "$binary"
@@ -303,28 +334,7 @@ quietLog="./.build/$me.log"
 
 requireFileDirectory "$quietLog"
 
-testSection "Checking all shellcheck and bash -n"
-
-failedScripts=()
-while IFS= read -r -d '' f; do
-    consoleInfo "Checking $f"
-    bash -n "$f"
-    if ! shellcheck "$f" >>"$quietLog"; then
-        failedScripts+=("$f")
-    fi
-done < <(find . -name '*.sh' ! -path '*/.*' -print0)
-
-if [ "${#failedScripts[@]}" -gt 0 ]; then
-    consoleError -n "The following scripts failed:"
-    for f in "${failedScripts[@]}"; do
-        echo "$(consoleMagenta -n "$f") $(consoleWhite -n ", ")"
-    done
-    consoleError "done."
-    failed "$quietLog"
-else
-    consoleSuccess "All scripts passed"
-fi
-
+testScripts
 testTools
 testEnvMap
 testBuildSetup
@@ -358,4 +368,8 @@ if ! which npm >/dev/null; then
 fi
 testScriptInstalls prettier "bin/build/install/prettier.sh"
 
+testCleanup() {
+    rm -rf vendor composer.json composer.lock test.*/ ./aws .build
+}
+testCleanup
 bigText Passed | prefixLines "$(consoleSuccess)"

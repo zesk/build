@@ -3,27 +3,43 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-set -eo pipefail
-errEnv=1
+errArguments=2
 
-me=$(basename "$0")
-relTop="../.."
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-	echo "$me: Can not cd to $relTop" 1>&2
-	exit $errEnv
-fi
+set -eo pipefail
+me=$(basename "${BASH_SOURCE[0]}")
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
-. bin/build/tools.sh
+. ./bin/build/tools.sh
 
-if [ "$1" = "$2" ]; then
-	echo "### cannon.sh takes two parameters now. The ones you passed are identical..."
-	exit 1
+usage() {
+	local exitCode=$1
+
+	shift
+	exec 1>&2
+	consoleError "$*"
+	echo
+	consoleInfo "$me fromText toText [ findArgs ... ]"
+	echo
+	consoleInfo "Replace text fromText with toText in files, using findArgs to filter files if needed"
+	echo
+	consoleInfo "This can mess up your files so use with caution."
+	echo
+	exit "$exitCode"
+}
+
+search=$1
+searchQuoted=$(quoteSedPattern "$search")
+shift
+
+replaceQuoted=$(quoteSedPattern "$1")
+shift
+
+if [ "$searchQuoted" = "$replaceQuoted" ]; then
+	usage $errArguments "from to \"$search\" are identical"
 fi
 
-search=$(quoteSedPattern "$1")
-replace=$(quoteSedPattern "$2")
-# echo "s/$search/$replace/g"
-find . -type f ! -path '*/.*' -print0 | xargs -0 grep -l "$1" | tee /tmp/cannon.$$.log | xargs sed -i '' -e "s/$search/$replace/g"
+# echo "s/$searchQuoted/$replaceQuoted/g"
+find . -type f ! -path '*/.*' "$@" -print0 | xargs -0 grep -l "$search" | tee /tmp/cannon.$$.log | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
 echo "# Modified $(cat /tmp/cannon.$$.log | wc -l) files"
 rm /tmp/cannon.$$.log

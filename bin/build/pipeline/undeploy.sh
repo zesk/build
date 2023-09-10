@@ -40,7 +40,7 @@ usage() {
 }
 
 if [ ! -f .build.env ]; then
-    consoleWarning "No .build.env found"
+    consoleWarning "No .build.env found" 1>&2
 else
     # shellcheck source=/dev/null
     set -a && . .build.env

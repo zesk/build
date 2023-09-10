@@ -7,6 +7,8 @@
 # End of deployment to system, update local settings or register server before
 # maintenance is turned off.
 #
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
 set -eo pipefail
 
 errEnv=1

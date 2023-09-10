@@ -6,6 +6,8 @@
 #
 # If not, fail.
 #
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
 set -eo pipefail
 
 errEnv=1

@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 #
-# release-check-version.sh
+# git-tag-version.sh
+#
+# does `git pull --tags origin` and then tags build for development or release
+# tags up to BUILD_MAXIMUM_TAGS_PER_VERSION as "{current}d{index}"
 #
 # Depends: apt git docker
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+set -eou pipefail
+
 errEnv=1
 errArg=2
+maximumTagsPerVersion=${BUILD_MAXIMUM_TAGS_PER_VERSION:-1000}
 
 me=$(basename "${BASH_SOURCE[0]}")
 relTop=../../..
@@ -16,12 +22,11 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   exit $errEnv
 fi
 
-set -eo pipefail
-
 # shellcheck source=/dev/null
-source "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
-"./bin/build/install/git.sh"
+init=$(beginTiming)
+./bin/build/install/git.sh
 
 usage() {
   local rs
@@ -30,33 +35,28 @@ usage() {
   shift
   exec 1>&2
   if [ -n "$*" ]; then
-    consoleRed "$@"
+    consoleError "$@"
     echo
   fi
-  echo "$me: Check version and optionally tag development version"
-  echo
-  echo "--develop    Tag a development version as {current}d{nextIndex}"
-  echo
+  {
+    echo "$me [ --suffix versionSuffix ] Tag version in git"
+    echo
+    echo "--suffix      word to use between version and index as: {current}rc{nextIndex}"
+    echo
+    echo "default is: --suffix rc (production)"
+  } | prefixLines "$(consoleInfo)"
   exit "$rs"
 }
 
-develop=
-production=
+versionSuffix=
 while [ $# -gt 0 ]; do
   case $1 in
-  --develop)
-    develop=1
-    if test "$production"; then
-      usage $errArg "Only --develop or --production can be specified, not both"
-    fi
+  --suffix)
     shift
-    ;;
-  --production)
-    if test "$develop"; then
-      usage $errArg "Only --develop or --production can be specified, not both"
+    versionSuffix=$1
+    if [ -z "$versionSuffix" ]; then
+      usage $errArg "--suffix is blank"
     fi
-    develop=
-    production=1
     shift
     ;;
   *)
@@ -91,14 +91,8 @@ if [ ! -f "$releaseNotes" ]; then
   exit 18
 fi
 
-maximumTagsPerVersion=1000
-if test "$develop"; then
-  label=development
-  versionSuffix=d
-else
-  label=release
-  versionSuffix=rc
-fi
+# rc is for release candidate
+versionSuffix=${versionSuffix:-${BUILD_VERSION_SUFFIX:-rc}}
 tagPrefix="${currentVersion}${versionSuffix}"
 index=0
 while true; do
@@ -107,13 +101,13 @@ while true; do
     break
   fi
   index=$((index + 1))
-  if [ $index -gt $maximumTagsPerVersion ]; then
-    consoleError "Tag $label version exceeded maximum of $maximumTagsPerVersion" 1>&2
+  if [ $index -gt "$maximumTagsPerVersion" ]; then
+    consoleError "Tag version exceeded maximum of $maximumTagsPerVersion" 1>&2
     exit 19
   fi
 done
 
-consoleInfo "Tagging $label version $tryVersion and pushing ... "
+consoleInfo "Tagging version $tryVersion and pushing ... "
 git tag "$tryVersion"
 git push --tags --quiet
-consoleSuccess OK && echo
+reportTiming "$init" "$0" completed && echo

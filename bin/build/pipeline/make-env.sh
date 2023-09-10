@@ -16,16 +16,16 @@
 #  ▌  ▛▀ ▚▄▌▌ ▌▐ ▌  ▛▀ ▌▐ ▌▛▀ ▌ ▌▐ ▖▝▀▖
 #  ▘  ▝▀▘  ▌▝▀▘▀▘▘  ▝▀▘▘▝ ▘▝▀▘▘ ▘ ▀ ▀▀
 #
-# Common: make-env.sh SMTP_URL MAIL_SUPPORT MAIL_FROM TESTING_EMAIL TESTING_EMAIL_IMAP DSN
-
+# Email: SMTP_URL MAIL_SUPPORT MAIL_FROM TESTING_EMAIL TESTING_EMAIL_IMAP
+# Database: DSN
+# BitBucket: BITBUCKET_COMMIT BITBUCKET_BUILD_NUMBER
+# Amazon: AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
+#
 # Must be defined and non-empty to run this script
 requireEnvironment=(
-    DEPLOY_USER_HOSTS
-    BITBUCKET_COMMIT BITBUCKET_BUILD_NUMBER
+    DEPLOY_USER_HOSTS BUILD_TARGET
     APPLICATION_VERSION APPLICATION_BUILD_DATE APPLICATION_GIT_SHA
-    AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
     DEPLOYMENT
-    "$@"
 )
 # Will be exported to the environment file, but may be defined below
 buildEnvironment=(
@@ -34,8 +34,7 @@ buildEnvironment=(
 )
 
 errEnv=1
-errArgument=2
-set -eo pipefail
+set -eou pipefail
 # set -x # Debugging
 
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
@@ -80,7 +79,7 @@ while [ $# -gt 0 ]; do
         DEPLOYMENT=$1
         ;;
     *)
-        usage "$errArgument" "Unknown parameter $1"
+        requireEnvironment+=("$1")
         ;;
     esac
     shift
@@ -100,7 +99,7 @@ APPLICATION_BUILD_NUMBER=$BITBUCKET_BUILD_NUMBER
 
 missing=()
 for e in "${requireEnvironment[@]}"; do
-    if [ -z "${!e}" ]; then
+    if [ -z "${!e:-}" ]; then
         echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleError "** No value **")"
         missing+=("$e")
     else

@@ -4,6 +4,8 @@
 #
 # Generate the .env file
 #
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
 set -eo pipefail
 
 errEnv=1

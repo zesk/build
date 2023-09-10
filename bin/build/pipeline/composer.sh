@@ -23,7 +23,7 @@ fi
 
 quietLog="./.build/$me.log"
 composerDirectory="$(pwd)"
-dockerImage=composer:latest
+dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
 cacheDir=.composer
 
 # shellcheck source=/dev/null
@@ -71,9 +71,9 @@ start=$(beginTiming)
 consoleInfo -n "Composer ... """
 bigText "Install vendor" >>"$quietLog"
 #DEBUGGING - remove, why no -q option? we like it quiet
-echo Running: docker pull $dockerImage >>"$quietLog"
+echo Running: docker pull "$dockerImage" >>"$quietLog"
 
-if ! docker pull $dockerImage >>"$quietLog" 2>&1; then
+if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
   consoleError "Failed to pull image $dockerImage"
   failed "$quietLog"
   exit $errBuild

@@ -2,6 +2,10 @@
 
 Pipeline and build-related tools which are useful across a variety of projects.
 
+See [the readme installed with the build tools.](./bin/build/README.md)
+
+Pipeline and build-related tools which are useful across a variety of projects.
+
 This toolkit makes the following assumptions:
 
 - You are using this with another project to help with your pipeline and build steps.
@@ -28,9 +32,13 @@ To use in your pipeline:
 
 - `bin/hooks/version-current.sh` - Return your current application version
 - `bin/hooks/version-live.sh` (optional)  - Return the LIVE application version
+- `bin/hooks/version-created.sh` (optional) - Run code when `new-release.sh` creates a new release
+- `bin/hooks/version-already.sh` (optional) - Run code when `new-release.sh` does not create a new release
+- `bin/hooks/make-env.sh` (optional) Customize environment generation in `php-build.sh`
 - `bin/hooks/maintenance.sh` (optional) turn on or off maintenance
 - `bin/hooks/deploy-start.sh` (optional) Used at start of deployment on remote host (delete caches, etc.)
 - `bin/hooks/deploy-finish.sh` (optional) After new code is deployed (update local files or register server etc.)
+- `bin/hooks/deploy-confirm.sh` (optional) After new code is deployed make sure it is running correctly
 
 ## General usage
 
@@ -92,3 +100,7 @@ error occurs:
         exit "$exitCode"
     }
 
+
+## Copyright &copy; 2023 Market Acumen, Inc.
+
+License is [MIT License.](LICENSE.md).

@@ -46,8 +46,12 @@ usage() {
   exit "$rs"
 }
 
-# shellcheck source=/dev/null
-set -a && source .build.env
+if [ ! -f .build.env ]; then
+  consoleWarning "No .build.env found" 1>&2
+else
+  # shellcheck source=/dev/null
+  set -a && . .build.env
+fi
 
 usageEnvironment "${requireEnvironments[@]}"
 
