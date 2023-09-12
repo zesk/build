@@ -11,9 +11,9 @@ set -eo pipefail
 
 errEnv=1
 errArg=2
-targetFileName=${BUILD_TARGET:-app.tar.gz}
 
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
+export BUILD_TARGET=${BUILD_TARGET:=app.tar.gz}
 me=$(basename "${BASH_SOURCE[0]}")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
@@ -29,13 +29,17 @@ usage() {
         consoleError "$@"
         echo
     fi
-    consoleInfo "$me [ --deployment deployment ] [ --suffix versionSuffix ] ENV_VAR1 ENV_VAR2 ... -- file1 file2 dir3"
+    consoleInfo "$me [ --name tarFileName ] [ --deployment deployment ] [ --suffix versionSuffix ] ENV_VAR1 ENV_VAR2 ... -- file1 file2 dir3"
     echo
     consoleInfo "Build deployment using composer, adding environment values to .env and packaging vendor and additional files into final:"
     echo
-    echo "$(consoleInfo -n "Target file") $(consoleValue -n "$targetFileName")"
+    echo "$(consoleInfo -n "Target file") $(consoleValue -n "$BUILD_TARGET")"
     echo
     consoleInfo "Override target file generated with environment variable BUILD_TARGET"
+    echo
+    consoleInfo "--name tarFileName       Set BUILD_TARGET via command line (wins)"
+    consoleInfo "--deployment deployment  Set DEPLOYMENT via command line (wins)"
+    consoleInfo "--suffix versionSuffix   Set tag suffix via command line"
     echo
     consoleInfo "Files are specified from the application root directory"
     exit "$rs"
@@ -54,6 +58,10 @@ while [ $# -gt 0 ]; do
     --deployment)
         shift
         DEPLOYMENT=$1
+        ;;
+    --name)
+        shift
+        BUILD_TARGET=$1
         ;;
     --)
         shift
@@ -74,7 +82,7 @@ while [ $# -gt 0 ]; do
 done
 
 if [ $# -eq 0 ]; then
-    usage $errEnv "Need to supply a list of files for application $targetFileName"
+    usage $errEnv "Need to supply a list of files for application $BUILD_TARGET"
 fi
 for tarFile in "$@"; do
     if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
@@ -151,9 +159,9 @@ set +a
 bigText "$APPLICATION_VERSION" | prefixLines "$(consoleGreen)"
 echo
 
-tar czf "$targetFileName" --owner=0 --group=0 --no-xattrs .env vendor/ .deploy/ "$@"
+tar czf "$BUILD_TARGET" --owner=0 --group=0 --no-xattrs .env vendor/ .deploy/ "$@"
 
 consoleInfo -n "Build completed "
 reportTiming "$initTime"
 
-# artifact: $targetFileName
+# artifact: $BUILD_TARGET
