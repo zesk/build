@@ -96,3 +96,4 @@ error occurs:
 ## Copyright &copy; 2023 Market Acumen, Inc.
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
+(this file is a copy - please modify the original)
