@@ -8,13 +8,9 @@
 #
 set -eo pipefail
 
-errEnv=1
-me=$(basename "${BASH_SOURCE[0]}")
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/../.."; then
-    echo "$me: Can not cd" && exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "$me is the sample script, please update for production sites."
+consoleSuccess "$(basname "${BASH_SOURCE[0]}") is the sample script, please update for production sites."

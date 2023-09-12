@@ -4,19 +4,13 @@
 #
 # Run in the pipeline, used to check smoke test on remote systems: did our deployment work?
 #
-# If not, fail.
+# If not, fail and it will undo it.
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eo pipefail
 
-errEnv=1
-me=$(basename "${BASH_SOURCE[0]}")
-relTop=../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd $relTop"
-    exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh

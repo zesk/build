@@ -7,22 +7,22 @@
 
 - `BUILD_COMPOSER_VERSION` - String. Default `latest`. Version of composer to use for building vendor directory. (See [`composer.sh`](composer.sh.md))
 - `BUILD_NPM_VERSION` - String. Default `latest`. Version of npm to install using native `npm` binary. (Affects [`npm.sh`](npm.sh.md))
-- `HOSTTYPE` - Affects which version of the AWS cli is installed (arm64 or amd64) (See `aws-cli.sh`)
+- `HOSTTYPE` - String. Affects which version of the AWS cli is installed (arm64 or amd64) (See `aws-cli.sh`). OS-specific.
 
 # GitHub Releases
 
-- `GITHUB_ACCESS_TOKEN` - Used in `github-release.sh`
-- `GITHUB_REPOSITORY_OWNER` - Used in `github-release.sh`
-- `GITHUB_REPOSITORY_NAME` - Used in `github-release.sh`
+- `GITHUB_ACCESS_TOKEN` - String. Used in `github-release.sh`. No default.
+- `GITHUB_REPOSITORY_OWNER` - String. Used in `github-release.sh`. No default.
+- `GITHUB_REPOSITORY_NAME` - String. Used in `github-release.sh`. No default.
 # Build
 
-- `BUILD_TARGET` - File to generate using `php-build.sh`
+- `BUILD_TARGET` -String. File to generate using `php-build.sh`. Defaults to `app.tar.gz`.
 
 # Deployment
 
-- `APPLICATION_REMOTE_PATH` - Used in `php-deploy.sh`
-- `DEPLOY_REMOTE_PATH` - Used in `php-deploy.sh`
-- `DEPLOY_USER_HOSTS` - Used in `php-deploy.sh`
+- `APPLICATION_REMOTE_PATH` - Path on remote system. Used in `php-deploy.sh`. No default.
+- `DEPLOY_REMOTE_PATH` - Path on remote system. Used in `php-deploy.sh`. No default.
+- `DEPLOY_USER_HOSTS` - List of user@host strings. Used in `php-deploy.sh`. No default.
 
 # AWS related
 

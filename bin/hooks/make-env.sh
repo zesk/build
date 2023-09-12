@@ -8,14 +8,10 @@
 #
 set -eo pipefail
 
-errEnv=1
-me=$(basename "${BASH_SOURCE[0]}")
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/../.."; then
-    echo "$me: Can not cd" && exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "$me is the default script, please customize for your application."
+consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the default script, please customize for your application."
 ./bin/build/pipeline/make-env.sh "$@"
