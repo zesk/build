@@ -5,5 +5,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/$../.."
+
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+
 bin/build/pipeline/github-version-live.sh zesk/build
