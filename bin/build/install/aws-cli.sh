@@ -26,8 +26,6 @@ quietLog="./.build/$me.log"
 if ! which aws >/dev/null; then
   ./bin/build/install/apt.sh
 
-  requireFileDirectory "$quietLog"
-
   consoleInfo -n "Installing aws-cli ... "
   start=$(beginTiming)
   case "$HOSTTYPE" in
@@ -38,6 +36,8 @@ if ! which aws >/dev/null; then
     url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
     ;;
   esac
+
+  requireFileDirectory "$quietLog"
   if ! curl -s "$url" -o "awscliv2.zip" >>"$quietLog"; then
     failed "$quietLog"
   fi

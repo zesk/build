@@ -13,6 +13,8 @@
 set -eo pipefail
 errEnv=1
 
+quietLog="./.build/$me.log"
+
 me=$(basename "$0")
 relTop=".."
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
@@ -324,15 +326,12 @@ testAWSExpiration() {
 #   | |  __/\__ \ |_
 #   |_|\___||___/\__|
 #
+requireFileDirectory "$quietLog"
 
 testSection APT
 bin/build/install/apt.sh shellcheck
 
 whichApt shellcheck shellcheck
-
-quietLog="./.build/$me.log"
-
-requireFileDirectory "$quietLog"
 
 testScripts
 testTools

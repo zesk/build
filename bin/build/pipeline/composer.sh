@@ -67,6 +67,8 @@ composerArgs+=("-v" "$composerDirectory/$cacheDir:/tmp")
 composerArgs+=("$dockerImage")
 composerArgs+=("--ignore-platform-reqs")
 
+requireFileDirectory "$quietLog"
+
 start=$(beginTiming)
 consoleInfo -n "Composer ... """
 bigText "Install vendor" >>"$quietLog"
