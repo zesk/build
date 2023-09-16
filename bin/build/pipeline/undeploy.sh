@@ -12,7 +12,7 @@ me=$(basename "${BASH_SOURCE[0]}")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
 requireEnvironments=(DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS)
 
@@ -42,4 +42,4 @@ fi
 
 usageEnvironment "${requireEnvironments[@]}"
 
-bin/build/pipeline/pipeline-deploy-to.sh --undo "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
+./bin/build/pipeline/deploy-to.sh --undo "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
