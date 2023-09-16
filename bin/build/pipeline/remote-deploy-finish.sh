@@ -12,12 +12,7 @@ start=$(($(date +%s) + 0))
 set -eo pipefail
 # set -x # Debugging
 me=$(basename "$0")
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd to $relTop" 1>&2
-    exit $errEnv
-fi
-top="$(pwd)"
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 BUILD_SETUP="$(find bin build-setup.sh)"
 $BUILD_SETUP
@@ -55,8 +50,8 @@ dotEnvConfig
 
 targetFileName=${BUILD_TARGET:-app.tar.gz}
 
-currentTar="$top/$targetFileName"
-previousCommitHashFile="$top/.deploy/git-commit-hash"
+currentTar="./$targetFileName"
+previousCommitHashFile="./.deploy/git-commit-hash"
 undoFlag=
 cleanupFlag=
 argBuildSHACheck=
@@ -149,7 +144,7 @@ deployAction() {
     #
     # Create a deploy.123 directory, export .env and look at the value in it
     #
-    deployTemp="$top/deploy.$$"
+    deployTemp="./deploy.$$"
     if ! mkdir -p "$deployTemp"; then
         usage "$errEnv" "unable to create temp deploy directory"
     fi
@@ -160,7 +155,7 @@ deployAction() {
     # shellcheck source=/dev/null
     . "$deployTemp/.env"
     set +a
-    cd "$top"
+    cd ..
     rm -rf "$deployTemp"
 
     #

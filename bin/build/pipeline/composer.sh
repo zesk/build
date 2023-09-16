@@ -10,16 +10,11 @@
 #
 set -eo pipefail
 # set -x
-errEnv=1
 errArg=1
 errBuild=1000
 
 me=$(basename "$0")
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-  echo "$me: Can not cd to $relTop" 1>&2
-  exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 quietLog="./.build/$me.log"
 composerDirectory="$(pwd)"

@@ -38,11 +38,8 @@ set -eou pipefail
 # set -x # Debugging
 
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd to $relTop" 1>&2
-    exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
 envFile="./.env"
 
 # shellcheck source=/dev/null
