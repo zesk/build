@@ -14,9 +14,6 @@ set -eo pipefail
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-BUILD_SETUP="$(find bin build-setup.sh)"
-$BUILD_SETUP
-
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
@@ -150,12 +147,12 @@ deployAction() {
     fi
     cd "$deployTemp/"
     # extract .env alone
-    tar zxf "$currentTar" "${tarArgs[@]}" ".env"
+    tar zxf "../$currentTar" "${tarArgs[@]}" ".env"
+    cd ..
     set -a
     # shellcheck source=/dev/null
     . "$deployTemp/.env"
     set +a
-    cd ..
     rm -rf "$deployTemp"
 
     #
