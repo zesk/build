@@ -15,11 +15,8 @@ errArg=2
 set -eo pipefail
 
 me=$(basename "$0")
-relTop="../../.."
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-  echo "$me: Can not cd to $relTop" 1>&2
-  exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
 knownHostsFile=$HOME/.ssh/known_hosts
 temporaryCommandsFile=./.temp-sftp
 deployedHostArtifact="./.deployed-hosts"

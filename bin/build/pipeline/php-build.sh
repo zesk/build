@@ -159,7 +159,7 @@ set +a
 bigText "$APPLICATION_VERSION" | prefixLines "$(consoleGreen)"
 echo
 
-tar czf "$BUILD_TARGET" --owner=0 --group=0 --no-xattrs .env vendor/ .deploy/ "$@"
+createTarFile "$BUILD_TARGET" .env vendor/ .deploy/ "$@"
 
 consoleInfo -n "Build completed "
 reportTiming "$initTime"

@@ -229,8 +229,9 @@ dateToTimestamp() {
 aptUpdateOnce() {
   local older name quietLog start
 
-  [ -d "./.build" ] || mkdir -p "./.build"
-  name=".build/.apt-update"
+  quietLog=./.build/apt-get-update.log
+  requireFileDirectory "$quietLog"
+  name=./.build/.apt-update
   # once an hour, technically
   older=$(find .build -name .apt-update -mmin +60)
   if [ -n "$older" ]; then
@@ -241,7 +242,6 @@ aptUpdateOnce() {
       consoleError "No apt-get available" 1>&2
       return $errEnv
     fi
-    quietLog="./.build/apt-get-update.log"
     start=$(beginTiming)
     consoleInfo -n "apt-get update ... "
     if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
@@ -253,7 +253,12 @@ aptUpdateOnce() {
 }
 
 requireFileDirectory() {
-  [ -d "$(dirname "$1")" ] || mkdir -p "$(dirname "$1")"
+  local name
+  while [ $# -gt 0 ]; do
+    name="$(dirname "$1")"
+    [ -d "$name" ] || mkdir -p "$name"
+    shift
+  done
 }
 
 whichApt() {
@@ -261,8 +266,8 @@ whichApt() {
   if ! which "$1" >/dev/null; then
     shift
     if aptUpdateOnce; then
-      [ -d "./.build" ] || mkdir -p "./.build"
       quietLog="./.build/apt.log"
+      requireFileDirectory "$quietLog"
       if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" >>"$quietLog" 2>&1; then
         consoleError "Unable to install" "$@"
         failed "$quietLog"
@@ -570,4 +575,22 @@ urlParseItem() {
   local name user password host
   eval "$(parseDSN "$1")"
   echo "${!2}"
+}
+
+createTarFile() {
+  local target=$1
+
+  shift
+  if tar --version | grep -q GNU; then
+    # GNU
+    # > tar --version
+    # tar (GNU tar) 1.34
+    # ...
+    tar czf "$target" --owner=0 --group=0 --no-xattrs "$@"
+  else
+    # BSD
+    # > tar --version
+    # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
+    tar czf "$target" --uid 0 --gid 0 --no-xattrs "$@"
+  fi
 }

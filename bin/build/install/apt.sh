@@ -50,6 +50,7 @@ if [ "${#actualPackages[@]}" -eq 0 ]; then
 fi
 start=$(beginTiming)
 consoleInfo -n "Installing ${actualPackages[*]} ... "
+requireFileDirectory "$quietLog"
 if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
   failed "$quietLog"
   exit $errEnv
