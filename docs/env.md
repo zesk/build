@@ -1,7 +1,10 @@
 # Environment variables which affect build scripts
 
+[⬅ Return to top](index.md)
+
 - `BUILD_VERSION_SUFFIX` - String. Default suffix used in `git-tag-version.sh`. Default is `rc` if not specified.
 - `BUILD_MAXIMUM_TAGS_PER_VERSION` - Integer. Default 1000. Affects `git-tag-version.sh`
+- `BUILD_DEBUG` - Enable debugging globally in the build scripts. Lots of output and tracing so beware. Affects `deploy-to.sh`, `php-build.sh`, `remote-deploy-finish.sh`, and `aws-ip-access.sh`.
 
 # Tool versioning
 

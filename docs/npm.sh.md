@@ -8,3 +8,5 @@ When this tool succeeds the `npm` binary is available in the local operating sys
 
 - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 
+[⬅ Return to top](index.md)
+

@@ -23,3 +23,5 @@ This tool uses the local `.composer` directory to cache information between buil
 ## Environment which affects this tool
 
 - `BUILD_COMPOSER_VERSION` - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
+
+[⬅ Return to top](index.md)
