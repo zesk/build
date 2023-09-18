@@ -333,6 +333,7 @@ bin/build/install/apt.sh shellcheck
 
 whichApt shellcheck shellcheck
 
+colorTest
 testScripts
 testTools
 testEnvMap

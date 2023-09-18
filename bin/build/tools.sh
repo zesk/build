@@ -42,7 +42,10 @@ __consoleEscape() {
 }
 
 colorTest() {
-  local i colors=(consoleRed consoleGreen consoleCyan consoleBlue consoleOrange consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline consoleBold consoleRedBold)
+  local i colors=(consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
+    consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
+    consoleBold consoleRedBold consoleCode consoleWarning consoleSuccess
+    consoleDecoration consoleError consoleLabel consoleValue)
   for i in "${colors[@]}"; do
     $i "$i: The quick brown fox jumped over the lazy dog."
   done
@@ -157,6 +160,7 @@ consoleSuccess() {
 #
 # decorations to output (like bars and lines)
 #
+# shellcheck disable=SC2120
 consoleDecoration() {
   consoleBoldMagenta "$@"
 }
@@ -204,6 +208,7 @@ usageGenerator() {
   local labelPrefix valuePrefix nSpaces=$((${1-30} + 0)) separatorChar=${2-\;}
 
   labelPrefix="$(consoleLabel)"
+  # shellcheck disable=SC2119
   valuePrefix="$(consoleDecoration)"
 
   awk "-F$separatorChar" "{ print \"$labelPrefix\" sprintf(\"%-\" $nSpaces \"s\", \$1) \"$valuePrefix\" substr(\$0, index(\$0, \"$separatorChar\") + 1) }"
@@ -339,11 +344,11 @@ ___dumpLines() {
   consoleError "$(echoBar)"
   echo "$(consoleInfo "$(consoleBold "$quietLog")")$(consoleBlack ": Last $nLines lines ...")"
   consoleError "$(echoBar)"
-  tail -n "$nLines" "$quietLog" | prefixLines "$(consoleYellow)$(consoleBlackBackground)"
+  tail -n "$nLines" "$quietLog" | prefixLines "$(consoleYellow)"
 }
 
 #
-# buildFailed "$quietLog"
+# x "$quietLog"
 #
 # Output the last parts of the quietLog to find the error
 # returns non-zero so fails in `set -e` shells
