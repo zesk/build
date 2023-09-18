@@ -14,6 +14,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+usageOptions() {
+    echo "--profile awsProfile|Use this AWS profile when connecting using ~/.aws/credentials"
+    echo "--services service0,service1,...|List of services to add or remove (maps to ports)"
+    echo "--id developerId|Specify an developer id manually (uses DEVELOPER_ID from environment by default)"
+    echo "--ip ip|Specify an IP manually (uses ipLookup tool from tools.sh by default)"
+    echo "--revoke|Remove permissions"
+    echo "--debug|Enable debugging. Defaults to BUILD_DEBUG environment variable."
+    echo "--help|Show this help"
+}
+
 usage() {
     local rs
     rs=$1
@@ -30,13 +40,9 @@ usage() {
         echo "Use this during deployment to grant temporary access to your systems during deployemnt only."
         echo "Build scripts should have a --revoke step afterwards, always."
         echo
-        echo "--profile awsProfile              Use this AWS profile when connecting using ~/.aws/credentials"
-        echo "--services service0,service1,...  List of services to add or remove (maps to ports)"
-        echo "--id developerId                  Specify an developer id manually (uses DEVELOPER_ID from environment by default)"
-        echo "--ip ip                           Specify an IP manually (uses ipLookup tool from tools.sh by default)"
-        echo "--revoke                          Remove permissions"
-        echo "--debug                           Enable debugging. Defaults to BUILD_DEBUG environment variable."
-        echo "--help                            Show this help"
+    } | prefixLines "$(consoleInfo)"
+    usageOptions | usageGenerator "$(($(usageOptions | maximumFieldLength 1 \|) + 2))" \|
+    {
         echo
         echo "services are looked up in /etc/services and match /tcp services only for port selection"
         echo

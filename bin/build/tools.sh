@@ -189,6 +189,26 @@ consoleNameValue() {
   echo "$(alignRight "$characterWidth" "$(consoleLabel -n "$name")") $(consoleValue -n "$@")"
 }
 
+maximumFieldLength() {
+  local index=$((${1-1} + 0)) separatorChar=${2-\;}
+
+  awk "-F$separatorChar" "{ print length(\$$index) }" | sort -rn | head -1
+}
+
+#
+# Formats name value pairs separated by semicolon and uses $nSpaces width for first field
+#
+# usageGenerator nSpaces separatorChar < formatFile
+#
+usageGenerator() {
+  local labelPrefix valuePrefix nSpaces=$((${1-30} + 0)) separatorChar=${2-\;}
+
+  labelPrefix="$(consoleLabel)"
+  valuePrefix="$(consoleDecoration)"
+
+  awk "-F$separatorChar" "{ print \"$labelPrefix\" sprintf(\"%-\" $nSpaces \"s\", \$1) \"$valuePrefix\" substr(\$0, index(\$0, \"$separatorChar\") + 1) }"
+}
+
 #
 # Requires environment variables to be set and non-blank
 #
