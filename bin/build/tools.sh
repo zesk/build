@@ -41,6 +41,25 @@ __consoleEscape() {
   fi
 }
 
+allColorTest() {
+  local i j n
+
+  i=0
+  while [ $i -lt 11 ]; do
+    j=0
+    while [ $j -lt 10 ]; do
+      n=$((10 * i + j))
+      if [ $n -gt 108 ]; then
+        break
+      fi
+      printf "\033[%dm %3d\033[m" $n $n
+      j=$((j + 1))
+    done
+    echo
+    i=$((i + 1))
+  done
+}
+
 colorTest() {
   local i colors=(consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
     consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline

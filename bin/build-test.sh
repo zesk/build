@@ -333,7 +333,13 @@ bin/build/install/apt.sh shellcheck
 
 whichApt shellcheck shellcheck
 
+bigText allColorTest | prefixLines "$(consoleMagenta)"
+allColorTest
+echo
+bigText colorTest | prefixLines "$(consoleGreen)"
 colorTest
+echo
+
 testScripts
 testTools
 testEnvMap
