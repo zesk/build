@@ -34,6 +34,6 @@ requireFileDirectory "$quietLog"
 
 start=$(beginTiming)
 if ! npm i -g "npm@$npm_version" --force >>"$quietLog" 2>&1; then
-  failed "$quietLog"
+  buildFailed "$quietLog"
 fi
 reportTiming "$start" OK

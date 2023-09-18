@@ -14,6 +14,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+usageOptions() {
+    echo "--profile awsProfile|Use this AWS profile when connecting using ~/.aws/credentials"
+    echo "--services service0,service1,...|List of services to add or remove (maps to ports)"
+    echo "--id developerId|Specify an developer id manually (uses DEVELOPER_ID from environment by default)"
+    echo "--ip ip|Specify an IP manually (uses ipLookup tool from tools.sh by default)"
+    echo "--revoke|Remove permissions"
+    echo "--debug|Enable debugging. Defaults to BUILD_DEBUG environment variable."
+    echo "--help|Show this help"
+}
+
 usage() {
     local rs
     rs=$1
@@ -24,18 +34,15 @@ usage() {
         echo
     fi
     {
-        echo "$me [ --services service0,service1 ] [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] security-group0 security-group1 ... "
+        echo "$me [ --debug ] [ --services service0,service1 ] [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] security-group0 security-group1 ... "
         echo
         echo "Register current IP address in listed security group(s) to allow for access to deployment sytstems from a specific IP."
         echo "Use this during deployment to grant temporary access to your systems during deployemnt only."
         echo "Build scripts should have a --revoke step afterwards, always."
         echo
-        echo "--profile awsProfile              Use this AWS profile when connecting using ~/.aws/credentials"
-        echo "--services service0,service1,...  List of services to add or remove (maps to ports)"
-        echo "--id developerId                  Specify an developer id manually (uses DEVELOPER_ID from environment by default)"
-        echo "--ip ip                           Specify an IP manually (uses ipLookup tool from tools.sh by default)"
-        echo "--revoke                          Remove permissions"
-        echo "--help                            Show this help"
+    } | prefixLines "$(consoleInfo)"
+    usageOptions | usageGenerator "$(($(usageOptions | maximumFieldLength 1 \|) + 2))" \|
+    {
         echo
         echo "services are looked up in /etc/services and match /tcp services only for port selection"
         echo
@@ -59,6 +66,7 @@ usage() {
 services=()
 optionRevoke=
 awsProfile=
+debuggingFlag=
 currentIP=
 developerId=${DEVELOPER_ID:-}
 while [ $# -gt 0 ]; do
@@ -77,6 +85,9 @@ while [ $# -gt 0 ]; do
     --help)
         usage 0
         ;;
+    --debug)
+        debuggingFlag=1
+        ;;
     --revoke)
         optionRevoke=1
         ;;
@@ -94,6 +105,14 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+if test "${BUILD_DEBUG-}"; then
+    debuggingFlag=1
+fi
+if test "$debuggingFlag"; then
+    consoleWarning "Debugging is enabled"
+    set -x
+fi
 
 if [ -z "$currentIP" ]; then
     currentIP=$(ipLookup)

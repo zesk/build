@@ -39,13 +39,13 @@ if ! which aws >/dev/null; then
 
   requireFileDirectory "$quietLog"
   if ! curl -s "$url" -o "awscliv2.zip" >>"$quietLog"; then
-    failed "$quietLog"
+    buildFailed "$quietLog"
   fi
   if ! unzip awscliv2.zip >>"$quietLog"; then
-    failed "$quietLog"
+    buildFailed "$quietLog"
   fi
   if ! ./aws/install >>"$quietLog"; then
-    failed "$quietLog"
+    buildFailed "$quietLog"
   fi
   rm -rf ./aws/ awscliv2.zip
   consoleValue -n "$(aws --version) "

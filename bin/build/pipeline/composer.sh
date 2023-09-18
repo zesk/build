@@ -72,13 +72,13 @@ echo Running: docker pull "$dockerImage" >>"$quietLog"
 
 if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
   consoleError "Failed to pull image $dockerImage"
-  failed "$quietLog"
+  buildFailed "$quietLog"
   exit $errBuild
 fi
 consoleInfo -n "validating ... "
 echo Running: docker run "${composerArgs[@]}" validate >>"$quietLog"
 if ! docker run "${composerArgs[@]}" install >>"$quietLog" 2>&1; then
-  failed "$quietLog"
+  buildFailed "$quietLog"
   exit $errBuild
 fi
 
@@ -86,7 +86,7 @@ composerArgs+=("install")
 consoleInfo -n "installing ... "
 echo Running: docker run "${composerArgs[@]}" >>"$quietLog"
 if ! docker run "${composerArgs[@]}" >>"$quietLog" 2>&1; then
-  failed "$quietLog"
+  buildFailed "$quietLog"
   exit $errBuild
 fi
 reportTiming "$start" OK
