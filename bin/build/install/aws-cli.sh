@@ -26,18 +26,26 @@ quietLog="./.build/$me.log"
 if ! which aws >/dev/null; then
   ./bin/build/install/apt.sh
 
-  requireFileDirectory "$quietLog"
-
   consoleInfo -n "Installing aws-cli ... "
   start=$(beginTiming)
-  if ! curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" >>"$quietLog"; then
-    failed "$quietLog"
+  case "$HOSTTYPE" in
+  arm64 | aarch64)
+    url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
+    ;;
+  *)
+    url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    ;;
+  esac
+
+  requireFileDirectory "$quietLog"
+  if ! curl -s "$url" -o "awscliv2.zip" >>"$quietLog"; then
+    buildFailed "$quietLog"
   fi
   if ! unzip awscliv2.zip >>"$quietLog"; then
-    failed "$quietLog"
+    buildFailed "$quietLog"
   fi
   if ! ./aws/install >>"$quietLog"; then
-    failed "$quietLog"
+    buildFailed "$quietLog"
   fi
   rm -rf ./aws/ awscliv2.zip
   consoleValue -n "$(aws --version) "

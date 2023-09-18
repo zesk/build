@@ -15,15 +15,11 @@ errArg=2
 set -eo pipefail
 
 me=$(basename "$0")
-relTop="../../.."
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-  echo "$me: Can not cd to $relTop" 1>&2
-  exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
 knownHostsFile=$HOME/.ssh/known_hosts
 temporaryCommandsFile=./.temp-sftp
 deployedHostArtifact="./.deployed-hosts"
-SSH_KEY_TYPE=${SSH_KEY_TYPE:-rsa}
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
@@ -39,10 +35,11 @@ usage() {
     echo "$@"
     echo
   fi
-  echo "$me [ --undo | --cleanup ] remoteDeploymentPath remotePath 'user1@host1 user2@host2'"
+  echo "$me [ --undo | --cleanup ] [ --debug ] remoteDeploymentPath remotePath 'user1@host1 user2@host2'"
   echo
   echo "Push current git tag to host at remotePath"
   echo
+  echo "--debug                Turn on debugging (defaults to BUILD_DEBUG environment variable)"
   echo "--undo                 Undo deployment using saved artifacts"
   echo "--cleanup              Clean up remote files after success"
   echo
@@ -53,11 +50,16 @@ usage() {
   exit "$rs"
 }
 
+if [ ! -d "${HOME:-}" ]; then
+  usage $errEnv "No HOME defined or not a directory: $HOME"
+fi
+
 dotEnvConfig
 
 # DEBUGGING # consoleWarning "ARGS: $*"
 
 undoFlag=
+debuggingFlag=
 cleanupFlag=
 userHosts=()
 remoteDeploymentPath=
@@ -65,6 +67,9 @@ remotePath=
 remoteArgs=()
 while [ $# -gt 0 ]; do
   case $1 in
+  --debug)
+    debuggingFlag=1
+    ;;
   --undo)
     undoFlag=1
     remoteArgs+=("--undo")
@@ -89,9 +94,20 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+# Debugging
+if test "${BUILD_DEBUG-}"; then
+  debuggingFlag=1
+fi
+if test $debuggingFlag; then
+  consoleWarning "Debugging is enabled"
+  set -x
+fi
+
+# Flag semantics
 if test "$undoFlag" && test "$cleanupFlag"; then
   usage $errArg "--undo and --cleanup are mutually exclusive"
 fi
+# Paths are not blank
 if [ -z "$remoteDeploymentPath" ]; then
   usage $errArg "Missing remoteDeploymentPath"
 fi
@@ -117,6 +133,7 @@ showInfo() {
 if [ -z "${userHosts[*]}" ]; then
   usage $errEnv "No user hosts provided?"
 fi
+
 #
 # known_hosts population
 #
@@ -202,12 +219,21 @@ cleanupAction() {
 }
 
 deployAction() {
+  local sDeployOptions
+
   #   ____             _
   #  |  _ \  ___ _ __ | | ___  _   _
   #  | | | |/ _ \ '_ \| |/ _ \| | | |
   #  | |_| |  __/ |_) | | (_) | |_| |
   #  |____/ \___| .__/|_|\___/ \__, |
   #             |_|            |___/
+  if test $debuggingFlag; then
+    # Triple verbosity
+    sDeployOptions="-vvv"
+  else
+    # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
+    sDeployOptions="-q"
+  fi
   bigText Deploy
   echo
   showInfo
@@ -215,15 +241,15 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remotePath") "
-    echo "@put vendor.tar.gz" | sftp -q "$userHost:$remotePath"
+    echo "@put app.tar.gz" | sftp $sDeployOptions "$userHost:$remotePath"
     reportTiming "$start" "Done."
   done
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
-    generateCommandsFile "git fetch -q; git reset --hard $APPLICATION_GIT_SHA" >"$temporaryCommandsFile"
+    generateCommandsFile "tar zxf app.tar.gz --no-xattrs" >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
-    ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
+    ssh $sDeployOptions -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     consoleInfo "<<< SSH output END"
     reportTiming "$start" "Done."
     echo "$host" >>"$deployedHostArtifact"

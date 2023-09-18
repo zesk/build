@@ -3,21 +3,12 @@
 #
 # Copyright &copy; 2023 Market Acumen Inc.
 #
-# Test run: docker run -v $(pwd):/opt/atlassian/bitbucketci/agent/build -it atlassian/default-image:4
+# Test run:
+#
+# docker run --platform linux/arm64 -v $(pwd):/opt/atlassian/bitbucketci/agent/build -it atlassian/default-image:4
+# rm -rf .build/ test.*; set -a; source .env.prod-robot ; bin/build-test.sh
 #
 image: atlassian/default-image:4
-
-definitions:
-  caches:
-    apt-lists: /var/lib/apt/lists
-    apt-cache: /var/cache/apt
-  services:
-    mariadb:
-      memory: 1024
-      image: mariadb:latest
-      variables:
-        MARIADB_ROOT_PASSWORD: hard-2-guess
-        MYSQL_ROOT_PASSWORD: hard-2-guess
 
 pipelines:
   branches:
@@ -26,39 +17,16 @@ pipelines:
           deployment: develop
           name: Build and Test
           services:
-            - mariadb
             - docker
           script:
-            - declare -px > .build.env
             - bin/build-test.sh develop
-          caches:
-            - docker
-            - apt-lists
-            - apt-cache
+            - bin/update-md.sh
     main:
       - step:
           deployment: production
-          name: Build and Test
-          artifacts:
-            - .build.env
+          name: Build, Test, and Deploy
           services:
-            - mariadb
             - docker
           script:
-            - declare -px > .build.env
             - bin/build-test.sh production
-          caches:
-            - docker
-            - apt-lists
-            - apt-cache
-      - step:
-          name: Deploy
-          trigger: manual
-          services:
-            - docker
-          script:
-            - set -eo && set -a && source .build.env && bin/deploy.sh
-          caches:
-            - docker
-            - apt-lists
-            - apt-cache
+            - bin/deploy.sh

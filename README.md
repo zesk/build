@@ -7,15 +7,15 @@ This toolkit makes the following assumptions:
 - You are using this with another project to help with your pipeline and build steps.
 - Binaries from this project installed at `./bin/build/`
 - Your project: Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
-- A binary exists in your project `./bin/version-current.sh`
-- Optionally a binary exists in your project `./bin/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
+- A hook exists in your project `./bin/hooks/version-current.sh`
+- Optionally a binary exists in your project `./bin/hooks/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
 - For certain functions, your shell script should define a function `usage` for argument errors and short documentation.
 - Most build operations occur at the project root directory but most can be run anywhere by supplying a parameter if needed (`composer.sh` specifically)
 - A `.build` directory will be created at your project root which contains marker files as well as log files for the build. It can be deleted safely at any time, but may contain evidence of failures.
 
 To use in your pipeline:
 
-- copy `bin/build-setup.sh` into your project (changing `relTop` if needed)
+- copy `bin/build/build-setup.sh` into your project (changing `relTop` if needed) manually
 - run it before you need your `bin/build` directory
 
 ## Project structure
@@ -26,11 +26,15 @@ To use in your pipeline:
 
 ## Local override scripts or hooks (not in this project - in your host project)
 
-- `bin/version-current.sh` - Return your current application version
-- `bin/version-live.sh` (optional)  - Return the LIVE application version
-- `bin/maintenance.sh` turn on or off maintenance
-- `bin/deploy-start.sh` (optional) Used at start of deployment on remote host (delete caches, etc.)
-- `bin/deploy-finish.sh` (optional) After new code is deployed (update local files or register server etc.)
+- `bin/hooks/version-current.sh` - Return your current application version
+- `bin/hooks/version-live.sh` (optional)  - Return the LIVE application version
+- `bin/hooks/version-created.sh` (optional) - Run code when `new-release.sh` creates a new release
+- `bin/hooks/version-already.sh` (optional) - Run code when `new-release.sh` does not create a new release
+- `bin/hooks/make-env.sh` (optional) Customize environment generation in `php-build.sh`
+- `bin/hooks/maintenance.sh` (optional) turn on or off maintenance
+- `bin/hooks/deploy-start.sh` (optional) Used at start of deployment on remote host (delete caches, etc.)
+- `bin/hooks/deploy-finish.sh` (optional) After new code is deployed (update local files or register server etc.)
+- `bin/hooks/deploy-confirm.sh` (optional) After new code is deployed make sure it is running correctly
 
 ## General usage
 
@@ -43,25 +47,21 @@ Template header for most scripts:
     set -eo pipefail
     errEnv=1
 
-    me=$(basename "$0")
-    relTop="../.."
-    if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-        echo "$me: Can not cd to $relTop" 1>&2
-        exit $errEnv
-    fi
+    cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
+    me=$(basename "$0")
     quietLog="./.build/$me.log"
     # other constants here
 
     # shellcheck source=/dev/null
-    . "./bin/build/colors.sh"
+    . ./bin/build/tools.sh
 
     requireFileDirectory "$quietLog"
     start=$(beginTiming)
     consoleInfo -n "Long process ... "
-    if ! do-a-long-process.sh >> "$quietLog"; then
+    if ! do-a-long-process.sh >>"$quietLog"; then
         consoleError "long process failed"
-        failed "$quietLog"
+        buildFailed "$quietLog"
     fi
     reportTiming "$start" Done
 
@@ -92,3 +92,7 @@ error occurs:
         exit "$exitCode"
     }
 
+
+## Copyright &copy; 2023 Market Acumen, Inc.
+
+License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).

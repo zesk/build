@@ -27,7 +27,7 @@ apt=$(which apt-get || :)
 . ./bin/build/tools.sh
 
 if [ -z "$apt" ]; then
-  consoleInfo "No apt, continuing"
+  consoleWarning "No apt, continuing anyway ..."
   exit 0
 fi
 
@@ -43,13 +43,16 @@ for p in "${packages[@]}"; do
 done
 
 if [ "${#actualPackages[@]}" -eq 0 ]; then
-  consoleSuccess "Already installed: ${packages[*]}"
+  if [ -n "$*" ]; then
+    consoleSuccess "Already installed: $*"
+  fi
   exit 0
 fi
 start=$(beginTiming)
 consoleInfo -n "Installing ${actualPackages[*]} ... "
+requireFileDirectory "$quietLog"
 if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
-  failed "$quietLog"
+  buildFailed "$quietLog"
   exit $errEnv
 fi
 reportTiming "$start" OK

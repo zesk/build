@@ -14,16 +14,11 @@
 #
 
 set -eo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-errEnv=1
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
 
-me=$(basename "$0")
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd to $relTop" 1>&2
-    exit $errEnv
-fi
-
-bin/build/install/apt.sh
+whichApt curl curl
 
 curl -o - -s "https://api.github.com/repos/$1/releases/latest" | jq -r .name

@@ -12,15 +12,7 @@ start=$(($(date +%s) + 0))
 set -eo pipefail
 # set -x # Debugging
 me=$(basename "$0")
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd to $relTop" 1>&2
-    exit $errEnv
-fi
-top="$(pwd)"
-
-BUILD_SETUP="$(find bin build-setup.sh)"
-$BUILD_SETUP
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
@@ -34,10 +26,11 @@ usage() {
         consoleError "$@"
         echo
     fi
-    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] build-sha-check atticPath")"
+    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] build-sha-check atticPath")"
     echo
     consoleInfo "This is run on the remote system after deployment; environment files are correct."
     echo
+    echo "$(consoleGreen "--debug        ")" "$(consoleInfo "Enable debugging. Defaults to BUILD_DEBUG.")"
     echo "$(consoleGreen "--undo         ")" "$(consoleInfo "Revert changes just made")"
     echo "$(consoleGreen "--cleanup      ")" "$(consoleInfo "Cleanup after success")"
     echo
@@ -51,16 +44,22 @@ usageWhich git
 
 tarArgs=(--no-same-owner --no-same-permissions --no-xattrs)
 
-targetFileName=${BUILD_TARGET:=app.tar.gz}
+dotEnvConfig
 
-currentTar="$top/$targetFileName"
-previousCommitHashFile="$top/.deploy/git-commit-hash"
+targetFileName=${BUILD_TARGET:-app.tar.gz}
+
+currentTar="./$targetFileName"
+previousCommitHashFile="./.deploy/git-commit-hash"
 undoFlag=
 cleanupFlag=
 argBuildSHACheck=
 atticPath=
+debuggingFlag=
 while [ $# -gt 0 ]; do
     case $1 in
+    --debug)
+        debuggingFlag=1
+        ;;
     --cleanup)
         cleanupFlag=1
         ;;
@@ -86,6 +85,14 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+if test "${BUILD_DEBUG-}"; then
+    debuggingFlag=1
+fi
+if test "$debuggingFlag"; then
+    consoleWarning "Debugging is enabled"
+    set -x
+fi
 
 cleanupAction() {
     #    ____ _
@@ -128,7 +135,7 @@ undoAction() {
 }
 
 deployAction() {
-    local computedSHA deployTemp previousSHA argBuildSHACheck
+    local deployTemp previousSHA argBuildSHACheck
 
     argBuildSHACheck=$1
     shift
@@ -147,27 +154,23 @@ deployAction() {
     #
     # Create a deploy.123 directory, export .env and look at the value in it
     #
-    deployTemp="$top/deploy.$$"
+    deployTemp="./deploy.$$"
     if ! mkdir -p "$deployTemp"; then
         usage "$errEnv" "unable to create temp deploy directory"
     fi
     cd "$deployTemp/"
     # extract .env alone
-    tar zxf "$currentTar" "${tarArgs[@]}" ".env"
+    tar zxf "../$currentTar" "${tarArgs[@]}" ".env"
+    cd ..
     set -a
     # shellcheck source=/dev/null
     . "$deployTemp/.env"
     set +a
-    cd "$top"
     rm -rf "$deployTemp"
 
     #
     # Check things match
     #
-    computedSHA="$(git rev-parse --short HEAD)"
-    if [ "$APPLICATION_GIT_SHA" != "$computedSHA" ]; then
-        usage "$errEnv" "Mismatch .env ($APPLICATION_GIT_SHA) != computed ($computedSHA)"
-    fi
     if [ "$APPLICATION_GIT_SHA" != "$argBuildSHACheck" ]; then
         consoleRed "$deployTemp/.env"
         cat "$deployTemp/.env"
@@ -199,7 +202,7 @@ deployAction() {
 }
 
 deployTarFile() {
-    local tarBallPath shaPrefix vendorTar
+    local tarBallPath shaPrefix vendorTar oldDir newDir
 
     tarBallPath=$1
     shift
@@ -211,31 +214,31 @@ deployTarFile() {
 
     [ -f "$vendorTar" ] || usage $errEnv "Missing $vendorTar"
 
-    bin/maintenance.sh on
-
-    consoleInfo -n "Resetting to $shaPrefix ... "
-    git reset --hard "$shaPrefix"
-
-    if [ -x ./bin/deploy-start.sh ]; then
-        consoleSuccess "No ./bin/deploy-start.sh script"
-    else
-        ./bin/deploy-start.sh
-    fi
-    [ -d ./.deploy ] && rm -rf ./.deploy
-
     consoleInfo "Unpacking $targetFileName ... "
-    rm .env*
-    tar zxf "$tarBallPath/$shaPrefix.$targetFileName" "${tarArgs[@]}"
+    currentDir="$(pwd)"
+    newDir="$(pwd).$$"
+    mkdir -p "$newDir"
+    cd "$newDir"
+    tar zxf "$vendorTar" "${tarArgs[@]}"
     date >"$tarBallPath/current.date"
     cp "$tarBallPath/current.date" "$tarBallPath/$shaPrefix.date"
-    echo "$shaPrefix" >"$tarBallPath/current"
+    cd "$currentDir"
+    runHook maintenance on
+    consoleInfo -n "Setting to version $shaPrefix ... "
 
-    if [ -x ./bin/deploy-finish.sh ]; then
-        consoleSuccess "No ./bin/deploy-finish.sh script"
+    runHook deploy-start "$newDir"
+    if hasHook deploy-move; then
+        runHook deploy-move "$newDir"
     else
-        ./bin/deploy-finish.sh
+        oldDir="$(pwd).$$.old"
+        mv "$currentDir" "$oldDir"
+        mv "$newDir" "$currentDir"
+        rm -rf "$oldDir"
     fi
-    bin/maintenance.sh off
+    cd "$currentDir"
+
+    runHook deploy-finish
+    runHook maintenance off
 }
 
 if test $undoFlag && test $cleanupFlag; then

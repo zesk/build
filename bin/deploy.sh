@@ -1,34 +1,40 @@
 #!/usr/bin/env bash
-
-set -eo pipefail
+#
+# Deploy Zesk Build
+#
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
 errEnv=1
 
-me=$(basename "$0")
-relTop=..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd to $relTop" 1>&2
-    exit $errEnv
-fi
+set -eo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-./bin/build/pipeline/release-check-version.sh
-currentVersion="$(bin/version-current.sh)"
+usage() {
+    local exitCode=$1
+
+    shift
+    exec 1>&2
+    consoleError "$*"
+    exit "$exitCode"
+}
+
+./bin/build/pipeline/git-tag-version.sh
+currentVersion="$(runHook version-current)"
+if [ -z "$currentVersion" ]; then
+    usage $errEnv "No current version returned by version-current.sh"
+fi
 releaseNotes="./docs/release/$currentVersion.md"
 if [ ! -f "$releaseNotes" ]; then
-    exec 1>&2
-    consoleError "Missing release notes at $releaseNotes"
-    exit $errEnv
+    usage $errEnv "Missing release notes at $releaseNotes"
 fi
 bigText "$currentVersion" | prefixLines "$(consoleMagenta)"
 start=$(beginTiming)
 consoleInfo -n "Deploying a new release "
-./bin/build/pipeline/github-release.sh "docs/release/$currentVersion.md" "$currentVersion"
 
-git tag -d "$currentVersion" || :
-git push --quiet origin ":$currentVersion" || :
-git tag "$currentVersion"
-git push --tags --quiet
+APPLICATION_GIT_SHA=$(git rev-parse --short HEAD)
+./bin/build/pipeline/github-release.sh "docs/release/$currentVersion.md" "$currentVersion" "$APPLICATION_GIT_SHA"
 
 reportTiming "$start" Done

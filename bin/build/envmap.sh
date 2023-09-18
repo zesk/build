@@ -11,8 +11,13 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")"; then
 	exit $errEnv
 fi
 
+if [ ! -f ./tools.sh ]; then
+	echo "$me: missing $(pwd)/tools.sh" 1>&2
+	exit $errEnv
+fi
+
 # shellcheck source=/dev/null
-. tools.sh
+. ./tools.sh
 
 sedFile=$(mktemp)
 cleanup() {
@@ -28,7 +33,5 @@ for i in $(env | cut -d = -f 1); do
 		echo "s/{$(quoteSedPattern "$i")}/$(quoteSedPattern "${!i}")/g" >>"$sedFile"
 		;;
 	esac
-
 done
 sed -f "$sedFile"
-rm "$sedFile"

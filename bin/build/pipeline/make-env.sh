@@ -16,16 +16,16 @@
 #  ▌  ▛▀ ▚▄▌▌ ▌▐ ▌  ▛▀ ▌▐ ▌▛▀ ▌ ▌▐ ▖▝▀▖
 #  ▘  ▝▀▘  ▌▝▀▘▀▘▘  ▝▀▘▘▝ ▘▝▀▘▘ ▘ ▀ ▀▀
 #
-# Common: make-env.sh SMTP_URL MAIL_SUPPORT MAIL_FROM TESTING_EMAIL TESTING_EMAIL_IMAP DSN
-
+# Email: SMTP_URL MAIL_SUPPORT MAIL_FROM TESTING_EMAIL TESTING_EMAIL_IMAP
+# Database: DSN
+# BitBucket: BITBUCKET_COMMIT BITBUCKET_BUILD_NUMBER
+# Amazon: AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
+#
 # Must be defined and non-empty to run this script
 requireEnvironment=(
-    DEPLOY_USER_HOSTS
-    BITBUCKET_COMMIT BITBUCKET_BUILD_NUMBER
+    DEPLOY_USER_HOSTS BUILD_TARGET
     APPLICATION_VERSION APPLICATION_BUILD_DATE APPLICATION_GIT_SHA
-    AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
     DEPLOYMENT
-    "$@"
 )
 # Will be exported to the environment file, but may be defined below
 buildEnvironment=(
@@ -34,20 +34,16 @@ buildEnvironment=(
 )
 
 errEnv=1
-errArgument=2
-set -eo pipefail
+set -eou pipefail
 # set -x # Debugging
 
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-    echo "$me: Can not cd to $relTop" 1>&2
-    exit $errEnv
-fi
-envFile="./.env"
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
+envFile=./.env
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
 me=$(basename "$0")
 
@@ -60,7 +56,7 @@ usage() {
         consoleError "$@"
         echo
     fi
-    consoleInfo "$me [ deployment ]"
+    consoleInfo "$me [ deployment ] [ requireEnv1 requireEnv2 requireEnv3 ... ]"
     echo
     consoleInfo "Create environment file:"
     consoleInfo "    $envFile"
@@ -80,7 +76,7 @@ while [ $# -gt 0 ]; do
         DEPLOYMENT=$1
         ;;
     *)
-        usage "$errArgument" "Unknown parameter $1"
+        requireEnvironment+=("$1")
         ;;
     esac
     shift
@@ -91,7 +87,7 @@ if ! git config --global --get safe.directory | grep -q "$(pwd)"; then
 fi
 
 # Computed
-APPLICATION_VERSION=$("./bin/version-current.sh")
+APPLICATION_VERSION=$(runHook version-current)
 APPLICATION_BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M:%S")
 APPLICATION_GIT_SHA=$(git rev-parse --short HEAD)
 BITBUCKET_COMMIT=${BITBUCKET_COMMIT:-$APPLICATION_GIT_SHA}
@@ -100,7 +96,7 @@ APPLICATION_BUILD_NUMBER=$BITBUCKET_BUILD_NUMBER
 
 missing=()
 for e in "${requireEnvironment[@]}"; do
-    if [ -z "${!e}" ]; then
+    if [ -z "${!e:-}" ]; then
         echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleError "** No value **")"
         missing+=("$e")
     else

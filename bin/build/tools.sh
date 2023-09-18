@@ -6,6 +6,8 @@
 #
 # Depends: -
 #
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
 errEnv=1
 
 #
@@ -40,7 +42,10 @@ __consoleEscape() {
 }
 
 colorTest() {
-  local i colors=(consoleRed consoleGreen consoleCyan consoleBlue consoleOrange consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline consoleBold consoleRedBold)
+  local i colors=(consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
+    consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
+    consoleBold consoleRedBold consoleCode consoleWarning consoleSuccess
+    consoleDecoration consoleError consoleLabel consoleValue)
   for i in "${colors[@]}"; do
     $i "$i: The quick brown fox jumped over the lazy dog."
   done
@@ -102,11 +107,20 @@ consoleNoBold() {
 consoleNoUnderline() {
   echo -en '\033[24m'
 }
+repeat() {
+  local count=$((${1:-2} + 0))
+
+  shift
+  while [ $count -gt 0 ]; do
+    echo -n "$*"
+    count=$((count - 1))
+  done
+}
 #
 # Decoration
 #
 echoBar() {
-  echo "======================================================="
+  repeat 80 =
 }
 prefixLines() {
   local prefix=$1 awkLine
@@ -146,6 +160,7 @@ consoleSuccess() {
 #
 # decorations to output (like bars and lines)
 #
+# shellcheck disable=SC2120
 consoleDecoration() {
   consoleBoldMagenta "$@"
 }
@@ -166,6 +181,37 @@ consoleLabel() {
 #
 consoleValue() {
   consoleMagenta "$@"
+}
+
+#
+# consoleNameValue characterWidth name value...
+#
+consoleNameValue() {
+  local characterWidth=$1 name=$2
+  shift
+  shift
+  echo "$(alignRight "$characterWidth" "$(consoleLabel -n "$name")") $(consoleValue -n "$@")"
+}
+
+maximumFieldLength() {
+  local index=$((${1-1} + 0)) separatorChar=${2-\;}
+
+  awk "-F$separatorChar" "{ print length(\$$index) }" | sort -rn | head -1
+}
+
+#
+# Formats name value pairs separated by semicolon and uses $nSpaces width for first field
+#
+# usageGenerator nSpaces separatorChar < formatFile
+#
+usageGenerator() {
+  local labelPrefix valuePrefix nSpaces=$((${1-30} + 0)) separatorChar=${2-\;}
+
+  labelPrefix="$(consoleLabel)"
+  # shellcheck disable=SC2119
+  valuePrefix="$(consoleDecoration)"
+
+  awk "-F$separatorChar" "{ print \"$labelPrefix\" sprintf(\"%-\" $nSpaces \"s\", \$1) \"$valuePrefix\" substr(\$0, index(\$0, \"$separatorChar\") + 1) }"
 }
 
 #
@@ -195,11 +241,32 @@ usageWhich() {
   done
 }
 
+#
+# Converts a date (YYYY-MM-DD) to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)
+#
+# dateToFormat 2023-04-20 %s 1681948800
+#
+dateToFormat() {
+  if date --version 2>/dev/null 1>&2; then
+    date -u --date="$1 00:00:00" "+$2" 2>/dev/null
+  else
+    date -u -jf '%F %T' "$1 00:00:00" "+$2" 2>/dev/null
+  fi
+}
+
+#
+# Converts a date to an integer timestamp
+#
+dateToTimestamp() {
+  dateToFormat "$1" %s
+}
+
 aptUpdateOnce() {
   local older name quietLog start
 
-  [ -d "./.build" ] || mkdir -p "./.build"
-  name=".build/.apt-update"
+  quietLog=./.build/apt-get-update.log
+  requireFileDirectory "$quietLog"
+  name=./.build/.apt-update
   # once an hour, technically
   older=$(find .build -name .apt-update -mmin +60)
   if [ -n "$older" ]; then
@@ -210,69 +277,93 @@ aptUpdateOnce() {
       consoleError "No apt-get available" 1>&2
       return $errEnv
     fi
-    quietLog="./.build/apt-get-update.log"
     start=$(beginTiming)
     consoleInfo -n "apt-get update ... "
     if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
-      failed "$quietLog"
+      buildFailed "$quietLog"
     fi
     reportTiming "$start" OK
     date >"$name"
   fi
 }
 
+#
+# Given a list of files, ensure their parent directories exist
+#
 requireFileDirectory() {
-  [ -d "$(dirname "$1")" ] || mkdir -p "$(dirname "$1")"
+  local name
+  while [ $# -gt 0 ]; do
+    name="$(dirname "$1")"
+    [ -d "$name" ] || mkdir -p "$name"
+    shift
+  done
 }
 
+#
+# whichApt binary aptInstallPackage
+#
+# Installs an apt package if a binary does not exist in the which path
+#
+# The assuption here is that aptInstallPackage will install the desired binary
+#
 whichApt() {
-  local quietLog
-  if ! which "$1" >/dev/null; then
-    shift
+  local binary=$1 quietLog
+  shift
+  if ! which "$binary" >/dev/null; then
     if aptUpdateOnce; then
-      [ -d "./.build" ] || mkdir -p "./.build"
       quietLog="./.build/apt.log"
+      requireFileDirectory "$quietLog"
       if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" >>"$quietLog" 2>&1; then
         consoleError "Unable to install" "$@"
-        failed "$quietLog"
+        buildFailed "$quietLog"
       fi
+      if which "$binary" >/dev/null; then
+        return 0
+      fi
+      consoleError "Apt packages $* do not add $binary to the PATH $PATH"
+      buildFailed "$quietLog"
     fi
   fi
 }
 
+# ▗▖     █       ▗▄▄▄▖
+# ▐▌     ▀       ▝▀█▀▘           ▐▌
+# ▐▙█▙  ██   ▟█▟▌  █   ▟█▙ ▝█ █▘▐███
+# ▐▛ ▜▌  █  ▐▛ ▜▌  █  ▐▙▄▟▌ ▐█▌  ▐▌
+# ▐▌ ▐▌  █  ▐▌ ▐▌  █  ▐▛▀▀▘ ▗█▖  ▐▌
+# ▐█▄█▘▗▄█▄▖▝█▄█▌  █  ▝█▄▄▌ ▟▀▙  ▐▙▄
+# ▝▘▀▘ ▝▀▀▀▘ ▞▀▐▌  ▀   ▝▀▀ ▝▀ ▀▘  ▀▀
+#            ▜█▛▘
 bigText() {
   whichApt toilet toilet
   toilet -f smmono12 "$@"
 }
 
+___dumpLines() {
+  local nLines=$1 quietLog=$2
+  consoleError "$(echoBar)"
+  echo "$(consoleInfo "$(consoleBold "$quietLog")")$(consoleBlack ": Last $nLines lines ...")"
+  consoleError "$(echoBar)"
+  tail -n "$nLines" "$quietLog" | prefixLines "$(consoleYellow)"
+}
+
 #
-# failed "$quietLog"
+# x "$quietLog"
 #
 # Output the last parts of the quietLog to find the error
 # returns non-zero so fails in `set -e` shells
 #
-failed() {
-  local quietLog=$1
+buildFailed() {
+  local quietLog=$1 bigLines=50 recentLines=3
   shift
+  ___dumpLines $bigLines "$quietLog"
   echo
-  consoleRed
-  consoleRed "$(echoBar)"
-  echo "$(consoleBold "$quietLog")" "$(consoleBlack ": Last 50 lines ...")"
-  consoleRed "$(echoBar)"
-  consoleYellow -n
-  consoleBlackBackground -n
-  tail -50 "$quietLog"
-  consoleReset
+  consoleMagenta "BUILD FAILED"
+  consoleMagenta "$(echoBar)"
   echo
-  consoleRed "$(echoBar)"
-  bigText failed
-  consoleRed "$(echoBar)"
-  echo "$(consoleBold "$quietLog")" "$(consoleBlack ": Last 3 lines ...")"
-  consoleRed "$(echoBar)"
-  consoleMagenta
-  tail -3 "$quietLog"
+  bigText Failed | prefixLines "$(consoleError)"
   echo
-  consoleReset
+  ___dumpLines $recentLines "$quietLog"
   return "$errEnv"
 }
 
@@ -281,13 +372,22 @@ failed() {
 # consoleInfo -n "Doing something really long ..."
 # # that thing
 # reportTiming "$start" Done
+# non-`tools.sh`` replacement:
 #
 beginTiming() {
   echo "$(($(date +%s) + 0))"
 }
 
+#
+# Usage: plural number singular plural
+#
+# Sample:
+#
+# count=$(($(wc -l < $foxSightings) + 0))
+# echo "We saw $count $(plural $count fox foxes)."
+#
 plural() {
-  if [ "$1" -eq 1 ]; then
+  if [ "$(($1 + 0))" -eq 1 ]; then
     echo "$2"
   else
     echo "$3"
@@ -339,19 +439,39 @@ alignRight() {
   printf "%${n}s" "$*"
 }
 
+#
+# alignLeft "$characterSize" "string to align"
+#
+alignLeft() {
+  local n=$(($1 + 0))
+  shift
+  printf "%-${n}s" "$*"
+}
+
+#
+# Loads "./.env" which is the current project configuration file
+# Also loads "./.env.local" if it exists
+# Generally speaking - these are NAME=value files and should be parsable by
+# bash and other languages.
+#
 dotEnvConfig() {
-  if [ ! -f "./.env" ]; then
+  if [ ! -f ./.env ]; then
     usage $errEnv "Missing ./.env"
   fi
 
   set -a
   # shellcheck source=/dev/null
-  . "./.env"
+  . ./.env
   # shellcheck source=/dev/null
-  [ -f "./.env.local" ] && . "./.env.local"
+  [ -f ./.env.local ] && . ./.env.local
   set +a
 }
 
+#
+# Install docker PHP extensions
+#
+# TODO not used anywhere
+#
 dockerPHPExtensions() {
   local start
   start=$(beginTiming)
@@ -361,33 +481,121 @@ dockerPHPExtensions() {
   reportTiming "$start" Done
 }
 
+#
+# Get the current IP address of the host
+#
 ipLookup() {
+  # Courtesy of Market Ruler, LLC thanks
+  local default="https://www.conversionruler.com/showip/?json"
   if ! whichApt curl curl; then
     return $errEnv
   fi
-  curl -s "${IP_URL:-https://www.conversionruler.com/showip/?json}"
+  curl -s "${IP_URL:-$default}"
 }
 
+#
+# Get the credentials file path, optionally outputting errors
+#
+awsCredentialsFile() {
+  local credentials=$HOME/.aws/credentials verbose=${1-}
+
+  if [ ! -d "$HOME" ]; then
+    if test "$verbose"; then
+      consoleWarning "No $HOME directory found" 1>&2
+    fi
+    return $errEnv
+  fi
+  if [ ! -f "$credentials" ]; then
+    if test "$verbose"; then
+      consoleWarning "No $credentials file found" 1>&2
+    fi
+    return $errEnv
+  fi
+  echo "$credentials"
+}
+
+#
+# For security we gotta update our keys every 90 days
+#
+# This value would be better encrypted and tied to the AWS_ACCESS_KEY_ID so developers
+# can not just update the value to avoid the security issue.
+#
+isAWSKeyUpToDate() {
+  local upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo pluralDays
+
+  if [ -z "${AWS_ACCESS_KEY_DATE:-}" ]; then
+    return 1
+  fi
+  shift
+  maxDays=366
+  upToDateDays=$((upToDateDays + 0))
+  if [ $upToDateDays -gt $maxDays ]; then
+    consoleError "isAWSKeyUpToDate $upToDateDays - values not allowed greater than $maxDays" 1>&2
+    return 1
+  fi
+  if [ $upToDateDays -le 0 ]; then
+    consoleError "isAWSKeyUpToDate $upToDateDays - negative or zero values not allowed" 1>&2
+    return 1
+  fi
+  if ! dateToTimestamp "$AWS_ACCESS_KEY_DATE" >/dev/null; then
+    consoleError "Invalid date $AWS_ACCESS_KEY_DATE" 1>&2
+    return 1
+  fi
+  accessKeyTimestamp=$(($(dateToTimestamp "$AWS_ACCESS_KEY_DATE") + 0))
+
+  todayTimestamp=$(($(date +%s) + 0))
+  deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
+  daysAgo=$((deltaDays - upToDateDays))
+  if [ $daysAgo -gt 0 ]; then
+    pluralDays=$(plural $daysAgo day days)
+    consoleError "Access key expired $AWS_ACCESS_KEY_DATE, $daysAgo $pluralDays" 1>&2
+    return 1
+  fi
+  daysAgo=$((-daysAgo))
+  pluralDays=$(plural $daysAgo day days)
+  if [ $daysAgo -lt 14 ]; then
+    bigText "$daysAgo $pluralDays" | prefixLines "$(consoleError)"
+  fi
+  if [ $daysAgo -lt 30 ]; then
+    consoleWarning "Access key expires on $AWS_ACCESS_KEY_DATE, in $daysAgo $pluralDays"
+    return 0
+  fi
+  return 0
+}
+#
+# Exits successfully if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
+#
+needAWSEnvironment() {
+  if [ -z ${AWS_ACCESS_KEY_ID+x} ] || [ -z ${AWS_SECRET_ACCESS_KEY+x} ]; then
+    return 0
+  fi
+  return 1
+}
+
+#
+# Usage: awsEnvironment groupName
+#
+# Output the AWS credentials extracted for groupName
+#
 awsEnvironment() {
-  local aws_credentials=$HOME/.aws/credentials
+  local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
 
-  set +u
-  if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-    if [ -f "$aws_credentials" ]; then
-      eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$aws_credentials" | grep "\[${RULER_AWS_GROUP}\]" | awk '{ print $2 $3 $4 }' OFS='')"
-    fi
-    if [ -n "$aws_access_key_id" ]; then
-      export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
-
-      consoleInfo "Extracted identity from AWS credentials: ${AWS_ACCESS_KEY_ID}"
-    fi
-    if [ -n "${aws_secret_access_key}" ]; then
-      export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
+  if awsCredentialsFile 1 >/dev/null; then
+    credentials=$(awsCredentialsFile)
+    eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
+    if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
+      echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
+      echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
+      return 0
     fi
   fi
-  set -u
+  return $errEnv
 }
 
+#
+# Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
+# Delete the old tag as well
+#
 veeGitTag() {
   local t="$1"
 
@@ -399,4 +607,91 @@ veeGitTag() {
   git tag -d "$t"
   git push origin "v$t" ":$t"
   git fetch -q --prune --prune-tags
+}
+
+#
+# Run a hook in the project located at ./bin/hooks/
+#
+# See (Hooks documentation)[docs/hooks.md] for available
+#
+runHook() {
+  local binary=$1
+
+  shift
+  if [ -x "./bin/hooks/$binary" ]; then
+    "./bin/hooks/$binary" "$@"
+  elif [ -x "./bin/hooks/$binary.sh" ]; then
+    "./bin/hooks/$binary.sh" "$@"
+  else
+    consoleWarning "No hook for $binary with arguments: $*"
+  fi
+}
+
+#
+# Does a hook exist in the local project?
+#
+hasHook() {
+  local binary=$1
+  [ -x "./bin/hooks/$binary" ] || [ -x "./bin/hooks/$binary.sh" ]
+}
+
+#
+#  urlParse url
+#
+urlParse() {
+  local url=$1 name user password host
+
+  name=${url##*/}
+
+  user=${url##*://}
+  user=${user%%:*}
+
+  password=${url%%@*}
+  password=${password##*:}
+
+  host=${url##*@}
+  host=${host%%/*}
+
+  port=${host##*:}
+  if [ "$port" = "$host" ]; then
+    port=
+  fi
+  host=${host%%:*}
+
+  echo "url=$url"
+  echo "name=$name"
+  echo "user=$user"
+  echo "password=$password"
+  echo "host=$host"
+  echo "port=$port"
+}
+
+#
+#  urlParseItem url name
+#
+urlParseItem() {
+  local name user password host
+  eval "$(parseDSN "$1")"
+  echo "${!2}"
+}
+
+#
+# Platform agnostic tar cfz which ignores owner and attributes
+#
+createTarFile() {
+  local target=$1
+
+  shift
+  if tar --version | grep -q GNU; then
+    # GNU
+    # > tar --version
+    # tar (GNU tar) 1.34
+    # ...
+    tar czf "$target" --owner=0 --group=0 --no-xattrs "$@"
+  else
+    # BSD
+    # > tar --version
+    # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
+    tar czf "$target" --uid 0 --gid 0 --no-xattrs "$@"
+  fi
 }

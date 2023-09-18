@@ -10,20 +10,15 @@
 #
 set -eo pipefail
 # set -x
-errEnv=1
 errArg=1
 errBuild=1000
 
 me=$(basename "$0")
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-  echo "$me: Can not cd to $relTop" 1>&2
-  exit $errEnv
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 quietLog="./.build/$me.log"
 composerDirectory="$(pwd)"
-dockerImage=composer:latest
+dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
 cacheDir=.composer
 
 # shellcheck source=/dev/null
@@ -67,21 +62,23 @@ composerArgs+=("-v" "$composerDirectory/$cacheDir:/tmp")
 composerArgs+=("$dockerImage")
 composerArgs+=("--ignore-platform-reqs")
 
+requireFileDirectory "$quietLog"
+
 start=$(beginTiming)
 consoleInfo -n "Composer ... """
 bigText "Install vendor" >>"$quietLog"
 #DEBUGGING - remove, why no -q option? we like it quiet
-echo Running: docker pull $dockerImage >>"$quietLog"
+echo Running: docker pull "$dockerImage" >>"$quietLog"
 
-if ! docker pull $dockerImage >>"$quietLog" 2>&1; then
+if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
   consoleError "Failed to pull image $dockerImage"
-  failed "$quietLog"
+  buildFailed "$quietLog"
   exit $errBuild
 fi
 consoleInfo -n "validating ... "
 echo Running: docker run "${composerArgs[@]}" validate >>"$quietLog"
 if ! docker run "${composerArgs[@]}" install >>"$quietLog" 2>&1; then
-  failed "$quietLog"
+  buildFailed "$quietLog"
   exit $errBuild
 fi
 
@@ -89,7 +86,7 @@ composerArgs+=("install")
 consoleInfo -n "installing ... "
 echo Running: docker run "${composerArgs[@]}" >>"$quietLog"
 if ! docker run "${composerArgs[@]}" >>"$quietLog" 2>&1; then
-  failed "$quietLog"
+  buildFailed "$quietLog"
   exit $errBuild
 fi
 reportTiming "$start" OK
