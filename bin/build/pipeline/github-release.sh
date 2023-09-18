@@ -113,7 +113,7 @@ if ! curl -s -L \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   "https://api.github.com/repos/$GITHUB_REPOSITORY_OWNER/$GITHUB_REPOSITORY_NAME/releases" \
   -d "$JSON" >"$resultsFile"; then
-  failed "$resultsFile"
+  buildFailed "$resultsFile"
 fi
 echo
 consoleSuccess "$(jq .html_url <"$resultsFile")"

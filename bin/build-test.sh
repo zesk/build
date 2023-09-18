@@ -84,7 +84,7 @@ testScripts() {
             echo "$(consoleMagenta -n "$f")$(consoleInfo -n ", ")"
         done
         consoleError "done."
-        failed "$quietLog"
+        buildFailed "$quietLog"
     else
         consoleSuccess "All scripts passed"
     fi
@@ -166,7 +166,7 @@ testBuildSetup() {
 
     if ! grep -q "was updated" "$testOutput"; then
         consoleError "Missing was updated from $testBinary"
-        failed "$testOutput"
+        buildFailed "$testOutput"
     fi
 
     if [ ! -d "test.$$/bin/build" ]; then
@@ -185,7 +185,7 @@ testBuildSetup() {
 
     if ! grep -q "up to date" "$testOutput"; then
         consoleError "Missing up to date from $testBinary"
-        failed "$testOutput"
+        buildFailed "$testOutput"
     fi
 
     consoleSuccess "build-setup.sh update was tested successfully"

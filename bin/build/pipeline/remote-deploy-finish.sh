@@ -26,10 +26,11 @@ usage() {
         consoleError "$@"
         echo
     fi
-    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] build-sha-check atticPath")"
+    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] build-sha-check atticPath")"
     echo
     consoleInfo "This is run on the remote system after deployment; environment files are correct."
     echo
+    echo "$(consoleGreen "--debug        ")" "$(consoleInfo "Enable debugging. Defaults to BUILD_DEBUG.")"
     echo "$(consoleGreen "--undo         ")" "$(consoleInfo "Revert changes just made")"
     echo "$(consoleGreen "--cleanup      ")" "$(consoleInfo "Cleanup after success")"
     echo
@@ -53,8 +54,12 @@ undoFlag=
 cleanupFlag=
 argBuildSHACheck=
 atticPath=
+debuggingFlag=
 while [ $# -gt 0 ]; do
     case $1 in
+    --debug)
+        debuggingFlag=1
+        ;;
     --cleanup)
         cleanupFlag=1
         ;;
@@ -80,6 +85,14 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+if test "${BUILD_DEBUG-}"; then
+    debuggingFlag=1
+fi
+if test "$debuggingFlag"; then
+    consoleWarning "Debugging is enabled"
+    set -x
+fi
 
 cleanupAction() {
     #    ____ _
@@ -211,7 +224,7 @@ deployTarFile() {
     cp "$tarBallPath/current.date" "$tarBallPath/$shaPrefix.date"
     cd "$currentDir"
     runHook maintenance on
-    consoleInfo -n "Resetting to $shaPrefix ... "
+    consoleInfo -n "Setting to version $shaPrefix ... "
 
     runHook deploy-start "$newDir"
     if hasHook deploy-move; then

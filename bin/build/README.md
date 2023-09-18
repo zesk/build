@@ -61,7 +61,7 @@ Template header for most scripts:
     consoleInfo -n "Long process ... "
     if ! do-a-long-process.sh >>"$quietLog"; then
         consoleError "long process failed"
-        failed "$quietLog"
+        buildFailed "$quietLog"
     fi
     reportTiming "$start" Done
 

@@ -24,7 +24,7 @@ usage() {
         echo
     fi
     {
-        echo "$me [ --services service0,service1 ] [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] security-group0 security-group1 ... "
+        echo "$me [ --debug ] [ --services service0,service1 ] [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] security-group0 security-group1 ... "
         echo
         echo "Register current IP address in listed security group(s) to allow for access to deployment sytstems from a specific IP."
         echo "Use this during deployment to grant temporary access to your systems during deployemnt only."
@@ -35,6 +35,7 @@ usage() {
         echo "--id developerId                  Specify an developer id manually (uses DEVELOPER_ID from environment by default)"
         echo "--ip ip                           Specify an IP manually (uses ipLookup tool from tools.sh by default)"
         echo "--revoke                          Remove permissions"
+        echo "--debug                           Enable debugging. Defaults to BUILD_DEBUG environment variable."
         echo "--help                            Show this help"
         echo
         echo "services are looked up in /etc/services and match /tcp services only for port selection"
@@ -59,6 +60,7 @@ usage() {
 services=()
 optionRevoke=
 awsProfile=
+debuggingFlag=
 currentIP=
 developerId=${DEVELOPER_ID:-}
 while [ $# -gt 0 ]; do
@@ -77,6 +79,9 @@ while [ $# -gt 0 ]; do
     --help)
         usage 0
         ;;
+    --debug)
+        debuggingFlag=1
+        ;;
     --revoke)
         optionRevoke=1
         ;;
@@ -94,6 +99,14 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+if test "${BUILD_DEBUG-}"; then
+    debuggingFlag=1
+fi
+if test "$debuggingFlag"; then
+    consoleWarning "Debugging is enabled"
+    set -x
+fi
 
 if [ -z "$currentIP" ]; then
     currentIP=$(ipLookup)

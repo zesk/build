@@ -37,9 +37,10 @@ usage() {
     echo
     consoleInfo "Override target file generated with environment variable BUILD_TARGET"
     echo
+    consoleInfo "--debug                  Enable debugging. Defaults to BUILD_DEBUG."
     consoleInfo "--name tarFileName       Set BUILD_TARGET via command line (wins)"
     consoleInfo "--deployment deployment  Set DEPLOYMENT via command line (wins)"
-    consoleInfo "--suffix versionSuffix   Set tag suffix via command line"
+    consoleInfo "--suffix versionSuffix   Set tag suffix via command line (wins, default inferred from deployment)"
     echo
     consoleInfo "Files are specified from the application root directory"
     exit "$rs"
@@ -49,12 +50,16 @@ usageWhich docker tar
 
 export DEPLOYMENT
 
+debuggingFlag=
 DEPLOYMENT=${DEPLOYMENT:-}
 optClean=
 versionSuffix=
 envVars=()
 while [ $# -gt 0 ]; do
     case $1 in
+    --debug)
+        debuggingFlag=1
+        ;;
     --deployment)
         shift
         DEPLOYMENT=$1
@@ -80,6 +85,14 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+if test "${BUILD_DEBUG-}"; then
+    debuggingFlag=1
+fi
+if test $debuggingFlag; then
+    consoleWarning "Debugging is enabled"
+    set -x
+fi
 
 if [ $# -eq 0 ]; then
     usage $errEnv "Need to supply a list of files for application $BUILD_TARGET"

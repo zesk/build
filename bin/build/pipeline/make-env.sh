@@ -40,10 +40,10 @@ set -eou pipefail
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-envFile="./.env"
+envFile=./.env
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
 me=$(basename "$0")
 
@@ -56,7 +56,7 @@ usage() {
         consoleError "$@"
         echo
     fi
-    consoleInfo "$me [ deployment ]"
+    consoleInfo "$me [ deployment ] [ requireEnv1 requireEnv2 requireEnv3 ... ]"
     echo
     consoleInfo "Create environment file:"
     consoleInfo "    $envFile"

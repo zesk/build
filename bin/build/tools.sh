@@ -180,6 +180,16 @@ consoleValue() {
 }
 
 #
+# consoleNameValue characterWidth name value...
+#
+consoleNameValue() {
+  local characterWidth=$1 name=$2
+  shift
+  shift
+  echo "$(alignRight "$characterWidth" "$(consoleLabel -n "$name")") $(consoleValue -n "$@")"
+}
+
+#
 # Requires environment variables to be set and non-blank
 #
 usageEnvironment() {
@@ -245,13 +255,16 @@ aptUpdateOnce() {
     start=$(beginTiming)
     consoleInfo -n "apt-get update ... "
     if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
-      failed "$quietLog"
+      buildFailed "$quietLog"
     fi
     reportTiming "$start" OK
     date >"$name"
   fi
 }
 
+#
+# Given a list of files, ensure their parent directories exist
+#
 requireFileDirectory() {
   local name
   while [ $# -gt 0 ]; do
@@ -261,54 +274,71 @@ requireFileDirectory() {
   done
 }
 
+#
+# whichApt binary aptInstallPackage
+#
+# Installs an apt package if a binary does not exist in the which path
+#
+# The assuption here is that aptInstallPackage will install the desired binary
+#
 whichApt() {
-  local quietLog
-  if ! which "$1" >/dev/null; then
-    shift
+  local binary=$1 quietLog
+  shift
+  if ! which "$binary" >/dev/null; then
     if aptUpdateOnce; then
       quietLog="./.build/apt.log"
       requireFileDirectory "$quietLog"
       if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" >>"$quietLog" 2>&1; then
         consoleError "Unable to install" "$@"
-        failed "$quietLog"
+        buildFailed "$quietLog"
       fi
+      if which "$binary" >/dev/null; then
+        return 0
+      fi
+      consoleError "Apt packages $* do not add $binary to the PATH $PATH"
+      buildFailed "$quietLog"
     fi
   fi
 }
 
+# ▗▖     █       ▗▄▄▄▖
+# ▐▌     ▀       ▝▀█▀▘           ▐▌
+# ▐▙█▙  ██   ▟█▟▌  █   ▟█▙ ▝█ █▘▐███
+# ▐▛ ▜▌  █  ▐▛ ▜▌  █  ▐▙▄▟▌ ▐█▌  ▐▌
+# ▐▌ ▐▌  █  ▐▌ ▐▌  █  ▐▛▀▀▘ ▗█▖  ▐▌
+# ▐█▄█▘▗▄█▄▖▝█▄█▌  █  ▝█▄▄▌ ▟▀▙  ▐▙▄
+# ▝▘▀▘ ▝▀▀▀▘ ▞▀▐▌  ▀   ▝▀▀ ▝▀ ▀▘  ▀▀
+#            ▜█▛▘
 bigText() {
   whichApt toilet toilet
   toilet -f smmono12 "$@"
 }
 
+___dumpLines() {
+  local nLines=$1 quietLog=$2
+  consoleError "$(echoBar)"
+  echo "$(consoleInfo "$(consoleBold "$quietLog")")$(consoleBlack ": Last $nLines lines ...")"
+  consoleError "$(echoBar)"
+  tail -n "$nLines" "$quietLog" | prefixLines "$(consoleYellow)$(consoleBlackBackground)"
+}
+
 #
-# failed "$quietLog"
+# buildFailed "$quietLog"
 #
 # Output the last parts of the quietLog to find the error
 # returns non-zero so fails in `set -e` shells
 #
-failed() {
-  local quietLog=$1
+buildFailed() {
+  local quietLog=$1 bigLines=50 recentLines=3
   shift
+  ___dumpLines $bigLines "$quietLog"
   echo
-  consoleRed
-  consoleRed "$(echoBar)"
-  echo "$(consoleBold "$quietLog")" "$(consoleBlack ": Last 50 lines ...")"
-  consoleRed "$(echoBar)"
-  consoleYellow -n
-  consoleBlackBackground -n
-  tail -50 "$quietLog"
-  consoleReset
+  consoleMagenta "BUILD FAILED"
+  consoleMagenta "$(echoBar)"
   echo
-  consoleRed "$(echoBar)"
-  bigText failed
-  consoleRed "$(echoBar)"
-  echo "$(consoleBold "$quietLog")" "$(consoleBlack ": Last 3 lines ...")"
-  consoleRed "$(echoBar)"
-  consoleMagenta
-  tail -3 "$quietLog"
+  bigText Failed | prefixLines "$(consoleError)"
   echo
-  consoleReset
+  ___dumpLines $recentLines "$quietLog"
   return "$errEnv"
 }
 
@@ -317,11 +347,20 @@ failed() {
 # consoleInfo -n "Doing something really long ..."
 # # that thing
 # reportTiming "$start" Done
+# non-`tools.sh`` replacement:
 #
 beginTiming() {
   echo "$(($(date +%s) + 0))"
 }
 
+#
+# Usage: plural number singular plural
+#
+# Sample:
+#
+# count=$(($(wc -l < $foxSightings) + 0))
+# echo "We saw $count $(plural $count fox foxes)."
+#
 plural() {
   if [ "$(($1 + 0))" -eq 1 ]; then
     echo "$2"
@@ -375,19 +414,39 @@ alignRight() {
   printf "%${n}s" "$*"
 }
 
+#
+# alignLeft "$characterSize" "string to align"
+#
+alignLeft() {
+  local n=$(($1 + 0))
+  shift
+  printf "%-${n}s" "$*"
+}
+
+#
+# Loads "./.env" which is the current project configuration file
+# Also loads "./.env.local" if it exists
+# Generally speaking - these are NAME=value files and should be parsable by
+# bash and other languages.
+#
 dotEnvConfig() {
-  if [ ! -f "./.env" ]; then
+  if [ ! -f ./.env ]; then
     usage $errEnv "Missing ./.env"
   fi
 
   set -a
   # shellcheck source=/dev/null
-  . "./.env"
+  . ./.env
   # shellcheck source=/dev/null
-  [ -f "./.env.local" ] && . "./.env.local"
+  [ -f ./.env.local ] && . ./.env.local
   set +a
 }
 
+#
+# Install docker PHP extensions
+#
+# TODO not used anywhere
+#
 dockerPHPExtensions() {
   local start
   start=$(beginTiming)
@@ -397,25 +456,33 @@ dockerPHPExtensions() {
   reportTiming "$start" Done
 }
 
+#
+# Get the current IP address of the host
+#
 ipLookup() {
+  # Courtesy of Market Ruler, LLC thanks
+  local default="https://www.conversionruler.com/showip/?json"
   if ! whichApt curl curl; then
     return $errEnv
   fi
-  curl -s "${IP_URL:-https://www.conversionruler.com/showip/?json}"
+  curl -s "${IP_URL:-$default}"
 }
 
+#
+# Get the credentials file path, optionally outputting errors
+#
 awsCredentialsFile() {
-  local credentials=$HOME/.aws/credentials verbose=${1+}
+  local credentials=$HOME/.aws/credentials verbose=${1-}
 
   if [ ! -d "$HOME" ]; then
     if test "$verbose"; then
-      consoleWarning "No $HOME directory found"
+      consoleWarning "No $HOME directory found" 1>&2
     fi
     return $errEnv
   fi
   if [ ! -f "$credentials" ]; then
     if test "$verbose"; then
-      consoleWarning "No $credentials file found"
+      consoleWarning "No $credentials file found" 1>&2
     fi
     return $errEnv
   fi
@@ -470,7 +537,9 @@ isAWSKeyUpToDate() {
   fi
   return 0
 }
-
+#
+# Exits successfully if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
+#
 needAWSEnvironment() {
   if [ -z ${AWS_ACCESS_KEY_ID+x} ] || [ -z ${AWS_SECRET_ACCESS_KEY+x} ]; then
     return 0
@@ -478,6 +547,11 @@ needAWSEnvironment() {
   return 1
 }
 
+#
+# Usage: awsEnvironment groupName
+#
+# Output the AWS credentials extracted for groupName
+#
 awsEnvironment() {
   local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
 
@@ -493,6 +567,10 @@ awsEnvironment() {
   return $errEnv
 }
 
+#
+# Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
+# Delete the old tag as well
+#
 veeGitTag() {
   local t="$1"
 
@@ -509,13 +587,7 @@ veeGitTag() {
 #
 # Run a hook in the project located at ./bin/hooks/
 #
-# Available hooks:
-#   github-release-before.sh
-#   deploy-start.sh
-#   deploy-finish.sh
-#   make-env.sh
-#   version-current.sh
-#   version-live.sh
+# See (Hooks documentation)[docs/hooks.md] for available
 #
 runHook() {
   local binary=$1
@@ -534,6 +606,7 @@ runHook() {
 # Does a hook exist in the local project?
 #
 hasHook() {
+  local binary=$1
   [ -x "./bin/hooks/$binary" ] || [ -x "./bin/hooks/$binary.sh" ]
 }
 
@@ -577,6 +650,9 @@ urlParseItem() {
   echo "${!2}"
 }
 
+#
+# Platform agnostic tar cfz which ignores owner and attributes
+#
 createTarFile() {
   local target=$1
 

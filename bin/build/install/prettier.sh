@@ -33,6 +33,6 @@ requireFileDirectory "$quietLog"
 consoleInfo -n "Installing prettier ..."
 start=$(beginTiming)
 if ! npm install -g prettier >>"$quietLog" 2>&1; then
-  failed "$quietLog"
+  buildFailed "$quietLog"
 fi
 reportTiming "$start" OK
