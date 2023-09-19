@@ -50,7 +50,7 @@ allColorTest() {
             if [ $n -gt 108 ]; then
                 break
             fi
-            printf "\033[%dm %3d\033[m" $n $n
+            printf "\033[%dm %3d\033[0m" $n $n
             j=$((j + 1))
         done
         echo
