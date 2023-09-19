@@ -4,6 +4,8 @@
 #
 # Depends: colors.sh text.sh
 #
+errEnv=1
+
 ###############################################################################
 #
 # ░█▀█░▀█▀░█▀█░█▀▀░█░░░▀█▀░█▀█░█▀▀
@@ -11,6 +13,27 @@
 # ░▀░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
 #
 #------------------------------------------------------------------------------
+
+#
+# Usage: dotEnvConfig
+#
+# Loads "./.env" which is the current project configuration file
+# Also loads "./.env.local" if it exists
+# Generally speaking - these are NAME=value files and should be parsable by
+# bash and other languages.
+#
+dotEnvConfig() {
+  if [ ! -f ./.env ]; then
+    usage $errEnv "Missing ./.env"
+  fi
+
+  set -a
+  # shellcheck source=/dev/null
+  . ./.env
+  # shellcheck source=/dev/null
+  [ -f ./.env.local ] && . ./.env.local
+  set +a
+}
 
 #
 # Run a hook in the project located at ./bin/hooks/
