@@ -13,7 +13,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 currentBranch=$(git branch --show-current)
 if [ "$currentBranch" = "main" ] || [ "$currentBranch" = "develop" ]; then
     consoleWarning "Running on $currentBranch - unable to make change"
-    exit 1
+    exit 0
 fi
 
 currentVersion="$(runHook version-current)"

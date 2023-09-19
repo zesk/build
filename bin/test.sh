@@ -8,7 +8,7 @@
 #
 # Test locally:
 # docker run --platform linux/arm64 -v $(pwd):/opt/atlassian/bitbucketci/agent/build -it atlassian/default-image:4
-# rm -rf .build/ test.*; set -a; source .env.prod-robot ; bin/build-test.sh
+# rm -rf .build/ test.*; set -a; source .env.prod-robot ; bin/test.sh
 
 set -eo pipefail
 errEnv=1
@@ -333,7 +333,13 @@ bin/build/install/apt.sh shellcheck
 
 whichApt shellcheck shellcheck
 
+bigText allColorTest | prefixLines "$(consoleMagenta)"
+allColorTest
+echo
+bigText colorTest | prefixLines "$(consoleGreen)"
 colorTest
+echo
+
 testScripts
 testTools
 testEnvMap
