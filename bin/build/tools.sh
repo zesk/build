@@ -8,22 +8,23 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-errEnv=1
+
+toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # shellcheck source=/dev/null
-. ./bin/build/tools/text.sh
+. "$toolsDir/text.sh"
 # shellcheck source=/dev/null
-. ./bin/build/tools/colors.sh
+. "$toolsDir/colors.sh"
 # shellcheck source=/dev/null
-. ./bin/build/tools/pipeline.sh
+. "$toolsDir/pipeline.sh"
 # shellcheck source=/dev/null
-. ./bin/build/tools/os.sh
+. "$toolsDir/os.sh"
 
 # shellcheck source=/dev/null
-. ./bin/build/tools/usage.sh
+. "$toolsDir/usage.sh"
 # shellcheck source=/dev/null
-. ./bin/build/tools/aws.sh
+. "$toolsDir/aws.sh"
 # shellcheck source=/dev/null
-. ./bin/build/tools/git.sh
+. "$toolsDir/git.sh"
 # shellcheck source=/dev/null
-. ./bin/build/tools/docker.sh
+. "$toolsDir/docker.sh"
