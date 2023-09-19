@@ -3,6 +3,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: colors.sh text.sh
+# bin: test echo date
 #
 errEnv=1
 

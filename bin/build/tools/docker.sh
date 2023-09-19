@@ -3,7 +3,8 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: colors.sh text.sh
-#
+# bin: head grep docker-php-ext-install
+
 ###############################################################################
 #
 #    ▗▖          ▗▖

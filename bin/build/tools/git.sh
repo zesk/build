@@ -3,6 +3,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: colors.sh
+# bin: git
 #
 
 ###############################################################################
@@ -33,4 +34,15 @@ veeGitTag() {
     git tag -d "$t"
     git push origin "v$t" ":$t"
     git fetch -q --prune --prune-tags
+}
+
+#
+# Has a lot of caveats
+#
+# gitRemoveFileFromHistory path/to/file
+#
+# usually have to `git push --force`
+#
+gitRemoveFileFromHistory() {
+    git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
 }

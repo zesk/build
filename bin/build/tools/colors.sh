@@ -2,6 +2,9 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+# Depends: text.sh
+# bin: test echo printf
+
 ###############################################################################
 #
 #   ▄▄      ▗▄▖
@@ -56,10 +59,12 @@ allColorTest() {
 }
 
 colorTest() {
-    local i colors=(consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
+    local i colors=(
+        consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
         consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
         consoleBold consoleRedBold consoleCode consoleWarning consoleSuccess
-        consoleDecoration consoleError consoleLabel consoleValue)
+        consoleDecoration consoleError consoleLabel consoleValue
+    )
     for i in "${colors[@]}"; do
         $i "$i: The quick brown fox jumped over the lazy dog."
     done
