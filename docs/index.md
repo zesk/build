@@ -30,15 +30,15 @@ To use in your pipeline:
 
 ### Install tools in the pipeline
 
-- `apt.sh` - Ensure apt-get is up to date.
+- [`apt.sh`](apt.sh.md) - Ensure apt-get is up to date.
 - [`aws-cli.sh`](aws-cli.sh.md) - Install the Amazon Web Services command line for usage in the pipeline.
 - [`docker-compose.sh`](docker-compose.sh.md) - Ensure `docker-compose` is available in the pipeline.
 - [`git.sh`](git.sh.md) - Ensure `git` is available in the pipeline.
 - [`mariadb-client.sh`](mariadb-client.sh.md) - Ensure `mariadb` (and `mysql`) is available in the pipeline.
 - [`npm.sh`](npm.sh.md) - Install `npm` for use in the pipeline.
-- `php-cli.sh`(php-cli.sh.md) - Install the `php` command line in the pipeline image.
-- `prettier.sh`(prettier.sh.md) - Ensure `prettier` is available in the pipeline.
-- `python.sh`(python.sh.md) - Ensure `python` (Version 3) is available in the pipeline.
+- [`php-cli.sh`](php-cli.sh.md) - Install the `php` command line in the pipeline image.
+- [`prettier.sh`](prettier.sh.md) - Ensure `prettier` is available in the pipeline.
+- [`python.sh`](python.sh.md) - Ensure `python` (Version 3) is available in the pipeline.
 
 ### Use tools in the pipeline
 

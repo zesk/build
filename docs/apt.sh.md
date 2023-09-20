@@ -1,25 +1,22 @@
-# `-----.sh` - Description
-
-TODO Update all of this including the long description.
+# `apt.sh` - Run aptitude update and install packages once
 
 If this fails it will output the installation log.
 
-When this tool succeeds the `----` tool has been installed in the local environment.
+When this tool succeeds `apt-get update` has been run in the local environment.
+
+Installs, by default, the following packages: `apt-utils figlet jq`
 
 ## Arguments
 
-Describe arguments here
+A list of installable packages for `apt-get`.
 
-e.g.
+## Local caches
 
-    bin/build/---/-----.sh ./app/
-
-## Local cache
-
-No local caches.
+- `apt-lists`: `/var/lib/apt/lists`
+- `apt-cache`: `/var/cache/apt`
 
 ## Environment which affects this tool
 
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
+No environment affects this tool.
 
 [⬅ Return to top](index.md)

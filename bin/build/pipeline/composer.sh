@@ -24,23 +24,26 @@ cacheDir=.composer
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
 
-# shellcheck source=/dev/null
-bin/build/install/apt.sh
-
 usage() {
   local rs=$1
   shift
   exec 1>&2
-  consoleError "$*"
-  echo
-  consoleInfo "$me [ installDirectory ]"
+  if [ -n "$*" ]; then
+    consoleError "$*"
+    echo
+  fi
+  echo "$me [ --help ] [ installDirectory ]" | usageGenerator $((${#me} + 1))
   echo
   consoleInfo "Run validate and install using docker image $dockerImage"
+  echo
   exit "$rs"
 }
 
 while [ $# -gt 0 ]; do
   case $1 in
+  --help)
+    usage 0
+    ;;
   *)
     if [ "$composerDirectory" != "." ]; then
       usage "$errArg" "Unknown argument $1"
@@ -53,6 +56,9 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+# shellcheck source=/dev/null
+./bin/build/install/apt.sh
 
 [ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
 

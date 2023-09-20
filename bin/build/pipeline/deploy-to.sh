@@ -26,6 +26,16 @@ deployedHostArtifact="./.deployed-hosts"
 
 initTime=$(beginTiming)
 
+usageOptions() {
+  echo "--debug Turn on debugging (defaults to BUILD_DEBUG environment variable)"
+  echo "--undo Undo deployment using saved artifacts"
+  echo "--cleanup Clean up remote files after success"
+  echo "--help This help"
+  echo
+  echo "remoteDeploymentPath Path on remote host where deployment backup files are stored."
+  echo "remotePath Path on remote host where deployment application exists."
+  echo "user1@host1 Deploy to this user at this host ..."
+}
 usage() {
   local rs
   rs=$1
@@ -35,17 +45,11 @@ usage() {
     echo "$@"
     echo
   fi
-  echo "$me [ --undo | --cleanup ] [ --debug ] remoteDeploymentPath remotePath 'user1@host1 user2@host2'"
+  echo "$me [ --undo | --cleanup ] [ --debug ] [ --help ] remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
   echo
-  echo "Push current git tag to host at remotePath"
+  echo "Deploy current application to host at remotePath"
   echo
-  echo "--debug                Turn on debugging (defaults to BUILD_DEBUG environment variable)"
-  echo "--undo                 Undo deployment using saved artifacts"
-  echo "--cleanup              Clean up remote files after success"
-  echo
-  echo "remoteDeploymentPath   Path on remote host where deployment backup files are stored."
-  echo "remotePath             Path on remote host where deployment application exists."
-  echo "user1@host1            Deploy to this user at this host ..."
+  usageOptions | usageGenerator "$(($(usageOptions | maximumFieldLength 1) + 2))"
   echo
   exit "$rs"
 }
@@ -67,6 +71,9 @@ remotePath=
 remoteArgs=()
 while [ $# -gt 0 ]; do
   case $1 in
+  --help)
+    usage 0
+    ;;
   --debug)
     debuggingFlag=1
     ;;

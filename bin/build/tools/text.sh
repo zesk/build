@@ -109,12 +109,17 @@ urlParseItem() {
 #
 # Given a input file, determine the maximum length of fieldIndex
 #
-# Defaults to first field
+# Defaults to first field, space separator
 #
 maximumFieldLength() {
-    local index=$((${1-1} + 0)) separatorChar=${2-\;}
+    local index=$((${1-1} + 0)) separatorChar=${2-}
 
-    awk "-F$separatorChar" "{ print length(\$$index) }" | sort -rn | head -1
+    if [ -n "$separatorChar" ]; then
+        separatorChar=("-F$separatorChar")
+    else
+        separatorChar=()
+    fi
+    awk "${separatorChar[@]}" "{ print length(\$$index) }" | sort -rn | head -1
 }
 
 #

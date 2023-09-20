@@ -1,18 +1,14 @@
-# `-----.sh` - Description
+# `docker-compose.sh` - Description
 
-TODO Update all of this including the long description.
+Install `docker-compose` tool. `docker-compose` is a tool related to `docker` which orchestrates multiple containers.
 
 If this fails it will output the installation log.
 
-When this tool succeeds the `----` tool has been installed in the local environment.
+When this tool succeeds the `docker-compose` tool has been installed in the local environment.
 
 ## Arguments
 
-Describe arguments here
-
-e.g.
-
-    bin/build/---/-----.sh ./app/
+No arguments.
 
 ## Local cache
 
@@ -20,6 +16,6 @@ No local caches.
 
 ## Environment which affects this tool
 
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
+No environment affects this host.
 
 [⬅ Return to top](index.md)
