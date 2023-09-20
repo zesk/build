@@ -1,18 +1,23 @@
-# `-----.sh` - Description
+# `git-tag-version.sh` - Description
 
-TODO Update all of this including the long description.
+Tag a version of the software in git and push tags to origin.
 
 If this fails it will output the installation log.
 
-When this tool succeeds the `----` tool has been installed in the local environment.
+When this tool succeeds the git repository contains
+
+
+## Usage
+
+    git-tag-version.sh [ --suffix versionSuffix ] Tag version in git
+
 
 ## Arguments
 
-Describe arguments here
+- `--suffix` - word to use between version and index as: `{current}rc{nextIndex}`
+## Hooks called
 
-e.g.
-
-    bin/build/---/-----.sh ./app/
+- `version-current`
 
 ## Local cache
 
@@ -20,6 +25,6 @@ No local caches.
 
 ## Environment which affects this tool
 
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
+- `BUILD_VERSION_SUFFIX` - String. Version suffix to use as a default. If not specified the default is `rc`.
 
 [⬅ Return to top](index.md)

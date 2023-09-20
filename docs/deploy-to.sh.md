@@ -1,10 +1,10 @@
-# `-----.sh` - Description
+# `deploy-to.sh` - Description
 
-TODO Update all of this including the long description.
+Deploy current application to host at remotePath
 
 If this fails it will output the installation log.
 
-When this tool succeeds the `----` tool has been installed in the local environment.
+When this tool succeeds the application has been installed in the remote system successfully.
 
 ## Arguments
 

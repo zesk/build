@@ -15,13 +15,15 @@
 #------------------------------------------------------------------------------
 
 #
-# Formats name value pairs separated by separatorChar (default ;) and uses
+# Formats name value pairs separated by separatorChar (default " ") and uses
 # $nSpaces width for first field
 #
 # usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
 #
+# use with maximumFieldLength 1 to generate widths
+#
 usageGenerator() {
-    local nSpaces=$((${1-30} + 0)) separatorChar=${2-\;} labelPrefix valuePrefix
+    local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix
 
     labelPrefix=${3-"$(consoleLabel)"}
     # shellcheck disable=SC2119

@@ -8,6 +8,10 @@ When this tool succeeds the `composer` tool has run on a source tree and the `ve
 
 This tools does not install the `composer` binary into the local environment.
 
+## Usage
+
+    composer.sh [ --help ] [ installDirectory ]
+
 ## Arguments
 
 You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
