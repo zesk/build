@@ -11,8 +11,12 @@
 
 toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
+# Ordering matters
+
+# no dependencies
 # shellcheck source=/dev/null
 . "$toolsDir/text.sh"
+
 # shellcheck source=/dev/null
 . "$toolsDir/colors.sh"
 # shellcheck source=/dev/null

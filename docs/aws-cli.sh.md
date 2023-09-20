@@ -1,18 +1,16 @@
-# `-----.sh` - Description
+# `aws-cli.sh` - Description
 
-TODO Update all of this including the long description.
+Installs the `aws` command line tool.
 
 If this fails it will output the installation log.
 
-When this tool succeeds the `----` tool has been installed in the local environment.
+When this tool succeeds the `aws` tool has been installed in the local environment.
+
+If `apt-get` is **not** available in the environment this tool still succeeds, allowing for testing in non-apt environments when tools are already installed. Proceed with caution.
 
 ## Arguments
 
-Describe arguments here
-
-e.g.
-
-    bin/build/---/-----.sh ./app/
+No arguments.
 
 ## Local cache
 
@@ -20,6 +18,6 @@ No local caches.
 
 ## Environment which affects this tool
 
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
+No environment variables affect this tool.
 
 [⬅ Return to top](index.md)
