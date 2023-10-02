@@ -343,13 +343,15 @@ echo
 testScripts
 testTools
 testEnvMap
-testBuildSetup
-testUrlParse
-testAWSExpiration
 
 if ! which docker-compose >/dev/null; then
     testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
 fi
+
+testBuildSetup
+testUrlParse
+testAWSExpiration
+
 testScriptInstalls php "bin/build/install/php-cli.sh"
 testScriptInstalls python "bin/build/install/python.sh"
 testScriptInstalls mariadb "bin/build/install/mariadb-client.sh"
