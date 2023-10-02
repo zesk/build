@@ -27,7 +27,7 @@ fi
 
 requireFileDirectory "$quietLog"
 
-./bin/build/python.sh
+./bin/build/install/python.sh
 
 consoleInfo -n "Installing docker-compose ... "
 start=$(beginTiming)
