@@ -377,7 +377,7 @@ fi
 testScriptInstalls prettier "bin/build/install/prettier.sh"
 
 testCleanup() {
-    rm -rf vendor composer.json composer.lock test.*/ ./aws .build
+    rm -rf vendor composer.json composer.lock test.*/ ./aws .build 2>/dev/null || :
 }
 testCleanup
 bigText Passed | prefixLines "$(consoleSuccess)"
