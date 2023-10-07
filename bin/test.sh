@@ -320,6 +320,26 @@ testAWSExpiration() {
     fi
     reportTiming "$start" Done
 }
+
+testDotEnvConfig() {
+    local tempDir="$$.dotEnvConfig"
+    mkdir "$tempDir"
+    cd "$tempDir"
+    consoleInfo "$(pwd)"
+    touch .env
+    if ! dotEnvConfig || [ -n "$(dotEnvConfig)" ]; then
+        consoleError "dotEnvConfig failed with just .env"
+        return $errEnv
+    fi
+    touch .env.local
+    if ! dotEnvConfig || [ -n "$(dotEnvConfig)" ]; then
+        consoleError "dotEnvConfig failed with both .env"
+        return $errEnv
+    fi
+    cd ..
+    rm -rf "$tempDir"
+    consoleGreen dotEnvConfig works AOK
+}
 #  _____         _
 # |_   _|__  ___| |_
 #   | |/ _ \/ __| __|
@@ -327,6 +347,9 @@ testAWSExpiration() {
 #   |_|\___||___/\__|
 #
 requireFileDirectory "$quietLog"
+
+testSection API
+testDotEnvConfig
 
 testSection APT
 bin/build/install/apt.sh shellcheck
@@ -377,7 +400,7 @@ fi
 testScriptInstalls prettier "bin/build/install/prettier.sh"
 
 testCleanup() {
-    rm -rf vendor composer.json composer.lock test.*/ ./aws .build
+    rm -rf vendor composer.json composer.lock test.*/ ./aws .build 2>/dev/null || :
 }
 testCleanup
 bigText Passed | prefixLines "$(consoleSuccess)"

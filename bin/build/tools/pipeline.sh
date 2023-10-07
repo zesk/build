@@ -25,6 +25,7 @@ errEnv=1
 dotEnvConfig() {
   if [ ! -f ./.env ]; then
     usage $errEnv "Missing ./.env"
+    return $errEnv
   fi
 
   set -a

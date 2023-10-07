@@ -158,6 +158,11 @@ done
 # Generate our commands file
 #
 generateCommandsFile() {
+  if buildDebugEnabled; then
+    # Debugging remote shell
+    echo "export BUILD_DEBUG=1"
+    echo "set -x"
+  fi
   echo "cd \"$remotePath\""
   if [ -n "$*" ]; then
     echo "$@"
@@ -256,6 +261,10 @@ deployAction() {
     host="${userHost##*@}"
     generateCommandsFile "tar zxf app.tar.gz --no-xattrs" >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
+    if buildDebugEnabled; then
+      consoleInfo "DEBUG: Commands file is:"
+      prefixLines "$(consoleCode)" <"$temporaryCommandsFile"
+    fi
     ssh $sDeployOptions -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     consoleInfo "<<< SSH output END"
     reportTiming "$start" "Done."
