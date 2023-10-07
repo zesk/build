@@ -77,6 +77,7 @@ while [ $# -gt 0 ]; do
         ;;
     *)
         requireEnvironment+=("$1")
+        buildEnvironment+=("$1")
         ;;
     esac
     shift
