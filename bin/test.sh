@@ -340,6 +340,31 @@ testDotEnvConfig() {
     rm -rf "$tempDir"
     consoleGreen dotEnvConfig works AOK
 }
+testMakeEnv() {
+    local v
+    export TESTING_ENV=chameleon
+    export DSN=mysql://not@host/thing
+
+    export DEPLOY_USER_HOSTS=none
+    export BUILD_TARGET=app2.tar.gz
+    export DEPLOYMENT=test-make-env
+
+    [ -f .env ] && rm .env
+    bin/build/pipeline/make-env.sh TESTING_ENV DSN
+
+    if [ ! -f .env ]; then
+        consoleError "make-env.sh did not generate a .env file"
+        return $errEnv
+    fi
+    for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_GIT_SHA DEPLOYMENT DSN; do
+        if ! grep -q "$v" .env; then
+            consoleError "make-env.sh .env file does not contain $v"
+            return $errEnv
+        fi
+    done
+    consoleGreen make-env.sh works AOK
+    rm .env
+}
 #  _____         _
 # |_   _|__  ___| |_
 #   | |/ _ \/ __| __|
@@ -350,6 +375,7 @@ requireFileDirectory "$quietLog"
 
 testSection API
 testDotEnvConfig
+testMakeEnv
 
 testSection APT
 bin/build/install/apt.sh shellcheck
