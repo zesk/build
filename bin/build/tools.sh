@@ -15,6 +15,10 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # no dependencies
 # shellcheck source=/dev/null
+. "$toolsDir/debug.sh"
+
+# no dependencies
+# shellcheck source=/dev/null
 . "$toolsDir/text.sh"
 
 # shellcheck source=/dev/null
