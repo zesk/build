@@ -13,4 +13,4 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "$(basname "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
+consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
