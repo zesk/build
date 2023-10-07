@@ -166,7 +166,6 @@ deployAction() {
     # shellcheck source=/dev/null
     . "$deployTemp/.env"
     set +a
-    rm -rf "$deployTemp"
 
     #
     # Check things match
@@ -176,6 +175,8 @@ deployAction() {
         cat "$deployTemp/.env"
         usage "$errEnv" "Mismatch .env ($APPLICATION_GIT_SHA) != arg ($argBuildSHACheck)"
     fi
+
+    rm -rf "$deployTemp"
 
     #
     # Maintenance on
