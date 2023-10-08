@@ -40,3 +40,7 @@ Tools: `aws-ip-access.sh`
 - `BUILD_VERSION_CREATED_EDITOR` is used in `bin/hooks/version-created.sh` to open the new file automatically
 - `EDITOR` is used as a default value for `BUILD_VERSION_CREATED_EDITOR` (used to open files)
 
+# Generated
+
+- `APPLICATION_CHECKSUM` - Code checksum representing the unique version of the application code (git commit SHA or equivalent)
+- `APPLICATION_TAG` - Tag of deployed code (may differ from version)

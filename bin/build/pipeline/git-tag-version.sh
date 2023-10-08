@@ -105,4 +105,5 @@ done
 consoleInfo "Tagging version $tryVersion and pushing ... "
 git tag "$tryVersion"
 git push --tags --quiet
+git fetch -q
 reportTiming "$init" "$0" completed && echo

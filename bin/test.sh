@@ -348,6 +348,7 @@ testMakeEnv() {
     export DEPLOY_USER_HOSTS=none
     export BUILD_TARGET=app2.tar.gz
     export DEPLOYMENT=test-make-env
+    export APPLICATION_CHECKSUM=aabbccdd
 
     [ -f .env ] && rm .env
     bin/build/pipeline/make-env.sh TESTING_ENV DSN
@@ -375,6 +376,7 @@ requireFileDirectory "$quietLog"
 
 testSection API
 testDotEnvConfig
+testSection make-env
 testMakeEnv
 
 testSection APT

@@ -90,14 +90,14 @@ while [ $# -gt 0 ]; do
     debuggingFlag=1
     ;;
   --undo)
-    if test $undoFlag; then
+    if test "$undoFlag"; then
       usage $errArg "--undo specified twice"
     fi
     undoFlag=1
     remoteArgs+=("--undo")
     ;;
   --cleanup)
-    if test $cleanupFlag; then
+    if test "$cleanupFlag"; then
       usage $errArg "--undo specified twice"
     fi
     cleanupFlag=1
