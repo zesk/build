@@ -2,7 +2,7 @@
 #
 # Fetch the version tag for the application
 #
-# Uses git rev-parse
+# Depends: git
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #

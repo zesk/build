@@ -2,7 +2,7 @@
 #
 # Fetch a checksum which represents the current application build/code state which is unique
 #
-# Uses git rev-parse
+# Depends: git
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
