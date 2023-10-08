@@ -159,12 +159,11 @@ set +a
 # Generate .build.env
 #
 deployGitDefaultValue() {
-    local e=$1
+    local e=$1 hook=$2
 
     shift
     if [ -z "${!e}" ]; then
-        git fetch -q
-        git "$@" >"./.deploy/$e"
+        runHook "$hook" >"./.deploy/$e"
         cat "./.deploy/$e"
     else
         echo -n "${!e}" >"./.deploy/$e"
@@ -176,9 +175,9 @@ deployGitDefaultValue() {
 mkdir -p ./.deploy
 
 export APPLICATION_CHECKSUM
-APPLICATION_CHECKSUM=$(deployGitDefaultValue APPLICATION_CHECKSUM rev-parse --short HEAD)
+APPLICATION_CHECKSUM=$(deployGitDefaultValue APPLICATION_CHECKSUM application-checksum)
 export APPLICATION_TAG
-APPLICATION_TAG=$(deployGitDefaultValue APPLICATION_TAG describe --tags --abbrev=0)
+APPLICATION_TAG=$(deployGitDefaultValue APPLICATION_TAG application-tag)
 
 # Save clean build environment to .build.env for other steps
 declare -px >.build.env

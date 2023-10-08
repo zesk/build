@@ -42,24 +42,37 @@ dotEnvConfig() {
 # See (Hooks documentation)[docs/hooks.md] for available
 #
 runHook() {
-  local binary=$1
+  local binary=$1 hook
 
   shift
-  if [ -x "./bin/hooks/$binary" ]; then
-    "./bin/hooks/$binary" "$@"
-  elif [ -x "./bin/hooks/$binary.sh" ]; then
-    "./bin/hooks/$binary.sh" "$@"
-  else
+  hook=$(whichHook "$binary")
+  if [ -z "$hook" ]; then
     consoleWarning "No hook for $binary with arguments: $*"
+    return $errEnv
   fi
+  "$hook" "$@"
 }
 
 #
 # Does a hook exist in the local project?
 #
 hasHook() {
-  local binary=$1
-  [ -x "./bin/hooks/$binary" ] || [ -x "./bin/hooks/$binary.sh" ]
+  [ -n "$(whichHook "$1")" ]
+}
+
+#
+# Does a hook exist in the local project?
+#
+whichHook() {
+  local binary=$1 paths=("./bin/hooks/" "./bin/build/hooks/") extensions=("" ".sh") p e
+  for p in "${paths[@]}"; do
+    for e in "${extensions[@]}"; do
+      if [ -x "$p/$binary$e" ]; then
+        echo "$p/$binary$e"
+        return 0
+      fi
+    done
+  done
 }
 
 #

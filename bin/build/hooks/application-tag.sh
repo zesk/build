@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#
+# Fetch the version tag for the application
+#
+# Uses git rev-parse
+#
+# Copyright &copy; 2023 Market Acumen, Inc.
+#
+set -eo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
+git describe --tags --abbrev=0
