@@ -11,5 +11,7 @@
 - `version-created.sh` - A new version was requested and created
 - `version-current.sh` - The current version of the software in this codebase.
 - `version-live.sh` - The current published live version of the software.
+- `application-tag.sh` - The current tagged version of the software
+- `application-checksum.sh` - Returns a string checksum of the current application source code (unique checksum for code state)
 
 [⬅ Return to top](index.md)

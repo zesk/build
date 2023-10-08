@@ -43,6 +43,12 @@ usage() {
     consoleInfo "--suffix versionSuffix   Set tag suffix via command line (wins, default inferred from deployment)"
     echo
     consoleInfo "Files are specified from the application root directory"
+    echo
+    consoleInfo "This file generates the .build.env file, which contains the current environment and:"
+    consoleInfo "   DEPLOYMENT"
+    consoleInfo "   BUILD_START_TIMESTAMP"
+    consoleInfo "   APPLICATION_TAG"
+    consoleInfo "   APPLICATION_CHECKSUM"
     exit "$rs"
 }
 
@@ -120,8 +126,6 @@ fi
 initTime=$(beginTiming)
 
 export BUILD_START_TIMESTAMP=$initTime
-# Save clean build environment to .build.env for other steps
-declare -px >.build.env
 
 bigText Build | prefixLines "$(consoleGreen)"
 
@@ -135,7 +139,7 @@ consoleInfo "Tagging $DEPLOYMENT deployment with $versionSuffix ..."
 
 #==========================================================================================
 #
-# Add needed tools
+# Generate .env
 #
 
 if hasHook make-env; then
@@ -145,6 +149,43 @@ else
     ./bin/build/pipeline/make-env.sh "${envVars[@]}"
 fi
 
+set -a
+# shellcheck source=/dev/null
+source .env
+set +a
+
+#==========================================================================================
+#
+# Generate .build.env
+#
+deployGitDefaultValue() {
+    local e=$1 hook=$2
+
+    shift
+    if [ -z "${!e}" ]; then
+        runHook "$hook" >"./.deploy/$e"
+        cat "./.deploy/$e"
+    else
+        echo -n "${!e}" >"./.deploy/$e"
+        echo -n "${!e}"
+    fi
+}
+
+[ -d ./.deploy ] && rm -rf ./.deploy
+mkdir -p ./.deploy
+
+export APPLICATION_CHECKSUM
+APPLICATION_CHECKSUM=$(deployGitDefaultValue APPLICATION_CHECKSUM application-checksum)
+export APPLICATION_TAG
+APPLICATION_TAG=$(deployGitDefaultValue APPLICATION_TAG application-tag)
+
+# Save clean build environment to .build.env for other steps
+declare -px >.build.env
+
+#==========================================================================================
+#
+# Build vendor
+#
 if [ -d ./vendor ] || test $optClean; then
     consoleWarning "vendor directory should not exist before composer, deleting"
     rm -rf ./vendor 2>/dev/null || :
@@ -156,20 +197,9 @@ if [ ! -d ./vendor ]; then
     usage "$errArg" "Composer step did not create the vendor directory"
 fi
 
-[ -d ./.deploy ] && rm -rf ./.deploy
-mkdir -p ./.deploy
-
-git fetch -q
-git rev-parse --short HEAD >./.deploy/git-commit-hash
-versionTag=$(git describe --tags --abbrev=0)
-echo -n "$versionTag" >./.deploy/version-tag
-
-set -a
-# shellcheck source=/dev/null
-source .env
-set +a
-
-bigText "$APPLICATION_VERSION" | prefixLines "$(consoleGreen)"
+bigText "$APPLICATION_TAG" | prefixLines "$(consoleGreen)"
+echo
+bigText "$APPLICATION_CHECKSUM" | prefixLines "$(consoleMagenta)"
 echo
 
 createTarFile "$BUILD_TARGET" .env vendor/ .deploy/ "$@"
