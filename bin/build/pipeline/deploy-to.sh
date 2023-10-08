@@ -27,14 +27,15 @@ deployedHostArtifact="./.deployed-hosts"
 initTime=$(beginTiming)
 
 usageOptions() {
-  echo "--debug Turn on debugging (defaults to BUILD_DEBUG environment variable)"
-  echo "--undo Undo deployment using saved artifacts"
-  echo "--cleanup Clean up remote files after success"
-  echo "--help This help"
+  echo "--deploy applicationChecksum;Deploy to remote host with the application checksum"
+  echo "--undo;Undo deployment using saved artifacts"
+  echo "--cleanup;Clean up remote files after success"
+  echo "--help;This help"
+  echo "--debug;Turn on debugging (defaults to BUILD_DEBUG environment variable)"
   echo
-  echo "remoteDeploymentPath Path on remote host where deployment backup files are stored."
-  echo "remotePath Path on remote host where deployment application exists."
-  echo "user1@host1 Deploy to this user at this host ..."
+  echo "remoteDeploymentPath;Path on remote host where deployment backup files are stored."
+  echo "remotePath;Path on remote host where deployment application exists."
+  echo "user1@host1;Deploy to this user at this host ..."
 }
 usage() {
   local rs
@@ -45,11 +46,11 @@ usage() {
     echo "$@"
     echo
   fi
-  echo "$me [ --undo | --cleanup ] [ --debug ] [ --help ] remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
+  echo "$me [ --undo | --cleanup | --deploy applicationChecksum ] [ --debug ] [ --help ] remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
   echo
   echo "Deploy current application to host at remotePath"
   echo
-  usageOptions | usageGenerator "$(($(usageOptions | maximumFieldLength 1) + 2))"
+  usageOptions | usageGenerator "$(($(usageOptions | maximumFieldLength 1 ";") + 2))" ";"
   echo
   exit "$rs"
 }
@@ -66,6 +67,7 @@ undoFlag=
 debuggingFlag=
 cleanupFlag=
 userHosts=()
+applicationChecksum=
 remoteDeploymentPath=
 remotePath=
 remoteArgs=()
@@ -74,14 +76,30 @@ while [ $# -gt 0 ]; do
   --help)
     usage 0
     ;;
+  --deploy)
+    shift
+    if [ -n "$applicationChecksum" ]; then
+      usage $errArg "--deploy arg passed twice"
+    fi
+    applicationChecksum=$1
+    if [ -z "$applicationChecksum" ]; then
+      usage $errArg "Empty deploy checksum"
+    fi
+    ;;
   --debug)
     debuggingFlag=1
     ;;
   --undo)
+    if test $undoFlag; then
+      usage $errArg "--undo specified twice"
+    fi
     undoFlag=1
     remoteArgs+=("--undo")
     ;;
   --cleanup)
+    if test $cleanupFlag; then
+      usage $errArg "--undo specified twice"
+    fi
     cleanupFlag=1
     remoteArgs+=("--cleanup")
     ;;
@@ -134,6 +152,7 @@ showInfo() {
   echo "$(consoleInfo -n "     IP is currently: ") $(consoleRed -n "$currentIP")"
   echo "$(consoleInfo -n "remoteDeploymentPath: ") $(consoleRed -n "$remoteDeploymentPath")"
   echo "$(consoleInfo -n "          remotePath: ") $(consoleRed -n "$remotePath")"
+  echo "$(consoleInfo -n " applicationChecksum: ") $(consoleRed -n "$applicationChecksum")"
   echo "$(consoleInfo -n "           Hosts are: ") $(consoleRed -n "${userHosts[*]}")"
 }
 
@@ -168,7 +187,7 @@ generateCommandsFile() {
     echo "$@"
   fi
   # shellcheck disable=SC2016
-  echo "bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$APPLICATION_GIT_SHA\" \"$remoteDeploymentPath\""
+  echo "bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remoteDeploymentPath\""
 }
 
 undoAction() {
@@ -230,22 +249,28 @@ cleanupAction() {
   done
 }
 
-deployAction() {
-  local sDeployOptions
+sshishDeployOptions() {
+  if buildDebugEnabled; then
+    if [ "$BUILD_DEBUG" -ge 3 ]; then
+      # Triple verbosity
+      echo -n "-vvv"
+    else
+      echo -n "-v"
+    fi
+  else
+    # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
+    echo -n "-q"
+  fi
 
+}
+
+deployAction() {
   #   ____             _
   #  |  _ \  ___ _ __ | | ___  _   _
   #  | | | |/ _ \ '_ \| |/ _ \| | | |
   #  | |_| |  __/ |_) | | (_) | |_| |
   #  |____/ \___| .__/|_|\___/ \__, |
   #             |_|            |___/
-  if test $debuggingFlag; then
-    # Triple verbosity
-    sDeployOptions="-vvv"
-  else
-    # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
-    sDeployOptions="-q"
-  fi
   bigText Deploy
   echo
   showInfo
@@ -253,7 +278,7 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remotePath") "
-    echo "@put app.tar.gz" | sftp $sDeployOptions "$userHost:$remotePath"
+    echo "@put app.tar.gz" | sftp "$(sshishDeployOptions)" "$userHost:$remotePath"
     reportTiming "$start" "Done."
   done
   for userHost in "${userHosts[@]}"; do
@@ -265,7 +290,7 @@ deployAction() {
       consoleInfo "DEBUG: Commands file is:"
       prefixLines "$(consoleCode)" <"$temporaryCommandsFile"
     fi
-    ssh $sDeployOptions -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
+    ssh "$(sshishDeployOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     consoleInfo "<<< SSH output END"
     reportTiming "$start" "Done."
     echo "$host" >>"$deployedHostArtifact"

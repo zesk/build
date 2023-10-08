@@ -34,3 +34,9 @@ Tools: `aws-ip-access.sh`
 - `AWS_REGION` - Default region for operations in AWS - required for `aws-ip-access.sh`
 - `AWS_ACCESS_KEY_ID` - Credentials for `aws-cli.sh` once installed
 - `AWS_SECRET_ACCESS_KEY` - Credentials for `aws-cli.sh` once installed
+
+# Development
+
+- `BUILD_VERSION_CREATED_EDITOR` is used in `bin/hooks/version-created.sh` to open the new file automatically
+- `EDITOR` is used as a default value for `BUILD_VERSION_CREATED_EDITOR` (used to open files)
+

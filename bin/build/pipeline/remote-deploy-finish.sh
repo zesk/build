@@ -26,16 +26,16 @@ usage() {
         consoleError "$@"
         echo
     fi
-    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] build-sha-check atticPath")"
+    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] applicationChecksum atticPath")"
     echo
     consoleInfo "This is run on the remote system after deployment; environment files are correct."
     echo
-    echo "$(consoleGreen "--debug        ")" "$(consoleInfo "Enable debugging. Defaults to BUILD_DEBUG.")"
-    echo "$(consoleGreen "--undo         ")" "$(consoleInfo "Revert changes just made")"
-    echo "$(consoleGreen "--cleanup      ")" "$(consoleInfo "Cleanup after success")"
+    echo "$(consoleGreen "--debug    ")" "$(consoleInfo "Enable debugging. Defaults to BUILD_DEBUG.")"
+    echo "$(consoleGreen "--undo     ")" "$(consoleInfo "Revert changes just made")"
+    echo "$(consoleGreen "--cleanup  ")" "$(consoleInfo "Cleanup after success")"
     echo
-    echo "$(consoleGreen "build-sha-check")" "$(consoleInfo "will match APPLICATION_GIT_SHA as well as local run command to get the git SHA")"
-    echo "$(consoleGreen "atticPath      ")" "$(consoleInfo "path where backup images are stored (and pruned)")"
+    echo "$(consoleGreen "applicationChecksum   ")" "$(consoleInfo "will match APPLICATION_CHECKSUM in .env")"
+    echo "$(consoleGreen "atticPath  ")" "$(consoleInfo "path where backup images are stored (and pruned)")"
     echo
     exit "$rs"
 }
@@ -52,7 +52,7 @@ currentTar="./$targetFileName"
 previousCommitHashFile="./.deploy/git-commit-hash"
 undoFlag=
 cleanupFlag=
-argBuildSHACheck=
+applicationChecksum=
 atticPath=
 debuggingFlag=
 while [ $# -gt 0 ]; do
@@ -67,8 +67,8 @@ while [ $# -gt 0 ]; do
         undoFlag=1
         ;;
     *)
-        if [ -z "$argBuildSHACheck" ]; then
-            argBuildSHACheck=$1
+        if [ -z "$applicationChecksum" ]; then
+            applicationChecksum=$1
         elif [ -z "$atticPath" ]; then
             atticPath=$1
             if [ ! -d "$atticPath" ]; then
@@ -135,9 +135,9 @@ undoAction() {
 }
 
 deployAction() {
-    local deployTemp previousSHA argBuildSHACheck
+    local deployTemp previousSHA applicationChecksum
 
-    argBuildSHACheck=$1
+    applicationChecksum=$1
     shift
     #   ____             _
     #  |  _ \  ___ _ __ | | ___  _   _
@@ -170,10 +170,10 @@ deployAction() {
     #
     # Check things match
     #
-    if [ "$APPLICATION_GIT_SHA" != "$argBuildSHACheck" ]; then
+    if [ "$APPLICATION_CHECKSUM" != "$applicationChecksum" ]; then
         consoleRed "$deployTemp/.env"
         cat "$deployTemp/.env"
-        usage "$errEnv" "Mismatch .env ($APPLICATION_GIT_SHA) != arg ($argBuildSHACheck)"
+        usage "$errEnv" "Mismatch .env ($APPLICATION_CHECKSUM) != arg ($applicationChecksum)"
     fi
 
     rm -rf "$deployTemp"
@@ -185,21 +185,21 @@ deployAction() {
         #
         # .next and .previous are created here
         #
-        cp "$previousCommitHashFile" "$atticPath/$argBuildSHACheck.previous"
+        cp "$previousCommitHashFile" "$atticPath/$applicationChecksum.previous"
         previousCommitHash=$(cat "$previousCommitHashFile")
-        if [ -f "$atticPath/$argBuildSHACheck.next" ]; then
-            nextFileContents=$(cat "$atticPath/$argBuildSHACheck.next")
-            if [ "$nextFileContents" != "$argBuildSHACheck" ]; then
+        if [ -f "$atticPath/$applicationChecksum.next" ]; then
+            nextFileContents=$(cat "$atticPath/$applicationChecksum.next")
+            if [ "$nextFileContents" != "$applicationChecksum" ]; then
                 echo "$(consoleError "Mismatch next file contents: ") $(consoleError "$nextFileContents")"
-                echo "$(consoleError "           Overwriting with: ") $(consoleError "$argBuildSHACheck")"
+                echo "$(consoleError "           Overwriting with: ") $(consoleError "$applicationChecksum")"
             fi
         fi
-        echo -n "$argBuildSHACheck" >"$atticPath/$previousCommitHash.next"
+        echo -n "$applicationChecksum" >"$atticPath/$previousCommitHash.next"
     fi
 
-    mv "$currentTar" "$atticPath/$argBuildSHACheck.$targetFileName"
+    mv "$currentTar" "$atticPath/$applicationChecksum.$targetFileName"
 
-    deployTarFile "$atticPath" "$argBuildSHACheck"
+    deployTarFile "$atticPath" "$applicationChecksum"
 }
 
 deployTarFile() {
@@ -247,13 +247,13 @@ if test $undoFlag && test $cleanupFlag; then
 fi
 start=$(beginTiming)
 if test $cleanupFlag; then
-    cleanupAction "$argBuildSHACheck"
+    cleanupAction "$applicationChecksum"
 elif test $undoFlag; then
-    undoAction "$argBuildSHACheck"
+    undoAction "$applicationChecksum"
 else
-    if [ -z "$argBuildSHACheck" ]; then
+    if [ -z "$applicationChecksum" ]; then
         usage "$errArg" "No argument build-sha-check passed"
     fi
-    deployAction "$argBuildSHACheck"
+    deployAction "$applicationChecksum"
 fi
 reportTiming "$start" "Done."
