@@ -356,7 +356,7 @@ testMakeEnv() {
         consoleError "make-env.sh did not generate a .env file"
         return $errEnv
     fi
-    for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_GIT_SHA DEPLOYMENT DSN; do
+    for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DEPLOYMENT DSN; do
         if ! grep -q "$v" .env; then
             consoleError "make-env.sh .env file does not contain $v"
             return $errEnv
