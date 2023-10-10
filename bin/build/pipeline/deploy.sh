@@ -51,18 +51,20 @@ fi
 usageEnvironment "${requireEnvironments[@]}"
 
 deploymentCleanup() {
-  consoleWarning "Deployment cleanup ..."
+  if [ $# -gt 0 ]; then
+    consoleWarning "$@"
+  else
+    consoleSuccess "Deployment cleanup ..."
+  fi
   bin/build/pipeline/deploy-to.sh --cleanup "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
 }
 
 if ! bin/build/pipeline/deploy-to.sh "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"; then
-  consoleError "Deployment failed"
-  deploymentCleanup || :
+  deploymentCleanup "Deployment failed" || :
   exit "$errorEnvironment"
 fi
 if hasHook deploy-confirm && ! runHook deploy-confirm; then
-  consoleError "Deployment confirmation failed"
-  deploymentCleanup || :
+  deploymentCleanup "Deployment confirmation failed" || :
   exit "$errorEnvironment"
 fi
 if ! deploymentCleanup; then
