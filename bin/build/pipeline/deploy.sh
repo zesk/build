@@ -61,7 +61,7 @@ if ! bin/build/pipeline/deploy-to.sh "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_
   exit "$errorEnvironment"
 fi
 if hasHook deploy-confirm && ! runHook deploy-confirm; then
-  consoleError "Deployment confrimation failed"
+  consoleError "Deployment confirmation failed"
   deploymentCleanup || :
   exit "$errorEnvironment"
 fi
