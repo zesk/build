@@ -176,6 +176,10 @@ alignLeft() {
     printf "%-${n}s" "$*"
 }
 
+#
+# Not sure if this works really, need to pair with
+# something in local script to make an array possibly
+#
 function argumentsToArray() {
     local -a a=("$@")
     echo "${a[@]}"
