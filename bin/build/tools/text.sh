@@ -175,3 +175,8 @@ alignLeft() {
     shift
     printf "%-${n}s" "$*"
 }
+
+function argumentsToArray() {
+    local -a a=("$@")
+    echo "${a[@]}"
+}

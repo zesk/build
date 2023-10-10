@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-
+errorEnvironment=1
 set -eo pipefail
 # set -x # Debugging
 
@@ -14,7 +14,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-requireEnvironments=(DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS APPLICATION_CHECKSUM)
+requireEnvironments=(DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS)
 
 usage() {
   local rs=$1
@@ -50,6 +50,23 @@ fi
 
 usageEnvironment "${requireEnvironments[@]}"
 
-bin/build/pipeline/deploy-to.sh --deploy "$APPLICATION_CHECKSUM" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
-runHook deploy-confirm
-bin/build/pipeline/deploy-to.sh --cleanup "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
+deploymentCleanup() {
+  consoleWarning "Deployment cleanup ..."
+  bin/build/pipeline/deploy-to.sh --cleanup "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
+}
+
+if ! bin/build/pipeline/deploy-to.sh "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"; then
+  consoleError "Deployment failed"
+  deploymentCleanup || :
+  exit "$errorEnvironment"
+fi
+if hasHook deploy-confirm && ! runHook deploy-confirm; then
+  consoleError "Deployment confrimation failed"
+  deploymentCleanup || :
+  exit "$errorEnvironment"
+fi
+if ! deploymentCleanup; then
+  consoleError "Deployment cleanup failed"
+  exit "$errorEnvironment"
+fi
+bigText Success | prefixLines "$(consoleSuccess)"
