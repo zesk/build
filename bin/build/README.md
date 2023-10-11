@@ -20,9 +20,20 @@ To use in your pipeline:
 
 ## Project structure
 
-- `bin/build/*.sh` - Build scripts and tools
+- `bin/build/tools.sh` - Main include file
+- `bin/build/tools/*.sh` - Build tools
 - `bin/build/pipeline/*.sh` - Tools or steps for deployment
 - `bin/build/install/*.sh` - Install dependencies in the pipeline
+
+## Tools
+
+- `chmod-sh.sh` - Make `.sh` files executable
+- `cannon.sh` - Replace text in all files specified
+- `deprecated.sh` - Replace or warn about deprecated build code
+- `envmap.sh` - Replace environment tokens in a text file with values from the environment
+- `new-release.sh` - Make a new release version
+- `version-last.sh` - The last version tagged
+- `version-list.sh` - List all version tags ordered by `versionSort`
 
 ## Local override scripts or hooks (not in this project - in your host project)
 
