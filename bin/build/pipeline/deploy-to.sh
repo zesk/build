@@ -63,6 +63,7 @@ dotEnvConfig
 
 # DEBUGGING # consoleWarning "ARGS: $*"
 
+deployFlag=
 undoFlag=
 debuggingFlag=
 cleanupFlag=
@@ -81,6 +82,7 @@ while [ $# -gt 0 ]; do
     if [ -n "$applicationChecksum" ]; then
       usage $errArg "--deploy arg passed twice"
     fi
+    deployFlag=1
     applicationChecksum=$1
     if [ -z "$applicationChecksum" ]; then
       usage $errArg "Empty deploy checksum"
@@ -132,7 +134,16 @@ fi
 if test "$undoFlag" && test "$cleanupFlag"; then
   usage $errArg "--undo and --cleanup are mutually exclusive"
 fi
-# Paths are not blank
+if test "$undoFlag" && test "$deployFlag"; then
+  usage $errArg "--undo and --deploy are mutually exclusive"
+fi
+if test "$deployFlag" && test "$cleanupFlag"; then
+  usage $errArg "--deploy and --cleanup are mutually exclusive"
+fi
+# Values are not blank
+if [ -z "$applicationChecksum" ]; then
+  usage $errArg "Missing applicationChecksum"
+fi
 if [ -z "$remoteDeploymentPath" ]; then
   usage $errArg "Missing remoteDeploymentPath"
 fi
