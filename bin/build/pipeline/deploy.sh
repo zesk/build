@@ -56,7 +56,7 @@ deploymentCleanup() {
   else
     consoleSuccess "Deployment cleanup ..."
   fi
-  bin/build/pipeline/deploy-to.sh --cleanup "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
+  bin/build/pipeline/deploy-to.sh --cleanup "$APPLICATION_CHECKSUM" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
 }
 
 if ! bin/build/pipeline/deploy-to.sh --deploy "$APPLICATION_CHECKSUM" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"; then

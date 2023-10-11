@@ -69,8 +69,10 @@ while [ $# -gt 0 ]; do
     *)
         if [ -z "$applicationChecksum" ]; then
             applicationChecksum=$1
+            echo "$(consoleLabel -n "Application Checksum:") $(consoleValue -n "$applicationChecksum")"
         elif [ -z "$atticPath" ]; then
             atticPath=$1
+            echo "$(consoleLabel -n "          Attic path:") $(consoleValue -n "$atticPath")"
             if [ ! -d "$atticPath" ]; then
                 if ! mkdir -p "$atticPath"; then
                     usage "$errEnv" "Can not create $atticPath"
@@ -162,6 +164,8 @@ deployAction() {
     # extract .env alone
     tar zxf "../$currentTar" "${tarArgs[@]}" ".env"
     cd ..
+
+    APPLICATION_CHECKSUM=
     set -a
     # shellcheck source=/dev/null
     . "$deployTemp/.env"

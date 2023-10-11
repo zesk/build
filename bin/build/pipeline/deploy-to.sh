@@ -27,7 +27,7 @@ deployedHostArtifact="./.deployed-hosts"
 initTime=$(beginTiming)
 
 usageOptions() {
-  echo "--deploy applicationChecksum;Deploy to remote host with the application checksum"
+  echo "--deploy;Deploy to remote host with the application checksum"
   echo "--undo;Undo deployment using saved artifacts"
   echo "--cleanup;Clean up remote files after success"
   echo "--help;This help"
@@ -46,7 +46,7 @@ usage() {
     echo "$@"
     echo
   fi
-  echo "$me [ --undo | --cleanup | --deploy applicationChecksum ] [ --debug ] [ --help ] remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
+  echo "$me [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
   echo
   echo "Deploy current application to host at remotePath"
   echo
@@ -59,7 +59,7 @@ if [ ! -d "${HOME:-}" ]; then
   usage $errEnv "No HOME defined or not a directory: $HOME"
 fi
 
-dotEnvConfig
+# dotEnvConfig
 
 # DEBUGGING # consoleWarning "ARGS: $*"
 
@@ -78,15 +78,10 @@ while [ $# -gt 0 ]; do
     usage 0
     ;;
   --deploy)
-    shift
-    if [ -n "$applicationChecksum" ]; then
+    if test "$deployFlag"; then
       usage $errArg "--deploy arg passed twice"
     fi
     deployFlag=1
-    applicationChecksum=$1
-    if [ -z "$applicationChecksum" ]; then
-      usage $errArg "Empty deploy checksum"
-    fi
     ;;
   --debug)
     debuggingFlag=1
@@ -106,7 +101,9 @@ while [ $# -gt 0 ]; do
     remoteArgs+=("--cleanup")
     ;;
   *)
-    if [ -z "$remoteDeploymentPath" ]; then
+    if [ -z "$applicationChecksum" ]; then
+      applicationChecksum=$1
+    elif [ -z "$remoteDeploymentPath" ]; then
       remoteDeploymentPath=$1
     elif [ -z "$remotePath" ]; then
       remotePath=$1
