@@ -212,6 +212,7 @@ generateCommandsFile() {
 }
 
 undoAction() {
+  local rs=0
   #   _   _           _
   #  | | | |_ __   __| | ___
   #  | | | | '_ \ / _` |/ _ \
@@ -234,8 +235,10 @@ undoAction() {
   consoleInfo "$deployedHostArtifact found ..."
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
+    host="${userHost##*@}"
     if ! grep -q "$host" "$deployedHostArtifact"; then
-      consoleWarning "$host not found in artifact file ... skipping"
+      consoleWarning "$host ($userHost) not found in artifact file ... skipping"
+      rs=$errEnv
       continue
     fi
     echo -n "$(consoleInfo -n "Reverting application at") $(consoleRed -n "$remotePath")"
@@ -245,9 +248,11 @@ undoAction() {
   done
   rm "$deployedHostArtifact"
   # artifact removed: .deployed-hosts
+  return $rs
 }
 
 cleanupAction() {
+  local rs=0
   #    ____ _
   #   / ___| | ___  __ _ _ __  _   _ _ __
   #  | |   | |/ _ \/ _` | '_ \| | | | '_ \
@@ -257,17 +262,24 @@ cleanupAction() {
   bigText Cleanup
   echo
   showInfo
-  if [ -f "$deployedHostArtifact" ]; then
-    consoleError "$deployedHostArtifact file found ... should not exist."
+  if [ ! -f "$deployedHostArtifact" ]; then
+    consoleError "$deployedHostArtifact file NOT found ... should exist."
     exit 99
   fi
   for userHost in "${userHosts[@]}"; do
+    host="${userHost##*@}"
+    if ! grep -q "$host" "$deployedHostArtifact"; then
+      consoleWarning "$host ($userHost) not found in artifact file ... skipping"
+      rs=$errEnv
+      continue
+    fi
     start=$(beginTiming)
     echo -n "$(consoleInfo -n "Finishing application at") $(consoleRed -n "$remotePath")"
     generateCommandsFile >"$temporaryCommandsFile"
     ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     reportTiming "$start" "Done."
   done
+  return $rs
 }
 
 sshishDeployOptions() {
