@@ -108,6 +108,14 @@ cleanupAction() {
         consoleError "Found $currentTar - LIKELY FAILURE"
         rm "$currentTar"
     fi
+    if hasHook deploy-cleanup; then
+        if ! runHook deploy-cleanup; then
+            consoleError "Cleanup failed"
+            return $errEnv
+        fi
+    else
+        consoleInfo "No deployment clean up hook"
+    fi
 }
 
 undoAction() {
@@ -134,6 +142,14 @@ undoAction() {
         return 0
     fi
     deployTarFile "$atticPath" "$previousSHA"
+    if hasHook deploy-undo; then
+        if ! runHook deploy-undo "$atticPath" "$previousSHA"; then
+            consoleError "deploy-undo hook failed, continuing anyway"
+        fi
+    else
+        consoleInfo "No deployment undo hook"
+    fi
+    return 0
 }
 
 deployAction() {
@@ -228,10 +244,10 @@ deployTarFile() {
     date >"$tarBallPath/current.date"
     cp "$tarBallPath/current.date" "$tarBallPath/$shaPrefix.date"
     cd "$currentDir"
-    runHook maintenance on
+    runOptionalHook maintenance on
     consoleInfo -n "Setting to version $shaPrefix ... "
 
-    runHook deploy-start "$newDir"
+    runOptionalHook deploy-start "$newDir"
     if hasHook deploy-move; then
         runHook deploy-move "$newDir"
     else
@@ -242,8 +258,8 @@ deployTarFile() {
     fi
     cd "$currentDir"
 
-    runHook deploy-finish
-    runHook maintenance off
+    runOptionalHook deploy-finish
+    runOptionalHook maintenance off
 }
 
 if test $undoFlag && test $cleanupFlag; then

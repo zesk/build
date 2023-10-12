@@ -27,6 +27,7 @@ deployedHostArtifact="./.deployed-hosts"
 initTime=$(beginTiming)
 
 usageOptions() {
+  echo "--target target;Build target file, defaults to app.tar.gz"
   echo "--deploy;Deploy to remote host with the application checksum"
   echo "--undo;Undo deployment using saved artifacts"
   echo "--cleanup;Clean up remote files after success"
@@ -46,7 +47,7 @@ usage() {
     echo "$@"
     echo
   fi
-  echo "$me [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
+  echo "$me [ --undo | --cleanup | --deploy ] [ --debug ] [ --target target ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
   echo
   echo "Deploy current application to host at remotePath"
   echo
@@ -71,9 +72,20 @@ userHosts=()
 applicationChecksum=
 remoteDeploymentPath=
 remotePath=
+buildTarget=
 remoteArgs=()
 while [ $# -gt 0 ]; do
   case $1 in
+  --target)
+    shift
+    if [ -n "$buildTarget" ]; then
+      usage $errArg "--target supplied twice"
+    fi
+    buildTarget=$1
+    if [ -z "$buildTarget" ]; then
+      usage $errArg "blank --target"
+    fi
+    ;;
   --help)
     usage 0
     ;;
@@ -138,6 +150,7 @@ if test "$deployFlag" && test "$cleanupFlag"; then
   usage $errArg "--deploy and --cleanup are mutually exclusive"
 fi
 # Values are not blank
+buildTarget="${buildTarget:-app.tar.gz}"
 if [ -z "$applicationChecksum" ]; then
   usage $errArg "Missing applicationChecksum"
 fi
@@ -273,6 +286,7 @@ sshishDeployOptions() {
 }
 
 deployAction() {
+  local buildTarget=$1
   #   ____             _
   #  |  _ \  ___ _ __ | | ___  _   _
   #  | | | |/ _ \ '_ \| |/ _ \| | | |
@@ -286,13 +300,13 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remotePath") "
-    echo "@put app.tar.gz" | sftp "$(sshishDeployOptions)" "$userHost:$remotePath"
+    echo "@put $buildTarget" | sftp "$(sshishDeployOptions)" "$userHost:$remotePath"
     reportTiming "$start" "Done."
   done
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
-    generateCommandsFile "tar zxf app.tar.gz --no-xattrs" >"$temporaryCommandsFile"
+    generateCommandsFile "tar zxf $buildTarget --no-xattrs" >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
     if buildDebugEnabled; then
       consoleInfo "DEBUG: Commands file is:"
@@ -305,6 +319,7 @@ deployAction() {
   done
   # artifact: .deployed-hosts
 }
+
 #
 # Put vendor.tar.gz
 #
@@ -313,7 +328,7 @@ if test $undoFlag; then
 elif test $cleanupFlag; then
   cleanupAction
 else
-  deployAction
+  deployAction "$buildTarget"
 fi
 
 [ -f "$temporaryCommandsFile" ] && rm "$temporaryCommandsFile"
