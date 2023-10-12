@@ -54,6 +54,25 @@ runHook() {
 }
 
 #
+# Run a hook but do not require it to exist
+#
+runOptionalHook() {
+  local binary=$1 hook
+
+  shift
+  if ! hasHook "$binary"; then
+    if buildDebugEnabled; then
+      consoleWarning "No hook $binary in this project"
+    fi
+    return 0
+  fi
+  if buildDebugEnabled; then
+    consoleSuccess "Running hook $binary $*"
+  fi
+  "$(whichHook "$binary")" "$@"
+}
+
+#
 # Does a hook exist in the local project?
 #
 hasHook() {

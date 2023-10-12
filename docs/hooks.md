@@ -1,9 +1,11 @@
 # Hooks
 
-- `deploy-start.sh` - Begin deployment, after maintenane has been enabled
-- `deploy-move.sh` - During deployment install passed directory as new version of the app in current directory
-- `deploy-finish.sh` - Deployment is finished (before maintenance is turned off)
-- `deploy-confirm.sh` - Before finish, check that deployment succeeded remotely via an alternate mechanism (smoke tests)
+- `deploy-start.sh` - Run on deployed system. Begin deployment, after maintenance has been enabled
+- `deploy-move.sh` - Run on deployed system. During deployment install passed directory as new version of the app in current directory
+- `deploy-finish.sh` - Run on deployed system. Deployment is finished (before maintenance is turned off)
+- `deploy-confirm.sh` - Run on pipeline systems. Before finish, check that deployment succeeded remotely via an alternate mechanism (smoke tests)
+- `deploy-cleanup.sh` - Run on deployed system. After deployment, delete stray files or left overs from deployment if necessary.
+- `deploy-undo.sh` - Run on deployed system. After failed deployment, revert to previous version.
 - `maintenance.sh -` Turn on or off maintenance
 - `github-release-before.sh` -
 - `make-env.sh` - Create the environment file (generally calls `bin/build/pipeline/make-env.sh` with your desired environment)
