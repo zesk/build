@@ -51,6 +51,7 @@ To use in your pipeline:
 - [`github-version-live.sh`](github-version-live.sh.md) - Tool to find the current release version for any GitHub hosted repository
 - [`make-env.sh`](make-env.sh.md) - Generate an `.env` file with a list of required environment values
 - [`php-build.sh`](php-build.sh.md) - Build a PHP application using `composer`
+- [`php-test.sh`](php-test.sh.md) - Test a PHP application using `docker-compose` and `composer`
 - [`remote-deploy-finish.sh`](remote-deploy-finish.sh.md) - Run on the remote system after a deployment is deployed but before it is finished to do any work on the remote system.
 - [`undeploy.sh`](undeploy.sh.md) - Reverse of `deploy.sh` - will revert an application on a host
 
