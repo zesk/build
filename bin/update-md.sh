@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Deploy Zesk Build
+# Update .md copies
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
@@ -10,13 +10,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-currentBranch=$(git branch --show-current)
-if [ "$currentBranch" = "main" ] || [ "$currentBranch" = "develop" ]; then
-    consoleWarning "Running on $currentBranch - unable to make change"
-    exit 0
-fi
-
-currentVersion="$(runHook version-current)"
 addNoteTo() {
     cp "$1" bin/build
     {
@@ -27,5 +20,3 @@ addNoteTo() {
 }
 addNoteTo README.md
 addNoteTo LICENSE.md
-git commit -m "updated license and readme for $currentVersion" -a >/dev/null || consoleSuccess Installation documentation up to date.
-git push
