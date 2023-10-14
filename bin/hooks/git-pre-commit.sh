@@ -4,6 +4,12 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
+fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
+if ! diff -q "${fromTo[@]}"; then
+    cp "${fromTo[@]}"
+    exec .git/hooks/pre-commit "$@"
+fi
+
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 

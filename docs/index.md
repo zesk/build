@@ -21,12 +21,14 @@ To use in your pipeline:
 ## Project structure
 
 - `bin/build/*.sh` - Build scripts and tools
+- `bin/build/tools/*.sh` - Tool functions
 - `bin/build/pipeline/*.sh` - Tools or steps for deployment
 - `bin/build/install/*.sh` - Install dependencies in the pipeline
 
 ## Documentation
 
 - [Environment variables which affect build](env.md)
+- [Tool Function Documentation](./tools/index.md)
 
 ### Install tools in the pipeline
 

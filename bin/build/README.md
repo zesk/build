@@ -27,6 +27,7 @@ To use in your pipeline:
 
 ## Tools
 
+- `tools.sh` - Main include for all build tools functions
 - `chmod-sh.sh` - Make `.sh` files executable
 - `cannon.sh` - Replace text in all files specified
 - `deprecated.sh` - Replace or warn about deprecated build code
@@ -88,6 +89,10 @@ A `./.deploy` directory is created for the `php-build.sh` steps and contains met
 In your bash scripts, certain functions require the definition of a `usage` function and will trigger it when an
 error occurs:
 
+    usageOptions() {
+        echo "--option      Description goes here"
+        echo "--debug       Debugging mode"
+    }
     usage() {
         local exitCode=$1
 
@@ -96,9 +101,9 @@ error occurs:
         if [ -n "$*" ]; then
             consoleError "$@"
         fi
-        consoleInfo "$me - do something"
+        echo "$me - do something" | usageGenerator 20
         echo
-        consoleInfo "--help     This help"
+        usageOptions | usageGenerator 20
         echo
         exit "$exitCode"
     }
