@@ -11,6 +11,8 @@
 #
 # getFromPipelineYML name defaultValue
 #
+# Simple get value of a variable from the bitbucket-pipelines.yml file
+#
 # Example:
 #
 # MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(getFromPipelineYML MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}

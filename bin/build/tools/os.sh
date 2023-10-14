@@ -72,9 +72,8 @@ aptUpdateOnce() {
 #
 # whichApt binary aptInstallPackage
 #
-# Installs an apt package if a binary does not exist in the which path
-#
-# The assuption here is that aptInstallPackage will install the desired binary
+# Installs an apt package if a binary does not exist in the which path.
+# The assumption here is that `aptInstallPackage` will install the desired `binary`.
 #
 whichApt() {
     local binary=$1 quietLog

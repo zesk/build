@@ -178,22 +178,6 @@ versionSort() {
 }
 
 #
-# Simple get value of a variable from the bitbucket-pipelines.yml file
-#
-# Usage: getFromPipelineYML MARIADB_ROOT_PASSWORD
-#
-# Assumes cwd is application/project root
-#
-getFromPipelineYML() {
-  local value
-
-  value=$(grep "$1" bitbucket-pipelines.yml | awk '{ print $2 }')
-  value=${value:=$2}
-
-  echo -n "$value"
-}
-
-#
 # Get the current IP address of the host
 #
 ipLookup() {
