@@ -191,17 +191,6 @@ consoleNameValue() {
 }
 
 #
-# Column count in current console
-#
-consoleColumns() {
-    if [ -z "${TERM:-}" ]; then
-        echo -n 80
-    else
-        tput cols
-    fi
-}
-
-#
 # Clears current line of text in the console
 #
 clearLine() {
@@ -219,4 +208,15 @@ statusMessage() {
     shift
     clearLine
     "$consoleAction" -n "$@"
+}
+
+#
+# Column count in current console
+#
+consoleColumns() {
+    if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
+        echo -n 80
+    else
+        tput cols
+    fi
 }
