@@ -39,6 +39,59 @@ Colors vary depending on the console and the terminal.
 - `consoleBold`
 - `consoleBoldRed`
 
+## `clearLine` - Clear a line in the console
+
+Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
+
+### Usage
+
+    clearLine
+
+### Arguments
+
+None
+
+### Environment
+
+Intended to be run on an interactive console. Should support `tput cols`.
+
+### Exit codes
+
+Zero
+
+### Examples
+
+    statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
+    clearLine
+
+
+## `statusMessage` - Output a status message with no newline
+
+Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
+
+### Usage
+
+    statusMessage consoleAction message [ ... ]
+
+### Arguments
+
+- `consoleAction` is one of **Semantic color commands** above or **Color commands** above
+- `message ...` is a message to output
+
+### Environment
+
+Intended to be run on an interactive console. Should support `tput cols`.
+
+### Exit codes
+
+Zero
+
+### Examples
+
+    statusMessage Loading...; bin/load.sh >>"$loadLogFile";
+    clearLine
+
+
 ## `consoleReset` - Reset the color
 
 This is typically appended after most `consoleAction` calls to reset the state of the console to default color and style.

@@ -25,6 +25,8 @@ requireFileDirectory() {
 #
 # If files do not exist, does nothing
 #
+# Used to move files, temporarily, sometimes and then move back easily.
+#
 renameFiles() {
     local old=$1 new=$2 verb=$3
 
@@ -37,12 +39,6 @@ renameFiles() {
             consoleWarning "$verb $i$old -> $i$new"
         fi
     done
-}
-envRenameHide() {
-    envRename "" ".$$.backup" hiding
-}
-envRenameUndo() {
-    envRename ".$$.backup" "" restoring
 }
 
 #

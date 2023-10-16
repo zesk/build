@@ -202,7 +202,7 @@ clearLine() {
 #
 # This is intended for messages on a line which are then overwritten using clearLine
 #
-statusLine() {
+statusMessage() {
     local consoleAction=$1
 
     shift
