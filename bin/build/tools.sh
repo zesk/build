@@ -36,3 +36,7 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/git.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/docker.sh"
+
+# no dependencies
+# shellcheck source=/dev/null
+. "$toolsDir/bitbucket.sh"

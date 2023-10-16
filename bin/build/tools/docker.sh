@@ -3,7 +3,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: colors.sh text.sh
-# bin: head grep docker-php-ext-install
+# bin: head grep
 
 ###############################################################################
 #
@@ -45,18 +45,4 @@ insideDocker() {
     fi
     # inside
     return 0
-}
-
-#
-# Install docker PHP extensions
-#
-# TODO not used anywhere - is this deprecated?
-#
-dockerPHPExtensions() {
-    local start
-    start=$(beginTiming)
-    consoleInfo -n "Installing PHP extensions ... "
-    [ -d "./.build" ] || mkdir -p "./.build"
-    docker-php-ext-install mysqli pcntl calendar >>"./.build/docker-php-ext-install.log"
-    reportTiming "$start" Done
 }

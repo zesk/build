@@ -20,7 +20,6 @@ pipelines:
             - docker
           script:
             - bin/test.sh develop
-            - bin/update-md.sh
     main:
       - step:
           deployment: production
