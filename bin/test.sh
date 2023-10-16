@@ -22,6 +22,7 @@ if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
     exit $errEnv
 fi
 
+echo "TERM=$TERM"
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
