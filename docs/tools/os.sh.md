@@ -8,16 +8,35 @@ Usage:
 
 Creates the directories for all files passed in.
 
-Environment:
+### Examples
+
+    logFile=./.build/$me.log
+
+    requireFileDirectory "$logFile"
+
+### Environment:
 
 - None
 
+## `renameFiles` - Rename a list of files usually to back them up temporarily
+
+Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
+
+### Usage:
+
+    renameFiles oldSuffix newSuffix actionVerb file0 [ file1 ... ]
+
+### Examples:
+
+    renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
+    ...
+    renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
 
 ## `createTarFile` - Platform agnostic tar create which keeps user and group as user 0
 
 `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
 
-Usage:
+### Usage:
 
     createTarFile target files
 
@@ -30,7 +49,7 @@ Usage:
 
 Like it says
 
-Usage:
+### Usage:
 
     aptUpdateOnce
 
@@ -42,11 +61,11 @@ Stores state files in `./.build/` directory which is created if it does not exis
 
 Installs an apt package if a binary does not exist in the which path. The assumption here is that `aptInstallPackage` will install the desired `binary`.
 
-Usage:
+### Usage:
 
     whichApt binary aptInstallPackage
 
-Examples:
+### Examples:
 
     whichApt shellcheck shellcheck
     whichApt mariadb mariadb-client
@@ -62,9 +81,7 @@ Confirms that `binary` is installed after installation succeeds.
 
 ### Environment
 
-None.
-
-...
+Technically this will install the binary and any related files as a package.
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -189,3 +189,23 @@ consoleNameValue() {
     shift
     echo "$(alignRight "$characterWidth" "$(consoleLabel -n "$name")") $(consoleValue -n "$@")"
 }
+
+#
+# Clears current line of text in the console
+#
+clearLine() {
+    echo -en "\r$(repeat "$(tput cols)" " ")\r"
+}
+
+#
+# Output a status line using a colorAction
+#
+# This is intended for messages on a line which are then overwritten using clearLine
+#
+statusLine() {
+    local consoleAction=$1
+
+    shift
+    clearLine
+    "$consoleAction" -n "$@"
+}

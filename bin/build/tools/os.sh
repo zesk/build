@@ -19,6 +19,33 @@ requireFileDirectory() {
 }
 
 #
+# renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
+#
+# Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
+#
+# If files do not exist, does nothing
+#
+renameFiles() {
+    local old=$1 new=$2 verb=$3
+
+    shift
+    shift
+    shift
+    for i in "$@"; do
+        if [ -f "$i$old" ]; then
+            mv "$i$old" "$i$new"
+            consoleWarning "$verb $i$old -> $i$new"
+        fi
+    done
+}
+envRenameHide() {
+    envRename "" ".$$.backup" hiding
+}
+envRenameUndo() {
+    envRename ".$$.backup" "" restoring
+}
+
+#
 # Platform agnostic tar cfz which ignores owner and attributes
 #
 createTarFile() {
