@@ -62,7 +62,7 @@ Output a bar as wide as the console using the `=` symbol.
 
 ### Environment
 
-Console width is captured using `tput cols`
+Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
 
 ### Exit codes
 

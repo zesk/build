@@ -191,10 +191,21 @@ consoleNameValue() {
 }
 
 #
+# Column count in current console
+#
+consoleColumns() {
+    if [ -z "${TERM:-}" ]; then
+        echo -n 80
+    else
+        tput cols
+    fi
+}
+
+#
 # Clears current line of text in the console
 #
 clearLine() {
-    echo -en "\r$(repeat "$(tput cols)" " ")\r"
+    echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
 }
 
 #

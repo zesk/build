@@ -41,7 +41,7 @@ repeat() {
 #
 echoBar() {
     local c="${1:-=}"
-    local n=$(($(tput cols) / ${#c}))
+    local n=$(($(consoleColumns) / ${#c}))
     repeat "$n" "$c"
 }
 
