@@ -1,5 +1,8 @@
 # Color Functions
 
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)
+
 All console functions in the form `consoleAction` where `Action` is a color name or a semantic meaning behave similarly:
 
 - With no arguments output the color escape codes with no newline to standard out
@@ -90,6 +93,27 @@ Zero
 
     statusMessage Loading...; bin/load.sh >>"$loadLogFile";
     clearLine
+
+
+## `consoleColumns`
+
+Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
+
+### Usage
+
+    consoleColumns
+
+### Arguments
+
+- None
+
+### Environment
+
+Uses the `tput cols` tool to find the value if `TERM` is non-blank. If
+
+### Examples
+
+    repeat $(consoleColumns) ^
 
 
 ## `consoleReset` - Reset the color
