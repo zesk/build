@@ -39,6 +39,7 @@ if which shellcheck >/dev/null; then
         fi
     done < <(find . -name '*.sh' ! -path '*/.*' -print0)
     if [ "${#failedReasons[@]}" -gt 0 ]; then
+        clearLine
         consoleError -n "The following scripts failed:"
         for f in "${failedReasons[@]}"; do
             echo "$(consoleMagenta -n "$f")$(consoleInfo -n ", ")"
@@ -46,6 +47,7 @@ if which shellcheck >/dev/null; then
         consoleError "done."
         exit 1
     else
+        clearLine
         consoleSuccess "All scripts passed"
     fi
 fi
