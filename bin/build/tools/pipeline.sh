@@ -15,14 +15,14 @@ errEnv=1
 #------------------------------------------------------------------------------
 
 #
-# Usage: dotEnvConfig
+# Usage: dotEnvConfigure
 #
 # Loads "./.env" which is the current project configuration file
 # Also loads "./.env.local" if it exists
 # Generally speaking - these are NAME=value files and should be parsable by
 # bash and other languages.
 #
-dotEnvConfig() {
+dotEnvConfigure() {
   if [ ! -f ./.env ]; then
     usage $errEnv "Missing ./.env"
     return $errEnv
@@ -36,6 +36,10 @@ dotEnvConfig() {
   set +a
 }
 
+dotEnvConfig() {
+  consoleWarning "dotEnvConfig is DEPRECATED - use dotEnvConfigure instead" 1>&2
+  dotEnvConfigure "$@"
+}
 #
 # Run a hook in the project located at ./bin/hooks/
 #
@@ -76,7 +80,12 @@ runOptionalHook() {
 # Does a hook exist in the local project?
 #
 hasHook() {
-  [ -n "$(whichHook "$1")" ]
+  while [ $# -gt 0 ]; do
+    if [ -x "$(whichHook "$1")" ]; then
+      return 1
+    fi
+  done
+  return 0
 }
 
 #
@@ -89,6 +98,9 @@ whichHook() {
       if [ -x "$p/$binary$e" ]; then
         echo "$p/$binary$e"
         return 0
+      fi
+      if [ -f "$p/$binary$e" ]; then
+        consoleWarning "$p/$binary$e exists but is not executable and will be ignored"
       fi
     done
   done
@@ -175,22 +187,6 @@ versionSort() {
     fi
   fi
   sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
-}
-
-#
-# Simple get value of a variable from the bitbucket-pipelines.yml file
-#
-# Usage: getFromPipelineYML MARIADB_ROOT_PASSWORD
-#
-# Assumes cwd is application/project root
-#
-getFromPipelineYML() {
-  local value
-
-  value=$(grep "$1" bitbucket-pipelines.yml | awk '{ print $2 }')
-  value=${value:=$2}
-
-  echo -n "$value"
 }
 
 #

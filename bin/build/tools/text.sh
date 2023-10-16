@@ -40,7 +40,9 @@ repeat() {
 # Decoration
 #
 echoBar() {
-    repeat 80 =
+    local c="${1:-=}"
+    local n=$(($(tput cols) / ${#c}))
+    repeat "$n" "$c"
 }
 
 #
@@ -132,9 +134,9 @@ maximumFieldLength() {
 #
 plural() {
     if [ "$(($1 + 0))" -eq 1 ]; then
-        echo "$2"
+        echo -n "$2"
     else
-        echo "$3"
+        echo -n "$3"
     fi
 }
 
@@ -180,7 +182,7 @@ alignLeft() {
 # Not sure if this works really, need to pair with
 # something in local script to make an array possibly
 #
-function argumentsToArray() {
+argumentsToArray() {
     local -a a=("$@")
     echo "${a[@]}"
 }

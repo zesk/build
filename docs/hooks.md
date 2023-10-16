@@ -15,5 +15,8 @@
 - `version-live.sh` - The current published live version of the software.
 - `application-tag.sh` - The current tagged version of the software
 - `application-checksum.sh` - Returns a string checksum of the current application source code (unique checksum for code state)
+- `test-setup.sh` - Move or copy files prior to docker-compose build to build test container
+- `test-runner.sh` - Run unit and any other tests inside the container
+- `test-cleanup.sh` - Reverse of test-setup hook actions
 
 [⬅ Return to top](index.md)

@@ -273,11 +273,13 @@ cleanupAction() {
       rs=$errEnv
       continue
     fi
+    echo
     start=$(beginTiming)
-    echo -n "$(consoleInfo -n "Finishing application at") $(consoleRed -n "$remotePath")"
+    echo "$(consoleInfo -n "Finishing application at") $(consoleSuccess "$host")@$(consoleRed -n "$remotePath")"
+    echo
     generateCommandsFile >"$temporaryCommandsFile"
     ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
-    reportTiming "$start" "Done."
+    reportTiming "$start" "$host deployed in"
   done
   return $rs
 }

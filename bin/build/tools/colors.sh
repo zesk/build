@@ -62,7 +62,7 @@ colorTest() {
     local i colors=(
         consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
         consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
-        consoleBold consoleRedBold consoleCode consoleWarning consoleSuccess
+        consoleBold consoleBoldRed consoleCode consoleWarning consoleSuccess
         consoleDecoration consoleError consoleLabel consoleValue
     )
     for i in "${colors[@]}"; do
@@ -117,7 +117,7 @@ consoleUnderline() {
 consoleBold() {
     __consoleEscape '\033[1m' '\033[21m' "$@"
 }
-consoleRedBold() {
+consoleBoldRed() {
     __consoleEscape '\033[31m' '\033[0m' "$@"
 }
 consoleNoBold() {
@@ -188,4 +188,24 @@ consoleNameValue() {
     shift
     shift
     echo "$(alignRight "$characterWidth" "$(consoleLabel -n "$name")") $(consoleValue -n "$@")"
+}
+
+#
+# Clears current line of text in the console
+#
+clearLine() {
+    echo -en "\r$(repeat "$(tput cols)" " ")\r"
+}
+
+#
+# Output a status line using a colorAction
+#
+# This is intended for messages on a line which are then overwritten using clearLine
+#
+statusMessage() {
+    local consoleAction=$1
+
+    shift
+    clearLine
+    "$consoleAction" -n "$@"
 }

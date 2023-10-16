@@ -19,6 +19,29 @@ requireFileDirectory() {
 }
 
 #
+# renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
+#
+# Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
+#
+# If files do not exist, does nothing
+#
+# Used to move files, temporarily, sometimes and then move back easily.
+#
+renameFiles() {
+    local old=$1 new=$2 verb=$3
+
+    shift
+    shift
+    shift
+    for i in "$@"; do
+        if [ -f "$i$old" ]; then
+            mv "$i$old" "$i$new"
+            consoleWarning "$verb $i$old -> $i$new"
+        fi
+    done
+}
+
+#
 # Platform agnostic tar cfz which ignores owner and attributes
 #
 createTarFile() {
@@ -72,9 +95,8 @@ aptUpdateOnce() {
 #
 # whichApt binary aptInstallPackage
 #
-# Installs an apt package if a binary does not exist in the which path
-#
-# The assuption here is that aptInstallPackage will install the desired binary
+# Installs an apt package if a binary does not exist in the which path.
+# The assumption here is that `aptInstallPackage` will install the desired `binary`.
 #
 whichApt() {
     local binary=$1 quietLog

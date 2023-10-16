@@ -21,12 +21,14 @@ To use in your pipeline:
 ## Project structure
 
 - `bin/build/*.sh` - Build scripts and tools
+- `bin/build/tools/*.sh` - Tool functions
 - `bin/build/pipeline/*.sh` - Tools or steps for deployment
 - `bin/build/install/*.sh` - Install dependencies in the pipeline
 
 ## Documentation
 
 - [Environment variables which affect build](env.md)
+- [Tool Function Documentation](./tools/index.md)
 
 ### Install tools in the pipeline
 
@@ -51,6 +53,7 @@ To use in your pipeline:
 - [`github-version-live.sh`](github-version-live.sh.md) - Tool to find the current release version for any GitHub hosted repository
 - [`make-env.sh`](make-env.sh.md) - Generate an `.env` file with a list of required environment values
 - [`php-build.sh`](php-build.sh.md) - Build a PHP application using `composer`
+- [`php-test.sh`](php-test.sh.md) - Test a PHP application using `docker-compose` and `composer`
 - [`remote-deploy-finish.sh`](remote-deploy-finish.sh.md) - Run on the remote system after a deployment is deployed but before it is finished to do any work on the remote system.
 - [`undeploy.sh`](undeploy.sh.md) - Reverse of `deploy.sh` - will revert an application on a host
 

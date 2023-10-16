@@ -69,10 +69,8 @@ while [ $# -gt 0 ]; do
     *)
         if [ -z "$applicationChecksum" ]; then
             applicationChecksum=$1
-            echo "$(consoleLabel -n "Application Checksum:") $(consoleValue -n "$applicationChecksum")"
         elif [ -z "$atticPath" ]; then
             atticPath=$1
-            echo "$(consoleLabel -n "          Attic path:") $(consoleValue -n "$atticPath")"
             if [ ! -d "$atticPath" ]; then
                 if ! mkdir -p "$atticPath"; then
                     usage "$errEnv" "Can not create $atticPath"
@@ -265,7 +263,12 @@ deployTarFile() {
 if test $undoFlag && test $cleanupFlag; then
     usage "$errArg" "--cleanup and --undo are mutually exclusive"
 fi
+
 start=$(beginTiming)
+consoleInfo "Remote deployment finish on $(uname -n)"
+echo "$(consoleLabel -n "Application Checksum:") $(consoleValue -n "$applicationChecksum")"
+echo "$(consoleLabel -n "          Attic path:") $(consoleValue -n "$atticPath")"
+
 if test $cleanupFlag; then
     cleanupAction "$applicationChecksum"
 elif test $undoFlag; then
@@ -276,4 +279,4 @@ else
     fi
     deployAction "$applicationChecksum"
 fi
-reportTiming "$start" "Done."
+reportTiming "$start" "Remote deployment finished in"
