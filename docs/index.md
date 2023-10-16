@@ -27,8 +27,8 @@ To use in your pipeline:
 
 ## Documentation
 
+- [Bash Functions Reference](./tools/index.md)
 - [Environment variables which affect build](env.md)
-- [Tool Function Documentation](./tools/index.md)
 
 ### Install tools in the pipeline
 
