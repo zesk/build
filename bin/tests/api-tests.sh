@@ -83,7 +83,7 @@ testHooks() {
 
 testEnvironmentVariables() {
     assertOutputContains PWD environmentVariables
-    assertOutputContains TERM environmentVariables
+    assertOutputContains SHLVL environmentVariables
     assertOutputContains PATH environmentVariables
     assertOutputContains HOME environmentVariables
     assertOutputContains LANG environmentVariables
