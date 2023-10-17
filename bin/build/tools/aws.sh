@@ -5,7 +5,7 @@
 # Depends: colors.sh text.sh
 # bin: test echo date
 #
-errEnv=1
+errorEnvironment=1
 
 ###############################################################################
 #
@@ -35,13 +35,13 @@ awsCredentialsFile() {
         if test "$verbose"; then
             consoleWarning "No $HOME directory found" 1>&2
         fi
-        return "$errEnv"
+        return "$errorEnvironment"
     fi
     if [ ! -f "$credentials" ]; then
         if test "$verbose"; then
             consoleWarning "No $credentials file found" 1>&2
         fi
-        return "$errEnv"
+        return "$errorEnvironment"
     fi
     echo "$credentials"
 }
@@ -121,5 +121,5 @@ awsEnvironment() {
             return 0
         fi
     fi
-    return "$errEnv"
+    return "$errorEnvironment"
 }

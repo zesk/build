@@ -9,8 +9,8 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-errEnv=1
-errArg=2
+errorEnvironment=1
+errorArgument=2
 # set -x # Uncomment to enable debugging
 set -eo pipefail
 
@@ -57,7 +57,7 @@ usage() {
 }
 
 if [ ! -d "${HOME:-}" ]; then
-  usage $errEnv "No HOME defined or not a directory: $HOME"
+  usage $errorEnvironment "No HOME defined or not a directory: $HOME"
 fi
 
 # dotEnvConfig
@@ -79,11 +79,11 @@ while [ $# -gt 0 ]; do
   --target)
     shift
     if [ -n "$buildTarget" ]; then
-      usage $errArg "--target supplied twice"
+      usage $errorArgument "--target supplied twice"
     fi
     buildTarget=$1
     if [ -z "$buildTarget" ]; then
-      usage $errArg "blank --target"
+      usage $errorArgument "blank --target"
     fi
     ;;
   --help)
@@ -91,7 +91,7 @@ while [ $# -gt 0 ]; do
     ;;
   --deploy)
     if test "$deployFlag"; then
-      usage $errArg "--deploy arg passed twice"
+      usage $errorArgument "--deploy arg passed twice"
     fi
     deployFlag=1
     ;;
@@ -100,14 +100,14 @@ while [ $# -gt 0 ]; do
     ;;
   --undo)
     if test "$undoFlag"; then
-      usage $errArg "--undo specified twice"
+      usage $errorArgument "--undo specified twice"
     fi
     undoFlag=1
     remoteArgs+=("--undo")
     ;;
   --cleanup)
     if test "$cleanupFlag"; then
-      usage $errArg "--undo specified twice"
+      usage $errorArgument "--undo specified twice"
     fi
     cleanupFlag=1
     remoteArgs+=("--cleanup")
@@ -141,24 +141,24 @@ fi
 
 # Flag semantics
 if test "$undoFlag" && test "$cleanupFlag"; then
-  usage $errArg "--undo and --cleanup are mutually exclusive"
+  usage $errorArgument "--undo and --cleanup are mutually exclusive"
 fi
 if test "$undoFlag" && test "$deployFlag"; then
-  usage $errArg "--undo and --deploy are mutually exclusive"
+  usage $errorArgument "--undo and --deploy are mutually exclusive"
 fi
 if test "$deployFlag" && test "$cleanupFlag"; then
-  usage $errArg "--deploy and --cleanup are mutually exclusive"
+  usage $errorArgument "--deploy and --cleanup are mutually exclusive"
 fi
 # Values are not blank
 buildTarget="${buildTarget:-app.tar.gz}"
 if [ -z "$applicationChecksum" ]; then
-  usage $errArg "Missing applicationChecksum"
+  usage $errorArgument "Missing applicationChecksum"
 fi
 if [ -z "$remoteDeploymentPath" ]; then
-  usage $errArg "Missing remoteDeploymentPath"
+  usage $errorArgument "Missing remoteDeploymentPath"
 fi
 if [ -z "$remotePath" ]; then
-  usage $errArg "Missing remotePath"
+  usage $errorArgument "Missing remotePath"
 fi
 
 #
@@ -166,7 +166,7 @@ fi
 #
 currentIP=$(ipLookup)
 if [ -z "$currentIP" ]; then
-  usage $errEnv "Unable to determine IP address"
+  usage $errorEnvironment "Unable to determine IP address"
 fi
 
 showInfo() {
@@ -178,7 +178,7 @@ showInfo() {
 }
 
 if [ -z "${userHosts[*]}" ]; then
-  usage $errEnv "No user hosts provided?"
+  usage $errorEnvironment "No user hosts provided?"
 fi
 
 #
@@ -238,7 +238,7 @@ undoAction() {
     host="${userHost##*@}"
     if ! grep -q "$host" "$deployedHostArtifact"; then
       consoleWarning "$host ($userHost) not found in artifact file ... skipping"
-      rs=$errEnv
+      rs=$errorEnvironment
       continue
     fi
     echo -n "$(consoleInfo -n "Reverting application at") $(consoleRed -n "$remotePath")"
@@ -270,7 +270,7 @@ cleanupAction() {
     host="${userHost##*@}"
     if ! grep -q "$host" "$deployedHostArtifact"; then
       consoleWarning "$host ($userHost) not found in artifact file ... skipping"
-      rs=$errEnv
+      rs=$errorEnvironment
       continue
     fi
     echo

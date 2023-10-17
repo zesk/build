@@ -9,8 +9,8 @@
 # set -x # Debugging
 set -eo pipefail
 
-errEnv=1
-errArg=2
+errorEnvironment=1
+errorArgument=2
 
 export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
 export BUILD_TARGET=${BUILD_TARGET:=app.tar.gz}
@@ -101,7 +101,7 @@ if test $debuggingFlag; then
 fi
 
 if [ $# -eq 0 ]; then
-    usage $errEnv "Need to supply a list of files for application $BUILD_TARGET"
+    usage $errorEnvironment "Need to supply a list of files for application $BUILD_TARGET"
 fi
 for tarFile in "$@"; do
     if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
@@ -109,7 +109,7 @@ for tarFile in "$@"; do
     fi
 done
 if [ ${#missingFile[@]} -gt 0 ]; then
-    usage $errEnv "Missing files: ${missingFile[*]}"
+    usage $errorEnvironment "Missing files: ${missingFile[*]}"
 fi
 
 # Sets the DEFAULT - can override with command line argument --suffix
@@ -118,10 +118,10 @@ if [ "$DEPLOYMENT" = "production" ]; then
 elif [ "$DEPLOYMENT" = "develop" ]; then
     versionSuffix=d
 elif [ -z "$DEPLOYMENT" ]; then
-    usage $errArg "DEPLOYMENT must be defined in the environment or passed as --deployment"
+    usage $errorArgument "DEPLOYMENT must be defined in the environment or passed as --deployment"
 fi
 if [ -z "$versionSuffix" ]; then
-    usage $errArg "No version --suffix defined - usually unknown DEPLOYMENT: $DEPLOYMENT"
+    usage $errorArgument "No version --suffix defined - usually unknown DEPLOYMENT: $DEPLOYMENT"
 fi
 initTime=$(beginTiming)
 
@@ -194,7 +194,7 @@ fi
 ./bin/build/pipeline/composer.sh
 
 if [ ! -d ./vendor ]; then
-    usage "$errArg" "Composer step did not create the vendor directory"
+    usage "$errorArgument" "Composer step did not create the vendor directory"
 fi
 
 bigText "$APPLICATION_TAG" | prefixLines "$(consoleGreen)"

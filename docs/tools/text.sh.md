@@ -54,12 +54,12 @@ Output a bar as wide as the console using the `=` symbol.
 
 ### Usage
 
-    echoBar [ alternateChar ]
+    echoBar [ alternateChar [ offset ] ]
 
 ### Arguments
 
 - `alternateChar` - Use an alternate character or string output
-
+- `offset` - an integer offset to increase or decrease the size of the bar (default is `0`)
 ### Environment
 
 Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.

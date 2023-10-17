@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-errEnv=1
+errorEnvironment=1
 
 set -eo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -24,11 +24,11 @@ usage() {
 ./bin/build/pipeline/git-tag-version.sh
 currentVersion="$(runHook version-current)"
 if [ -z "$currentVersion" ]; then
-    usage $errEnv "No current version returned by version-current.sh"
+    usage $errorEnvironment "No current version returned by version-current.sh"
 fi
 releaseNotes="./docs/release/$currentVersion.md"
 if [ ! -f "$releaseNotes" ]; then
-    usage $errEnv "Missing release notes at $releaseNotes"
+    usage $errorEnvironment "Missing release notes at $releaseNotes"
 fi
 bigText "$currentVersion" | prefixLines "$(consoleMagenta)"
 start=$(beginTiming)

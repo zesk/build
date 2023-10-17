@@ -11,7 +11,7 @@
 relTop=../..
 
 # The remaining lines will be replaced by the main script every time.
-errEnv=1
+errorEnvironment=1
 set -eo pipefail
 # set -x # Debugging
 
@@ -19,12 +19,12 @@ myBinary="${BASH_SOURCE[0]}"
 me=$(basename "$myBinary")
 if ! cd "$(dirname "$myBinary")"; then
   echo "$me: Can not cd" 1>&2
-  exit $errEnv
+  exit $errorEnvironment
 fi
 myBinary="$(pwd)/$me"
 if ! cd "$relTop"; then
   echo "me: Can not cd to $relTop" 1>&2
-  exit $errEnv
+  exit $errorEnvironment
 fi
 
 if [ ! -d bin/build ]; then
@@ -39,7 +39,7 @@ if [ ! -d bin/build ]; then
   rm build.tar.gz
   if [ ! -d bin/build ]; then
     echo "Unable to download and install bin/build" 1>&2
-    exit $errEnv
+    exit $errorEnvironment
   fi
 
   # shellcheck source=/dev/null
@@ -54,7 +54,7 @@ else
     echo
     echo "  rm -rf bin/build"
     echo "  ${BASH_SOURCE[0]}"
-    exit $errEnv
+    exit $errorEnvironment
   fi
   # shellcheck source=/dev/null
   . bin/build/tools.sh
