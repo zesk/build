@@ -5,8 +5,8 @@
 #
 # Test run:
 #
-# docker run --platform linux/arm64 -v $(pwd):/opt/atlassian/bitbucketci/agent/build -it atlassian/default-image:4
-# rm -rf .build/ test.*; set -a; source .env.prod-robot ; bin/test.sh
+# bin/local-container.sh
+# inside: bin/reset-test.sh
 #
 image: atlassian/default-image:4
 
@@ -19,7 +19,7 @@ pipelines:
           services:
             - docker
           script:
-            - bin/test.sh develop
+            - bin/test.sh
     main:
       - step:
           deployment: production
@@ -27,5 +27,5 @@ pipelines:
           services:
             - docker
           script:
-            - bin/test.sh production
+            - bin/test.sh
             - bin/deploy.sh
