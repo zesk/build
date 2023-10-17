@@ -11,7 +11,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-errEnv=1
+errorEnvironment=1
 set -eou pipefail
 # set -x # Debugging
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
@@ -102,7 +102,7 @@ for e in "${requireEnvironment[@]}"; do
     fi
 done
 if [ ${#missing[@]} -gt 0 ]; then
-    usage "$errEnv" "Missing environment variables: ${missing[*]}"
+    usage "$errorEnvironment" "Missing environment variables: ${missing[*]}"
 fi
 
 #==========================================================================================

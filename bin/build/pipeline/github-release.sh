@@ -22,7 +22,7 @@ export DEBIAN_FRONTEND=noninteractive
 #
 # Exit codes
 #
-errArg=2
+errorArgument=2
 
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
@@ -43,19 +43,19 @@ usage() {
 usageEnvironment "${requireEnvironment[@]}"
 
 if [ ! -f "$1" ]; then
-  usage "$errArg" "Pass in description file path as first argument"
+  usage "$errorArgument" "Pass in description file path as first argument"
 fi
 export descriptionFile="$1"
 shift
 
 if [ -z "$1" ]; then
-  usage "$errArg" "Empty releaseName"
+  usage "$errorArgument" "Empty releaseName"
 fi
 export releaseName="$1"
 shift
 
 if [ -z "$1" ]; then
-  usage "$errArg" "Empty commitish"
+  usage "$errorArgument" "Empty commitish"
 fi
 export commitish="$1"
 shift

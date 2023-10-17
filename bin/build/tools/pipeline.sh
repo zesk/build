@@ -4,7 +4,7 @@
 #
 # Depends: colors.sh text.sh
 #
-errEnv=1
+errorEnvironment=1
 
 ###############################################################################
 #
@@ -24,8 +24,8 @@ errEnv=1
 #
 dotEnvConfigure() {
   if [ ! -f ./.env ]; then
-    usage $errEnv "Missing ./.env"
-    return $errEnv
+    usage $errorEnvironment "Missing ./.env"
+    return $errorEnvironment
   fi
 
   set -a
@@ -52,7 +52,7 @@ runHook() {
   hook=$(whichHook "$binary")
   if [ -z "$hook" ]; then
     consoleWarning "No hook for $binary with arguments: $*"
-    return $errEnv
+    return $errorEnvironment
   fi
   "$hook" "$@"
 }
@@ -82,10 +82,11 @@ runOptionalHook() {
 hasHook() {
   while [ $# -gt 0 ]; do
     if [ -x "$(whichHook "$1")" ]; then
-      return 1
+      return 0
     fi
+    shift
   done
-  return 0
+  return 1
 }
 
 #

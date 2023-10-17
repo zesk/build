@@ -6,12 +6,12 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-errEnv=1
+errorEnvironment=1
 relTop="../.."
 me=$(basename "${BASH_SOURCE[0]}")
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
-  exit $errEnv
+  exit $errorEnvironment
 fi
 
 # shellcheck source=/dev/null
@@ -19,7 +19,7 @@ fi
 
 if [ ! -d "./.git" ]; then
   echo "No .git directory at $(pwd), stopping" 1>&2
-  exit $errEnv
+  exit $errorEnvironment
 fi
 
 # versionSort works on vMMM.NNN.PPP

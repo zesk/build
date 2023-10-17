@@ -83,5 +83,31 @@ Confirms that `binary` is installed after installation succeeds.
 
 Technically this will install the binary and any related files as a package.
 
+## `environmentVariables` - Fetch a list of environment variable names
+
+Returns the list of defined environment variables exported in the current bash context.
+
+### Usage
+
+    environmentVariables
+
+### Arguments
+
+None.
+
+### Exit codes
+
+Zero
+
+### Output
+
+Environment variable names, one per line.
+
+### Examples
+
+    for f in $(environmentVariables); do
+        echo "$f"
+    done
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -9,7 +9,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eo pipefail
-errEnv=1
+errorEnvironment=1
 
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
@@ -49,6 +49,6 @@ consoleInfo -n "Installing ${actualPackages[*]} ... "
 requireFileDirectory "$quietLog"
 if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
   buildFailed "$quietLog"
-  exit $errEnv
+  exit $errorEnvironment
 fi
 reportTiming "$start" OK
