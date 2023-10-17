@@ -37,11 +37,14 @@ repeat() {
 }
 
 #
-# Decoration
+# echoBar character offset
 #
 echoBar() {
     local c="${1:-=}"
     local n=$(($(consoleColumns) / ${#c}))
+    local delta=$((${2:-0} + 0))
+
+    n=$((n + delta))
     repeat "$n" "$c"
 }
 
@@ -73,8 +76,16 @@ urlParse() {
     local url=$1 name user password host
 
     name=${url##*/}
+    # strip ?
+    name=${name%%\?*}
+    # strip #
+    name=${name%%#*}
 
+    # extract scheme before ://
+    scheme=${url%%://*}
+    # user is after scheme
     user=${url##*://}
+    # before password
     user=${user%%:*}
 
     password=${url%%@*}
@@ -89,6 +100,13 @@ urlParse() {
     fi
     host=${host%%:*}
 
+    if [ "$scheme" = "$url" ] || [ "$user" = "$url" ] || [ "$password" = "$url" ] || [ "$host" = "$url" ]; then
+        echo "url=$url" 1>&2
+        echo "failed=1" 1>&2
+        return 1
+    fi
+
+    echo "scheme=$scheme"
     echo "url=$url"
     echo "name=$name"
     echo "user=$user"

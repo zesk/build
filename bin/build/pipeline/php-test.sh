@@ -7,7 +7,7 @@
 set -eo pipefail
 # set -x # Debugging
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
 . ./bin/pipeline/tools.sh

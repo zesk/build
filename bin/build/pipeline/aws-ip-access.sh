@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2023, Market Acumen, Inc.
 #
-errEnv=1
+errorEnvironment=1
 errArgument=1
 
 set -euo pipefail
@@ -117,7 +117,7 @@ fi
 if [ -z "$currentIP" ]; then
     currentIP=$(ipLookup)
     if [ -z "$currentIP" ]; then
-        usage $errEnv "Unable to determine IP address"
+        usage $errorEnvironment "Unable to determine IP address"
     fi
 fi
 currentIP="$currentIP/32"
@@ -140,7 +140,7 @@ if needAWSEnvironment; then
         export AWS_SECRET_ACCESS_KEY
         eval "$(awsEnvironment "$awsProfile")"
     else
-        usage $errEnv "No AWS credentials available: $awsProfile"
+        usage $errorEnvironment "No AWS credentials available: $awsProfile"
     fi
 fi
 
@@ -167,7 +167,7 @@ ipRemove() {
         consoleValue -n "$port "
         if ! aws --output json ec2 revoke-security-group-ingress --region "$AWS_REGION" --group-id "$group_id" --protocol tcp --port "$port" --cidr "$old_ip" >/dev/null; then
             consoleError "FAILED $?"
-            return $errEnv
+            return $errorEnvironment
         fi
         reportTiming "$start" Success
     fi
@@ -239,7 +239,7 @@ simpleServicePortLookup() {
         echo 5432
         ;;
     *)
-        exit $errEnv
+        exit $errorEnvironment
         ;;
     esac
     return 0
@@ -253,7 +253,7 @@ servicePortLookup() {
     else
         port=$(($(grep /tcp /etc/services | grep "^$1\s" | awk '{ print $2 }' | cut -d / -f 1) + 0))
         if [ $port -eq 0 ]; then
-            return $errEnv
+            return $errorEnvironment
         fi
         echo $port
     fi

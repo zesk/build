@@ -6,8 +6,8 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-errEnv=1
-errArg=2
+errorEnvironment=1
+errorArgument=2
 start=$(($(date +%s) + 0))
 set -eo pipefail
 # set -x # Debugging
@@ -73,13 +73,13 @@ while [ $# -gt 0 ]; do
             atticPath=$1
             if [ ! -d "$atticPath" ]; then
                 if ! mkdir -p "$atticPath"; then
-                    usage "$errEnv" "Can not create $atticPath"
+                    usage "$errorEnvironment" "Can not create $atticPath"
                 else
                     consoleWarning "Created $atticPath"
                 fi
             fi
         else
-            usage "$errArg" "Unknown parameter $1"
+            usage "$errorArgument" "Unknown parameter $1"
         fi
         ;;
     esac
@@ -109,7 +109,7 @@ cleanupAction() {
     if hasHook deploy-cleanup; then
         if ! runHook deploy-cleanup; then
             consoleError "Cleanup failed"
-            return $errEnv
+            return $errorEnvironment
         fi
     else
         consoleInfo "No deployment clean up hook"
@@ -162,7 +162,7 @@ deployAction() {
     #  |____/ \___| .__/|_|\___/ \__, |
     #             |_|            |___/
     if [ ! -f "$currentTar" ]; then
-        usage "$errEnv" "$currentTar is not uploaded here"
+        usage "$errorEnvironment" "$currentTar is not uploaded here"
     fi
 
     #
@@ -172,7 +172,7 @@ deployAction() {
     #
     deployTemp="./deploy.$$"
     if ! mkdir -p "$deployTemp"; then
-        usage "$errEnv" "unable to create temp deploy directory"
+        usage "$errorEnvironment" "unable to create temp deploy directory"
     fi
     cd "$deployTemp/"
     # extract .env alone
@@ -191,7 +191,7 @@ deployAction() {
     if [ "$APPLICATION_CHECKSUM" != "$applicationChecksum" ]; then
         consoleRed "$deployTemp/.env"
         cat "$deployTemp/.env"
-        usage "$errEnv" "Mismatch .env ($APPLICATION_CHECKSUM) != arg ($applicationChecksum)"
+        usage "$errorEnvironment" "Mismatch .env ($APPLICATION_CHECKSUM) != arg ($applicationChecksum)"
     fi
 
     rm -rf "$deployTemp"
@@ -231,7 +231,7 @@ deployTarFile() {
 
     vendorTar="$tarBallPath/$shaPrefix.$targetFileName"
 
-    [ -f "$vendorTar" ] || usage $errEnv "Missing $vendorTar"
+    [ -f "$vendorTar" ] || usage $errorEnvironment "Missing $vendorTar"
 
     consoleInfo "Unpacking $targetFileName ... "
     currentDir="$(pwd)"
@@ -261,7 +261,7 @@ deployTarFile() {
 }
 
 if test $undoFlag && test $cleanupFlag; then
-    usage "$errArg" "--cleanup and --undo are mutually exclusive"
+    usage "$errorArgument" "--cleanup and --undo are mutually exclusive"
 fi
 
 start=$(beginTiming)
@@ -275,7 +275,7 @@ elif test $undoFlag; then
     undoAction "$applicationChecksum"
 else
     if [ -z "$applicationChecksum" ]; then
-        usage "$errArg" "No argument build-sha-check passed"
+        usage "$errorArgument" "No argument build-sha-check passed"
     fi
     deployAction "$applicationChecksum"
 fi

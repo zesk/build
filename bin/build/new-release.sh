@@ -17,14 +17,14 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eo pipefail
-errEnv=1
-errArg=2
+errorEnvironment=1
+errorArgument=2
 
 me="$(basename "${BASH_SOURCE[0]}")"
 relTop="../.."
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
-  exit $errEnv
+  exit $errorEnvironment
 fi
 
 usage() {
@@ -53,7 +53,7 @@ while [ $# -gt 0 ]; do
   case $1 in
   *)
     if [ -n "$newVersion" ]; then
-      usage $errArg "Unknown argument $1"
+      usage $errorArgument "Unknown argument $1"
     fi
     newVersion=$1
     shift
@@ -66,16 +66,16 @@ if [ -z "$newVersion" ]; then
   readLoop=1
 fi
 if ! hasHook version-current; then
-  usage $errEnv "Requires hook version-current"
+  usage $errorEnvironment "Requires hook version-current"
 fi
 currentVersion=$(runHook version-current)
 if [ -z "$currentVersion" ]; then
-  usage $errEnv "version-current returned empty string"
+  usage $errorEnvironment "version-current returned empty string"
 fi
 if hasHook version-live; then
   liveVersion=$(runHook version-live)
   if [ -z "$liveVersion" ]; then
-    usage $errEnv "version-live returned empty string"
+    usage $errorEnvironment "version-live returned empty string"
   fi
   echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
 else
@@ -101,7 +101,7 @@ while true; do
     break
   else
     if ! test $readLoop; then
-      usage $errArg "Invalid version $newVersion"
+      usage $errorArgument "Invalid version $newVersion"
     else
       consoleError "Invalid version $newVersion"
     fi

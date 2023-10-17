@@ -10,14 +10,14 @@
 #
 npm_version=${BUILD_NPM_VERSION:-latest}
 set -eo pipefail
-errEnv=1
+errorEnvironment=1
 export DEBIAN_FRONTEND=noninteractive
 
 me="$(basename "$0")"
 relTop=../../..
 if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
   echo "$me: Can not cd to $relTop" 1>&2
-  exit $errEnv
+  exit $errorEnvironment
 fi
 quietLog="./.build/$me.log"
 

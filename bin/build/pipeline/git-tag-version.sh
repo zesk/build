@@ -11,7 +11,7 @@
 #
 set -eou pipefail
 
-errArg=2
+errorArgument=2
 maximumTagsPerVersion=${BUILD_MAXIMUM_TAGS_PER_VERSION:-1000}
 
 me=$(basename "${BASH_SOURCE[0]}")
@@ -50,12 +50,12 @@ while [ $# -gt 0 ]; do
     shift
     versionSuffix=$1
     if [ -z "$versionSuffix" ]; then
-      usage $errArg "--suffix is blank"
+      usage $errorArgument "--suffix is blank"
     fi
     shift
     ;;
   *)
-    usage $errArg "Unknown argument: $1"
+    usage $errorArgument "Unknown argument: $1"
     ;;
   esac
 done
@@ -106,4 +106,4 @@ consoleInfo "Tagging version $tryVersion and pushing ... "
 git tag "$tryVersion"
 git push --tags --quiet
 git fetch -q
-reportTiming "$init" "$0" completed && echo
+reportTiming "$init" "Tagged version completed in"

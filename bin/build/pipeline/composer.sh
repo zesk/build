@@ -10,7 +10,7 @@
 #
 set -eo pipefail
 # set -x
-errArg=1
+errorArgument=1
 errBuild=1000
 
 me=$(basename "$0")
@@ -46,10 +46,10 @@ while [ $# -gt 0 ]; do
     ;;
   *)
     if [ "$composerDirectory" != "." ]; then
-      usage "$errArg" "Unknown argument $1"
+      usage "$errorArgument" "Unknown argument $1"
     fi
     if [ ! -d "$1" ]; then
-      usage "$errArg" "Directory does not exist: $1"
+      usage "$errorArgument" "Directory does not exist: $1"
     fi
     composerDirectory=$1
     ;;

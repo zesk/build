@@ -57,7 +57,7 @@ Template header for most scripts:
     # Does a long process
     #
     set -eo pipefail
-    errEnv=1
+    errorEnvironment=1
 
     cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 

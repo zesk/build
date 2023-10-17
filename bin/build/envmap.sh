@@ -4,16 +4,16 @@
 #
 set -eo pipefail
 
-errEnv=1
+errorEnvironment=1
 me=$(basename "$0")
 if ! cd "$(dirname "${BASH_SOURCE[0]}")"; then
 	echo "$me: Can not cd" 1>&2
-	exit $errEnv
+	exit $errorEnvironment
 fi
 
 if [ ! -f ./tools.sh ]; then
 	echo "$me: missing $(pwd)/tools.sh" 1>&2
-	exit $errEnv
+	exit $errorEnvironment
 fi
 
 # shellcheck source=/dev/null
@@ -25,8 +25,9 @@ cleanup() {
 }
 trap cleanup EXIT INT
 
-for i in $(env | cut -d = -f 1); do
+for i in $(environmentVariables); do
 	case "$i" in
+	*[%{}]*) ;;
 	LD_*) ;;
 	_*) ;;
 	*)
