@@ -60,7 +60,7 @@ if [ ! -d "${HOME:-}" ]; then
   usage $errorEnvironment "No HOME defined or not a directory: $HOME"
 fi
 
-# dotEnvConfig
+# dotEnvConfigure
 
 # DEBUGGING # consoleWarning "ARGS: $*"
 
@@ -281,6 +281,8 @@ cleanupAction() {
     ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     reportTiming "$start" "$host deployed in"
   done
+  rm "$deployedHostArtifact"
+  # artifact removed: .deployed-hosts
   return $rs
 }
 

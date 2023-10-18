@@ -44,12 +44,12 @@ usageWhich git
 
 tarArgs=(--no-same-owner --no-same-permissions --no-xattrs)
 
-dotEnvConfig
+dotEnvConfigure
 
 targetFileName=${BUILD_TARGET:-app.tar.gz}
 
 currentTar="./$targetFileName"
-previousCommitHashFile="./.deploy/git-commit-hash"
+appChecksumFile="./.deploy/APPLICATION_CHECKSUM"
 undoFlag=
 cleanupFlag=
 applicationChecksum=
@@ -199,14 +199,14 @@ deployAction() {
     #
     # Maintenance on
     #
-    if [ -f "$previousCommitHashFile" ]; then
+    if [ -f "$appChecksumFile" ]; then
         #
         # .next and .previous are created here
         #
-        cp "$previousCommitHashFile" "$atticPath/$applicationChecksum.previous"
-        previousCommitHash=$(cat "$previousCommitHashFile")
-        if [ -f "$atticPath/$applicationChecksum.next" ]; then
-            nextFileContents=$(cat "$atticPath/$applicationChecksum.next")
+        cp "$appChecksumFile" "$atticPath/$applicationChecksum.previous"
+        previousCommitHash=$(cat "$appChecksumFile")
+        if [ -f "$atticPath/$previousCommitHash.next" ]; then
+            nextFileContents=$(cat "$atticPath/$previousCommitHash.next")
             if [ "$nextFileContents" != "$applicationChecksum" ]; then
                 echo "$(consoleError "Mismatch next file contents: ") $(consoleError "$nextFileContents")"
                 echo "$(consoleError "           Overwriting with: ") $(consoleError "$applicationChecksum")"
@@ -220,6 +220,11 @@ deployAction() {
     deployTarFile "$atticPath" "$applicationChecksum"
 }
 
+#
+# deployTarFile DEPLOY/app-path shaPrefix
+#
+# Assumes pwd is app directory
+#
 deployTarFile() {
     local tarBallPath shaPrefix vendorTar oldDir newDir
 
@@ -239,9 +244,12 @@ deployTarFile() {
     mkdir -p "$newDir"
     cd "$newDir"
     tar zxf "$vendorTar" "${tarArgs[@]}"
-    date >"$tarBallPath/current.date"
-    cp "$tarBallPath/current.date" "$tarBallPath/$shaPrefix.date"
     cd "$currentDir"
+
+    rm "$tarBallPath/*.LIVE" 2>/dev/null || :
+
+    date >"$tarBallPath/$shaPrefix.LIVE"
+
     runOptionalHook maintenance on
     consoleInfo -n "Setting to version $shaPrefix ... "
 

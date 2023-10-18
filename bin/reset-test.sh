@@ -7,6 +7,7 @@
 set -eo pipefail
 
 envFile=${1:-.env.prod-robot}
+shift || :
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
