@@ -110,6 +110,7 @@ testUrlParse
 testDotEnvConfigure
 testHooks
 testEnvironmentVariables
+testDates
 
 testSection bin Tests
 testMakeEnv
