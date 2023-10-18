@@ -17,15 +17,9 @@ set -eo pipefail
 
 myBinary="${BASH_SOURCE[0]}"
 me=$(basename "$myBinary")
-if ! cd "$(dirname "$myBinary")"; then
-  echo "$me: Can not cd" 1>&2
-  exit $errorEnvironment
-fi
+cd "$(dirname "$myBinary")"
 myBinary="$(pwd)/$me"
-if ! cd "$relTop"; then
-  echo "me: Can not cd to $relTop" 1>&2
-  exit $errorEnvironment
-fi
+cd "$relTop"
 
 if [ ! -d bin/build ]; then
   start=$(($(date +%s) + 0))
@@ -64,7 +58,7 @@ diffLines=$(diff "$(pwd)/bin/build/build-setup.sh" "$myBinary" | grep -v 'relTop
 if [ "$diffLines" -gt 0 ]; then
   replace=$(quoteSedPattern "relTop=$relTop")
   sed -e "s/^relTop=.*/$replace/" <bin/build/build-setup.sh >"$myBinary"
-  echo "$(consoleValue -n "$myBinary") $(consoleWarning -n "was updated.")"
+  echo "$(consoleValue -n "$myBinary")" "$(consoleWarning -n "was updated.")"
 else
-  echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n "is up to date.")"
+  echo "$(consoleValue -n "$myBinary")" "$(consoleSuccess -n "is up to date.")"
 fi
