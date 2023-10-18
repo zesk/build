@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-
+# set -x
 # Change this line when placing in your project
 relTop=../..
 
@@ -15,6 +15,11 @@ errorEnvironment=1
 set -eo pipefail
 # set -x # Debugging
 
+if [ "$1" = "--update" ]; then
+  shift
+  cp "${BASH_SOURCE[0]}" "$1"
+  rm "${BASH_SOURCE[0]}"
+fi
 myBinary="${BASH_SOURCE[0]}"
 me=$(basename "$myBinary")
 cd "$(dirname "$myBinary")"
@@ -55,10 +60,13 @@ else
 fi
 
 diffLines=$(diff "$(pwd)/bin/build/build-setup.sh" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)
-if [ "$diffLines" -gt 0 ]; then
-  replace=$(quoteSedPattern "relTop=$relTop")
-  sed -e "s/^relTop=.*/$replace/" <bin/build/build-setup.sh >"$myBinary"
-  echo "$(consoleValue -n "$myBinary")" "$(consoleWarning -n "was updated.")"
-else
-  echo "$(consoleValue -n "$myBinary")" "$(consoleSuccess -n "is up to date.")"
+if [ "$diffLines" -eq 0 ]; then
+  echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
+  exit 0
 fi
+
+replace=$(quoteSedPattern "relTop=$relTop")
+sed -e "s/^relTop=.*/$replace/" <bin/build/build-setup.sh >"$myBinary.$$"
+chmod +x "$myBinary.$$"
+(mv "$myBinary.$$" "$myBinary")
+echo "$(consoleValue -n "$myBinary") $(consoleWarning -n was updated.)"

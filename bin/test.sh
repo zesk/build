@@ -39,6 +39,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 usageArguments() {
     echo "--help This help"
     echo "--clean Delete test artifact files before starting"
+    echo "--messy Do not delete test artifact files afterwards"
 }
 
 usage() {
@@ -51,13 +52,21 @@ usage() {
         echo
     fi
     echo
-    consoleInfo "$me [ --clean ] - Test Zesk Build"
+    consoleInfo "$me [ --clean ] [ --messy ] - Test Zesk Build"
     echo
-    usageArguments | usageGenerator "$(maximumFieldLength | usageArguments)"
+    usageArguments | usageGenerator $(("$(usageArguments | maximumFieldLength)" + 2))
+    echo
+    consoleReset
     exit "$result"
 }
+
+messyOption=
+
 testCleanup() {
     cd "$top"
+    if test "$messyOption"; then
+        return 0
+    fi
     rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws ./.build/ 2>/dev/null || :
 }
 
@@ -67,6 +76,9 @@ while [ $# -gt 0 ]; do
         consoleWarning -n "Cleaning ... "
         testCleanup
         consoleSuccess "done"
+        ;;
+    --messy)
+        messyOption=1
         ;;
     *)
         usage "$errorArgument" "Unknown argument $1"
