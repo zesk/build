@@ -179,6 +179,27 @@ dateToTimestamp() {
 }
 
 #
+# Converts a date (YYYY-MM-DD) to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)
+#
+# timestampToDate 1681948800 %F
+#
+timestampToDate() {
+    if date --version 2>/dev/null 1>&2; then
+        date -d "@$1" "+$2"
+    else
+        date -r "$1" "+$2"
+    fi
+}
+
+yesterdayDate() {
+    timestampToDate "$(($(date +%s) - 86400))" %F
+}
+
+todayDate() {
+    date +%F
+}
+
+#
 # alignRight "$characterSize" "string to align"
 #
 alignRight() {

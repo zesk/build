@@ -89,3 +89,19 @@ testEnvironmentVariables() {
     assertOutputContains LANG environmentVariables
     assertOutputContains PWD environmentVariables
 }
+
+testDates() {
+    local t y
+    assertEquals "$(timestampToDate 1697666075 %F)" "2023-10-18"
+    assertEquals "$(todayDate)" "$(date +%F)"
+    t="$(todayDate)"
+    y="$(yesterdayDate)"
+    assertEquals "${#t}" "${#y}"
+
+    if [[ "$y" < "$t" ]]; then
+        consoleSuccess OK
+    else
+        consoleError "$y \< $t" failed
+        return $errorEnvironment
+    fi
+}
