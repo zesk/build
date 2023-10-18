@@ -179,7 +179,7 @@ deployAction() {
     tar zxf "../$currentTar" "${tarArgs[@]}" ".env"
     cd ..
 
-    APPLICATION_TAG=
+    APPLICATION_CHECKSUM=
     set -a
     # shellcheck source=/dev/null
     . "$deployTemp/.env"
@@ -188,10 +188,10 @@ deployAction() {
     #
     # Check things match
     #
-    if [ "$APPLICATION_TAG" != "$applicationChecksum" ]; then
+    if [ "$APPLICATION_CHECKSUM" != "$applicationChecksum" ]; then
         consoleRed "$deployTemp/.env"
         cat "$deployTemp/.env"
-        usage "$errorEnvironment" "Mismatch .env ($APPLICATION_TAG) != arg ($applicationChecksum)"
+        usage "$errorEnvironment" "Mismatch .env ($APPLICATION_CHECKSUM) != arg ($applicationChecksum)"
     fi
 
     rm -rf "$deployTemp"
