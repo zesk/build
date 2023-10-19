@@ -22,6 +22,7 @@ testTools() {
     assertEquals "$(dateToFormat 2023-04-20 %s)" "1681948800"
     assertEquals "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20"
     assertEquals "$(dateToTimestamp 2023-04-20)" "1681948800"
+    consoleSuccess testTools OK
 }
 
 testUrlParse() {
@@ -50,6 +51,7 @@ testUrlParse() {
     assertEquals "$host" identity
     assertEquals "$port" ""
     assertEquals "$password" hard-to-type
+    consoleSuccess testUrlParse OK
 }
 
 testDotEnvConfigure() {
@@ -69,7 +71,7 @@ testDotEnvConfigure() {
     fi
     cd ..
     rm -rf "$tempDir"
-    consoleGreen dotEnvConfigure works AOK
+    consoleSuccess dotEnvConfigure works AOK
 }
 
 testHooks() {
@@ -79,6 +81,7 @@ testHooks() {
     for h in misspelled-deployed-cleanup not-rude-confirm; do
         assertNotExitCode 0 hasHook $h
     done
+    consoleSuccess testHooks OK
 }
 
 testEnvironmentVariables() {
@@ -88,6 +91,7 @@ testEnvironmentVariables() {
     assertOutputContains HOME environmentVariables
     assertOutputContains LANG environmentVariables
     assertOutputContains PWD environmentVariables
+    consoleSuccess testEnvironmentVariables OK
 }
 
 testDates() {
@@ -99,9 +103,19 @@ testDates() {
     assertEquals "${#t}" "${#y}"
 
     if [[ "$y" < "$t" ]]; then
-        consoleSuccess OK
+        consoleSuccess testDates OK
     else
         consoleError "$y \< $t" failed
         return $errorEnvironment
     fi
+}
+
+testEnvMap() {
+    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh)"
+    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh NAME PLACE)"
+    assertEquals "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh NAME)"
+    assertEquals "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh PLACE)"
+    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh NAM PLAC)"
+    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh AME LACE)"
+    consoleSuccess testEnvMap OK
 }

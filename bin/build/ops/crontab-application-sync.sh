@@ -26,7 +26,7 @@ set -eo pipefail
 errorEnvironment=1
 errorArgument=2
 me=$(basename "$0")
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 usageOptions() {
   echo "--env environment    Apply this environment file first before application environment files"
@@ -110,8 +110,8 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$environmentMapper" ]; then
-  if [ -x ./bin/build/envmap.sh ]; then
-    environmentMapper="$(pwd)/bin/build/envmap.sh"
+  if [ -x ./envmap.sh ]; then
+    environmentMapper="$(pwd)/envmap.sh"
   elif which envmap.sh >/dev/null; then
     environmentMapper="$(which envmap.sh)"
   else
