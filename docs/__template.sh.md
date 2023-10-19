@@ -30,4 +30,8 @@ No local caches.
 
 - `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
 
+## Examples
+
+    foo.sh < thing > thang
+
 [⬅ Return to top](index.md)

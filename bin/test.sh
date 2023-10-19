@@ -104,7 +104,7 @@ colorTest
 echo
 
 testSection API Tests
-
+testEnvMap
 testTools
 testUrlParse
 testDotEnvConfigure
@@ -113,6 +113,7 @@ testEnvironmentVariables
 testDates
 
 testSection bin Tests
+testEnvmapPortability
 testMakeEnv
 testBuildSetup
 testEnvMap
@@ -124,6 +125,9 @@ testScriptIntallations  # has side-effects
 testSection AWS Tests
 testAWSExpiration
 testAWSIPAccess "$quietLog" # has side-effects
+
+testSection "crontab-application-sync.sh (ops)"
+./bin/tests/test-crontab-application-sync.sh -v | prefixLines "$(consoleCode)"
 
 testCleanup
 

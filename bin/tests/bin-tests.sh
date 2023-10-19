@@ -161,6 +161,16 @@ testScriptInstalls() {
     fi
 }
 
+testEnvmapPortability() {
+    tempDir="./random.$$/"
+    mkdir -p "$tempDir" || :
+    cp ./bin/build/envmap.sh "./random.$$/"
+    export DUDE=ax
+    export WILD=m
+    assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/envmap.sh)" "maximum"
+    rm -rf "$tempDir"
+}
+
 #
 # Side-effect: installs scripts
 #
@@ -190,4 +200,5 @@ testScriptIntallations() {
     fi
     testScriptInstalls prettier "bin/build/install/prettier.sh"
 
+    testScriptInstalls terraform "bin/build/install/terraform.sh"
 }
