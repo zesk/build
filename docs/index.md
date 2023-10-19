@@ -30,6 +30,16 @@ To use in your pipeline:
 - [Bash Functions Reference](./tools/index.md)
 - [Environment variables which affect build](env.md)
 
+### Generic tools
+
+- [`envmap.sh`](envmap.sh.md) - Map environment values into files
+- [`chmod-sh.sh`](chmod-sh.sh.md) - Make `.sh` files executable
+- [`cannon.sh`](cannon.sh.md) - Map strings in files to make global changes. Dangerous.
+- [`new-release.sh`](new-release.sh.md) - Create a new release for the current project.
+- [`version-last.sh`](version-last.sh.md) - The last version in the list of tags for this project
+- [`version-list.sh`](new-release.sh.md) - The list of versions for this project, in order by semantic versioning
+- [`tools.sh`](./tools/index.md) - Build shell tools and all related functions. Include this via `. ./bin/build/tools.sh`
+
 ### Install tools in the pipeline
 
 - [`apt.sh`](apt.sh.md) - Ensure apt-get is up to date.
@@ -56,5 +66,9 @@ To use in your pipeline:
 - [`php-test.sh`](php-test.sh.md) - Test a PHP application using `docker-compose` and `composer`
 - [`remote-deploy-finish.sh`](remote-deploy-finish.sh.md) - Run on the remote system after a deployment is deployed but before it is finished to do any work on the remote system.
 - [`undeploy.sh`](undeploy.sh.md) - Reverse of `deploy.sh` - will revert an application on a host
+
+### Operations Tools
+
+- [`crontab-application-sync.sh`](crontab-application-sync.sh.md) - Keep a crontab up to date with multiple applications
 
 
