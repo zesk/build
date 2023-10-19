@@ -253,6 +253,79 @@ If parsing fails, non-zero exit code.
 
     timestamp=$(dateToTimestamp '2023-10-15')
 
+
+## `timestampToDate`
+
+### Usage
+
+    timestampToDate integerTimestamp format
+
+### Arguments
+
+- `integerTimestamp` - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
+- `format` - How to output the date (e.g. `%F` - no `+` is required)
+
+### Environment
+
+Compatible with BSD and GNU date.
+
+### Exit codes
+
+If parsing fails, non-zero exit code.
+
+### Examples
+
+    dateField=$(timestampToDate $init %Y)
+
+
+## `yesterdayDate`
+
+Returns the yesterday's date, in YYYY-MM-DD format. (same as `%F`)
+
+### Usage
+
+    yesterdayDate
+
+### Arguments
+
+None.
+
+### Environment
+
+Compatible with BSD and GNU date.
+
+### Exit codes
+
+Zero.
+
+### Examples
+
+    rotated="$log.$(yesterdayDate)"
+
+## `todayDate`
+
+Returns the current date, in YYYY-MM-DD format. (same as `%F`)
+
+### Usage
+
+    todayDate
+
+### Arguments
+
+None.
+
+### Environment
+
+Compatible with BSD and GNU date.
+
+### Exit codes
+
+Zero
+
+### Examples
+
+    date="$(todayDate)"
+
 ## `alignRight`
 
 Format text and align it right using spaces.
