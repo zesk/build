@@ -17,7 +17,8 @@ set -eo pipefail
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-knownHostsFile=$HOME/.ssh/known_hosts
+sshHome=$HOME/.ssh
+knownHostsFile=$sshHome/known_hosts
 temporaryCommandsFile=./.temp-sftp
 deployedHostArtifact="./.deployed-hosts"
 
@@ -179,6 +180,10 @@ showInfo() {
 
 if [ -z "${userHosts[*]}" ]; then
   usage $errorEnvironment "No user hosts provided?"
+fi
+
+if [ ! -d "$sshHome" ] && ! mkdir -m 0700 "$sshHome"; then
+  usage $errorEnvironment "Need to be able to create $sshHome"
 fi
 
 #
