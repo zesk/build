@@ -6,6 +6,10 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+# Depends: colors.sh text.sh prefixLines
+#
+# TODO md5sum is not portable
+#
 
 errorEnvironment=1
 
