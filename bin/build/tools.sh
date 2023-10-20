@@ -23,6 +23,10 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # shellcheck source=/dev/null
 . "$toolsDir/colors.sh"
+# Depends on colors.sh text.sh
+# shellcheck source=/dev/null
+. "$toolsDir/assert.sh"
+
 # shellcheck source=/dev/null
 . "$toolsDir/pipeline.sh"
 # shellcheck source=/dev/null
@@ -40,3 +44,6 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 # no dependencies
 # shellcheck source=/dev/null
 . "$toolsDir/bitbucket.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/tests.sh"

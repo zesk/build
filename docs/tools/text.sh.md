@@ -388,5 +388,39 @@ Output:
     Name:          Juanita
     Profession:    Engineer
 
+
+## `boxedHeading` - Text heading decoration
+
+Output a section heading.
+
+### Usage
+
+    boxedHeading text [ ... ]
+
+### Arguments
+
+- `text ...` - Text to put in the box
+
+### Environment
+
+None
+
+### Exit codes
+
+Zero.
+
+### Examples
+
+    boxedHeading Moving ...
+
+Output:
+
+    +================================================================================================+
+    |                                                                                                |
+    | Moving ...                                                                                     |
+    |                                                                                                |
+    +================================================================================================+
+
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

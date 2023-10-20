@@ -225,3 +225,20 @@ argumentsToArray() {
     local -a a=("$@")
     echo "${a[@]}"
 }
+
+#
+# Heading for section output
+#
+boxedHeading() {
+    local bar spaces text emptyBar
+
+    bar="+$(echoBar '' -2)+"
+    emptyBar="|$(echoBar ' ' -2)|"
+    text="$*"
+    spaces=$((${#bar} - ${#text} - 4))
+    consoleDecoration "$bar"
+    consoleDecoration "$emptyBar"
+    echo "$(consoleDecoration -n \|) $(consoleInfo -n "$text")$(repeat $spaces " ") $(consoleDecoration -n \|)"
+    consoleDecoration "$emptyBar"
+    consoleDecoration "$bar"
+}
