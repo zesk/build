@@ -105,49 +105,10 @@ testEnvMap() {
 }
 
 #
-# Requires shellcheck so should be later in the testing process to have a cleaner build
+# testShellScripts moved into tools/
 #
-# Side-effect: shellcheck is installed
-#
-testScripts() {
-    local failedReasons thisYear f quietLog=$1
-    testSection "Checking all shellcheck and bash -n"
 
-    bin/build/install/apt.sh shellcheck
-    if [ -f ./1 ]; then
-        echo "1 found after apt.sh"
-        exit 1
-    fi
-    whichApt shellcheck shellcheck
-
-    thisYear=$(date +%Y)
-    failedReasons=()
-    while IFS= read -r -d '' f; do
-        consoleInfo "Checking $f"
-        if ! bash -n "$f"; then
-            failedReasons+=("bash -n $f failed")
-        fi
-        if ! shellcheck "$f" >>"$quietLog"; then
-            failedReasons+=("shellcheck $f failed")
-        fi
-        if ! grep -q "Copyright &copy; $thisYear" "$f"; then
-            failedReasons+=("$f missing copyright")
-        fi
-    done < <(find . -name '*.sh' ! -path '*/.*' -print0)
-
-    if [ "${#failedReasons[@]}" -gt 0 ]; then
-        consoleError -n "The following scripts failed:"
-        for f in "${failedReasons[@]}"; do
-            echo "$(consoleMagenta -n "$f")$(consoleInfo -n ", ")"
-        done
-        consoleError "done."
-        buildFailed "$quietLog"
-    else
-        consoleSuccess "All scripts passed"
-    fi
-}
-
-testScriptInstalls() {
+__doesScriptInstall() {
     local binary=$1 script=$2
     testSection "$binary"
     if which "$binary" >/dev/null; then
@@ -174,14 +135,14 @@ testEnvmapPortability() {
 #
 # Side-effect: installs scripts
 #
-testScriptIntallations() {
+testScriptInstallations() {
     if ! which docker-compose >/dev/null; then
-        testScriptInstalls docker-compose "bin/build/install/docker-compose.sh"
+        __doesScriptInstall docker-compose "bin/build/install/docker-compose.sh"
     fi
 
-    testScriptInstalls php "bin/build/install/php-cli.sh"
-    testScriptInstalls python "bin/build/install/python.sh"
-    testScriptInstalls mariadb "bin/build/install/mariadb-client.sh"
+    __doesScriptInstall php "bin/build/install/php-cli.sh"
+    __doesScriptInstall python "bin/build/install/python.sh"
+    __doesScriptInstall mariadb "bin/build/install/mariadb-client.sh"
     # requires docker
     if which docker >/dev/null; then
         echo "{}" >composer.json
@@ -192,13 +153,13 @@ testScriptIntallations() {
     fi
 
     if ! which git >/dev/null; then
-        testScriptInstalls git "bin/build/install/git.sh"
+        __doesScriptInstall git "bin/build/install/git.sh"
     fi
     if ! which npm >/dev/null; then
         # npm 18 installed in this image
-        testScriptInstalls npm "bin/build/install/npm.sh"
+        __doesScriptInstall npm "bin/build/install/npm.sh"
     fi
-    testScriptInstalls prettier "bin/build/install/prettier.sh"
+    __doesScriptInstall prettier "bin/build/install/prettier.sh"
 
-    testScriptInstalls terraform "bin/build/install/terraform.sh"
+    __doesScriptInstall terraform "bin/build/install/terraform.sh"
 }

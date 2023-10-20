@@ -28,11 +28,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # shellcheck source=/dev/null
 . ./bin/tests/api-tests.sh
 # shellcheck source=/dev/null
-. ./bin/tests/assert.sh
-# shellcheck source=/dev/null
 . ./bin/tests/aws-tests.sh
 # shellcheck source=/dev/null
 . ./bin/tests/bin-tests.sh
+# shellcheck source=/dev/null
+. ./bin/tests/text-tests.sh
 # shellcheck source=/dev/null
 . ./bin/tests/test-tools.sh
 
@@ -112,6 +112,9 @@ testHooks
 testEnvironmentVariables
 testDates
 
+testSection Text Tests
+testText
+
 testSection bin Tests
 testEnvmapPortability
 testMakeEnv
@@ -119,8 +122,8 @@ testBuildSetup
 testEnvMap
 
 requireFileDirectory "$quietLog"
-testScripts "$quietLog" # has side-effects
-testScriptIntallations  # has side-effects
+testShellScripts "$quietLog" # has side-effects
+testScriptInstallations      # has side-effects
 
 testSection AWS Tests
 testAWSExpiration
