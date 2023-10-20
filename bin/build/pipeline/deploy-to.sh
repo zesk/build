@@ -191,7 +191,7 @@ fi
 #
 for userHost in "${userHosts[@]}"; do
   host="${userHost##*@}"
-  if ! grep -q "$host" "$knownHostsFile"; then
+  if [ ! -f "$knownHostsFile" ] || ! grep -q "$host" "$knownHostsFile"; then
     echo "$(consoleInfo "Adding")" "$(consoleRed "$host")" "$(consoleInfo to)" "$(consoleGreen "$knownHostsFile")"
     ssh-keyscan -H "$host" >>"$knownHostsFile" 2>/dev/null
   else
