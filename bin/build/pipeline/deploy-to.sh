@@ -205,6 +205,8 @@ done
 #
 # Generate our commands file
 #
+# Argument commands must cd such that current directory is a project directory
+#
 generateCommandsFile() {
   if buildDebugEnabled; then
     # Debugging remote shell
@@ -217,7 +219,7 @@ generateCommandsFile() {
     shift
   done
   # shellcheck disable=SC2016
-  echo "$remoteDeploymentPath/$applicationChecksum/app/bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remotePath\""
+  echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remotePath\""
 }
 
 undoAction() {
@@ -251,7 +253,7 @@ undoAction() {
       continue
     fi
     echo -n "$(consoleInfo -n "Reverting application at") $(consoleRed -n "$remotePath")"
-    generateCommandsFile >"$temporaryCommandsFile"
+    generateCommandsFile "cd \"$remotePath\"" >"$temporaryCommandsFile"
     ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     reportTiming "$start" "Done."
   done
@@ -286,7 +288,7 @@ cleanupAction() {
     start=$(beginTiming)
     echo "$(consoleInfo -n "Finishing application at") $(consoleSuccess "$host")@$(consoleRed -n "$remotePath")"
     echo
-    generateCommandsFile >"$temporaryCommandsFile"
+    generateCommandsFile "cd \"$remotePath\"" >"$temporaryCommandsFile"
     ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     reportTiming "$start" "$host deployed in"
   done
@@ -337,7 +339,7 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
-    generateCommandsFile "cd app" "tar zxf ../$buildTarget --no-xattrs" "cd .." >"$temporaryCommandsFile"
+    generateCommandsFile "cd app" "tar zxf ../$buildTarget --no-xattrs" >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
     if buildDebugEnabled; then
       consoleInfo "DEBUG: Commands file is:"
