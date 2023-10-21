@@ -6,7 +6,7 @@
 #
 # The directory is currently run inside:
 #
-# - remoteDeploymentPath/applicationChecksum/app/
+# - deployHome/applicationChecksum/app/
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
@@ -17,10 +17,11 @@ set -eo pipefail
 # set -x # Debugging
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
-atticPath="$(dirname "$(pwd)")"
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+deployHome="$(dirname "$(dirname "$(pwd)")")"
 
 usage() {
     local rs
@@ -33,7 +34,8 @@ usage() {
     fi
     echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] applicationChecksum applicationPath")"
     echo
-    consoleInfo "This is run on the remote system after deployment; environment files are correct. It is run within the DEPLOYMENT"
+    consoleInfo "This is run on the remote system after deployment; environment files are correct."
+    consoleInfo "It is run inside the deployment home directory in the new application folder."
     echo
     echo "$(consoleGreen "--debug    ")" "$(consoleInfo "Enable debugging. Defaults to BUILD_DEBUG.")"
     echo "$(consoleGreen "--undo     ")" "$(consoleInfo "Revert changes just made")"
@@ -42,6 +44,7 @@ usage() {
     echo "$(consoleGreen "applicationChecksum   ")" "$(consoleInfo "will match APPLICATION_CHECKSUM in .env")"
     echo "$(consoleGreen "applicationPath       ")" "$(consoleInfo "path where the application is live")"
     echo
+    consoleInfo Current working directory is deployHome/applicationChecksum/app.
     exit "$rs"
 }
 
@@ -50,8 +53,6 @@ usageWhich git
 dotEnvConfigure
 
 targetPackage=${BUILD_TARGET:-app.tar.gz}
-
-currentTar="./$targetPackage"
 
 undoFlag=
 cleanupFlag=
@@ -104,11 +105,10 @@ cleanupAction() {
     #  | |___| |  __/ (_| | | | | |_| | |_) |
     #   \____|_|\___|\__,_|_| |_|\__,_| .__/
     #                                 |_|
+    cd "$1"
+    shift
+
     consoleInfo -n "Cleaning up ..."
-    if [ -f "$currentTar" ]; then
-        consoleError "Found $currentTar - LIKELY FAILURE"
-        rm "$currentTar"
-    fi
     if hasHook deploy-cleanup; then
         if ! runHook deploy-cleanup; then
             consoleError "Cleanup failed"
@@ -117,40 +117,6 @@ cleanupAction() {
     else
         consoleInfo "No deployment clean up hook"
     fi
-}
-
-undoAction() {
-    local undoDeploySHA
-    #   _   _           _
-    #  | | | |_ __   __| | ___
-    #  | | | | '_ \ / _` |/ _ \
-    #  | |_| | | | | (_| | (_) |
-    #   \___/|_| |_|\__,_|\___/
-    #
-    undoDeploySHA=$1
-    shift
-    consoleInfo -n "Reverting installation $undoDeploySHA ... "
-
-    previousSHAFile="$atticPath/$undoDeploySHA.previous"
-    if [ ! -f "$previousSHAFile" ]; then
-        consoleError "No $previousSHAFile - no undo"
-        return 0
-    fi
-    previousSHA=$(cat "$previousSHAFile")
-    previousTar="$atticPath/$previousSHA.$targetPackage"
-    if [ ! -f "$previousTar" ]; then
-        consoleError "No $previousTar - no undo"
-        return 0
-    fi
-    deployApplication "$atticPath" "$previousSHA" "$targetPackage" "$applicationPath"
-    if hasHook deploy-undo; then
-        if ! runHook deploy-undo "$atticPath" "$previousSHA"; then
-            consoleError "deploy-undo hook failed, continuing anyway"
-        fi
-    else
-        consoleInfo "No deployment undo hook"
-    fi
-    return 0
 }
 
 #   ____             _
@@ -164,18 +130,20 @@ if test $undoFlag && test $cleanupFlag; then
 fi
 
 start=$(beginTiming)
-consoleInfo "Remote deployment finish on $(uname -n)"
-echo "$(consoleLabel -n "Application Checksum:") $(consoleValue -n "$applicationChecksum")"
-echo "$(consoleLabel -n "          Attic path:") $(consoleValue -n "$atticPath")"
+width=50
+consoleNameValue $width "Host:" "$(uname -n)"
+consoleNameValue $width "Deployment Path:" "$deployHome"
+consoleNameValue $width "Application path:" "$applicationPath"
+consoleNameValue $width "Application checksum:" "$applicationChecksum"
 
 if test $cleanupFlag; then
-    cleanupAction "$applicationChecksum"
+    cleanupAction "$applicationPath"
 elif test $undoFlag; then
-    undoDeployApplication "$atticPath" "$applicationChecksum" "$targetPackage" "$applicationPath"
+    undoDeployApplication "$deployHome" "$applicationChecksum" "$targetPackage" "$applicationPath"
 else
     if [ -z "$applicationChecksum" ]; then
-        usage "$errorArgument" "No argument build-sha-check passed"
+        usage "$errorArgument" "No argument applicationChecksum passed"
     fi
-    deployApplication "$atticPath" "$applicationChecksum" "$targetPackage" "$applicationPath"
+    deployApplication "$deployHome" "$applicationChecksum" "$targetPackage" "$applicationPath"
 fi
 reportTiming "$start" "Remote deployment finished in"

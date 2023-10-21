@@ -205,7 +205,7 @@ todayDate() {
 alignRight() {
     local n=$(($1 + 0))
     shift
-    printf "%${n}s" "$*"
+    echo -n "$(printf "%${n}s" "$*")"
 }
 
 #
