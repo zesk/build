@@ -14,7 +14,7 @@
 # Side-effect: shellcheck is installed
 #
 testShellScripts() {
-    local failedReasons thisYear f quietLog=$1
+    local failedReasons thisYear f quietLog=$1 shFiles
     boxedHeading "Checking all shellcheck and bash -n"
 
     ./bin/build/install/apt.sh shellcheck
@@ -22,6 +22,8 @@ testShellScripts() {
 
     thisYear=$(date +%Y)
     failedReasons=()
+    shFiles=$(mktemp)
+    find . -name '*.sh' ! -path '*/.*' -print0 >"$shFiles"
     while IFS= read -r -d '' f; do
         consoleInfo "Checking $f"
         if ! bash -n "$f"; then
@@ -33,7 +35,8 @@ testShellScripts() {
         if ! grep -q "Copyright &copy; $thisYear" "$f"; then
             failedReasons+=("$f missing copyright")
         fi
-    done < <(find . -name '*.sh' ! -path '*/.*' -print0)
+    done <"$shFiles"
+    rm "$shFiles"
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
         consoleError -n "The following scripts failed:"

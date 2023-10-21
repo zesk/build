@@ -1,8 +1,6 @@
 .history/
 /.build/
 /.vscode/
-/composer.json
-/composer.lock
 /vendor/
 /.composer/
 /.env*
