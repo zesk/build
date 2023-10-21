@@ -212,11 +212,12 @@ generateCommandsFile() {
     echo "set -x"
   fi
   echo "cd \"$remoteDeploymentPath/$applicationChecksum\""
-  if [ -n "$*" ]; then
-    echo "$@"
-  fi
+  while [ $# -gt 0 ]; do
+    echo "$1"
+    shift
+  done
   # shellcheck disable=SC2016
-  echo "app/bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remotePath\""
+  echo "$remoteDeploymentPath/$applicationChecksum/app/bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remotePath\""
 }
 
 undoAction() {
@@ -325,8 +326,10 @@ deployAction() {
     start=$(beginTiming)
     echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remoteDeploymentPath") "
     {
-      echo "@mkdir $applicationChecksum"
-      echo "@mkdir $applicationChecksum/app"
+      echo "cd $remoteDeploymentPath"
+      echo "[ -d \"$applicationChecksum/app\" ] || mkdir -p \"$applicationChecksum/app\""
+    } | ssh "$(sshishDeployOptions)" -T "$userHost" bash --noprofile -s -e
+    {
       echo "@put $buildTarget $applicationChecksum/$buildTarget"
     } | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
     reportTiming "$start" "Done."
@@ -334,7 +337,7 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
-    generateCommandsFile "tar zxf $applicationChecksum/$buildTarget --no-xattrs" >"$temporaryCommandsFile"
+    generateCommandsFile "cd app" "tar zxf ../$buildTarget --no-xattrs" "cd .." >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
     if buildDebugEnabled; then
       consoleInfo "DEBUG: Commands file is:"
