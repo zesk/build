@@ -16,10 +16,11 @@ errorEnvironment=1
 #
 testShellScripts() {
     local failedReasons thisYear f quietLog=$1 shFiles
-    boxedHeading "Checking all shellcheck and bash -n" >>"$quietLog"
-
-    ./bin/build/install/apt.sh shellcheck
-    whichApt shellcheck shellcheck
+    {
+        boxedHeading "Checking all shellcheck and bash -n"
+        ./bin/build/install/apt.sh shellcheck
+        whichApt shellcheck shellcheck
+    } >>"$quietLog"
 
     thisYear=$(date +%Y)
     failedReasons=()
