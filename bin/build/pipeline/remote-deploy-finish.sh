@@ -4,6 +4,10 @@
 #
 # Note environment here is NOT THE BUILD ENVIRONMENT - it is the remote host itself
 #
+# The directory is currently run inside:
+#
+# - remoteDeploymentPath/applicationChecksum/app/
+#
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 errorEnvironment=1
@@ -13,6 +17,7 @@ set -eo pipefail
 # set -x # Debugging
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+atticPath="$(dirname "$(pwd)")"
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
@@ -26,34 +31,32 @@ usage() {
         consoleError "$@"
         echo
     fi
-    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] applicationChecksum atticPath")"
+    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] applicationChecksum applicationPath")"
     echo
-    consoleInfo "This is run on the remote system after deployment; environment files are correct."
+    consoleInfo "This is run on the remote system after deployment; environment files are correct. It is run within the DEPLOYMENT"
     echo
     echo "$(consoleGreen "--debug    ")" "$(consoleInfo "Enable debugging. Defaults to BUILD_DEBUG.")"
     echo "$(consoleGreen "--undo     ")" "$(consoleInfo "Revert changes just made")"
     echo "$(consoleGreen "--cleanup  ")" "$(consoleInfo "Cleanup after success")"
     echo
     echo "$(consoleGreen "applicationChecksum   ")" "$(consoleInfo "will match APPLICATION_CHECKSUM in .env")"
-    echo "$(consoleGreen "atticPath  ")" "$(consoleInfo "path where backup images are stored (and pruned)")"
+    echo "$(consoleGreen "applicationPath       ")" "$(consoleInfo "path where the application is live")"
     echo
     exit "$rs"
 }
 
 usageWhich git
 
-tarArgs=(--no-same-owner --no-same-permissions --no-xattrs)
-
 dotEnvConfigure
 
-targetFileName=${BUILD_TARGET:-app.tar.gz}
+targetPackage=${BUILD_TARGET:-app.tar.gz}
 
-currentTar="./$targetFileName"
-appChecksumFile="./.deploy/APPLICATION_CHECKSUM"
+currentTar="./$targetPackage"
+
 undoFlag=
 cleanupFlag=
 applicationChecksum=
-atticPath=
+applicationPath=
 debuggingFlag=
 while [ $# -gt 0 ]; do
     case $1 in
@@ -69,13 +72,13 @@ while [ $# -gt 0 ]; do
     *)
         if [ -z "$applicationChecksum" ]; then
             applicationChecksum=$1
-        elif [ -z "$atticPath" ]; then
-            atticPath=$1
-            if [ ! -d "$atticPath" ]; then
-                if ! mkdir -p "$atticPath"; then
-                    usage "$errorEnvironment" "Can not create $atticPath"
+        elif [ -z "$applicationPath" ]; then
+            applicationPath=$1
+            if [ ! -d "$applicationPath" ]; then
+                if ! mkdir -p "$applicationPath"; then
+                    usage "$errorEnvironment" "Can not create $applicationPath"
                 else
-                    consoleWarning "Created $atticPath"
+                    consoleWarning "Created $applicationPath"
                 fi
             fi
         else
@@ -134,12 +137,12 @@ undoAction() {
         return 0
     fi
     previousSHA=$(cat "$previousSHAFile")
-    previousTar="$atticPath/$previousSHA.$targetFileName"
+    previousTar="$atticPath/$previousSHA.$targetPackage"
     if [ ! -f "$previousTar" ]; then
         consoleError "No $previousTar - no undo"
         return 0
     fi
-    deployTarFile "$atticPath" "$previousSHA"
+    deployApplication "$atticPath" "$previousSHA" "$targetPackage" "$applicationPath"
     if hasHook deploy-undo; then
         if ! runHook deploy-undo "$atticPath" "$previousSHA"; then
             consoleError "deploy-undo hook failed, continuing anyway"
@@ -150,124 +153,12 @@ undoAction() {
     return 0
 }
 
-deployAction() {
-    local deployTemp previousSHA applicationChecksum
-
-    applicationChecksum=$1
-    shift
-    #   ____             _
-    #  |  _ \  ___ _ __ | | ___  _   _
-    #  | | | |/ _ \ '_ \| |/ _ \| | | |
-    #  | |_| |  __/ |_) | | (_) | |_| |
-    #  |____/ \___| .__/|_|\___/ \__, |
-    #             |_|            |___/
-    if [ ! -f "$currentTar" ]; then
-        usage "$errorEnvironment" "$currentTar is not uploaded here"
-    fi
-
-    #
-    # Check the deployment file to make sure it matches what we know
-    #
-    # Create a deploy.123 directory, export .env and look at the value in it
-    #
-    deployTemp="./deploy.$$"
-    if ! mkdir -p "$deployTemp"; then
-        usage "$errorEnvironment" "unable to create temp deploy directory"
-    fi
-    cd "$deployTemp/"
-    # extract .env alone
-    tar zxf "../$currentTar" "${tarArgs[@]}" ".env"
-    cd ..
-
-    APPLICATION_CHECKSUM=
-    set -a
-    # shellcheck source=/dev/null
-    . "$deployTemp/.env"
-    set +a
-
-    #
-    # Check things match
-    #
-    if [ "$APPLICATION_CHECKSUM" != "$applicationChecksum" ]; then
-        consoleRed "$deployTemp/.env"
-        cat "$deployTemp/.env"
-        usage "$errorEnvironment" "Mismatch .env ($APPLICATION_CHECKSUM) != arg ($applicationChecksum)"
-    fi
-
-    rm -rf "$deployTemp"
-
-    #
-    # Maintenance on
-    #
-    if [ -f "$appChecksumFile" ]; then
-        #
-        # .next and .previous are created here
-        #
-        cp "$appChecksumFile" "$atticPath/$applicationChecksum.previous"
-        previousCommitHash=$(cat "$appChecksumFile")
-        if [ -f "$atticPath/$previousCommitHash.next" ]; then
-            nextFileContents=$(cat "$atticPath/$previousCommitHash.next")
-            if [ "$nextFileContents" != "$applicationChecksum" ]; then
-                echo "$(consoleError "Mismatch next file contents: ") $(consoleError "$nextFileContents")"
-                echo "$(consoleError "           Overwriting with: ") $(consoleError "$applicationChecksum")"
-            fi
-        fi
-        echo -n "$applicationChecksum" >"$atticPath/$previousCommitHash.next"
-    fi
-
-    mv "$currentTar" "$atticPath/$applicationChecksum.$targetFileName"
-
-    deployTarFile "$atticPath" "$applicationChecksum"
-}
-
-#
-# deployTarFile DEPLOY/app-path shaPrefix
-#
-# Assumes pwd is app directory
-#
-deployTarFile() {
-    local tarBallPath shaPrefix vendorTar oldDir newDir
-
-    tarBallPath=$1
-    shift
-
-    shaPrefix=$1
-    shift
-
-    vendorTar="$tarBallPath/$shaPrefix.$targetFileName"
-
-    [ -f "$vendorTar" ] || usage $errorEnvironment "Missing $vendorTar"
-
-    consoleInfo "Unpacking $targetFileName ... "
-    currentDir="$(pwd)"
-    newDir="$(pwd).$$"
-    mkdir -p "$newDir"
-    cd "$newDir"
-    tar zxf "$vendorTar" "${tarArgs[@]}"
-    cd "$currentDir"
-
-    rm "$tarBallPath/*.LIVE" 2>/dev/null || :
-
-    date >"$tarBallPath/$shaPrefix.LIVE"
-
-    runOptionalHook maintenance on
-    consoleInfo -n "Setting to version $shaPrefix ... "
-
-    runOptionalHook deploy-start "$newDir"
-    if hasHook deploy-move; then
-        runHook deploy-move "$newDir"
-    else
-        oldDir="$(pwd).$$.old"
-        mv "$currentDir" "$oldDir"
-        mv "$newDir" "$currentDir"
-        rm -rf "$oldDir"
-    fi
-    cd "$currentDir"
-
-    runOptionalHook deploy-finish
-    runOptionalHook maintenance off
-}
-
+#   ____             _
+#  |  _ \  ___ _ __ | | ___  _   _
+#  | | | |/ _ \ '_ \| |/ _ \| | | |
+#  | |_| |  __/ |_) | | (_) | |_| |
+#  |____/ \___| .__/|_|\___/ \__, |
+#             |_|            |___/
 if test $undoFlag && test $cleanupFlag; then
     usage "$errorArgument" "--cleanup and --undo are mutually exclusive"
 fi
@@ -280,11 +171,11 @@ echo "$(consoleLabel -n "          Attic path:") $(consoleValue -n "$atticPath")
 if test $cleanupFlag; then
     cleanupAction "$applicationChecksum"
 elif test $undoFlag; then
-    undoAction "$applicationChecksum"
+    undoDeployApplication "$atticPath" "$applicationChecksum" "$targetPackage" "$applicationPath"
 else
     if [ -z "$applicationChecksum" ]; then
         usage "$errorArgument" "No argument build-sha-check passed"
     fi
-    deployAction "$applicationChecksum"
+    deployApplication "$atticPath" "$applicationChecksum" "$targetPackage" "$applicationPath"
 fi
 reportTiming "$start" "Remote deployment finished in"
