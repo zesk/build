@@ -212,9 +212,10 @@ generateCommandsFile() {
     echo "set -x"
   fi
   echo "cd \"$remoteDeploymentPath/$applicationChecksum\""
-  if [ -n "$*" ]; then
-    echo "$@"
-  fi
+  while [ $# -gt 0 ]; do
+    echo "$1"
+    shift
+  done
   # shellcheck disable=SC2016
   echo "app/bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remotePath\""
 }
@@ -334,7 +335,7 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
-    generateCommandsFile "tar zxf $applicationChecksum/$buildTarget --no-xattrs" >"$temporaryCommandsFile"
+    generateCommandsFile "cd app" "tar zxf ../$buildTarget --no-xattrs" >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
     if buildDebugEnabled; then
       consoleInfo "DEBUG: Commands file is:"
