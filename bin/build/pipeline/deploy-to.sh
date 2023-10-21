@@ -9,6 +9,14 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+
+#
+# /var/www/DEPLOY/app1/applicationChecksum1/app.tar.gz
+# /var/www/DEPLOY/app1/applicationChecksum1/app/... - app files
+# /var/www/DEPLOY/app1/applicationChecksum1.previous
+# /var/www/DEPLOY/app1/applicationChecksum1.next
+#
+#
 errorEnvironment=1
 errorArgument=2
 # set -x # Uncomment to enable debugging
@@ -203,12 +211,12 @@ generateCommandsFile() {
     echo "export BUILD_DEBUG=1"
     echo "set -x"
   fi
-  echo "cd \"$remotePath\""
+  echo "cd \"$remoteDeploymentPath/$applicationChecksum\""
   if [ -n "$*" ]; then
     echo "$@"
   fi
   # shellcheck disable=SC2016
-  echo "bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remoteDeploymentPath\""
+  echo "app/bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remotePath\""
 }
 
 undoAction() {
@@ -315,14 +323,18 @@ deployAction() {
   echo
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
-    echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remotePath") "
-    echo "@put $buildTarget" | sftp "$(sshishDeployOptions)" "$userHost:$remotePath"
+    echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remoteDeploymentPath") "
+    {
+      echo "@mkdir $applicationChecksum"
+      echo "@mkdir $applicationChecksum/app"
+      echo "@put $buildTarget $applicationChecksum/$buildTarget"
+    } | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
     reportTiming "$start" "Done."
   done
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
-    generateCommandsFile "tar zxf $buildTarget --no-xattrs" >"$temporaryCommandsFile"
+    generateCommandsFile "tar zxf $applicationChecksum/$buildTarget --no-xattrs" >"$temporaryCommandsFile"
     echo "$(consoleInfo -n Deploying the code to) $(consoleGreen "$userHost") $(consoleRed -n "$remotePath") $(consoleInfo -n "SSH output BEGIN >>>")"
     if buildDebugEnabled; then
       consoleInfo "DEBUG: Commands file is:"
