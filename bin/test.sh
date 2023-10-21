@@ -34,6 +34,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # shellcheck source=/dev/null
 . ./bin/tests/text-tests.sh
 # shellcheck source=/dev/null
+. ./bin/tests/deploy-tests.sh
+# shellcheck source=/dev/null
 . ./bin/tests/test-tools.sh
 
 usageArguments() {
@@ -94,6 +96,9 @@ trap testCleanup EXIT QUIT TERM
 #   | |  __/\__ \ |_
 #   |_|\___||___/\__|
 #
+testSection Deployment
+deployApplicationTest
+
 testSection Whoa, dude.
 
 bigText allColorTest | prefixLines "$(consoleMagenta)"

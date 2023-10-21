@@ -24,7 +24,7 @@ errorEnvironment=1
 #
 dotEnvConfigure() {
   if [ ! -f ./.env ]; then
-    usage $errorEnvironment "Missing ./.env"
+    consoleError "Missing ./.env"
     return $errorEnvironment
   fi
 
@@ -231,4 +231,216 @@ bigText() {
     shift
   fi
   toilet -f $font "$@"
+}
+
+getApplicationDeployVersion() {
+  local p=$1 value appChecksumFile=.deploy/APPLICATION_CHECKSUM
+
+  if [ ! -d "$p" ]; then
+    consoleError "$p is not a directory"
+    return 1
+  fi
+  if [ -f "$p/$appChecksumFile" ]; then
+    cat "$p/$appChecksumFile"
+    return 0
+  fi
+  if [ ! -f "$p/.env" ]; then
+    return 0
+  fi
+  for f in APPLICATION_CHECKSUM APPLICATION_GIT_SHA; do
+    # shellcheck source=/dev/null
+    value=$(
+      source "$p/.env"
+      echo "${!f-}"
+    )
+    if [ -n "$value" ]; then
+      echo -n "$value"
+      return 0
+    fi
+  done
+  return 0
+}
+
+#
+# deployHasVersion deployHome versionName
+#
+deployHasVersion() {
+  local deployHome versionName targetPackage
+  deployHome=$1
+  shift
+  versionName=$1
+  shift
+  targetPackage=${1:-app.tar.gz}
+  shift || :
+
+  if [ ! -d "$deployHome" ]; then
+    consoleError "No deployment home found: $deployHome" 1>&2
+    return $errorEnvironment
+  fi
+  if [ ! -d "$deployHome/$versionName" ]; then
+    return 1
+  fi
+  [ -f "$deployHome/$versionName/$targetPackage" ]
+}
+
+#
+# deployPreviousVersion deployHome versionName
+#
+deployPreviousVersion() {
+  local deployHome versionName targetPackage
+  deployHome=$1
+  shift
+  versionName=$1
+
+  if [ ! -d "$deployHome" ]; then
+    consoleError "No $deployHome" 1>&2
+    return 1
+  fi
+  if [ -f "$deployHome/$versionName.previous" ]; then
+    cat "$deployHome/$versionName.previous"
+  fi
+}
+
+#
+# deployNextVersion deployHome versionName
+#
+deployNextVersion() {
+  local deployHome versionName targetPackage
+  deployHome=$1
+  shift
+  versionName=$1
+
+  if [ ! -d "$deployHome" ]; then
+    consoleError "No $deployHome" 1>&2
+    return 1
+  fi
+  if [ -f "$deployHome/$versionName.next" ]; then
+    cat "$deployHome/$versionName.next"
+  else
+    return 1
+  fi
+}
+
+#   _   _           _
+#  | | | |_ __   __| | ___
+#  | | | | '_ \ / _` |/ _ \
+#  | |_| | | | | (_| | (_) |
+#   \___/|_| |_|\__,_|\___/
+#
+undoDeployApplication() {
+  local deployHome versionName targetPackage previousChecksum
+
+  deployHome=$1
+  shift
+  versionName=$1
+  shift
+  targetPackage=$1
+  shift
+  applicationPath=$1
+  shift
+
+  if ! deployPreviousVersion "$deployHome" "$versionName" >/dev/null 1>&2; then
+    consoleError "Unable to get previous checksum for $versionName"
+    return $errorEnvironment
+  fi
+  previousChecksum=$(deployPreviousVersion "$deployHome" "$versionName")
+  consoleInfo -n "Reverting installation $versionName -> $previousChecksum ... "
+
+  deployApplication "$deployHome" "$previousChecksum" "$targetPackage" "$applicationPath"
+
+  if ! runOptionalHook deploy-undo "$deployHome" "$versionName"; then
+    consoleError "deploy-undo hook failed, continuing anyway"
+  fi
+  return 0
+
+}
+#
+# deployApplication deployHome deployVersion targetPackage applicationPath
+#
+# e.g.
+#
+# deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
+#
+deployApplication() {
+  local deployHome deployVersion applicationPath deployedApplicationPath
+  local previousApplicationChecksum targetPackageFullPath me
+
+  me="$(basename "$0")"
+  set -e
+  deployHome=$1
+  shift
+
+  deployVersion=$1
+  shift
+
+  targetPackage=$1
+  shift
+
+  applicationPath=$1
+  shift
+
+  deployedApplicationPath="$deployHome/$deployVersion/app"
+
+  previousApplicationChecksum=$(getApplicationDeployVersion "$applicationPath")
+
+  targetPackageFullPath="$deployHome/$deployVersion/$targetPackage"
+
+  if [ ! -f "$targetPackageFullPath" ]; then
+    consoleError "$me: Missing target file $targetPackageFullPath" 1>&2
+    return $errorEnvironment
+  fi
+
+  if [ ! -d "$applicationPath" ]; then
+    consoleError "$me: No application path found: $applicationPath" 1>&2
+    return $errorEnvironment
+  fi
+
+  if [ ! -d "$deployedApplicationPath" ]; then
+    mkdir "$deployedApplicationPath"
+    cd "$deployedApplicationPath"
+    tar xzf "$targetPackageFullPath"
+  fi
+
+  deployVersion=$(getApplicationDeployVersion "$deployedApplicationPath")
+
+  if [ "$deployVersion" != "$deployVersion" ]; then
+    consoleError "Arg $deployVersion != Computed $deployVersion" 1>&2
+    return 1
+  fi
+
+  if [ -d "$applicationPath/bin/build" ] && [ -d "$applicationPath/bin/hooks" ]; then
+    cd "$applicationPath"
+    runOptionalHook maintenance on
+    cd "$deployedApplicationPath"
+  fi
+
+  if [ -n "$previousApplicationChecksum" ]; then
+    if [ ! -f "$deployHome/$deployVersion.previous" ] && [ ! -f "$deployHome/$previousApplicationChecksum.next" ]; then
+      # Linked list forward only
+      echo "$previousApplicationChecksum" >"$deployHome/$deployVersion.previous"
+      echo "$deployVersion" >"$deployHome/$previousApplicationChecksum.next"
+    fi
+  fi
+
+  consoleInfo -n "Setting to version $deployVersion ... "
+
+  cd "$deployedApplicationPath"
+  runOptionalHook deploy-start "$applicationPath"
+  if hasHook deploy-move; then
+    runHook deploy-move "$applicationPath"
+  else
+    if [ ! -d "$deployHome/$previousApplicationChecksum" ]; then
+      mkdir "$deployHome/$previousApplicationChecksum"
+    fi
+    if [ -d "$deployHome/$previousApplicationChecksum/app" ]; then
+      rm -rf "$deployHome/$previousApplicationChecksum/app"
+    fi
+    cd "$deployHome"
+    mv "$applicationPath" "$deployHome/$previousApplicationChecksum/app"
+    mv "$deployedApplicationPath" "$applicationPath"
+  fi
+  cd "$applicationPath"
+  runOptionalHook deploy-finish
+  runOptionalHook maintenance off
+  consoleSuccess "Completed"
 }

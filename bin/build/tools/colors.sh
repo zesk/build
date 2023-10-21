@@ -187,7 +187,8 @@ consoleNameValue() {
     local characterWidth=$1 name=$2
     shift
     shift
-    echo "$(alignRight "$characterWidth" "$(consoleLabel -n "$name")") $(consoleValue -n "$@")"
+    name="$(consoleLabel -n "$name")"
+    echo "$(alignRight "$characterWidth" "$name") $(consoleValue -n "$@")"
 }
 
 #

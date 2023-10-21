@@ -52,10 +52,12 @@ assertNotExitCode() {
 
     shift
     shift
+    set +e
     actual=$(
         "$bin" "$@"
         echo "$?"
     )
+    set -e
     assertNotEquals "$expected" "$actual" "$* exit code should not equal expected $expected ($actual)"
 }
 #
