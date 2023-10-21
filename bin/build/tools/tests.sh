@@ -45,9 +45,9 @@ testShellScripts() {
         for f in "${failedReasons[@]}"; do
             echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" >>"$quietLog"
         done
-        consoleError "done." >>"$quietLog"
+        consoleError "done."
         return $errorEnvironment
     else
-        consoleSuccess "All scripts passed"
+        consoleSuccess "All scripts passed" >>"$quietLog"
     fi
 }
