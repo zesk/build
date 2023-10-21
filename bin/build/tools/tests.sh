@@ -5,6 +5,7 @@
 # Depends: colors.sh text.sh apt.sh
 #
 
+errorEnvironment=1
 #
 # testShellScripts
 #
@@ -15,7 +16,7 @@
 #
 testShellScripts() {
     local failedReasons thisYear f quietLog=$1 shFiles
-    boxedHeading "Checking all shellcheck and bash -n"
+    boxedHeading "Checking all shellcheck and bash -n" >>"$quietLog"
 
     ./bin/build/install/apt.sh shellcheck
     whichApt shellcheck shellcheck
@@ -25,7 +26,7 @@ testShellScripts() {
     shFiles=$(mktemp)
     find . -name '*.sh' ! -path '*/.*' -print0 >"$shFiles"
     while IFS= read -r -d '' f; do
-        consoleInfo "Checking $f"
+        consoleInfo "Checking $f" >>"$quietLog"
         if ! bash -n "$f"; then
             failedReasons+=("bash -n $f failed")
         fi
@@ -39,12 +40,12 @@ testShellScripts() {
     rm "$shFiles"
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
-        consoleError -n "The following scripts failed:"
+        consoleError "The following scripts failed:" >>"$quietLog"
         for f in "${failedReasons[@]}"; do
-            echo "$(consoleMagenta -n "$f")$(consoleInfo -n ", ")"
+            echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" >>"$quietLog"
         done
-        consoleError "done."
-        buildFailed "$quietLog"
+        consoleError "done." >>"$quietLog"
+        return $errorEnvironment
     else
         consoleSuccess "All scripts passed"
     fi
