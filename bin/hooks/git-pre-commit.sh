@@ -30,3 +30,4 @@ statusMessage consoleSuccess Running shellcheck ...
 if ! testShellScripts "$quietLog"; then
     buildFailed "$quietLog"
 fi
+clearLine
