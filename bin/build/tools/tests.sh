@@ -15,23 +15,21 @@ errorEnvironment=1
 # Side-effect: shellcheck is installed
 #
 testShellScripts() {
-    local failedReasons thisYear f quietLog=$1 shFiles
-    {
-        boxedHeading "Checking all shellcheck and bash -n"
-        ./bin/build/install/apt.sh shellcheck
-        whichApt shellcheck shellcheck
-    } >>"$quietLog"
+    local failedReasons thisYear f shFiles
+    boxedHeading "Checking all shellcheck and bash -n"
+    ./bin/build/install/apt.sh shellcheck
+    whichApt shellcheck shellcheck
 
     thisYear=$(date +%Y)
     failedReasons=()
     shFiles=$(mktemp)
     find . -name '*.sh' ! -path '*/.*' -print0 >"$shFiles"
     while IFS= read -r -d '' f; do
-        consoleInfo "Checking $f" >>"$quietLog"
-        if ! bash -n "$f"; then
+        consoleInfo "Checking $f"
+        if ! bash -n "$f" >/dev/null; then
             failedReasons+=("bash -n $f failed")
         fi
-        if ! shellcheck "$f" >>"$quietLog"; then
+        if ! shellcheck "$f" >/dev/null; then
             failedReasons+=("shellcheck $f failed")
         fi
         if ! grep -q "Copyright &copy; $thisYear" "$f"; then
@@ -41,13 +39,13 @@ testShellScripts() {
     rm "$shFiles"
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
-        consoleError "The following scripts failed:" >>"$quietLog"
+        consoleError "The following scripts failed:"
         for f in "${failedReasons[@]}"; do
-            echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" >>"$quietLog"
+            echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")"
         done
         consoleError "done."
         return $errorEnvironment
     else
-        consoleSuccess "All scripts passed" >>"$quietLog"
+        consoleSuccess "All scripts passed"
     fi
 }
