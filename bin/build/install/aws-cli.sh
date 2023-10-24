@@ -45,13 +45,13 @@ requireFileDirectory "$quietLog"
 if ! curl -s "$url" -o "${buildDir}awscliv2.zip" >>"$quietLog"; then
   buildFailed "$quietLog"
 fi
-if ! unzip "${buildDir}awscliv2.zip" >>"$quietLog"; then
+if ! unzip -d "$buildDir" "${buildDir}awscliv2.zip" >>"$quietLog"; then
   buildFailed "$quietLog"
 fi
 if ! "${buildDir}aws/install" >>"$quietLog"; then
   buildFailed "$quietLog"
 fi
-# This failed once, not sure why, .build will be deleted anyway
+# This failed once, not sure why, .build will be deleted
 rm -rf "${buildDir}aws/" "${buildDir}awscliv2.zip" 2>/dev/null || :
 consoleValue -n "$(aws --version) "
 reportTiming "$start" OK
