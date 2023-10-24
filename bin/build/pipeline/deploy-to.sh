@@ -25,7 +25,8 @@ set -eo pipefail
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-knownHostsFile=$HOME/.ssh/known_hosts
+sshHome="$HOME/.ssh"
+knownHostsFile="$sshHome/known_hosts"
 temporaryCommandsFile=./.temp-sftp
 deployedHostArtifact="./.deployed-hosts"
 
@@ -192,10 +193,16 @@ fi
 #
 # known_hosts population
 #
+# Side effect: known_hosts is modified
+#
+if [ ! -d "$sshHome" ]; then
+  mkdir -m 0700 "$sshHome" || usage $errorEnvironment "Unable to create $sshHome for known_hosts files"
+fi
 for userHost in "${userHosts[@]}"; do
   host="${userHost##*@}"
-  if ! grep -q "$host" "$knownHostsFile"; then
+  if [ ! -f "$knownHostsFile" ] || ! grep -q "$host" "$knownHostsFile"; then
     echo "$(consoleInfo "Adding")" "$(consoleRed "$host")" "$(consoleInfo to)" "$(consoleGreen "$knownHostsFile")"
+    umask 0077
     ssh-keyscan -H "$host" >>"$knownHostsFile" 2>/dev/null
   else
     consoleInfo "Using cached key $host in $knownHostsFile"
