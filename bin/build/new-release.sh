@@ -21,11 +21,7 @@ errorEnvironment=1
 errorArgument=2
 
 me="$(basename "${BASH_SOURCE[0]}")"
-relTop="../.."
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-  echo "$me: Can not cd to $relTop" 1>&2
-  exit $errorEnvironment
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 usage() {
   local rs=$1

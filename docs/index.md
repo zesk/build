@@ -39,6 +39,7 @@ To use in your pipeline:
 - [`version-last.sh`](version-last.sh.md) - The last version in the list of tags for this project
 - [`version-list.sh`](new-release.sh.md) - The list of versions for this project, in order by semantic versioning
 - [`tools.sh`](./tools/index.md) - Build shell tools and all related functions. Include this via `. ./bin/build/tools.sh`
+- [`release-notes.sh`](./release-notes.md) - Return path to current release notes file (`./docs/release/`)
 
 ### Install tools in the pipeline
 
