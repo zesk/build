@@ -7,6 +7,7 @@
 # The directory is currently run inside:
 #
 # - deployHome/applicationChecksum/app/
+# - applicationHome/
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
@@ -21,8 +22,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-deployHome="$(dirname "$(dirname "$(pwd)")")"
-
 usage() {
     local rs
     rs=$1
@@ -32,7 +31,7 @@ usage() {
         consoleError "$@"
         echo
     fi
-    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] applicationChecksum applicationPath")"
+    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] applicationChecksum deployPath applicationPath")"
     echo
     consoleInfo "This is run on the remote system after deployment; environment files are correct."
     consoleInfo "It is run inside the deployment home directory in the new application folder."
@@ -42,9 +41,12 @@ usage() {
     echo "$(consoleGreen "--cleanup  ")" "$(consoleInfo "Cleanup after success")"
     echo
     echo "$(consoleGreen "applicationChecksum   ")" "$(consoleInfo "will match APPLICATION_CHECKSUM in .env")"
+    echo "$(consoleGreen "deployPath            ")" "$(consoleInfo "path where the deployments database is")"
     echo "$(consoleGreen "applicationPath       ")" "$(consoleInfo "path where the application is live")"
     echo
-    consoleInfo Current working directory is deployHome/applicationChecksum/app.
+    consoleInfo Current working directory on deploy is deployHome/applicationChecksum/app.
+    consoleInfo Current working directory on cleanup is applicationHome/
+    consoleInfo Current working directory on undo is applicationHome/
     exit "$rs"
 }
 
@@ -73,6 +75,8 @@ while [ $# -gt 0 ]; do
     *)
         if [ -z "$applicationChecksum" ]; then
             applicationChecksum=$1
+        elif [ -z "$deployHome" ]; then
+            deployHome=$1
         elif [ -z "$applicationPath" ]; then
             applicationPath=$1
             if [ ! -d "$applicationPath" ]; then

@@ -226,7 +226,7 @@ generateCommandsFile() {
     shift
   done
   # shellcheck disable=SC2016
-  echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remotePath\""
+  echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remoteDeploymentPath\" \"$remotePath\""
 }
 
 undoAction() {
