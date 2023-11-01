@@ -117,6 +117,10 @@ if [ "$DEPLOYMENT" = "production" ]; then
     versionSuffix=rc
 elif [ "$DEPLOYMENT" = "develop" ]; then
     versionSuffix=d
+elif [ "$DEPLOYMENT" = "staging" ]; then
+    versionSuffix=s
+elif [ "$DEPLOYMENT" = "test" ]; then
+    versionSuffix=t
 elif [ -z "$DEPLOYMENT" ]; then
     usage $errorArgument "DEPLOYMENT must be defined in the environment or passed as --deployment"
 fi
