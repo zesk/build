@@ -13,6 +13,34 @@
 
 errorEnvironment=1
 
+#
+# dumpFile fileName
+#
+dumpFile() {
+    local f nLines showLines=10 nBytes
+
+    while [ $# -gt 0 ]; do
+        if [ -f "$1" ]; then
+            nLines=$(($(wc -l <"$1" | cut -f 1 -d' ') + 0))
+            nBytes=$(($(wc -c <"$1") + 0))
+            consoleInfo -n "$1"
+            consoleSuccess -n ": $nLines $(plural "$nLines" line lines), $nBytes $(plural "$nBytes" byte bytes)"
+            if [ $showLines -lt $nLines ]; then
+                consoleWarning "(Showing $showLines)"
+            else
+                echo
+            fi
+            {
+                echoBar " "
+                head -$showLines "$1"
+                echoBar " "
+            } | prefixLines "$(consoleCode)    "
+        else
+            consoleError "dumpFile: $1 is not a file"
+        fi
+        shift
+    done
+}
 assertEquals() {
     local a=$1 b=$2
     shift
@@ -85,4 +113,58 @@ assertOutputContains() {
 
 randomString() {
     head --bytes=64 /dev/random | md5sum | cut -f 1 -d ' '
+}
+
+assertDirectoryDoesNotExist() {
+    local d=$1
+
+    shift
+    if [ -d "$d" ]; then
+        consoleError "$d was expected to not be a directory but is: $*"
+        return 1
+    fi
+}
+
+assertDirectoryExists() {
+    local d=$1
+
+    shift
+    if [ ! -d "$d" ]; then
+        consoleError "$d was expected to not a directory but is NOT: $*"
+        return 1
+    fi
+}
+
+assertFileContains() {
+    local f=$1
+
+    shift
+    if [ ! -f "$f" ]; then
+        consoleError "assertFileContains: $f is not a file: $*"
+    fi
+    while [ $# -gt 0 ]; do
+        if ! grep -q "$1" "$f"; then
+            consoleError "assertFileContains: $f does not contain string: $1"
+            dumpFile "$f"
+            return 1
+        fi
+        shift
+    done
+}
+
+assertFileDoesNotContain() {
+    local f=$1
+
+    shift
+    if [ ! -f "$f" ]; then
+        consoleError "assertFileDoesNotContain: $f is not a file: $*"
+    fi
+    while [ $# -gt 0 ]; do
+        if grep -q "$1" "$f"; then
+            consoleError "assertFileDoesNotContain: $f does contain string: $1"
+            dumpFile "$f"
+            return 1
+        fi
+        shift
+    done
 }

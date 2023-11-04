@@ -137,6 +137,9 @@ testAWSIPAccess "$quietLog" # has side-effects
 testSection "crontab-application-sync.sh (ops)"
 ./bin/tests/test-crontab-application-sync.sh -v | prefixLines "$(consoleCode)"
 
+testSection "setup-git-test.sh"
+./bin/tests/setup-git-test.sh "$(pwd)"
+
 testCleanup
 
 bigText Passed | prefixLines "$(consoleSuccess)"
