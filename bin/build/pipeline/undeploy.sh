@@ -16,21 +16,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 requireEnvironments=(DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS APPLICATION_CHECKSUM)
 
-usage() {
-    local rs=$1
+usageDescription() {
+    cat <<EOF
+Undeploy in pipeline.
 
-    shift
-    exec 1>&2
-    if [ -n "$*" ]; then
-        consoleError "$@"
-        echo
-    fi
-    consoleInfo "$me"
-    echo
-    consoleInfo "Undeploy in pipeline"
-    echo
-    consoleInfo "Need environment ${requireEnvironments[*]}"
-    exit "$rs"
+Need environment: $(consoleValue "${requireEnvironments[*]}")
+EOF
+}
+usage() {
+    usageMain "$me" "$@"
+    exit $?
 }
 
 if [ ! -f .build.env ]; then

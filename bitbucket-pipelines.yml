@@ -12,9 +12,9 @@ image: atlassian/default-image:4
 
 pipelines:
   branches:
-    develop:
+    test:
       - step:
-          deployment: develop
+          deployment: test
           name: Build and Test
           services:
             - docker

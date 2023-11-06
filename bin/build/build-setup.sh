@@ -15,11 +15,6 @@ errorEnvironment=1
 set -eo pipefail
 # set -x # Debugging
 
-if [ "$1" = "--update" ]; then
-  shift
-  cp "${BASH_SOURCE[0]}" "$1"
-  rm "${BASH_SOURCE[0]}"
-fi
 myBinary="${BASH_SOURCE[0]}"
 me=$(basename "$myBinary")
 cd "$(dirname "$myBinary")"
@@ -28,14 +23,20 @@ cd "$relTop"
 
 if [ ! -d bin/build ]; then
   start=$(($(date +%s) + 0))
-  curl -L -s "$(curl -s https://api.github.com/repos/zesk/build/releases/latest | jq -r .tarball_url)" -o build.tar.gz
-  if [ "$(uname)" = "Darwin" ]; then
-    tarArgs=(--include='*/bin/build/*')
+  if [ "${1-}" = "--mock" ]; then
+    shift
+    cp -R "$1" ./bin/build
+    shift
   else
-    tarArgs=(--wildcards '*/bin/build/*')
+    curl -L -s "$(curl -s https://api.github.com/repos/zesk/build/releases/latest | jq -r .tarball_url)" -o build.tar.gz
+    if [ "$(uname)" = "Darwin" ]; then
+      tarArgs=(--include='*/bin/build/*')
+    else
+      tarArgs=(--wildcards '*/bin/build/*')
+    fi
+    tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}"
+    rm build.tar.gz
   fi
-  tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}"
-  rm build.tar.gz
   if [ ! -d bin/build ]; then
     echo "Unable to download and install bin/build" 1>&2
     exit $errorEnvironment
@@ -57,6 +58,14 @@ else
   fi
   # shellcheck source=/dev/null
   . bin/build/tools.sh
+fi
+
+ignoreFile=.gitignore
+if [ -f "$ignoreFile" ] && ! grep -q "/bin/build/" "$ignoreFile"; then
+  consoleWarning "$ignoreFile does not ignore ./bin/build, recommend adding it:"
+  echo
+  consoleCode "    echo /bin/build/ >> $ignoreFile"
+  echo
 fi
 
 diffLines=$(diff "$(pwd)/bin/build/build-setup.sh" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)

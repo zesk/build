@@ -86,3 +86,57 @@ assertOutputContains() {
 randomString() {
     head --bytes=64 /dev/random | md5sum | cut -f 1 -d ' '
 }
+
+assertDirectoryDoesNotExist() {
+    local d=$1
+
+    shift
+    if [ -d "$d" ]; then
+        consoleError "$d was expected to not be a directory but is: $*"
+        return 1
+    fi
+}
+
+assertDirectoryExists() {
+    local d=$1
+
+    shift
+    if [ ! -d "$d" ]; then
+        consoleError "$d was expected to not a directory but is NOT: $*"
+        return 1
+    fi
+}
+
+assertFileContains() {
+    local f=$1
+
+    shift
+    if [ ! -f "$f" ]; then
+        consoleError "assertFileContains: $f is not a file: $*"
+    fi
+    while [ $# -gt 0 ]; do
+        if ! grep -q "$1" "$f"; then
+            consoleError "assertFileContains: $f does not contain string: $1"
+            dumpFile "$f"
+            return 1
+        fi
+        shift
+    done
+}
+
+assertFileDoesNotContain() {
+    local f=$1
+
+    shift
+    if [ ! -f "$f" ]; then
+        consoleError "assertFileDoesNotContain: $f is not a file: $*"
+    fi
+    while [ $# -gt 0 ]; do
+        if grep -q "$1" "$f"; then
+            consoleError "assertFileDoesNotContain: $f does contain string: $1"
+            dumpFile "$f"
+            return 1
+        fi
+        shift
+    done
+}

@@ -125,11 +125,11 @@ urlParseItem() {
 }
 
 #
-# Usage: maximumFieldLength [ fieldIndex ] < fieldBasedFile
+# Usage: maximumFieldLength [ fieldIndex [ separatorChar ] ] < fieldBasedFile
 #
-# Given a input file, determine the maximum length of fieldIndex
+# Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
 #
-# Defaults to first field, space separator
+# Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 #
 maximumFieldLength() {
     local index=$((${1-1} + 0)) separatorChar=${2-}

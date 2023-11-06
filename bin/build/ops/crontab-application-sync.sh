@@ -28,7 +28,7 @@ errorArgument=2
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-usageOptions() {
+crontabApplicationSyncOptions() {
   echo "--env environment    Apply this environment file first before application environment files"
   echo "--user user          The crontab user to look for files for as well as to apply crontab for (defaults to whoami)"
   echo "--show               Display new crontab, do not install it"
@@ -48,7 +48,7 @@ usage() {
   echo
   echo "Keep multiple applications in sync with a crontab"
   echo
-  usageOptions
+  crontabApplicationSyncOptions
   echo
   echo Searches for files named user.crontab in applicationPath, and applies environment files
   echo to generate the crontab and keep it up to date.

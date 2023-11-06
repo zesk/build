@@ -54,7 +54,7 @@ usage() {
 # Moved into build
 #
 renameFiles() {
-    local old=$1 new=$2 verb=$3
+    local old="$1" new="$2" verb="$3"
 
     shift
     shift

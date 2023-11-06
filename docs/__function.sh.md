@@ -1,22 +1,16 @@
-## `-----` - Description
+## `todoReplaceThisName` - TODO Replace Description
 
-TODO Update all of this including the long description.
-
-If this fails it will output the installation log.
-
-When this tool succeeds the `----` tool has been installed in the local environment.
+TODO More details if needed
 
 ### Usage
 
-    foo.sh arg1 arg2 --help
+    todoReplaceThisName arg1 arg2 [ --help ]
 
 ### Arguments
 
-- `--help` - This help
-
-e.g.
-
-    bin/build/---/-----.sh ./app/
+- `arg1` - **Required**. *String*. Thing one TODO
+- `arg2` - **Required**. *String*. Thing two TODO
+- `--help` - **Optional**. Show this help and exit
 
 ### Exit codes
 
@@ -28,9 +22,10 @@ No local caches.
 
 ### Environment
 
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
+No dependencies on environment.
+No changes to environment.
 
 ### Examples
 
-    foo.sh < thing > thang
+    todoReplaceThisName thing1 thing2 # TODO
 
