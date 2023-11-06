@@ -39,27 +39,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 . ./bin/tests/test-tools.sh
 
 usageArguments() {
-    echo "--help This help"
-    echo "--clean Delete test artifact files before starting"
-    echo "--messy Do not delete test artifact files afterwards"
+    cat <<EOF
+--help This help
+--clean Delete test artifact files before starting
+--messy Do not delete test artifact files afterwards
+EOF
 }
 
 usage() {
-    local result
-
-    result=$1
-    shift
-    if [ $# -gt 0 ]; then
-        consoleError "$*"
-        echo
-    fi
-    echo
-    consoleInfo "$me [ --clean ] [ --messy ] - Test Zesk Build"
-    echo
-    usageArguments | usageGenerator $(("$(usageArguments | maximumFieldLength)" + 2))
-    echo
-    consoleReset
-    exit "$result"
+    usageMain "$me" "$@"
+    exit "$?"
 }
 
 messyOption=

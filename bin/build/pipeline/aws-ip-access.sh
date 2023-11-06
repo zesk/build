@@ -14,53 +14,34 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+export usageDelimiter="|"
 usageOptions() {
-    echo "--profile awsProfile|Use this AWS profile when connecting using ~/.aws/credentials"
-    echo "--services service0,service1,...|List of services to add or remove (maps to ports)"
-    echo "--id developerId|Specify an developer id manually (uses DEVELOPER_ID from environment by default)"
-    echo "--ip ip|Specify an IP manually (uses ipLookup tool from tools.sh by default)"
-    echo "--revoke|Remove permissions"
-    echo "--debug|Enable debugging. Defaults to BUILD_DEBUG environment variable."
-    echo "--help|Show this help"
+    cat <<EOF
+--profile awsProfile|Use this AWS profile when connecting using ~/.aws/credentials
+--services service0,service1,...|List of services to add or remove (maps to ports)
+--id developerId|Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+--ip ip|Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+--revoke|Remove permissions
+--debug|Enable debugging. Defaults to BUILD_DEBUG environment variable.
+--help|Show this help
+EOF
 }
+usageDescription() {
+    cat <<EOF
+$(consoleReset)Register current IP address in listed security groups to allow for access to deployment sytstems from a specific IP.
+Use this during deployment to grant temporary access to your systems during deployemnt only.
+Build scripts should have a $(consoleCode --revoke) step afterwards, always.
+services are looked up in /etc/services and match /tcp services only for port selection
 
+If no $(consoleCode /etc/services) matches the default values are supported within the script: mysql,postgres,ssh,http,https
+
+    $(consoleNameValue 40 "Required environment variables:" "AWS_REGION")
+    $(consoleNameValue 40 "Optional environment variables:" "DEVELOPER_ID AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY")
+EOF
+}
 usage() {
-    local rs
-    rs=$1
-    shift
-    exec 1>&2
-    if [ -n "$*" ]; then
-        consoleError "$@"
-        echo
-    fi
-    {
-        echo "$me [ --debug ] [ --services service0,service1 ] [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] security-group0 security-group1 ... "
-        echo
-        echo "Register current IP address in listed security group(s) to allow for access to deployment sytstems from a specific IP."
-        echo "Use this during deployment to grant temporary access to your systems during deployemnt only."
-        echo "Build scripts should have a --revoke step afterwards, always."
-        echo
-    } | prefixLines "$(consoleInfo)"
-    usageOptions | usageGenerator "$(($(usageOptions | maximumFieldLength 1 \|) + 2))" \|
-    {
-        echo
-        echo "services are looked up in /etc/services and match /tcp services only for port selection"
-        echo
-        echo "If no /etc/services matches the default values are supported within the script: mysql,postgres,ssh,http,https"
-    } | prefixLines "$(consoleInfo)"
-    echo
-    consoleLabel "Required environment variables:"
-    consoleValue "    AWS_REGION"
-    echo
-    consoleLabel "Optional environment variables:"
-    consoleValue "    DEVELOPER_ID AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY"
-    echo
-    if awsCredentialsFile 2>/dev/null; then
-        echo "$(consoleInfo -n "AWS credentials are extracted from") $(consoleValue -n "$(awsCredentialsFile)")"
-    else
-        consoleInfo "AWS credentials can be extracted from \$HOME/.aws/credentials when configured)"
-    fi
-    exit "$rs"
+    usageMain "$me" "$@"
+    exit $?
 }
 
 services=()

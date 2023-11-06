@@ -13,34 +13,6 @@
 
 errorEnvironment=1
 
-#
-# dumpFile fileName
-#
-dumpFile() {
-    local f nLines showLines=10 nBytes
-
-    while [ $# -gt 0 ]; do
-        if [ -f "$1" ]; then
-            nLines=$(($(wc -l <"$1" | cut -f 1 -d' ') + 0))
-            nBytes=$(($(wc -c <"$1") + 0))
-            consoleInfo -n "$1"
-            consoleSuccess -n ": $nLines $(plural "$nLines" line lines), $nBytes $(plural "$nBytes" byte bytes)"
-            if [ $showLines -lt $nLines ]; then
-                consoleWarning "(Showing $showLines)"
-            else
-                echo
-            fi
-            {
-                echoBar " "
-                head -$showLines "$1"
-                echoBar " "
-            } | prefixLines "$(consoleCode)    "
-        else
-            consoleError "dumpFile: $1 is not a file"
-        fi
-        shift
-    done
-}
 assertEquals() {
     local a=$1 b=$2
     shift

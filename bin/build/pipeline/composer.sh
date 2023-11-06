@@ -24,19 +24,20 @@ cacheDir=.composer
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
 
+usageOptions() {
+  cat <<EOF
+--help This help
+installDirectory The directory to run the composer command in
+EOF
+}
+usageDescription() {
+  cat <<EOF
+Run validate and install using docker image $dockerImage
+EOF
+}
 usage() {
-  local rs=$1
-  shift
-  exec 1>&2
-  if [ -n "$*" ]; then
-    consoleError "$*"
-    echo
-  fi
-  echo "$me [ --help ] [ installDirectory ]" | usageGenerator $((${#me} + 1))
-  echo
-  consoleInfo "Run validate and install using docker image $dockerImage"
-  echo
-  exit "$rs"
+  usageMain "$me" "$@"
+  exit "$?"
 }
 
 while [ $# -gt 0 ]; do

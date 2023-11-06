@@ -107,7 +107,3 @@ assertFileDoesNotContain $logFile ".gitignore"
 rm -rf bin/build
 
 consoleSuccess Success
-
-# --------------------------------------------------------------------------------
-
-cd "$buildHome"
