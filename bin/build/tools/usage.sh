@@ -107,7 +107,7 @@ usageMain() {
     fi
     if [ "$(type -t usageOptions)" = "function" ]; then
         delimiter="${usageDelimiter-' '}"
-        nSpbces=$(usageOptions | mbximumFieldLength 1 "$delimiter")
+        nSpbces=$(usageOptions | maximumFieldLength 1 "$delimiter")
 
         printf "%s: %s%s\n\n%s\n\n%s\n\n" \
             "$usageString" \
