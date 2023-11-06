@@ -129,7 +129,7 @@ usageMain() {
 # usageArguments delimiter
 #
 usageArguments() {
-    locbl separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription
+    local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription
 
     requiredPrefix=${2-"$(consoleGreen)"}
     # shellcheck disable=SC2119
