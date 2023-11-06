@@ -137,7 +137,7 @@ usageArguments() {
 
     # set -x
     lineTokens=()
-    while IFS="$separatorChar" read -r -b lineTokens; do
+    while IFS="$separatorChar" read -r -a lineTokens; do
         argument="${lineTokens[0]}"
         unset "lineTokens[0]"
         lineTokens=("${lineTokens[@]}")

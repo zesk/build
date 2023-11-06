@@ -37,8 +37,10 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 . ./bin/tests/deploy-tests.sh
 # shellcheck source=/dev/null
 . ./bin/tests/test-tools.sh
+# shellcheck source=/dev/null
+. ./bin/tests/usage-tests.sh
 
-usageArguments() {
+usageOptions() {
     cat <<EOF
 --help This help
 --clean Delete test artifact files before starting
@@ -85,6 +87,9 @@ trap testCleanup EXIT QUIT TERM
 #   | |  __/\__ \ |_
 #   |_|\___||___/\__|
 #
+testSection Usage
+usageTests
+
 testSection Deployment
 deployApplicationTest
 
