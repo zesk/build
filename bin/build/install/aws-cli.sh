@@ -25,7 +25,7 @@ fi
 
 consoleInfo -n "Installing aws-cli ... "
 start=$(beginTiming)
-case "$HOSTTYPE" in
+case "${HOSTTYPE-}" in
 arm64 | aarch64)
   url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
   ;;

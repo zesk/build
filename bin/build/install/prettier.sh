@@ -9,14 +9,9 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eo pipefail
-errorEnvironment=1
 
 me="$(basename "$0")"
-relTop=../../..
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-  echo "$me: Can not cd to $relTop" 1>&2
-  exit $errorEnvironment
-fi
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 quietLog="./.build/$me.log"
 
 # shellcheck source=/dev/null
