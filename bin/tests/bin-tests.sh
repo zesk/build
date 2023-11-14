@@ -8,6 +8,9 @@
 #
 errorEnvironment=1
 
+declare -a tests
+
+tests+=(testMakeEnv)
 testMakeEnv() {
     local v
     export TESTING_ENV=chameleon
@@ -35,14 +38,15 @@ testMakeEnv() {
     rm .env
 }
 
+tests+=(testBuildSetup)
 testBuildSetup() {
     local targetDir marker testBinary testOutput
 
-    testSection build-setup.sh
+    testSection install-bin-build.sh
     targetDir="test.$$/bin/deeper/deepest"
     mkdir -p "$targetDir"
-    testBinary="$targetDir/build-setup.sh"
-    cp bin/build/build-setup.sh "$testBinary"
+    testBinary="$targetDir/install-bin-build.sh"
+    cp bin/build/install-bin-build.sh "$testBinary"
     sed -i -e 's/^relTop=.*/relTop=..\/..\/../g' "$testBinary"
     chmod +x "$testBinary"
     marker=$(randomString)
@@ -83,25 +87,26 @@ testBuildSetup() {
         buildFailed "$testOutput"
     fi
 
-    consoleSuccess "build-setup.sh update was tested successfully"
+    consoleSuccess "install-bin-build.sh update was tested successfully"
     rm -rf "./test.$$"
 }
 
-testEnvMap() {
+tests+=(testMapBin)
+testMapBin() {
     local result expected
 
-    testSection testEnvMap
+    testSection testMap
     export FOO=test
     export BAR=goob
 
-    result="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | bin/build/envmap.sh)"
+    result="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | bin/build/map.sh)"
 
     expected="testgoob{foo}{bar}goob"
     if [ "$result" != "$expected" ]; then
-        consoleError "envmap.sh failed: $result != $expected"
+        consoleError "map.sh failed: $result != $expected"
         exit "$errorEnvironment"
     fi
-    consoleSuccess OK
+    consoleSuccess testMapBin OK
 }
 
 #
@@ -122,19 +127,21 @@ __doesScriptInstall() {
     fi
 }
 
-testEnvmapPortability() {
+tests+=(testMapPortability)
+testMapPortability() {
     tempDir="./random.$$/"
     mkdir -p "$tempDir" || :
-    cp ./bin/build/envmap.sh "./random.$$/"
+    cp ./bin/build/map.sh "./random.$$/"
     export DUDE=ax
     export WILD=m
-    assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/envmap.sh)" "maximum"
+    assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum"
     rm -rf "$tempDir"
 }
 
 #
 # Side-effect: installs scripts
 #
+tests+=(testScriptInstallations)
 testScriptInstallations() {
     if ! which docker-compose >/dev/null; then
         __doesScriptInstall docker-compose "bin/build/install/docker-compose.sh"

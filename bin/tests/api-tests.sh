@@ -8,12 +8,15 @@
 #
 errorEnvironment=1
 
+declare -a tests
+
+tests+=(testTools)
 testTools() {
     assertEquals "$(plural 0 singular plural)" "plural"
     assertEquals "$(plural 1 singular plural)" "singular"
     assertEquals "$(plural 2 singular plural)" "plural"
     assertEquals "$(plural -1 singular plural)" "plural"
-    assertEquals "$(plural X singular plural)" "plural"
+    assertExitCode 1 plural X singular plural
 
     assertEquals "$(alignRight 20 012345)" "              012345"
     assertEquals "$(alignRight 5 012345)" "012345"
@@ -25,6 +28,7 @@ testTools() {
     consoleSuccess testTools OK
 }
 
+tests+=(testUrlParse)
 testUrlParse() {
     local u url user name password host port
 
@@ -54,6 +58,7 @@ testUrlParse() {
     consoleSuccess testUrlParse OK
 }
 
+tests+=(testDotEnvConfigure)
 testDotEnvConfigure() {
     local tempDir="$$.dotEnvConfig"
     mkdir "$tempDir"
@@ -74,6 +79,7 @@ testDotEnvConfigure() {
     consoleSuccess dotEnvConfigure works AOK
 }
 
+tests+=(testHooks)
 testHooks() {
     for h in deploy-cleanup deploy-confirm make-env version-created version-live; do
         assertExitCode 0 hasHook $h
@@ -84,6 +90,7 @@ testHooks() {
     consoleSuccess testHooks OK
 }
 
+tests+=(testEnvironmentVariables)
 testEnvironmentVariables() {
     assertOutputContains PWD environmentVariables
     assertOutputContains SHLVL environmentVariables
@@ -94,6 +101,7 @@ testEnvironmentVariables() {
     consoleSuccess testEnvironmentVariables OK
 }
 
+tests+=(testDates)
 testDates() {
     local t y
     assertEquals "$(timestampToDate 1697666075 %F)" "2023-10-18"
@@ -110,12 +118,22 @@ testDates() {
     fi
 }
 
-testEnvMap() {
-    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh)"
-    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh NAME PLACE)"
-    assertEquals "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh NAME)"
-    assertEquals "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh PLACE)"
-    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh NAM PLAC)"
-    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/envmap.sh AME LACE)"
-    consoleSuccess testEnvMap OK
+tests+=(testMapPrefixSuffix)
+testMapPrefixSuffix() {
+    local assertItem=1
+    assertEquals "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world bin/build/map.sh --prefix '[' --suffix ']')" "#$assertItem failed" #1
+    assertItem=$((assertItem + 1))
+    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh)" "#$assertItem failed"
+    assertItem=$((assertItem + 1))
+    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAME PLACE)" "#$assertItem failed"
+    assertItem=$((assertItem + 1))
+    assertEquals "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAME)" "#$assertItem failed"
+    assertItem=$((assertItem + 1))
+    assertEquals "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh PLACE)" "#$assertItem failed"
+    assertItem=$((assertItem + 1))
+    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAM PLAC)" "#$assertItem failed"
+    assertItem=$((assertItem + 1))
+    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh AME LACE)" "#$assertItem failed"
+    assertItem=$((assertItem + 1))
+    consoleSuccess testMapPrefixSuffix OK
 }

@@ -1,4 +1,4 @@
-# `envmap.sh` - Description
+# `map.sh` - Description
 
 Map tokens in the input stream based on environment values with the same names.
 
@@ -8,7 +8,7 @@ Undefined values are not converted.
 
 ## Usage
 
-    envmap.sh [ environmentName0 environmentName1 ... ]
+    map.sh [ environmentName0 environmentName1 ... ]
 
 ## Arguments
 
@@ -28,6 +28,6 @@ Argument-passed or entire environment variables which are exported are used and 
 
 ## Examples
 
-    echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world envmap.sh NAME PLACE
+    echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world map.sh NAME PLACE
 
 [⬅ Return to top](index.md)

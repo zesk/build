@@ -127,3 +127,10 @@ whichApt() {
 environmentVariables() {
     declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
+
+#
+# Source: https://stackoverflow.com/questions/742466/how-can-i-reverse-the-order-of-lines-in-a-file
+#
+reverseFileLines() {
+    awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
+}

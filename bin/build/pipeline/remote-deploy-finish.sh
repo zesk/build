@@ -101,12 +101,12 @@ if test "$debuggingFlag"; then
 fi
 
 cleanupAction() {
-    #    ____ _
+    # ____ _
     #   / ___| | ___  __ _ _ __  _   _ _ __
     #  | |   | |/ _ \/ _` | '_ \| | | | '_ \
     #  | |___| |  __/ (_| | | | | |_| | |_) |
     #   \____|_|\___|\__,_|_| |_|\__,_| .__/
-    #                                 |_|
+    #                              |_|
     cd "$1"
     shift
 
@@ -126,7 +126,7 @@ cleanupAction() {
 #  | | | |/ _ \ '_ \| |/ _ \| | | |
 #  | |_| |  __/ |_) | | (_) | |_| |
 #  |____/ \___| .__/|_|\___/ \__, |
-#             |_|            |___/
+#          |_|            |___/
 if test $undoFlag && test $cleanupFlag; then
     usage "$errorArgument" "--cleanup and --undo are mutually exclusive"
 fi

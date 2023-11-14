@@ -15,7 +15,7 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-- copy `bin/build/build-setup.sh` into your project (changing `relTop` if needed) manually
+- copy `bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually
 - run it before you need your `bin/build` directory
 
 ## Project structure
@@ -31,7 +31,7 @@ To use in your pipeline:
 - `chmod-sh.sh` - Make `.sh` files executable
 - `cannon.sh` - Replace text in all files specified
 - `deprecated.sh` - Replace or warn about deprecated build code
-- `envmap.sh` - Replace environment tokens in a text file with values from the environment
+- `map.sh` - Replace environment tokens in a text file with values from the environment
 - `new-release.sh` - Make a new release version
 - `version-last.sh` - The last version tagged
 - `version-list.sh` - List all version tags ordered by `versionSort`

@@ -4,6 +4,10 @@
 #
 # Depends: assert.sh usage.sh
 #
+
+declare -a tests
+tests+=(usageTests)
+
 usageTests() {
     local results
 

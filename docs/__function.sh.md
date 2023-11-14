@@ -1,31 +1,41 @@
-## `todoReplaceThisName` - TODO Replace Description
+## `{fn}` - {short_description}
 
-TODO More details if needed
+{description}
+
+(Located at: `{file}`)
 
 ### Usage
 
-    todoReplaceThisName arg1 arg2 [ --help ]
+{usage}
 
 ### Arguments
 
-- `arg1` - **Required**. *String*. Thing one TODO
-- `arg2` - **Required**. *String*. Thing two TODO
-- `--help` - **Optional**. Show this help and exit
-
-### Exit codes
-
-Zero.
-
-### Local cache
-
-No local caches.
-
-### Environment
-
-No dependencies on environment.
-No changes to environment.
+{argument}
 
 ### Examples
 
-    todoReplaceThisName thing1 thing2 # TODO
+{example}
 
+### Exit codes
+
+{exit_code}
+
+### Local cache
+
+{local_cache}
+
+### Environment
+
+{environment}
+
+### Depends
+
+{depends}
+
+### Credits
+
+Thanks to [{credits}]({source}).
+
+### Errors
+
+{error}

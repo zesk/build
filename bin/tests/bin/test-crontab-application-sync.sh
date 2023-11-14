@@ -19,7 +19,7 @@ set -eo pipefail
 errorEnvironment=1
 errorArgument=2
 me=$(basename "$0")
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 #shellcheck source=/dev/null
 . ./bin/build/tools.sh

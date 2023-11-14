@@ -16,15 +16,58 @@
 #------------------------------------------------------------------------------
 #
 
+
 #
 # Quote sed strings for shell use
+# Usage: quoteSedPattern text
+# Argument: text - Text to quote
+# Output: string quoted and appropriate to insert in a sed search or replacement phrase
+# Example: sed "s/$(quoteSedPattern "$search")/HIDE/g"
 #
 quoteSedPattern() {
-    echo -n "$1" | sed 's/\([\/.*+?]\)/\\\1/g'
+    # IDENTICAL quoteSedPattern 2
+    value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
+    value="${value//\//\\\\\/}"
+    value="${value//[/\\[}"
+    value="${value//]/\\]}"
+    printf %s "${value//$'\n'/\\n}"
 }
 
 #
-# Usage: repeat count string
+# Quote strings for inclusion in shell quoted strings
+# Usage: escapeSingleQuotes text
+# Argument: text - Text to quote
+# Output: Single quotes are prefixed with a backslash
+# Example: escapeSingleQuotes "Now I can't not include this in a bash string."
+#
+escapeSingleQuotes() {
+    printf %s "${1//\'/\\\'}"
+}
+
+#
+# Strip whitespace in input stream
+# Removes leading and trailing spaces in input, also removes blank lines I think
+# Usage: stripWhitespace < file > output
+# Arguments: None
+#
+stripWhitespace() {
+    awk '{$1=$1};NF'
+}
+
+#
+# Quote bash strings for inclusion as single-quoted for eval
+# Usage: quoteBashString text
+# Argument: text - Text to quote
+# Output: string quoted and appropriate to assign to a value in the shell
+# Example: name="$(quoteBashString "$name")"
+quoteBashString() {
+    printf '%s' "$1" | sed 's/\([$`<>'\'']\)/\\\1/g'
+}
+#
+# Usage: repeat count string [ ... ]
+# Argument: count - Required, integer count of times to repeat
+# Argument: string - The ext string to repeat
+# Argument: ... - Additional arguments are output using shell expansion of `$*`
 #
 repeat() {
     local count=$((${1:-2} + 0))
@@ -52,12 +95,16 @@ echoBar() {
 # Prefix each line with the arguments passed
 #
 # Usage: prefixLines string < fileToPrefixLines
+# Exit Code: 0
+# Argument: `string` - Prefix each line with this string
+# Example: cat "$file" | prefixLines "$(consoleCode)"
+# Example: cat "$errors" | prefixLines "    ERROR: "
 #
 prefixLines() {
-    local prefix="$*" awkLine
-    shift
-    awkLine="{ print \"$prefix\"\$0 }"
-    awk "$awkLine"
+    local prefix="$*"
+    while IFS= read -r line; do
+        printf "%s%s\n" "$prefix" "$line"
+    done
 }
 
 ###############################################################################
@@ -68,6 +115,62 @@ prefixLines() {
 # ▀▀  ▀ ▘  ▀▘▘ ▘▗▄▘▀▀
 #
 #------------------------------------------------------------------------------
+#
+
+#
+# Check if an element exists in an array
+#
+# Usage: inArray element [ arrayElement0 arrayElement1 ... ]
+# Argument: `element` - Thing to search for
+# Argument: `arrayElement0` - One or more array elements to match
+# Example: if inArray "$thing" "${things[@]}"; then things+=("$thing");
+# Example:     things+=("$thing")
+# Example: fi
+# Exit Code: 0 - If element is found in array
+# Exit Code: 1 - If element is NOT found in array
+# Tested: No
+#
+inArray() {
+    local element=${1-} arrayElement
+    shift || return 1
+    for arrayElement; do
+        if [ "$element" == "$arrayElement" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+#
+# Remove words
+#
+# Usage: inArray element [ arrayElement0 arrayElement1 ... ]
+# Argument: `element` - Thing to search for
+# Argument: `arrayElement0` - One or more array elements to match
+# Example: if inArray "$thing" "${things[@]}"; then things+=("$thing");
+# Example:     things+=("$thing")
+# Example: fi
+# Exit Code: 0 - If element is found in array
+# Exit Code: 1 - If element is NOT found in array
+# Reviewed: 2023-11-13
+# Tested: No
+#
+trimWords() {
+    local wordCount=$((${1-0} + 0)) words=()
+    shift || return 0
+    while [ ${#words[@]} -lt $wordCount ]; do
+        IFS=' ' read -ra argumentWords <<<"$1"
+        for argumentWord in "${argumentWords[@]}"; do
+            words+=("$argumentWord")
+            if [ ${#words[@]} -ge $wordCount ]; then
+                printf "%s " "${words[@]}"
+                return 0
+            fi
+        done
+        shift || return 0
+    done
+    printf "%s\n" "${words[@]}"
+}
 
 #
 #  urlParse url
@@ -105,7 +208,7 @@ urlParse() {
         echo "failed=1" 1>&2
         return 1
     fi
-
+\
     echo "scheme=$scheme"
     echo "url=$url"
     echo "name=$name"
@@ -143,18 +246,30 @@ maximumFieldLength() {
 }
 
 #
+# Output singular or plural noun based on number
+#
 # Usage: plural number singular plural
+# Argument: number - An integer or floating point number
+# Argument: singular - The singular form of a noun
+# Argument: plural - The plural form of a noun
 #
-# Sample:
+# Example: count=$(($(wc -l < $foxSightings) + 0))
+# Example: printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
 #
-# count=$(($(wc -l < $foxSightings) + 0))
-# echo "We saw $count $(plural $count fox foxes)."
+# Exit code: 1 - If count is non-numeric
+# Exit code: 0 - If count is numeric
 #
 plural() {
-    if [ "$(($1 + 0))" -eq 1 ]; then
-        echo -n "$2"
+    local count=${1-}
+    if [ "$count" -eq "$count" ] 2>/dev/null; then
+        if [ "$((${1-} + 0))" -eq 1 ]; then
+            printf %s "${2-}"
+        else
+            printf %s "${3-}"
+        fi
     else
-        echo -n "$3"
+        printf "%s: %s\n" "plural argument is not numeric" "$count" 1>&2
+        return 1
     fi
 }
 
@@ -217,6 +332,12 @@ alignLeft() {
     printf "%-${n}s" "$*"
 }
 
+lowercase() {
+    while [ $# -gt 0 ]; do
+        printf %s "$1" | tr '[:upper:]' '[:lower:]'
+        shift
+    done
+}
 #
 # Not sure if this works really, need to pair with
 # something in local script to make an array possibly
@@ -241,4 +362,47 @@ boxedHeading() {
     echo "$(consoleDecoration -n \|) $(consoleInfo -n "$text")$(repeat $spaces " ") $(consoleDecoration -n \|)"
     consoleDecoration "$emptyBar"
     consoleDecoration "$bar"
+}
+
+#
+# Strip ANSI console escape sequences from a file
+# Usage: stripAnsi < input > output
+# Argument: None.
+# Exit Codes: Zero.
+# Local Cache: None.
+# Environment: None.
+# Write Environment: None.
+# Credits: commandlinefu tripleee
+# Short description: Remove ANSI escape codes from streams
+# Source: https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc
+# Depends: sed
+#
+stripAnsi() {
+    sed $'s,\x1B\[[0-9;]*[a-zA-Z],,g'
+}
+
+#
+# listTokens
+# Usage: listTokens prefix suffix < input > output
+# Argument: `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
+# Argument: `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
+# Exit Codes: Zero.
+# Local Cache: None.
+# Environment: None.
+# Short description: list mappable variables in a file
+# Depends: sed quoteSedPattern
+#
+listTokens() {
+    local prefix suffix removeQuotesPattern
+
+    prefix="$(quoteSedPattern "${1-{}")"
+    suffix="${2-\\}}"
+
+    removeQuotesPattern="s/.*$prefix\([a-zA-Z0-9_]*\)$suffix.*/\1/g"
+
+    # insert newline after all found suffix
+    # remove lines missing a prefix and missing a suffix
+    # remove all content before prefix and after suffix
+    # remaining lines are our tokens
+    sed "s/$suffix/$suffix\n/g" | sed -e "/$prefix/!d" -e "/$suffix/!d" -e "$removeQuotesPattern"
 }
