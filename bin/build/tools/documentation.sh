@@ -139,7 +139,7 @@ bashFindFunctionDocumentation() {
         rm "$definitionFiles"
         return 1
     fi
-    definitionFile="$(head -1 $definitionFiles)"
+    definitionFile="$(head -1 "$definitionFiles")"
     rm "$definitionFiles"
     if [ -z "$definitionFile" ]; then
         consoleError "No files found for $fn in $directory" 1>&2
@@ -282,6 +282,8 @@ removeUnfinishedSections() {
 }
 
 _bashDocumentFunction_exit_codeFormat() {
+    # SC2016 is the backtick check below
+    # shellcheck disable=SC2016
     sed 's/\([0-9][0-9]*\)[[:space:]]*-[[:space:]]*/- \`\1\` - /g'
 }
 
