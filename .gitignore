@@ -5,3 +5,4 @@
 /.composer/
 /.env*
 /.idea/
+/.build-docs/

@@ -16,7 +16,12 @@ testText() {
 
 tests+=(testEscapeSingleQuotes)
 testEscapeSingleQuotes() {
+    assertEquals "Ralph \"Dude\" Brown" "$(escapeSingleQuotes "Ralph \"Dude\" Brown")"
     assertEquals "Dude\\'s place" "$(escapeSingleQuotes "Dude's place")"
+}
+testEscapeDoubleQuotes() {
+    assertEquals "Ralph \\\"Dude\\\" Brown" "$(escapeDoubleQuotes "Ralph \"Dude\" Brown")"
+    assertEquals "Dude's place" "$(escapeDoubleQuotes "Dude's place")"
 }
 
 tests+=(testQuoteSedPattern)

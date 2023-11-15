@@ -38,15 +38,15 @@ bashDocumentFunction() {
     envFile=$(mktemp)
     printf "%s\n" "#!/usr/bin/env bash" >>"$envFile"
     printf "%s\n" "set -eou pipefail" >>"$envFile"
+    # set -u does not work with read which returns 1 on EOF
     if ! bashFindFunctionDocumentation "$directory" "$fn" >>"$envFile"; then
         __dumpNameValue "error" "$fn was not found" >>"$envFile"
     fi
-    echo "$fn 1" 1>&2
     target=$(mktemp)
     (
         set -eo pipefail
         set -a
-        consoleError "$envFile" 1>&2
+        # consoleError "$envFile" 1>&2
         chmod +x "$envFile"
         if ! "$envFile"; then
             consoleError "Failed"
@@ -74,13 +74,14 @@ bashDocumentFunction() {
 # Argument: `name` - Shell value to
 #
 __dumpNameValue() {
-    printf '%s=$(cat <<"EOF"\n' "$1"
+    local varName=$1
+    printf "if ! read -r -d '' '%s' <<'%s'\n" "$varName" "EOF" # Single quote means no interpolation
     shift
     while [ $# -gt 0 ]; do
         printf "%s\n" "$(escapeSingleQuotes "$1")"
         shift
     done
-    printf "%s\n)\n" "EOF"
+    printf "%s\nthen\n    export '%s'\nfi\n" "EOF" "$varName"
 }
 
 #
@@ -113,7 +114,7 @@ __dumpNameValue() {
 # Depends: colors.sh text.sh prefixLines
 #
 bashFindFunctionDocumentation() {
-    local maxLines=1000 directory=$1 fn=$2 definitionFile
+    local maxLines=1000 directory=$1 fn=$2 definitionFiles foundCount definitionFile
     local line name value desc tempDoc foundNames
 
     if [ ! -d "$directory" ]; then
@@ -124,9 +125,24 @@ bashFindFunctionDocumentation() {
         consoleError "function name is blank" 1>&2
         return 2
     fi
-    definitionFile=$(bashFindFunctionDefinition "$directory" "$fn" || :)
-    if [ -z "$definitionFile" ]; then
+    definitionFiles=$(mktemp)
+    if ! bashFindFunctionDefinition "$directory" "$fn" > "$definitionFiles"; then
+        cat "$definitionFiles"
+        rm "$definitionFiles"
         consoleError "$fn not found in $directory" 1>&2
+        return 1
+    fi
+    foundCount=$(wc -l < "$definitionFiles")
+    if [ $foundCount -gt 1 ]; then
+        consoleError "$fn found in $foundCount $(plural $foundCount file files):" 1>&2
+        cat "$definitionFiles" | prefixLines "    $(consoleCode)"
+        rm "$definitionFiles"
+        return 1
+    fi
+    definitionFile="$(head -1 $definitionFiles)"
+    rm "$definitionFiles"
+    if [ -z "$definitionFile" ]; then
+        consoleError "No files found for $fn in $directory" 1>&2
         return 1
     fi
     tempDoc=$(mktemp)
@@ -150,7 +166,7 @@ bashFindFunctionDocumentation() {
             value="${line#*:}"
             value="${value# }"
             name="$(lowercase "$(printf '%s' "$name" | sed 's/[^A-Za-z0-9]/_/g')")"
-            if ! inArray "$name" "${foundNames[@]}"; then
+            if ! inArray "$name" "${foundNames[@]+${foundNames[@]}}"; then
                 foundNames+=("$name")
             fi
             if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
@@ -164,23 +180,25 @@ bashFindFunctionDocumentation() {
     if [ "${#values[@]}" -gt 0 ]; then
         __dumpNameValue "$lastName" "${values[@]}"
     fi
-    __dumpNameValue "description" "${desc[@]}"
+    if [ "${#desc[@]}" -gt 0 ]; then
+        __dumpNameValue "description" "${desc[@]}"
+        if ! inArray "short_description" "${foundNames[@]+}"; then
+            __dumpNameValue "short_description" "$(trimWords 10 "${desc[@]}")"
+        fi
+    fi
     __dumpNameValue "fn" "$fn"
     __dumpNameValue "file" "$definitionFile"
     __dumpNameValue "base" "$(basename "$definitionFile")"
-    if ! inArray "short_description" "${foundNames[@]}"; then
-        __dumpNameValue "short_description" "$(trimWords 10 "${desc[@]}")"
-    fi
-    if ! inArray "exit_code" "${foundNames[@]}"; then
+    if ! inArray "exit_code" "${foundNames[@]+}"; then
         __dumpNameValue "exit_code" '0 - Always succeeds'
     fi
-    if ! inArray "local_cache" "${foundNames[@]}"; then
+    if ! inArray "local_cache" "${foundNames[@]+}"; then
         __dumpNameValue "local_cache" 'None'
     fi
-    if ! inArray "reviewed" "${foundNames[@]}"; then
+    if ! inArray "reviewed" "${foundNames[@]+}"; then
         __dumpNameValue "reviewed" 'Never'
     fi
-    if ! inArray "environment" "${foundNames[@]}"; then
+    if ! inArray "environment" "${foundNames[@]+}"; then
         __dumpNameValue "environment" 'No environment dependencies or modifications.'
     fi
 }
@@ -248,7 +266,7 @@ removeUnfinishedSections() {
     while IFS= read -r line; do
         if [ "${line:0:1}" = "#" ]; then
             if ! test $foundVar; then
-                printf '%s\n' "${section[@]}"
+                printf '%s\n' "${section[@]+${section[@]}}"
             fi
             section=()
             foundVar=

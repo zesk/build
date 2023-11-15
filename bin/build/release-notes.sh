@@ -29,4 +29,4 @@ if [ ! -f "$path" ]; then
     consoleError "No release notes found at $path" 1>&2
     exit $errorEnvironment
 fi
-echo -n "$path"
+printf %s "$path"

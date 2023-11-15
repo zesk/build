@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL install-bin-build 10000
+#
+# Since scripts may copy this file directly, must replicate until deprecated
 #
 # Load build system - part of zesk/build
 #
@@ -13,6 +16,7 @@
 relTop=../..
 
 # The remaining lines will be replaced by the main script every time.
+binName=install-bin-build.sh
 errorEnvironment=1
 set -eo pipefail
 # set -x # Debugging
@@ -70,7 +74,7 @@ if [ -f "$ignoreFile" ] && ! grep -q "/bin/build/" "$ignoreFile"; then
   echo
 fi
 
-diffLines=$(diff "$(pwd)/bin/build/install-bin-build.sh" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)
+diffLines=$(diff "$(pwd)/bin/build/$binName" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)
 if [ "$diffLines" -eq 0 ]; then
   echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
   exit 0

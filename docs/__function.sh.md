@@ -16,6 +16,10 @@
 
 {example}
 
+### Sample Output
+
+{output}
+
 ### Exit codes
 
 {exit_code}

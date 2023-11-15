@@ -3,8 +3,8 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{assertEquals}
 {assertNotEquals}
+{assertEquals}
 {assertExitCode}
 {assertNotExitCode}
 {assertOutputContains}

@@ -35,14 +35,17 @@ assertEquals() {
         consoleSuccess "assertEquals $a == $b (correct)"
     fi
 }
+
 # Assert two strings are not equal.
 #
 # If this fails it will output an error and exit.
+# Short Description: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
 # Argument: - `expected` - Expected string
 # Argument: - `actual` - Actual string
 # Argument: - `message` - Message to output if the assertion fails
-# Example: assertNotEquals "$(head -1 /proc/1/sched | awk '{ print $1 })" "init" "sched should not be init"
+# Example: assertNotEquals "$(head -1 /proc/1/sched | awk '{ print $1 }')" "init" "/proc/1/sched should not be init"
+# Example: Single quote break's
 # Reviewed: 2023-11-12
 #
 assertNotEquals() {
@@ -64,6 +67,7 @@ assertNotEquals() {
 #
 # If this fails it will output an error and exit.
 #
+# Short Description: Assert actual value is greater than expected value
 # Usage: assertGreaterThan expected actual [ message ]
 # Argument: - `expected` - Expected numeric value
 # Argument: - `actual` - Actual numeric value
@@ -82,6 +86,7 @@ assertGreaterThan() {
         exit "$errorEnvironment"
     fi
 }
+
 # Assert actual value is greater than or equal to expected value.
 #
 # If this fails it will output an error and exit.
@@ -91,7 +96,7 @@ assertGreaterThan() {
 # Argument: - `message` - Message to output if the assertion fails
 # Example: assertGreaterThanOrEqual 3 $found
 # Reviewed: 2023-11-12
-#
+# Short Description: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
     local expected=$1 actual=$2
     shift
@@ -104,7 +109,7 @@ assertGreaterThanOrEqual() {
     fi
 }
 
-# Assert actual value is greater than or equal to expected value.
+# Assert actual value is less than expected value.
 #
 # If this fails it will output an error and exit.
 # Usage: assertLessThan expected actual [ message ]
@@ -113,6 +118,7 @@ assertGreaterThanOrEqual() {
 # Argument: - `message` - Message to output if the assertion fails
 # Example: assertLessThan 3 $found
 # Reviewed: 2023-11-12
+# Short Description: Assert actual value is less than expected value
 #
 assertLessThan() {
     local expected=$1 actual=$2
@@ -126,6 +132,7 @@ assertLessThan() {
     fi
 }
 
+# Short Description: Assert two strings are not equal
 # Assert two strings are not equal.
 #
 # If this fails it will output an error and exit.
@@ -202,6 +209,7 @@ assertNotExitCode() {
     set -e
     assertNotEquals "$expected" "$actual" "$* exit code should not equal expected $expected ($actual)"
 }
+
 #
 # Run a command and expect the output to contain the occurrence of a string.
 #
@@ -245,6 +253,7 @@ assertOutputContains() {
 randomString() {
     head --bytes=64 /dev/random | md5sum | cut -f 1 -d ' '
 }
+
 #
 # Usage: assertDirectoryExists directory [ message ... ]
 #
@@ -266,6 +275,7 @@ assertDirectoryExists() {
         return 1
     fi
 }
+
 #
 # Usage: assertDirectoryDoesNotExist directory [ message ... ]
 #

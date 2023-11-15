@@ -95,6 +95,7 @@ consoleOrange() {
     # see https://i.stack.imgur.com/KTSQa.png
     __consoleEscape '\033[38;5;214m' '\033[0m' "$@"
 }
+
 # shellcheck disable=SC2120
 consoleMagenta() {
     __consoleEscape '\033[35m' '\033[0m' "$@"
@@ -108,6 +109,7 @@ consoleWhite() {
 consoleBoldMagenta() {
     __consoleEscape '\033[1m\033[35m' '\033[0m' "$@"
 }
+
 #
 # Styles
 #
@@ -126,6 +128,7 @@ consoleNoBold() {
 consoleNoUnderline() {
     echo -en '\033[24m'
 }
+
 #
 # Semantics-based
 #
@@ -136,24 +139,28 @@ consoleNoUnderline() {
 consoleInfo() {
     consoleCyan "$@"
 }
+
 #
 # code or variables in output
 #
 consoleCode() {
     consoleYellow "$@"
 }
+
 #
 # warning things are not normal
 #
 consoleWarning() {
     consoleOrange "$@"
 }
+
 #
 # things went well
 #
 consoleSuccess() {
     consoleGreen "$@"
 }
+
 #
 # decorations to output (like bars and lines)
 #
@@ -161,18 +168,21 @@ consoleSuccess() {
 consoleDecoration() {
     consoleBoldMagenta "$@"
 }
+
 #
 # things went poorly
 #
 consoleError() {
     __consoleEscape '\033[1;31m' '\033[0m' "$@"
 }
+
 #
 # Name/Value pairs
 #
 consoleLabel() {
     consoleOrange "$@"
 }
+
 #
 # Name/Value pairs
 #

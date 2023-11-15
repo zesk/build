@@ -4,8 +4,7 @@
 [⬅ Return to top](../index.md)
 
 
-## `bashFindFunctionDefinition` - Find where a function is defined in a directory of shell scripts
-
+## `bashFindFunctionDefinition` - 
 
 Finds a function definition and outputs the file in which it is found
 Searches solely `.sh` files. (Bash or sh scripts)
@@ -31,8 +30,7 @@ may output partial results with a failure.
 
 ### Exit codes
 
-- `0` - if one or more function definitions are found
-- `1` - if no function definitions are found
+- `0` - Always succeeds
 
 ### Local cache
 
@@ -40,32 +38,46 @@ None
 
 ### Environment
 
-Generates a temporary file which is removed
+No environment dependencies or modifications.
 
-### Depends
+## `bashFindFunctionDocumentation` - 
 
-    colors.sh text.sh prefixLines
+Uses `bashFindFunctionDefinition` to locate bash function, then
+extracts the comments preceding the function definition and converts it
+into a set of name/value pairs.
 
+A few special values are generated/computed:
+
+- `description` - Any line in the comment which is not in variable is appended to the field `description`
+- `fn` - The function name (no parenthesis or anything)
+- `base` - The basename of the file
+- `file` - The relative path name of the file from the application root
+- `short_description` - Defaults to first ten words of `description`
+- `exit_code` - Defaults to `0 - Always succeeds`
+- `reviewed"  - Defaults to `Never`
+- `environment"  - Defaults to `No environment dependencies or modifications.`
+
+Otherwise the assumed variables (in addition to above) to define functions are:
+
+- `argument` - Individual arguments
+- `usage` - Canonical usage example (code)
+- `example` - An example of usage (code, many)
+- `depends` - Any dependencies (list)
+
+(Located at: `./bin/build/tools/documentation.sh`)
 
 ### Usage
 
-    bashDocumentFunction directory function template
+    bashFindFunctionDocumentation directory function
 
 ### Arguments
 
-`directory` - Directory to search for function definition
-`function` - The function definition to search for and to map to the template
-`template` - A markdown template to use to map values. Postprocessed with `removeUnfinishedSections`
-
-### Examples
-
-    bashFindFunctionDefinition bashFindFunctionDefinition
-    ./bin/build/tools/autodoc.sh
+`directory` - Directory
+`function` - Function to find definition for
 
 ### Exit codes
 
-- `1` - Template file not found
-- `0` - Success
+- `0` - Always succeeds
 
 ### Local cache
 
@@ -81,6 +93,28 @@ No environment dependencies or modifications.
 
 ### Usage
 
+    bashDocumentFunction directory function template
+
+### Arguments
+
+`directory` - Directory to search for function definition
+`function` - The function definition to search for and to map to the template
+`template` - A markdown template to use to map values. Postprocessed with `removeUnfinishedSections`
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Local cache
+
+None
+
+### Environment
+
+No environment dependencies or modifications.
+
+### Usage
+
     removeUnfinishedSections < inputFile > outputFile
 
 ### Arguments
@@ -93,7 +127,7 @@ None
 
 ### Exit codes
 
-0
+- `0` - Always succeeds
 
 ### Local cache
 
@@ -101,7 +135,7 @@ None
 
 ### Environment
 
-None
+No environment dependencies or modifications.
 
 ### Depends
 

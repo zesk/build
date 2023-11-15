@@ -30,4 +30,5 @@ statusMessage consoleSuccess Running shellcheck ...
 if ! testShellScripts >>"$quietLog"; then
     buildFailed "$quietLog"
 fi
+./bin/build/identical-check.sh --prefix '# IDENTICAL' --extension sh
 clearLine

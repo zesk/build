@@ -94,6 +94,7 @@ isAWSKeyUpToDate() {
     fi
     return 0
 }
+
 #
 # Exits successfully if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
 #

@@ -20,10 +20,10 @@ set -eou pipefail
 #
 # Quote sed strings for shell use
 #
-quoteSedPattern() {
-    # IDENTICAL quoteSedPattern 2
+mapQuoteSedPattern() {
+    # IDENTICAL quoteSedPattern 5
     value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
-    value="${value//\//\\\/}"
+    value="${value//\//\/}"
     value="${value//[/\\[}"
     value="${value//]/\\]}"
     printf %s "${value//$'\n'/\\n}"
@@ -57,7 +57,7 @@ generateSedFile() {
             LD_*) ;;
             _*) ;;
             *)
-                printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" >>"$sedFile"
+                printf "s/%s/%s/g\n" "$(mapQuoteSedPattern "$prefix$i$suffix")" "$(mapQuoteSedPattern "${!i-}")" >>"$sedFile"
                 ;;
         esac
     done
