@@ -21,12 +21,14 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 . ./bin/build/tools.sh
 
 export usageDelimiter=,
+# shellcheck disable=SC2317
 usageOptions() {
     cat <<EOF
 --extension extension,Required. The extension to search for files to match (may specify more than one)
 --prefix prefix,Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
 EOF
 }
+# shellcheck disable=SC2317
 usageDescription() {
     cat <<'EOF'
 When, for whatever reason, you need code to match between files, add a comment in the form:
@@ -92,12 +94,12 @@ find . "${findArgs[@]}" ! -path "*/.*" | while IFS= read -r searchFile; do
     for prefix in "${prefixes[@]}"; do
         [ -d "$tempDirectory/$prefixIndex" ] || mkdir "$tempDirectory/$prefixIndex"
         grep "$prefix" "$searchFile" | while read -r identicalLine; do
-            identicalLine="$(trimSpace "${identicalLine##$prefix}")"
+            identicalLine="$(trimSpace "${identicalLine##"$prefix"}")"
             token=${identicalLine%% *}
             count=${identicalLine##* }
             if ! isNumber "$count"; then
                 clearLine
-                printf "%s %s, Bad count: %s" "$(consoleWarning -n "Skipping bad instance at ")" "$(consoleCode $searchFile)" "$count"
+                printf "%s %s, Bad count: %s" "$(consoleWarning -n "Skipping bad instance at ")" "$(consoleCode "$searchFile")" "$count"
                 continue
             fi
             tokenFile="$tempDirectory/$prefixIndex/$token"
