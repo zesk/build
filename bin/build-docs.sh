@@ -4,6 +4,8 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+errorArgument=2
+
 set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -31,12 +33,13 @@ usage() {
     exit $?
 }
 
+# Default option settings
 optionCache=1
+optionForce=
 while [ $# -gt 0 ]; do
     case $1 in
         --force)
             optionForce=1
-            optionCache=
             ;;
         --no-cache)
             optionCache=
@@ -69,10 +72,16 @@ for sourceShellScripts in bin/build/tools/*.sh; do
             if [ -f "$checksumFile" ]; then
                 generatedChecksum=$(cat "$checksumFile")
                 if [ "$generatedChecksum" = "$checksum" ]; then
-                    statusMessage consoleWarning "Skipping $sourceShellScripts as it has not changed ..."
-                    continue
+                    if test $optionForce; then
+                        statusMessage consoleWarning "Force generating $sourceShellScripts ..."
+                    else
+                        statusMessage consoleWarning "Skipping $sourceShellScripts as it has not changed ..."
+                        continue
+                    fi
+                    reason="(forced)"
+                else
+                    reason="(Checksum changed)"
                 fi
-                reason="(Checksum changed)"
             else
                 reason="(Need first time processing)"
             fi
@@ -92,7 +101,7 @@ for sourceShellScripts in bin/build/tools/*.sh; do
             ./bin/build/map.sh <"$templateFile" >"$targetFile"
         )
         if test $optionCache; then
-            printf %s "$checksum" >$checksumFile
+            printf %s "$checksum" >"$checksumFile"
             statusMessage consoleSuccess "Saved $targetFile checksum $checksum ..."
         fi
     fi
