@@ -15,6 +15,8 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+errorArgument=1
+
 set -eou pipefail
 
 #

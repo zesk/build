@@ -309,7 +309,7 @@ trimWords() {
 # Example: echo $name
 #
 urlParse() {
-    local url=$1 name user password host
+    local url="${1-}" v name scheme user password host port failed
 
     name=${url##*/}
     # strip ?
@@ -336,31 +336,30 @@ urlParse() {
     fi
     host=${host%%:*}
 
+    failed=
     if [ "$scheme" = "$url" ] || [ "$user" = "$url" ] || [ "$password" = "$url" ] || [ "$host" = "$url" ]; then
         echo "url=$url" 1>&2
         echo "failed=1" 1>&2
         return 1
     fi
 
-    echo "scheme=$scheme"
-    echo "url=$url"
-    echo "name=$name"
-    echo "user=$user"
-    echo "password=$password"
-    echo "host=$host"
-    echo "port=$port"
+    for v in url scheme name user password host port failed; do
+        printf "%s=%s\n" "$v" "$(quoteBashString "${!v}")"
+    done
 }
+
 
 #
 # Gets the component of the URL from a given database URL.
 # Short Description: Get a database URL component directly
 # Usage: urlParseItem url name
 # Argument: url - a Uniform Resource Locator used to specify a database connection
-# Argument: name - the url component to get: `name`, `user`, `password`, `host`, `port`
+# Argument: name - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
 # Example: consoleInfo "Connecting as $(urlParseItem "$url" user)"
 #
 urlParseItem() {
-    local scheme url failed name user password host port
+    # shellcheck disable=SC2034
+    local scheme url name user password host port failed
     eval "$(urlParse "$1")"
     echo "${!2}"
 }

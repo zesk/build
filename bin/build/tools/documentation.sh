@@ -50,7 +50,7 @@ bashDocumentFunction() {
         chmod +x "$envFile"
         if ! "$envFile"; then
             consoleError "Failed"
-            prefixLines "$(consoleCode)" <$envFile
+            prefixLines "$(consoleCode)" <"$envFile"
             return 1
         fi
         # shellcheck source=/dev/null
@@ -59,7 +59,7 @@ bashDocumentFunction() {
         while read -r envVar; do
             formatter="_bashDocumentFunction_${envVar}Format"
             if [ "$(type -t "$formatter")" = "function" ]; then
-                declare $envVar="$(printf "%s\n" "${!envVar}" | "$formatter")"
+                declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
             fi
         done <"$envFile"
         ./bin/build/map.sh <"$template" >"$target"
@@ -126,16 +126,16 @@ bashFindFunctionDocumentation() {
         return 2
     fi
     definitionFiles=$(mktemp)
-    if ! bashFindFunctionDefinition "$directory" "$fn" > "$definitionFiles"; then
+    if ! bashFindFunctionDefinition "$directory" "$fn" >"$definitionFiles"; then
         cat "$definitionFiles"
         rm "$definitionFiles"
         consoleError "$fn not found in $directory" 1>&2
         return 1
     fi
-    foundCount=$(wc -l < "$definitionFiles")
-    if [ $foundCount -gt 1 ]; then
-        consoleError "$fn found in $foundCount $(plural $foundCount file files):" 1>&2
-        cat "$definitionFiles" | prefixLines "    $(consoleCode)"
+    foundCount=$(wc -l <"$definitionFiles")
+    if [ "$foundCount" -gt 1 ]; then
+        consoleError "$fn found in $foundCount $(plural "$foundCount" file files):" 1>&2
+        prefixLines "    $(consoleCode)" <"$definitionFiles"
         rm "$definitionFiles"
         return 1
     fi
@@ -247,7 +247,7 @@ bashFindFunctionDefinition() {
 # which starts with a `#` character and then continuing to but not including the next line which starts with a `#`
 # character or the end of file; which corresponds roughly to headings in Markdown.
 #
-# If a section contains an unused variable in the form `{variable}` it is removed from the output.
+# If a section contains an unused variable in the form `{variable}`, the entire section is removed from the output.
 #
 # This can be used to remove sections which have variables or values which are optional.
 #
@@ -294,6 +294,7 @@ _bashDocumentFunction_exampleFormat() {
 }
 
 _bashDocumentFunction_argumentFormat() {
+    # shellcheck disable=SC2016
     sed 's/\([a-z][A-Z][0-9]*\)[[:space:]]*-[[:space:]]*/- \`\1\` - /g'
 }
 
