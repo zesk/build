@@ -22,6 +22,13 @@ envFiles=()
 extraArgs=()
 while [ $# -gt 0 ]; do
     if [ -f "$1" ]; then
+        if ! checkDockerEnvFile "$1" 2>/dev/null; then
+            consoleError "Invalid docker env file: $1$(consoleCode)" 1>&2
+            (checkDockerEnvFile "$1" 2>&1 || :) | prefixLines "$(consoleCode)     " 1>&2
+            printf %s "$(consoleReset)"
+            clearLine
+            exit 1
+        fi
         envFiles+=("--env-file" "$1")
     else
         extraArgs+=("$1")

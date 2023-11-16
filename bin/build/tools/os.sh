@@ -5,6 +5,9 @@
 # Depends: colors.sh pipeline.sh
 #
 
+# IDENTICAL errorArgument 1
+errorArgument=2
+
 #
 #
 # Given a list of files, ensure their parent directories exist
@@ -18,6 +21,28 @@ requireFileDirectory() {
     done
 }
 
+#
+# Usage: runCount count binary [ args ... ]
+# Argument: count - The number of times to run the binary
+# Argument: binary - The binary to run
+# Argument: args ... - Any arguments to pass to the binary each run
+# Exit Code: 0 - success
+# Exit Code: 2 - `count` is not an unsigned number
+# Exit Code: Any - If `binary` fails, the exit code is returned
+#
+runCount() {
+    local n
+    n="$1"
+    if ! isUnsignedNumber "$n"; then
+        return "$errorArgument"
+    fi
+    shift
+    while [ "$n" -gt 0 ]; do
+        if ! "$@"; then
+            return $?
+        fi
+    done
+}
 #
 # renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
 #

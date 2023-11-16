@@ -4,6 +4,8 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+
+# IDENTICAL errorArgument 1
 errorArgument=2
 
 set -eou pipefail
@@ -38,35 +40,35 @@ optionCache=1
 optionForce=
 while [ $# -gt 0 ]; do
     case $1 in
-        --force)
-            optionForce=1
-            ;;
-        --no-cache)
-            optionCache=
-            ;;
-        --cache)
-            shift || usage $errorArgument "--cache missing argument"
-            cacheDirectory="${1%%/}"
-            if [ ! -d "$cacheDirectory" ]; then
-                usage $errorArgument "--cache $cacheDirectory is not a directory"
-            fi
-            ;;
+    --force)
+        optionForce=1
+        ;;
+    --no-cache)
+        optionCache=
+        ;;
+    --cache)
+        shift || usage $errorArgument "--cache missing argument"
+        cacheDirectory="${1%%/}"
+        if [ ! -d "$cacheDirectory" ]; then
+            usage $errorArgument "--cache $cacheDirectory is not a directory"
+        fi
+        ;;
     esac
     shift
 done
 
-if test $optionCache; then
+if test "$optionCache"; then
     [ -d "$cacheDirectory" ] || mkdir -p "$cacheDirectory"
 fi
 functionTemplate="./docs/__function.sh.md"
-functionSum="$(shaPipe < "$functionTemplate")"
+functionSum="$(shaPipe <"$functionTemplate")"
 for sourceShellScripts in bin/build/tools/*.sh; do
     reason=""
     base="$(basename "$sourceShellScripts")"
     templateFile="./docs/templates/tools/$base.md"
     targetFile="./docs/tools/$base.md"
     if [ -f "$templateFile" ]; then
-        if test $optionCache; then
+        if test "$optionCache"; then
             checksum="${functionSum}:$(shaPipe <"$sourceShellScripts"):$(shaPipe <"$templateFile")"
             checksumFile="$cacheDirectory/$base.checksum"
             if [ -f "$checksumFile" ]; then
@@ -100,7 +102,7 @@ for sourceShellScripts in bin/build/tools/*.sh; do
             statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
             ./bin/build/map.sh <"$templateFile" >"$targetFile"
         )
-        if test $optionCache; then
+        if test "$optionCache"; then
             printf %s "$checksum" >"$checksumFile"
             statusMessage consoleSuccess "Saved $targetFile checksum $checksum ..."
         fi

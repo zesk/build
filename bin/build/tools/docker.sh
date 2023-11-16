@@ -46,3 +46,20 @@ insideDocker() {
     # inside
     return 0
 }
+
+#
+# Usage: checkDockerEnvFile [ filename ... ]
+# Argument: filename - Docker environment file to check for common issues
+# Exit Code: 1 - if errors occur
+# Exit Code: 0 - if file is valid
+#
+checkDockerEnvFile() {
+    local result=0
+    for f in "$@"; do
+        if grep -q -E '\$|="|='"'" "$f"; then
+            grep -E '\$|="|='"'" "$f" 1>&2
+            result=1
+        fi
+    done
+    return "$result"
+}

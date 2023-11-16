@@ -64,7 +64,11 @@ while [ $# -gt 0 ]; do
         showFlag=1
         ;;
     *)
-        usage $errorArgument "No arguments"
+        if [ -d "$1" ]; then
+            echo "Home is $1"
+        else
+            usage $errorArgument "No arguments"
+        fi
         ;;
     esac
     shift

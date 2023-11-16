@@ -23,8 +23,11 @@ set -eo pipefail
 #
 # Do not depend on anything in build
 #
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+# IDENTICAL errorArgument 1
 errorArgument=2
+
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 

@@ -25,12 +25,13 @@
 # Example: sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 #
 quoteSedPattern() {
-    # IDENTICAL quoteSedPattern 5
+    # IDENTICAL quoteSedPattern 6
     value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
-    value="${value//\//\/}"
+    value="${value//\//\\/}"
     value="${value//[/\\[}"
     value="${value//]/\\]}"
-    printf %s "${value//$'\n'/\\n}"
+    value="${value//$'\n'/\\n}"
+    printf %s "$value"
 }
 
 #
@@ -52,7 +53,7 @@ escapeDoubleQuotes() {
 # Example: escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeSingleQuotes() {
-    printf %s "${1//\'/\'}"
+    printf %s "${1//\'/\\\'}"
 }
 
 #
@@ -578,14 +579,40 @@ argumentsToArray() {
 # Output: +================================================================================================+
 #
 boxedHeading() {
-    local bar spaces text emptyBar
+    local bar spaces text=() emptyBar i nLines
 
+    nLines=1
+    while [ $# -gt 0 ]; do
+        case $1 in
+            --size)
+                shift
+                nLines="$1"
+                if ! isUnsignedNumber "$nLines"; then
+                    consoleError "--size requires an unsigned integer" 1>&2
+                    return 1
+                fi
+                ;;
+            *)
+                text+=("$1")
+                ;;
+        esac
+        shift
+    done
     bar="+$(echoBar '' -2)+"
     emptyBar="|$(echoBar ' ' -2)|"
-    text="$*"
+
+    # convert to string
+    # shellcheck disable=SC2178
+    text="${text[*]}"
+
     spaces=$((${#bar} - ${#text} - 4))
     consoleDecoration "$bar"
-    consoleDecoration "$emptyBar"
+    for((i=0;i<${#foo[@]};i++))
+    do
+        echo "$i: ${foo[$i]}"
+    done
+
+        consoleDecoration "$emptyBar"
     echo "$(consoleDecoration -n \|) $(consoleInfo -n "$text")$(repeat $spaces " ") $(consoleDecoration -n \|)"
     consoleDecoration "$emptyBar"
     consoleDecoration "$bar"

@@ -11,7 +11,9 @@
 #
 set -eou pipefail
 
+# IDENTICAL errorArgument 1
 errorArgument=2
+
 maximumTagsPerVersion=${BUILD_MAXIMUM_TAGS_PER_VERSION:-1000}
 
 me=$(basename "${BASH_SOURCE[0]}")

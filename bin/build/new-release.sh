@@ -17,7 +17,11 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eou pipefail
+
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+
+# IDENTICAL errorArgument 1
 errorArgument=2
 
 me="$(basename "${BASH_SOURCE[0]}")"

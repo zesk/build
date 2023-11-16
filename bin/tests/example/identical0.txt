@@ -1,0 +1,47 @@
+Here's
+
+// Alternate heading is identical commentHeading1 6
+All work and no play makes Ryu a dull boy.
+All work and no play makes Ryu a dull boy.
+All work and no play makes Ryu a dull boy.
+All work and no play makes Ryu a dull boy.
+All work and no play makes Ryu a dull boy.
+All work and no play makes Jack a dull boy.
+
+# aIDENTICAL test0 4
+1: This is a comment. I love comments. This overlaps the next section and fails.
+2:
+3: # aIDENTICAL test1 2
+4: This is a comment. I love comments.
+SAFE TO BE DIFFERENTish
+
+# bIDENTICAL test2 5
+ABC
+
+# cIDENTICAL test3 2
+THIS HAS ONLY ONE OCCURRENCE
+
+// Identical ShiningTheme 5
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+
+# eIDENTICAL whyHappeningHotSauce 1
+MATCH IN THE SAME FILE
+
+# eIDENTICAL whyHappeningHotSauce 1
+MATCH IN THE SAME FILE
+
+# fIDENTICAL whatIsHappeningSauce 1
+MATCH IN THE SAME FILE
+
+# fIDENTICAL whatIsHappeningSauce 1
+MISMATCH IN THE SAME FILE
+
+# dIDENTICAL test4 50
+A => B C => D e => F
+`Quote`
+"Quote"
+'Quote' EOF

@@ -23,12 +23,13 @@ set -eou pipefail
 # Quote sed strings for shell use
 #
 mapQuoteSedPattern() {
-    # IDENTICAL quoteSedPattern 5
+    # IDENTICAL quoteSedPattern 6
     value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
-    value="${value//\//\/}"
+    value="${value//\//\\/}"
     value="${value//[/\\[}"
     value="${value//]/\\]}"
-    printf %s "${value//$'\n'/\\n}"
+    value="${value//$'\n'/\\n}"
+    printf %s "$value"
 }
 
 #

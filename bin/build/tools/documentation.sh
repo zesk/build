@@ -265,7 +265,7 @@ removeUnfinishedSections() {
     local section=() foundVar=
     while IFS= read -r line; do
         if [ "${line:0:1}" = "#" ]; then
-            if ! test $foundVar; then
+            if ! test "$foundVar"; then
                 printf '%s\n' "${section[@]+${section[@]}}"
             fi
             section=()

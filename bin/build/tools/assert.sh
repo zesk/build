@@ -175,11 +175,18 @@ assertExitCode() {
 
     shift
     shift
-    actual=$(
-        "$bin" "$@"
-        echo "$?"
-    )
-    assertEquals "$actual" "$expected" "$* exit code should equal expected $expected ($actual)"
+    outputFile=$(mktemp)
+    actual="$(
+        "$bin" "$@" >"$outputFile" 2>&1
+        printf %d "$?"
+    )"
+    if ! assertEquals "$expected" "$actual" "$bin $* exit code should equal expected $expected ($actual)$(consoleCode)"; then
+        prefixLines "$(consoleCode)" <"$outputFile"
+        consoleReset
+        rm "$outputFile"
+        return 1
+    fi
+    return 0
 }
 
 #
@@ -191,8 +198,6 @@ assertExitCode() {
 # Argument: - `expectedExitCode` - A numeric exit code not expected from the command
 # Argument: - `command` - The command to run
 # Argument: - `arguments` - Any arguments to pass to the command to run
-# Local cache: None
-# Environment: None
 # Examples: assertNotExitCode 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
 #
@@ -219,6 +224,8 @@ assertNotExitCode() {
 # Argument: - `expected` - A string to expect in the output
 # Argument: - `command` - The command to run
 # Argument: - `arguments` - Any arguments to pass to the command to run
+# Argument: - `--exit` - Assert exit status of process to be this number
+# Argument: - `--stderr` - Also include standard error in output checking
 # Exit code: 0 - If the output contains at least one occurrence of the string
 # Exit code: 1 - If output does not contain string
 # Local cache: None
@@ -226,19 +233,108 @@ assertNotExitCode() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-    local expected=$1 tempFile
+    local expected="" commands=() tempFile exitCode=0 pipeStdErr=""
 
-    shift
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --exit)
+            shift
+            assertExitCode 0 isNumber "$1"
+            exitCode="$1"
+            ;;
+        --stderr)
+            pipeStdErr=1
+            ;;
+        *)
+            if [ -z "$expected" ]; then
+                expected="$1"
+            else
+                commands+=("$1")
+            fi
+            ;;
+        esac
+        shift
+    done
     tempFile=$(mktemp)
-    actual=$(
-        "$@" >"$tempFile"
-        echo $?
-    )
-    assertEquals 0 "$actual" "Exit code should be zero"
+    if test $pipeStdErr; then
+        actual=$(
+            "${commands[@]}" >"$tempFile" 2>&1
+            echo $?
+        )
+    else
+        actual=$(
+            "${commands[@]}" >"$tempFile"
+            echo $?
+        )
+    fi
+    assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
     if grep -q "$expected" "$tempFile"; then
         consoleSuccess "$expected found in $* output"
     else
         consoleError "$expected not found in $* output"
+        prefixLines "$(consoleCode)" <"$tempFile"
+        consoleError "$(echoBar)"
+        return 1
+    fi
+}
+
+#
+# Run a command and expect the output to not contain the occurrence of a string.
+#
+# If this fails it will output the command result to stdout.
+#
+# Usage: assertOutputDoesNotContain expected command [ arguments ... ]
+# Argument: - `expected` - A string to NOT expect in the output
+# Argument: - `command` - The command to run
+# Argument: - `arguments` - Any arguments to pass to the command to run
+# Argument: - `--exit` - Assert exit status of process to be this number
+# Argument: - `--stderr` - Also include standard error in output checking
+# Exit code: 0 - If the output contains at least one occurrence of the string
+# Exit code: 1 - If output does not contain string
+# Local cache: None
+# Example: assertOutputDoesNotContain Success complex-thing.sh --dry-run
+# Reviewed: 2023-11-12
+#
+assertOutputDoesNotContain() {
+    local expected="" commands=() tempFile exitCode=0 pipeStdErr=""
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --exit)
+            shift
+            assertExitCode 0 isNumber "$1"
+            exitCode="$1"
+            ;;
+        --stderr)
+            pipeStdErr=1
+            ;;
+        *)
+            if [ -z "$expected" ]; then
+                expected="$1"
+            else
+                commands+=("$1")
+            fi
+            ;;
+        esac
+        shift
+    done
+    tempFile=$(mktemp)
+    if test $pipeStdErr; then
+        actual=$(
+            "${commands[@]}" >"$tempFile" 2>&1
+            echo $?
+        )
+    else
+        actual=$(
+            "${commands[@]}" >"$tempFile"
+            echo $?
+        )
+    fi
+    assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
+    if ! grep -q "$expected" "$tempFile"; then
+        consoleSuccess "$expected NOT found in ${commands[*]} output (correct)"
+    else
+        consoleError "$expected found in $* output (inocorrect)"
         prefixLines "$(consoleCode)" <"$tempFile"
         consoleError "$(echoBar)"
         return 1
@@ -329,7 +425,6 @@ assertFileContains() {
     done
 }
 
-
 #
 # Usage: assertFileDoesNotContain fileName string0 [ ... ]
 #
@@ -337,7 +432,6 @@ assertFileContains() {
 # Argument: - `string0 ...` - One or more strings which must NOT be found anywhere in `fileName`
 # Exit code: - `1` - If the assertions fails
 # Exit code: - `0` - If the assertion succeeds
-# Local cache: None
 # Environment: If the file does not exist, this will fail.
 # Example: assertFileDoesNotContain $logFile error Error ERROR
 # Example: assertFileDoesNotContain $logFile warning Warning WARNING

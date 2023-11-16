@@ -17,7 +17,9 @@
 # /var/www/DEPLOY/app1/applicationChecksum1.next
 #
 #
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+# IDENTICAL errorArgument 1
 errorArgument=2
 # set -x # Uncomment to enable debugging
 set -eo pipefail

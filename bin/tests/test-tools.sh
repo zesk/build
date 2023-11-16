@@ -7,5 +7,11 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 testSection() {
-    boxedHeading "$@"
+    boxedHeading --height 0 "$@"
+}
+
+testHeading() {
+    bigText "$@"
+    consoleOrange "$(echoBar)"
+    consoleReset
 }
