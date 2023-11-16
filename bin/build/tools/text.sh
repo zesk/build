@@ -349,7 +349,6 @@ urlParse() {
     done
 }
 
-
 #
 # Gets the component of the URL from a given database URL.
 # Short Description: Get a database URL component directly
@@ -579,22 +578,22 @@ argumentsToArray() {
 # Output: +================================================================================================+
 #
 boxedHeading() {
-    local bar spaces text=() emptyBar i nLines
+    local bar spaces text=() textString emptyBar nLines
 
     nLines=1
     while [ $# -gt 0 ]; do
         case $1 in
-            --size)
-                shift
-                nLines="$1"
-                if ! isUnsignedNumber "$nLines"; then
-                    consoleError "--size requires an unsigned integer" 1>&2
-                    return 1
-                fi
-                ;;
-            *)
-                text+=("$1")
-                ;;
+        --size)
+            shift
+            nLines="$1"
+            if ! isUnsignedNumber "$nLines"; then
+                consoleError "--size requires an unsigned integer" 1>&2
+                return 1
+            fi
+            ;;
+        *)
+            text+=("$1")
+            ;;
         esac
         shift
     done
@@ -602,19 +601,13 @@ boxedHeading() {
     emptyBar="|$(echoBar ' ' -2)|"
 
     # convert to string
-    # shellcheck disable=SC2178
-    text="${text[*]}"
+    textString="${text[*]}"
 
-    spaces=$((${#bar} - ${#text} - 4))
+    spaces=$((${#bar} - ${#textString} - 4))
     consoleDecoration "$bar"
-    for((i=0;i<${#foo[@]};i++))
-    do
-        echo "$i: ${foo[$i]}"
-    done
-
-        consoleDecoration "$emptyBar"
-    echo "$(consoleDecoration -n \|) $(consoleInfo -n "$text")$(repeat $spaces " ") $(consoleDecoration -n \|)"
-    consoleDecoration "$emptyBar"
+    runCount "$nLines" consoleDecoration "$emptyBar"
+    echo "$(consoleDecoration -n \|) $(consoleInfo -n "$textString")$(repeat $spaces " ") $(consoleDecoration -n \|)"
+    runCount "$nLines" consoleDecoration "$emptyBar"
     consoleDecoration "$bar"
 }
 
@@ -660,7 +653,6 @@ listTokens() {
     # remaining lines are our tokens
     sed "s/$suffix/$suffix\n/g" | sed -e "/$prefix/!d" -e "/$suffix/!d" -e "$removeQuotesPattern"
 }
-
 
 #
 # Usage: shaPipe [ ... ]
