@@ -174,7 +174,7 @@ bashFindFunctionDocumentation() {
             # no colon or ends with colon *or* starts with :
             # strip starting colon (end colon STAYS)
             value="${line##:}"
-            if [ "$(trimSpace "$value")" != "" ]; then
+            if [ "${#desc[@]}" -gt 0 ] || [ "$(trimSpace "$value")" != "" ]; then
                 desc+=("$value")
             fi
         else
@@ -217,6 +217,9 @@ bashFindFunctionDocumentation() {
     if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
         __dumpNameValue "exit_code" '0 - Always succeeds'
     fi
+    #
+    # Defaults no longer needed
+    #
     # if ! inArray "local_cache" "${foundNames[@]+${foundNames[@]}}"; then
     #     __dumpNameValue "local_cache" 'None'
     # fi
