@@ -26,7 +26,7 @@ testFormatArguments() {
 
 tests+=(testDocumentation)
 testDocumentation() {
-    local testOutput exitCode=0
+    local testOutput
     local short_description description
 
     testOutput=$(mktemp)

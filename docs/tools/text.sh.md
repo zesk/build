@@ -6,7 +6,7 @@
 
 ## `quoteSedPattern` - Quote sed strings for shell use
 
-Quote a string to be used in a sed pattern on the command line.. File: `./bin/build/tools/text.sh`, reviewed Never.
+Quote a string to be used in a sed pattern on the command line.
 
 ### Usage
 
@@ -50,7 +50,7 @@ string quoted and appropriate to insert in a sed search or replacement phrase
 
 ## `echoBar` - Output a bar as wide as the console using the
 
-Output a bar as wide as the console using the `=` symbol.. File: `./bin/build/tools/text.sh`, reviewed Never.
+Output a bar as wide as the console using the `=` symbol.
 
 ### Usage
 
@@ -78,7 +78,7 @@ Console width is captured using `tput cols` or if no `TERM` set, then uses the v
 ## `prefixLines` - Prefix output lines with a string
 
 Prefix output lines with a string, useful to format output or add color codes to
-consoles which do not honor colors line-by-line. Intended to be used as a pipe.. File: `./bin/build/tools/text.sh`, reviewed Never.
+consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Usage
 
@@ -99,7 +99,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe..
 
 ## `trimSpace` - Trim whitespace of a bash argument
 
-Trim spaces and only spaces. File: `./bin/build/tools/text.sh`, reviewed Never.
+Trim spaces and only spaces
 
 ### Usage
 
@@ -133,7 +133,7 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 - `user` - Database user
 - `password` - Database password
 - `port` - Database port
-- `name` - Database name. File: `./bin/build/tools/text.sh`, reviewed Never.
+- `name` - Database name
 
 ### Usage
 
@@ -155,7 +155,7 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 
 ## `urlParseItem` - Get a database URL component directly
 
-Gets the component of the URL from a given database URL.. File: `./bin/build/tools/text.sh`, reviewed Never.
+Gets the component of the URL from a given database URL.
 
 ### Usage
 
@@ -177,7 +177,7 @@ Gets the component of the URL from a given database URL.. File: `./bin/build/too
 ## `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
 
 Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
-Defaults to first field (fieldIndex=1), space separator (separatorChar=" "). File: `./bin/build/tools/text.sh`, reviewed Never.
+Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 ### Usage
 
@@ -199,7 +199,7 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" "). Fil
 
 ## `escapeDoubleQuotes` - Quote strings for inclusion in shell quoted strings
 
-Quote strings for inclusion in shell quoted strings. File: `./bin/build/tools/text.sh`, reviewed Never.
+Quote strings for inclusion in shell quoted strings
 
 ### Usage
 
@@ -224,7 +224,7 @@ Single quotes are prefixed with a backslash
 ## `plural` - Output numeric messages which are grammatically accurate
 
 Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
-Example:. File: `./bin/build/tools/text.sh`, reviewed Never.
+Example:
 
 ### Usage
 
@@ -251,7 +251,7 @@ Example:. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ## `escapeSingleQuotes` - Quote strings for inclusion in shell quoted strings
 
-Quote strings for inclusion in shell quoted strings. File: `./bin/build/tools/text.sh`, reviewed Never.
+Quote strings for inclusion in shell quoted strings
 
 ### Usage
 
@@ -275,7 +275,7 @@ Single quotes are prefixed with a backslash
 
 ## `escapeQuotes` - Quote strings for inclusion in shell quoted strings
 
-Quote strings for inclusion in shell quoted strings. File: `./bin/build/tools/text.sh`, reviewed Never.
+Quote strings for inclusion in shell quoted strings
 
 ### Usage
 
@@ -300,7 +300,7 @@ Single quotes are prefixed with a backslash
 ## `stripWhitespace` - Trim whitespace in a pipeline
 
 Strip whitespace in input stream
-Removes leading and trailing spaces in input, also removes blank lines I think. File: `./bin/build/tools/text.sh`, reviewed Never.
+Removes leading and trailing spaces in input, also removes blank lines I think
 
 ### Usage
 
@@ -325,7 +325,7 @@ Removes leading and trailing spaces in input, also removes blank lines I think. 
 
 ## `dateToTimestamp` - Converts a date to an integer timestamp
 
-Converts a date to an integer timestamp. File: `./bin/build/tools/text.sh`, reviewed Never.
+Converts a date to an integer timestamp
 
 ### Usage
 
@@ -351,7 +351,7 @@ Compatible with BSD and GNU date.
 
 ## `echoBar` - Output a bar as wide as the console using the
 
-Output a bar as wide as the console using the `=` symbol.. File: `./bin/build/tools/text.sh`, reviewed Never.
+Output a bar as wide as the console using the `=` symbol.
 
 ### Usage
 
@@ -388,7 +388,7 @@ Console width is captured using `tput cols` or if no `TERM` set, then uses the v
 ## `prefixLines` - Prefix output lines with a string
 
 Prefix output lines with a string, useful to format output or add color codes to
-consoles which do not honor colors line-by-line. Intended to be used as a pipe.. File: `./bin/build/tools/text.sh`, reviewed Never.
+consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Usage
 
@@ -410,7 +410,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe..
 
 ## `alignRight` - align text right
 
-Format text and align it right using spaces.. File: `./bin/build/tools/text.sh`, reviewed Never.
+Format text and align it right using spaces.
 
 ### Usage
 
@@ -436,7 +436,7 @@ Format text and align it right using spaces.. File: `./bin/build/tools/text.sh`,
 
 ## `alignLeft` - align text left
 
-Format text and align it left using spaces.. File: `./bin/build/tools/text.sh`, reviewed Never.
+Format text and align it left using spaces.
 
 ### Usage
 
@@ -463,7 +463,7 @@ Format text and align it left using spaces.. File: `./bin/build/tools/text.sh`, 
 
 ## `lowercase` - Convert text to lowercase
 
-Convert text to lowercase. File: `./bin/build/tools/text.sh`, reviewed Never.
+Convert text to lowercase
 
 ### Usage
 
@@ -475,7 +475,7 @@ Convert text to lowercase. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ## `boxedHeading` - Text heading decoration
 
-Heading for section output. File: `./bin/build/tools/text.sh`, reviewed Never.
+Heading for section output
 
 ### Usage
 
@@ -503,7 +503,7 @@ Heading for section output. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ## `shaPipe` - SHA1 checksum of standard input
 
-Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal. File: `./bin/build/tools/text.sh`, reviewed Never.
+Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal
 
 ### Usage
 
@@ -524,8 +524,6 @@ cf7861b50054e8c680a9552917b43ec2b9edae2b
 ### Depends
 
     shasum
-
-### Reviewed
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
