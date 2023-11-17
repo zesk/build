@@ -32,7 +32,7 @@ To use in your pipeline:
 
 ### Generic tools
 
-- [`envmap.sh`](envmap.sh.md) - Map environment values into files
+- [`map.sh`](map.sh.md) - Map environment values into files
 - [`chmod-sh.sh`](chmod-sh.sh.md) - Make `.sh` files executable
 - [`cannon.sh`](cannon.sh.md) - Map strings in files to make global changes. Dangerous.
 - [`new-release.sh`](new-release.sh.md) - Create a new release for the current project.
@@ -71,5 +71,3 @@ To use in your pipeline:
 ### Operations Tools
 
 - [`crontab-application-sync.sh`](crontab-application-sync.sh.md) - Keep a crontab up to date with multiple applications
-
-

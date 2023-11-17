@@ -9,6 +9,8 @@
 errorEnvironment=1
 errorArgument=2
 
+declare -a tests
+tests+=(testAWSIPAccess)
 testAWSIPAccess() {
     local quietLog=$1 id key
 
@@ -97,6 +99,7 @@ testAWSIPAccess() {
     export AWS_SECRET_ACCESS_KEY=$key
 }
 
+tests+=(testAWSExpiration)
 testAWSExpiration() {
     local thisYear thisMonth expirationDays start
 

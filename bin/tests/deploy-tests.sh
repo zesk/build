@@ -8,6 +8,9 @@
 #
 set -e
 
+declare -a tests
+tests+=(deployApplicationTest)
+
 deployApplicationTest() {
     local d
 

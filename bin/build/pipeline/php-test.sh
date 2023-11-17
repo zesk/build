@@ -17,7 +17,7 @@ me="$(basename "${BASH_SOURCE[0]}")"
 quietLog="./.build/$me.log"
 requireFileDirectory "$quietLog"
 
-#    __                  _   _
+# __                  _   _
 #   / _|_   _ _ __   ___| |_(_) ___  _ __  ___
 #  | |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 #  |  _| |_| | | | | (__| |_| | (_) | | | \__ \
@@ -50,23 +50,6 @@ usage() {
     exit "$rs"
 }
 
-#
-# Moved into build
-#
-renameFiles() {
-    local old="$1" new="$2" verb="$3"
-
-    shift
-    shift
-    shift
-    for i in "$@"; do
-        if [ -f "$i$old" ]; then
-            mv "$i$old" "$i$new"
-            consoleWarning "$verb $i$old -> $i$new"
-        fi
-    done
-}
-
 envRenameHide() {
     renameFiles "" ".$$.backup" hiding .env .env.local
 }
@@ -83,7 +66,7 @@ testCleanup() {
     done
 }
 
-#                   _
+#                _
 #   _ __ ___   __ _(_)_ __
 #  | '_ ` _ \ / _` | | '_ \
 #  | | | | | | (_| | | | | |

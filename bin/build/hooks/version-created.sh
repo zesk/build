@@ -4,13 +4,16 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-errorEnvironment=1
-set -eo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
-BUILD_VERSION_CREATED_EDITOR=${BUILD_VERSION_CREATED_EDITOR:-${EDITOR-}}
+# IDENTICAL bashHeader 5
+set -eo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+errorEnvironment=1
+BUILD_VERSION_CREATED_EDITOR=${BUILD_VERSION_CREATED_EDITOR:-${EDITOR-}}
 
 currentVersion=$1
 shift

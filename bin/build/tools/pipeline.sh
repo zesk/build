@@ -40,6 +40,7 @@ dotEnvConfig() {
   consoleWarning "dotEnvConfig is DEPRECATED - use dotEnvConfigure instead" 1>&2
   dotEnvConfigure "$@"
 }
+
 #
 # Run a hook in the project located at ./bin/hooks/
 #
@@ -221,7 +222,7 @@ ipLookup() {
 # ▐▌ ▐▌  █  ▐▌ ▐▌  █  ▐▛▀▀▘ ▗█▖  ▐▌
 # ▐█▄█▘▗▄█▄▖▝█▄█▌  █  ▝█▄▄▌ ▟▀▙  ▐▙▄
 # ▝▘▀▘ ▝▀▀▀▘ ▞▀▐▌  ▀   ▝▀▀ ▝▀ ▀▘  ▀▀
-#            ▜█▛▘
+#         ▜█▛▘
 #
 bigText() {
   local font=smblock
@@ -354,6 +355,7 @@ undoDeployApplication() {
   return 0
 
 }
+
 #
 # deployApplication deployHome deployVersion targetPackage applicationPath
 #

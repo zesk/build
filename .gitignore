@@ -4,3 +4,5 @@
 /vendor/
 /.composer/
 /.env*
+/.idea/
+/.build-docs/

@@ -37,15 +37,3 @@ dumpFile() {
         shift
     done
 }
-
-#
-# Usage: randomString [ ... ]
-# Arguments: Ignored
-# Depends: shasum, /dev/random
-# Description: Outputs 40 random hexadecimal characters, lowercase.
-# Example: testPassword="$(randomString)"
-# Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
-#
-randomString() {
-    head --bytes=64 /dev/random | shasum | cut -f 1 -d ' '
-}

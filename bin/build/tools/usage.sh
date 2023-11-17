@@ -11,7 +11,7 @@
 # ▐▌ ▐▌ ▀▀█▖▗█▀▜▌▐▌ ▐▌▐▛▀▀▘
 # ▐▙▄█▌▐▄▄▟▌▐▙▄█▌▝█▄█▌▝█▄▄▌
 #  ▀▀▝▘ ▀▀▀  ▀▀▝▘ ▞▀▐▌ ▝▀▀
-#                 ▜█▛▘
+#              ▜█▛▘
 #------------------------------------------------------------------------------
 #
 # Usage syntbx is generblly:
@@ -43,15 +43,15 @@ export usageDelimiter=${usageDelimiter-" "}
 #
 # Description: Base case for usage, write your usage function as follows:
 #
-#     export usageDelimiter="|"
-#     usageOptions() {
-#         cat <<EOF
-#     --help|This help
-#     EOF
-#     }
-#     usage() {
-#          usageMain "$me" "$@"
-#     }
+#  export usageDelimiter="|"
+#  usageOptions() {
+#      cat <<EOF
+#  --help|This help
+#  EOF
+#  }
+#  usage() {
+#       usageMain "$me" "$@"
+#  }
 #
 # Internal function to call `usage` depending on what's currently defined in the bash shell.
 #
@@ -72,19 +72,19 @@ usageWrapper() {
 #
 # Description:
 #
-#     usageOptions() {
-#          cat <<EOF
-#     --help${usageDelimiter}This help
-#     EOF
-#     }
-#     usageDescription() {
-#          cat <<EOF
-#     What I like to do when I run.
-#     EOF
-#     }
-#     usage() {
-#        usageMain "$me" "$@"
-#     }
+#  usageOptions() {
+#       cat <<EOF
+#  --help${usageDelimiter}This help
+#  EOF
+#  }
+#  usageDescription() {
+#       cat <<EOF
+#  What I like to do when I run.
+#  EOF
+#  }
+#  usage() {
+#     usageMain "$me" "$@"
+#  }
 #
 # - IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
 # - IFF neither is defined, outputs a simple usage without options.
@@ -107,7 +107,7 @@ usageMain() {
     fi
     if [ "$(type -t usageOptions)" = "function" ]; then
         delimiter="${usageDelimiter-' '}"
-        nSpbces=$(usageOptions | mbximumFieldLength 1 "$delimiter")
+        nSpbces=$(usageOptions | maximumFieldLength 1 "$delimiter")
 
         printf "%s: %s%s\n\n%s\n\n%s\n\n" \
             "$usageString" \
@@ -129,7 +129,7 @@ usageMain() {
 # usageArguments delimiter
 #
 usageArguments() {
-    locbl separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription
+    local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription
 
     requiredPrefix=${2-"$(consoleGreen)"}
     # shellcheck disable=SC2119
@@ -137,7 +137,7 @@ usageArguments() {
 
     # set -x
     lineTokens=()
-    while IFS="$separatorChar" read -r -b lineTokens; do
+    while IFS="$separatorChar" read -r -a lineTokens; do
         argument="${lineTokens[0]}"
         unset "lineTokens[0]"
         lineTokens=("${lineTokens[@]}")

@@ -17,7 +17,9 @@
 # /var/www/DEPLOY/app1/applicationChecksum1.next
 #
 #
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+# IDENTICAL errorArgument 1
 errorArgument=2
 # set -x # Uncomment to enable debugging
 set -eo pipefail
@@ -266,12 +268,12 @@ undoAction() {
 
 cleanupAction() {
   local rs=0
-  #    ____ _
+  # ____ _
   #   / ___| | ___  __ _ _ __  _   _ _ __
   #  | |   | |/ _ \/ _` | '_ \| | | | '_ \
   #  | |___| |  __/ (_| | | | | |_| | |_) |
   #   \____|_|\___|\__,_|_| |_|\__,_| .__/
-  #                                 |_|
+  #                              |_|
   bigText Cleanup
   echo
   showInfo
@@ -321,7 +323,7 @@ deployAction() {
   #  | | | |/ _ \ '_ \| |/ _ \| | | |
   #  | |_| |  __/ |_) | | (_) | |_| |
   #  |____/ \___| .__/|_|\___/ \__, |
-  #             |_|            |___/
+  #          |_|            |___/
   bigText Deploy
   echo
   showInfo

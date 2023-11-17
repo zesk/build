@@ -8,7 +8,7 @@
 #
 # Usage:
 #
-#     github-version-live.sh owner/repo
+#  github-version-live.sh owner/repo
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #

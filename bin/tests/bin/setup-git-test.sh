@@ -2,9 +2,9 @@
 #
 # setup-git-test.sh
 #
-# build-setup.sh tests
+# install-bin-build.sh tests
 #
-# Note that this tests the LIVE version of build-setup.sh so it's a version behind#
+# Note that this tests the LIVE version of build-setup.sh so it's a version behind
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
@@ -22,8 +22,8 @@ testDir=$(mktemp -d)
 cd "$testDir"
 
 mkdir -p bin/pipeline
-cp "$buildHome/bin/build/build-setup.sh" "bin/pipeline/build-setup.sh"
-echo '# this make the file different' >>bin/pipeline/build-setup.sh
+cp "$buildHome/bin/build/install-bin-build.sh" "bin/pipeline/install-bin-build.sh"
+echo '# this make the file different' >>bin/pipeline/install-bin-build.sh
 
 # --------------------------------------------------------------------------------
 #
@@ -35,11 +35,11 @@ logFile=$section.log
 
 assertDirectoryDoesNotExist bin/build
 
-bin/pipeline/build-setup.sh --mock "$buildHome/bin/build" >$logFile 2>&1
+bin/pipeline/install-bin-build.sh --mock "$buildHome/bin/build" >$logFile 2>&1
 
 assertDirectoryExists bin/build
 
-assertFileContains $logFile build-setup.sh
+assertFileContains $logFile install-bin-build.sh
 
 assertFileContains $logFile "was updated"
 assertFileDoesNotContain $logFile "is up to date"
@@ -61,14 +61,14 @@ logFile=$section.log
 assertDirectoryDoesNotExist bin/build
 
 touch .gitignore
-mv bin/pipeline/build-setup.sh bin/pipeline/we-like-head-rubs.sh
+mv bin/pipeline/install-bin-build.sh bin/pipeline/we-like-head-rubs.sh
 
 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1
 
 assertDirectoryExists bin/build
 
 assertFileContains $logFile we-like-head-rubs.sh
-assertFileDoesNotContain $logFile "build-setup.sh"
+assertFileDoesNotContain $logFile "install-bin-build.sh"
 
 assertFileContains $logFile "is up to date"
 assertFileDoesNotContain $logFile "was updated"
@@ -96,7 +96,7 @@ bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1
 assertDirectoryExists bin/build
 
 assertFileContains $logFile we-like-head-rubs.sh
-assertFileDoesNotContain $logFile "build-setup.sh"
+assertFileDoesNotContain $logFile "install-bin-build.sh"
 
 assertFileContains $logFile "is up to date"
 assertFileDoesNotContain $logFile "was updated"

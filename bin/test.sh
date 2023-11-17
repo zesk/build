@@ -13,7 +13,11 @@
 set -eo pipefail
 # set -x
 
+# IDENTICAL errorArgument 1
 errorArgument=2
+
+errorTest=3
+
 quietLog="./.build/$me.log"
 
 me=$(basename "$0")
@@ -26,19 +30,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 . ./bin/build/tools.sh
 
 # shellcheck source=/dev/null
-. ./bin/tests/api-tests.sh
-# shellcheck source=/dev/null
-. ./bin/tests/aws-tests.sh
-# shellcheck source=/dev/null
-. ./bin/tests/bin-tests.sh
-# shellcheck source=/dev/null
-. ./bin/tests/text-tests.sh
-# shellcheck source=/dev/null
-. ./bin/tests/deploy-tests.sh
-# shellcheck source=/dev/null
 . ./bin/tests/test-tools.sh
 
-usageArguments() {
+usageOptions() {
     cat <<EOF
 --help This help
 --clean Delete test artifact files before starting
@@ -79,56 +73,74 @@ while [ $# -gt 0 ]; do
 done
 trap testCleanup EXIT QUIT TERM
 
-#  _____         _
-# |_   _|__  ___| |_
-#   | |/ _ \/ __| __|
-#   | |  __/\__ \ |_
-#   |_|\___||___/\__|
-#
-testSection Deployment
-deployApplicationTest
+cleanTestName() {
+    local testName
+    testName="${1%%.sh}"
+    testName="${testName%%-test}"
+    testName="${testName%%-tests}"
+    testName=${testName##tests-}
+    testName=${testName##test-}
+    printf %s "$testName"
+}
+loadTestFiles() {
+    local testCount tests=() testName quietLog=$1
 
-testSection Whoa, dude.
-
-bigText allColorTest | prefixLines "$(consoleMagenta)"
-allColorTest
-echo
-bigText colorTest | prefixLines "$(consoleGreen)"
-colorTest
-echo
-
-testSection API Tests
-testEnvMap
-testTools
-testUrlParse
-testDotEnvConfigure
-testHooks
-testEnvironmentVariables
-testDates
-
-testSection Text Tests
-testText
-
-testSection bin Tests
-testEnvmapPortability
-testMakeEnv
-testBuildSetup
-testEnvMap
+    shift
+    statusMessage consoleWarning "Loading tests ..."
+    while [ "$#" -gt 0 ]; do
+        testName="$(cleanTestName "$1")"
+        tests+=("#$testName") # Section
+        testCount=${#tests[@]}
+        statusMessage consoleError "$testName"
+        # shellcheck source=/dev/null
+        . "./bin/tests/$1"
+        clearLine
+        printf "%s" "$(assertGreaterThan "$testCount" "${#tests[@]}" "No tests defined in ./bin/tests/$1")"
+        shift
+    done
+    statusMessage consoleSuccess "Loaded ${#tests[@]} tests ..."
+    echo
+    while [ ${#tests[@]} -gt 0 ]; do
+        test="${tests[0]}"
+        # Section
+        if [ "${test#\#}" != "$test" ]; then
+            testHeading "${test#\#}"
+        else
+            # Test
+            testSection "${test#\#}"
+            if ! $test "$quietLog"; then
+                consoleError "$test failed" 1>&2
+                return $errorTest
+            fi
+        fi
+        unset 'tests[0]'
+        tests=("${tests[@]}")
+    done
+    return 0
+}
 
 requireFileDirectory "$quietLog"
-testShellScripts "$quietLog" # has side-effects
-testScriptInstallations      # has side-effects
 
-testSection AWS Tests
-testAWSExpiration
-testAWSIPAccess "$quietLog" # has side-effects
+# Unusual quoting here is to avoid matching HERE
+./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
 
-testSection "crontab-application-sync.sh (ops)"
-./bin/tests/test-crontab-application-sync.sh -v | prefixLines "$(consoleCode)"
+loadTestFiles "$quietLog" documentation-tests.sh docker-tests.sh text-tests.sh colors-tests.sh api-tests.sh aws-tests.sh usage-tests.sh deploy-tests.sh
 
-testSection "setup-git-test.sh"
-./bin/tests/setup-git-test.sh "$(pwd)"
+# Side effects - install the software
+loadTestFiles "$quietLog" bin-tests.sh
+
+# tests-tests.sh has side-effects - installs shellcheck
+loadTestFiles "$quietLog" tests-tests.sh
+
+# aws-tests.sh testAWSIPAccess has side-effects, installs AWS
+loadTestFiles "$quietLog" aws-tests.sh
+
+for binTest in ./bin/tests/bin/*.sh; do
+    testHeading "$(cleanTestName "$(basename "$binTest")")"
+    "$binTest" "$(pwd)"
+done
 
 testCleanup
 
 bigText Passed | prefixLines "$(consoleSuccess)"
+consoleReset
