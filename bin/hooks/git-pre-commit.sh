@@ -32,4 +32,5 @@ if ! testShellScripts >>"$quietLog"; then
 fi
 # Unusual quoting here is to avoid having this match as an identical
 ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh
+./bin/build-docs.sh
 clearLine

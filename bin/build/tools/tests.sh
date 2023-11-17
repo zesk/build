@@ -16,6 +16,8 @@ errorArgument=2
 # Side-effect: shellcheck is installed
 #
 testShellScripts() {
+    local thisYear
+    thisYear=$(date +%Y)
     validateShellScripts
     validateFileContents sh -- "Copyright &copy; $thisYear"
 }

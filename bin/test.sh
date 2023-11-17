@@ -57,17 +57,17 @@ testCleanup() {
 
 while [ $# -gt 0 ]; do
     case $1 in
-        --clean)
-            consoleWarning -n "Cleaning ... "
-            testCleanup
-            consoleSuccess "done"
-            ;;
-        --messy)
-            messyOption=1
-            ;;
-        *)
-            usage "$errorArgument" "Unknown argument $1"
-            ;;
+    --clean)
+        consoleWarning -n "Cleaning ... "
+        testCleanup
+        consoleSuccess "done"
+        ;;
+    --messy)
+        messyOption=1
+        ;;
+    *)
+        usage "$errorArgument" "Unknown argument $1"
+        ;;
     esac
     shift
 done
@@ -77,7 +77,7 @@ loadTestFiles() {
     local testCount tests=() testName quietLog=$1
 
     shift
-    boxedHeading "Loading tests"
+    statusMessage consoleWarning "Loading tests ..."
     while [ "$#" -gt 0 ]; do
         testName="${1%%.sh}"
         testName="${testName%%-test}"
@@ -97,10 +97,10 @@ loadTestFiles() {
         test="${tests[0]}"
         # Section
         if [ "${test#\#}" != "$test" ]; then
-            testSection "${test#\#}"
+            testHeading "${test#\#}"
         else
             # Test
-            testHeading "${test#\#}"
+            testSection "${test#\#}"
             if ! $test "$quietLog"; then
                 consoleError "$test failed" 1>&2
                 return $errorTest
@@ -117,20 +117,28 @@ requireFileDirectory "$quietLog"
 # Unusual quoting here is to avoid matching HERE
 ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
 
-loadTestFiles "$quietLog" docker-tests.sh text-tests.sh colors-tests.sh api-tests.sh aws-tests.sh usage-tests.sh deploy-tests.sh
+loadTestFiles "$quietLog" documentation-tests.sh docker-tests.sh text-tests.sh colors-tests.sh api-tests.sh aws-tests.sh usage-tests.sh deploy-tests.sh
 
-testShellScripts "$quietLog" # has side-effects
+# Side effects - install the software
+loadTestFiles "$quietLog" bin-tests.sh
 
-# aws-tests.sh testAWSIPAccess has side-effects
+# tests-tests.sh has side-effects - installs shellcheck
+loadTestFiles "$quietLog" tests-tests.sh
 
-# Side effects
-loadTestFiles bin-tests.sh
+# aws-tests.sh testAWSIPAccess has side-effects, installs AWS
+loadTestFiles "$quietLog" aws-tests.sh
 
 for binTest in ./bin/tests/bin/*.sh; do
-    testHeading "$(basename "${binTest%%.sh}")"
-    "$binTest" "$(pwd)" | prefixLines "$(consoleCode)"
+    testName="${binTest%%.sh}"
+    testName=${testName##tests-}
+    testName=${testName%%-tests}
+    testName=${testName##test-}
+    testName=${testName%%-test}
+    testHeading "$(basename "$testName")"
+    "$binTest" "$(pwd)"
 done
 
 testCleanup
 
 bigText Passed | prefixLines "$(consoleSuccess)"
+consoleReset

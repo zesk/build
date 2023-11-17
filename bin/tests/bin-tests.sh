@@ -40,17 +40,18 @@ testMakeEnv() {
 
 tests+=(testBuildSetup)
 testBuildSetup() {
-    local targetDir marker testBinary testOutput
+    local topDir targetDir marker testBinary testOutput
 
     testSection install-bin-build.sh
-    targetDir="test.$$/bin/deeper/deepest"
+    topDir="$(pwd)/test.$$"
+    targetDir="$topDir/bin/deeper/deepest"
     mkdir -p "$targetDir"
     testBinary="$targetDir/install-bin-build.sh"
     cp bin/build/install-bin-build.sh "$testBinary"
     sed -i -e 's/^relTop=.*/relTop=..\/..\/../g' "$testBinary"
     chmod +x "$testBinary"
     marker=$(randomString)
-    echo "# changed $marker" >>"$testBinary"
+    echo " # changed $marker" >>"$testBinary"
 
     if ! grep -q "$marker" "$testBinary"; then
         consoleError "binary $testBinary does not contain marker?"
@@ -73,7 +74,8 @@ testBuildSetup() {
         return "$errorEnvironment"
     fi
     if grep -q "$marker" "$testBinary"; then
-        consoleError "binary $testBinary did not update itself as it should have"
+        consoleError "binary $testBinary did not update itself as it should have ($marker found)"
+        tail -n 20 "$testBinary" | prefixLines "$(consoleCode)"
         return "$errorEnvironment"
     fi
 
@@ -88,7 +90,7 @@ testBuildSetup() {
     fi
 
     consoleSuccess "install-bin-build.sh update was tested successfully"
-    rm -rf "./test.$$"
+    rm -rf "$topDir"
 }
 
 tests+=(testMapBin)

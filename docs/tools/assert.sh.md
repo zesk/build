@@ -4,7 +4,7 @@
 [⬅ Return to top](../index.md)
 
 
-## `assertNotEquals` - 
+## `assertNotEquals` - Assert two strings are not equal
 
 Assert two strings are not equal.
 
@@ -145,6 +145,8 @@ If this fails it will output the command result to stdout.
 - `expected` - A string to expect in the output
 - `command` - The command to run
 - `arguments` - Any arguments to pass to the command to run
+- `--exit` - Assert exit status of process to be this number
+- `--stderr` - Also include standard error in output checking
 
 ### Examples
 
@@ -162,7 +164,7 @@ None
 
 No environment dependencies or modifications.
 
-## `assertDirectoryExists` - 
+## `assertDirectoryExists` - Test that a directory exists
 
 
 
@@ -193,7 +195,7 @@ None
 
 No environment dependencies or modifications.
 
-## `assertDirectoryDoesNotExist` - 
+## `assertDirectoryDoesNotExist` - Test that a directory does not exist
 
 
 

@@ -177,14 +177,19 @@ bashFindFunctionDocumentation() {
             lastName="$name"
         fi
     done <"$tempDoc"
+    printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]}")"
     if [ "${#values[@]}" -gt 0 ]; then
         __dumpNameValue "$lastName" "${values[@]}"
     fi
     if [ "${#desc[@]}" -gt 0 ]; then
         __dumpNameValue "description" "${desc[@]}"
-        if ! inArray "short_description" "${foundNames[@]+}"; then
+        printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]}")"
+        if ! inArray "short_description" "${foundNames[@]}"; then
+            echo "# NOT INARRAY short_description:::" "${foundNames[@]}"
             __dumpNameValue "short_description" "$(trimWords 10 "${desc[@]}")"
         fi
+    else
+        echo "# NO DESC"
     fi
     __dumpNameValue "fn" "$fn"
     __dumpNameValue "file" "$definitionFile"
@@ -281,10 +286,13 @@ removeUnfinishedSections() {
     fi
 }
 
-_bashDocumentFunction_exit_codeFormat() {
-    # SC2016 is the backtick check below
+markdownListify() {
+    local wordClass='[^`[:space:]-]' spaceClass='[[:space:]]'
     # shellcheck disable=SC2016
-    sed 's/\([0-9][0-9]*\)[[:space:]]*-[[:space:]]*/- \`\1\` - /g'
+    sed -e "s/\($wordClass$wordClass*\)${spaceClass}*-${spaceClass}*/- \`\1\` - /g" | sed -e "s/^\($wordClass\)/- \1/g"
+}
+_bashDocumentFunction_exit_codeFormat() {
+    markdownListify
 }
 
 _bashDocumentFunction_usageFormat() {
@@ -296,10 +304,10 @@ _bashDocumentFunction_exampleFormat() {
 }
 
 _bashDocumentFunction_argumentFormat() {
-    # shellcheck disable=SC2016
-    sed 's/\([a-z][A-Z][0-9]*\)[[:space:]]*-[[:space:]]*/- \`\1\` - /g'
+    markdownListify
 }
-
+# sed -e 's/^- //g' |
+#| prefixLines '- '
 _bashDocumentFunction_dependsFormat() {
     prefixLines "    "
 }

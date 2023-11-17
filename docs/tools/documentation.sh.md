@@ -4,7 +4,7 @@
 [⬅ Return to top](../index.md)
 
 
-## `bashFindFunctionDefinition` - 
+## `bashFindFunctionDefinition` - Find where a function is defined in a directory of shell scripts
 
 Finds a function definition and outputs the file in which it is found
 Searches solely `.sh` files. (Bash or sh scripts)
@@ -40,7 +40,7 @@ None
 
 No environment dependencies or modifications.
 
-## `bashFindFunctionDocumentation` - 
+## `bashFindFunctionDocumentation` - Generate a set of name/value pairs to document bash functions
 
 Uses `bashFindFunctionDefinition` to locate bash function, then
 extracts the comments preceding the function definition and converts it
@@ -119,7 +119,7 @@ No environment dependencies or modifications.
 
 ### Arguments
 
-None
+- None
 
 ### Examples
 

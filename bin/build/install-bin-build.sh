@@ -16,7 +16,6 @@
 relTop=../..
 
 # The remaining lines will be replaced by the main script every time.
-binName=install-bin-build.sh
 errorEnvironment=1
 set -eo pipefail
 # set -x # Debugging
@@ -74,14 +73,26 @@ if [ -f "$ignoreFile" ] && ! grep -q "/bin/build/" "$ignoreFile"; then
   echo
 fi
 
-diffLines=$(diff "$(pwd)/bin/build/$binName" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)
-if [ "$diffLines" -eq 0 ]; then
-  echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
-  exit 0
+diffLines=NONE
+for binName in install-bin-build.sh build-setup.sh; do
+  binName="./bin/build/$binName"
+  if [ ! -x "$binName" ]; then
+    continue
+  fi
+  diffLines=$(diff "$binName" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)
+  if [ "$diffLines" -eq 0 ]; then
+    echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
+    exit 0
+  fi
+  break
+done
+if [ "$diffLines" = "NONE" ]; then
+  echo "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)" 1>&2
+  exit 1
 fi
 
 replace=$(quoteSedPattern "relTop=$relTop")
-sed -e "s/^relTop=.*/$replace/" <bin/build/install-bin-build.sh >"$myBinary.$$"
+sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary.$$"
 chmod +x "$myBinary.$$"
 (mv "$myBinary.$$" "$myBinary")
 echo "$(consoleValue -n "$myBinary") $(consoleWarning -n was updated.)"

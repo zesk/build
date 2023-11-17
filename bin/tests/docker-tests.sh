@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -e
+set -eo pipefail
 
 declare -a tests
 tests+=(testCheckDockerEnvFile)

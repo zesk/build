@@ -7,11 +7,14 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 testSection() {
-    boxedHeading --height 0 "$@"
+    boxedHeading --size 0 "$@"
 }
 
 testHeading() {
-    bigText "$@"
+    printf "%s" "$(consoleCode)"
+    consoleOrange "$(echoBar '*')"
+    printf "%s" "$(consoleCode)$(clearLine)"
+    bigText "$@" | prefixLines "  $(consoleCode)"
     consoleOrange "$(echoBar)"
     consoleReset
 }

@@ -29,6 +29,7 @@ requireFileDirectory() {
 # Exit Code: 0 - success
 # Exit Code: 2 - `count` is not an unsigned number
 # Exit Code: Any - If `binary` fails, the exit code is returned
+# Short Description: Run a binary count times
 #
 runCount() {
     local n
@@ -41,6 +42,7 @@ runCount() {
         if ! "$@"; then
             return $?
         fi
+        n=$((n - 1))
     done
 }
 #

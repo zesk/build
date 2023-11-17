@@ -8,8 +8,6 @@
 #
 # Depends: colors.sh text.sh prefixLines
 #
-# TODO md5sum is not portable
-#
 
 errorEnvironment=1
 
@@ -29,10 +27,10 @@ assertEquals() {
     shift
     shift
     if [ "$a" != "$b" ]; then
-        consoleError "assertEquals $a != $b but should: $*"
-        exit "$errorEnvironment"
+        consoleError "assertEquals \"$a\" != \"$b\" but should: ${*-mismatch}"
+        return "$errorEnvironment"
     else
-        consoleSuccess "assertEquals $a == $b (correct)"
+        consoleSuccess "assertEquals \"$a\" == \"$b\" (correct)"
     fi
 }
 
@@ -54,7 +52,7 @@ assertNotEquals() {
     shift
     if [ "$expected" = "$actual" ]; then
         consoleError "assertNotEquals $expected = $actual but should not: $*"
-        exit $errorEnvironment
+        return $errorEnvironment
     else
         consoleSuccess "assertNotEquals $expected != $actual (correct)"
     fi
@@ -83,7 +81,7 @@ assertGreaterThan() {
         consoleSuccess "assertGreaterThan $actual -gt $expected (correct)"
     else
         consoleError "assertEquals $a != $b but should: $*"
-        exit "$errorEnvironment"
+        return "$errorEnvironment"
     fi
 }
 
@@ -105,7 +103,7 @@ assertGreaterThanOrEqual() {
         consoleSuccess "assertGreaterThanOrEqual $actual -gt $expected (correct)"
     else
         consoleError "assertEquals $a != $b but should: $*"
-        exit "$errorEnvironment"
+        return "$errorEnvironment"
     fi
 }
 
@@ -128,7 +126,7 @@ assertLessThan() {
         consoleSuccess "assertGreaterThan $actual -gt $expected (correct)"
     else
         consoleError "assertEquals $a != $b but should: $*"
-        exit "$errorEnvironment"
+        return "$errorEnvironment"
     fi
 }
 
@@ -149,7 +147,7 @@ assertLessThanOrEqual() {
     shift
     if [ "$expected" = "$actual" ]; then
         consoleError "assertNotEquals $expected = $actual but should not: $*"
-        exit $errorEnvironment
+        return $errorEnvironment
     else
         consoleSuccess "assertNotEquals $expected != $actual (correct)"
     fi
@@ -347,7 +345,7 @@ assertOutputDoesNotContain() {
 # Example: token=$(randomString)
 #
 randomString() {
-    head --bytes=64 /dev/random | md5sum | cut -f 1 -d ' '
+    head --bytes=64 /dev/random | shasum | cut -f 1 -d ' '
 }
 
 #
@@ -381,7 +379,7 @@ assertDirectoryExists() {
 # Exit code: - `1` - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything at all, even a non-directory (such as a link)
-# Examples:     assertDirectoryDoesNotExists "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
+# Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
 # Short Description: Test that a directory does not exist
 # Reviewed: 2023-11-12
 #

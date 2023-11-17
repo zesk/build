@@ -1,7 +1,7 @@
 # Operating System Functions
 
 
-## `runCount` - 
+## `runCount` - Run a binary count times
 
 
 
@@ -13,9 +13,9 @@
 
 ### Arguments
 
-count - The number of times to run the binary
-binary - The binary to run
-args ... - Any arguments to pass to the binary each run
+- `count` - The number of times to run the binary
+- `binary` - The binary to run
+- args - `...` - Any arguments to pass to the binary each run
 
 ### Exit codes
 

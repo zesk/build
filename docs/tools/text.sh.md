@@ -4,7 +4,7 @@
 [⬅ Return to top](../index.md)
 
 
-## `quoteSedPattern` - 
+## `quoteSedPattern` - Quote sed strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
 
@@ -16,7 +16,7 @@ Quote a string to be used in a sed pattern on the command line.
 
 ### Arguments
 
-text - Text to quote
+- `text` - Text to quote
 
 ### Examples
 
@@ -52,7 +52,7 @@ No environment dependencies or modifications.
 
 `count` - Required, integer count of times to repeat
 `string` - A sequence of characters to repeat
-... - Additional arguments are output using shell expansion of `$*`
+- `...` - Additional arguments are output using shell expansion of `$*`
 
 ### Examples
 
@@ -84,8 +84,8 @@ Output a bar as wide as the console using the `=` symbol.
 
 ### Arguments
 
-alternateChar - Use an alternate character or string output
-offset - an integer offset to increase or decrease the size of the bar (default is `0`)
+- `alternateChar` - Use an alternate character or string output
+- `offset` - an integer offset to increase or decrease the size of the bar (default is `0`)
 
 ### Examples
 
@@ -105,7 +105,7 @@ None
 
 No environment dependencies or modifications.
 
-## `prefixLines` - 
+## `prefixLines` - Prefix output lines with a string
 
 Prefix output lines with a string, useful to format output or add color codes to
 consoles which do not honor colors line-by-line. Intended to be used as a pipe.
@@ -137,7 +137,7 @@ None
 
 No environment dependencies or modifications.
 
-## `trimSpace` - 
+## `trimSpace` - Trim whitespace of a bash argument
 
 Trim spaces and only spaces
 
@@ -149,7 +149,7 @@ Trim spaces and only spaces
 
 ### Arguments
 
-text - Text to remove spaces
+- `text` - Text to remove spaces
 
 ### Examples
 
@@ -175,7 +175,7 @@ No environment dependencies or modifications.
 
 Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
 
-## `urlParse` - 
+## `urlParse` - Simple Database URL Parsing
 
 Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
 
@@ -194,7 +194,7 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 
 ### Arguments
 
-url - a Uniform Resource Locator used to specify a database connection
+- `url` - a Uniform Resource Locator used to specify a database connection
 
 ### Examples
 
@@ -213,7 +213,7 @@ None
 
 No environment dependencies or modifications.
 
-## `urlParseItem` - 
+## `urlParseItem` - Get a database URL component directly
 
 Gets the component of the URL from a given database URL.
 
@@ -225,8 +225,8 @@ Gets the component of the URL from a given database URL.
 
 ### Arguments
 
-url - a Uniform Resource Locator used to specify a database connection
-name - the url component to get: `name`, `user`, `password`, `host`, `port`
+- `url` - a Uniform Resource Locator used to specify a database connection
+- `name` - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
 
 ### Examples
 
@@ -290,7 +290,7 @@ Quote strings for inclusion in shell quoted strings
 
 ### Arguments
 
-text - Text to quote
+- `text` - Text to quote
 
 ### Examples
 
@@ -312,7 +312,7 @@ None
 
 No environment dependencies or modifications.
 
-## `plural` - 
+## `plural` - Output numeric messages which are grammatically accurate
 
 Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
 
@@ -327,9 +327,9 @@ Example:
 
 ### Arguments
 
-number - An integer or floating point number
-singular - The singular form of a noun
-plural - The plural form of a noun
+- `number` - An integer or floating point number
+- `singular` - The singular form of a noun
+- `plural` - The plural form of a noun
 
 ### Examples
 
@@ -363,7 +363,7 @@ Quote strings for inclusion in shell quoted strings
 
 ### Arguments
 
-text - Text to quote
+- `text` - Text to quote
 
 ### Examples
 
@@ -397,7 +397,7 @@ Quote strings for inclusion in shell quoted strings
 
 ### Arguments
 
-text - Text to quote
+- `text` - Text to quote
 
 ### Examples
 
@@ -419,7 +419,7 @@ None
 
 No environment dependencies or modifications.
 
-## `stripWhitespace` - 
+## `stripWhitespace` - Trim whitespace in a pipeline
 
 Strip whitespace in input stream
 Removes leading and trailing spaces in input, also removes blank lines I think
@@ -432,7 +432,7 @@ Removes leading and trailing spaces in input, also removes blank lines I think
 
 ### Arguments
 
-None
+- None
 
 ### Exit codes
 
@@ -475,7 +475,7 @@ Converts a date to an integer timestamp
 
 ### Arguments
 
-date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
+- `date` - String in the form `- `YYYY` - - `MM` - DD` (e.g. `- `2023` - - `10` - 15`)
 
 ### Examples
 
@@ -506,8 +506,8 @@ Output a bar as wide as the console using the `=` symbol.
 
 ### Arguments
 
-alternateChar - Use an alternate character or string output
-offset - an integer offset to increase or decrease the size of the bar (default is `0`)
+- `alternateChar` - Use an alternate character or string output
+- `offset` - an integer offset to increase or decrease the size of the bar (default is `0`)
 
 ### Examples
 
@@ -552,7 +552,7 @@ None
 
 No environment dependencies or modifications.
 
-## `prefixLines` - 
+## `prefixLines` - Prefix output lines with a string
 
 Prefix output lines with a string, useful to format output or add color codes to
 consoles which do not honor colors line-by-line. Intended to be used as a pipe.
@@ -585,7 +585,7 @@ None
 No environment dependencies or modifications.
 
 
-## `alignRight` - 
+## `alignRight` - align text right
 
 Format text and align it right using spaces.
 
@@ -621,7 +621,7 @@ None
 
 No environment dependencies or modifications.
 
-## `alignLeft` - 
+## `alignLeft` - align text left
 
 Format text and align it left using spaces.
 
@@ -633,7 +633,7 @@ Format text and align it left using spaces.
 
 ### Arguments
 
-- characterWidth - Characters to align left
+- - `characterWidth` - Characters to align left
 - `text ...` - Text to align left
 
 ### Examples
@@ -680,7 +680,7 @@ None
 
 No environment dependencies or modifications.
 
-## `boxedHeading` - 
+## `boxedHeading` - Text heading decoration
 
 Heading for section output
 
@@ -718,7 +718,7 @@ None
 
 No environment dependencies or modifications.
 
-## `shaPipe` - 
+## `shaPipe` - SHA1 checksum of standard input
 
 
 
