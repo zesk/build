@@ -6,9 +6,7 @@
 
 ## `quoteSedPattern` - Quote sed strings for shell use
 
-Quote a string to be used in a sed pattern on the command line.
-
-(Located at: `./bin/build/tools/text.sh`)
+Quote a string to be used in a sed pattern on the command line.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -30,20 +28,6 @@ string quoted and appropriate to insert in a sed search or replacement phrase
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
-## `repeat` - 
-
-
-
-(Located at: `./bin/build/tools/text.sh`)
-
 ### Usage
 
     repeat count string [ ... ]
@@ -64,19 +48,9 @@ No environment dependencies or modifications.
 
 - `0` - Always succeeds
 
-### Local cache
+## `echoBar` - Output a bar as wide as the console using the
 
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
-## `echoBar` - 
-
-Output a bar as wide as the console using the `=` symbol.
-
-(Located at: `./bin/build/tools/text.sh`)
+Output a bar as wide as the console using the `=` symbol.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -97,20 +71,14 @@ Output a bar as wide as the console using the `=` symbol.
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
 ### Environment
 
-No environment dependencies or modifications.
+Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
 
 ## `prefixLines` - Prefix output lines with a string
 
 Prefix output lines with a string, useful to format output or add color codes to
-consoles which do not honor colors line-by-line. Intended to be used as a pipe.
-
-(Located at: `./bin/build/tools/text.sh`)
+consoles which do not honor colors line-by-line. Intended to be used as a pipe.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -127,21 +95,11 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Exit codes
 
-- `0` - Always succeeds
-
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
+- 0
 
 ## `trimSpace` - Trim whitespace of a bash argument
 
-Trim spaces and only spaces
-
-(Located at: `./bin/build/tools/text.sh`)
+Trim spaces and only spaces. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -163,14 +121,6 @@ text
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 ### Credits
 
 Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
@@ -178,15 +128,12 @@ Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228
 ## `urlParse` - Simple Database URL Parsing
 
 Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
-
 - `url` - URL
 - `host` - Database host
 - `user` - Database user
 - `password` - Database password
 - `port` - Database port
-- `name` - Database name
-
-(Located at: `./bin/build/tools/text.sh`)
+- `name` - Database name. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -203,21 +150,12 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 
 ### Exit codes
 
-- `0` - Always succeeds
-
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
+- `0` - If parsing succeeds
+- `1` - If parsing fails
 
 ## `urlParseItem` - Get a database URL component directly
 
-Gets the component of the URL from a given database URL.
-
-(Located at: `./bin/build/tools/text.sh`)
+Gets the component of the URL from a given database URL.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -236,21 +174,10 @@ Gets the component of the URL from a given database URL.
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
-## `maximumFieldLength` - 
+## `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
 
 Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
-
-Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
-
-(Located at: `./bin/build/tools/text.sh`)
+Defaults to first field (fieldIndex=1), space separator (separatorChar=" "). File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -270,19 +197,9 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 - `0` - Always succeeds
 
-### Local cache
+## `escapeDoubleQuotes` - Quote strings for inclusion in shell quoted strings
 
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
-## `escapeDoubleQuotes` - 
-
-Quote strings for inclusion in shell quoted strings
-
-(Located at: `./bin/build/tools/text.sh`)
+Quote strings for inclusion in shell quoted strings. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -304,22 +221,10 @@ Single quotes are prefixed with a backslash
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 ## `plural` - Output numeric messages which are grammatically accurate
 
 Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
-
-
-Example:
-
-(Located at: `./bin/build/tools/text.sh`)
+Example:. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -341,21 +246,12 @@ Example:
 
 ### Exit codes
 
-- `0` - Always succeeds
+- `1` - If count is - `non` - numeric
+- `0` - If count is numeric 
 
-### Local cache
+## `escapeSingleQuotes` - Quote strings for inclusion in shell quoted strings
 
-None
-
-### Environment
-
-No environment dependencies or modifications. 
-
-## `escapeSingleQuotes` - 
-
-Quote strings for inclusion in shell quoted strings
-
-(Located at: `./bin/build/tools/text.sh`)
+Quote strings for inclusion in shell quoted strings. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -377,19 +273,9 @@ Single quotes are prefixed with a backslash
 
 - `0` - Always succeeds
 
-### Local cache
+## `escapeQuotes` - Quote strings for inclusion in shell quoted strings
 
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
-## `escapeQuotes` - 
-
-Quote strings for inclusion in shell quoted strings
-
-(Located at: `./bin/build/tools/text.sh`)
+Quote strings for inclusion in shell quoted strings. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -410,21 +296,11 @@ Single quotes are prefixed with a backslash
 ### Exit codes
 
 - `0` - Always succeeds
-
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
 
 ## `stripWhitespace` - Trim whitespace in a pipeline
 
 Strip whitespace in input stream
-Removes leading and trailing spaces in input, also removes blank lines I think
-
-(Located at: `./bin/build/tools/text.sh`)
+Removes leading and trailing spaces in input, also removes blank lines I think. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -438,14 +314,6 @@ Removes leading and trailing spaces in input, also removes blank lines I think
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 ### Depends
 
     awk 
@@ -454,20 +322,10 @@ No environment dependencies or modifications.
 
 - `0` - Always succeeds
 
-### Local cache
 
-None
+## `dateToTimestamp` - Converts a date to an integer timestamp
 
-### Environment
-
-No environment dependencies or modifications.
-
-
-## `dateToTimestamp` - 
-
-Converts a date to an integer timestamp
-
-(Located at: `./bin/build/tools/text.sh`)
+Converts a date to an integer timestamp. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -483,22 +341,17 @@ Converts a date to an integer timestamp
 
 ### Exit codes
 
-- `0` - Always succeeds
-
-### Local cache
-
-None
+- `1` - if parsing fails
+- `0` - if parsing succeeds
 
 ### Environment
 
-No environment dependencies or modifications.
+Compatible with BSD and GNU date.
 
 
-## `echoBar` - 
+## `echoBar` - Output a bar as wide as the console using the
 
-Output a bar as wide as the console using the `=` symbol.
-
-(Located at: `./bin/build/tools/text.sh`)
+Output a bar as wide as the console using the `=` symbol.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -519,45 +372,23 @@ Output a bar as wide as the console using the `=` symbol.
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
 ### Environment
 
-No environment dependencies or modifications.
+Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
 
 ### Exit codes
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 
 ### Exit codes
 
 - `0` - Always succeeds
-
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
 
 ## `prefixLines` - Prefix output lines with a string
 
 Prefix output lines with a string, useful to format output or add color codes to
-consoles which do not honor colors line-by-line. Intended to be used as a pipe.
-
-(Located at: `./bin/build/tools/text.sh`)
+consoles which do not honor colors line-by-line. Intended to be used as a pipe.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -574,22 +405,12 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Exit codes
 
-- `0` - Always succeeds
-
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
+- 0
 
 
 ## `alignRight` - align text right
 
-Format text and align it right using spaces.
-
-(Located at: `./bin/build/tools/text.sh`)
+Format text and align it right using spaces.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -613,19 +434,9 @@ Format text and align it right using spaces.
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 ## `alignLeft` - align text left
 
-Format text and align it left using spaces.
-
-(Located at: `./bin/build/tools/text.sh`)
+Format text and align it left using spaces.. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -649,20 +460,10 @@ Format text and align it left using spaces.
 
 - `0` - Always succeeds
 
-### Local cache
 
-None
+## `lowercase` - Convert text to lowercase
 
-### Environment
-
-No environment dependencies or modifications.
-
-
-## `lowercase` - 
-
-Convert text to lowercase
-
-(Located at: `./bin/build/tools/text.sh`)
+Convert text to lowercase. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -672,19 +473,9 @@ Convert text to lowercase
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 ## `boxedHeading` - Text heading decoration
 
-Heading for section output
-
-(Located at: `./bin/build/tools/text.sh`)
+Heading for section output. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -710,19 +501,9 @@ Heading for section output
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 ## `shaPipe` - SHA1 checksum of standard input
 
-
-
-(Located at: `./bin/build/tools/text.sh`)
+Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal. File: `./bin/build/tools/text.sh`, reviewed Never.
 
 ### Usage
 
@@ -740,17 +521,11 @@ cf7861b50054e8c680a9552917b43ec2b9edae2b
 
 - `0` - Always succeeds
 
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
 ### Depends
 
     shasum
+
+### Reviewed
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

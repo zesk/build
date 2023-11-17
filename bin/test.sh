@@ -73,15 +73,22 @@ while [ $# -gt 0 ]; do
 done
 trap testCleanup EXIT QUIT TERM
 
+cleanTestName() {
+    local testName
+    testName="${1%%.sh}"
+    testName="${testName%%-test}"
+    testName="${testName%%-tests}"
+    testName=${testName##tests-}
+    testName=${testName##test-}
+    printf %s "$testName"
+}
 loadTestFiles() {
     local testCount tests=() testName quietLog=$1
 
     shift
     statusMessage consoleWarning "Loading tests ..."
     while [ "$#" -gt 0 ]; do
-        testName="${1%%.sh}"
-        testName="${testName%%-test}"
-        testName="${testName%%-tests}"
+        testName="$(cleanTestName "$1")"
         tests+=("#$testName") # Section
         testCount=${#tests[@]}
         statusMessage consoleError "$testName"
@@ -129,12 +136,7 @@ loadTestFiles "$quietLog" tests-tests.sh
 loadTestFiles "$quietLog" aws-tests.sh
 
 for binTest in ./bin/tests/bin/*.sh; do
-    testName="${binTest%%.sh}"
-    testName=${testName##tests-}
-    testName=${testName%%-tests}
-    testName=${testName##test-}
-    testName=${testName%%-test}
-    testHeading "$(basename "$testName")"
+    testHeading "$(cleanTestName "$(basename "$binTest")")"
     "$binTest" "$(pwd)"
 done
 

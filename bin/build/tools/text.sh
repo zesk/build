@@ -276,20 +276,20 @@ isUnsignedInteger() {
 # Tested: No
 #
 trimWords() {
-    local wordCount=$((${1-0} + 0)) words=()
+    local wordCount=$((${1-0} + 0)) words=() result
     shift || return 0
     while [ ${#words[@]} -lt $wordCount ]; do
         IFS=' ' read -ra argumentWords <<<"${1-}"
         for argumentWord in "${argumentWords[@]+${argumentWords[@]}}"; do
             words+=("$argumentWord")
             if [ ${#words[@]} -ge $wordCount ]; then
-                printf "%s " "${words[@]+}"
-                return 0
+                break
             fi
         done
-        shift || return 0
+        shift || break
     done
-    printf "%s\n" "${words[@]+${words[@]}}"
+    result=$(printf '%s ' "${words[@]+${words[@]}}")
+    printf %s "${result%% }"
 }
 
 #

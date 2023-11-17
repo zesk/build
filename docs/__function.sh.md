@@ -2,8 +2,6 @@
 
 {description}
 
-(Located at: `{file}`)
-
 ### Usage
 
 {usage}
@@ -39,6 +37,10 @@
 ### Credits
 
 Thanks to [{credits}]({source}).
+
+### Review Status
+
+File `{file}`, function `{fn}` was reviewed {reviewed}.
 
 ### Errors
 

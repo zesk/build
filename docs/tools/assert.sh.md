@@ -4,43 +4,10 @@
 [⬅ Return to top](../index.md)
 
 
-## `assertNotEquals` - Assert two strings are not equal
-
-Assert two strings are not equal.
-
-If this fails it will output an error and exit.
-
-(Located at: `./bin/build/tools/assert.sh`)
-
-### Usage
-
-    assertNotEquals expected actual [ message ]
-
-### Arguments
-
-- `expected` - Expected string
-- `actual` - Actual string
-- `message` - Message to output if the assertion fails
-
-### Exit codes
-
-- `0` - Always succeeds
-
-### Local cache
-
-None
-
-### Environment
-
-No environment dependencies or modifications.
-
-## `assertEquals` - 
+## `assertEquals` - Assert two strings are equal.
 
 Assert two strings are equal.
-
 If this fails it will output an error and exit.
-
-(Located at: `./bin/build/tools/assert.sh`)
 
 ### Usage
 
@@ -60,21 +27,151 @@ If this fails it will output an error and exit.
 
 - `0` - Always succeeds
 
-### Local cache
+### Review Status
 
-None
+File `./bin/build/tools/assert.sh`, function `assertEquals` was reviewed 2023-11-12.
 
-### Environment
+## `assertNotEquals` - Assert two strings are not equal
 
-No environment dependencies or modifications.
-
-## `assertExitCode` - 
-
-Assert a process runs and exits with the correct exit code.
-
+Assert two strings are not equal.
 If this fails it will output an error and exit.
 
-(Located at: `./bin/build/tools/assert.sh`)
+### Usage
+
+    assertNotEquals expected actual [ message ]
+
+### Arguments
+
+- `expected` - Expected string
+- `actual` - Actual string
+- `message` - Message to output if the assertion fails
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
+
+
+## `assertGreaterThan` - Assert actual value is greater than expected value
+
+Assert actual value is greater than expected value.
+    expected < actual will pass
+If this fails it will output an error and exit.
+
+### Usage
+
+    assertGreaterThan expected actual [ message ]
+
+### Arguments
+
+- `expected` - Expected numeric value
+- `actual` - Actual numeric value
+- `message` - Message to output if the assertion fails
+
+### Examples
+
+    assertGreaterThan 3 $found
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023-11-14.
+
+## `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
+
+Assert actual value is greater than or equal to expected value.
+If this fails it will output an error and exit.
+
+### Usage
+
+    assertNotEquals expected actual [ message ]
+
+### Arguments
+
+- `expected` - Expected numeric value
+- `actual` - Actual numeric value
+- `message` - Message to output if the assertion fails
+
+### Examples
+
+    assertGreaterThanOrEqual 3 $found
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
+
+
+## `assertLessThan` - Assert actual value is less than expected value
+
+Assert actual value is less than expected value.
+If this fails it will output an error and exit.
+
+### Usage
+
+    assertLessThan expected actual [ message ]
+
+### Arguments
+
+- `expected` - Expected numeric value
+- `actual` - Actual numeric value
+- `message` - Message to output if the assertion fails
+
+### Examples
+
+    assertLessThan 3 $found
+
+### Exit codes
+
+- `0` - expected less than to actual
+- `1` - expected greater than or equal to actual, or invalid numbers
+
+### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
+
+## `assertLessThanOrEqual` - Assert two strings are not equal
+
+Assert two strings are not equal.
+If this fails it will output an error and exit.
+
+### Usage
+
+    assertNotEquals expected actual [ message ]
+
+### Arguments
+
+- `expected` - Expected numeric value
+- `actual` - Actual numeric value
+- `message` - Message to output if the assertion fails
+
+### Examples
+
+    assertLessThanOrEqual 3 $found
+
+### Exit codes
+
+- `0` - expected less than or equal to actual
+- `1` - expected greater than actual, or invalid numbers
+
+### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
+
+
+## `assertExitCode` - Assert a process runs and exits with the correct exit
+
+Assert a process runs and exits with the correct exit code.
+If this fails it will output an error and exit.
 
 ### Usage
 
@@ -88,23 +185,25 @@ If this fails it will output an error and exit.
 
 ### Exit codes
 
-- `0` - Always succeeds
+- `0` - If the process exits with the provided exit code
+- `1` - If the process exits with a different exit code
 
 ### Local cache
 
-None
+None.
 
 ### Environment
 
-No environment dependencies or modifications.
+None.
 
-## `assertNotExitCode` - 
+### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-11-12.
+
+## `assertNotExitCode` - Assert a process runs and exits with an exit code
 
 Assert a process runs and exits with an exit code which does not match the passed in exit code.
-
 If this fails it will output an error and exit.
-
-(Located at: `./bin/build/tools/assert.sh`)
 
 ### Usage
 
@@ -118,23 +217,18 @@ If this fails it will output an error and exit.
 
 ### Exit codes
 
-- `0` - Always succeeds
+- `0` - If the process exits with a different exit code
+- `1` - If the process exits with the provided exit code
 
-### Local cache
+### Review Status
 
-None
+File `./bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
 
-### Environment
 
-No environment dependencies or modifications.
-
-## `assertOutputContains` - 
+## `assertOutputContains` - Run a command and expect the output to contain the
 
 Run a command and expect the output to contain the occurrence of a string.
-
 If this fails it will output the command result to stdout.
-
-(Located at: `./bin/build/tools/assert.sh`)
 
 ### Usage
 
@@ -154,21 +248,55 @@ If this fails it will output the command result to stdout.
 
 ### Exit codes
 
-- `0` - Always succeeds
+- `0` - If the output contains at least one occurrence of the string
+- `1` - If output does not contain string
 
 ### Local cache
 
 None
 
-### Environment
+### Review Status
 
-No environment dependencies or modifications.
+File `./bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
+
+## `assertOutputDoesNotContain` - Run a command and expect the output to not contain
+
+Run a command and expect the output to not contain the occurrence of a string.
+If this fails it will output the command result to stdout.
+
+### Usage
+
+    assertOutputDoesNotContain expected command [ arguments ... ]
+
+### Arguments
+
+- `expected` - A string to NOT expect in the output
+- `command` - The command to run
+- `arguments` - Any arguments to pass to the command to run
+- `--exit` - Assert exit status of process to be this number
+- `--stderr` - Also include standard error in output checking
+
+### Examples
+
+    assertOutputDoesNotContain Success complex-thing.sh --dry-run
+
+### Exit codes
+
+- `0` - If the output contains at least one occurrence of the string
+- `1` - If output does not contain string
+
+### Local cache
+
+None
+
+### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
+
 
 ## `assertDirectoryExists` - Test that a directory exists
 
-
-
-(Located at: `./bin/build/tools/assert.sh`)
+$Test that a directory exists
 
 ### Usage
 
@@ -185,7 +313,8 @@ No environment dependencies or modifications.
 
 ### Exit codes
 
-- `0` - Always succeeds
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
 
 ### Local cache
 
@@ -193,13 +322,11 @@ None
 
 ### Environment
 
-No environment dependencies or modifications.
+- This fails if `directory` is anything but a `directory`
 
 ## `assertDirectoryDoesNotExist` - Test that a directory does not exist
 
-
-
-(Located at: `./bin/build/tools/assert.sh`)
+$Test that a directory does not exist
 
 ### Usage
 
@@ -212,7 +339,8 @@ No environment dependencies or modifications.
 
 ### Exit codes
 
-- `0` - Always succeeds
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
 
 ### Local cache
 
@@ -220,13 +348,12 @@ None
 
 ### Environment
 
-No environment dependencies or modifications.
+- This fails if `directory` is anything at all, even a non-directory (such as a link)
 
-## `assertFileContains` - 
+### Review Status
 
+File `./bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 
-
-(Located at: `./bin/build/tools/assert.sh`)
 
 ### Usage
 
@@ -244,7 +371,8 @@ No environment dependencies or modifications.
 
 ### Exit codes
 
-- `0` - Always succeeds
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
 
 ### Local cache
 
@@ -252,13 +380,11 @@ None
 
 ### Environment
 
-No environment dependencies or modifications.
+If the file does not exist, this will fail.
 
-## `assertFileDoesNotContain` - 
+### Review Status
 
-
-
-(Located at: `./bin/build/tools/assert.sh`)
+File `./bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
 
 ### Usage
 
@@ -276,15 +402,37 @@ No environment dependencies or modifications.
 
 ### Exit codes
 
-- `0` - Always succeeds
-
-### Local cache
-
-None
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
 
 ### Environment
 
-No environment dependencies or modifications.
+If the file does not exist, this will fail.
+
+
+## `randomString` - Outputs 40 random hexadecimal characters, lowercase.
+
+Outputs 40 random hexadecimal characters, lowercase.
+
+### Usage
+
+    randomString [ ... ]
+
+### Examples
+
+    testPassword="$(randomString)"
+
+### Sample Output
+
+cf7861b50054e8c680a9552917b43ec2b9edae2b
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Depends
+
+    shasum, /dev/random
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

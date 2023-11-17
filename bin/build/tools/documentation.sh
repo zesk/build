@@ -19,8 +19,6 @@
 # Filter functions should modify the input/output pipe; an example can be found in {file} by looking at
 # sample functions `_bashDocumentFunction_exit_codeFormat`.
 #
-#
-#
 # Usage: bashDocumentFunction directory function template
 # Argument: `directory` - Directory to search for function definition
 # Argument: `function` - The function definition to search for and to map to the template
@@ -71,17 +69,30 @@ bashDocumentFunction() {
 
 #
 # Usage: __dumpNameValue name [ value0 value1 ... ]
-# Argument: `name` - Shell value to
+# Argument: `name` - Shell value to output
+# Argument: `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
 #
 __dumpNameValue() {
-    local varName=$1
+    __dumpNameValuePrefix "" "$@"
+}
+#
+# Usage: __dumpNameValuePrefix prefix name [ value0 value1 ... ]
+# Argument: `name` - Shell value to output
+# Argument: `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
+#
+__dumpNameValuePrefix() {
+    local prefix=$1 varName=$2
     printf "if ! read -r -d '' '%s' <<'%s'\n" "$varName" "EOF" # Single quote means no interpolation
     shift
+    shift
     while [ $# -gt 0 ]; do
-        printf "%s\n" "$(escapeSingleQuotes "$1")"
+        printf "%s%s\n" "$prefix" "$(escapeSingleQuotes "$1")"
         shift
     done
     printf "%s\nthen\n    export '%s'\nfi\n" "EOF" "$varName"
+}
+__dumpAliasedValue() {
+    printf 'export "%s"="%s%s%s"\n' "$1" '\$\{' "$2" '}'
 }
 
 #
@@ -161,12 +172,21 @@ bashFindFunctionDocumentation() {
         name="${line%%:*}"
         if [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
             # no colon or ends with colon *or* starts with :
-            desc+=("${line##:}") # strip starting colon (end colon STAYS)
+            # strip starting colon (end colon STAYS)
+            value="${line##:}"
+            if [ "$(trimSpace "$value")" != "" ]; then
+                desc+=("$value")
+            fi
         else
             value="${line#*:}"
             value="${value# }"
             name="$(lowercase "$(printf '%s' "$name" | sed 's/[^A-Za-z0-9]/_/g')")"
-            if ! inArray "$name" "${foundNames[@]+${foundNames[@]}}"; then
+            if [ "$name" = "description" ]; then
+                if [ "$(trimSpace "$value")" != "" ]; then
+                    desc+=("$value")
+                fi
+                continue
+            elif ! inArray "$name" "${foundNames[@]+${foundNames[@]}}"; then
                 foundNames+=("$name")
             fi
             if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
@@ -177,35 +197,35 @@ bashFindFunctionDocumentation() {
             lastName="$name"
         fi
     done <"$tempDoc"
-    printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]}")"
+    printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
     if [ "${#values[@]}" -gt 0 ]; then
         __dumpNameValue "$lastName" "${values[@]}"
     fi
     if [ "${#desc[@]}" -gt 0 ]; then
         __dumpNameValue "description" "${desc[@]}"
-        printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]}")"
-        if ! inArray "short_description" "${foundNames[@]}"; then
-            echo "# NOT INARRAY short_description:::" "${foundNames[@]}"
-            __dumpNameValue "short_description" "$(trimWords 10 "${desc[@]}")"
+        printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
+        if ! inArray "short_description" "${foundNames[@]+${foundNames[@]}}"; then
+            echo "# NOT INARRAY short_description:::" "${foundNames[@]+${foundNames[@]}}"
+            __dumpNameValue "short_description" "$(trimWords 10 "${desc[0]}")"
         fi
-    else
-        echo "# NO DESC"
+    elif inArray "short_description" "${foundNames[@]+${foundNames[@]}}"; then
+        __dumpAliasedValue description short_description
     fi
     __dumpNameValue "fn" "$fn"
     __dumpNameValue "file" "$definitionFile"
     __dumpNameValue "base" "$(basename "$definitionFile")"
-    if ! inArray "exit_code" "${foundNames[@]+}"; then
+    if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
         __dumpNameValue "exit_code" '0 - Always succeeds'
     fi
-    if ! inArray "local_cache" "${foundNames[@]+}"; then
-        __dumpNameValue "local_cache" 'None'
-    fi
-    if ! inArray "reviewed" "${foundNames[@]+}"; then
-        __dumpNameValue "reviewed" 'Never'
-    fi
-    if ! inArray "environment" "${foundNames[@]+}"; then
-        __dumpNameValue "environment" 'No environment dependencies or modifications.'
-    fi
+    # if ! inArray "local_cache" "${foundNames[@]+${foundNames[@]}}"; then
+    #     __dumpNameValue "local_cache" 'None'
+    # fi
+    # if ! inArray "reviewed" "${foundNames[@]+${foundNames[@]}}"; then
+    #     __dumpNameValue "reviewed" 'Never'
+    # fi
+    # if ! inArray "environment" "${foundNames[@]+${foundNames[@]}}"; then
+    #     __dumpNameValue "environment" 'No environment dependencies or modifications.'
+    # fi
 }
 
 #
@@ -286,28 +306,46 @@ removeUnfinishedSections() {
     fi
 }
 
+#
+# Simple function to make list-like things more list-like in Markdown
+#
 markdownListify() {
     local wordClass='[^`[:space:]-]' spaceClass='[[:space:]]'
     # shellcheck disable=SC2016
     sed -e "s/\($wordClass$wordClass*\)${spaceClass}*-${spaceClass}*/- \`\1\` - /g" | sed -e "s/^\($wordClass\)/- \1/g"
 }
+
+#
+# Format code blocks (does markdownListify)
+#
 _bashDocumentFunction_exit_codeFormat() {
     markdownListify
 }
 
+#
+# Format usage blocks (indents as a code block)
+#
 _bashDocumentFunction_usageFormat() {
     prefixLines "    "
 }
 
+#
+# Format example blocks (indents as a code block)
+#
 _bashDocumentFunction_exampleFormat() {
     prefixLines "    "
 }
 
+#
+# Format argument blocks (does markdownListify)
+#
 _bashDocumentFunction_argumentFormat() {
     markdownListify
 }
-# sed -e 's/^- //g' |
-#| prefixLines '- '
+
+#
+# Format depends blocks (indents as a code block)
+#
 _bashDocumentFunction_dependsFormat() {
     prefixLines "    "
 }

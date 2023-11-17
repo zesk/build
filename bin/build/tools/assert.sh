@@ -9,6 +9,7 @@
 # Depends: colors.sh text.sh prefixLines
 #
 
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
 # Assert two strings are equal.
@@ -51,7 +52,7 @@ assertNotEquals() {
     shift
     shift
     if [ "$expected" = "$actual" ]; then
-        consoleError "assertNotEquals $expected = $actual but should not: $*"
+        consoleError "assertNotEquals $expected = $actual but should not: ${*-equals}"
         return $errorEnvironment
     else
         consoleSuccess "assertNotEquals $expected != $actual (correct)"
@@ -77,10 +78,18 @@ assertGreaterThan() {
     local expected=$1 actual=$2
     shift
     shift
+    if ! isNumber "$expected"; then
+        consoleError "assertGreaterThanOrEqual [ \"$actual\" -gt \"$expected\" ] (not number $expected)"
+        return "$errorEnvironment"
+    fi
+    if ! isNumber "$actual"; then
+        consoleError "assertGreaterThanOrEqual [ \"$actual\" -gt \"$expected\" ] (not number $actual)"
+        return "$errorEnvironment"
+    fi
     if [ "$actual" -gt "$expected" ]; then
-        consoleSuccess "assertGreaterThan $actual -gt $expected (correct)"
+        consoleSuccess "assertGreaterThan (actual) $actual -gt $expected (expected) (correct)"
     else
-        consoleError "assertEquals $a != $b but should: $*"
+        consoleError "assertGreaterThan (actual) $actual -gt $expected (expected) (FAILED)"
         return "$errorEnvironment"
     fi
 }
@@ -99,10 +108,18 @@ assertGreaterThanOrEqual() {
     local expected=$1 actual=$2
     shift
     shift
+    if ! isNumber "$expected"; then
+        consoleError "assertGreaterThanOrEqual [ \"$actual\" -ge \"$expected\" ] (not number $expected)"
+        return "$errorEnvironment"
+    fi
+    if ! isNumber "$actual"; then
+        consoleError "assertGreaterThanOrEqual [ \"$actual\" -ge \"$expected\" ] (not number $actual)"
+        return "$errorEnvironment"
+    fi
     if [ "$actual" -ge "$expected" ]; then
-        consoleSuccess "assertGreaterThanOrEqual $actual -gt $expected (correct)"
+        consoleSuccess "assertGreaterThanOrEqual [ \"$actual\" -ge \"$expected\" ] (correct)"
     else
-        consoleError "assertEquals $a != $b but should: $*"
+        consoleError "assertGreaterThanOrEqual [ \"$actual\" -ge \"$expected\" ] (incorrect) ${*--}"
         return "$errorEnvironment"
     fi
 }
@@ -117,15 +134,24 @@ assertGreaterThanOrEqual() {
 # Example: assertLessThan 3 $found
 # Reviewed: 2023-11-12
 # Short Description: Assert actual value is less than expected value
-#
+# Exit code: 0 - expected less than to actual
+# Exit code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
     local expected=$1 actual=$2
     shift
     shift
-    if [ "$actual" -ge "$expected" ]; then
-        consoleSuccess "assertGreaterThan $actual -gt $expected (correct)"
+    if ! isNumber "$expected"; then
+        consoleError "assertLessThan [ \"$actual\" -lt \"$expected\" ] (not number $expected)"
+        return "$errorEnvironment"
+    fi
+    if ! isNumber "$actual"; then
+        consoleError "assertLessThan [ \"$actual\" -lt \"$expected\" ] (not number $actual)"
+        return "$errorEnvironment"
+    fi
+    if [ "$actual" -lt "$expected" ]; then
+        consoleSuccess "assertLessThan [ \"$actual\" -lt \"$expected\" ] (correct)"
     else
-        consoleError "assertEquals $a != $b but should: $*"
+        consoleError "assertLessThan [ \"$actual\" -lt \"$expected\" ] (incorrect) ${*--}"
         return "$errorEnvironment"
     fi
 }
@@ -140,16 +166,26 @@ assertLessThan() {
 # Argument: - `message` - Message to output if the assertion fails
 # Example: assertLessThanOrEqual 3 $found
 # Reviewed: 2023-11-12
+# Exit code: 0 - expected less than or equal to actual
+# Exit code: 1 - expected greater than actual, or invalid numbers
 #
 assertLessThanOrEqual() {
     local expected=$1 actual=$2
     shift
     shift
-    if [ "$expected" = "$actual" ]; then
-        consoleError "assertNotEquals $expected = $actual but should not: $*"
-        return $errorEnvironment
+    if ! isNumber "$expected"; then
+        consoleError "assertLessThanOrEqual [ \"$actual\" -le \"$expected\" ] (not number $expected)"
+        return "$errorEnvironment"
+    fi
+    if ! isNumber "$actual"; then
+        consoleError "assertGreaterThanOrEqual [ \"$actual\" -le \"$expected\" ] (not number $actual)"
+        return "$errorEnvironment"
+    fi
+    if [ "$actual" -le "$expected" ]; then
+        consoleSuccess "assertLessThan [ \"$actual\" -le \"$expected\" ] (correct)"
     else
-        consoleSuccess "assertNotEquals $expected != $actual (correct)"
+        consoleSuccess "assertLessThan [ \"$actual\" -le \"$expected\" ] (incorrect) ${*--}"
+        return "$errorEnvironment"
     fi
 }
 
@@ -167,6 +203,8 @@ assertLessThanOrEqual() {
 # Environment: None.
 # Examples: assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
+# Exit code: 0 - If the process exits with the provided exit code
+# Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
     local expected=$1 actual bin=$2
@@ -198,6 +236,8 @@ assertExitCode() {
 # Argument: - `arguments` - Any arguments to pass to the command to run
 # Examples: assertNotExitCode 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
+# Exit code: 0 - If the process exits with a different exit code
+# Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
     local expected=$1 actual bin=$2
@@ -340,9 +380,12 @@ assertOutputDoesNotContain() {
 }
 
 #
-# Usage: randomString
-# Output: 64 random hexadecimal characters
-# Example: token=$(randomString)
+# Usage: randomString [ ... ]
+# Arguments: Ignored
+# Depends: shasum, /dev/random
+# Description: Outputs 40 random hexadecimal characters, lowercase.
+# Example: testPassword="$(randomString)"
+# Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 randomString() {
     head --bytes=64 /dev/random | shasum | cut -f 1 -d ' '

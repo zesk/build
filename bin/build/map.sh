@@ -38,7 +38,8 @@ mapQuoteSedPattern() {
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-environmentVariables() {
+mapEnvironmentVariables() {
+    # IDENTICAL environmentVariables 1
     declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
@@ -56,29 +57,28 @@ generateSedFile() {
     shift
     for i in "$@"; do
         case "$i" in
-            *[%{}]*) ;;
-            LD_*) ;;
-            _*) ;;
-            *)
-                printf "s/%s/%s/g\n" "$(mapQuoteSedPattern "$prefix$i$suffix")" "$(mapQuoteSedPattern "${!i-}")" >>"$sedFile"
-                ;;
+        *[%{}]*) ;;
+        LD_*) ;;
+        *)
+            printf "s/%s/%s/g\n" "$(mapQuoteSedPattern "$prefix$i$suffix")" "$(mapQuoteSedPattern "${!i-}")" >>"$sedFile"
+            ;;
         esac
     done
 }
 
 while [ $# -gt 0 ]; do
     case $1 in
-        --prefix)
-            shift || usage $errorArgument "--prefix missing a value"
-            prefix="$1"
-            ;;
-        --suffix)
-            shift || usage $errorArgument "--suffix missing a value"
-            suffix="$1"
-            ;;
-        *)
-            break
-            ;;
+    --prefix)
+        shift || usage $errorArgument "--prefix missing a value"
+        prefix="$1"
+        ;;
+    --suffix)
+        shift || usage $errorArgument "--suffix missing a value"
+        suffix="$1"
+        ;;
+    *)
+        break
+        ;;
     esac
     shift
 done
@@ -88,7 +88,7 @@ sedFile=$(mktemp)
 
 if [ $# -eq 0 ]; then
     ee=()
-    for e in $(environmentVariables); do
+    for e in $(mapEnvironmentVariables); do
         ee+=("$e")
     done
     generateSedFile "$sedFile" "${ee[@]}"
