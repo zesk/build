@@ -20,6 +20,7 @@ documentDirectory() {
     local functionSum sourceShellScripts reason base targetFile checksum
     local generatedChecksum functionTokensFile
 
+    optionForce=
     while [ $# -gt 0 ]; do
         case $1 in
         --force)
@@ -47,7 +48,7 @@ documentDirectory() {
     fi
     if [ -n "$cacheDirectory" ]; then
         if [ ! -d "$cacheDirectory" ]; then
-            consoleError "$functionTemplate is not a template file" 1>&2
+            consoleError "$cacheDirectory was specified but is not a directory" 1>&2
             return "$errorArgument"
         fi
     fi
@@ -57,18 +58,19 @@ documentDirectory() {
         reason=""
         base="$(basename "$templateFile")"
         base="${base%%.md}"
+        templatePrefix=$(printf %s "$templateDirectory" | shasum | cut -b 8)
 
         targetFile="$targetDirectory/$base.md"
         if [ -n "$cacheDirectory" ]; then
-            checksum="${functionSum}:$(shaPipe <"$sourceShellScripts"):$(shaPipe <"$templateFile")"
-            checksumFile="$cacheDirectory/$base.checksum"
+            checksum="$targetDirectory:${functionSum}:$(shaPipe <"$templateFile")"
+            checksumFile="$cacheDirectory/$templatePrefix-$base.checksum"
             if [ -f "$checksumFile" ]; then
                 generatedChecksum=$(cat "$checksumFile")
                 if [ "$generatedChecksum" = "$checksum" ]; then
                     if test "$optionForce"; then
-                        statusMessage consoleWarning "Force generating $sourceShellScripts ..."
+                        statusMessage consoleWarning "Force generating $templateFile ..."
                     else
-                        statusMessage consoleWarning "Skipping $sourceShellScripts as it has not changed ..."
+                        statusMessage consoleWarning "Skipping $templateFile as it has not changed ..."
                         continue
                     fi
                     reason="(forced)"

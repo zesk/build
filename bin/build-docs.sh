@@ -35,15 +35,14 @@ usage() {
     exit $?
 }
 
+cacheDirectory="$(buildCacheDirectory build-docs)"
 # Default option settings
 documentDirectoryArgs=()
-cacheDirectoryArgs=()
+cacheDirectoryArgs=("$cacheDirectory")
 while [ $# -gt 0 ]; do
     case $1 in
-    --cache)
-        if ! inArray "$1" "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-            cacheDirectoryArgs+=("$1")
-        fi
+    --no-cache)
+        cacheDirectoryArgs=()
         ;;
     --force)
         if ! inArray "$1" "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}"; then
@@ -54,5 +53,12 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/install/ ./docs/install/ ./docs/__binary.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"
-documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/tools/ ./docs/tools/ ./docs/__function.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"
+if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
+    return $?
+fi
+if ! documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/install/ ./docs/install/ ./docs/__binary.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    return $?
+fi
+if ! documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/tools/ ./docs/tools/ ./docs/__function.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    return $?
+fi
