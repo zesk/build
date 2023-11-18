@@ -5,6 +5,7 @@
 ## `requireFileDirectory` - Given a list of files, ensure their parent directories exist
 
 Given a list of files, ensure their parent directories exist
+
 Creates the directories for all files passed in.
 
 ### Usage
@@ -44,8 +45,11 @@ $Run a binary count times
 Rename a list of files usually to back them up temporarily
 
 Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
+
 If files do not exist, does nothing
+
 Used to move files, temporarily, sometimes and then move back easily.
+
 Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 
 ### Usage
@@ -74,6 +78,7 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 ## `createTarFile` - Platform agnostic tar create which keeps user and group as user 0
 
 Platform agnostic tar cfz which ignores owner and attributes
+
 `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
 
 ### Usage
@@ -109,9 +114,12 @@ Stores state files in `./.build/` directory which is created if it does not exis
 ## `whichApt` - Install tools using `apt-get` if they are not found
 
 whichApt binary aptInstallPackage
+
 Installs an apt package if a binary does not exist in the which path.
 The assumption here is that `aptInstallPackage` will install the desired `binary`.
+
 If fails, runs `buildFailed` and outputs the log file.
+
 Confirms that `binary` is installed after installation succeeds.
 
 ### Usage
@@ -139,8 +147,10 @@ Technically this will install the binary and any related files as a package.
 ## `environmentVariables` - Fetch a list of environment variable names
 
 Output a list of environment variables and ignore function definitions
+
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
+
 Returns the list of defined environment variables exported in the current bash context.
 
 ### Usage

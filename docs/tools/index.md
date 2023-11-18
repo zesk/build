@@ -6,8 +6,9 @@ To include tool functions, do:
 
 ## Reference
 
+- [Apt Package Manager Functions](./apt.sh.md)
 - [Assertion Functions](./assert.sh.md)
-- [AWS Functions](./aws.sh.md)
+- [Amazon Web Services Functions](./aws.sh.md)
 - [BitBucket Functions](./bitbucket.sh.md)
 - [Color Functions](./colors.sh.md)
 - [Debug Functions](./debug.sh.md)

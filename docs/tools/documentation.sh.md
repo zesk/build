@@ -4,9 +4,9 @@
 [⬅ Return to top](../index.md)
 
 
-## `bashFindFunctionDocumentation` - Generate a set of name/value pairs to document bash functions
+## `bashFindDocumentation` - Generate a set of name/value pairs to document bash functions
 
-Uses `bashFindFunctionDefinition` to locate bash function, then
+Uses `bashFindDocumentationFiles` to locate bash function, then
 extracts the comments preceding the function definition and converts it
 into a set of name/value pairs.
 
@@ -30,7 +30,7 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
 ### Usage
 
-    bashFindFunctionDocumentation directory function
+    bashFindDocumentation directory function
 
 ### Arguments
 
@@ -45,7 +45,7 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
     colors.sh text.sh prefixLines
 
-## `bashFindFunctionDefinition` - Find where a function is defined in a directory of shell scripts
+## `bashFindDocumentationFiles` - Find where a function is defined in a directory of shell scripts
 
 Finds a function definition and outputs the file in which it is found
 Searches solely `.sh` files. (Bash or sh scripts)
@@ -55,7 +55,7 @@ may output partial results with a failure.
 
 ### Usage
 
-    bashFindFunctionDefinition fnName0 [ fnName1... ]
+    bashFindDocumentationFiles fnName0 [ fnName1... ]
 
 ### Arguments
 
@@ -64,7 +64,7 @@ may output partial results with a failure.
 
 ### Examples
 
-    bashFindFunctionDefinition bashFindFunctionDefinition
+    bashFindDocumentationFiles bashFindDocumentationFiles
     ./bin/build/tools/autodoc.sh
 
 ### Exit codes

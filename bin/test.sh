@@ -10,24 +10,23 @@
 # bin/local-container.sh
 # . bin/test-reset.sh; bin/test.sh
 
-set -eo pipefail
-# set -x
-
 # IDENTICAL errorArgument 1
 errorArgument=2
 
 errorTest=3
 
-quietLog="./.build/$me.log"
+set -eo pipefail
 
-me=$(basename "$0")
-top=$(pwd)
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+top=$(pwd)
 
 # echo "TERM=$TERM"
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+me=$(basename "$0")
+quietLog=$(buildQuietLog "$me")
 
 # shellcheck source=/dev/null
 . ./bin/tests/test-tools.sh
@@ -52,7 +51,7 @@ testCleanup() {
     if test "$messyOption"; then
         return 0
     fi
-    rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws ./.build/ 2>/dev/null || :
+    rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" 2>/dev/null || :
 }
 
 while [ $# -gt 0 ]; do

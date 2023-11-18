@@ -7,6 +7,7 @@
 ## `assertEquals` - Assert two strings are equal.
 
 Assert two strings are equal.
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -34,6 +35,7 @@ File `./bin/build/tools/assert.sh`, function `assertEquals` was reviewed 2023-11
 ## `assertNotEquals` - Assert two strings are not equal
 
 Assert two strings are not equal.
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -58,7 +60,9 @@ File `./bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023
 ## `assertGreaterThan` - Assert actual value is greater than expected value
 
 Assert actual value is greater than expected value.
+
     expected < actual will pass
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -86,6 +90,7 @@ File `./bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 20
 ## `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
 
 Assert actual value is greater than or equal to expected value.
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -114,6 +119,7 @@ File `./bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was revi
 ## `assertLessThan` - Assert actual value is less than expected value
 
 Assert actual value is less than expected value.
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -142,6 +148,7 @@ File `./bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-
 ## `assertLessThanOrEqual` - Assert two strings are not equal
 
 Assert two strings are not equal.
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -171,6 +178,7 @@ File `./bin/build/tools/assert.sh`, function `assertLessThanOrEqual` was reviewe
 ## `assertExitCode` - Assert a process runs and exits with the correct exit
 
 Assert a process runs and exits with the correct exit code.
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -203,6 +211,7 @@ File `./bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-
 ## `assertNotExitCode` - Assert a process runs and exits with an exit code
 
 Assert a process runs and exits with an exit code which does not match the passed in exit code.
+
 If this fails it will output an error and exit.
 
 ### Usage
@@ -228,6 +237,7 @@ File `./bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 20
 ## `assertOutputContains` - Run a command and expect the output to contain the
 
 Run a command and expect the output to contain the occurrence of a string.
+
 If this fails it will output the command result to stdout.
 
 ### Usage
@@ -262,6 +272,7 @@ File `./bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed
 ## `assertOutputDoesNotContain` - Run a command and expect the output to not contain
 
 Run a command and expect the output to not contain the occurrence of a string.
+
 If this fails it will output the command result to stdout.
 
 ### Usage

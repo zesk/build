@@ -6,13 +6,15 @@
 #
 
 # IDENTICAL bashHeader 5
-set -eo pipefail
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+
 BUILD_VERSION_CREATED_EDITOR=${BUILD_VERSION_CREATED_EDITOR:-${EDITOR-}}
 
 currentVersion=$1

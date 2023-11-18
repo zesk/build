@@ -20,6 +20,16 @@
 #------------------------------------------------------------------------------
 
 #
+# Installs the `git` binary
+# Usage: gitInstall [ package ... ]
+# Argument: package - Additional packages to install
+# Short Description: Install git if needed
+#
+gitInstall() {
+    whichApt git git "%@"
+}
+
+#
 # Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
 # Delete the old tag as well
 #
