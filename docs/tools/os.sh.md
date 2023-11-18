@@ -1,6 +1,32 @@
 # Operating System Functions
 
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)
 
+
+## `buildCacheDirectory` - Path to cache directory for build system.
+
+Path to cache directory for build system.
+
+Defaults to `$HOME/.build` unless `$HOME` is not a directory.
+
+Appends any passed in arguments as path segments.
+
+### Usage
+
+    buildCacheDirectory [ pathSegment ... ]
+
+### Arguments
+
+- `pathSegment` - One or more directory or file path, concatenated as path segments using `/`
+
+### Examples
+
+    logFile=$(buildCacheDirectory test.log)
+
+### Exit codes
+
+- `0` - Always succeeds
 
 ## `requireFileDirectory` - Given a list of files, ensure their parent directories exist
 
@@ -12,10 +38,32 @@ Creates the directories for all files passed in.
 
     requireFileDirectory file1 file2 ...
 
+### Arguments
+
+- `name` - The log file name
+
 ### Examples
 
     logFile=./.build/$me.log
     requireFileDirectory "$logFile"
+
+### Exit codes
+
+- `0` - Always succeeds
+
+## `requireDirectory` - Given a list of files, ensure their parent directories exist
+
+Given a list of files, ensure their parent directories exist
+
+Creates the directories for all files passed in.
+
+### Usage
+
+    requireDirectory dir1 [ dir2 ... ]
+
+### Examples
+
+    requireDirectory "$cachePath"
 
 ### Exit codes
 
@@ -41,8 +89,7 @@ $Run a binary count times
 - `2` - `count` is not an unsigned number
 - `Any` - If `binary` fails, the exit code is returned
 
-## `renameFiles` - Run a binary count times
-Rename a list of files usually to back them up temporarily
+## `renameFiles` - Rename a list of files usually to back them up temporarily
 
 Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
 
@@ -71,9 +118,7 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 
 ### Exit codes
 
-- `0` - success
-- `2` - `count` is not an unsigned number
-- `Any` - If `binary` fails, the exit code is returned
+- `0` - Always succeeds
 
 ## `createTarFile` - Platform agnostic tar create which keeps user and group as user 0
 
@@ -93,56 +138,6 @@ Platform agnostic tar cfz which ignores owner and attributes
 ### Exit codes
 
 - `0` - Always succeeds
-
-## `aptUpdateOnce` - Do `apt-get update` once
-
-Run apt-get update once and only once in the pipeline, at least
-once an hour as well (when testing)
-
-### Usage
-
-    aptUpdateOnce
-
-### Exit codes
-
-- `0` - Always succeeds
-
-### Environment
-
-Stores state files in `./.build/` directory which is created if it does not exist.
-
-## `whichApt` - Install tools using `apt-get` if they are not found
-
-whichApt binary aptInstallPackage
-
-Installs an apt package if a binary does not exist in the which path.
-The assumption here is that `aptInstallPackage` will install the desired `binary`.
-
-If fails, runs `buildFailed` and outputs the log file.
-
-Confirms that `binary` is installed after installation succeeds.
-
-### Usage
-
-    whichApt binary aptInstallPackage
-
-### Arguments
-
-- `binary` - The binary to look for
-- `aptInstallPackage` - The package name to install if the binary is not found in the `$PATH`.
-
-### Examples
-
-    whichApt shellcheck shellcheck
-    whichApt mariadb mariadb-client
-
-### Exit codes
-
-- `0` - Always succeeds
-
-### Environment
-
-Technically this will install the binary and any related files as a package.
 
 ## `environmentVariables` - Fetch a list of environment variable names
 

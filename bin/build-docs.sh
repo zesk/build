@@ -5,9 +5,6 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -57,5 +54,5 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/install/ ./docs/tools/install/ ./docs/__binary.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"
+documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/install/ ./docs/install/ ./docs/__binary.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"
 documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/tools/ ./docs/tools/ ./docs/__function.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"
