@@ -1,0 +1,4 @@
+# Prettier functions
+
+{prettierInstall}
+

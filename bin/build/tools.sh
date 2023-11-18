@@ -30,6 +30,8 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 # shellcheck source=/dev/null
 . "$toolsDir/pipeline.sh"
 # shellcheck source=/dev/null
+. "$toolsDir/apt.sh"
+# shellcheck source=/dev/null
 . "$toolsDir/os.sh"
 
 # shellcheck source=/dev/null
@@ -40,6 +42,14 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/git.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/docker.sh"
+# shellcheck source=/dev/null
+. "$toolsDir/npm.sh"
+# shellcheck source=/dev/null
+. "$toolsDir/prettier.sh"
+# shellcheck source=/dev/null
+. "$toolsDir/install.sh"
+# shellcheck source=/dev/null
+. "$toolsDir/terraform.sh"
 
 # no dependencies
 # shellcheck source=/dev/null

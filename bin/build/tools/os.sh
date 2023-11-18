@@ -8,6 +8,39 @@
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+# Path to cache directory for build system.
+#
+# Defaults to `$HOME/.build` unless `$HOME` is not a directory.
+#
+# Appends any passed in arguments as path segments.
+#
+# Example: logFile=$(buildCacheDirectory test.log)
+# Usage: buildCacheDirectory [ pathSegment ... ]
+# Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
+#
+buildCacheDirectory() {
+    export HOME
+    local suffix useDir="${HOME-./}"
+    if [ ! -d "$useDir" ]; then
+        useDir="./"
+    fi
+    suffix="$(printf "%s/" "$@")"
+    printf "%s/%s/%s" "${useDir%%/}" ".build" "${suffix%%/}"
+}
+
+#
+#
+# Usage: buildQuietLog name
+# Argument: name - The log file name
+#
+buildQuietLog() {
+    if [ -z "$1" ]; then
+        consoleError "buildQuietLog requires a name parameter" 1>&2
+        return 1
+    fi
+    printf %s "$(buildCacheDirectory "$1.log")"
+}
+#
 # Given a list of files, ensure their parent directories exist
 #
 # Creates the directories for all files passed in.
@@ -17,10 +50,36 @@ errorArgument=2
 # Example: requireFileDirectory "$logFile"
 #
 requireFileDirectory() {
-    local name
+    local rs name
     while [ $# -gt 0 ]; do
         name="$(dirname "$1")"
-        [ -d "$name" ] || mkdir -p "$name"
+        if [ ! -d "$name" ] && ! mkdir -p "$name"; then
+            rs=$?
+            consoleError "Unable to create directory \"$name\"" 1>&2
+            return "$rs"
+        fi
+        shift
+    done
+}
+
+#
+# Given a list of files, ensure their parent directories exist
+#
+# Creates the directories for all files passed in.
+#
+# Usage: requireDirectory dir1 [ dir2 ... ]
+# Argumetn: dir1 - One or more directories to create
+# Example: requireDirectory "$cachePath"
+#
+requireDirectory() {
+    local rs name
+    while [ $# -gt 0 ]; do
+        name="$1"
+        if [ ! -d "$name" ] && ! mkdir -p "$name"; then
+            rs=$?
+            consoleError "Unable to create directory \"$name\"" 1>&2
+            return "$rs"
+        fi
         shift
     done
 }
@@ -49,8 +108,7 @@ runCount() {
         n=$((n - 1))
     done
 }
-#
-#
+
 #
 # Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
 #
@@ -112,78 +170,6 @@ createTarFile() {
 }
 
 #
-# Run apt-get update once and only once in the pipeline, at least
-# once an hour as well (when testing)
-#
-# Short Description: Do `apt-get update` once
-# Usage: aptUpdateOnce
-# Environment: Stores state files in `./.build/` directory which is created if it does not exist.
-#
-aptUpdateOnce() {
-    local older name quietLog start
-
-    quietLog=./.build/apt-get-update.log
-    requireFileDirectory "$quietLog"
-    name=./.build/.apt-update
-    # once an hour, technically
-    older=$(find ./.build -name .apt-update -mmin +60 | head -n 1)
-    if [ -n "$older" ]; then
-        rm -rf "$older"
-    fi
-    if [ ! -f "$name" ]; then
-        if ! which apt-get >/dev/null; then
-            consoleError "No apt-get available" 1>&2
-            return 1
-        fi
-        start=$(beginTiming)
-        consoleInfo -n "apt-get update ... "
-        if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
-            buildFailed "$quietLog"
-        fi
-        reportTiming "$start" OK
-        date >"$name"
-    fi
-}
-
-#
-# whichApt binary aptInstallPackage
-#
-# Installs an apt package if a binary does not exist in the which path.
-# The assumption here is that `aptInstallPackage` will install the desired `binary`.
-#
-# If fails, runs `buildFailed` and outputs the log file.
-#
-# Confirms that `binary` is installed after installation succeeds.
-#
-# Short Description: Install tools using `apt-get` if they are not found
-# Usage: whichApt binary aptInstallPackage
-# Example: whichApt shellcheck shellcheck
-# Example: whichApt mariadb mariadb-client
-# Argument: binary - The binary to look for
-# Argument: aptInstallPackage - The package name to install if the binary is not found in the `$PATH`.
-# Environment: Technically this will install the binary and any related files as a package.
-#
-whichApt() {
-    local binary=$1 quietLog
-    shift
-    if ! which "$binary" >/dev/null; then
-        if aptUpdateOnce; then
-            quietLog="./.build/apt.log"
-            requireFileDirectory "$quietLog"
-            if ! DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" >>"$quietLog" 2>&1; then
-                consoleError "Unable to install" "$@"
-                buildFailed "$quietLog"
-            fi
-            if which "$binary" >/dev/null; then
-                return 0
-            fi
-            consoleError "Apt packages $* do not add $binary to the PATH $PATH"
-            buildFailed "$quietLog"
-        fi
-    fi
-}
-
-#
 # Output a list of environment variables and ignore function definitions
 #
 # both `set` and `env` output functions and this is an easy way to just output
@@ -203,6 +189,7 @@ environmentVariables() {
     declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
+#
 # Reverses a pipe's input lines to output using an awk trick.
 #
 # Short Description: Reverse output lines

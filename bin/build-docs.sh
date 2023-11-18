@@ -5,9 +5,6 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -21,8 +18,7 @@ export usageDelimiter=,
 usageOptions() {
     cat <<EOF
 --force,Force generation, ignore cache directives
---cache directory,Specify a cache directory different than the default \`$cacheDirectory\`
---no-cache,Do not generate or save cache files
+--cache,Use a cache at \"$cacheDirectory\"
 EOF
 }
 usageDescription() {
@@ -30,82 +26,39 @@ usageDescription() {
 Build documentation for build system.
 EOF
 }
+#
+# Argument: --force - Force generation, ignore cache directives
+# Argument: --cache - Use a cache at "./.build-docs/"
+#
 usage() {
     usageMain "$me" "$@"
     exit $?
 }
 
+cacheDirectory="$(buildCacheDirectory build-docs)"
 # Default option settings
-optionCache=1
-optionForce=
+documentDirectoryArgs=()
+cacheDirectoryArgs=("$cacheDirectory")
 while [ $# -gt 0 ]; do
     case $1 in
-    --force)
-        optionForce=1
-        ;;
     --no-cache)
-        optionCache=
+        cacheDirectoryArgs=()
         ;;
-    --cache)
-        shift || usage $errorArgument "--cache missing argument"
-        cacheDirectory="${1%%/}"
-        if [ ! -d "$cacheDirectory" ]; then
-            usage $errorArgument "--cache $cacheDirectory is not a directory"
+    --force)
+        if ! inArray "$1" "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}"; then
+            documentDirectoryArgs+=("$1")
         fi
         ;;
     esac
     shift
 done
 
-if test "$optionCache"; then
-    [ -d "$cacheDirectory" ] || mkdir -p "$cacheDirectory"
+if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
+    return $?
 fi
-functionTemplate="./docs/__function.sh.md"
-functionSum="$(shaPipe <"$functionTemplate")"
-for sourceShellScripts in bin/build/tools/*.sh; do
-    reason=""
-    base="$(basename "$sourceShellScripts")"
-    templateFile="./docs/templates/tools/$base.md"
-    targetFile="./docs/tools/$base.md"
-    if [ -f "$templateFile" ]; then
-        if test "$optionCache"; then
-            checksum="${functionSum}:$(shaPipe <"$sourceShellScripts"):$(shaPipe <"$templateFile")"
-            checksumFile="$cacheDirectory/$base.checksum"
-            if [ -f "$checksumFile" ]; then
-                generatedChecksum=$(cat "$checksumFile")
-                if [ "$generatedChecksum" = "$checksum" ]; then
-                    if test $optionForce; then
-                        statusMessage consoleWarning "Force generating $sourceShellScripts ..."
-                    else
-                        statusMessage consoleWarning "Skipping $sourceShellScripts as it has not changed ..."
-                        continue
-                    fi
-                    reason="(forced)"
-                else
-                    reason="(Checksum changed)"
-                fi
-            else
-                reason="(Need first time processing)"
-            fi
-        fi
-        statusMessage consoleInfo "Generating $base ... $reason"
-        (
-            functionTokensFile=$(mktemp)
-            listTokens <"$templateFile" >"$functionTokensFile"
-            while read -r token; do
-                statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... $reason"
-                declare "$token"="$(bashDocumentFunction . "$token" "$functionTemplate")"
-                export "${token?}"
-            done <"$functionTokensFile"
-            rm "$functionTokensFile"
-            clearLine
-            statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
-            ./bin/build/map.sh <"$templateFile" >"$targetFile"
-        )
-        if test "$optionCache"; then
-            printf %s "$checksum" >"$checksumFile"
-            statusMessage consoleSuccess "Saved $targetFile checksum $checksum ..."
-        fi
-    fi
-done
-clearLine
+if ! documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/install/ ./docs/install/ ./docs/__binary.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    return $?
+fi
+if ! documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/tools/ ./docs/tools/ ./docs/__function.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    return $?
+fi

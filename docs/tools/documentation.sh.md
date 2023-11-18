@@ -4,12 +4,14 @@
 [⬅ Return to top](../index.md)
 
 
-## `bashFindFunctionDocumentation` - Generate a set of name/value pairs to document bash functions
+## `bashFindDocumentation` - Generate a set of name/value pairs to document bash functions
 
-Uses `bashFindFunctionDefinition` to locate bash function, then
+Uses `bashFindDocumentationFiles` to locate bash function, then
 extracts the comments preceding the function definition and converts it
 into a set of name/value pairs.
+
 A few special values are generated/computed:
+
 - `description` - Any line in the comment which is not in variable is appended to the field `description`
 - `fn` - The function name (no parenthesis or anything)
 - `base` - The basename of the file
@@ -18,7 +20,9 @@ A few special values are generated/computed:
 - `exit_code` - Defaults to `0 - Always succeeds`
 - `reviewed"  - Defaults to `Never`
 - `environment"  - Defaults to `No environment dependencies or modifications.`
+
 Otherwise the assumed variables (in addition to above) to define functions are:
+
 - `argument` - Individual arguments
 - `usage` - Canonical usage example (code)
 - `example` - An example of usage (code, many)
@@ -26,7 +30,7 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
 ### Usage
 
-    bashFindFunctionDocumentation directory function
+    bashFindDocumentation directory function
 
 ### Arguments
 
@@ -41,16 +45,17 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
     colors.sh text.sh prefixLines
 
-## `bashFindFunctionDefinition` - Find where a function is defined in a directory of shell scripts
+## `bashFindDocumentationFiles` - Find where a function is defined in a directory of shell scripts
 
 Finds a function definition and outputs the file in which it is found
 Searches solely `.sh` files. (Bash or sh scripts)
+
 Note this function succeeds if it finds all occurrences of each function, but
 may output partial results with a failure.
 
 ### Usage
 
-    bashFindFunctionDefinition fnName0 [ fnName1... ]
+    bashFindDocumentationFiles fnName0 [ fnName1... ]
 
 ### Arguments
 
@@ -59,7 +64,7 @@ may output partial results with a failure.
 
 ### Examples
 
-    bashFindFunctionDefinition bashFindFunctionDefinition
+    bashFindDocumentationFiles bashFindDocumentationFiles
     ./bin/build/tools/autodoc.sh
 
 ### Exit codes

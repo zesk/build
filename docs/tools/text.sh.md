@@ -128,6 +128,7 @@ Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228
 ## `urlParse` - Simple Database URL Parsing
 
 Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
+
 - `url` - URL
 - `host` - Database host
 - `user` - Database user
@@ -177,6 +178,7 @@ Gets the component of the URL from a given database URL.
 ## `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
 
 Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
+
 Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 ### Usage
@@ -224,6 +226,8 @@ Single quotes are prefixed with a backslash
 ## `plural` - Output numeric messages which are grammatically accurate
 
 Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
+
+
 Example:
 
 ### Usage
