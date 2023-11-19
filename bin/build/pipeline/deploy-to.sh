@@ -17,7 +17,9 @@
 # /var/www/DEPLOY/app1/applicationChecksum1.next
 #
 #
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+# IDENTICAL errorArgument 1
 errorArgument=2
 # set -x # Uncomment to enable debugging
 set -eo pipefail
@@ -35,34 +37,29 @@ deployedHostArtifact="./.deployed-hosts"
 
 initTime=$(beginTiming)
 
+export usageDelimiter=";"
 usageOptions() {
-  echo "--target target;Build target file, defaults to app.tar.gz"
-  echo "--deploy;Deploy to remote host with the application checksum"
-  echo "--undo;Undo deployment using saved artifacts"
-  echo "--cleanup;Clean up remote files after success"
-  echo "--help;This help"
-  echo "--debug;Turn on debugging (defaults to BUILD_DEBUG environment variable)"
-  echo
-  echo "remoteDeploymentPath;Path on remote host where deployment backup files are stored."
-  echo "remotePath;Path on remote host where deployment application exists."
-  echo "user1@host1;Deploy to this user at this host ..."
+  cat <<EOF
+--target target${usageDelimiter}Build target file, defaults to app.tar.gz
+--deploy;Deploy to remote host with the application checksum
+--undo;Undo deployment using saved artifacts
+--cleanup;Clean up remote files after success
+--help;This help
+--debug;Turn on debugging (defaults to BUILD_DEBUG environment variable)
+applicationChecksum;The application serial numaer
+remoteDeploymentPath;Path on remote host where deployment files are stored
+remotePath;Path on remote host where deployment application exists.
+user1@host1 ...;Deploy to this user at this host ...
+EOF
+}
+usageDescription() {
+  cat <<EOF
+Deploy current application to host at remotePath
+EOF
 }
 usage() {
-  local rs
-  rs=$1
-  shift
-  exec 1>&2
-  if [ -n "$*" ]; then
-    echo "$@"
-    echo
-  fi
-  echo "$me [ --undo | --cleanup | --deploy ] [ --debug ] [ --target target ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'" | usageGenerator $((${#me} + 1))
-  echo
-  echo "Deploy current application to host at remotePath"
-  echo
-  usageOptions | usageGenerator "$(($(usageOptions | maximumFieldLength 1 ";") + 2))" ";"
-  echo
-  exit "$rs"
+  usageMain "$me" "$@"
+  exit $?
 }
 
 if [ ! -d "${HOME:-}" ]; then
@@ -271,12 +268,12 @@ undoAction() {
 
 cleanupAction() {
   local rs=0
-  #    ____ _
+  # ____ _
   #   / ___| | ___  __ _ _ __  _   _ _ __
   #  | |   | |/ _ \/ _` | '_ \| | | | '_ \
   #  | |___| |  __/ (_| | | | | |_| | |_) |
   #   \____|_|\___|\__,_|_| |_|\__,_| .__/
-  #                                 |_|
+  #                              |_|
   bigText Cleanup
   echo
   showInfo
@@ -326,7 +323,7 @@ deployAction() {
   #  | | | |/ _ \ '_ \| |/ _ \| | | |
   #  | |_| |  __/ |_) | | (_) | |_| |
   #  |____/ \___| .__/|_|\___/ \__, |
-  #             |_|            |___/
+  #          |_|            |___/
   bigText Deploy
   echo
   showInfo

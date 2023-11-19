@@ -2,10 +2,13 @@
 
 Pipeline and build-related tools which are useful across a variety of projects.
 
+This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries.
+
 This toolkit makes the following assumptions:
 
 - You are using this with another project to help with your pipeline and build steps.
 - Binaries from this project installed at `./bin/build/`
+- Files containing bash code end with `.sh`
 - Your project: Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
 - A hook exists in your project `./bin/hooks/version-current.sh`
 - Optionally a binary exists in your project `./bin/hooks/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
@@ -15,7 +18,7 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-- copy `bin/build/build-setup.sh` into your project (changing `relTop` if needed) manually
+- copy `bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually
 - run it before you need your `bin/build` directory
 
 ## Project structure
@@ -27,14 +30,19 @@ To use in your pipeline:
 
 ## Tools
 
-- `tools.sh` - Main include for all build tools functions
+- `tools.sh` - The only include required for all build tools functions
 - `chmod-sh.sh` - Make `.sh` files executable
 - `cannon.sh` - Replace text in all files specified
 - `deprecated.sh` - Replace or warn about deprecated build code
-- `envmap.sh` - Replace environment tokens in a text file with values from the environment
+- `map.sh` - Replace environment tokens in a text file with values from the environment
+- `envmap.sh` - Previous name for `map.sh`. Deprecated 2023.
 - `new-release.sh` - Make a new release version
 - `version-last.sh` - The last version tagged
 - `version-list.sh` - List all version tags ordered by `versionSort`
+- `identical-check.sh` - Handy tool to ensure code matches in different places
+- `release-notes.sh` - Outputs file name of current release notes (Try `open $(bin/build/release-notes.sh)`)
+- `install-bin-build.sh` - Copy this into your project, rename it if you want, modify `relTop` and then use it to install this anywhere.
+- `build-setup.sh` - Previous version of `install-bin-build.sh`. Deprecated 2023.
 
 ## Local override scripts or hooks (not in this project - in your host project)
 

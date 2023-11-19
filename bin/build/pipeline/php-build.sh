@@ -20,36 +20,51 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+export usageDelimiter=@
+usageOptions() {
+    cat <<EOF
+--name tarFileName@Set BUILD_TARGET via command line (wins)
+--deployment deployment@Set DEPLOYMENT via command line (wins)
+--suffix versionSuffix@Set tag suffix via command line (wins, default inferred from deployment)
+--debug${usageDelimiter}Enable debugging. Defaults to BUILD_DEBUG.
+ENV_VAR1 ENV_VAR2 ...@Required. Environment variables to build into the deployed .env file
+--@Required. Separates environment variables to file list
+file1 file2 dir3 ...@Required. List of files and directories to build into the application package.
+EOF
+}
 usage() {
-    local rs
-    rs=$1
-    shift
-    exec 1>&2
-    if [ -n "$*" ]; then
-        consoleError "$@"
-        echo
-    fi
-    consoleInfo "$me [ --name tarFileName ] [ --deployment deployment ] [ --suffix versionSuffix ] ENV_VAR1 ENV_VAR2 ... -- file1 file2 dir3"
-    echo
-    consoleInfo "Build deployment using composer, adding environment values to .env and packaging vendor and additional files into final:"
-    echo
-    echo "$(consoleInfo -n "Target file") $(consoleValue -n "$BUILD_TARGET")"
-    echo
-    consoleInfo "Override target file generated with environment variable BUILD_TARGET"
-    echo
-    consoleInfo "--debug                  Enable debugging. Defaults to BUILD_DEBUG."
-    consoleInfo "--name tarFileName       Set BUILD_TARGET via command line (wins)"
-    consoleInfo "--deployment deployment  Set DEPLOYMENT via command line (wins)"
-    consoleInfo "--suffix versionSuffix   Set tag suffix via command line (wins, default inferred from deployment)"
-    echo
-    consoleInfo "Files are specified from the application root directory"
-    echo
-    consoleInfo "This file generates the .build.env file, which contains the current environment and:"
-    consoleInfo "   DEPLOYMENT"
-    consoleInfo "   BUILD_START_TIMESTAMP"
-    consoleInfo "   APPLICATION_TAG"
-    consoleInfo "   APPLICATION_CHECKSUM"
-    exit "$rs"
+    usageMain "$me" "$@"
+    exit $?
+}
+usageDescription() {
+    cat <<EOF
+Build deployment using composer, adding environment values to .env and packaging vendor and additional
+files into final:
+
+$(consoleInfo -n "Target file") $(consoleBoldRed -n "$BUILD_TARGET")
+
+Override target file generated with environment variable $(consoleCode BUILD_TARGET) which must ae set during build
+and on remote systems during deployment.
+
+Files are specified from the application root directory.
+
+This file generates the $(consoleCode .build.env) file, which contains the current environment and:
+
+    $(consoleCode DEPLOYMENT)
+    $(consoleCode BUILD_TARGET)
+    $(consoleCode BUILD_START_TIMESTAMP)
+    $(consoleCode APPLICATION_TAG)
+    $(consoleCode APPLICATION_CHECKSUM)
+
+$(consoleCode DEPLOYMENT) is mapped to suffixes when $(consoleLabel --suffix) not specified as follows:
+
+EOF
+    cat <<EOF | usageGenerator 10 | prefixLines "$(repeat 4 " ")"
+rc production
+d develop
+s staging
+t test
+EOF
 }
 
 usageWhich docker tar
@@ -117,6 +132,10 @@ if [ "$DEPLOYMENT" = "production" ]; then
     versionSuffix=rc
 elif [ "$DEPLOYMENT" = "develop" ]; then
     versionSuffix=d
+elif [ "$DEPLOYMENT" = "staging" ]; then
+    versionSuffix=s
+elif [ "$DEPLOYMENT" = "test" ]; then
+    versionSuffix=t
 elif [ -z "$DEPLOYMENT" ]; then
     usage $errorArgument "DEPLOYMENT must be defined in the environment or passed as --deployment"
 fi

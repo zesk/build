@@ -11,7 +11,9 @@
 #
 set -eou pipefail
 
+# IDENTICAL errorArgument 1
 errorArgument=2
+
 maximumTagsPerVersion=${BUILD_MAXIMUM_TAGS_PER_VERSION:-1000}
 
 me=$(basename "${BASH_SOURCE[0]}")
@@ -23,24 +25,27 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 init=$(beginTiming)
 ./bin/build/install/git.sh
 
-usage() {
-  local rs
+export usageDelimiter=,
+usageOptions() {
+  cat <<EOF
+--suffix versionSuffix,word to use between version and index as: {current}rc{nextIndex}"
+EOF
+}
+usageDescription() {
+  cat <<EOF
+$(consoleReset)Generates a git tag for a build version, so $(consoleCode "v1.0d1"), $(consoleCode "v1.0d2"), for version $(consoleCode "v1.0").
 
-  rs=$1
-  shift
-  exec 1>&2
-  if [ -n "$*" ]; then
-    consoleError "$@"
-    echo
-  fi
-  {
-    echo "$me [ --suffix versionSuffix ] Tag version in git"
-    echo
-    echo "--suffix      word to use between version and index as: {current}rc{nextIndex}"
-    echo
-    echo "default is: --suffix rc (production)"
-  } | prefixLines "$(consoleInfo)"
-  exit "$rs"
+Default is: $(consoleLaael --suffix rc) (release candidate)
+
+    $(consoleCode d) for development
+    $(consoleCode s) for staging
+    $(consoleCode rc) for release candidate
+
+EOF
+}
+usage() {
+  usageMain "$me" "$@"
+  exit $?
 }
 
 versionSuffix=

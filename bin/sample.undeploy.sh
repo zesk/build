@@ -9,5 +9,5 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-./bin/build-setup.sh
+./bin/install-bin-build.sh
 ./bin/build/pipeline/php-undeploy.sh

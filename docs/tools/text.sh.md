@@ -3,44 +3,40 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-## `quoteSedPattern`
+
+## `quoteSedPattern` - Quote sed strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
 
 ### Usage
 
-    quoteSedPattern string
+    quoteSedPattern text
 
 ### Arguments
 
-- `string` - A string to quote
-
-### Environment
-
-None.
-
-### Exit codes
-
-- 0 - Always
+- `text` - Text to quote
 
 ### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 
-# `repeat`
+### Sample Output
+
+string quoted and appropriate to insert in a sed search or replacement phrase
+
+### Exit codes
+
+- `0` - Always succeeds
 
 ### Usage
 
-    repeat count string
+    repeat count string [ ... ]
 
 ### Arguments
 
-- `count` - An integer greater than or equal to zero
-- `string` - A sequence of characters to repeat
-
-### Environment
-
-None.
+`count` - Required, integer count of times to repeat
+`string` - A sequence of characters to repeat
+- `...` - Additional arguments are output using shell expansion of `$*`
 
 ### Examples
 
@@ -48,7 +44,11 @@ None.
     echo Hello world
     echo $(repeat 80 -)
 
-## `echoBar`
+### Exit codes
+
+- `0` - Always succeeds
+
+## `echoBar` - Output a bar as wide as the console using the
 
 Output a bar as wide as the console using the `=` symbol.
 
@@ -60,13 +60,6 @@ Output a bar as wide as the console using the `=` symbol.
 
 - `alternateChar` - Use an alternate character or string output
 - `offset` - an integer offset to increase or decrease the size of the bar (default is `0`)
-### Environment
-
-Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
-
-### Exit codes
-
-Zero.
 
 ### Examples
 
@@ -74,33 +67,67 @@ Zero.
     consoleSuccess $(echoBar "- Success ")
     consoleMagenta $(echoBar +-)
 
-## `prefixLines` - Prefix output lines with a string
+### Exit codes
 
-Prefix output lines with a string, useful to format output or add color codes to consoles which do not honor colors line-by-line. Intended to be used as a pipe.
-
-### Usage
-
-    prefixLines [ text .. ]
-
-### Arguments
-
-- `text` - Text to prefix
+- `0` - Always succeeds
 
 ### Environment
 
-None.
+Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
 
-### Exit codes
+## `prefixLines` - Prefix output lines with a string
 
-0
+Prefix output lines with a string, useful to format output or add color codes to
+consoles which do not honor colors line-by-line. Intended to be used as a pipe.
+
+### Usage
+
+    prefixLines [ text .. ] < fileToPrefixLines
+
+### Arguments
+
+`text` - Prefix each line with this text
 
 ### Examples
 
-    bigText Success | prefixLines "$(consoleSuccess)"
+    cat "$file" | prefixLines "$(consoleCode)"
+    cat "$errors" | prefixLines "    ERROR: "
+
+### Exit codes
+
+- 0
+
+## `trimSpace` - Trim whitespace of a bash argument
+
+Trim spaces and only spaces
+
+### Usage
+
+    trimSpace text
+
+### Arguments
+
+- `text` - Text to remove spaces
+
+### Examples
+
+    trimSpace "$token"
+
+### Sample Output
+
+text
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Credits
+
+Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
 
 ## `urlParse` - Simple Database URL Parsing
 
-Converts a `url` into values which can be parsed or evaluated:
+Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
 
 - `url` - URL
 - `host` - Database host
@@ -108,7 +135,6 @@ Converts a `url` into values which can be parsed or evaluated:
 - `password` - Database password
 - `port` - Database port
 - `name` - Database name
-
 
 ### Usage
 
@@ -118,20 +144,17 @@ Converts a `url` into values which can be parsed or evaluated:
 
 - `url` - a Uniform Resource Locator used to specify a database connection
 
-### Environment
-
-None.
-
-### Exit codes
-
-Zero.
-
 ### Examples
 
     eval "$(urlParse scheme://user:password@host:port/path)"
     echo $name
 
-## `urlParseItem` - get a database URL component directly
+### Exit codes
+
+- `0` - If parsing succeeds
+- `1` - If parsing fails
+
+## `urlParseItem` - Get a database URL component directly
 
 Gets the component of the URL from a given database URL.
 
@@ -142,20 +165,21 @@ Gets the component of the URL from a given database URL.
 ### Arguments
 
 - `url` - a Uniform Resource Locator used to specify a database connection
-- `name` - the url component to get: `name`, `user`, `password`, `host`, `port`
-### Environment
-
-None.
-
-### Exit codes
-
-Zero.
+- `name` - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
 
 ### Examples
 
     consoleInfo "Connecting as $(urlParseItem "$url" user)"
 
-## `maximumFieldLength`
+### Exit codes
+
+- `0` - Always succeeds
+
+## `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
+
+Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
+
+Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 ### Usage
 
@@ -167,21 +191,44 @@ Zero.
 - `separatorChar` - The separator character to delineate fields
 - `fieldBasedFile` - A file with fields
 
-### Environment
-
-None.
-
-### Exit codes
-
-None.
-
 ### Examples
 
     usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
 
+### Exit codes
+
+- `0` - Always succeeds
+
+## `escapeDoubleQuotes` - Quote strings for inclusion in shell quoted strings
+
+Quote strings for inclusion in shell quoted strings
+
+### Usage
+
+    escapeSingleQuotes text
+
+### Arguments
+
+- `text` - Text to quote
+
+### Examples
+
+    escapeSingleQuotes "Now I can't not include this in a bash string."
+
+### Sample Output
+
+Single quotes are prefixed with a backslash
+
+### Exit codes
+
+- `0` - Always succeeds
+
 ## `plural` - Output numeric messages which are grammatically accurate
 
 Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
+
+
+Example:
 
 ### Usage
 
@@ -189,49 +236,100 @@ Outputs the `singular` value to standard out when the value of `number` is one. 
 
 ### Arguments
 
-- `number` - A number of nouns you want to describe
+- `number` - An integer or floating point number
 - `singular` - The singular form of a noun
 - `plural` - The plural form of a noun
 
-### Environment
+### Examples
 
-None.
+    count=$(($(wc -l < $foxSightings) + 0))
+    printf "We saw %d %s.
+" "$count" "$(plural $count fox foxes)"
+    n=$(($(date +%s)) - start))
+    printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
 
 ### Exit codes
 
-Zero.
+- `1` - If count is - `non` - numeric
+- `0` - If count is numeric 
 
-### Examples
+## `escapeSingleQuotes` - Quote strings for inclusion in shell quoted strings
 
-    n=$(($(date +%s)) - start))
-    echo "That took $n $(plural "$n" second seconds)"
-
-## `dateToFormat` - Platform agnostic date conversion
-
-Converts a date (`YYYY-MM-DD`) to another format.
+Quote strings for inclusion in shell quoted strings
 
 ### Usage
 
-    dateToFormat date format
+    escapeSingleQuotes text
 
 ### Arguments
 
-- `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
-- `format` - Format string for the `date` command (e.g. `%s`)
-
-### Environment
-
-Compatible with BSD and GNU date.
-
-### Exit codes
-
-If parsing fails, non-zero exit code.
+- `text` - Text to quote
 
 ### Examples
 
-    timestamp=$(dateToFormat '2023-10-15' %s)
+    escapeSingleQuotes "Now I can't not include this in a bash string."
 
-## `dateToTimestamp`
+### Sample Output
+
+Single quotes are prefixed with a backslash
+
+### Exit codes
+
+- `0` - Always succeeds
+
+## `escapeQuotes` - Quote strings for inclusion in shell quoted strings
+
+Quote strings for inclusion in shell quoted strings
+
+### Usage
+
+    escapeSingleQuotes text
+
+### Arguments
+
+- `text` - Text to quote
+
+### Examples
+
+    escapeSingleQuotes "Now I can't not include this in a bash string."
+
+### Sample Output
+
+Single quotes are prefixed with a backslash
+
+### Exit codes
+
+- `0` - Always succeeds
+
+## `stripWhitespace` - Trim whitespace in a pipeline
+
+Strip whitespace in input stream
+Removes leading and trailing spaces in input, also removes blank lines I think
+
+### Usage
+
+    stripWhitespace < file > output
+
+### Arguments
+
+- None
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Depends
+
+    awk 
+
+### Exit codes
+
+- `0` - Always succeeds
+
+
+## `dateToTimestamp` - Converts a date to an integer timestamp
+
+Converts a date to an integer timestamp
 
 ### Usage
 
@@ -239,94 +337,82 @@ If parsing fails, non-zero exit code.
 
 ### Arguments
 
-- `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
-
-### Environment
-
-Compatible with BSD and GNU date.
-
-### Exit codes
-
-If parsing fails, non-zero exit code.
+- `date` - String in the form `- `YYYY` - - `MM` - DD` (e.g. `- `2023` - - `10` - 15`)
 
 ### Examples
 
     timestamp=$(dateToTimestamp '2023-10-15')
 
+### Exit codes
 
-## `timestampToDate`
-
-### Usage
-
-    timestampToDate integerTimestamp format
-
-### Arguments
-
-- `integerTimestamp` - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
-- `format` - How to output the date (e.g. `%F` - no `+` is required)
+- `1` - if parsing fails
+- `0` - if parsing succeeds
 
 ### Environment
 
 Compatible with BSD and GNU date.
 
-### Exit codes
 
-If parsing fails, non-zero exit code.
+## `echoBar` - Output a bar as wide as the console using the
 
-### Examples
-
-    dateField=$(timestampToDate $init %Y)
-
-
-## `yesterdayDate`
-
-Returns the yesterday's date, in YYYY-MM-DD format. (same as `%F`)
+Output a bar as wide as the console using the `=` symbol.
 
 ### Usage
 
-    yesterdayDate
+    echoBar [ alternateChar [ offset ] ]
 
 ### Arguments
 
-None.
-
-### Environment
-
-Compatible with BSD and GNU date.
-
-### Exit codes
-
-Zero.
+- `alternateChar` - Use an alternate character or string output
+- `offset` - an integer offset to increase or decrease the size of the bar (default is `0`)
 
 ### Examples
 
-    rotated="$log.$(yesterdayDate)"
+    consoleSuccess $(echoBar =-)
+    consoleSuccess $(echoBar "- Success ")
+    consoleMagenta $(echoBar +-)
 
-## `todayDate`
+### Exit codes
 
-Returns the current date, in YYYY-MM-DD format. (same as `%F`)
+- `0` - Always succeeds
+
+### Environment
+
+Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
+
+### Exit codes
+
+- `0` - Always succeeds
+
+
+### Exit codes
+
+- `0` - Always succeeds
+
+## `prefixLines` - Prefix output lines with a string
+
+Prefix output lines with a string, useful to format output or add color codes to
+consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Usage
 
-    todayDate
+    prefixLines [ text .. ] < fileToPrefixLines
 
 ### Arguments
 
-None.
-
-### Environment
-
-Compatible with BSD and GNU date.
-
-### Exit codes
-
-Zero
+`text` - Prefix each line with this text
 
 ### Examples
 
-    date="$(todayDate)"
+    cat "$file" | prefixLines "$(consoleCode)"
+    cat "$errors" | prefixLines "    ERROR: "
 
-## `alignRight`
+### Exit codes
+
+- 0
+
+
+## `alignRight` - align text right
 
 Format text and align it right using spaces.
 
@@ -336,28 +422,23 @@ Format text and align it right using spaces.
 
 ### Arguments
 
-- `characterWidth` - Characters to align right
-- `text ...` - Text to align right
-
-### Environment
-
-None
-
-### Exit codes
-
-Zero.
+`characterWidth` - Characters to align right
+`text ...` - Text to align right
 
 ### Examples
 
-    echo "$(alignRight 20 Name:) $name"
-    echo "$(alignRight 20 Profession:) $occupation"
+    printf "%s: %s
+" "$(alignRight 20 Name)" "$name"
+    printf "%s: %s
+" "$(alignRight 20 Profession)" "$occupation"
+                    Name: Juanita
+              Profession: Engineer
 
-Output:
+### Exit codes
 
-             Name: Juanita
-       Profession: Engineer
+- `0` - Always succeeds
 
-## `alignLeft`
+## `alignLeft` - align text left
 
 Format text and align it left using spaces.
 
@@ -367,31 +448,38 @@ Format text and align it left using spaces.
 
 ### Arguments
 
-- `characterWidth` - Characters to align left
+- - `characterWidth` - Characters to align left
 - `text ...` - Text to align left
-
-### Environment
-
-None
-
-### Exit codes
-
-Zero.
 
 ### Examples
 
-    echo "$(alignLeft 14 Name:) $name"
-    echo "$(alignLeft 14 Profession:) $occupation"
+    printf "%s: %s
+" "$(alignLeft 14 Name)" "$name"
+    printf "%s: %s
+" "$(alignLeft 14 Profession)" "$occupation"
+    Name          : Tyrone
+    Profession    : Engineer
 
-Output:
+### Exit codes
 
-    Name:          Juanita
-    Profession:    Engineer
+- `0` - Always succeeds
 
+
+## `lowercase` - Convert text to lowercase
+
+Convert text to lowercase
+
+### Usage
+
+    lowercase [ text ... ]
+
+### Exit codes
+
+- `0` - Always succeeds
 
 ## `boxedHeading` - Text heading decoration
 
-Output a section heading.
+Heading for section output
 
 ### Usage
 
@@ -401,26 +489,45 @@ Output a section heading.
 
 - `text ...` - Text to put in the box
 
-### Environment
-
-None
-
-### Exit codes
-
-Zero.
-
 ### Examples
 
     boxedHeading Moving ...
 
-Output:
+### Sample Output
 
-    +================================================================================================+
-    |                                                                                                |
-    | Moving ...                                                                                     |
-    |                                                                                                |
-    +================================================================================================+
++================================================================================================+
+|                                                                                                |
+| Moving ...                                                                                     |
+|                                                                                                |
++================================================================================================+
 
+### Exit codes
+
+- `0` - Always succeeds
+
+## `shaPipe` - SHA1 checksum of standard input
+
+Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal
+
+### Usage
+
+    shaPipe [ ... ]
+
+### Examples
+
+    shaPipe < "$fileName"
+
+### Sample Output
+
+cf7861b50054e8c680a9552917b43ec2b9edae2b
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Depends
+
+    shasum
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -22,32 +22,30 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+export usageDelimiter=@
+usageOptions() {
+    cat <<EOF
+applicationChecksum@Required. String. Should match APPLICATION_CHECKSUM in .env
+deployPath@Required. String. Path where the deployments database is on remote system.
+applicationPath@Required. String. Path on the remote system where the application is live.
+--undo@Revert changes just made
+--cleanup@Cleanup after success
+--debug@Enable debugging. Defaults to BUILD_DEBUG.
+EOF
+}
+usageDescription() {
+    cat <<EOF
+This is run on the remote system after deployment; environment files are correct.
+It is run inside the deployment home directory in the new application folder.
+
+Current working directory on deploy is deployHome/applicationChecksum/app.
+Current working directory on cleanup is applicationHome/
+Current working directory on undo is applicationHome/
+EOF
+}
 usage() {
-    local rs
-    rs=$1
-    shift
-    exec 1>&2
-    if [ -n "$*" ]; then
-        consoleError "$@"
-        echo
-    fi
-    echo "$(consoleInfo -n "$me") $(consoleGreen -n "[ --undo | --cleanup ] [ --debug ] applicationChecksum deployPath applicationPath")"
-    echo
-    consoleInfo "This is run on the remote system after deployment; environment files are correct."
-    consoleInfo "It is run inside the deployment home directory in the new application folder."
-    echo
-    echo "$(consoleGreen "--debug    ")" "$(consoleInfo "Enable debugging. Defaults to BUILD_DEBUG.")"
-    echo "$(consoleGreen "--undo     ")" "$(consoleInfo "Revert changes just made")"
-    echo "$(consoleGreen "--cleanup  ")" "$(consoleInfo "Cleanup after success")"
-    echo
-    echo "$(consoleGreen "applicationChecksum   ")" "$(consoleInfo "will match APPLICATION_CHECKSUM in .env")"
-    echo "$(consoleGreen "deployPath            ")" "$(consoleInfo "path where the deployments database is")"
-    echo "$(consoleGreen "applicationPath       ")" "$(consoleInfo "path where the application is live")"
-    echo
-    consoleInfo Current working directory on deploy is deployHome/applicationChecksum/app.
-    consoleInfo Current working directory on cleanup is applicationHome/
-    consoleInfo Current working directory on undo is applicationHome/
-    exit "$rs"
+    usageMain "$me" "$@"
+    exit $?
 }
 
 usageWhich git
@@ -103,12 +101,12 @@ if test "$debuggingFlag"; then
 fi
 
 cleanupAction() {
-    #    ____ _
+    # ____ _
     #   / ___| | ___  __ _ _ __  _   _ _ __
     #  | |   | |/ _ \/ _` | '_ \| | | | '_ \
     #  | |___| |  __/ (_| | | | | |_| | |_) |
     #   \____|_|\___|\__,_|_| |_|\__,_| .__/
-    #                                 |_|
+    #                              |_|
     cd "$1"
     shift
 
@@ -128,7 +126,7 @@ cleanupAction() {
 #  | | | |/ _ \ '_ \| |/ _ \| | | |
 #  | |_| |  __/ |_) | | (_) | |_| |
 #  |____/ \___| .__/|_|\___/ \__, |
-#             |_|            |___/
+#          |_|            |___/
 if test $undoFlag && test $cleanupFlag; then
     usage "$errorArgument" "--cleanup and --undo are mutually exclusive"
 fi

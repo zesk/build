@@ -22,6 +22,8 @@ export DEBIAN_FRONTEND=noninteractive
 #
 # Exit codes
 #
+
+# IDENTICAL errorArgument 1
 errorArgument=2
 
 me=$(basename "$0")

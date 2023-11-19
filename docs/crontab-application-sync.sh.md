@@ -11,7 +11,7 @@ Keep a crontab in sync with a directory of applications.
 - $(--env environment) - Top-level environment file to pass variables into the crontabs
 - $(--show) - Show the crontab instaed of installing it
 - $(--user user) - Scan for crontab files in the form $(user.crontab) and then install as this user. If not specified, uses $(whoami).
-- $(--mapper envMapper) - The binary use to map environment values to the file (see (envmap.sh.md)[./envmap.sh.md])
+- $(--mapper envMapper) - The binary use to map environment values to the file (see (map.sh.md)[./map.sh.md])
 e.g.
 
     bin/build/---/-----.sh ./app/

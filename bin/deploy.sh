@@ -4,6 +4,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
 set -eo pipefail

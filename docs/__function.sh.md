@@ -1,36 +1,47 @@
-## `-----` - Description
+## `{fn}` - {short_description}
 
-TODO Update all of this including the long description.
-
-If this fails it will output the installation log.
-
-When this tool succeeds the `----` tool has been installed in the local environment.
+{description}
 
 ### Usage
 
-    foo.sh arg1 arg2 --help
+{usage}
 
 ### Arguments
 
-- `--help` - This help
-
-e.g.
-
-    bin/build/---/-----.sh ./app/
-
-### Exit codes
-
-Zero.
-
-### Local cache
-
-No local caches.
-
-### Environment
-
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
+{argument}
 
 ### Examples
 
-    foo.sh < thing > thang
+{example}
 
+### Sample Output
+
+{output}
+
+### Exit codes
+
+{exit_code}
+
+### Local cache
+
+{local_cache}
+
+### Environment
+
+{environment}
+
+### Depends
+
+{depends}
+
+### Credits
+
+Thanks to [{credits}]({source}).
+
+### Review Status
+
+File `{file}`, function `{fn}` was reviewed {reviewed}.
+
+### Errors
+
+{error}

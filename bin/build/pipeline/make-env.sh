@@ -37,7 +37,6 @@ buildEnvironment=(
 )
 
 BUILD_TIMESTAMP=$(($(date +%s) + 0))
-APPLICATION_BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M:%S")
 
 envFile=./.env
 

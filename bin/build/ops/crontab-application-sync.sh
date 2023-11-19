@@ -23,16 +23,19 @@ set -eo pipefail
 #
 # Do not depend on anything in build
 #
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+# IDENTICAL errorArgument 1
 errorArgument=2
+
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-usageOptions() {
+crontabApplicationSyncOptions() {
   echo "--env environment    Apply this environment file first before application environment files"
   echo "--user user          The crontab user to look for files for as well as to apply crontab for (defaults to whoami)"
   echo "--show               Display new crontab, do not install it"
-  echo "--mapper envMapper   Use this binary to map the environment files (usually envmap.sh)"
+  echo "--mapper envMapper   Use this binary to map the environment files (usually map.sh)"
 }
 usage() {
   local rs
@@ -48,7 +51,7 @@ usage() {
   echo
   echo "Keep multiple applications in sync with a crontab"
   echo
-  usageOptions
+  crontabApplicationSyncOptions
   echo
   echo Searches for files named user.crontab in applicationPath, and applies environment files
   echo to generate the crontab and keep it up to date.
@@ -110,10 +113,10 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$environmentMapper" ]; then
-  if [ -x ./envmap.sh ]; then
-    environmentMapper="$(pwd)/envmap.sh"
-  elif which envmap.sh >/dev/null; then
-    environmentMapper="$(which envmap.sh)"
+  if [ -x ./map.sh ]; then
+    environmentMapper="$(pwd)/map.sh"
+  elif which map.sh >/dev/null; then
+    environmentMapper="$(which map.sh)"
   else
     usage $errorArgument "Need to specify --mapper, none found nearby"
   fi
