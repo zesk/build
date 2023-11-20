@@ -1,8 +1,11 @@
 # Functions Available in Build Tools
 
-To include tool functions, do:
+The `tools.sh` shell is the only include you need in your scripts:
 
+    # shellcheck source=/dev/null
     . ./bin/build/tools.sh
+
+Once included, all functions here are available for use and may affect your build or operating system environment.
 
 ## Reference
 

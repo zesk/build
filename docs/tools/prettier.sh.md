@@ -10,6 +10,7 @@ When this tool succeeds the `prettier` binary is available in the local operatin
 ### Usage
 
     prettierInstall [ npmVersion ]
+    bin/build/install/prettier.sh [ npmVersion ]
 
 ### Arguments
 

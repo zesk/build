@@ -199,3 +199,13 @@ environmentVariables() {
 reverseFileLines() {
     awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
+
+# Makes all `*.sh` files executable
+#
+# Usage: makeShellFilesExecutable
+# Environment: Works from the current directory
+#
+makeShellFilesExecutable() {
+    # IDENTICAL makeShellFilesExecutable 1
+    find . -name '*.sh' ! -path '*/.*' -print0 | xargs -0 chmod -v +x
+}
