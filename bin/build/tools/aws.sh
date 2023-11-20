@@ -25,8 +25,8 @@ errorEnvironment=1
 # Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 #
 # Usage: awsInstall [ package ... ]
-# Argument: package - One or more packages to install using apt-get prior to installing AWS
-# Exit Code: if aptInstall fails, the exit code is returned
+# Argument: package - One or more packages to install using `apt-get` prior to installing AWS
+# Exit Code: if `aptInstall` fails, the exit code is returned
 # Depends: apt-get
 #
 awsInstall() {
@@ -79,21 +79,15 @@ awsInstall() {
 #
 # Get the credentials file path, optionally outputting errors
 #
-# awsCredentialsFile [ true ]
-#
 # Pass a trueish value to output warnings to stderr on failure
-#
-# Returns 0 if succeeds
-#
-# Short Description: Get the path to the AWS credentials file
-
-# Usage:  awsCredentialsFile [ verboseFlag ]
 #
 # Pass any value to output warnings if the environment or file is not found; otherwise
 # output the credentials file path.
 #
 # If not found, returns with exit code 1.
 #
+# Short Description: Get the path to the AWS credentials file
+# Usage:  awsCredentialsFile [ verboseFlag ]
 # Example: if ! awsCredentialsFile 1 >/dev/null; then
 # Example:     consoleError "No AWS credentials"
 # Example:     exit 1
@@ -199,6 +193,7 @@ isAWSKeyUpToDate() {
 # Example:    ...
 # Example: fi
 # Short Description: Test whether the AWS environment variables are set or not
+#
 needAWSEnvironment() {
     export AWS_ACCESS_KEY_ID
     export AWS_SECRET_ACCESS_KEY
@@ -225,6 +220,7 @@ needAWSEnvironment() {
 # Example:     consoleError "Need $profile profile in aws credentials file"
 # Example:     exit 1
 # Example: fi
+#
 awsEnvironment() {
     local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
 

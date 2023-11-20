@@ -13,6 +13,7 @@
 # If this fails it will output the installation log.
 #
 # Usage: mariadbInstall [ package ]
+# Usage: bin/build/install/mariadb-client.sh [ package ... ]
 # Argument: package - Additional packages to install
 # Short Description: Install `mariadb`
 # When this tool succeeds the `mariadb` binary is available in the local operating system.
@@ -30,6 +31,7 @@ mariadbInstall() {
 # If this fails it will output the installation log.
 #
 # Usage: pythonInstall [ package ]
+# Usage: bin/build/install/python.sh [ package ... ]
 # Argument: package - Additional packages to install
 # Short Description: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
@@ -46,6 +48,7 @@ pythonInstall() {
 # If this fails it will output the installation log.
 #
 # Usage: phpInstall [ package ... ]
+# Usage: bin/build/install/php-cli.sh [ package ... ]
 # Argument: package - Additional packages to install
 # Short Description: Install `php`
 # When this tool succeeds the `python` binary is available in the local operating system.
@@ -62,6 +65,7 @@ phpInstall() {
 # If this fails it will output the installation log.
 #
 # Usage: dockerComposeInstall [ package ... ]
+# Usage: bin/build/install/docker-compose.sh [ package ... ]
 # Argument: package - Additional packages to install (using apt)
 # Short Description: Install `docker-compose`
 # When this tool succeeds the `docker-compose` binary is available in the local operating system.

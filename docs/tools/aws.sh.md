@@ -24,17 +24,21 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 ### Arguments
 
-- `package` - One or more packages to install using - `apt` - get prior to installing AWS
+- `package` - One or more packages to install using `- `apt` - get` prior to installing AWS
 
 ### Exit codes
 
-- if aptInstall fails, the exit code is returned
+- if `aptInstall` fails, the exit code is returned
 
 ### Depends
 
     apt-get
 
-## `awsCredentialsFile` - Pass any value to output warnings if the environment or
+## `awsCredentialsFile` - Get the path to the AWS credentials file
+
+Get the credentials file path, optionally outputting errors
+
+Pass a trueish value to output warnings to stderr on failure
 
 Pass any value to output warnings if the environment or file is not found; otherwise
 output the credentials file path.

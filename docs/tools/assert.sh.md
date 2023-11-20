@@ -30,7 +30,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertEquals` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertEquals` was reviewed 2023-11-12.
 
 ## `assertNotEquals` - Assert two strings are not equal
 
@@ -54,7 +54,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
 
 
 ## `assertGreaterThan` - Assert actual value is greater than expected value
@@ -85,7 +85,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023-11-14.
+File `./bin/build//tools/assert.sh`, function `assertGreaterThan` was reviewed 2023-11-14.
 
 ## `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
 
@@ -113,7 +113,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
 
 
 ## `assertLessThan` - Assert actual value is less than expected value
@@ -143,7 +143,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
 
 ## `assertLessThanOrEqual` - Assert two strings are not equal
 
@@ -172,7 +172,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
 
 
 ## `assertExitCode` - Assert a process runs and exits with the correct exit
@@ -206,7 +206,7 @@ None.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertExitCode` was reviewed 2023-11-12.
 
 ## `assertNotExitCode` - Assert a process runs and exits with an exit code
 
@@ -231,7 +231,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
 
 
 ## `assertOutputContains` - Run a command and expect the output to contain the
@@ -267,7 +267,7 @@ None
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
 
 ## `assertOutputDoesNotContain` - Run a command and expect the output to not contain
 
@@ -302,7 +302,7 @@ None
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
 
 
 ## `assertDirectoryExists` - Test that a directory exists
@@ -363,7 +363,7 @@ None
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 
 
 ### Usage
@@ -395,7 +395,7 @@ If the file does not exist, this will fail.
 
 ### Review Status
 
-File `./bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
+File `./bin/build//tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
 
 ### Usage
 

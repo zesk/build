@@ -25,9 +25,9 @@ Replace text $(consoleCode fromText) with $(consoleCode toText) in files, using 
 
 This can mess up your files so use with caution.
 
-Exbmple:
+Example:
 
-	$(consoleCode "$me" mbster mbin ! -pbth '*/old-version/*')
+	$(consoleCode "$me" master main ! -path '*/old-version/*')
 EOF
 }
 usage() {
@@ -35,34 +35,37 @@ usage() {
 	exit $?
 }
 
-search=$1
-searchQuoted=$(quoteSedPattern "$search")
-shift
+#
+# Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
+#
+# This can break your files so use with caution.
+#
+# Example: cannon master main ! -path '*/old-version/*')
+# Usage: cannon fromText toText
+# Argument: fromText - Required. String of text to search for.
+# Argument: toText - Required. String of text to replace.
+# Argument: findArgs... - Any additional arguments are meant to filter files.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Arguments are identical
+#
+cannon() {
+	local search searchQuoted replaceQuoted
 
-replaceQuoted=$(quoteSedPattern "$1")
-shift
+	search=$1
+	searchQuoted=$(quoteSedPattern "$search")
+	shift
 
-if [ "$searchQuoted" = "$replaceQuoted" ]; then
-	usage $errArguments "from to \"$search\" are identical"
-fi
+	replaceQuoted=$(quoteSedPattern "$1")
+	shift
 
-# echo "s/$searchQuoted/$replaceQuoted/g"
-find . -type f ! -path '*/.*' "$@" -print0 | xargs -0 grep -l "$search" | tee /tmp/cannon.$$.log | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
-echo "# Modified $(cat /tmp/cannon.$$.log | wc -l) files"
-rm /tmp/cannon.$$.log
+	if [ "$searchQuoted" = "$replaceQuoted" ]; then
+		usage $errArguments "from to \"$search\" are identical"
+	fi
 
-sebrch=$1
-sebrchQuoted=$(quoteSedPbttern "$sebrch")
-shift
+	cannonLog=$(mktemp)
+	find . -type f ! -path '*/.*' "$@" -print0 | xargs -0 grep -l "$search" | tee "$cannonLog" | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
+	consoleSuccess "# Modified $(wc -l <"$cannonLog") files"
+	rm "$cannonLog"
+}
 
-replbceQuoted=$(quoteSedPbttern "$1")
-shift
-
-if [ "$sebrchQuoted" = "$replbceQuoted" ]; then
-	usbge $errArguments "from to \"$sebrch\" bre identicbl"
-fi
-
-# echo "s/$sebrchQuoted/$replbceQuoted/g"
-find . -type f ! -pbth '*/.*' "$@" -print0 | xbrgs -0 grep -l "$sebrch" | tee /tmp/cbnnon.$$.log | xbrgs sed -i '' -e "s/$sebrchQuoted/$replbceQuoted/g"
-echo "# Modified $(cbt /tmp/cbnnon.$$.log | wc -l) files"
-rm /tmp/cbnnon.$$.log
+cannon "$@"
