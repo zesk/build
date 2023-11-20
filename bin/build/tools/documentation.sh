@@ -101,7 +101,7 @@ documentFunctionsWithTemplate() {
     # echo cacheDirectory="$cacheDirectory"
 
     templatePrefix="$(printf %s "$sourceCodeDirectory" | shaPipe | cut -b -8)"
-    checksumPrefix="$(shaPipe <"$functionTemplate")-$(shaPipe <"$documentTemplate")"
+    checksumPrefix="$(shaPipe <"$functionTemplate")"
 
     reason=""
     base="$(basename "$targetFile")"
@@ -113,6 +113,7 @@ documentFunctionsWithTemplate() {
         documentTokensFile=$(mktemp)
         listTokens <"$documentTemplate" >"$documentTokensFile"
         set -a
+        allCached=1
         while read -r token; do
             sourceShellScript=$(bashFindDocumentationFile "$sourceCodeDirectory" "$token")
             if [ ! -f "$sourceShellScript" ]; then
@@ -123,8 +124,10 @@ documentFunctionsWithTemplate() {
             fi
             if [ -n "$cacheDirectory" ]; then
                 checksum="$checksumPrefix-$(shaPipe <"$sourceShellScript")"
-                checksumFile="$cacheDirectory/$templatePrefix-$token.checksum"
-                cacheFile="$cacheDirectory/$templatePrefix-$token.cache"
+                documentChecksum="$(shaPipe <"$documentTemplate")"
+                checksumFile="$cacheDirectory/$templatePrefix/$documentChecksum-$token.checksum"
+                cacheFile="$cacheDirectory/$templatePrefix/$documentChecksum-$token.cache"
+                requireFileDirectory "$checksumFile"
                 if [ -f "$checksumFile" ] && [ -f "$cacheFile" ]; then
                     generatedChecksum=$(cat "$checksumFile")
                     if [ "$generatedChecksum" = "$checksum" ]; then
@@ -149,6 +152,7 @@ documentFunctionsWithTemplate() {
             statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... $reason"
             export "${token?}"
             declare "$token"="$(bashDocumentFunction "$sourceShellScript" "$token" "$functionTemplate")"
+            allCached=
 
             if [ -n "$cacheDirectory" ]; then
                 printf %s "${!token}" >"$cacheFile"
@@ -160,6 +164,8 @@ documentFunctionsWithTemplate() {
         if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
             consoleWarning "No tokens found in $documentTemplate, copying to $targetFile"
             cp "$documentTemplate" "$targetFile"
+        elif test $allCached && [ -f "$targetFile" ]; then
+            statusMessage consoleWarning "$targetFile remains unchanged ..."
         else
             statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
             ./bin/build/map.sh <"$templateFile" >"$targetFile"

@@ -1,5 +1,7 @@
 ### Use tools in the pipeline
 
+[⬅ Return to documentation root](../index.md)
+
 - [`composer.sh`](./pipeline/composer.sh.md) - Run a version of composer on my codebase
 - [`deploy-to.sh`](./pipeline/deploy-to.sh.md) - Deploy an application to a remote host
 - [`deploy.sh`](./pipeline/deploy.sh.md) - Deploy an application to one or more hosts
@@ -13,6 +15,4 @@
 - [`remote-deploy-finish.sh`](./pipeline/remote-deploy-finish.sh.md) - Run on the remote system after a deployment is deployed but before it is finished to do any work on the remote system.
 - [`undeploy.sh`](./pipeline/undeploy.sh.md) - Reverse of `deploy.sh` - will revert an application on a host
 
-### Operations Tools
-
-- [`crontab-application-sync.sh`](crontab-application-sync.sh.md) - Keep a crontab up to date with multiple applications
+[⬅ Return to documentation root](../index.md)
