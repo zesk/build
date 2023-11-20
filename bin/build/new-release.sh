@@ -99,7 +99,8 @@ newRelease() {
   defaultVersion=$(defaultVersion "$liveVersion")
   echo "$(consoleLabel -n "Current: ") $(consoleValue -n "$currentVersion")"
   # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
-  if [ "$currentVersion" == "v$defaultVersion" ]; then
+  versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
+  if [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
     consoleError "Ready to deploy: $currentVersion"
     exit 0
   fi
@@ -139,3 +140,5 @@ EOF
   fi
   git add "$releaseNotes"
 }
+
+newRelease "$@"

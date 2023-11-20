@@ -44,8 +44,8 @@ errorArgument=2
 documentFunctionsWithTemplate() {
     local sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory
 
-    local optionForce targetDirectory cacheFile
-    local sourceShellScript reason base checksumPrefix checksum
+    local optionForce targetDirectory cacheFile tokenLookupCacheFile
+    local sourceShellScript sourceShellScriptChecksum reason base checksumPrefix checksum
     local generatedChecksum error
     local documentTokensFile
 
@@ -115,7 +115,29 @@ documentFunctionsWithTemplate() {
         set -a
         allCached=1
         while read -r token; do
-            sourceShellScript=$(bashFindDocumentationFile "$sourceCodeDirectory" "$token")
+            sourceShellScript=
+            sourceShellScriptChecksum=
+            if [ -n "$cacheDirectory" ]; then
+                tokenLookupCacheFile="$cacheDirectory/$templatePrefix/tokens/$token"
+                requireFileDirectory "$tokenLookupCacheFile"
+                if [ -f "$tokenLookupCacheFile" ]; then
+                    sourceShellScript="$(head -n 1 "$tokenLookupCacheFile")"
+                    if [ ! -f "$sourceShellScript" ]; then
+                        sourceShellScript=
+                        rm "$tokenLookupCacheFile"
+                    else
+                        sourceShellScriptChecksum="$(shaPipe <"$sourceShellScript")"
+                        if [ "$sourceShellScriptChecksum" != "$(tail -n 1 "$tokenLookupCacheFile")" ]; then
+                            statusMessage consoleWarning "$sourceShellScript changed, searching for $token again"
+                            sourceShellScript=
+                            rm "$tokenLookupCacheFile"
+                        fi
+                    fi
+                fi
+            fi
+            if [ -z "$sourceShellScript" ]; then
+                sourceShellScript=$(bashFindDocumentationFile "$sourceCodeDirectory" "$token")
+            fi
             if [ ! -f "$sourceShellScript" ]; then
                 error="Unable to find \"$token\" (from \"$documentTemplate\") in \"$sourceCodeDirectory\""
                 consoleError "$error" 1>&2
@@ -123,10 +145,15 @@ documentFunctionsWithTemplate() {
                 continue
             fi
             if [ -n "$cacheDirectory" ]; then
-                checksum="$checksumPrefix-$(shaPipe <"$sourceShellScript")"
+                if [ -z "$sourceShellScriptChecksum" ]; then
+                    sourceShellScriptChecksum=$(shaPipe <"$sourceShellScript")
+                fi
+                printf "%s\n%s" "$sourceShellScript" "$sourceShellScriptChecksum" >"$tokenLookupCacheFile"
+                checksum="$checksumPrefix-"
                 documentChecksum="$(shaPipe <"$documentTemplate")"
-                checksumFile="$cacheDirectory/$templatePrefix/$documentChecksum-$token.checksum"
-                cacheFile="$cacheDirectory/$templatePrefix/$documentChecksum-$token.cache"
+                documentChecksum="${documentChecksum:0:8}"
+                checksumFile="$cacheDirectory/$templatePrefix/$documentChecksum/$token.checksum"
+                cacheFile="$cacheDirectory/$templatePrefix/$documentChecksum/$token.cache"
                 requireFileDirectory "$checksumFile"
                 if [ -f "$checksumFile" ] && [ -f "$cacheFile" ]; then
                     generatedChecksum=$(cat "$checksumFile")
