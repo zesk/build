@@ -56,7 +56,7 @@ done
 if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
     exit $?
 fi
-for binaryDirectory in bin install pipeline; do
+for binaryDirectory in ops bin install pipeline; do
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
         ./bin/build/ ./docs/templates/$binaryDirectory/ ./docs/__binary.sh.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
         exit $?

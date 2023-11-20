@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# IDENTICAL install-bin-build 10000
 #
 # Since scripts may copy this file directly, must replicate until deprecated
 #
@@ -15,17 +14,6 @@
 #
 relTop=../..
 
-# The remaining lines will be replaced by the main script every time.
-errorEnvironment=1
-set -eou pipefail
-# set -x # Debugging
-
-myBinary="${BASH_SOURCE[0]}"
-me=$(basename "$myBinary")
-cd "$(dirname "$myBinary")"
-myBinary="$(pwd)/$me"
-cd "$relTop"
-
 # Usage: installBinBuild [ --mock mockBuildRoot ]
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
@@ -33,6 +21,7 @@ cd "$relTop"
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
 installBinBuild() {
+  # IDENTICAL install-bin-build 75
   local start ignoreFile tarArgs diffLines binName replace
   if [ ! -d bin/build ]; then
     start=$(($(date +%s) + 0))
@@ -105,5 +94,16 @@ installBinBuild() {
   (mv "$myBinary.$$" "$myBinary")
   echo "$(consoleValue -n "$myBinary") $(consoleWarning -n was updated.)"
 }
+
+# The remaining lines will be replaced by the main script every time.
+errorEnvironment=1
+set -eou pipefail
+# set -x # Debugging
+
+myBinary="${BASH_SOURCE[0]}"
+me=$(basename "$myBinary")
+cd "$(dirname "$myBinary")"
+myBinary="$(pwd)/$me"
+cd "$relTop"
 
 installBinBuild "$@"

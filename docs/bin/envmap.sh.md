@@ -1,0 +1,1 @@
+Unable to find "environmentMap" (from "./docs/templates/bin/envmap.sh.md") in "./bin/build/"
