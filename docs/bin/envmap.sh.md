@@ -1,3 +1,7 @@
+# `envmap.sh` is deprecated
+
+See [`map.sh`](map.sh) documentation here.
+
 
 ## Usage
 
@@ -15,3 +19,4 @@
 ## Environment
 
 Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+
