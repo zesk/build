@@ -1,4 +1,7 @@
+
 # `release-notes.sh` - Show current release notes
+
+[⬅ Return to top](index.md)
 
 Output the current release notes.
 
@@ -10,24 +13,10 @@ When this tool succeeds it outputs the current release notes file relative to th
 
     release-notes.sh
 
-## Arguments
-
-None.
-
-## Exit codes
-
-- 1 if an error occurs
-
-## Local cache
-
-No local caches.
-
-## Environment
-
-None.
-
 ## Examples
 
     open $(bin/build/release-notes.sh)
 
-[⬅ Return to top](index.md)
+## Exit codes
+
+- `1` - if an error occurs

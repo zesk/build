@@ -48,80 +48,97 @@ defaultVersion() {
   last=$((last + 1))
   echo "$prefix.$last"
 }
-newVersion=
-while [ $# -gt 0 ]; do
-  case $1 in
-  *)
-    if [ -n "$newVersion" ]; then
-      usage $errorArgument "Unknown argument $1"
-    fi
-    newVersion=$1
-    shift
-    ;;
-  esac
-done
 
-readLoop=
-if [ -z "$newVersion" ]; then
-  readLoop=1
-fi
-if ! hasHook version-current; then
-  usage $errorEnvironment "Requires hook version-current"
-fi
-currentVersion=$(runHook version-current)
-if [ -z "$currentVersion" ]; then
-  usage $errorEnvironment "version-current returned empty string"
-fi
-if hasHook version-live; then
-  liveVersion=$(runHook version-live)
-  if [ -z "$liveVersion" ]; then
-    usage $errorEnvironment "version-live returned empty string"
+# fn: new-release.sh
+# Short Description: Generate a new release notes and bump the version
+# Hook: version-current
+# Hook: version-live
+# Hook: version-created
+# Hook: version-already
+# Checks the live version versus the version in code and prompts to
+# generate a new release file if needed.
+#
+# A release notes template file is added at `./docs/release/`. This file is
+# also added to `git`.
+#
+newRelease() {
+  local newVersion readLoop currentVersion liveVersion defaultVersion releaseNotes
+  newVersion=
+  while [ $# -gt 0 ]; do
+    case $1 in
+    *)
+      if [ -n "$newVersion" ]; then
+        usage $errorArgument "Unknown argument $1"
+      fi
+      newVersion=$1
+      shift
+      ;;
+    esac
+  done
+
+  readLoop=
+  if [ -z "$newVersion" ]; then
+    readLoop=1
   fi
-  echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
-else
-  liveVersion=$currentVersion
-fi
-defaultVersion=$(defaultVersion "$liveVersion")
-echo "$(consoleLabel -n "Current: ") $(consoleValue -n "$currentVersion")"
-# echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
-if [ "$currentVersion" == "v$defaultVersion" ]; then
-  consoleError "Ready to deploy: $currentVersion"
-  exit 0
-fi
-while true; do
-  if test $readLoop; then
-    consoleInfo -n "New version? (default $defaultVersion): "
-    read -r newVersion
-    if [ -z "$newVersion" ]; then
-      newVersion=$defaultVersion
+  if ! hasHook version-current; then
+    usage $errorEnvironment "Requires hook version-current"
+  fi
+  currentVersion=$(runHook version-current)
+  if [ -z "$currentVersion" ]; then
+    usage $errorEnvironment "version-current returned empty string"
+  fi
+  if hasHook version-live; then
+    liveVersion=$(runHook version-live)
+    if [ -z "$liveVersion" ]; then
+      usage $errorEnvironment "version-live returned empty string"
     fi
-  fi
-  if [[ "$newVersion" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
-    newVersion="v$newVersion"
-    break
+    echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
   else
-    if ! test $readLoop; then
-      usage $errorArgument "Invalid version $newVersion"
-    else
-      consoleError "Invalid version $newVersion"
-    fi
+    liveVersion=$currentVersion
   fi
-done
+  defaultVersion=$(defaultVersion "$liveVersion")
+  echo "$(consoleLabel -n "Current: ") $(consoleValue -n "$currentVersion")"
+  # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
+  versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
+  if [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
+    consoleError "Ready to deploy: $currentVersion"
+    exit 0
+  fi
+  while true; do
+    if test $readLoop; then
+      consoleInfo -n "New version? (default $defaultVersion): "
+      read -r newVersion
+      if [ -z "$newVersion" ]; then
+        newVersion=$defaultVersion
+      fi
+    fi
+    if [[ "$newVersion" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
+      newVersion="v$newVersion"
+      break
+    else
+      if ! test $readLoop; then
+        usage $errorArgument "Invalid version $newVersion"
+      else
+        consoleError "Invalid version $newVersion"
+      fi
+    fi
+  done
 
-releaseNotes=docs/release/$newVersion.md
-if [ ! -f "$releaseNotes" ]; then
-  cat >"$releaseNotes" <<EOF
-# Release $newVersion
+  releaseNotes=docs/release/$newVersion.md
+  if [ ! -f "$releaseNotes" ]; then
+    cat >"$releaseNotes" <<-EOF
+        # Release $newVersion
 
-- Upgrade from $currentVersion
-- Lots of new
-- Features here
-
+        - Upgrade from $currentVersion
+        - New snazzy features here
 EOF
-  consoleSuccess "Version $newVersion ready - release notes: $releaseNotes"
-  runHook version-created "$newVersion" "$releaseNotes"
-else
-  consoleWarning "Version $newVersion already - release notes: $releaseNotes"
-  runHook version-already "$newVersion" "$releaseNotes"
-fi
-git add "$releaseNotes"
+    consoleSuccess "Version $newVersion ready - release notes: $releaseNotes"
+    runHook version-created "$newVersion" "$releaseNotes"
+  else
+    consoleWarning "Version $newVersion already - release notes: $releaseNotes"
+    runHook version-already "$newVersion" "$releaseNotes"
+  fi
+  git add "$releaseNotes"
+}
+
+newRelease "$@"

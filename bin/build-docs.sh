@@ -54,11 +54,15 @@ while [ $# -gt 0 ]; do
 done
 
 if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
-    return $?
+    exit $?
 fi
-if ! documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/install/ ./docs/install/ ./docs/__binary.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-    return $?
-fi
-if ! documentDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" ./docs/templates/tools/ ./docs/tools/ ./docs/__function.sh.md "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-    return $?
+for binaryDirectory in ops bin install pipeline; do
+    if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
+        ./bin/build/ ./docs/templates/$binaryDirectory/ ./docs/__binary.sh.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+        exit $?
+    fi
+done
+if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
+    ./bin/build/ ./docs/templates/tools/ ./docs/__function.sh.md ./docs/tools/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    exit $?
 fi

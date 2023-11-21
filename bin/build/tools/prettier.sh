@@ -20,6 +20,7 @@
 # Exit Code: 0 - If npm is already installed or installed without error
 # Binary: prettier.sh
 # Usage: prettierInstall [ npmVersion ]
+# Usage: bin/build/install/prettier.sh [ npmVersion ]
 # Argument: npmVersion - Optional. String. npm version to install.
 #
 prettierInstall() {

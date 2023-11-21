@@ -43,14 +43,6 @@ mapEnvironmentVariables() {
     declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
-cleanup() {
-    [ -f "$sedFile" ] && rm "$sedFile"
-}
-trap cleanup EXIT INT
-
-prefix='{'
-suffix='}'
-
 generateSedFile() {
     local sedFile=$1 value
 
@@ -66,38 +58,60 @@ generateSedFile() {
     done
 }
 
-while [ $# -gt 0 ]; do
-    case $1 in
-    --prefix)
-        shift || usage $errorArgument "--prefix missing a value"
-        prefix="$1"
-        ;;
-    --suffix)
-        shift || usage $errorArgument "--suffix missing a value"
-        suffix="$1"
-        ;;
-    *)
-        break
-        ;;
-    esac
-    shift
-done
+# Short Description: Convert tokens in files to environment variable values
+#
+# Map tokens in the input stream based on environment values with the same names.
+# Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
+# Undefined values are not converted.
+# Usage: map.sh [ environmentName0 environmentName1 ... ]
+# Usage: mapEnvironment [ environmentName0 environmentName1 ... ]
+#
+# Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
+# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+# Example: echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world map.sh NAME PLACE
+mapEnvironment() {
+    local prefix suffix sedFile ee e rs
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
-sedFile=$(mktemp)
+    prefix='{'
+    suffix='}'
 
-if [ $# -eq 0 ]; then
-    ee=()
-    for e in $(mapEnvironmentVariables); do
-        ee+=("$e")
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --prefix)
+            shift || usage $errorArgument "--prefix missing a value"
+            prefix="$1"
+            ;;
+        --suffix)
+            shift || usage $errorArgument "--suffix missing a value"
+            suffix="$1"
+            ;;
+        *)
+            break
+            ;;
+        esac
+        shift
     done
-    generateSedFile "$sedFile" "${ee[@]}"
-else
-    generateSedFile "$sedFile" "$@"
-fi
 
-if ! sed -f "$sedFile"; then
-    rs=$?
-    cat "$sedFile" 1>&2
-    exit $rs
-fi
+    cd "$(dirname "${BASH_SOURCE[0]}")"
+    sedFile=$(mktemp)
+
+    if [ $# -eq 0 ]; then
+        ee=()
+        for e in $(mapEnvironmentVariables); do
+            ee+=("$e")
+        done
+        generateSedFile "$sedFile" "${ee[@]}"
+    else
+        generateSedFile "$sedFile" "$@"
+    fi
+
+    if ! sed -f "$sedFile"; then
+        rs=$?
+        cat "$sedFile" 1>&2
+        rm "$sedFile"
+        return $rs
+    fi
+    rm "$sedFile"
+}
+
+mapEnvironment "$@"
