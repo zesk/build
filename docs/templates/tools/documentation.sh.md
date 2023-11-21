@@ -11,8 +11,8 @@
 
 # Finding documentation
 
-{bashFindDocumentation}
-{bashFindDocumentationFiles}
+{bashExtractDocumentation}
+{bashFindFunctionFiles}
 
 # Documentation Utilities
 

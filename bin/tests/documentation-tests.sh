@@ -32,7 +32,7 @@ testDocumentation() {
     testOutput=$(mktemp)
     assertExitCode 0 inArray "short_description" short_description usage argument example reviewed
 
-    bashFindDocumentation . assertNotEquals >"$testOutput" || return $?
+    bashExtractDocumentation "$(bashFindFunctionFile . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
     set -a
     # shellcheck source=/dev/null
     . "$testOutput"
@@ -40,7 +40,7 @@ testDocumentation() {
     assertEquals "Assert two strings are not equal" "${short_description}" || return $?
     assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.' "${description}" || return $?
 
-    bashFindDocumentation . assertEquals >"$testOutput" || return $?
+    bashExtractDocumentation "$(bashFindFunctionFile . assertEquals)" assertEquals >"$testOutput" || return $?
     set -a
     # shellcheck source=/dev/null
     . "$testOutput" || return $?

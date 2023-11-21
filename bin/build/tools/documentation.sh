@@ -136,7 +136,7 @@ documentFunctionsWithTemplate() {
                 fi
             fi
             if [ -z "$sourceShellScript" ]; then
-                sourceShellScript=$(bashFindDocumentationFile "$sourceCodeDirectory" "$token")
+                sourceShellScript=$(bashFindFunctionFile "$sourceCodeDirectory" "$token")
             fi
             if [ ! -f "$sourceShellScript" ]; then
                 error="Unable to find \"$token\" (from \"$documentTemplate\") in \"$sourceCodeDirectory\""
@@ -318,7 +318,7 @@ bashDocumentFunction() {
     printf "%s\n" "#!/usr/bin/env bash" >>"$envFile"
     printf "%s\n" "set -eou pipefail" >>"$envFile"
     # set -u does not work with read which returns 1 on EOF
-    if ! bashFindDocumentation "$file" "$fn" >>"$envFile"; then
+    if ! bashExtractDocumentation "$file" "$fn" >>"$envFile"; then
         __dumpNameValue "error" "$fn was not found" >>"$envFile"
     fi
     if ! (
@@ -393,7 +393,7 @@ __dumpAliasedValue() {
 }
 
 #
-# Uses `bashFindDocumentationFiles` to locate bash function, then
+# Uses `bashFindFunctionFiles` to locate bash function, then
 # extracts the comments preceding the function definition and converts it
 # into a set of name/value pairs.
 #
@@ -416,12 +416,12 @@ __dumpAliasedValue() {
 # - `depends` - Any dependencies (list)
 #
 # Short Description: Generate a set of name/value pairs to document bash functions
-# Usage: bashFindDocumentation directory function
+# Usage: bashExtractDocumentation directory function
 # Argument: `definitionFile` - File in which function is defined
 # Argument: `function` - Function defined in `file`
 # Depends: colors.sh text.sh prefixLines
 #
-bashFindDocumentation() {
+bashExtractDocumentation() {
     local maxLines=1000 definitionFile=$1 fn=$2 definitionFile
     local line name value desc tempDoc foundNames
 
@@ -517,19 +517,19 @@ bashFindDocumentation() {
 # Note this function succeeds if it finds all occurrences of each function, but
 # may output partial results with a failure.
 #
-# Usage: bashFindDocumentationFiles dirctory fnName0 [ fnName1... ]
+# Usage: bashFindFunctionFiles dirctory fnName0 [ fnName1... ]
 # Argument: `directory` - The directory to search
 # Argument: `fnName0` - A function to find the file in which it is defined
 # Argument: `fnName1...` - Additional functions are found are output as well
 # Exit Code: 0 - if one or more function definitions are found
 # Exit Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
-# Example: bashFindDocumentationFiles bashFindDocumentationFiles
+# Example: bashFindFunctionFiles . bashFindFunctionFiles
 # Example: ./bin/build/tools/autodoc.sh
 # Platform: `stat` is not cross-platform
 # Short Description: Find where a function is defined in a directory of shell scripts
 #
-bashFindDocumentationFiles() {
+bashFindFunctionFiles() {
     local directory=$1
     local functionPattern fn linesOutput phraseCount
 
@@ -556,16 +556,16 @@ bashFindDocumentationFiles() {
 #
 # Succeeds IFF only one version of a function is found.
 #
-# Usage: bashFindDocumentationFile dirctory fn
+# Usage: bashFindFunctionFile dirctory fn
 # Argument: `directory` - The directory to search
 # Argument: `fn` - A function to find the file in which it is defined
 # Exit Code: 0 - if one or more function definitions are found
 # Exit Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
-# Example: bashFindDocumentationFile . usage
+# Example: bashFindFunctionFile . usage
 # Short Description: Find single location where a function is defined in a directory of shell scripts
 #
-bashFindDocumentationFile() {
+bashFindFunctionFile() {
     local definitionFiles directory="$1" fn="$2"
 
     if [ ! -d "$directory" ]; then
@@ -577,7 +577,7 @@ bashFindDocumentationFile() {
         return $errorArgument
     fi
     definitionFiles=$(mktemp)
-    if ! bashFindDocumentationFiles "$directory" "$fn" >"$definitionFiles"; then
+    if ! bashFindFunctionFiles "$directory" "$fn" >"$definitionFiles"; then
         rm "$definitionFiles"
         consoleError "$fn not found in $directory" 1>&2
         return 1
