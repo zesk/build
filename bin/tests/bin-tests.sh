@@ -10,6 +10,11 @@ errorEnvironment=1
 
 declare -a tests
 
+tests+=(versionSortTest)
+versionSortTest() {
+    assertGreaterThan 0 $(($(bin/build/version-list.sh | wc -l) + 0))
+}
+
 tests+=(testMakeEnv)
 testMakeEnv() {
     local v

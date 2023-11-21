@@ -123,10 +123,10 @@ requireFileDirectory "$quietLog"
 # Unusual quoting here is to avoid matching HERE
 ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
 
-loadTestFiles "$quietLog" documentation-tests.sh docker-tests.sh text-tests.sh colors-tests.sh api-tests.sh aws-tests.sh usage-tests.sh deploy-tests.sh
-
 # Side effects - install the software
 loadTestFiles "$quietLog" bin-tests.sh
+
+loadTestFiles "$quietLog" documentation-tests.sh docker-tests.sh text-tests.sh colors-tests.sh api-tests.sh aws-tests.sh usage-tests.sh deploy-tests.sh
 
 # tests-tests.sh has side-effects - installs shellcheck
 loadTestFiles "$quietLog" tests-tests.sh
