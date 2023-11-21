@@ -147,7 +147,7 @@ may output partial results with a failure.
 
 ### Examples
 
-    bashFindFunctionFiles bashFindFunctionFiles
+    bashFindFunctionFiles . bashFindFunctionFiles
     ./bin/build/tools/autodoc.sh
 
 ### Exit codes
