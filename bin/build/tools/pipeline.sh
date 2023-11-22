@@ -155,6 +155,7 @@ ___dumpLines() {
 buildFailed() {
   local quietLog=$1 bigLines=50 recentLines=3
   shift
+  printf "\n"
   ___dumpLines $bigLines "$quietLog"
   echo
   consoleMagenta "BUILD FAILED"
@@ -163,7 +164,7 @@ buildFailed() {
   bigText Failed | prefixLines "$(consoleError)"
   echo
   ___dumpLines $recentLines "$quietLog"
-  return 1
+  return "$errorEnvironment"
 }
 
 #

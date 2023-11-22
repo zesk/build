@@ -21,7 +21,8 @@ errorArgument=2
 # Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
 # Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regarldess.
 #
-# Generates a usage output using documentation tools
+# Generates console usage output for a script using documentation tools parsed from the comment
+#
 usageDocument() {
     local functionDefinitionFile functionName exitCode variablesFile
 
@@ -51,6 +52,7 @@ usageDocument() {
 
         usageTemplate "$fn" "$(printf %s "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | simpleMarkdownToConsole)" "$exitCode" "$@"
     )
+    return "$exitCode"
 }
 # Usage: documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
 # Argument: sourceCodeDirectory - Required. The directory where the source code lives

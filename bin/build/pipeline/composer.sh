@@ -8,7 +8,8 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eo pipefail
+set -eou pipefail
+
 # set -x
 errorArgument=1
 errBuild=1000
@@ -24,76 +25,93 @@ cacheDir=.composer
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
 
-usageOptions() {
-  cat <<EOF
---help This help
-installDirectory The directory to run the composer command in
-EOF
-}
-usageDescription() {
-  cat <<EOF
-Run validate and install using docker image $dockerImage
-EOF
+#
+# Short Description: Run Composer commands on code
+#
+# Runs composer validate and install on a directory.
+#
+# If this fails it will output the installation log.
+#
+# When this tool succeeds the `composer` tool has run on a source tree and the `vendor` directory and `composer.lock` are often updated.
+#
+# This tools does not install the `composer` binary into the local environment.
+# fn: composer.sh
+# Usage: composer.sh [ --help ] [ installDirectory ]
+#
+# Argument: installDirectory - You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
+# Argument: --help - This help
+#
+# Example: bin/build/pipeline/composer.sh ./app/
+# Local Cache: This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.
+#
+# Environment: BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
+#
+phpComposer() {
+  local start composerArgs
+
+  start=$(beginTiming)
+
+  while [ $# -gt 0 ]; do
+    case $1 in
+    --help)
+      usage 0
+      ;;
+    *)
+      if [ "$composerDirectory" != "." ]; then
+        usage "$errorArgument" "Unknown argument $1"
+      fi
+      if [ ! -d "$1" ]; then
+        usage "$errorArgument" "Directory does not exist: $1"
+      fi
+      composerDirectory=$1
+      ;;
+    esac
+    shift
+  done
+
+  # shellcheck source=/dev/null
+  ./bin/build/install/apt.sh
+
+  [ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
+
+  composerArgs=()
+  composerArgs+=("-v" "$composerDirectory:/app")
+  composerArgs+=("-v" "$composerDirectory/$cacheDir:/tmp")
+  composerArgs+=("$dockerImage")
+  composerArgs+=("--ignore-platform-reqs")
+
+  requireFileDirectory "$quietLog"
+
+  consoleInfo -n "Composer ... """
+  bigText "Install vendor" >>"$quietLog"
+  #DEBUGGING - remove, why no -q option? we like it quiet
+  echo Running: docker pull "$dockerImage" >>"$quietLog"
+
+  if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
+    consoleError "Failed to pull image $dockerImage"
+    buildFailed "$quietLog"
+    return $errBuild
+  fi
+  consoleInfo -n "validating ... "
+  echo Running: docker run "${composerArgs[@]}" validate >>"$quietLog"
+  if ! docker run "${composerArgs[@]}" install >>"$quietLog" 2>&1; then
+    buildFailed "$quietLog"
+    return $errBuild
+  fi
+
+  composerArgs+=("install")
+  consoleInfo -n "installing ... "
+  echo Running: docker run "${composerArgs[@]}" >>"$quietLog"
+  if ! docker run "${composerArgs[@]}" >>"$quietLog" 2>&1; then
+    buildFailed "$quietLog"
+    return $errBuild
+  fi
+  reportTiming "$start" OK
+
 }
 usage() {
-  usageMain "$me" "$@"
+  usageDocument "./bin/build/pipeline/$me" "phpComposer" "$@"
   exit "$?"
 }
 
-while [ $# -gt 0 ]; do
-  case $1 in
-  --help)
-    usage 0
-    ;;
-  *)
-    if [ "$composerDirectory" != "." ]; then
-      usage "$errorArgument" "Unknown argument $1"
-    fi
-    if [ ! -d "$1" ]; then
-      usage "$errorArgument" "Directory does not exist: $1"
-    fi
-    composerDirectory=$1
-    ;;
-  esac
-  shift
-done
-
-# shellcheck source=/dev/null
-./bin/build/install/apt.sh
-
-[ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
-
-composerArgs=()
-composerArgs+=("-v" "$composerDirectory:/app")
-composerArgs+=("-v" "$composerDirectory/$cacheDir:/tmp")
-composerArgs+=("$dockerImage")
-composerArgs+=("--ignore-platform-reqs")
-
-requireFileDirectory "$quietLog"
-
-start=$(beginTiming)
-consoleInfo -n "Composer ... """
-bigText "Install vendor" >>"$quietLog"
-#DEBUGGING - remove, why no -q option? we like it quiet
-echo Running: docker pull "$dockerImage" >>"$quietLog"
-
-if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
-  consoleError "Failed to pull image $dockerImage"
-  buildFailed "$quietLog"
-  exit $errBuild
-fi
-consoleInfo -n "validating ... "
-echo Running: docker run "${composerArgs[@]}" validate >>"$quietLog"
-if ! docker run "${composerArgs[@]}" install >>"$quietLog" 2>&1; then
-  buildFailed "$quietLog"
-  exit $errBuild
-fi
-
-composerArgs+=("install")
-consoleInfo -n "installing ... "
-echo Running: docker run "${composerArgs[@]}" >>"$quietLog"
-if ! docker run "${composerArgs[@]}" >>"$quietLog" 2>&1; then
-  buildFailed "$quietLog"
-  exit $errBuild
-fi
-reportTiming "$start" OK
+phpComposer "$@"
