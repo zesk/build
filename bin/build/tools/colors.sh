@@ -144,7 +144,7 @@ consoleInfo() {
 # code or variables in output
 #
 consoleCode() {
-    consoleYellow "$@"
+    consoleGreen "$@"
 }
 
 #
@@ -230,4 +230,43 @@ consoleColumns() {
     else
         tput cols
     fi
+}
+
+backticksHighligh() {
+    toggleCharacterToColor '`' "$(consoleCode)"
+}
+
+#
+# Usage: toggleCharacterToColor character colorOn [ colorOff ]
+# Argument: character - The character to map to color start/stop
+# Argument: colorOn - Color on escape sequence
+# Argument: colorOff - Color off escape sequence defaults to "$(consoleReset)"
+#
+toggleCharacterToColor() {
+    local character line code reset lastLine=
+
+    # shellcheck disable=SC2119
+    character=$1
+    code="$2"
+    reset="${3-$(consoleReset)}"
+    while true; do
+        if ! IFS="$character" read -r -a line; then
+            lastLine=1
+        fi
+        odd=0
+        while [ ${#line[@]} -gt 0 ]; do
+            if [ $((odd & 1)) -eq 1 ]; then
+                printf "%s%s%s" "$code" "${line[0]}" "$reset"
+            else
+                printf "%s" "${line[0]}"
+            fi
+            unset 'line[0]'
+            line=("${line[@]+${line[@]}}")
+            odd=$((odd + 1))
+        done
+        printf "\n"
+        if test $lastLine; then
+            return 0
+        fi
+    done
 }

@@ -28,12 +28,7 @@ me="$(basename "${BASH_SOURCE[0]}")"
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 usage() {
-  local rs=$1
-
-  shift
-  exec 1>&2
-  echo "$me $*"
-  exit "$rs"
+  usageDocument "./bin/build/$me" newRelease "$@"
 }
 
 # shellcheck source=/dev/null
@@ -50,7 +45,9 @@ defaultVersion() {
 }
 
 # fn: new-release.sh
-# Argument: --non-interactive - If new version is needed, use default version
+# Argument: --non-interactive - Optional. If new version is needed, use default version
+# Argument: versionName - Optional. Set the new version name to this.
+# Argument: fucksauce - Required. Set the new version name to this.
 # Short Description: Generate a new release notes and bump the version
 # Hook: version-current
 # Hook: version-live
@@ -61,7 +58,7 @@ defaultVersion() {
 # generate a new release file if needed.
 #
 # A release notes template file is added at `./docs/release/`. This file is
-# also added to `git`.
+# also added to `git` the first time.
 #
 newRelease() {
   local newVersion readLoop currentVersion liveVersion defaultVersion releaseNotes nonInteractive
@@ -73,14 +70,19 @@ newRelease() {
     --non-interactive)
       nonInteractive=1
       ;;
+    --help)
+      usage 0
+      return 0
+      ;;
     *)
       if [ -n "$newVersion" ]; then
         usage $errorArgument "Unknown argument $1"
+        return $?
       fi
       newVersion=$1
-      shift
       ;;
     esac
+    shift
   done
 
   readLoop=
@@ -89,15 +91,18 @@ newRelease() {
   fi
   if ! hasHook version-current; then
     usage $errorEnvironment "Requires hook version-current"
+    return $?
   fi
   currentVersion=$(runHook version-current)
   if [ -z "$currentVersion" ]; then
     usage $errorEnvironment "version-current returned empty string"
+    return $?
   fi
   if hasHook version-live; then
     liveVersion=$(runHook version-live)
     if [ -z "$liveVersion" ]; then
       usage $errorEnvironment "version-live returned empty string"
+      return $?
     fi
     echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
   else
@@ -108,11 +113,16 @@ newRelease() {
   # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
-    consoleError "Ready to deploy: $currentVersion"
-    exit 0
+    consoleInfo "Ready to deploy: $currentVersion"
+    return 0
   fi
   if test $nonInteractive; then
-    newVersion=$defaultVersion
+    if [ -z "$newVersion" ]; then
+      newVersion=$defaultVersion
+    elif ! isVersion "$newVersion"; then
+      usage $errorArgument "New version $newVersion is not a valid version tag"
+      return $?
+    fi
   else
     while true; do
       if test $readLoop; then

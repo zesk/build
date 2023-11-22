@@ -10,8 +10,12 @@ errorEnvironment=1
 
 declare -a tests
 
-tests+=(versionSortTest)
-versionSortTest() {
+tests+=(testNewRelease)
+testNewRelease() {
+    assertExitCode 0 bin/build/new-release.sh --non-interactive
+}
+tests+=(testVersionSort)
+testVersionSort() {
     assertGreaterThan 0 $(($(bin/build/version-list.sh | wc -l) + 0))
 }
 

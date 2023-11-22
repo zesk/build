@@ -15,7 +15,7 @@ errorArgument=2
 
 errorTest=3
 
-set -eo pipefail
+set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 top=$(pwd)
@@ -97,7 +97,7 @@ loadTestFiles() {
         printf "%s" "$(assertGreaterThan "$testCount" "${#tests[@]}" "No tests defined in ./bin/tests/$1")"
         shift
     done
-    statusMessage consoleSuccess "Loaded ${#tests[@]} tests ..."
+    statusMessage consoleSuccess "Loaded ${#tests[@]} tests \"${tests[*]}\" ..."
     echo
     while [ ${#tests[@]} -gt 0 ]; do
         test="${tests[0]}"
@@ -107,10 +107,11 @@ loadTestFiles() {
         else
             # Test
             testSection "${test#\#}"
-            if ! $test "$quietLog"; then
+            if ! "$test" "$quietLog"; then
                 consoleError "$test failed" 1>&2
                 return $errorTest
             fi
+            consoleSuccess "$test passed"
         fi
         unset 'tests[0]'
         tests=("${tests[@]}")
@@ -118,25 +119,39 @@ loadTestFiles() {
     return 0
 }
 
+testFailed() {
+    local errorCode="$errorTest"
+    printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo -n "$*")"
+    exit "$errorCode"
+}
+requireTestFiles() {
+    if ! loadTestFiles "$@"; then
+        testFailed "$(consoleInfo -n "$*")"
+    fi
+}
 requireFileDirectory "$quietLog"
 
 # Unusual quoting here is to avoid matching HERE
 ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
 
-# Side effects - install the software
-loadTestFiles "$quietLog" bin-tests.sh
+requireTestFiles "$quietLog" assert-tests.sh
+requireTestFiles "$quietLog" usage-tests.sh
+requireTestFiles "$quietLog" documentation-tests.sh docker-tests.sh text-tests.sh colors-tests.sh api-tests.sh aws-tests.sh deploy-tests.sh
 
-loadTestFiles "$quietLog" documentation-tests.sh docker-tests.sh text-tests.sh colors-tests.sh api-tests.sh aws-tests.sh usage-tests.sh deploy-tests.sh
+# Side effects - install the software
+requireTestFiles "$quietLog" bin-tests.sh
 
 # tests-tests.sh has side-effects - installs shellcheck
-loadTestFiles "$quietLog" tests-tests.sh
+requireTestFiles "$quietLog" tests-tests.sh
 
 # aws-tests.sh testAWSIPAccess has side-effects, installs AWS
-loadTestFiles "$quietLog" aws-tests.sh
+requireTestFiles "$quietLog" aws-tests.sh
 
 for binTest in ./bin/tests/bin/*.sh; do
     testHeading "$(cleanTestName "$(basename "$binTest")")"
-    "$binTest" "$(pwd)"
+    if ! "$binTest" "$(pwd)"; then
+        testFailed "$binTest" "$(pwd)"
+    fi
 done
 
 testCleanup

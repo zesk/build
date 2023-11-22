@@ -34,7 +34,7 @@ awsInstall() {
     local url buildDir quietLog
 
     if ! aptInstall unzip curl "$@"; then
-        return $?
+        return "$errorEnvironment"
     fi
 
     if which aws >/dev/null; then
@@ -55,10 +55,10 @@ awsInstall() {
     buildDir="$(buildCacheDirectory awsCache.$$)"
     quietLog="$(buildQuietLog awsInstall)"
     if ! requireDirectory "$buildDir"; then
-        return $?
+        return "$errorEnvironment"
     fi
     if ! requireFileDirectory "$quietLog"; then
-        return $?
+        return "$errorEnvironment"
     fi
     if ! curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
         buildFailed "$quietLog"

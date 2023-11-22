@@ -24,7 +24,7 @@ aptUpdateOnce() {
     quietLog=$(buildQuietLog aptUpdateOnce)
     name=$(buildCacheDirectory "$cacheFile")
     if ! requireFileDirectory "$quietLog" || ! requireFileDirectory "$name"; then
-        return $?
+        return "$errorEnvironment"
     fi
     # once an hour, technically
     older=$(find "$(buildCacheDirectory)" -name "$cacheFile" -mmin +60 | head -n 1)
@@ -42,7 +42,7 @@ aptUpdateOnce() {
     consoleInfo -n "apt-get update ... "
     if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
         buildFailed "$quietLog"
-        return $?
+        return "$errorEnvironment"
     fi
     reportTiming "$start" OK
     date >"$name"
@@ -74,10 +74,10 @@ aptInstall() {
     fi
 
     if ! aptUpdateOnce; then
-        return $?
+        return "$errorEnvironment"
     fi
     if ! requireFileDirectory "$quietLog" || ! requireFileDirectory "$installedLog"; then
-        return $?
+        return "$errorEnvironment"
     fi
     touch "$installedLog" || return $?
 
@@ -127,7 +127,7 @@ whichApt() {
         return 0
     fi
     if ! aptInstall "$@"; then
-        return $?
+        return $errorEnvironment
     fi
     if which "$binary" >/dev/null; then
         return 0

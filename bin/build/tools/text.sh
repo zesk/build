@@ -68,6 +68,15 @@ escapeQuotes() {
 }
 
 #
+# Usage: replaceFirstPattern pattern replacement
+#
+# Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
+#
+replaceFirstPattern() {
+    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/1"
+}
+
+#
 # Trim spaces and only spaces
 # Usage: trimSpace text
 # Argument: text - Text to remove spaces
