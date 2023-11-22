@@ -7,6 +7,9 @@
 
 set -eou pipefail
 
+# IDENTICAL errorArgument 1
+errorArgument=2
+
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 me=$(basename "$0")
 cacheDirectory="./.build-docs"
@@ -48,6 +51,12 @@ while [ $# -gt 0 ]; do
         if ! inArray "$1" "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}"; then
             documentDirectoryArgs+=("$1")
         fi
+        ;;
+    --help)
+        usage 0
+        ;;
+    *)
+        usage "$errorArgument" "Unknown argument $1"
         ;;
     esac
     shift

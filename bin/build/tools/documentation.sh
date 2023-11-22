@@ -17,6 +17,43 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+# Usage: usageDocument functionDefinitionFile functionName exitCode [ ... ]
+# Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
+# Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regarldess.
+#
+# Generates console usage output for a script using documentation tools parsed from the comment
+#
+usageDocument() {
+    local functionDefinitionFile functionName exitCode variablesFile
+
+    functionDefinitionFile="$1"
+    shift || return "$errorArgument"
+    functionName="$1"
+    shift || return "$errorArgument"
+    exitCode="${1-0}"
+    shift || :
+
+    variablesFile=$(mktemp)
+    if ! bashExtractDocumentation "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
+        if ! rm "$variablesFile"; then
+            consoleError "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" 1>&2
+            return $errorEnvironment
+        fi
+        consoleError "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" 1>&2
+        return $errorArgument
+    fi
+    (
+        set -a
+        description=""
+        argument=""
+
+        # shellcheck source=/dev/null
+        source "$variablesFile"
+
+        usageTemplate "$fn" "$(printf %s "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | simpleMarkdownToConsole)" "$exitCode" "$@"
+    )
+    return "$exitCode"
+}
 # Usage: documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
 # Argument: sourceCodeDirectory - Required. The directory where the source code lives
 # Argument: documentTemplate - Required. The document template containing functions to define
@@ -189,7 +226,7 @@ documentFunctionsWithTemplate() {
         done <"$documentTokensFile"
         clearLine
         if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
-            consoleWarning "No tokens found in $documentTemplate, copying to $targetFile"
+            statusMessage consoleWarning "No tokens found in $documentTemplate, copying to $targetFile"
             cp "$documentTemplate" "$targetFile"
         elif test $allCached && [ -f "$targetFile" ]; then
             statusMessage consoleWarning "$targetFile remains unchanged ..."

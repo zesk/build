@@ -12,6 +12,9 @@
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
+# IDENTICAL errorArgument 1
+errorArgument=2
+
 # Assert two strings are equal.
 #
 # If this fails it will output an error and exit.
@@ -24,14 +27,14 @@ errorEnvironment=1
 # Reviewed: 2023-11-12
 #
 assertEquals() {
-    local a=$1 b=$2
+    local expected=$1 actual=$2
     shift
     shift
-    if [ "$a" != "$b" ]; then
-        consoleError "assertEquals \"$a\" != \"$b\" but should: ${*-mismatch}"
+    if [ "$expected" != "$actual" ]; then
+        consoleError "assertEquals $expected = $actual but should: ${*-equals}"
         return "$errorEnvironment"
     else
-        consoleSuccess "assertEquals \"$a\" == \"$b\" (correct)"
+        consoleSuccess "assertEquals \"$expected\" == \"$actual\" (correct)"
     fi
 }
 
@@ -55,7 +58,7 @@ assertNotEquals() {
         consoleError "assertNotEquals $expected = $actual but should not: ${*-equals}"
         return $errorEnvironment
     else
-        consoleSuccess "assertNotEquals $expected != $actual (correct)"
+        consoleSuccess "assertNotEquals \"$expected\" != \"$actual\" (correct)"
     fi
 }
 
@@ -294,6 +297,7 @@ assertOutputContains() {
         shift
     done
     tempFile=$(mktemp)
+    printf "%s%s%s: \"%s%s%s\"\n" "$(consoleInfo)" "Running" "$(consoleReset)" "$(consoleCode)" "${commands[*]}" "$(consoleReset)"
     if test $pipeStdErr; then
         actual=$(
             "${commands[@]}" >"$tempFile" 2>&1
@@ -313,6 +317,25 @@ assertOutputContains() {
         prefixLines "$(consoleCode)" <"$tempFile"
         consoleError "$(echoBar)"
         return 1
+    fi
+}
+
+# Usage: assertContains expected actual
+#
+assertContains() {
+    local expected=$1 actual=$2 shortActual
+    shift || return "$errorArgument"
+
+    shift || return "$errorArgument"
+    shortActual="$(printf %s "$actual" | head -n 5)"
+    if [ "$shortActual" != "$actual" ]; then
+        shortActual="${shortActual} ..."
+    fi
+    if ! printf %s "$actual" | grep -q "$expected"; then
+        consoleError "assertContains \"$expected\" \"$shortActual\" but should: ${*-contain}"
+        return "$errorEnvironment"
+    else
+        consoleSuccess "assertContains \"$expected\" == \"$shortActual\" (correct)"
     fi
 }
 

@@ -68,6 +68,15 @@ escapeQuotes() {
 }
 
 #
+# Usage: replaceFirstPattern pattern replacement
+#
+# Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
+#
+replaceFirstPattern() {
+    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/1"
+}
+
+#
 # Trim spaces and only spaces
 # Usage: trimSpace text
 # Argument: text - Text to remove spaces
@@ -88,12 +97,12 @@ trimSpace() {
 #
 # Strip whitespace in input stream
 # Removes leading and trailing spaces in input, also removes blank lines I think
-# Usage: stripWhitespace < file > output
+# Usage: trimSpacePipe < file > output
 # Short Description: Trim whitespace in a pipeline
 # Depends: awk
 # Argument: None
 #
-stripWhitespace() {
+trimSpacePipe() {
     awk '{$1=$1};NF'
 }
 

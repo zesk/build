@@ -6,13 +6,12 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+set -eou pipefail
+
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
-relTop="../.."
-me=$(basename "${BASH_SOURCE[0]}")
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/$relTop"; then
-  echo "$me: Can not cd to $relTop" 1>&2
-  exit $errorEnvironment
-fi
+
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
@@ -33,5 +32,7 @@ versionList() {
 
   # versionSort works on vMMM.NNN.PPP
   # skip any versions with extensions like v1.0.1d2
-  git tag | grep -e '^v[0-9.]*$' | versionSort
+  git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
 }
+
+versionList "$@"

@@ -21,10 +21,13 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # When this tool succeeds it outputs the current release notes file relative to the project root.
 # Usage: release-notes.sh
+# Usage: releaseNotes
+# Output: ./docs/release/v1.0.0.md
 # fn: release-notes.sh
 # Hook: version-current
 # Exit code: 1 - if an error occurs
 # Example: open $(bin/build/release-notes.sh)
+# Example: vim $(releaseNotes)
 releaseNotes() {
     version=$(runHook version-current)
     if [ -z "$version" ]; then

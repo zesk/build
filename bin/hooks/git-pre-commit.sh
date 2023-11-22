@@ -8,7 +8,10 @@
 #
 quietLog=$(mktemp)
 
-set -eo pipefail
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
+set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
@@ -22,15 +25,28 @@ fi
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+failed() {
+    printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")"
+    exit "$errorEnvironment"
+}
 statusMessage consoleSuccess Making shell files executable ...
-./bin/build/chmod-sh.sh >/dev/null
+if ! ./bin/build/chmod-sh.sh >/dev/null; then
+    failed chmod-sh.sh
+fi
 statusMessage consoleSuccess Updating help files ...
-./bin/update-md.sh >/dev/null
+if ! ./bin/update-md.sh >/dev/null; then
+    failed update-md.sh
+fi
 statusMessage consoleSuccess Running shellcheck ...
 if ! testShellScripts >>"$quietLog"; then
     buildFailed "$quietLog"
+    failed testShellScripts
 fi
 # Unusual quoting here is to avoid having this match as an identical
-./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh
-./bin/build-docs.sh
+if ! ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh; then
+    failed identical-check.sh
+fi
+if ! ./bin/build-docs.sh; then
+    failed build-docs.sh
+fi
 clearLine

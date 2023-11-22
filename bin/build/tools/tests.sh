@@ -18,8 +18,12 @@ errorArgument=2
 testShellScripts() {
     local thisYear
     thisYear=$(date +%Y)
-    validateShellScripts
-    validateFileContents sh -- "Copyright &copy; $thisYear"
+    if ! validateShellScripts; then
+        return $errorEnvironment
+    fi
+    if ! validateFileContents sh -- "Copyright &copy; $thisYear"; then
+        return $errorEnvironment
+    fi
 }
 
 #

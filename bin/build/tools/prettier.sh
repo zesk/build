@@ -9,6 +9,9 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 #
 # Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
 # Short Description: Install prettier in the build environment
@@ -32,14 +35,14 @@ prettierInstall() {
 
   start=$(beginTiming)
   if ! npmInstall "$@"; then
-    return $?
+    return "$errorEnvironment"
   fi
   consoleInfo -n "Installing prettier ..."
   quietLog=$(buildQuietLog prettierInstall)
   requireFileDirectory "$quietLog"
   if ! npm install -g prettier >>"$quietLog" 2>&1; then
     buildFailed "$quietLog"
-    return $?
+    return "$errorEnvironment"
   fi
   reportTiming "$start" OK
 }
