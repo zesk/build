@@ -2,18 +2,6 @@
 #
 # new-release.sh
 #
-# New release - generates files in system for a new release.
-#
-# Requires:
-#
-# - bin/hooks/version-current.sh
-#
-# Optional:
-#
-# - bin/hooks/version-live.sh
-#
-# Uses semantic versioning MAJOR.MINOR.PATCH
-#
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eou pipefail
@@ -44,6 +32,7 @@ defaultVersion() {
   echo "$prefix.$last"
 }
 
+#
 # fn: new-release.sh
 # Argument: --non-interactive - Optional. If new version is needed, use default version
 # Argument: versionName - Optional. Set the new version name to this.
@@ -54,6 +43,12 @@ defaultVersion() {
 # Hook: version-created
 # Hook: version-already
 # Exit Code: 1 - If new version needs to be created and `--non-interactive`
+# **New release** - generates files in system for a new release.
+#
+# *Requires* hook `version-current`, optionally `version-live`
+#
+# Uses semantic versioning `MAJOR.MINOR.PATCH`
+#
 # Checks the live version versus the version in code and prompts to
 # generate a new release file if needed.
 #

@@ -49,7 +49,7 @@ usageDocument() {
         # shellcheck source=/dev/null
         source "$variablesFile"
 
-        usageTemplate "$fn" "$(printf %s "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | backticksHighligh)" "$exitCode" "$@"
+        usageTemplate "$fn" "$(printf %s "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | simpleMarkdownToConsole)" "$exitCode" "$@"
     )
 }
 # Usage: documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]

@@ -15,30 +15,33 @@
 #  █▄▄▌▝█▄█▘ ▐▙▄ ▝█▄█▘ █   ▐▄▄▟▌
 #   ▀▀  ▝▀▘   ▀▀  ▝▀▘  ▀    ▀▀▀
 #
+# Reset the color
+#
+# This is typically appended after most `consoleAction` calls to reset the state of the console to default color and style.
+#
+# It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
+#
 consoleReset() {
     echo -en '\033[0m' # Reset
 }
 
 __consoleEscape() {
-    local start=$1 end=$2 nl=1
+    local start=$1 end=$2 nl="\n"
     shift
     shift
     if [ -z "$*" ]; then
-        echo -ne "$start"
+        printf "%s$start" ""
     else
         if [ "$1" = "-n" ]; then
             nl=
             shift
         fi
-        echo -ne "$start"
-        echo -n "$@"
-        echo -ne "$end"
-        if test "$nl"; then
-            echo
-        fi
+        printf "$start%s$end$nl" "$*"
     fi
 }
-
+# Short Description: Alternate color output
+# If you want to explore what colors are available in your terminal, try this.
+#
 allColorTest() {
     local i j n
 
@@ -58,6 +61,9 @@ allColorTest() {
     done
 }
 
+# Short Description: Output colors
+# Outputs sample sentences for the `consoleAction` commands to see what they look like.
+#
 colorTest() {
     local i colors=(
         consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
@@ -190,8 +196,15 @@ consoleValue() {
     consoleMagenta "$@"
 }
 
+# Short Description: Output a name value pair
 #
-# consoleNameValue characterWidth name value...
+# Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
+# right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
+#
+# Usage: consoleNameValue characterWidth name [ value ... ]
+# Argument: characterWidth - Required. Number of characters to format the value for spacing
+# Argument: name - Required. Name to output
+# Argument: value ... - Optional. One or more Value to output
 #
 consoleNameValue() {
     local characterWidth=$1 name=$2
@@ -204,6 +217,14 @@ consoleNameValue() {
 #
 # Clears current line of text in the console
 #
+# Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
+#
+# Short Description: Clear a line in the console
+# Usage: clearLine
+# Environment: Intended to be run on an interactive console. Should support `tput cols`.
+# Example: statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
+# Example: clearLine
+#
 clearLine() {
     echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
 }
@@ -212,6 +233,16 @@ clearLine() {
 # Output a status line using a colorAction
 #
 # This is intended for messages on a line which are then overwritten using clearLine
+#
+# Short Description: Output a status message with no newline
+# Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
+# Usage: statusMessage consoleAction message [ ... ]
+# Argument: consoleAction - Required. String. Is one of **Semantic color commands** above or **Color commands** above
+# Argument: message ... - Message to output
+# Environment: Intended to be run on an interactive console. Should support $(tput cols).
+# Example: statusMessage Loading...
+# Example: bin/load.sh >>"$loadLogFile"
+# Example: clearLine
 #
 statusMessage() {
     local consoleAction=$1
@@ -224,6 +255,11 @@ statusMessage() {
 #
 # Column count in current console
 #
+# Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
+# Usage: consoleColumns
+# Environment: Uses the `tput cols` tool to find the value if `TERM` is non-blank.
+# Example: repeat $(consoleColumns)
+#
 consoleColumns() {
     if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
         echo -n 80
@@ -232,8 +268,13 @@ consoleColumns() {
     fi
 }
 
-backticksHighligh() {
-    toggleCharacterToColor '`' "$(consoleCode)"
+#
+# Usage: simpleMarkdownToConsole < $markdownFile
+# Converts backticks, bold and italic to console colors.
+#
+simpleMarkdownToConsole() {
+    # shellcheck disable=SC2119
+    toggleCharacterToColor '`' "$(consoleCode)" | toggleCharacterToColor '**' "$(consoleError)" | toggleCharacterToColor '*' "$(consoleInfo)"
 }
 
 #
@@ -243,29 +284,41 @@ backticksHighligh() {
 # Argument: colorOff - Color off escape sequence defaults to "$(consoleReset)"
 #
 toggleCharacterToColor() {
-    local character line code reset lastLine=
+    local sequence line code reset lastItem lastLine=
 
     # shellcheck disable=SC2119
-    character=$1
+    sequence="$(quoteSedPattern "$1")"
+    # sequence="$1"
     code="$2"
     reset="${3-$(consoleReset)}"
     while true; do
-        if ! IFS="$character" read -r -a line; then
+        if ! IFS= read -r line; then
             lastLine=1
         fi
+        lastItem=
         odd=0
-        while [ ${#line[@]} -gt 0 ]; do
-            if [ $((odd & 1)) -eq 1 ]; then
-                printf "%s%s%s" "$code" "${line[0]}" "$reset"
+        while true; do
+            # shellcheck disable=SC2295
+            text="${line%%$sequence*}"
+            # shellcheck disable=SC2295
+            remain="${line#*$sequence}"
+            if [ "$text" = "$remain" ]; then
+                lastItem=1
             else
-                printf "%s" "${line[0]}"
+                line="$remain"
             fi
-            unset 'line[0]'
-            line=("${line[@]+${line[@]}}")
+            if [ $((odd & 1)) -eq 1 ]; then
+                printf "%s%s%s" "$code" "$text" "$reset"
+            else
+                printf "%s" "$text"
+            fi
+            if test $lastItem; then
+                printf "\n"
+                break
+            fi
             odd=$((odd + 1))
         done
-        printf "\n"
-        if test $lastLine; then
+        if test "$lastLine"; then
             return 0
         fi
     done
