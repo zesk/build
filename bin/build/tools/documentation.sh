@@ -224,7 +224,7 @@ documentFunctionsWithTemplate() {
         done <"$documentTokensFile"
         clearLine
         if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
-            consoleWarning "No tokens found in $documentTemplate, copying to $targetFile"
+            statusMessage consoleWarning "No tokens found in $documentTemplate, copying to $targetFile"
             cp "$documentTemplate" "$targetFile"
         elif test $allCached && [ -f "$targetFile" ]; then
             statusMessage consoleWarning "$targetFile remains unchanged ..."
