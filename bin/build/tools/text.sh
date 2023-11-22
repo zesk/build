@@ -88,12 +88,12 @@ trimSpace() {
 #
 # Strip whitespace in input stream
 # Removes leading and trailing spaces in input, also removes blank lines I think
-# Usage: stripWhitespace < file > output
+# Usage: trimSpacePipe < file > output
 # Short Description: Trim whitespace in a pipeline
 # Depends: awk
 # Argument: None
 #
-stripWhitespace() {
+trimSpacePipe() {
     awk '{$1=$1};NF'
 }
 

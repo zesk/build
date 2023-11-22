@@ -12,10 +12,10 @@
 {urlParseItem}
 {maximumFieldLength}
 {escapeDoubleQuotes}
-{plural} 
+{plural}
 {escapeSingleQuotes}
 {escapeQuotes}
-{stripWhitespace} 
+{trimSpacePipe}
 {dateToFormat}
 
 {dateToTimestamp}

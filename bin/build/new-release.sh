@@ -50,11 +50,13 @@ defaultVersion() {
 }
 
 # fn: new-release.sh
+# Argument: --non-interactive - If new version is needed, use default version
 # Short Description: Generate a new release notes and bump the version
 # Hook: version-current
 # Hook: version-live
 # Hook: version-created
 # Hook: version-already
+# Exit Code: 1 - If new version needs to be created and `--non-interactive`
 # Checks the live version versus the version in code and prompts to
 # generate a new release file if needed.
 #
@@ -62,10 +64,15 @@ defaultVersion() {
 # also added to `git`.
 #
 newRelease() {
-  local newVersion readLoop currentVersion liveVersion defaultVersion releaseNotes
+  local newVersion readLoop currentVersion liveVersion defaultVersion releaseNotes nonInteractive
+
+  nonInteractive=
   newVersion=
   while [ $# -gt 0 ]; do
     case $1 in
+    --non-interactive)
+      nonInteractive=1
+      ;;
     *)
       if [ -n "$newVersion" ]; then
         usage $errorArgument "Unknown argument $1"
@@ -100,33 +107,36 @@ newRelease() {
   echo "$(consoleLabel -n "Current: ") $(consoleValue -n "$currentVersion")"
   # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
-  if [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
+  if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
     consoleError "Ready to deploy: $currentVersion"
     exit 0
   fi
-  while true; do
-    if test $readLoop; then
-      consoleInfo -n "New version? (default $defaultVersion): "
-      read -r newVersion
-      if [ -z "$newVersion" ]; then
-        newVersion=$defaultVersion
+  if test $nonInteractive; then
+    newVersion=$defaultVersion
+  else
+    while true; do
+      if test $readLoop; then
+        consoleInfo -n "New version? (default $defaultVersion): "
+        read -r newVersion
+        if [ -z "$newVersion" ]; then
+          newVersion=$defaultVersion
+        fi
       fi
-    fi
-    if [[ "$newVersion" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
-      newVersion="v$newVersion"
-      break
-    else
-      if ! test $readLoop; then
-        usage $errorArgument "Invalid version $newVersion"
+      if [[ "$newVersion" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
+        newVersion="v$newVersion"
+        break
       else
-        consoleError "Invalid version $newVersion"
+        if ! test $readLoop; then
+          usage $errorArgument "Invalid version $newVersion"
+        else
+          consoleError "Invalid version $newVersion"
+        fi
       fi
-    fi
-  done
-
+    done
+  fi
   releaseNotes=docs/release/$newVersion.md
   if [ ! -f "$releaseNotes" ]; then
-    cat >"$releaseNotes" <<-EOF
+    trimSpacePipe >"$releaseNotes" <<-EOF
         # Release $newVersion
 
         - Upgrade from $currentVersion

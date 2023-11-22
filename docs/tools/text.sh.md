@@ -251,7 +251,7 @@ Example:
 ### Exit codes
 
 - `1` - If count is - `non` - numeric
-- `0` - If count is numeric 
+- `0` - If count is numeric
 
 ## `escapeSingleQuotes` - Quote strings for inclusion in shell quoted strings
 
@@ -301,14 +301,14 @@ Single quotes are prefixed with a backslash
 
 - `0` - Always succeeds
 
-## `stripWhitespace` - Trim whitespace in a pipeline
+## `trimSpacePipe` - Trim whitespace in a pipeline
 
 Strip whitespace in input stream
 Removes leading and trailing spaces in input, also removes blank lines I think
 
 ### Usage
 
-    stripWhitespace < file > output
+    trimSpacePipe < file > output
 
 ### Arguments
 
@@ -320,7 +320,7 @@ Removes leading and trailing spaces in input, also removes blank lines I think
 
 ### Depends
 
-    awk 
+    awk
 
 ### Exit codes
 
