@@ -316,7 +316,7 @@ sshishDeployOptions() {
 
 }
 
-# fn: deploy-to.sh
+# binary: deploy-to.sh
 # Usage: deploy-to.sh [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'
 # Argument: --deploy - Default - deploy an application to a remote host
 # Argument: --undo - Reverses a deployment
