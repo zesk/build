@@ -142,6 +142,7 @@ consoleNoUnderline() {
 #
 # info
 #
+# shellcheck disable=SC2120
 consoleInfo() {
     consoleCyan "$@"
 }
@@ -149,6 +150,7 @@ consoleInfo() {
 #
 # code or variables in output
 #
+# shellcheck disable=SC2120
 consoleCode() {
     consoleGreen "$@"
 }
@@ -156,6 +158,7 @@ consoleCode() {
 #
 # warning things are not normal
 #
+# shellcheck disable=SC2120
 consoleWarning() {
     consoleOrange "$@"
 }
@@ -163,6 +166,7 @@ consoleWarning() {
 #
 # things went well
 #
+# shellcheck disable=SC2120
 consoleSuccess() {
     consoleGreen "$@"
 }
@@ -178,6 +182,7 @@ consoleDecoration() {
 #
 # things went poorly
 #
+# shellcheck disable=SC2120
 consoleError() {
     __consoleEscape '\033[1;31m' '\033[0m' "$@"
 }
@@ -185,6 +190,7 @@ consoleError() {
 #
 # Name/Value pairs
 #
+# shellcheck disable=SC2120
 consoleLabel() {
     consoleOrange "$@"
 }
@@ -192,6 +198,7 @@ consoleLabel() {
 #
 # Name/Value pairs
 #
+# shellcheck disable=SC2120
 consoleValue() {
     consoleMagenta "$@"
 }
@@ -206,6 +213,7 @@ consoleValue() {
 # Argument: name - Required. Name to output
 # Argument: value ... - Optional. One or more Value to output
 #
+# shellcheck disable=SC2120
 consoleNameValue() {
     local characterWidth=$1 name=$2
     shift
@@ -244,6 +252,7 @@ clearLine() {
 # Example: bin/load.sh >>"$loadLogFile"
 # Example: clearLine
 #
+# shellcheck disable=SC2120
 statusMessage() {
     local consoleAction=$1
 
