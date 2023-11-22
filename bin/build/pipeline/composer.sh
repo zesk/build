@@ -82,7 +82,7 @@ phpComposer() {
 
   requireFileDirectory "$quietLog"
 
-  consoleInfo -n "Composer ... """
+  consoleInfo -n "Composer ... "
   bigText "Install vendor" >>"$quietLog"
   #DEBUGGING - remove, why no -q option? we like it quiet
   echo Running: docker pull "$dockerImage" >>"$quietLog"
