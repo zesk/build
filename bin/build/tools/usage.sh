@@ -153,7 +153,7 @@ usageTemplate() {
         printf "%s: %s\n\n%s\n\n" \
             "$usageString" \
             "$(consoleInfo "$binName")" \
-            "$(consoleReset)$desc"
+            "$(consoleReset)$description"
         echo
     fi
 

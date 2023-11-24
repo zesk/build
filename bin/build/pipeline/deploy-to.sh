@@ -316,9 +316,8 @@ sshishDeployOptions() {
 
 }
 
-# binary: deploy-to.sh
 # Usage: deploy-to.sh [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'
-# Argument: --deploy - Default - deploy an application to a remote host
+# Argument: --deploy - Default. deploy an application to a remote host
 # Argument: --undo - Reverses a deployment
 # Argument: --cleanup - After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
 # Argument: --help - Show help
@@ -359,7 +358,9 @@ sshishDeployOptions() {
 # - Runs the `deploy-undo` hook afterwards
 #
 # Local cache: `remoteDeploymentPath` is considered a state directory so removing entries in this should be managed separately.
+#
 # TODO: add ability to prune past n versions safely on all hosts.
+# fn: deploy-to.sh
 deployAction() {
   local buildTarget=$1
   #   ____             _

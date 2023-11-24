@@ -34,8 +34,8 @@ string quoted and appropriate to insert in a sed search or replacement phrase
 
 ### Arguments
 
-`count` - Required, integer count of times to repeat
-`string` - A sequence of characters to repeat
+- `count` - Required, integer count of times to repeat
+- `string` - A sequence of characters to repeat
 - `...` - Additional arguments are output using shell expansion of `$*`
 
 ### Examples
@@ -86,7 +86,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Arguments
 
-`text` - Prefix each line with this text
+- `text` - Prefix each line with this text
 
 ### Examples
 
@@ -250,7 +250,7 @@ Example:
 
 ### Exit codes
 
-- `1` - If count is - `non` - numeric
+- `1` - If count is non-numeric
 - `0` - If count is numeric
 
 ## `escapeSingleQuotes` - Quote strings for inclusion in shell quoted strings
@@ -337,7 +337,7 @@ Converts a date to an integer timestamp
 
 ### Arguments
 
-- `date` - String in the form `- `YYYY` - - `MM` - DD` (e.g. `- `2023` - - `10` - 15`)
+- `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 
 ### Examples
 
@@ -400,7 +400,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Arguments
 
-`text` - Prefix each line with this text
+- `text` - Prefix each line with this text
 
 ### Examples
 
@@ -422,8 +422,8 @@ Format text and align it right using spaces.
 
 ### Arguments
 
-`characterWidth` - Characters to align right
-`text ...` - Text to align right
+- `characterWidth` - Characters to align right
+- `text ...` - Text to align right
 
 ### Examples
 
@@ -448,7 +448,7 @@ Format text and align it left using spaces.
 
 ### Arguments
 
-- - `characterWidth` - Characters to align left
+- `characterWidth` - Characters to align left
 - `text ...` - Text to align left
 
 ### Examples
@@ -507,15 +507,22 @@ Heading for section output
 
 ## `shaPipe` - SHA1 checksum of standard input
 
-Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal
+Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal wihtout any extra stuff
+
+You can use this as a pipe or pass in arguments which are files to be checksummed.
 
 ### Usage
 
-    shaPipe [ ... ]
+    shaPipe [ filename ... ]
+
+### Arguments
+
+- `filename` - One or more filenames to generate a checksum for
 
 ### Examples
 
     shaPipe < "$fileName"
+    shaPipe "$fileName0" "$fileName1"
 
 ### Sample Output
 
@@ -524,6 +531,10 @@ cf7861b50054e8c680a9552917b43ec2b9edae2b
 ### Exit codes
 
 - `0` - Always succeeds
+
+### Environment
+
+DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
 
 ### Depends
 

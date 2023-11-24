@@ -16,6 +16,12 @@
 #------------------------------------------------------------------------------
 #
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
+# IDENTICAL errorArgument 1
+errorArgument=2
+
 #
 # Short Description: Quote sed strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
@@ -663,14 +669,129 @@ listTokens() {
     sed "s/$suffix/$suffix\n/g" | sed -e "/$prefix/!d" -e "/$suffix/!d" -e "$removeQuotesPattern"
 }
 
+# Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal wihtout any extra stuff
 #
-# Usage: shaPipe [ ... ]
+# You can use this as a pipe or pass in arguments which are files to be checksummed.
+#
+# Usage: shaPipe [ filename ... ]
+# Argument: filename - One or more filenames to generate a checksum for
 # Depends: shasum
-# Description: Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal
 # Short Description: SHA1 checksum of standard input
 # Example: shaPipe < "$fileName"
+# Example: shaPipe "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
+# Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
 #
 shaPipe() {
-    shasum | cut -f 1 -d ' '
+    if [ -n "$*" ]; then
+        while [ $# -gt 0 ]; do
+            if [ ! -f "$1" ]; then
+                consoleError "$1 is not a file" 1>&2
+                return "$errorArgument"
+            fi
+            if test "${DEBUG_SHAPIPE-}"; then
+                printf "%s: %s\n" "$(date +"%FT%T")" "$1" >shaPipe.log
+            fi
+            shasum <"$1" | cut -f 1 -d ' '
+            shift
+        done
+    else
+        if test "${DEBUG_SHAPIPE-}"; then
+            printf "%s: stdin\n" "$(date +"%FT%T")" >shaPipe.log
+        fi
+        shasum | cut -f 1 -d ' '
+    fi
+}
+
+# Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal wihtout any extra stuff
+#
+# You can use this as a pipe or pass in arguments which are files to be checksummed.
+#
+# Speeds up shaPipe using modification dates of the files instead.
+#
+# The cacheDiretory
+#
+# Usage: cachedShaPipe cacheDirectory [ filename ]
+# Argument: cacheDirectory - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+# Depends: shasum
+# Short Description: SHA1 checksum of standard input
+# Example: cachedShaPipe "$cacheDirectory" < "$fileName"
+# Example: cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
+# Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
+#
+cachedShaPipe() {
+    local cacheDirectory="${1%%/}"
+
+    # Special case to skip caching
+    shift
+    if [ -z "$cacheDirectory" ]; then
+        shaPipe "$@"
+        return $?
+    fi
+
+    if [ ! -d "$cacheDirectory" ]; then
+        consoleError "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" 1>&2
+        return $errorArgument
+    fi
+    if [ $# -gt 0 ]; then
+        while [ $# -gt 0 ]; do
+            if [ ! -f "$1" ]; then
+                consoleError "$1 is not a file" 1>&2
+                return "$errorArgument"
+            fi
+            cacheFile="$cacheDirectory/${1##/}"
+            if ! requireFileDirectory "$cacheFile"; then
+                return "$errorEnvironment"
+            fi
+            if [ -f "$cacheFile" ] && isNewestFile "$cacheFile" "$1"; then
+                printf "%s\n" "$(cat "$cacheFile")"
+            else
+                shaPipe "$1" | tee "$cacheFile"
+            fi
+            shift
+        done
+    else
+        shaPipe
+    fi
+
+}
+
+# Maps a string using an envionment file
+#
+# Usage: mapValue mapFile [ value ... ]
+# Argument: mapFile - a file containing bash environment definitions
+# Argument: value - One or more values to map using said environment file
+#
+mapValue() {
+    local name value searchToken mapFile="${1-}"
+
+    shift
+    if [ ! -f "$mapFile" ]; then
+        consoleError "mapValue - \"$mapFile\" is not a file" 1>&2
+        return $errorArgument
+    fi
+    (
+        set -a
+        # shellcheck source=/dev/null
+        source "$mapFile"
+        set +a
+        value="$*"
+        while read -r name; do
+            searchToken='{'"$name"'}'
+            value="${value/${searchToken}/${!name-}}"
+        done < <(environmentVariables)
+        printf "%s" "$value"
+    )
+}
+
+#
+# Usage: randomString [ ... ]
+# Arguments: Ignored
+# Depends: shasum, /dev/random
+# Description: Outputs 40 random hexadecimal characters, lowercase.
+# Example: testPassword="$(randomString)"
+# Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
+#
+randomString() {
+    head --bytes=64 /dev/random | shasum | cut -f 1 -d ' '
 }

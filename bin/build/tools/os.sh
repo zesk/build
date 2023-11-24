@@ -204,8 +204,111 @@ reverseFileLines() {
 #
 # Usage: makeShellFilesExecutable
 # Environment: Works from the current directory
-#
+# See: chmod-sh.sh
 makeShellFilesExecutable() {
     # IDENTICAL makeShellFilesExecutable 1
     find . -name '*.sh' ! -path '*/.*' -print0 | xargs -0 chmod -v +x
+}
+
+# Fetch the modification time of a file as a timestamp
+#
+# Usage: modificationTime filename0 [ filename1 ... ]
+# Exit Code: 2 - If file does not existd
+# Exit Code: 0 - If file exists and modification times are output, one per line
+# Example: modificationTime ~/.bash_profile
+#
+modificationTime() {
+    while [ $# -gt 0 ]; do
+        if [ ! -f "$1" ]; then
+            return "$errorArgument"
+        fi
+        printf "%d\n" "$(date -r "$1" +%s)"
+        shift
+    done
+}
+
+#
+# Check to see if the first file is the newest one
+#
+# If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+# Otherwise return `1``
+#
+# Usage: isNewestFile firstFile [ targetFile0 ... ]
+# Argument: sourceFile - File to check
+# Argument: targetFile0 - One or more files to compare
+#
+# Exit code: 1 - `sourceFile`, 'targetFile' does not exist, or
+# Exit code: 0 - All files exist and `sourceFile` is the oldest file
+#
+isNewestFile() {
+    if [ $# -eq 0 ]; then
+        return 1
+    fi
+    [ "$1" = "$(newestFile "$@")" ]
+}
+
+#
+# Check to see if the first file is the newest one
+#
+# If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+# Otherwise return `1``
+#
+# Usage: isNewestFile firstFile [ targetFile0 ... ]
+# Argument: sourceFile - File to check
+# Argument: targetFile0 - One or more files to compare
+#
+# Exit code: 1 - `sourceFile`, 'targetFile' does not exist, or
+# Exit code: 0 - All files exist and `sourceFile` is the oldest file
+#
+isOldestFile() {
+    if [ $# -eq 0 ]; then
+        return 1
+    fi
+    [ "$1" = "$(oldestFile "$@")" ]
+}
+
+#
+# Return the oldest file in the list.
+#
+# Usage: oldestFile file0 [ file1 ... ]
+# Argument: file0 - One or more files to examine
+#
+oldestFile() {
+    local tempTime oldestTime theFile=
+
+    while [ $# -gt 0 ]; do
+        if [ ! -f "$1" ]; then
+            return "$errorArgument"
+        fi
+        tempTime=$(modificationTime "$1")
+        if [ -z "$theFile" ] || [ "$tempTime" -lt "$oldestTime" ]; then
+            theFile="$1"
+            oldestTime="$tempTime"
+        fi
+        shift
+    done
+    printf "%s" "$theFile"
+}
+
+#
+# Return the newest file in the list
+#
+# Usage: newestFile file0 [ file1 ... ]
+# Argument: file0 - One or more files to examine
+#
+newestFile() {
+    local tempTime newestTime theFile=
+
+    while [ $# -gt 0 ]; do
+        if [ ! -f "$1" ]; then
+            return "$errorArgument"
+        fi
+        tempTime=$(modificationTime "$1")
+        if [ -z "$theFile" ] || [ "$tempTime" -gt "$newestTime" ]; then
+            theFile="$1"
+            newestTime="$tempTime"
+        fi
+        shift
+    done
+    printf "%s" "$theFile"
 }

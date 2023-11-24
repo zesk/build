@@ -36,15 +36,16 @@ usage() {
 }
 
 #
+# fn: cannon.sh
 # Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
 #
 # This can break your files so use with caution.
 #
 # Example: cannon master main ! -path '*/old-version/*')
-# Usage: cannon fromText toText
+# Usage: cannon fromText toText [ findArgs ... ]
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
-# Argument: findArgs... - Any additional arguments are meant to filter files.
+# Argument: findArgs ... - Any additional arguments are meant to filter files.
 # Exit Code: 0 - Success
 # Exit Code: 1 - Arguments are identical
 #

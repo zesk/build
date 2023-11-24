@@ -84,7 +84,7 @@ documentFunctionsWithTemplate() {
     local optionForce targetDirectory cacheFile tokenLookupCacheFile
     local sourceShellScript sourceShellScriptChecksum reason base checksumPrefix checksum
     local generatedChecksum error
-    local documentTokensFile
+    local documentTokensFile shaCache
 
     optionForce=
     while [ $# -gt 0 ]; do
@@ -125,11 +125,15 @@ documentFunctionsWithTemplate() {
         consoleError "$targetFile diretory does not exist" 1>&2
         return "$errorArgument"
     fi
+    shaCache=""
     if [ -n "$cacheDirectory" ]; then
         if [ ! -d "$cacheDirectory" ]; then
             consoleError "$cacheDirectory was specified but is not a directory" 1>&2
             return "$errorArgument"
         fi
+        cacheDirectory=${cacheDirectory%%/}
+        shaCache="$cacheDirectory/cachedShaPipe"
+        requireDirectory "$shaCache"
     fi
     # echo sourceCodeDirectory="$sourceCodeDirectory"
     # echo documentTemplate="$documentTemplate"
@@ -138,15 +142,16 @@ documentFunctionsWithTemplate() {
     # echo cacheDirectory="$cacheDirectory"
 
     templatePrefix="$(printf %s "$sourceCodeDirectory" | shaPipe | cut -b -8)"
-    checksumPrefix="$(shaPipe <"$functionTemplate")"
+    checksumPrefix="$(cachedShaPipe "$shaCache" "$functionTemplate")"
 
     reason=""
     base="$(basename "$targetFile")"
     base="${base%%.md}"
 
     statusMessage consoleInfo "Generating $base ..."
-    if ! (
-        # subshell to hide environment tokens
+
+    # subshell to hide environment tokens
+    (
         documentTokensFile=$(mktemp)
         listTokens <"$documentTemplate" >"$documentTokensFile"
         set -a
@@ -163,7 +168,7 @@ documentFunctionsWithTemplate() {
                         sourceShellScript=
                         rm "$tokenLookupCacheFile"
                     else
-                        sourceShellScriptChecksum="$(shaPipe <"$sourceShellScript")"
+                        sourceShellScriptChecksum="$(cachedShaPipe "$shaCache" "$sourceShellScript")"
                         if [ "$sourceShellScriptChecksum" != "$(tail -n 1 "$tokenLookupCacheFile")" ]; then
                             statusMessage consoleWarning "$sourceShellScript changed, searching for $token again"
                             sourceShellScript=
@@ -183,11 +188,11 @@ documentFunctionsWithTemplate() {
             fi
             if [ -n "$cacheDirectory" ]; then
                 if [ -z "$sourceShellScriptChecksum" ]; then
-                    sourceShellScriptChecksum=$(shaPipe <"$sourceShellScript")
+                    sourceShellScriptChecksum=$(cachedShaPipe "$shaCache" "$sourceShellScript")
                 fi
                 printf "%s\n%s" "$sourceShellScript" "$sourceShellScriptChecksum" >"$tokenLookupCacheFile"
                 checksum="$checksumPrefix-"
-                documentChecksum="$(shaPipe <"$documentTemplate")"
+                documentChecksum="$(cachedShaPipe "$shaCache" "$documentTemplate")"
                 documentChecksum="${documentChecksum:0:8}"
                 checksumFile="$cacheDirectory/$templatePrefix/$documentChecksum/$token.checksum"
                 cacheFile="$cacheDirectory/$templatePrefix/$documentChecksum/$token.cache"
@@ -198,7 +203,6 @@ documentFunctionsWithTemplate() {
                         if test "$optionForce"; then
                             statusMessage consoleWarning "Force generating $templateFile ..."
                         else
-                            statusMessage consoleWarning "Skipping $templateFile as it has not changed ..."
                             export "${token?}"
                             declare "$token"="$(cat "$cacheFile")"
                             statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... (using cache)"
@@ -226,20 +230,20 @@ documentFunctionsWithTemplate() {
         done <"$documentTokensFile"
         clearLine
         if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
-            statusMessage consoleWarning "No tokens found in $documentTemplate, copying to $targetFile"
-            cp "$documentTemplate" "$targetFile"
-        elif test $allCached && [ -f "$targetFile" ]; then
-            statusMessage consoleWarning "$targetFile remains unchanged ..."
+            if [ ! -f "$targetFile" ] || ! diff -q "$documentTemplate" "$targetFile" >/dev/null; then
+                printf "%s -> %s %s\n" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
+                cp "$documentTemplate" "$targetFile"
+            fi
+        elif test "$allCached" && [ -f "$targetFile" ]; then
+            statusMessage consoleInfo "$targetFile remains unchanged ..."
         else
             statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
             ./bin/build/map.sh <"$templateFile" >"$targetFile"
         fi
         rm "$documentTokensFile"
-    ); then
-        consoleError "Generation of $targetFile failed" 1>&2
-        return "$errorEnvironment"
-    fi
-    clearLine
+
+        clearLine
+    )
 }
 
 # Usage: documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDiretory [ cacheDirectory ]
@@ -461,6 +465,7 @@ __dumpAliasedValue() {
 bashExtractDocumentation() {
     local maxLines=1000 definitionFile=$1 fn=$2 definitionFile
     local line name value desc tempDoc foundNames
+    local base
 
     if [ ! -f "$definitionFile" ]; then
         consoleError "$definitionFile is not a file" 1>&2
@@ -470,7 +475,14 @@ bashExtractDocumentation() {
         consoleError "function name is blank" 1>&2
         return 2
     fi
+    base="$(basename "$definitionFile")"
     tempDoc=$(mktemp)
+    docMap=$(mktemp)
+
+    __dumpNameValue "file" "$definitionFile" | tee -a "$docMap"
+    __dumpNameValue "base" "$base" | tee -a "$docMap"
+    __dumpNameValue "fn" "$fn" >>"$docMap" # just docMap
+
     #
     # Search for our function and then capture all of the lines BEFORE it
     # which have a `#` character and then stop capture at the next blank line
@@ -504,8 +516,11 @@ bashExtractDocumentation() {
                 foundNames+=("$name")
             fi
             if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
-                __dumpNameValue "$lastName" "${values[@]}"
+                __dumpNameValue "$lastName" "${values[@]}" | tee -a "$docMap"
                 values=()
+            fi
+            if inArray "$name" fn; then
+                value=$(mapValue "$docMap" "$value")
             fi
             values+=("$value")
             lastName="$name"
@@ -513,26 +528,24 @@ bashExtractDocumentation() {
     done <"$tempDoc"
     printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
     if [ "${#values[@]}" -gt 0 ]; then
-        __dumpNameValue "$lastName" "${values[@]}"
+        __dumpNameValue "$lastName" "${values[@]}" | tee -a "$docMap"
     fi
     if [ "${#desc[@]}" -gt 0 ]; then
         __dumpNameValue "description" "${desc[@]}"
         printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
         if ! inArray "short_description" "${foundNames[@]+${foundNames[@]}}"; then
-            echo "# NOT INARRAY short_description:::" "${foundNames[@]+${foundNames[@]}}"
             __dumpNameValue "short_description" "$(trimWords 10 "${desc[0]}")"
         fi
     elif inArray "short_description" "${foundNames[@]+${foundNames[@]}}"; then
         __dumpAliasedValue description short_description
     fi
-    if ! inArray "fn" "${foundNames[@]+${foundNames[@]}}"; then
-        __dumpNameValue "fn" "$fn"
-    fi
-    __dumpNameValue "file" "$definitionFile"
-    __dumpNameValue "base" "$(basename "$definitionFile")"
     if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
         __dumpNameValue "exit_code" '0 - Always succeeds'
     fi
+    if ! inArray "fn" "${foundNames[@]+${foundNames[@]}}"; then
+        __dumpNameValue "fn" "$fn"
+    fi
+    echo "# DocMap: $docMap"
     #
     # Defaults no longer needed
     #
@@ -672,10 +685,18 @@ removeUnfinishedSections() {
 #
 # Simple function to make list-like things more list-like in Markdown
 #
+# 1. remove leading "dash space" if it exists (`- `)
+# 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
+# 3. Prefix each line with a "dash space" (`- `)
+#
 markdownListify() {
-    local wordClass='[^`[:space:]-]' spaceClass='[[:space:]]'
+    local wordClass='[-.`_A-Za-z0-9[:space:]]' spaceClass='[[:space:]]'
     # shellcheck disable=SC2016
-    sed -e "s/\($wordClass$wordClass*\)${spaceClass}*-${spaceClass}*/- \`\1\` - /g" | sed -e "s/^\($wordClass\)/- \1/g"
+    sed \
+        -e "s/^- //1" \
+        -e "s/\`\($wordClass*\)\`${spaceClass}-${spaceClass}/\1 - /1" \
+        -e "s/\($wordClass*\)${spaceClass}-${spaceClass}/- \`\1\` - /1" \
+        -e "s/^\([^-]\)/- \1/1"
 }
 
 #

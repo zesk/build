@@ -42,6 +42,7 @@ defaultVersion() {
 # Hook: version-live
 # Hook: version-created
 # Hook: version-already
+# Exit Code: 0 - Release generated or has already been generated
 # Exit Code: 1 - If new version needs to be created and `--non-interactive`
 # **New release** - generates files in system for a new release.
 #
@@ -86,18 +87,18 @@ newRelease() {
   fi
   if ! hasHook version-current; then
     usage $errorEnvironment "Requires hook version-current"
-    return $?
+    return "$errorEnvironment"
   fi
   currentVersion=$(runHook version-current)
   if [ -z "$currentVersion" ]; then
     usage $errorEnvironment "version-current returned empty string"
-    return $?
+    return "$errorEnvironment"
   fi
   if hasHook version-live; then
     liveVersion=$(runHook version-live)
     if [ -z "$liveVersion" ]; then
       usage $errorEnvironment "version-live returned empty string"
-      return $?
+      return "$errorEnvironment"
     fi
     echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
   else
@@ -116,7 +117,7 @@ newRelease() {
       newVersion=$defaultVersion
     elif ! isVersion "$newVersion"; then
       usage $errorArgument "New version $newVersion is not a valid version tag"
-      return $?
+      return $errorArgument
     fi
   else
     while true; do

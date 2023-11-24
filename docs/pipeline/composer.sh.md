@@ -18,7 +18,7 @@ This tools does not install the `composer` binary into the local environment.
 ## Arguments
 
 - `installDirectory` - You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
---- `help` - This help
+- `--help` - This help
 
 ## Examples
 

@@ -16,7 +16,7 @@ testNewRelease() {
 }
 tests+=(testVersionSort)
 testVersionSort() {
-    assertGreaterThan 0 $(($(bin/build/version-list.sh | wc -l) + 0))
+    assertGreaterThan $(($(bin/build/version-list.sh | wc -l) + 0)) 0
 }
 
 tests+=(testMakeEnv)

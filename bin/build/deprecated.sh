@@ -14,9 +14,10 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # a clean build checkout and examine changes manually each time.
 #
 # Does various checks for deprecated code and updates code.
-# Usage: deprecatedCleanup
+# Usage: deprecated.sh
 # Exit Code: 0 - All cleaned up
 # Exit Code: 1 - If fails or validation fails
+# fn: deprecated.sh
 #
 deprecatedCleanup() {
     local exitCode=0
