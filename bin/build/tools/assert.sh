@@ -290,11 +290,11 @@ assertOutputContains() {
         consoleSuccess "\"$expected\" found in \"${commands[*]}\" output"
     else
         printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)" 1>&2
-        consoleError "$(echoBar)" 1>&2
+        consoleInfo "$(echoBar)" 1>&2
         prefixLines "$(consoleCode)" <"$tempFile" 1>&2
         consoleError "$(echoBar)" 1>&2
         nLines=$(($(wc -l <"$tempFile") + 0))
-        consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")"
+        consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")" 1>&2
         return 1
     fi
 }
