@@ -76,6 +76,8 @@ This is intended for messages on a line which are then overwritten using clearLi
 
 Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
 
+shellcheck disable=SC2120
+
 ### Usage
 
     statusMessage consoleAction message [ ... ]
@@ -83,7 +85,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 ### Arguments
 
 - `consoleAction` - Required. String. Is one of **Semantic color commands** above or **Color commands** above
-- message - `...` - Message to output
+- `message ...` - Message to output
 
 ### Examples
 
@@ -104,6 +106,9 @@ Intended to be run on an interactive console. Should support $(tput cols).
 Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
 right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
 
+
+shellcheck disable=SC2120
+
 ### Usage
 
     consoleNameValue characterWidth name [ value ... ]
@@ -112,7 +117,7 @@ right-aligned to the `characterWidth` given and colored using `consoleLabel`; th
 
 - `characterWidth` - Required. Number of characters to format the value for spacing
 - `name` - Required. Name to output
-- value - `...` - Optional. One or more Value to output
+- `value ...` - Optional. One or more Value to output
 
 ### Exit codes
 
@@ -155,6 +160,8 @@ This is intended for messages on a line which are then overwritten using clearLi
 
 Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
 
+shellcheck disable=SC2120
+
 ### Usage
 
     statusMessage consoleAction message [ ... ]
@@ -162,7 +169,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 ### Arguments
 
 - `consoleAction` - Required. String. Is one of **Semantic color commands** above or **Color commands** above
-- message - `...` - Message to output
+- `message ...` - Message to output
 
 ### Examples
 

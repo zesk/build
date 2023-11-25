@@ -2,8 +2,11 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+
 errorArgument=1
 set -eou pipefail
+
+errorFailures=100
 
 me="$(basename "$0")"
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
@@ -11,54 +14,43 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-export usageDelimiter=,
-# shellcheck disable=SC2317
-usageOptions() {
-    cat <<'EOF'
---extension extension,Required. The extension to search for files to match (may specify more than one)
---prefix prefix,Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
---cd directory,Optional. Change to this directory to check for identical files first. Defaults to `.`.
-EOF
-}
-# shellcheck disable=SC2317
-usageDescription() {
-    cat <<'EOF'
-When, for whatever reason, you need code to match between files, add a comment in the form:
-
-    # IDENTICAL tokenName n
-
-Where tokenName is unique to your project, n is the number of lines to match. All found sets of lines in this form
-must match each other set of lines with the same prefix, otherwise errors and details about failures are printed to stdout.
-
-The command to then check would be:
-
-    identical-check.sh --extension sh --prefix '# IDENTICAL'
-
-This is largely useful for projects in which specific functions are replicated between scripts for code independence, yet should remain identical.
-
-Failures are considered:
-
-- Partial success, but warnings occurred with an invalid number in a file
-- Two code instances with the same token were found which were not identical
-- Two code instances with the same token were found which have different line counts
-
-This is best used as a pre-commit check, for example. Wink.
-EOF
-}
 usage() {
-    usageMain "$me" "$@"
+    usageDocument "./bin/build/$me" "identicalCheck" "$@"
     exit $?
 }
-errorFailures=100
 
-# Usage: identicalCheck --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
+# fn: identical-check.sh
+# Usage: identical-check.sh --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
 # Argument: --extension extension - Required. One or more extensions to search for in the current directory.
-# Argument: --prefix prefix - Required. One or more string prefixes to search for in matching files.
-# Argument: --cd directory - Optional. Change to this directory before running.
+# Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
+# Argument: --cd directory - Optional. Change to this directory before running. Defaults to current direcory.
+# Argument: --help - Optional. This help.
 #
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success, everything matches
 # Exit Code: 100 - Failures
+#
+# When, for whatever reason, you need code to match between files, add a comment in the form:
+#
+#     # IDENTICAL tokenName n
+#
+# Where `tokenName` is unique to your project, `n` is the number of lines to match. All found sets of lines in this form
+# must match each other set of lines with the same prefix, otherwise errors and details about failures are printed to stdout.
+#
+# The command to then check would be:
+#
+#     identical-check.sh --extension sh --prefix '# IDENTICAL'
+#
+# This is largely useful for projects in which specific functions are replicated between scripts for code independence, yet
+# should remain identical.
+#
+# Failures are considered:
+#
+# - Partial success, but warnings occurred with an invalid number in a file
+# - Two code instances with the same token were found which were not identical
+# - Two code instances with the same token were found which have different line counts
+#
+# This is best used as a pre-commit check, for example. Wink.
 #
 identicalCheck() {
     local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
@@ -165,10 +157,12 @@ identicalCheck() {
     clearLine
     find "$tempDirectory" -type f -name '*.match' | while read -r matchFile; do
         if [ ! -f "$matchFile.compare" ]; then
+            tokenFile="$(dirname "$matchFile")"
             token="$(basename "$matchFile")"
             token="${token%%.match}"
             token="${token#*@}"
-            printf "%s: %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" >>"$resultsFile"
+            tokenFile="$tokenFile/$token"
+            printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$(tail -n 1 "$tokenFile")")" >>"$resultsFile"
         fi
     done
     rm -rf "$tempDirectory"

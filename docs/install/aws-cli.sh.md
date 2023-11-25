@@ -13,7 +13,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 ## Arguments
 
-- `package` - One or more packages to install using `- `apt` - get` prior to installing AWS
+- `package` - One or more packages to install using `apt-get` prior to installing AWS
 
 ## Exit codes
 

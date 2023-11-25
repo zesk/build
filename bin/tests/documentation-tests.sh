@@ -9,19 +9,23 @@
 set -eou pipefail
 
 declare -a tests
-tests+=(testFormatArguments)
+tests+=(testMarkdownListify)
 
-assertBashDocumentFormatArguments() {
-    assertEquals "$1" "$(printf %s "$2" | _bashDocumentFunction_argumentFormat)" || return $?
+assertMarkdownListify() {
+    assertEquals "$1" "$(printf %s "$2" | markdownListify)" "markdownListify \"$2\" !== \"$1\""
 }
-testFormatArguments() {
+testMarkdownListify() {
     # shellcheck disable=SC2016
-    assertBashDocumentFormatArguments '- `dude` - Hello' 'dude - Hello' || return $?
+    assertMarkdownListify '- `dude` - Hello' 'dude - Hello' || return $?
     # shellcheck disable=SC2016
-    assertBashDocumentFormatArguments '- `expected` - Expected string' '- `expected` - Expected string' || return $?
+    assertMarkdownListify '- `--extension extension` - A description of extension' '--extension extension - A description of extension' || return $?
+    # shellcheck disable=SC2016
+    assertMarkdownListify '- `expected` - Expected string' '- `expected` - Expected string' || return $?
 
-    assertBashDocumentFormatArguments '- Hello' '- Hello' || return $?
-    assertBashDocumentFormatArguments '- Hello' 'Hello' || return $?
+    assertMarkdownListify '- Hello' '- Hello' || return $?
+    assertMarkdownListify '- Hello' 'Hello' || return $?
+    # shellcheck disable=SC2016
+    assertMarkdownListify '- `--arg1` - Argument One' '--arg1 - Argument One' || return $?
 }
 
 tests+=(testDocumentation)

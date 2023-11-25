@@ -14,15 +14,18 @@
 #
 relTop=../..
 
-# Usage: buildSetup [ --mock mockBuildRoot ]
+#
+# Usage: build-setup.sh [ --mock mockBuildRoot ]
 # Deprecated: 2023
+# fn: build-setup.sh
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
 #
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
+#
 buildSetup() {
-  # IDENTICAL install-bin-build 75
+  # IDENTICAL installBinBuild 83
   local start ignoreFile tarArgs diffLines binName replace
   if [ ! -d bin/build ]; then
     start=$(($(date +%s) + 0))
@@ -42,7 +45,7 @@ buildSetup() {
     fi
     if [ ! -d bin/build ]; then
       echo "Unable to download and install bin/build" 1>&2
-      return $errorEnvironment
+      return "$errorEnvironment"
     fi
 
     # shellcheck source=/dev/null
@@ -57,7 +60,7 @@ buildSetup() {
       echo
       echo "  rm -rf bin/build"
       echo "  ${BASH_SOURCE[0]}"
-      exit $errorEnvironment
+      return "$errorEnvironment"
     fi
     # shellcheck source=/dev/null
     . bin/build/tools.sh
@@ -80,13 +83,13 @@ buildSetup() {
     diffLines=$(diff "$binName" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)
     if [ "$diffLines" -eq 0 ]; then
       echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
-      exit 0
+      return 0
     fi
     break
   done
   if [ "$diffLines" = "NONE" ]; then
     echo "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)" 1>&2
-    exit 1
+    return 1
   fi
 
   replace=$(quoteSedPattern "relTop=$relTop")
