@@ -126,7 +126,7 @@ assertNotExitCode() {
         echo "$?"
     )
     set -e
-    assertNotEquals "$expected" "$actual" "$* exit code should not equal expected $expected ($actual)"
+    assertNotEquals "$expected" "$actual" "\"$*\" exit code should not equal expected $expected ($actual)"
 }
 
 # Usage: assertContains expected actual
@@ -287,11 +287,11 @@ assertOutputContains() {
     fi
     assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
     if grep -q "$expected" "$tempFile"; then
-        consoleSuccess "$expected found in $* output"
+        consoleSuccess "\"$expected\" found in \"${commands[*]}\" output"
     else
-        consoleError "$expected not found in $* output"
-        prefixLines "$(consoleCode)" <"$tempFile"
-        consoleError "$(echoBar)"
+        printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)" 1>&2
+        prefixLines "$(consoleCode)" <"$tempFile" 1>&2
+        consoleError "$(echoBar)" 1>&2
         return 1
     fi
 }
