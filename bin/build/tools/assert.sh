@@ -250,7 +250,7 @@ assertOutputEquals() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-    local expected="" commands=() tempFile exitCode=0 pipeStdErr=""
+    local nLines expected="" commands=() tempFile exitCode=0 pipeStdErr=""
 
     while [ $# -gt 0 ]; do
         case $1 in
@@ -285,13 +285,16 @@ assertOutputContains() {
             echo $?
         )
     fi
-    assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
+    assertEquals "$exitCode" "$actual" "Exit code should be $exitCode ($actual)"
     if grep -q "$expected" "$tempFile"; then
         consoleSuccess "\"$expected\" found in \"${commands[*]}\" output"
     else
         printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)" 1>&2
+        consoleError "$(echoBar)" 1>&2
         prefixLines "$(consoleCode)" <"$tempFile" 1>&2
         consoleError "$(echoBar)" 1>&2
+        nLines=$(($(wc -l <"$tempFile") + 0))
+        consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")"
         return 1
     fi
 }
