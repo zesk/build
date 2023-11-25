@@ -82,7 +82,7 @@ cleanTestName() {
     printf %s "$testName"
 }
 loadTestFiles() {
-    local fileCount testCount tests=() testName quietLog=$1 testDirectory
+    local fileCount testCount tests=() testName quietLog=$1 testDirectory resultCode=0
 
     shift
     statusMessage consoleWarning "Loading tests ..."
@@ -95,7 +95,10 @@ loadTestFiles() {
         # shellcheck source=/dev/null
         . "./bin/tests/$1"
         clearLine
-        printf "%s" "$(assertGreaterThan "$testCount" "${#tests[@]}" "No tests defined in ./bin/tests/$1")"
+        if [ "${#tests[@]}" -le "$testCount" ]; then
+            consoleError "No tests defined in ./bin/tests/$1"
+            resultCode=$errorTest
+        fi
         shift
     done
     testCount=$((${#tests[@]} - fileCount))
@@ -121,7 +124,7 @@ loadTestFiles() {
         unset 'tests[0]'
         tests=("${tests[@]+${tests[@]}}")
     done
-    return 0
+    return $resultCode
 }
 
 testFailed() {
