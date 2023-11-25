@@ -49,6 +49,7 @@ usage() {
 # Exit Code: 0 - Success
 # Exit Code: 1 - Arguments are identical
 #
+#
 cannon() {
 	local search searchQuoted replaceQuoted
 

@@ -362,7 +362,7 @@ bashDocumentFunction() {
     if ! bashExtractDocumentation "$file" "$fn" >>"$envFile"; then
         __dumpNameValue "error" "$fn was not found" >>"$envFile"
     fi
-    if ! (
+    (
         set -eo pipefail
         chmod +x "$envFile"
         if ! "$envFile"; then
@@ -383,13 +383,8 @@ bashDocumentFunction() {
                 declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
             fi
         done <"$envFile"
-        ./bin/build/map.sh <"$template" >"$target"
-    ); then
-        rm "$target"
-        rm "$envFile"
-        consoleError "Unable to generate $target" 1>&2
-        return $errorEnvironment
-    fi
+        ./bin/build/map.sh <"$template" | grep -v '# shellcheck' >"$target"
+    )
     removeUnfinishedSections <"$target"
     rm "$target"
     rm "$envFile"
@@ -580,7 +575,7 @@ bashExtractDocumentation() {
 # Short Description: Find where a function is defined in a directory of shell scripts
 #
 bashFindFunctionFiles() {
-    local directory=$1
+    local directory="${1%%/}"
     local functionPattern fn linesOutput phraseCount
 
     shift
@@ -616,7 +611,7 @@ bashFindFunctionFiles() {
 # Short Description: Find single location where a function is defined in a directory of shell scripts
 #
 bashFindFunctionFile() {
-    local definitionFiles directory="$1" fn="$2"
+    local definitionFiles directory="${1%%/}" fn="$2"
 
     if [ ! -d "$directory" ]; then
         consoleError "$directory is not a directory" 1>&2
