@@ -40,7 +40,6 @@ testNewestAndOldest() {
         return 1
     fi
 
-    set -x
     if ! assertGreaterThan "$bTime" "$aTime" "bTime > aTime" ||
         ! assertGreaterThan "$cTime" "$aTime" "cTime > aTime" ||
         ! assertExitCode 0 isNewestFile "c" "a" ||
@@ -52,5 +51,4 @@ testNewestAndOldest() {
         set +x
         return 1
     fi
-    set +x
 }
