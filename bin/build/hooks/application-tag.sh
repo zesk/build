@@ -10,4 +10,14 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-git describe --tags --abbrev=0
+# fn: {base}
+#
+# Get the "tag" (or current display version) for an application
+#
+# The default hook uses the short git checksum
+#
+hookApplicationTag() {
+    git describe --tags --abbrev=0
+}
+
+hookApplicationTag
