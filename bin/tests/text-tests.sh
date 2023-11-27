@@ -42,3 +42,8 @@ testMapValue() {
 
     rm "$tempEnv"
 }
+
+tests+=(testLowercase)
+testLowercase() {
+    assertOutputEquals lowercase lowercase LoWerCaSe
+}
