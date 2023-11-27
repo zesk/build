@@ -56,7 +56,7 @@ hasColors() {
             else
                 BUILD_COLORS=
             fi
-        elif [ "$(tput colors)" -ge 256 ]; then
+        elif [ "$(tput colors)" -ge 8 ]; then
             BUILD_COLORS=1
         else
             BUILD_COLORS=
