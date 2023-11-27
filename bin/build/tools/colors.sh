@@ -25,6 +25,35 @@ consoleReset() {
     echo -en '\033[0m' # Reset
 }
 
+#
+# Usage: hasConsoleAnimation
+# Exit Code: 0 - Supports console animation
+# Exit Code; 1 - Does not support console animation
+# Environment: CI - If this has a non-blank value, this returns true (supports animation)
+#
+hasConsoleAnimation() {
+    [ -z "${CI-}" ]
+}
+
+#
+# Usage: hasColors
+# Exit Code: 0 - Console or output supports colors
+# Exit Code; 1 - No colors
+# Local Cache: this value is cached in __BUILD_TERMINAL_COLORS
+# Environment: __BUILD_TERMINAL_COLORS - Uses this for storage, can be unset any time.
+hasColors() {
+    export __BUILD_TERMINAL_COLORS
+    __BUILD_TERMINAL_COLORS=${__BUILD_TERMINAL_COLORS-z}
+    if [ "z" = "$__BUILD_TERMINAL_COLORS" ]; then
+        if [ "$(tput colors)" -ge 256 ]; then
+            __BUILD_TERMINAL_COLORS=1
+        else
+            __BUILD_TERMINAL_COLORS=
+        fi
+    fi
+    test "$__BUILD_TERMINAL_COLORS"
+}
+
 __consoleEscape() {
     local start=$1 end=$2 nl="\n"
     shift
@@ -39,12 +68,38 @@ __consoleEscape() {
         printf "$start%s$end$nl" "$*"
     fi
 }
+
+__consoleOutput() {
+    local prefix=$1 start=$2 end=$3 nl="\n"
+
+    shift
+    shift
+    shift
+    if [ "$1" = "-n" ]; then
+        nl=
+        shift
+    fi
+    if hasColors; then
+        if [ -z "$*" ]; then
+            printf "%s$start" ""
+        else
+            printf "$start%s$end$nl" "$*"
+        fi
+    elif [ -n "$*" ]; then
+        printf "%s: %s$nl" "$prefix" "$*"
+    fi
+}
+#
 # Short Description: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
 #
 allColorTest() {
     local i j n
 
+    if ! hasColors; then
+        printf "no colors\n"
+        return 0
+    fi
     i=0
     while [ $i -lt 11 ]; do
         j=0
@@ -56,7 +111,7 @@ allColorTest() {
             printf "\033[%dm %3d\033[0m" $n $n
             j=$((j + 1))
         done
-        echo
+        printf "\n"
         i=$((i + 1))
     done
 }
@@ -80,13 +135,28 @@ colorTest() {
 # Color-based
 #
 consoleRed() {
-    __consoleEscape '\033[31m' '\033[0m' "$@"
+    _consoleRed '' "$@"
+}
+_consoleRed() {
+    local label="$1"
+    shift
+    __consoleOutput "$label" '\033[31m' '\033[0m' "$@"
 }
 consoleGreen() {
-    __consoleEscape '\033[92m' '\033[0m' "$@"
+    _consoleGreen "" "$@"
+}
+_consoleGreen() {
+    local label="$1"
+    shift
+    __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
 }
 consoleCyan() {
-    __consoleEscape '\033[36m' '\033[0m' "$@"
+    _consoleEscape "" "$@"
+}
+_consoleCyan() {
+    local label="$1"
+    shift
+    __consoleOutput "$label" '\033[36m' '\033[0m' "$@"
 }
 consoleBlue() {
     __consoleEscape '\033[94m' '\033[0m' "$@"
@@ -97,9 +167,16 @@ consoleBlackBackground() {
 consoleYellow() {
     __consoleEscape '\033[48;5;16;38;5;11m' '\033[0m' "$@"
 }
+
 consoleOrange() {
+    _consoleOrange orange "$@"
+}
+
+_consoleOrange() {
+    local label="$1"
+    shift
     # see https://i.stack.imgur.com/KTSQa.png
-    __consoleEscape '\033[38;5;214m' '\033[0m' "$@"
+    __consoleEscape "$label" '\033[38;5;214m' '\033[0m' "$@"
 }
 
 # shellcheck disable=SC2120
@@ -144,7 +221,7 @@ consoleNoUnderline() {
 #
 # shellcheck disable=SC2120
 consoleInfo() {
-    consoleCyan "$@"
+    _consoleCyan Info "$@"
 }
 
 #
@@ -160,7 +237,7 @@ consoleCode() {
 #
 # shellcheck disable=SC2120
 consoleWarning() {
-    consoleOrange "$@"
+    _consoleOrange Warning "$@"
 }
 
 #
@@ -168,7 +245,7 @@ consoleWarning() {
 #
 # shellcheck disable=SC2120
 consoleSuccess() {
-    consoleGreen "$@"
+    _consoleGreen SUCCESS "$@"
 }
 
 #
@@ -184,7 +261,7 @@ consoleDecoration() {
 #
 # shellcheck disable=SC2120
 consoleError() {
-    __consoleEscape '\033[1;31m' '\033[0m' "$@"
+    __consoleOutput ERROR '\033[1;31m' '\033[0m' "$@"
 }
 
 #
@@ -234,7 +311,11 @@ consoleNameValue() {
 # Example: clearLine
 #
 clearLine() {
-    echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
+    if hasConsoleAnimation; then
+        echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
+    else
+        printf "\n"
+    fi
 }
 
 #
