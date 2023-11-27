@@ -218,10 +218,7 @@ generateCommandsFile() {
     echo "set -x"
   fi
   echo "cd \"$remoteDeploymentPath/$applicationChecksum\""
-  while [ $# -gt 0 ]; do
-    echo "$1"
-    shift
-  done
+  printf "%s\n" "$@"
   # shellcheck disable=SC2016
   echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remoteDeploymentPath\" \"$remotePath\""
 }
@@ -268,12 +265,12 @@ undoAction() {
 
 cleanupAction() {
   local rs=0
-  # ____ _
-  #   / ___| | ___  __ _ _ __  _   _ _ __
-  #  | |   | |/ _ \/ _` | '_ \| | | | '_ \
-  #  | |___| |  __/ (_| | | | | |_| | |_) |
-  #   \____|_|\___|\__,_|_| |_|\__,_| .__/
-  #                              |_|
+  #   ____ _
+  #  / ___| | ___  __ _ _ __  _   _ _ __
+  # | |   | |/ _ \/ _` | '_ \| | | | '_ \
+  # | |___| |  __/ (_| | | | | |_| | |_) |
+  #  \____|_|\___|\__,_|_| |_|\__,_| .__/
+  # :::::::::::::::::::::::::::::::|_|:::
   bigText Cleanup
   echo
   showInfo
@@ -363,12 +360,14 @@ sshishDeployOptions() {
 # fn: deploy-to.sh
 deployAction() {
   local buildTarget=$1
+  #
   #   ____             _
   #  |  _ \  ___ _ __ | | ___  _   _
   #  | | | |/ _ \ '_ \| |/ _ \| | | |
   #  | |_| |  __/ |_) | | (_) | |_| |
   #  |____/ \___| .__/|_|\___/ \__, |
-  #          |_|            |___/
+  #  :::::::::::|_|::::::::::::|___/
+  #
   bigText Deploy
   echo
   showInfo
@@ -377,6 +376,8 @@ deployAction() {
     start=$(beginTiming)
     echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remoteDeploymentPath") "
     {
+      echo "[ -d \"$remotePath\" ] || mkdir -p \"$remotePath && echo Created $remotePath\""
+      echo "[ -d \"$remoteDeploymentPath\" ] || mkdir -p \"$remoteDeploymentPath\""
       echo "cd $remoteDeploymentPath"
       echo "[ -d \"$applicationChecksum/app\" ] || mkdir -p \"$applicationChecksum/app\""
     } | ssh "$(sshishDeployOptions)" -T "$userHost" bash --noprofile -s -e

@@ -104,7 +104,11 @@ __consoleOutput() {
             printf "$start%s$end$nl" "$*"
         fi
     elif [ -n "$*" ]; then
-        printf "%s: %s$nl" "$prefix" "$*"
+        if [ -n "$prefix" ]; then
+            printf "%s: %s$nl" "$prefix" "$*"
+        else
+            printf "%s$nl" "$*"
+        fi
     fi
 }
 #
