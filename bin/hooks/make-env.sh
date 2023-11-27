@@ -9,9 +9,20 @@
 set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+me=$(basename "${BASH_SOURCE[0]}")
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the default script, please customize for your application."
-./bin/build/pipeline/make-env.sh "$@"
+#
+# Default hook runs `bin/build/pipeline/make-env.sh` directly. To customize this
+# override this hook in your project.
+#
+# See: make-env.sh
+#
+hookMakeEnvironment() {
+    consoleSuccess "$me is the default script, please customize for your application."
+    ./bin/build/pipeline/make-env.sh "$@"
+}
+
+hookMakeEnvironment "$@"

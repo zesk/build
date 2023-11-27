@@ -26,7 +26,16 @@ Defaults to the last version numerically found in `docs/release` directory.
 
 BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
 EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
-Unable to find "hookVersionLive" (from "./docs/templates/hooks/version.md") in "./bin/build/"
+
+## `version-live.sh` - Live version of the application
+
+Output the current live, published version of this application.
+
+If implemented, `new-release.sh` will create a release only when needed.
+
+## Exit codes
+
+- `0` - Always succeeds
 
 # `new-release.sh` Hooks
 
@@ -41,7 +50,7 @@ Run whenever `new-version.sh` is run and a version already exists
 
 ## Errors
 
-Unable to find "hookVersionLive" (from "./docs/templates/hooks/version.md") in "./bin/build/"
+Unable to find "hookVersionLive" (from "./docs/templates/hooks/version.md") in "./bin/"
 
 ## `version-created.sh` - Run whenever `new-version.sh` is run and a version was just
 
@@ -58,6 +67,6 @@ EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 
 ## Errors
 
-Unable to find "hookVersionLive" (from "./docs/templates/hooks/version.md") in "./bin/build/"
+Unable to find "hookVersionLive" (from "./docs/templates/hooks/version.md") in "./bin/"
 
 [⬅ Return to hook index](index.md)

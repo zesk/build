@@ -2,6 +2,14 @@
 
 [⬅ Return to hook index](index.md)
 
-Unable to find "hookGitPreCommit" (from "./docs/templates/hooks/git-pre-commit.sh.md") in "./bin/build/"
+
+## `hookGitPreCommit` - The `git-pre-commit` hook will be installed as a `git` pre-commit
+
+The `git-pre-commit` hook will be installed as a `git` pre-commit hook in your project
+If you already have a `pre-commit` hook - do not use this.
+
+## Exit codes
+
+- `0` - Always succeeds
 
 [⬅ Return to hook index](index.md)

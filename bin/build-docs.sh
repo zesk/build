@@ -49,7 +49,7 @@ buildBuildDocumentation() {
         exit $?
     fi
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-        ./bin/build/ ./docs/templates/hooks/ ./docs/__hook.sh.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+        ./bin/ ./docs/templates/hooks/ ./docs/__hook.sh.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
         exit $?
     fi
     for binaryDirectory in ops bin install pipeline; do

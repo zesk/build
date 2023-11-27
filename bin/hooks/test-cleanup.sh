@@ -11,4 +11,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "Test cleanup does nothing - please rewrite"
+#
+# Runs after tests have been run to clean up any artifacts or other test files which
+# may have been generated.
+#
+hookTestCleanup() {
+    consoleSuccess "Test cleanup does nothing - please rewrite"
+}
+
+hookTestCleanup "$@"
