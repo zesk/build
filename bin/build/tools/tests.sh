@@ -8,7 +8,7 @@
 errorEnvironment=1
 errorArgument=2
 #
-# testShellScripts
+# testShellScripts [ findArgs ]
 #
 # Requires shellcheck so should be later in the testing process to have a cleaner build
 # This can be run on any directory tree to test scripts in any application.
@@ -18,10 +18,10 @@ errorArgument=2
 testShellScripts() {
     local thisYear
     thisYear=$(date +%Y)
-    if ! validateShellScripts; then
+    if ! validateShellScripts "$@"; then
         return $errorEnvironment
     fi
-    if ! validateFileContents sh -- "Copyright &copy; $thisYear"; then
+    if ! validateFileContents sh -- "Copyright &copy; $thisYear" -- "$@"; then
         return $errorEnvironment
     fi
 }
@@ -32,9 +32,9 @@ testShellScripts() {
 # Requires shellcheck so should be later in the testing process to have a cleaner build
 # This can be run on any directory tree to test scripts in any application.
 #
-# Usage: validateShellScripts
+# Usage: validateShellScripts [ findArgs ]
 # Example: if validateShellScripts; then git commit -m "saving things" -a; fi
-# Argument: No arguments.
+# Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
 # Environment: This operates in the current working directory
@@ -51,7 +51,7 @@ validateShellScripts() {
     thisYear=$(date +%Y)
     failedReasons=()
     foundFiles=$(mktemp)
-    find . -name '*.sh' ! -path '*/.*' -print0 >"$foundFiles"
+    find . -name '*.sh' ! -path '*/.*' "$@" -print0 >"$foundFiles"
     while IFS= read -r -d '' f; do
         clearLine
         consoleInfo -n "Checking $f"
@@ -84,11 +84,13 @@ validateShellScripts() {
 #
 # By default, any directory which begins with a dot `.` will be ignored.
 #
-# Usage: validateFileContents extension0 [ extension1 ... ] -- text0 [ text1 ... ]
+# Usage: validateFileContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
 # Example: validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2023'
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
 # Argument: `--` - Required. Separates extensions from text
 # Argument: `text0` - Required. Text which must exist in each file with the extension given.
+# Argument: `--` - Optional. Final delimiter to specify find arguments.
+# Argument: findArgs - Optional. Limit find to additional conditions.
 # Side-effect: Errors written to stderr, status written to stdout
 # Environment: This operates in the current working directory
 # Short Description: Check files for the existence of a string
@@ -109,7 +111,15 @@ validateFileContents() {
     done
     unset 'extensions['$((${#extensions[@]} - 1))']'
 
-    textMatches=("$@")
+    textMatches=()
+    while [ $# -gt 0 ]; do
+        if [ "$1" == "--" ]; then
+            shift
+            break
+        fi
+        textMatches+=("$1")
+        shift
+    done
     if [ "${#extensions[@]}" -eq 0 ]; then
         consoleError "No extension arguments" 1>&2
         return $errorArgument
@@ -122,7 +132,8 @@ validateFileContents() {
     failedReasons=()
     total=0
     foundFiles=$(mktemp)
-    find . "${extensions[@]}" ! -path '*/.*' -print0 >"$foundFiles"
+    # Final arguments for find
+    find . "${extensions[@]}" ! -path '*/.*' "$@" -print0 >"$foundFiles"
     while IFS= read -r -d '' f; do
         clearLine
         consoleInfo -n "Checking $f"
