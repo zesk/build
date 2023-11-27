@@ -10,8 +10,15 @@
 #
 # set -x
 #
-# Change this line when placing in your project
+# Change this line when placing in your project to point to your application root (where `bin/build` will be based)
 #
+#     e.g.
+#     relTop=..
+#     relTop=../../..
+#
+# or wherever you put it in your project to install it
+#
+
 relTop=../..
 
 # Usage: install-bin-build.sh [ --mock mockBuildRoot ]
