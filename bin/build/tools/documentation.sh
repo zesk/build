@@ -270,11 +270,12 @@ documentFunctionsWithTemplate() {
 # Exit Code: 2 - Argument error
 #
 documentFunctionTemplateDirectory() {
-    local sourceCodeDirectory templateDirectory functionTemplate targetDirectory cacheDirectory
+    local start sourceCodeDirectory templateDirectory functionTemplate targetDirectory cacheDirectory
     local extraOptions cacheFile
     local sourceShellScript reason base targetFile checksum
     local generatedChecksum documentTokensFile
 
+    start=$(beginTiming)
     extraOptions=()
     while [ $# -gt 0 ]; do
         case $1 in
@@ -330,6 +331,8 @@ documentFunctionTemplateDirectory() {
             exitCode=$errorEnvironment
         fi
     done
+    clearLine
+    reportTiming "$start" "Completed gemeration of $(consoleInfo "$templateDirectory") in"
     return $exitCode
 }
 
