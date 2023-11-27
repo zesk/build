@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# Run during bin/pipeline/github-release.sh before tagging
+# Run during bin/pipeline/github-release.sh after release is completed
 #
-# Add any files to your repository here and commit them automatically if they need to be
+# Do any post-release steps you want (update your website etc.)
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
@@ -17,8 +17,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Optional hook run during `github-release.sh` before tagging and pushing occurs
 #
 # fn: {base}
-hookGithubReleaseBefore() {
+hookGithubReleaseAfter() {
     consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
 }
 
-hookGithubReleaseBefore "$@"
+hookGithubReleaseAfter "$@"

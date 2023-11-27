@@ -15,4 +15,14 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+# After a deployment was successful on a host, this undos that deployment and goes back to the previous version.
+#
+# fn: {base}
+# Short Description: Deployment "undo" script
+#
+# Exit code: 0 - This SHOULD exit successfully always
+hookDeployUndo() {
+    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+}
+
+hookDeployUndo

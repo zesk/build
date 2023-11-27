@@ -90,7 +90,7 @@ identicalCheck() {
     export exitCode=0
     tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")"
     resultsFile=$(mktemp)
-    find "$rootDir" "${findArgs[@]}" ! -path "*/.*" | while IFS= read -r searchFile; do
+    find "$rootDir" "${findArgs[@]}" ! -path "*/.*" | sort | while IFS= read -r searchFile; do
         # Do not process files which look like `identical-check.sh`
         if [ "$(basename "$searchFile")" = "$me" ]; then
             # We are exceptional ;)

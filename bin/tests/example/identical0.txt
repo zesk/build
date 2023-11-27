@@ -15,7 +15,7 @@ All work and no play makes Jack a dull boy.
 4: This is a comment. I love comments.
 SAFE TO BE DIFFERENTish
 
-# bIDENTICAL test2 5
+# bIDENTICAL test2 NAN
 ABC
 
 # cIDENTICAL test3 2
