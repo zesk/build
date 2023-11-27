@@ -621,7 +621,7 @@ boxedHeading() {
     spaces=$((${#bar} - ${#textString} - 4))
     consoleDecoration "$bar"
     runCount "$nLines" consoleDecoration "$emptyBar"
-    echo "$(consoleDecoration -n \|) $(consoleInfo -n "$textString")$(repeat $spaces " ") $(consoleDecoration -n \|)"
+    echo "$(consoleDecoration -n \|) $(_consoleInfo "" -n "$textString")$(repeat $spaces " ") $(consoleDecoration -n \|)"
     runCount "$nLines" consoleDecoration "$emptyBar"
     consoleDecoration "$bar"
 }

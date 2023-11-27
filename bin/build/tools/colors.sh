@@ -169,7 +169,7 @@ _consoleGreen() {
     __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
 }
 consoleCyan() {
-    _consoleEscape "" "$@"
+    _consoleCyan "" "$@"
 }
 _consoleCyan() {
     local label="$1"
@@ -187,7 +187,7 @@ consoleYellow() {
 }
 
 consoleOrange() {
-    _consoleOrange orange "$@"
+    _consoleOrange "" "$@"
 }
 
 _consoleOrange() {
