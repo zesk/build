@@ -142,7 +142,7 @@ identicalCheck() {
                             consoleReset 1>&2
                             break
                         else
-                            statusMessage consoleSuccess "Verified $searchFile"
+                            statusMessage consoleSuccess "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))"
                         fi
                     fi
                 else
