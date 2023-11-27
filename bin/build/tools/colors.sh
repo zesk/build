@@ -241,6 +241,9 @@ consoleNoUnderline() {
 consoleInfo() {
     _consoleCyan Info "$@"
 }
+_consoleInfo() {
+    _consoleCyan "$@"
+}
 
 #
 # code or variables in output
