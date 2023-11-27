@@ -16,7 +16,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # Optional hook run during `github-release.sh` before tagging and pushing occurs
 #
-#
+# fn: {base}
 hookGithubReleaseBefore() {
     consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
 }

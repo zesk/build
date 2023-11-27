@@ -20,6 +20,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Exit Code: 0 - If the test setup was successful
 # Exit Code: Non-Zero - Any error will terminate testing
 #
+# fn: {base}
 hookTestSetup() {
     consoleSuccess "Test setup does nothing - please rewrite"
 }

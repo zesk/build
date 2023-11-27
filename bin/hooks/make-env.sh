@@ -19,7 +19,7 @@ me=$(basename "${BASH_SOURCE[0]}")
 # override this hook in your project.
 #
 # See: make-env.sh
-#
+# fn: {base}
 hookMakeEnvironment() {
     consoleSuccess "$me is the default script, please customize for your application."
     ./bin/build/pipeline/make-env.sh "$@"

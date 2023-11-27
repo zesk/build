@@ -19,6 +19,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Exit Code: 0 - If the tests all pass
 # Exit Code: Non-Zero - If any test fails for any reason
 #
+# fn: {base}
 hookTestRunner() {
     consoleError "Test runner does nothing, failing, rewrite this."
     return 99
