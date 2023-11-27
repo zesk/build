@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eou pipefail
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 # fn: {base}
 # Build documentation for build system.
 #
@@ -46,21 +49,21 @@ buildBuildDocumentation() {
     done
 
     if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
-        exit $?
+        return $errorEnvironment
     fi
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
         ./bin/ ./docs/templates/hooks/ ./docs/__hook.sh.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-        exit $?
+        return "$errorEnvironment"
     fi
     for binaryDirectory in ops bin install pipeline; do
         if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
             ./bin/build/ ./docs/templates/$binaryDirectory/ ./docs/__binary.sh.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-            exit $?
+            return $errorEnvironment
         fi
     done
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
         ./bin/build/ ./docs/templates/tools/ ./docs/__function.sh.md ./docs/tools/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-        exit $?
+        return $errorEnvironment
     fi
     reportTiming "$start" "Completed in"
 }

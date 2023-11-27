@@ -5,6 +5,9 @@
 # Depends: colors.sh pipeline.sh
 #
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 # IDENTICAL errorArgument 1
 errorArgument=2
 
@@ -72,13 +75,12 @@ requireFileDirectory() {
 # Example: requireDirectory "$cachePath"
 #
 requireDirectory() {
-    local rs name
+    local name
     while [ $# -gt 0 ]; do
         name="$1"
         if [ ! -d "$name" ] && ! mkdir -p "$name"; then
-            rs=$?
             consoleError "Unable to create directory \"$name\"" 1>&2
-            return "$rs"
+            return "$errorEnvironment"
         fi
         shift
     done
