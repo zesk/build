@@ -4,7 +4,10 @@
 
 - `BUILD_VERSION_SUFFIX` - String. Default suffix used in `git-tag-version.sh`. Default is `rc` if not specified.
 - `BUILD_MAXIMUM_TAGS_PER_VERSION` - Integer. Default 1000. Affects `git-tag-version.sh`
+
 - `BUILD_DEBUG` - Enable debugging globally in the build scripts. Lots of output and tracing so beware. Affects `deploy-to.sh`, `php-build.sh`, `remote-deploy-finish.sh`, and `aws-ip-access.sh`.
+- `BUILD_COLORS` - Force (`export BUILD_COLORS=1` or disable `export BUILD_COLORS=0` build and console colors). See `colors.sh`.
+- `CI` - If this value is non-blank, then console `statusMessage`s are just output normally.
 
 # Tool versioning
 
