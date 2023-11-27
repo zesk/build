@@ -15,11 +15,20 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with live smoke tests"
-
-# Some examples:
 #
-# - Enable a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
-# - Check the home page for a version number
-# - Check for a known artifact (build sha) in the server somehow
-# - etc.
+# fn: {base}
+# Short Description: Deployment confirmation script
+#
+# Exit code: 0 - Continue with deployment
+# Exit code: Non-zero - Any non-zero exit code will run `deploy-undo` hook on all systems and cancel deployment
+# should do wahtever is required to ensure that.
+#
+# Example: - Enable a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
+# Example: - Check the home page for a version number
+# Example: - Check for a known artifact (build sha) in the server somehow
+# Example: - etc.
+hookDeployConfirm() {
+    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with live smoke tests"
+}
+
+hookDeployConfirm

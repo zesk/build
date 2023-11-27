@@ -24,7 +24,7 @@ assertOutputContains --stderr --exit 100 'overlap' ./bin/build/identical-check.s
 
 consoleInfo "bad number failure"
 assertOutputContains --stderr --exit 100 'not a number' ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL'
-assertOutputContains --stderr --exit 100 'do not match' ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL'
+assertOutputContains --stderr --exit 100 'counts do not match' ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL'
 
 consoleInfo "single instance failure"
 assertOutputContains --stderr --exit 100 'Single instance of token found:' ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL'

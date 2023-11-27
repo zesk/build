@@ -1,5 +1,5 @@
 
-# `cannon` - Replace text `fromText` with `toText` in files, using `findArgs` to
+# `cannon.sh` - Replace text `fromText` with `toText` in files, using `findArgs` to
 
 [⬅ Return to top](index.md)
 
@@ -9,13 +9,13 @@ This can break your files so use with caution.
 
 ## Usage
 
-    cannon fromText toText
+    cannon fromText toText [ findArgs ... ]
 
 ## Arguments
 
 - `fromText` - Required. String of text to search for.
 - `toText` - Required. String of text to replace.
-- `findArgs...` - Any additional arguments are meant to filter files.
+- `findArgs ...` - Any additional arguments are meant to filter files.
 
 ## Examples
 

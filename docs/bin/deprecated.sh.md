@@ -1,5 +1,5 @@
 
-# `deprecatedCleanup` - Clean up deprecated code automatically. This can be dangerous (uses
+# `deprecated.sh` - Clean up deprecated code automatically. This can be dangerous (uses
 
 [⬅ Return to top](index.md)
 
@@ -10,7 +10,7 @@ Does various checks for deprecated code and updates code.
 
 ## Usage
 
-    deprecatedCleanup
+    deprecated.sh
 
 ## Exit codes
 

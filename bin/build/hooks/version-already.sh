@@ -12,9 +12,17 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-currentVersion=$1
-shift
-releaseNotes=$1
-shift
+# fn: {base}
+#
+# Run whenever `new-version.sh` is run and a version already exists
+#
+hookVersionAlready() {
+    currentVersion=$1
+    shift
+    releaseNotes=$1
+    shift
 
-consoleSuccess "Current version is $currentVersion, release notes are $releaseNotes"
+    consoleSuccess "Current version is $currentVersion, release notes are $releaseNotes"
+}
+
+hookVersionAlready "$@"

@@ -6,12 +6,14 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-quietLog=$(mktemp)
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
 
-set -eo pipefail
+set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
+quietLog=$(mktemp)
 fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
 if ! diff -q "${fromTo[@]}" >/dev/null; then
     echo -n "Git pre-commit hook was updated ..."
@@ -22,15 +24,39 @@ fi
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-statusMessage consoleSuccess Making shell files executable ...
-./bin/build/chmod-sh.sh >/dev/null
-statusMessage consoleSuccess Updating help files ...
-./bin/update-md.sh >/dev/null
-statusMessage consoleSuccess Running shellcheck ...
-if ! testShellScripts >>"$quietLog"; then
-    buildFailed "$quietLog"
-fi
-# Unusual quoting here is to avoid having this match as an identical
-./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh
-./bin/build-docs.sh
-clearLine
+failed() {
+    printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")"
+    exit "$errorEnvironment"
+}
+
+#
+# The `git-pre-commit` hook will be installed as a `git` pre-commit hook in your project and will
+# overwrite any existing `pre-commit` hook.
+#
+# fn: {base}
+hookGitPreCommit() {
+    statusMessage consoleSuccess Making shell files executable ...
+    if ! ./bin/build/chmod-sh.sh >/dev/null; then
+        failed chmod-sh.sh
+    fi
+    statusMessage consoleSuccess Updating help files ...
+    if ! ./bin/update-md.sh >/dev/null; then
+        failed update-md.sh
+    fi
+    statusMessage consoleSuccess Running shellcheck ...
+    if ! testShellScripts >>"$quietLog"; then
+        buildFailed "$quietLog"
+        failed testShellScripts
+    fi
+    # Unusual quoting here is to avoid having this match as an identical
+    if ! ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh; then
+        failed identical-check.sh
+    fi
+    if ! ./bin/build-docs.sh; then
+        failed build-docs.sh
+    fi
+    clearLine
+
+}
+
+hookGitPreCommit "$@"

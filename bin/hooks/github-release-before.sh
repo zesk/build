@@ -13,4 +13,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
+#
+# Optional hook run during `github-release.sh` before tagging and pushing occurs
+#
+# fn: {base}
+hookGithubReleaseBefore() {
+    consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
+}
+
+hookGithubReleaseBefore "$@"

@@ -2,18 +2,6 @@
 #
 # new-release.sh
 #
-# New release - generates files in system for a new release.
-#
-# Requires:
-#
-# - bin/hooks/version-current.sh
-#
-# Optional:
-#
-# - bin/hooks/version-live.sh
-#
-# Uses semantic versioning MAJOR.MINOR.PATCH
-#
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 set -eou pipefail
@@ -28,12 +16,7 @@ me="$(basename "${BASH_SOURCE[0]}")"
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 usage() {
-  local rs=$1
-
-  shift
-  exec 1>&2
-  echo "$me $*"
-  exit "$rs"
+  usageDocument "./bin/build/$me" newRelease "$@"
 }
 
 # shellcheck source=/dev/null
@@ -49,31 +32,53 @@ defaultVersion() {
   echo "$prefix.$last"
 }
 
+#
 # fn: new-release.sh
+# Argument: --non-interactive - Optional. If new version is needed, use default version
+# Argument: versionName - Optional. Set the new version name to this.
+# Argument: fucksauce - Required. Set the new version name to this.
 # Short Description: Generate a new release notes and bump the version
 # Hook: version-current
 # Hook: version-live
 # Hook: version-created
 # Hook: version-already
+# Exit Code: 0 - Release generated or has already been generated
+# Exit Code: 1 - If new version needs to be created and `--non-interactive`
+# **New release** - generates files in system for a new release.
+#
+# *Requires* hook `version-current`, optionally `version-live`
+#
+# Uses semantic versioning `MAJOR.MINOR.PATCH`
+#
 # Checks the live version versus the version in code and prompts to
 # generate a new release file if needed.
 #
 # A release notes template file is added at `./docs/release/`. This file is
-# also added to `git`.
+# also added to `git` the first time.
 #
 newRelease() {
-  local newVersion readLoop currentVersion liveVersion defaultVersion releaseNotes
+  local newVersion readLoop currentVersion liveVersion defaultVersion releaseNotes nonInteractive
+
+  nonInteractive=
   newVersion=
   while [ $# -gt 0 ]; do
     case $1 in
+    --non-interactive)
+      nonInteractive=1
+      ;;
+    --help)
+      usage 0
+      return 0
+      ;;
     *)
       if [ -n "$newVersion" ]; then
         usage $errorArgument "Unknown argument $1"
+        return $?
       fi
       newVersion=$1
-      shift
       ;;
     esac
+    shift
   done
 
   readLoop=
@@ -82,15 +87,18 @@ newRelease() {
   fi
   if ! hasHook version-current; then
     usage $errorEnvironment "Requires hook version-current"
+    return "$errorEnvironment"
   fi
   currentVersion=$(runHook version-current)
   if [ -z "$currentVersion" ]; then
     usage $errorEnvironment "version-current returned empty string"
+    return "$errorEnvironment"
   fi
   if hasHook version-live; then
     liveVersion=$(runHook version-live)
     if [ -z "$liveVersion" ]; then
       usage $errorEnvironment "version-live returned empty string"
+      return "$errorEnvironment"
     fi
     echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
   else
@@ -100,33 +108,41 @@ newRelease() {
   echo "$(consoleLabel -n "Current: ") $(consoleValue -n "$currentVersion")"
   # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
-  if [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
-    consoleError "Ready to deploy: $currentVersion"
-    exit 0
+  if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
+    consoleInfo "Ready to deploy: $currentVersion"
+    return 0
   fi
-  while true; do
-    if test $readLoop; then
-      consoleInfo -n "New version? (default $defaultVersion): "
-      read -r newVersion
-      if [ -z "$newVersion" ]; then
-        newVersion=$defaultVersion
-      fi
+  if test $nonInteractive; then
+    if [ -z "$newVersion" ]; then
+      newVersion=$defaultVersion
+    elif ! isVersion "$newVersion"; then
+      usage $errorArgument "New version $newVersion is not a valid version tag"
+      return $errorArgument
     fi
-    if [[ "$newVersion" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
-      newVersion="v$newVersion"
-      break
-    else
-      if ! test $readLoop; then
-        usage $errorArgument "Invalid version $newVersion"
+  else
+    while true; do
+      if test $readLoop; then
+        consoleInfo -n "New version? (default $defaultVersion): "
+        read -r newVersion
+        if [ -z "$newVersion" ]; then
+          newVersion=$defaultVersion
+        fi
+      fi
+      if [[ "$newVersion" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
+        newVersion="v$newVersion"
+        break
       else
-        consoleError "Invalid version $newVersion"
+        if ! test $readLoop; then
+          usage $errorArgument "Invalid version $newVersion"
+        else
+          consoleError "Invalid version $newVersion"
+        fi
       fi
-    fi
-  done
-
+    done
+  fi
   releaseNotes=docs/release/$newVersion.md
   if [ ! -f "$releaseNotes" ]; then
-    cat >"$releaseNotes" <<-EOF
+    trimSpacePipe >"$releaseNotes" <<-EOF
         # Release $newVersion
 
         - Upgrade from $currentVersion

@@ -1,5 +1,5 @@
 
-# `buildSetup` - Installs the build system in `./bin/build` if not installed. Also
+# `build-setup.sh` - Installs the build system in `./bin/build` if not installed. Also
 
 [⬅ Return to top](index.md)
 
@@ -8,7 +8,7 @@ will overwrite this binary with the latest version after installation.
 
 ## Usage
 
-    buildSetup [ --mock mockBuildRoot ]
+    build-setup.sh [ --mock mockBuildRoot ]
 
 ## Exit codes
 

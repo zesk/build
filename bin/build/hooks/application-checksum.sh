@@ -10,4 +10,14 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-git rev-parse --short HEAD
+# fn: {base}
+#
+# Generate a unique checksum for the state of the application files
+#
+# The default hook uses the short git checksum
+#
+hookApplicationChecksum() {
+    git rev-parse --short HEAD
+}
+
+hookApplicationChecksum

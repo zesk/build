@@ -15,4 +15,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+#
+# fn: {base}
+# Short Description: Run after a successful deployment
+# Run on remote systems after deployment has succeeded on all systems.
+#
+# This step must always succeed on the remote system; the deployment step prior to this
+# should do wahtever is required to ensure that.
+#
+hookDeployCleanup() {
+    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+}
+
+hookDeployCleanup "$@"

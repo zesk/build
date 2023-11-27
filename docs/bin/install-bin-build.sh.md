@@ -1,5 +1,5 @@
 
-# `installBinBuild` - Installs the build system in `./bin/build` if not installed. Also
+# `install-bin-build.sh` - Installs the build system in `./bin/build` if not installed. Also
 
 [⬅ Return to top](index.md)
 
@@ -8,7 +8,7 @@ will overwrite this binary with the latest version after installation.
 
 ## Usage
 
-    installBinBuild [ --mock mockBuildRoot ]
+    install-bin-build.sh [ --mock mockBuildRoot ]
 
 ## Exit codes
 

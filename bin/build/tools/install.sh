@@ -8,6 +8,9 @@
 # bin: npm
 #
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 # Install `mariadb`
 #
 # If this fails it will output the installation log.
@@ -83,10 +86,10 @@ dockerComposeInstall() {
     quietLog=$(buildQuietLog dockerComposeInstall)
 
     if ! requireFileDirectory "$quietLog"; then
-        return $?
+        return "$errorEnvironment"
     fi
     if ! pythonInstall "$@"; then
-        return $?
+        return "$errorEnvironment"
     fi
 
     consoleInfo -n "Installing docker-compose ... "
@@ -94,12 +97,12 @@ dockerComposeInstall() {
     if ! pip install docker-compose >"$quietLog" 2>&1; then
         consoleError "pip install docker-compose failed $?"
         buildFailed "$quietLog"
-        return $?
+        return "$errorEnvironment"
     fi
     if ! which docker-compose 2>/dev/null; then
         consoleError "docker-compose not found after install"
         buildFailed "$quietLog"
-        return $?
+        return "$errorEnvironment"
     fi
     reportTiming "$start" OK
 }

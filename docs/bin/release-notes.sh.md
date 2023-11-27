@@ -12,10 +12,16 @@ When this tool succeeds it outputs the current release notes file relative to th
 ## Usage
 
     release-notes.sh
+    releaseNotes
 
 ## Examples
 
     open $(bin/build/release-notes.sh)
+    vim $(releaseNotes)
+
+## Sample Output
+
+./docs/release/v1.0.0.md
 
 ## Exit codes
 

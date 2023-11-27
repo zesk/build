@@ -10,18 +10,26 @@
 #
 # set -x
 #
-# Change this line when placing in your project
+# Change this line when placing in your project to point to your application root (where `bin/build` will be based)
 #
+#     e.g.
+#     relTop=..
+#     relTop=../../..
+#
+# or wherever you put it in your project to install it
+#
+
 relTop=../..
 
-# Usage: installBinBuild [ --mock mockBuildRoot ]
+# Usage: install-bin-build.sh [ --mock mockBuildRoot ]
+# fn: install-bin-build.sh
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
 #
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
 installBinBuild() {
-  # IDENTICAL install-bin-build 75
+  # IDENTICAL installBinBuild 83
   local start ignoreFile tarArgs diffLines binName replace
   if [ ! -d bin/build ]; then
     start=$(($(date +%s) + 0))
@@ -41,7 +49,7 @@ installBinBuild() {
     fi
     if [ ! -d bin/build ]; then
       echo "Unable to download and install bin/build" 1>&2
-      return $errorEnvironment
+      return "$errorEnvironment"
     fi
 
     # shellcheck source=/dev/null
@@ -56,7 +64,7 @@ installBinBuild() {
       echo
       echo "  rm -rf bin/build"
       echo "  ${BASH_SOURCE[0]}"
-      exit $errorEnvironment
+      return "$errorEnvironment"
     fi
     # shellcheck source=/dev/null
     . bin/build/tools.sh
@@ -79,13 +87,13 @@ installBinBuild() {
     diffLines=$(diff "$binName" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :)
     if [ "$diffLines" -eq 0 ]; then
       echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
-      exit 0
+      return 0
     fi
     break
   done
   if [ "$diffLines" = "NONE" ]; then
     echo "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)" 1>&2
-    exit 1
+    return 1
   fi
 
   replace=$(quoteSedPattern "relTop=$relTop")

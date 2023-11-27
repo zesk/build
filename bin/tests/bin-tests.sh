@@ -10,6 +10,15 @@ errorEnvironment=1
 
 declare -a tests
 
+tests+=(testNewRelease)
+testNewRelease() {
+    assertExitCode 0 bin/build/new-release.sh --non-interactive
+}
+tests+=(testVersionSort)
+testVersionSort() {
+    assertGreaterThan $(($(bin/build/version-list.sh | wc -l) + 0)) 0
+}
+
 tests+=(testMakeEnv)
 testMakeEnv() {
     local v

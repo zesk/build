@@ -6,3 +6,4 @@
 /.env*
 /.idea/
 /.build-docs/
+/shaPipe.log

@@ -29,3 +29,21 @@ testQuoteSedPattern() {
     assertEquals "\\[" "$(quoteSedPattern '[')"
     assertEquals "\\]" "$(quoteSedPattern ']')"
 }
+
+tests+=(testMapValue)
+testMapValue() {
+    tempEnv=$(mktemp)
+
+    assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")"
+
+    printf "%s=%s\n" "foo" "bar" >>"$tempEnv"
+
+    assertEquals "bar" "$(mapValue "$tempEnv" "{foo}")"
+
+    rm "$tempEnv"
+}
+
+tests+=(testLowercase)
+testLowercase() {
+    assertOutputEquals lowercase lowercase LoWerCaSe
+}

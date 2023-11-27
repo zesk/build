@@ -116,8 +116,8 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
 ### Arguments
 
-`definitionFile` - File in which function is defined
-`function` - Function defined in `file`
+- `definitionFile` - File in which function is defined
+- `function` - Function defined in `file`
 
 ### Exit codes
 
@@ -141,9 +141,9 @@ may output partial results with a failure.
 
 ### Arguments
 
-`directory` - The directory to search
-`fnName0` - A function to find the file in which it is defined
-`fnName1...` - Additional functions are found are output as well
+- `directory` - The directory to search
+- `fnName0` - A function to find the file in which it is defined
+- `fnName1...` - Additional functions are found are output as well
 
 ### Examples
 
@@ -190,6 +190,10 @@ None
 
 Simple function to make list-like things more list-like in Markdown
 
+1. remove leading "dash space" if it exists (`- `)
+2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
+3. Prefix each line with a "dash space" (`- `)
+
 ### Exit codes
 
 - `0` - Always succeeds
@@ -204,8 +208,8 @@ Utility to export multi-line values as Bash variables
 
 ### Arguments
 
-`name` - Shell value to output
-`value0` - One or more lines of text associated with this value to be output in a - `bash` - friendly manner
+- `name` - Shell value to output
+- `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
 
 ### Exit codes
 
@@ -217,8 +221,8 @@ Utility to export multi-line values as Bash variables
 
 ### Arguments
 
-`variable` - shell variable to set
-`alias` - The shell variable to assign to `variable`
+- `variable` - shell variable to set
+- `alias` - The shell variable to assign to `variable`
 
 ### Exit codes
 

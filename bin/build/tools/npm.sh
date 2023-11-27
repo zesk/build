@@ -8,6 +8,9 @@
 # bin: npm
 #
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 #
 # Usage: npmInstall npmVersion
 # Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
@@ -33,15 +36,15 @@ npmInstall() {
     quietLog=$(buildQuietLog npmInstall)
 
     if ! aptInstall npm; then
-        return $?
+        return "$errorEnvironment"
     fi
 
     if ! requireFileDirectory "$quietLog"; then
-        return $?
+        return "$errorEnvironment"
     fi
     if ! npm i -g "npm@$npm_version" --force >>"$quietLog" 2>&1; then
         buildFailed "$quietLog"
-        return $?
+        return "$errorEnvironment"
     fi
     reportTiming "$start" OK
 }

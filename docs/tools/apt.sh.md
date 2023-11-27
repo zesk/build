@@ -73,8 +73,8 @@ and assumes packages will be available.
 
 ### Exit codes
 
-- `0` - If `- `apt` - get` is not installed, returns 0.
-- `1` - If `- `apt` - get` fails to install the packages
+- `0` - If `apt-get` is not installed, returns 0.
+- `1` - If `apt-get` fails to install the packages
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

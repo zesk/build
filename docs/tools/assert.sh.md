@@ -57,13 +57,9 @@ If this fails it will output an error and exit.
 File `./bin/build//tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
 
 
-## `assertGreaterThan` - Assert actual value is greater than expected value
+## `assertGreaterThan` - Assert `leftValue > rightValue`
 
-Assert actual value is greater than expected value.
-
-    expected < actual will pass
-
-If this fails it will output an error and exit.
+Assert `leftValue > rightValue`
 
 ### Usage
 
@@ -71,13 +67,13 @@ If this fails it will output an error and exit.
 
 ### Arguments
 
-- `expected` - Expected numeric value
-- `actual` - Actual numeric value
+- `leftValue` - Value to compare on the left hand side of the comparison
+- `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
 
 ### Examples
 
-    assertGreaterThan 3 $found
+    assertGreaterThan 3 "$found"
 
 ### Exit codes
 
@@ -89,9 +85,7 @@ File `./bin/build//tools/assert.sh`, function `assertGreaterThan` was reviewed 2
 
 ## `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
 
-Assert actual value is greater than or equal to expected value.
-
-If this fails it will output an error and exit.
+Assert `leftValue >= rightValue`
 
 ### Usage
 
@@ -99,8 +93,8 @@ If this fails it will output an error and exit.
 
 ### Arguments
 
-- `expected` - Expected numeric value
-- `actual` - Actual numeric value
+- `leftValue` - Value to compare on the left hand side of the comparison
+- `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
 
 ### Examples
@@ -116,11 +110,9 @@ If this fails it will output an error and exit.
 File `./bin/build//tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
 
 
-## `assertLessThan` - Assert actual value is less than expected value
+## `assertLessThan` - Assert `leftValue < rightValue`
 
-Assert actual value is less than expected value.
-
-If this fails it will output an error and exit.
+Assert `leftValue < rightValue`
 
 ### Usage
 
@@ -128,8 +120,8 @@ If this fails it will output an error and exit.
 
 ### Arguments
 
-- `expected` - Expected numeric value
-- `actual` - Actual numeric value
+- `leftValue` - Value to compare on the left hand side of the comparison
+- `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
 
 ### Examples
@@ -145,20 +137,18 @@ If this fails it will output an error and exit.
 
 File `./bin/build//tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
 
-## `assertLessThanOrEqual` - Assert two strings are not equal
+## `assertLessThanOrEqual` - Assert `leftValue <= rightValue`
 
-Assert two strings are not equal.
-
-If this fails it will output an error and exit.
+Assert `leftValue <= rightValue`
 
 ### Usage
 
-    assertNotEquals expected actual [ message ]
+    assertLessThanOrEqual leftValue rightValue [ message ]
 
 ### Arguments
 
-- `expected` - Expected numeric value
-- `actual` - Actual numeric value
+- `leftValue` - Value to compare on the left hand side of the comparison
+- `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
 
 ### Examples

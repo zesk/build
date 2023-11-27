@@ -28,6 +28,19 @@ Appends any passed in arguments as path segments.
 
 - `0` - Always succeeds
 
+### Usage
+
+    buildQuietLog name
+
+### Arguments
+
+- `name` - The log file name
+
+### Exit codes
+
+- `0` - Always succeeds
+
+
 ## `requireFileDirectory` - Given a list of files, ensure their parent directories exist
 
 Given a list of files, ensure their parent directories exist
@@ -69,6 +82,7 @@ Creates the directories for all files passed in.
 
 - `0` - Always succeeds
 
+
 ## `runCount` - Run a binary count times
 
 $Run a binary count times
@@ -81,13 +95,14 @@ $Run a binary count times
 
 - `count` - The number of times to run the binary
 - `binary` - The binary to run
-- args - `...` - Any arguments to pass to the binary each run
+- `args ...` - Any arguments to pass to the binary each run
 
 ### Exit codes
 
 - `0` - success
 - `2` - `count` is not an unsigned number
 - `Any` - If `binary` fails, the exit code is returned
+
 
 ## `renameFiles` - Rename a list of files usually to back them up temporarily
 
@@ -120,6 +135,7 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 
 - `0` - Always succeeds
 
+
 ## `createTarFile` - Platform agnostic tar create which keeps user and group as user 0
 
 Platform agnostic tar cfz which ignores owner and attributes
@@ -138,6 +154,7 @@ Platform agnostic tar cfz which ignores owner and attributes
 ### Exit codes
 
 - `0` - Always succeeds
+
 
 ## `environmentVariables` - Fetch a list of environment variable names
 
@@ -161,6 +178,130 @@ Returns the list of defined environment variables exported in the current bash c
 ### Sample Output
 
 Environment variable names, one per line.
+
+### Exit codes
+
+- `0` - Always succeeds
+
+
+## `reverseFileLines` - Reverse output lines
+
+Reverses a pipe's input lines to output using an awk trick.
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Credits
+
+Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt).
+
+
+## `makeShellFilesExecutable` - Makes all `*.sh` files executable
+
+Makes all `*.sh` files executable
+
+### Usage
+
+    makeShellFilesExecutable
+
+### Exit codes
+
+- `0` - Always succeeds
+
+### Environment
+
+Works from the current directory
+
+
+## `modificationTime` - Fetch the modification time of a file as a timestamp
+
+Fetch the modification time of a file as a timestamp
+
+### Usage
+
+    modificationTime filename0 [ filename1 ... ]
+
+### Examples
+
+    modificationTime ~/.bash_profile
+
+### Exit codes
+
+- `2` - If file does not existd
+- `0` - If file exists and modification times are output, one per line
+
+
+## `isNewestFile` - Check to see if the first file is the newest
+
+Check to see if the first file is the newest one
+
+If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+Otherwise return `1``
+
+### Usage
+
+    isNewestFile firstFile [ targetFile0 ... ]
+
+### Arguments
+
+- `sourceFile` - File to check
+- `targetFile0` - One or more files to compare
+
+### Exit codes
+
+- `1` - `sourceFile`, 'targetFile' does not exist, or
+- `0` - All files exist and `sourceFile` is the oldest file
+
+## `isOldestFile` - Check to see if the first file is the newest
+
+Check to see if the first file is the newest one
+
+If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+Otherwise return `1``
+
+### Usage
+
+    isNewestFile firstFile [ targetFile0 ... ]
+
+### Arguments
+
+- `sourceFile` - File to check
+- `targetFile0` - One or more files to compare
+
+### Exit codes
+
+- `1` - `sourceFile`, 'targetFile' does not exist, or
+- `0` - All files exist and `sourceFile` is the oldest file
+
+
+## `oldestFile` - Return the oldest file in the list.
+
+Return the oldest file in the list.
+
+### Usage
+
+    oldestFile file0 [ file1 ... ]
+
+### Arguments
+
+- `file0` - One or more files to examine
+
+### Exit codes
+
+- `0` - Always succeeds
+
+## `newestFile` - Return the newest file in the list
+
+Return the newest file in the list
+
+### Usage
+
+    newestFile file0 [ file1 ... ]
+
+### Arguments
+
+- `file0` - One or more files to examine
 
 ### Exit codes
 
