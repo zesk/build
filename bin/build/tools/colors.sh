@@ -39,19 +39,20 @@ hasConsoleAnimation() {
 # Usage: hasColors
 # Exit Code: 0 - Console or output supports colors
 # Exit Code; 1 - No colors
-# Local Cache: this value is cached in __BUILD_TERMINAL_COLORS
-# Environment: __BUILD_TERMINAL_COLORS - Uses this for storage, can be unset any time.
+# Local Cache: this value is cached in BUILD_COLORS if it is not set.
+# Environment: BUILD_COLORS - Override value for this
 hasColors() {
-    export __BUILD_TERMINAL_COLORS
-    __BUILD_TERMINAL_COLORS=${__BUILD_TERMINAL_COLORS-z}
-    if [ "z" = "$__BUILD_TERMINAL_COLORS" ]; then
+    export BUILD_COLORS
+
+    BUILD_COLORS="${BUILD_COLORS-z}"
+    if [ "z" = "$BUILD_COLORS" ]; then
         if [ "$(tput colors)" -ge 256 ]; then
-            __BUILD_TERMINAL_COLORS=1
+            BUILD_COLORS=1
         else
-            __BUILD_TERMINAL_COLORS=
+            BUILD_COLORS=
         fi
     fi
-    test "$__BUILD_TERMINAL_COLORS"
+    test "$BUILD_COLORS"
 }
 
 __consoleEscape() {
