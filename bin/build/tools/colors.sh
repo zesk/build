@@ -181,7 +181,7 @@ _consoleOrange() {
     local label="$1"
     shift
     # see https://i.stack.imgur.com/KTSQa.png
-    __consoleEscape "$label" '\033[38;5;214m' '\033[0m' "$@"
+    __consoleOutput "$label" '\033[38;5;214m' '\033[0m' "$@"
 }
 
 # shellcheck disable=SC2120
