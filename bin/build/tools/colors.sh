@@ -43,10 +43,17 @@ hasConsoleAnimation() {
 # Environment: BUILD_COLORS - Override value for this
 hasColors() {
     export BUILD_COLORS
+    export TERM
 
     BUILD_COLORS="${BUILD_COLORS-z}"
     if [ "z" = "$BUILD_COLORS" ]; then
-        if [ "$(tput colors)" -ge 256 ]; then
+        if [ -z "${TERM-}" ]; then
+            if [ -n "$DISPLAY" ]; then
+                BUILD_COLORS=1
+            else
+                BUILD_COLORS=
+            fi
+        elif [ "$(tput colors)" -ge 256 ]; then
             BUILD_COLORS=1
         else
             BUILD_COLORS=
