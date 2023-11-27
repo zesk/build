@@ -51,6 +51,9 @@ hasColors() {
         else
             BUILD_COLORS=
         fi
+    elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
+        # Values allowed for this global are 1 and blank only
+        BUILD_COLORS=
     fi
     test "$BUILD_COLORS"
 }
