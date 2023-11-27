@@ -244,7 +244,7 @@ documentFunctionsWithTemplate() {
         clearLine
         rm "$documentTokensFile"
     )
-    reportTiming "$start" Generated "$targetFile" in
+    statusMessage consoleSuccess "$(reportTiming "$start" Generated "$targetFile" in)"
 }
 
 # Usage: documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDiretory [ cacheDirectory ]
