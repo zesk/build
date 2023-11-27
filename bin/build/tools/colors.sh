@@ -58,14 +58,18 @@ __consoleEscape() {
     local start=$1 end=$2 nl="\n"
     shift
     shift
-    if [ -z "$*" ]; then
-        printf "%s$start" ""
-    else
-        if [ "$1" = "-n" ]; then
-            nl=
-            shift
+    if [ "$1" = "-n" ]; then
+        nl=
+        shift
+    fi
+    if hasColors; then
+        if [ -z "$*" ]; then
+            printf "%s$start" ""
+        else
+            printf "$start%s$end$nl" "$*"
         fi
-        printf "$start%s$end$nl" "$*"
+    else
+        printf "%s$nl" "$*"
     fi
 }
 
