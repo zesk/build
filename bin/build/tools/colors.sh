@@ -321,8 +321,6 @@ consoleNameValue() {
 clearLine() {
     if hasConsoleAnimation; then
         echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
-    else
-        printf "\n"
     fi
 }
 
@@ -346,8 +344,12 @@ statusMessage() {
     local consoleAction=$1
 
     shift
-    clearLine
-    "$consoleAction" -n "$@"
+    if hasConsoleAnimation; then
+        clearLine
+        "$consoleAction" -n "$@"
+    else
+        "$consoleAction" "$@"
+    fi
 }
 
 #

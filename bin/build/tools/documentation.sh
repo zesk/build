@@ -21,7 +21,9 @@ errorArgument=2
 # Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
 # Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regarldess.
 #
-# Generates console usage output for a script using documentation tools parsed from the comment
+# Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
+#
+# Simplifies documentation and has it in one place for shell and online.
 #
 usageDocument() {
     local functionDefinitionFile functionName exitCode variablesFile
@@ -79,13 +81,14 @@ usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentFunctionsWithTemplate() {
-    local sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory
+    local start sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory
 
     local optionForce targetDirectory cacheFile tokenLookupCacheFile
     local sourceShellScript sourceShellScriptChecksum reason base checksumPrefix checksum
     local generatedChecksum error
     local documentTokensFile shaCache
 
+    start=$(beginTiming)
     optionForce=
     while [ $# -gt 0 ]; do
         case $1 in
@@ -147,7 +150,6 @@ documentFunctionsWithTemplate() {
     reason=""
     base="$(basename "$targetFile")"
     base="${base%%.md}"
-
     statusMessage consoleInfo "Generating $base ..."
 
     # subshell to hide environment tokens
@@ -228,10 +230,9 @@ documentFunctionsWithTemplate() {
                 statusMessage consoleSuccess "Saved $targetFile checksum $checksum ..."
             fi
         done <"$documentTokensFile"
-        clearLine
         if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
             if [ ! -f "$targetFile" ] || ! diff -q "$documentTemplate" "$targetFile" >/dev/null; then
-                printf "%s -> %s %s\n" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
+                printf "%s -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
                 cp "$documentTemplate" "$targetFile"
             fi
         elif test "$allCached" && [ -f "$targetFile" ]; then
@@ -240,10 +241,10 @@ documentFunctionsWithTemplate() {
             statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
             ./bin/build/map.sh <"$templateFile" >"$targetFile"
         fi
-        rm "$documentTokensFile"
-
         clearLine
+        rm "$documentTokensFile"
     )
+    statusMessage consoleSuccess "$(reportTiming "$start" Generated "$targetFile" in)"
 }
 
 # Usage: documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDiretory [ cacheDirectory ]
@@ -269,11 +270,12 @@ documentFunctionsWithTemplate() {
 # Exit Code: 2 - Argument error
 #
 documentFunctionTemplateDirectory() {
-    local sourceCodeDirectory templateDirectory functionTemplate targetDirectory cacheDirectory
+    local start sourceCodeDirectory templateDirectory functionTemplate targetDirectory cacheDirectory
     local extraOptions cacheFile
     local sourceShellScript reason base targetFile checksum
     local generatedChecksum documentTokensFile
 
+    start=$(beginTiming)
     extraOptions=()
     while [ $# -gt 0 ]; do
         case $1 in
@@ -329,6 +331,8 @@ documentFunctionTemplateDirectory() {
             exitCode=$errorEnvironment
         fi
     done
+    clearLine
+    reportTiming "$start" "Completed gemeration of $(consoleInfo "$templateDirectory") in"
     return $exitCode
 }
 
