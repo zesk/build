@@ -50,7 +50,7 @@ hasColors() {
 
     BUILD_COLORS="${BUILD_COLORS-z}"
     if [ "z" = "$BUILD_COLORS" ]; then
-        if [ -z "${TERM-}" ]; then
+        if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
             if [ -n "${DISPLAY-}" ]; then
                 BUILD_COLORS=1
             else
