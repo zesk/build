@@ -19,6 +19,7 @@ pipelines:
           services:
             - docker
           script:
+            - env
             - bin/test.sh
     main:
       - step:
