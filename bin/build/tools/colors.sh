@@ -46,11 +46,12 @@ hasConsoleAnimation() {
 hasColors() {
     export BUILD_COLORS
     export TERM
+    export DISPLAY
 
     BUILD_COLORS="${BUILD_COLORS-z}"
     if [ "z" = "$BUILD_COLORS" ]; then
         if [ -z "${TERM-}" ]; then
-            if [ -n "$DISPLAY" ]; then
+            if [ -n "${DISPLAY-}" ]; then
                 BUILD_COLORS=1
             else
                 BUILD_COLORS=
@@ -71,7 +72,7 @@ __consoleEscape() {
     local start=$1 end=$2 nl="\n"
     shift
     shift
-    if [ "$1" = "-n" ]; then
+    if [ "${1-}" = "-n" ]; then
         nl=
         shift
     fi
@@ -92,7 +93,7 @@ __consoleOutput() {
     shift
     shift
     shift
-    if [ "$1" = "-n" ]; then
+    if [ "${1-}" = "-n" ]; then
         nl=
         shift
     fi

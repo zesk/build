@@ -137,7 +137,13 @@ requireTestFiles() {
         testFailed "$(consoleInfo -n "$*")"
     fi
 }
+
 requireFileDirectory "$quietLog"
+
+printf "TERM: %s DISPLAY: %s\n" "${TERM-none}" "${DISPLAY-none} hasColors: $(
+    hasColors
+    printf %d $?
+)"
 
 # Unusual quoting here is to avoid matching HERE
 ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
