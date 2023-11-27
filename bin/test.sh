@@ -91,7 +91,7 @@ loadTestFiles() {
         testName="$(cleanTestName "$1")"
         tests+=("#$testName") # Section
         testCount=${#tests[@]}
-        statusMessage consoleError "$testName"
+        statusMessage consoleError "Loading test section \"$testName\""
         # shellcheck source=/dev/null
         . "./bin/tests/$1"
         clearLine
