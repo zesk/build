@@ -14,6 +14,7 @@ me=$(basename "${BASH_SOURCE[0]}")
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# fn: make-env
 # Generate the environment file for this project.
 #
 # Default hook runs `bin/build/pipeline/make-env.sh` directly. To customize this
@@ -21,7 +22,6 @@ me=$(basename "${BASH_SOURCE[0]}")
 # required environment variables which are set in your build pipeline.
 #
 # See: make-env.sh
-# fn: make-env
 hookMakeEnvironment() {
     consoleSuccess "$me is the default script, please customize for your application."
     ./bin/build/pipeline/make-env.sh "$@"
