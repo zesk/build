@@ -148,12 +148,13 @@ printf "TERM: %s DISPLAY: %s\n" "${TERM-none}" "${DISPLAY-none} hasColors: $(
 # Unusual quoting here is to avoid matching HERE
 ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
 
+requireTestFiles "$quietLog" deploy-tests.sh
 requireTestFiles "$quietLog" documentation-tests.sh
 requireTestFiles "$quietLog" os-tests.sh
 requireTestFiles "$quietLog" text-tests.sh
 requireTestFiles "$quietLog" assert-tests.sh
 requireTestFiles "$quietLog" usage-tests.sh
-requireTestFiles "$quietLog" docker-tests.sh colors-tests.sh api-tests.sh aws-tests.sh deploy-tests.sh
+requireTestFiles "$quietLog" docker-tests.sh colors-tests.sh api-tests.sh aws-tests.sh
 
 # Side effects - install the software
 requireTestFiles "$quietLog" bin-tests.sh

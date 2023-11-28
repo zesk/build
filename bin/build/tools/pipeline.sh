@@ -239,7 +239,7 @@ getApplicationDeployVersion() {
   local p=$1 value appChecksumFile=.deploy/APPLICATION_CHECKSUM
 
   if [ ! -d "$p" ]; then
-    consoleError "$p is not a directory"
+    consoleError "$p is not a directory" 1>&2
     return 1
   fi
   if [ -f "$p/$appChecksumFile" ]; then
@@ -253,14 +253,14 @@ getApplicationDeployVersion() {
     # shellcheck source=/dev/null
     value=$(
       source "$p/.env"
-      echo "${!f-}"
+      printf %s "${!f-}"
     )
     if [ -n "$value" ]; then
-      echo -n "$value"
+      printf %s "$value"
       return 0
     fi
   done
-  return 0
+  return 1
 }
 
 #
@@ -366,7 +366,7 @@ undoDeployApplication() {
 #
 deployApplication() {
   local deployHome deployVersion applicationPath deployedApplicationPath
-  local previousApplicationChecksum targetPackageFullPath me
+  local previousApplicationChecksum targetPackageFullPath me exitCode=0
 
   me="$(basename "$0")"
   set -e
@@ -385,7 +385,9 @@ deployApplication() {
   deployedApplicationPath="$deployHome/$deployVersion/app"
 
   previousApplicationChecksum=$(getApplicationDeployVersion "$applicationPath")
-
+  if [ -n "$previousApplicationChecksum" ]; then
+    previousApplicationChecksum=$(date '+%F_%H-%M')
+  fi
   targetPackageFullPath="$deployHome/$deployVersion/$targetPackage"
 
   if [ ! -f "$targetPackageFullPath" ]; then
@@ -433,17 +435,45 @@ deployApplication() {
     runHook deploy-move "$applicationPath"
   else
     if [ ! -d "$deployHome/$previousApplicationChecksum" ]; then
-      mkdir "$deployHome/$previousApplicationChecksum"
+      if ! mkdir -p "$deployHome/$previousApplicationChecksum"; then
+        consoleError "Unable to create deploy home/previous checksum \"$deployHome/$previousApplicationChecksum\"" 1>&2
+        return "$errorEnvironment"
+      fi
     fi
     if [ -d "$deployHome/$previousApplicationChecksum/app" ]; then
-      rm -rf "$deployHome/$previousApplicationChecksum/app"
+      if ! rm -rf "$deployHome/$previousApplicationChecksum/app"; then
+        consoleError "Unable to delete \"$deployHome/$previousApplicationChecksum/app\"" 1>&2
+        return "$errorEnvironment"
+      fi
     fi
-    cd "$deployHome"
-    mv "$applicationPath" "$deployHome/$previousApplicationChecksum/app"
-    mv "$deployedApplicationPath" "$applicationPath"
+    if ! cd "$deployHome"; then
+      consoleError "Unable to cd to \"$deployHome\"" 1>&2
+      return "$errorEnvironment"
+    fi
+    if ! mv "$applicationPath" "$deployHome/$previousApplicationChecksum/app"; then
+      consoleError "Unable to move \"$applicationPath\" \"$deployHome/$previousApplicationChecksum/app\"" 1>&2
+      return "$errorEnvironment"
+    fi
+    if ! mv "$deployedApplicationPath" "$applicationPath"; then
+      consoleError "Unable to do FINAL mv \"$deployedApplicationPath\" \"$applicationPath\" attempting UNDO" 1>&2
+      if ! mv "$deployHome/$previousApplicationChecksum/app" "$applicationPath"; then
+        consoleError "Unable to UNDO FINAL mv \"$deployHome/$previousApplicationChecksum/app\" \"$applicationPath\", system is unstable" 1>&2
+      fi
+      return "$errorEnvironment"
+    fi
   fi
-  cd "$applicationPath"
-  runOptionalHook deploy-finish
-  runOptionalHook maintenance off
+  if ! cd "$applicationPath"; then
+    consoleError "Unable to do cd \"$applicationPath\" can not run optional hooks - UNSTABLE" 1>&2
+    return "$errorEnvironment"
+  fi
+  if ! runOptionalHook deploy-finish; then
+    consoleError "Deploy finish failed" 1>&2
+    exitCode=$errorEnvironment
+  fi
+  if ! runOptionalHook maintenance off; then
+    consoleError "maintenance off failed" 1>&2
+    exitCode=$errorEnvironment
+  fi
   consoleSuccess "Completed"
+  return "$exitCode"
 }
