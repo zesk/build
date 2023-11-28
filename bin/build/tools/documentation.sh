@@ -716,6 +716,9 @@ _bashDocumentFunction_usageFormat() {
 # Format example blocks (indents as a code block)
 #
 _bashDocumentFunction_exampleFormat() {
+    markdownListify
+}
+_bashDocumentFunction_outputFormat() {
     prefixLines "    "
 }
 
@@ -723,7 +726,7 @@ _bashDocumentFunction_exampleFormat() {
 # Format argument blocks (does markdownListify)
 #
 _bashDocumentFunction_argumentFormat() {
-    markdownListify
+    listify
 }
 
 #

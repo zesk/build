@@ -583,8 +583,9 @@ argumentsToArray() {
 # Heading for section output
 #
 # Short Description: Text heading decoration
-# Usage: boxedHeading text [ ... ]
-# Argument: - `text ...` - Text to put in the box
+# Usage: boxedHeading [ --size size ] text [ ... ]
+# Argument: --size size - Number of liens to output
+# Argument: text ... - Text to put in the box
 # Example: boxedHeading Moving ...
 # Output: +================================================================================================+
 # Output: |                                                                                                |
