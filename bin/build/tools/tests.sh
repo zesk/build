@@ -53,13 +53,12 @@ validateShellScripts() {
     foundFiles=$(mktemp)
     find . -name '*.sh' ! -path '*/.*' "$@" -print0 >"$foundFiles"
     while IFS= read -r -d '' f; do
-        clearLine
-        consoleInfo -n "Checking $f"
+        statusMessage consoleInfo "Checking $f"
         if ! bash -n "$f" >/dev/null; then
-            failedReasons+=("bash -n \"$f\"")
+            failedReasons+=("bash -n $f")
         fi
         if ! shellcheck "$f" >/dev/null; then
-            failedReasons+=("shellcheck \"$f\"")
+            failedReasons+=("shellcheck $f")
         fi
     done <"$foundFiles"
     rm "$foundFiles"
@@ -99,17 +98,21 @@ validateShellScripts() {
 # Exit Code: 2 - Arguments error (missing extension or text)
 #
 validateFileContents() {
-    local failedReasons f foundFiles extensions=() textMatches
+    local failedReasons f foundFiles
+    local extensionArgs textMatches extensions
 
+    extensionArgs=()
+    extensions=()
     while [ $# -gt 0 ]; do
         if [ "$1" == "--" ]; then
             shift
             break
         fi
-        extensions+=("-name" "*.$1" "-o")
+        extensions+=("$1")
+        extensionArgs+=("-name" "*.$1" "-o")
         shift
     done
-    unset 'extensions['$((${#extensions[@]} - 1))']'
+    unset 'extensionArgs['$((${#extensionArgs[@]} - 1))']'
 
     textMatches=()
     while [ $# -gt 0 ]; do
@@ -133,15 +136,20 @@ validateFileContents() {
     total=0
     foundFiles=$(mktemp)
     # Final arguments for find
-    find . "${extensions[@]}" ! -path '*/.*' "$@" -print0 >"$foundFiles"
+    find . "${extensionArgs[@]}" ! -path '*/.*' "$@" >"$foundFiles"
     total=$(($(wc -l <"$foundFiles") + 0))
-    statusMessage consoleInfo "Searching $total $(plural $total file files) for text: $(consoleCode)$(printf " \"%s\"" "${textMatches[@]}")"
-    while IFS= read -r -d '' f; do
-        statusMessage consoleInfo "Checking $f"
+    # shellcheck disable=SC2059
+    statusMessage consoleInfo "Searching $total $(plural $total file files) (ext: ${extensions[*]}) for text: $(printf " $(consoleReset)\"$(consoleCode "%s")\"" "${textMatches[@]}")"
+
+    total=0
+    while IFS= read -r f; do
         total=$((total + 1))
         for t in "${textMatches[@]}"; do
             if ! grep -q "$t" "$f"; then
                 failedReasons+=("$f missing \"$t\"")
+                statusMessage consoleError "Searching $f ... NOT FOUND"
+            else
+                statusMessage consoleSuccess "Searching $f ... found"
             fi
         done
     done <"$foundFiles"
