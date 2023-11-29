@@ -28,7 +28,7 @@ errorArgument=2
 # Usage: quoteSedPattern text
 # Argument: text - Text to quote
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
-# Example: sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+# Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 #
 quoteSedPattern() {
     # IDENTICAL quoteSedPattern 6
@@ -45,7 +45,7 @@ quoteSedPattern() {
 # Usage: escapeSingleQuotes text
 # Argument: text - Text to quote
 # Output: Single quotes are prefixed with a backslash
-# Example: escapeSingleQuotes "Now I can't not include this in a bash string."
+# Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeDoubleQuotes() {
     printf %s "${1//\"/\"}"
@@ -56,7 +56,7 @@ escapeDoubleQuotes() {
 # Usage: escapeSingleQuotes text
 # Argument: text - Text to quote
 # Output: Single quotes are prefixed with a backslash
-# Example: escapeSingleQuotes "Now I can't not include this in a bash string."
+# Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeSingleQuotes() {
     printf %s "${1//\'/\\\'}"
@@ -67,7 +67,7 @@ escapeSingleQuotes() {
 # Usage: escapeSingleQuotes text
 # Argument: text - Text to quote
 # Output: Single quotes are prefixed with a backslash
-# Example: escapeSingleQuotes "Now I can't not include this in a bash string."
+# Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeQuotes() {
     printf %s "$(escapeDoubleQuotes "$(escapeSingleQuotes "$1")")"
@@ -87,7 +87,7 @@ replaceFirstPattern() {
 # Usage: trimSpace text
 # Argument: text - Text to remove spaces
 # Output: text
-# Example: trimSpace "$token"
+# Example:     trimSpace "$token"
 # Short Description: Trim whitespace of a bash argument
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
@@ -118,7 +118,7 @@ trimSpacePipe() {
 # Argument: text - Text to quote
 # Output: string quoted and appropriate to assign to a value in the shell
 # Depends: sed
-# Example: name="$(quoteBashString "$name")"
+# Example:     name="$(quoteBashString "$name")"
 quoteBashString() {
     printf '%s' "$1" | sed 's/\([$`<>'\'']\)/\\\1/g'
 }
@@ -128,9 +128,9 @@ quoteBashString() {
 # Argument: `count` - Required, integer count of times to repeat
 # Argument: `string` - A sequence of characters to repeat
 # Argument: ... - Additional arguments are output using shell expansion of `$*`
-# Example: echo $(repeat 80 =)
-# Example: echo Hello world
-# Example: echo $(repeat 80 -)
+# Example:     echo $(repeat 80 =)
+# Example:     echo Hello world
+# Example:     echo $(repeat 80 -)
 #
 repeat() {
     local count=$((${1:-2} + 0))
@@ -148,9 +148,9 @@ repeat() {
 # Argument: alternateChar - Use an alternate character or string output
 # Argument: offset - an integer offset to increase or decrease the size of the bar (default is `0`)
 # Environment: Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
-# Example: consoleSuccess $(echoBar =-)
-# Example: consoleSuccess $(echoBar "- Success ")
-# Example: consoleMagenta $(echoBar +-)
+# Example:     consoleSuccess $(echoBar =-)
+# Example:     consoleSuccess $(echoBar "- Success ")
+# Example:     consoleMagenta $(echoBar +-)
 echoBar() {
     local c="${1:-=}"
     local n=$(($(consoleColumns) / ${#c}))
@@ -168,8 +168,8 @@ echoBar() {
 # Usage: prefixLines [ text .. ] < fileToPrefixLines
 # Exit Code: 0
 # Argument: `text` - Prefix each line with this text
-# Example: cat "$file" | prefixLines "$(consoleCode)"
-# Example: cat "$errors" | prefixLines "    ERROR: "
+# Example:     cat "$file" | prefixLines "$(consoleCode)"
+# Example:     cat "$errors" | prefixLines "    ERROR: "
 #
 prefixLines() {
     local prefix="$*"
@@ -194,9 +194,9 @@ prefixLines() {
 # Usage: inArray element [ arrayElement0 arrayElement1 ... ]
 # Argument: `element` - Thing to search for
 # Argument: `arrayElement0` - One or more array elements to match
-# Example: if inArray "$thing" "${things[@]}"; then things+=("$thing");
-# Example:     things+=("$thing")
-# Example: fi
+# Example:     if inArray "$thing" "${things[@]}"; then things+=("$thing");
+# Example:         things+=("$thing")
+# Example:     fi
 # Exit Code: 0 - If element is found in array
 # Exit Code: 1 - If element is NOT found in array
 # Tested: No
@@ -287,7 +287,7 @@ isUnsignedInteger() {
 # Usage: trimWords [ wordCount [ word0 ... ] ]
 # Argument: `wordCount` - Words to output
 # Argument: `word0` - One or more words to output
-# Example: printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
+# Example:     printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
 # Tested: No
 #
 trimWords() {
@@ -321,8 +321,8 @@ trimWords() {
 # Short Description: Simple Database URL Parsing
 # Usage: urlParse url
 # Argument: url - a Uniform Resource Locator used to specify a database connection
-# Example: eval "$(urlParse scheme://user:password@host:port/path)"
-# Example: echo $name
+# Example:     eval "$(urlParse scheme://user:password@host:port/path)"
+# Example:     echo $name
 #
 urlParse() {
     local url="${1-}" v name scheme user password host port failed
@@ -370,7 +370,7 @@ urlParse() {
 # Usage: urlParseItem url name
 # Argument: url - a Uniform Resource Locator used to specify a database connection
 # Argument: name - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
-# Example: consoleInfo "Connecting as $(urlParseItem "$url" user)"
+# Example:     consoleInfo "Connecting as $(urlParseItem "$url" user)"
 #
 urlParseItem() {
     # shellcheck disable=SC2034
@@ -389,7 +389,7 @@ urlParseItem() {
 # Argument: - `fieldIndex` - The field to compute the maximum length for
 # Argument: - `separatorChar` - The separator character to delineate fields
 # Argument: - `fieldBasedFile` - A file with fields
-# Example: usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
+# Example:     usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
 #
 maximumFieldLength() {
     local index=$((${1-1} + 0)) separatorChar=${2-}
@@ -413,11 +413,11 @@ maximumFieldLength() {
 #
 # Exit code: 1 - If count is non-numeric
 # Exit code: 0 - If count is numeric
-# Example: count=$(($(wc -l < $foxSightings) + 0))
-# Example: printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
+# Example:     count=$(($(wc -l < $foxSightings) + 0))
+# Example:     printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
 # Example:
-# Example: n=$(($(date +%s)) - start))
-# Example: printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
+# Example:     n=$(($(date +%s)) - start))
+# Example:     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
 #
 plural() {
     local count=${1-}
@@ -439,8 +439,8 @@ plural() {
 # Usage: dateToFormat date format
 # Argument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 # Argument: format - Format string for the `date` command (e.g. `%s`)
-# Example: dateToFormat 2023-04-20 %s 1681948800
-# Example: timestamp=$(dateToFormat '2023-10-15' %s)
+# Example:     dateToFormat 2023-04-20 %s 1681948800
+# Example:     timestamp=$(dateToFormat '2023-10-15' %s)
 # Environment: Compatible with BSD and GNU date.
 # Exit Code: 1 - if parsing fails
 # Exit Code: 0 - if parsing succeeds
@@ -462,7 +462,7 @@ dateToFormat() {
 # Environment: Compatible with BSD and GNU date.
 # Exit Code: 1 - if parsing fails
 # Exit Code: 0 - if parsing succeeds
-# Example: timestamp=$(dateToTimestamp '2023-10-15')
+# Example:     timestamp=$(dateToTimestamp '2023-10-15')
 #
 dateToTimestamp() {
     dateToFormat "$1" %s
@@ -482,7 +482,7 @@ dateToTimestamp() {
 
 # Exit codes: If parsing fails, non-zero exit code.
 
-# Example: dateField=$(timestampToDate $init %Y)
+# Example:     dateField=$(timestampToDate $init %Y)
 
 timestampToDate() {
     if date --version 2>/dev/null 1>&2; then
@@ -502,7 +502,7 @@ timestampToDate() {
 #
 # Short Description: Yesterday's date
 # Environment: Compatible with BSD and GNU date.
-# Example: rotated="$log.$(yesterdayDate)"
+# Example:     rotated="$log.$(yesterdayDate)"
 
 yesterdayDate() {
     timestampToDate "$(($(date +%s) - 86400))" %F
@@ -513,7 +513,7 @@ yesterdayDate() {
 # Usage: todayDate
 # Argument: None.
 # Environment: Compatible with BSD and GNU date.
-# Example: date="$(todayDate)"
+# Example:     date="$(todayDate)"
 #
 todayDate() {
     date +%F
@@ -526,8 +526,8 @@ todayDate() {
 # Short Description: align text right
 # Argument: `characterWidth` - Characters to align right
 # Argument: `text ...` - Text to align right
-# Example: printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
-# Example: printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
+# Example:     printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
+# Example:     printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
 # Example:                 Name: Juanita
 # Example:           Profession: Engineer
 #
@@ -546,10 +546,10 @@ alignRight() {
 # Argument: - characterWidth - Characters to align left
 # Argument: - `text ...` - Text to align left
 #
-# Example: printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
-# Example: printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
-# Example: Name          : Tyrone
-# Example: Profession    : Engineer
+# Example:     printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
+# Example:     printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
+# Example:     Name          : Tyrone
+# Example:     Profession    : Engineer
 #
 alignLeft() {
     local n=$(($1 + 0))
@@ -586,7 +586,7 @@ argumentsToArray() {
 # Usage: boxedHeading [ --size size ] text [ ... ]
 # Argument: --size size - Number of liens to output
 # Argument: text ... - Text to put in the box
-# Example: boxedHeading Moving ...
+# Example:     boxedHeading Moving ...
 # Output: +================================================================================================+
 # Output: |                                                                                                |
 # Output: | Moving ...                                                                                     |
@@ -678,8 +678,8 @@ listTokens() {
 # Argument: filename - One or more filenames to generate a checksum for
 # Depends: shasum
 # Short Description: SHA1 checksum of standard input
-# Example: shaPipe < "$fileName"
-# Example: shaPipe "$fileName0" "$fileName1"
+# Example:     shaPipe < "$fileName"
+# Example:     shaPipe "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 # Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
 #
@@ -716,8 +716,8 @@ shaPipe() {
 # Argument: cacheDirectory - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
 # Depends: shasum
 # Short Description: SHA1 checksum of standard input
-# Example: cachedShaPipe "$cacheDirectory" < "$fileName"
-# Example: cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
+# Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
+# Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 cachedShaPipe() {
@@ -790,7 +790,7 @@ mapValue() {
 # Arguments: Ignored
 # Depends: shasum, /dev/random
 # Description: Outputs 40 random hexadecimal characters, lowercase.
-# Example: testPassword="$(randomString)"
+# Example:     testPassword="$(randomString)"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 randomString() {

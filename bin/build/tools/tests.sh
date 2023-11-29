@@ -33,7 +33,7 @@ testShellScripts() {
 # This can be run on any directory tree to test scripts in any application.
 #
 # Usage: validateShellScripts [ findArgs ]
-# Example: if validateShellScripts; then git commit -m "saving things" -a; fi
+# Example:     if validateShellScripts; then git commit -m "saving things" -a; fi
 # Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
@@ -56,21 +56,21 @@ validateShellScripts() {
         clearLine
         consoleInfo -n "Checking $f"
         if ! bash -n "$f" >/dev/null; then
-            failedReasons+=("bash -n $f failed")
+            failedReasons+=("bash -n \"$f\"")
         fi
         if ! shellcheck "$f" >/dev/null; then
-            failedReasons+=("shellcheck $f failed")
+            failedReasons+=("shellcheck \"$f\"")
         fi
     done <"$foundFiles"
     rm "$foundFiles"
     clearLine
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
-        consoleError "The following scripts failed:" 1>&2
+        consoleError "# The following scripts failed:" 1>&2
         for f in "${failedReasons[@]}"; do
             echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
         done
-        consoleError "done." 1>&2
+        consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
         return $errorEnvironment
     else
         consoleSuccess "All scripts passed"
@@ -85,7 +85,7 @@ validateShellScripts() {
 # By default, any directory which begins with a dot `.` will be ignored.
 #
 # Usage: validateFileContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
-# Example: validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2023'
+# Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2023'
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
 # Argument: `--` - Required. Separates extensions from text
 # Argument: `text0` - Required. Text which must exist in each file with the extension given.

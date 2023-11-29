@@ -3,10 +3,10 @@
 [⬅ Return to hook index](index.md)
 
 
-## `hookGitPreCommit` - The `git-pre-commit` hook will be installed as a `git` pre-commit
+## `git-pre-commit.sh` - The `git-pre-commit` hook will be installed as a `git` pre-commit
 
-The `git-pre-commit` hook will be installed as a `git` pre-commit hook in your project
-If you already have a `pre-commit` hook - do not use this.
+The `git-pre-commit` hook will be installed as a `git` pre-commit hook in your project and will
+overwrite any existing `pre-commit` hook.
 
 ## Exit codes
 

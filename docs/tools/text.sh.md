@@ -18,11 +18,11 @@ Quote a string to be used in a sed pattern on the command line.
 
 ### Examples
 
-    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 
 ### Sample Output
 
-string quoted and appropriate to insert in a sed search or replacement phrase
+    string quoted and appropriate to insert in a sed search or replacement phrase
 
 ### Exit codes
 
@@ -40,7 +40,7 @@ string quoted and appropriate to insert in a sed search or replacement phrase
 
 ### Examples
 
-    echo $(repeat 80 =)
+echo $(repeat 80 =)
     echo Hello world
     echo $(repeat 80 -)
 
@@ -63,7 +63,7 @@ Output a bar as wide as the console using the `=` symbol.
 
 ### Examples
 
-    consoleSuccess $(echoBar =-)
+consoleSuccess $(echoBar =-)
     consoleSuccess $(echoBar "- Success ")
     consoleMagenta $(echoBar +-)
 
@@ -90,7 +90,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Examples
 
-    cat "$file" | prefixLines "$(consoleCode)"
+cat "$file" | prefixLines "$(consoleCode)"
     cat "$errors" | prefixLines "    ERROR: "
 
 ### Exit codes
@@ -111,11 +111,11 @@ Trim spaces and only spaces
 
 ### Examples
 
-    trimSpace "$token"
+trimSpace "$token"
 
 ### Sample Output
 
-text
+    text
 
 ### Exit codes
 
@@ -146,7 +146,7 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 
 ### Examples
 
-    eval "$(urlParse scheme://user:password@host:port/path)"
+eval "$(urlParse scheme://user:password@host:port/path)"
     echo $name
 
 ### Exit codes
@@ -169,7 +169,7 @@ Gets the component of the URL from a given database URL.
 
 ### Examples
 
-    consoleInfo "Connecting as $(urlParseItem "$url" user)"
+consoleInfo "Connecting as $(urlParseItem "$url" user)"
 
 ### Exit codes
 
@@ -193,7 +193,7 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 ### Examples
 
-    usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
+usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
 
 ### Exit codes
 
@@ -213,11 +213,11 @@ Quote strings for inclusion in shell quoted strings
 
 ### Examples
 
-    escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can't not include this in a bash string."
 
 ### Sample Output
 
-Single quotes are prefixed with a backslash
+    Single quotes are prefixed with a backslash
 
 ### Exit codes
 
@@ -242,7 +242,7 @@ Example:
 
 ### Examples
 
-    count=$(($(wc -l < $foxSightings) + 0))
+count=$(($(wc -l < $foxSightings) + 0))
     printf "We saw %d %s.
 " "$count" "$(plural $count fox foxes)"
     n=$(($(date +%s)) - start))
@@ -267,11 +267,11 @@ Quote strings for inclusion in shell quoted strings
 
 ### Examples
 
-    escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can't not include this in a bash string."
 
 ### Sample Output
 
-Single quotes are prefixed with a backslash
+    Single quotes are prefixed with a backslash
 
 ### Exit codes
 
@@ -291,11 +291,11 @@ Quote strings for inclusion in shell quoted strings
 
 ### Examples
 
-    escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can't not include this in a bash string."
 
 ### Sample Output
 
-Single quotes are prefixed with a backslash
+    Single quotes are prefixed with a backslash
 
 ### Exit codes
 
@@ -341,7 +341,7 @@ Converts a date to an integer timestamp
 
 ### Examples
 
-    timestamp=$(dateToTimestamp '2023-10-15')
+timestamp=$(dateToTimestamp '2023-10-15')
 
 ### Exit codes
 
@@ -368,7 +368,7 @@ Output a bar as wide as the console using the `=` symbol.
 
 ### Examples
 
-    consoleSuccess $(echoBar =-)
+consoleSuccess $(echoBar =-)
     consoleSuccess $(echoBar "- Success ")
     consoleMagenta $(echoBar +-)
 
@@ -404,7 +404,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 ### Examples
 
-    cat "$file" | prefixLines "$(consoleCode)"
+cat "$file" | prefixLines "$(consoleCode)"
     cat "$errors" | prefixLines "    ERROR: "
 
 ### Exit codes
@@ -427,12 +427,12 @@ Format text and align it right using spaces.
 
 ### Examples
 
-    printf "%s: %s
+printf "%s: %s
 " "$(alignRight 20 Name)" "$name"
     printf "%s: %s
 " "$(alignRight 20 Profession)" "$occupation"
-                    Name: Juanita
-              Profession: Engineer
+                Name: Juanita
+          Profession: Engineer
 
 ### Exit codes
 
@@ -453,7 +453,7 @@ Format text and align it left using spaces.
 
 ### Examples
 
-    printf "%s: %s
+printf "%s: %s
 " "$(alignLeft 14 Name)" "$name"
     printf "%s: %s
 " "$(alignLeft 14 Profession)" "$occupation"
@@ -483,23 +483,24 @@ Heading for section output
 
 ### Usage
 
-    boxedHeading text [ ... ]
+    boxedHeading [ --size size ] text [ ... ]
 
 ### Arguments
 
+- `--size size` - Number of liens to output
 - `text ...` - Text to put in the box
 
 ### Examples
 
-    boxedHeading Moving ...
+boxedHeading Moving ...
 
 ### Sample Output
 
-+================================================================================================+
-|                                                                                                |
-| Moving ...                                                                                     |
-|                                                                                                |
-+================================================================================================+
+    +================================================================================================+
+    |                                                                                                |
+    | Moving ...                                                                                     |
+    |                                                                                                |
+    +================================================================================================+
 
 ### Exit codes
 
@@ -521,12 +522,12 @@ You can use this as a pipe or pass in arguments which are files to be checksumme
 
 ### Examples
 
-    shaPipe < "$fileName"
+shaPipe < "$fileName"
     shaPipe "$fileName0" "$fileName1"
 
 ### Sample Output
 
-cf7861b50054e8c680a9552917b43ec2b9edae2b
+    cf7861b50054e8c680a9552917b43ec2b9edae2b
 
 ### Exit codes
 

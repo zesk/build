@@ -15,3 +15,7 @@
 ## Environment
 
 Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+
+## See Also
+
+mapValue

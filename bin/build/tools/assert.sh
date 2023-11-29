@@ -24,7 +24,7 @@ errorArgument=2
 # Argument: - `expected` - Expected string
 # Argument: - `actual` - Actual string
 # Argument: - `message` - Message to output if the assertion fails
-# Example: assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
 # Reviewed: 2023-11-12
 #
 assertEquals() {
@@ -47,8 +47,8 @@ assertEquals() {
 # Argument: - `expected` - Expected string
 # Argument: - `actual` - Actual string
 # Argument: - `message` - Message to output if the assertion fails
-# Example: assertNotEquals "$(head -1 /proc/1/sched | awk '{ print $1 }')" "init" "/proc/1/sched should not be init"
-# Example: Single quote break's
+# Example:     assertNotEquals "$(head -1 /proc/1/sched | awk '{ print $1 }')" "init" "/proc/1/sched should not be init"
+# Example:     Single quote break's
 # Reviewed: 2023-11-12
 #
 assertNotEquals() {
@@ -165,7 +165,7 @@ assertContains() {
 # Exit code: - `1` - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
-# Example: assertDirectoryExists "$HOME" "HOME not found"
+# Example:     assertDirectoryExists "$HOME" "HOME not found"
 # Short Description: Test that a directory exists
 #
 assertDirectoryExists() {
@@ -217,7 +217,7 @@ assertDirectoryDoesNotExist() {
 # Argument: - `expected` - Expected string
 # Argument: - `binary` - Binary to run and evaluate output
 # Argument: - `parameters` - Any additional parameters to binary
-# Example: assertOutputEquals "2023" date +%Y
+# Example:     assertOutputEquals "2023" date +%Y
 # Reviewed: 2023-11-12
 #
 assertOutputEquals() {
@@ -246,7 +246,7 @@ assertOutputEquals() {
 # Exit code: 0 - If the output contains at least one occurrence of the string
 # Exit code: 1 - If output does not contain string
 # Local cache: None
-# Example: assertOutputContains Success complex-thing.sh --dry-run
+# Example:     assertOutputContains Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
@@ -313,7 +313,7 @@ assertOutputContains() {
 # Exit code: 0 - If the output contains at least one occurrence of the string
 # Exit code: 1 - If output does not contain string
 # Local cache: None
-# Example: assertOutputDoesNotContain Success complex-thing.sh --dry-run
+# Example:     assertOutputDoesNotContain Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
 #
 assertOutputDoesNotContain() {
@@ -371,8 +371,8 @@ assertOutputDoesNotContain() {
 # Exit code: - `1` - If the assertion fails
 # Local cache: None
 # Environment: If the file does not exist, this will fail.
-# Example: assertFileContains $logFile Success
-# Example: assertFileContains $logFile "is up to date"
+# Example:     assertFileContains $logFile Success
+# Example:     assertFileContains $logFile "is up to date"
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
@@ -400,8 +400,8 @@ assertFileContains() {
 # Exit code: - `1` - If the assertions fails
 # Exit code: - `0` - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
-# Example: assertFileDoesNotContain $logFile error Error ERROR
-# Example: assertFileDoesNotContain $logFile warning Warning WARNING
+# Example:     assertFileDoesNotContain $logFile error Error ERROR
+# Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
     local f=$1
@@ -435,7 +435,7 @@ assertFileDoesNotContain() {
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
-# Example: assertGreaterThan 3 "$found"
+# Example:     assertGreaterThan 3 "$found"
 # Reviewed: 2023-11-14
 #
 assertGreaterThan() {
@@ -464,7 +464,7 @@ assertGreaterThan() {
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: - `message` - Message to output if the assertion fails
-# Example: assertGreaterThanOrEqual 3 $found
+# Example:     assertGreaterThanOrEqual 3 $found
 # Reviewed: 2023-11-12
 # Short Description: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
@@ -494,7 +494,7 @@ assertGreaterThanOrEqual() {
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: - `message` - Message to output if the assertion fails
-# Example: assertLessThan 3 $found
+# Example:     assertLessThan 3 $found
 # Reviewed: 2023-11-12
 # Exit code: 0 - expected less than to actual
 # Exit code: 1 - expected greater than or equal to actual, or invalid numbers
@@ -524,7 +524,7 @@ assertLessThan() {
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: - `message` - Message to output if the assertion fails
-# Example: assertLessThanOrEqual 3 $found
+# Example:     assertLessThanOrEqual 3 $found
 # Reviewed: 2023-11-12
 # Exit code: 0 - expected less than or equal to actual
 # Exit code: 1 - expected greater than actual, or invalid numbers

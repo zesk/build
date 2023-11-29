@@ -22,7 +22,7 @@ If this fails it will output an error and exit.
 
 ### Examples
 
-    assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
 
 ### Exit codes
 
@@ -30,7 +30,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertEquals` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertEquals` was reviewed 2023-11-12.
 
 ## `assertNotEquals` - Assert two strings are not equal
 
@@ -54,7 +54,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
 
 
 ## `assertGreaterThan` - Assert `leftValue > rightValue`
@@ -73,7 +73,7 @@ Assert `leftValue > rightValue`
 
 ### Examples
 
-    assertGreaterThan 3 "$found"
+assertGreaterThan 3 "$found"
 
 ### Exit codes
 
@@ -81,7 +81,7 @@ Assert `leftValue > rightValue`
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertGreaterThan` was reviewed 2023-11-14.
+File `./bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023-11-14.
 
 ## `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
 
@@ -99,7 +99,7 @@ Assert `leftValue >= rightValue`
 
 ### Examples
 
-    assertGreaterThanOrEqual 3 $found
+assertGreaterThanOrEqual 3 $found
 
 ### Exit codes
 
@@ -107,7 +107,7 @@ Assert `leftValue >= rightValue`
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
 
 
 ## `assertLessThan` - Assert `leftValue < rightValue`
@@ -126,7 +126,7 @@ Assert `leftValue < rightValue`
 
 ### Examples
 
-    assertLessThan 3 $found
+assertLessThan 3 $found
 
 ### Exit codes
 
@@ -135,7 +135,7 @@ Assert `leftValue < rightValue`
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
 
 ## `assertLessThanOrEqual` - Assert `leftValue <= rightValue`
 
@@ -153,7 +153,7 @@ Assert `leftValue <= rightValue`
 
 ### Examples
 
-    assertLessThanOrEqual 3 $found
+assertLessThanOrEqual 3 $found
 
 ### Exit codes
 
@@ -162,7 +162,7 @@ Assert `leftValue <= rightValue`
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
 
 
 ## `assertExitCode` - Assert a process runs and exits with the correct exit
@@ -196,7 +196,7 @@ None.
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertExitCode` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-11-12.
 
 ## `assertNotExitCode` - Assert a process runs and exits with an exit code
 
@@ -221,7 +221,7 @@ If this fails it will output an error and exit.
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
 
 
 ## `assertOutputContains` - Run a command and expect the output to contain the
@@ -244,7 +244,7 @@ If this fails it will output the command result to stdout.
 
 ### Examples
 
-    assertOutputContains Success complex-thing.sh --dry-run
+assertOutputContains Success complex-thing.sh --dry-run
 
 ### Exit codes
 
@@ -257,7 +257,7 @@ None
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
 
 ## `assertOutputDoesNotContain` - Run a command and expect the output to not contain
 
@@ -279,7 +279,7 @@ If this fails it will output the command result to stdout.
 
 ### Examples
 
-    assertOutputDoesNotContain Success complex-thing.sh --dry-run
+assertOutputDoesNotContain Success complex-thing.sh --dry-run
 
 ### Exit codes
 
@@ -292,7 +292,7 @@ None
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
 
 
 ## `assertDirectoryExists` - Test that a directory exists
@@ -310,7 +310,7 @@ $Test that a directory exists
 
 ### Examples
 
-    assertDirectoryExists "$HOME" "HOME not found"
+assertDirectoryExists "$HOME" "HOME not found"
 
 ### Exit codes
 
@@ -353,7 +353,7 @@ None
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 
 
 ### Usage
@@ -367,7 +367,7 @@ File `./bin/build//tools/assert.sh`, function `assertDirectoryDoesNotExist` was 
 
 ### Examples
 
-    assertFileContains $logFile Success
+assertFileContains $logFile Success
     assertFileContains $logFile "is up to date"
 
 ### Exit codes
@@ -385,7 +385,7 @@ If the file does not exist, this will fail.
 
 ### Review Status
 
-File `./bin/build//tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
+File `./bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
 
 ### Usage
 
@@ -398,7 +398,7 @@ File `./bin/build//tools/assert.sh`, function `assertFileContains` was reviewed 
 
 ### Examples
 
-    assertFileDoesNotContain $logFile error Error ERROR
+assertFileDoesNotContain $logFile error Error ERROR
     assertFileDoesNotContain $logFile warning Warning WARNING
 
 ### Exit codes
@@ -421,11 +421,11 @@ Outputs 40 random hexadecimal characters, lowercase.
 
 ### Examples
 
-    testPassword="$(randomString)"
+testPassword="$(randomString)"
 
 ### Sample Output
 
-cf7861b50054e8c680a9552917b43ec2b9edae2b
+    cf7861b50054e8c680a9552917b43ec2b9edae2b
 
 ### Exit codes
 

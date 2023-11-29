@@ -17,7 +17,7 @@ errorArgument=2
 #
 # Appends any passed in arguments as path segments.
 #
-# Example: logFile=$(buildCacheDirectory test.log)
+# Example:     logFile=$(buildCacheDirectory test.log)
 # Usage: buildCacheDirectory [ pathSegment ... ]
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 #
@@ -49,8 +49,8 @@ buildQuietLog() {
 # Creates the directories for all files passed in.
 #
 # Usage: requireFileDirectory file1 file2 ...
-# Example: logFile=./.build/$me.log
-# Example: requireFileDirectory "$logFile"
+# Example:     logFile=./.build/$me.log
+# Example:     requireFileDirectory "$logFile"
 #
 requireFileDirectory() {
     local rs name
@@ -72,7 +72,7 @@ requireFileDirectory() {
 #
 # Usage: requireDirectory dir1 [ dir2 ... ]
 # Argumetn: dir1 - One or more directories to create
-# Example: requireDirectory "$cachePath"
+# Example:     requireDirectory "$cachePath"
 #
 requireDirectory() {
     local name
@@ -126,9 +126,9 @@ runCount() {
 # Argument: newSuffix - Required. String. New suffix to rename to.
 # Argument: actionVerb - Required. String. Description to output for found files.
 # Argument: file0 - Required. String. One or more files to rename, if found, renaming occurs.
-# Example: renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
-# Example: ...
-# Example: renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
+# Example:     renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
+# Example:     ...
+# Example:     renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
 #
 renameFiles() {
     local old=$1 new=$2 verb=$3
@@ -182,9 +182,9 @@ createTarFile() {
 # Short Description: Fetch a list of environment variable names
 # Usage: environmentVariables
 # Output: Environment variable names, one per line.
-# Example: for f in $(environmentVariables); do
+# Example:     for f in $(environmentVariables); do
 # Example:     echo "$f"
-# Example: done
+# Example:     done
 #
 environmentVariables() {
     # IDENTICAL environmentVariables 1
@@ -206,7 +206,8 @@ reverseFileLines() {
 #
 # Usage: makeShellFilesExecutable
 # Environment: Works from the current directory
-# See: chmod-sh.sh
+# See: makeShellFilesExecutable
+# fn: chmod-sh.sh
 makeShellFilesExecutable() {
     # IDENTICAL makeShellFilesExecutable 1
     find . -name '*.sh' ! -path '*/.*' -print0 | xargs -0 chmod -v +x
@@ -217,7 +218,7 @@ makeShellFilesExecutable() {
 # Usage: modificationTime filename0 [ filename1 ... ]
 # Exit Code: 2 - If file does not existd
 # Exit Code: 0 - If file exists and modification times are output, one per line
-# Example: modificationTime ~/.bash_profile
+# Example:     modificationTime ~/.bash_profile
 #
 modificationTime() {
     while [ $# -gt 0 ]; do

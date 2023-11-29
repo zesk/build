@@ -7,7 +7,7 @@
 
 Get the "tag" (or current display version) for an application
 
-The default hook uses the short git checksum
+The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
 
 ## Exit codes
 

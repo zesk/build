@@ -16,7 +16,7 @@ and assumes packages will be available.
 
 ## Examples
 
-    aptInstall shellcheck
+aptInstall shellcheck
 
 ## Exit codes
 
