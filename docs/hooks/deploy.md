@@ -2,7 +2,6 @@
 
 [⬅ Return to hook index](index.md)
 
-
 Deployment occurs as follows:
 
 - `make-env` - Optional. Run on deployment system. Create environment file for remote system.
@@ -13,23 +12,30 @@ Deployment occurs as follows:
 - `deploy-undo` - Optional. Run on each remote system.
 
 
-## `hookMakeEnvironment` - Default hook runs `bin/build/pipeline/make-env.sh` directly. To customize this
+## `make-env` - Generate the environment file for this project.
+
+Generate the environment file for this project.
 
 Default hook runs `bin/build/pipeline/make-env.sh` directly. To customize this
-override this hook in your project.
+override this hook in your project, usually by specifying a list of
+required environment variables which are set in your build pipeline.
 
 ## Exit codes
 
 - `0` - Always succeeds
 
+## See Also
+
+make-env.sh
+
 
 ## `deploy-start.sh` - Deployment "start" script
 
-$Deployment "start" script
+Deployment "start" script
 
 ## Examples
 
-    - Move directories to make deployment final
+- Move directories to make deployment final
 
 ## Exit codes
 
@@ -45,19 +51,15 @@ should do wahtever is required to ensure that.
 
 ## Examples
 
-    - Enable a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
-    - Check the home page for a version number
-    - Check for a known artifact (build sha) in the server somehow
-    - etc.
+- Enable a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
+- Check the home page for a version number
+- Check for a known artifact (build sha) in the server somehow
+- etc.
 
 ## Exit codes
 
 - `0` - Continue with deployment
 - `Non-zero` - Any non-zero exit code will run `deploy-undo` hook on all systems and cancel deployment
-
-## Errors
-
-Unable to find "hookDeployMove" (from "./docs/templates/hooks/deploy.md") in "./bin/"
 
 ## `deploy-cleanup.sh` - Run after a successful deployment
 
@@ -70,25 +72,17 @@ should do wahtever is required to ensure that.
 
 - `0` - Always succeeds
 
-## Errors
-
-Unable to find "hookDeployMove" (from "./docs/templates/hooks/deploy.md") in "./bin/"
-
 ## `deploy-finish.sh` - Deployment "finish" script
 
 $Deployment "finish" script
 
 ## Examples
 
-    - Move directories to make deployment final
+- Move directories to make deployment final
 
 ## Exit codes
 
 - `0` - This SHOULD exit successfully always
-
-## Errors
-
-Unable to find "hookDeployMove" (from "./docs/templates/hooks/deploy.md") in "./bin/"
 
 ## `deploy-undo.sh` - Deployment "undo" script
 

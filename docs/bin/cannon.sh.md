@@ -19,7 +19,7 @@ This can break your files so use with caution.
 
 ## Examples
 
-    cannon master main ! -path '*/old-version/*')
+cannon master main ! -path '*/old-version/*')
 
 ## Exit codes
 

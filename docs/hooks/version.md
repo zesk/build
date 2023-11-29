@@ -37,6 +37,10 @@ If implemented, `new-release.sh` will create a release only when needed.
 
 - `0` - Always succeeds
 
+## See Also
+
+github-version-live.sh
+
 # `new-release.sh` Hooks
 
 
@@ -47,10 +51,6 @@ Run whenever `new-version.sh` is run and a version already exists
 ## Exit codes
 
 - `0` - Always succeeds
-
-## Errors
-
-Unable to find "hookVersionLive" (from "./docs/templates/hooks/version.md") in "./bin/"
 
 ## `version-created.sh` - Run whenever `new-version.sh` is run and a version was just
 
@@ -64,9 +64,5 @@ Run whenever `new-version.sh` is run and a version was just created
 
 BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
 EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
-
-## Errors
-
-Unable to find "hookVersionLive" (from "./docs/templates/hooks/version.md") in "./bin/"
 
 [⬅ Return to hook index](index.md)

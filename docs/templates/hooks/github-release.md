@@ -1,8 +1,6 @@
-# Git Pre Commit
+# GitHub Release Hooks
 
 [⬅ Return to hook index](index.md)
-
-# GitHub Release Hooks
 
 These hooks are run in your code during `github-release.sh`:
 

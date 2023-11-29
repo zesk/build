@@ -14,10 +14,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 #
 # Get the "tag" (or current display version) for an application
 #
-# The default hook uses the short git checksum
+# The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
 #
 hookApplicationTag() {
-    git describe --tags --abbrev=0
+    if ! git describe --tags --abbrev=0 2>/dev/null; then
+        printf %s "v0.0.1"
+    fi
 }
 
 hookApplicationTag

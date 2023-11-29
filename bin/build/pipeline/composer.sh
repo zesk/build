@@ -41,7 +41,7 @@ cacheDir=.composer
 # Argument: installDirectory - You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
 # Argument: --help - This help
 #
-# Example: bin/build/pipeline/composer.sh ./app/
+# Example:     bin/build/pipeline/composer.sh ./app/
 # Local Cache: This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.
 #
 # Environment: BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code

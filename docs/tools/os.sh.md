@@ -22,7 +22,7 @@ Appends any passed in arguments as path segments.
 
 ### Examples
 
-    logFile=$(buildCacheDirectory test.log)
+logFile=$(buildCacheDirectory test.log)
 
 ### Exit codes
 
@@ -57,7 +57,7 @@ Creates the directories for all files passed in.
 
 ### Examples
 
-    logFile=./.build/$me.log
+logFile=./.build/$me.log
     requireFileDirectory "$logFile"
 
 ### Exit codes
@@ -76,7 +76,7 @@ Creates the directories for all files passed in.
 
 ### Examples
 
-    requireDirectory "$cachePath"
+requireDirectory "$cachePath"
 
 ### Exit codes
 
@@ -127,7 +127,7 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 
 ### Examples
 
-    renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
+renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
     ...
     renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
 
@@ -171,13 +171,13 @@ Returns the list of defined environment variables exported in the current bash c
 
 ### Examples
 
-    for f in $(environmentVariables); do
-        echo "$f"
+for f in $(environmentVariables); do
+    echo "$f"
     done
 
 ### Sample Output
 
-Environment variable names, one per line.
+    Environment variable names, one per line.
 
 ### Exit codes
 
@@ -197,7 +197,7 @@ Reverses a pipe's input lines to output using an awk trick.
 Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt).
 
 
-## `makeShellFilesExecutable` - Makes all `*.sh` files executable
+## `chmod-sh.sh` - Makes all `*.sh` files executable
 
 Makes all `*.sh` files executable
 
@@ -213,6 +213,10 @@ Makes all `*.sh` files executable
 
 Works from the current directory
 
+## See Also
+
+makeShellFilesExecutable
+
 
 ## `modificationTime` - Fetch the modification time of a file as a timestamp
 
@@ -224,7 +228,7 @@ Fetch the modification time of a file as a timestamp
 
 ### Examples
 
-    modificationTime ~/.bash_profile
+modificationTime ~/.bash_profile
 
 ### Exit codes
 

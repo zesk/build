@@ -37,7 +37,7 @@ deployApplicationTest() {
 
     for t in 1a 2b 3c 4d; do
         assertExitCode 0 deployHasVersion "$d/DEPLOY" $t
-        deployApplication "$d/DEPLOY" "$t" app.tar.gz "$d/live-app"
+        assertExitCode 0 deployApplication "$d/DEPLOY" "$t" app.tar.gz "$d/live-app"
         assertEquals "$t" "$(getApplicationDeployVersion "$d/live-app")"
     done
 

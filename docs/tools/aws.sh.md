@@ -51,9 +51,9 @@ If not found, returns with exit code 1.
 
 ### Examples
 
-    if ! awsCredentialsFile 1 >/dev/null; then
-        consoleError "No AWS credentials"
-        exit 1
+if ! awsCredentialsFile 1 >/dev/null; then
+    consoleError "No AWS credentials"
+    exit 1
     fi
     file=$(awsCredentialsFile)
 
@@ -84,9 +84,9 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 ### Examples
 
-    if !isAWSKeyUpToDate 90; then
-        bigText Failed, update key and reset date
-        exit 99
+if !isAWSKeyUpToDate 90; then
+    bigText Failed, update key and reset date
+    exit 99
     fi
 
 ### Exit codes
@@ -104,8 +104,8 @@ Exits successfully if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
 
 ### Examples
 
-    if needAWSEnvironment; then
-       ...
+if needAWSEnvironment; then
+   ...
     fi
 
 ### Exit codes
@@ -135,13 +135,13 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 
 ### Examples
 
-    setFile=$(mktemp)
+setFile=$(mktemp)
     if awsEnvironment "$profile" > "$setFile"; then
-        eval $(cat "$setFile")
-        rm "$setFile"
+    eval $(cat "$setFile")
+    rm "$setFile"
     else
-        consoleError "Need $profile profile in aws credentials file"
-        exit 1
+    consoleError "Need $profile profile in aws credentials file"
+    exit 1
     fi
 
 ### Exit codes

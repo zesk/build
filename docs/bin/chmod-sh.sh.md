@@ -1,5 +1,5 @@
 
-# `makeShellFilesExecutable` - Makes all `*.sh` files executable
+# `chmod-sh.sh` - Makes all `*.sh` files executable
 
 [⬅ Return to top](index.md)
 
@@ -16,3 +16,7 @@ Makes all `*.sh` files executable
 ## Environment
 
 Works from the current directory
+
+## See Also
+
+makeShellFilesExecutable

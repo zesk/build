@@ -88,11 +88,11 @@ awsInstall() {
 #
 # Short Description: Get the path to the AWS credentials file
 # Usage:  awsCredentialsFile [ verboseFlag ]
-# Example: if ! awsCredentialsFile 1 >/dev/null; then
+# Example:     if ! awsCredentialsFile 1 >/dev/null; then
 # Example:     consoleError "No AWS credentials"
 # Example:     exit 1
-# Example: fi
-# Example: file=$(awsCredentialsFile)
+# Example:     fi
+# Example:     file=$(awsCredentialsFile)
 # Exit Code: 1 - If `$HOME` is not a directory or credentials file does not exist
 # Exit Code: 0 - If credentials file is found and output to stdout
 #
@@ -132,10 +132,10 @@ awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Variable used to test
 # Short Description: Test whether the AWS keys do not need to be updated
 # Usage: isAWSKeyUpToDate upToDateDays
-# Example: if !isAWSKeyUpToDate 90; then
+# Example:     if !isAWSKeyUpToDate 90; then
 # Example:     bigText Failed, update key and reset date
 # Example:     exit 99
-# Example: fi
+# Example:     fi
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 isAWSKeyUpToDate() {
@@ -189,9 +189,9 @@ isAWSKeyUpToDate() {
 # Exit Code: 1 - If the environment seems to be set already
 # Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (enironment needs to be updated)
 # Environment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (enironment needs to be updated)
-# Example: if needAWSEnvironment; then
+# Example:     if needAWSEnvironment; then
 # Example:    ...
-# Example: fi
+# Example:     fi
 # Short Description: Test whether the AWS environment variables are set or not
 #
 needAWSEnvironment() {
@@ -212,14 +212,14 @@ needAWSEnvironment() {
 # Short Description: Get credentials and output environment variables for AWS authentication
 # Usage: awsEnvironment profileName
 # Argument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
-# Example: setFile=$(mktemp)
-# Example: if awsEnvironment "$profile" > "$setFile"; then
+# Example:     setFile=$(mktemp)
+# Example:     if awsEnvironment "$profile" > "$setFile"; then
 # Example:     eval $(cat "$setFile")
 # Example:     rm "$setFile"
-# Example: else
+# Example:     else
 # Example:     consoleError "Need $profile profile in aws credentials file"
 # Example:     exit 1
-# Example: fi
+# Example:     fi
 #
 awsEnvironment() {
     local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key

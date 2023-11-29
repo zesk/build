@@ -104,7 +104,11 @@ __consoleOutput() {
             printf "$start%s$end$nl" "$*"
         fi
     elif [ -n "$*" ]; then
-        printf "%s: %s$nl" "$prefix" "$*"
+        if [ -n "$prefix" ]; then
+            printf "%s: %s$nl" "$prefix" "$*"
+        else
+            printf "%s$nl" "$*"
+        fi
     fi
 }
 #
@@ -328,8 +332,8 @@ consoleNameValue() {
 # Short Description: Clear a line in the console
 # Usage: clearLine
 # Environment: Intended to be run on an interactive console. Should support `tput cols`.
-# Example: statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
-# Example: clearLine
+# Example:     statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
+# Example:     clearLine
 #
 clearLine() {
     if hasConsoleAnimation; then
@@ -348,9 +352,9 @@ clearLine() {
 # Argument: consoleAction - Required. String. Is one of **Semantic color commands** above or **Color commands** above
 # Argument: message ... - Message to output
 # Environment: Intended to be run on an interactive console. Should support $(tput cols).
-# Example: statusMessage Loading...
-# Example: bin/load.sh >>"$loadLogFile"
-# Example: clearLine
+# Example:     statusMessage Loading...
+# Example:     bin/load.sh >>"$loadLogFile"
+# Example:     clearLine
 #
 # shellcheck disable=SC2120
 statusMessage() {
@@ -371,7 +375,7 @@ statusMessage() {
 # Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
 # Usage: consoleColumns
 # Environment: Uses the `tput cols` tool to find the value if `TERM` is non-blank.
-# Example: repeat $(consoleColumns)
+# Example:     repeat $(consoleColumns)
 #
 consoleColumns() {
     if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then

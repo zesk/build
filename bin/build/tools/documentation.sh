@@ -180,6 +180,7 @@ documentFunctionsWithTemplate() {
                 fi
             fi
             if [ -z "$sourceShellScript" ]; then
+                clearLine
                 sourceShellScript=$(bashFindFunctionFile "$sourceCodeDirectory" "$token")
             fi
             if [ ! -f "$sourceShellScript" ]; then
@@ -573,8 +574,8 @@ bashExtractDocumentation() {
 # Exit Code: 0 - if one or more function definitions are found
 # Exit Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
-# Example: bashFindFunctionFiles . bashFindFunctionFiles
-# Example: ./bin/build/tools/autodoc.sh
+# Example:     bashFindFunctionFiles . bashFindFunctionFiles
+# Example:     ./bin/build/tools/autodoc.sh
 # Platform: `stat` is not cross-platform
 # Short Description: Find where a function is defined in a directory of shell scripts
 #
@@ -611,7 +612,7 @@ bashFindFunctionFiles() {
 # Exit Code: 0 - if one or more function definitions are found
 # Exit Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
-# Example: bashFindFunctionFile . usage
+# Example:     bashFindFunctionFile . usage
 # Short Description: Find single location where a function is defined in a directory of shell scripts
 #
 bashFindFunctionFile() {
@@ -659,7 +660,7 @@ bashFindFunctionFile() {
 # Depends: read printf
 # Exit Code: 0
 # Environment: None
-# Example: map.sh < $templateFile | removeUnfinishedSections
+# Example:     map.sh < $templateFile | removeUnfinishedSections
 #
 removeUnfinishedSections() {
     local section=() foundVar=
@@ -712,10 +713,13 @@ _bashDocumentFunction_usageFormat() {
     prefixLines "    "
 }
 
-#
-# Format example blocks (indents as a code block)
-#
-_bashDocumentFunction_exampleFormat() {
+# #
+# # Format example blocks (indents as a code block)
+# #
+# _bashDocumentFunction_exampleFormat() {
+#     markdownListify
+# }
+_bashDocumentFunction_outputFormat() {
     prefixLines "    "
 }
 

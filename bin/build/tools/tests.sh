@@ -33,7 +33,7 @@ testShellScripts() {
 # This can be run on any directory tree to test scripts in any application.
 #
 # Usage: validateShellScripts [ findArgs ]
-# Example: if validateShellScripts; then git commit -m "saving things" -a; fi
+# Example:     if validateShellScripts; then git commit -m "saving things" -a; fi
 # Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
@@ -41,10 +41,10 @@ testShellScripts() {
 # Short Description: Check files for the existence of a string
 # Exit Code: 0 - All found files pass `shellcheck` and `bash -n`
 # Exit Code: 1 - One or more files did not pass
-#
+# Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
     local failedReasons thisYear f foundFiles
-    consoleInfo "Checking all shellcheck and bash -n"
+    statusMessage consoleInfo "Checking all shellcheck and bash -n"
     ./bin/build/install/apt.sh shellcheck
     whichApt shellcheck shellcheck
 
@@ -53,27 +53,26 @@ validateShellScripts() {
     foundFiles=$(mktemp)
     find . -name '*.sh' ! -path '*/.*' "$@" -print0 >"$foundFiles"
     while IFS= read -r -d '' f; do
-        clearLine
-        consoleInfo -n "Checking $f"
+        statusMessage consoleInfo "Checking $f"
         if ! bash -n "$f" >/dev/null; then
-            failedReasons+=("bash -n $f failed")
+            failedReasons+=("bash -n $f")
         fi
         if ! shellcheck "$f" >/dev/null; then
-            failedReasons+=("shellcheck $f failed")
+            failedReasons+=("shellcheck $f")
         fi
     done <"$foundFiles"
     rm "$foundFiles"
-    clearLine
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
-        consoleError "The following scripts failed:" 1>&2
+        clearLine
+        consoleError "# The following scripts failed:" 1>&2
         for f in "${failedReasons[@]}"; do
             echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
         done
-        consoleError "done." 1>&2
+        consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
         return $errorEnvironment
     else
-        consoleSuccess "All scripts passed"
+        statusMessage consoleSuccess "All scripts passed"
     fi
 }
 
@@ -85,7 +84,7 @@ validateShellScripts() {
 # By default, any directory which begins with a dot `.` will be ignored.
 #
 # Usage: validateFileContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
-# Example: validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2023'
+# Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2023'
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
 # Argument: `--` - Required. Separates extensions from text
 # Argument: `text0` - Required. Text which must exist in each file with the extension given.
@@ -99,17 +98,21 @@ validateShellScripts() {
 # Exit Code: 2 - Arguments error (missing extension or text)
 #
 validateFileContents() {
-    local failedReasons f foundFiles extensions=() textMatches
+    local failedReasons f foundFiles
+    local extensionArgs textMatches extensions
 
+    extensionArgs=()
+    extensions=()
     while [ $# -gt 0 ]; do
         if [ "$1" == "--" ]; then
             shift
             break
         fi
-        extensions+=("-name" "*.$1" "-o")
+        extensions+=("$1")
+        extensionArgs+=("-name" "*.$1" "-o")
         shift
     done
-    unset 'extensions['$((${#extensions[@]} - 1))']'
+    unset 'extensionArgs['$((${#extensionArgs[@]} - 1))']'
 
     textMatches=()
     while [ $# -gt 0 ]; do
@@ -133,22 +136,28 @@ validateFileContents() {
     total=0
     foundFiles=$(mktemp)
     # Final arguments for find
-    find . "${extensions[@]}" ! -path '*/.*' "$@" -print0 >"$foundFiles"
-    while IFS= read -r -d '' f; do
-        clearLine
-        consoleInfo -n "Checking $f"
+    find . "${extensionArgs[@]}" ! -path '*/.*' "$@" >"$foundFiles"
+    total=$(($(wc -l <"$foundFiles") + 0))
+    # shellcheck disable=SC2059
+    statusMessage consoleInfo "Searching $total $(plural $total file files) (ext: ${extensions[*]}) for text: $(printf " $(consoleReset)\"$(consoleCode "%s")\"" "${textMatches[@]}")"
+
+    total=0
+    while IFS= read -r f; do
         total=$((total + 1))
         for t in "${textMatches[@]}"; do
             if ! grep -q "$t" "$f"; then
                 failedReasons+=("$f missing \"$t\"")
+                statusMessage consoleError "Searching $f ... NOT FOUND"
+            else
+                statusMessage consoleSuccess "Searching $f ... found"
             fi
         done
     done <"$foundFiles"
-    clearLine
-    consoleInfo "Checked $total $(plural $total file files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
+    statusMessage consoleInfo "Checked $total $(plural $total file files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
     rm "$foundFiles"
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
+        clearLine
         consoleError "The following scripts failed:" 1>&2
         for f in "${failedReasons[@]}"; do
             echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
@@ -156,6 +165,6 @@ validateFileContents() {
         consoleError "done." 1>&2
         return $errorEnvironment
     else
-        consoleSuccess "All scripts passed"
+        statusMessage consoleSuccess "All scripts passed"
     fi
 }

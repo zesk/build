@@ -37,7 +37,7 @@ Any files not found are skipped. Note that environment values are not carried be
 
 ## Examples
 
-    crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data --mapper /usr/local/bin/map.sh /var/www/applications
+crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data --mapper /usr/local/bin/map.sh /var/www/applications
     crontabGenerate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 
 ## Exit codes

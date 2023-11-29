@@ -13,7 +13,6 @@ set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
-quietLog=$(mktemp)
 fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
 if ! diff -q "${fromTo[@]}" >/dev/null; then
     echo -n "Git pre-commit hook was updated ..."
@@ -44,8 +43,7 @@ hookGitPreCommit() {
         failed update-md.sh
     fi
     statusMessage consoleSuccess Running shellcheck ...
-    if ! testShellScripts >>"$quietLog"; then
-        buildFailed "$quietLog"
+    if ! testShellScripts; then
         failed testShellScripts
     fi
     # Unusual quoting here is to avoid having this match as an identical

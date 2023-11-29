@@ -156,8 +156,8 @@ fi
 # Argument: --show - Show the crontab instaed of installing it
 # Argument: --user user - Scan for crontab files in the form $(user.crontab) and then install as this user. If not specified, uses $(whoami).
 # Argument: --mapper envMapper - The binary use to map environment values to the file (see (../bin/map.sh.md)[./map.sh.md])
-# Example: crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data --mapper /usr/local/bin/map.sh /var/www/applications
-# Example: crontabGenerate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
+# Example:     crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data --mapper /usr/local/bin/map.sh /var/www/applications
+# Example:     crontabGenerate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 #
 crontabGenerate() {
   local crontabTemplate rootEnv rootPath user appName mapper
