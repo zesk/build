@@ -26,8 +26,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # fn: release-notes.sh
 # Hook: version-current
 # Exit code: 1 - if an error occurs
-# Example: open $(bin/build/release-notes.sh)
-# Example: vim $(releaseNotes)
+# Example:     open $(bin/build/release-notes.sh)
+# Example:     vim $(releaseNotes)
 releaseNotes() {
     version=$(runHook version-current)
     if [ -z "$version" ]; then

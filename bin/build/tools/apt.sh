@@ -53,7 +53,7 @@ aptUpdateOnce() {
 # and assumes packages will be available.
 #
 # Usage: aptInstall [ package ... ]
-# Example: aptInstall shellcheck
+# Example:     aptInstall shellcheck
 # Exit Code: 0 - If `apt-get` is not installed, returns 0.
 # Exit Code: 1 - If `apt-get` fails to install the packages
 # Short Description: Install packages using `apt-get`
@@ -69,7 +69,7 @@ aptInstall() {
     installedLog="$(buildCacheDirectory apt.packages)"
     apt=$(which apt-get || :)
     if [ -z "$apt" ]; then
-        consoleWarning "No apt, continuing anyway ..."
+        statusMessage consoleWarning "No apt, continuing anyway ..."
         return 0
     fi
 
@@ -114,8 +114,8 @@ aptInstall() {
 #
 # Short Description: Install tools using `apt-get` if they are not found
 # Usage: whichApt binary aptInstallPackage
-# Example: whichApt shellcheck shellcheck
-# Example: whichApt mariadb mariadb-client
+# Example:     whichApt shellcheck shellcheck
+# Example:     whichApt mariadb mariadb-client
 # Argument: binary - The binary to look for
 # Argument: aptInstallPackage - The package name to install if the binary is not found in the `$PATH`.
 # Environment: Technically this will install the binary and any related files as a package.

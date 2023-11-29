@@ -15,12 +15,10 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# Deployment "start" script
 #
 # fn: {base}
-# Short Description: Deployment "start" script
-#
 # Exit code: 0 - This SHOULD exit successfully always
-#
 # Example: - Move directories to make deployment final
 hookDeployStart() {
     consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."

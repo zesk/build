@@ -41,7 +41,7 @@ usage() {
 #
 # This can break your files so use with caution.
 #
-# Example: cannon master main ! -path '*/old-version/*')
+# Example:     cannon master main ! -path '*/old-version/*')
 # Usage: cannon fromText toText [ findArgs ... ]
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.

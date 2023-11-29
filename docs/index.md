@@ -9,21 +9,21 @@ This toolkit makes the following assumptions:
 - Your project: Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
 - A hook exists in your project `./bin/hooks/version-current.sh`
 - Optionally a binary exists in your project `./bin/hooks/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
-- For certain functions, your shell script should define a function `usage` for argument errors and short documentation.
 - Most build operations occur at the project root directory but most can be run anywhere by supplying a parameter if needed (`composer.sh` specifically)
-- A `.build` directory will be created at your project root which contains marker files as well as log files for the build. It can be deleted safely at any time, but may contain evidence of failures.
+- A `.build` directory may be created to store cache files
 
 To use in your pipeline:
 
-- copy `bin/build/build-setup.sh` into your project (changing `relTop` if needed) manually
-- run it before you need your `bin/build` directory
+- copy `./bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually
+- run it before you need your `./bin/build` directory
 
-## Project structure
+## Zesk Build Functionality
 
-- `bin/build/*.sh` - [Build scripts and tools](./bin/index.md)
-- `bin/build/tools/*.sh` - [Build Bash Functions](./tools/index.md)
-- `bin/build/pipeline/*.sh` - [Pipeline tools](./pipeline/index.md)
-- `bin/build/install/*.sh` - Install dependencies in the pipeline
+- `./bin/build/*.sh` - [Build scripts and tools](./bin/index.md) - Handy scripts universally useful everywhere.
+- `./bin/build/tools/*.sh` - [Build Bash Functions](./tools/index.md) - Lots of handy functions
+- `./bin/build/pipeline/*.sh` - [Pipeline tools](./pipeline/index.md) - Do work related to building and deploying software.
+- `./bin/build/install/*.sh` - Install dependencies in the pipeline - most of these exist as functions
+- `./bin/hooks/*.sh` - [Build Hooks](./hooks/index.md) - Hooks are a way to customize default behaviors in build scripts.
 
 ## Reference
 

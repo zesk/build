@@ -53,6 +53,10 @@ to regenerate each time.
 - `1` - Issue with file generation
 - `2` - Argument error
 
+## See Also
+
+documentFunctionTemplateDirectory
+
 ## `documentFunctionTemplateDirectory` - Convert a directory of templates into documentation for Bash functions
 
 Convert a directory of templates for bash functions into full-fledged documentation.
@@ -82,6 +86,10 @@ to regenerate each time.
 - `0` - If success
 - `1` - Any template file failed to generate for any reason
 - `2` - Argument error
+
+## See Also
+
+documentFunctionsWithTemplate
 
 # Finding documentation
 
@@ -147,7 +155,7 @@ may output partial results with a failure.
 
 ### Examples
 
-    bashFindFunctionFiles . bashFindFunctionFiles
+bashFindFunctionFiles . bashFindFunctionFiles
     ./bin/build/tools/autodoc.sh
 
 ### Exit codes
@@ -172,7 +180,7 @@ Generates a temporary file which is removed
 
 ### Examples
 
-    map.sh < $templateFile | removeUnfinishedSections
+map.sh < $templateFile | removeUnfinishedSections
 
 ### Exit codes
 
@@ -242,14 +250,6 @@ Format code blocks (does markdownListify)
 ## `_bashDocumentFunction_usageFormat` - Format usage blocks (indents as a code block)
 
 Format usage blocks (indents as a code block)
-
-### Exit codes
-
-- `0` - Always succeeds
-
-## `_bashDocumentFunction_exampleFormat` - Format example blocks (indents as a code block)
-
-Format example blocks (indents as a code block)
 
 ### Exit codes
 
