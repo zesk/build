@@ -148,7 +148,7 @@ identicalCheck() {
                 else
                     printf "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
                     tail -n $((totalLines - lineNumber + 1)) "$searchFile" | head -n "$((count + 1))" >"$countFile"
-                    statusMessage consoleInfo "Found $count lines for $token and comparing"
+                    statusMessage consoleInfo "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(consoleCode "$token")" "$(consoleValue "$searchFile")")"
                 fi
             done || :
             prefixIndex=$((prefixIndex + 1))
