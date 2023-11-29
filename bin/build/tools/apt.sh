@@ -69,7 +69,7 @@ aptInstall() {
     installedLog="$(buildCacheDirectory apt.packages)"
     apt=$(which apt-get || :)
     if [ -z "$apt" ]; then
-        consoleWarning "No apt, continuing anyway ..."
+        statusMessage consoleWarning "No apt, continuing anyway ..."
         return 0
     fi
 

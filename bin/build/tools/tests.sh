@@ -41,10 +41,10 @@ testShellScripts() {
 # Short Description: Check files for the existence of a string
 # Exit Code: 0 - All found files pass `shellcheck` and `bash -n`
 # Exit Code: 1 - One or more files did not pass
-#
+# Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
     local failedReasons thisYear f foundFiles
-    consoleInfo "Checking all shellcheck and bash -n"
+    statusMessage consoleInfo "Checking all shellcheck and bash -n"
     ./bin/build/install/apt.sh shellcheck
     whichApt shellcheck shellcheck
 
@@ -63,9 +63,9 @@ validateShellScripts() {
         fi
     done <"$foundFiles"
     rm "$foundFiles"
-    clearLine
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
+        clearLine
         consoleError "# The following scripts failed:" 1>&2
         for f in "${failedReasons[@]}"; do
             echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
@@ -73,7 +73,7 @@ validateShellScripts() {
         consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
         return $errorEnvironment
     else
-        consoleSuccess "All scripts passed"
+        statusMessage consoleSuccess "All scripts passed"
     fi
 }
 
@@ -134,9 +134,10 @@ validateFileContents() {
     foundFiles=$(mktemp)
     # Final arguments for find
     find . "${extensions[@]}" ! -path '*/.*' "$@" -print0 >"$foundFiles"
+    total=$(($(wc -l <"$foundFiles") + 0))
+    statusMessage consoleInfo "Searching $total $(plural $total file files) for text: $(consoleCode)$(printf " \"%s\"" "${textMatches[@]}")"
     while IFS= read -r -d '' f; do
-        clearLine
-        consoleInfo -n "Checking $f"
+        statusMessage consoleInfo "Checking $f"
         total=$((total + 1))
         for t in "${textMatches[@]}"; do
             if ! grep -q "$t" "$f"; then
@@ -144,11 +145,11 @@ validateFileContents() {
             fi
         done
     done <"$foundFiles"
-    clearLine
-    consoleInfo "Checked $total $(plural $total file files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
+    statusMessage consoleInfo "Checked $total $(plural $total file files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
     rm "$foundFiles"
 
     if [ "${#failedReasons[@]}" -gt 0 ]; then
+        clearLine
         consoleError "The following scripts failed:" 1>&2
         for f in "${failedReasons[@]}"; do
             echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
@@ -156,6 +157,6 @@ validateFileContents() {
         consoleError "done." 1>&2
         return $errorEnvironment
     else
-        consoleSuccess "All scripts passed"
+        statusMessage consoleSuccess "All scripts passed"
     fi
 }
