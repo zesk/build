@@ -33,9 +33,9 @@ if [ ! -f "$releaseNotes" ]; then
 fi
 bigText "$currentVersion" | prefixLines "$(consoleMagenta)"
 start=$(beginTiming)
-consoleInfo -n "Deploying a new release "
+consoleInfo "Deploying a new release ... "
 
 APPLICATION_GIT_SHA=$(git rev-parse --short HEAD)
 ./bin/build/pipeline/github-release.sh "docs/release/$currentVersion.md" "$currentVersion" "$APPLICATION_GIT_SHA"
 
-reportTiming "$start" Done
+reportTiming "$start" Release completed in

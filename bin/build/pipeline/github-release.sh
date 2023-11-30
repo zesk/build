@@ -110,8 +110,7 @@ githubRelease() {
   consoleDecoration "$(echoBar)"
   bigText "$releaseName" | prefixLines "$(consoleMagenta)"
   consoleDecoration "$(echoBar)"
-  consoleGreen "Tagging $releaseName ($commitish) and pushing ... "
-  consoleDecoration "$(echoBar)"
+  consoleGreen -n "Tagging $releaseName ($commitish) and pushing ... "
   start=$(beginTiming)
 
   git tag -d "$releaseName" 2>/dev/null || :
@@ -122,8 +121,7 @@ githubRelease() {
   git push origin --tags --quiet
   git push github --tags --force --quiet
   git push github --all --force --quiet
-  consoleDecoration "$(echoBar)"
-  reportTiming "$start" OK
+  reportTiming "$start" Completed in
 
   # passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github) that's good enough
   #
@@ -136,6 +134,7 @@ githubRelease() {
 
   resultsFile=./.build/results.json
   requireFileDirectory "$resultsFile"
+  consoleInfo
   if ! curl -s -L \
     -X POST \
     -H "Accept: application/vnd.github+json" \
@@ -143,11 +142,18 @@ githubRelease() {
     -H "X-GitHub-Api-Version: 2022-11-28" \
     "https://api.github.com/repos/$GITHUB_REPOSITORY_OWNER/$GITHUB_REPOSITORY_NAME/releases" \
     -d "$JSON" >"$resultsFile"; then
-    buildFailed "$resultsFile"
+    consoleError "POST failed to GitHub" 1>&2
+    prefixLines "$(consoleInfo)JSON: $(consoleCode)" <"$JSON" 1>&2
+    buildFailed "$resultsFile" 1>&2
+    return $?
   fi
-  echo
-  consoleSuccess "$(jq .html_url <"$resultsFile")"
-  echo
+  url="$(jq .html_url <"$resultsFile")"
+  if [ -z "$url" ] || [ "$url" = "null" ]; then
+    prefixLines "$(consoleInfo)JSON: $(consoleCode)" <"$JSON" 1>&2
+    buildFailed "$resultsFile" 1>&2
+    return $?
+  fi
+  consoleOrange "$(jq .html_url <"$resultsFile")"
   consoleSuccess "Release $releaseName completed"
   rm "$resultsFile"
 }
