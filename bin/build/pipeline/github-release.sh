@@ -149,11 +149,13 @@ githubRelease() {
   fi
   url="$(jq .html_url <"$resultsFile")"
   if [ -z "$url" ] || [ "$url" = "null" ]; then
+    consoleError "Results had no html_url" 1>&2
     prefixLines "$(consoleInfo)JSON: $(consoleCode)" <"$JSON" 1>&2
     buildFailed "$resultsFile" 1>&2
     return $?
   fi
-  consoleOrange "$(jq .html_url <"$resultsFile")"
+  printf "%s: %s\n" "$(consoleInfo URL)" "$(consoleOrange "$url")"
+
   consoleSuccess "Release $releaseName completed"
   rm "$resultsFile"
 }
