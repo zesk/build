@@ -35,8 +35,9 @@ export DEPLOYMENT
 
 # fn: {base}
 # Usage: {fn} [ deployment ] [ requireEnv1 requireEnv2 requireEnv3 ... ]"
-#
-# Create environment file:
+# Argument: deployment - Required. String. `production` or `staging` or `docker`
+# Argument: requireEnv1 - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+# Create environment file `.env` for build.
 #
 makeEnvironment() {
     local start missing e
@@ -64,9 +65,6 @@ makeEnvironment() {
     export BUILD_TIMESTAMP=$(($(date +%s) + 0))
 
     local envFile=./.env
-
-    # shellcheck source=/dev/null
-    . ./bin/build/tools.sh
 
     DEPLOYMENT=${DEPLOYMENT:-}
     while [ $# -gt 0 ]; do

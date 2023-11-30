@@ -5,17 +5,20 @@
 # Depends: colors.sh text.sh
 # bin: head grep
 
+# IDENTICAL errorArgument 1
+errorArgument=2
+
 ###############################################################################
 #
-# ▗▖          ▗▖
-# ▐▌          ▐▌
-#  ▟█▟▌ ▟█▙  ▟██▖▐▌▟▛  ▟█▙  █▟█▌
-# ▐▛ ▜▌▐▛ ▜▌▐▛  ▘▐▙█  ▐▙▄▟▌ █▘
-# ▐▌ ▐▌▐▌ ▐▌▐▌   ▐▛█▖ ▐▛▀▀▘ █
-# ▝█▄█▌▝█▄█▘▝█▄▄▌▐▌▝▙ ▝█▄▄▌ █
-#  ▝▀▝▘ ▝▀▘  ▝▀▀ ▝▘ ▀▘ ▝▀▀  ▀
-#
-#------------------------------------------------------------------------------
+#....▗▖..........▗▖.............
+#....▐▌..........▐▌.............
+#..▟█▟▌.▟█▙..▟██▖▐▌▟▛..▟█▙..█▟█▌
+#.▐▛.▜▌▐▛.▜▌▐▛..▘▐▙█..▐▙▄▟▌.█▘..
+#.▐▌.▐▌▐▌.▐▌▐▌...▐▛█▖.▐▛▀▀▘.█...
+#.▝█▄█▌▝█▄█▘▝█▄▄▌▐▌▝▙.▝█▄▄▌.█...
+#..▝▀▝▘.▝▀▘..▝▀▀.▝▘.▀▘.▝▀▀..▀...
+#...............................
+
 #
 # Debugging, dumps the proc1file which is used to figure out if we
 # are insideDocker or not; use this to confirm platform implementation
@@ -33,6 +36,9 @@ dumpDockerTestFile() {
 
 #
 # Are we inside a docker container right now?
+#
+# Exit Code: 0 - Yes
+# Exit Code: 1 - No
 #
 insideDocker() {
     if [ ! -f /proc/1/sched ]; then
@@ -62,4 +68,62 @@ checkDockerEnvFile() {
         fi
     done
     return "$result"
+}
+
+_dockerLocalContainerUsage() {
+    usageDocument "bin/build/tools/docker.sh" dockerLocalContainer "$@"
+}
+
+#
+# Run a build container using given docker image.
+#
+# Runs ARM64 by default.
+#
+# fn: {base}
+# Usage: {fn} imageName imageApplicationPath [ envFile ... ] [ extraArgs ... ]
+# Argument: imageName - Required. String. Docker image name to run.
+# Argument: imageApplicationPath - Path. Docker image path to map to current directory.
+# Argument: envFile - Optional. File. One or more environment files which are suitable to load for docker; must be valid
+# Argument: extraArgs - Optional. Mixed. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
+# Exit Code: 1 - If already inside docker, or the environment file passed is not valid
+# Exit Code: 0 - Success
+# Exit Code: Any - `docker run` error code is returned if non-zero
+# Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
+dockerLocalContainer() {
+    local imageName imageApplicationPath envFiles extraArgs platform
+
+    platform=${BUILD_DOCKER_PLATFORM-linux/arm64}
+    imageName=${1-}
+    if ! shift; then
+        _dockerLocalContainerUsage "$errorArgument" "Missing imageApplicationPath"
+        return $?
+    fi
+    imageApplicationPath=${1-}
+    shift || :
+    if [ -z "$imageName" ]; then
+        _dockerLocalContainerUsage "$errorArgument" "imageName is empty"
+        return $?
+    fi
+    if [ -z "$imageApplicationPath" ]; then
+        _dockerLocalContainerUsage "$errorArgument" "imageApplicationPath is empty"
+        return $?
+    fi
+    if insideDocker; then
+        consoleError "Already inside docker" 1>&2
+        return 1
+    fi
+    envFiles=()
+    extraArgs=()
+    while [ $# -gt 0 ] && [ -f "$1" ]; do
+        if ! checkDockerEnvFile "$1" 2>/dev/null; then
+            consoleError "Invalid docker env file: $1$(consoleCode)" 1>&2
+            (checkDockerEnvFile "$1" 2>&1 || :) | prefixLines "$(consoleCode)     " 1>&2
+            printf %s "$(consoleReset)" 1>&2
+            return 1
+        fi
+        envFiles+=("--env-file" "$1")
+        shift
+    done
+    extraArgs+=("$@")
+    docker run "${envFiles[@]}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]}"
 }
