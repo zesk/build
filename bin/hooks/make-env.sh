@@ -14,9 +14,14 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 . ./bin/build/tools.sh
 
 #
-# Deprecated use function
-# Generate an environment file for this project.
+# Generate an environment file with environment variables (must be `export`ed)
 #
+# If your project has specific environment variables, you can add them in your `make-env` hook.
+#
+# Usage: runHook make-env [ requiredEnvironment0 ... ] [ -- optionalEnvironment0 ... ]
 # See: makeEnvironment
-echo "# make-env.sh is deprecated"
-makeEnvironment "$@"
+#
+# fn: runHook make-env
+hookMakeEnvironment() {
+  makeEnvironment "$@"
+}

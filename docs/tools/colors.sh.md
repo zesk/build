@@ -247,5 +247,17 @@ repeat $(consoleColumns)
 
 Uses the `tput cols` tool to find the value if `TERM` is non-blank.
 
+### `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
+
+Converts backticks, bold and italic to console colors.
+
+#### Usage
+
+    simpleMarkdownToConsole < $markdownFile
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
