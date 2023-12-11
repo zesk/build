@@ -18,7 +18,7 @@ errorEnvironment=1
 # Usage: mariadbInstall [ package ]
 # Usage: bin/build/install/mariadb-client.sh [ package ... ]
 # Argument: package - Additional packages to install
-# Short Description: Install `mariadb`
+# Summary: Install `mariadb`
 # When this tool succeeds the `mariadb` binary is available in the local operating system.
 # Environment: - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 # Exit Code: 1 - If installation fails
@@ -36,7 +36,7 @@ mariadbInstall() {
 # Usage: pythonInstall [ package ]
 # Usage: bin/build/install/python.sh [ package ... ]
 # Argument: package - Additional packages to install
-# Short Description: Install `python`
+# Summary: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
@@ -53,7 +53,7 @@ pythonInstall() {
 # Usage: phpInstall [ package ... ]
 # Usage: bin/build/install/php-cli.sh [ package ... ]
 # Argument: package - Additional packages to install
-# Short Description: Install `php`
+# Summary: Install `php`
 # When this tool succeeds the `python` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
@@ -70,7 +70,7 @@ phpInstall() {
 # Usage: dockerComposeInstall [ package ... ]
 # Usage: bin/build/install/docker-compose.sh [ package ... ]
 # Argument: package - Additional packages to install (using apt)
-# Short Description: Install `docker-compose`
+# Summary: Install `docker-compose`
 # When this tool succeeds the `docker-compose` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
@@ -82,10 +82,7 @@ dockerComposeInstall() {
     if which docker-compose 2>/dev/null 1>&2; then
         return 0
     fi
-
-    quietLog=$(buildQuietLog dockerComposeInstall)
-
-    if ! requireFileDirectory "$quietLog"; then
+    if ! quietLog=$(buildQuietLog dockerComposeInstall); then
         return "$errorEnvironment"
     fi
     if ! pythonInstall "$@"; then

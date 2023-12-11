@@ -8,6 +8,7 @@
 {echoBar}
 {prefixLines}
 {trimSpace}
+{stringOffset}
 {urlParse}
 {urlParseItem}
 {maximumFieldLength}

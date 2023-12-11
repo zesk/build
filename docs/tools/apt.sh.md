@@ -4,24 +4,24 @@
 [⬅ Return to top](../index.md)
 
 
-## `aptUpdateOnce` - Do `apt-get update` once
+### `aptUpdateOnce` - Do `apt-get update` once
 
 Run apt-get update once and only once in the pipeline, at least
 once an hour as well (when testing)
 
-### Usage
+#### Usage
 
     aptUpdateOnce
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Environment
+#### Environment
 
 Stores state files in `./.build/` directory which is created if it does not exist.
 
-## `whichApt` - Install tools using `apt-get` if they are not found
+### `whichApt` - Install tools using `apt-get` if they are not found
 
 whichApt binary aptInstallPackage
 
@@ -32,46 +32,46 @@ If fails, runs `buildFailed` and outputs the log file.
 
 Confirms that `binary` is installed after installation succeeds.
 
-### Usage
+#### Usage
 
     whichApt binary aptInstallPackage
 
-### Arguments
+#### Arguments
 
 - `binary` - The binary to look for
 - `aptInstallPackage` - The package name to install if the binary is not found in the `$PATH`.
 
-### Examples
+#### Examples
 
 whichApt shellcheck shellcheck
     whichApt mariadb mariadb-client
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Environment
+#### Environment
 
 Technically this will install the binary and any related files as a package.
 
-## `aptInstall` - Install packages using `apt-get`
+### `aptInstall` - Install packages using `apt-get`
 
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available.
 
-### Usage
+#### Usage
 
     aptInstall [ package ... ]
 
-### Arguments
+#### Arguments
 
 - `package` - One or more packages to install
 
-### Examples
+#### Examples
 
 aptInstall shellcheck
 
-### Exit codes
+#### Exit codes
 
 - `0` - If `apt-get` is not installed, returns 0.
 - `1` - If `apt-get` fails to install the packages

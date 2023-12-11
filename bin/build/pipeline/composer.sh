@@ -11,22 +11,24 @@
 set -eou pipefail
 
 # set -x
-errorArgument=1
+# IDENTICAL errorArgument 1
+errorArgument=2
+
 errBuild=1000
 
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-quietLog="./.build/$me.log"
-composerDirectory="$(pwd)"
-dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
-cacheDir=.composer
-
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
 
+_phpComposerUsage() {
+  usageDocument "./bin/build/pipeline/$me" "phpComposer" "$@"
+  exit "$?"
+}
+
 #
-# Short Description: Run Composer commands on code
+# Summary: Run Composer commands on code
 #
 # Runs composer validate and install on a directory.
 #
@@ -47,21 +49,25 @@ cacheDir=.composer
 # Environment: BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
 #
 phpComposer() {
-  local start composerArgs
+  local start composerArgs quietLog dockerImage cacheDir
+
+  dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
+  composerDirectory="$(pwd)"
+  cacheDir=.composer
 
   start=$(beginTiming)
 
   while [ $# -gt 0 ]; do
     case $1 in
     --help)
-      usage 0
+      _phpComposerUsage 0
       ;;
     *)
       if [ "$composerDirectory" != "." ]; then
-        usage "$errorArgument" "Unknown argument $1"
+        _phpComposerUsage "$errorArgument" "Unknown argument $1"
       fi
       if [ ! -d "$1" ]; then
-        usage "$errorArgument" "Directory does not exist: $1"
+        _phpComposerUsage "$errorArgument" "Directory does not exist: $1"
       fi
       composerDirectory=$1
       ;;
@@ -69,8 +75,7 @@ phpComposer() {
     shift
   done
 
-  # shellcheck source=/dev/null
-  ./bin/build/install/apt.sh
+  aptInstall
 
   [ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
 
@@ -80,8 +85,7 @@ phpComposer() {
   composerArgs+=("$dockerImage")
   composerArgs+=("--ignore-platform-reqs")
 
-  requireFileDirectory "$quietLog"
-
+  quietLog="$(buildQuietLog phpComposer)"
   consoleInfo -n "Composer ... "
   bigText "Install vendor" >>"$quietLog"
   #DEBUGGING - remove, why no -q option? we like it quiet
@@ -108,10 +112,6 @@ phpComposer() {
   fi
   reportTiming "$start" OK
 
-}
-usage() {
-  usageDocument "./bin/build/pipeline/$me" "phpComposer" "$@"
-  exit "$?"
 }
 
 phpComposer "$@"

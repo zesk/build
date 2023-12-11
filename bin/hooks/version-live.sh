@@ -9,7 +9,7 @@ set -eo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # fn: {base}
-# Short Description: Live version of the application
+# Summary: Live version of the application
 #
 # Output the current live, published version of this application.
 #

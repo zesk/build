@@ -29,5 +29,18 @@
 {oldestFile}
 {newestFile}
 
+{modifiedDays}
+{modifiedSeconds}
+
+{pathConfigure}
+{pathCleanDuplicates}
+
+{manPathConfigure}
+{pathAppend}
+
+{realPath}
+
+{JSON}
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

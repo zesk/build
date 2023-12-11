@@ -14,7 +14,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . "./bin/build/tools.sh"
 
-# Short Description: Show current release notes
+# Summary: Show current release notes
 # Output the current release notes.
 #
 # If this fails it outputs an error to stderr

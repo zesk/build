@@ -45,30 +45,30 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 - `consoleBoldRed`
 
 
-## `clearLine` - Clear a line in the console
+### `clearLine` - Clear a line in the console
 
 Clears current line of text in the console
 
 Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
 
-### Usage
+#### Usage
 
     clearLine
 
-### Examples
+#### Examples
 
 statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
     clearLine
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Environment
+#### Environment
 
 Intended to be run on an interactive console. Should support `tput cols`.
 
-## `statusMessage` - Output a status message with no newline
+### `statusMessage` - Output a status message with no newline
 
 Output a status line using a colorAction
 
@@ -78,30 +78,30 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 shellcheck disable=SC2120
 
-### Usage
+#### Usage
 
     statusMessage consoleAction message [ ... ]
 
-### Arguments
+#### Arguments
 
 - `consoleAction` - Required. String. Is one of **Semantic color commands** above or **Color commands** above
 - `message ...` - Message to output
 
-### Examples
+#### Examples
 
 statusMessage Loading...
     bin/load.sh >>"$loadLogFile"
     clearLine
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Environment
+#### Environment
 
 Intended to be run on an interactive console. Should support $(tput cols).
 
-## `consoleNameValue` - Output a name value pair
+### `consoleNameValue` - Output a name value pair
 
 Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
 right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
@@ -109,90 +109,90 @@ right-aligned to the `characterWidth` given and colored using `consoleLabel`; th
 
 shellcheck disable=SC2120
 
-### Usage
+#### Usage
 
     consoleNameValue characterWidth name [ value ... ]
 
-### Arguments
+#### Arguments
 
 - `characterWidth` - Required. Number of characters to format the value for spacing
 - `name` - Required. Name to output
 - `value ...` - Optional. One or more Value to output
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
 
-## `hasColors` - This tests whether `TERM` is set, and if not, uses
+### `hasColors` - This tests whether `TERM` is set, and if not, uses
 
 This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
 If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
 
 Exit Code; 1 - No colors
 
-### Usage
+#### Usage
 
     hasColors
 
-### Exit codes
+#### Exit codes
 
 - `0` - Console or output supports colors
 
-### Local cache
+#### Local cache
 
 this value is cached in BUILD_COLORS if it is not set.
 
-### Environment
+#### Environment
 
 BUILD_COLORS - Override value for this
 
-## `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation
+### `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation
 
 Exit Code; 1 - Does not support console animation
 
-### Usage
+#### Usage
 
     hasConsoleAnimation
 
-### Exit codes
+#### Exit codes
 
 - `0` - Supports console animation
 
-### Environment
+#### Environment
 
 CI - If this has a non-blank value, this returns true (supports animation)
 
 
-## `colorTest` - Output colors
+### `colorTest` - Output colors
 
 Outputs sample sentences for the `consoleAction` commands to see what they look like.
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `allColorTest` - Alternate color output
+### `allColorTest` - Alternate color output
 
 If you want to explore what colors are available in your terminal, try this.
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
+### `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
 
 Converts backticks, bold and italic to console colors.
 
-### Usage
+#### Usage
 
     simpleMarkdownToConsole < $markdownFile
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `statusMessage` - Output a status message with no newline
+### `statusMessage` - Output a status message with no newline
 
 Output a status line using a colorAction
 
@@ -202,48 +202,48 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 shellcheck disable=SC2120
 
-### Usage
+#### Usage
 
     statusMessage consoleAction message [ ... ]
 
-### Arguments
+#### Arguments
 
 - `consoleAction` - Required. String. Is one of **Semantic color commands** above or **Color commands** above
 - `message ...` - Message to output
 
-### Examples
+#### Examples
 
 statusMessage Loading...
     bin/load.sh >>"$loadLogFile"
     clearLine
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Environment
+#### Environment
 
 Intended to be run on an interactive console. Should support $(tput cols).
 
-## `consoleColumns` - Column count in current console
+### `consoleColumns` - Column count in current console
 
 Column count in current console
 
 Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
 
-### Usage
+#### Usage
 
     consoleColumns
 
-### Examples
+#### Examples
 
 repeat $(consoleColumns)
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Environment
+#### Environment
 
 Uses the `tput cols` tool to find the value if `TERM` is non-blank.
 

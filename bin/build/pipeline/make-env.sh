@@ -25,8 +25,6 @@ usage() {
     usageDocument "./bin/build/pipeline/make-env.sh" "makeEnvironment" "$@"
 }
 
-export DEPLOY_USER_HOSTS
-export BUILD_TARGET
 export APPLICATION_CHECKSUM
 export APPLICATION_TAG
 export APPLICATION_VERSION
@@ -51,7 +49,6 @@ makeEnvironment() {
     #
     # Must be defined and non-empty to run this script
     local requireEnvironment=(
-        DEPLOY_USER_HOSTS BUILD_TARGET
         APPLICATION_CHECKSUM APPLICATION_TAG
         APPLICATION_VERSION APPLICATION_BUILD_DATE
         DEPLOYMENT

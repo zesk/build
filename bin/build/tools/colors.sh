@@ -112,7 +112,7 @@ __consoleOutput() {
     fi
 }
 #
-# Short Description: Alternate color output
+# Summary: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
 #
 allColorTest() {
@@ -138,7 +138,7 @@ allColorTest() {
     done
 }
 
-# Short Description: Output colors
+# Summary: Output colors
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 colorTest() {
@@ -254,7 +254,7 @@ _consoleInfo() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-    __consoleEscape '\033[42m' '\033[0m' "$@"
+    __consoleEscape '\033[102m' '\033[0m' "$@"
 }
 
 #
@@ -305,7 +305,7 @@ consoleValue() {
     consoleMagenta "$@"
 }
 
-# Short Description: Output a name value pair
+# Summary: Output a name value pair
 #
 # Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
 # right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
@@ -329,7 +329,7 @@ consoleNameValue() {
 #
 # Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
 #
-# Short Description: Clear a line in the console
+# Summary: Clear a line in the console
 # Usage: clearLine
 # Environment: Intended to be run on an interactive console. Should support `tput cols`.
 # Example:     statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
@@ -346,7 +346,7 @@ clearLine() {
 #
 # This is intended for messages on a line which are then overwritten using clearLine
 #
-# Short Description: Output a status message with no newline
+# Summary: Output a status message with no newline
 # Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
 # Usage: statusMessage consoleAction message [ ... ]
 # Argument: consoleAction - Required. String. Is one of **Semantic color commands** above or **Color commands** above

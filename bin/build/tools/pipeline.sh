@@ -4,7 +4,12 @@
 #
 # Depends: colors.sh text.sh
 #
+
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+
+# IDENTICAL errorArgument 1
+errorArgument=2
 
 ###############################################################################
 #
@@ -21,10 +26,20 @@ errorEnvironment=1
 # Also loads "./.env.local" if it exists
 # Generally speaking - these are NAME=value files and should be parsable by
 # bash and other languages.
+# See: toDockerEnv
+# Summary: Load `.env` and optional `.env.local` into bash context
 #
+# Requires the file `.env` to exist and is loaded via bash `source` and all variables are `export`ed in the current shell context.
+#
+# If `.env.local` exists, it is also loaded in a similar manner.
+#
+# The previous version of this function was `dotEnvConfig` and is now deprecated, and outputs a warning.
+# Environment: Loads `./.env` and `./.env.local`, use with caution.
+# Exit code: 1 - if `.env` does not exist; outputs an error
+# Exit code: 0 - if files are loaded successfully
 dotEnvConfigure() {
   if [ ! -f ./.env ]; then
-    consoleError "Missing ./.env"
+    consoleError "Missing ./.env" 1>&2
     return $errorEnvironment
   fi
 
@@ -41,11 +56,24 @@ dotEnvConfig() {
   dotEnvConfigure "$@"
 }
 
+# Run a hook in the project located at `./bin/hooks/`
 #
-# Run a hook in the project located at ./bin/hooks/
+# See (Hooks documentation)[../hooks/index.md] for available hooks.
 #
-# See (Hooks documentation)[docs/hooks.md] for available
+# Summary: Run a project hook
+# Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
+# So the hook for `version-current` would be a file at:
 #
+#     bin/hooks/version-current.sh
+#
+# Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
+#
+# Default hooks (scripts) can be found in `bin/build/hooks/`
+#
+# Usage: runHook hookName [ arguments ... ]
+# Exit code: Any - The hook exit code is returned if it is run
+# Exit code: 1 - is returned if the hook is not found
+# Example:     version="$(runHook version-current)"
 runHook() {
   local binary=$1 hook
 
@@ -59,8 +87,26 @@ runHook() {
 }
 
 #
-# Run a hook but do not require it to exist
+# See `runHook`, the behavior is identical except exit code zero is returned if the hook is not found..
 #
+# See (Hooks documentation)[../hooks/index.md] for available hooks.
+#
+# Summary: Run a hook if it exists otherwise succeed
+# Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
+# So the hook for `version-current` would be a file at:
+#
+#     bin/hooks/version-current.sh
+#
+# Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
+#
+# Default hooks (scripts) can be found in `bin/build/hooks/`
+#
+# Usage: runOptionalHook hookName [ arguments ... ]
+# Exit code: Any - The hook exit code is returned if it is run
+# Exit code: 0 - is returned if the hook is not found
+# Example:     if ! runOptionalHook test-cleanup >>"$quietLog"; then
+# Example:         buildFailed "$quietLog"
+# Example:     fi
 runOptionalHook() {
   local binary=$1 hook
 
@@ -77,35 +123,52 @@ runOptionalHook() {
   "$(whichHook "$binary")" "$@"
 }
 
-#
 # Does a hook exist in the local project?
 #
+# Check if one or more hook exists. All hooks must exist to succeed.
+# Summary: Determine if a hook exists
+# Usage: hasHook [ hookName ... ]
+# Argument: hookName - one or more hook names which must exist
+# Exit Code: 0 - If all hooks exist
 hasHook() {
   while [ $# -gt 0 ]; do
-    if [ -x "$(whichHook "$1")" ]; then
-      return 0
+    if [ ! -x "$(whichHook "$1")" ]; then
+      return 1
     fi
     shift
   done
-  return 1
+  return 0
 }
 
 #
+# Summary: Find the path to a hook binary file
+#
 # Does a hook exist in the local project?
 #
+# Find the path to a hook. The search path is:
+#
+# - `./bin/hooks/`
+# - `./bin/build/hooks/`
+#
+# If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
+# Usage: whichHook hookName
+# Arguments: hookName - Hook to locate
+#
 whichHook() {
-  local binary=$1 paths=("./bin/hooks/" "./bin/build/hooks/") extensions=("" ".sh") p e
+  local binary=$1 paths=("./bin/hooks/" "./bin/build/hooks/") extensions=("" ".sh")
+  local p e
   for p in "${paths[@]}"; do
     for e in "${extensions[@]}"; do
       if [ -x "$p/$binary$e" ]; then
-        echo "$p/$binary$e"
+        printf %s "$p/$binary$e"
         return 0
       fi
       if [ -f "$p/$binary$e" ]; then
-        consoleWarning "$p/$binary$e exists but is not executable and will be ignored"
+        consoleWarning "$p/$binary$e exists but is not executable and will be ignored" 1>&2
       fi
     done
   done
+  return 1
 }
 
 #
@@ -115,15 +178,33 @@ whichHook() {
 # reportTiming "$start" Done
 # non-`tools.sh`` replacement:
 #
+
+#
+# Summary: Start a timer for a section of the build
+#
+# Outputs the offset in seconds from January 1, 1970.
+#
+# Usage: beginTiming
+# Example:     init=$(beginTiming)
+# Example:     ...
+# Example:     reportTiming "$init" "Completed in"
+#
 beginTiming() {
   echo "$(($(date +%s) + 0))"
 }
 
-#
 # Outputs the timing in Magenta optionally prefixed by a message in green
 #
 # Usage: reportTiming "$startTime" outputText...
-#
+# Summary: Output the time elapsed
+# Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
+# Usage: reportTiming startOffset [ message ... ]
+# Argument: startOffset - Unix timestamp seconds of start timestamp
+# Argument: message - Any additional arguments are output before the elapsed value computed
+# Exit code: 0 - Exits with exit code zero
+# Example:    init=$(beginTiming)
+# Example:    ...
+# Example:    reportTiming "$init" "Deploy completed in"
 reportTiming() {
   local start delta
   start=$1
@@ -146,12 +227,23 @@ ___dumpLines() {
   tail -n "$nLines" "$quietLog" | prefixLines "$(consoleYellow)"
 }
 
+# Summary: Output debugging information when the build fails
 #
-# Usage: buildFailed "$quietLog"
+# Outputs debugging information after build fails:
 #
-# Output the last parts of the quietLog to find the error
-# returns non-zero so fails in `set -e` shells
+# - last 50 lines in build log
+# - Failed message
+# - last 3 lines in build log
 #
+# Usage: buildFailed logFile
+# Argument: logFile - the most recent log from the current script
+#
+# Example:     quietLog="$(buildQuietLog "$me")"
+# Example:     if ! ./bin/deploy.sh >>"$quietLog"; then
+# Example:         consoleError "Deploy failed"
+# Example:         buildFailed "$quietLog"
+# Example:     fi
+# Exit Code: 1 - Always fails
 buildFailed() {
   local quietLog=$1 bigLines=50 recentLines=3
   shift
@@ -167,12 +259,19 @@ buildFailed() {
   return "$errorEnvironment"
 }
 
+# Summary: Sort versions in the format v0.0.0
+#
+# Sorts semantic versions prefixed with a `v` character; intended to be used as a pipe.
 #
 # vXXX.XXX.XXX
 #
 # for sort - -k 1.c,1 - the `c` is the 1-based character index, so 2 means skip the 1st character
 #
 # Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume
+#
+# Usage: versionSort [ -r ]
+# Argument: -r - Reverse the sort order (optional)
+# Example:    git tag | grep -e '^v[0-9.]*$' | versionSort
 #
 versionSort() {
   local r=
@@ -181,12 +280,8 @@ versionSort() {
       r=r
       shift
     else
-      (
-        exec 1>&2
-        consoleError "Unknown argument: $1"
-        echo
-        consoleInfo "versionSort [ -r ] - sort versions"
-      )
+        consoleError "Unknown argument: $1" 1>&2
+        return "$errorArgument"
     fi
   fi
   sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
@@ -194,7 +289,7 @@ versionSort() {
 
 #
 # Get the current IP address of the host
-#
+# Exit Code: 1 - Returns
 ipLookup() {
   # Courtesy of Market Ruler, LLC thanks
   local default="https://www.conversionruler.com/showip/?json"
@@ -322,17 +417,20 @@ deployNextVersion() {
     return 1
   fi
 }
-
-#   _   _           _
-#  | | | |_ __   __| | ___
-#  | | | | '_ \ / _` |/ _ \
-#  | |_| | | | | (_| | (_) |
-#   \___/|_| |_|\__,_|\___/
+#      _   _           _
+#     | | | |_ __   __| | ___
+#     | | | | '_ \ / _` |/ _ \
+#     | |_| | | | | (_| | (_) |
+#      \___/|_| |_|\__,_|\___/
+#
+# Undo deplpying an application from a deployment repository
+#
+# Usage: undoDeployApplication deployHome deployVersion targetPackage applicationPath
 #
 undoDeployApplication() {
   local deployHome versionName targetPackage previousChecksum
 
-  deployHome=$1
+  deployHome=$1p
   shift
   versionName=$1
   shift
@@ -357,13 +455,15 @@ undoDeployApplication() {
 
 }
 
+# Deploy an application from a deployment repository
 #
-# deployApplication deployHome deployVersion targetPackage applicationPath
+# Usage: deployApplication deployHome deployVersion targetPackage applicationPath
 #
-# e.g.
+# Argument: deployHome - The deplpoyment repository home
+# Argument: deployVersion - The version to deploy
+# Argument: targetPackage -
 #
-# deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
-#
+# Example: deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
 deployApplication() {
   local deployHome deployVersion applicationPath deployedApplicationPath
   local previousApplicationChecksum targetPackageFullPath me exitCode=0

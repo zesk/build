@@ -14,7 +14,7 @@ errorEnvironment=1
 # Run apt-get update once and only once in the pipeline, at least
 # once an hour as well (when testing)
 #
-# Short Description: Do `apt-get update` once
+# Summary: Do `apt-get update` once
 # Usage: aptUpdateOnce
 # Environment: Stores state files in `./.build/` directory which is created if it does not exist.
 #
@@ -23,7 +23,7 @@ aptUpdateOnce() {
 
     quietLog=$(buildQuietLog aptUpdateOnce)
     name=$(buildCacheDirectory "$cacheFile")
-    if ! requireFileDirectory "$quietLog" || ! requireFileDirectory "$name"; then
+    if ! requireFileDirectory "$name"; then
         return "$errorEnvironment"
     fi
     # once an hour, technically
@@ -56,7 +56,7 @@ aptUpdateOnce() {
 # Example:     aptInstall shellcheck
 # Exit Code: 0 - If `apt-get` is not installed, returns 0.
 # Exit Code: 1 - If `apt-get` fails to install the packages
-# Short Description: Install packages using `apt-get`
+# Summary: Install packages using `apt-get`
 # Argument: package - One or more packages to install
 #
 aptInstall() {
@@ -76,7 +76,7 @@ aptInstall() {
     if ! aptUpdateOnce; then
         return "$errorEnvironment"
     fi
-    if ! requireFileDirectory "$quietLog" || ! requireFileDirectory "$installedLog"; then
+    if ! requireFileDirectory "$installedLog"; then
         return "$errorEnvironment"
     fi
     touch "$installedLog" || return $?
@@ -112,7 +112,7 @@ aptInstall() {
 #
 # Confirms that `binary` is installed after installation succeeds.
 #
-# Short Description: Install tools using `apt-get` if they are not found
+# Summary: Install tools using `apt-get` if they are not found
 # Usage: whichApt binary aptInstallPackage
 # Example:     whichApt shellcheck shellcheck
 # Example:     whichApt mariadb mariadb-client

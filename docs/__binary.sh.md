@@ -1,4 +1,4 @@
-# `{fn}` - {short_description}
+# `{fn}` - {summary}
 
 [⬅ Return to top](index.md)
 
