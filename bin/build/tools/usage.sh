@@ -3,7 +3,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: colors.sh
-#
+# Docs: contextOpen ./docs/templates/tools/usage.sh.md
 
 # IDENTICAL errorArgument 1
 errorArgument=2
@@ -33,8 +33,8 @@ errorArgument=2
 # - Description
 #
 _usageOptionsSample() {
-    echo "--download file|Required. String. File to download"
-    echo "--target path|Optional. Integer. Place to download to."
+  echo "--download file|Required. String. File to download"
+  echo "--target path|Optional. Integer. Place to download to."
 }
 
 #
@@ -43,7 +43,7 @@ _usageOptionsSample() {
 export usageDelimiter=${usageDelimiter-" "}
 
 #
-# Usage: usageWrbpper [ exitCode [ message ... ] ]
+# Usage: usageWrapper [ exitCode [ message ... ] ]
 #
 # Description: Base case for usage, write your usage function as follows:
 #
@@ -64,11 +64,11 @@ export usageDelimiter=${usageDelimiter-" "}
 # - IFF neither is defined, outputs a simple usage without options
 #
 usageWrapper() {
-    if [ "$(type -t usage)" = "function" ]; then
-        usage "$@"
-    else
-        usageMain "$@"
-    fi
+  if [ "$(type -t usage)" = "function" ]; then
+    usage "$@"
+  else
+    usageMain "$@"
+  fi
 }
 
 #
@@ -94,22 +94,22 @@ usageWrapper() {
 # - IFF neither is defined, outputs a simple usage without options.
 #
 usageMain() {
-    local binName="${1-me}" exitCode="${2-0}" delimiter usageString
+  local binName="${1-me}" exitCode="${2-0}" delimiter usageString
 
-    usageString="$(consoleBoldRed Usage)"
-    shift
-    shift
+  usageString="$(consoleBoldRed Usage)"
+  shift
+  shift
 
-    desc="No description"
-    if [ "$(type -t usageDescription)" ]; then
-        desc="$(usageDescription)"
-    fi
-    if [ "$(type -t usageOptions)" = "function" ]; then
-        usageTemplate "$binName" "$(usageOptions)" "${usageDelimiter-' '}" "$desc" "$exitCode" "$*"
-    else
-        usageTemplate "$binName" "" "" "$desc" "$exitCode" "$*"
-    fi
-    return "$exitCode"
+  desc="No description"
+  if [ "$(type -t usageDescription)" ]; then
+    desc="$(usageDescription)"
+  fi
+  if [ "$(type -t usageOptions)" = "function" ]; then
+    usageTemplate "$binName" "$(usageOptions)" "${usageDelimiter-' '}" "$desc" "$exitCode" "$*"
+  else
+    usageTemplate "$binName" "" "" "$desc" "$exitCode" "$*"
+  fi
+  return "$exitCode"
 }
 
 #
@@ -120,76 +120,76 @@ usageMain() {
 # Should look into a actual file template, probably
 #
 usageTemplate() {
-    local usageString binName options delimiter description exitCode
+  local usageString binName options delimiter description exitCode
 
-    binName="$1"
-    shift || return "$errorArgument"
-    options="$(printf "%s\n" "$1")"
-    shift || return "$errorArgument"
-    delimiter="$1"
-    shift || return "$errorArgument"
-    description="$1"
-    shift || return "$errorArgument"
-    exitCode="${1-0}"
-    usageString="$(consoleBoldRed Usage)"
-    shift || :
+  binName="$1"
+  shift || return "$errorArgument"
+  options="$(printf "%s\n" "$1")"
+  shift || return "$errorArgument"
+  delimiter="$1"
+  shift || return "$errorArgument"
+  description="$1"
+  shift || return "$errorArgument"
+  exitCode="${1-0}"
+  usageString="$(consoleBoldRed Usage)"
+  shift || :
 
-    exec 1>&2
-    if [ ${#@} -gt 0 ]; then
-        consoleError "$@"
-        echo
-    fi
-    description=${description:-"No description"}
-    nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
+  exec 1>&2
+  if [ ${#@} -gt 0 ]; then
+    consoleError "$@"
+    echo
+  fi
+  description=${description:-"No description"}
+  nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
 
-    if [ -n "$delimiter" ] && [ -n "$options" ]; then
-        printf "%s: %s%s\n\n%s\n\n%s\n\n" \
-            "$usageString" \
-            "$(consoleInfo -n "$binName")" \
-            "$(printf %s "$options" | usageArguments "$delimiter")" \
-            "$(printf %s "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | prefixLines "    ")" \
-            "$(consoleReset)$description"
-    else
-        printf "%s: %s\n\n%s\n\n" \
-            "$usageString" \
-            "$(consoleInfo "$binName")" \
-            "$(consoleReset)$description"
-        echo
-    fi
+  if [ -n "$delimiter" ] && [ -n "$options" ]; then
+    printf "%s: %s%s\n\n%s\n\n%s\n\n" \
+      "$usageString" \
+      "$(consoleInfo -n "$binName")" \
+      "$(printf %s "$options" | usageArguments "$delimiter")" \
+      "$(printf %s "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | prefixLines "    ")" \
+      "$(consoleReset)$description"
+  else
+    printf "%s: %s\n\n%s\n\n" \
+      "$usageString" \
+      "$(consoleInfo "$binName")" \
+      "$(consoleReset)$description"
+    echo
+  fi
 
-    return "$exitCode"
+  return "$exitCode"
 }
 
 #
 # usageArguments delimiter
 #
 usageArguments() {
-    local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription lastLine
+  local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription lastLine
 
-    optionalPrefix=${2-"$(consoleBlue)"}
-    requiredPrefix=${3-"$(consoleRed)"}
+  optionalPrefix=${2-"$(consoleBlue)"}
+  requiredPrefix=${3-"$(consoleRed)"}
 
-    lineTokens=()
-    lastLine=
-    while true; do
-        if ! IFS="$separatorChar" read -r -a lineTokens; then
-            lastLine=1
-        fi
-        if [ ${#lineTokens[@]} -gt 0 ]; then
-            argument="${lineTokens[0]}"
-            unset "lineTokens[0]"
-            lineTokens=("${lineTokens[@]}")
-            argDescription="${lineTokens[*]}"
-            if [ "${argDescription%*equire*}" != "$argDescription" ]; then
-                echo -n " $requiredPrefix$argument"
-            else
-                echo -n " $optionalPrefix""[ $argument ]"
-            fi
-        fi
-        if test $lastLine; then
-            break
-        fi
-    done
+  lineTokens=()
+  lastLine=
+  while true; do
+    if ! IFS="$separatorChar" read -r -a lineTokens; then
+      lastLine=1
+    fi
+    if [ ${#lineTokens[@]} -gt 0 ]; then
+      argument="${lineTokens[0]}"
+      unset "lineTokens[0]"
+      lineTokens=("${lineTokens[@]}")
+      argDescription="${lineTokens[*]}"
+      if [ "${argDescription%*equire*}" != "$argDescription" ]; then
+        echo -n " $requiredPrefix$argument"
+      else
+        echo -n " $optionalPrefix""[ $argument ]"
+      fi
+    fi
+    if test $lastLine; then
+      break
+    fi
+  done
 }
 
 # Formats name value pairs separated by separatorChar (default " ") and uses
@@ -200,28 +200,28 @@ usageArguments() {
 # use with maximumFieldLength 1 to generate widths
 #
 usageGenerator() {
-    local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine=
+  local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine=
 
-    labelOptionalPrefix=${3-"$(consoleBlue)"}
-    labelRequiredPrefix=${4-"$(consoleRed)"}
-    # shellcheck disable=SC2119
-    valuePrefix=${5-"$(consoleValue)"}
+  labelOptionalPrefix=${3-"$(consoleBlue)"}
+  labelRequiredPrefix=${4-"$(consoleRed)"}
+  # shellcheck disable=SC2119
+  valuePrefix=${5-"$(consoleValue)"}
 
-    while true; do
-        if ! IFS= read -r line; then
-            lastLine=1
-        fi
-        capsLine="$(lowercase "$line")"
-        if [ "${capsLine##*required}" != "$capsLine" ]; then
-            labelPrefix=$labelRequiredPrefix
-        else
-            labelPrefix=$labelOptionalPrefix
-        fi
-        printf "%s\n" "$line" | awk "-F$separatorChar" "{ print \"$labelPrefix\" sprintf(\"%-\" $nSpaces \"s\", \$1) \"$valuePrefix\" substr(\$0, index(\$0, \"$separatorChar\") + 1) }"
-        if test $lastLine; then
-            break
-        fi
-    done
+  while true; do
+    if ! IFS= read -r line; then
+      lastLine=1
+    fi
+    capsLine="$(lowercase "$line")"
+    if [ "${capsLine##*required}" != "$capsLine" ]; then
+      labelPrefix=$labelRequiredPrefix
+    else
+      labelPrefix=$labelOptionalPrefix
+    fi
+    printf "%s\n" "$line" | awk "-F$separatorChar" "{ print \"$labelPrefix\" sprintf(\"%-\" $nSpaces \"s\", \$1) \"$valuePrefix\" substr(\$0, index(\$0, \"$separatorChar\") + 1) }"
+    if test $lastLine; then
+      break
+    fi
+  done
 
 }
 
@@ -232,26 +232,26 @@ usageGenerator() {
 # Arguments: env0 string One or more environment variables which should be set and non-empty
 #
 usageEnvironment() {
-    set +u
-    for e in "$@"; do
-        if [ -z "${!e}" ]; then
-            usageWrapper 1 "Required $e not set"
-            return 1
-        fi
-    done
-    set -u
+  local e
+  for e in "$@"; do
+    if [ -z "${!e-}" ]; then
+      usageWrapper 1 "Required $e not set"
+      return 1
+    fi
+  done
 }
 
 #
-# Usage: usageWhich [ binbry0 ... ]
-# Exit Codes: 1 - If any binbry0 bre not bvbilbble within the current pbth
-# Description: Requires the binbries to be found vib `which`
-# fbils if not
+# Usage: usageWhich [ binary0 ... ]
+# Exit Codes: 1 - If any binary0 are not available within the current path
+# Description: Requires the binaries to be found via `which`
+# fails if not
 #
 usageWhich() {
-    for b in "$@"; do
-        if [ -z "$(which "$b")" ]; then
-            usageWrapper 1 "$b is not available in path, not found: $PATH"
-        fi
-    done
+  local b
+  for b in "$@"; do
+    if [ -z "$(which "$b")" ]; then
+      usageWrapper 1 "$b is not available in path, not found: $PATH"
+    fi
+  done
 }

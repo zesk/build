@@ -143,13 +143,14 @@ printf "TERM: %s DISPLAY: %s\n" "${TERM-none}" "${DISPLAY-none} hasColors: $(
     printf %d $?
 )"
 
-requireTestFiles "$quietLog" aws-tests.sh
+requireTestFiles "$quietLog" pipeline-tests.sh
 
 #
 # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
 #
 ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
 
+requireTestFiles "$quietLog" aws-tests.sh
 requireTestFiles "$quietLog" text-tests.sh
 requireTestFiles "$quietLog" deploy-tests.sh
 requireTestFiles "$quietLog" documentation-tests.sh
@@ -158,14 +159,15 @@ requireTestFiles "$quietLog" assert-tests.sh
 requireTestFiles "$quietLog" usage-tests.sh
 requireTestFiles "$quietLog" docker-tests.sh colors-tests.sh api-tests.sh
 
-# Side effects - install the software
-requireTestFiles "$quietLog" bin-tests.sh
 
 # tests-tests.sh has side-effects - installs shellcheck
 requireTestFiles "$quietLog" tests-tests.sh
 
 # aws-tests.sh testAWSIPAccess has side-effects, installs AWS
 requireTestFiles "$quietLog" aws-tests.sh
+
+# Side effects - install the software
+requireTestFiles "$quietLog" bin-tests.sh
 
 for binTest in ./bin/tests/bin/*.sh; do
     testHeading "$(cleanTestName "$(basename "$binTest")")"
