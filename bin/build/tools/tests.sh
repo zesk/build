@@ -38,7 +38,7 @@ testShellScripts() {
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
 # Environment: This operates in the current working directory
-# Short Description: Check files for the existence of a string
+# Summary: Check files for the existence of a string
 # Exit Code: 0 - All found files pass `shellcheck` and `bash -n`
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
@@ -67,7 +67,7 @@ validateShellScripts() {
         clearLine
         consoleError "# The following scripts failed:" 1>&2
         for f in "${failedReasons[@]}"; do
-            echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
+            echo "    $(consoleMagenta -n "$f")" 1>&2
         done
         consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
         return $errorEnvironment
@@ -92,7 +92,7 @@ validateShellScripts() {
 # Argument: findArgs - Optional. Limit find to additional conditions.
 # Side-effect: Errors written to stderr, status written to stdout
 # Environment: This operates in the current working directory
-# Short Description: Check files for the existence of a string
+# Summary: Check files for the existence of a string
 # Exit Code: 0 - All found files contain all text strings
 # Exit Code: 1 - One or more files does not contain all text strings
 # Exit Code: 2 - Arguments error (missing extension or text)

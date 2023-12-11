@@ -6,7 +6,7 @@
 # BitBucket Functions
 
 
-## `getFromPipelineYML` - Fetch a value from the pipelines YAML file
+### `getFromPipelineYML` - Fetch a value from the pipelines YAML file
 
 Fetch a value from the pipelines YAML file
 
@@ -27,25 +27,25 @@ An example `bitbucket-pipelines.yml` file may have a header which looks like thi
 
 On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `super-secret`; it uses `grep` and `sed` to extract the value.
 
-### Arguments
+#### Arguments
 
 - `varName` - Name of the value to extract from `bitbucket-pipelines.yml`
 - `defaultValue` - Value if not found in pipelines
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `bitbucket.sh` - Run the default build container for build testing on BitBucket
+### `bitbucket.sh` - Run the default build container for build testing on BitBucket
 
 Run the default build container for build testing on BitBucket
 
-### Arguments
+#### Arguments
 
 - `envFile` - One or more environment files which are suitable to load for docker; must be valid
 - `extraArgs` - The first non-file argument to `bitbucket.sh` is passed directly through to `docker run` as arguments
 
-### Exit codes
+#### Exit codes
 
 - `1` - If already inside docker, or the environment file passed is not valid
 - `0` - Success

@@ -1,4 +1,4 @@
-{consoleInfo}{fn} - {short_description}
+{consoleInfo}{fn} - {summary}
 
 {consoleBoldRed}Usage: {consoleInfo}{fn} {consoleReset}{argumentsLine}
 

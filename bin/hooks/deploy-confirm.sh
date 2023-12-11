@@ -17,7 +17,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 #
 # fn: {base}
-# Short Description: Deployment confirmation script
+# Summary: Deployment confirmation script
 #
 # Exit code: 0 - Continue with deployment
 # Exit code: Non-zero - Any non-zero exit code will run `deploy-undo` hook on all systems and cancel deployment

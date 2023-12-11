@@ -138,8 +138,6 @@ requireTestFiles() {
     fi
 }
 
-requireFileDirectory "$quietLog"
-
 printf "TERM: %s DISPLAY: %s\n" "${TERM-none}" "${DISPLAY-none} hasColors: $(
     hasColors
     printf %d $?

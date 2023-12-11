@@ -70,21 +70,19 @@ Template header for most scripts:
     cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
     me=$(basename "$0")
-    quietLog="./.build/$me.log"
     # other constants here
 
     # shellcheck source=/dev/null
     . ./bin/build/tools.sh
 
-    requireFileDirectory "$quietLog"
     start=$(beginTiming)
     consoleInfo -n "Long process ... "
+    quietLog="$(buildQuietLog "$me")"
     if ! do-a-long-process.sh >>"$quietLog"; then
         consoleError "long process failed"
         buildFailed "$quietLog"
     fi
     reportTiming "$start" Done
-
 
 ## Artifacts
 
@@ -116,7 +114,6 @@ error occurs:
         exit "$exitCode"
     }
 
-
-## Copyright &copy; 2023 Market Acumen, Inc.
+## Copyright &copy; 2023 Market Acumen, Inc
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).

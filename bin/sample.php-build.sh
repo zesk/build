@@ -15,6 +15,7 @@ extraEnvs=(SMTP_URL MAIL_SUPPORT MAIL_FROM TESTING_EMAIL TESTING_EMAIL_IMAP DSN)
 files=(bin src etc public)
 
 # Copy of bin/build/install-bin-build.sh in your project
+# This is copied into local project after first install
 ./bin/install-bin-build.sh
 ./bin/build/pipeline/php-build.sh "${extraEnvs[@]}" -- "${files[@]}"
 

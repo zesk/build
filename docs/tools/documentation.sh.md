@@ -3,25 +3,25 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-# `bashDocumentFunction`
+## `bashDocumentFunction`
 
 
-### Usage
+#### Usage
 
     bashDocumentFunction file function template
 
-### Arguments
+#### Arguments
 
 - `file` - Required. File in which the function is defined
 - `function` - Required. The function name which is defined in `file`
 - `template` - Required. A markdown template to use to map values. Postprocessed with `removeUnfinishedSections`
 
-### Exit codes
+#### Exit codes
 
 - `0` - Success
 - `1` - Template file not found
 
-## `documentFunctionsWithTemplate` - Convert a template into documentation for Bash functions
+### `documentFunctionsWithTemplate` - Convert a template into documentation for Bash functions
 
 Convert a template which contains bash functions into full-fledged documentation.
 
@@ -35,11 +35,11 @@ The process:
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
-### Usage
+#### Usage
 
     documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
 
-### Arguments
+#### Arguments
 
 - `sourceCodeDirectory` - Required. The directory where the source code lives
 - `documentTemplate` - Required. The document template containing functions to define
@@ -47,17 +47,17 @@ to regenerate each time.
 - `targetFile` - Required. Target file to generate
 - `cacheDirectory` - Optional. If supplied, cache to reduce work when files remain unchanged.
 
-### Exit codes
+#### Exit codes
 
 - `0` - If success
 - `1` - Issue with file generation
 - `2` - Argument error
 
-## See Also
+#### See Also
 
 documentFunctionTemplateDirectory
 
-## `documentFunctionTemplateDirectory` - Convert a directory of templates into documentation for Bash functions
+### `documentFunctionTemplateDirectory` - Convert a directory of templates into documentation for Bash functions
 
 Convert a directory of templates for bash functions into full-fledged documentation.
 
@@ -69,11 +69,11 @@ The process:
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
-### Usage
+#### Usage
 
     documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDiretory [ cacheDirectory ]
 
-### Arguments
+#### Arguments
 
 - `sourceCodeDirectory` - Required. The directory where the source code lives
 - `documentDirectory` - Required. Directory containing documentation templates
@@ -81,20 +81,20 @@ to regenerate each time.
 - `targetDiretory` - Required. Directory to create generated documentation
 - `cacheDirectory` - Optional. If supplied, cache to reduce work when files remain unchanged.
 
-### Exit codes
+#### Exit codes
 
 - `0` - If success
 - `1` - Any template file failed to generate for any reason
 - `2` - Argument error
 
-## See Also
+#### See Also
 
 documentFunctionsWithTemplate
 
-# Finding documentation
+## Finding documentation
 
 
-## `bashExtractDocumentation` - Generate a set of name/value pairs to document bash functions
+### `bashExtractDocumentation` - Generate a set of name/value pairs to document bash functions
 
 Uses `bashFindFunctionFiles` to locate bash function, then
 extracts the comments preceding the function definition and converts it
@@ -106,7 +106,7 @@ A few special values are generated/computed:
 - `fn` - The function name (no parenthesis or anything)
 - `base` - The basename of the file
 - `file` - The relative path name of the file from the application root
-- `short_description` - Defaults to first ten words of `description`
+- `summary` - Defaults to first ten words of `description`
 - `exit_code` - Defaults to `0 - Always succeeds`
 - `reviewed"  - Defaults to `Never`
 - `environment"  - Defaults to `No environment dependencies or modifications.`
@@ -118,24 +118,24 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 - `example` - An example of usage (code, many)
 - `depends` - Any dependencies (list)
 
-### Usage
+#### Usage
 
     bashExtractDocumentation directory function
 
-### Arguments
+#### Arguments
 
 - `definitionFile` - File in which function is defined
 - `function` - Function defined in `file`
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Depends
+#### Depends
 
     colors.sh text.sh prefixLines
 
-## `bashFindFunctionFiles` - Find where a function is defined in a directory of shell scripts
+### `bashFindFunctionFiles` - Find where a function is defined in a directory of shell scripts
 
 Finds one ore more function definition and outputs the file or files in which a
 function definition is found. Searches solely `.sh` files. (Bash or sh scripts)
@@ -143,58 +143,58 @@ function definition is found. Searches solely `.sh` files. (Bash or sh scripts)
 Note this function succeeds if it finds all occurrences of each function, but
 may output partial results with a failure.
 
-### Usage
+#### Usage
 
     bashFindFunctionFiles dirctory fnName0 [ fnName1... ]
 
-### Arguments
+#### Arguments
 
 - `directory` - The directory to search
 - `fnName0` - A function to find the file in which it is defined
 - `fnName1...` - Additional functions are found are output as well
 
-### Examples
+#### Examples
 
 bashFindFunctionFiles . bashFindFunctionFiles
     ./bin/build/tools/autodoc.sh
 
-### Exit codes
+#### Exit codes
 
 - `0` - if one or more function definitions are found
 - `1` - if no function definitions are found
 
-### Environment
+#### Environment
 
 Generates a temporary file which is removed
 
-# Documentation Utilities
+## Documentation Utilities
 
 
-### Usage
+#### Usage
 
     removeUnfinishedSections < inputFile > outputFile
 
-### Arguments
+#### Arguments
 
 - None
 
-### Examples
+#### Examples
 
 map.sh < $templateFile | removeUnfinishedSections
 
-### Exit codes
+#### Exit codes
 
 - 0
 
-### Environment
+#### Environment
 
 None
 
-### Depends
+#### Depends
 
     read printf
 
-## `markdownListify` - Simple function to make list-like things more list-like in Markdown
+### `markdownListify` - Simple function to make list-like things more list-like in Markdown
 
 Simple function to make list-like things more list-like in Markdown
 
@@ -202,75 +202,74 @@ Simple function to make list-like things more list-like in Markdown
 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
 3. Prefix each line with a "dash space" (`- `)
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `__dumpNameValue` - Utility to export multi-line values as Bash variables
+### `__dumpNameValue` - Utility to export multi-line values as Bash variables
 
 Utility to export multi-line values as Bash variables
 
-### Usage
+#### Usage
 
     __dumpNameValue name [ value0 value1 ... ]
 
-### Arguments
+#### Arguments
 
 - `name` - Shell value to output
 - `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Usage
+#### Usage
 
     __dumpAliasedValue variable alias
 
-### Arguments
+#### Arguments
 
 - `variable` - shell variable to set
 - `alias` - The shell variable to assign to `variable`
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-# `bashDocumentFunction` Formatting
+## `bashDocumentFunction` Formatting
 
 
-## `_bashDocumentFunction_exit_codeFormat` - Format code blocks (does markdownListify)
+### `_bashDocumentFunction_exit_codeFormat` - Format code blocks (does markdownListify)
 
 Format code blocks (does markdownListify)
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `_bashDocumentFunction_usageFormat` - Format usage blocks (indents as a code block)
+### `_bashDocumentFunction_usageFormat` - Format usage blocks (indents as a code block)
 
 Format usage blocks (indents as a code block)
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `_bashDocumentFunction_argumentFormat` - Format argument blocks (does markdownListify)
+### `_bashDocumentFunction_argumentFormat` - Format argument blocks (does markdownListify)
 
 Format argument blocks (does markdownListify)
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `_bashDocumentFunction_dependsFormat` - Format depends blocks (indents as a code block)
+### `_bashDocumentFunction_dependsFormat` - Format depends blocks (indents as a code block)
 
 Format depends blocks (indents as a code block)
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
-
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

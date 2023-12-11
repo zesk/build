@@ -42,7 +42,7 @@ assertEquals() {
 # Assert two strings are not equal.
 #
 # If this fails it will output an error and exit.
-# Short Description: Assert two strings are not equal
+# Summary: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
 # Argument: - `expected` - Expected string
 # Argument: - `actual` - Actual string
@@ -166,7 +166,7 @@ assertContains() {
 # Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
-# Short Description: Test that a directory exists
+# Summary: Test that a directory exists
 #
 assertDirectoryExists() {
     local d=$1
@@ -188,7 +188,7 @@ assertDirectoryExists() {
 # Local cache: None
 # Environment: - This fails if `directory` is anything at all, even a non-directory (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
-# Short Description: Test that a directory does not exist
+# Summary: Test that a directory does not exist
 # Reviewed: 2023-11-12
 #
 assertDirectoryDoesNotExist() {
@@ -466,7 +466,7 @@ assertGreaterThan() {
 # Argument: - `message` - Message to output if the assertion fails
 # Example:     assertGreaterThanOrEqual 3 $found
 # Reviewed: 2023-11-12
-# Short Description: Assert actual value is greater than or equal to expected value
+# Summary: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
     local leftValue=$1 rightValue=$2
     shift

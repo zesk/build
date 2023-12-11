@@ -18,7 +18,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 #
 # fn: {base}
-# Short Description: Deployment "finish" script
+# Summary: Deployment "finish" script
 #
 # Exit code: 0 - This SHOULD exit successfully always
 #
