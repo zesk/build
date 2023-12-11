@@ -1,5 +1,8 @@
 # Prettier functions
 
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)
+
 
 ### `prettierInstall` - Install prettier in the build environment
 
@@ -25,3 +28,5 @@ When this tool succeeds the `prettier` binary is available in the local operatin
 
 - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)

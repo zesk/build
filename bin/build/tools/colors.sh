@@ -4,6 +4,7 @@
 #
 # Depends: text.sh
 # bin: test echo printf
+# Docs: contextOpen ./docs/templates/tools/colors.sh.md
 
 ###############################################################################
 #
@@ -156,6 +157,7 @@ colorTest() {
 #
 # Color-based
 #
+# shellcheck disable=SC2120
 consoleRed() {
     _consoleRed '' "$@"
 }
@@ -172,6 +174,7 @@ _consoleGreen() {
     shift
     __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
 }
+# shellcheck disable=SC2120
 consoleCyan() {
     _consoleCyan "" "$@"
 }
@@ -254,7 +257,7 @@ _consoleInfo() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-    __consoleEscape '\033[102m' '\033[0m' "$@"
+    __consoleEscape '\033[30;102m' '\033[0m' "$@"
 }
 
 #
@@ -386,21 +389,25 @@ consoleColumns() {
 }
 
 #
-# Usage: simpleMarkdownToConsole < $markdownFile
 # Converts backticks, bold and italic to console colors.
+#
+# Usage: simpleMarkdownToConsole < $markdownFile
 #
 simpleMarkdownToConsole() {
     # shellcheck disable=SC2119
-    toggleCharacterToColor '`' "$(consoleCode)" | toggleCharacterToColor '**' "$(consoleError)" | toggleCharacterToColor '*' "$(consoleInfo)"
+    _toggleCharacterToColor '`' "$(consoleCode)" | toggleCharacterToColor '**' "$(consoleRed)" | toggleCharacterToColor '*' "$(consoleCyan)"
 }
 
 #
+# Internal
+#
+# Utility function to help with simpleMarkdownToConsole
 # Usage: toggleCharacterToColor character colorOn [ colorOff ]
 # Argument: character - The character to map to color start/stop
 # Argument: colorOn - Color on escape sequence
 # Argument: colorOff - Color off escape sequence defaults to "$(consoleReset)"
 #
-toggleCharacterToColor() {
+_toggleCharacterToColor() {
     local sequence line code reset lastItem lastLine=
 
     # shellcheck disable=SC2119

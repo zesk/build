@@ -9,22 +9,19 @@
 set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-me=$(basename "${BASH_SOURCE[0]}")
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-# fn: make-env
-# Generate the environment file for this project.
 #
-# Default hook runs `bin/build/pipeline/make-env.sh` directly. To customize this
-# override this hook in your project, usually by specifying a list of
-# required environment variables which are set in your build pipeline.
+# Generate an environment file with environment variables (must be `export`ed)
 #
-# See: make-env.sh
+# If your project has specific environment variables, you can add them in your `make-env` hook.
+#
+# Usage: runHook make-env [ requiredEnvironment0 ... ] [ -- optionalEnvironment0 ... ]
+# See: makeEnvironment
+#
+# fn: runHook make-env
 hookMakeEnvironment() {
-    consoleSuccess "$me is the default script, please customize for your application."
-    ./bin/build/pipeline/make-env.sh "$@"
+  makeEnvironment "$@"
 }
-
-hookMakeEnvironment "$@"

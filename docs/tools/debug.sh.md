@@ -1,24 +1,73 @@
 # Debug Functions
 
-Functions to assist in debugging the internals of the build scripts.
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)
 
-The main mechanism is to set the environment value `BUILD_DEBUG` to a value (`1`, `2` or more) to increase the verbosity of the output generated.
 
-## `buildDebugEnabled`
+### `buildDebugEnabled` - Is build debugging enabled?
 
-If the `BUILD_DEBUG` environment is set to a truthy value.
+Is build debugging enabled?
 
-### Environment
+#### Usage
 
-- `BUILD_DEBUG` - if `test $BUILD_DEBUG` succeeds, then debugging is enabled.
+    buildDebugEnabled
 
-## `buildDebugStart`
+#### Exit codes
 
-If build debugging is enabled, start trace execution (output of each command in the shell). (see `set -x`)
+- `1` - Debugging is not enabled
+- `0` - Debugging is enabled
 
-## `buildDebugStop`
+#### Environment
 
-If build debugging is enabled, stop trace execution.
+BUILD_DEBUG - Set to 1 to enable debugging, blank to disable
+
+### `buildDebugStart` - Start build debugging if it is enabled.
+
+Start build debugging if it is enabled.
+This does `set -x` which traces and outputs every shell command
+Use it to debug when you can not figure out what is happening internally.
+
+#### Usage
+
+    buildDebugStart
+
+#### Examples
+
+buildDebugStart
+    # ... complex code here
+    buildDebugStop
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `buildDebugStop` - Start build debugging if it is enabled.
+
+Start build debugging if it is enabled.
+This does `set -x` which traces and outputs every shell command
+Use it to debug when you can not figure out what is happening internally.
+
+
+
+Stop build debugging if it is enabled
+
+#### Usage
+
+    buildDebugStop
+
+#### Examples
+
+buildDebugStart
+    # ... complex code here
+    buildDebugStop
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+buildDebugStart
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

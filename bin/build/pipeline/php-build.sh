@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 export usageDelimiter=@
 usageOptions() {
-    cat <<EOF
+  cat <<EOF
 --name tarFileName@Set BUILD_TARGET via command line (wins)
 --deployment deployment@Set DEPLOYMENT via command line (wins)
 --suffix versionSuffix@Set tag suffix via command line (wins, default inferred from deployment)
@@ -33,11 +33,11 @@ file1 file2 dir3 ...@Required. List of files and directories to build into the a
 EOF
 }
 usage() {
-    usageMain "$me" "$@"
-    exit $?
+  usageMain "$me" "$@"
+  exit $?
 }
 usageDescription() {
-    cat <<EOF
+  cat <<EOF
 Build deployment using composer, adding environment values to .env and packaging vendor and additional
 files into final:
 
@@ -59,7 +59,7 @@ This file generates the $(consoleCode .build.env) file, which contains the curre
 $(consoleCode DEPLOYMENT) is mapped to suffixes when $(consoleLabel --suffix) not specified as follows:
 
 EOF
-    cat <<EOF | usageGenerator 10 | prefixLines "$(repeat 4 " ")"
+  cat <<EOF | usageGenerator 10 | prefixLines "$(repeat 4 " ")"
 rc production
 d develop
 s staging
@@ -77,70 +77,70 @@ optClean=
 versionSuffix=
 envVars=()
 while [ $# -gt 0 ]; do
-    case $1 in
+  case $1 in
     --debug)
-        debuggingFlag=1
-        ;;
+      debuggingFlag=1
+      ;;
     --deployment)
-        shift
-        DEPLOYMENT=$1
-        ;;
+      shift
+      DEPLOYMENT=$1
+      ;;
     --name)
-        shift
-        BUILD_TARGET=$1
-        ;;
+      shift
+      BUILD_TARGET=$1
+      ;;
     --)
-        shift
-        break
-        ;;
+      shift
+      break
+      ;;
     --clean)
-        optClean=1
-        ;;
+      optClean=1
+      ;;
     --suffix)
-        shift
-        versionSuffix=$1
-        ;;
+      shift
+      versionSuffix=$1
+      ;;
     *)
-        envVars+=("$1")
-        ;;
-    esac
-    shift
+      envVars+=("$1")
+      ;;
+  esac
+  shift
 done
 
 if test "${BUILD_DEBUG-}"; then
-    debuggingFlag=1
+  debuggingFlag=1
 fi
 if test $debuggingFlag; then
-    consoleWarning "Debugging is enabled"
-    set -x
+  consoleWarning "Debugging is enabled"
+  set -x
 fi
 
 if [ $# -eq 0 ]; then
-    usage $errorEnvironment "Need to supply a list of files for application $BUILD_TARGET"
+  usage $errorEnvironment "Need to supply a list of files for application $BUILD_TARGET"
 fi
 for tarFile in "$@"; do
-    if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
-        missingFile+=("$tarFile")
-    fi
+  if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
+    missingFile+=("$tarFile")
+  fi
 done
 if [ ${#missingFile[@]} -gt 0 ]; then
-    usage $errorEnvironment "Missing files: ${missingFile[*]}"
+  usage $errorEnvironment "Missing files: ${missingFile[*]}"
 fi
 
 # Sets the DEFAULT - can override with command line argument --suffix
 if [ "$DEPLOYMENT" = "production" ]; then
-    versionSuffix=rc
+  versionSuffix=rc
 elif [ "$DEPLOYMENT" = "develop" ]; then
-    versionSuffix=d
+  versionSuffix=d
 elif [ "$DEPLOYMENT" = "staging" ]; then
-    versionSuffix=s
+  versionSuffix=s
 elif [ "$DEPLOYMENT" = "test" ]; then
-    versionSuffix=t
+  versionSuffix=t
 elif [ -z "$DEPLOYMENT" ]; then
-    usage $errorArgument "DEPLOYMENT must be defined in the environment or passed as --deployment"
+  usage $errorArgument "DEPLOYMENT must be defined in the environment or passed as --deployment"
 fi
 if [ -z "$versionSuffix" ]; then
-    usage $errorArgument "No version --suffix defined - usually unknown DEPLOYMENT: $DEPLOYMENT"
+  usage $errorArgument "No version --suffix defined - usually unknown DEPLOYMENT: $DEPLOYMENT"
 fi
 initTime=$(beginTiming)
 
@@ -162,12 +162,24 @@ consoleInfo "Tagging $DEPLOYMENT deployment with $versionSuffix ..."
 #
 
 if hasHook make-env; then
-    # this script usually runs ./bin/build/pipeline/make-env.sh
-    runHook make-env "${envVars[@]}"
+  # this script usually runs ./bin/build/pipeline/make-env.sh
+  if ! runHook make-env "${envVars[@]}" >.env; then
+    consoleError "make-env hook failed $?" 1>&2
+    return $errorEnvironment
+  fi
 else
-    ./bin/build/pipeline/make-env.sh "${envVars[@]}"
+  if ! makeEnvironment "${envVars[@]}" >.env; then
+    consoleError makeEnvironment "${envVars[@]}" failed "$?" 1>&2
+    return $errorEnvironment
+  fi
 fi
+showEnvironment "${envVars[@]}"
 
+if ! grep -q APPLICATION .env; then
+  consoleError ".env file seems to be invalid:" 1>&2
+  buildFailed ".env"
+  return $errorEnvironment
+fi
 set -a
 # shellcheck source=/dev/null
 source .env
@@ -178,16 +190,16 @@ set +a
 # Generate .build.env
 #
 deployGitDefaultValue() {
-    local e=$1 hook=$2
+  local e=$1 hook=$2
 
-    shift
-    if [ -z "${!e}" ]; then
-        runHook "$hook" >"./.deploy/$e"
-        cat "./.deploy/$e"
-    else
-        echo -n "${!e}" >"./.deploy/$e"
-        echo -n "${!e}"
-    fi
+  shift
+  if [ -z "${!e}" ]; then
+    runHook "$hook" >"./.deploy/$e"
+    cat "./.deploy/$e"
+  else
+    echo -n "${!e}" >"./.deploy/$e"
+    echo -n "${!e}"
+  fi
 }
 
 [ -d ./.deploy ] && rm -rf ./.deploy
@@ -206,14 +218,14 @@ declare -px >.build.env
 # Build vendor
 #
 if [ -d ./vendor ] || test $optClean; then
-    consoleWarning "vendor directory should not exist before composer, deleting"
-    rm -rf ./vendor 2>/dev/null || :
+  consoleWarning "vendor directory should not exist before composer, deleting"
+  rm -rf ./vendor 2>/dev/null || :
 fi
 
 ./bin/build/pipeline/composer.sh
 
 if [ ! -d ./vendor ]; then
-    usage "$errorArgument" "Composer step did not create the vendor directory"
+  usage "$errorArgument" "Composer step did not create the vendor directory"
 fi
 
 bigText "$APPLICATION_TAG" | prefixLines "$(consoleGreen)"

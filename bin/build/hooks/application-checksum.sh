@@ -10,6 +10,9 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
+
 # fn: {base}
 #
 # Generate a unique checksum for the state of the application files
@@ -17,7 +20,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # The default hook uses the short git checksum
 #
 hookApplicationChecksum() {
-    git rev-parse --short HEAD
+  gitEnsureSafeDirectory "$(pwd)"
+  git rev-parse --short HEAD
 }
 
 hookApplicationChecksum

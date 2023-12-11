@@ -136,46 +136,7 @@ awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 isAWSKeyUpToDate() {
-    local upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo pluralDays
-
-    if [ -z "${AWS_ACCESS_KEY_DATE:-}" ]; then
-        return 1
-    fi
-    shift
-    maxDays=366
-    upToDateDays=$((upToDateDays + 0))
-    if [ $upToDateDays -gt $maxDays ]; then
-        consoleError "isAWSKeyUpToDate $upToDateDays - values not allowed greater than $maxDays" 1>&2
-        return 1
-    fi
-    if [ $upToDateDays -le 0 ]; then
-        consoleError "isAWSKeyUpToDate $upToDateDays - negative or zero values not allowed" 1>&2
-        return 1
-    fi
-    if ! dateToTimestamp "$AWS_ACCESS_KEY_DATE" >/dev/null; then
-        consoleError "Invalid date $AWS_ACCESS_KEY_DATE" 1>&2
-        return 1
-    fi
-    accessKeyTimestamp=$(($(dateToTimestamp "$AWS_ACCESS_KEY_DATE") + 0))
-
-    todayTimestamp=$(($(date +%s) + 0))
-    deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
-    daysAgo=$((deltaDays - upToDateDays))
-    if [ $daysAgo -gt 0 ]; then
-        pluralDays=$(plural $daysAgo day days)
-        consoleError "Access key expired $AWS_ACCESS_KEY_DATE, $daysAgo $pluralDays" 1>&2
-        return 1
-    fi
-    daysAgo=$((-daysAgo))
-    pluralDays=$(plural $daysAgo day days)
-    if [ $daysAgo -lt 14 ]; then
-        bigText "$daysAgo $pluralDays" | prefixLines "$(consoleError)"
-    fi
-    if [ $daysAgo -lt 30 ]; then
-        consoleWarning "Access key expires on $AWS_ACCESS_KEY_DATE, in $daysAgo $pluralDays"
-        return 0
-    fi
-    return 0
+    isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 
 #

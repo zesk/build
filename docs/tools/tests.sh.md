@@ -1,242 +1,81 @@
-# Test Functions
+# Tests Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-## `testShellScripts`
 
-Check all `.sh` files and make sure they pass bash linting as well as `shellcheck`.
+### `testShellScripts` - testShellScripts [ findArgs ]
 
-All `.sh` files should have a Copyright with the current year.
+testShellScripts [ findArgs ]
 
-If fails logs to standard output and returns a non-zero exit code.
+Requires shellcheck so should be later in the testing process to have a cleaner build
+This can be run on any directory tree to test scripts in any application.
 
-## Usage
+#### Exit codes
 
-    testShellScripts
+- `0` - Always succeeds
 
-## Arguments
+### `validateShellScripts` - Check files for the existence of a string
 
-None.
+validateShellScripts
 
-## Exit codes
+Requires shellcheck so should be later in the testing process to have a cleaner build
+This can be run on any directory tree to test scripts in any application.
 
-- Zero. Success.
-- Non-zero. Failed.
+#### Usage
 
-## Local cache
+    validateShellScripts [ findArgs ]
 
-No local caches.
+#### Arguments
 
-## Environment
+- `findArgs` - Additional find arguments for .sh files (or exclude directories).
 
-- Current directory is used to traverse shell scripts
-- `shellcheck` is installed in the local environment if hasn't already
+#### Examples
 
-## Examples
+if validateShellScripts; then git commit -m "saving things" -a; fi
 
-    testShellScripts
+#### Sample Output
 
-## `assertEquals` - Description
+    This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 
-Assert two strings are equal.
+#### Exit codes
 
-If this fails it will output an error and exit.
+- `0` - All found files pass `shellcheck` and `bash -n`
+- `1` - One or more files did not pass
 
-### Usage
+#### Environment
 
-    assertEquals expected actual [ message ]
+This operates in the current working directory
 
-### Arguments
+### `validateFileContents` - Check files for the existence of a string
 
-- `expected` - Expected string
-- `actual` - Actual string
-- `message` - Message to output if the assertion fails
+Search for file extensions and ensure that text is found in each file.
 
-### Exit codes
+This can be run on any directory tree to test files in any application.
 
-Zero.
+By default, any directory which begins with a dot `.` will be ignored.
 
-### Local cache
+#### Usage
 
-No local caches.
+    validateFileContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
 
-### Environment
+#### Arguments
 
-None.
+- `extension0 - Required` - the extension to search for (`*.extension`)
+- `--` - Required. Separates extensions from text
+- `text0` - Required. Text which must exist in each file with the extension given.
+- `--` - Optional. Final delimiter to specify find arguments.
+- `findArgs` - Optional. Limit find to additional conditions.
 
-### Examples
+#### Exit codes
 
-    assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+- `0` - All found files contain all text strings
+- `1` - One or more files does not contain all text strings
+- `2` - Arguments error (missing extension or text)
 
-## `assertNotEquals` - Description
+#### Environment
 
-Assert two strings are not equal.
-
-If this fails it will output an error and exit.
-
-### Usage
-
-    assertNotEquals expected actual [ message ]
-
-### Arguments
-
-- `expected` - Expected string
-- `actual` - Actual string
-- `message` - Message to output if the assertion fails
-
-### Exit codes
-
-Zero.
-
-### Local cache
-
-No local caches.
-
-### Environment
-
-None.
-
-### Examples
-
-    assertNotEquals "$(head -1 /proc/1/sched | awk '{ print $1 })" "init" "sched should not be init"
-## `assertExitCode` - Description
-
-Assert a process runs and exits with the correct exit code.
-
-If this fails it will output an error and exit.
-
-### Usage
-
-    assertExitCode expectedExitCode command [ arguments ... ]
-
-### Arguments
-
-- `expectedExitCode` - A numeric exit code expected from the command
-- `command` - The command to run
-- `arguments` - Any arguments to pass to the command to run
-
-### Exit codes
-
-Zero.
-
-### Local cache
-
-No local caches.
-
-### Environment
-
-None.
-
-### Examples
-
-    assertExitCode 0 hasHook version-current
-
-## `assertNotExitCode` - Description
-
-Assert a process runs and exits with an exit code which does not match the passed in exit code.
-
-If this fails it will output an error and exit.
-
-### Usage
-
-    assertNotExitCode expectedExitCode command [ arguments ... ]
-
-### Arguments
-
-- `expectedExitCode` - A numeric exit code not expected from the command
-- `command` - The command to run
-- `arguments` - Any arguments to pass to the command to run
-
-### Exit codes
-
-Zero.
-
-### Local cache
-
-No local caches.
-
-### Environment
-
-None.
-
-### Examples
-
-    assertNotExitCode 0 hasHook make-cash-quickly
-
-## `assertOutputContains` - Description
-
-Run a command and expect the output to contain the occurrence of a string.
-
-If this fails it will output the installation log.
-
-### Usage
-
-    assertOutputContains expected command [ arguments ... ]
-
-### Arguments
-
-- `expected` - A string to expect in the output
-- `command` - The command to run
-- `arguments` - Any arguments to pass to the command to run
-
-e.g.
-
-    bin/build/---/-----.sh ./app/
-
-### Exit codes
-
-Zero.
-
-### Local cache
-
-No local caches.
-
-### Environment
-
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
-
-### Examples
-
-    foo.sh < thing > thang
-
-## `randomString` - Description
-
-TODO Update all of this including the long description.
-
-If this fails it will output the installation log.
-
-When this tool succeeds the `----` tool has been installed in the local environment.
-
-### Usage
-
-    foo.sh arg1 arg2 --help
-
-### Arguments
-
-- `--help` - This help
-
-e.g.
-
-    bin/build/---/-----.sh ./app/
-
-### Exit codes
-
-Zero.
-
-### Local cache
-
-No local caches.
-
-### Environment
-
-- `BUILD_-----_VERSION` - String. Default to `latest`. Used to install the version of ----- you want on your environment.
-
-### Examples
-
-    foo.sh < thing > thang
-
+This operates in the current working directory
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
-

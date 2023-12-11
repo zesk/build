@@ -3,40 +3,96 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-## `veeGitTag`
 
-If a tag in git is a version without a `v` prefix, this will rename it so that it has a `v` prefix and delete the old tag.
+### `gitInstall` - Install git if needed
 
-### Usage
+Installs the `git` binary
 
-    veeGitTag tagName
+#### Usage
 
-### Arguments
+    gitInstall [ package ... ]
 
-- `tagName` - The tag to vee
+#### Arguments
 
-### Environment
+- `package` - Additional packages to install
 
-Uses the local `git` project
+#### Exit codes
 
-### Examples
+- `0` - Always succeeds
 
-    veeGitTag 0.0.1
+### `veeGitTag` - Given a tag in the form "1.1.3" convert it to
 
-## `gitRemoveFileFromHistory` - Remove a file from the git history
+Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
+Delete the old tag as well
 
-If you have committed a secret to `git`, this is a way to undo your commit. Use with caution, and make a backup before using this. The has a lot of caveats particularly if a file has a long history.
+#### Exit codes
 
-This uses `git filter-branch` which has a lot of potential problems. Use with caution.
+- `0` - Always succeeds
 
-### Usage
+### `gitRemoveFileFromHistory` - Has a lot of caveats
 
-    gitRemoveFileFromHistory fileName
+Has a lot of caveats
 
-### Arguments
+gitRemoveFileFromHistory path/to/file
 
-- `fileName` is the path to the file to remove from git history
+usually have to `git push --force`
 
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `gitEnsureSafeDirectory` - When running git operations on a deployment host, at times
+
+When running git operations on a deployment host, at times it's necessary to
+add the current directory (or a directory) to the git `safe.directory` directive.
+
+This adds the directory passed to that directory in the local user's environment
+
+#### Usage
+
+    gitEnsureSafeDirectory [ directory ... ]
+
+#### Arguments
+
+- `directory` - The directory to add to the `git` `safe.directory` configuration directive
+
+#### Exit codes
+
+- `0` - Success
+- `2` - Argument is not a valid directory
+- `Other` - git config error codes
+
+### `gitTagDelete` - Delete git tag locally and at origin
+
+Delete git tag locally and at origin
+
+#### Usage
+
+    gitTagDelete [ tag ... ]
+
+#### Arguments
+
+- `tag` - The tag to delete locally and remote
+
+#### Exit codes
+
+- `2` - Any stage fails will result in this exit code. Partial deletion may occur.
+
+### `gitTagAgain` - Remove a tag everywhere and tag again on the current
+
+Remove a tag everywhere and tag again on the current branch
+
+#### Usage
+
+    gitTagDelete [ tag ... ]
+
+#### Arguments
+
+- `tag` - The tag to delete locally and remote
+
+#### Exit codes
+
+- `2` - Any stage fails will result in this exit code. Partial deletion may occur.
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
