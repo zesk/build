@@ -48,7 +48,7 @@ assertEquals() {
 # Argument: - `actual` - Actual string
 # Argument: - `message` - Message to output if the assertion fails
 # Example:     assertNotEquals "$(head -1 /proc/1/sched | awk '{ print $1 }')" "init" "/proc/1/sched should not be init"
-# Example:     Single quote break's
+# Example:     Single quote break-s
 # Reviewed: 2023-11-12
 #
 assertNotEquals() {
