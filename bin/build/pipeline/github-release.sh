@@ -40,7 +40,8 @@ _githubReleaseUsage() {
 
 #
 # fn: {base}
-# Usage: {fn} descriptionFilePath releaseName commitish - Generate a release on GitHub using API
+# Summary: Generate a release on GitHub using API
+# Usage: {fn} [ --token token ] [ --owner owner ] [ --name name ] [ --expire expire ] descriptionFilePath releaseName commitish
 # Argument: --token token - Optional. Uses `GITHUB_ACCESS_TOKEN` if not supplied. Access token for GitHub REST API.
 # Argument: --owner owner - Optional. Uses `GITHUB_REPOSITORY_OWNER` if not supplied. Repository owner of release.
 # Argument: --name name - Optional. Uses `GITHUB_REPOSITORY_NAME` if not supplied. Repository name to release.
@@ -52,6 +53,17 @@ _githubReleaseUsage() {
 # Environment: GITHUB_ACCESS_TOKEN_EXPIRE - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
 # Environment: GITHUB_REPOSITORY_OWNER - Owner of the repository (`https://github.com/owner`)
 # Environment: GITHUB_REPOSITORY_NAME - Name of the repository (`https://github.com/owner/name`)
+#
+# Use GitHub API to generate a release
+#
+# GitHub MUST have two sets of credentials enabled:
+#
+# - The SSH key for the deployment robot should have push access to the repository on GitHub to enable releases (git handles this)
+#  - Found here: https://github.com/$repoOwner/$repoName/settings/keys
+# - The `token` must have the permission to create releases for this repository
+#  - Found here: https://github.com/settings/tokens
+#
+# Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
 githubRelease() {
   local start descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName
 
@@ -156,12 +168,9 @@ githubRelease() {
   git push github --all --force --quiet
   reportTiming "$start" Completed in
 
-  # passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github) that's good enough
-  #
-  # GitHub MUST have two sets of credentials enabled:
-  # - The SSH key for the deployment robot should have push access to the repository on GitHub to enable releases (git handles this)
-  # - The GITHUB_ACCESS_TOKEN must have the permission to create releases for this repository
-  #
+  # passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github)
+  # that's good enough
+
   JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
   JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')"
 
