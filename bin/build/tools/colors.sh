@@ -254,7 +254,7 @@ _consoleInfo() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-    __consoleEscape '\033[102m' '\033[0m' "$@"
+    __consoleEscape '\033[30;102m' '\033[0m' "$@"
 }
 
 #
