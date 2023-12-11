@@ -23,7 +23,7 @@ errorEnvironment=1
 errorArgument=2
 
 #
-# Short Description: Quote sed strings for shell use
+# Summary: Quote sed strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
 # Usage: quoteSedPattern text
 # Argument: text - Text to quote
@@ -88,7 +88,7 @@ replaceFirstPattern() {
 # Argument: text - Text to remove spaces
 # Output: text
 # Example:     trimSpace "$token"
-# Short Description: Trim whitespace of a bash argument
+# Summary: Trim whitespace of a bash argument
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
 #
@@ -104,7 +104,7 @@ trimSpace() {
 # Strip whitespace in input stream
 # Removes leading and trailing spaces in input, also removes blank lines I think
 # Usage: trimSpacePipe < file > output
-# Short Description: Trim whitespace in a pipeline
+# Summary: Trim whitespace in a pipeline
 # Depends: awk
 # Argument: None
 #
@@ -164,7 +164,7 @@ echoBar() {
 # Prefix output lines with a string, useful to format output or add color codes to
 # consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #
-# Short Description: Prefix output lines with a string
+# Summary: Prefix output lines with a string
 # Usage: prefixLines [ text .. ] < fileToPrefixLines
 # Exit Code: 0
 # Argument: `text` - Prefix each line with this text
@@ -318,7 +318,7 @@ trimWords() {
 # - `name` - Database name
 # Exit Code: 0 - If parsing succeeds
 # Exit Code: 1 - If parsing fails
-# Short Description: Simple Database URL Parsing
+# Summary: Simple Database URL Parsing
 # Usage: urlParse url
 # Argument: url - a Uniform Resource Locator used to specify a database connection
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
@@ -366,7 +366,7 @@ urlParse() {
 
 #
 # Gets the component of the URL from a given database URL.
-# Short Description: Get a database URL component directly
+# Summary: Get a database URL component directly
 # Usage: urlParseItem url name
 # Argument: url - a Uniform Resource Locator used to specify a database connection
 # Argument: name - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
@@ -435,7 +435,7 @@ plural() {
 
 #
 # Converts a date (`YYYY-MM-DD`) to another format.
-# Short Description: Platform agnostic date conversion
+# Summary: Platform agnostic date conversion
 # Usage: dateToFormat date format
 # Argument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 # Argument: format - Format string for the `date` command (e.g. `%s`)
@@ -500,7 +500,7 @@ timestampToDate() {
 #
 # Argument: None.
 #
-# Short Description: Yesterday's date
+# Summary: Yesterday's date
 # Environment: Compatible with BSD and GNU date.
 # Example:     rotated="$log.$(yesterdayDate)"
 
@@ -508,7 +508,7 @@ yesterdayDate() {
     timestampToDate "$(($(date +%s) - 86400))" %F
 }
 
-# Short Description: Today's date
+# Summary: Today's date
 # Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 # Usage: todayDate
 # Argument: None.
@@ -523,7 +523,7 @@ todayDate() {
 # Format text and align it right using spaces.
 #
 # Usage: alignRight characterWidth text [ ... ]
-# Short Description: align text right
+# Summary: align text right
 # Argument: `characterWidth` - Characters to align right
 # Argument: `text ...` - Text to align right
 # Example:     printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
@@ -542,7 +542,7 @@ alignRight() {
 #
 # Usage: alignLeft characterWidth text [ ... ]
 #
-# Short Description: align text left
+# Summary: align text left
 # Argument: - characterWidth - Characters to align left
 # Argument: - `text ...` - Text to align left
 #
@@ -582,7 +582,7 @@ argumentsToArray() {
 #
 # Heading for section output
 #
-# Short Description: Text heading decoration
+# Summary: Text heading decoration
 # Usage: boxedHeading [ --size size ] text [ ... ]
 # Argument: --size size - Number of liens to output
 # Argument: text ... - Text to put in the box
@@ -677,7 +677,7 @@ listTokens() {
 # Usage: shaPipe [ filename ... ]
 # Argument: filename - One or more filenames to generate a checksum for
 # Depends: shasum
-# Short Description: SHA1 checksum of standard input
+# Summary: SHA1 checksum of standard input
 # Example:     shaPipe < "$fileName"
 # Example:     shaPipe "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
@@ -715,7 +715,7 @@ shaPipe() {
 # Usage: cachedShaPipe cacheDirectory [ filename ]
 # Argument: cacheDirectory - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
 # Depends: shasum
-# Short Description: SHA1 checksum of standard input
+# Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
 # Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
@@ -795,4 +795,19 @@ mapValue() {
 #
 randomString() {
     head --bytes=64 /dev/random | shasum | cut -f 1 -d ' '
+}
+
+#
+# Usage: stringOffset needle haystack
+# Outputs the integer offset of `needle` if found as substring in `haystack`
+# If `haystack` is not found, -1 is output
+#
+stringOffset() {
+    local length=${#2}
+    local substring="${2/${1-}*/}"
+    local offset="${#substring}"
+    if [ "$offset" -eq "$length" ]; then
+        offset=-1
+    fi
+    printf %d "$offset"
 }

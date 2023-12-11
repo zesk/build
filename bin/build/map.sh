@@ -58,7 +58,7 @@ generateSedFile() {
     done
 }
 
-# Short Description: Convert tokens in files to environment variable values
+# Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.

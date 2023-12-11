@@ -17,7 +17,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 #
 # fn: {base}
-# Short Description: Run after a successful deployment
+# Summary: Run after a successful deployment
 # Run on remote systems after deployment has succeeded on all systems.
 #
 # This step must always succeed on the remote system; the deployment step prior to this

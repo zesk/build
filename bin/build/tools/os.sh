@@ -35,14 +35,31 @@ buildCacheDirectory() {
 #
 # Usage: buildQuietLog name
 # Argument: name - The log file name
+# Argument: --no-create - Optional. Do not require creation of the directory where the log file will appear.
 #
 buildQuietLog() {
-    if [ -z "$1" ]; then
-        consoleError "buildQuietLog requires a name parameter" 1>&2
-        return 1
+    local logFile flagMake=1
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --no-create)
+            flagMake=
+            ;;
+        *)
+            if [ -z "$1" ]; then
+                consoleError "buildQuietLog requires a name parameter" 1>&2
+                return 1
+            fi
+            logFile="$(buildCacheDirectory "$1.log")"
+            ;;
+        esac
+        shift
+    done
+    if test $flagMake && ! requireFileDirectory "$logFile"; then
+        return $?
     fi
-    printf %s "$(buildCacheDirectory "$1.log")"
+    printf %s "$logFile"
 }
+
 #
 # Given a list of files, ensure their parent directories exist
 #
@@ -94,7 +111,7 @@ requireDirectory() {
 # Exit Code: 0 - success
 # Exit Code: 2 - `count` is not an unsigned number
 # Exit Code: Any - If `binary` fails, the exit code is returned
-# Short Description: Run a binary count times
+# Summary: Run a binary count times
 #
 runCount() {
     local n
@@ -120,7 +137,7 @@ runCount() {
 #
 # Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 #
-# Short Description: Rename a list of files usually to back them up temporarily
+# Summary: Rename a list of files usually to back them up temporarily
 # Usage: renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
 # Argument: oldSuffix - Required. String. Old suffix to look rename from.
 # Argument: newSuffix - Required. String. New suffix to rename to.
@@ -179,7 +196,7 @@ createTarFile() {
 #
 # Returns the list of defined environment variables exported in the current bash context.
 #
-# Short Description: Fetch a list of environment variable names
+# Summary: Fetch a list of environment variable names
 # Usage: environmentVariables
 # Output: Environment variable names, one per line.
 # Example:     for f in $(environmentVariables); do
@@ -194,7 +211,7 @@ environmentVariables() {
 #
 # Reverses a pipe's input lines to output using an awk trick.
 #
-# Short Description: Reverse output lines
+# Summary: Reverse output lines
 # Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
 # Credits: Eric Pement
 #
@@ -314,4 +331,153 @@ newestFile() {
         shift
     done
     printf "%s" "$theFile"
+}
+
+#
+# Prints seconds since modified
+#
+# Exit Code: 0 - Success
+# Exit Code: 2 - Can not get modification time
+#
+modifiedSeconds() {
+    local ts
+
+    if ! ts=$(modificationTime "$1"); then
+        return $errorArgument
+    fi
+    printf %d "$(($(date +%s) - ts))"
+}
+
+#
+# Prints days (integer) since modified
+#
+# Exit Code: 0 - Success
+# Exit Code: 2 - Can not get modification time
+#
+modifiedDays() {
+    local ts
+
+    if ! ts=$(modifiedSeconds "$1"); then
+        return $errorArgument
+    fi
+    printf %d "$((ts / 86400))"
+}
+
+#
+# Usage: pathAppend pathValue separator [ --first | --last | path ]
+# Argument: pathValue - Required. Path value to modify.
+# Argument: separator - Required. Separator string for path values (typically `:`)
+# Argument: --first - Optional. Place any paths after this flag first in the list
+# Argument: --last - Optional. Place any paths after this flag last in the list. Default.
+# Argument: path - the path to be added to the `pathValue`
+#
+pathAppend() {
+    local pathValue="$1" s="$2" exitCode=0 firstFlag=
+
+    shift
+    shift
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --first)
+            firstFlag=1
+            ;;
+        --last)
+            firstFlag=
+            ;;
+        *)
+            if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
+                if [ ! -d "$1" ]; then
+                    exitCode=2
+                elif [ -z "$pathValue" ]; then
+                    pathValue="$1"
+                elif test $firstFlag; then
+                    pathValue="$1$s$pathValue"
+                else
+                    pathValue="$pathValue$s$1"
+                fi
+            else
+                exitCode=1
+            fi
+            ;;
+        esac
+        shift
+    done
+    printf %s "$pathValue"
+    return "$exitCode"
+}
+
+#
+# Usage: manPathConfigure [ --first | --last | path ] ...
+# Argument: --first - Optional. Place any paths after this flag first in the list
+# Argument: --last - Optional. Place any paths after this flag last in the list. Default.
+# Argument: path - the path to be added to the `MANPATH` environment
+#
+manPathConfigure() {
+    local tempPath
+
+    export MANPATH
+    if tempPath="$(pathAppend "$MANPATH" ':' "$@")"; then
+        MANPATH="$tempPath"
+        return 0
+    fi
+    return $?
+}
+# Usage: pathConfigure [ --first | --last | path ] ...
+# Argument: --first - Optional. Place any paths after this flag first in the list
+# Argument: --last - Optional. Place any paths after this flag last in the list. Default.
+# Argument: path - the path to be added to the `PATH` environment
+pathConfigure() {
+    local tempPath
+
+    export PATH
+    if tempPath="$(pathAppend "$PATH" ':' "$@")"; then
+        PATH="$tempPath"
+        return 0
+    fi
+    return $?
+}
+
+# Cleans the path and removes non-directory entries and duplicates
+#
+# Maintains ordering.
+#
+# Usage: pathCleanDuplicates
+#
+pathCleanDuplicates() {
+    local tempPath elements delta removed=() s=':'
+
+    export PATH
+    IFS=$s read -r -a elements < <(printf %s "$PATH")
+    delta="${#elements[@]}"
+    tempPath=
+    for p in "${elements[@]}"; do
+        if [ ! -d "$p" ]; then
+            removed+=("$(consoleError "Not a directory: $p")")
+        elif ! tempPath=$(pathAppend "$tempPath" "$s" "$p"); then
+            removed+=("$(consoleWarning "Duplicate: $p")")
+        fi
+    done
+    IFS=$s read -r -a elements < <(printf %s "$tempPath")
+    delta=$((delta - ${#elements[@]}))
+    if [ "$delta" -gt 0 ]; then
+        consoleSuccess "Removed $delta path $(plural "$delta" element elements)"
+        printf "    %s\n" "${removed[@]}"
+    fi
+    echo "NEW PATH IS $tempPath"
+    # PATH="$tempPath"
+}
+
+realPath() {
+    #
+    # realpath is not present always
+    #
+    if ! which realpath >/dev/null; then
+        readlink -f -n "$@"
+    else
+        realpath "$@"
+    fi
+}
+
+JSON() {
+    python -c "import sys, json; print(json.dumps(json.load(sys.stdin), indent=4))"
 }

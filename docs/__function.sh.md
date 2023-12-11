@@ -1,51 +1,51 @@
-## `{fn}` - {short_description}
+### `{fn}` - {summary}
 
 {description}
 
-### Usage
+#### Usage
 
 {usage}
 
-### Arguments
+#### Arguments
 
 {argument}
 
-### Examples
+#### Examples
 
 {example}
 
-### Sample Output
+#### Sample Output
 
 {output}
 
-### Exit codes
+#### Exit codes
 
 {exit_code}
 
-### Local cache
+#### Local cache
 
 {local_cache}
 
-### Environment
+#### Environment
 
 {environment}
 
-### Depends
+#### Depends
 
 {depends}
 
-## See Also
+#### See Also
 
 {see}
 
-### Credits
+#### Credits
 
 Thanks to [{credits}]({source}).
 
-### Review Status
+#### Review Status
 
 File `{file}`, function `{fn}` was reviewed {reviewed}.
 
-### Errors
+#### Errors
 
 {error}

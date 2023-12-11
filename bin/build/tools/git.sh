@@ -23,7 +23,7 @@
 # Installs the `git` binary
 # Usage: gitInstall [ package ... ]
 # Argument: package - Additional packages to install
-# Short Description: Install git if needed
+# Summary: Install git if needed
 #
 gitInstall() {
     whichApt git git "%@"

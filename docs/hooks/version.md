@@ -12,55 +12,55 @@ These hooks interact with `new-release.sh` and deployment tools but are intended
 # Version Status Hooks
 
 
-## `version-current.sh` - Hook to return the current version
+### `version-current.sh` - Hook to return the current version
 
 Hook to return the current version
 
 Defaults to the last version numerically found in `docs/release` directory.
 
-## Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## Environment
+#### Environment
 
 BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
 EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 
-## `version-live.sh` - Live version of the application
+### `version-live.sh` - Live version of the application
 
 Output the current live, published version of this application.
 
 If implemented, `new-release.sh` will create a release only when needed.
 
-## Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## See Also
+#### See Also
 
 github-version-live.sh
 
 # `new-release.sh` Hooks
 
 
-## `version-already.sh` - Run whenever `new-version.sh` is run and a version already exists
+### `version-already.sh` - Run whenever `new-version.sh` is run and a version already exists
 
 Run whenever `new-version.sh` is run and a version already exists
 
-## Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `version-created.sh` - Run whenever `new-version.sh` is run and a version was just
+### `version-created.sh` - Run whenever `new-version.sh` is run and a version was just
 
 Run whenever `new-version.sh` is run and a version was just created
 
-## Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## Environment
+#### Environment
 
 BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
 EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined

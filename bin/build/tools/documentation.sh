@@ -62,7 +62,7 @@ usageDocument() {
 # Argument: templateFile - Required. Function template file to generate documentation for functions
 # Argument: targetFile - Required. Target file to generate
 # Argument: cacheDirectory - Optional. If supplied, cache to reduce work when files remain unchanged.
-# Short Description: Convert a template into documentation for Bash functions
+# Summary: Convert a template into documentation for Bash functions
 # Convert a template which contains bash functions into full-fledged documentation.
 #
 # The process:
@@ -254,7 +254,7 @@ documentFunctionsWithTemplate() {
 # Argument: templateFile - Required. Function template file to generate documentation for functions
 # Argument: targetDiretory - Required. Directory to create generated documentation
 # Argument: cacheDirectory - Optional. If supplied, cache to reduce work when files remain unchanged.
-# Short Description: Convert a directory of templates into documentation for Bash functions
+# Summary: Convert a directory of templates into documentation for Bash functions
 # Convert a directory of templates for bash functions into full-fledged documentation.
 #
 # The process:
@@ -424,7 +424,7 @@ __dumpNameValuePrefix() {
 }
 # This basically just does `a=${b}` in the output
 #
-# Short Description: Assign one value to another in bash
+# Summary: Assign one value to another in bash
 # Usage: __dumpAliasedValue variable alias
 # Argument: `variable` - shell variable to set
 # Argument: `alias` - The shell variable to assign to `variable`
@@ -444,7 +444,7 @@ __dumpAliasedValue() {
 # - `fn` - The function name (no parenthesis or anything)
 # - `base` - The basename of the file
 # - `file` - The relative path name of the file from the application root
-# - `short_description` - Defaults to first ten words of `description`
+# - `summary` - Defaults to first ten words of `description`
 # - `exit_code` - Defaults to `0 - Always succeeds`
 # - `reviewed"  - Defaults to `Never`
 # - `environment"  - Defaults to `No environment dependencies or modifications.`
@@ -456,7 +456,7 @@ __dumpAliasedValue() {
 # - `example` - An example of usage (code, many)
 # - `depends` - Any dependencies (list)
 #
-# Short Description: Generate a set of name/value pairs to document bash functions
+# Summary: Generate a set of name/value pairs to document bash functions
 # Usage: bashExtractDocumentation directory function
 # Argument: `definitionFile` - File in which function is defined
 # Argument: `function` - Function defined in `file`
@@ -533,11 +533,11 @@ bashExtractDocumentation() {
     if [ "${#desc[@]}" -gt 0 ]; then
         __dumpNameValue "description" "${desc[@]}"
         printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
-        if ! inArray "short_description" "${foundNames[@]+${foundNames[@]}}"; then
-            __dumpNameValue "short_description" "$(trimWords 10 "${desc[0]}")"
+        if ! inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
+            __dumpNameValue "summary" "$(trimWords 10 "${desc[0]}")"
         fi
-    elif inArray "short_description" "${foundNames[@]+${foundNames[@]}}"; then
-        __dumpAliasedValue description short_description
+    elif inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
+        __dumpAliasedValue description summary
     fi
     if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
         __dumpNameValue "exit_code" '0 - Always succeeds'
@@ -577,7 +577,7 @@ bashExtractDocumentation() {
 # Example:     bashFindFunctionFiles . bashFindFunctionFiles
 # Example:     ./bin/build/tools/autodoc.sh
 # Platform: `stat` is not cross-platform
-# Short Description: Find where a function is defined in a directory of shell scripts
+# Summary: Find where a function is defined in a directory of shell scripts
 #
 bashFindFunctionFiles() {
     local directory="${1%%/}"
@@ -613,7 +613,7 @@ bashFindFunctionFiles() {
 # Exit Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
 # Example:     bashFindFunctionFile . usage
-# Short Description: Find single location where a function is defined in a directory of shell scripts
+# Summary: Find single location where a function is defined in a directory of shell scripts
 #
 bashFindFunctionFile() {
     local definitionFiles directory="${1%%/}" fn="$2"

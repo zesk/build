@@ -14,10 +14,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 init=$(beginTiming)
 me="$(basename "${BASH_SOURCE[0]}")"
-quietLog="./.build/$me.log"
-requireFileDirectory "$quietLog"
 
-# __                  _   _
+#    __                  _   _
 #   / _|_   _ _ __   ___| |_(_) ___  _ __  ___
 #  | |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 #  |  _| |_| | | | | (__| |_| | (_) | | | \__ \
@@ -66,12 +64,14 @@ testCleanup() {
     done
 }
 
-#                _
+#                   _
 #   _ __ ___   __ _(_)_ __
 #  | '_ ` _ \ / _` | | '_ \
 #  | | | | | | (_| | | | | |
 #  |_| |_| |_|\__,_|_|_| |_|
 #
+quietLog=$(buildQuietLog "$me")
+
 buildDebugStart
 
 ./bin/build/install/docker-compose.sh

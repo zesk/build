@@ -4,7 +4,7 @@
 [⬅ Return to top](../index.md)
 
 
-## `buildCacheDirectory` - Path to cache directory for build system.
+### `buildCacheDirectory` - Path to cache directory for build system.
 
 Path to cache directory for build system.
 
@@ -12,99 +12,96 @@ Defaults to `$HOME/.build` unless `$HOME` is not a directory.
 
 Appends any passed in arguments as path segments.
 
-### Usage
+#### Usage
 
     buildCacheDirectory [ pathSegment ... ]
 
-### Arguments
+#### Arguments
 
 - `pathSegment` - One or more directory or file path, concatenated as path segments using `/`
 
-### Examples
+#### Examples
 
 logFile=$(buildCacheDirectory test.log)
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Usage
+#### Usage
 
     buildQuietLog name
 
-### Arguments
+#### Arguments
 
 - `name` - The log file name
+- `--no-create` - Optional. Do not require creation of the directory where the log file will appear.
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
 
-## `requireFileDirectory` - Given a list of files, ensure their parent directories exist
+### `requireFileDirectory` - Given a list of files, ensure their parent directories exist
 
 Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
 
-### Usage
+#### Usage
 
     requireFileDirectory file1 file2 ...
 
-### Arguments
-
-- `name` - The log file name
-
-### Examples
+#### Examples
 
 logFile=./.build/$me.log
     requireFileDirectory "$logFile"
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `requireDirectory` - Given a list of files, ensure their parent directories exist
+### `requireDirectory` - Given a list of files, ensure their parent directories exist
 
 Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
 
-### Usage
+#### Usage
 
     requireDirectory dir1 [ dir2 ... ]
 
-### Examples
+#### Examples
 
 requireDirectory "$cachePath"
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
 
-## `runCount` - Run a binary count times
+### `runCount` - Run a binary count times
 
 $Run a binary count times
 
-### Usage
+#### Usage
 
     runCount count binary [ args ... ]
 
-### Arguments
+#### Arguments
 
 - `count` - The number of times to run the binary
 - `binary` - The binary to run
 - `args ...` - Any arguments to pass to the binary each run
 
-### Exit codes
+#### Exit codes
 
 - `0` - success
 - `2` - `count` is not an unsigned number
 - `Any` - If `binary` fails, the exit code is returned
 
 
-## `renameFiles` - Rename a list of files usually to back them up temporarily
+### `renameFiles` - Rename a list of files usually to back them up temporarily
 
 Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
 
@@ -114,49 +111,49 @@ Used to move files, temporarily, sometimes and then move back easily.
 
 Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 
-### Usage
+#### Usage
 
     renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
 
-### Arguments
+#### Arguments
 
 - `oldSuffix` - Required. String. Old suffix to look rename from.
 - `newSuffix` - Required. String. New suffix to rename to.
 - `actionVerb` - Required. String. Description to output for found files.
 - `file0` - Required. String. One or more files to rename, if found, renaming occurs.
 
-### Examples
+#### Examples
 
 renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
     ...
     renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
 
-## `createTarFile` - Platform agnostic tar create which keeps user and group as user 0
+### `createTarFile` - Platform agnostic tar cfz which ignores owner and attributes
 
 Platform agnostic tar cfz which ignores owner and attributes
 
 `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
 
-### Usage
+#### Usage
 
     createTarFile target files
 
-### Arguments
+#### Arguments
 
 - `target` - The tar.gz file to create
 - `files` - A list of files to include in the tar file
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
 
-## `environmentVariables` - Fetch a list of environment variable names
+### `environmentVariables` - Fetch a list of environment variable names
 
 Output a list of environment variables and ignore function definitions
 
@@ -165,149 +162,238 @@ exported variables
 
 Returns the list of defined environment variables exported in the current bash context.
 
-### Usage
+#### Usage
 
     environmentVariables
 
-### Examples
+#### Examples
 
 for f in $(environmentVariables); do
     echo "$f"
     done
 
-### Sample Output
+#### Sample Output
 
     Environment variable names, one per line.
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
 
-## `reverseFileLines` - Reverse output lines
+### `reverseFileLines` - Reverse output lines
 
 Reverses a pipe's input lines to output using an awk trick.
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Credits
+#### Credits
 
 Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt).
 
 
-## `chmod-sh.sh` - Makes all `*.sh` files executable
+### `chmod-sh.sh` - Makes all `*.sh` files executable
 
 Makes all `*.sh` files executable
 
-### Usage
+#### Usage
 
     makeShellFilesExecutable
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-### Environment
+#### Environment
 
 Works from the current directory
 
-## See Also
+#### See Also
 
 makeShellFilesExecutable
 
 
-## `modificationTime` - Fetch the modification time of a file as a timestamp
+### `modificationTime` - Fetch the modification time of a file as a timestamp
 
 Fetch the modification time of a file as a timestamp
 
-### Usage
+#### Usage
 
     modificationTime filename0 [ filename1 ... ]
 
-### Examples
+#### Examples
 
 modificationTime ~/.bash_profile
 
-### Exit codes
+#### Exit codes
 
 - `2` - If file does not existd
 - `0` - If file exists and modification times are output, one per line
 
 
-## `isNewestFile` - Check to see if the first file is the newest
+### `isNewestFile` - Check to see if the first file is the newest
 
 Check to see if the first file is the newest one
 
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
-### Usage
+#### Usage
 
     isNewestFile firstFile [ targetFile0 ... ]
 
-### Arguments
+#### Arguments
 
 - `sourceFile` - File to check
 - `targetFile0` - One or more files to compare
 
-### Exit codes
+#### Exit codes
 
 - `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
-## `isOldestFile` - Check to see if the first file is the newest
+### `isOldestFile` - Check to see if the first file is the newest
 
 Check to see if the first file is the newest one
 
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
-### Usage
+#### Usage
 
     isNewestFile firstFile [ targetFile0 ... ]
 
-### Arguments
+#### Arguments
 
 - `sourceFile` - File to check
 - `targetFile0` - One or more files to compare
 
-### Exit codes
+#### Exit codes
 
 - `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
 
-## `oldestFile` - Return the oldest file in the list.
+### `oldestFile` - Return the oldest file in the list.
 
 Return the oldest file in the list.
 
-### Usage
+#### Usage
 
     oldestFile file0 [ file1 ... ]
 
-### Arguments
+#### Arguments
 
 - `file0` - One or more files to examine
 
-### Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## `newestFile` - Return the newest file in the list
+### `newestFile` - Return the newest file in the list
 
 Return the newest file in the list
 
-### Usage
+#### Usage
 
     newestFile file0 [ file1 ... ]
 
-### Arguments
+#### Arguments
 
 - `file0` - One or more files to examine
 
-### Exit codes
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+### `modifiedDays` - Prints days (integer) since modified
+
+Prints days (integer) since modified
+
+#### Exit codes
+
+- `0` - Success
+- `2` - Can not get modification time
+
+### `modifiedSeconds` - Prints seconds since modified
+
+Prints seconds since modified
+
+#### Exit codes
+
+- `0` - Success
+- `2` - Can not get modification time
+
+
+#### Usage
+
+    pathConfigure [ --first | --last | path ] ...
+
+#### Arguments
+
+- `--first` - Optional. Place any paths after this flag first in the list
+- `--last` - Optional. Place any paths after this flag last in the list. Default.
+- `path` - the path to be added to the `PATH` environment
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `pathCleanDuplicates` - Cleans the path and removes non-directory entries and duplicates
+
+Cleans the path and removes non-directory entries and duplicates
+
+Maintains ordering.
+
+#### Usage
+
+    pathCleanDuplicates
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+#### Usage
+
+    manPathConfigure [ --first | --last | path ] ...
+
+#### Arguments
+
+- `--first` - Optional. Place any paths after this flag first in the list
+- `--last` - Optional. Place any paths after this flag last in the list. Default.
+- `path` - the path to be added to the `MANPATH` environment
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Usage
+
+    pathAppend pathValue separator [ --first | --last | path ]
+
+#### Arguments
+
+- `pathValue` - Required. Path value to modify.
+- `separator` - Required. Separator string for path values (typically `:`)
+- `--first` - Optional. Place any paths after this flag first in the list
+- `--last` - Optional. Place any paths after this flag last in the list. Default.
+- `path` - the path to be added to the `pathValue`
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+#### Exit codes
 
 - `0` - Always succeeds
 

@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # passed as an argument is the place where the **new** application should be moved to
 # in order to activate it.
 #
-# Short Description: Deployment move script
+# Summary: Deployment move script
 # Usage: runHook deploy-move applicationPath
 # Argument: applicationPath - This is the target for the current application
 # Exit code: 0 - This is called to replace the running application in-place

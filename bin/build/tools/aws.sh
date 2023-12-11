@@ -57,9 +57,6 @@ awsInstall() {
     if ! requireDirectory "$buildDir"; then
         return "$errorEnvironment"
     fi
-    if ! requireFileDirectory "$quietLog"; then
-        return "$errorEnvironment"
-    fi
     if ! curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
         buildFailed "$quietLog"
     fi
@@ -86,7 +83,7 @@ awsInstall() {
 #
 # If not found, returns with exit code 1.
 #
-# Short Description: Get the path to the AWS credentials file
+# Summary: Get the path to the AWS credentials file
 # Usage:  awsCredentialsFile [ verboseFlag ]
 # Example:     if ! awsCredentialsFile 1 >/dev/null; then
 # Example:     consoleError "No AWS credentials"
@@ -130,7 +127,7 @@ awsCredentialsFile() {
 # Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `AWS_ACCESS_KEY_DATE` has not exceeded the number of days.
 #
 # Environment: AWS_ACCESS_KEY_DATE - Variable used to test
-# Short Description: Test whether the AWS keys do not need to be updated
+# Summary: Test whether the AWS keys do not need to be updated
 # Usage: isAWSKeyUpToDate upToDateDays
 # Example:     if !isAWSKeyUpToDate 90; then
 # Example:     bigText Failed, update key and reset date
@@ -192,7 +189,7 @@ isAWSKeyUpToDate() {
 # Example:     if needAWSEnvironment; then
 # Example:    ...
 # Example:     fi
-# Short Description: Test whether the AWS environment variables are set or not
+# Summary: Test whether the AWS environment variables are set or not
 #
 needAWSEnvironment() {
     export AWS_ACCESS_KEY_ID
@@ -209,7 +206,7 @@ needAWSEnvironment() {
 # If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
 # If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
 #
-# Short Description: Get credentials and output environment variables for AWS authentication
+# Summary: Get credentials and output environment variables for AWS authentication
 # Usage: awsEnvironment profileName
 # Argument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # Example:     setFile=$(mktemp)

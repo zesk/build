@@ -31,17 +31,17 @@ testMarkdownListify() {
 tests+=(testDocumentation)
 testDocumentation() {
     local testOutput
-    local short_description description
+    local summary description
 
     testOutput=$(mktemp)
-    assertExitCode 0 inArray "short_description" short_description usage argument example reviewed
+    assertExitCode 0 inArray "summary" summary usage argument example reviewed
 
     bashExtractDocumentation "$(bashFindFunctionFile . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
     set -a
     # shellcheck source=/dev/null
     . "$testOutput"
     set +a
-    assertEquals "Assert two strings are not equal" "${short_description}" || return $?
+    assertEquals "Assert two strings are not equal" "${summary}" || return $?
     assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.' "${description}" || return $?
 
     bashExtractDocumentation "$(bashFindFunctionFile . assertEquals)" assertEquals >"$testOutput" || return $?
@@ -52,7 +52,7 @@ testDocumentation() {
     assertEquals $'Assert two strings are equal.\n\nIf this fails it will output an error and exit.' "${description}" || return $?
     desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
     assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
-    assertEquals "Assert two strings are equal." "${short_description}" || return $?
+    assertEquals "Assert two strings are equal." "${summary}" || return $?
 
     rm "$testOutput"
 }

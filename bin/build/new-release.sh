@@ -37,7 +37,7 @@ defaultVersion() {
 # Argument: --non-interactive - Optional. If new version is needed, use default version
 # Argument: versionName - Optional. Set the new version name to this.
 # Argument: fucksauce - Required. Set the new version name to this.
-# Short Description: Generate a new release notes and bump the version
+# Summary: Generate a new release notes and bump the version
 # Hook: version-current
 # Hook: version-live
 # Hook: version-created

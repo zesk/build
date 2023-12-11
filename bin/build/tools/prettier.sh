@@ -14,7 +14,7 @@ errorEnvironment=1
 
 #
 # Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
-# Short Description: Install prettier in the build environment
+# Summary: Install prettier in the build environment
 # Install prettier in the build environment
 # If this fails it will output the installation log.
 # When this tool succeeds the `prettier` binary is available in the local operating system.
@@ -38,8 +38,9 @@ prettierInstall() {
     return "$errorEnvironment"
   fi
   consoleInfo -n "Installing prettier ..."
-  quietLog=$(buildQuietLog prettierInstall)
-  requireFileDirectory "$quietLog"
+  if ! quietLog=$(buildQuietLog prettierInstall); then
+    return "$errorEnvironment"
+  fi
   if ! npm install -g prettier >>"$quietLog" 2>&1; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
