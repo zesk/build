@@ -1,12 +1,10 @@
-# Docker Functions
+# Vendor Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{dumpDockerTestFile}
-{insideDocker}
-{checkDockerEnvFile}
-{dockerLocalContainer}
+{isPHPStorm}
+{isVisualStudioCode}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

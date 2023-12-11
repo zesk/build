@@ -446,6 +446,9 @@ plural() {
 # Exit Code: 0 - if parsing succeeds
 
 dateToFormat() {
+    if [ $# -eq 0 ]; then
+      return 2
+    fi
     if date --version 2>/dev/null 1>&2; then
         date -u --date="$1 00:00:00" "+$2" 2>/dev/null
     else
@@ -810,4 +813,74 @@ stringOffset() {
         offset=-1
     fi
     printf %d "$offset"
+}
+
+
+#
+# For security one should update keys every N days
+#
+# This value would be better encrypted and tied to the key itself so developers
+# can not just update the value to avoid the security issue.
+#
+# This tool checks the value and checks if it is `upToDateDays` of today; if not this fails.
+#
+# It will also fail if:
+#
+# - `upToDateDays` is less than zero or greater than 366
+# - `keyDate` is empty or has an invalid value
+#
+# Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
+#
+# Summary: Test whether the key needs to be updated
+# Usage: isUpToDate keyDate upToDateDays
+# Argument: keyDate - Date formatted like `YYYY-MM-DD`
+# Argument: upToDateDays - Days that key expires after `keyDate`
+# Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
+# Example:       bigText Failed, update key and reset date
+# Example:       exit 99
+# Example:     fi
+#
+isUpToDate() {
+    local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate
+
+    keyDate="${1-}"
+    shift || return "$errorArgument"
+    if [ -z "${1-}" ]; then
+        consoleError "Invalid date $keyDate" 1>&2
+        return "$errorArgument"
+    fi
+    upToDateDays="${1-}"
+    upToDateDays=$((upToDateDays + 0))
+    maxDays=366
+    if [ $upToDateDays -gt $maxDays ]; then
+        consoleError "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" 1>&2
+        return 1
+    fi
+    if [ $upToDateDays -lt 0 ]; then
+        consoleError "isUpToDate $keyDate $upToDateDays - negative values not allowed" 1>&2
+        return 1
+    fi
+    if ! dateToTimestamp "$keyDate" >/dev/null; then
+        consoleError "isUpToDate $keyDate $upToDateDays - Invalid date $keyDate" 1>&2
+        return 1
+    fi
+    accessKeyTimestamp=$(($(dateToTimestamp "$keyDate") + 0))
+    expireDate=$((accessKeyTimestamp + 86400 * upToDateDays))
+    todayTimestamp=$(dateToTimestamp "$(todayDate)")
+    deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
+    daysAgo=$((deltaDays - upToDateDays))
+    if [ $daysAgo -gt 0 ]; then
+        consoleError "Expired $keyDate, $daysAgo" 1>&2
+        return 1
+    fi
+    daysAgo=$((-daysAgo))
+    if [ $daysAgo -lt 14 ]; then
+        bigText "$daysAgo  $(plural $daysAgo day days)" | prefixLines "$(consoleError)"
+    fi
+    if [ $daysAgo -lt 30 ]; then
+      expireDate=$(dateToFormat)
+        consoleWarning "Expires on $expireDate, in $daysAgo $(plural $daysAgo day days)"
+        return 0
+    fi
+    return 0
 }

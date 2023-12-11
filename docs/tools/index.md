@@ -25,6 +25,7 @@ Once included, all functions here are available for use and may affect your buil
 - [Test Support Functions](./tests.sh.md)
 - [Text Functions](./text.sh.md)
 - [Usage Functions](./usage.sh.md)
+- [Vendor Functions](./vendor.sh.md)
 
 ## Templates
 

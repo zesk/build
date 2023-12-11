@@ -10,6 +10,9 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
+
 # fn: {base}
 #
 # Get the "tag" (or current display version) for an application
@@ -17,9 +20,10 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
 #
 hookApplicationTag() {
-    if ! git describe --tags --abbrev=0 2>/dev/null; then
-        printf %s "v0.0.1"
-    fi
+  gitEnsureSafeDirectory "$(pwd)"
+  if ! git describe --tags --abbrev=0 2>/dev/null; then
+    printf %s "v0.0.1"
+  fi
 }
 
 hookApplicationTag

@@ -24,6 +24,7 @@ testShellScripts() {
     if ! validateFileContents sh -- "Copyright &copy; $thisYear" -- "$@"; then
         return $errorEnvironment
     fi
+    printf "\n"
 }
 
 #

@@ -60,3 +60,6 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # shellcheck source=/dev/null
 . "$toolsDir/documentation.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/vendor.sh"

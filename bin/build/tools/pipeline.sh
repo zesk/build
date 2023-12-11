@@ -74,6 +74,7 @@ dotEnvConfig() {
 # Exit code: Any - The hook exit code is returned if it is run
 # Exit code: 1 - is returned if the hook is not found
 # Example:     version="$(runHook version-current)"
+# Test: testHookSystem
 runHook() {
   local binary=$1 hook
 
@@ -107,6 +108,7 @@ runHook() {
 # Example:     if ! runOptionalHook test-cleanup >>"$quietLog"; then
 # Example:         buildFailed "$quietLog"
 # Example:     fi
+# Test: testHookSystem
 runOptionalHook() {
   local binary=$1 hook
 
@@ -123,6 +125,7 @@ runOptionalHook() {
   "$(whichHook "$binary")" "$@"
 }
 
+#
 # Does a hook exist in the local project?
 #
 # Check if one or more hook exists. All hooks must exist to succeed.
@@ -130,6 +133,7 @@ runOptionalHook() {
 # Usage: hasHook [ hookName ... ]
 # Argument: hookName - one or more hook names which must exist
 # Exit Code: 0 - If all hooks exist
+# Test: testHookSystem
 hasHook() {
   while [ $# -gt 0 ]; do
     if [ ! -x "$(whichHook "$1")" ]; then
@@ -154,6 +158,7 @@ hasHook() {
 # Usage: whichHook hookName
 # Arguments: hookName - Hook to locate
 #
+# Test: testHookSystem
 whichHook() {
   local binary=$1 paths=("./bin/hooks/" "./bin/build/hooks/") extensions=("" ".sh")
   local p e
@@ -280,8 +285,8 @@ versionSort() {
       r=r
       shift
     else
-        consoleError "Unknown argument: $1" 1>&2
-        return "$errorArgument"
+      consoleError "Unknown argument: $1" 1>&2
+      return "$errorArgument"
     fi
   fi
   sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
@@ -328,6 +333,161 @@ bigText() {
     shift
   fi
   toilet -f $font "$@"
+}
+
+_makeEnvironmentUsage() {
+  usageDocument "./bin/build/tools/pipeline.sh" "makeEnvironment" "$@"
+}
+
+applicationEnvironment() {
+  local hook
+
+  export BUILD_TIMESTAMP
+  export APPLICATION_BUILD_DATE
+  export APPLICATION_VERSION
+  export APPLICATION_CHECKSUM
+  export APPLICATION_TAG
+
+  if [ -z "${BUILD_TIMESTAMP-}" ]; then
+    BUILD_TIMESTAMP="$(date +%s)"
+  fi
+  if [ -z "${APPLICATION_BUILD_DATE-}" ]; then
+    APPLICATION_BUILD_DATE="$(date -u +"%Y-%m-%d %H:%M:%S")"
+  fi
+
+  if [ -z "${APPLICATION_VERSION-}" ]; then
+    hook=version-current
+    if ! APPLICATION_VERSION="$(runHook "$hook")"; then
+      consoleError "$hook failed $?" 1>&2
+      return "$errorEnvironment"
+    fi
+  fi
+  if [ -z "${APPLICATION_CHECKSUM-}" ]; then
+    hook=application-checksum
+    if ! APPLICATION_CHECKSUM="$(runHook "$hook")"; then
+      consoleError "$hook failed $?" 1>&2
+      return "$errorEnvironment"
+    fi
+  fi
+  if [ -z "${APPLICATION_TAG-}" ]; then
+    hook=application-tag
+    if ! APPLICATION_TAG="$(runHook "$hook")"; then
+      consoleError "$hook failed $?" 1>&2
+      return "$errorEnvironment"
+    fi
+  fi
+  printf "%s " BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_CHECKSUM APPLICATION_TAG
+}
+
+showEnvironment() {
+  local start missing e requireEnvironment buildEnvironment tempEnv
+
+  export BUILD_TIMESTAMP
+  export APPLICATION_BUILD_DATE
+  export APPLICATION_VERSION
+  export APPLICATION_CHECKSUM
+  export APPLICATION_TAG
+
+  #
+  # e.g.
+  #
+  # Email: SMTP_URL MAIL_SUPPORT MAIL_FROM TESTING_EMAIL TESTING_EMAIL_IMAP
+  # Database: DSN
+  # Amazon: AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
+  #
+  # Must be defined and non-empty to run this script
+
+  tempEnv=$(mktemp)
+  if ! applicationEnvironment >"$tempEnv"; then
+    rm "$tempEnv" || :
+    return "$errorEnvironment"
+  fi
+  read -r -a requireEnvironment < "$tempEnv"
+  rm "$tempEnv" || :
+  # Will be exported to the environment file, only if defined
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --)
+        shift
+        break
+        ;;
+      *)
+        requireEnvironment+=("$1")
+        ;;
+    esac
+    shift
+  done
+  buildEnvironment=("$@")
+
+  consoleInfo -n "Application #$APPLICATION_VERSION on $APPLICATION_BUILD_DATE ... "
+  if buildDebugEnabled; then
+    consoleMagenta -n "(checksum \"$APPLICATION_CHECKSUM\", tag \"$APPLICATION_TAG\", timestamp $BUILD_TIMESTAMP)"
+  fi
+  missing=()
+  for e in "${requireEnvironment[@]}"; do
+    if [ -z "${!e:-}" ]; then
+      printf "%s %s\n" "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleError "** No value **")" 1>&2
+      missing+=("$e")
+    else
+      echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
+    fi
+  done
+  for e in "${buildEnvironment[@]}"; do
+    if [ -z "${!e:-}" ]; then
+      printf "%s %s\n" "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleSuccess "** Blank **")" 1>&2
+    else
+      echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
+    fi
+  done
+  if [ ${#missing[@]} -gt 0 ]; then
+    return "$errorEnvironment"
+  fi
+}
+
+# fn: {base}
+# Usage: {fn} [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
+# Argument: requireEnv1 - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+# Argument: optionalEnv1 - Optional. One or more environment variables which are included if blank or not
+# Create environment file `.env` for build.
+# Environment: APPLICATION_VERSION - reserved and set to `runHook version-current`
+# Environment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
+# Environment: APPLICATION_TAG - reserved and set to `runHook application-checksum`
+# Environment: APPLICATION_CHECKSUM - reserved and set to `runHook application-tag`
+#
+makeEnvironment() {
+  local missing e requireEnvironment
+
+  read -r -a requireEnvironment < <(applicationEnvironment)
+
+  echo "requireEnvironment: ${requireEnvironment[*]}"
+  if ! showEnvironment "$@" >/dev/null; then
+    _makeEnvironmentUsage "$errorEnvironment" "Missing values"
+    showEnvironment 1>&2
+    return "$errorEnvironment"
+  fi
+
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --)
+        shift
+        break
+        ;;
+      *)
+        requireEnvironment+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  #==========================================================================================
+  #
+  # Generate an .env artifact
+  #
+  for e in "${requireEnvironment[@]}" "$@"; do
+    if [ -n "${!e}" ]; then
+      echo "$e=\"${!e//\"/\\\"}\""
+    fi
+  done
 }
 
 getApplicationDeployVersion() {

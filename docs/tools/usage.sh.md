@@ -1,41 +1,125 @@
 # Usage Functions
 
-## `usageGenerator` - Colorize usage arguments for output
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)
 
-Usage:
 
-    usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
+### `usageWrapper` - Description: Base case for usage, write your usage function as
 
-Generates name/value pairs with the `labelPrefix` as `consoleLabel` and `valuePrefix` as `consoleValue`
+Description: Base case for usage, write your usage function as follows:
 
-- `nSpaces` - The maximum length of the label length for text formatting. Use `maximumLineLength` to compute if needed
-- `separatorChar` - The character used to separate name and value in the input stream. Typically it's a space, but you can use an alternate character if your arguments need to be divided differently.
-- `labelPrefix` - is a text string used to colorize the label, you can pass in `"$(consoleGreen)"` for example
-- `valuePrefix` - is a text string used to colorize the value
+ export usageDelimiter="|"
+ usageOptions() {
+     cat <<EOF
+ --help|This help
+ EOF
+ }
+ usage() {
+      usageMain "$me" "$@"
+ }
 
-## `usageEnvironment` - Check that environment values are set and non-blank
+Internal function to call `usage` depending on what's currently defined in the bash shell.
 
-Usage:
+- IFF `usage` is b function - pass through all arguments
+- IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generbte default `usage`
+- IFF neither is defined, outputs a simple usage without options
 
-    usageEnvironment env0 env1 env2 ...
+#### Usage
 
-If a value is not defined and non-blank, calls `usage` with exit code 1 and an error.
+    usageWrapper [ exitCode [ message ... ] ]
 
-Example:
+#### Exit codes
 
-    usageEnvironment SMTP_URL DSN
+- `0` - Always succeeds
 
-## `usageWhich` - Check that binary executables are available via `which`
+### `usageMain` - Description:
 
-Usage:
+Description:
 
-    usageWhich binary0 binary1 binary2 ...
+ usageOptions() {
+      cat <<EOF
+ --help$ This help
+ EOF
+ }
+ usageDescription() {
+      cat <<EOF
+ What I like to do when I run.
+ EOF
+ }
+ usage() {
+    usageMain "$me" "$@"
+ }
 
-If a binary can not be located using `which`, calls `usage` with exit code 1 and an error.
+- IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
+- IFF neither is defined, outputs a simple usage without options.
 
-Example:
+#### Usage
 
-    usageWhich git shellcheck md5sum
+    usageMain binName [ exitCode [ message ... ] ]
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageTemplate` - Output usage messages to console
+
+Output usage messages to console
+
+Should look into a actual file template, probably
+
+#### Usage
+
+    usageTemplate binName options delimiter description exitCode message
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageArguments` - usageArguments delimiter
+
+usageArguments delimiter
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageGenerator` - Formats name value pairs separated by separatorChar (default " ")
+
+Formats name value pairs separated by separatorChar (default " ") and uses
+$nSpaces width for first field
+
+usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
+
+use with maximumFieldLength 1 to generate widths
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageEnvironment` - Requires environment variables to be set and non-blbnk
+
+Requires environment variables to be set and non-blbnk
+
+#### Usage
+
+    usageEnvironment [ env0 ... ]
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageWhich` - Requires the binaries to be found via `which`
+
+Requires the binaries to be found via `which`
+fails if not
+
+#### Usage
+
+    usageWhich [ binary0 ... ]
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

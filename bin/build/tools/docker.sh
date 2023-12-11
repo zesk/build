@@ -4,6 +4,7 @@
 #
 # Depends: colors.sh text.sh
 # bin: head grep
+# Docs: contextOpen ./docs/templates/tools/docker.sh.md
 
 # IDENTICAL errorArgument 1
 errorArgument=2
@@ -53,14 +54,14 @@ insideDocker() {
     return 0
 }
 
-#
+# Ensure an environment file is compatible with non-quoted docker environment files
 # Usage: checkDockerEnvFile [ filename ... ]
 # Argument: filename - Docker environment file to check for common issues
 # Exit Code: 1 - if errors occur
 # Exit Code: 0 - if file is valid
 #
 checkDockerEnvFile() {
-    local result=0
+    local f result=0
     for f in "$@"; do
         if grep -q -E '\$|="|='"'" "$f"; then
             grep -E '\$|="|='"'" "$f" 1>&2
@@ -70,6 +71,8 @@ checkDockerEnvFile() {
     return "$result"
 }
 
+# Internal
+# See: dockerLocalContainer
 _dockerLocalContainerUsage() {
     usageDocument "bin/build/tools/docker.sh" dockerLocalContainer "$@"
 }
@@ -89,6 +92,7 @@ _dockerLocalContainerUsage() {
 # Exit Code: 0 - Success
 # Exit Code: Any - `docker run` error code is returned if non-zero
 # Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
+#
 dockerLocalContainer() {
     local imageName imageApplicationPath envFiles extraArgs platform
 
