@@ -150,7 +150,8 @@ githubRelease() {
   url="$(jq .html_url <"$resultsFile")"
   if [ -z "$url" ] || [ "$url" = "null" ]; then
     consoleError "Results had no html_url" 1>&2
-    prefixLines "$(consoleInfo)JSON: $(consoleCode)" <"$JSON" 1>&2
+    consoleError "GITHUB_ACCESS_TOKEN length ${#GITHUB_ACCESS_TOKEN}" 1>&2
+    printf %s "$JSON" | prefixLines "$(consoleInfo)Submitted JSON: $(consoleCode)" 1>&2
     buildFailed "$resultsFile" 1>&2
     return $?
   fi
