@@ -61,12 +61,10 @@ githubRelease() {
   export GITHUB_REPOSITORY_NAME
 
   extras=()
-  commitish="$1"
   accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}"
   accessToken="${GITHUB_ACCESS_TOKEN-}"
   repoOwner="${GITHUB_REPOSITORY_OWNER-}"
   repoName="${GITHUB_REPOSITORY_NAME-}"
-  shift
   while [ $# -gt 0 ]; do
     case "$1" in
       --token)
@@ -111,6 +109,19 @@ githubRelease() {
   # descriptionFile
   if [ ! -f "$descriptionFile" ]; then
     _githubReleaseUsage "$errorArgument" "Description file is not a file"
+    return $?
+  fi
+  if [ -z "$repoOwner" ]; then
+    _githubReleaseUsage "$errorArgument" "Repository owner is blank"
+    return $?
+  fi
+  if [ -z "$repoName" ]; then
+    _githubReleaseUsage "$errorArgument" "Repository name is blank"
+    return $?
+  fi
+  if [ -z "$accessToken" ]; then
+    _githubReleaseUsage "$errorArgument" "Access token is blank"
+    return $?
   fi
   #
   # Preflight our environment to make sure we have the basics defined in the calling script

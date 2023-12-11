@@ -28,15 +28,15 @@ errorArgument=2
 # Reviewed: 2023-11-12
 #
 assertEquals() {
-    local expected=$1 actual=$2
-    shift
-    shift
-    if [ "$expected" != "$actual" ]; then
-        consoleError "assertEquals \"$expected\" should equal \"$actual\" but does not: ${*-not equal}"
-        return "$errorEnvironment"
-    else
-        consoleSuccess "assertEquals \"$expected\" == \"$actual\" (correct)"
-    fi
+  local expected=$1 actual=$2
+  shift
+  shift
+  if [ "$expected" != "$actual" ]; then
+    consoleError "assertEquals \"$expected\" should equal \"$actual\" but does not: ${*-not equal}"
+    return "$errorEnvironment"
+  else
+    consoleSuccess "assertEquals \"$expected\" == \"$actual\" (correct)"
+  fi
 }
 
 # Assert two strings are not equal.
@@ -44,23 +44,23 @@ assertEquals() {
 # If this fails it will output an error and exit.
 # Summary: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
-# Argument: - `expected` - Expected string
-# Argument: - `actual` - Actual string
-# Argument: - `message` - Message to output if the assertion fails
-# Example:     assertNotEquals "$(head -1 /proc/1/sched | awk '{ print $1 }')" "init" "/proc/1/sched should not be init"
+# Argument: expected - Required. Expected string.
+# Argument: actual - Required. Actual string.
+# Argument: message - Message to output if the assertion fails. Optional.
+# Example:     assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
 # Example:     Single quote break-s
 # Reviewed: 2023-11-12
 #
 assertNotEquals() {
-    local expected=$1 actual=$2
-    shift
-    shift
-    if [ "$expected" = "$actual" ]; then
-        consoleError "assertNotEquals $expected = $actual but should not: ${*-equals}"
-        return $errorEnvironment
-    else
-        consoleSuccess "assertNotEquals \"$expected\" != \"$actual\" (correct)"
-    fi
+  local expected=$1 actual=$2
+  shift
+  shift
+  if [ "$expected" = "$actual" ]; then
+    consoleError "assertNotEquals $expected = $actual but should not: ${*-equals}"
+    return $errorEnvironment
+  else
+    consoleSuccess "assertNotEquals \"$expected\" != \"$actual\" (correct)"
+  fi
 }
 
 #
@@ -81,24 +81,24 @@ assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-    local expected=$1 actual bin=$2
+  local expected=$1 actual bin=$2
 
-    shift
-    shift
-    outputFile=$(mktemp)
-    actual="$(
-        "$bin" "$@" >"$outputFile" 2>&1
-        printf %d "$?"
-    )"
-    if [ "$expected" != "$actual" ]; then
-        printf "assertExitCode: %s -> %s, expected %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
-        prefixLines "$(consoleCode)" <"$outputFile" 1>&2
-        consoleReset 1>&2
-        rm "$outputFile"
-        return 1
-    fi
+  shift
+  shift
+  outputFile=$(mktemp)
+  actual="$(
+    "$bin" "$@" >"$outputFile" 2>&1
+    printf %d "$?"
+  )"
+  if [ "$expected" != "$actual" ]; then
+    printf "assertExitCode: %s -> %s, expected %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
+    prefixLines "$(consoleCode)" <"$outputFile" 1>&2
+    consoleReset 1>&2
     rm "$outputFile"
-    return 0
+    return 1
+  fi
+  rm "$outputFile"
+  return 0
 }
 
 #
@@ -116,36 +116,36 @@ assertExitCode() {
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-    local expected=$1 actual bin=$2
+  local expected=$1 actual bin=$2
 
-    shift
-    shift
-    set +e
-    actual=$(
-        "$bin" "$@"
-        echo "$?"
-    )
-    set -e
-    assertNotEquals "$expected" "$actual" "\"$*\" exit code should not equal expected $expected ($actual)"
+  shift
+  shift
+  set +e
+  actual=$(
+    "$bin" "$@"
+    echo "$?"
+  )
+  set -e
+  assertNotEquals "$expected" "$actual" "\"$*\" exit code should not equal expected $expected ($actual)"
 }
 
 # Usage: assertContains expected actual
 #
 assertContains() {
-    local expected=$1 actual=$2 shortActual
-    shift || return "$errorArgument"
+  local expected=$1 actual=$2 shortActual
+  shift || return "$errorArgument"
 
-    shift || return "$errorArgument"
-    shortActual="$(printf %s "$actual" | head -n 5)"
-    if [ "$shortActual" != "$actual" ]; then
-        shortActual="${shortActual} ..."
-    fi
-    if ! printf %s "$actual" | grep -q "$expected"; then
-        consoleError "assertContains \"$expected\" \"$shortActual\" but should: ${*-contain}"
-        return "$errorEnvironment"
-    else
-        consoleSuccess "assertContains \"$expected\" == \"$shortActual\" (correct)"
-    fi
+  shift || return "$errorArgument"
+  shortActual="$(printf %s "$actual" | head -n 5)"
+  if [ "$shortActual" != "$actual" ]; then
+    shortActual="${shortActual} ..."
+  fi
+  if ! printf %s "$actual" | grep -q "$expected"; then
+    consoleError "assertContains \"$expected\" \"$shortActual\" but should: ${*-contain}"
+    return "$errorEnvironment"
+  else
+    consoleSuccess "assertContains \"$expected\" == \"$shortActual\" (correct)"
+  fi
 }
 
 ################################################################################################################################
@@ -169,13 +169,13 @@ assertContains() {
 # Summary: Test that a directory exists
 #
 assertDirectoryExists() {
-    local d=$1
+  local d=$1
 
-    shift
-    if [ ! -d "$d" ]; then
-        consoleError "$d was expected to not a directory but is NOT: $*"
-        return 1
-    fi
+  shift
+  if [ ! -d "$d" ]; then
+    consoleError "$d was expected to not a directory but is NOT: $*"
+    return 1
+  fi
 }
 
 #
@@ -192,13 +192,13 @@ assertDirectoryExists() {
 # Reviewed: 2023-11-12
 #
 assertDirectoryDoesNotExist() {
-    local d=$1
+  local d=$1
 
-    shift
-    if [ -d "$d" ]; then
-        consoleError "$d was expected to not be a directory but is: $*"
-        return 1
-    fi
+  shift
+  if [ -d "$d" ]; then
+    consoleError "$d was expected to not be a directory but is: $*"
+    return 1
+  fi
 }
 
 ################################################################################################################################
@@ -221,15 +221,15 @@ assertDirectoryDoesNotExist() {
 # Reviewed: 2023-11-12
 #
 assertOutputEquals() {
-    local expected=$1 actual
-    shift
-    actual=$("$@" || printf "exited with code %d" "$?")
-    if [ "$expected" != "$actual" ]; then
-        consoleError "assertOutputEquals \"$expected\" \"$actual\" (output of \"$*\")"
-        return "$errorEnvironment"
-    else
-        consoleSuccess "assertOutputEquals \"$expected\" \"$actual\" (CORRECT: $1)"
-    fi
+  local expected=$1 actual
+  shift
+  actual=$("$@" || printf "exited with code %d" "$?")
+  if [ "$expected" != "$actual" ]; then
+    consoleError "assertOutputEquals \"$expected\" \"$actual\" (output of \"$*\")"
+    return "$errorEnvironment"
+  else
+    consoleSuccess "assertOutputEquals \"$expected\" \"$actual\" (CORRECT: $1)"
+  fi
 }
 
 #
@@ -250,53 +250,53 @@ assertOutputEquals() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-    local nLines expected="" commands=() tempFile exitCode=0 pipeStdErr=""
+  local nLines expected="" commands=() tempFile exitCode=0 pipeStdErr=""
 
-    while [ $# -gt 0 ]; do
-        case $1 in
-        --exit)
-            shift
-            assertExitCode 0 isNumber "$1"
-            exitCode="$1"
-            ;;
-        --stderr)
-            pipeStdErr=1
-            ;;
-        *)
-            if [ -z "$expected" ]; then
-                expected="$1"
-            else
-                commands+=("$1")
-            fi
-            ;;
-        esac
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --exit)
         shift
-    done
-    tempFile=$(mktemp)
-    printf "%s%s%s: \"%s%s%s\"\n" "$(consoleInfo)" "Running" "$(consoleReset)" "$(consoleCode)" "${commands[*]}" "$(consoleReset)"
-    if test $pipeStdErr; then
-        actual=$(
-            "${commands[@]}" >"$tempFile" 2>&1
-            echo $?
-        )
-    else
-        actual=$(
-            "${commands[@]}" >"$tempFile"
-            echo $?
-        )
-    fi
-    assertEquals "$exitCode" "$actual" "Exit code should be $exitCode ($actual)"
-    if grep -q "$expected" "$tempFile"; then
-        consoleSuccess "\"$expected\" found in \"${commands[*]}\" output"
-    else
-        printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)" 1>&2
-        consoleInfo "$(echoBar)" 1>&2
-        prefixLines "$(consoleCode)" <"$tempFile" 1>&2
-        consoleError "$(echoBar)" 1>&2
-        nLines=$(($(wc -l <"$tempFile") + 0))
-        consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")" 1>&2
-        return 1
-    fi
+        assertExitCode 0 isNumber "$1"
+        exitCode="$1"
+        ;;
+      --stderr)
+        pipeStdErr=1
+        ;;
+      *)
+        if [ -z "$expected" ]; then
+          expected="$1"
+        else
+          commands+=("$1")
+        fi
+        ;;
+    esac
+    shift
+  done
+  tempFile=$(mktemp)
+  printf "%s%s%s: \"%s%s%s\"\n" "$(consoleInfo)" "Running" "$(consoleReset)" "$(consoleCode)" "${commands[*]}" "$(consoleReset)"
+  if test $pipeStdErr; then
+    actual=$(
+      "${commands[@]}" >"$tempFile" 2>&1
+      echo $?
+    )
+  else
+    actual=$(
+      "${commands[@]}" >"$tempFile"
+      echo $?
+    )
+  fi
+  assertEquals "$exitCode" "$actual" "Exit code should be $exitCode ($actual)"
+  if grep -q "$expected" "$tempFile"; then
+    consoleSuccess "\"$expected\" found in \"${commands[*]}\" output"
+  else
+    printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)" 1>&2
+    consoleInfo "$(echoBar)" 1>&2
+    prefixLines "$(consoleCode)" <"$tempFile" 1>&2
+    consoleError "$(echoBar)" 1>&2
+    nLines=$(($(wc -l <"$tempFile") + 0))
+    consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")" 1>&2
+    return 1
+  fi
 }
 
 #
@@ -317,49 +317,49 @@ assertOutputContains() {
 # Reviewed: 2023-11-12
 #
 assertOutputDoesNotContain() {
-    local expected="" commands=() tempFile exitCode=0 pipeStdErr=""
+  local expected="" commands=() tempFile exitCode=0 pipeStdErr=""
 
-    while [ $# -gt 0 ]; do
-        case $1 in
-        --exit)
-            shift
-            assertExitCode 0 isNumber "$1"
-            exitCode="$1"
-            ;;
-        --stderr)
-            pipeStdErr=1
-            ;;
-        *)
-            if [ -z "$expected" ]; then
-                expected="$1"
-            else
-                commands+=("$1")
-            fi
-            ;;
-        esac
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --exit)
         shift
-    done
-    tempFile=$(mktemp)
-    if test $pipeStdErr; then
-        actual=$(
-            "${commands[@]}" >"$tempFile" 2>&1
-            echo $?
-        )
-    else
-        actual=$(
-            "${commands[@]}" >"$tempFile"
-            echo $?
-        )
-    fi
-    assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
-    if ! grep -q "$expected" "$tempFile"; then
-        consoleSuccess "$expected NOT found in ${commands[*]} output (correct)"
-    else
-        consoleError "$expected found in $* output (incorrect)" 1>&2
-        prefixLines "$(consoleCode)" <"$tempFile" 1>&2
-        consoleError "$(echoBar)" 1>&2
-        return 1
-    fi
+        assertExitCode 0 isNumber "$1"
+        exitCode="$1"
+        ;;
+      --stderr)
+        pipeStdErr=1
+        ;;
+      *)
+        if [ -z "$expected" ]; then
+          expected="$1"
+        else
+          commands+=("$1")
+        fi
+        ;;
+    esac
+    shift
+  done
+  tempFile=$(mktemp)
+  if test $pipeStdErr; then
+    actual=$(
+      "${commands[@]}" >"$tempFile" 2>&1
+      echo $?
+    )
+  else
+    actual=$(
+      "${commands[@]}" >"$tempFile"
+      echo $?
+    )
+  fi
+  assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
+  if ! grep -q "$expected" "$tempFile"; then
+    consoleSuccess "$expected NOT found in ${commands[*]} output (correct)"
+  else
+    consoleError "$expected found in $* output (incorrect)" 1>&2
+    prefixLines "$(consoleCode)" <"$tempFile" 1>&2
+    consoleError "$(echoBar)" 1>&2
+    return 1
+  fi
 }
 
 # Usage: assertFileContains fileName string0 [ ... ]
@@ -376,20 +376,20 @@ assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-    local f=$1
+  local f=$1
 
-    shift
-    if [ ! -f "$f" ]; then
-        consoleError "assertFileContains: $f is not a file: $*"
+  shift
+  if [ ! -f "$f" ]; then
+    consoleError "assertFileContains: $f is not a file: $*"
+  fi
+  while [ $# -gt 0 ]; do
+    if ! grep -q "$1" "$f"; then
+      consoleError "assertFileContains: $f does not contain string: $1"
+      dumpFile "$f"
+      return 1
     fi
-    while [ $# -gt 0 ]; do
-        if ! grep -q "$1" "$f"; then
-            consoleError "assertFileContains: $f does not contain string: $1"
-            dumpFile "$f"
-            return 1
-        fi
-        shift
-    done
+    shift
+  done
 }
 
 #
@@ -404,20 +404,20 @@ assertFileContains() {
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
-    local f=$1
+  local f=$1
 
-    shift
-    if [ ! -f "$f" ]; then
-        consoleError "assertFileDoesNotContain: $f is not a file: $*"
+  shift
+  if [ ! -f "$f" ]; then
+    consoleError "assertFileDoesNotContain: $f is not a file: $*"
+  fi
+  while [ $# -gt 0 ]; do
+    if grep -q "$1" "$f"; then
+      consoleError "assertFileDoesNotContain: $f does contain string: $1"
+      dumpFile "$f"
+      return 1
     fi
-    while [ $# -gt 0 ]; do
-        if grep -q "$1" "$f"; then
-            consoleError "assertFileDoesNotContain: $f does contain string: $1"
-            dumpFile "$f"
-            return 1
-        fi
-        shift
-    done
+    shift
+  done
 }
 
 ################################################################################################################################
@@ -439,23 +439,23 @@ assertFileDoesNotContain() {
 # Reviewed: 2023-11-14
 #
 assertGreaterThan() {
-    local leftValue=$1 rightValue=$2
-    shift
-    shift
-    if ! isNumber "$leftValue"; then
-        consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $leftValue): $*"
-        return "$errorEnvironment"
-    fi
-    if ! isNumber "$rightValue"; then
-        consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $rightValue): $*"
-        return "$errorEnvironment"
-    fi
-    if [ "$leftValue" -gt "$rightValue" ]; then
-        consoleSuccess "assertGreaterThan [ \"$leftValue\" -gt \"$rightValue\" ] (correct)"
-    else
-        consoleError "assertGreaterThan [ \"$leftValue\" -gt \"$rightValue\" ] (FAILED): $*"
-        return "$errorEnvironment"
-    fi
+  local leftValue=$1 rightValue=$2
+  shift
+  shift
+  if ! isNumber "$leftValue"; then
+    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $leftValue): $*"
+    return "$errorEnvironment"
+  fi
+  if ! isNumber "$rightValue"; then
+    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $rightValue): $*"
+    return "$errorEnvironment"
+  fi
+  if [ "$leftValue" -gt "$rightValue" ]; then
+    consoleSuccess "assertGreaterThan [ \"$leftValue\" -gt \"$rightValue\" ] (correct)"
+  else
+    consoleError "assertGreaterThan [ \"$leftValue\" -gt \"$rightValue\" ] (FAILED): $*"
+    return "$errorEnvironment"
+  fi
 }
 
 # Assert `leftValue >= rightValue`
@@ -468,23 +468,23 @@ assertGreaterThan() {
 # Reviewed: 2023-11-12
 # Summary: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
-    local leftValue=$1 rightValue=$2
-    shift
-    shift
-    if ! isNumber "$leftValue"; then
-        consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $leftValue): $*"
-        return "$errorEnvironment"
-    fi
-    if ! isNumber "$rightValue"; then
-        consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $rightValue): $*"
-        return "$errorEnvironment"
-    fi
-    if [ "$leftValue" -ge "$rightValue" ]; then
-        consoleSuccess "assertGreaterThan [ \"$leftValue\" -ge \"$rightValue\" ] (correct)"
-    else
-        consoleError "assertGreaterThan [ \"$leftValue\" -ge \"$rightValue\" ] (FAILED): $*"
-        return "$errorEnvironment"
-    fi
+  local leftValue=$1 rightValue=$2
+  shift
+  shift
+  if ! isNumber "$leftValue"; then
+    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $leftValue): $*"
+    return "$errorEnvironment"
+  fi
+  if ! isNumber "$rightValue"; then
+    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $rightValue): $*"
+    return "$errorEnvironment"
+  fi
+  if [ "$leftValue" -ge "$rightValue" ]; then
+    consoleSuccess "assertGreaterThan [ \"$leftValue\" -ge \"$rightValue\" ] (correct)"
+  else
+    consoleError "assertGreaterThan [ \"$leftValue\" -ge \"$rightValue\" ] (FAILED): $*"
+    return "$errorEnvironment"
+  fi
 }
 
 #
@@ -499,23 +499,23 @@ assertGreaterThanOrEqual() {
 # Exit code: 0 - expected less than to actual
 # Exit code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
-    local leftValue=$1 rightValue=$2
-    shift
-    shift
-    if ! isNumber "$leftValue"; then
-        consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (not number $leftValue): $*"
-        return "$errorEnvironment"
-    fi
-    if ! isNumber "$rightValue"; then
-        consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (not number $rightValue): $*"
-        return "$errorEnvironment"
-    fi
-    if [ "$leftValue" -gt "$rightValue" ]; then
-        consoleSuccess "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (correct)"
-    else
-        consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (FAILED): $*"
-        return "$errorEnvironment"
-    fi
+  local leftValue=$1 rightValue=$2
+  shift
+  shift
+  if ! isNumber "$leftValue"; then
+    consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (not number $leftValue): $*"
+    return "$errorEnvironment"
+  fi
+  if ! isNumber "$rightValue"; then
+    consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (not number $rightValue): $*"
+    return "$errorEnvironment"
+  fi
+  if [ "$leftValue" -gt "$rightValue" ]; then
+    consoleSuccess "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (correct)"
+  else
+    consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (FAILED): $*"
+    return "$errorEnvironment"
+  fi
 }
 
 # Assert `leftValue <= rightValue`
@@ -530,21 +530,21 @@ assertLessThan() {
 # Exit code: 1 - expected greater than actual, or invalid numbers
 #
 assertLessThanOrEqual() {
-    local leftValue=$1 rightValue=$2
-    shift
-    shift
-    if ! isNumber "$leftValue"; then
-        consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (not number $leftValue): $*"
-        return "$errorEnvironment"
-    fi
-    if ! isNumber "$rightValue"; then
-        consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (not number $rightValue): $*"
-        return "$errorEnvironment"
-    fi
-    if [ "$leftValue" -gt "$rightValue" ]; then
-        consoleSuccess "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (correct)"
-    else
-        consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (FAILED): $*"
-        return "$errorEnvironment"
-    fi
+  local leftValue=$1 rightValue=$2
+  shift
+  shift
+  if ! isNumber "$leftValue"; then
+    consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (not number $leftValue): $*"
+    return "$errorEnvironment"
+  fi
+  if ! isNumber "$rightValue"; then
+    consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (not number $rightValue): $*"
+    return "$errorEnvironment"
+  fi
+  if [ "$leftValue" -gt "$rightValue" ]; then
+    consoleSuccess "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (correct)"
+  else
+    consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (FAILED): $*"
+    return "$errorEnvironment"
+  fi
 }
