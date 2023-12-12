@@ -348,12 +348,8 @@ applicationEnvironment() {
   export APPLICATION_CHECKSUM
   export APPLICATION_TAG
 
-  if [ -z "${BUILD_TIMESTAMP-}" ]; then
-    BUILD_TIMESTAMP="$(date +%s)"
-  fi
-  if [ -z "${APPLICATION_BUILD_DATE-}" ]; then
-    APPLICATION_BUILD_DATE="$(date -u +"%Y-%m-%d %H:%M:%S")"
-  fi
+  BUILD_TIMESTAMP="$(date +%s)"
+  APPLICATION_BUILD_DATE="$(date -u +"%Y-%m-%d %H:%M:%S")"
 
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
@@ -444,12 +440,13 @@ showEnvironment() {
   fi
 }
 
+#
 # fn: {base}
 # Usage: {fn} [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
 # Argument: requireEnv1 - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
 # Argument: optionalEnv1 - Optional. One or more environment variables which are included if blank or not
 # Create environment file `.env` for build.
-# Environment: APPLICATION_VERSION - reserved and set to `runHook version-current`
+# Environment: APPLICATION_VERSION - reserved and set to `runHook version-current` if not set already
 # Environment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 # Environment: APPLICATION_TAG - reserved and set to `runHook application-checksum`
 # Environment: APPLICATION_CHECKSUM - reserved and set to `runHook application-tag`
