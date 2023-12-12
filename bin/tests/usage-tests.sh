@@ -30,7 +30,7 @@ tests+=(testUsageArguments)
 testUsageArguments() {
     local value testIndex=0
 
-    IFS= read -r -d '' value <<'EOF'
+    IFS= read -r -d '' value <<'EOF' || :
 --test^Optional thing.
 variable^OptionalTHing
 third^Required thing
