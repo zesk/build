@@ -86,7 +86,7 @@ errorArgument=2
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 me=$(basename "$0")
 
-#shellcheck source=/dev/null
+# shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
 start=$(beginTiming)

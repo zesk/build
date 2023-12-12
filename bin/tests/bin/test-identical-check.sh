@@ -8,7 +8,7 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
-#shellcheck source=/dev/null
+# shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
 identicalCheckArgs=(--cd bin/tests/example --extension 'txt')

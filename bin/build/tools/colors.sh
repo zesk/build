@@ -395,7 +395,7 @@ consoleColumns() {
 #
 simpleMarkdownToConsole() {
     # shellcheck disable=SC2119
-    _toggleCharacterToColor '`' "$(consoleCode)" | toggleCharacterToColor '**' "$(consoleRed)" | toggleCharacterToColor '*' "$(consoleCyan)"
+    _toggleCharacterToColor '`' "$(consoleCode)" | _toggleCharacterToColor '**' "$(consoleRed)" | _toggleCharacterToColor '*' "$(consoleCyan)"
 }
 
 #

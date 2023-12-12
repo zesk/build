@@ -76,19 +76,19 @@ usageWrapper() {
 #
 # Description:
 #
-#  usageOptions() {
-#       cat <<EOF
-#  --help${usageDelimiter}This help
-#  EOF
-#  }
-#  usageDescription() {
-#       cat <<EOF
-#  What I like to do when I run.
-#  EOF
-#  }
-#  usage() {
-#     usageMain "$me" "$@"
-#  }
+#       usageOptions() {
+#            cat <<EOF
+#       --help${usageDelimiter}This help
+#       EOF
+#       }
+#       usageDescription() {
+#            cat <<EOF
+#       What I like to do when I run.
+#       EOF
+#       }
+#       usage() {
+#          usageMain "$me" "$@"
+#       }
 #
 # - IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
 # - IFF neither is defined, outputs a simple usage without options.
