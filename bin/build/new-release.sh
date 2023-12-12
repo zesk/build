@@ -123,7 +123,7 @@ newRelease() {
     while true; do
       if test $readLoop; then
         consoleInfo -n "New version? (default $defaultVersion): "
-        read -r newVersion
+        read -r newVersion || :
         if [ -z "$newVersion" ]; then
           newVersion=$defaultVersion
         fi

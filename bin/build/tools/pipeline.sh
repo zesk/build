@@ -402,7 +402,7 @@ showEnvironment() {
     rm "$tempEnv" || :
     return "$errorEnvironment"
   fi
-  read -r -a requireEnvironment < "$tempEnv"
+  read -r -a requireEnvironment < "$tempEnv" || :
   rm "$tempEnv" || :
   # Will be exported to the environment file, only if defined
   while [ $# -gt 0 ]; do
@@ -457,9 +457,8 @@ showEnvironment() {
 makeEnvironment() {
   local missing e requireEnvironment
 
-  read -r -a requireEnvironment < <(applicationEnvironment)
+  read -r -a requireEnvironment < <(applicationEnvironment) || :
 
-  echo "requireEnvironment: ${requireEnvironment[*]}"
   if ! showEnvironment "$@" >/dev/null; then
     _makeEnvironmentUsage "$errorEnvironment" "Missing values"
     showEnvironment 1>&2

@@ -13,14 +13,10 @@
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-errorTest=3
-
 set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 top=$(pwd)
-
-# echo "TERM=$TERM"
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
@@ -32,7 +28,7 @@ quietLog=$(buildQuietLog "$me")
 . ./bin/tests/test-tools.sh
 
 usageOptions() {
-    cat <<EOF
+  cat <<EOF
 --help This help
 --clean Delete test artifact files before starting
 --messy Do not delete test artifact files afterwards
@@ -40,108 +36,41 @@ EOF
 }
 
 usage() {
-    usageMain "$me" "$@"
-    exit "$?"
+  usageMain "$me" "$@"
+  exit "$?"
+}
+
+messyTestCleanup() {
+  if test "$messyOption"; then
+    return 0
+  fi
+  cd "$top"
+  testCleanup
 }
 
 messyOption=
 
-testCleanup() {
-    cd "$top"
-    if test "$messyOption"; then
-        return 0
-    fi
-    rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" 2>/dev/null || :
-}
-
 while [ $# -gt 0 ]; do
-    case $1 in
+  case $1 in
     --clean)
-        consoleWarning -n "Cleaning ... "
-        testCleanup
-        consoleSuccess "done"
-        ;;
+      consoleWarning -n "Cleaning ... "
+      testCleanup
+      consoleSuccess "done"
+      ;;
     --messy)
-        messyOption=1
-        ;;
+      messyOption=1
+      ;;
     *)
-        usage "$errorArgument" "Unknown argument $1"
-        ;;
-    esac
-    shift
+      usage "$errorArgument" "Unknown argument $1"
+      ;;
+  esac
+  shift
 done
-trap testCleanup EXIT QUIT TERM
 
-cleanTestName() {
-    local testName
-    testName="${1%%.sh}"
-    testName="${testName%%-test}"
-    testName="${testName%%-tests}"
-    testName=${testName##tests-}
-    testName=${testName##test-}
-    printf %s "$testName"
-}
-loadTestFiles() {
-    local fileCount testCount tests=() testName quietLog=$1 testDirectory resultCode=0
+trap messyTestCleanup EXIT QUIT TERM
 
-    shift
-    statusMessage consoleWarning "Loading tests ..."
-    fileCount="$#"
-    while [ "$#" -gt 0 ]; do
-        testName="$(cleanTestName "$1")"
-        tests+=("#$testName") # Section
-        testCount=${#tests[@]}
-        statusMessage consoleError "Loading test section \"$testName\""
-        # shellcheck source=/dev/null
-        . "./bin/tests/$1"
-        clearLine
-        if [ "${#tests[@]}" -le "$testCount" ]; then
-            consoleError "No tests defined in ./bin/tests/$1"
-            resultCode=$errorTest
-        fi
-        shift
-    done
-    testCount=$((${#tests[@]} - fileCount))
-    statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${tests[*]}\" ..."
-    echo
-    testDirectory=$(pwd)
-    while [ ${#tests[@]} -gt 0 ]; do
-        test="${tests[0]}"
-        # Section
-        if [ "${test#\#}" != "$test" ]; then
-            testHeading "${test#\#}"
-        else
-            # Test
-            testSection "${test#\#}"
-            if ! "$test" "$quietLog"; then
-                cd "$testDirectory"
-                consoleError "$test failed" 1>&2
-                return $errorTest
-            fi
-            cd "$testDirectory"
-            consoleSuccess "$test passed"
-        fi
-        unset 'tests[0]'
-        tests=("${tests[@]+${tests[@]}}")
-    done
-    return $resultCode
-}
-
-testFailed() {
-    local errorCode="$errorTest"
-    printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo -n "$*")"
-    exit "$errorCode"
-}
-requireTestFiles() {
-    if ! loadTestFiles "$@"; then
-        testFailed "$(consoleInfo -n "$*")"
-    fi
-}
-
-printf "TERM: %s DISPLAY: %s\n" "${TERM-none}" "${DISPLAY-none} hasColors: $(
-    hasColors
-    printf %d $?
-)"
+# debugTermDisplay
+requireTestFiles "$quietLog" colors-tests.sh
 
 requireTestFiles "$quietLog" pipeline-tests.sh
 
@@ -157,8 +86,7 @@ requireTestFiles "$quietLog" documentation-tests.sh
 requireTestFiles "$quietLog" os-tests.sh
 requireTestFiles "$quietLog" assert-tests.sh
 requireTestFiles "$quietLog" usage-tests.sh
-requireTestFiles "$quietLog" docker-tests.sh colors-tests.sh api-tests.sh
-
+requireTestFiles "$quietLog" docker-tests.sh api-tests.sh
 
 # tests-tests.sh has side-effects - installs shellcheck
 requireTestFiles "$quietLog" tests-tests.sh
@@ -170,13 +98,14 @@ requireTestFiles "$quietLog" aws-tests.sh
 requireTestFiles "$quietLog" bin-tests.sh
 
 for binTest in ./bin/tests/bin/*.sh; do
-    testHeading "$(cleanTestName "$(basename "$binTest")")"
-    if ! "$binTest" "$(pwd)"; then
-        testFailed "$binTest" "$(pwd)"
-    fi
+  testHeading "$(cleanTestName "$(basename "$binTest")")"
+  if ! "$binTest" "$(pwd)"; then
+    testFailed "$binTest" "$(pwd)"
+  fi
 done
 
-testCleanup
+cd "$top" || return $?
+messyTestCleanup
 
 bigText Passed | prefixLines "$(consoleSuccess)"
 consoleReset
