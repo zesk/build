@@ -62,20 +62,20 @@ newRelease() {
   newVersion=
   while [ $# -gt 0 ]; do
     case $1 in
-    --non-interactive)
-      nonInteractive=1
-      ;;
-    --help)
-      usage 0
-      return 0
-      ;;
-    *)
-      if [ -n "$newVersion" ]; then
-        usage $errorArgument "Unknown argument $1"
-        return $?
-      fi
-      newVersion=$1
-      ;;
+      --non-interactive)
+        nonInteractive=1
+        ;;
+      --help)
+        usage 0
+        return 0
+        ;;
+      *)
+        if [ -n "$newVersion" ]; then
+          usage $errorArgument "Unknown argument $1"
+          return $?
+        fi
+        newVersion=$1
+        ;;
     esac
     shift
   done
@@ -108,7 +108,10 @@ newRelease() {
   # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$defaultVersion")"
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$defaultVersion" ]; then
+    releaseNotes="$(bin/build/release-notes.sh)"
     consoleInfo "Ready to deploy: $currentVersion"
+    consoleWarning "Release notes: $releaseNotes"
+    runHook version-already "$currentVersion" "$releaseNotes"
     return 0
   fi
   if test $nonInteractive; then
@@ -139,7 +142,7 @@ newRelease() {
       fi
     done
   fi
-  releaseNotes=docs/release/$newVersion.md
+  releaseNotes="$(bin/build/release-notes.sh)"
   if [ ! -f "$releaseNotes" ]; then
     trimSpacePipe >"$releaseNotes" <<-EOF
         # Release $newVersion
