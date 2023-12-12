@@ -105,6 +105,7 @@ testMakeEnvironment() {
   export APPLICATION_CHECKSUM=aabbccdd
 
   [ -f .env ] && rm .env
+  set -eou pipefail
   makeEnvironment TESTING_ENV DSN >.env
 
   if [ ! -f .env ]; then
