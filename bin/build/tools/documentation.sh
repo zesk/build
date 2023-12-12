@@ -333,7 +333,7 @@ documentFunctionTemplateDirectory() {
         fi
     done
     clearLine
-    reportTiming "$start" "Completed gemeration of $(consoleInfo "$templateDirectory") in"
+    reportTiming "$start" "Completed generation of $(consoleInfo "$templateDirectory") in"
     return $exitCode
 }
 
