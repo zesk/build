@@ -64,7 +64,7 @@ Template header for most scripts:
     #
     # Does a long process
     #
-    set -eo pipefail
+    set -eou pipefail
     errorEnvironment=1
 
     cd "$(dirname "${BASH_SOURCE[0]}")/../.."
@@ -86,33 +86,11 @@ Template header for most scripts:
 
 ## Artifacts
 
-A `./.build` directory is created at your project root where log files are generated. You can preserve this post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
+A `./.build` directory is created at your `$HOME` directory, or the project root (if `$HOME` is not set) where log files are generated.
+
+You can preserve this post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
 
 A `./.deploy` directory is created for the `php-build.sh` steps and contains metadata about the deployment.
-
-## Usage function example
-
-In your bash scripts, certain functions require the definition of a `usage` function and will trigger it when an
-error occurs:
-
-    usageOptions() {
-        echo "--option      Description goes here"
-        echo "--debug       Debugging mode"
-    }
-    usage() {
-        local exitCode=$1
-
-        exec 1>&2
-        shift
-        if [ -n "$*" ]; then
-            consoleError "$@"
-        fi
-        echo "$me - do something" | usageGenerator 20
-        echo
-        usageOptions | usageGenerator 20
-        echo
-        exit "$exitCode"
-    }
 
 ## Copyright &copy; 2023 Market Acumen, Inc
 
