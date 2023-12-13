@@ -56,9 +56,9 @@ contextOpen() {
     pycharm "$@"
   elif isVisualStudioCode; then
     code "$@"
-  elif [ -n "$EDITOR" ]; then
+  elif [ -n "${EDITOR-}" ]; then
     $EDITOR "$@"
-  elif [ -n "$VISUAL" ]; then
+  elif [ -n "${VISUAL-}" ]; then
     $VISUAL "$@"
   fi
 }
