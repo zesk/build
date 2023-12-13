@@ -8,19 +8,21 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eou pipefail
 
-# set -x
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-errBuild=1000
+errorBuild=1000
 
-me=$(basename "$0")
+# IDENTICAL bashHeader 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
+
+# IDENTICAL me 1
+me="$(basename "${BASH_SOURCE[0]}")"
 
 _phpComposerUsage() {
   usageDocument "./bin/build/pipeline/$me" "phpComposer" "$@"
@@ -94,13 +96,13 @@ phpComposer() {
   if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
     consoleError "Failed to pull image $dockerImage"
     buildFailed "$quietLog"
-    return $errBuild
+    return $errorBuild
   fi
   consoleInfo -n "validating ... "
   echo Running: docker run "${composerArgs[@]}" validate >>"$quietLog"
   if ! docker run "${composerArgs[@]}" install >>"$quietLog" 2>&1; then
     buildFailed "$quietLog"
-    return $errBuild
+    return $errorBuild
   fi
 
   composerArgs+=("install")
@@ -108,7 +110,7 @@ phpComposer() {
   echo Running: docker run "${composerArgs[@]}" >>"$quietLog"
   if ! docker run "${composerArgs[@]}" >>"$quietLog" 2>&1; then
     buildFailed "$quietLog"
-    return $errBuild
+    return $errorBuild
   fi
   reportTiming "$start" OK
 

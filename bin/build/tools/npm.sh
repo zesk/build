@@ -22,7 +22,6 @@ errorEnvironment=1
 # Exit Code: 1 - If installation of npm fails
 # Exit Code: 0 - If npm is already installed or installed without error
 # Binary: npm.sh
-# Usage: bin/build/install/npm.sh
 #
 npmInstall() {
     local start npm_version quietLog

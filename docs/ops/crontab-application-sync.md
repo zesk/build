@@ -33,7 +33,7 @@ Any files not found are skipped. Note that environment values are not carried be
 - `--env environment` - Top-level environment file to pass variables into the user `crontab` template
 - `--show` - Show the crontab instaed of installing it
 - `--user user` - Scan for crontab files in the form $(user.crontab) and then install as this user. If not specified, uses $(whoami).
-- `--mapper envMapper` - The binary use to map environment values to the file (see (../bin/map.sh.md)[./map.sh.md])
+- `--mapper envMapper` - The binary use to map environment values to the file (see (../bin/map.md)[./map.md])
 
 ## Examples
 

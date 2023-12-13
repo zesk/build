@@ -150,8 +150,8 @@ bigText Build | prefixLines "$(consoleGreen)"
 
 consoleInfo "Installing build tools ..."
 
-./bin/build/install/apt.sh
-./bin/build/install/git.sh
+aptInstall
+gitInstall
 
 consoleInfo "Tagging $DEPLOYMENT deployment with $versionSuffix ..."
 ./bin/build/pipeline/git-tag-version.sh --suffix "$versionSuffix"

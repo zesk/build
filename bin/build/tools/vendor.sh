@@ -5,7 +5,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: nothing
-# Docs: contextOpen ./docs/templates/tools/vendor.sh.md
+# Docs: contextOpen ./docs/_templates/tools/vendor.md
 
 #
 # Are we within the JetBrains PHPStorm terminal?

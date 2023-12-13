@@ -4,12 +4,13 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eou pipefail
 
+# IDENTICAL bashHeader 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
 # fn: {base}
 #

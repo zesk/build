@@ -5,8 +5,10 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
+# IDENTICAL bashHeader2 5
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
@@ -30,6 +32,9 @@ deprecatedCleanup() {
         consoleError dockerPHPExtensions found
         exitCode=1
     fi
+
+    # v0.5.9
+    bin/build/cannon.sh markdownListify markdownFormatList
     return $exitCode
 }
 

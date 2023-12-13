@@ -11,8 +11,8 @@
 
 # Tool versioning
 
-- `BUILD_COMPOSER_VERSION` - String. Default `latest`. Version of composer to use for building vendor directory. (See [`composer.sh`](composer.sh.md))
-- `BUILD_NPM_VERSION` - String. Default `latest`. Version of npm to install using native `npm` binary. (Affects [`npm.sh`](npm.sh.md))
+- `BUILD_COMPOSER_VERSION` - String. Default `latest`. Version of composer to use for building vendor directory. (See [`composer.sh`](composer.md))
+- `BUILD_NPM_VERSION` - String. Default `latest`. Version of npm to install using native `npm` binary. (Affects [`npm.sh`](npm.md))
 - `HOSTTYPE` - String. Affects which version of the AWS cli is installed (arm64 or amd64) (See `aws-cli.sh`). OS-specific.
 
 # GitHub Releases

@@ -54,7 +54,7 @@ buildQuietLog() {
         esac
         shift
     done
-    if test $flagMake && ! requireFileDirectory "$logFile"; then
+    if test "$flagMake" && ! requireFileDirectory "$logFile"; then
         return $?
     fi
     printf %s "$logFile"
@@ -88,7 +88,7 @@ requireFileDirectory() {
 # Creates the directories for all files passed in.
 #
 # Usage: requireDirectory dir1 [ dir2 ... ]
-# Argumetn: dir1 - One or more directories to create
+# Argument: dir1 - One or more directories to create
 # Example:     requireDirectory "$cachePath"
 #
 requireDirectory() {
@@ -233,7 +233,7 @@ makeShellFilesExecutable() {
 # Fetch the modification time of a file as a timestamp
 #
 # Usage: modificationTime filename0 [ filename1 ... ]
-# Exit Code: 2 - If file does not existd
+# Exit Code: 2 - If file does not exist
 # Exit Code: 0 - If file exists and modification times are output, one per line
 # Example:     modificationTime ~/.bash_profile
 #
@@ -390,7 +390,7 @@ pathAppend() {
                     exitCode=2
                 elif [ -z "$pathValue" ]; then
                     pathValue="$1"
-                elif test $firstFlag; then
+                elif test "$firstFlag"; then
                     pathValue="$1$s$pathValue"
                 else
                     pathValue="$pathValue$s$1"

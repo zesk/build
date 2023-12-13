@@ -9,23 +9,23 @@
 set -eou pipefail
 
 declare -a tests
-tests+=(testMarkdownListify)
+tests+=(testMarkdownFormatList)
 
-assertMarkdownListify() {
-    assertEquals "$1" "$(printf %s "$2" | markdownListify)" "markdownListify \"$2\" !== \"$1\""
+assertMarkdownFormatList() {
+    assertEquals "$1" "$(printf %s "$2" | markdownFormatList)" "markdownFormatList \"$2\" !== \"$1\""
 }
-testMarkdownListify() {
+testMarkdownFormatList() {
     # shellcheck disable=SC2016
-    assertMarkdownListify '- `dude` - Hello' 'dude - Hello' || return $?
+    assertMarkdownFormatList '- `dude` - Hello' 'dude - Hello' || return $?
     # shellcheck disable=SC2016
-    assertMarkdownListify '- `--extension extension` - A description of extension' '--extension extension - A description of extension' || return $?
+    assertMarkdownFormatList '- `--extension extension` - A description of extension' '--extension extension - A description of extension' || return $?
     # shellcheck disable=SC2016
-    assertMarkdownListify '- `expected` - Expected string' '- `expected` - Expected string' || return $?
+    assertMarkdownFormatList '- `expected` - Expected string' '- `expected` - Expected string' || return $?
 
-    assertMarkdownListify '- Hello' '- Hello' || return $?
-    assertMarkdownListify '- Hello' 'Hello' || return $?
+    assertMarkdownFormatList '- Hello' '- Hello' || return $?
+    assertMarkdownFormatList '- Hello' 'Hello' || return $?
     # shellcheck disable=SC2016
-    assertMarkdownListify '- `--arg1` - Argument One' '--arg1 - Argument One' || return $?
+    assertMarkdownFormatList '- `--arg1` - Argument One' '--arg1 - Argument One' || return $?
 }
 
 tests+=(testDocumentation)

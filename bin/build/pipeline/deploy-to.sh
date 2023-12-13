@@ -16,54 +16,36 @@
 # /var/www/DEPLOY/app1/applicationChecksum1.previous
 # /var/www/DEPLOY/app1/applicationChecksum1.next
 #
-#
+
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
+
 # IDENTICAL errorArgument 1
 errorArgument=2
-# set -x # Uncomment to enable debugging
-set -eou pipefail
 
-me=$(basename "$0")
+# IDENTICAL me 1
+me="$(basename "${BASH_SOURCE[0]}")"
+
+# IDENTICAL bashHeader 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
 
 sshHome="$HOME/.ssh"
 knownHostsFile="$sshHome/known_hosts"
 temporaryCommandsFile=./.temp-sftp
 deployedHostArtifact="./.deployed-hosts"
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
-
 initTime=$(beginTiming)
 
-export usageDelimiter=";"
-usageOptions() {
-  cat <<EOF
---target target${usageDelimiter}Build target file, defaults to app.tar.gz
---deploy;Deploy to remote host with the application checksum
---undo;Undo deployment using saved artifacts
---cleanup;Clean up remote files after success
---help;This help
---debug;Turn on debugging (defaults to BUILD_DEBUG environment variable)
-applicationChecksum;The application serial numaer
-remoteDeploymentPath;Path on remote host where deployment files are stored
-remotePath;Path on remote host where deployment application exists.
-user1@host1 ...;Deploy to this user at this host ...
-EOF
-}
-usageDescription() {
-  cat <<EOF
-Deploy current application to host at remotePath
-EOF
-}
-usage() {
-  usageMain "$me" "$@"
+_deployToUsage() {
+  usageDocument "bin/build/pipeline/$me" deployAction "$@"
   exit $?
 }
 
 if [ ! -d "${HOME:-}" ]; then
-  usage $errorEnvironment "No HOME defined or not a directory: $HOME"
+  _deployToUsage $errorEnvironment "No HOME defined or not a directory: $HOME"
 fi
 
 # dotEnvConfigure
@@ -85,19 +67,19 @@ while [ $# -gt 0 ]; do
   --target)
     shift
     if [ -n "$buildTarget" ]; then
-      usage $errorArgument "--target supplied twice"
+      _deployToUsage $errorArgument "--target supplied twice"
     fi
     buildTarget=$1
     if [ -z "$buildTarget" ]; then
-      usage $errorArgument "blank --target"
+      _deployToUsage $errorArgument "blank --target"
     fi
     ;;
   --help)
-    usage 0
+    _deployToUsage 0
     ;;
   --deploy)
     if test "$deployFlag"; then
-      usage $errorArgument "--deploy arg passed twice"
+      _deployToUsage $errorArgument "--deploy arg passed twice"
     fi
     deployFlag=1
     ;;
@@ -106,14 +88,14 @@ while [ $# -gt 0 ]; do
     ;;
   --undo)
     if test "$undoFlag"; then
-      usage $errorArgument "--undo specified twice"
+      _deployToUsage $errorArgument "--undo specified twice"
     fi
     undoFlag=1
     remoteArgs+=("--undo")
     ;;
   --cleanup)
     if test "$cleanupFlag"; then
-      usage $errorArgument "--undo specified twice"
+      _deployToUsage $errorArgument "--undo specified twice"
     fi
     cleanupFlag=1
     remoteArgs+=("--cleanup")
@@ -147,24 +129,24 @@ fi
 
 # Flag semantics
 if test "$undoFlag" && test "$cleanupFlag"; then
-  usage $errorArgument "--undo and --cleanup are mutually exclusive"
+  _deployToUsage $errorArgument "--undo and --cleanup are mutually exclusive"
 fi
 if test "$undoFlag" && test "$deployFlag"; then
-  usage $errorArgument "--undo and --deploy are mutually exclusive"
+  _deployToUsage $errorArgument "--undo and --deploy are mutually exclusive"
 fi
 if test "$deployFlag" && test "$cleanupFlag"; then
-  usage $errorArgument "--deploy and --cleanup are mutually exclusive"
+  _deployToUsage $errorArgument "--deploy and --cleanup are mutually exclusive"
 fi
 # Values are not blank
 buildTarget="${buildTarget:-app.tar.gz}"
 if [ -z "$applicationChecksum" ]; then
-  usage $errorArgument "Missing applicationChecksum"
+  _deployToUsage $errorArgument "Missing applicationChecksum"
 fi
 if [ -z "$remoteDeploymentPath" ]; then
-  usage $errorArgument "Missing remoteDeploymentPath"
+  _deployToUsage $errorArgument "Missing remoteDeploymentPath"
 fi
 if [ -z "$remotePath" ]; then
-  usage $errorArgument "Missing remotePath"
+  _deployToUsage $errorArgument "Missing remotePath"
 fi
 
 #
@@ -172,7 +154,7 @@ fi
 #
 currentIP=$(ipLookup)
 if [ -z "$currentIP" ]; then
-  usage $errorEnvironment "Unable to determine IP address"
+  _deployToUsage $errorEnvironment "Unable to determine IP address"
 fi
 
 showInfo() {
@@ -184,7 +166,7 @@ showInfo() {
 }
 
 if [ -z "${userHosts[*]}" ]; then
-  usage $errorEnvironment "No user hosts provided?"
+  _deployToUsage $errorEnvironment "No user hosts provided?"
 fi
 
 #
@@ -193,7 +175,7 @@ fi
 # Side effect: known_hosts is modified
 #
 if [ ! -d "$sshHome" ]; then
-  mkdir -m 0700 "$sshHome" || usage $errorEnvironment "Unable to create $sshHome for known_hosts files"
+  mkdir -m 0700 "$sshHome" || _deployToUsage $errorEnvironment "Unable to create $sshHome for known_hosts files"
 fi
 for userHost in "${userHosts[@]}"; do
   host="${userHost##*@}"
@@ -312,16 +294,20 @@ sshishDeployOptions() {
   fi
 
 }
-
+# fn: {base}
+#
+# Summary:Deploy current application to host at remotePath
 # Usage: deploy-to.sh [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'
-# Argument: --deploy - Default. deploy an application to a remote host
-# Argument: --undo - Reverses a deployment
-# Argument: --cleanup - After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
-# Argument: --help - Show help
-# Argument: applicationChecksum - The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
-# Argument: remoteDeploymentPath - Remote path where we can store deployment state files.
-# Argument: remotePath - Path where the application will be deployed
-# Argument: user1@host1 - A list of space-separated values or arguments which match users at remote hosts
+# Argument: --target target$ - Optional. String. Build target file, defaults to `app.tar.gz`
+# Argument: --deploy - Default. Flag. deploy an application to a remote host
+# Argument: --undo - Optional. Flag. Reverses a deployment
+# Argument: --cleanup - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
+# Argument: --help - Optional. Flag. Show help
+# Argument: --debug - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
+# Argument: applicationChecksum - Required. String. The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
+# Argument: remoteDeploymentPath - Required. Path. Remote path where we can store deployment state files.
+# Argument: remotePath - Required. Path. Path where the application will be deployed
+# Argument: user1@host1 - Required. Strings. A list of space-separated values or arguments which match users at remote hosts
 #
 # Deploy current application to host at remotePath.
 #
@@ -357,7 +343,7 @@ sshishDeployOptions() {
 # Local cache: `remoteDeploymentPath` is considered a state directory so removing entries in this should be managed separately.
 #
 # TODO: add ability to prune past n versions safely on all hosts.
-# fn: deploy-to.sh
+#
 deployAction() {
   local buildTarget=$1
   #

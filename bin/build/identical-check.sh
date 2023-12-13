@@ -3,16 +3,20 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-errorArgument=1
-set -eou pipefail
+# IDENTICAL errorArgument 1
+errorArgument=2
 
 errorFailures=100
 
-me="$(basename "$0")"
+# IDENTICAL bashHeader2 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+# IDENTICAL me 1
+me="$(basename "${BASH_SOURCE[0]}")"
 
 usage() {
     usageDocument "./bin/build/$me" "identicalCheck" "$@"

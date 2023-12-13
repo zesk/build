@@ -18,7 +18,7 @@ errorEnvironment=1
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
 # Usage: addHashicorpAptKey
-# Exit Code: 1 - if environmeny is awry
+# Exit Code: 1 - if environment is awry
 # Exit Code: 0 - All good to install terraform
 #
 addHashicorpAptKey() {
@@ -72,8 +72,8 @@ addHashicorpAptKey() {
 #
 # Exit Code: 1 - Error with environment
 # Exit Code: 0 - Installed successfully
-# Usage: terraformInstall [ pacakge ... ]
-# Argument: package - Additional packages to install using apt
+# Usage: terraformInstall [ package ... ]
+# Argument: package - Additional packages to install using `apt`
 #
 terraformInstall() {
     local init

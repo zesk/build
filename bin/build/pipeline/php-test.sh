@@ -4,15 +4,17 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eou pipefail
-# set -x # Debugging
 
+# IDENTICAL bashHeader 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. ./bin/pipeline/tools.sh
+. ./bin/build/tools.sh
 
 init=$(beginTiming)
+
+# IDENTICAL me 1
 me="$(basename "${BASH_SOURCE[0]}")"
 
 #    __                  _   _
@@ -74,7 +76,7 @@ quietLog=$(buildQuietLog "$me")
 
 buildDebugStart
 
-./bin/build/install/docker-compose.sh
+dockerComposeInstall
 ./bin/build/pipeline/composer.sh
 
 consoleInfo "Building test container"

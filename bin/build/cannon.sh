@@ -3,14 +3,17 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
+# IDENTICAL errorArgument 1
 errorArgument=2
 
+# IDENTICAL bashHeader2 5
 set -eou pipefail
-me=$(basename "${BASH_SOURCE[0]}")
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+me=$(basename "${BASH_SOURCE[0]}")
 
 usageOptions() {
 	cat <<EOF

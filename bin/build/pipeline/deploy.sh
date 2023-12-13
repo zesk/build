@@ -4,15 +4,19 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-errorEnvironment=1
-set -eou pipefail
-# set -x # Debugging
 
-me=$(basename "${BASH_SOURCE[0]}")
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
+# IDENTICAL bashHeader 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+# IDENTICAL me 1
+me="$(basename "${BASH_SOURCE[0]}")"
 
 requireEnvironments=(APPLICATION_CHECKSUM DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS)
 

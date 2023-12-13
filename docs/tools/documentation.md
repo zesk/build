@@ -14,7 +14,7 @@
 
 - `file` - Required. File in which the function is defined
 - `function` - Required. The function name which is defined in `file`
-- `template` - Required. A markdown template to use to map values. Postprocessed with `removeUnfinishedSections`
+- `template` - Required. A markdown template to use to map values. Post-processed with `removeUnfinishedSections`
 
 #### Exit codes
 
@@ -71,14 +71,14 @@ to regenerate each time.
 
 #### Usage
 
-    documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDiretory [ cacheDirectory ]
+    documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDirectory [ cacheDirectory ]
 
 #### Arguments
 
 - `sourceCodeDirectory` - Required. The directory where the source code lives
 - `documentDirectory` - Required. Directory containing documentation templates
 - `templateFile` - Required. Function template file to generate documentation for functions
-- `targetDiretory` - Required. Directory to create generated documentation
+- `targetDirectory` - Required. Directory to create generated documentation
 - `cacheDirectory` - Optional. If supplied, cache to reduce work when files remain unchanged.
 
 #### Exit codes
@@ -145,7 +145,7 @@ may output partial results with a failure.
 
 #### Usage
 
-    bashFindFunctionFiles dirctory fnName0 [ fnName1... ]
+    bashFindFunctionFiles directory fnName0 [ fnName1... ]
 
 #### Arguments
 
@@ -194,7 +194,7 @@ None
 
     read printf
 
-### `markdownListify` - Simple function to make list-like things more list-like in Markdown
+### `markdownFormatList` - Simple function to make list-like things more list-like in Markdown
 
 Simple function to make list-like things more list-like in Markdown
 
@@ -239,9 +239,9 @@ Utility to export multi-line values as Bash variables
 ## `bashDocumentFunction` Formatting
 
 
-### `_bashDocumentFunction_exit_codeFormat` - Format code blocks (does markdownListify)
+### `_bashDocumentFunction_exit_codeFormat` - Format code blocks (does markdownFormatList)
 
-Format code blocks (does markdownListify)
+Format code blocks (does markdownFormatList)
 
 #### Exit codes
 
@@ -255,9 +255,9 @@ Format usage blocks (indents as a code block)
 
 - `0` - Always succeeds
 
-### `_bashDocumentFunction_argumentFormat` - Format argument blocks (does markdownListify)
+### `_bashDocumentFunction_argumentFormat` - Format argument blocks (does markdownFormatList)
 
-Format argument blocks (does markdownListify)
+Format argument blocks (does markdownFormatList)
 
 #### Exit codes
 

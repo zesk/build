@@ -4,7 +4,7 @@
 #
 # Depends: -
 # bin: set test
-# Docs: contextOpen ./docs/templates/tools/debug.sh.md
+# Docs: contextOpen ./docs/_templates/tools/debug.md
 
 #
 # Is build debugging enabled?

@@ -1,5 +1,5 @@
 
-# `versionLast` - Get the last reported version.
+# `gitVersionLast` - Get the last reported version.
 
 [⬅ Return to top](index.md)
 
@@ -7,7 +7,7 @@ Get the last reported version.
 
 ## Usage
 
-    versionLast [ ignorePattern ]
+    gitVersionLast [ ignorePattern ]
 
 ## Arguments
 

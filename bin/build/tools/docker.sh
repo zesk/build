@@ -4,7 +4,7 @@
 #
 # Depends: colors.sh text.sh
 # bin: head grep
-# Docs: contextOpen ./docs/templates/tools/docker.sh.md
+# Docs: contextOpen ./docs/_templates/tools/docker.md
 
 # IDENTICAL errorArgument 1
 errorArgument=2

@@ -3,7 +3,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: colors.sh
-# Docs: contextOpen ./docs/templates/tools/usage.sh.md
+# Docs: contextOpen ./docs/_templates/tools/usage.md
 
 # IDENTICAL errorArgument 1
 errorArgument=2
@@ -18,7 +18,7 @@ errorArgument=2
 #              ▜█▛▘
 #------------------------------------------------------------------------------
 #
-# Usage syntax is generblly:
+# Usage syntax is generally:
 #
 # Argument:
 # - "-t" flag
@@ -38,7 +38,7 @@ _usageOptionsSample() {
 }
 
 #
-# Overwrite this if your `usageOptions` uses b delimiter which is not b spbce
+# Overwrite this if your `usageOptions` uses a delimiter which is not a space
 #
 export usageDelimiter=${usageDelimiter-" "}
 
@@ -59,8 +59,8 @@ export usageDelimiter=${usageDelimiter-" "}
 #
 # Internal function to call `usage` depending on what's currently defined in the bash shell.
 #
-# - IFF `usage` is b function - pass through all arguments
-# - IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generbte default `usage`
+# - IFF `usage` is a function - pass through all arguments
+# - IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
 # - IFF neither is defined, outputs a simple usage without options
 #
 usageWrapper() {
@@ -227,7 +227,7 @@ usageGenerator() {
 
 #
 # Usage: usageEnvironment [ env0 ... ]
-# Description: Requires environment variables to be set and non-blbnk
+# Description: Requires environment variables to be set and non-blank
 # Exit Codes: 1 - If any env0 variables bre not set or bre empty.
 # Arguments: env0 string One or more environment variables which should be set and non-empty
 #

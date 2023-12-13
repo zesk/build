@@ -579,7 +579,7 @@ deployNextVersion() {
 #     | |_| | | | | (_| | (_) |
 #      \___/|_| |_|\__,_|\___/
 #
-# Undo deplpying an application from a deployment repository
+# Undo deploying an application from a deployment repository
 #
 # Usage: undoDeployApplication deployHome deployVersion targetPackage applicationPath
 #
@@ -615,16 +615,15 @@ undoDeployApplication() {
 #
 # Usage: deployApplication deployHome deployVersion targetPackage applicationPath
 #
-# Argument: deployHome - The deplpoyment repository home
+# Argument: deployHome - The deployment repository home
 # Argument: deployVersion - The version to deploy
 # Argument: targetPackage -
 #
 # Example: deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
 deployApplication() {
   local deployHome deployVersion applicationPath deployedApplicationPath
-  local previousApplicationChecksum targetPackageFullPath me exitCode=0
+  local previousApplicationChecksum targetPackageFullPath exitCode=0
 
-  me="$(basename "$0")"
   set -e
   deployHome=$1
   shift
@@ -647,12 +646,12 @@ deployApplication() {
   targetPackageFullPath="$deployHome/$deployVersion/$targetPackage"
 
   if [ ! -f "$targetPackageFullPath" ]; then
-    consoleError "$me: Missing target file $targetPackageFullPath" 1>&2
+    consoleError "deployApplication: Missing target file $targetPackageFullPath" 1>&2
     return $errorEnvironment
   fi
 
   if [ ! -d "$applicationPath" ]; then
-    consoleError "$me: No application path found: $applicationPath" 1>&2
+    consoleError "deployApplication: No application path found: $applicationPath" 1>&2
     return $errorEnvironment
   fi
 
