@@ -4,7 +4,7 @@
 #
 # Depends: text.sh
 # bin: test echo printf
-# Docs: contextOpen ./docs/templates/tools/colors.sh.md
+# Docs: contextOpen ./docs/_templates/tools/colors.md
 
 ###############################################################################
 #

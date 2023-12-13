@@ -8,7 +8,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eo pipefail
+set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 

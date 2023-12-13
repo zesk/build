@@ -46,7 +46,7 @@ testShellScripts() {
 validateShellScripts() {
     local failedReasons thisYear f foundFiles
     statusMessage consoleInfo "Checking all shellcheck and bash -n"
-    ./bin/build/install/apt.sh shellcheck
+    aptInstall shellcheck
     whichApt shellcheck shellcheck
 
     thisYear=$(date +%Y)
@@ -73,7 +73,7 @@ validateShellScripts() {
         consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
         return $errorEnvironment
     else
-        statusMessage consoleSuccess "All scripts passed"
+        statusMessage consoleSuccess "All scripts passed validation"
     fi
 }
 

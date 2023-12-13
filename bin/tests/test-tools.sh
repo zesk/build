@@ -14,6 +14,7 @@ testSection() {
 }
 
 testHeading() {
+  whichApt toilet toilet > /dev/null 2>&1
   printf "%s" "$(consoleCode)"
   consoleOrange "$(echoBar '*')"
   printf "%s" "$(consoleCode)$(clearLine)"

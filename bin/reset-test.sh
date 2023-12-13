@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eo pipefail
+set -eou pipefail
 
 envFile=${1:-.env.prod-robot}
 shift || :

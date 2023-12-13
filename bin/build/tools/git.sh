@@ -5,8 +5,11 @@
 # Depends: colors.sh
 # bin: git
 #
-# Docs: contextOpen ./docs/templates/tools/git.sh.md
+# Docs: contextOpen ./docs/_templates/tools/git.md
 #
+
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
 
 # IDENTICAL errorArgument 1
 errorArgument=2
@@ -127,4 +130,36 @@ gitTagAgain() {
     printf "%s %s %s" "$(consoleError "Unable to push")" "$(consoleCode "$1")" "$(consoleError "to remote")" 1>&2
     return $errorArgument
   fi
+}
+
+#
+# Fetches a list of tags from git and filters those which start with v and a digit and returns
+# them sorted by version correctly.
+#
+# Usage: gitVersionList
+# Exit Code: 1 - If the `.git` directory does not exist
+# Exit Code: 0 - Success
+#
+gitVersionList() {
+  if [ ! -d "./.git" ]; then
+    echo "No .git directory at $(pwd), stopping" 1>&2
+    return $errorEnvironment
+  fi
+
+  # versionSort works on vMMM.NNN.PPP
+  # skip any versions with extensions like v1.0.1d2
+  git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
+}
+
+
+# Get the last reported version.
+# Usage: gitVersionLast [ ignorePattern ]
+# Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
+gitVersionLast() {
+  if [ -n "$1" ]; then
+    gitVersionList "$@" | grep -v "$1" | tail -1
+  else
+    gitVersionList "$@" | tail -1
+  fi
+
 }

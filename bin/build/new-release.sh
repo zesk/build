@@ -12,16 +12,20 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+# IDENTICAL me 1
 me="$(basename "${BASH_SOURCE[0]}")"
+
+# IDENTICAL bashHeader2 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
+
 
 usage() {
   usageDocument "./bin/build/$me" newRelease "$@"
 }
-
-# shellcheck source=/dev/null
-. "./bin/build/tools.sh"
-
 defaultVersion() {
   local last prefix
 

@@ -1,25 +1,17 @@
 #!/usr/bin/env bash
 #
-# version-last.sh
+# version-last.sh - Last version
 #
 # Depends: git
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-# Get the last reported version.
-# Usage: versionLast [ ignorePattern ]
-# Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
-versionLast() {
-  local listBin
+# IDENTICAL bashHeader2 5
+set -eou pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
-  listBin="$(dirname "${BASH_SOURCE[0]}")/version-list.sh"
-  if [ -n "$1" ]; then
-    $listBin | grep -v "$1" | tail -1
-  else
-    $listBin | tail -1
-  fi
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
 
-}
-
-versionLast "$@"
+gitVersionLast "$@"

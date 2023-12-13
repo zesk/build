@@ -2,46 +2,49 @@
 #
 # Copyright &copy; 2023, Market Acumen, Inc.
 #
+
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
-errArgument=1
 
-set -euo pipefail
-# set -x # Uncomment to enable debugging
+# IDENTICAL errorArgument 1
+errorArgument=2
 
-me=$(basename "$0")
+# IDENTICAL bashHeader 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-export usageDelimiter="|"
-usageOptions() {
-    cat <<EOF
---profile awsProfile|Use this AWS profile when connecting using ~/.aws/credentials
---services service0,service1,...|List of services to add or remove (maps to ports)
---id developerId|Specify an developer id manually (uses DEVELOPER_ID from environment by default)
---ip ip|Specify bn IP manually (uses ipLookup tool from tools.sh by default)
---revoke|Remove permissions
---debug|Enable debugging. Defaults to BUILD_DEBUG environment variable.
---help|Show this help
-EOF
-}
-usageDescription() {
-    cat <<EOF
-$(consoleReset)Register current IP address in listed security groups to allow for access to deployment sytstems from a specific IP.
-Use this during deployment to grant temporary access to your systems during deployemnt only.
-Build scripts should have a $(consoleCode --revoke) step afterwards, always.
-services are looked up in /etc/services and match /tcp services only for port selection
+# IDENTICAL me 1
+me="$(basename "${BASH_SOURCE[0]}")"
 
-If no $(consoleCode /etc/services) matches the default values are supported within the script: mysql,postgres,ssh,http,https
-
-    $(consoleNameValue 40 "Required environment variables:" "AWS_REGION")
-    $(consoleNameValue 40 "Optional environment variables:" "DEVELOPER_ID AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY")
-EOF
-}
-usage() {
-    usageMain "$me" "$@"
-    exit $?
+# fn: {base}
+# Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
+# Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
+# Argument: --profile awsProfile - Use this AWS profile when connecting using ~/.aws/credentials
+# Argument: --services service0,service1,... - Required. List of services to add or remove (maps to ports)
+# Argument: --id developerId - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+# Argument: --ip ip - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+# Argument: --revoke - Flag. Remove permissions
+# Argument: --debug - Flag. Enable debugging. Defaults to BUILD_DEBUG environment variable.
+# Argument: --help - Flag. Show this help
+#
+# Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
+# Use this during deployment to grant temporary access to your systems during deployment only.
+# Build scripts should have a $(consoleCode --revoke) step afterward, always.
+# services are looked up in /etc/services and match /tcp services only for port selection
+#
+# If no `/etc/services` matches the default values are supported within the script: `mysql`,`postgres`,`ssh`,`http`,`https`
+#
+# Environment: AWS_REGION - Where to update the security group
+# Environment: DEVELOPER_ID - Developer used to register rules in Amazon
+# Environment: AWS_ACCESS_KEY_ID - Amazon IAM ID
+# Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
+#
+_awsIPAccessUsage() {
+    usageDocument "./bin/build/pipeline/$me" _awsIPAccessUsage "$@"
+    return $?
 }
 
 services=()
@@ -58,13 +61,13 @@ while [ $# -gt 0 ]; do
         ;;
     --profile)
         if [ -n "$awsProfile" ]; then
-            usage $errArgument "--profile already specified: $awsProfile"
+            _awsIPAccessUsage $errorArgument "--profile already specified: $awsProfile"
         fi
         shift
         awsProfile=$1
         ;;
     --help)
-        usage 0
+        _awsIPAccessUsage 0
         ;;
     --debug)
         debuggingFlag=1
@@ -98,21 +101,21 @@ fi
 if [ -z "$currentIP" ]; then
     currentIP=$(ipLookup)
     if [ -z "$currentIP" ]; then
-        usage $errorEnvironment "Unable to determine IP address"
+        _awsIPAccessUsage $errorEnvironment "Unable to determine IP address"
     fi
 fi
 currentIP="$currentIP/32"
 
 if [ -z "$developerId" ]; then
-    usage $errArgument "Empty --id or DEVELOPER_ID environment"
+    _awsIPAccessUsage $errorArgument "Empty --id or DEVELOPER_ID environment"
 fi
 
 if [ "${#services[@]}" -eq 0 ]; then
-    usage $errArgument "Supply one or more services"
+    _awsIPAccessUsage $errorArgument "Supply one or more services"
 fi
 awsProfile=${awsProfile:=default}
 
-./bin/build/install/aws-cli.sh
+awsInstall
 
 if needAWSEnvironment; then
     consoleInfo "Need AWS Environment: $awsProfile"
@@ -121,7 +124,7 @@ if needAWSEnvironment; then
         export AWS_SECRET_ACCESS_KEY
         eval "$(awsEnvironment "$awsProfile")"
     else
-        usage $errorEnvironment "No AWS credentials available: $awsProfile"
+        _awsIPAccessUsage $errorEnvironment "No AWS credentials available: $awsProfile"
     fi
 fi
 
@@ -249,7 +252,7 @@ echo "$(consoleLabel -n " AWS_ACCESS_KEY_ID"): $(consoleValue -n "$AWS_ACCESS_KE
 
 for s in "${services[@]}"; do
     if ! servicePortLookup "$s" >/dev/null; then
-        usage "$errArgument" "Invalid service $s provided"
+        _awsIPAccessUsage "$errorArgument" "Invalid service $s provided"
     fi
 done
 for sg_id in "$@"; do
