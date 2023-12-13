@@ -22,7 +22,7 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 # set -x # Uncomment to enable debugging
-set -eo pipefail
+set -eou pipefail
 
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."

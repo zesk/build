@@ -5,7 +5,7 @@
 
 errorArgument=2
 
-set -eo pipefail
+set -eou pipefail
 me=$(basename "${BASH_SOURCE[0]}")
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 

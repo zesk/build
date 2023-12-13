@@ -14,7 +14,7 @@
 errorEnvironment=1
 errorArgument=2
 start=$(($(date +%s) + 0))
-set -eo pipefail
+set -eou pipefail
 # set -x # Debugging
 me=$(basename "$0")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."

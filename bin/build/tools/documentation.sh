@@ -368,7 +368,7 @@ bashDocumentFunction() {
         __dumpNameValue "error" "$fn was not found" >>"$envFile"
     fi
     (
-        set -eo pipefail
+        set -eou pipefail
         chmod +x "$envFile"
         if ! "$envFile"; then
             consoleError "Failed"

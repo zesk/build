@@ -11,10 +11,12 @@ set -eou pipefail
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+# IDENTICAL bashHeader 5
+set -eou pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. "./bin/build/tools.sh"
+. ./bin/build/tools.sh
 
 #
 # Fetches a list of tags from git and filters those which start with v and a digit and returns

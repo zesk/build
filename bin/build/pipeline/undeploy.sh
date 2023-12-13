@@ -5,7 +5,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-set -eo pipefail
+set -eou pipefail
 # set -x # Debugging
 
 me=$(basename "${BASH_SOURCE[0]}")

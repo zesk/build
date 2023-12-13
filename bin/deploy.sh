@@ -7,7 +7,7 @@
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
-set -eo pipefail
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 # shellcheck source=/dev/null
