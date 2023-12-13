@@ -49,7 +49,7 @@ testHookSystem() {
 
   for f in test0.sh test1.sh noExtension; do
     path="$testDir/bin/hooks/$f"
-    printf "%s\n%s" "#!/usr/bin/env bash" "echo \"$f-$randomApp\"" >"$path"
+    printf "%s\n%s" "#!/usr/bin/env bash" "echo \"$f-\${BASH_SOURCE[0]}-$randomApp\"" >"$path"
     chmod +x "$path"
   done
   for f in nonZero.sh nonZeroNoExt; do
@@ -63,34 +63,44 @@ testHookSystem() {
   done
   for f in test1.sh test2.sh; do
     path="$testDir/bin/build/hooks/$f"
-    printf "%s\n%s" "#!/usr/bin/env bash" "echo \"$f-\${BASH_SOURCE[0]}-$randomApp\"" >"$path"
+    printf "%s\n%s" "#!/usr/bin/env bash" "echo \"$f-\${BASH_SOURCE[0]}-$randomDefault\"" >"$path"
     chmod +x "$path"
   done
 
-  assertExitCode 0 hasHook test0
-  assertExitCode 0 hasHook test1
-  assertExitCode 0 hasHook test2
-  assertExitCode 0 hasHook nonZero
-  assertExitCode 0 hasHook nonZero
-  assertExitCode 1 hasHook nonX
-  assertExitCode 1 hasHook nonZeroNoExt
-  assertExitCode 1 hasHook nonXNoExt
-  assertExitCode 1 hasHook noExtension
+  printf "%s %s\n" "$(consoleLabel "Current directory is")" "$(consoleValue "$(pwd)")"
 
-  assertNotExitCode 0 hasHook test3
+  # Allowed hooks have .sh or no .sh but must be +x
+  assertExitCode 0 hasHook test0 || return $?
+  assertExitCode 0 hasHook test1 || return $?
+  assertExitCode 0 hasHook test2 || return $?
+  assertExitCode 0 hasHook nonZero || return $?
+  assertExitCode 0 hasHook noExtension || return $?
+  assertExitCode 0 hasHook nonZeroNoExt || return $?
 
-  assertExitCode 99 runHook nonZero
-  assertExitCode 1 runHook nonX
-  assertExitCode 1 runHook nonZeroNoExt
-  assertExitCode 1 runHook nonXNoExt
-  assertExitCode 1 runHook noExtension
+  # If not -x, then ignored
+  assertExitCode 1 hasHook nonX || return $?
+  assertExitCode 1 hasHook nonXNoExt || return $?
 
-  assertOutputContains "$randomApp" runHook test0
-  assertOutputDoesNotContain "build/hooks" runHook test0
-  assertOutputContains "$randomApp" runHook test1
-  assertOutputDoesNotContain "build/hooks" runHook test1
-  assertOutputContains "$randomDefault" runHook test2
-  assertOutputContains "build/hooks" runHook test2
+  # No hook
+  assertNotExitCode 0 hasHook test3 || return $?
+
+  # Exit codes
+  assertExitCode 0 runHook test0 || return $?
+  assertExitCode 0 runHook test1 || return $?
+  assertExitCode 0 runHook noExtension || return $?
+  assertExitCode 99 runHook nonZero || return $?
+  assertExitCode 99 runHook nonZeroNoExt || return $?
+  assertExitCode 1 runHook nonX || return $?
+  assertExitCode 1 runHook nonXNoExt || return $?
+  assertExitCode 0 runHook test2 || return $?
+  assertExitCode 1 runHook test3 || return $?
+
+  assertOutputContains "$randomApp" runHook test0 || return $?
+  assertOutputDoesNotContain "build/hooks" runHook test0 || return $?
+  assertOutputContains "$randomApp" runHook test1 || return $?
+  assertOutputDoesNotContain "build/hooks" runHook test1 || return $?
+  assertOutputContains "$randomDefault" runHook test2 || return $?
+  assertOutputContains "build/hooks" runHook test2 || return $?
 }
 
 tests+=(testMakeEnvironment)

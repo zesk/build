@@ -135,8 +135,9 @@ runOptionalHook() {
 # Exit Code: 0 - If all hooks exist
 # Test: testHookSystem
 hasHook() {
+  local binary
   while [ $# -gt 0 ]; do
-    if [ ! -x "$(whichHook "$1")" ]; then
+    if ! binary=$(whichHook "$1") || [ ! -x "$binary" ]; then
       return 1
     fi
     shift
@@ -160,12 +161,12 @@ hasHook() {
 #
 # Test: testHookSystem
 whichHook() {
-  local binary=$1 paths=("./bin/hooks/" "./bin/build/hooks/") extensions=("" ".sh")
+  local binary=$1 paths=("./bin/hooks" "./bin/build/hooks") extensions=("" ".sh")
   local p e
   for p in "${paths[@]}"; do
     for e in "${extensions[@]}"; do
-      if [ -x "$p/$binary$e" ]; then
-        printf %s "$p/$binary$e"
+      if [ -x "${p%%/}/$binary$e" ]; then
+        printf %s "${p%%/}/$binary$e"
         return 0
       fi
       if [ -f "$p/$binary$e" ]; then
@@ -398,7 +399,7 @@ showEnvironment() {
     rm "$tempEnv" || :
     return "$errorEnvironment"
   fi
-  read -r -a requireEnvironment < "$tempEnv" || :
+  read -r -a requireEnvironment <"$tempEnv" || :
   rm "$tempEnv" || :
   # Will be exported to the environment file, only if defined
   while [ $# -gt 0 ]; do
