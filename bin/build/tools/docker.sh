@@ -129,5 +129,5 @@ dockerLocalContainer() {
         shift
     done
     extraArgs+=("$@")
-    docker run "${envFiles[@]}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]}"
+    docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}"
 }
