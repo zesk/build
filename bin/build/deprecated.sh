@@ -33,7 +33,7 @@ deprecatedCleanup() {
         exitCode=1
     fi
 
-    # v0.5.9
+    # v0.6.0
     bin/build/cannon.sh markdownListify markdownFormatList
     return $exitCode
 }
