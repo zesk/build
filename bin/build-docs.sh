@@ -52,17 +52,17 @@ buildBuildDocumentation() {
         return $errorEnvironment
     fi
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-        ./bin/ ./docs/templates/hooks/ ./docs/__hook.sh.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+        ./bin/ ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
         return "$errorEnvironment"
     fi
     for binaryDirectory in ops bin install pipeline; do
         if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-            ./bin/build/ ./docs/templates/$binaryDirectory/ ./docs/__binary.sh.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+            ./bin/build/ ./docs/_templates/$binaryDirectory/ ./docs/_templates/__binary.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
             return $errorEnvironment
         fi
     done
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-        ./bin/build/ ./docs/templates/tools/ ./docs/__function.sh.md ./docs/tools/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+        ./bin/build/ ./docs/_templates/tools/ ./docs/_templates/__function.md ./docs/tools/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
         return $errorEnvironment
     fi
     reportTiming "$start" "Completed in"
@@ -86,7 +86,7 @@ errorArgument=2
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 me=$(basename "$0")
 
-#shellcheck source=/dev/null
+# shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
 start=$(beginTiming)

@@ -8,4 +8,11 @@
 #
 declare -a tests
 
-tests+=(testShellScripts)
+tests+=(testWrapperShellScripts)
+testWrapperShellScripts() {
+  local quietLog
+  # shellcheck disable=SC2034
+  quietLog=$1
+  shift
+  testShellScripts "$@"
+}

@@ -673,9 +673,9 @@ listTokens() {
     sed "s/$suffix/$suffix\n/g" | sed -e "/$prefix/!d" -e "/$suffix/!d" -e "$removeQuotesPattern"
 }
 
-# Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal wihtout any extra stuff
+# Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
 #
-# You can use this as a pipe or pass in arguments which are files to be checksummed.
+# You can use this as a pipe or pass in arguments which are files to be hashed.
 #
 # Usage: shaPipe [ filename ... ]
 # Argument: filename - One or more filenames to generate a checksum for
@@ -707,13 +707,13 @@ shaPipe() {
     fi
 }
 
-# Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal wihtout any extra stuff
+# Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
 #
-# You can use this as a pipe or pass in arguments which are files to be checksummed.
+# You can use this as a pipe or pass in arguments which are files to be hashed.
 #
 # Speeds up shaPipe using modification dates of the files instead.
 #
-# The cacheDiretory
+# The cacheDirectory
 #
 # Usage: cachedShaPipe cacheDirectory [ filename ]
 # Argument: cacheDirectory - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
@@ -760,7 +760,7 @@ cachedShaPipe() {
 
 }
 
-# Maps a string using an envionment file
+# Maps a string using an environment file
 #
 # Usage: mapValue mapFile [ value ... ]
 # Argument: mapFile - a file containing bash environment definitions

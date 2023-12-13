@@ -76,7 +76,7 @@ awsInstall() {
 #
 # Get the credentials file path, optionally outputting errors
 #
-# Pass a trueish value to output warnings to stderr on failure
+# Pass a true-ish value to output warnings to stderr on failure
 #
 # Pass any value to output warnings if the environment or file is not found; otherwise
 # output the credentials file path.
@@ -145,8 +145,8 @@ isAWSKeyUpToDate() {
 #
 # Exit Code: 0 - If environment needs to be updated
 # Exit Code: 1 - If the environment seems to be set already
-# Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (enironment needs to be updated)
-# Environment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (enironment needs to be updated)
+# Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
+# Environment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)
 # Example:     if needAWSEnvironment; then
 # Example:    ...
 # Example:     fi

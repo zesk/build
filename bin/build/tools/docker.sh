@@ -4,7 +4,7 @@
 #
 # Depends: colors.sh text.sh
 # bin: head grep
-# Docs: contextOpen ./docs/templates/tools/docker.sh.md
+# Docs: contextOpen ./docs/_templates/tools/docker.md
 
 # IDENTICAL errorArgument 1
 errorArgument=2
@@ -129,5 +129,5 @@ dockerLocalContainer() {
         shift
     done
     extraArgs+=("$@")
-    docker run "${envFiles[@]}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]}"
+    docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}"
 }

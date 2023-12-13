@@ -17,7 +17,7 @@
 ## Documentation Utilities
 
 {removeUnfinishedSections}
-{markdownListify}
+{markdownFormatList}
 {__dumpNameValue}
 {__dumpAliasedValue}
 

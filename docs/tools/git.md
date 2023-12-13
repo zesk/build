@@ -3,6 +3,8 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+## git Installation
+
 
 ### `gitInstall` - Install git if needed
 
@@ -15,27 +17,6 @@ Installs the `git` binary
 #### Arguments
 
 - `package` - Additional packages to install
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `veeGitTag` - Given a tag in the form "1.1.3" convert it to
-
-Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
-Delete the old tag as well
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `gitRemoveFileFromHistory` - Has a lot of caveats
-
-Has a lot of caveats
-
-gitRemoveFileFromHistory path/to/file
-
-usually have to `git push --force`
 
 #### Exit codes
 
@@ -61,6 +42,9 @@ This adds the directory passed to that directory in the local user's environment
 - `0` - Success
 - `2` - Argument is not a valid directory
 - `Other` - git config error codes
+
+## git Tags
+
 
 ### `gitTagDelete` - Delete git tag locally and at origin
 
@@ -93,6 +77,60 @@ Remove a tag everywhere and tag again on the current branch
 #### Exit codes
 
 - `2` - Any stage fails will result in this exit code. Partial deletion may occur.
+
+### `gitVersionList` - Fetches a list of tags from git and filters those
+
+Fetches a list of tags from git and filters those which start with v and a digit and returns
+them sorted by version correctly.
+
+#### Usage
+
+    gitVersionList
+
+#### Exit codes
+
+- `1` - If the `.git` directory does not exist
+- `0` - Success
+
+### `gitVersionLast` - Get the last reported version.
+
+Get the last reported version.
+
+#### Usage
+
+    gitVersionLast [ ignorePattern ]
+
+#### Arguments
+
+- `ignorePattern` - Optional. Specify a grep pattern to ignore; allows you to ignore current version
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `veeGitTag` - Given a tag in the form "1.1.3" convert it to
+
+Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
+Delete the old tag as well
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+## git History
+
+
+### `gitRemoveFileFromHistory` - Has a lot of caveats
+
+Has a lot of caveats
+
+gitRemoveFileFromHistory path/to/file
+
+usually have to `git push --force`
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

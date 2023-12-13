@@ -6,6 +6,7 @@
 #
 # Depends: colors.sh os.sh apt.sh
 # bin: npm
+# Binary paths are at bin/build/install
 #
 
 # IDENTICAL errorEnvironment 1
@@ -16,14 +17,14 @@ errorEnvironment=1
 # If this fails it will output the installation log.
 #
 # Usage: mariadbInstall [ package ]
-# Usage: bin/build/install/mariadb-client.sh [ package ... ]
+# Usage: {fn} [ package ... ]
 # Argument: package - Additional packages to install
 # Summary: Install `mariadb`
 # When this tool succeeds the `mariadb` binary is available in the local operating system.
 # Environment: - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
-# Binary: bin/build/install/mariadb-client.sh
+# Binary: mariadb-client.sh
 #
 mariadbInstall() {
     whichApt mariadb mariadb-client "$@"
@@ -34,13 +35,12 @@ mariadbInstall() {
 # If this fails it will output the installation log.
 #
 # Usage: pythonInstall [ package ]
-# Usage: bin/build/install/python.sh [ package ... ]
 # Argument: package - Additional packages to install
 # Summary: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
-# Binary: bin/build/install/python.sh
+# Binary: python.sh
 #
 pythonInstall() {
     whichApt python python-is-python3 python3 python3-pip "$@"
@@ -51,13 +51,12 @@ pythonInstall() {
 # If this fails it will output the installation log.
 #
 # Usage: phpInstall [ package ... ]
-# Usage: bin/build/install/php-cli.sh [ package ... ]
 # Argument: package - Additional packages to install
 # Summary: Install `php`
 # When this tool succeeds the `python` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
-# Binary: bin/build/install/php.sh
+# Binary: php.sh
 #
 phpInstall() {
     whichApt php php-cli "$@"
@@ -68,13 +67,12 @@ phpInstall() {
 # If this fails it will output the installation log.
 #
 # Usage: dockerComposeInstall [ package ... ]
-# Usage: bin/build/install/docker-compose.sh [ package ... ]
 # Argument: package - Additional packages to install (using apt)
 # Summary: Install `docker-compose`
 # When this tool succeeds the `docker-compose` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
-# Binary: bin/build/install/docker-compose.sh
+# Binary: docker-compose.sh
 #
 dockerComposeInstall() {
     local quietLog

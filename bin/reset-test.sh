@@ -4,14 +4,14 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eo pipefail
+set -eou pipefail
 
 envFile=${1:-.env.prod-robot}
 shift || :
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-#shellcheck source=/dev/null
+# shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
 if [ ! -f "$envFile" ]; then
@@ -19,7 +19,7 @@ if [ ! -f "$envFile" ]; then
     exit 1
 fi
 set -a
-#shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$envFile"
 
 bin/test.sh --clean "$@"

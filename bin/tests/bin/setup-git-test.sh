@@ -8,14 +8,14 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eo pipefail
+set -eou pipefail
 
 section=0
 
 buildHome=$1
 shift
 
-#shellcheck source=/dev/null
+# shellcheck source=/dev/null
 . "$buildHome/bin/build/tools.sh"
 
 testDir=$(mktemp -d)

@@ -18,7 +18,7 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
-set -eo pipefail
+set -eou pipefail
 
 #
 # Do not depend on anything in build
@@ -33,7 +33,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 crontabApplicationSyncOptions() {
   echo "--env environment    Apply this environment file first before application environment files"
-  echo "--user user          The crontab user to look for files for as well as to apply crontab for (defaults to whoami)"
+  echo "--user user          The crontab user to look for files for as well as to apply crontab for (defaults to current user)"
   echo "--show               Display new crontab, do not install it"
   echo "--mapper envMapper   Use this binary to map the environment files (usually map.sh)"
 }
@@ -66,6 +66,7 @@ usage() {
   exit "$rs"
 }
 
+rootEnv=
 appPath=
 user=$(whoami)
 flagShow=
@@ -153,12 +154,12 @@ fi
 # Usage: crontabGenerate rootEnv rootPath user mapper
 # fn: crontab-application-sync.sh
 # Argument: --env environment - Top-level environment file to pass variables into the user `crontab` template
-# Argument: --show - Show the crontab instaed of installing it
-# Argument: --user user - Scan for crontab files in the form $(user.crontab) and then install as this user. If not specified, uses $(whoami).
-# Argument: --mapper envMapper - The binary use to map environment values to the file (see (../bin/map.sh.md)[./map.sh.md])
+# Argument: --show - Show the crontab instead of installing it
+# Argument: --user user - Scan for crontab files in the form $(user.crontab) and then install as this user. If not specified, uses current user name.
+# Argument: --mapper envMapper - The binary use to map environment values to the file (see (../bin/map.md)[./map.md])
 # Example:     crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data --mapper /usr/local/bin/map.sh /var/www/applications
 # Example:     crontabGenerate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
-#
+# See: whoami
 crontabGenerate() {
   local crontabTemplate rootEnv rootPath user appName mapper
 

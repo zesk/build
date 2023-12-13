@@ -3,14 +3,17 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
-errArguments=2
+# IDENTICAL errorArgument 1
+errorArgument=2
 
-set -eo pipefail
-me=$(basename "${BASH_SOURCE[0]}")
+# IDENTICAL bashHeader2 5
+set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+me=$(basename "${BASH_SOURCE[0]}")
 
 usageOptions() {
 	cat <<EOF
@@ -32,7 +35,7 @@ EOF
 }
 usage() {
 	usageMain "$me" "$@"
-	exit $?
+	return $?
 }
 
 #
@@ -53,15 +56,21 @@ usage() {
 cannon() {
 	local search searchQuoted replaceQuoted
 
-	search=$1
+	if [ -z "${1-}" ]; then
+		usage "$errorArgument" "Empty search string"
+		return $?
+	fi
+	search=${1-}
 	searchQuoted=$(quoteSedPattern "$search")
+	shift || usage "$errorArgument" "Missing replacement argument"
+	if [ -z "${1-}" ]; then
+		usage "$errorArgument" "Empty replacement string"
+		return $?
+	fi
+	replaceQuoted=$(quoteSedPattern "${1-}")
 	shift
-
-	replaceQuoted=$(quoteSedPattern "$1")
-	shift
-
 	if [ "$searchQuoted" = "$replaceQuoted" ]; then
-		usage $errArguments "from to \"$search\" are identical"
+		usage "$errorArgument" "from to \"$search\" are identical"
 	fi
 
 	cannonLog=$(mktemp)

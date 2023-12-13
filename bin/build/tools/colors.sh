@@ -4,7 +4,7 @@
 #
 # Depends: text.sh
 # bin: test echo printf
-# Docs: contextOpen ./docs/templates/tools/colors.sh.md
+# Docs: contextOpen ./docs/_templates/tools/colors.md
 
 ###############################################################################
 #
@@ -395,7 +395,7 @@ consoleColumns() {
 #
 simpleMarkdownToConsole() {
     # shellcheck disable=SC2119
-    _toggleCharacterToColor '`' "$(consoleCode)" | toggleCharacterToColor '**' "$(consoleRed)" | toggleCharacterToColor '*' "$(consoleCyan)"
+    _toggleCharacterToColor '`' "$(consoleCode)" | _toggleCharacterToColor '**' "$(consoleRed)" | _toggleCharacterToColor '*' "$(consoleCyan)"
 }
 
 #

@@ -19,7 +19,7 @@ errorArgument=2
 
 # Usage: usageDocument functionDefinitionFile functionName exitCode [ ... ]
 # Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
-# Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regarldess.
+# Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 #
 # Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
 #
@@ -125,7 +125,7 @@ documentFunctionsWithTemplate() {
         return "$errorArgument"
     fi
     if [ ! -d "$(dirname "$targetFile")" ]; then
-        consoleError "$targetFile diretory does not exist" 1>&2
+        consoleError "$targetFile directory does not exist" 1>&2
         return "$errorArgument"
     fi
     shaCache=""
@@ -248,11 +248,11 @@ documentFunctionsWithTemplate() {
     statusMessage consoleSuccess "$(reportTiming "$start" Generated "$targetFile" in)"
 }
 
-# Usage: documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDiretory [ cacheDirectory ]
+# Usage: documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDirectory [ cacheDirectory ]
 # Argument: sourceCodeDirectory - Required. The directory where the source code lives
 # Argument: documentDirectory - Required. Directory containing documentation templates
 # Argument: templateFile - Required. Function template file to generate documentation for functions
-# Argument: targetDiretory - Required. Directory to create generated documentation
+# Argument: targetDirectory - Required. Directory to create generated documentation
 # Argument: cacheDirectory - Optional. If supplied, cache to reduce work when files remain unchanged.
 # Summary: Convert a directory of templates into documentation for Bash functions
 # Convert a directory of templates for bash functions into full-fledged documentation.
@@ -333,7 +333,7 @@ documentFunctionTemplateDirectory() {
         fi
     done
     clearLine
-    reportTiming "$start" "Completed gemeration of $(consoleInfo "$templateDirectory") in"
+    reportTiming "$start" "Completed generation of $(consoleInfo "$templateDirectory") in"
     return $exitCode
 }
 
@@ -348,7 +348,7 @@ documentFunctionTemplateDirectory() {
 # Usage: bashDocumentFunction file function template
 # Argument: file - Required. File in which the function is defined
 # Argument: function - Required. The function name which is defined in `file`
-# Argument: template - Required. A markdown template to use to map values. Postprocessed with `removeUnfinishedSections`
+# Argument: template - Required. A markdown template to use to map values. Post-processed with `removeUnfinishedSections`
 # Exit code: 0 - Success
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
@@ -368,7 +368,7 @@ bashDocumentFunction() {
         __dumpNameValue "error" "$fn was not found" >>"$envFile"
     fi
     (
-        set -eo pipefail
+        set -eou pipefail
         chmod +x "$envFile"
         if ! "$envFile"; then
             consoleError "Failed"
@@ -567,7 +567,7 @@ bashExtractDocumentation() {
 # Note this function succeeds if it finds all occurrences of each function, but
 # may output partial results with a failure.
 #
-# Usage: bashFindFunctionFiles dirctory fnName0 [ fnName1... ]
+# Usage: bashFindFunctionFiles directory fnName0 [ fnName1... ]
 # Argument: `directory` - The directory to search
 # Argument: `fnName0` - A function to find the file in which it is defined
 # Argument: `fnName1...` - Additional functions are found are output as well
@@ -606,7 +606,7 @@ bashFindFunctionFiles() {
 #
 # Succeeds IFF only one version of a function is found.
 #
-# Usage: bashFindFunctionFile dirctory fn
+# Usage: bashFindFunctionFile directory fn
 # Argument: `directory` - The directory to search
 # Argument: `fn` - A function to find the file in which it is defined
 # Exit Code: 0 - if one or more function definitions are found
@@ -689,7 +689,7 @@ removeUnfinishedSections() {
 # 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
 # 3. Prefix each line with a "dash space" (`- `)
 #
-markdownListify() {
+markdownFormatList() {
     local wordClass='[-.`_A-Za-z0-9[:space:]]' spaceClass='[[:space:]]'
     # shellcheck disable=SC2016
     sed \
@@ -700,10 +700,10 @@ markdownListify() {
 }
 
 #
-# Format code blocks (does markdownListify)
+# Format code blocks (does markdownFormatList)
 #
 _bashDocumentFunction_exit_codeFormat() {
-    markdownListify
+    markdownFormatList
 }
 
 #
@@ -717,17 +717,17 @@ _bashDocumentFunction_usageFormat() {
 # # Format example blocks (indents as a code block)
 # #
 # _bashDocumentFunction_exampleFormat() {
-#     markdownListify
+#     markdownFormatList
 # }
 _bashDocumentFunction_outputFormat() {
     prefixLines "    "
 }
 
 #
-# Format argument blocks (does markdownListify)
+# Format argument blocks (does markdownFormatList)
 #
 _bashDocumentFunction_argumentFormat() {
-    markdownListify
+    markdownFormatList
 }
 
 #

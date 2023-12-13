@@ -1,5 +1,5 @@
 
-# `versionList` - Fetches a list of tags from git and filters those
+# `gitVersionList` - Fetches a list of tags from git and filters those
 
 [⬅ Return to top](index.md)
 
@@ -8,7 +8,7 @@ them sorted by version correctly.
 
 ## Usage
 
-    versionList
+    gitVersionList
 
 ## Exit codes
 

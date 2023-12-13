@@ -5,7 +5,7 @@
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: nothing
-# Docs: contextOpen ./docs/templates/tools/vendor.sh.md
+# Docs: contextOpen ./docs/_templates/tools/vendor.md
 
 #
 # Are we within the JetBrains PHPStorm terminal?
@@ -15,9 +15,21 @@
 # Exit Code: 1 - not within the PhpStorm terminal AFAIK
 # See: contextOpen
 isPHPStorm() {
-	[ "${XPC_SERVICE_NAME%%PhpStorm*}" != "${XPC_SERVICE_NAME-}" ]
+  local xpc="${XPC_SERVICE_NAME-}"
+  [ "${xpc%%PhpStorm*}" != "${xpc}" ]
 }
 
+#
+# Are we within the JetBrains PyCharm terminal?
+#
+# Usage: isPyCharm
+# Exit Code: 0 - within the PyCharm terminal
+# Exit Code: 1 - not within the PyCharm terminal AFAIK
+# See: contextOpen
+isPyCharm() {
+  local xpc="${XPC_SERVICE_NAME-}"
+  [ "${xpc%%pycharm*}" != "${xpc}" ]
+}
 #
 # Are we within the Microsoft Visual Studio Code terminal?
 #
@@ -27,5 +39,26 @@ isPHPStorm() {
 # See: contextOpen
 #
 isVisualStudioCode() {
-	[ "${VSCODE_SHELL_INTEGRATION-}" = "1" ]
+  [ "${VSCODE_SHELL_INTEGRATION-}" = "1" ]
+}
+
+#
+# Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
+#
+# Environment: EDITOR - Used as a default editor (first)
+# Environment: VISUAL - Used as another default editor (last)
+#
+contextOpen() {
+  # should maybe make this extensible
+  if isPHPStorm; then
+    phpstorm "$@"
+  elif isPyCharm; then
+    pycharm "$@"
+  elif isVisualStudioCode; then
+    code "$@"
+  elif [ -n "${EDITOR-}" ]; then
+    $EDITOR "$@"
+  elif [ -n "${VISUAL-}" ]; then
+    $VISUAL "$@"
+  fi
 }

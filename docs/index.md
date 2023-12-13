@@ -25,7 +25,10 @@ To use in your pipeline:
 - `./bin/build/install/*.sh` - Install dependencies in the pipeline - most of these exist as functions
 - `./bin/hooks/*.sh` - [Build Hooks](./hooks/index.md) - Hooks are a way to customize default behaviors in build scripts.
 
+## Guides
+
+- [Usage formatting](./guide/usage.md)
+
 ## Reference
 
 - [Environment variables which affect build](env.md)
-
