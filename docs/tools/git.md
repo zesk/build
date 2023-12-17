@@ -132,5 +132,53 @@ usually have to `git push --force`
 
 - `0` - Always succeeds
 
+## git Working Tree State
+
+
+### `gitRepositoryChanged` - Has a git repository been changed from HEAD?
+
+Has a git repository been changed from HEAD?
+
+#### Exit codes
+
+- `0` - the repo has been modified
+- `1` - the repo has NOT bee modified
+
+### `gitShowChanges` - Show changed files from HEAD
+
+Show changed files from HEAD
+
+#### Usage
+
+    gitShowChanges
+
+#### Exit codes
+
+- `0` - the repo has been modified
+- `1` - the repo has NOT bee modified
+
+### `gitShowStatus` - Show changed files from HEAD with their status prefix character:
+
+Show changed files from HEAD with their status prefix character:
+
+- ' ' = unmodified
+- `M` = modified
+- `A` = added
+- `D` = deleted
+- `R` = renamed
+- `C` = copied
+- `U` = updated but unmerged
+
+(See `man git` for more details on status flags)
+
+#### Usage
+
+    gitShowStatus
+
+#### Exit codes
+
+- `0` - the repo has been modified
+- `1` - the repo has NOT bee modified
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

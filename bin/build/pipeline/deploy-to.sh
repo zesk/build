@@ -235,7 +235,7 @@ undoAction() {
       rs=$errorEnvironment
       continue
     fi
-    echo -n "$(consoleInfo -n "Reverting application at") $(consoleRed -n "$remotePath")"
+    printf "%s %s" "$(consoleInfo "Reverting application at")" "$(consoleRed "$remotePath")"
     generateCommandsFile "cd \"$remotePath\"" >"$temporaryCommandsFile"
     ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
     reportTiming "$start" "Done."
@@ -284,13 +284,13 @@ sshishDeployOptions() {
   if buildDebugEnabled; then
     if [ "$BUILD_DEBUG" -ge 3 ]; then
       # Triple verbosity
-      echo -n "-vvv"
+      printf %s "-vvv"
     else
-      echo -n "-v"
+      printf %s "-v"
     fi
   else
     # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
-    echo -n "-q"
+    printf %s "-q"
   fi
 
 }
@@ -355,23 +355,20 @@ deployAction() {
   #  :::::::::::|_|::::::::::::|___/
   #
   bigText Deploy
-  echo
+  printf "\n"
   showInfo
-  echo
+  printf "\n"
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
-    echo -n "$(consoleInfo -n "Uploading build environment to") $(consoleGreen -n "$userHost")$(consoleInfo -n ":")$(consoleRed -n "$remoteDeploymentPath") "
-    {
-      echo "[ -d \"$remotePath\" ] || mkdir -p \"$remotePath && echo Created $remotePath\""
-      echo "[ -d \"$remoteDeploymentPath\" ] || mkdir -p \"$remoteDeploymentPath\""
-      echo "cd $remoteDeploymentPath"
-      echo "[ -d \"$applicationChecksum/app\" ] || mkdir -p \"$applicationChecksum/app\""
-    } | ssh "$(sshishDeployOptions)" -T "$userHost" bash --noprofile -s -e
-    {
-      echo "@put $buildTarget $applicationChecksum/$buildTarget"
-    } | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
-    reportTiming "$start" "Done."
+    printf "%s: %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Setting up")"
+    for makeDirectory in "$remotePath" "$remoteDeploymentPath" "$remoteDeploymentPath/$applicationChecksum/app"; do
+      printf '[ -d "%s" ] || || mkdir -p "%s" && echo "Created %s"\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
+    done | ssh "$(sshishDeployOptions)" -T "$userHost" bash --noprofile -s -e
+    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remoteDeploymentPath/$applicationChecksum/$buildTarget")"
+    printf '@put %s %s' "$buildTarget" "$applicationChecksum/$buildTarget" | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
+    reportTiming "$start" "Completed $(consoleGreen "$userHost")"
   done
+
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"

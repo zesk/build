@@ -15,7 +15,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
 if ! diff -q "${fromTo[@]}" >/dev/null; then
-    echo -n "Git pre-commit hook was updated ..."
+    printf %s "Git pre-commit hook was updated ..."
     cp "${fromTo[@]}"
     exec .git/hooks/pre-commit "$@"
 fi

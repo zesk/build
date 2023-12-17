@@ -137,7 +137,7 @@ repeat() {
 
     shift
     while [ $count -gt 0 ]; do
-        echo -n "$*"
+        printf %s "$*"
         count=$((count - 1))
     done
 }
@@ -447,7 +447,7 @@ plural() {
 
 dateToFormat() {
     if [ $# -eq 0 ]; then
-      return 2
+        return 2
     fi
     if date --version 2>/dev/null 1>&2; then
         date -u --date="$1 00:00:00" "+$2" 2>/dev/null
@@ -537,7 +537,7 @@ todayDate() {
 alignRight() {
     local n=$(($1 + 0))
     shift
-    echo -n "$(printf "%${n}s" "$*")"
+    printf "%${n}s" "$*"
 }
 
 #
@@ -815,7 +815,6 @@ stringOffset() {
     printf %d "$offset"
 }
 
-
 #
 # For security one should update keys every N days
 #
@@ -878,7 +877,7 @@ isUpToDate() {
         bigText "$daysAgo  $(plural $daysAgo day days)" | prefixLines "$(consoleError)"
     fi
     if [ $daysAgo -lt 30 ]; then
-      expireDate=$(dateToFormat)
+        expireDate=$(dateToFormat)
         consoleWarning "Expires on $expireDate, in $daysAgo $(plural $daysAgo day days)"
         return 0
     fi

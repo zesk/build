@@ -382,7 +382,7 @@ statusMessage() {
 #
 consoleColumns() {
     if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
-        echo -n 80
+        printf %d 80
     else
         tput cols
     fi

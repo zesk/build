@@ -20,5 +20,11 @@
 
 {gitRemoveFileFromHistory}
 
+## git Working Tree State
+
+{gitRepositoryChanged}
+{gitShowChanges}
+{gitShowStatus}
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

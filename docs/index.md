@@ -4,13 +4,11 @@ Pipeline and build-related tools which are useful across a variety of projects.
 
 This toolkit makes the following assumptions:
 
-- You are using this with another project to help with your pipeline and build steps.
+- You are using in another project to help with your development, pipeline, build, or operations.
 - Binaries from this project installed at `./bin/build/`
 - Your project: Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
-- A hook exists in your project `./bin/hooks/version-current.sh`
-- Optionally a binary exists in your project `./bin/hooks/version-live.sh` (for `bin/build/new-release.sh` - will create a new version each time without it)
-- Most build operations occur at the project root directory but most can be run anywhere by supplying a parameter if needed (`composer.sh` specifically)
-- A `.build` directory may be created to store cache files
+- Extensions to the build system are installed in a directory `./bin/hooks/`
+- A `.build` directory may be created (at `$HOME`, or at the project root) to store cache files
 
 To use in your pipeline:
 
@@ -25,10 +23,15 @@ To use in your pipeline:
 - `./bin/build/install/*.sh` - Install dependencies in the pipeline - most of these exist as functions
 - `./bin/hooks/*.sh` - [Build Hooks](./hooks/index.md) - Hooks are a way to customize default behaviors in build scripts.
 
-## Guides
+## Zesk Build Guides
 
 - [Usage formatting](./guide/usage.md)
 
-## Reference
+## Zesk Build Reference
 
 - [Environment variables which affect build](env.md)
+- [Deprecated functionality](./deprecated.md)
+
+## Copyright
+
+Copyright &copy; 2023 Market Acumen, Inc. All Rights Reserved. License is [MIT License](../LICENSE.md).
