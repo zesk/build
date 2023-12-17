@@ -4,9 +4,9 @@
 [⬅ Return to top](../index.md)
 
 
-### `isPHPStorm` - Are we within the JetBrains PHPStorm application?
+### `isPHPStorm` - Are we within the JetBrains PHPStorm terminal?
 
-Are we within the JetBrains PHPStorm application?
+Are we within the JetBrains PHPStorm terminal?
 
 #### Usage
 
@@ -17,7 +17,14 @@ Are we within the JetBrains PHPStorm application?
 - `0` - within the PhpStorm terminal
 - `1` - not within the PhpStorm terminal AFAIK
 
-### `isVisualStudioCode` - Are we within the Microsoft Visual Studio Code terminal?
+#### See Also
+
+contextOpen
+
+### `isVisualStudioCode` - Are we within the JetBrains PyCharm terminal?
+
+Are we within the JetBrains PyCharm terminal?
+
 
 Are we within the Microsoft Visual Studio Code terminal?
 
@@ -29,6 +36,10 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 - `0` - within the Visual Studio Code terminal
 - `1` - not within the Visual Studio Code terminal AFAIK
+
+#### See Also
+
+contextOpen
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -290,7 +290,7 @@ Deploy an application from a deployment repository
 
 #### Arguments
 
-- `deployHome` - The deplpoyment repository home
+- `deployHome` - The deployment repository home
 - `deployVersion` - The version to deploy
 - targetPackage -
 
@@ -310,7 +310,7 @@ _   _           _
     | |_| | | | | (_| | (_) |
      ___/|_| |_|__,_|___/
 
-Undo deplpying an application from a deployment repository
+Undo deploying an application from a deployment repository
 
 #### Usage
 

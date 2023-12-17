@@ -30,7 +30,7 @@ printf "%s" "{}" | jq --arg version "$(runHook version-current)" \
     '. + {version: $version, tag: $tag, checksum: $checksum}' >"$buildMarker"
 git add "$buildMarker"
 
-env >.update-md.env
+env | sort >.update-md.env
 if ! git diff-index --quiet HEAD; then
     statusMessage consoleInfo "Committing build.json"
     if [ ! -f ".$me" ]; then

@@ -9,7 +9,7 @@ When this tool succeeds the `npm` binary is available in the local operating sys
 
 ## Usage
 
-    bin/build/install/npm.sh
+    npmInstall npmVersion
 
 ## Exit codes
 

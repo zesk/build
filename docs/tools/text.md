@@ -521,9 +521,9 @@ boxedHeading Moving ...
 
 ### `shaPipe` - SHA1 checksum of standard input
 
-Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal wihtout any extra stuff
+Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
 
-You can use this as a pipe or pass in arguments which are files to be checksummed.
+You can use this as a pipe or pass in arguments which are files to be hashed.
 
 #### Usage
 

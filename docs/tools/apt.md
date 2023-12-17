@@ -43,7 +43,7 @@ Confirms that `binary` is installed after installation succeeds.
 
 #### Examples
 
-    whichApt shellcheck shellcheck
+whichApt shellcheck shellcheck
     whichApt mariadb mariadb-client
 
 #### Exit codes

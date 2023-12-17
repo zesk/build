@@ -44,9 +44,14 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
-- `expected` - Expected string
-- `actual` - Actual string
-- `message` - Message to output if the assertion fails
+- `expected` - Required. Expected string.
+- `actual` - Required. Actual string.
+- `message` - Message to output if the assertion fails. Optional.
+
+#### Examples
+
+assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
+    Single quote break-s
 
 #### Exit codes
 

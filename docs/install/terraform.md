@@ -7,11 +7,11 @@ Install terraform binary
 
 ## Usage
 
-    terraformInstall [ pacakge ... ]
+    terraformInstall [ package ... ]
 
 ## Arguments
 
-- `package` - Additional packages to install using apt
+- `package` - Additional packages to install using `apt`
 
 ## Exit codes
 

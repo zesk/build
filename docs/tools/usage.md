@@ -20,8 +20,8 @@ Description: Base case for usage, write your usage function as follows:
 
 Internal function to call `usage` depending on what's currently defined in the bash shell.
 
-- IFF `usage` is b function - pass through all arguments
-- IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generbte default `usage`
+- IFF `usage` is a function - pass through all arguments
+- IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
 - IFF neither is defined, outputs a simple usage without options
 
 #### Usage
@@ -36,19 +36,19 @@ Internal function to call `usage` depending on what's currently defined in the b
 
 Description:
 
- usageOptions() {
-      cat <<EOF
- --help$ This help
- EOF
- }
- usageDescription() {
-      cat <<EOF
- What I like to do when I run.
- EOF
- }
- usage() {
-    usageMain "$me" "$@"
- }
+      usageOptions() {
+           cat <<EOF
+      --help$ This help
+      EOF
+      }
+      usageDescription() {
+           cat <<EOF
+      What I like to do when I run.
+      EOF
+      }
+      usage() {
+         usageMain "$me" "$@"
+      }
 
 - IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
 - IFF neither is defined, outputs a simple usage without options.
@@ -96,9 +96,9 @@ use with maximumFieldLength 1 to generate widths
 
 - `0` - Always succeeds
 
-### `usageEnvironment` - Requires environment variables to be set and non-blbnk
+### `usageEnvironment` - Requires environment variables to be set and non-blank
 
-Requires environment variables to be set and non-blbnk
+Requires environment variables to be set and non-blank
 
 #### Usage
 

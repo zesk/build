@@ -166,7 +166,7 @@ gitRemoveFileFromHistory() {
 }
 
 #
-# Usage: {fn}
+# Usage: {f
 # Exit Code: 0 - the repo has been modified
 # Exit Code: 1 - the repo has NOT bee modified
 #
@@ -213,4 +213,13 @@ gitShowChanges() {
 #
 gitShowStatus() {
   git diff-index --name-status "$@" HEAD
+}
+
+#
+# Usage: {fn}
+# Exit Code: 0 - We are inside a git hook
+# Exit Code: 1 - We are NOT inside a git hook
+#
+insideGitHook() {
+  [ -n "${GIT_REFLOG_ACTION-}" ]
 }
