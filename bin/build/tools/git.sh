@@ -216,10 +216,39 @@ gitShowStatus() {
 }
 
 #
-# Usage: {fn}
-# Exit Code: 0 - We are inside a git hook
-# Exit Code: 1 - We are NOT inside a git hook
+# Are we currently inside a git hook?
 #
-insideGitHook() {
-  [ -n "${GIT_REFLOG_ACTION-}" ]
+# Tests non-blank strings in our environment.
+#
+# Environment: GIT_EXEC_PATH - Must be set to pass
+# Environment: GIT_INDEX_FILE - Must be set to pass
+# Usage: {fn}
+# Exit Code: 0 - We are, semantically, inside a git hook
+# Exit Code: 1 - We are NOT, semantically, inside a git hook
+#
+gitInsideHook() {
+  [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
 }
+
+# bin/build/local-container.sh
+#
+# GIT_AUTHOR_DATE=@1702851863 +0000
+# GIT_AUTHOR_EMAIL=kent@marketacumen.com
+# GIT_AUTHOR_NAME=root
+# GIT_EDITOR=:
+# GIT_EXEC_PATH=/usr/lib/git-core
+# GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
+# GIT_PREFIX=
+
+#
+# HomeBrew
+#
+# GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+# GIT_AUTHOR_DATE=@1702851303 -0500
+# GIT_AUTHOR_EMAIL=kent@marketacumen.com
+# GIT_AUTHOR_NAME=Kent Davidson
+# GIT_EDITOR=:
+# GIT_EXEC_PATH=/usr/local/Cellar/git/2.28.0/libexec/git-core
+# GIT_INDEX_FILE=/Users/kent/marketacumen/build/.git/index.lock
+# GIT_PREFIX=
+# GIT_REFLOG_ACTION=pull
