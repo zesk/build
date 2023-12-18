@@ -5,7 +5,7 @@
 #
 # Test run:
 #
-# bin/local-container.sh
+# bin/build/local-container.sh .env.PRODUCTION
 # inside: bin/reset-test.sh
 #
 image: atlassian/default-image:4
@@ -19,7 +19,7 @@ pipelines:
           services:
             - docker
           script:
-            - env
+            - bin/build.sh
             - bin/test.sh
     main:
       - step:
@@ -28,5 +28,6 @@ pipelines:
           services:
             - docker
           script:
+            - bin/build.sh
             - bin/test.sh
             - bin/deploy.sh

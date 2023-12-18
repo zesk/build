@@ -12,7 +12,6 @@ When this tool succeeds the `python` binary is available in the local operating 
 ## Usage
 
     phpInstall [ package ... ]
-    bin/build/install/php-cli.sh [ package ... ]
 
 ## Arguments
 

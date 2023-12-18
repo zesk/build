@@ -21,27 +21,27 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-- copy `bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually
+- copy `bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually (this line is the only thing that survives updates)
 - run it before you need this code (installed at `bin/build`)
 
 ## Project structure
 
-- `bin/build/tools.sh` - Main include file
-- `bin/build/tools/*.sh` - Build tools
+- `bin/build/tools.sh` - Main include file - source this in your scripts to get all benefits
+- `bin/build/tools/*.sh` - Build tools implementations
 - `bin/build/pipeline/*.sh` - Tools or steps for deployment
-- `bin/build/install/*.sh` - Install dependencies in the pipeline
+- `bin/build/install/*.sh` - Install dependencies in the pipeline (most of these exist as functions)
 
 ## Tools
 
 - `tools.sh` - The only include required for all build tools functions
 - `chmod-sh.sh` - Make `.sh` files executable (function `makeShellFilesExecutable`)
-- `cannon.sh` - Replace text in all files specified
+- `cannon.sh` - Replace text in all files specified (DANGER)
 - `deprecated.sh` - Replace or warn about deprecated build code
 - `map.sh` - Replace environment tokens in a text file with values from the environment
 - `new-release.sh` - Make a new release version
 - `version-last.sh` - The last version tagged (function `gitVersionLast`)
 - `version-list.sh` - List all version tags ordered by `versionSort` (function `gitVersionList`)
-- `identical-check.sh` - Handy tool to ensure code matches in different places
+- `identical-check.sh` - Quality tool to ensure code matches in different places
 - `release-notes.sh` - Outputs file name of current release notes (Try `open $(bin/build/release-notes.sh)`)
 - `install-bin-build.sh` - Copy this into your project, rename it if you want, modify `relTop` and then use it to install this anywhere.
 
@@ -85,18 +85,13 @@ Template header for most scripts:
     fi
     reportTiming "$start" Done
 
-## Artifacts
+## Artifacts: Build Directory and `.deploy`
 
 A `./.build` directory is created at your `$HOME` directory, or the project root (if `$HOME` is not set) where log files are generated.
 
-You can preserve this post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
+You can preserve the build directory post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
 
 A `./.deploy` directory is created for the `php-build.sh` steps and contains metadata about the deployment.
-
-## Deprecated
-
-- `envmap.sh` - Previous name for `map.sh`. Deprecated 2023.
-- `build-setup.sh` - Previous version of `install-bin-build.sh`. Deprecated 2023.
 
 ## Copyright &copy; 2023 Market Acumen, Inc
 

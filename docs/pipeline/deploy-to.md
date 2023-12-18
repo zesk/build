@@ -1,5 +1,5 @@
 
-# `deploy-to.sh` - Deploy current application to host at remotePath.
+# `deploy-to.sh` - Deploy current application to host at remotePath
 
 [⬅ Return to top](index.md)
 
@@ -40,14 +40,16 @@ Operation:
 
 ## Arguments
 
-- `--deploy` - Default. deploy an application to a remote host
-- `--undo` - Reverses a deployment
-- `--cleanup` - After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
-- `--help` - Show help
-- `applicationChecksum` - The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
-- `remoteDeploymentPath` - Remote path where we can store deployment state files.
-- `remotePath` - Path where the application will be deployed
-- user1@- `host1` - A list of space-separated values or arguments which match users at remote hosts
+--target target$- `` - Optional. String. Build target file, defaults to `app.tar.gz`
+- `--deploy` - Default. Flag. deploy an application to a remote host
+- `--undo` - Optional. Flag. Reverses a deployment
+- `--cleanup` - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
+- `--help` - Optional. Flag. Show help
+- `--debug` - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
+- `applicationChecksum` - Required. String. The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
+- `remoteDeploymentPath` - Required. Path. Remote path where we can store deployment state files.
+- `remotePath` - Required. Path. Path where the application will be deployed
+- user1@- `host1` - Required. Strings. A list of space-separated values or arguments which match users at remote hosts
 
 ## Exit codes
 

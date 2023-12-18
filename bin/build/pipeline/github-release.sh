@@ -79,29 +79,29 @@ githubRelease() {
   repoName="${GITHUB_REPOSITORY_NAME-}"
   while [ $# -gt 0 ]; do
     case "$1" in
-      --token)
-        shift || _githubReleaseUsage $errorArgument "Missing token argument"
-        accessToken="$1"
-        ;;
-      --owner)
-        shift || _githubReleaseUsage $errorArgument "Missing owner argument"
-        repoOwner="$1"
-        ;;
-      --name)
-        shift || _githubReleaseUsage $errorArgument "Missing name argument"
-        repoName="$1"
-        ;;
-      --expire)
-        shift || _githubReleaseUsage $errorArgument "Missing expire argument"
-        accessTokenExpire="$1"
-        ;;
-      *)
-        if [ -z "$1" ]; then
-          _githubReleaseUsage "$errorArgument" "Blank argument"
-          return $?
-        fi
-        extras+=("$1")
-        ;;
+    --token)
+      shift || _githubReleaseUsage $errorArgument "Missing token argument"
+      accessToken="$1"
+      ;;
+    --owner)
+      shift || _githubReleaseUsage $errorArgument "Missing owner argument"
+      repoOwner="$1"
+      ;;
+    --name)
+      shift || _githubReleaseUsage $errorArgument "Missing name argument"
+      repoName="$1"
+      ;;
+    --expire)
+      shift || _githubReleaseUsage $errorArgument "Missing expire argument"
+      accessTokenExpire="$1"
+      ;;
+    *)
+      if [ -z "$1" ]; then
+        _githubReleaseUsage "$errorArgument" "Blank argument"
+        return $?
+      fi
+      extras+=("$1")
+      ;;
     esac
     shift
   done
@@ -140,11 +140,12 @@ githubRelease() {
   #
   aptInstall curl
 
+  # TODO Move to build function
   start=$(beginTiming)
   consoleInfo -n "Adding remote ..."
   ssh-keyscan github.com >>"$HOME/.ssh/known_hosts" 2>/dev/null
   if git remote | grep -q github; then
-    echo -n "$(consoleInfo Remote) $(consoleMagenta github) $(consoleInfo exists, not adding again.) "
+    printf "%s %s %s" "$(consoleInfo Remote)" "$(consoleMagenta github)" "$(consoleInfo exists, not adding again.) "
   else
     git remote add github "git@github.com:$repoOwner/$repoName.git"
   fi

@@ -12,7 +12,6 @@ When this tool succeeds the `python` binary is available in the local operating 
 ## Usage
 
     pythonInstall [ package ]
-    bin/build/install/python.sh [ package ... ]
 
 ## Arguments
 

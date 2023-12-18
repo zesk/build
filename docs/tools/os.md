@@ -71,6 +71,10 @@ Creates the directories for all files passed in.
 
     requireDirectory dir1 [ dir2 ... ]
 
+#### Arguments
+
+- `dir1` - One or more directories to create
+
 #### Examples
 
 requireDirectory "$cachePath"
@@ -229,7 +233,7 @@ modificationTime ~/.bash_profile
 
 #### Exit codes
 
-- `2` - If file does not existd
+- `2` - If file does not exist
 - `0` - If file exists and modification times are output, one per line
 
 

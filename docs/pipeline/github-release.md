@@ -1,5 +1,5 @@
 
-# `github-release.sh` - Use GitHub API to generate a release
+# `github-release.sh` - Generate a release on GitHub using API
 
 [⬅ Return to top](index.md)
 
@@ -8,7 +8,7 @@ Use GitHub API to generate a release
 GitHub MUST have two sets of credentials enabled:
 
 - The SSH key for the deployment robot should have push access to the repository on GitHub to enable releases (git handles this)
-- The GITHUB_ACCESS_TOKEN must have the permission to create releases for this repository
+- The `token` must have the permission to create releases for this repository
 
 Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
 

@@ -48,13 +48,7 @@ github-version-live.sh
 
 Run whenever `new-version.sh` is run and a version already exists
 
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `version-created.sh` - Run whenever `new-version.sh` is run and a version was just
-
-Run whenever `new-version.sh` is run and a version was just created
+Opens the release notes in the current editor.
 
 #### Exit codes
 
@@ -62,7 +56,20 @@ Run whenever `new-version.sh` is run and a version was just created
 
 #### Environment
 
-BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
-EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
+BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
+
+### `version-created.sh` - Run whenever `new-version.sh` is run and a version was just
+
+Run whenever `new-version.sh` is run and a version was just created.
+
+Opens the release notes in the current editor.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
 
 [⬅ Return to hook index](index.md)
