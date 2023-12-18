@@ -4,12 +4,29 @@
 #
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
+
+# IDENTICAL errorArgument 1
+errorArgument=2
+
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+flagSkipCommit=
+while [ $# -gt 0 ]; do
+    case $1 in
+    --skip-commit)
+        flagSkipCommit=1
+        statusMessage consoleWarning "Skipping commit ..."
+        ;;
+    *)
+        _usageUpdateMarkdown $errorArgument "Bad argument $1"
+        ;;
+    esac
+    shift
+done
 addNoteTo() {
     statusMessage consoleInfo "Adding note to $1"
     cp "$1" bin/build
@@ -36,13 +53,15 @@ git add "$buildMarker"
 #
 
 # Do this as long as we are not in the hook
-if ! gitInsideHook; then
-    if ! git diff-index --quiet HEAD; then
-        statusMessage consoleInfo "Committing build.json"
-        git commit -m "Updating build.json" "$buildMarker"
-        git push origin
+if ! test $flagSkipCommit; then
+    if ! gitInsideHook; then
+        if gitRepositoryChanged; then
+            statusMessage consoleInfo "Committing build.json"
+            git commit -m "Updating build.json" "$buildMarker"
+            git push origin
+        fi
+    else
+        statusMessage consoleWarning "Skipping update during commit hook"
     fi
-else
-    statusMessage consoleWarning "Skipping update during commit hook"
 fi
 clearLine
