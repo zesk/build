@@ -19,7 +19,7 @@ pipelines:
           services:
             - docker
           script:
-            - env
+            - bin/build.sh
             - bin/test.sh
     main:
       - step:
@@ -28,5 +28,6 @@ pipelines:
           services:
             - docker
           script:
+            - bin/build.sh
             - bin/test.sh
             - bin/deploy.sh

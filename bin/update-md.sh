@@ -40,6 +40,7 @@ if ! gitInsideHook; then
     if ! git diff-index --quiet HEAD; then
         statusMessage consoleInfo "Committing build.json"
         git commit -m "Updating build.json" "$buildMarker"
+        git push origin
     fi
 else
     statusMessage consoleWarning "Skipping update during commit hook"
