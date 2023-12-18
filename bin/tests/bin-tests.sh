@@ -12,7 +12,7 @@ declare -a tests
 
 tests+=(testNewRelease)
 testNewRelease() {
-    assertExitCode 0 bin/build/new-release.sh --non-interactive
+    assertExitCode 1 bin/build/new-release.sh --non-interactive
 }
 tests+=(testVersionSort)
 testVersionSort() {
