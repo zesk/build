@@ -129,8 +129,11 @@ gitVersionList() {
 # Usage: gitVersionLast [ ignorePattern ]
 # Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
 gitVersionLast() {
-  if [ -n "$1" ]; then
-    gitVersionList "$@" | grep -v "$1" | tail -1
+  local skip
+  if [ -n "${1-}" ]; then
+    skip="$1"
+    shift
+    gitVersionList "$@" | grep -v "$skip" | tail -1
   else
     gitVersionList "$@" | tail -1
   fi
