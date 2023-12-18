@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+#
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 
@@ -15,26 +16,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 me=$(basename "${BASH_SOURCE[0]}")
 
-usageOptions() {
-	cat <<EOF
-	fromText Required. String of text to search for.
-	toText Required. String of text to replace.
-	findArgs... Any additional arguments are meant to filter files.
-EOF
-}
-usageDescription() {
-	cat <<EOF
-Replace text $(consoleCode fromText) with $(consoleCode toText) in files, using $(consoleCode findArgs) to filter files if needed.
-
-This can mess up your files so use with caution.
-
-Example:
-
-	$(consoleCode "$me" master main ! -path '*/old-version/*')
-EOF
-}
-usage() {
-	usageMain "$me" "$@"
+#
+# Usage generator for `cannon`
+# See: cannon
+#
+_cannonUsage() {
+	usageDocument "bin/build/$me" cannon "$@"
 	return $?
 }
 
@@ -45,7 +32,7 @@ usage() {
 # This can break your files so use with caution.
 #
 # Example:     cannon master main ! -path '*/old-version/*')
-# Usage: cannon fromText toText [ findArgs ... ]
+# _cannonUsage: cannon fromText toText [ findArgs ... ]
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
 # Argument: findArgs ... - Any additional arguments are meant to filter files.
@@ -57,20 +44,20 @@ cannon() {
 	local search searchQuoted replaceQuoted
 
 	if [ -z "${1-}" ]; then
-		usage "$errorArgument" "Empty search string"
+		_cannonUsage "$errorArgument" "Empty search string"
 		return $?
 	fi
 	search=${1-}
 	searchQuoted=$(quoteSedPattern "$search")
-	shift || usage "$errorArgument" "Missing replacement argument"
+	shift || _cannonUsage "$errorArgument" "Missing replacement argument"
 	if [ -z "${1-}" ]; then
-		usage "$errorArgument" "Empty replacement string"
+		_cannonUsage "$errorArgument" "Empty replacement string"
 		return $?
 	fi
 	replaceQuoted=$(quoteSedPattern "${1-}")
 	shift
 	if [ "$searchQuoted" = "$replaceQuoted" ]; then
-		usage "$errorArgument" "from to \"$search\" are identical"
+		_cannonUsage "$errorArgument" "from to \"$search\" are identical"
 	fi
 
 	cannonLog=$(mktemp)
