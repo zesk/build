@@ -877,7 +877,10 @@ isUpToDate() {
         bigText "$daysAgo  $(plural $daysAgo day days)" | prefixLines "$(consoleError)"
     fi
     if [ $daysAgo -lt 30 ]; then
-        expireDate=$(dateToFormat)
+        expireDate=$(timestampToDate "$expireDate" '%A, %B %d, %Y %R')
+        # consoleInfo "keyDate $keyDate"
+        # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
+        # consoleInfo "expireDate $expireDate"
         consoleWarning "Expires on $expireDate, in $daysAgo $(plural $daysAgo day days)"
         return 0
     fi
