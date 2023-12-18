@@ -13,8 +13,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 . ./bin/build/tools.sh
 
 ./bin/update-md.sh --skip-commit
-./bin/build-docs.sh
+
+# This takes a long time, keep as pre-commit
+# ./bin/build-docs.sh
+
 if gitRepositoryChanged; then
-    git commit -m "Documentation version $(runHook version-current)" -a
-    git push
+    git commit -m "Build version $(runHook version-current)" -a
+    git push origin
 fi
