@@ -12,7 +12,6 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 ## Usage
 
     dockerComposeInstall [ package ... ]
-    bin/build/install/docker-compose.sh [ package ... ]
 
 ## Arguments
 

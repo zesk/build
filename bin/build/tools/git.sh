@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# git tools, lame attempts have been made to have each function start with `git`.
+#
 # Copyright &copy; 2023 Market Acumen, Inc.
 #
 # Depends: colors.sh
@@ -35,34 +37,6 @@ errorArgument=2
 #
 gitInstall() {
   whichApt git git "%@"
-}
-
-#
-# Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
-# Delete the old tag as well
-#
-veeGitTag() {
-  local t="$1"
-
-  if [ "$t" != "${t##v}" ]; then
-    consoleError "Tag is already veed: $t" 1>&2
-    return 1
-  fi
-  git tag "v$t" "$t"
-  git tag -d "$t"
-  git push origin "v$t" ":$t"
-  git fetch -q --prune --prune-tags
-}
-
-#
-# Has a lot of caveats
-#
-# gitRemoveFileFromHistory path/to/file
-#
-# usually have to `git push --force`
-#
-gitRemoveFileFromHistory() {
-  git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
 }
 
 #
@@ -151,15 +125,133 @@ gitVersionList() {
   git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
 }
 
-
 # Get the last reported version.
 # Usage: gitVersionLast [ ignorePattern ]
 # Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
 gitVersionLast() {
-  if [ -n "$1" ]; then
-    gitVersionList "$@" | grep -v "$1" | tail -1
+  local skip
+  if [ -n "${1-}" ]; then
+    skip="$1"
+    shift
+    gitVersionList "$@" | grep -v "$skip" | tail -1
   else
     gitVersionList "$@" | tail -1
   fi
 
 }
+
+#
+# Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
+# Delete the old tag as well
+#
+veeGitTag() {
+  local t="$1"
+
+  if [ "$t" != "${t##v}" ]; then
+    consoleError "Tag is already veed: $t" 1>&2
+    return 1
+  fi
+  git tag "v$t" "$t"
+  git tag -d "$t"
+  git push origin "v$t" ":$t"
+  git fetch -q --prune --prune-tags
+}
+
+#
+# Has a lot of caveats
+#
+# gitRemoveFileFromHistory path/to/file
+#
+# usually have to `git push --force`
+#
+gitRemoveFileFromHistory() {
+  git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
+}
+
+#
+# Usage: {f
+# Exit Code: 0 - the repo has been modified
+# Exit Code: 1 - the repo has NOT bee modified
+#
+# Has a git repository been changed from HEAD?
+# Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339
+# Credit: Chris Johnsen
+#
+gitRepositoryChanged() {
+  git diff-index --quiet "$@" HEAD
+}
+
+#
+# Usage: gitShowChanges
+# Exit Code: 0 - the repo has been modified
+# Exit Code: 1 - the repo has NOT bee modified
+#
+# Show changed files from HEAD
+# Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339
+# Credit: Chris Johnsen
+#
+gitShowChanges() {
+  git diff-index --name-only "$@" HEAD
+}
+
+#
+# Usage: gitShowStatus
+# Exit Code: 0 - the repo has been modified
+# Exit Code: 1 - the repo has NOT bee modified
+#
+# Show changed files from HEAD with their status prefix character:
+#
+# - ' ' = unmodified
+# - `M` = modified
+# - `A` = added
+# - `D` = deleted
+# - `R` = renamed
+# - `C` = copied
+# - `U` = updated but unmerged
+#
+# (See `man git` for more details on status flags)
+#
+# Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339
+# Credit: Chris Johnsen
+#
+gitShowStatus() {
+  git diff-index --name-status "$@" HEAD
+}
+
+#
+# Are we currently inside a git hook?
+#
+# Tests non-blank strings in our environment.
+#
+# Environment: GIT_EXEC_PATH - Must be set to pass
+# Environment: GIT_INDEX_FILE - Must be set to pass
+# Usage: {fn}
+# Exit Code: 0 - We are, semantically, inside a git hook
+# Exit Code: 1 - We are NOT, semantically, inside a git hook
+#
+gitInsideHook() {
+  [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
+}
+
+# bin/build/local-container.sh
+#
+# GIT_AUTHOR_DATE=@1702851863 +0000
+# GIT_AUTHOR_EMAIL=kent@marketacumen.com
+# GIT_AUTHOR_NAME=root
+# GIT_EDITOR=:
+# GIT_EXEC_PATH=/usr/lib/git-core
+# GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
+# GIT_PREFIX=
+
+#
+# HomeBrew
+#
+# GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+# GIT_AUTHOR_DATE=@1702851303 -0500
+# GIT_AUTHOR_EMAIL=kent@marketacumen.com
+# GIT_AUTHOR_NAME=Kent Davidson
+# GIT_EDITOR=:
+# GIT_EXEC_PATH=/usr/local/Cellar/git/2.28.0/libexec/git-core
+# GIT_INDEX_FILE=/Users/kent/marketacumen/build/.git/index.lock
+# GIT_PREFIX=
+# GIT_REFLOG_ACTION=pull

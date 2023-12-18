@@ -38,7 +38,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 Get the credentials file path, optionally outputting errors
 
-Pass a trueish value to output warnings to stderr on failure
+Pass a true-ish value to output warnings to stderr on failure
 
 Pass any value to output warnings if the environment or file is not found; otherwise
 output the credentials file path.
@@ -115,8 +115,8 @@ if needAWSEnvironment; then
 
 #### Environment
 
-AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (enironment needs to be updated)
-AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (enironment needs to be updated)
+AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
+AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)
 
 ### `awsEnvironment` - Get credentials and output environment variables for AWS authentication
 

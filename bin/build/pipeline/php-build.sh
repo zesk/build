@@ -78,31 +78,31 @@ versionSuffix=
 envVars=()
 while [ $# -gt 0 ]; do
   case $1 in
-    --debug)
-      debuggingFlag=1
-      ;;
-    --deployment)
-      shift
-      DEPLOYMENT=$1
-      ;;
-    --name)
-      shift
-      BUILD_TARGET=$1
-      ;;
-    --)
-      shift
-      break
-      ;;
-    --clean)
-      optClean=1
-      ;;
-    --suffix)
-      shift
-      versionSuffix=$1
-      ;;
-    *)
-      envVars+=("$1")
-      ;;
+  --debug)
+    debuggingFlag=1
+    ;;
+  --deployment)
+    shift
+    DEPLOYMENT=$1
+    ;;
+  --name)
+    shift
+    BUILD_TARGET=$1
+    ;;
+  --)
+    shift
+    break
+    ;;
+  --clean)
+    optClean=1
+    ;;
+  --suffix)
+    shift
+    versionSuffix=$1
+    ;;
+  *)
+    envVars+=("$1")
+    ;;
   esac
   shift
 done
@@ -197,8 +197,8 @@ deployGitDefaultValue() {
     runHook "$hook" >"./.deploy/$e"
     cat "./.deploy/$e"
   else
-    echo -n "${!e}" >"./.deploy/$e"
-    echo -n "${!e}"
+    printf %s "${!e}" >"./.deploy/$e"
+    printf %s "${!e}"
   fi
 }
 

@@ -1,8 +1,23 @@
 #!/bin/bash
+#
+# Copyright: Copyright &copy; 2023 Market Acumen, Inc.
+#
+
 set -eou pipefail
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
+
+# IDENTICAL errorArgument 1
+errorArgument=2
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+me=$(basename "$0")
+
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh
+
+start=$(beginTiming)
 
 # fn: {base}
 # Build documentation for build system.
@@ -18,9 +33,6 @@ errorEnvironment=1
 # Argument: --no-cache - Do not use cache or store cache.
 # Argument: --help - I need somebody
 # TODO: Stop complaining about bash
-#
-# Copyright: Copyright &copy; 2023 Market Acumen, Inc.
-#
 buildBuildDocumentation() {
     local cacheDirectory
 
@@ -39,10 +51,10 @@ buildBuildDocumentation() {
             fi
             ;;
         --help)
-            usage 0
+            _buildBuildDocumentationUsage 0
             ;;
         *)
-            usage "$errorArgument" "Unknown argument $1"
+            _buildBuildDocumentationUsage "$errorArgument" "Unknown argument $1"
             ;;
         esac
         shift
@@ -73,22 +85,11 @@ buildBuildDocumentation() {
 #
 
 #
-# Output usage and exit
+# Output _buildBuildDocumentationUsage and exit
 #
-usage() {
+_buildBuildDocumentationUsage() {
     usageDocument "./bin/$me" "buildBuildDocumentation" "$@"
     exit $?
 }
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
-me=$(basename "$0")
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
-
-start=$(beginTiming)
 
 buildBuildDocumentation "$@"

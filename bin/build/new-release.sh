@@ -22,8 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-
-usage() {
+_newReleaseUsage() {
   usageDocument "./bin/build/$me" newRelease "$@"
 }
 defaultVersion() {
@@ -66,20 +65,21 @@ newRelease() {
   newVersion=
   while [ $# -gt 0 ]; do
     case $1 in
-      --non-interactive)
-        nonInteractive=1
-        ;;
-      --help)
-        usage 0
-        return 0
-        ;;
-      *)
-        if [ -n "$newVersion" ]; then
-          usage $errorArgument "Unknown argument $1"
-          return $?
-        fi
-        newVersion=$1
-        ;;
+    --non-interactive)
+      nonInteractive=1
+      consoleWarning "Non-interactive mode set"
+      ;;
+    --help)
+      _newReleaseUsage 0
+      return 0
+      ;;
+    *)
+      if [ -n "$newVersion" ]; then
+        _newReleaseUsage $errorArgument "Unknown argument $1"
+        return $?
+      fi
+      newVersion=$1
+      ;;
     esac
     shift
   done
@@ -89,18 +89,18 @@ newRelease() {
     readLoop=1
   fi
   if ! hasHook version-current; then
-    usage $errorEnvironment "Requires hook version-current"
+    _newReleaseUsage $errorEnvironment "Requires hook version-current"
     return "$errorEnvironment"
   fi
   currentVersion=$(runHook version-current)
   if [ -z "$currentVersion" ]; then
-    usage $errorEnvironment "version-current returned empty string"
+    _newReleaseUsage $errorEnvironment "version-current returned empty string"
     return "$errorEnvironment"
   fi
   if hasHook version-live; then
     liveVersion=$(runHook version-live)
     if [ -z "$liveVersion" ]; then
-      usage $errorEnvironment "version-live returned empty string"
+      _newReleaseUsage $errorEnvironment "version-live returned empty string"
       return "$errorEnvironment"
     fi
     echo "$(consoleLabel -n "   Live: ") $(consoleValue -n "$liveVersion")"
@@ -115,14 +115,16 @@ newRelease() {
     releaseNotes="$(bin/build/release-notes.sh)"
     consoleInfo "Ready to deploy: $currentVersion"
     consoleWarning "Release notes: $releaseNotes"
-    runHook version-already "$currentVersion" "$releaseNotes"
+    if ! test $nonInteractive; then
+      runHook version-already "$currentVersion" "$releaseNotes"
+    fi
     return 0
   fi
   if test $nonInteractive; then
     if [ -z "$newVersion" ]; then
       newVersion=$defaultVersion
     elif ! isVersion "$newVersion"; then
-      usage $errorArgument "New version $newVersion is not a valid version tag"
+      _newReleaseUsage $errorArgument "New version $newVersion is not a valid version tag"
       return $errorArgument
     fi
   else
@@ -139,7 +141,7 @@ newRelease() {
         break
       else
         if ! test $readLoop; then
-          usage $errorArgument "Invalid version $newVersion"
+          _newReleaseUsage $errorArgument "Invalid version $newVersion"
         else
           consoleError "Invalid version $newVersion"
         fi
@@ -155,10 +157,14 @@ newRelease() {
         - New snazzy features here
 EOF
     consoleSuccess "Version $newVersion ready - release notes: $releaseNotes"
-    runHook version-created "$newVersion" "$releaseNotes"
+    if ! test $nonInteractive; then
+      runHook version-created "$newVersion" "$releaseNotes"
+    fi
   else
     consoleWarning "Version $newVersion already - release notes: $releaseNotes"
-    runHook version-already "$newVersion" "$releaseNotes"
+    if ! test $nonInteractive; then
+      runHook version-already "$newVersion" "$releaseNotes"
+    fi
   fi
   git add "$releaseNotes"
 }

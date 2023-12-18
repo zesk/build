@@ -67,13 +67,13 @@ gitTagVersion() {
       shift
       versionSuffix=$1
       if [ -z "$versionSuffix" ]; then
-        _gitTagVersionUsage $errorArgument "--suffix is blank"
+        _gitTagVersionUsage $errorArgument "$me: --suffix is blank"
         return $?
       fi
       shift
       ;;
     *)
-      _gitTagVersionUsage $errorArgument "Unknown argument: $1"
+      _gitTagVersionUsage $errorArgument "$me: Unknown argument: $1"
       return $?
       ;;
     esac
@@ -84,7 +84,7 @@ gitTagVersion() {
   reportTiming "$start"
 
   currentVersion=$(runHook version-current)
-  previousVersion=$("./bin/build/version-last.sh" "$currentVersion")
+  previousVersion=$(gitVersionLast "$currentVersion")
 
   if git show-ref --tags "$currentVersion" --quiet; then
     consoleError "Version $currentVersion already exists, already tagged." 1>&2

@@ -12,13 +12,15 @@ Deployment occurs as follows:
 - `deploy-undo` - Optional. Run on each remote system.
 
 
-### `make-env` - Generate the environment file for this project.
+### `runHook make-env` - Generate an environment file with environment variables (must be `export`ed)
 
-Generate the environment file for this project.
+Generate an environment file with environment variables (must be `export`ed)
 
-Default hook runs `bin/build/pipeline/make-env.sh` directly. To customize this
-override this hook in your project, usually by specifying a list of
-required environment variables which are set in your build pipeline.
+If your project has specific environment variables, you can add them in your `make-env` hook.
+
+#### Usage
+
+    runHook make-env [ requiredEnvironment0 ... ] [ -- optionalEnvironment0 ... ]
 
 #### Exit codes
 
@@ -26,7 +28,7 @@ required environment variables which are set in your build pipeline.
 
 #### See Also
 
-make-env.sh
+makeEnvironment
 
 
 ### `deploy-start.sh` - Deployment "start" script

@@ -181,9 +181,9 @@ usageArguments() {
       lineTokens=("${lineTokens[@]}")
       argDescription="${lineTokens[*]}"
       if [ "${argDescription%*equire*}" != "$argDescription" ]; then
-        echo -n " $requiredPrefix$argument"
+        printf " %s%s" "$requiredPrefix" "$argument"
       else
-        echo -n " $optionalPrefix""[ $argument ]"
+        printf " %s[ %s ]" "$optionalPrefix" "$argument"
       fi
     fi
     if test $lastLine; then

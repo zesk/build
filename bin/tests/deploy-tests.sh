@@ -26,7 +26,7 @@ deployApplicationTest() {
     cp -R "$home/bin/build" "app/bin"
     cd app || exit
     for t in 1a 2b 3c 4d; do
-        echo -n "$t" | tee .deploy/APPLICATION_CHECKSUM >.deploy/APPLICATION_TAG
+        printf %s "$t" | tee .deploy/APPLICATION_CHECKSUM >.deploy/APPLICATION_TAG
         echo "APPLICATION_CHECKSUM=$t" >.env
         echo "APPLICATION_TAG=$t" >>.env
         mkdir -p "$d/DEPLOY/$t"
