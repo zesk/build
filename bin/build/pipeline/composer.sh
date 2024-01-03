@@ -51,10 +51,10 @@ _phpComposerUsage() {
 # Environment: BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
 #
 phpComposer() {
-  local start composerArgs quietLog dockerImage cacheDir
+  local start composerArgs quietLog dockerImage cacheDir composerDirectory
 
   dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
-  composerDirectory="$(pwd)"
+  composerDirectory=
   cacheDir=.composer
 
   start=$(beginTiming)
@@ -65,7 +65,7 @@ phpComposer() {
       _phpComposerUsage 0
       ;;
     *)
-      if [ "$composerDirectory" != "." ]; then
+      if [ -n "$composerDirectory" ]; then
         _phpComposerUsage "$errorArgument" "Unknown argument $1"
       fi
       if [ ! -d "$1" ]; then
