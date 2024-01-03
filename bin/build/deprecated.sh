@@ -2,7 +2,7 @@
 #
 # Run this if you want to upgrade your scripts
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader2 5

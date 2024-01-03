@@ -2,7 +2,7 @@
 #
 # npm functions
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh os.sh apt.sh
 # bin: npm

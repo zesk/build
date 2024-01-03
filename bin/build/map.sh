@@ -13,7 +13,7 @@
 # Argument: env0 - Optional. If specified, then ONLY these environment variables are mapped; all others are ignored. If not specified, then all environment variables are mapped.
 # Argument: ... - Optional. Additional environment variables to map can be specified as additional arguments
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 errorArgument=1
 

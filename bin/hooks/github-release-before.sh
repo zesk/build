@@ -4,7 +4,7 @@
 #
 # Add any files to your repository here and commit them automatically if they need to be
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 

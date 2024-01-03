@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh text.sh apt.sh
 #
@@ -85,7 +85,7 @@ validateShellScripts() {
 # By default, any directory which begins with a dot `.` will be ignored.
 #
 # Usage: validateFileContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
-# Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2023'
+# Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2024'
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
 # Argument: `--` - Required. Separates extensions from text
 # Argument: `text0` - Required. Text which must exist in each file with the extension given.

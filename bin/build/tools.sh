@@ -6,7 +6,7 @@
 #
 # Depends: -
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"

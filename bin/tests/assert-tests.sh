@@ -4,7 +4,7 @@
 #
 # Assertion testing
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 declare -a tests
 

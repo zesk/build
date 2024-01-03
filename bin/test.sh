@@ -4,7 +4,7 @@
 #
 # Testing
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Test locally:
 # bin/local-container.sh

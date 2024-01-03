@@ -4,7 +4,7 @@
 #
 # Part of build system integration with git
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1

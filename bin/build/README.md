@@ -93,7 +93,7 @@ You can preserve the build directory post-build to see the details. Most failure
 
 A `./.deploy` directory is created for the `php-build.sh` steps and contains metadata about the deployment.
 
-## Copyright &copy; 2023 Market Acumen, Inc
+## Copyright &copy; 2024 Market Acumen, Inc
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 

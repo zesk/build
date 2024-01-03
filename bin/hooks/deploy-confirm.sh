@@ -6,7 +6,7 @@
 #
 # If not, fail and it will undo it.
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 

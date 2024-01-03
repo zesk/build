@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright: Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 set -eou pipefail

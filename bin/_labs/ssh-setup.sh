@@ -2,7 +2,7 @@
 #
 # Set up SSH for a user with ID and backup keys in `~/.ssh`
 #
-# Copyright &copy; 2023, Market Acumen, Inc.
+# Copyright &copy; 2024, Market Acumen, Inc.
 #
 # Created 2005/01/06 05:45:46 by kent
 #

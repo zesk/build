@@ -4,7 +4,7 @@
 #
 # AWS tests
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 errorEnvironment=1
 errorArgument=2

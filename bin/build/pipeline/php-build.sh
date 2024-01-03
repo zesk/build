@@ -4,7 +4,7 @@
 #
 # Tags
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # set -x # Debugging
 set -eou pipefail
@@ -118,6 +118,7 @@ fi
 if [ $# -eq 0 ]; then
   usage $errorEnvironment "Need to supply a list of files for application $BUILD_TARGET"
 fi
+missingFile=()
 for tarFile in "$@"; do
   if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
     missingFile+=("$tarFile")

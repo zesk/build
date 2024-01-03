@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 echo "Killing daemontools and starting from scratch ..."
 pgrep svscan -l | while read -r pid name; do

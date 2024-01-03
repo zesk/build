@@ -6,7 +6,7 @@
 # documentation from code. Note that bash makes a terrible template engine, but
 # having no language dependencies outweighs the negatives.
 #
-# Copyright: Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh text.sh prefixLines
 #

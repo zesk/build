@@ -34,4 +34,4 @@ To use in your pipeline:
 
 ## Copyright
 
-Copyright &copy; 2023 Market Acumen, Inc. All Rights Reserved. License is [MIT License](../LICENSE.md).
+Copyright &copy; 2024 Market Acumen, Inc. All Rights Reserved. License is [MIT License](../LICENSE.md).

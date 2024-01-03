@@ -6,7 +6,7 @@
 #
 # Do any steps after a deployment fails to undo and restore the previous deployment on a host
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 

@@ -6,7 +6,7 @@
 #
 # Note that this tests the LIVE version of build-setup.sh so it's a version behind
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 

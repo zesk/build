@@ -2,7 +2,7 @@
 #
 # Test a docker-based PHP application
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader 5

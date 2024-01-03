@@ -7,7 +7,7 @@
 # Used to track failed or successful host deployment
 # Must be preserved between pipeline steps
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 #
