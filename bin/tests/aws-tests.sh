@@ -9,12 +9,17 @@
 errorEnvironment=1
 errorArgument=2
 
+_testAWSIPAccessUsage() {
+  consoleError "$@"
+  return "$1"
+}
+
 declare -a tests
 tests+=(testAWSIPAccess)
 testAWSIPAccess() {
   local quietLog=$1 id key
 
-  usageEnvironment TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME
+  usageRequireEnvironment _testAWSIPAccessUsage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME
 
   if [ -z "$quietLog" ]; then
     consoleError "testAWSIPAccess missing log"

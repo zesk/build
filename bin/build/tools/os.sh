@@ -22,13 +22,13 @@ errorArgument=2
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 #
 buildCacheDirectory() {
-    export HOME
-    local suffix useDir="${HOME-./}"
-    if [ ! -d "$useDir" ]; then
-        useDir="./"
-    fi
-    suffix="$(printf "%s/" "$@")"
-    printf "%s/%s/%s" "${useDir%%/}" ".build" "${suffix%%/}"
+  export HOME
+  local suffix useDir="${HOME-./}"
+  if [ ! -d "$useDir" ]; then
+    useDir="./"
+  fi
+  suffix="$(printf "%s/" "$@")"
+  printf "%s/%s/%s" "${useDir%%/}" ".build" "${suffix%%/}"
 }
 
 #
@@ -38,26 +38,26 @@ buildCacheDirectory() {
 # Argument: --no-create - Optional. Do not require creation of the directory where the log file will appear.
 #
 buildQuietLog() {
-    local logFile flagMake=1
-    while [ $# -gt 0 ]; do
-        case $1 in
-        --no-create)
-            flagMake=
-            ;;
-        *)
-            if [ -z "$1" ]; then
-                consoleError "buildQuietLog requires a name parameter" 1>&2
-                return 1
-            fi
-            logFile="$(buildCacheDirectory "$1.log")"
-            ;;
-        esac
-        shift
-    done
-    if test "$flagMake" && ! requireFileDirectory "$logFile"; then
-        return $?
-    fi
-    printf %s "$logFile"
+  local logFile flagMake=1
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --no-create)
+        flagMake=
+        ;;
+      *)
+        if [ -z "$1" ]; then
+          consoleError "buildQuietLog requires a name parameter" 1>&2
+          return 1
+        fi
+        logFile="$(buildCacheDirectory "$1.log")"
+        ;;
+    esac
+    shift
+  done
+  if test "$flagMake" && ! requireFileDirectory "$logFile"; then
+    return $?
+  fi
+  printf %s "$logFile"
 }
 
 #
@@ -70,16 +70,16 @@ buildQuietLog() {
 # Example:     requireFileDirectory "$logFile"
 #
 requireFileDirectory() {
-    local rs name
-    while [ $# -gt 0 ]; do
-        name="$(dirname "$1")"
-        if [ ! -d "$name" ] && ! mkdir -p "$name"; then
-            rs=$?
-            consoleError "Unable to create directory \"$name\"" 1>&2
-            return "$rs"
-        fi
-        shift
-    done
+  local rs name
+  while [ $# -gt 0 ]; do
+    name="$(dirname "$1")"
+    if [ ! -d "$name" ] && ! mkdir -p "$name"; then
+      rs=$?
+      consoleError "Unable to create directory \"$name\"" 1>&2
+      return "$rs"
+    fi
+    shift
+  done
 }
 
 #
@@ -92,15 +92,15 @@ requireFileDirectory() {
 # Example:     requireDirectory "$cachePath"
 #
 requireDirectory() {
-    local name
-    while [ $# -gt 0 ]; do
-        name="$1"
-        if [ ! -d "$name" ] && ! mkdir -p "$name"; then
-            consoleError "Unable to create directory \"$name\"" 1>&2
-            return "$errorEnvironment"
-        fi
-        shift
-    done
+  local name
+  while [ $# -gt 0 ]; do
+    name="$1"
+    if [ ! -d "$name" ] && ! mkdir -p "$name"; then
+      consoleError "Unable to create directory \"$name\"" 1>&2
+      return "$errorEnvironment"
+    fi
+    shift
+  done
 }
 
 #
@@ -114,18 +114,18 @@ requireDirectory() {
 # Summary: Run a binary count times
 #
 runCount() {
-    local n
-    n="$1"
-    if ! isUnsignedNumber "$n"; then
-        return "$errorArgument"
+  local n
+  n="$1"
+  if ! isUnsignedNumber "$n"; then
+    return "$errorArgument"
+  fi
+  shift
+  while [ "$n" -gt 0 ]; do
+    if ! "$@"; then
+      return $?
     fi
-    shift
-    while [ "$n" -gt 0 ]; do
-        if ! "$@"; then
-            return $?
-        fi
-        n=$((n - 1))
-    done
+    n=$((n - 1))
+  done
 }
 
 #
@@ -148,17 +148,17 @@ runCount() {
 # Example:     renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
 #
 renameFiles() {
-    local old=$1 new=$2 verb=$3
+  local old=$1 new=$2 verb=$3
 
-    shift
-    shift
-    shift
-    for i in "$@"; do
-        if [ -f "$i$old" ]; then
-            mv "$i$old" "$i$new"
-            consoleWarning "$verb $i$old -> $i$new"
-        fi
-    done
+  shift
+  shift
+  shift
+  for i in "$@"; do
+    if [ -f "$i$old" ]; then
+      mv "$i$old" "$i$new"
+      consoleWarning "$verb $i$old -> $i$new"
+    fi
+  done
 }
 
 #
@@ -171,21 +171,21 @@ renameFiles() {
 # Argument: files - A list of files to include in the tar file
 #
 createTarFile() {
-    local target=$1
+  local target=$1
 
-    shift
-    if tar --version | grep -q GNU; then
-        # GNU
-        # > tar --version
-        # tar (GNU tar) 1.34
-        # ...
-        tar czf "$target" --owner=0 --group=0 --no-xattrs "$@"
-    else
-        # BSD
-        # > tar --version
-        # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
-        tar czf "$target" --uid 0 --gid 0 --no-xattrs "$@"
-    fi
+  shift
+  if tar --version | grep -q GNU; then
+    # GNU
+    # > tar --version
+    # tar (GNU tar) 1.34
+    # ...
+    tar czf "$target" --owner=0 --group=0 --no-xattrs "$@"
+  else
+    # BSD
+    # > tar --version
+    # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
+    tar czf "$target" --uid 0 --gid 0 --no-xattrs "$@"
+  fi
 }
 
 #
@@ -204,8 +204,8 @@ createTarFile() {
 # Example:     done
 #
 environmentVariables() {
-    # IDENTICAL environmentVariables 1
-    declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+  # IDENTICAL environmentVariables 1
+  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
 #
@@ -216,7 +216,7 @@ environmentVariables() {
 # Credits: Eric Pement
 #
 reverseFileLines() {
-    awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
+  awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 
 # Makes all `*.sh` files executable
@@ -226,8 +226,8 @@ reverseFileLines() {
 # See: makeShellFilesExecutable
 # fn: chmod-sh.sh
 makeShellFilesExecutable() {
-    # IDENTICAL makeShellFilesExecutable 1
-    find . -name '*.sh' ! -path '*/.*' -print0 | xargs -0 chmod -v +x
+  # IDENTICAL makeShellFilesExecutable 1
+  find . -name '*.sh' ! -path '*/.*' -print0 | xargs -0 chmod -v +x
 }
 
 # Fetch the modification time of a file as a timestamp
@@ -238,13 +238,13 @@ makeShellFilesExecutable() {
 # Example:     modificationTime ~/.bash_profile
 #
 modificationTime() {
-    while [ $# -gt 0 ]; do
-        if [ ! -f "$1" ]; then
-            return "$errorArgument"
-        fi
-        printf "%d\n" "$(date -r "$1" +%s)"
-        shift
-    done
+  while [ $# -gt 0 ]; do
+    if [ ! -f "$1" ]; then
+      return "$errorArgument"
+    fi
+    printf "%d\n" "$(date -r "$1" +%s)"
+    shift
+  done
 }
 
 #
@@ -261,10 +261,10 @@ modificationTime() {
 # Exit code: 0 - All files exist and `sourceFile` is the oldest file
 #
 isNewestFile() {
-    if [ $# -eq 0 ]; then
-        return 1
-    fi
-    [ "$1" = "$(newestFile "$@")" ]
+  if [ $# -eq 0 ]; then
+    return 1
+  fi
+  [ "$1" = "$(newestFile "$@")" ]
 }
 
 #
@@ -281,10 +281,10 @@ isNewestFile() {
 # Exit code: 0 - All files exist and `sourceFile` is the oldest file
 #
 isOldestFile() {
-    if [ $# -eq 0 ]; then
-        return 1
-    fi
-    [ "$1" = "$(oldestFile "$@")" ]
+  if [ $# -eq 0 ]; then
+    return 1
+  fi
+  [ "$1" = "$(oldestFile "$@")" ]
 }
 
 #
@@ -294,20 +294,20 @@ isOldestFile() {
 # Argument: file0 - One or more files to examine
 #
 oldestFile() {
-    local tempTime oldestTime theFile=
+  local tempTime oldestTime theFile=
 
-    while [ $# -gt 0 ]; do
-        if [ ! -f "$1" ]; then
-            return "$errorArgument"
-        fi
-        tempTime=$(modificationTime "$1")
-        if [ -z "$theFile" ] || [ "$tempTime" -lt "$oldestTime" ]; then
-            theFile="$1"
-            oldestTime="$tempTime"
-        fi
-        shift
-    done
-    printf "%s" "$theFile"
+  while [ $# -gt 0 ]; do
+    if [ ! -f "$1" ]; then
+      return "$errorArgument"
+    fi
+    tempTime=$(modificationTime "$1")
+    if [ -z "$theFile" ] || [ "$tempTime" -lt "$oldestTime" ]; then
+      theFile="$1"
+      oldestTime="$tempTime"
+    fi
+    shift
+  done
+  printf "%s" "$theFile"
 }
 
 #
@@ -317,20 +317,20 @@ oldestFile() {
 # Argument: file0 - One or more files to examine
 #
 newestFile() {
-    local tempTime newestTime theFile=
+  local tempTime newestTime theFile=
 
-    while [ $# -gt 0 ]; do
-        if [ ! -f "$1" ]; then
-            return "$errorArgument"
-        fi
-        tempTime=$(modificationTime "$1")
-        if [ -z "$theFile" ] || [ "$tempTime" -gt "$newestTime" ]; then
-            theFile="$1"
-            newestTime="$tempTime"
-        fi
-        shift
-    done
-    printf "%s" "$theFile"
+  while [ $# -gt 0 ]; do
+    if [ ! -f "$1" ]; then
+      return "$errorArgument"
+    fi
+    tempTime=$(modificationTime "$1")
+    if [ -z "$theFile" ] || [ "$tempTime" -gt "$newestTime" ]; then
+      theFile="$1"
+      newestTime="$tempTime"
+    fi
+    shift
+  done
+  printf "%s" "$theFile"
 }
 
 #
@@ -340,12 +340,12 @@ newestFile() {
 # Exit Code: 2 - Can not get modification time
 #
 modifiedSeconds() {
-    local ts
+  local ts
 
-    if ! ts=$(modificationTime "$1"); then
-        return $errorArgument
-    fi
-    printf %d "$(($(date +%s) - ts))"
+  if ! ts=$(modificationTime "$1"); then
+    return $errorArgument
+  fi
+  printf %d "$(($(date +%s) - ts))"
 }
 
 #
@@ -355,12 +355,12 @@ modifiedSeconds() {
 # Exit Code: 2 - Can not get modification time
 #
 modifiedDays() {
-    local ts
+  local ts
 
-    if ! ts=$(modifiedSeconds "$1"); then
-        return $errorArgument
-    fi
-    printf %d "$((ts / 86400))"
+  if ! ts=$(modifiedSeconds "$1"); then
+    return $errorArgument
+  fi
+  printf %d "$((ts / 86400))"
 }
 
 #
@@ -372,38 +372,38 @@ modifiedDays() {
 # Argument: path - the path to be added to the `pathValue`
 #
 pathAppend() {
-    local pathValue="$1" s="$2" exitCode=0 firstFlag=
+  local pathValue="$1" s="$2" exitCode=0 firstFlag=
 
+  shift
+  shift
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --first)
+        firstFlag=1
+        ;;
+      --last)
+        firstFlag=
+        ;;
+      *)
+        if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
+          if [ ! -d "$1" ]; then
+            exitCode=2
+          elif [ -z "$pathValue" ]; then
+            pathValue="$1"
+          elif test "$firstFlag"; then
+            pathValue="$1$s$pathValue"
+          else
+            pathValue="$pathValue$s$1"
+          fi
+        else
+          exitCode=1
+        fi
+        ;;
+    esac
     shift
-    shift
-    while [ $# -gt 0 ]; do
-        case $1 in
-        --first)
-            firstFlag=1
-            ;;
-        --last)
-            firstFlag=
-            ;;
-        *)
-            if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
-                if [ ! -d "$1" ]; then
-                    exitCode=2
-                elif [ -z "$pathValue" ]; then
-                    pathValue="$1"
-                elif test "$firstFlag"; then
-                    pathValue="$1$s$pathValue"
-                else
-                    pathValue="$pathValue$s$1"
-                fi
-            else
-                exitCode=1
-            fi
-            ;;
-        esac
-        shift
-    done
-    printf %s "$pathValue"
-    return "$exitCode"
+  done
+  printf %s "$pathValue"
+  return "$exitCode"
 }
 
 #
@@ -413,28 +413,28 @@ pathAppend() {
 # Argument: path - the path to be added to the `MANPATH` environment
 #
 manPathConfigure() {
-    local tempPath
+  local tempPath
 
-    export MANPATH
-    if tempPath="$(pathAppend "$MANPATH" ':' "$@")"; then
-        MANPATH="$tempPath"
-        return 0
-    fi
-    return $?
+  export MANPATH
+  if tempPath="$(pathAppend "$MANPATH" ':' "$@")"; then
+    MANPATH="$tempPath"
+    return 0
+  fi
+  return $?
 }
 # Usage: pathConfigure [ --first | --last | path ] ...
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `PATH` environment
 pathConfigure() {
-    local tempPath
+  local tempPath
 
-    export PATH
-    if tempPath="$(pathAppend "$PATH" ':' "$@")"; then
-        PATH="$tempPath"
-        return 0
-    fi
-    return $?
+  export PATH
+  if tempPath="$(pathAppend "$PATH" ':' "$@")"; then
+    PATH="$tempPath"
+    return 0
+  fi
+  return $?
 }
 
 # Cleans the path and removes non-directory entries and duplicates
@@ -444,40 +444,40 @@ pathConfigure() {
 # Usage: pathCleanDuplicates
 #
 pathCleanDuplicates() {
-    local tempPath elements delta removed=() s=':'
+  local tempPath elements delta removed=() s=':'
 
-    export PATH
-    IFS=$s read -r -a elements < <(printf %s "$PATH")
-    delta="${#elements[@]}"
-    tempPath=
-    for p in "${elements[@]}"; do
-        if [ ! -d "$p" ]; then
-            removed+=("$(consoleError "Not a directory: $p")")
-        elif ! tempPath=$(pathAppend "$tempPath" "$s" "$p"); then
-            removed+=("$(consoleWarning "Duplicate: $p")")
-        fi
-    done
-    IFS=$s read -r -a elements < <(printf %s "$tempPath")
-    delta=$((delta - ${#elements[@]}))
-    if [ "$delta" -gt 0 ]; then
-        consoleSuccess "Removed $delta path $(plural "$delta" element elements)"
-        printf "    %s\n" "${removed[@]}"
+  export PATH
+  IFS=$s read -r -a elements < <(printf %s "$PATH")
+  delta="${#elements[@]}"
+  tempPath=
+  for p in "${elements[@]}"; do
+    if [ ! -d "$p" ]; then
+      removed+=("$(consoleError "Not a directory: $p")")
+    elif ! tempPath=$(pathAppend "$tempPath" "$s" "$p"); then
+      removed+=("$(consoleWarning "Duplicate: $p")")
     fi
-    echo "NEW PATH IS $tempPath"
-    # PATH="$tempPath"
+  done
+  IFS=$s read -r -a elements < <(printf %s "$tempPath")
+  delta=$((delta - ${#elements[@]}))
+  if [ "$delta" -gt 0 ]; then
+    consoleSuccess "Removed $delta path $(plural "$delta" element elements)"
+    printf "    %s\n" "${removed[@]}"
+  fi
+  echo "NEW PATH IS $tempPath"
+  # PATH="$tempPath"
 }
 
 realPath() {
-    #
-    # realpath is not present always
-    #
-    if ! which realpath >/dev/null; then
-        readlink -f -n "$@"
-    else
-        realpath "$@"
-    fi
+  #
+  # realpath is not present always
+  #
+  if ! which realpath >/dev/null; then
+    readlink -f -n "$@"
+  else
+    realpath "$@"
+  fi
 }
 
 JSON() {
-    python -c "import sys, json; print(json.dumps(json.load(sys.stdin), indent=4))"
+  python -c "import sys, json; print(json.dumps(json.load(sys.stdin), indent=4))"
 }

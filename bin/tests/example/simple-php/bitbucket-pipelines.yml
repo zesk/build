@@ -1,0 +1,17 @@
+#
+# Simple PHP Build BitBucket Pipeline
+#
+# Copyright &copy; 2024 Market Acumen Inc.
+#
+image: atlassian/default-image:4
+
+pipelines:
+  branches:
+    main:
+      - step:
+          deployment: production
+          name: Build, Test, and Deploy
+          services:
+            - docker
+          script:
+            - bin/build.sh

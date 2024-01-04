@@ -24,7 +24,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # Example: - Move directories to make deployment final
 hookDeployFinish() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 hookDeployFinish

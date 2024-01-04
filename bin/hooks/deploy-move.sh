@@ -29,7 +29,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 
 hookDeployMove() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 hookDeployMove

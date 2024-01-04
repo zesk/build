@@ -54,25 +54,25 @@ phpComposer() {
   local start composerArgs quietLog dockerImage cacheDir composerDirectory
 
   dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
-  composerDirectory=
+  composerDirectory=.
   cacheDir=.composer
 
   start=$(beginTiming)
 
   while [ $# -gt 0 ]; do
     case $1 in
-    --help)
-      _phpComposerUsage 0
-      ;;
-    *)
-      if [ -n "$composerDirectory" ]; then
-        _phpComposerUsage "$errorArgument" "Unknown argument $1"
-      fi
-      if [ ! -d "$1" ]; then
-        _phpComposerUsage "$errorArgument" "Directory does not exist: $1"
-      fi
-      composerDirectory=$1
-      ;;
+      --help)
+        _phpComposerUsage 0
+        ;;
+      *)
+        if [ "$composerDirectory" != "." ]; then
+          _phpComposerUsage "$errorArgument" "Unknown argument $1"
+        fi
+        if [ ! -d "$1" ]; then
+          _phpComposerUsage "$errorArgument" "Directory does not exist: $1"
+        fi
+        composerDirectory=$1
+        ;;
     esac
     shift
   done

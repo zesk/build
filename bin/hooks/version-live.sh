@@ -18,7 +18,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # See: github-version-live.sh
 #
 hookVersionLive() {
-    bin/build/pipeline/github-version-live.sh zesk/build
+  bin/build/pipeline/github-version-live.sh zesk/build
 }
 
 hookVersionLive

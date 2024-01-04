@@ -38,12 +38,12 @@
 # Example:     MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(getFromPipelineYML MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}
 #
 getFromPipelineYML() {
-    local value
+  local value
 
-    value=$(grep "$1" bitbucket-pipelines.yml | awk '{ print $2 }')
-    value=${value:-$2}
+  value=$(grep "$1" bitbucket-pipelines.yml | awk '{ print $2 }')
+  value=${value:-$2}
 
-    printf "%s" "$value"
+  printf "%s" "$value"
 }
 
 #
@@ -58,5 +58,5 @@ getFromPipelineYML() {
 # Run the default build container for build testing on BitBucket
 #
 bitbucketContainer() {
-    dockerLocalContainer atlassian/default-image:4 /opt/atlassian/bitbucketci/agent/build "$@"
+  dockerLocalContainer atlassian/default-image:4 /opt/atlassian/bitbucketci/agent/build "$@"
 }

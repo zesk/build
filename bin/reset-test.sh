@@ -15,8 +15,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 . ./bin/build/tools.sh
 
 if [ ! -f "$envFile" ]; then
-    consoleError "No $envFile found"
-    exit 1
+  consoleError "No $envFile found"
+  exit 1
 fi
 set -a
 # shellcheck source=/dev/null

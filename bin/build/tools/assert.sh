@@ -8,6 +8,7 @@
 #
 # Depends: colors.sh text.sh prefixLines
 #
+# Docs: contextOpen ./docs/_templates/tools/assert.md
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -169,11 +170,11 @@ assertContains() {
 # Summary: Test that a directory exists
 #
 assertDirectoryExists() {
-  local d=$1
+  local d=$1 noun=directory
 
   shift
   if [ ! -d "$d" ]; then
-    consoleError "$d was expected to not a directory but is NOT: $*"
+    printf "%s was expected to be a %s but is NOT %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -192,11 +193,65 @@ assertDirectoryExists() {
 # Reviewed: 2023-11-12
 #
 assertDirectoryDoesNotExist() {
-  local d=$1
+  local d=$1 noun=directory
 
   shift
   if [ -d "$d" ]; then
-    consoleError "$d was expected to not be a directory but is: $*"
+    printf "%s was expected NOT to be a %s but is %s (%s)\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    return 1
+  fi
+}
+
+################################################################################################################################
+#
+# ▛▀▘▗▜
+# ▙▄ ▄▐ ▞▀▖
+# ▌  ▐▐ ▛▀
+# ▘  ▀▘▘▝▀▘
+#
+
+#
+# Usage: assertDirectoryExists directory [ message ... ]
+#
+# Argument: - `directory` - Directory that should exist
+# Argument: - `message` - An error message if this fails
+# Exit code: - `0` - If the assertion succeeds
+# Exit code: - `1` - If the assertion fails
+# Local cache: None
+# Environment: - This fails if `directory` is anything but a `directory`
+# Example:     assertDirectoryExists "$HOME" "HOME not found"
+# Summary: Test that a file exists
+#
+assertFileExists() {
+  local d=$1 noun=file
+
+  shift
+  message="$*"
+  if [ ! -f "$d" ]; then
+    printf "%s was expected to be a %s but is NOT %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    return 1
+  fi
+}
+
+#
+# Usage: assertFileDoesNotExist file [ message ... ]
+#
+# Argument: - `file` - Directory that should NOT exist
+# Argument: - `message` - An error message if this fails
+# Exit code: - `0` - If the assertion succeeds
+# Exit code: - `1` - If the assertion fails
+# Local cache: None
+# Environment: - This fails if `file` is anything at all, even a non-directory (such as a link)
+# Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
+# Summary: Test that a file does not exist
+# Reviewed: 2023-11-12
+#
+assertFileDoesNotExist() {
+  local d=$1 noun=file
+
+  shift
+  if [ -f "$d" ]; then
+    printf "%s was expected NOT to be a %s but is %s (%s)\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
     return 1
   fi
 }

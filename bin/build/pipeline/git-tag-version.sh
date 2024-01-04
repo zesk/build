@@ -63,19 +63,19 @@ gitTagVersion() {
   versionSuffix=
   while [ $# -gt 0 ]; do
     case $1 in
-    --suffix)
-      shift
-      versionSuffix=$1
-      if [ -z "$versionSuffix" ]; then
-        _gitTagVersionUsage $errorArgument "$me: --suffix is blank"
+      --suffix)
+        shift
+        versionSuffix=$1
+        if [ -z "$versionSuffix" ]; then
+          _gitTagVersionUsage $errorArgument "$me: --suffix is blank"
+          return $?
+        fi
+        shift
+        ;;
+      *)
+        _gitTagVersionUsage $errorArgument "$me: Unknown argument: $1"
         return $?
-      fi
-      shift
-      ;;
-    *)
-      _gitTagVersionUsage $errorArgument "$me: Unknown argument: $1"
-      return $?
-      ;;
+        ;;
     esac
   done
 

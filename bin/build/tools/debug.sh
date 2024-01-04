@@ -15,7 +15,7 @@
 # Environment: BUILD_DEBUG - Set to 1 to enable debugging, blank to disable
 #
 buildDebugEnabled() {
-    test "${BUILD_DEBUG-}"
+  test "${BUILD_DEBUG-}"
 }
 
 #
@@ -29,9 +29,9 @@ buildDebugEnabled() {
 # Example:     buildDebugStop
 #
 buildDebugStart() {
-    if buildDebugEnabled; then
-        set -x # Outputs each command for debugging
-    fi
+  if buildDebugEnabled; then
+    set -x # Outputs each command for debugging
+  fi
 }
 #
 # Stop build debugging if it is enabled
@@ -39,7 +39,7 @@ buildDebugStart() {
 # See: buildDebugStart
 #
 buildDebugStop() {
-    if buildDebugEnabled; then
-        set +x # Debugging off
-    fi
+  if buildDebugEnabled; then
+    set +x # Debugging off
+  fi
 }

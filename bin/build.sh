@@ -18,6 +18,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # ./bin/build-docs.sh
 
 if gitRepositoryChanged; then
-    git commit -m "Build version $(runHook version-current)" -a
-    git push origin
+  git commit -m "Build version $(runHook version-current)" -a
+  git push origin
 fi

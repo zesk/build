@@ -28,7 +28,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Example: - Check for a known artifact (build sha) in the server somehow
 # Example: - etc.
 hookDeployConfirm() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with live smoke tests"
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with live smoke tests"
 }
 
 hookDeployConfirm

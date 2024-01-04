@@ -22,7 +22,6 @@ testSimpleMarkdownToConsole() {
   saveCI="${CI-}"
   export CI
 
-
   result="$(printf "%s text is %s and %s" "$(consoleCode Code)" "$(consoleCyan italic)" "$(consoleCyan bold)")"
   CI=
   # shellcheck disable=SC2016

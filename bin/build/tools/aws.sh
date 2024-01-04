@@ -30,46 +30,46 @@ errorEnvironment=1
 # Depends: apt-get
 #
 awsInstall() {
-    local zipFile=awscliv2.zip
-    local url buildDir quietLog
+  local zipFile=awscliv2.zip
+  local url buildDir quietLog
 
-    if ! aptInstall unzip curl "$@"; then
-        return "$errorEnvironment"
-    fi
+  if ! aptInstall unzip curl "$@"; then
+    return "$errorEnvironment"
+  fi
 
-    if which aws >/dev/null; then
-        return 0
-    fi
+  if which aws >/dev/null; then
+    return 0
+  fi
 
-    consoleInfo -n "Installing aws-cli ... "
-    start=$(beginTiming)
-    case "${HOSTTYPE-}" in
+  consoleInfo -n "Installing aws-cli ... "
+  start=$(beginTiming)
+  case "${HOSTTYPE-}" in
     arm64 | aarch64)
-        url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
-        ;;
+      url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
+      ;;
     *)
-        url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
-        ;;
-    esac
+      url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+      ;;
+  esac
 
-    buildDir="$(buildCacheDirectory awsCache.$$)"
-    quietLog="$(buildQuietLog awsInstall)"
-    if ! requireDirectory "$buildDir"; then
-        return "$errorEnvironment"
-    fi
-    if ! curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
-        buildFailed "$quietLog"
-    fi
-    if ! unzip -d "$buildDir" "$buildDir/$zipFile" >>"$quietLog"; then
-        buildFailed "$quietLog"
-    fi
-    if ! "$buildDir/aws/install" >>"$quietLog"; then
-        buildFailed "$quietLog"
-    fi
-    # This failed once, not sure why, .build will be deleted
-    rm -rf "$buildDir" 2>/dev/null || :
-    consoleValue -n "$(aws --version) "
-    reportTiming "$start" OK
+  buildDir="$(buildCacheDirectory awsCache.$$)"
+  quietLog="$(buildQuietLog awsInstall)"
+  if ! requireDirectory "$buildDir"; then
+    return "$errorEnvironment"
+  fi
+  if ! curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
+    buildFailed "$quietLog"
+  fi
+  if ! unzip -d "$buildDir" "$buildDir/$zipFile" >>"$quietLog"; then
+    buildFailed "$quietLog"
+  fi
+  if ! "$buildDir/aws/install" >>"$quietLog"; then
+    buildFailed "$quietLog"
+  fi
+  # This failed once, not sure why, .build will be deleted
+  rm -rf "$buildDir" 2>/dev/null || :
+  consoleValue -n "$(aws --version) "
+  reportTiming "$start" OK
 
 }
 
@@ -94,21 +94,21 @@ awsInstall() {
 # Exit Code: 0 - If credentials file is found and output to stdout
 #
 awsCredentialsFile() {
-    local credentials=$HOME/.aws/credentials verbose=${1-}
+  local credentials=$HOME/.aws/credentials verbose=${1-}
 
-    if [ ! -d "$HOME" ]; then
-        if test "$verbose"; then
-            consoleWarning "No $HOME directory found" 1>&2
-        fi
-        return "$errorEnvironment"
+  if [ ! -d "$HOME" ]; then
+    if test "$verbose"; then
+      consoleWarning "No $HOME directory found" 1>&2
     fi
-    if [ ! -f "$credentials" ]; then
-        if test "$verbose"; then
-            consoleWarning "No $credentials file found" 1>&2
-        fi
-        return "$errorEnvironment"
+    return "$errorEnvironment"
+  fi
+  if [ ! -f "$credentials" ]; then
+    if test "$verbose"; then
+      consoleWarning "No $credentials file found" 1>&2
     fi
-    printf %s "$credentials"
+    return "$errorEnvironment"
+  fi
+  printf %s "$credentials"
 }
 
 #
@@ -136,7 +136,7 @@ awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 isAWSKeyUpToDate() {
-    isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
+  isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 
 #
@@ -153,12 +153,12 @@ isAWSKeyUpToDate() {
 # Summary: Test whether the AWS environment variables are set or not
 #
 needAWSEnvironment() {
-    export AWS_ACCESS_KEY_ID
-    export AWS_SECRET_ACCESS_KEY
-    if [ -z ${AWS_ACCESS_KEY_ID+x} ] || [ -z ${AWS_SECRET_ACCESS_KEY+x} ]; then
-        return 0
-    fi
-    return 1
+  export AWS_ACCESS_KEY_ID
+  export AWS_SECRET_ACCESS_KEY
+  if [ -z ${AWS_ACCESS_KEY_ID+x} ] || [ -z ${AWS_SECRET_ACCESS_KEY+x} ]; then
+    return 0
+  fi
+  return 1
 }
 
 #
@@ -180,16 +180,16 @@ needAWSEnvironment() {
 # Example:     fi
 #
 awsEnvironment() {
-    local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
+  local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
 
-    if awsCredentialsFile 1 >/dev/null; then
-        credentials=$(awsCredentialsFile)
-        eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
-        if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
-            echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
-            echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
-            return 0
-        fi
+  if awsCredentialsFile 1 >/dev/null; then
+    credentials=$(awsCredentialsFile)
+    eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
+    if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
+      echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
+      echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
+      return 0
     fi
-    return "$errorEnvironment"
+  fi
+  return "$errorEnvironment"
 }

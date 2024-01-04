@@ -29,13 +29,18 @@ relTop=../..
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
 installBinBuild() {
-  # IDENTICAL installBinBuild 83
-  local start ignoreFile tarArgs diffLines binName replace
+  # IDENTICAL installBinBuild 87
+  local start ignoreFile tarArgs diffLines binName replace mockPath
   if [ ! -d bin/build ]; then
     start=$(($(date +%s) + 0))
     if [ "${1-}" = "--mock" ]; then
       shift
-      cp -R "$1" ./bin/build
+      mockPath="${1%%/}/"
+      if [ ! -f "$mockPath/tools.sh" ]; then
+        echo "--mock argument must be bin/build path" 1>&2
+        return 2
+      fi
+      cp -R "${1%%/}/" ./bin/build/
       shift
     else
       curl -L -s "$(curl -s https://api.github.com/repos/zesk/build/releases/latest | jq -r .tarball_url)" -o build.tar.gz

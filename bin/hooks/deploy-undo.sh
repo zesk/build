@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # Exit code: 0 - This SHOULD exit successfully always
 hookDeployUndo() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 hookDeployUndo

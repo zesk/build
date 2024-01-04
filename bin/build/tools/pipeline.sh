@@ -349,8 +349,8 @@ applicationEnvironment() {
   export APPLICATION_CHECKSUM
   export APPLICATION_TAG
 
-  BUILD_TIMESTAMP="$(date +%s)"
-  APPLICATION_BUILD_DATE="$(date -u +"%Y-%m-%d %H:%M:%S")"
+  BUILD_TIMESTAMP="${BUILD_TIMESTAMP:-"$(date +%s)"}"
+  APPLICATION_BUILD_DATE="$(timestampToDate "$BUILD_TIMESTAMP" "%Y-%m-%d %H:%M:%S")"
 
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
@@ -429,7 +429,7 @@ showEnvironment() {
       echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
     fi
   done
-  for e in "${buildEnvironment[@]}"; do
+  for e in "${buildEnvironment[@]+"${buildEnvironment[@]}"}"; do
     if [ -z "${!e:-}" ]; then
       printf "%s %s\n" "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleSuccess "** Blank **")" 1>&2
     else
@@ -732,4 +732,122 @@ deployApplication() {
   fi
   consoleSuccess "Completed"
   return "$exitCode"
+}
+
+_remoteDeployFinishUsage() {
+  usageDocument "bin/build/tools/pipeline.sh" remoteDeployFinish "$@"
+  return $?
+}
+
+# This is run on the remote system after deployment; environment files are correct.
+# It is run inside the deployment home directory in the new application folder.
+#
+# Current working directory on deploy is `deployHome/applicationChecksum/app`.
+# Current working directory on cleanup is `applicationHome/`
+# Current working directory on undo is `applicationHome/`
+#
+# applicationChecksum - Required. String. Should match APPLICATION_CHECKSUM in .env
+# deployPath - Required. String. Path where the deployments database is on remote system.
+# applicationPath - Required. String. Path on the remote system where the application is live.
+# --undo - Revert changes just made
+# --cleanup - Cleanup after success
+# --debug - Enable debugging. Defaults to `BUILD_DEBUG`
+#
+remoteDeployFinish() {
+  local targetPackage undoFlag cleanupFlag applicationChecksum applicationPath debuggingFlag start width
+
+  if ! usageRequireBinary _remoteDeployFinishUsage git; then
+    return $?
+  fi
+
+  if ! dotEnvConfigure; then
+    consoleError "remoteDeployFinish: Unable to dotEnvConfigure" 1>&2
+    return $?
+  fi
+
+  targetPackage=${BUILD_TARGET:-app.tar.gz}
+
+  undoFlag=
+  cleanupFlag=
+  applicationChecksum=
+  applicationPath=
+  debuggingFlag=
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --debug)
+        debuggingFlag=1
+        ;;
+      --cleanup)
+        cleanupFlag=1
+        ;;
+      --undo)
+        undoFlag=1
+        ;;
+      *)
+        if [ -z "$applicationChecksum" ]; then
+          applicationChecksum=$1
+        elif [ -z "$deployHome" ]; then
+          deployHome=$1
+        elif [ -z "$applicationPath" ]; then
+          applicationPath=$1
+          if [ ! -d "$applicationPath" ]; then
+            if ! mkdir -p "$applicationPath"; then
+              usage "$errorEnvironment" "Can not create $applicationPath"
+            else
+              consoleWarning "Created $applicationPath"
+            fi
+          fi
+        else
+          usage "$errorArgument" "Unknown parameter $1"
+        fi
+        ;;
+    esac
+    shift
+  done
+
+  if test "${BUILD_DEBUG-}"; then
+    debuggingFlag=1
+  fi
+  if test "$debuggingFlag"; then
+    consoleWarning "Debugging is enabled"
+    set -x
+  fi
+
+  #   ____             _
+  #  |  _ \  ___ _ __ | | ___  _   _
+  #  | | | |/ _ \ '_ \| |/ _ \| | | |
+  #  | |_| |  __/ |_) | | (_) | |_| |
+  #  |____/ \___| .__/|_|\___/ \__, |
+  #          |_|            |___/
+  if test $undoFlag && test $cleanupFlag; then
+    _remoteDeployFinishUsage "$errorArgument" "--cleanup and --undo are mutually exclusive"
+  fi
+
+  start=$(beginTiming)
+  width=50
+  consoleNameValue $width "Host:" "$(uname -n)"
+  consoleNameValue $width "Deployment Path:" "$deployHome"
+  consoleNameValue $width "Application path:" "$applicationPath"
+  consoleNameValue $width "Application checksum:" "$applicationChecksum"
+
+  if test $cleanupFlag; then
+    cd "$applicationPath"
+    consoleInfo -n "Cleaning up ..."
+    if hasHook deploy-cleanup; then
+      if ! runHook deploy-cleanup; then
+        consoleError "Cleanup failed"
+        return $errorEnvironment
+      fi
+    else
+      printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
+    fi
+  elif test $undoFlag; then
+    undoDeployApplication "$deployHome" "$applicationChecksum" "$targetPackage" "$applicationPath"
+  else
+    if [ -z "$applicationChecksum" ]; then
+      _remoteDeployFinishUsage "$errorArgument" "No argument applicationChecksum passed"
+    fi
+    deployApplication "$deployHome" "$applicationChecksum" "$targetPackage" "$applicationPath"
+  fi
+  reportTiming "$start" "Remote deployment finished in"
 }

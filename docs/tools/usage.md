@@ -115,7 +115,7 @@ fails if not
 
 #### Usage
 
-    usageWhich [ binary0 ... ]
+    usageRequireBinary usage [ binary0 ... ]
 
 #### Exit codes
 

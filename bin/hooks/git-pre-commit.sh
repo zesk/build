@@ -15,17 +15,17 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
 if ! diff -q "${fromTo[@]}" >/dev/null; then
-    printf %s "Git pre-commit hook was updated ..."
-    cp "${fromTo[@]}"
-    exec .git/hooks/pre-commit "$@"
+  printf %s "Git pre-commit hook was updated ..."
+  cp "${fromTo[@]}"
+  exec .git/hooks/pre-commit "$@"
 fi
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
 failed() {
-    printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")"
-    exit "$errorEnvironment"
+  printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")"
+  exit "$errorEnvironment"
 }
 
 #
@@ -34,26 +34,26 @@ failed() {
 #
 # fn: {base}
 hookGitPreCommit() {
-    statusMessage consoleSuccess Making shell files executable ...
-    if ! ./bin/build/chmod-sh.sh >/dev/null; then
-        failed chmod-sh.sh
-    fi
-    statusMessage consoleSuccess Updating help files ...
-    if ! ./bin/update-md.sh >/dev/null; then
-        failed update-md.sh
-    fi
-    statusMessage consoleSuccess Running shellcheck ...
-    if ! testShellScripts; then
-        failed testShellScripts
-    fi
-    # Unusual quoting here is to avoid having this match as an identical
-    if ! ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh; then
-        failed identical-check.sh
-    fi
-    if ! ./bin/build-docs.sh; then
-        failed build-docs.sh
-    fi
-    clearLine
+  statusMessage consoleSuccess Making shell files executable ...
+  if ! ./bin/build/chmod-sh.sh >/dev/null; then
+    failed chmod-sh.sh
+  fi
+  statusMessage consoleSuccess Updating help files ...
+  if ! ./bin/update-md.sh >/dev/null; then
+    failed update-md.sh
+  fi
+  statusMessage consoleSuccess Running shellcheck ...
+  if ! testShellScripts ! -path '*/vendor/*'; then
+    failed testShellScripts
+  fi
+  # Unusual quoting here is to avoid having this match as an identical
+  if ! ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh; then
+    failed identical-check.sh
+  fi
+  if ! ./bin/build-docs.sh; then
+    failed build-docs.sh
+  fi
+  clearLine
 
 }
 

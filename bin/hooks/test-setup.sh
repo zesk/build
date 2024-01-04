@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # fn: {base}
 hookTestSetup() {
-    consoleSuccess "Test setup does nothing - please rewrite"
+  consoleSuccess "Test setup does nothing - please rewrite"
 }
 
 hookTestSetup "$@"

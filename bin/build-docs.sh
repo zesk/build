@@ -34,50 +34,50 @@ start=$(beginTiming)
 # Argument: --help - I need somebody
 # TODO: Stop complaining about bash
 buildBuildDocumentation() {
-    local cacheDirectory
+  local cacheDirectory
 
-    cacheDirectory="$(buildCacheDirectory build-docs)"
-    # Default option settings
-    documentDirectoryArgs=()
-    cacheDirectoryArgs=("$cacheDirectory")
-    while [ $# -gt 0 ]; do
-        case $1 in
-        --no-cache)
-            cacheDirectoryArgs=()
-            ;;
-        --force)
-            if ! inArray "$1" "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}"; then
-                documentDirectoryArgs+=("$1")
-            fi
-            ;;
-        --help)
-            _buildBuildDocumentationUsage 0
-            ;;
-        *)
-            _buildBuildDocumentationUsage "$errorArgument" "Unknown argument $1"
-            ;;
-        esac
-        shift
-    done
-
-    if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
-        return $errorEnvironment
-    fi
-    if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-        ./bin/ ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-        return "$errorEnvironment"
-    fi
-    for binaryDirectory in ops bin install pipeline; do
-        if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-            ./bin/build/ ./docs/_templates/$binaryDirectory/ ./docs/_templates/__binary.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-            return $errorEnvironment
+  cacheDirectory="$(buildCacheDirectory build-docs)"
+  # Default option settings
+  documentDirectoryArgs=()
+  cacheDirectoryArgs=("$cacheDirectory")
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --no-cache)
+        cacheDirectoryArgs=()
+        ;;
+      --force)
+        if ! inArray "$1" "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}"; then
+          documentDirectoryArgs+=("$1")
         fi
-    done
+        ;;
+      --help)
+        _buildBuildDocumentationUsage 0
+        ;;
+      *)
+        _buildBuildDocumentationUsage "$errorArgument" "Unknown argument $1"
+        ;;
+    esac
+    shift
+  done
+
+  if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
+    return $errorEnvironment
+  fi
+  if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
+    ./bin/ ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    return "$errorEnvironment"
+  fi
+  for binaryDirectory in ops bin install pipeline; do
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-        ./bin/build/ ./docs/_templates/tools/ ./docs/_templates/__function.md ./docs/tools/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-        return $errorEnvironment
+      ./bin/build/ ./docs/_templates/$binaryDirectory/ ./docs/_templates/__binary.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+      return $errorEnvironment
     fi
-    reportTiming "$start" "Completed in"
+  done
+  if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
+    ./bin/build/ ./docs/_templates/tools/ ./docs/_templates/__function.md ./docs/tools/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    return $errorEnvironment
+  fi
+  reportTiming "$start" "Completed in"
 }
 
 #
@@ -88,8 +88,8 @@ buildBuildDocumentation() {
 # Output _buildBuildDocumentationUsage and exit
 #
 _buildBuildDocumentationUsage() {
-    usageDocument "./bin/$me" "buildBuildDocumentation" "$@"
-    exit $?
+  usageDocument "./bin/$me" "buildBuildDocumentation" "$@"
+  exit $?
 }
 
 buildBuildDocumentation "$@"

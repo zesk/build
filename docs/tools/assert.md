@@ -361,6 +361,67 @@ None
 File `./bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 
 
+### `assertFileExists` - Test that a file exists
+
+$Test that a file exists
+
+#### Usage
+
+    assertDirectoryExists directory [ message ... ]
+
+#### Arguments
+
+- `directory` - Directory that should exist
+- `message` - An error message if this fails
+
+#### Examples
+
+assertDirectoryExists "$HOME" "HOME not found"
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+- This fails if `directory` is anything but a `directory`
+
+### `assertFileDoesNotExist` - Test that a file does not exist
+
+$Test that a file does not exist
+
+#### Usage
+
+    assertFileDoesNotExist file [ message ... ]
+
+#### Arguments
+
+- `file` - Directory that should NOT exist
+- `message` - An error message if this fails
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+- This fails if `file` is anything at all, even a non-directory (such as a link)
+
+#### Review Status
+
+File `./bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed 2023-11-12.
+
+
 #### Usage
 
     assertFileContains fileName string0 [ ... ]

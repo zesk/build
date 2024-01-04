@@ -29,22 +29,22 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Example:     open $(bin/build/release-notes.sh)
 # Example:     vim $(releaseNotes)
 releaseNotes() {
-    version=$(runHook version-current)
-    if [ -z "$version" ]; then
-        consoleError "No version-current" 1>&2
-        return $errorEnvironment
-    fi
-    releasePath="./docs/release"
-    if [ ! -d "$releasePath" ]; then
-        consoleError "Not a directory $releasePath" 1>&2
-        return $errorEnvironment
-    fi
-    path="./docs/release/$version.md"
-    if [ ! -f "$path" ]; then
-        consoleError "No release notes found at $path" 1>&2
-        return $errorEnvironment
-    fi
-    printf %s "$path"
+  version=$(runHook version-current)
+  if [ -z "$version" ]; then
+    consoleError "No version-current" 1>&2
+    return $errorEnvironment
+  fi
+  releasePath="./docs/release"
+  if [ ! -d "$releasePath" ]; then
+    consoleError "Not a directory $releasePath" 1>&2
+    return $errorEnvironment
+  fi
+  path="./docs/release/$version.md"
+  if [ ! -f "$path" ]; then
+    consoleError "No release notes found at $path" 1>&2
+    return $errorEnvironment
+  fi
+  printf %s "$path"
 
 }
 

@@ -2,6 +2,12 @@
 
 date_default_timezone_set('UTC');
 
+if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
+	die('Not configured');
+}
+
+require_once __DIR__ . '/vendor/autoload.php';
+
 function unquote($x)
 {
 	$first = $x[0];

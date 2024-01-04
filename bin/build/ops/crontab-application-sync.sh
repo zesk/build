@@ -73,42 +73,42 @@ flagShow=
 environmentMapper=
 while [ $# -gt 0 ]; do
   case $1 in
-  --help)
-    usage 0
-    ;;
-  --env)
-    if [ -n "$rootEnv" ]; then
-      usage "$errorArgument" "--env only once"
-    fi
-    shift
-    rootEnv=$1
-    if [ ! -f "$rootEnv" ]; then
-      usage "$errorArgument" "--env must supply a file that exists"
-    fi
-    ;;
-  --mapper)
-    if [ -n "$environmentMapper" ]; then
-      usage "$errorArgument" "$environmentMapper already set"
-    fi
-    shift
-    environmentMapper=$1
-    if [ ! -x "$environmentMapper" ]; then
-      usage $errorEnvironment "$environmentMapper is not executable, failing"
-    fi
-    ;;
-  --user)
-    shift
-    user=$1
-    ;;
-  --show)
-    flagShow=1
-    ;;
-  *)
-    appPath=$1
-    if [ ! -d "$appPath" ]; then
-      usage $errorEnvironment "App path $appPath is not a directory"
-    fi
-    ;;
+    --help)
+      usage 0
+      ;;
+    --env)
+      if [ -n "$rootEnv" ]; then
+        usage "$errorArgument" "--env only once"
+      fi
+      shift
+      rootEnv=$1
+      if [ ! -f "$rootEnv" ]; then
+        usage "$errorArgument" "--env must supply a file that exists"
+      fi
+      ;;
+    --mapper)
+      if [ -n "$environmentMapper" ]; then
+        usage "$errorArgument" "$environmentMapper already set"
+      fi
+      shift
+      environmentMapper=$1
+      if [ ! -x "$environmentMapper" ]; then
+        usage $errorEnvironment "$environmentMapper is not executable, failing"
+      fi
+      ;;
+    --user)
+      shift
+      user=$1
+      ;;
+    --show)
+      flagShow=1
+      ;;
+    *)
+      appPath=$1
+      if [ ! -d "$appPath" ]; then
+        usage $errorEnvironment "App path $appPath is not a directory"
+      fi
+      ;;
   esac
   shift
 done

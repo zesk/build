@@ -17,7 +17,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # fn: {base}
 hookTestCleanup() {
-    consoleSuccess "Test cleanup does nothing - please rewrite"
+  consoleSuccess "Test cleanup does nothing - please rewrite"
 }
 
 hookTestCleanup "$@"

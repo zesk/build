@@ -19,33 +19,33 @@ errorEnvironment=1
 # Environment: Stores state files in `./.build/` directory which is created if it does not exist.
 #
 aptUpdateOnce() {
-    local older name quietLog start cacheFile=.apt-update
+  local older name quietLog start cacheFile=.apt-update
 
-    quietLog=$(buildQuietLog aptUpdateOnce)
-    name=$(buildCacheDirectory "$cacheFile")
-    if ! requireFileDirectory "$name"; then
-        return "$errorEnvironment"
-    fi
-    # once an hour, technically
-    older=$(find "$(buildCacheDirectory)" -name "$cacheFile" -mmin +60 | head -n 1)
-    if [ -n "$older" ]; then
-        rm -rf "$older"
-    fi
-    if [ -f "$name" ]; then
-        return 0
-    fi
-    if ! which apt-get >/dev/null; then
-        consoleError "No apt-get available" 1>&2
-        return 1
-    fi
-    start=$(beginTiming)
-    consoleInfo -n "apt-get update ... "
-    if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
-        buildFailed "$quietLog"
-        return "$errorEnvironment"
-    fi
-    reportTiming "$start" OK
-    date >"$name"
+  quietLog=$(buildQuietLog aptUpdateOnce)
+  name=$(buildCacheDirectory "$cacheFile")
+  if ! requireFileDirectory "$name"; then
+    return "$errorEnvironment"
+  fi
+  # once an hour, technically
+  older=$(find "$(buildCacheDirectory)" -name "$cacheFile" -mmin +60 | head -n 1)
+  if [ -n "$older" ]; then
+    rm -rf "$older"
+  fi
+  if [ -f "$name" ]; then
+    return 0
+  fi
+  if ! which apt-get >/dev/null; then
+    consoleError "No apt-get available" 1>&2
+    return 1
+  fi
+  start=$(beginTiming)
+  consoleInfo -n "apt-get update ... "
+  if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
+    buildFailed "$quietLog"
+    return "$errorEnvironment"
+  fi
+  reportTiming "$start" OK
+  date >"$name"
 }
 
 #
@@ -60,46 +60,46 @@ aptUpdateOnce() {
 # Argument: package - One or more packages to install
 #
 aptInstall() {
-    local installedLog quietLog
-    local actualPackages=() packages=(apt-utils figlet jq "$@")
-    local apt start
+  local installedLog quietLog
+  local actualPackages=() packages=(apt-utils figlet jq "$@")
+  local apt start
 
-    start=$(beginTiming)
-    quietLog=$(buildQuietLog aptInstall)
-    installedLog="$(buildCacheDirectory apt.packages)"
-    apt=$(which apt-get || :)
-    if [ -z "$apt" ]; then
-        statusMessage consoleWarning "No apt, continuing anyway ..."
-        return 0
-    fi
+  start=$(beginTiming)
+  quietLog=$(buildQuietLog aptInstall)
+  installedLog="$(buildCacheDirectory apt.packages)"
+  apt=$(which apt-get || :)
+  if [ -z "$apt" ]; then
+    statusMessage consoleWarning "No apt, continuing anyway ..."
+    return 0
+  fi
 
-    if ! aptUpdateOnce; then
-        return "$errorEnvironment"
-    fi
-    if ! requireFileDirectory "$installedLog"; then
-        return "$errorEnvironment"
-    fi
-    touch "$installedLog" || return $?
+  if ! aptUpdateOnce; then
+    return "$errorEnvironment"
+  fi
+  if ! requireFileDirectory "$installedLog"; then
+    return "$errorEnvironment"
+  fi
+  touch "$installedLog" || return $?
 
-    for p in "${packages[@]}"; do
-        if ! grep -q -e "^$p$" "$installedLog"; then
-            actualPackages+=("$p")
-            printf "%s\n" "$p" >>"$installedLog"
-        fi
-    done
+  for p in "${packages[@]}"; do
+    if ! grep -q -e "^$p$" "$installedLog"; then
+      actualPackages+=("$p")
+      printf "%s\n" "$p" >>"$installedLog"
+    fi
+  done
 
-    if [ "${#actualPackages[@]}" -eq 0 ]; then
-        if [ -n "$*" ]; then
-            consoleSuccess "Already installed: $*"
-        fi
-        return 0
+  if [ "${#actualPackages[@]}" -eq 0 ]; then
+    if [ -n "$*" ]; then
+      consoleSuccess "Already installed: $*"
     fi
-    consoleInfo -n "Installing ${actualPackages[*]} ... "
-    if ! DEBIAN_FRONTEND=noninteractive "$apt" install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
-        buildFailed "$quietLog"
-        return "$errorEnvironment"
-    fi
-    reportTiming "$start" OK
+    return 0
+  fi
+  consoleInfo -n "Installing ${actualPackages[*]} ... "
+  if ! DEBIAN_FRONTEND=noninteractive "$apt" install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
+    buildFailed "$quietLog"
+    return "$errorEnvironment"
+  fi
+  reportTiming "$start" OK
 }
 
 #
@@ -121,17 +121,17 @@ aptInstall() {
 # Environment: Technically this will install the binary and any related files as a package.
 #
 whichApt() {
-    local binary=$1 quietLog
-    shift
-    if which "$binary" >/dev/null; then
-        return 0
-    fi
-    if ! aptInstall "$@"; then
-        return $errorEnvironment
-    fi
-    if which "$binary" >/dev/null; then
-        return 0
-    fi
-    consoleError "Apt packages \"$*\" did not add $binary to the PATH $PATH"
-    buildFailed "$quietLog"
+  local binary=$1 quietLog
+  shift
+  if which "$binary" >/dev/null; then
+    return 0
+  fi
+  if ! aptInstall "$@"; then
+    return $errorEnvironment
+  fi
+  if which "$binary" >/dev/null; then
+    return 0
+  fi
+  consoleError "Apt packages \"$*\" did not add $binary to the PATH $PATH"
+  buildFailed "$quietLog"
 }

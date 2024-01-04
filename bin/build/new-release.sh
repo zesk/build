@@ -65,21 +65,21 @@ newRelease() {
   newVersion=
   while [ $# -gt 0 ]; do
     case $1 in
-    --non-interactive)
-      nonInteractive=1
-      consoleWarning "Non-interactive mode set"
-      ;;
-    --help)
-      _newReleaseUsage 0
-      return 0
-      ;;
-    *)
-      if [ -n "$newVersion" ]; then
-        _newReleaseUsage $errorArgument "Unknown argument $1"
-        return $?
-      fi
-      newVersion=$1
-      ;;
+      --non-interactive)
+        nonInteractive=1
+        consoleWarning "Non-interactive mode set"
+        ;;
+      --help)
+        _newReleaseUsage 0
+        return 0
+        ;;
+      *)
+        if [ -n "$newVersion" ]; then
+          _newReleaseUsage $errorArgument "Unknown argument $1"
+          return $?
+        fi
+        newVersion=$1
+        ;;
     esac
     shift
   done

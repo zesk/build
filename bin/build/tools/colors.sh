@@ -23,7 +23,7 @@
 # It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
 #
 consoleReset() {
-    echo -en '\033[0m' # Reset
+  echo -en '\033[0m' # Reset
 }
 
 #
@@ -33,7 +33,7 @@ consoleReset() {
 # Environment: CI - If this has a non-blank value, this returns true (supports animation)
 #
 hasConsoleAnimation() {
-    [ -z "${CI-}" ]
+  [ -z "${CI-}" ]
 }
 
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
@@ -45,113 +45,113 @@ hasConsoleAnimation() {
 # Local Cache: this value is cached in BUILD_COLORS if it is not set.
 # Environment: BUILD_COLORS - Override value for this
 hasColors() {
-    export BUILD_COLORS
-    export TERM
-    export DISPLAY
+  export BUILD_COLORS
+  export TERM
+  export DISPLAY
 
-    BUILD_COLORS="${BUILD_COLORS-z}"
-    if [ "z" = "$BUILD_COLORS" ]; then
-        if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
-            if [ -n "${DISPLAY-}" ]; then
-                BUILD_COLORS=1
-            else
-                BUILD_COLORS=
-            fi
-        elif [ "$(tput colors)" -ge 8 ]; then
-            BUILD_COLORS=1
-        else
-            BUILD_COLORS=
-        fi
-    elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
-        # Values allowed for this global are 1 and blank only
+  BUILD_COLORS="${BUILD_COLORS-z}"
+  if [ "z" = "$BUILD_COLORS" ]; then
+    if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
+      if [ -n "${DISPLAY-}" ]; then
+        BUILD_COLORS=1
+      else
         BUILD_COLORS=
+      fi
+    elif [ "$(tput colors)" -ge 8 ]; then
+      BUILD_COLORS=1
+    else
+      BUILD_COLORS=
     fi
-    test "$BUILD_COLORS"
+  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
+    # Values allowed for this global are 1 and blank only
+    BUILD_COLORS=
+  fi
+  test "$BUILD_COLORS"
 }
 
 __consoleEscape() {
-    local start=$1 end=$2 nl="\n"
+  local start=$1 end=$2 nl="\n"
+  shift
+  shift
+  if [ "${1-}" = "-n" ]; then
+    nl=
     shift
-    shift
-    if [ "${1-}" = "-n" ]; then
-        nl=
-        shift
-    fi
-    if hasColors; then
-        if [ -z "$*" ]; then
-            printf "%s$start" ""
-        else
-            printf "$start%s$end$nl" "$*"
-        fi
+  fi
+  if hasColors; then
+    if [ -z "$*" ]; then
+      printf "%s$start" ""
     else
-        printf "%s$nl" "$*"
+      printf "$start%s$end$nl" "$*"
     fi
+  else
+    printf "%s$nl" "$*"
+  fi
 }
 
 __consoleOutput() {
-    local prefix=$1 start=$2 end=$3 nl="\n"
+  local prefix=$1 start=$2 end=$3 nl="\n"
 
+  shift
+  shift
+  shift
+  if [ "${1-}" = "-n" ]; then
+    nl=
     shift
-    shift
-    shift
-    if [ "${1-}" = "-n" ]; then
-        nl=
-        shift
+  fi
+  if hasColors; then
+    if [ -z "$*" ]; then
+      printf "%s$start" ""
+    else
+      printf "$start%s$end$nl" "$*"
     fi
-    if hasColors; then
-        if [ -z "$*" ]; then
-            printf "%s$start" ""
-        else
-            printf "$start%s$end$nl" "$*"
-        fi
-    elif [ -n "$*" ]; then
-        if [ -n "$prefix" ]; then
-            printf "%s: %s$nl" "$prefix" "$*"
-        else
-            printf "%s$nl" "$*"
-        fi
+  elif [ -n "$*" ]; then
+    if [ -n "$prefix" ]; then
+      printf "%s: %s$nl" "$prefix" "$*"
+    else
+      printf "%s$nl" "$*"
     fi
+  fi
 }
 #
 # Summary: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
 #
 allColorTest() {
-    local i j n
+  local i j n
 
-    if ! hasColors; then
-        printf "no colors\n"
-        return 0
-    fi
-    i=0
-    while [ $i -lt 11 ]; do
-        j=0
-        while [ $j -lt 10 ]; do
-            n=$((10 * i + j))
-            if [ $n -gt 108 ]; then
-                break
-            fi
-            printf "\033[%dm %3d\033[0m" $n $n
-            j=$((j + 1))
-        done
-        printf "\n"
-        i=$((i + 1))
+  if ! hasColors; then
+    printf "no colors\n"
+    return 0
+  fi
+  i=0
+  while [ $i -lt 11 ]; do
+    j=0
+    while [ $j -lt 10 ]; do
+      n=$((10 * i + j))
+      if [ $n -gt 108 ]; then
+        break
+      fi
+      printf "\033[%dm %3d\033[0m" $n $n
+      j=$((j + 1))
     done
+    printf "\n"
+    i=$((i + 1))
+  done
 }
 
 # Summary: Output colors
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 colorTest() {
-    local i colors=(
-        consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
-        consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
-        consoleBold consoleBoldRed consoleCode consoleWarning consoleSuccess
-        consoleDecoration consoleError consoleLabel consoleValue
-    )
-    for i in "${colors[@]}"; do
-        $i "$i: The quick brown fox jumped over the lazy dog."
-    done
+  local i colors=(
+    consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
+    consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
+    consoleBold consoleBoldRed consoleCode consoleWarning consoleSuccess
+    consoleDecoration consoleError consoleLabel consoleValue
+  )
+  for i in "${colors[@]}"; do
+    $i "$i: The quick brown fox jumped over the lazy dog."
+  done
 }
 
 #
@@ -159,82 +159,82 @@ colorTest() {
 #
 # shellcheck disable=SC2120
 consoleRed() {
-    _consoleRed '' "$@"
+  _consoleRed '' "$@"
 }
 _consoleRed() {
-    local label="$1"
-    shift
-    __consoleOutput "$label" '\033[31m' '\033[0m' "$@"
+  local label="$1"
+  shift
+  __consoleOutput "$label" '\033[31m' '\033[0m' "$@"
 }
 consoleGreen() {
-    _consoleGreen "" "$@"
+  _consoleGreen "" "$@"
 }
 _consoleGreen() {
-    local label="$1"
-    shift
-    __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
+  local label="$1"
+  shift
+  __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
 }
 # shellcheck disable=SC2120
 consoleCyan() {
-    _consoleCyan "" "$@"
+  _consoleCyan "" "$@"
 }
 _consoleCyan() {
-    local label="$1"
-    shift
-    __consoleOutput "$label" '\033[36m' '\033[0m' "$@"
+  local label="$1"
+  shift
+  __consoleOutput "$label" '\033[36m' '\033[0m' "$@"
 }
 consoleBlue() {
-    __consoleEscape '\033[94m' '\033[0m' "$@"
+  __consoleEscape '\033[94m' '\033[0m' "$@"
 }
 consoleBlackBackground() {
-    __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
+  __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
 }
 consoleYellow() {
-    __consoleEscape '\033[48;5;16;38;5;11m' '\033[0m' "$@"
+  __consoleEscape '\033[48;5;16;38;5;11m' '\033[0m' "$@"
 }
 
 consoleOrange() {
-    _consoleOrange "" "$@"
+  _consoleOrange "" "$@"
 }
 
 _consoleOrange() {
-    local label="$1"
-    shift
-    # see https://i.stack.imgur.com/KTSQa.png
-    __consoleOutput "$label" '\033[38;5;214m' '\033[0m' "$@"
+  local label="$1"
+  shift
+  # see https://i.stack.imgur.com/KTSQa.png
+  __consoleOutput "$label" '\033[38;5;214m' '\033[0m' "$@"
 }
 
 # shellcheck disable=SC2120
 consoleMagenta() {
-    __consoleEscape '\033[35m' '\033[0m' "$@"
+  __consoleEscape '\033[35m' '\033[0m' "$@"
 }
 consoleBlack() {
-    __consoleEscape '\033[30m' '\033[0m' "$@"
+  __consoleEscape '\033[30m' '\033[0m' "$@"
 }
 consoleWhite() {
-    __consoleEscape '\033[48;5;0;37m' '\033[0m' "$@"
+  __consoleEscape '\033[48;5;0;37m' '\033[0m' "$@"
 }
 consoleBoldMagenta() {
-    __consoleEscape '\033[1m\033[35m' '\033[0m' "$@"
+  __consoleEscape '\033[1m\033[35m' '\033[0m' "$@"
 }
 
 #
 # Styles
 #
 consoleUnderline() {
-    __consoleEscape '\033[4m' '\033[24m' "$@"
+  __consoleEscape '\033[4m' '\033[24m' "$@"
 }
 consoleBold() {
-    __consoleEscape '\033[1m' '\033[21m' "$@"
+  __consoleEscape '\033[1m' '\033[21m' "$@"
 }
 consoleBoldRed() {
-    __consoleEscape '\033[31m' '\033[0m' "$@"
+  __consoleEscape '\033[31m' '\033[0m' "$@"
 }
 consoleNoBold() {
-    echo -en '\033[21m'
+  echo -en '\033[21m'
 }
 consoleNoUnderline() {
-    echo -en '\033[24m'
+  echo -en '\033[24m'
 }
 
 #
@@ -246,10 +246,10 @@ consoleNoUnderline() {
 #
 # shellcheck disable=SC2120
 consoleInfo() {
-    _consoleCyan Info "$@"
+  _consoleCyan Info "$@"
 }
 _consoleInfo() {
-    _consoleCyan "$@"
+  _consoleCyan "$@"
 }
 
 #
@@ -257,7 +257,7 @@ _consoleInfo() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-    __consoleEscape '\033[30;102m' '\033[0m' "$@"
+  __consoleEscape '\033[30;102m' '\033[0m' "$@"
 }
 
 #
@@ -265,7 +265,7 @@ consoleCode() {
 #
 # shellcheck disable=SC2120
 consoleWarning() {
-    _consoleOrange Warning "$@"
+  _consoleOrange Warning "$@"
 }
 
 #
@@ -273,7 +273,7 @@ consoleWarning() {
 #
 # shellcheck disable=SC2120
 consoleSuccess() {
-    _consoleGreen SUCCESS "$@"
+  _consoleGreen SUCCESS "$@"
 }
 
 #
@@ -281,7 +281,7 @@ consoleSuccess() {
 #
 # shellcheck disable=SC2120
 consoleDecoration() {
-    consoleBoldMagenta "$@"
+  consoleBoldMagenta "$@"
 }
 
 #
@@ -289,7 +289,7 @@ consoleDecoration() {
 #
 # shellcheck disable=SC2120
 consoleError() {
-    __consoleOutput ERROR '\033[1;31m' '\033[0m' "$@"
+  __consoleOutput ERROR '\033[1;31m' '\033[0m' "$@"
 }
 
 #
@@ -297,7 +297,7 @@ consoleError() {
 #
 # shellcheck disable=SC2120
 consoleLabel() {
-    consoleOrange "$@"
+  consoleOrange "$@"
 }
 
 #
@@ -305,7 +305,7 @@ consoleLabel() {
 #
 # shellcheck disable=SC2120
 consoleValue() {
-    consoleMagenta "$@"
+  consoleMagenta "$@"
 }
 
 # Summary: Output a name value pair
@@ -320,11 +320,11 @@ consoleValue() {
 #
 # shellcheck disable=SC2120
 consoleNameValue() {
-    local characterWidth=$1 name=$2
-    shift
-    shift
-    name="$(consoleLabel -n "$name")"
-    echo "$(alignRight "$characterWidth" "$name") $(consoleValue -n "$@")"
+  local characterWidth=$1 name=$2
+  shift
+  shift
+  name="$(consoleLabel -n "$name")"
+  echo "$(alignRight "$characterWidth" "$name") $(consoleValue -n "$@")"
 }
 
 #
@@ -339,9 +339,9 @@ consoleNameValue() {
 # Example:     clearLine
 #
 clearLine() {
-    if hasConsoleAnimation; then
-        echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
-    fi
+  if hasConsoleAnimation; then
+    echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
+  fi
 }
 
 #
@@ -361,15 +361,15 @@ clearLine() {
 #
 # shellcheck disable=SC2120
 statusMessage() {
-    local consoleAction=$1
+  local consoleAction=$1
 
-    shift
-    if hasConsoleAnimation; then
-        clearLine
-        "$consoleAction" -n "$@"
-    else
-        "$consoleAction" "$@"
-    fi
+  shift
+  if hasConsoleAnimation; then
+    clearLine
+    "$consoleAction" -n "$@"
+  else
+    "$consoleAction" "$@"
+  fi
 }
 
 #
@@ -381,11 +381,11 @@ statusMessage() {
 # Example:     repeat $(consoleColumns)
 #
 consoleColumns() {
-    if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
-        printf %d 80
-    else
-        tput cols
-    fi
+  if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
+    printf %d 80
+  else
+    tput cols
+  fi
 }
 
 #
@@ -394,8 +394,8 @@ consoleColumns() {
 # Usage: simpleMarkdownToConsole < $markdownFile
 #
 simpleMarkdownToConsole() {
-    # shellcheck disable=SC2119
-    _toggleCharacterToColor '`' "$(consoleCode)" | _toggleCharacterToColor '**' "$(consoleRed)" | _toggleCharacterToColor '*' "$(consoleCyan)"
+  # shellcheck disable=SC2119
+  _toggleCharacterToColor '`' "$(consoleCode)" | _toggleCharacterToColor '**' "$(consoleRed)" | _toggleCharacterToColor '*' "$(consoleCyan)"
 }
 
 #
@@ -408,42 +408,42 @@ simpleMarkdownToConsole() {
 # Argument: colorOff - Color off escape sequence defaults to "$(consoleReset)"
 #
 _toggleCharacterToColor() {
-    local sequence line code reset lastItem lastLine=
+  local sequence line code reset lastItem lastLine=
 
-    # shellcheck disable=SC2119
-    sequence="$(quoteSedPattern "$1")"
-    # sequence="$1"
-    code="$2"
-    reset="${3-$(consoleReset)}"
+  # shellcheck disable=SC2119
+  sequence="$(quoteSedPattern "$1")"
+  # sequence="$1"
+  code="$2"
+  reset="${3-$(consoleReset)}"
+  while true; do
+    if ! IFS= read -r line; then
+      lastLine=1
+    fi
+    lastItem=
+    odd=0
     while true; do
-        if ! IFS= read -r line; then
-            lastLine=1
-        fi
-        lastItem=
-        odd=0
-        while true; do
-            # shellcheck disable=SC2295
-            text="${line%%$sequence*}"
-            # shellcheck disable=SC2295
-            remain="${line#*$sequence}"
-            if [ "$text" = "$remain" ]; then
-                lastItem=1
-            else
-                line="$remain"
-            fi
-            if [ $((odd & 1)) -eq 1 ]; then
-                printf "%s%s%s" "$code" "$text" "$reset"
-            else
-                printf "%s" "$text"
-            fi
-            if test $lastItem; then
-                printf "\n"
-                break
-            fi
-            odd=$((odd + 1))
-        done
-        if test "$lastLine"; then
-            return 0
-        fi
+      # shellcheck disable=SC2295
+      text="${line%%$sequence*}"
+      # shellcheck disable=SC2295
+      remain="${line#*$sequence}"
+      if [ "$text" = "$remain" ]; then
+        lastItem=1
+      else
+        line="$remain"
+      fi
+      if [ $((odd & 1)) -eq 1 ]; then
+        printf "%s%s%s" "$code" "$text" "$reset"
+      else
+        printf "%s" "$text"
+      fi
+      if test $lastItem; then
+        printf "\n"
+        break
+      fi
+      odd=$((odd + 1))
     done
+    if test "$lastLine"; then
+      return 0
+    fi
+  done
 }

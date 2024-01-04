@@ -4,34 +4,45 @@
 [⬅ Return to top](../index.md)
 
 {quoteSedPattern}
+{quoteBashString}
+
+{escapeQuotes}
+{escapeSingleQuotes}
+{escapeDoubleQuotes}
+{replaceFirstPattern}
+
+{trimWords}
+{trimSpace}
+{trimSpacePipe}
+
+{stringOffset}
+{maximumFieldLength}
+
+## Types
+
+{inArray}
+{isUnsignedNumber}
+{isNumber}
+{isInteger}
+{isUnsignedInteger}
+{isNumber}
+
+## Language-related
+
+{plural}
+
+## Decoration
+
 {repeat}
 {echoBar}
 {prefixLines}
-{trimSpace}
-{stringOffset}
-{urlParse}
-{urlParseItem}
-{maximumFieldLength}
-{escapeDoubleQuotes}
-{plural}
-{escapeSingleQuotes}
-{escapeQuotes}
-{trimSpacePipe}
-{dateToFormat}
-
-{dateToTimestamp}
-
-{echoBar}
-{timestampToDate}
-
-{yesterdayDate}
-{prefixLines}
-
 {alignRight}
 {alignLeft}
+{boxedHeading}
+
+## Transformation
 
 {lowercase}
-{boxedHeading}
 {shaPipe}
 
 [⬅ Return to index](index.md)

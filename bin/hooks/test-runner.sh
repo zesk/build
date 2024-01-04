@@ -21,8 +21,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # fn: {base}
 hookTestRunner() {
-    consoleError "Test runner does nothing, failing, rewrite this."
-    return 99
+  consoleError "Test runner does nothing, failing, rewrite this."
+  return 99
 }
 
 hookTestRunner "$@"

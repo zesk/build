@@ -64,56 +64,56 @@ buildTarget=
 remoteArgs=()
 while [ $# -gt 0 ]; do
   case $1 in
-  --target)
-    shift
-    if [ -n "$buildTarget" ]; then
-      _deployToUsage $errorArgument "--target supplied twice"
-    fi
-    buildTarget=$1
-    if [ -z "$buildTarget" ]; then
-      _deployToUsage $errorArgument "blank --target"
-    fi
-    ;;
-  --help)
-    _deployToUsage 0
-    ;;
-  --deploy)
-    if test "$deployFlag"; then
-      _deployToUsage $errorArgument "--deploy arg passed twice"
-    fi
-    deployFlag=1
-    ;;
-  --debug)
-    debuggingFlag=1
-    ;;
-  --undo)
-    if test "$undoFlag"; then
-      _deployToUsage $errorArgument "--undo specified twice"
-    fi
-    undoFlag=1
-    remoteArgs+=("--undo")
-    ;;
-  --cleanup)
-    if test "$cleanupFlag"; then
-      _deployToUsage $errorArgument "--undo specified twice"
-    fi
-    cleanupFlag=1
-    remoteArgs+=("--cleanup")
-    ;;
-  *)
-    if [ -z "$applicationChecksum" ]; then
-      applicationChecksum=$1
-    elif [ -z "$remoteDeploymentPath" ]; then
-      remoteDeploymentPath=$1
-    elif [ -z "$remotePath" ]; then
-      remotePath=$1
-    else
-      IFS=' ' read -ra tokens <<<"$1"
-      for token in "${tokens[@]}"; do
-        userHosts+=("$token")
-      done
-    fi
-    ;;
+    --target)
+      shift
+      if [ -n "$buildTarget" ]; then
+        _deployToUsage $errorArgument "--target supplied twice"
+      fi
+      buildTarget=$1
+      if [ -z "$buildTarget" ]; then
+        _deployToUsage $errorArgument "blank --target"
+      fi
+      ;;
+    --help)
+      _deployToUsage 0
+      ;;
+    --deploy)
+      if test "$deployFlag"; then
+        _deployToUsage $errorArgument "--deploy arg passed twice"
+      fi
+      deployFlag=1
+      ;;
+    --debug)
+      debuggingFlag=1
+      ;;
+    --undo)
+      if test "$undoFlag"; then
+        _deployToUsage $errorArgument "--undo specified twice"
+      fi
+      undoFlag=1
+      remoteArgs+=("--undo")
+      ;;
+    --cleanup)
+      if test "$cleanupFlag"; then
+        _deployToUsage $errorArgument "--undo specified twice"
+      fi
+      cleanupFlag=1
+      remoteArgs+=("--cleanup")
+      ;;
+    *)
+      if [ -z "$applicationChecksum" ]; then
+        applicationChecksum=$1
+      elif [ -z "$remoteDeploymentPath" ]; then
+        remoteDeploymentPath=$1
+      elif [ -z "$remotePath" ]; then
+        remotePath=$1
+      else
+        IFS=' ' read -ra tokens <<<"$1"
+        for token in "${tokens[@]}"; do
+          userHosts+=("$token")
+        done
+      fi
+      ;;
   esac
   shift
 done

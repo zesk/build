@@ -22,11 +22,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # Environment: EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 #
 hookVersionCurrent() {
-    cd docs/release
-    for f in *.md; do
-        f=${f%.md}
-        echo "$f"
-    done | versionSort -r | head -1
+  cd docs/release
+  for f in *.md; do
+    f=${f%.md}
+    echo "$f"
+  done | versionSort -r | head -1
 }
 
 hookVersionCurrent

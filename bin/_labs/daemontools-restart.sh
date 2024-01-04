@@ -4,8 +4,8 @@
 #
 echo "Killing daemontools and starting from scratch ..."
 pgrep svscan -l | while read -r pid name; do
-    printf "%s (%s) " "$name" "$pid"
-    kill -9 "$pid" || printf "kill %s FAILED (?: %d) " "$name" $?
+  printf "%s (%s) " "$name" "$pid"
+  kill -9 "$pid" || printf "kill %s FAILED (?: %d) " "$name" $?
 done
 pkill svscan -t KILL
 svc -dx /etc/service/* /etc/service/*/log

@@ -21,8 +21,8 @@ me=$(basename "${BASH_SOURCE[0]}")
 # See: cannon
 #
 _cannonUsage() {
-	usageDocument "bin/build/$me" cannon "$@"
-	return $?
+  usageDocument "bin/build/$me" cannon "$@"
+  return $?
 }
 
 #
@@ -41,29 +41,29 @@ _cannonUsage() {
 #
 #
 cannon() {
-	local search searchQuoted replaceQuoted
+  local search searchQuoted replaceQuoted
 
-	if [ -z "${1-}" ]; then
-		_cannonUsage "$errorArgument" "Empty search string"
-		return $?
-	fi
-	search=${1-}
-	searchQuoted=$(quoteSedPattern "$search")
-	shift || _cannonUsage "$errorArgument" "Missing replacement argument"
-	if [ -z "${1-}" ]; then
-		_cannonUsage "$errorArgument" "Empty replacement string"
-		return $?
-	fi
-	replaceQuoted=$(quoteSedPattern "${1-}")
-	shift
-	if [ "$searchQuoted" = "$replaceQuoted" ]; then
-		_cannonUsage "$errorArgument" "from to \"$search\" are identical"
-	fi
+  if [ -z "${1-}" ]; then
+    _cannonUsage "$errorArgument" "Empty search string"
+    return $?
+  fi
+  search=${1-}
+  searchQuoted=$(quoteSedPattern "$search")
+  shift || _cannonUsage "$errorArgument" "Missing replacement argument"
+  if [ -z "${1-}" ]; then
+    _cannonUsage "$errorArgument" "Empty replacement string"
+    return $?
+  fi
+  replaceQuoted=$(quoteSedPattern "${1-}")
+  shift
+  if [ "$searchQuoted" = "$replaceQuoted" ]; then
+    _cannonUsage "$errorArgument" "from to \"$search\" are identical"
+  fi
 
-	cannonLog=$(mktemp)
-	find . -type f ! -path '*/.*' "$@" -print0 | xargs -0 grep -l "$search" | tee "$cannonLog" | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
-	consoleSuccess "# Modified $(wc -l <"$cannonLog") files"
-	rm "$cannonLog"
+  cannonLog=$(mktemp)
+  find . -type f ! -path '*/.*' "$@" -print0 | xargs -0 grep -l "$search" | tee "$cannonLog" | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
+  consoleSuccess "# Modified $(wc -l <"$cannonLog") files"
+  rm "$cannonLog"
 }
 
 cannon "$@"
