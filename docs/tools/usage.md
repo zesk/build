@@ -4,72 +4,20 @@
 [⬅ Return to top](../index.md)
 
 
-### `usageWrapper` - Description: Base case for usage, write your usage function as
+### `usageDocument` - Generates console usage output for a script using documentation tools
 
-Description: Base case for usage, write your usage function as follows:
+Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
 
- export usageDelimiter="|"
- usageOptions() {
-     cat <<EOF
- --help|This help
- EOF
- }
- usage() {
-      usageMain "$me" "$@"
- }
-
-Internal function to call `usage` depending on what's currently defined in the bash shell.
-
-- IFF `usage` is a function - pass through all arguments
-- IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
-- IFF neither is defined, outputs a simple usage without options
+Simplifies documentation and has it in one place for shell and online.
 
 #### Usage
 
-    usageWrapper [ exitCode [ message ... ] ]
+    usageDocument functionDefinitionFile functionName exitCode [ ... ]
 
-#### Exit codes
+#### Arguments
 
-- `0` - Always succeeds
-
-### `usageMain` - Description:
-
-Description:
-
-      usageOptions() {
-           cat <<EOF
-      --help$ This help
-      EOF
-      }
-      usageDescription() {
-           cat <<EOF
-      What I like to do when I run.
-      EOF
-      }
-      usage() {
-         usageMain "$me" "$@"
-      }
-
-- IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
-- IFF neither is defined, outputs a simple usage without options.
-
-#### Usage
-
-    usageMain binName [ exitCode [ message ... ] ]
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `usageTemplate` - Output usage messages to console
-
-Output usage messages to console
-
-Should look into a actual file template, probably
-
-#### Usage
-
-    usageTemplate binName options delimiter description exitCode message
+- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
+- `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 
 #### Exit codes
 
@@ -96,30 +44,43 @@ use with maximumFieldLength 1 to generate widths
 
 - `0` - Always succeeds
 
-### `usageEnvironment` - Requires environment variables to be set and non-blank
-
-Requires environment variables to be set and non-blank
-
-#### Usage
-
-    usageEnvironment [ env0 ... ]
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `usageWhich` - Requires the binaries to be found via `which`
+### `usageRequireBinary` - Check that one or more binaries are installed
 
 Requires the binaries to be found via `which`
-fails if not
+
+Runs `usageFunction` on failure
 
 #### Usage
 
-    usageRequireBinary usage [ binary0 ... ]
+    usageRequireBinary usage usageFunction binary0 [ ... ]
 
 #### Exit codes
 
 - `0` - Always succeeds
+Unable to find "usageRequireEnvironment" (from "./docs/_templates/tools/usage.md") in "./bin/build/"
+Unable to find "usageMain" (from "./docs/_templates/tools/usage.md") in "./bin/build/"
+
+### `usageTemplate` - Output usage messages to console
+
+Output usage messages to console
+
+Should look into an actual file template, probably
+
+#### Usage
+
+    usageTemplate binName options delimiter description exitCode message
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+usageDocument
+
+#### Errors
+
+Unable to find "usageMain" (from "./docs/_templates/tools/usage.md") in "./bin/build/"
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
