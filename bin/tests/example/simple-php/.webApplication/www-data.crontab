@@ -1,0 +1,4 @@
+#
+# Run once a minute and do something simple
+#
+* * * * * {APPLICATION_PATH}/bin/cron.php

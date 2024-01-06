@@ -28,6 +28,9 @@ errorArgument=2
 # - `password` - Database password
 # - `port` - Database port
 # - `name` - Database name
+#
+# Does little to no validation of anything so best used for well-formed input.
+#
 # Exit Code: 0 - If parsing succeeds
 # Exit Code: 1 - If parsing fails
 # Summary: Simple Database URL Parsing
@@ -87,6 +90,10 @@ urlParse() {
 urlParseItem() {
   # shellcheck disable=SC2034
   local scheme url name user password host port failed
+  if [ $# -ne 2 ]; then
+    consoleError "urlParseItem url name" 1>&2
+    return $errorArgument
+  fi
   eval "$(urlParse "$1")"
-  echo "${!2}"
+  printf "%s\n" "${!2}"
 }
