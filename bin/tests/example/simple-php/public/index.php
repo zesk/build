@@ -30,13 +30,17 @@ function justKeys(array $array, array $keys): array
 
 function addEnvironmentKeys(callable|array $method, bool $showDetails = false): array
 {
+	$baseKeys = [
+		'error', 'lastRun', 'firstRun', 'HOST', 'nextDelay', 'lastLog', 'uname',
+		'APPLICATION_BUILD_DATE', 'APPLICATION_TAG', 'APPLICATION_VERSION', 'FOO', 'TEST', 'DEVELOPMENT'
+	];
+	if ($showDetails) {
+		$baseKeys = array_merge($baseKeys, ['HOME','TERM']);
+	}
 	try {
 		$result = [];
 		$environment = is_array($method) ? $method : $method();
-		$result = justKeys($environment, [
-			'error', 'lastRun', 'firstRun', 'HOME', 'HOST', 'TERM', 'nextDelay', 'lastLog', 'uname',
-			'APPLICATION_BUILD_DATE', 'APPLICATION_TAG', 'APPLICATION_VERSION', 'FOO', 'TEST', 'DEVELOPMENT'
-		]);
+		$result = justKeys($environment, $baseKeys);
 		if ($result['lastRun'] ?? null) {
 			$result['lastElapsed'] = time() - $result['lastRun'];
 		}
