@@ -8,7 +8,6 @@
 {usageGenerator}
 {usageRequireBinary}
 {usageRequireEnvironment}
-{usageMain}
 {usageTemplate}
 
 [⬅ Return to index](index.md)

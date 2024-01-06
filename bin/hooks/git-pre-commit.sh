@@ -34,6 +34,8 @@ failed() {
 #
 # fn: {base}
 hookGitPreCommit() {
+  local ignorePaths=(! -path '*/vendor/*')
+
   statusMessage consoleSuccess Making shell files executable ...
   if ! ./bin/build/chmod-sh.sh >/dev/null; then
     failed chmod-sh.sh
@@ -43,7 +45,7 @@ hookGitPreCommit() {
     failed update-md.sh
   fi
   statusMessage consoleSuccess Running shellcheck ...
-  if ! testShellScripts ! -path '*/vendor/*'; then
+  if ! testShellScripts "${ignorePaths[@]}"; then
     failed testShellScripts
   fi
   # Unusual quoting here is to avoid having this match as an identical

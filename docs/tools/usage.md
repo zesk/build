@@ -40,6 +40,13 @@ usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
 
 use with maximumFieldLength 1 to generate widths
 
+#### Arguments
+
+- `nSpaces` - Required. Integer. Number of spaces to indent arguments.
+- `separatorChar` - Optional. String. Default is space.
+- `labelPrefix` - Optional. String. Defaults to blue color text.
+- `valuePrefix` - Optional. String. Defaults to red color text.
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -50,15 +57,27 @@ Requires the binaries to be found via `which`
 
 Runs `usageFunction` on failure
 
-#### Usage
+#### Arguments
 
-    usageRequireBinary usage usageFunction binary0 [ ... ]
+- `usageFunction` - Required. `bash` function already defined to output usage
+- `binary0` - Required. Binary which must have a `which` path.
 
 #### Exit codes
 
 - `0` - Always succeeds
-Unable to find "usageRequireEnvironment" (from "./docs/_templates/tools/usage.md") in "./bin/build/"
-Unable to find "usageMain" (from "./docs/_templates/tools/usage.md") in "./bin/build/"
+
+### `usageRequireEnvironment` - Requires environment variables to be set and non-blank
+
+Requires environment variables to be set and non-blank
+
+#### Arguments
+
+- `usageFunction` - Required. `bash` function already defined to output usage
+- `env0` - Optional. String. One or more environment variables which should be set and non-empty.
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ### `usageTemplate` - Output usage messages to console
 
@@ -77,10 +96,6 @@ Should look into an actual file template, probably
 #### See Also
 
 usageDocument
-
-#### Errors
-
-Unable to find "usageMain" (from "./docs/_templates/tools/usage.md") in "./bin/build/"
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

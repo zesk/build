@@ -22,8 +22,6 @@ EOF
     --name value
     --value name
 EOF
-
-  # usageMain usageTests 1 2 3 4 2>/dev/null || :
 }
 
 tests+=(testUsageArguments)

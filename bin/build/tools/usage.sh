@@ -110,13 +110,19 @@ usageArguments() {
 #
 # use with maximumFieldLength 1 to generate widths
 #
+# Argument: nSpaces - Required. Integer. Number of spaces to indent arguments.
+# Argument: separatorChar - Optional. String. Default is space.
+# Argument: labelPrefix - Optional. String. Defaults to blue color text.
+# Argument: valuePrefix - Optional. String. Defaults to red color text.
+#
 usageGenerator() {
-  local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine=
+  local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine
 
   labelOptionalPrefix=${3-"$(consoleBlue)"}
   labelRequiredPrefix=${4-"$(consoleRed)"}
   # shellcheck disable=SC2119
   valuePrefix=${5-"$(consoleValue)"}
+  lastLine=
 
   while true; do
     if ! IFS= read -r line; then
@@ -171,7 +177,9 @@ usageWhich() {
 
 #
 # Summary: Check that one or more binaries are installed
-# Usage: usageRequireBinary usage usageFunction binary0 [ ... ]
+# Usage: {fn} usageFunction binary0 [ ... ]
+# Argument: usageFunction - Required. `bash` function already defined to output usage
+# Argument: binary0 - Required. Binary which must have a `which` path.
 # Exit Codes: 1 - If any binary0 are not available within the current path
 # Requires the binaries to be found via `which`
 #
@@ -186,8 +194,32 @@ usageRequireBinary() {
   fi
   shift || return $errorArgument
   for b in "$@"; do
-    if [ -z "$(which "$b")" ]; then
+    if [ -z "$(which "$b" || :)" ]; then
       "$f" "$errorEnvironment" "$b is not available in path, not found: $PATH"
+    fi
+  done
+}
+
+#
+# Usage: {fn} usageFunction [ env0 ... ]
+# Requires environment variables to be set and non-blank
+# Argument: usageFunction - Required. `bash` function already defined to output usage
+# Argument: env0 - Optional. String. One or more environment variables which should be set and non-empty.
+# Exit Codes: 1 - If any env0 variables bre not set or bre empty.
+# Deprecated: 2024-01-01
+#
+usageRequireEnvironment() {
+  local f e
+  f="${1-}"
+  if [ "$(type -t "$f")" != "function" ]; then
+    consoleError "$f must be a valid function" 1>&2
+    return $errorArgument
+  fi
+  shift || return $errorArgument
+  for e in "$@"; do
+    if [ -z "${!e-}" ]; then
+      "$f" 1 "Required $e not set"
+      return 1
     fi
   done
 }

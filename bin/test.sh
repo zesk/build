@@ -27,17 +27,18 @@ quietLog=$(buildQuietLog "$me")
 # shellcheck source=/dev/null
 . ./bin/tests/test-tools.sh
 
-usageOptions() {
-  cat <<EOF
---help This help
---clean Delete test artifact files before starting
---messy Do not delete test artifact files afterwards
-EOF
-}
-
-usage() {
-  usageMain "$me" "$@"
-  exit "$?"
+#
+# fn: {base}
+# Usage: {fn} [ --help ] [ --clean ] [ --messy ]
+# Run Zesk Build tests
+#
+# Argument: --help - Optional. This help.
+# Argument: --clean - Optional. Delete test artifact files before starting.
+# Argument: --messy - Optional. Do not delete test artifact files afterwards.
+#
+_testUsage() {
+  usageDocument "bin/$me" _testUsage "$@"
+  return "$?"
 }
 
 messyTestCleanup() {
@@ -52,6 +53,10 @@ messyOption=
 
 while [ $# -gt 0 ]; do
   case $1 in
+    --help)
+      _testUsage 0
+      exit $?
+      ;;
     --clean)
       consoleWarning -n "Cleaning ... "
       testCleanup
@@ -61,7 +66,8 @@ while [ $# -gt 0 ]; do
       messyOption=1
       ;;
     *)
-      usage "$errorArgument" "Unknown argument $1"
+      _testUsage "$errorArgument" "Unknown argument $1"
+      exit $?
       ;;
   esac
   shift

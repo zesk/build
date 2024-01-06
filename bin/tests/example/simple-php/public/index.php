@@ -9,12 +9,13 @@ use zesk\SimpleApplication\Application;
 
 require_once dirname(__DIR__) . '/simple.application.php';
 
-$debugKey = $_REQUEST['key'] ?? null;
 $showDetails = false;
 $env = Application::loadDotEnvironment();
 $env['uname'] = Application::unameSet();
 
-if ($debugKey && $env['APPLICATION_KEY'] === $debugKey) {
+$debugKey = $_REQUEST['key'] ?? null;
+$applicationKey = $env['APPLICATION_KEY'] ?? null;
+if ($applicationKey && $debugKey && $applicationKey === $debugKey) {
 	$showDetails = true;
 }
 function justKeys(array $array, array $keys): array
@@ -38,7 +39,6 @@ function addEnvironmentKeys(callable|array $method, bool $showDetails = false): 
 		$baseKeys = array_merge($baseKeys, ['HOME','TERM']);
 	}
 	try {
-		$result = [];
 		$environment = is_array($method) ? $method : $method();
 		$result = justKeys($environment, $baseKeys);
 		if ($result['lastRun'] ?? null) {
