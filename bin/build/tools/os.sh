@@ -4,6 +4,8 @@
 #
 # Depends: colors.sh pipeline.sh
 #
+# Docs: o ./docs/_templates/tools/os.md
+# Test: o ./bin/tests/os-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -17,8 +19,8 @@ errorArgument=2
 #
 # Appends any passed in arguments as path segments.
 #
-# Example:     logFile=$(buildCacheDirectory test.log)
-# Usage: buildCacheDirectory [ pathSegment ... ]
+# Example:     logFile=$({fn} test.log)
+# Usage: {fn} [ pathSegment ... ]
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 #
 buildCacheDirectory() {
@@ -33,7 +35,7 @@ buildCacheDirectory() {
 
 #
 #
-# Usage: buildQuietLog name
+# Usage: {fn} name
 # Argument: name - The log file name
 # Argument: --no-create - Optional. Do not require creation of the directory where the log file will appear.
 #
@@ -65,9 +67,9 @@ buildQuietLog() {
 #
 # Creates the directories for all files passed in.
 #
-# Usage: requireFileDirectory file1 file2 ...
+# Usage: {fn} file1 file2 ...
 # Example:     logFile=./.build/$me.log
-# Example:     requireFileDirectory "$logFile"
+# Example:     {fn} "$logFile"
 #
 requireFileDirectory() {
   local rs name
@@ -87,9 +89,9 @@ requireFileDirectory() {
 #
 # Creates the directories for all files passed in.
 #
-# Usage: requireDirectory dir1 [ dir2 ... ]
+# Usage: {fn} dir1 [ dir2 ... ]
 # Argument: dir1 - One or more directories to create
-# Example:     requireDirectory "$cachePath"
+# Example:     {fn} "$cachePath"
 #
 requireDirectory() {
   local name
@@ -104,7 +106,7 @@ requireDirectory() {
 }
 
 #
-# Usage: runCount count binary [ args ... ]
+# Usage: {fn} count binary [ args ... ]
 # Argument: count - The number of times to run the binary
 # Argument: binary - The binary to run
 # Argument: args ... - Any arguments to pass to the binary each run
@@ -116,7 +118,7 @@ requireDirectory() {
 runCount() {
   local n
   n="$1"
-  if ! isUnsignedNumber "$n"; then
+  if ! isUnsignedInteger "$n"; then
     return "$errorArgument"
   fi
   shift
@@ -138,14 +140,14 @@ runCount() {
 # Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 #
 # Summary: Rename a list of files usually to back them up temporarily
-# Usage: renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
+# Usage: {fn} oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
 # Argument: oldSuffix - Required. String. Old suffix to look rename from.
 # Argument: newSuffix - Required. String. New suffix to rename to.
 # Argument: actionVerb - Required. String. Description to output for found files.
 # Argument: file0 - Required. String. One or more files to rename, if found, renaming occurs.
-# Example:     renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
+# Example:     {fn} "" ".$$.backup" hiding etc/app.json etc/config.json
 # Example:     ...
-# Example:     renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
+# Example:     {fn} ".$$.backup" "" restoring etc/app.json etc/config.json
 #
 renameFiles() {
   local old=$1 new=$2 verb=$3
@@ -209,7 +211,7 @@ environmentVariables() {
 }
 
 #
-# Reverses a pipe's input lines to output using an awk trick.
+# Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
 #
 # Summary: Reverse output lines
 # Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
@@ -221,13 +223,14 @@ reverseFileLines() {
 
 # Makes all `*.sh` files executable
 #
-# Usage: makeShellFilesExecutable
+# Usage: {fn} [ findArguments ... ]
+# Argument: findArguments - Optional. Add arguments to exclude files or paths.
 # Environment: Works from the current directory
 # See: makeShellFilesExecutable
 # fn: chmod-sh.sh
 makeShellFilesExecutable() {
   # IDENTICAL makeShellFilesExecutable 1
-  find . -name '*.sh' ! -path '*/.*' -print0 | xargs -0 chmod -v +x
+  find . -name '*.sh' ! -path '*/.*' "$@" -print0 | xargs -0 chmod -v +x
 }
 
 # Fetch the modification time of a file as a timestamp
@@ -253,7 +256,7 @@ modificationTime() {
 # If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 # Otherwise return `1``
 #
-# Usage: isNewestFile firstFile [ targetFile0 ... ]
+# Usage: {fn} firstFile [ targetFile0 ... ]
 # Argument: sourceFile - File to check
 # Argument: targetFile0 - One or more files to compare
 #
@@ -273,7 +276,7 @@ isNewestFile() {
 # If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 # Otherwise return `1``
 #
-# Usage: isNewestFile firstFile [ targetFile0 ... ]
+# Usage: {fn} firstFile [ targetFile0 ... ]
 # Argument: sourceFile - File to check
 # Argument: targetFile0 - One or more files to compare
 #
@@ -290,7 +293,7 @@ isOldestFile() {
 #
 # Return the oldest file in the list.
 #
-# Usage: oldestFile file0 [ file1 ... ]
+# Usage: {fn} file0 [ file1 ... ]
 # Argument: file0 - One or more files to examine
 #
 oldestFile() {
@@ -313,7 +316,7 @@ oldestFile() {
 #
 # Return the newest file in the list
 #
-# Usage: newestFile file0 [ file1 ... ]
+# Usage: {fn} file0 [ file1 ... ]
 # Argument: file0 - One or more files to examine
 #
 newestFile() {
@@ -335,7 +338,7 @@ newestFile() {
 
 #
 # Prints seconds since modified
-#
+# Usage: {fn} file
 # Exit Code: 0 - Success
 # Exit Code: 2 - Can not get modification time
 #
@@ -364,7 +367,7 @@ modifiedDays() {
 }
 
 #
-# Usage: pathAppend pathValue separator [ --first | --last | path ]
+# Usage: {fn} pathValue separator [ --first | --last | path ]
 # Argument: pathValue - Required. Path value to modify.
 # Argument: separator - Required. Separator string for path values (typically `:`)
 # Argument: --first - Optional. Place any paths after this flag first in the list
@@ -407,7 +410,7 @@ pathAppend() {
 }
 
 #
-# Usage: manPathConfigure [ --first | --last | path ] ...
+# Usage: {fn} [ --first | --last | path ] ...
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `MANPATH` environment
@@ -422,7 +425,9 @@ manPathConfigure() {
   fi
   return $?
 }
-# Usage: pathConfigure [ --first | --last | path ] ...
+
+#
+# Usage: {fn} [ --first | --last | path ] ...
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `PATH` environment
@@ -437,6 +442,7 @@ pathConfigure() {
   return $?
 }
 
+#
 # Cleans the path and removes non-directory entries and duplicates
 #
 # Maintains ordering.
@@ -478,6 +484,78 @@ realPath() {
   fi
 }
 
+#
+# Format something neatly as JSON
+# Usage: JSON < inputFile > outputFile
+# Depend: python
 JSON() {
   python -c "import sys, json; print(json.dumps(json.load(sys.stdin), indent=4))"
+}
+
+#
+# Usage: {fn} file ...
+# Argument: file - File to get the owner for
+# Outputs the file owner for each file passed on the command line
+# Exit code: 0 - Success
+# Exit code: 1 - Unable to access file
+#
+fileOwner() {
+  local uid
+  while [ $# -gt 0 ]; do
+    # shellcheck disable=SC2012
+    if ! uid="$(ls -ld "$1" | awk '{ print $3 }')"; then
+      return "$errorEnvironment"
+    fi
+    printf "%s\n" "$uid"
+    shift
+  done
+}
+
+#
+# Outputs value of resident memory used by a process, value is in kilobytes
+#
+# Usage: {fn} pid
+# Argument: pid - Process ID of running process
+# Example:     > {fn} 23
+# Output: 423
+# Exit Code: 0 - Success
+# Exit Code: 2 - Argument error
+processMemoryUsage() {
+  local pid
+  while [ $# -gt 0 ]; do
+    pid="$1"
+    if ! isInteger "$pid"; then
+      _processMemoryUsageUsage "$errorArgument" "Not an integer"
+      return $?
+    fi
+    # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
+    printf %d $(("$(ps -o rss -p "$pid" | tail -n 1)" * 1))
+    shift
+  done
+}
+
+#
+# Outputs value of virtual memory allocated for a process, value is in kilobytes
+#
+# Usage: {fn} pid
+# Argument: pid - Process ID of running process
+# Example:     {fn} 23
+# Output: 423
+# Exit Code: 0 - Success
+# Exit Code: 2 - Argument error
+processVirtualMemoryAllocation() {
+  local pid
+  while [ $# -gt 0 ]; do
+    pid="$1"
+    if ! isInteger "$pid"; then
+      _processVirtualMemoryAllocationUsage "$errorArgument" "Not an integer"
+      return $?
+    fi
+    printf %d $(("$(ps -o vsz -p "$pid" | tail -n 1)" * 1))
+    shift
+  done
+}
+
+_processVirtualMemoryAllocationUsage() {
+  usageDocument "bin/build/tools/$(basename "${BASH_SOURCE[0]}")" processMemoryUsage "$@"
 }

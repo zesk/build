@@ -153,3 +153,13 @@ testScriptInstallations() {
 
   __doesScriptInstall terraform "bin/build/install/terraform.sh"
 }
+
+tests+=(testAdditionalBins)
+testAdditionalBins() {
+  for binTest in ./bin/tests/bin/*.sh; do
+    testHeading "$(cleanTestName "$(basename "$binTest")")"
+    if ! "$binTest" "$(pwd)"; then
+      testFailed "$binTest" "$(pwd)"
+    fi
+  done
+}

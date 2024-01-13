@@ -56,6 +56,8 @@ usageDocument() {
   )
   return "$exitCode"
 }
+
+#
 # Usage: documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
 # Argument: sourceCodeDirectory - Required. The directory where the source code lives
 # Argument: documentTemplate - Required. The document template containing functions to define
@@ -368,6 +370,7 @@ bashDocumentFunction() {
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
   (
+    # subshell this does not affect anything except these commands
     set -eou pipefail
     chmod +x "$envFile"
     if ! "$envFile"; then
@@ -405,6 +408,7 @@ bashDocumentFunction() {
 __dumpNameValue() {
   __dumpNameValuePrefix "" "$@"
 }
+
 #
 # Usage: __dumpNameValuePrefix prefix name [ value0 value1 ... ]
 # Argument: `prefix` - Literal string value to prefix each argument with
@@ -422,6 +426,7 @@ __dumpNameValuePrefix() {
   done
   printf "%s\nthen\n    export '%s'\nfi\n" "EOF" "$varName"
 }
+
 # This basically just does `a=${b}` in the output
 #
 # Summary: Assign one value to another in bash

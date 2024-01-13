@@ -574,6 +574,7 @@ deployNextVersion() {
     return 1
   fi
 }
+
 #      _   _           _
 #     | | | |_ __   __| | ___
 #     | | | | '_ \ / _` |/ _ \
@@ -612,6 +613,17 @@ undoDeployApplication() {
 
 }
 
+_unwindDeploy() {
+  local deployedApplicationPath=$1
+
+  shift
+  consoleError "$*" 1>&2
+  rm -rf "$deployedApplicationPath" || :
+  return "$errorEnvironment"
+
+}
+
+#
 # Deploy an application from a deployment repository
 #
 # Usage: deployApplication deployHome deployVersion targetPackage applicationPath
@@ -623,9 +635,8 @@ undoDeployApplication() {
 # Example: deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
 deployApplication() {
   local deployHome deployVersion applicationPath deployedApplicationPath
-  local previousApplicationChecksum targetPackageFullPath exitCode=0
+  local previousApplicationPath previousApplicationChecksum targetPackageFullPath exitCode=0
 
-  set -e
   deployHome=$1
   shift
 
@@ -658,21 +669,37 @@ deployApplication() {
 
   if [ ! -d "$deployedApplicationPath" ]; then
     mkdir "$deployedApplicationPath"
-    cd "$deployedApplicationPath"
-    tar xzf "$targetPackageFullPath"
+    if cd "$deployedApplicationPath"; then
+      if ! tar xzf "$targetPackageFullPath"; then
+        return $?
+      fi
+    else
+      _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
+      return $?
+    fi
   fi
 
   deployVersion=$(getApplicationDeployVersion "$deployedApplicationPath")
 
   if [ "$deployVersion" != "$deployVersion" ]; then
-    consoleError "Arg $deployVersion != Computed $deployVersion" 1>&2
-    return 1
+    _unwindDeploy "$deployedApplicationPath" "Arg $deployVersion != Computed $deployVersion"
+    return $?
   fi
 
   if [ -d "$applicationPath/bin/build" ] && [ -d "$applicationPath/bin/hooks" ]; then
-    cd "$applicationPath"
-    runOptionalHook maintenance on
-    cd "$deployedApplicationPath"
+    if cd "$applicationPath"; then
+      if ! runOptionalHook maintenance on; then
+        _unwindDeploy "$deployedApplicationPath" "Turning maintenance on in $applicationPath failed"
+        return $?
+      fi
+      if ! cd "$deployedApplicationPath"; then
+        _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
+        return $?
+      fi
+    else
+      _unwindDeploy "$deployedApplicationPath" "cd $applicationPath failed"
+      return $?
+    fi
   fi
 
   if [ -n "$previousApplicationChecksum" ]; then
@@ -684,43 +711,58 @@ deployApplication() {
   fi
 
   consoleInfo -n "Setting to version $deployVersion ... "
-
-  cd "$deployedApplicationPath"
-  runOptionalHook deploy-start "$applicationPath"
+  if ! cd "$deployedApplicationPath"; then
+    _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
+    return $?
+  fi
+  if ! runOptionalHook deploy-start "$applicationPath"; then
+    _unwindDeploy "$deployedApplicationPath" "runOptionalHook deploy-start failed"
+    return $?
+  fi
   if hasHook deploy-move; then
     runHook deploy-move "$applicationPath"
   else
     if [ ! -d "$deployHome/$previousApplicationChecksum" ]; then
       if ! mkdir -p "$deployHome/$previousApplicationChecksum"; then
-        consoleError "Unable to create deploy home/previous checksum \"$deployHome/$previousApplicationChecksum\"" 1>&2
-        return "$errorEnvironment"
+        _unwindDeploy "$deployedApplicationPath" "Unable to create deploy home/previous checksum \"$deployHome/$previousApplicationChecksum\""
+        return $?
       fi
     fi
-    if [ -d "$deployHome/$previousApplicationChecksum/app" ]; then
-      if ! rm -rf "$deployHome/$previousApplicationChecksum/app"; then
-        consoleError "Unable to delete \"$deployHome/$previousApplicationChecksum/app\"" 1>&2
-        return "$errorEnvironment"
+    previousApplicationPath="$deployHome/$previousApplicationChecksum/app/"
+    if [ -d "$previousApplicationPath" ]; then
+      if ! rm -rf "$previousApplicationPath"; then
+        _unwindDeploy "$deployedApplicationPath" "Unable to delete \"$previousApplicationPath\""
+        return $?
       fi
     fi
     if ! cd "$deployHome"; then
-      consoleError "Unable to cd to \"$deployHome\"" 1>&2
+      _unwindDeploy "$deployedApplicationPath" "Unable to cd to \"$deployHome\""
+      return $?
+    fi
+    # COPY is safest
+    if ! cp -R "${applicationPath%%/}" "$previousApplicationPath"; then
+      _unwindDeploy "$deployedApplicationPath" "Unable to copy \"$applicationPath\" \"$previousApplicationPath\"" 1>&2
       return "$errorEnvironment"
     fi
-    if ! mv "$applicationPath" "$deployHome/$previousApplicationChecksum/app"; then
-      consoleError "Unable to move \"$applicationPath\" \"$deployHome/$previousApplicationChecksum/app\"" 1>&2
-      return "$errorEnvironment"
+    if ! mv "$applicationPath" "$applicationPath.$$"; then
+      _unwindDeploy "$deployedApplicationPath" "Unable to move $applicationPath to $applicationPath.$$"
+      return $?
     fi
-    if ! mv "$deployedApplicationPath" "$applicationPath"; then
+    if mv "$deployedApplicationPath" "$applicationPath"; then
+      if ! rm -rf "$applicationPath.$$"; then
+        consoleError "ERROR: Deleting $applicationPath.$$ resulted in exit code $?" 1>&2
+      fi
+    else
       consoleError "Unable to do FINAL mv \"$deployedApplicationPath\" \"$applicationPath\" attempting UNDO" 1>&2
-      if ! mv "$deployHome/$previousApplicationChecksum/app" "$applicationPath"; then
-        consoleError "Unable to UNDO FINAL mv \"$deployHome/$previousApplicationChecksum/app\" \"$applicationPath\", system is unstable" 1>&2
+      if ! mv "$applicationPath.$$" "$applicationPath"; then
+        _unwindDeploy "$deployedApplicationPath" "Unable to UNDO FINAL mv \"$applicationPath.$$\" \"$applicationPath\", system is BROKEN"
       fi
       return "$errorEnvironment"
     fi
   fi
   if ! cd "$applicationPath"; then
-    consoleError "Unable to do cd \"$applicationPath\" can not run optional hooks - UNSTABLE" 1>&2
-    return "$errorEnvironment"
+    consoleError "$deployedApplicationPath" "Unable to do cd \"$applicationPath\" can not run optional hooks - UNSTABLE" 1>&2
+    exitCode=$errorEnvironment
   fi
   if ! runOptionalHook deploy-finish; then
     consoleError "Deploy finish failed" 1>&2
@@ -831,7 +873,10 @@ remoteDeployFinish() {
   consoleNameValue $width "Application checksum:" "$applicationChecksum"
 
   if test $cleanupFlag; then
-    cd "$applicationPath"
+    if ! cd "$applicationPath"; then
+      consoleError "Unable to change directory to $applicationPath, exiting" 1>&2
+      return $errorEnvironment
+    fi
     consoleInfo -n "Cleaning up ..."
     if hasHook deploy-cleanup; then
       if ! runHook deploy-cleanup; then

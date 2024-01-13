@@ -25,6 +25,7 @@ Once included, all functions here are available for use and may affect your buil
 - [Prettier Functions](./prettier.md)
 - [Test Support Functions](./tests.md)
 - [Text Functions](./text.md)
+- [Type Functions](./type.md)
 - [Usage Functions](./usage.md)
 - [URL Functions](./url.md)
 - [Vendor Functions](./vendor.md)

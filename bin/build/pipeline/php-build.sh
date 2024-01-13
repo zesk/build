@@ -41,6 +41,7 @@ _phpBuildUsage() {
   usageDocument "bin/build/pipeline/$me" "phpBuild" "$@"
   return $?
 }
+
 # Build deployment using composer, adding environment values to .env and packaging vendor and additional
 # files into final: `BUILD_TARGET` (defaults to `app.tar.gz`)
 #
@@ -75,7 +76,7 @@ _phpBuildUsage() {
 phpBuild() {
   local tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime
 
-  usageRequireBinary usage docker tar
+  usageRequireBinary _phpBuildUsage docker tar
 
   export DEPLOYMENT
 
@@ -174,6 +175,7 @@ phpBuild() {
     consoleInfo "Tagging $DEPLOYMENT deployment with $versionSuffix ..."
     ./bin/build/pipeline/git-tag-version.sh --suffix "$versionSuffix"
   else
+    clearLine
     consoleInfo "No tagging of this deployment"
   fi
   #==========================================================================================

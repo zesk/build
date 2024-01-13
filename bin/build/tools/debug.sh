@@ -33,6 +33,7 @@ buildDebugStart() {
     set -x # Outputs each command for debugging
   fi
 }
+
 #
 # Stop build debugging if it is enabled
 # Usage: buildDebugStop
@@ -41,5 +42,48 @@ buildDebugStart() {
 buildDebugStop() {
   if buildDebugEnabled; then
     set +x # Debugging off
+  fi
+}
+
+#
+# Returns whether the shell has the error exit flag set
+#
+# Useful if you need to temporarily enable or disable it.
+#
+# Usage: {fn}
+#
+isErrorExit() {
+  case $- in
+    *e*)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+#
+# Usage: {fn}
+# Example:     save=$(saveErrorExit)
+# Example:     set +x
+# Example:     ... some nasty stuff
+# Example:     restoreErrorExit "$save"
+# See: restoreErrorExit
+saveErrorExit() {
+  if isErrorExit; then
+    echo 1
+  fi
+}
+
+# Usage: {fn}
+# Example:     save=$(saveErrorExit)
+# Example:     set +x
+# Example:     ... some nasty stuff
+# Example:     restoreErrorExit "$save"
+# See: saveErrorExit
+restoreErrorExit() {
+  if [ "$1" = "1" ]; then
+    set -x
+  else
+    set +x
   fi
 }

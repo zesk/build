@@ -214,75 +214,6 @@ inArray() {
 }
 
 #
-# Test if an argument is a floating point number
-#
-# Usage: isInteger argument
-# Exit Code: 0 - if it is an integer
-# Exit Code: 1 - if it is not an integer
-# Credits: F. Hauri - Give Up GitHub (isnum_Case)
-# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-#
-isUnsignedNumber() {
-  case ${1#[-+]} in
-    '' | . | *[!0-9.]* | *.*.*)
-      return 1
-      ;;
-  esac
-}
-
-#
-# Test if an argument is a floating point number
-#
-# Usage: isInteger argument
-# Exit Code: 0 - if it is an integer
-# Exit Code: 1 - if it is not an integer
-# Credits: F. Hauri - Give Up GitHub (isnum_Case)
-# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-#
-isNumber() {
-  case ${1#[-+]} in
-    '' | . | *[!0-9.]* | *.*.*)
-      return 1
-      ;;
-  esac
-}
-
-#
-# Test if an argument is a signed integer
-#
-# Usage: isInteger argument
-# Exit Code: 0 - if it is a signed integer
-# Exit Code: 1 - if it is not a signed integer
-# Credits: F. Hauri - Give Up GitHub (isuint_Case)
-# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-#
-isInteger() {
-  case ${1#[-+]} in
-    '' | *[!0-9]*)
-      return 1
-      ;;
-  esac
-}
-
-#
-# Test if an argument is an unsigned integer
-#
-# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-# Credits: F. Hauri - Give Up GitHub (isnum_Case)
-# Original: is_uint
-# Usage: {fn} string
-# Exit Code: 0 - if it is an unsigned integer
-# Exit Code: 1 - if it is not an unsigned integer
-#
-isUnsignedInteger() {
-  case $1 in
-    '' | *[!0-9]*)
-      return 1
-      ;;
-  esac
-}
-
-#
 # Remove words from the end of a phrase
 #
 # Usage: trimWords [ wordCount [ word0 ... ] ]
@@ -361,6 +292,7 @@ plural() {
     return 1
   fi
 }
+
 #
 # Format text and align it right using spaces.
 #
@@ -724,4 +656,60 @@ isUpToDate() {
     return 0
   fi
   return 0
+}
+
+# Summary: Convert tokens in files to environment variable values
+#
+# Map tokens in the input stream based on environment values with the same names.
+# Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
+# Undefined values are not converted.
+# Usage: {fn} [ environmentName0 environmentName1 ... ]
+# TODO: Do this like mapValue
+# See: mapValue
+# Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
+# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+# Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
+mapEnvironment() {
+  # IDENTICAL mapEnvironment 745 786
+  local prefix suffix sedFile ee e rs
+
+  prefix='{'
+  suffix='}'
+
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --prefix)
+        shift || usage $errorArgument "--prefix missing a value"
+        prefix="$1"
+        ;;
+      --suffix)
+        shift || usage $errorArgument "--suffix missing a value"
+        suffix="$1"
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift
+  done
+
+  sedFile=$(mktemp)
+
+  if [ $# -eq 0 ]; then
+    ee=()
+    for e in $(mapEnvironmentVariables); do
+      ee+=("$e")
+    done
+    generateSedFile "$sedFile" "${ee[@]}"
+  else
+    generateSedFile "$sedFile" "$@"
+  fi
+
+  if ! sed -f "$sedFile"; then
+    rs=$?
+    cat "$sedFile" 1>&2
+    rm "$sedFile"
+    return $rs
+  fi
+  rm "$sedFile"
 }

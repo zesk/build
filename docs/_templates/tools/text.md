@@ -18,15 +18,6 @@
 {stringOffset}
 {maximumFieldLength}
 
-## Types
-
-{inArray}
-{isUnsignedNumber}
-{isNumber}
-{isInteger}
-{isUnsignedInteger}
-{isNumber}
-
 ## Language-related
 
 {plural}

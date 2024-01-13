@@ -82,15 +82,19 @@ assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-  local expected=$1 actual bin=$2
+  local expected=$1 actual bin=$2 outputFile savedErrorExit
 
   shift
   shift
   outputFile=$(mktemp)
+  savedErrorExit=$(saveErrorExit)
+  set -e
   actual="$(
     "$bin" "$@" >"$outputFile" 2>&1
     printf %d "$?"
   )"
+  restoreErrorExit "$(savedErrorExit)"
+
   if [ "$expected" != "$actual" ]; then
     printf "assertExitCode: %s -> %s, expected %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
@@ -117,17 +121,28 @@ assertExitCode() {
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-  local expected=$1 actual bin=$2
+  local expected=$1 actual bin=$2 outputFile savedErrorExit
 
   shift
   shift
-  set +e
+  savedErrorExit=$(saveErrorExit)
+  set -e
+  outputFile=$(mktemp)
   actual=$(
-    "$bin" "$@"
+    "$bin" "$@" >"$outputFile" 2>&1
     echo "$?"
   )
-  set -e
-  assertNotEquals "$expected" "$actual" "\"$*\" exit code should not equal expected $expected ($actual)"
+  restoreErrorExit "$savedErrorExit"
+
+  if [ "$expected" = "$actual" ]; then
+    printf "assertExitCode: %s -> %s, expected NOT %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
+    prefixLines "$(consoleCode)" <"$outputFile" 1>&2
+    consoleReset 1>&2
+    rm "$outputFile"
+    return 1
+  fi
+  rm "$outputFile"
+  return 0
 }
 
 # Usage: assertContains expected actual

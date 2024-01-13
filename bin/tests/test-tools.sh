@@ -7,6 +7,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+export testTracing
+
 errorTest=3
 
 testSection() {
@@ -52,11 +54,16 @@ loadTestFiles() {
     testCount=${#tests[@]}
     statusMessage consoleError "Loading test section \"$testName\""
     # shellcheck source=/dev/null
-    . "./bin/tests/$1"
-    clearLine
-    if [ "${#tests[@]}" -le "$testCount" ]; then
-      consoleError "No tests defined in ./bin/tests/$1"
+    if ! isExecutable "./bin/tests/$1"; then
+      printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./bin/tests/$1")" "$(consoleInfo "$(pwd)")"
       resultCode="$errorTest"
+    else
+      . "./bin/tests/$1"
+      clearLine
+      if [ "${#tests[@]}" -le "$testCount" ]; then
+        consoleError "No tests defined in ./bin/tests/$1"
+        resultCode="$errorTest"
+      fi
     fi
     shift
   done
@@ -72,13 +79,14 @@ loadTestFiles() {
     else
       # Test
       testSection "${test#\#}"
+      printf "%s %s ...\n" "$(consoleCyan "Running")" "$(consoleCode "$test")"
       if ! "$test" "$quietLog"; then
         cd "$testDirectory" || return $?
-        consoleError "$test failed" 1>&2
+      printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleRed "FAILED")" 1>&2
         return "$errorTest"
       fi
       cd "$testDirectory" || return $?
-      consoleSuccess "$test passed"
+      printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleGreen "passed")"
     fi
     unset 'tests[0]'
     tests=("${tests[@]+${tests[@]}}")
@@ -89,9 +97,10 @@ loadTestFiles() {
 testFailed() {
   local errorCode="$errorTest"
   printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo -n "$*")"
-  exit "$errorCode"
+  return "$errorCode"
 }
 requireTestFiles() {
+  testTracing="$2"
   if ! loadTestFiles "$@"; then
     testFailed "$(consoleInfo -n "$*")"
   fi

@@ -23,6 +23,9 @@ top=$(pwd)
 
 me=$(basename "$0")
 quietLog=$(buildQuietLog "$me")
+cleanExit=
+export testTracing
+testTracing=initialization
 
 # shellcheck source=/dev/null
 . ./bin/tests/test-tools.sh
@@ -42,6 +45,10 @@ _testUsage() {
 }
 
 messyTestCleanup() {
+  local exitCode=$?
+  if ! test "$cleanExit"; then
+    consoleError "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
+  fi
   if test "$messyOption"; then
     return 0
   fi
@@ -75,14 +82,19 @@ done
 
 trap messyTestCleanup EXIT QUIT TERM
 
+# Types
+requireTestFiles "$quietLog" type-tests.sh
+
 # debugTermDisplay
-requireTestFiles "$quietLog" colors-tests.sh
+requireTestFiles "$quietLog" colors-tests.shi
 
 requireTestFiles "$quietLog" pipeline-tests.sh
+
 
 #
 # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
 #
+testTracing=identical-check.sh
 ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
 
 requireTestFiles "$quietLog" aws-tests.sh
@@ -92,7 +104,8 @@ requireTestFiles "$quietLog" documentation-tests.sh
 requireTestFiles "$quietLog" os-tests.sh
 requireTestFiles "$quietLog" assert-tests.sh
 requireTestFiles "$quietLog" usage-tests.sh
-requireTestFiles "$quietLog" docker-tests.sh api-tests.sh
+requireTestFiles "$quietLog" docker-tests.sh
+requireTestFiles "$quietLog" api-tests.sh
 
 # tests-tests.sh has side-effects - installs shellcheck
 requireTestFiles "$quietLog" tests-tests.sh
@@ -103,14 +116,9 @@ requireTestFiles "$quietLog" aws-tests.sh
 # Side effects - install the software
 requireTestFiles "$quietLog" bin-tests.sh
 
-for binTest in ./bin/tests/bin/*.sh; do
-  testHeading "$(cleanTestName "$(basename "$binTest")")"
-  if ! "$binTest" "$(pwd)"; then
-    testFailed "$binTest" "$(pwd)"
-  fi
-done
-
 cd "$top" || return $?
+cleanExit=1
+testTracing=cleanup
 messyTestCleanup
 
 bigText Passed | prefixLines "$(consoleSuccess)"

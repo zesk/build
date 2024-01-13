@@ -42,5 +42,10 @@
 
 {JSON}
 
+{fileOwner}
+
+{processMemoryUsage}
+{processVirtualMemoryAllocation}
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

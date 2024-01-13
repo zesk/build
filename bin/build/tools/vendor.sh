@@ -30,6 +30,7 @@ isPyCharm() {
   local xpc="${XPC_SERVICE_NAME-}"
   [ "${xpc%%pycharm*}" != "${xpc}" ]
 }
+
 #
 # Are we within the Microsoft Visual Studio Code terminal?
 #

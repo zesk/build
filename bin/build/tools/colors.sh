@@ -4,7 +4,8 @@
 #
 # Depends: text.sh
 # bin: test echo printf
-# Docs: contextOpen ./docs/_templates/tools/colors.md
+# Docs: o ./docs/_templates/tools/colors.md
+# Test: o ./bin/tests/colors-tests.sh
 
 ###############################################################################
 #
@@ -112,6 +113,7 @@ __consoleOutput() {
     fi
   fi
 }
+
 #
 # Summary: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
@@ -174,6 +176,7 @@ _consoleGreen() {
   shift
   __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
 }
+
 # shellcheck disable=SC2120
 consoleCyan() {
   _consoleCyan "" "$@"

@@ -58,6 +58,7 @@ generateSedFile() {
   done
 }
 
+#
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
@@ -72,6 +73,7 @@ generateSedFile() {
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world map.sh NAME PLACE
 mapEnvironment() {
+  # IDENTICAL mapEnvironment 79 120
   local prefix suffix sedFile ee e rs
 
   prefix='{'
@@ -94,7 +96,6 @@ mapEnvironment() {
     shift
   done
 
-  cd "$(dirname "${BASH_SOURCE[0]}")"
   sedFile=$(mktemp)
 
   if [ $# -eq 0 ]; then

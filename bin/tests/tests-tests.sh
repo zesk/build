@@ -14,5 +14,5 @@ testWrapperShellScripts() {
   # shellcheck disable=SC2034
   quietLog=$1
   shift
-  testShellScripts "$@"
+  testShellScripts ! -path '*/vendor/*' "$@"
 }

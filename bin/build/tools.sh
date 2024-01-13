@@ -17,6 +17,9 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 # shellcheck source=/dev/null
 . "$toolsDir/debug.sh"
 
+# shellcheck source=/dev/null
+. "$toolsDir/type.sh"
+
 # no dependencies
 # shellcheck source=/dev/null
 . "$toolsDir/text.sh"
@@ -63,10 +66,19 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/bitbucket.sh"
 
 # shellcheck source=/dev/null
-. "$toolsDir/tests.sh"
+. "$toolsDir/test.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/documentation.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/vendor.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/interactive.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/identical.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/daemontools.sh"

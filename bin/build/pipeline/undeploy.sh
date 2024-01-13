@@ -22,6 +22,7 @@ usageDescription() {
 Need environment: $(consoleValue "${requireEnvironments[*]}")
 EOF
 }
+
 #
 # Undeploy in pipeline.
 #

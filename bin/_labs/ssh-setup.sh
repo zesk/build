@@ -103,6 +103,7 @@ generateSSHKeyPair() {
   keyName="$1"
   ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N ""
 }
+
 #
 # usage [ exitcode ]
 #

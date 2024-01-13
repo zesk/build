@@ -292,8 +292,9 @@ sshishDeployOptions() {
     # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
     printf %s "-q"
   fi
-
 }
+
+#
 # fn: {base}
 #
 # Summary:Deploy current application to host at remotePath

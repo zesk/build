@@ -15,10 +15,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 _testPHPBuildUsage() {
   usageDocument "bin/tests/bin/$me" testPHPBuild
 }
+
 #
-# Argument: --show - Print the displayed test crontab file to stdout
-# Argument: --verbose - Be chatty
-# Argument: --keep - Do not delete artifacts when done, print created values
+# Usage: {fn} [ --show ] [ --verbose ] [ --keep ]
+# Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.
+# Argument: --verbose - Optional. Flag. Be chatty.
+# Argument: --keep - Optional. Flag. Do not delete artifacts when done, print created values.
 #
 testPHPBuild() {
   local keepFlag testPath here
@@ -82,15 +84,30 @@ testPHPBuild() {
   bin/build.sh
   assertFileExists "$BUILD_TARGET"
 
-  assertEquals "$(shaPipe app.tar.gz)" "$(shaPipe "$BUILD_TARGET")" "checksums do not match"
+  mkdir ./compare-app
+  mkdir ./compare-alternate
+  cd ./compare-app
+  tar xf ../app.tar.gz
+  cd ..
+
+  cd ./compare-alternate
+  tar xf ../alternate.tar.gz
+  cd ..
+
+  if ! diff -r ./compare-app ./compare-alternate; then
+    consoleError "Directories differ - failed"
+    return $?
+  fi
 
   manifest=$(mktemp)
-  tar tf app.tar.gz >"$manifest"
+  tar tf app.tar.gz | grep -v '/vendor/'>"$manifest"
   assertFileContains "$manifest" .deploy .deploy/APPLICATION_CHECKSUM .deploy/APPLICATION_TAG simple.application.php vendor/zesk vendor/composer src/Application.php .env
   assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml
 
-  if ! test $keepFlag; then
+  if ! test "$keepFlag"; then
+    consoleWarning Deleting app.tar.gz "$BUILD_TARGET"
     rm app.tar.gz "$BUILD_TARGET"
+    rm -rf ./compare-app ./compare-alternate
   fi
   consoleSuccess Passed.
 }
