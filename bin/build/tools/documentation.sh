@@ -60,7 +60,7 @@ usageDocument() {
 }
 
 #
-# Usage: documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
+# Usage: {fn} sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
 # Argument: sourceCodeDirectory - Required. The directory where the source code lives
 # Argument: documentTemplate - Required. The document template containing functions to define
 # Argument: templateFile - Required. Function template file to generate documentation for functions
