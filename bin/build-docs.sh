@@ -12,12 +12,9 @@ errorEnvironment=1
 errorArgument=2
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-me=$(basename "$0")
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
-
-start=$(beginTiming)
 
 # fn: {base}
 # Build documentation for build system.
@@ -34,7 +31,9 @@ start=$(beginTiming)
 # Argument: --help - I need somebody
 # TODO: Stop complaining about bash
 buildBuildDocumentation() {
-  local cacheDirectory
+  local cacheDirectory theDirectory start documentDirectoryArgs cacheDirectoryArgs
+
+  start=$(beginTiming)
 
   cacheDirectory="$(buildCacheDirectory build-docs)"
   # Default option settings
@@ -67,9 +66,15 @@ buildBuildDocumentation() {
     ./bin/ ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
     return "$errorEnvironment"
   fi
-  for binaryDirectory in ops bin install pipeline; do
+  for theDirectory in bin install pipeline; do
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-      ./bin/build/ ./docs/_templates/$binaryDirectory/ ./docs/_templates/__binary.md ./docs/$binaryDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+      ./bin/build/ ./docs/_templates/$theDirectory/ ./docs/_templates/__binary.md ./docs/$theDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+      return $errorEnvironment
+    fi
+  done
+  for theDirectory in ops tools; do
+    if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
+      ./bin/build/ ./docs/_templates/$theDirectory/ ./docs/_templates/__function.md ./docs/$theDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
       return $errorEnvironment
     fi
   done
@@ -88,7 +93,7 @@ buildBuildDocumentation() {
 # Output _buildBuildDocumentationUsage and exit
 #
 _buildBuildDocumentationUsage() {
-  usageDocument "./bin/$me" "buildBuildDocumentation" "$@"
+  usageDocument "./bin/$(basename "${BASH_SOURCE[0]}")" "buildBuildDocumentation" "$@"
   exit $?
 }
 

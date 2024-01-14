@@ -72,6 +72,7 @@ generateSedFile() {
 # Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world map.sh NAME PLACE
+#
 mapEnvironment() {
   # IDENTICAL mapEnvironment 79 120
   local prefix suffix sedFile ee e rs

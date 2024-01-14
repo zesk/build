@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# Shell colors
+# Shell tools
 #
-# Usage: source ./bin/build/tools.sh
-#
+# Usage: # shellcheck source=/dev/null
+# Usage: . ./bin/build/tools.sh
 # Depends: -
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
@@ -79,6 +79,3 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # shellcheck source=/dev/null
 . "$toolsDir/identical.sh"
-
-# shellcheck source=/dev/null
-. "$toolsDir/daemontools.sh"

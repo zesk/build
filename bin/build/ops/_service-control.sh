@@ -4,6 +4,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# IDENTICAL DAEMONTOOLS_HOME 2
+export DAEMONTOOLS_HOME
+DAEMONTOOLS_HOME=${DAEMONTOOLS_HOME-/etc/service}
+
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
@@ -17,36 +21,48 @@ _serviceControlDaemonUsage() {
   return "$errorCode"
 }
 
-# Runs a daemon which monitors
+# Runs a daemon which monitors files and operates on services.
 #
-# Usage: {fn} {service} [ --interval seconds ] {file} [ action ... ]
-# Argument: --interval intervalSeconds - Number of seconds to check for presence of the file
-# Argument: --chirp chirpSeconds - Output a message saying we're alive every `chirpSeconds` seconds.
-# Argument: service - Required. Directory. Service to control (e.g. `/etc/service/application/`)
-# Argument: file - Required. File. Absolute path to a file. Presence of  `file` triggers `action`
-# Argument: action - Optional. String. Action to perform `start`, `stop`, `restart`. Default is `restart`.
+# To request a specific action write the file with the action as the first line.
+#
+# Allows control across user boundaries.
+#
+# Specify actions more than once on the command line to specify more than one set of permissions.
+#
+# Usage: {fn} [ --interval seconds ] [ --stat statFile ] [ --action actions ] service0 file0 [ service1 file1 ]
+# Argument: --home serviceHome - Optional. Service directory home. Defaults to `/etc/service`.
+# Argument: --interval intervalSeconds - Optional. Number of seconds to check for presence of the file. Defaults to 10.
+# Argument: --stat statFile - Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.
+# Argument: --chirp chirpSeconds - Optional. Output a message saying we're alive every `chirpSeconds` seconds.
+# Argument: --action actions - Optional. String. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.
+# Argument: service0 - Required. Directory. Service to control (e.g. `/etc/service/application/`)
+# Argument: file1 - Required. File. Absolute path to a file. Presence of  `file` triggers `action`
 #
 serviceControlDaemon() {
-  local lastChirp now intervalSeconds chirpSeconds service file directory svcBin secondsNoun
-  local fileAction action defaultAction action_start action_stop action_restart
+  local intervalSeconds chirpSeconds statFile serviceHome
+  local directory svcBin svcBinFlags secondsNoun
+  local lastChirp now
+  local fileAction index
+  local currentActions action
+  local services files actions
 
-  file=
-  defaultAction=
-  action_start=
-  action_stop=
-  action_restart=
+  services=()
+  files=()
   actions=()
-  intervalSeconds=1
-  chirpSeconds=0
-  ! test "" || printf "%s" "$action_start $action_stop $action_restart"
 
+  currentActions=("restart")
+  intervalSeconds=10
+  chirpSeconds=0
+  statFile=
+  serviceHome="$DAEMONTOOLS_HOME"
   if ! svcBin=$(which svc); then
     _serviceControlDaemonUsage "$errorEnvironment" "svc binary not found in PATH: $PATH"
     return $?
   fi
 
   while [ $# -gt 0 ]; do
-    case "$1" in
+    arg="$1"
+    case "$arg" in
       --chirp)
         shift
         chirpSeconds=$((${1-0} + 0))
@@ -63,6 +79,41 @@ serviceControlDaemon() {
           return $?
         fi
         ;;
+      --stat)
+        if [ -n "$statFile" ]; then
+          _serviceControlDaemonUsage "$errorArgument" "--stat must be specified once $statFile and $1"
+          return $?
+        fi
+        shift
+        statFile="$1"
+        if [ ! -d "$(dirname "$statFile")" ]; then
+          _serviceControlDaemonUsage "$errorEnvironment" "--stat must be in a directory that exists: $statFile"
+          return $?
+        fi
+        ;;
+      --home)
+        shift
+        serviceHome="$1"
+        if [ ! -d "$serviceHome" ]; then
+          _serviceControlDaemonUsage "$errorEnvironment" "--home must be a directory that exists: $serviceHome"
+          return $?
+        fi
+        ;;
+      --action)
+        shift
+        IFS="," read -r -a currentActions <<<"$1"
+        if [ ${#currentActions[@]} -eq 0 ]; then
+          _serviceControlDaemonUsage "$errorArgument" "$arg No actions specified"
+          return $?
+        fi
+        for action in "${currentActions[@]}"; do
+          case $action in start | restart | stop) ;; *)
+            _serviceControlDaemonUsage "$errorArgument" "Invalid action $action"
+            return $?
+            ;;
+          esac
+        done
+        ;;
       *)
         if [ -z "$service" ]; then
           service="$1"
@@ -70,38 +121,25 @@ serviceControlDaemon() {
             _serviceControlDaemonUsage "$errorEnvironment" "service must be a service directory that exists: $service"
             return $?
           fi
-        elif [ -z "$file" ]; then
+        else
           file="$1"
-          directory="$(dirname "$file")"
-          if [ ! -d "$directory" ]; then
+          if [ ! -d "$(dirname "$file")" ]; then
             _serviceControlDaemonUsage "$errorEnvironment" "file must be in a directory that exists: $file"
             return $?
           fi
-        else
-          case "$1" in
-            stop | start | restart)
-              action="action_$1"
-              if ! test "${!action}"; then
-                actions+=("$1")
-                declare -i "$action"=1
-                if [ -z "$defaultAction" ]; then
-                  defaultAction=$action
-                fi
-              fi
-              ;;
-            *)
-              _serviceControlDaemonUsage "$errorArgument" "Action must start, stop or restart: $1"
-              return $?
-              ;;
-          esac
+          services+=("$service")
+          files+=("$file")
+          actions+=("${currentActions[*]}")
+          service=
+          file=
         fi
         ;;
     esac
+    shift
   done
-  if [ -z "$defaultAction" ]; then
-    defaultAction=restart
-    action_restart=1
-    actions+=("$defaultAction")
+  if [ "${#services[@]}" -eq 0 ]; then
+    _serviceControlDaemonUsage "$errorArgument" "Need at least one service and file pair"
+    return $?
   fi
   start=$(date +%s)
   lastChirp=$start
@@ -109,36 +147,60 @@ serviceControlDaemon() {
   if [ "$intervalSeconds" -eq 1 ]; then
     secondsNoun=second
   fi
-  printf "%s: pid %d: service %s, file %s for: %s (every %d %s)\n" "$$" "$(basename "${BASH_SOURCE[0]}")" "$service" "$file" "$intervalSeconds" "${actions[*]}" "$secondsNoun"
+  printf "%s: pid %d: (every %d %s)\n" "$(basename "${BASH_SOURCE[0]}")" "$$" "$intervalSeconds" "$secondsNoun"
+  index=0
+  while [ $index -lt ${#files[@]} ]; do
+    printf "    service: %s file: %s actions: %s\n" "${services[$index]}" "${files[$index]}" "${actions[$index]}"
+    index=$((index + 1))
+  done
   while true; do
-    if [ ! -d "$directory" ]; then
-      _serviceControlDaemonUsage $errorEnvironment "Parent directory deleted, exiting: $directory"
-      return $errorEnvironment
+    if [ -n "$statFile" ]; then
+      svstat "$serviceHome/*" "$serviceHome/*/log"
     fi
-    if [ -f "$file" ]; then
+    index=0
+    while [ $index -lt ${#files[@]} ]; do
+      service="${services[$index]}"
+      file="${files[$index]}"
+      action=${actions[$index]}
+      index=$((index + 1))
+      directory="$(dirname "$file")"
+      if [ ! -d "$directory" ]; then
+        _serviceControlDaemonUsage $errorEnvironment "Parent directory deleted, exiting: $directory"
+        return $errorEnvironment
+      fi
+      if [ ! -f "$file" ]; then
+        continue
+      fi
       fileAction="$(head -1 "$file")"
       case "$fileAction" in start | stop | restart) ;; *) fileAction="restart" ;; esac
-      action="action_$fileAction"
-      if ! test "${!action}"; then
-        printf "%s requested but not permitted: %s\n" "$fileAction" "${actions[*]}" 1>&2
+      IFS=" " read -r -a currentActions <<<"$action"
+      svcBinFlags=
+      for action in "${currentActions[@]}"; do
+        if [ "$action" = "$fileAction" ]; then
+          printf "start=%s\n""action=%s\n""daemon=%d\n""service=%s\n" "$(date +%s)" "$fileAction" "$$" "$service" >"$file.svc"
+          printf "Service %s: %s\n" "$fileAction" "$(basename "$service")"
+          case $fileAction in
+            start) svcBinFlags="-u" ;;
+            stop) svcBinFlags="-d" ;;
+            *) svcBinFlags="-t" ;;
+          esac
+          break
+        fi
+      done
+      if [ -z "$svcBinFlags" ]; then
+        printf "Service %s: %s requested but not permitted: %s\n" "$(basename "$service")" "$fileAction" "${actions[*]}" 1>&2
       else
-        printf "start=%s\n""action=%s\n""daemon=%d\n""service=%s\n" "$(date +%s)" "$fileAction" "$$" "$service" >"$file.svc"
-        printf "Service %s: %s\n" "$fileAction" "$(basename "$service")"
-        case $fileAction in
-          stop)
-            "$svcBin" -d "$service"
-            ;;
-          start)
-            "$svcBin" -u "$service"
-            ;;
-          *)
-            "$svcBin" -t "$service"
-            ;;
-        esac
+        if "$svcBin" "$svcBinFlags" "$service" 2>&1 | grep -q warning; then
+          _serviceControlDaemonUsage $errorEnvironment "Unable to control service $service ($svcBinFlags)"
+          return $errorEnvironment
+        fi
       fi
       rm -f "$file" "$file.svc" 2>/dev/null
+    done
+    # Does this work?
+    if ! sleep "$intervalSeconds"; then
+      break
     fi
-    sleep "$intervalSeconds"
     if [ "$chirpSeconds" -gt 0 ]; then
       now=$(date +%s)
       if [ "$((now - lastChirp))" -gt "$chirpSeconds" ]; then

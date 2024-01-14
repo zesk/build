@@ -4,9 +4,11 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-#
-export DAEMONTOOLS_HOME
+# Docs: o docs/_templates/ops/daemontools.md
+# Test: o bin/tests/daemontools-tests.sh
 
+# IDENTICAL DAEMONTOOLS_HOME 2
+export DAEMONTOOLS_HOME
 DAEMONTOOLS_HOME=${DAEMONTOOLS_HOME-/etc/service}
 
 # IDENTICAL errorArgument 1
@@ -24,14 +26,15 @@ _daemontoolsInstallServiceUsage() {
 #
 # Installs a `daemontools` service with an optional logging daemon process. Uses `_generic-service.sh` and `_generic-log.sh` files as templates.
 #
+# Argument: --home serviceHome - Optional. Path. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
 # Argument: serviceFile - Required. Binary. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
-# Argument: serviceName - Optional. String. The daemon serviceName. If not specified uses the baseserviceName with any extension removed for the serviceName.
+# Argument: serviceName - Optional. String. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
 # Argument: --log logPath - Optional. Path. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
-# Argument: --home serviceHome - Optional. Path. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`.
 #
 daemontoolsInstallService() {
-  local arg serviceHome serviceName source target logSource logTarget appUser
+  local arg serviceHome serviceName source target logPath logSource logTarget appUser
 
+  logPath=
   serviceHome="${DAEMONTOOLS_HOME}"
   while [ $# -gt 0 ]; do
     arg=$1
@@ -90,10 +93,12 @@ daemontoolsInstallService() {
   if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile escalatedMapCopyFileChanged "$source" "$target/run"; then
     svc -t "$target"
   fi
-  logSource="./build/ops/_generic-log.sh"
-  logTarget="$DAEMONTOOLS_HOME/$serviceName/log"
-  [ -d "$logTarget" ] || (mkdir "$logTarget" && echo "Created $logTarget")
-  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile escalatedCopyFileChanged "$logSource" "$logTarget/run"; then
-    svc -t "$logTarget"
+  if [ -n "$logPath" ]; then
+    logSource="./build/ops/_generic-log.sh"
+    logTarget="$DAEMONTOOLS_HOME/$serviceName/log"
+    [ -d "$logTarget" ] || (mkdir "$logTarget" && echo "Created $logTarget")
+    if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile escalatedCopyFileChanged "$logSource" "$logTarget/run"; then
+      svc -t "$logTarget"
+    fi
   fi
 }
