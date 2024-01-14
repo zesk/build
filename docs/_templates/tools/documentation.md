@@ -14,6 +14,16 @@
 {bashExtractDocumentation}
 {bashFindFunctionFiles}
 
+## Release Related
+
+{releaseNotes}
+{newRelease}
+{nextMinorVersion}
+
+## Usage Utilities
+
+{usageDocument}
+
 ## Documentation Utilities
 
 {removeUnfinishedSections}

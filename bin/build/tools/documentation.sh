@@ -10,6 +10,8 @@
 #
 # Depends: colors.sh text.sh prefixLines
 #
+# Docs: o ./docs/_templates/tools/documentation.md
+# Test: o ./bin/tests/documentation-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -811,7 +813,6 @@ nextMinorVersion() {
 }
 
 #
-# fn: new-release.sh
 # Argument: --non-interactive - Optional. If new version is needed, use default version
 # Argument: versionName - Optional. Set the new version name to this.
 # Summary: Generate a new release notes and bump the version
