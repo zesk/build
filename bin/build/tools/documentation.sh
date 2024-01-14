@@ -85,7 +85,7 @@ usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentFunctionsWithTemplate() {
-  local start sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory
+  local last start sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory
 
   local optionForce targetDirectory cacheFile tokenLookupCacheFile
   local sourceShellScript sourceShellScriptChecksum reason base checksumPrefix checksum
@@ -162,6 +162,7 @@ documentFunctionsWithTemplate() {
     listTokens <"$documentTemplate" >"$documentTokensFile"
     set -a
     allCached=1
+    last=$(beginTiming)
     while read -r token; do
       sourceShellScript=
       sourceShellScriptChecksum=
@@ -212,7 +213,8 @@ documentFunctionsWithTemplate() {
             else
               export "${token?}"
               declare "$token"="$(cat "$cacheFile")"
-              statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... (using cache)"
+              statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... (using cache) $(reportTiming "$last")"
+              last=$(beginTiming)
               continue
             fi
             reason="(forced)"

@@ -52,8 +52,7 @@ updateMarkdown() {
   statusMessage consoleInfo "Generating build.json"
   printf "%s" "{}" | jq --arg version "$(runHook version-current)" \
     --arg tag "$(runHook application-tag)" \
-    --arg checksum "$(runHook application-checksum)" \
-    '. + {version: $version, tag: $tag, checksum: $checksum}' >"$buildMarker"
+    '. + {version: $version, tag: $tag}' >"$buildMarker"
   git add "$buildMarker"
 
   #
