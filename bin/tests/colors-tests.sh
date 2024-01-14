@@ -25,9 +25,9 @@ testSimpleMarkdownToConsole() {
   result="$(printf "%s text is %s and %s" "$(consoleCode Code)" "$(consoleCyan italic)" "$(consoleCyan bold)")"
   CI=
   # shellcheck disable=SC2016
-  assertEquals "$(printf "%s" '`Code` text is *italic* and **bold**' | simpleMarkdownToConsole)" "$result"
+  assertEquals "$(printf "%s" '`Code` text is *italic* and **bold**' | simpleMarkdownToConsole)" "$result" || return $?
   CI=1
   # shellcheck disable=SC2016
-  assertEquals "$(printf "%s" '`Code` text is *italic* and **bold**' | simpleMarkdownToConsole)" "Code text is italic and bold"
+  assertEquals "$(printf "%s" '`Code` text is *italic* and **bold**' | simpleMarkdownToConsole)" "Code text is italic and bold" || return $?
   CI="$saveCI"
 }

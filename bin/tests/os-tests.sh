@@ -6,6 +6,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+set -eou pipefail
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -57,33 +58,33 @@ testMemoryRelated() {
   local rss vsz
 
   rss=$(processMemoryUsage $$)
-  vsz=$(processVirtualMemoryUsage $$)
+  vsz=$(processVirtualMemoryAllocation $$)
 
-  assertExitCode 0 isInteger "$rss"
-  assertExitCode 0 isInteger "$vsz"
+  assertExitCode 0 isInteger "$rss" || return $?
+  assertExitCode 0 isInteger "$vsz" || return $?
 
-  assertGreaterThan 5 "$rss" "pid $$ rss $rss"
-  assertGreaterThan 5 "$vsz" "pid $$ virtual memory $vsz"
-  assertGreaterThan "$vsz" "$rss" "pid $$  rss $rss, virtual memory $vsz"
+  assertGreaterThan "$rss" 1024 "pid $$ rss $rss" || return $?
+  assertGreaterThan "$vsz" 1024 "pid $$ virtual memory $vsz" || return $?
+  assertGreaterThan "$vsz" "$rss" "pid $$  rss $rss, virtual memory $vsz" || return $?
 }
 
-tests=(testRunCount)
+tests+=(testRunCount)
 testRunCount() {
-  assertEquals "$(runCount 10 echo -n .)" ".........."
-  assertEquals "$(runCount 20 echo -n .)" "...................."
-  assertExitCode 2 runCount -4923 echo busted
-  assertExitCode 2 runCount 33.3 echo busted
-  assertExitCode 2 runCount 4.0 echo busted
-  assertExitCode 2 runCount thirty echo busted
+  assertEquals "$(runCount 10 echo -n .)" ".........." || return $?
+  assertEquals "$(runCount 20 echo -n .)" "...................." || return $?
+  assertExitCode 2 runCount -4923 echo busted || return $?
+  assertExitCode 2 runCount 33.3 echo busted || return $?
+  assertExitCode 2 runCount 4.0 echo busted || return $?
+  assertExitCode 2 runCount thirty echo busted || return $?
 }
-tests=(testEnvironmentVariables)
+
+tests+=(testEnvironmentVariables)
 testEnvironmentVariables() {
   local e
   e=$(mktemp)
   export BUILD_TEST_UNIQUE=1
-  environmentVariables > "$e"
-  assertFileContains BUILD_TEST_UNIQUE "$e"
-  assertFileContains HOME "$e"
-  assertFileContains PATH "$e"
+  environmentVariables >"$e"
+  assertFileContains "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
+  prefixLines "environmentVariables: $(consoleCode)" <"$e"
   rm "$e"
 }

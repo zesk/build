@@ -30,9 +30,11 @@ hookVersionAlready() {
   releaseNotes=$1
   shift
 
-  printf "%s %s %s %s\n" "$(consoleSuccess "Already at")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes are")" "$(consoleValue "$releaseNotes")"
   if ! test "$BUILD_VERSION_NO_OPEN"; then
+    printf "%s %s %s %s\n" "$(consoleSuccess "Opening")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes at")" "$(consoleValue "$releaseNotes")"
     contextOpen "$releaseNotes"
+  else
+    printf "%s %s %s %s\n" "$(consoleSuccess "Already at")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes")" "$(consoleValue "$releaseNotes")"
   fi
 }
 

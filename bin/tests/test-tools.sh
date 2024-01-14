@@ -43,25 +43,30 @@ cleanTestName() {
 }
 
 loadTestFiles() {
-  local fileCount testCount tests=() testName quietLog=$1 testDirectory resultCode=0
+  local fileCount testCount tests testName quietLog=$1 testDirectory resultCode=0 resultReason
 
+  export tests
+  resultReason="Success"
   shift
   statusMessage consoleWarning "Loading tests ..."
   fileCount="$#"
+  tests=()
   while [ "$#" -gt 0 ]; do
     testName="$(cleanTestName "$1")"
     tests+=("#$testName") # Section
-    testCount=${#tests[@]}
     statusMessage consoleError "Loading test section \"$testName\""
-    # shellcheck source=/dev/null
     if ! isExecutable "./bin/tests/$1"; then
       printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./bin/tests/$1")" "$(consoleInfo "$(pwd)")"
+      resultReason="Not executable"
       resultCode="$errorTest"
     else
+      testCount=${#tests[@]}
+      # shellcheck source=/dev/null
       . "./bin/tests/$1"
       clearLine
       if [ "${#tests[@]}" -le "$testCount" ]; then
         consoleError "No tests defined in ./bin/tests/$1"
+        resultReason="No tests defined in ./bin/tests/$1 ${#tests[@]} <= $testCount"
         resultCode="$errorTest"
       fi
     fi
@@ -82,7 +87,9 @@ loadTestFiles() {
       printf "%s %s ...\n" "$(consoleCyan "Running")" "$(consoleCode "$test")"
       if ! "$test" "$quietLog"; then
         cd "$testDirectory" || return $?
-      printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleRed "FAILED")" 1>&2
+        printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleRed "FAILED")" 1>&2
+        buildFailed "$quietLog"
+        resultReason="test failed"
         return "$errorTest"
       fi
       cd "$testDirectory" || return $?
@@ -91,6 +98,7 @@ loadTestFiles() {
     unset 'tests[0]'
     tests=("${tests[@]+${tests[@]}}")
   done
+  printf "resultReason: %s\n" "$(consoleMagenta "$resultReason")"
   return $resultCode
 }
 

@@ -251,108 +251,6 @@ usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
 
 - `0` - Always succeeds
 
-## Types
-
-
-### `inArray` - Check if an element exists in an array
-
-Check if an element exists in an array
-
-#### Usage
-
-    inArray element [ arrayElement0 arrayElement1 ... ]
-
-#### Arguments
-
-- `element` - Thing to search for
-- `arrayElement0` - One or more array elements to match
-
-#### Exit codes
-
-- `0` - If element is found in array
-- `1` - If element is NOT found in array
-
-### `isUnsignedNumber` - Test if an argument is a floating point number
-
-Test if an argument is a floating point number
-
-#### Usage
-
-    isInteger argument
-
-#### Exit codes
-
-- `0` - if it is an integer
-- `1` - if it is not an integer
-
-#### Credits
-
-Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash).
-
-### `isNumber` - Test if an argument is a floating point number
-
-Test if an argument is a floating point number
-
-#### Usage
-
-    isInteger argument
-
-#### Exit codes
-
-- `0` - if it is an integer
-- `1` - if it is not an integer
-
-#### Credits
-
-Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash).
-
-### `isInteger` - Test if an argument is a signed integer
-
-Test if an argument is a signed integer
-
-#### Usage
-
-    isInteger argument
-
-#### Exit codes
-
-- `0` - if it is a signed integer
-- `1` - if it is not a signed integer
-
-#### Credits
-
-Thanks to [F. Hauri - Give Up GitHub (isuint_Case)](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash).
-
-### `isUnsignedInteger` - Test if an argument is an unsigned integer
-
-Test if an argument is an unsigned integer
-
-#### Exit codes
-
-- `0` - if it is an unsigned integer
-- `1` - if it is not an unsigned integer
-
-#### Credits
-
-Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash).
-
-### `isNumber` - Test if an argument is a floating point number
-
-Test if an argument is a floating point number
-
-#### Usage
-
-    isInteger argument
-
-#### Exit codes
-
-- `0` - if it is an integer
-- `1` - if it is not an integer
-
-#### Credits
-
-Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash).
-
 ## Language-related
 
 
@@ -460,12 +358,6 @@ cat "$file" | prefixLines "$(consoleCode)"
 
 ### `alignRight` - align text right
 
-Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
-
-
-Example:
-
-
 Format text and align it right using spaces.
 
 #### Usage
@@ -488,8 +380,7 @@ printf "%s: %s
 
 #### Exit codes
 
-- `1` - If count is non-numeric
-- `0` - If count is numeric
+- `0` - Always succeeds
 
 ### `alignLeft` - align text left
 

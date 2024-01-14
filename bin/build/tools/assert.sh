@@ -82,18 +82,18 @@ assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-  local expected=$1 actual bin=$2 outputFile savedErrorExit
+  local expected=$1 actual bin=$2 outputFile saved
 
   shift
   shift
   outputFile=$(mktemp)
-  savedErrorExit=$(saveErrorExit)
+  saved=$(saveErrorExit)
   set -e
   actual="$(
     "$bin" "$@" >"$outputFile" 2>&1
     printf %d "$?"
   )"
-  restoreErrorExit "$(savedErrorExit)"
+  restoreErrorExit "$saved"
 
   if [ "$expected" != "$actual" ]; then
     printf "assertExitCode: %s -> %s, expected %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2

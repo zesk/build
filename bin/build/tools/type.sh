@@ -114,15 +114,28 @@ isFunction() {
 # Exit code: 0 - All arguments are executable binaries
 # Exit code: 1 - One or or more arguments are not executable binaries
 isExecutable() {
+  local lsMask
   if [ $# -eq 0 ]; then
     return 1
   fi
   while [ $# -gt 0 ]; do
-    if [ ! -x "$1" ] || [ -d "$1" ] || [ -f "$1" ]; then
+    if [ -f "$1" ]; then
+      # FAILS on plain files in docker on Mac OS X
+      if [ ! -x "$1" ]; then
+        return 1
+      fi
+      # shellcheck disable=SC2012
+      if lsMask="$(ls -lhaF "$1" | awk '{ print $1 }')"; then
+        if [ "$lsMask" = "${lsMask%%x*}" ]; then
+          return 2
+        fi
+      fi
+    else
       return 1
     fi
     shift
   done
+  return 0
 }
 
 # Test if all arguments are callable as a command

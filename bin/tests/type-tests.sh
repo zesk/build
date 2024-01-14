@@ -210,8 +210,8 @@ validateNotSignedInteger() {
 }
 validateUnsignedInteger() {
   while IF="" read -r testLine; do
-        _testLineLabel "isUnsignedInteger" "$testLine"
-if ! assertExitCode 0 isUnsignedInteger "$testLine"; then
+    _testLineLabel "isUnsignedInteger" "$testLine"
+    if ! assertExitCode 0 isUnsignedInteger "$testLine"; then
       return 1
     fi
   done

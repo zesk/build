@@ -100,14 +100,16 @@ testPHPBuild() {
   fi
 
   manifest=$(mktemp)
-  tar tf app.tar.gz | grep -v '/vendor/'>"$manifest"
-  assertFileContains "$manifest" .deploy .deploy/APPLICATION_CHECKSUM .deploy/APPLICATION_TAG simple.application.php vendor/zesk vendor/composer src/Application.php .env
+  tar tf app.tar.gz >"$manifest.complete"
+  grep -v 'vendor/' "$manifest.complete" >"$manifest"
+  assertFileContains "$manifest" .deploy .deploy/APPLICATION_CHECKSUM .deploy/APPLICATION_TAG simple.application.php src/Application.php .env
   assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml
+  assertFileContains "$manifest.complete" vendor/zesk vendor/composer
 
   if ! test "$keepFlag"; then
     consoleWarning Deleting app.tar.gz "$BUILD_TARGET"
     rm app.tar.gz "$BUILD_TARGET"
-    rm -rf ./compare-app ./compare-alternate
+    rm -rf ./compare-app ./compare-alternate "$manifest.complete" "$manifest"
   fi
   consoleSuccess Passed.
 }

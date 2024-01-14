@@ -45,8 +45,13 @@ _testUsage() {
 }
 
 messyTestCleanup() {
-  local exitCode=$?
+  local fn exitCode=$?
   if ! test "$cleanExit"; then
+    consoleInfo -n "Stack:"
+    for fn in "${FUNCNAME[@]}"; do
+      printf " %s" "$(consoleWarning "$fn")"
+    done
+    printf "\n"
     consoleError "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
   fi
   if test "$messyOption"; then
@@ -85,11 +90,13 @@ trap messyTestCleanup EXIT QUIT TERM
 # Types
 requireTestFiles "$quietLog" type-tests.sh
 
+# OS
+requireTestFiles "$quietLog" os-tests.sh
+
 # debugTermDisplay
-requireTestFiles "$quietLog" colors-tests.shi
+requireTestFiles "$quietLog" colors-tests.sh
 
 requireTestFiles "$quietLog" pipeline-tests.sh
-
 
 #
 # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
@@ -101,7 +108,6 @@ requireTestFiles "$quietLog" aws-tests.sh
 requireTestFiles "$quietLog" text-tests.sh
 requireTestFiles "$quietLog" deploy-tests.sh
 requireTestFiles "$quietLog" documentation-tests.sh
-requireTestFiles "$quietLog" os-tests.sh
 requireTestFiles "$quietLog" assert-tests.sh
 requireTestFiles "$quietLog" usage-tests.sh
 requireTestFiles "$quietLog" docker-tests.sh
