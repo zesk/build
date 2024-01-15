@@ -87,14 +87,14 @@ done
 
 trap messyTestCleanup EXIT QUIT TERM
 
+# debugTermDisplay
+requireTestFiles "$quietLog" colors-tests.sh
+
 # Types
 requireTestFiles "$quietLog" type-tests.sh
 
 # OS
 requireTestFiles "$quietLog" os-tests.sh
-
-# debugTermDisplay
-requireTestFiles "$quietLog" colors-tests.sh
 
 requireTestFiles "$quietLog" pipeline-tests.sh
 

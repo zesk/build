@@ -8,26 +8,39 @@
 #
 set -eou pipefail
 
+export BUILD_COLORS
+
 declare -a tests
-
-tests+=(allColorTest)
-
-tests+=(colorTest)
 
 tests+=(testSimpleMarkdownToConsole)
 
 testSimpleMarkdownToConsole() {
-  local saveCI
+  local saveBC actual expected testString
 
-  saveCI="${CI-}"
-  export CI
+  saveBC=${BUILD_COLORS-}
 
-  result="$(printf "%s text is %s and %s" "$(consoleCode Code)" "$(consoleCyan italic)" "$(consoleCyan bold)")"
-  CI=
   # shellcheck disable=SC2016
-  assertEquals "$(printf "%s" '`Code` text is *italic* and **bold**' | simpleMarkdownToConsole)" "$result" || return $?
-  CI=1
-  # shellcheck disable=SC2016
-  assertEquals "$(printf "%s" '`Code` text is *italic* and **bold**' | simpleMarkdownToConsole)" "Code text is italic and bold" || return $?
-  CI="$saveCI"
+  testString='`Code` text is *italic* and **bold**'
+
+  expected="$(printf "%s text is %s and %s" "$(consoleCode Code)" "$(consoleCyan italic)" "$(consoleRed bold)")"
+
+  actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
+
+  assertEquals "$actual" "$expected" || return $?
+
+  BUILD_COLORS=
+  actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
+  BUILD_COLORS="$saveBC"
+
+  expected="Code text is italic and bold"
+
+  echo "EXPECTED:"
+  echo "$expected" | xxd
+  echo "ACTUAL:"
+  echo "$actual" | xxd
+  assertEquals "$actual" "$expected" || return $?
 }
+
+tests+=(allColorTest)
+
+tests+=(colorTest)

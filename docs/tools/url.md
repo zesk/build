@@ -15,6 +15,8 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 - `port` - Database port
 - `name` - Database name
 
+Does little to no validation of anything so best used for well-formed input.
+
 #### Usage
 
     urlParse url

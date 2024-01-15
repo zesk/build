@@ -5,9 +5,9 @@
 
 Makes all `*.sh` files executable
 
-## Usage
+## Arguments
 
-    makeShellFilesExecutable
+- `findArguments` - Optional. Add arguments to exclude files or paths.
 
 ## Exit codes
 

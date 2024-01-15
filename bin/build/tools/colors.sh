@@ -24,7 +24,9 @@
 # It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
 #
 consoleReset() {
-  echo -en '\033[0m' # Reset
+  if hasColors; then
+    echo -en '\033[0m' # Reset
+  fi
 }
 
 #
@@ -260,7 +262,7 @@ _consoleInfo() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleEscape '\033[30;102m' '\033[0m' "$@"
+  __consoleOutput '' '\033[30;102m' '\033[0m' "$@"
 }
 
 #

@@ -35,10 +35,6 @@ The process:
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
-#### Usage
-
-    documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
-
 #### Arguments
 
 - `sourceCodeDirectory` - Required. The directory where the source code lives

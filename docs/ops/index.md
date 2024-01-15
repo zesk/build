@@ -4,7 +4,7 @@
 [⬅ Return to top](../index.md)
 
 
-### `crontab-application-sync.sh` - Keep crontab synced with files and environment files in an
+### `crontab-application-sync.sh` - Application-specific crontab synchronization
 
 Keep crontab synced with files and environment files in an application folder structure.
 
@@ -35,7 +35,7 @@ Any files not found are skipped. Note that environment values are not carried be
 
 - `--env environment` - Top-level environment file to pass variables into the user `crontab` template
 - `--show` - Show the crontab instead of installing it
-- `--user user` - Scan for crontab files in the form $(user.crontab) and then install as this user. If not specified, uses current user name.
+- `--user user` - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.
 - `--mapper envMapper` - Optional. Binary. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
 
 #### Examples

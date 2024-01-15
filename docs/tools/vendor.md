@@ -21,10 +21,7 @@ Are we within the JetBrains PHPStorm terminal?
 
 contextOpen
 
-### `isVisualStudioCode` - Are we within the JetBrains PyCharm terminal?
-
-Are we within the JetBrains PyCharm terminal?
-
+### `isVisualStudioCode` - Are we within the Microsoft Visual Studio Code terminal?
 
 Are we within the Microsoft Visual Studio Code terminal?
 

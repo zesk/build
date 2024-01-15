@@ -7,10 +7,6 @@ Replace text `fromText` with `toText` in files, using `findArgs` to filter files
 
 This can break your files so use with caution.
 
-## Usage
-
-    cannon fromText toText [ findArgs ... ]
-
 ## Arguments
 
 - `fromText` - Required. String of text to search for.

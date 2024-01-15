@@ -9,10 +9,9 @@ If this fails it outputs an error to stderr
 
 When this tool succeeds it outputs the current release notes file relative to the project root.
 
-## Usage
+## Arguments
 
-    release-notes.sh
-    releaseNotes
+- `version` - Optional. String. Version for the release notes path. If not specified uses the current version.
 
 ## Examples
 
