@@ -24,6 +24,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_MAXIMUM_TAGS_PER_VERSION.sh
+
 init=$(beginTiming)
 
 gitInstall
@@ -33,7 +36,6 @@ _gitTagVersionUsage() {
   return $?
 }
 
-export BUILD_MAXIMUM_TAGS_PER_VERSION
 
 # fn: {base}
 #

@@ -12,6 +12,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_RELEASE_PATH.sh
+
 # fn: {base}
 #
 # Hook to return the current version
@@ -22,7 +25,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # Environment: EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 #
 hookVersionCurrent() {
-  cd docs/release
+  cd "${BUILD_RELEASE_PATH}"
   for f in *.md; do
     f=${f%.md}
     echo "$f"

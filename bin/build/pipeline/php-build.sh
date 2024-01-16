@@ -12,10 +12,19 @@ set -eou pipefail
 errorEnvironment=1
 errorArgument=2
 
-export BUILD_DATE_INITIAL=$(($(date +%s) + 0))
-export BUILD_TARGET=${BUILD_TARGET:=app.tar.gz}
-me=$(basename "${BASH_SOURCE[0]}")
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_DEBUG.sh
+
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_TARGET.sh
+
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_DATE_INITIAL.sh
+
+# shellcheck source=/dev/null
+. ./bin/build/env/DEPLOYMENT.sh
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
@@ -38,7 +47,7 @@ deployGitDefaultValue() {
 }
 
 _phpBuildUsage() {
-  usageDocument "bin/build/pipeline/$me" "phpBuild" "$@"
+  usageDocument "bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" "phpBuild" "$@"
   return $?
 }
 
@@ -74,15 +83,13 @@ _phpBuildUsage() {
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
 #
 phpBuild() {
-  local tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime
+  local tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment
 
   usageRequireBinary _phpBuildUsage docker tar
 
-  export DEPLOYMENT
-
   tagDeploymentFlag=1
   debuggingFlag=
-  DEPLOYMENT=${DEPLOYMENT:-}
+  deployment=${DEPLOYMENT:-}
   optClean=
   versionSuffix=
   envVars=()
@@ -93,7 +100,7 @@ phpBuild() {
         ;;
       --deployment)
         shift
-        DEPLOYMENT=$1
+        deployment=$1
         ;;
       --no-tag | --skip-tag)
         tagDeploymentFlag=
@@ -144,20 +151,20 @@ phpBuild() {
   fi
 
   # Sets the DEFAULT - can override with command line argument --suffix
-  if [ "$DEPLOYMENT" = "production" ]; then
+  if [ "$deployment" = "production" ]; then
     versionSuffix=rc
-  elif [ "$DEPLOYMENT" = "develop" ]; then
+  elif [ "$deployment" = "develop" ]; then
     versionSuffix=d
-  elif [ "$DEPLOYMENT" = "staging" ]; then
+  elif [ "$deployment" = "staging" ]; then
     versionSuffix=s
-  elif [ "$DEPLOYMENT" = "test" ]; then
+  elif [ "$deployment" = "test" ]; then
     versionSuffix=t
-  elif [ -z "$DEPLOYMENT" ]; then
+  elif [ -z "$deployment" ]; then
     _phpBuildUsage $errorArgument "DEPLOYMENT must be defined in the environment or passed as --deployment"
     return $?
   fi
   if [ -z "$versionSuffix" ]; then
-    _phpBuildUsage $errorArgument "No version --suffix defined - usually unknown DEPLOYMENT: $DEPLOYMENT"
+    _phpBuildUsage $errorArgument "No version --suffix defined - usually unknown DEPLOYMENT: $deployment"
     return $?
   fi
   initTime=$(beginTiming)
@@ -172,7 +179,7 @@ phpBuild() {
   gitInstall
 
   if test "$tagDeploymentFlag"; then
-    consoleInfo "Tagging $DEPLOYMENT deployment with $versionSuffix ..."
+    consoleInfo "Tagging $deployment deployment with $versionSuffix ..."
     ./bin/build/pipeline/git-tag-version.sh --suffix "$versionSuffix"
   else
     clearLine
@@ -182,7 +189,7 @@ phpBuild() {
   #
   # Generate .env
   #
-
+  DEPLOYMENT="$deployment"
   if hasHook make-env; then
     # this script usually runs ./bin/build/pipeline/make-env.sh
     if ! runHook make-env "${envVars[@]}" >.env; then
@@ -211,8 +218,9 @@ phpBuild() {
   mkdir -p ./.deploy || return $errorEnvironment
 
   export APPLICATION_CHECKSUM
-  APPLICATION_CHECKSUM=$(deployGitDefaultValue APPLICATION_CHECKSUM application-checksum)
   export APPLICATION_TAG
+
+  APPLICATION_CHECKSUM=$(deployGitDefaultValue APPLICATION_CHECKSUM application-checksum)
   APPLICATION_TAG=$(deployGitDefaultValue APPLICATION_TAG application-tag)
 
   # Save clean build environment to .build.env for other steps

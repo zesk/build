@@ -16,6 +16,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_DEBUG.sh
+
 # IDENTICAL me 1
 me="$(basename "${BASH_SOURCE[0]}")"
 

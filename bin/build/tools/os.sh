@@ -250,6 +250,26 @@ modificationTime() {
   done
 }
 
+# Fetch the modification time in seconds from now of a file as a timestamp
+#
+# Usage: modificationTime filename0 [ filename1 ... ]
+# Exit Code: 2 - If file does not exist
+# Exit Code: 0 - If file exists and modification times are output, one per line
+# Example:     modificationTime ~/.bash_profile
+#
+modificationSeconds() {
+  local now
+
+  now="$(date +%s)"
+  while [ $# -gt 0 ]; do
+    if [ ! -f "$1" ]; then
+      return "$errorArgument"
+    fi
+    printf "%d\n" "$((now - "$(modificationTime "$1")"))"
+    shift
+  done
+}
+
 #
 # Check to see if the first file is the newest one
 #

@@ -93,7 +93,6 @@ identicalCheck() {
     return $?
   fi
 
-  export exitCode=0
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")"
   resultsFile=$(mktemp)
   find "$rootDir" "${findArgs[@]}" ! -path "*/.*" | sort | while IFS= read -r searchFile; do
@@ -181,6 +180,7 @@ identicalCheck() {
     fi
   done
   rm -rf "$tempDirectory"
+  exitCode=0
   if [ "$(wc -l <"$resultsFile")" -ne 0 ]; then
     exitCode=$errorFailures
   fi

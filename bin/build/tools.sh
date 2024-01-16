@@ -79,3 +79,7 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # shellcheck source=/dev/null
 . "$toolsDir/identical.sh"
+
+if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+  "$@"
+fi

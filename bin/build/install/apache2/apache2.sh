@@ -15,9 +15,8 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-export APACHE_HOME
-
-APACHE_HOME=${APACHE_HOME-/etc/apache2}
+# shellcheck source=/dev/null
+. ./bin/build/env/APACHE_HOME.sh
 
 _installApacheConfigurationUsage() {
   usageDocument ./bin/build/install/lib/apache2.sh installApacheConfiguration "$@"

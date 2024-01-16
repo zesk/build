@@ -7,9 +7,8 @@
 # Docs: o docs/_templates/ops/daemontools.md
 # Test: o bin/tests/daemontools-tests.sh
 
-# IDENTICAL DAEMONTOOLS_HOME 2
-export DAEMONTOOLS_HOME
-DAEMONTOOLS_HOME=${DAEMONTOOLS_HOME-/etc/service}
+# shellcheck source=/dev/null
+. ./bin/build/env/DAEMONTOOLS_HOME.sh
 
 # IDENTICAL errorArgument 1
 errorArgument=2

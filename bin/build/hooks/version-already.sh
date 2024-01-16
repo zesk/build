@@ -12,8 +12,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-export BUILD_VERSION_NO_OPEN
-BUILD_VERSION_NO_OPEN=${BUILD_VERSION_NO_OPEN-}
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_VERSION_NO_OPEN.sh
 
 # fn: {base}
 #

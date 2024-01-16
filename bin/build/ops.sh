@@ -14,5 +14,11 @@ opsDir="$(dirname "${BASH_SOURCE[0]}")/ops"
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/tools.sh"
 
+# Operations
+
 # shellcheck source=/dev/null
 . "$opsDir/daemontools.sh"
+
+if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+  "$@"
+fi
