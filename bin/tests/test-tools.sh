@@ -9,6 +9,9 @@
 
 export testTracing
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 errorTest=3
 
 testSection() {
@@ -16,7 +19,10 @@ testSection() {
 }
 
 testHeading() {
-  whichApt toilet toilet >/dev/null 2>&1
+  if ! whichApt toilet toilet 2>/dev/null 1>&2; then
+    consoleError "Unable to install toilet" 1>&2
+    return $errorEnvironment
+  fi
   printf "%s" "$(consoleCode)"
   consoleOrange "$(echoBar '*')"
   printf "%s" "$(consoleCode)$(clearLine)"
@@ -74,7 +80,7 @@ loadTestFiles() {
   done
   testCount=$((${#tests[@]} - fileCount))
   statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${tests[*]}\" ..."
-  echo
+  printf "\n"
   testDirectory=$(pwd)
   while [ ${#tests[@]} -gt 0 ]; do
     test="${tests[0]}"
@@ -115,5 +121,6 @@ requireTestFiles() {
 }
 
 testCleanup() {
+  printf "Call Stack: %s\n" "$(printf "\n    %s" "${FUNCNAME[@]}")"
   rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" 2>/dev/null || :
 }

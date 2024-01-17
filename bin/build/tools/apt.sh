@@ -22,20 +22,19 @@ errorEnvironment=1
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
 #
 aptUpdateOnce() {
-  local older name quietLog start cacheFile=.apt-update lastModified
+  local name quietLog start cacheFile=.apt-update lastModified
 
-  quietLog=$(buildQuietLog "${FUNCNAME[0]}")
+  quietLog=$(buildQuietLog aptUpdateOnce)
   name=$(buildCacheDirectory "$cacheFile")
   if ! requireFileDirectory "$name"; then
     return "$errorEnvironment"
   fi
-  lastModified="$(modificationSeconds "$name")"
-  # once an hour, technically
-  if [ -z "$lastModified" ] || [ "$lastModified" -gt 3600 ]; then
-    rm -rf "$older"
-  fi
   if [ -f "$name" ]; then
-    return 0
+    lastModified="$(modificationSeconds "$name")"
+    # once an hour, technically
+    if [ "$lastModified" -lt 3600 ]; then
+      return 0
+    fi
   fi
   if ! which apt-get >/dev/null; then
     consoleError "No apt-get available" 1>&2
@@ -77,8 +76,9 @@ aptInstall() {
     return 0
   fi
 
-  if ! aptUpdateOnce >>"$quietLog" 2>&1; then
-    buildFailed "$quietLog" 1>&2
+  echo "quietLog: $quietLog"
+  if ! aptUpdateOnce; then
+    buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
   if ! requireFileDirectory "$installedLog"; then
@@ -126,7 +126,7 @@ aptInstall() {
 # Environment: Technically this will install the binary and any related files as a package.
 #
 whichApt() {
-  local binary=$1 quietLog
+  local binary=$1
   shift
   if which "$binary" >/dev/null; then
     return 0
@@ -138,7 +138,7 @@ whichApt() {
     return 0
   fi
   consoleError "Apt packages \"$*\" did not add $binary to the PATH $PATH" 1>&2
-  buildFailed "$quietLog" 1>&2
+  return $errorEnvironment
 }
 
 #
