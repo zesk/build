@@ -292,6 +292,58 @@ Prints seconds since modified
 - `2` - Can not get modification time
 
 
+### `listFileModificationTimes` - Lists files in a directory recursively along with their modification
+
+Lists files in a directory recursively along with their modification time in seconds.
+
+Output is unsorted.
+
+#### Arguments
+
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
+
+#### Examples
+
+listFileModificationTimes $myDir ! -path '*/.*'
+
+#### Sample Output
+
+    1705347087 bin/build/tools.sh
+    1704312758 bin/build/deprecated.sh
+    1705442647 bin/build/build.json
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `mostRecentlyModifiedFile` - List the most recently modified file in a directory
+
+List the most recently modified file in a directory
+
+#### Arguments
+
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `mostRecentlyModifiedTimestamp` - List the most recently modified file in a directory
+
+List the most recently modified file in a directory
+
+#### Arguments
+
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list

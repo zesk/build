@@ -66,6 +66,7 @@ usageDocument() {
 # Argument: templateFile - Required. Function template file to generate documentation for functions
 # Argument: targetFile - Required. Target file to generate
 # Argument: cacheDirectory - Optional. If supplied, cache to reduce work when files remain unchanged.
+# Argument: --source-timestamp timestamp - Optional. Cached value of the most recently modified timestamp in the source directory. Can speed up this function.
 # Summary: Convert a template into documentation for Bash functions
 # Convert a template which contains bash functions into full-fledged documentation.
 #
@@ -85,7 +86,7 @@ usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentFunctionsWithTemplate() {
-  local last start sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory
+  local last start sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory sourceCodeTimestamp
 
   local optionForce targetDirectory cacheFile tokenLookupCacheFile
   local sourceShellScript sourceShellScriptChecksum reason base checksumPrefix checksum
@@ -98,6 +99,14 @@ documentFunctionsWithTemplate() {
     case $1 in
       --force)
         optionForce=1
+        ;;
+      --source-timestamp)
+        shift || return $errorArgument
+        sourceCodeTimestamp="$1"
+        if ! isInteger "$1"; then
+          consoleError "Source code timestamp \"$sourceCodeTimestamp\" is not an integer" 1>&2
+          return "$errorArgument"
+        fi
         ;;
       *)
         break
@@ -140,13 +149,23 @@ documentFunctionsWithTemplate() {
     fi
     cacheDirectory=${cacheDirectory%%/}
     shaCache="$cacheDirectory/cachedShaPipe"
-    requireDirectory "$shaCache"
+    requireDirectory "$shaCache" || return $?
   fi
   # echo sourceCodeDirectory="$sourceCodeDirectory"
   # echo documentTemplate="$documentTemplate"
   # echo targetFile="$targetFile"
   # echo functionTemplate="$functionTemplate"
   # echo cacheDirectory="$cacheDirectory"
+
+  if [ -f "$targetFile" ]; then
+    if [ -z "$sourceCodeTimestamp" ]; then
+      sourceCodeTimestamp=$(mostRecentlyModifiedTimestamp "$sourceCodeDirectory" -name '*.sh')
+    fi
+    if [ "$(modificationTime "$targetFile")" -gt "$sourceCodeTimestamp" ]; then
+      statusMessage consoleSuccess "$targetFile is unchanged, no source changes"
+      return 0
+    fi
+  fi
 
   templatePrefix="$(printf %s "$sourceCodeDirectory" | shaPipe | cut -b -8)"
   checksumPrefix="$(cachedShaPipe "$shaCache" "$functionTemplate")"
@@ -244,6 +263,7 @@ documentFunctionsWithTemplate() {
       fi
     elif test "$allCached" && [ -f "$targetFile" ]; then
       statusMessage consoleInfo "$targetFile remains unchanged ..."
+      touch "$targetFile"
     else
       statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
       ./bin/build/map.sh <"$templateFile" >"$targetFile"
@@ -328,8 +348,9 @@ documentFunctionTemplateDirectory() {
       return "$errorArgument"
     fi
   fi
-
+  extraOptions+=(--source-timestamp "$(mostRecentlyModifiedTimestamp "$sourceCodeDirectory" -name '*.sh')")
   exitCode=0
+  fileCount=0
   for templateFile in "$templateDirectory/"*.md; do
     base="$(basename "$templateFile")"
     targetFile="$targetDirectory/$base"
@@ -337,9 +358,10 @@ documentFunctionTemplateDirectory() {
       consoleError "Failed to generate $targetFile" 1>&2
       exitCode=$errorEnvironment
     fi
+    fileCount=$((fileCount + 1))
   done
   clearLine
-  reportTiming "$start" "Completed generation of $(consoleInfo "$targetDirectory") in"
+  reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(consoleInfo "$targetDirectory") "
   return $exitCode
 }
 

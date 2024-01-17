@@ -78,10 +78,6 @@ buildBuildDocumentation() {
       return $errorEnvironment
     fi
   done
-  if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-    ./bin/build/ ./docs/_templates/tools/ ./docs/_templates/__function.md ./docs/tools/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
-    return $errorEnvironment
-  fi
   reportTiming "$start" "Completed in"
 }
 

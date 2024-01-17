@@ -271,6 +271,63 @@ modificationSeconds() {
 }
 
 #
+# Lists files in a directory recursively along with their modification time in seconds.
+#
+# Output is unsorted.
+#
+# Usage: {fn} directory [ findArgs ... ]
+# Argument: directory - Required. Directory. Must exists - directory to list.
+# Argument: findArgs - Optional additional arguments to modify the find query
+# Example: {fn} $myDir ! -path '*/.*'
+# Output: 1705347087 bin/build/tools.sh
+# Output: 1704312758 bin/build/deprecated.sh
+# Output: 1705442647 bin/build/build.json
+#
+listFileModificationTimes() {
+  local directory
+
+  directory="$1"
+  if [ ! -d "$directory" ]; then
+    printf "%s: %s" "$(consoleError "Not a directory")" "$(consoleCode "$directory")" 1>&2
+    return $errorArgument
+  fi
+  shift
+  if [ "$(uname -s)" = "Darwin" ]; then
+    find "$directory" -type f "$@" -exec stat -f '%m %N' {} \;
+  else
+    find "$directory" -type f "$@" -exec stat --format='%Y %n' {} \;
+  fi
+}
+
+# List the most recently modified file in a directory
+# Usage: {fn} directory [ findArgs ... ]
+# Argument: directory - Required. Directory. Must exists - directory to list.
+# Argument: findArgs - Optional additional arguments to modify the find query
+mostRecentlyModifiedFile() {
+  directory="$1"
+  if [ ! -d "$directory" ]; then
+    printf "%s: %s" "$(consoleError "Not a directory")" "$(consoleCode "$directory")" 1>&2
+    return $errorArgument
+  fi
+  shift
+  listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
+}
+
+# List the most recently modified file in a directory
+# Usage: {fn} directory [ findArgs ... ]
+# Argument: directory - Required. Directory. Must exists - directory to list.
+# Argument: findArgs - Optional additional arguments to modify the find query
+mostRecentlyModifiedTimestamp() {
+  directory="$1"
+  if [ ! -d "$directory" ]; then
+    printf "%s: %s" "$(consoleError "Not a directory")" "$(consoleCode "$directory")" 1>&2
+    return $errorArgument
+  fi
+  shift
+  listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
+}
+
+#
 # Check to see if the first file is the newest one
 #
 # If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``

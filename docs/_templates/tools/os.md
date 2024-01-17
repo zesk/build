@@ -32,6 +32,10 @@
 {modifiedDays}
 {modifiedSeconds}
 
+{listFileModificationTimes}
+{mostRecentlyModifiedFile}
+{mostRecentlyModifiedTimestamp}
+
 {pathConfigure}
 {pathCleanDuplicates}
 
