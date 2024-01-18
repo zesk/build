@@ -14,9 +14,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 init=$(beginTiming)
 
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
-
 #    __                  _   _
 #   / _|_   _ _ __   ___| |_(_) ___  _ __  ___
 #  | |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
@@ -38,7 +35,7 @@ usage() {
     consoleError "$@"
     echo
   fi
-  consoleInfo "$me [ production | develop ]"
+  consoleInfo "$(basename "${BASH_SOURCE[0]}") [ production | develop ]"
   echo
   consoleInfo "Test a docker-based PHP application during build"
   echo
@@ -72,7 +69,7 @@ testCleanup() {
 #  | | | | | | (_| | | | | |
 #  |_| |_| |_|\__,_|_|_| |_|
 #
-quietLog=$(buildQuietLog "$me")
+quietLog=$(buildQuietLog "$(basename "${BASH_SOURCE[0]}")")
 
 buildDebugStart
 

@@ -16,9 +16,12 @@
 #
 set -eou pipefail
 
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+
+# IDENTICAL errorArgument 1
 errorArgument=2
-me=$(basename "$0")
+
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
@@ -38,7 +41,7 @@ usage() {
     echo "$*"
     echo
   fi
-  echo "$me [ -k | --keep ] [ -v | --verbose ] [ -s | --show ]" | usageGenerator
+  echo "$(basename "${BASH_SOURCE[0]}") [ -k | --keep ] [ -v | --verbose ] [ -s | --show ]" | usageGenerator
   echo
   consoleInfo "Test script for crontab-application-sync.sh"
   echo

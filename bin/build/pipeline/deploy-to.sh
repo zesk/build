@@ -23,9 +23,6 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
-
 # IDENTICAL bashHeader 5
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
@@ -40,7 +37,7 @@ deployedHostArtifact="./.deployed-hosts"
 initTime=$(beginTiming)
 
 _deployToUsage() {
-  usageDocument "bin/build/pipeline/$me" deployAction "$@"
+  usageDocument "bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" deployAction "$@"
   exit $?
 }
 

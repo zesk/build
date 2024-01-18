@@ -19,9 +19,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/env/BUILD_DEBUG.sh
 
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
-
 # fn: {base}
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
 # Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
@@ -46,7 +43,7 @@ me="$(basename "${BASH_SOURCE[0]}")"
 # Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 #
 _awsIPAccessUsage() {
-  usageDocument "./bin/build/pipeline/$me" _awsIPAccessUsage "$@"
+  usageDocument "./bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" _awsIPAccessUsage "$@"
   return $?
 }
 

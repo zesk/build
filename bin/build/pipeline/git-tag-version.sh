@@ -14,9 +14,6 @@ set -eou pipefail
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
-
 # IDENTICAL bashHeader 5
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
@@ -32,7 +29,7 @@ init=$(beginTiming)
 gitInstall
 
 _gitTagVersionUsage() {
-  usageTemplate "./bin/build/pipeline/$me" "gitTagVersion" "$@"
+  usageTemplate "./bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" "gitTagVersion" "$@"
   return $?
 }
 
@@ -69,13 +66,13 @@ gitTagVersion() {
         shift
         versionSuffix=$1
         if [ -z "$versionSuffix" ]; then
-          _gitTagVersionUsage $errorArgument "$me: --suffix is blank"
+          _gitTagVersionUsage $errorArgument "--suffix is blank"
           return $?
         fi
         shift
         ;;
       *)
-        _gitTagVersionUsage $errorArgument "$me: Unknown argument: $1"
+        _gitTagVersionUsage $errorArgument "Unknown argument: $1"
         return $?
         ;;
     esac

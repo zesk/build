@@ -15,11 +15,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
-
 _deployUsage() {
-  usageDocument "bin/build/pipeline/$me" deployMain "$@"
+  usageDocument "bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" deployMain "$@"
   return $?
 }
 
