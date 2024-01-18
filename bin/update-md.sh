@@ -65,7 +65,7 @@ updateMarkdown() {
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
         statusMessage consoleInfo "Committing build.json"
-        git commit -m "Updating build.json" "$buildMarker"
+        git commit -m "Updating build.json" "$buildMarker" || :
         git push origin
       fi
     else
