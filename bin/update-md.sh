@@ -10,13 +10,12 @@ errorArgument=2
 
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-me="$(dirname "$0")"
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
 _usageUpdateMarkdown() {
-  usageDocument "bin/$me" updateMarkdown "$@"
+  usageDocument "bin/$(dirname "${BASH_SOURCE[0]}")" updateMarkdown "$@"
 }
 
 addNoteTo() {

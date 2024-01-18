@@ -21,3 +21,5 @@ if gitRepositoryChanged; then
   git commit -m "Build version $(runHook version-current)" -a
   git push origin
 fi
+
+consoleSuccess Built successfully.
