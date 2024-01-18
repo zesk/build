@@ -26,7 +26,7 @@ me="$(basename "${BASH_SOURCE[0]}")"
 
 _phpComposerUsage() {
   usageDocument "./bin/build/pipeline/$me" "phpComposer" "$@"
-  exit "$?"
+  return "$?"
 }
 
 #
@@ -63,13 +63,16 @@ phpComposer() {
     case $1 in
       --help)
         _phpComposerUsage 0
+        return $?
         ;;
       *)
         if [ "$composerDirectory" != "." ]; then
           _phpComposerUsage "$errorArgument" "Unknown argument $1"
+          return $?
         fi
         if [ ! -d "$1" ]; then
           _phpComposerUsage "$errorArgument" "Directory does not exist: $1"
+          return $?
         fi
         composerDirectory=$1
         ;;
@@ -79,6 +82,10 @@ phpComposer() {
 
   aptInstall
 
+  if ! composerDirectory=$(realPath "$composerDirectory"); then
+    _phpComposerUsage "$errorArgument" "Composer directory issues $composerDirectory"
+    return $?
+  fi
   [ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
 
   composerArgs=()
