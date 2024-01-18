@@ -21,11 +21,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
-
 _phpComposerUsage() {
-  usageDocument "./bin/build/pipeline/$me" "phpComposer" "$@"
+  usageDocument "./bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" "phpComposer" "$@"
   return "$?"
 }
 
