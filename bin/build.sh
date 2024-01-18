@@ -12,13 +12,18 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-./bin/update-md.sh --skip-commit
+if ! ./bin/update-md.sh --skip-commit; then
+  consoleError "Can not update the Markdown files" 1>&2
+  return 1
+fi
 
 # This takes a long time, keep as pre-commit
 # ./bin/build-docs.sh
 
 if gitRepositoryChanged; then
-  git commit -m "Build version $(runHook version-current)" -a
+  printf "%s\n" "CHANGES:"
+  gitShowChanges | prefixLines "$(consoleCode)    "
+  git commit -m "Build version $(runHook version-current)" -a || :
   git push origin
 fi
 
