@@ -49,7 +49,12 @@ testPHPBuild() {
     shift
   done
 
-  testPath=$(mktemp -d)
+  here=$(pwd)
+
+  #
+  # This MUST be inside the source tree root to run docker in pipelines
+  #
+  testPath="$here/testPHPBuild.$$"
   appName="sublimeApplication"
 
   if ! cp -r ./bin/tests/example/simple-php "$testPath/$appName"; then
