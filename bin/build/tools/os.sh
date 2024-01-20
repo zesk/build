@@ -45,16 +45,16 @@ buildQuietLog() {
   local logFile flagMake=1
   while [ $# -gt 0 ]; do
     case $1 in
-    --no-create)
-      flagMake=
-      ;;
-    *)
-      if [ -z "$1" ]; then
-        consoleError "buildQuietLog requires a name parameter" 1>&2
-        return 1
-      fi
-      logFile="$(buildCacheDirectory "$1.log")"
-      ;;
+      --no-create)
+        flagMake=
+        ;;
+      *)
+        if [ -z "$1" ]; then
+          consoleError "buildQuietLog requires a name parameter" 1>&2
+          return 1
+        fi
+        logFile="$(buildCacheDirectory "$1.log")"
+        ;;
     esac
     shift
   done
@@ -176,9 +176,9 @@ renameFiles() {
 # Argument: files - A list of files to include in the tar file
 #
 createTarFile() {
-  local target=$1
+  local target="${1-}"
 
-  shift
+  shift || return "$errorArgument"
   if tar --version | grep -q GNU; then
     # GNU
     # > tar --version
@@ -461,27 +461,27 @@ pathAppend() {
   shift
   while [ $# -gt 0 ]; do
     case $1 in
-    --first)
-      firstFlag=1
-      ;;
-    --last)
-      firstFlag=
-      ;;
-    *)
-      if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
-        if [ ! -d "$1" ]; then
-          exitCode=2
-        elif [ -z "$pathValue" ]; then
-          pathValue="$1"
-        elif test "$firstFlag"; then
-          pathValue="$1$s$pathValue"
+      --first)
+        firstFlag=1
+        ;;
+      --last)
+        firstFlag=
+        ;;
+      *)
+        if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
+          if [ ! -d "$1" ]; then
+            exitCode=2
+          elif [ -z "$pathValue" ]; then
+            pathValue="$1"
+          elif test "$firstFlag"; then
+            pathValue="$1$s$pathValue"
+          else
+            pathValue="$pathValue$s$1"
+          fi
         else
-          pathValue="$pathValue$s$1"
+          exitCode=1
         fi
-      else
-        exitCode=1
-      fi
-      ;;
+        ;;
     esac
     shift
   done

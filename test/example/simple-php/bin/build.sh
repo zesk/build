@@ -10,13 +10,10 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 export APP_THING=secret
 
-echo "PWD: $(pwd)"
-set -x
 if ! bin/build/pipeline/php-build.sh --deployment staging --skip-tag APP_THING -- simple.application.php public src docs; then
   consoleError "Build failed"
   return 1
 fi
-set +x
 echo "PWD: $(pwd)"
 echo "LS:"
 ls -la

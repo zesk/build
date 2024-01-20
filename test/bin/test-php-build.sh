@@ -22,7 +22,7 @@ _testPHPBuildUsage() {
 # Argument: --keep - Optional. Flag. Do not delete artifacts when done, print created values.
 #
 testPHPBuild() {
-  local keepFlag testPath here
+  local keepFlag testPath here appName f
 
   keepFlag=
   while [ $# -gt 0 ]; do
@@ -66,6 +66,12 @@ testPHPBuild() {
     consoleError "Failed copy app"
     return $errorEnvironment
   fi
+  # shellcheck source=/dev/null
+  . ./bin/build/env/BUILD_TARGET.sh
+  # shellcheck source=/dev/null
+  . ./bin/build/env/BUILD_TIMESTAMP.sh
+
+  assertEquals "${BUILD_TARGET}" "app.tar.gz"
 
   mkdir -p "$testPath/$appName/bin/pipeline" || return $errorEnvironment
   cp ./bin/build/install-bin-build.sh "$testPath/$appName/bin/pipeline/install-bin-build.sh" || return $errorEnvironment
@@ -85,12 +91,11 @@ testPHPBuild() {
   assertDirectoryExists bin/build
 
   consoleWarning "Building PHP app"
-  export BUILD_TIMESTAMP
 
-  BUILD_TIMESTAMP=$(date +%s)
   bin/build.sh
   assertFileExists "./app.tar.gz" "pwd: $(pwd)"
-  export BUILD_TARGET=alternate.tar.gz
+
+  BUILD_TARGET=alternate.tar.gz
   bin/build.sh
   assertFileExists "$BUILD_TARGET" "pwd: $(pwd)"
 
