@@ -8,7 +8,8 @@
 #
 set -eou pipefail
 
-export BUILD_COLORS
+# shellcheck source=/dev/null
+source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/env/BUILD_COLORS.sh"
 
 declare -a tests
 

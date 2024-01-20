@@ -19,8 +19,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # fn: {base}
 # Build documentation for build system.
 #
-# Given that bash is a terrible template language, caching is sort of mandatory if you
-# want builds which do not take eons.
+# Given that bash is not an ideal template language, caching is mandatory.
 #
 # Uses a cache at `buildCacheDirectory build-docs`
 #
@@ -29,20 +28,18 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # Argument: --force - Force generation, ignore cache directives
 # Argument: --no-cache - Do not use cache or store cache.
 # Argument: --help - I need somebody
-# TODO: Stop complaining about bash
 buildBuildDocumentation() {
-  local cacheDirectory theDirectory start documentDirectoryArgs cacheDirectoryArgs
-
+  local cacheDirectory theDirectory start documentDirectoryArgs indexArgs=()
+  local functionLinkPattern fileLinkPattern
   start=$(beginTiming)
 
-  cacheDirectory="$(buildCacheDirectory build-docs)"
+  cacheDirectory="$(buildCacheDirectory)"
   # Default option settings
   documentDirectoryArgs=()
-  cacheDirectoryArgs=("$cacheDirectory")
   while [ $# -gt 0 ]; do
     case $1 in
       --no-cache)
-        cacheDirectoryArgs=()
+        indexArgs+=(--clean)
         ;;
       --force)
         if ! inArray "$1" "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}"; then
@@ -51,33 +48,45 @@ buildBuildDocumentation() {
         ;;
       --help)
         _buildBuildDocumentationUsage 0
+        return $?
         ;;
       *)
         _buildBuildDocumentationUsage "$errorArgument" "Unknown argument $1"
+        return $?
         ;;
     esac
     shift
   done
-
-  if [ "${#cacheDirectoryArgs[@]}" -gt 0 ] && ! requireDirectory "$cacheDirectory"; then
+  if ! cacheDirectory=$(requireDirectory "$cacheDirectory"); then
+    return $errorEnvironment
+  fi
+  if ! documentationFunctionIndex "${indexArgs[@]+${indexArgs[@]}}" ./bin/ "$(requireDirectory "$cacheDirectory")"; then
     return $errorEnvironment
   fi
   if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-    ./bin/ ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+    "$cacheDirectory" ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/; then
     return "$errorEnvironment"
   fi
   for theDirectory in bin install pipeline; do
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-      ./bin/build/ ./docs/_templates/$theDirectory/ ./docs/_templates/__binary.md ./docs/$theDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+      "$cacheDirectory" ./docs/_templates/$theDirectory/ ./docs/_templates/__binary.md ./docs/$theDirectory/; then
       return $errorEnvironment
     fi
   done
   for theDirectory in ops tools; do
     if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
-      ./bin/build/ ./docs/_templates/$theDirectory/ ./docs/_templates/__function.md ./docs/$theDirectory/ "${cacheDirectoryArgs[@]+${cacheDirectoryArgs[@]}}"; then
+      "$cacheDirectory" ./docs/_templates/$theDirectory/ ./docs/_templates/__function.md ./docs/$theDirectory/; then
       return $errorEnvironment
     fi
   done
+  (
+    # shellcheck source=/dev/null
+    source "$(dirname "${BASH_SOURCE[0]}")/build/env/BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN.sh"
+    functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
+    # Remove line
+    fileLinkPattern=${functionLinkPattern%%#.*}
+    documentationFunctionSeeLinker "$cacheDirectory" "./docs" ./docs/_templates/__seeFunction.md "$functionLinkPattern" ./docs/_templates/__seeFile.md "$fileLinkPattern"
+  )
   reportTiming "$start" "Completed in"
 }
 
@@ -90,7 +99,7 @@ buildBuildDocumentation() {
 #
 _buildBuildDocumentationUsage() {
   usageDocument "./bin/$(basename "${BASH_SOURCE[0]}")" "buildBuildDocumentation" "$@"
-  exit $?
+  return $?
 }
 
 buildBuildDocumentation "$@"

@@ -13,7 +13,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 . ./bin/build/tools.sh
 
 # shellcheck source=/dev/null
-. ./bin/build/env/BUILD_RELEASE_PATH.sh
+. ./bin/build/env/BUILD_RELEASE_NOTES.sh
 
 # fn: {base}
 #
@@ -25,7 +25,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # Environment: EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 #
 hookVersionCurrent() {
-  cd "${BUILD_RELEASE_PATH}"
+  cd "${BUILD_RELEASE_NOTES}"
   for f in *.md; do
     f=${f%.md}
     echo "$f"

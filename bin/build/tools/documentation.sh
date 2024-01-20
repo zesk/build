@@ -11,7 +11,7 @@
 # Depends: colors.sh text.sh prefixLines
 #
 # Docs: o ./docs/_templates/tools/documentation.md
-# Test: o ./bin/tests/documentation-tests.sh
+# Test: o ./test/tools/documentation-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -60,13 +60,11 @@ usageDocument() {
 }
 
 #
-# Usage: {fn} sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
-# Argument: sourceCodeDirectory - Required. The directory where the source code lives
+# Usage: {fn} cacheDirectory documentTemplate functionTemplate targetFile
+# Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: documentTemplate - Required. The document template containing functions to define
 # Argument: templateFile - Required. Function template file to generate documentation for functions
 # Argument: targetFile - Required. Target file to generate
-# Argument: cacheDirectory - Optional. If supplied, cache to reduce work when files remain unchanged.
-# Argument: --source-timestamp timestamp - Optional. Cached value of the most recently modified timestamp in the source directory. Can speed up this function.
 # Summary: Convert a template into documentation for Bash functions
 # Convert a template which contains bash functions into full-fledged documentation.
 #
@@ -86,27 +84,20 @@ usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentFunctionsWithTemplate() {
-  local last start sourceCodeDirectory documentTemplate functionTemplate targetFile cacheDirectory sourceCodeTimestamp
+  local start documentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
 
-  local optionForce targetDirectory cacheFile tokenLookupCacheFile
-  local sourceShellScript sourceShellScriptChecksum reason base checksumPrefix checksum
-  local generatedChecksum error
-  local documentTokensFile shaCache
+  local targetDirectory settingsFile
+  local reason base
+  local error
+  local documentTokensFile
 
-  start=$(beginTiming)
-  optionForce=
+  forceFlag=
   while [ $# -gt 0 ]; do
-    case $1 in
+    case "$1" in
       --force)
-        optionForce=1
-        ;;
-      --source-timestamp)
-        shift || return $errorArgument
-        sourceCodeTimestamp="$1"
-        if ! isInteger "$1"; then
-          consoleError "Source code timestamp \"$sourceCodeTimestamp\" is not an integer" 1>&2
-          return "$errorArgument"
-        fi
+        forceFlag=1
+        shift
+        break
         ;;
       *)
         break
@@ -115,20 +106,21 @@ documentFunctionsWithTemplate() {
     shift
   done
 
-  sourceCodeDirectory=${1-}
+  start=$(beginTiming)
+  cacheDirectory=${1-}
   shift || return $errorArgument
   documentTemplate="${1-}"
   shift || return $errorArgument
   functionTemplate="${1-}"
   shift || return $errorArgument
   targetFile="${1-}"
-  shift || return $errorArgument
-  cacheDirectory="${1-}"
 
-  if [ ! -d "$sourceCodeDirectory" ]; then
-    consoleError "Source code directory \"$sourceCodeDirectory\" is not a directory" 1>&2
+  if [ ! -d "$cacheDirectory" ]; then
+    consoleError "$cacheDirectory was specified but is not a directory" 1>&2
     return "$errorArgument"
   fi
+  cacheDirectory=${cacheDirectory%%/}
+
   if [ ! -f "$documentTemplate" ]; then
     consoleError "Source file $documentTemplate is not a directory" 1>&2
     return "$errorArgument"
@@ -141,152 +133,73 @@ documentFunctionsWithTemplate() {
     consoleError "$targetFile directory does not exist" 1>&2
     return "$errorArgument"
   fi
-  shaCache=""
-  if [ -n "$cacheDirectory" ]; then
-    if [ ! -d "$cacheDirectory" ]; then
-      consoleError "$cacheDirectory was specified but is not a directory" 1>&2
-      return "$errorArgument"
-    fi
-    cacheDirectory=${cacheDirectory%%/}
-    shaCache="$cacheDirectory/cachedShaPipe"
-    requireDirectory "$shaCache" || return $?
-  fi
-  # echo sourceCodeDirectory="$sourceCodeDirectory"
-  # echo documentTemplate="$documentTemplate"
-  # echo targetFile="$targetFile"
-  # echo functionTemplate="$functionTemplate"
+
   # echo cacheDirectory="$cacheDirectory"
-
-  if [ -f "$targetFile" ]; then
-    if [ -z "$sourceCodeTimestamp" ]; then
-      sourceCodeTimestamp=$(mostRecentlyModifiedTimestamp "$sourceCodeDirectory" -name '*.sh')
-    fi
-    if [ "$(modificationTime "$targetFile")" -gt "$sourceCodeTimestamp" ]; then
-      statusMessage consoleSuccess "$targetFile is unchanged, no source changes"
-      return 0
-    fi
-  fi
-
-  templatePrefix="$(printf %s "$sourceCodeDirectory" | shaPipe | cut -b -8)"
-  checksumPrefix="$(cachedShaPipe "$shaCache" "$functionTemplate")"
+  # echo documentTemplate="$documentTemplate"
+  # echo functionTemplate="$functionTemplate"
+  # echo targetFile="$targetFile"
 
   reason=""
   base="$(basename "$targetFile")"
   base="${base%%.md}"
   statusMessage consoleInfo "Generating $base ..."
 
+  documentTokensFile=$(mktemp)
   # subshell to hide environment tokens
-  (
-    documentTokensFile=$(mktemp)
-    listTokens <"$documentTemplate" >"$documentTokensFile"
-    set -a
-    allCached=1
-    last=$(beginTiming)
-    while read -r token; do
-      sourceShellScript=
-      sourceShellScriptChecksum=
-      if [ -n "$cacheDirectory" ]; then
-        tokenLookupCacheFile="$cacheDirectory/$templatePrefix/tokens/$token"
-        requireFileDirectory "$tokenLookupCacheFile"
-        if [ -f "$tokenLookupCacheFile" ]; then
-          sourceShellScript="$(head -n 1 "$tokenLookupCacheFile")"
-          if [ ! -f "$sourceShellScript" ]; then
-            sourceShellScript=
-            rm "$tokenLookupCacheFile"
-          else
-            sourceShellScriptChecksum="$(cachedShaPipe "$shaCache" "$sourceShellScript")"
-            if [ "$sourceShellScriptChecksum" != "$(tail -n 1 "$tokenLookupCacheFile")" ]; then
-              statusMessage consoleWarning "$sourceShellScript changed, searching for $token again"
-              sourceShellScript=
-              rm "$tokenLookupCacheFile"
-            fi
-          fi
-        fi
-      fi
-      if [ -z "$sourceShellScript" ]; then
-        clearLine
-        sourceShellScript=$(bashFindFunctionFile "$sourceCodeDirectory" "$token")
-      fi
-      if [ ! -f "$sourceShellScript" ]; then
-        error="Unable to find \"$token\" (from \"$documentTemplate\") in \"$sourceCodeDirectory\""
-        consoleError "$error" 1>&2
-        declare "$token"="$error"
-        continue
-      fi
-      if [ -n "$cacheDirectory" ]; then
-        if [ -z "$sourceShellScriptChecksum" ]; then
-          sourceShellScriptChecksum=$(cachedShaPipe "$shaCache" "$sourceShellScript")
-        fi
-        printf "%s\n%s" "$sourceShellScript" "$sourceShellScriptChecksum" >"$tokenLookupCacheFile"
-        checksum="$checksumPrefix-"
-        documentChecksum="$(cachedShaPipe "$shaCache" "$documentTemplate")"
-        documentChecksum="${documentChecksum:0:8}"
-        checksumFile="$cacheDirectory/$templatePrefix/$documentChecksum/$token.checksum"
-        cacheFile="$cacheDirectory/$templatePrefix/$documentChecksum/$token.cache"
-        requireFileDirectory "$checksumFile"
-        if [ -f "$checksumFile" ] && [ -f "$cacheFile" ]; then
-          generatedChecksum=$(cat "$checksumFile")
-          if [ "$generatedChecksum" = "$checksum" ]; then
-            if test "$optionForce"; then
-              statusMessage consoleWarning "Force generating $templateFile ..."
-            else
-              export "${token?}"
-              declare "$token"="$(cat "$cacheFile")"
-              statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... (using cache) $(reportTiming "$last")"
-              last=$(beginTiming)
-              continue
-            fi
-            reason="(forced)"
-          else
-            reason="(Checksum changed)"
-          fi
-        else
-          reason="(Need first time processing)"
-        fi
-      fi
-
-      statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... $reason"
-      export "${token?}"
-      declare "$token"="$(bashDocumentFunction "$sourceShellScript" "$token" "$functionTemplate")"
-      allCached=
-
-      if [ -n "$cacheDirectory" ]; then
-        printf %s "${!token}" >"$cacheFile"
-        printf %s "$checksum" >"$checksumFile"
-        statusMessage consoleSuccess "Saved $targetFile checksum $checksum ..."
-      fi
-    done <"$documentTokensFile"
-    if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
-      if [ ! -f "$targetFile" ] || ! diff -q "$documentTemplate" "$targetFile" >/dev/null; then
-        printf "%s -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
-        cp "$documentTemplate" "$targetFile"
-      fi
-    elif test "$allCached" && [ -f "$targetFile" ]; then
-      statusMessage consoleInfo "$targetFile remains unchanged ..."
-      touch "$targetFile"
-    else
-      statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
-      ./bin/build/map.sh <"$templateFile" >"$targetFile"
+  listTokens <"$documentTemplate" >"$documentTokensFile"
+  checkFiles=("$functionTemplate" "$documentTemplate")
+  while read -r token; do
+    if ! settingsFile=$(documentationFunctionLookup --source "$cacheDirectory" "$token"); then
+      continue
     fi
-    clearLine
-    rm "$documentTokensFile"
-  )
+    checkFiles+=("$settingsFile")
+  done <"$documentTokensFile"
+  if test $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+${checkFiles[@]}}"; then
+    (
+      set -a
+      while read -r token; do
+        if ! settingsFile=$(documentationFunctionLookup "$cacheDirectory" "$token"); then
+          error="Unable to find \"$token\" (using index \"$cacheDirectory\")"
+          consoleError "$error" 1>&2
+          declare "$token"="$error"
+          continue
+        fi
+        if ! grep -q "'documentationPath'" "$settingsFile"; then
+          statusMessage consoleInfo "Adding documentationPath to $(consoleValue "[$token]") settings"
+          __dumpNameValue documentationPath "$targetFile" >>"$settingsFile"
+        fi
+        statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... $reason"
+        export "${token?}"
+        declare "$token"="$(bashDocumentationTemplate "$settingsFile" "$functionTemplate")"
+      done <"$documentTokensFile"
+      if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
+        if [ ! -f "$targetFile" ] || ! diff -q "$documentTemplate" "$targetFile" >/dev/null; then
+          printf "%s -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
+          cp "$documentTemplate" "$targetFile"
+        fi
+      else
+        statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
+        mapEnvironment <"$templateFile" >"$targetFile"
+      fi
+      clearLine
+      rm "$documentTokensFile"
+    )
+  fi
   statusMessage consoleSuccess "$(reportTiming "$start" Generated "$targetFile" in)"
 }
 
-# Usage: documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDirectory [ cacheDirectory ]
-# Argument: sourceCodeDirectory - Required. The directory where the source code lives
+# Usage: {fn} cacheDirectory documentDirectory functionTemplate targetDirectory
+# Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
 # Argument: documentDirectory - Required. Directory containing documentation templates
 # Argument: templateFile - Required. Function template file to generate documentation for functions
 # Argument: targetDirectory - Required. Directory to create generated documentation
-# Argument: cacheDirectory - Optional. If supplied, cache to reduce work when files remain unchanged.
 # Summary: Convert a directory of templates into documentation for Bash functions
 # Convert a directory of templates for bash functions into full-fledged documentation.
 #
 # The process:
 #
 # 1. `documentDirectory` is scanned for files which look like `*.md`
-# 1. `documentFunctionsWithTemplate` is called for each one
+# 1. `{fn}` is called for each one
 #
 # If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 # to regenerate each time.
@@ -297,17 +210,16 @@ documentFunctionsWithTemplate() {
 # Exit Code: 2 - Argument error
 #
 documentFunctionTemplateDirectory() {
-  local start sourceCodeDirectory templateDirectory functionTemplate targetDirectory cacheDirectory
-  local extraOptions cacheFile
-  local sourceShellScript reason base targetFile checksum
-  local generatedChecksum documentTokensFile
+  local start templateDirectory functionTemplate targetDirectory cacheDirectory forceFlag=()
+  local reason base targetFile
+  local documentTokensFile
 
-  start=$(beginTiming)
-  extraOptions=()
   while [ $# -gt 0 ]; do
-    case $1 in
+    case "$1" in
       --force)
-        extraOptions=(--force)
+        forceFlag=(--force)
+        shift
+        break
         ;;
       *)
         break
@@ -316,18 +228,17 @@ documentFunctionTemplateDirectory() {
     shift
   done
 
-  sourceCodeDirectory="$1"
+  start=$(beginTiming)
+  cacheDirectory="$1"
   shift || return $errorArgument
   templateDirectory="${1%%/}"
   shift || return $errorArgument
   functionTemplate="$1"
   shift || return $errorArgument
   targetDirectory="${1%%/}"
-  shift || return $errorArgument
-  cacheDirectory="${1%%/-}"
 
-  if [ ! -d "$sourceCodeDirectory" ]; then
-    consoleError "Source code directory \"$sourceCodeDirectory\" is not a directory" 1>&2
+  if [ ! -d "$cacheDirectory" ]; then
+    consoleError "$cacheDirectory was specified but is not a directory" 1>&2
     return "$errorArgument"
   fi
   if [ ! -d "$templateDirectory" ]; then
@@ -342,19 +253,13 @@ documentFunctionTemplateDirectory() {
     consoleError "$targetDirectory is not a directory" 1>&2
     return "$errorArgument"
   fi
-  if [ -n "$cacheDirectory" ]; then
-    if [ ! -d "$cacheDirectory" ]; then
-      consoleError "$cacheDirectory was specified but is not a directory" 1>&2
-      return "$errorArgument"
-    fi
-  fi
-  extraOptions+=(--source-timestamp "$(mostRecentlyModifiedTimestamp "$sourceCodeDirectory" -name '*.sh')")
+
   exitCode=0
   fileCount=0
   for templateFile in "$templateDirectory/"*.md; do
     base="$(basename "$templateFile")"
     targetFile="$targetDirectory/$base"
-    if ! documentFunctionsWithTemplate "${extraOptions[@]+${extraOptions[@]}}" "$sourceCodeDirectory" "$templateFile" "$functionTemplate" "$targetFile" "$cacheDirectory"; then
+    if ! documentFunctionsWithTemplate "${forceFlag[@]+${forceFlag[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       consoleError "Failed to generate $targetFile" 1>&2
       exitCode=$errorEnvironment
     fi
@@ -366,12 +271,7 @@ documentFunctionTemplateDirectory() {
 }
 
 #
-# Document a function and generate a function template (markdown). To custom format any
-# of the fields in this, write functions in the form `_bashDocumentFunction_${name}Format` such that
-# name matches the variable name (lowercase alphanumeric characters and underscores).
-#
-# Filter functions should modify the input/output pipe; an example can be found in {file} by looking at
-# sample functions `_bashDocumentFunction_exit_codeFormat`.
+# Document a function and generate a function template (markdown)
 #
 # Usage: bashDocumentFunction file function template
 # Argument: file - Required. File in which the function is defined
@@ -380,48 +280,80 @@ documentFunctionTemplateDirectory() {
 # Exit code: 0 - Success
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
+# Deprecated: 2023-01-18
+# See: bashDocumentationTemplate
+# See: bashDocumentFunction
+# See: repeat
 #
 bashDocumentFunction() {
-  local file=$1 fn=$2 template=$3 target
+  local envFile file=$1 fn=$2 template=$3
   if [ ! -f "$template" ]; then
     consoleError "Template $template not found" 1>&2
     return 1
   fi
   envFile=$(mktemp)
-  target=$(mktemp)
   printf "%s\n" "#!/usr/bin/env bash" >>"$envFile"
   printf "%s\n" "set -eou pipefail" >>"$envFile"
-  # set -u does not work with read which returns 1 on EOF
   if ! bashExtractDocumentation "$file" "$fn" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
-  (
+  bashDocumentationTemplate "$envFile" "$template"
+  exitCode=$?
+  rm "$envFile" || :
+  return $exitCode
+}
+
+# See: bashDocumentFunction
+# Document a function and generate a function template (markdown). To custom format any
+# of the fields in this, write functions in the form `_bashDocumentFormatter_${name}Format` such that
+# name matches the variable name (lowercase alphanumeric characters and underscores).
+#
+# Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
+# sample function `_bashDocumentFormatter_exit_code`.
+#
+# See: _bashDocumentFormatter_exit_code
+# Usage: {fn} settingsFile template
+# Argument: settingsFile - Required. Cached documentation settings.
+# Argument: template - Required. A markdown template to use to map values. Post-processed with `removeUnfinishedSections`
+# Exit code: 0 - Success
+# Exit code: 1 - Template file not found
+# Short description: Simple bash function documentation
+#
+bashDocumentationTemplate() {
+  local envFile=$1 template=$2
+  if [ ! -f "$envFile" ]; then
+    consoleError "Settings file $envFile not found" 1>&2
+    return $errorArgument
+  fi
+  if [ ! -f "$template" ]; then
+    consoleError "Template $template not found" 1>&2
+    return $errorArgument
+  fi
+  if ! (
     # subshell this does not affect anything except these commands
     set -eou pipefail
-    chmod +x "$envFile"
-    if ! "$envFile"; then
-      consoleError "Failed"
+    set -a
+    # shellcheck source=/dev/null
+    if ! source "$envFile"; then
+      set +a
+      consoleError "$envFile Failed"
       prefixLines "$(consoleCode)" <"$envFile"
       return $errorEnvironment
     fi
-
-    set -a
-    # shellcheck source=/dev/null
-    source "$envFile"
     set +a
-
-    environmentVariables >"$envFile"
     while read -r envVar; do
-      formatter="_bashDocumentFunction_${envVar}Format"
+      formatter="_bashDocumentFormatter_${envVar}"
       if [ "$(type -t "$formatter")" = "function" ]; then
         declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
       fi
-    done <"$envFile"
-    ./bin/build/map.sh <"$template" | grep -v '# shellcheck' >"$target"
-  )
-  removeUnfinishedSections <"$target"
-  rm "$target"
-  rm "$envFile"
+    done < <(environmentVariables)
+    if ! mapEnvironment <"$template" | grep -v '# shellcheck' | removeUnfinishedSections; then
+      return $?
+    fi
+  ); then
+    consoleError "Template $template not found" 1>&2
+    return $errorEnvironment
+  fi
 }
 
 #
@@ -450,7 +382,7 @@ __dumpNameValuePrefix() {
     printf "%s%s\n" "$prefix" "$(escapeSingleQuotes "$1")"
     shift
   done
-  printf "%s\nthen\n    export '%s'\nfi\n" "EOF" "$varName"
+  printf "%s\n""then\n    export '%s'\nfi\n" "EOF" "$varName"
 }
 
 # This basically just does `a=${b}` in the output
@@ -488,7 +420,7 @@ __dumpAliasedValue() {
 # - `depends` - Any dependencies (list)
 #
 # Summary: Generate a set of name/value pairs to document bash functions
-# Usage: bashExtractDocumentation directory function
+# Usage: {fn} definitionFile function
 # Argument: `definitionFile` - File in which function is defined
 # Argument: `function` - Function defined in `file`
 # Depends: colors.sh text.sh prefixLines
@@ -675,6 +607,8 @@ bashFindFunctionFile() {
 #
 # Given a file containing Markdown, remove header and any section which has a variable still
 #
+# This EXPLICITLY ignores variables with a colon to work with `{SEE:other}` syntax
+#
 # This operates as a filter on a file. A section is any group of contiguous lines beginning with a line
 # which starts with a `#` character and then continuing to but not including the next line which starts with a `#`
 # character or the end of file; which corresponds roughly to headings in Markdown.
@@ -703,13 +637,13 @@ removeUnfinishedSections() {
       section=()
       foundVar=
     fi
-    if [ "$line" != "$(printf "%s" "$line" | sed 's/{[^}]*}//g')" ]; then
+    if [ "$line" != "$(printf "%s" "$line" | sed 's/{[^:}]*}//g')" ]; then
       foundVar=1
     fi
     section+=("$line")
   done
   if ! test $foundVar; then
-    printf '%s\n' "${section[@]}"
+    printf '%s\n' "${section[@]+${section[@]}}"
   fi
 }
 
@@ -733,239 +667,47 @@ markdownFormatList() {
 #
 # Format code blocks (does markdownFormatList)
 #
-_bashDocumentFunction_exit_codeFormat() {
+_bashDocumentFormatter_exit_code() {
   markdownFormatList
 }
 
 #
 # Format usage blocks (indents as a code block)
 #
-_bashDocumentFunction_usageFormat() {
+_bashDocumentFormatter_usage() {
   prefixLines "    "
 }
 
 # #
 # # Format example blocks (indents as a code block)
 # #
-# _bashDocumentFunction_exampleFormat() {
+# _bashDocumentFormatter_exampleFormat() {
 #     markdownFormatList
 # }
-_bashDocumentFunction_outputFormat() {
+_bashDocumentFormatter_output() {
   prefixLines "    "
 }
 
 #
 # Format argument blocks (does markdownFormatList)
 #
-_bashDocumentFunction_argumentFormat() {
+_bashDocumentFormatter_argument() {
   markdownFormatList
 }
 
 #
 # Format depends blocks (indents as a code block)
 #
-_bashDocumentFunction_dependsFormat() {
+_bashDocumentFormatter_depends() {
   prefixLines "    "
 }
 
 #
-# Summary: Show current release notes
-# Output the current release notes.
+# Format see block
 #
-# If this fails it outputs an error to stderr
-#
-# When this tool succeeds it outputs the current release notes file relative to the project root.
-# Usage: release-notes.sh
-# Usage: {fn} [ version ]
-# Argument: version - Optional. String. Version for the release notes path. If not specified uses the current version.
-# Output: ./docs/release/v1.0.0.md
-# fn: release-notes.sh
-# Hook: version-current
-# Exit code: 1 - if an error occurs
-# Example:     open $(bin/build/release-notes.sh)
-# Example:     vim $(releaseNotes)
-#
-releaseNotes() {
-  local version
-
-  version=
-  while [ $# -gt 0 ]; do
-    case $1 in
-      *)
-        if [ -n "$version" ]; then
-          consoleError "Version $version already specified: $1"
-        else
-          version="${1-}"
-        fi
-        ;;
-    esac
-    shift
-  done
-  if [ -z "$version" ]; then
-    version=$(runHook version-current)
-    if [ -z "$version" ]; then
-      consoleError "No version-current" 1>&2
-      return $errorEnvironment
-    fi
-  fi
-  releasePath="./docs/release"
-  if [ ! -d "$releasePath" ]; then
-    consoleError "Not a directory $releasePath" 1>&2
-    return $errorEnvironment
-  fi
-  path="./docs/release/$version.md"
-  printf %s "$path"
-
-}
-
-_newReleaseUsage() {
-  usageDocument "./bin/build/tools/$(basename "${BASH_SOURCE[0]}")" newRelease "$@"
-}
-
-#
-# Usage: {fn} lastVersion
-# Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
-#
-nextMinorVersion() {
-  local last prefix
-
-  last=${1##*.}
-  prefix=${1%.*}
-  prefix=${prefix#v*}
-  last=$((last + 1))
-  printf "%s.%s" "$prefix" "$last"
-}
-
-#
-# Argument: --non-interactive - Optional. If new version is needed, use default version
-# Argument: versionName - Optional. Set the new version name to this.
-# Summary: Generate a new release notes and bump the version
-# Hook: version-current
-# Hook: version-live
-# Hook: version-created
-# Hook: version-already
-# Exit Code: 0 - Release generated or has already been generated
-# Exit Code: 1 - If new version needs to be created and `--non-interactive`
-# **New release** - generates files in system for a new release.
-#
-# *Requires* hook `version-current`, optionally `version-live`
-#
-# Uses semantic versioning `MAJOR.MINOR.PATCH`
-#
-# Checks the live version versus the version in code and prompts to
-# generate a new release file if needed.
-#
-# A release notes template file is added at `./docs/release/`. This file is
-# also added to `git` the first time.
-#
-newRelease() {
-  local newVersion readLoop currentVersion liveVersion nextVersion releaseNotes nonInteractive
-  local width=40
-
-  nonInteractive=
-  newVersion=
-  while [ $# -gt 0 ]; do
-    case $1 in
-      --non-interactive)
-        nonInteractive=1
-        consoleWarning "Non-interactive mode set"
-        ;;
-      --help)
-        _newReleaseUsage 0
-        return 0
-        ;;
-      *)
-        if [ -n "$newVersion" ]; then
-          _newReleaseUsage $errorArgument "Unknown argument $1"
-          return $?
-        fi
-        newVersion=$1
-        ;;
-    esac
-    shift
-  done
-
-  readLoop=
-  if [ -z "$newVersion" ]; then
-    readLoop=1
-  fi
-  if ! hasHook version-current; then
-    _newReleaseUsage $errorEnvironment "Requires hook version-current"
-    return "$errorEnvironment"
-  fi
-  currentVersion=$(runHook version-current)
-  if [ -z "$currentVersion" ]; then
-    _newReleaseUsage $errorEnvironment "version-current returned empty string"
-    return "$errorEnvironment"
-  fi
-  if hasHook version-live; then
-    liveVersion=$(runHook version-live)
-    if [ -z "$liveVersion" ]; then
-      _newReleaseUsage $errorEnvironment "version-live returned empty string"
-      return "$errorEnvironment"
-    fi
-    consoleNameValue $width "Live:" "$liveVersion"
-  else
-    liveVersion=$currentVersion
-  fi
-  nextVersion=$(nextMinorVersion "$liveVersion")
-  consoleNameValue $width "Current:" "$currentVersion"
-  # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$nextVersion")"
-  versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
-  if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
-    releaseNotes="$(releaseNotes)"
-    consoleNameValue $width "Ready to deploy:" "$currentVersion"
-    consoleNameValue $width "Release notes:" "$releaseNotes"
-    if ! test $nonInteractive; then
-      runHook version-already "$currentVersion" "$releaseNotes"
-    fi
-    return 0
-  fi
-  if test $nonInteractive; then
-    if [ -z "$newVersion" ]; then
-      newVersion=$nextVersion
-    elif ! isVersion "$newVersion"; then
-      _newReleaseUsage $errorArgument "New version $newVersion is not a valid version tag"
-      return $errorArgument
-    fi
-  else
-    while true; do
-      if test $readLoop; then
-        printf "%s? (%s %s) " "$(consoleInfo "New version")" "$(consoleBoldMagenta "default")" "$(consoleCode "$nextVersion")"
-        read -r newVersion || :
-        if [ -z "$newVersion" ]; then
-          newVersion=$nextVersion
-        fi
-      fi
-      if [[ "$newVersion" =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
-        newVersion="v$newVersion"
-        break
-      else
-        if ! test $readLoop; then
-          _newReleaseUsage $errorArgument "Invalid version $newVersion"
-        else
-          consoleError "Invalid version $newVersion"
-        fi
-      fi
-    done
-  fi
-  releaseNotes="$(releaseNotes "$newVersion")"
-  if [ ! -f "$releaseNotes" ]; then
-    trimSpacePipe >"$releaseNotes" <<-EOF
-        # Release $newVersion
-
-        - Upgrade from $currentVersion
-        - New snazzy features here
-EOF
-    consoleSuccess "Version $newVersion ready - release notes: $releaseNotes"
-    if ! test $nonInteractive; then
-      runHook version-created "$newVersion" "$releaseNotes"
-    fi
-  else
-    consoleWarning "Version $newVersion already - release notes: $releaseNotes"
-    if ! test $nonInteractive; then
-      runHook version-already "$newVersion" "$releaseNotes"
-    fi
-  fi
-  git add "$releaseNotes"
+_bashDocumentFormatter_see() {
+  local seeItems=()
+  while IFS=" " read -r -a seeItems; do
+    printf "{SEE:%s}\n" "${seeItems[@]+${seeItems[@]}}"
+  done || :
 }

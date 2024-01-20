@@ -27,4 +27,4 @@ hookApplicationTag() {
   fi
 }
 
-hookApplicationTag
+hookApplicationTag "$@"

@@ -6,6 +6,10 @@
 ## `bashDocumentFunction`
 
 
+### `bashDocumentFunction` - Document a function and generate a function template (markdown)
+
+Document a function and generate a function template (markdown)
+
 #### Usage
 
     bashDocumentFunction file function template
@@ -20,6 +24,12 @@
 
 - `0` - Success
 - `1` - Template file not found
+
+#### See Also
+
+{SEE:bashDocumentationTemplate}
+{SEE:bashDocumentFunction}
+{SEE:repeat}
 
 ### `documentFunctionsWithTemplate` - Convert a template into documentation for Bash functions
 
@@ -37,11 +47,10 @@ to regenerate each time.
 
 #### Arguments
 
-- `sourceCodeDirectory` - Required. The directory where the source code lives
+- `cacheDirectory` - Required. Cache directory where the indexes live.
 - `documentTemplate` - Required. The document template containing functions to define
 - `templateFile` - Required. Function template file to generate documentation for functions
 - `targetFile` - Required. Target file to generate
-- `cacheDirectory` - Optional. If supplied, cache to reduce work when files remain unchanged.
 
 #### Exit codes
 
@@ -51,7 +60,7 @@ to regenerate each time.
 
 #### See Also
 
-documentFunctionTemplateDirectory
+{SEE:documentFunctionTemplateDirectory}
 
 ### `documentFunctionTemplateDirectory` - Convert a directory of templates into documentation for Bash functions
 
@@ -60,22 +69,17 @@ Convert a directory of templates for bash functions into full-fledged documentat
 The process:
 
 1. `documentDirectory` is scanned for files which look like `*.md`
-1. `documentFunctionsWithTemplate` is called for each one
+1. `documentFunctionTemplateDirectory` is called for each one
 
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
-#### Usage
-
-    documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDirectory [ cacheDirectory ]
-
 #### Arguments
 
-- `sourceCodeDirectory` - Required. The directory where the source code lives
+- `cacheDirectory` - Required. The directory where function index exists and additional cache files can be stored.
 - `documentDirectory` - Required. Directory containing documentation templates
 - `templateFile` - Required. Function template file to generate documentation for functions
 - `targetDirectory` - Required. Directory to create generated documentation
-- `cacheDirectory` - Optional. If supplied, cache to reduce work when files remain unchanged.
 
 #### Exit codes
 
@@ -85,7 +89,62 @@ to regenerate each time.
 
 #### See Also
 
-documentFunctionsWithTemplate
+{SEE:documentFunctionsWithTemplate}
+
+## Documentation Indexing
+
+
+### `documentationFunctionIndex` - Generate a function index for bash files
+
+Generate a function index for bash files
+
+cacheDirectory/code/bashFilePath/functionName
+cacheDirectory/index/functionName
+cacheDirectory/files/baseName
+
+Use with documentationFunctionLookup
+
+#### Arguments
+
+- `codePath` - Required. Directory. Path where code is stored (should remain identical between invocations)
+- `cacheDirectory` - Required. Directory. Store cached information
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+{SEE:documentationFunctionLookup}
+
+### `documentationFunctionLookup` - Looks up information in the function index
+
+Looks up information in the function index
+
+#### Arguments
+
+- `--settings` - `lookupPattern` is a function name. Outputs a file containing function settings
+- `--source` - `lookupPattern` is a function name. Outputs the source code path to where the function is defined
+- `--line` - `lookupPattern` is a function name. Outputs the source code line where the function is defined
+- `--combined` - `lookupPattern` is a function name. Outputs the source code path and line where the function is defined as `path:line`
+- `--file` - `lookupPattern` is a file name. Find files which match this base file name.
+- `cacheDirectory` - Directory where we can store cached information
+- `lookupPattern` - Token to look up in the index
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+{SEE:documentationFunctionIndex}
+
+## Documentation "See" Linker
+
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ## Finding documentation
 
@@ -113,10 +172,6 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 - `usage` - Canonical usage example (code)
 - `example` - An example of usage (code, many)
 - `depends` - Any dependencies (list)
-
-#### Usage
-
-    bashExtractDocumentation directory function
 
 #### Arguments
 
@@ -162,66 +217,6 @@ bashFindFunctionFiles . bashFindFunctionFiles
 #### Environment
 
 Generates a temporary file which is removed
-
-## Release Related
-
-
-### `release-notes.sh` - Show current release notes
-
-Output the current release notes.
-
-If this fails it outputs an error to stderr
-
-When this tool succeeds it outputs the current release notes file relative to the project root.
-
-#### Arguments
-
-- `version` - Optional. String. Version for the release notes path. If not specified uses the current version.
-
-#### Examples
-
-open $(bin/build/release-notes.sh)
-    vim $(releaseNotes)
-
-#### Sample Output
-
-    ./docs/release/v1.0.0.md
-
-#### Exit codes
-
-- `1` - if an error occurs
-
-### `newRelease` - Generate a new release notes and bump the version
-
-**New release** - generates files in system for a new release.
-
-*Requires* hook `version-current`, optionally `version-live`
-
-Uses semantic versioning `MAJOR.MINOR.PATCH`
-
-Checks the live version versus the version in code and prompts to
-generate a new release file if needed.
-
-A release notes template file is added at `./docs/release/`. This file is
-also added to `git` the first time.
-
-#### Arguments
-
-- `--non-interactive` - Optional. If new version is needed, use default version
-- `versionName` - Optional. Set the new version name to this.
-
-#### Exit codes
-
-- `0` - Release generated or has already been generated
-- `1` - If new version needs to be created and `--non-interactive`
-
-### `nextMinorVersion` - Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
-
-Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
-
-#### Exit codes
-
-- `0` - Always succeeds
 
 ## Usage Utilities
 
@@ -317,7 +312,7 @@ Utility to export multi-line values as Bash variables
 ## `bashDocumentFunction` Formatting
 
 
-### `_bashDocumentFunction_exit_codeFormat` - Format code blocks (does markdownFormatList)
+### `_bashDocumentFormatter_exit_code` - Format code blocks (does markdownFormatList)
 
 Format code blocks (does markdownFormatList)
 
@@ -325,7 +320,7 @@ Format code blocks (does markdownFormatList)
 
 - `0` - Always succeeds
 
-### `_bashDocumentFunction_usageFormat` - Format usage blocks (indents as a code block)
+### `_bashDocumentFormatter_usage` - Format usage blocks (indents as a code block)
 
 Format usage blocks (indents as a code block)
 
@@ -333,7 +328,7 @@ Format usage blocks (indents as a code block)
 
 - `0` - Always succeeds
 
-### `_bashDocumentFunction_argumentFormat` - Format argument blocks (does markdownFormatList)
+### `_bashDocumentFormatter_argument` - Format argument blocks (does markdownFormatList)
 
 Format argument blocks (does markdownFormatList)
 
@@ -341,7 +336,7 @@ Format argument blocks (does markdownFormatList)
 
 - `0` - Always succeeds
 
-### `_bashDocumentFunction_dependsFormat` - Format depends blocks (indents as a code block)
+### `_bashDocumentFormatter_depends` - Format depends blocks (indents as a code block)
 
 Format depends blocks (indents as a code block)
 

@@ -48,16 +48,20 @@ _phpComposerUsage() {
 # Environment: BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
 #
 phpComposer() {
-  local start composerArgs quietLog dockerImage cacheDir composerDirectory
+  local start forceDocker installArgs quietLog dockerImage cacheDir composerBin composerDirectory savedWorking
 
   dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
   composerDirectory=.
   cacheDir=.composer
-
+  forceDocker=
   start=$(beginTiming)
 
   while [ $# -gt 0 ]; do
     case $1 in
+      --docker)
+        consoleWarning "Requiring docker composer"
+        forceDocker=1
+        ;;
       --help)
         _phpComposerUsage 0
         return $?
@@ -72,52 +76,60 @@ phpComposer() {
           return $?
         fi
         composerDirectory=$1
+        consoleInfo "Using composer directory: $composerDirectory"
         ;;
     esac
     shift
   done
 
-  aptInstall
-
-  if ! composerDirectory=$(realPath "$composerDirectory"); then
-    _phpComposerUsage "$errorArgument" "Composer directory issues $composerDirectory"
-    return $?
-  fi
   [ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
 
-  composerArgs=()
-  composerArgs+=("-v" "$composerDirectory:/app")
-  composerArgs+=("-v" "$composerDirectory/$cacheDir:/tmp")
-  composerArgs+=("$dockerImage")
-  composerArgs+=("--ignore-platform-reqs")
+  installArgs=("--ignore-platform-reqs")
 
   quietLog="$(buildQuietLog phpComposer)"
-  consoleInfo -n "Composer ... "
+  consoleBoldRed -n "Composer ... "
   bigText "Install vendor" >>"$quietLog"
-  #DEBUGGING - remove, why no -q option? we like it quiet
-  echo Running: docker pull "$dockerImage" >>"$quietLog"
 
-  if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
-    consoleError "Failed to pull image $dockerImage"
-    buildFailed "$quietLog"
-    return $errorBuild
+  if test $forceDocker; then
+    consoleWarning -n "pulling ... "
+    if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
+      consoleError "Failed to pull image $dockerImage" 1>&2
+      buildFailed "$quietLog" 1>&2
+      return $errorBuild
+    fi
+    composerBin=(docker run)
+    composerBin+=("-v" "$composerDirectory:/app")
+    composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
+    composerBin+=("$dockerImage")
+  else
+    consoleWarning -n "installing ... "
+    if ! aptInstall composer composer >>"$quietLog" 2>&1; then
+      consoleError "Failed to install composer" 1>&2
+      buildFailed "$quietLog" 1>&2
+      return $errorBuild
+    fi
+    composerBin=(composer)
   fi
   consoleInfo -n "validating ... "
-  echo Running: docker run "${composerArgs[@]}" validate >>"$quietLog"
-  if ! docker run "${composerArgs[@]}" install >>"$quietLog" 2>&1; then
+
+  savedWorking="$(pwd)"
+  cd "$composerDirectory" || return $?
+  printf "%s\n" "Running: ${composerBin[*]} validate" >>"$quietLog"
+  if ! "${composerBin[@]}" validate >>"$quietLog" 2>&1; then
+    cd "$savedWorking" || :
     buildFailed "$quietLog"
     return $errorBuild
   fi
 
-  composerArgs+=("install")
   consoleInfo -n "installing ... "
-  echo Running: docker run "${composerArgs[@]}" >>"$quietLog"
-  if ! docker run "${composerArgs[@]}" >>"$quietLog" 2>&1; then
-    buildFailed "$quietLog"
+  printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog"
+  if ! "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1; then
+    cd "$savedWorking" || :
+    buildFailed "$quietLog" 1>&2
     return $errorBuild
   fi
-  reportTiming "$start" OK
-
+  cd "$savedWorking" || :
+  reportTiming "$start" "completed in"
 }
 
 phpComposer "$@"

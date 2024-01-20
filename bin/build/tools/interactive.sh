@@ -7,7 +7,7 @@
 # Depends: text.sh colors.sh
 # bin: test echo printf
 # Docs: o ./docs/_templates/tools/interactive.md
-# Test: o ./bin/tests/interactive-tests.sh
+# Test: o ./test/tools/interactive-tests.sh
 
 # IDENTICAL errorArgument 1
 errorArgument=2

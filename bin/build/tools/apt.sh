@@ -7,7 +7,7 @@
 # Depends: colors.sh pipeline.sh
 #
 # Docs: o ./docs/_templates/tools/apt.md
-# Test: o bin/tests/apt-tests.sh
+# Test: o ./test/tools/apt-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -61,10 +61,11 @@ aptUpdateOnce() {
 # Summary: Install packages using `apt-get`
 # Argument: package - One or more packages to install
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
+# Default: apt-utils figlet jq pcregrep
 #
 aptInstall() {
   local installedLog quietLog
-  local actualPackages=() packages=(apt-utils figlet jq "$@")
+  local actualPackages=() packages=(apt-utils figlet jq pcregrep "$@")
   local apt start
 
   start=$(beginTiming)
@@ -76,9 +77,8 @@ aptInstall() {
     return 0
   fi
 
-  echo "quietLog: $quietLog"
-  if ! aptUpdateOnce; then
-    buildFailed "$quietLog"
+  if ! aptUpdateOnce >> "$quietLog" 2>&1; then
+    buildFailed "$quietLog" 1>&2
     return "$errorEnvironment"
   fi
   if ! requireFileDirectory "$installedLog"; then
@@ -137,7 +137,7 @@ whichApt() {
   if which "$binary" >/dev/null; then
     return 0
   fi
-  consoleError "Apt packages \"$*\" did not add $binary to the PATH $PATH" 1>&2
+  consoleError "Apt packages \"$*\" did not add $binary to the PATH: ${PATH-}" 1>&2
   return $errorEnvironment
 }
 

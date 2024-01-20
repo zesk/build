@@ -75,8 +75,3 @@ deployApplicationTest() {
 
   cd "$home"
 }
-
-# source ./bin/build/tools.sh
-# source ./bin/tests/deploy-tests.sh
-# deployApplicationTest
-# . bin/build/tools.sh; . bin/tests/deploy-tests.sh; deployApplicationTest

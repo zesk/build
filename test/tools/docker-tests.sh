@@ -12,7 +12,7 @@ declare -a tests
 tests+=(testCheckDockerEnvFile)
 
 testCheckDockerEnvFile() {
-  local testFile=./bin/tests/example/bad.env
+  local testFile=./test/example/bad.env
   assertExitCode 1 checkDockerEnvFile $testFile
   assertOutputContains --exit 1 HELLO checkDockerEnvFile $testFile
   assertOutputContains --exit 1 TEST_AWS_SECURITY_GROUP checkDockerEnvFile $testFile

@@ -4,8 +4,8 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Docs: o docs/_templates/ops/daemontools.md
-# Test: o bin/tests/daemontools-tests.sh
+# Docs: o ./docs/_templates/ops/daemontools.md
+# Test: o ./test/tools/daemontools-tests.sh
 
 # shellcheck source=/dev/null
 . ./bin/build/env/DAEMONTOOLS_HOME.sh

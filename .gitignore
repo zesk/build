@@ -8,6 +8,6 @@
 /.build-docs/
 /shaPipe.log
 /.pipeline-key*
-/bin/tests/example/simple-php/vendor/
-/bin/tests/example/simple-php/.env
-/bin/tests/example/simple-php/cache/
+/test/example/simple-php/vendor/
+/test/example/simple-php/.env
+/test/example/simple-php/cache/

@@ -30,6 +30,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# shellcheck source=/dev/null
+. ./bin/build/env/HOME.sh
+
 sshHome="$HOME/.ssh"
 knownHostsFile="$sshHome/known_hosts"
 temporaryCommandsFile=./.temp-sftp
@@ -41,7 +44,7 @@ _deployToUsage() {
   exit $?
 }
 
-if [ ! -d "${HOME:-}" ]; then
+if [ ! -d "$HOME" ]; then
   _deployToUsage $errorEnvironment "No HOME defined or not a directory: $HOME"
 fi
 
@@ -292,10 +295,8 @@ sshishDeployOptions() {
 }
 
 #
-# fn: {base}
-#
-# Summary:Deploy current application to host at remotePath
-# Usage: deploy-to.sh [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'
+# Summary: Deploy current application to one or more hosts
+# Usage: {fn} [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath [ userAtHost ... ]
 # Argument: --target target$ - Optional. String. Build target file, defaults to `app.tar.gz`
 # Argument: --deploy - Default. Flag. deploy an application to a remote host
 # Argument: --undo - Optional. Flag. Reverses a deployment
@@ -305,7 +306,7 @@ sshishDeployOptions() {
 # Argument: applicationChecksum - Required. String. The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
 # Argument: remoteDeploymentPath - Required. Path. Remote path where we can store deployment state files.
 # Argument: remotePath - Required. Path. Path where the application will be deployed
-# Argument: user1@host1 - Required. Strings. A list of space-separated values or arguments which match users at remote hosts
+# Argument: userAtHost - Required. Strings. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
 #
 # Deploy current application to host at remotePath.
 #
@@ -337,6 +338,10 @@ sshishDeployOptions() {
 # - Run the `remote-deploy-finish.sh` script which ...
 # - Deploys the prior version in the same manner, and ... <!-- needs expansion TODO -->
 # - Runs the `deploy-undo` hook afterwards
+#
+# The `userAtHost` can be passed as follows:
+#
+#     deployAction --deploy 5125ab12 /var/www/DEPLOY/coolApp/ /var/www/apps/coolApp/ "www-data@host0 www-data@host1 stageuser@host3" "www-data@host4"
 #
 # Local cache: `remoteDeploymentPath` is considered a state directory so removing entries in this should be managed separately.
 #

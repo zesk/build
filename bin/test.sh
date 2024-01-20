@@ -13,6 +13,9 @@
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -21,28 +24,11 @@ top=$(pwd)
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-me=$(basename "$0")
-quietLog=$(buildQuietLog "$me")
-cleanExit=
-export testTracing
-testTracing=initialization
-
 # shellcheck source=/dev/null
-. ./bin/tests/test-tools.sh
-
-#
-# fn: {base}
-# Usage: {fn} [ --help ] [ --clean ] [ --messy ]
-# Run Zesk Build tests
-#
-# Argument: --help - Optional. This help.
-# Argument: --clean - Optional. Delete test artifact files before starting.
-# Argument: --messy - Optional. Do not delete test artifact files afterwards.
-#
-_testUsage() {
-  usageDocument "bin/$me" _testUsage "$@"
-  return "$?"
-}
+if ! . ./test/test-tools.sh; then
+  consoleError "Unable to load test tools library" 1>&2
+  return $errorEnvironment
+fi
 
 messyTestCleanup() {
   local fn exitCode=$?
@@ -61,71 +47,93 @@ messyTestCleanup() {
   testCleanup
 }
 
-messyOption=
+_textExit() {
+  export cleanExit=1
+  exit "$@"
+}
 
-while [ $# -gt 0 ]; do
-  case $1 in
-    --help)
-      _testUsage 0
-      exit $?
-      ;;
-    --clean)
-      consoleWarning -n "Cleaning ... "
-      testCleanup
-      consoleSuccess "done"
-      ;;
-    --messy)
-      messyOption=1
-      ;;
-    *)
-      _testUsage "$errorArgument" "Unknown argument $1"
-      exit $?
-      ;;
-  esac
-  shift
-done
-
-trap messyTestCleanup EXIT QUIT TERM
-
-# debugTermDisplay
-requireTestFiles "$quietLog" colors-tests.sh
-
-# Types
-requireTestFiles "$quietLog" type-tests.sh
-
-# OS
-requireTestFiles "$quietLog" os-tests.sh
-
-requireTestFiles "$quietLog" pipeline-tests.sh
+_testUsage() {
+  usageDocument "bin/$(basename "${BASH_SOURCE[0]}")" buildTestSuite "$@"
+  return "$?"
+}
 
 #
-# Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
+# fn: {base}
+# Usage: {fn} [ --help ] [ --clean ] [ --messy ]
+# Run Zesk Build tests
 #
-testTracing=identical-check.sh
-./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL'
+# Argument: --one test - Optional. Add one test to run.
+# Argument: --show - Optional. Flag. List all tests.
+# Argument: --help - Optional. This help.
+# Argument: --clean - Optional. Delete test artifact files before starting.
+# Argument: --messy - Optional. Do not delete test artifact files afterwards.
+#
+buildTestSuite() {
+  local quietLog allTests runTests
 
-requireTestFiles "$quietLog" aws-tests.sh
-requireTestFiles "$quietLog" text-tests.sh
-requireTestFiles "$quietLog" deploy-tests.sh
-requireTestFiles "$quietLog" documentation-tests.sh
-requireTestFiles "$quietLog" assert-tests.sh
-requireTestFiles "$quietLog" usage-tests.sh
-requireTestFiles "$quietLog" docker-tests.sh
-requireTestFiles "$quietLog" api-tests.sh
+  quietLog=$(buildQuietLog "$(basename "${BASH_SOURCE[0]}")")
 
-# tests-tests.sh has side-effects - installs shellcheck
-requireTestFiles "$quietLog" tests-tests.sh
+  export cleanExit=
+  export testTracing
 
-# aws-tests.sh testAWSIPAccess has side-effects, installs AWS
-requireTestFiles "$quietLog" aws-tests.sh
+  testTracing=initialization
+  trap messyTestCleanup EXIT QUIT TERM
 
-# Side effects - install the software
-requireTestFiles "$quietLog" bin-tests.sh
+  messyOption=
+  allTests=(version colors type os pipeline identical aws text deploy documentation assert usage docker api tests aws bin)
+  runTests=()
 
-cd "$top" || return $?
-cleanExit=1
-testTracing=cleanup
-messyTestCleanup
+  testTracing=options
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --show)
+        printf "%s\n" "${allTests[@]}"
+        _textExit 0
+        ;;
+      --one)
+        shift || return $?
+        printf "%s %s\n" "$(consoleWarning "Adding one test:")" "$(consoleBoldRed "$1")"
+        runTests+=("$1")
+        ;;
+      --help)
+        _testUsage 0
+        _textExit $?ƒ
+        ;;
+      --clean)
+        consoleWarning -n "Cleaning ... "
+        testCleanup
+        consoleSuccess "done"
+        ;;
+      --messy)
+        messyOption=1
+        ;;
+      *)
+        _testUsage "$errorArgument" "Unknown argument $1"
+        _textExit $?
+        ;;
+    esac
+    shift
+  done
 
-bigText Passed | prefixLines "$(consoleSuccess)"
-consoleReset
+  if [ ${#runTests[@]} -eq 0 ]; then
+    runTests=("${allTests[@]}")
+  fi
+  # tests-tests.sh has side-effects - installs shellcheck
+  # aws-tests.sh testAWSIPAccess has side-effects, installs AWS
+  # bin-tests has side effects - installs OS software
+
+  for shortTest in "${runTests[@]}"; do
+    testTracing="test: $shortTest"
+    requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
+  done
+
+  cd "$top" || return $?
+  cleanExit=1
+  testTracing=cleanup
+  messyTestCleanup
+
+  bigText Passed | prefixLines "$(consoleSuccess)"
+  consoleReset
+}
+
+buildTestSuite "$@"

@@ -18,6 +18,8 @@ errorArgument=2
 sshSetup() {
   local sshHomePath flagForce servers keyType keyBits
 
+  # shellcheck source=/dev/null
+  source "$(dirname "${BASH_SOURCE[0]}")/../build/env/HOME.sh"
   if [ ! -d "${HOME-}" ]; then
     consoleError "$errorArgument" "HOME is not defined and is required"
   fi

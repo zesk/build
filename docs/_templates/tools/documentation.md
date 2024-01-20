@@ -9,16 +9,19 @@
 {documentFunctionsWithTemplate}
 {documentFunctionTemplateDirectory}
 
+## Documentation Indexing
+
+{documentationFunctionIndex}
+{documentationFunctionLookup}
+
+## Documentation "See" Linker
+
+{documentationFunctionSeeLinker}
+
 ## Finding documentation
 
 {bashExtractDocumentation}
 {bashFindFunctionFiles}
-
-## Release Related
-
-{releaseNotes}
-{newRelease}
-{nextMinorVersion}
 
 ## Usage Utilities
 
@@ -33,10 +36,10 @@
 
 ## `bashDocumentFunction` Formatting
 
-{_bashDocumentFunction_exit_codeFormat}
-{_bashDocumentFunction_usageFormat}
-{_bashDocumentFunction_argumentFormat}
-{_bashDocumentFunction_dependsFormat}
+{_bashDocumentFormatter_exit_code}
+{_bashDocumentFormatter_usage}
+{_bashDocumentFormatter_argument}
+{_bashDocumentFormatter_depends}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

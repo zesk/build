@@ -13,10 +13,7 @@ This toolkit makes the following assumptions:
 - You are using this with another project to help with your pipeline, build or operations
 - Binaries from this project installed at `./bin/build/`
 - Files containing bash code end with `.sh`
-- Your project: Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
-- The last version-sorted release notes is the current release of your software, or an optional hook exists in your project `./bin/hooks/version-current.sh`
-- Optionally a binary exists in your project `./bin/hooks/version-live.sh` to fetch the live version from somewhere
-- **Most** build operations occur at the project root directory
+- Release notes are located in a dedicated subdirectory, named `v1.0.0.md` which match version names (`v1.0.0`)
 - A central `$HOME/.build` directory is created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used.
 
 To use in your pipeline:
@@ -35,6 +32,7 @@ To install it in the operating system:
 
 ## Project structure
 
+- `bin/build/env/*.sh` - Any external environment variable is referenced 
 - `bin/build/tools/*.sh` - Build tools function implementations.
 - `bin/build/pipeline/*.sh` - Tools or steps for deployment
 - `bin/build/install/*.sh` - Install dependencies in the pipeline (most of these exist as functions)
@@ -53,7 +51,7 @@ You can preserve the build directory post-build to see the details. Most failure
 
 A `./.deploy` directory is created for the `php-build.sh` steps and contains metadata about the deployment.
 
-## Oprerations
+## Operations
 
 Operations support is currently sparse by goal is to support **setup and configuration** of:
 
@@ -63,11 +61,22 @@ Operations support is currently sparse by goal is to support **setup and configu
 - `crontab`
 - `daemontools` 
 
+## Run tests in docker
+
+Scripts are written so you can load a `.env` and then run commands directly in a test container:
+
+    bin/build/local-container.sh .env.MYTESTENV -- bin/test.sh --clean
+
+
 ## Tested operating systems
+
+Main issues between platforms are differences between BSD, GNU or POSIX standard tools in the shell.
 
 - Darwin (Mac OS X)
 - Ubuntu 22
 - debian:latest
+
+If you test on another OS or need support, report an issue.
 
 ## Known issues and workarounds
 

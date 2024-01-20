@@ -5,7 +5,7 @@
 # Depends: text.sh
 # bin: test echo printf
 # Docs: o ./docs/_templates/tools/colors.md
-# Test: o ./bin/tests/colors-tests.sh
+# Test: o ./test/tools/colors-tests.sh
 
 ###############################################################################
 #

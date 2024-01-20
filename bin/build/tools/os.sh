@@ -5,7 +5,7 @@
 # Depends: colors.sh pipeline.sh
 #
 # Docs: o ./docs/_templates/tools/os.md
-# Test: o ./bin/tests/os-tests.sh
+# Test: o ./test/tools/os-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -24,8 +24,10 @@ errorArgument=2
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 #
 buildCacheDirectory() {
-  export HOME
-  local suffix useDir="${HOME-./}"
+  local suffix useDir
+  # shellcheck source=/dev/null
+  source "$(dirname "${BASH_SOURCE[0]}")/../env/HOME.sh"
+  useDir="$HOME"
   if [ ! -d "$useDir" ]; then
     useDir="./"
   fi
@@ -43,16 +45,16 @@ buildQuietLog() {
   local logFile flagMake=1
   while [ $# -gt 0 ]; do
     case $1 in
-      --no-create)
-        flagMake=
-        ;;
-      *)
-        if [ -z "$1" ]; then
-          consoleError "buildQuietLog requires a name parameter" 1>&2
-          return 1
-        fi
-        logFile="$(buildCacheDirectory "$1.log")"
-        ;;
+    --no-create)
+      flagMake=
+      ;;
+    *)
+      if [ -z "$1" ]; then
+        consoleError "buildQuietLog requires a name parameter" 1>&2
+        return 1
+      fi
+      logFile="$(buildCacheDirectory "$1.log")"
+      ;;
     esac
     shift
   done
@@ -101,6 +103,7 @@ requireDirectory() {
       consoleError "Unable to create directory \"$name\"" 1>&2
       return "$errorEnvironment"
     fi
+    printf "%s\n" "$name"
     shift
   done
 }
@@ -230,7 +233,7 @@ reverseFileLines() {
 # fn: chmod-sh.sh
 makeShellFilesExecutable() {
   # IDENTICAL makeShellFilesExecutable 1
-  find . -name '*.sh' ! -path '*/.*' "$@" -print0 | xargs -0 chmod -v +x
+  find . -name '*.sh' -type f ! -path '*/.*' "$@" -print0 | xargs -0 chmod -v +x
 }
 
 # Fetch the modification time of a file as a timestamp
@@ -458,27 +461,27 @@ pathAppend() {
   shift
   while [ $# -gt 0 ]; do
     case $1 in
-      --first)
-        firstFlag=1
-        ;;
-      --last)
-        firstFlag=
-        ;;
-      *)
-        if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
-          if [ ! -d "$1" ]; then
-            exitCode=2
-          elif [ -z "$pathValue" ]; then
-            pathValue="$1"
-          elif test "$firstFlag"; then
-            pathValue="$1$s$pathValue"
-          else
-            pathValue="$pathValue$s$1"
-          fi
+    --first)
+      firstFlag=1
+      ;;
+    --last)
+      firstFlag=
+      ;;
+    *)
+      if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
+        if [ ! -d "$1" ]; then
+          exitCode=2
+        elif [ -z "$pathValue" ]; then
+          pathValue="$1"
+        elif test "$firstFlag"; then
+          pathValue="$1$s$pathValue"
         else
-          exitCode=1
+          pathValue="$pathValue$s$1"
         fi
-        ;;
+      else
+        exitCode=1
+      fi
+      ;;
     esac
     shift
   done
@@ -494,8 +497,8 @@ pathAppend() {
 #
 manPathConfigure() {
   local tempPath
-
-  export MANPATH
+  # shellcheck source=/dev/null
+  source "$(dirname "${BASH_SOURCE[0]}")/../env/MANPATH.sh"
   if tempPath="$(pathAppend "$MANPATH" ':' "$@")"; then
     MANPATH="$tempPath"
     return 0
@@ -510,8 +513,8 @@ manPathConfigure() {
 # Argument: path - the path to be added to the `PATH` environment
 pathConfigure() {
   local tempPath
-
-  export PATH
+  # shellcheck source=/dev/null
+  source "$(dirname "${BASH_SOURCE[0]}")/../env/PATH.sh"
   if tempPath="$(pathAppend "$PATH" ':' "$@")"; then
     PATH="$tempPath"
     return 0

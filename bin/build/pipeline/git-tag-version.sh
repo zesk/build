@@ -96,7 +96,7 @@ gitTagVersion() {
   echo "$(consoleLabel -n "Previous version is: ") $(consoleValue -n "$previousVersion")"
   echo "$(consoleLabel -n " Release version is: ") $(consoleValue -n "$currentVersion")"
 
-  releaseNotes=./docs/release/$currentVersion.md
+  releaseNotes="$(releaseNotes "$currentVersion")"
 
   if [ ! -f "$releaseNotes" ]; then
     consoleError "Version $currentVersion no release notes \"$releaseNotes\" found, stopping." 1>&2

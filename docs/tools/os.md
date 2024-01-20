@@ -192,7 +192,7 @@ Works from the current directory
 
 #### See Also
 
-makeShellFilesExecutable
+{SEE:makeShellFilesExecutable}
 
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp

@@ -658,6 +658,22 @@ isUpToDate() {
   return 0
 }
 
+_mapEnvironmentGenerateSedFile() {
+  # IDENTICAL _mapEnvironmentGenerateSedFile 12
+  local sedFile=$1 value
+
+  shift
+  for i in "$@"; do
+    case "$i" in
+      *[%{}]*) ;;
+      LD_*) ;;
+      *)
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" >>"$sedFile"
+        ;;
+    esac
+  done
+}
+
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
@@ -697,12 +713,12 @@ mapEnvironment() {
 
   if [ $# -eq 0 ]; then
     ee=()
-    for e in $(mapEnvironmentVariables); do
+    for e in $(environmentVariables); do
       ee+=("$e")
     done
-    generateSedFile "$sedFile" "${ee[@]}"
+    _mapEnvironmentGenerateSedFile "$sedFile" "${ee[@]}"
   else
-    generateSedFile "$sedFile" "$@"
+    _mapEnvironmentGenerateSedFile "$sedFile" "$@"
   fi
 
   if ! sed -f "$sedFile"; then

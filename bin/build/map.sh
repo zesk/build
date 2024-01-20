@@ -19,10 +19,7 @@ errorArgument=1
 
 set -eou pipefail
 
-#
-# Quote sed strings for shell use
-#
-mapQuoteSedPattern() {
+quoteSedPattern() {
   # IDENTICAL quoteSedPattern 6
   value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
@@ -38,12 +35,15 @@ mapQuoteSedPattern() {
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-mapEnvironmentVariables() {
+# Usage: {fn}
+#
+environmentVariables() {
   # IDENTICAL environmentVariables 1
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
-generateSedFile() {
+_mapEnvironmentGenerateSedFile() {
+  # IDENTICAL _mapEnvironmentGenerateSedFile 12
   local sedFile=$1 value
 
   shift
@@ -52,7 +52,7 @@ generateSedFile() {
       *[%{}]*) ;;
       LD_*) ;;
       *)
-        printf "s/%s/%s/g\n" "$(mapQuoteSedPattern "$prefix$i$suffix")" "$(mapQuoteSedPattern "${!i-}")" >>"$sedFile"
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" >>"$sedFile"
         ;;
     esac
   done
@@ -101,12 +101,12 @@ mapEnvironment() {
 
   if [ $# -eq 0 ]; then
     ee=()
-    for e in $(mapEnvironmentVariables); do
+    for e in $(environmentVariables); do
       ee+=("$e")
     done
-    generateSedFile "$sedFile" "${ee[@]}"
+    _mapEnvironmentGenerateSedFile "$sedFile" "${ee[@]}"
   else
-    generateSedFile "$sedFile" "$@"
+    _mapEnvironmentGenerateSedFile "$sedFile" "$@"
   fi
 
   if ! sed -f "$sedFile"; then

@@ -19,4 +19,4 @@ Works from the current directory
 
 ## See Also
 
-makeShellFilesExecutable
+{SEE:makeShellFilesExecutable}

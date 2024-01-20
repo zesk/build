@@ -20,5 +20,8 @@ opsDir="$(dirname "${BASH_SOURCE[0]}")/ops"
 . "$opsDir/daemontools.sh"
 
 if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+  # Only require when running as a shell command
+  set -eou pipefail
+  # Run remaining command line arguments
   "$@"
 fi

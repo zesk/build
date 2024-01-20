@@ -19,14 +19,14 @@ All work and no play makes Ryu a dull boy.
 All work and no play makes Ryu a dull boy.
 All work and no play makes Chun-li a dull girl.
 
-TEXT IN FRONT SHOULD NOT MATTER BUT MUST MATCH // Alternate heading is identical commentHeading0 5
+TEXT IN FRONT SHOULD NOT MATTER AND DOES NOT MATCH // Alternate heading is identical commentHeading0 5
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 
-TEXT IN FRONT SHOULD NOT MATTER BUT MUST MATCH // IDENTICAL commentHeading1 5
+TEXT IN FRONT SHOULD NOT MATTER BUT NO LONGER NEEDS TO MATCH // IDENTICAL commentHeading1 5
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.

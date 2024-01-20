@@ -85,7 +85,7 @@ _phpBuildUsage() {
 phpBuild() {
   local tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment
 
-  usageRequireBinary _phpBuildUsage docker tar
+  usageRequireBinary _phpBuildUsage tar
 
   tagDeploymentFlag=1
   debuggingFlag=
@@ -171,8 +171,8 @@ phpBuild() {
 
   export BUILD_START_TIMESTAMP=$initTime
 
-  bigText Build | prefixLines "$(consoleGreen)"
-
+  bigText "PHP Build" | prefixLines "$(consoleGreen)"
+  consoleBoldRed "$(echoBar '<=>')"
   consoleInfo "Installing build tools ..."
 
   aptInstall

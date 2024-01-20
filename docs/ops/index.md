@@ -26,11 +26,6 @@ Feasibly for each file, the following environment files are loaded:
 
 Any files not found are skipped. Note that environment values are not carried between applications.
 
-#### Usage
-
-    crontab-application-sync.sh [ --env environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
-    crontabGenerate rootEnv rootPath user mapper
-
 #### Arguments
 
 - `--env environment` - Top-level environment file to pass variables into the user `crontab` template
@@ -41,7 +36,7 @@ Any files not found are skipped. Note that environment values are not carried be
 #### Examples
 
 crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/applications
-    crontabGenerate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
+    crontab-application-sync.sh /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 
 #### Exit codes
 
@@ -49,7 +44,7 @@ crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/a
 
 #### See Also
 
-whoami
+Not found
 
 [⬅ Return to documentation root](index.md)
 [⬅ Return to top](../index.md)

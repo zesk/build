@@ -105,6 +105,7 @@ identicalCheck() {
       [ -d "$tempDirectory/$prefixIndex" ] || mkdir "$tempDirectory/$prefixIndex"
       totalLines=$(wc -l <"$searchFile")
       grep -n "$prefix" "$searchFile" | while read -r identicalLine; do
+        # DEBUG # consoleBoldRed "$identicalLine" # DEBUG
         lineNumber=${identicalLine%%:*}
         lineNumber=$((lineNumber + 1))
         identicalLine=${identicalLine#*:}
@@ -143,7 +144,7 @@ identicalCheck() {
             # 10 lines in file, line 9 means: tail -n 2
             # 10 lines in file, line 10 means: tail -n 1
             tail -n $((totalLines - lineNumber + 1)) "$searchFile" | head -n "$count" >"$compareFile"
-            if [ "$(grep "$prefix" -c "$compareFile")" -gt 1 ]; then
+            if [ "$(grep -c "$prefix" "$compareFile")" -gt 0 ]; then
               clearLine 1>&2
               printf "%s: %s\n< %s%s\n" "$(consoleInfo "$token")" "$(consoleError -n "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" 1>&2
               prefixLines "$(consoleCode)    " <"$compareFile" 1>&2
@@ -169,6 +170,7 @@ identicalCheck() {
     done
   done 2>"$resultsFile"
   clearLine
+  exitCode=0
   find "$tempDirectory" -type f -name '*.match' | while read -r matchFile; do
     if [ ! -f "$matchFile.compare" ]; then
       tokenFile="$(dirname "$matchFile")"
@@ -177,10 +179,12 @@ identicalCheck() {
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
       printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$(tail -n 1 "$tokenFile")")" >>"$resultsFile"
+      exitCode=$errorFailures
     fi
   done
+  # DEBUG # echo "tempDirectory: $tempDirectory STOPPING"
+  # return 99 # DEBUG
   rm -rf "$tempDirectory"
-  exitCode=0
   if [ "$(wc -l <"$resultsFile")" -ne 0 ]; then
     exitCode=$errorFailures
   fi

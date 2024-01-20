@@ -416,9 +416,11 @@ showEnvironment() {
   done
   buildEnvironment=("$@")
 
-  consoleInfo -n "Application #$APPLICATION_VERSION on $APPLICATION_BUILD_DATE ... "
+  printf "%s %s %s %s%s\n" "$(consoleInfo "Application")" "$(consoleMagenta "$APPLICATION_VERSION")" "$(consoleInfo "on")" "$(consoleBoldRed "$APPLICATION_BUILD_DATE")" "$(consoleInfo "...")"
   if buildDebugEnabled; then
-    consoleMagenta -n "(checksum \"$APPLICATION_CHECKSUM\", tag \"$APPLICATION_TAG\", timestamp $BUILD_TIMESTAMP)"
+    consoleNameValue 40 Checksum "$APPLICATION_CHECKSUM"
+    consoleNameValue 40 Tag "$APPLICATION_TAG"
+    consoleNameValue 40 Timestamp "$BUILD_TIMESTAMP"
   fi
   missing=()
   for e in "${requireEnvironment[@]}"; do

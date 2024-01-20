@@ -14,6 +14,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+echo "PWD: ${BASH_SOURCE[0]} $(pwd)"
 set -eou pipefail
 
 # IDENTICAL errorEnvironment 1
@@ -22,7 +23,7 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh

@@ -1,13 +1,13 @@
 
-# `release-notes.sh` - Show current release notes
+# `releaseNotes` - Output path to current release notes
 
 [⬅ Return to top](index.md)
 
-Output the current release notes.
+Output path to current release notes
 
 If this fails it outputs an error to stderr
 
-When this tool succeeds it outputs the current release notes file relative to the project root.
+When this tool succeeds it outputs the path to the current release notes file
 
 ## Arguments
 
@@ -18,10 +18,10 @@ When this tool succeeds it outputs the current release notes file relative to th
 open $(bin/build/release-notes.sh)
     vim $(releaseNotes)
 
-## Sample Output
-
-    ./docs/release/v1.0.0.md
-
 ## Exit codes
 
 - `1` - if an error occurs
+
+## Environment
+
+BUILD_RELEASE_NOTES

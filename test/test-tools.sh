@@ -8,12 +8,20 @@
 #
 
 export testTracing
+export globalTestFailure=
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
 errorTest=3
 
+didAnyTestsFail() {
+  if test "$globalTestFailure"; then
+    printf %s "$globalTestFailure"
+    return 0
+  fi
+  return 1
+}
 testSection() {
   boxedHeading --size 0 "$@"
 }
@@ -61,18 +69,18 @@ loadTestFiles() {
     testName="$(cleanTestName "$1")"
     tests+=("#$testName") # Section
     statusMessage consoleError "Loading test section \"$testName\""
-    if ! isExecutable "./bin/tests/$1"; then
-      printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./bin/tests/$1")" "$(consoleInfo "$(pwd)")"
+    if ! isExecutable "./test/tools/$1"; then
+      printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./test/tools/$1")" "$(consoleInfo "$(pwd)")"
       resultReason="Not executable"
       resultCode="$errorTest"
     else
       testCount=${#tests[@]}
       # shellcheck source=/dev/null
-      . "./bin/tests/$1"
+      . "./test/tools/$1"
       clearLine
       if [ "${#tests[@]}" -le "$testCount" ]; then
-        consoleError "No tests defined in ./bin/tests/$1"
-        resultReason="No tests defined in ./bin/tests/$1 ${#tests[@]} <= $testCount"
+        consoleError "No tests defined in ./test/tools/$1"
+        resultReason="No tests defined in ./test/tools/$1 ${#tests[@]} <= $testCount"
         resultCode="$errorTest"
       fi
     fi
@@ -94,7 +102,7 @@ loadTestFiles() {
       if ! "$test" "$quietLog"; then
         cd "$testDirectory" || return $?
         printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleRed "FAILED")" 1>&2
-        buildFailed "$quietLog"
+        buildFailed "$quietLog" || :
         resultReason="test failed"
         return "$errorTest"
       fi
@@ -104,15 +112,26 @@ loadTestFiles() {
     unset 'tests[0]'
     tests=("${tests[@]+${tests[@]}}")
   done
-  printf "resultReason: %s\n" "$(consoleMagenta "$resultReason")"
+  if [ "$resultCode" -eq 0 ] && resultReason=$(didAnyTestsFail); then
+    # Should probably reset test status but ...
+    resultCode=$errorTest
+  fi
+  if [ "$resultCode" -ne 0 ]; then
+    printf "resultReason: %s\n" "$(consoleMagenta "$resultReason")"
+  fi
   return $resultCode
 }
 
 testFailed() {
   local errorCode="$errorTest"
   printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo -n "$*")"
+  export globalTestFailure="$*"
   return "$errorCode"
 }
+
+#
+# Usage: {fn}
+#
 requireTestFiles() {
   testTracing="$2"
   if ! loadTestFiles "$@"; then
@@ -121,6 +140,5 @@ requireTestFiles() {
 }
 
 testCleanup() {
-  printf "Call Stack: %s\n" "$(printf "\n    %s" "${FUNCNAME[@]}")"
   rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" 2>/dev/null || :
 }

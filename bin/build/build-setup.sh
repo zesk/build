@@ -10,21 +10,25 @@
 #
 # set -x
 #
-# Change this line when placing in your project
+# Change this line when placing in your project to point to your application root (where `bin/build` will be based)
 #
+#     e.g.
+#     relTop=..
+#     relTop=../../..
+#
+# or wherever you put it in your project to install it
+#
+
 relTop=../..
 
-#
-# Usage: build-setup.sh [ --mock mockBuildRoot ]
-# Deprecated: 2023
-# fn: build-setup.sh
+# Usage: install-bin-build.sh [ --mock mockBuildRoot ]
+# fn: install-bin-build.sh
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
 #
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
-#
-buildSetup() {
+installBinBuild() {
   # IDENTICAL installBinBuild 87
   local start ignoreFile tarArgs diffLines binName replace mockPath
   if [ ! -d bin/build ]; then
@@ -115,4 +119,4 @@ cd "$(dirname "$myBinary")"
 myBinary="$(pwd)/$me"
 cd "$relTop"
 
-buildSetup "$@"
+installBinBuild "$@"

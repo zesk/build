@@ -33,6 +33,11 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # shellcheck source=/dev/null
 . "$toolsDir/colors.sh"
+
+# Depends on text.sh
+# shellcheck source=/dev/null
+. "$toolsDir/sed.sh"
+
 # Depends on colors.sh text.sh
 # shellcheck source=/dev/null
 . "$toolsDir/assert.sh"
@@ -69,7 +74,16 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/test.sh"
 
 # shellcheck source=/dev/null
+. "$toolsDir/version.sh"
+
+# shellcheck source=/dev/null
 . "$toolsDir/documentation.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/documentation-index.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/documentation-see.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/vendor.sh"
@@ -81,5 +95,8 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/identical.sh"
 
 if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+  # Only require when running as a shell command
+  set -eou pipefail
+  # Run remaining command line arguments
   "$@"
 fi

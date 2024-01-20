@@ -6,12 +6,12 @@
 #
 set -eou pipefail
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-identicalCheckArgs=(--cd bin/tests/example --extension 'txt')
+identicalCheckArgs=(--cd test/example --extension 'txt')
 
 consoleInfo "same file match"
 assertOutputDoesNotContain --stderr 'Token code changed' ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL'
@@ -36,8 +36,8 @@ assertExitCode 0 ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --pre
 consoleInfo "slash slash"
 assertOutputContains --stderr --exit 100 'Token code changed' ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical '
 
-consoleInfo "slash slash prefix mismatch"
-assertExitCode 100 ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '// IDENTICAL'
+consoleInfo "slash slash prefix mismatch is OK"
+assertExitCode 0 ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '// IDENTICAL'
 
 consoleInfo "case match"
 assertExitCode 0 ./bin/build/identical-check.sh "${identicalCheckArgs[@]}" --prefix '// Identical'

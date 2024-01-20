@@ -90,7 +90,7 @@ validateShellScripts() {
   thisYear=$(date +%Y)
   failedReasons=()
   foundFiles=$(mktemp)
-  find . -name '*.sh' ! -path '*/.*' "$@" -print0 >"$foundFiles"
+  find . -name '*.sh' -type f ! -path '*/.*' "$@" -print0 >"$foundFiles"
   while IFS= read -r -d '' f; do
     statusMessage consoleInfo "Checking $f"
     if ! bash -n "$f" >/dev/null; then

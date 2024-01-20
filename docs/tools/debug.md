@@ -55,7 +55,7 @@ Stop build debugging if it is enabled
 
 #### See Also
 
-buildDebugStart
+- [function buildDebugStart](./docs/tools/debug.md) - [Start build debugging if it is enabled.](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L30)
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

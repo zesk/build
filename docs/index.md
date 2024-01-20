@@ -4,11 +4,13 @@ Pipeline and build-related tools which are useful across a variety of projects.
 
 This toolkit makes the following assumptions:
 
-- You are using in another project to help with your development, pipeline, build, or operations.
+- You are using this with another project to help with your pipeline, build or operations
 - Binaries from this project installed at `./bin/build/`
-- Your project: Release notes located at `./docs/release` which are named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
-- Extensions to the build system are installed in a directory `./bin/hooks/`
-- A `.build` directory may be created (at `$HOME`, or at the project root) to store cache files
+- Optional `hook` binaries can be placed in your project at `./bin/hooks/`
+- Files containing bash code end with `.sh`
+- Your project has release notes located in a dedicated subdirectory, files named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
+- **Most** build operations occur at the project root directory
+- A central `$HOME/.build` directory is created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used.
 
 To use in your pipeline:
 
@@ -39,35 +41,6 @@ Handy tools
 - `release-notes.sh` - Outputs file name of current release notes (Try `open $(bin/build/release-notes.sh)`)
 - `install-bin-build.sh` - Copy this into your project, rename it if you want, modify `relTop` and then use it to install this anywhere.
 
-## General usage
-
-Template header for most scripts:
-
-    #!/usr/bin/env bash
-    #
-    # Does a long process
-    #
-    set -eou pipefail
-    errorEnvironment=1
-
-    cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
-    me=$(basename "$0")
-    # other constants here
-
-    # shellcheck source=/dev/null
-    . ./bin/build/tools.sh
-
-    start=$(beginTiming)
-    consoleInfo -n "Long process ... "
-    quietLog="$(buildQuietLog "$me")"
-    if ! do-a-long-process.sh >>"$quietLog"; then
-        consoleError "long process failed"
-        buildFailed "$quietLog"
-    fi
-    reportTiming "$start" Done
-
-
 ## Zesk Build Guides
 
 - [Usage formatting](./guide/usage.md)
@@ -79,4 +52,4 @@ Template header for most scripts:
 
 ## Copyright
 
-Copyright &copy; 2024 Market Acumen, Inc. All Rights Reserved. License is [MIT License](../LICENSE.md).
+Copyright &copy; 2024 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](../LICENSE.md).

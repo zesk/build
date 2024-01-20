@@ -6,14 +6,13 @@ set -eou pipefail
 
 errorEnvironment=1
 errorArgument=2
-me=$(basename "$0")
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
 _testPHPBuildUsage() {
-  usageDocument "bin/tests/bin/$me" testPHPBuild
+  usageDocument "test/bin/$(basename "${BASH_SOURCE[0]}")" testPHPBuild
 }
 
 #
@@ -31,7 +30,7 @@ testPHPBuild() {
       --clean)
         statusMessage consoleWarning "Cleaning ..."
         for f in vendor .composer; do
-          rm -rf "./bin/tests/example/simple-php/$f" 2>/dev/null
+          rm -rf "./test/tools/example/simple-php/$f" 2>/dev/null
         done
         ;;
       --keep)
@@ -54,10 +53,16 @@ testPHPBuild() {
   #
   # This MUST be inside the source tree root to run docker in pipelines
   #
-  testPath="$here/testPHPBuild.$$"
+  testPath="$(randomString)"
+  testPath="${testPath:0:8}"
+  testPath="$here/.testPHPBuild.$testPath"
+  if ! mkdir -p "$testPath"; then
+    consoleError "Unable to create $testPath, exiting"
+    return $errorEnvironment
+  fi
   appName="sublimeApplication"
 
-  if ! cp -r ./bin/tests/example/simple-php "$testPath/$appName"; then
+  if ! cp -r ./test/example/simple-php "$testPath/$appName"; then
     consoleError "Failed copy app"
     return $errorEnvironment
   fi
@@ -93,10 +98,13 @@ testPHPBuild() {
   mkdir ./compare-alternate
   cd ./compare-app
   tar xf ../app.tar.gz
+  # Vendor has random numbers in the classnames
+  rm -rf ./vendor
   cd ..
 
   cd ./compare-alternate
   tar xf ../alternate.tar.gz
+  rm -rf ./vendor
   cd ..
 
   if ! diff -r ./compare-app ./compare-alternate; then
@@ -114,7 +122,8 @@ testPHPBuild() {
   if ! test "$keepFlag"; then
     consoleWarning Deleting app.tar.gz "$BUILD_TARGET"
     rm app.tar.gz "$BUILD_TARGET"
-    rm -rf ./compare-app ./compare-alternate "$manifest.complete" "$manifest"
+    cd "$here" || :
+    rm -rf ./compare-app ./compare-alternate "$manifest.complete" "$manifest" ./.testPHPBuild.*
   fi
   consoleSuccess Passed.
 }
