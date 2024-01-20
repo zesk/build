@@ -92,7 +92,10 @@ testPHPBuild() {
 
   consoleWarning "Building PHP app"
 
+  assertEquals "${BUILD_TARGET}" "app.tar.gz"
+
   bin/build.sh
+
   assertFileExists "./app.tar.gz" "pwd: $(pwd)"
 
   BUILD_TARGET=alternate.tar.gz
