@@ -27,9 +27,9 @@ Document a function and generate a function template (markdown)
 
 #### See Also
 
-{SEE:bashDocumentationTemplate}
-{SEE:bashDocumentFunction}
-{SEE:repeat}
+- [function bashDocumentationTemplate]({documentationPath}) - [Document a function and generate a function template (markdown). To](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L321)
+- [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L287)
+- [function repeat](./docs/tools/text.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L135)
 
 ### `documentFunctionsWithTemplate` - Convert a template into documentation for Bash functions
 
@@ -60,7 +60,7 @@ to regenerate each time.
 
 #### See Also
 
-{SEE:documentFunctionTemplateDirectory}
+- [function documentFunctionTemplateDirectory](./docs/tools/documentation.md) - [Convert a directory of templates into documentation for Bash functions](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L211)
 
 ### `documentFunctionTemplateDirectory` - Convert a directory of templates into documentation for Bash functions
 
@@ -89,7 +89,7 @@ to regenerate each time.
 
 #### See Also
 
-{SEE:documentFunctionsWithTemplate}
+- [function documentFunctionsWithTemplate](./docs/tools/documentation.md) - [Convert a template into documentation for Bash functions](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L85)
 
 ## Documentation Indexing
 
@@ -115,7 +115,7 @@ Use with documentationFunctionLookup
 
 #### See Also
 
-{SEE:documentationFunctionLookup}
+- [function documentationFunctionLookup](./docs/tools/documentation.md) - [Looks up information in the function index](https://github.com/zesk/build/blob/main/bin/build/tools/documentation-index.sh#L34)
 
 ### `documentationFunctionLookup` - Looks up information in the function index
 
@@ -137,7 +137,7 @@ Looks up information in the function index
 
 #### See Also
 
-{SEE:documentationFunctionIndex}
+- [function documentationFunctionIndex](./docs/tools/documentation.md) - [Generate a function index for bash files](https://github.com/zesk/build/blob/main/bin/build/tools/documentation-index.sh#L139)
 
 ## Documentation "See" Linker
 

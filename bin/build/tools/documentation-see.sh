@@ -24,7 +24,7 @@ documentationFunctionSeeLinker() {
   local cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
   local start linkPattern linkPatternFile
   local matchingFile matchingToken cleanToken
-  local seePattern='\{SEE:([^}]+)\}' returnCode=0
+  local seePattern='\{SEE:([^}]+)\}'
 
   start=$(beginTiming)
   cacheDirectory=
@@ -154,10 +154,8 @@ documentationFunctionSeeLinker() {
     done; then
     clearLine
     consoleWarning "No matching see directives found" 1>&2
-    returnCode="$errorEnvironment"
   fi
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
   clearLine
   reportTiming "$start" "See completed in"
-  return "$returnCode"
 }
