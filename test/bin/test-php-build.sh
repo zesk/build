@@ -89,10 +89,10 @@ testPHPBuild() {
 
   BUILD_TIMESTAMP=$(date +%s)
   bin/build.sh
-  assertFileExists "./app.tar.gz"
+  assertFileExists "./app.tar.gz" "pwd: $(pwd)"
   export BUILD_TARGET=alternate.tar.gz
   bin/build.sh
-  assertFileExists "$BUILD_TARGET"
+  assertFileExists "$BUILD_TARGET" "pwd: $(pwd)"
 
   mkdir ./compare-app
   mkdir ./compare-alternate
@@ -125,6 +125,7 @@ testPHPBuild() {
     cd "$here" || :
     rm -rf ./compare-app ./compare-alternate "$manifest.complete" "$manifest" ./.testPHPBuild.*
   fi
+  cd "$here" || :
   consoleSuccess Passed.
 }
 
