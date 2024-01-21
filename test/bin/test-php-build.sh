@@ -125,7 +125,7 @@ testPHPBuild() {
   manifest=$(mktemp)
   tar tf app.tar.gz >"$manifest.complete"
   grep -v 'vendor/' "$manifest.complete" >"$manifest"
-  assertFileContains "$manifest" .deploy .deploy/APPLICATION_CHECKSUM .deploy/APPLICATION_TAG simple.application.php src/Application.php .env
+  assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env
   assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml
   assertFileContains "$manifest.complete" vendor/zesk vendor/composer
 

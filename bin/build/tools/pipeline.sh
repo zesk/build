@@ -343,14 +343,16 @@ _makeEnvironmentUsage() {
 applicationEnvironment() {
   local hook
 
-  export BUILD_TIMESTAMP
-  export APPLICATION_BUILD_DATE
-  export APPLICATION_VERSION
-  export APPLICATION_CHECKSUM
-  export APPLICATION_TAG
-
-  BUILD_TIMESTAMP="${BUILD_TIMESTAMP:-"$(date +%s)"}"
-  APPLICATION_BUILD_DATE="$(timestampToDate "$BUILD_TIMESTAMP" "%Y-%m-%d %H:%M:%S")"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_TIMESTAMP.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_BUILD_DATE.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_VERSION.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_ID.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_TAG.sh"
 
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
@@ -359,9 +361,9 @@ applicationEnvironment() {
       return "$errorEnvironment"
     fi
   fi
-  if [ -z "${APPLICATION_CHECKSUM-}" ]; then
-    hook=application-checksum
-    if ! APPLICATION_CHECKSUM="$(runHook "$hook")"; then
+  if [ -z "${APPLICATION_ID-}" ]; then
+    hook=application-id
+    if ! APPLICATION_ID="$(runHook "$hook")"; then
       consoleError "$hook failed $?" 1>&2
       return "$errorEnvironment"
     fi
@@ -373,7 +375,7 @@ applicationEnvironment() {
       return "$errorEnvironment"
     fi
   fi
-  printf "%s " BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_CHECKSUM APPLICATION_TAG
+  printf "%s " BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
 }
 
 showEnvironment() {
@@ -382,7 +384,7 @@ showEnvironment() {
   export BUILD_TIMESTAMP
   export APPLICATION_BUILD_DATE
   export APPLICATION_VERSION
-  export APPLICATION_CHECKSUM
+  export APPLICATION_ID
   export APPLICATION_TAG
 
   #
@@ -418,7 +420,7 @@ showEnvironment() {
 
   printf "%s %s %s %s%s\n" "$(consoleInfo "Application")" "$(consoleMagenta "$APPLICATION_VERSION")" "$(consoleInfo "on")" "$(consoleBoldRed "$APPLICATION_BUILD_DATE")" "$(consoleInfo "...")"
   if buildDebugEnabled; then
-    consoleNameValue 40 Checksum "$APPLICATION_CHECKSUM"
+    consoleNameValue 40 Checksum "$APPLICATION_ID"
     consoleNameValue 40 Tag "$APPLICATION_TAG"
     consoleNameValue 40 Timestamp "$BUILD_TIMESTAMP"
   fi
@@ -451,8 +453,8 @@ showEnvironment() {
 # Create environment file `.env` for build.
 # Environment: APPLICATION_VERSION - reserved and set to `runHook version-current` if not set already
 # Environment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
-# Environment: APPLICATION_TAG - reserved and set to `runHook application-checksum`
-# Environment: APPLICATION_CHECKSUM - reserved and set to `runHook application-tag`
+# Environment: APPLICATION_TAG - reserved and set to `runHook application-id`
+# Environment: APPLICATION_ID - reserved and set to `runHook application-tag`
 #
 makeEnvironment() {
   local missing e requireEnvironment
@@ -490,7 +492,7 @@ makeEnvironment() {
 }
 
 getApplicationDeployVersion() {
-  local p=$1 value appChecksumFile=.deploy/APPLICATION_CHECKSUM
+  local p=$1 value appChecksumFile=.deploy/APPLICATION_ID
 
   if [ ! -d "$p" ]; then
     consoleError "$p is not a directory" 1>&2
@@ -503,7 +505,7 @@ getApplicationDeployVersion() {
   if [ ! -f "$p/.env" ]; then
     return 0
   fi
-  for f in APPLICATION_CHECKSUM APPLICATION_GIT_SHA; do
+  for f in APPLICATION_ID APPLICATION_GIT_SHA; do
     # shellcheck source=/dev/null
     value=$(
       source "$p/.env"
@@ -786,11 +788,11 @@ _remoteDeployFinishUsage() {
 # This is run on the remote system after deployment; environment files are correct.
 # It is run inside the deployment home directory in the new application folder.
 #
-# Current working directory on deploy is `deployHome/applicationChecksum/app`.
+# Current working directory on deploy is `deployHome/applicationId/app`.
 # Current working directory on cleanup is `applicationHome/`
 # Current working directory on undo is `applicationHome/`
 #
-# applicationChecksum - Required. String. Should match APPLICATION_CHECKSUM in .env
+# applicationId - Required. String. Should match APPLICATION_ID in .env
 # deployPath - Required. String. Path where the deployments database is on remote system.
 # applicationPath - Required. String. Path on the remote system where the application is live.
 # --undo - Revert changes just made
@@ -798,7 +800,7 @@ _remoteDeployFinishUsage() {
 # --debug - Enable debugging. Defaults to `BUILD_DEBUG`
 #
 remoteDeployFinish() {
-  local targetPackage undoFlag cleanupFlag applicationChecksum applicationPath debuggingFlag start width
+  local targetPackage undoFlag cleanupFlag applicationId applicationPath debuggingFlag start width
 
   if ! usageRequireBinary _remoteDeployFinishUsage git; then
     return $?
@@ -813,7 +815,7 @@ remoteDeployFinish() {
 
   undoFlag=
   cleanupFlag=
-  applicationChecksum=
+  applicationId=
   applicationPath=
   debuggingFlag=
   while [ $# -gt 0 ]; do
@@ -828,8 +830,8 @@ remoteDeployFinish() {
         undoFlag=1
         ;;
       *)
-        if [ -z "$applicationChecksum" ]; then
-          applicationChecksum=$1
+        if [ -z "$applicationId" ]; then
+          applicationId=$1
         elif [ -z "$deployHome" ]; then
           deployHome=$1
         elif [ -z "$applicationPath" ]; then
@@ -872,7 +874,7 @@ remoteDeployFinish() {
   consoleNameValue $width "Host:" "$(uname -n)"
   consoleNameValue $width "Deployment Path:" "$deployHome"
   consoleNameValue $width "Application path:" "$applicationPath"
-  consoleNameValue $width "Application checksum:" "$applicationChecksum"
+  consoleNameValue $width "Application checksum:" "$applicationId"
 
   if test $cleanupFlag; then
     if ! cd "$applicationPath"; then
@@ -889,12 +891,12 @@ remoteDeployFinish() {
       printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
     fi
   elif test $undoFlag; then
-    undoDeployApplication "$deployHome" "$applicationChecksum" "$targetPackage" "$applicationPath"
+    undoDeployApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
   else
-    if [ -z "$applicationChecksum" ]; then
-      _remoteDeployFinishUsage "$errorArgument" "No argument applicationChecksum passed"
+    if [ -z "$applicationId" ]; then
+      _remoteDeployFinishUsage "$errorArgument" "No argument applicationId passed"
     fi
-    deployApplication "$deployHome" "$applicationChecksum" "$targetPackage" "$applicationPath"
+    deployApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
   fi
   reportTiming "$start" "Remote deployment finished in"
 }

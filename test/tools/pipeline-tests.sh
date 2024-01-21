@@ -112,7 +112,7 @@ testMakeEnvironment() {
   export DEPLOY_USER_HOSTS=none
   export BUILD_TARGET=app2.tar.gz
   export DEPLOYMENT=test-make-env
-  export APPLICATION_CHECKSUM=aabbccdd
+  export APPLICATION_ID=aabbccdd
 
   [ -f .env ] && rm .env
   set -eou pipefail

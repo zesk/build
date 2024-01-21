@@ -26,7 +26,7 @@ deploymentCleanup() {
   else
     consoleSuccess "Deployment cleanup ..."
   fi
-  bin/build/pipeline/deploy-to.sh --cleanup "$APPLICATION_CHECKSUM" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
+  bin/build/pipeline/deploy-to.sh --cleanup "$APPLICATION_ID" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
 }
 
 # Deploy to a host
@@ -40,7 +40,7 @@ deploymentCleanup() {
 # "Not possible to deploy to different paths on different hosts"
 
 deployMain() {
-  local requireEnvironments=(APPLICATION_CHECKSUM DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS)
+  local requireEnvironments=(APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS)
 
   if [ ! -f .build.env ]; then
     consoleWarning "No .build.env found" 1>&2
@@ -53,7 +53,7 @@ deployMain() {
 
   usageRequireEnvironment _deployUsage "${requireEnvironments[@]}"
 
-  if ! bin/build/pipeline/deploy-to.sh --deploy "$APPLICATION_CHECKSUM" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"; then
+  if ! bin/build/pipeline/deploy-to.sh --deploy "$APPLICATION_ID" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"; then
     deploymentCleanup "Deployment failed" || :
     return "$errorEnvironment"
   fi

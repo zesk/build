@@ -15,19 +15,19 @@ errorArgument=2
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
+. ./bin/build/tools.sh
+
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_TIMESTAMP.sh
+
+# shellcheck source=/dev/null
 . ./bin/build/env/BUILD_DEBUG.sh
 
 # shellcheck source=/dev/null
 . ./bin/build/env/BUILD_TARGET.sh
 
 # shellcheck source=/dev/null
-. ./bin/build/env/BUILD_DATE_INITIAL.sh
-
-# shellcheck source=/dev/null
 . ./bin/build/env/DEPLOYMENT.sh
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
 
 #==========================================================================================
 #
@@ -47,7 +47,7 @@ deployGitDefaultValue() {
 }
 
 _phpBuildUsage() {
-  usageDocument "bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" "phpBuild" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "phpBuild" "$@"
   return $?
 }
 
@@ -65,7 +65,7 @@ _phpBuildUsage() {
 # - BUILD_TARGET
 # - BUILD_START_TIMESTAMP
 # - APPLICATION_TAG
-# - APPLICATION_CHECKSUM
+# - APPLICATION_ID
 #
 # `DEPLOYMENT` is mapped to suffixes when `--suffix` not specified as follows:
 #
@@ -84,9 +84,14 @@ _phpBuildUsage() {
 #
 phpBuild() {
   local tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment
+  local targetName
 
   usageRequireBinary _phpBuildUsage tar
 
+  # shellcheck source=/dev/null
+  source bin/build/env/BUILD_TARGET.sh
+
+  targetName="$BUILD_TARGET"
   tagDeploymentFlag=1
   debuggingFlag=
   deployment=${DEPLOYMENT:-}
@@ -107,7 +112,7 @@ phpBuild() {
         ;;
       --name)
         shift
-        BUILD_TARGET=$1
+        targetName=$1
         ;;
       --)
         shift
@@ -217,10 +222,10 @@ phpBuild() {
   [ ! -d ./.deploy ] || rm -rf ./.deploy
   mkdir -p ./.deploy || return $errorEnvironment
 
-  export APPLICATION_CHECKSUM
+  export APPLICATION_ID
   export APPLICATION_TAG
 
-  APPLICATION_CHECKSUM=$(deployGitDefaultValue APPLICATION_CHECKSUM application-checksum)
+  APPLICATION_ID=$(deployGitDefaultValue APPLICATION_ID application-id)
   APPLICATION_TAG=$(deployGitDefaultValue APPLICATION_TAG application-tag)
 
   # Save clean build environment to .build.env for other steps
@@ -244,15 +249,13 @@ phpBuild() {
 
   bigText "$APPLICATION_TAG" | prefixLines "$(consoleGreen)"
   echo
-  bigText "$APPLICATION_CHECKSUM" | prefixLines "$(consoleMagenta)"
+  bigText "$APPLICATION_ID" | prefixLines "$(consoleMagenta)"
   echo
 
-  createTarFile "$BUILD_TARGET" .env vendor/ .deploy/ "$@"
+  createTarFile "$targetName" .env vendor/ .deploy/ "$@"
 
   consoleInfo -n "Build completed "
   reportTiming "$initTime"
 }
 
 phpBuild "$@"
-
-# artifact: $BUILD_TARGET

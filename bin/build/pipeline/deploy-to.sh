@@ -11,10 +11,10 @@
 #
 
 #
-# /var/www/DEPLOY/app1/applicationChecksum1/app.tar.gz
-# /var/www/DEPLOY/app1/applicationChecksum1/app/... - app files
-# /var/www/DEPLOY/app1/applicationChecksum1.previous
-# /var/www/DEPLOY/app1/applicationChecksum1.next
+# /var/www/DEPLOY/app1/applicationId1/app.tar.gz
+# /var/www/DEPLOY/app1/applicationId1/app/... - app files
+# /var/www/DEPLOY/app1/applicationId1.previous
+# /var/www/DEPLOY/app1/applicationId1.next
 #
 
 # IDENTICAL errorEnvironment 1
@@ -57,7 +57,7 @@ undoFlag=
 debuggingFlag=
 cleanupFlag=
 userHosts=()
-applicationChecksum=
+applicationId=
 remoteDeploymentPath=
 remotePath=
 buildTarget=
@@ -101,8 +101,8 @@ while [ $# -gt 0 ]; do
       remoteArgs+=("--cleanup")
       ;;
     *)
-      if [ -z "$applicationChecksum" ]; then
-        applicationChecksum=$1
+      if [ -z "$applicationId" ]; then
+        applicationId=$1
       elif [ -z "$remoteDeploymentPath" ]; then
         remoteDeploymentPath=$1
       elif [ -z "$remotePath" ]; then
@@ -139,8 +139,8 @@ if test "$deployFlag" && test "$cleanupFlag"; then
 fi
 # Values are not blank
 buildTarget="${buildTarget:-app.tar.gz}"
-if [ -z "$applicationChecksum" ]; then
-  _deployToUsage $errorArgument "Missing applicationChecksum"
+if [ -z "$applicationId" ]; then
+  _deployToUsage $errorArgument "Missing applicationId"
 fi
 if [ -z "$remoteDeploymentPath" ]; then
   _deployToUsage $errorArgument "Missing remoteDeploymentPath"
@@ -161,7 +161,7 @@ showInfo() {
   echo "$(consoleInfo -n "     IP is currently: ") $(consoleRed -n "$currentIP")"
   echo "$(consoleInfo -n "remoteDeploymentPath: ") $(consoleRed -n "$remoteDeploymentPath")"
   echo "$(consoleInfo -n "          remotePath: ") $(consoleRed -n "$remotePath")"
-  echo "$(consoleInfo -n " applicationChecksum: ") $(consoleRed -n "$applicationChecksum")"
+  echo "$(consoleInfo -n " applicationId: ") $(consoleRed -n "$applicationId")"
   echo "$(consoleInfo -n "           Hosts are: ") $(consoleRed -n "${userHosts[*]}")"
 }
 
@@ -199,10 +199,10 @@ generateCommandsFile() {
     echo "export BUILD_DEBUG=1"
     echo "set -x"
   fi
-  echo "cd \"$remoteDeploymentPath/$applicationChecksum\""
+  echo "cd \"$remoteDeploymentPath/$applicationId\""
   printf "%s\n" "$@"
   # shellcheck disable=SC2016
-  echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remoteDeploymentPath\" \"$remotePath\""
+  echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationId\" \"$remoteDeploymentPath\" \"$remotePath\""
 }
 
 undoAction() {
@@ -296,14 +296,14 @@ sshishDeployOptions() {
 
 #
 # Summary: Deploy current application to one or more hosts
-# Usage: {fn} [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath [ userAtHost ... ]
+# Usage: {fn} [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationId remoteDeploymentPath remotePath [ userAtHost ... ]
 # Argument: --target target$ - Optional. String. Build target file, defaults to `app.tar.gz`
 # Argument: --deploy - Default. Flag. deploy an application to a remote host
 # Argument: --undo - Optional. Flag. Reverses a deployment
 # Argument: --cleanup - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
 # Argument: --help - Optional. Flag. Show help
 # Argument: --debug - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
-# Argument: applicationChecksum - Required. String. The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
+# Argument: applicationId - Required. String. The application package will contain a `.env` with `APPLICATION_ID` set to this Value
 # Argument: remoteDeploymentPath - Required. Path. Remote path where we can store deployment state files.
 # Argument: remotePath - Required. Path. Path where the application will be deployed
 # Argument: userAtHost - Required. Strings. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
@@ -364,11 +364,11 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     printf "%s: %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Setting up")"
-    for makeDirectory in "$remotePath" "$remoteDeploymentPath" "$remoteDeploymentPath/$applicationChecksum/app"; do
+    for makeDirectory in "$remotePath" "$remoteDeploymentPath" "$remoteDeploymentPath/$applicationId/app"; do
       printf '[ -d "%s" ] || || mkdir -p "%s" && echo "Created %s"\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
     done | ssh "$(sshishDeployOptions)" -T "$userHost" bash --noprofile -s -e
-    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remoteDeploymentPath/$applicationChecksum/$buildTarget")"
-    printf '@put %s %s' "$buildTarget" "$applicationChecksum/$buildTarget" | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
+    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remoteDeploymentPath/$applicationId/$buildTarget")"
+    printf '@put %s %s' "$buildTarget" "$applicationId/$buildTarget" | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
     reportTiming "$start" "Completed $(consoleGreen "$userHost")"
   done
 

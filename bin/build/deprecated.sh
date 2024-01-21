@@ -43,6 +43,10 @@ deprecatedCleanup() {
   # v0.6.1
   bin/build/cannon.sh 'usageWhich ' 'usageRequireBinary usage ' "${ignoreStuff[@]}"
 
+  # v0.7.0
+  bin/build/cannon.sh 'APPLICATION_CHECKSUM' 'APPLICATION_ID' "${ignoreStuff[@]}"
+  bin/build/cannon.sh 'application-checksum' 'application-id' "${ignoreStuff[@]}"
+
   return $exitCode
 }
 

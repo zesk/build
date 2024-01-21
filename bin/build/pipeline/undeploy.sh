@@ -14,7 +14,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-requireEnvironments=(DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS APPLICATION_CHECKSUM)
+requireEnvironments=(DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS APPLICATION_ID)
 
 usageDescription() {
   cat <<EOF
@@ -30,7 +30,7 @@ EOF
 #
 # fn: {base}
 # Usage: {fn}
-# Environment: APPLICATION_CHECKSUM - Required. App unique ID
+# Environment: APPLICATION_ID - Required. App unique ID
 # Environment: DEPLOY_REMOTE_PATH - Required. Deployment home directory on remote
 # Environment: APPLICATION_REMOTE_PATH - Required. Application home directory on remote
 # Environment: DEPLOY_USER_HOSTS - Required. user@host list
@@ -53,4 +53,4 @@ if ! usageRequireEnvironment _undeployUsage "${requireEnvironments[@]}"; then
   return $?
 fi
 
-./bin/build/pipeline/deploy-to.sh --undo "$APPLICATION_CHECKSUM" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
+./bin/build/pipeline/deploy-to.sh --undo "$APPLICATION_ID" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"

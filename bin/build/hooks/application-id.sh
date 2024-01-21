@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Fetch a checksum which represents the current application build/code state which is unique
+# Fetch an ID which represents the current application build/code state which is unique
 #
 # Depends: git
 #
@@ -15,10 +15,15 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 . ./bin/build/tools.sh
 
 # fn: {base}
+# Usage: {fn}
 #
-# Generate a unique checksum for the state of the application files
+# Generate a unique ID for the state of the application files
 #
-# The default hook uses the short git checksum
+# The default hook uses the short git sha:
+#
+#     git rev-parse --short HEAD
+#
+# Example:     885acc3
 #
 hookApplicationChecksum() {
   gitEnsureSafeDirectory "$(pwd)"

@@ -6,7 +6,7 @@
 #
 # The directory is currently run inside:
 #
-# - deployHome/applicationChecksum/app/
+# - deployHome/applicationId/app/
 # - applicationHome/
 #
 # Copyright &copy; 2024 Market Acumen, Inc.

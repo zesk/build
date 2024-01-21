@@ -26,8 +26,8 @@ deployApplicationTest() {
   cp -R "$home/bin/build" "app/bin"
   cd app || exit
   for t in 1a 2b 3c 4d; do
-    printf %s "$t" | tee .deploy/APPLICATION_CHECKSUM >.deploy/APPLICATION_TAG
-    echo "APPLICATION_CHECKSUM=$t" >.env
+    printf %s "$t" | tee .deploy/APPLICATION_ID >.deploy/APPLICATION_TAG
+    echo "APPLICATION_ID=$t" >.env
     echo "APPLICATION_TAG=$t" >>.env
     mkdir -p "$d/DEPLOY/$t"
     tar cfz "$d/DEPLOY/$t/app.tar.gz" .deploy bin index.php .env

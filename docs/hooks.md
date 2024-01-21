@@ -17,7 +17,7 @@ Most hooks are optional unless specified.
 
 - `make-env` - Create the environment file. Generally calls `bin/build/pipeline/make-env.sh` with your desired environment. Currently used in `php-build.sh`.
 - `application-tag` - The current tagged version of the software (e.g `v1.0.0rc71`)
-- `application-checksum` - Returns a string checksum of the current application source code (unique checksum for code state)
+- `application-id` - Returns a string checksum of the current application source code (unique checksum for code state)
 
 ## [Deployment Hooks](hooks/deploy.md)
 
