@@ -66,6 +66,8 @@ testPHPBuild() {
     consoleError "Failed copy app"
     return $errorEnvironment
   fi
+  echo "PWD: $(pwd)"
+
   # shellcheck source=/dev/null
   . ./bin/build/env/BUILD_TARGET.sh
   # shellcheck source=/dev/null
