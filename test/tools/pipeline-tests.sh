@@ -106,29 +106,32 @@ testHookSystem() {
 tests+=(testMakeEnvironment)
 testMakeEnvironment() {
   local v
-  export TESTING_ENV=chameleon
-  export DSN=mysql://not@host/thing
+  (
+    set -eou pipefail
 
-  export DEPLOY_USER_HOSTS=none
-  export BUILD_TARGET=app2.tar.gz
-  export DEPLOYMENT=test-make-env
-  export APPLICATION_ID=aabbccdd
+    export TESTING_ENV=chameleon
+    export DSN=mysql://not@host/thing
 
-  [ -f .env ] && rm .env
-  set -eou pipefail
-  makeEnvironment TESTING_ENV DSN >.env
+    export DEPLOY_USER_HOSTS=none
+    export BUILD_TARGET=app2.tar.gz
+    export DEPLOYMENT=test-make-env
+    export APPLICATION_ID=aabbccdd
 
-  if [ ! -f .env ]; then
-    consoleError "make-env.sh did not generate a .env file"
-    return "$errorEnvironment"
-  fi
-  for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DSN; do
-    if ! grep -q "$v" .env; then
-      consoleError "makeEnvironment > .env file does not contain $v"
-      prefixLines "$(consoleCode)    " <.env
+    [ -f .env ] && rm .env || return $?
+    makeEnvironment TESTING_ENV DSN >.env || return $?
+
+    if [ ! -f .env ]; then
+      consoleError "make-env.sh did not generate a .env file"
       return "$errorEnvironment"
     fi
-  done
-  consoleGreen make-env.sh works AOK
-  rm .env
+    for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DSN; do
+      if ! grep -q "$v" .env; then
+        consoleError "makeEnvironment > .env file does not contain $v"
+        prefixLines "$(consoleCode)    " <.env
+        return "$errorEnvironment"
+      fi
+    done
+    consoleGreen make-env.sh works AOK
+    rm .env
+  )
 }
