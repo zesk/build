@@ -32,6 +32,10 @@
 {modifiedDays}
 {modifiedSeconds}
 
+{listFileModificationTimes}
+{mostRecentlyModifiedFile}
+{mostRecentlyModifiedTimestamp}
+
 {pathConfigure}
 {pathCleanDuplicates}
 
@@ -41,6 +45,11 @@
 {realPath}
 
 {JSON}
+
+{fileOwner}
+
+{processMemoryUsage}
+{processVirtualMemoryAllocation}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

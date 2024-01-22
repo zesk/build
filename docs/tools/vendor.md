@@ -19,12 +19,9 @@ Are we within the JetBrains PHPStorm terminal?
 
 #### See Also
 
-contextOpen
+- [function contextOpen]({documentationPath}) - [Open a file in a shell using the program we](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L54)
 
-### `isVisualStudioCode` - Are we within the JetBrains PyCharm terminal?
-
-Are we within the JetBrains PyCharm terminal?
-
+### `isVisualStudioCode` - Are we within the Microsoft Visual Studio Code terminal?
 
 Are we within the Microsoft Visual Studio Code terminal?
 
@@ -39,7 +36,7 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 #### See Also
 
-contextOpen
+- [function contextOpen]({documentationPath}) - [Open a file in a shell using the program we](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L54)
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

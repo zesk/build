@@ -39,7 +39,7 @@ If implemented, `new-release.sh` will create a release only when needed.
 
 #### See Also
 
-github-version-live.sh
+- [Source github-version-live.sh]()
 
 # `new-release.sh` Hooks
 

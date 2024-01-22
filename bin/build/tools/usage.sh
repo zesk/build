@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh
-# Docs: contextOpen ./docs/_templates/tools/usage.md
+# Docs: o ./docs/_templates/tools/usage.md
 
 # IDENTICAL errorArgument 1
 errorArgument=2
+
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
 
 ###############################################################################
 #
@@ -18,106 +21,14 @@ errorArgument=2
 #              ▜█▛▘
 #------------------------------------------------------------------------------
 #
-# Usage syntax is generally:
-#
-# Argument:
-# - "-t" flag
-# - "--flag" boolean on
-# - "--flag args" with parameter
-# - "--name=value" with equals for settings
-#
-# Description:
-# - Required/Optional.
-# - Data type: string, integer, date, etc.
-# - Format: If any
-# - Description
-#
-_usageOptionsSample() {
-  echo "--download file|Required. String. File to download"
-  echo "--target path|Optional. Integer. Place to download to."
-}
-
-#
-# Overwrite this if your `usageOptions` uses a delimiter which is not a space
-#
-export usageDelimiter=${usageDelimiter-" "}
-
-#
-# Usage: usageWrapper [ exitCode [ message ... ] ]
-#
-# Description: Base case for usage, write your usage function as follows:
-#
-#  export usageDelimiter="|"
-#  usageOptions() {
-#      cat <<EOF
-#  --help|This help
-#  EOF
-#  }
-#  usage() {
-#       usageMain "$me" "$@"
-#  }
-#
-# Internal function to call `usage` depending on what's currently defined in the bash shell.
-#
-# - IFF `usage` is a function - pass through all arguments
-# - IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
-# - IFF neither is defined, outputs a simple usage without options
-#
-usageWrapper() {
-  if [ "$(type -t usage)" = "function" ]; then
-    usage "$@"
-  else
-    usageMain "$@"
-  fi
-}
-
-#
-# Usage: usageMain binName [ exitCode [ message ... ] ]
-#
-# Description:
-#
-#       usageOptions() {
-#            cat <<EOF
-#       --help${usageDelimiter}This help
-#       EOF
-#       }
-#       usageDescription() {
-#            cat <<EOF
-#       What I like to do when I run.
-#       EOF
-#       }
-#       usage() {
-#          usageMain "$me" "$@"
-#       }
-#
-# - IFF `usageOptions` is a function, use export `usageDelimiter` and `usageOptions` to generate default `usage`
-# - IFF neither is defined, outputs a simple usage without options.
-#
-usageMain() {
-  local binName="${1-me}" exitCode="${2-0}" delimiter usageString
-
-  usageString="$(consoleBoldRed Usage)"
-  shift
-  shift
-
-  desc="No description"
-  if [ "$(type -t usageDescription)" ]; then
-    desc="$(usageDescription)"
-  fi
-  if [ "$(type -t usageOptions)" = "function" ]; then
-    usageTemplate "$binName" "$(usageOptions)" "${usageDelimiter-' '}" "$desc" "$exitCode" "$*"
-  else
-    usageTemplate "$binName" "" "" "$desc" "$exitCode" "$*"
-  fi
-  return "$exitCode"
-}
 
 #
 # Usage: usageTemplate binName options delimiter description exitCode message
 #
 # Output usage messages to console
 #
-# Should look into a actual file template, probably
+# Should look into an actual file template, probably
+# See: usageDocument
 #
 usageTemplate() {
   local usageString binName options delimiter description exitCode
@@ -199,13 +110,19 @@ usageArguments() {
 #
 # use with maximumFieldLength 1 to generate widths
 #
+# Argument: nSpaces - Required. Integer. Number of spaces to indent arguments.
+# Argument: separatorChar - Optional. String. Default is space.
+# Argument: labelPrefix - Optional. String. Defaults to blue color text.
+# Argument: valuePrefix - Optional. String. Defaults to red color text.
+#
 usageGenerator() {
-  local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine=
+  local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine
 
   labelOptionalPrefix=${3-"$(consoleBlue)"}
   labelRequiredPrefix=${4-"$(consoleRed)"}
   # shellcheck disable=SC2119
   valuePrefix=${5-"$(consoleValue)"}
+  lastLine=
 
   while true; do
     if ! IFS= read -r line; then
@@ -230,6 +147,7 @@ usageGenerator() {
 # Description: Requires environment variables to be set and non-blank
 # Exit Codes: 1 - If any env0 variables bre not set or bre empty.
 # Arguments: env0 string One or more environment variables which should be set and non-empty
+# Deprecated: 2024-01-01
 #
 usageEnvironment() {
   local e
@@ -246,12 +164,62 @@ usageEnvironment() {
 # Exit Codes: 1 - If any binary0 are not available within the current path
 # Description: Requires the binaries to be found via `which`
 # fails if not
+# Deprecated: 2023-01-01 Use `usageRequireBinary usage` as a substitute
 #
 usageWhich() {
   local b
   for b in "$@"; do
     if [ -z "$(which "$b")" ]; then
       usageWrapper 1 "$b is not available in path, not found: $PATH"
+    fi
+  done
+}
+
+#
+# Summary: Check that one or more binaries are installed
+# Usage: {fn} usageFunction binary0 [ ... ]
+# Argument: usageFunction - Required. `bash` function already defined to output usage
+# Argument: binary0 - Required. Binary which must have a `which` path.
+# Exit Codes: 1 - If any binary0 are not available within the current path
+# Requires the binaries to be found via `which`
+#
+# Runs `usageFunction` on failure
+#
+usageRequireBinary() {
+  local f b
+  f="${1-}"
+  if [ "$(type -t "$f")" != "function" ]; then
+    consoleError "$f must be a valid function" 1>&2
+    return $errorArgument
+  fi
+  shift || return $errorArgument
+  for b in "$@"; do
+    if [ -z "$(which "$b" || :)" ]; then
+      "$f" "$errorEnvironment" "$b is not available in path, not found: $PATH"
+    fi
+  done
+}
+
+#
+# Usage: {fn} usageFunction [ env0 ... ]
+# Requires environment variables to be set and non-blank
+# Argument: usageFunction - Required. `bash` function already defined to output usage
+# Argument: env0 - Optional. String. One or more environment variables which should be set and non-empty.
+# Exit Codes: 1 - If any env0 variables bre not set or bre empty.
+# Deprecated: 2024-01-01
+#
+usageRequireEnvironment() {
+  local f e
+  f="${1-}"
+  if [ "$(type -t "$f")" != "function" ]; then
+    consoleError "$f must be a valid function" 1>&2
+    return $errorArgument
+  fi
+  shift || return $errorArgument
+  for e in "$@"; do
+    if [ -z "${!e-}" ]; then
+      "$f" 1 "Required $e not set"
+      return 1
     fi
   done
 }

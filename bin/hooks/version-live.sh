@@ -2,7 +2,7 @@
 #
 # Sample live version script, uses github API to fetch release version
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -18,7 +18,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # See: github-version-live.sh
 #
 hookVersionLive() {
-    bin/build/pipeline/github-version-live.sh zesk/build
+  bin/build/pipeline/github-version-live.sh zesk/build
 }
 
 hookVersionLive

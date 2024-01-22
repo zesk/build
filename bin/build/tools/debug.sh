@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: -
 # bin: set test
@@ -15,7 +15,7 @@
 # Environment: BUILD_DEBUG - Set to 1 to enable debugging, blank to disable
 #
 buildDebugEnabled() {
-    test "${BUILD_DEBUG-}"
+  test "${BUILD_DEBUG-}"
 }
 
 #
@@ -29,17 +29,77 @@ buildDebugEnabled() {
 # Example:     buildDebugStop
 #
 buildDebugStart() {
-    if buildDebugEnabled; then
-        set -x # Outputs each command for debugging
-    fi
+  if buildDebugEnabled; then
+    set -x # Outputs each command for debugging
+  fi
 }
+
 #
 # Stop build debugging if it is enabled
 # Usage: buildDebugStop
 # See: buildDebugStart
 #
 buildDebugStop() {
-    if buildDebugEnabled; then
-        set +x # Debugging off
-    fi
+  if buildDebugEnabled; then
+    set +x # Debugging off
+  fi
+}
+
+#
+# Returns whether the shell has the error exit flag set
+#
+# Useful if you need to temporarily enable or disable it.
+#
+# Usage: {fn}
+#
+isErrorExit() {
+  case $- in
+    *e*)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+#
+# Returns whether the shell has the debugging flag set
+#
+# Useful if you need to temporarily enable or disable it.
+#
+# Usage: {fn}
+#
+isBashDebug() {
+  case $- in
+    *x*)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+#
+# Usage: {fn}
+# Example:     save=$(saveErrorExit)
+# Example:     set +x
+# Example:     ... some nasty stuff
+# Example:     restoreErrorExit "$save"
+# See: restoreErrorExit
+saveErrorExit() {
+  if isErrorExit; then
+    echo 1
+  fi
+}
+
+# Usage: {fn}
+# Example:     save=$(saveErrorExit)
+# Example:     set +x
+# Example:     ... some nasty stuff
+# Example:     restoreErrorExit "$save"
+# See: saveErrorExit
+restoreErrorExit() {
+  if [ "$1" = "1" ]; then
+    set -x
+  else
+    set +x
+  fi
 }

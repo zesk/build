@@ -6,7 +6,7 @@
 #
 # Start of deployment to system, delete caches and deal with post-maintenance stopping of services, etc.
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -21,7 +21,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Exit code: 0 - This SHOULD exit successfully always
 # Example: - Move directories to make deployment final
 hookDeployStart() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 hookDeployStart

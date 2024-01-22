@@ -6,6 +6,10 @@
 ## `bashDocumentFunction`
 
 
+### `bashDocumentFunction` - Document a function and generate a function template (markdown)
+
+Document a function and generate a function template (markdown)
+
 #### Usage
 
     bashDocumentFunction file function template
@@ -21,6 +25,12 @@
 - `0` - Success
 - `1` - Template file not found
 
+#### See Also
+
+- [function bashDocumentationTemplate]({documentationPath}) - [Document a function and generate a function template (markdown). To](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L321)
+- [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L287)
+- [function repeat](./docs/tools/text.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L135)
+
 ### `documentFunctionsWithTemplate` - Convert a template into documentation for Bash functions
 
 Convert a template which contains bash functions into full-fledged documentation.
@@ -35,17 +45,12 @@ The process:
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
-#### Usage
-
-    documentFunctionsWithTemplate sourceCodeDirectory documentTemplate functionTemplate targetFile [ cacheDirectory ]
-
 #### Arguments
 
-- `sourceCodeDirectory` - Required. The directory where the source code lives
+- `cacheDirectory` - Required. Cache directory where the indexes live.
 - `documentTemplate` - Required. The document template containing functions to define
 - `templateFile` - Required. Function template file to generate documentation for functions
 - `targetFile` - Required. Target file to generate
-- `cacheDirectory` - Optional. If supplied, cache to reduce work when files remain unchanged.
 
 #### Exit codes
 
@@ -55,7 +60,7 @@ to regenerate each time.
 
 #### See Also
 
-documentFunctionTemplateDirectory
+- [function documentFunctionTemplateDirectory](./docs/tools/documentation.md) - [Convert a directory of templates into documentation for Bash functions](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L211)
 
 ### `documentFunctionTemplateDirectory` - Convert a directory of templates into documentation for Bash functions
 
@@ -64,22 +69,17 @@ Convert a directory of templates for bash functions into full-fledged documentat
 The process:
 
 1. `documentDirectory` is scanned for files which look like `*.md`
-1. `documentFunctionsWithTemplate` is called for each one
+1. `documentFunctionTemplateDirectory` is called for each one
 
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
-#### Usage
-
-    documentFunctionsWithTemplate sourceCodeDirectory documentDirectory functionTemplate targetDirectory [ cacheDirectory ]
-
 #### Arguments
 
-- `sourceCodeDirectory` - Required. The directory where the source code lives
+- `cacheDirectory` - Required. The directory where function index exists and additional cache files can be stored.
 - `documentDirectory` - Required. Directory containing documentation templates
 - `templateFile` - Required. Function template file to generate documentation for functions
 - `targetDirectory` - Required. Directory to create generated documentation
-- `cacheDirectory` - Optional. If supplied, cache to reduce work when files remain unchanged.
 
 #### Exit codes
 
@@ -89,7 +89,62 @@ to regenerate each time.
 
 #### See Also
 
-documentFunctionsWithTemplate
+- [function documentFunctionsWithTemplate](./docs/tools/documentation.md) - [Convert a template into documentation for Bash functions](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L85)
+
+## Documentation Indexing
+
+
+### `documentationFunctionIndex` - Generate a function index for bash files
+
+Generate a function index for bash files
+
+cacheDirectory/code/bashFilePath/functionName
+cacheDirectory/index/functionName
+cacheDirectory/files/baseName
+
+Use with documentationFunctionLookup
+
+#### Arguments
+
+- `codePath` - Required. Directory. Path where code is stored (should remain identical between invocations)
+- `cacheDirectory` - Required. Directory. Store cached information
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function documentationFunctionLookup](./docs/tools/documentation.md) - [Looks up information in the function index](https://github.com/zesk/build/blob/main/bin/build/tools/documentation-index.sh#L34)
+
+### `documentationFunctionLookup` - Looks up information in the function index
+
+Looks up information in the function index
+
+#### Arguments
+
+- `--settings` - `lookupPattern` is a function name. Outputs a file containing function settings
+- `--source` - `lookupPattern` is a function name. Outputs the source code path to where the function is defined
+- `--line` - `lookupPattern` is a function name. Outputs the source code line where the function is defined
+- `--combined` - `lookupPattern` is a function name. Outputs the source code path and line where the function is defined as `path:line`
+- `--file` - `lookupPattern` is a file name. Find files which match this base file name.
+- `cacheDirectory` - Directory where we can store cached information
+- `lookupPattern` - Token to look up in the index
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function documentationFunctionIndex](./docs/tools/documentation.md) - [Generate a function index for bash files](https://github.com/zesk/build/blob/main/bin/build/tools/documentation-index.sh#L139)
+
+## Documentation "See" Linker
+
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ## Finding documentation
 
@@ -117,10 +172,6 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 - `usage` - Canonical usage example (code)
 - `example` - An example of usage (code, many)
 - `depends` - Any dependencies (list)
-
-#### Usage
-
-    bashExtractDocumentation directory function
 
 #### Arguments
 
@@ -166,6 +217,28 @@ bashFindFunctionFiles . bashFindFunctionFiles
 #### Environment
 
 Generates a temporary file which is removed
+
+## Usage Utilities
+
+
+### `usageDocument` - Generates console usage output for a script using documentation tools
+
+Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
+
+Simplifies documentation and has it in one place for shell and online.
+
+#### Usage
+
+    usageDocument functionDefinitionFile functionName exitCode [ ... ]
+
+#### Arguments
+
+- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
+- `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ## Documentation Utilities
 
@@ -239,7 +312,7 @@ Utility to export multi-line values as Bash variables
 ## `bashDocumentFunction` Formatting
 
 
-### `_bashDocumentFunction_exit_codeFormat` - Format code blocks (does markdownFormatList)
+### `_bashDocumentFormatter_exit_code` - Format code blocks (does markdownFormatList)
 
 Format code blocks (does markdownFormatList)
 
@@ -247,7 +320,7 @@ Format code blocks (does markdownFormatList)
 
 - `0` - Always succeeds
 
-### `_bashDocumentFunction_usageFormat` - Format usage blocks (indents as a code block)
+### `_bashDocumentFormatter_usage` - Format usage blocks (indents as a code block)
 
 Format usage blocks (indents as a code block)
 
@@ -255,7 +328,7 @@ Format usage blocks (indents as a code block)
 
 - `0` - Always succeeds
 
-### `_bashDocumentFunction_argumentFormat` - Format argument blocks (does markdownFormatList)
+### `_bashDocumentFormatter_argument` - Format argument blocks (does markdownFormatList)
 
 Format argument blocks (does markdownFormatList)
 
@@ -263,7 +336,7 @@ Format argument blocks (does markdownFormatList)
 
 - `0` - Always succeeds
 
-### `_bashDocumentFunction_dependsFormat` - Format depends blocks (indents as a code block)
+### `_bashDocumentFormatter_depends` - Format depends blocks (indents as a code block)
 
 Format depends blocks (indents as a code block)
 

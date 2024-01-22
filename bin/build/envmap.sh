@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Renamed to map.sh in 2023-11-12
 #

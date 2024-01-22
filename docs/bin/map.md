@@ -1,9 +1,4 @@
 
-## Usage
-
-    map.sh [ environmentName0 environmentName1 ... ]
-    mapEnvironment [ environmentName0 environmentName1 ... ]
-
 ## Arguments
 
 - `environmentName0` - Map this value only. If not specified, all environment variables are mapped.
@@ -18,4 +13,4 @@ Argument-passed or entire environment variables which are exported are used and 
 
 ## See Also
 
-mapValue
+- [function mapValue]({documentationPath}) - [Maps a string using an environment file](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L539)

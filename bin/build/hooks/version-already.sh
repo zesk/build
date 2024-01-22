@@ -2,7 +2,7 @@
 #
 # Run during bin/build/new-release.sh when a new version was already created
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader 5
@@ -12,8 +12,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-export BUILD_VERSION_NO_OPEN
-BUILD_VERSION_NO_OPEN=${BUILD_VERSION_NO_OPEN-}
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_VERSION_NO_OPEN.sh
 
 # fn: {base}
 #
@@ -30,9 +30,11 @@ hookVersionAlready() {
   releaseNotes=$1
   shift
 
-  printf "%s %s %s %s\n" "$(consoleSuccess "Already at")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes are")" "$(consoleValue "$releaseNotes")"
   if ! test "$BUILD_VERSION_NO_OPEN"; then
+    printf "%s %s %s %s\n" "$(consoleSuccess "Opening")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes at")" "$(consoleValue "$releaseNotes")"
     contextOpen "$releaseNotes"
+  else
+    printf "%s %s %s %s\n" "$(consoleSuccess "Already at")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes")" "$(consoleValue "$releaseNotes")"
   fi
 }
 

@@ -1,0 +1,19 @@
+TEXT IN FRONT SHOULD NOT MATTER BUT MUST MATCH // Alternate heading is identical commentHeading0 5
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+
+DOES NOT MATCH AND NO ONE CARES // IDENTICAL commentHeading1 5
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+All work and no play makes Jack a dull boy.
+
+# dIDENTICAL test4 50
+A => B C => D e => F
+`Quote`
+"Quote"
+'Quote' EOF

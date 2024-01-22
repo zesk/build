@@ -21,6 +21,9 @@
 {assertDirectoryExists}
 {assertDirectoryDoesNotExist}
 
+{assertFileExists}
+{assertFileDoesNotExist}
+
 {assertFileContains}
 {assertFileDoesNotContain}
 

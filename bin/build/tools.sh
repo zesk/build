@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# Shell colors
+# Shell tools
 #
-# Usage: source ./bin/build/tools.sh
-#
+# Usage: # shellcheck source=/dev/null
+# Usage: . ./bin/build/tools.sh
 # Depends: -
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
@@ -17,12 +17,27 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 # shellcheck source=/dev/null
 . "$toolsDir/debug.sh"
 
+# shellcheck source=/dev/null
+. "$toolsDir/type.sh"
+
 # no dependencies
 # shellcheck source=/dev/null
 . "$toolsDir/text.sh"
 
+# no dependencies
+# shellcheck source=/dev/null
+. "$toolsDir/date.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/url.sh"
+
 # shellcheck source=/dev/null
 . "$toolsDir/colors.sh"
+
+# Depends on text.sh
+# shellcheck source=/dev/null
+. "$toolsDir/sed.sh"
+
 # Depends on colors.sh text.sh
 # shellcheck source=/dev/null
 . "$toolsDir/assert.sh"
@@ -56,10 +71,32 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/bitbucket.sh"
 
 # shellcheck source=/dev/null
-. "$toolsDir/tests.sh"
+. "$toolsDir/test.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/version.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/documentation.sh"
 
 # shellcheck source=/dev/null
+. "$toolsDir/documentation-index.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/documentation-see.sh"
+
+# shellcheck source=/dev/null
 . "$toolsDir/vendor.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/interactive.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/identical.sh"
+
+if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+  # Only require when running as a shell command
+  set -eou pipefail
+  # Run remaining command line arguments
+  "$@"
+fi

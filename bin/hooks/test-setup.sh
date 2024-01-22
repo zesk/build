@@ -2,7 +2,7 @@
 #
 # Run before tests are run and before environment is built for testing
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # fn: {base}
 hookTestSetup() {
-    consoleSuccess "Test setup does nothing - please rewrite"
+  consoleSuccess "Test setup does nothing - please rewrite"
 }
 
 hookTestSetup "$@"

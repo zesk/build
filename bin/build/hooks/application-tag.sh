@@ -4,7 +4,7 @@
 #
 # Depends: git
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader 5
@@ -27,4 +27,4 @@ hookApplicationTag() {
   fi
 }
 
-hookApplicationTag
+hookApplicationTag "$@"

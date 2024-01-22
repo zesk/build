@@ -2,7 +2,7 @@
 #
 # npm functions
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh os.sh apt.sh
 # bin: npm
@@ -24,26 +24,26 @@ errorEnvironment=1
 # Binary: npm.sh
 #
 npmInstall() {
-    local start npm_version quietLog
+  local start npm_version quietLog
 
-    if which npm 2>/dev/null 1>&2; then
-        return 0
-    fi
+  if which npm 2>/dev/null 1>&2; then
+    return 0
+  fi
 
-    start=$(beginTiming)
-    npm_version="${1-${BUILD_NPM_VERSION:-latest}}"
-    quietLog=$(buildQuietLog npmInstall)
+  start=$(beginTiming)
+  npm_version="${1-${BUILD_NPM_VERSION:-latest}}"
+  quietLog=$(buildQuietLog npmInstall)
 
-    if ! aptInstall npm; then
-        return "$errorEnvironment"
-    fi
+  if ! aptInstall npm; then
+    return "$errorEnvironment"
+  fi
 
-    if ! requireFileDirectory "$quietLog"; then
-        return "$errorEnvironment"
-    fi
-    if ! npm i -g "npm@$npm_version" --force >>"$quietLog" 2>&1; then
-        buildFailed "$quietLog"
-        return "$errorEnvironment"
-    fi
-    reportTiming "$start" OK
+  if ! requireFileDirectory "$quietLog"; then
+    return "$errorEnvironment"
+  fi
+  if ! npm i -g "npm@$npm_version" --force >>"$quietLog" 2>&1; then
+    buildFailed "$quietLog"
+    return "$errorEnvironment"
+  fi
+  reportTiming "$start" OK
 }

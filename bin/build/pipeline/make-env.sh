@@ -8,7 +8,7 @@
 # instead explicitly define all desired variables used as well as their coverage within
 # the application.
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader 5

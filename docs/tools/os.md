@@ -12,10 +12,6 @@ Defaults to `$HOME/.build` unless `$HOME` is not a directory.
 
 Appends any passed in arguments as path segments.
 
-#### Usage
-
-    buildCacheDirectory [ pathSegment ... ]
-
 #### Arguments
 
 - `pathSegment` - One or more directory or file path, concatenated as path segments using `/`
@@ -27,10 +23,6 @@ logFile=$(buildCacheDirectory test.log)
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Usage
-
-    buildQuietLog name
 
 #### Arguments
 
@@ -48,10 +40,6 @@ Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
 
-#### Usage
-
-    requireFileDirectory file1 file2 ...
-
 #### Examples
 
 logFile=./.build/$me.log
@@ -66,10 +54,6 @@ logFile=./.build/$me.log
 Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
-
-#### Usage
-
-    requireDirectory dir1 [ dir2 ... ]
 
 #### Arguments
 
@@ -87,10 +71,6 @@ requireDirectory "$cachePath"
 ### `runCount` - Run a binary count times
 
 $Run a binary count times
-
-#### Usage
-
-    runCount count binary [ args ... ]
 
 #### Arguments
 
@@ -114,10 +94,6 @@ If files do not exist, does nothing
 Used to move files, temporarily, sometimes and then move back easily.
 
 Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
-
-#### Usage
-
-    renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
 
 #### Arguments
 
@@ -187,7 +163,7 @@ for f in $(environmentVariables); do
 
 ### `reverseFileLines` - Reverse output lines
 
-Reverses a pipe's input lines to output using an awk trick.
+Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
 
 #### Exit codes
 
@@ -202,9 +178,9 @@ Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://studen
 
 Makes all `*.sh` files executable
 
-#### Usage
+#### Arguments
 
-    makeShellFilesExecutable
+- `findArguments` - Optional. Add arguments to exclude files or paths.
 
 #### Exit codes
 
@@ -216,7 +192,7 @@ Works from the current directory
 
 #### See Also
 
-makeShellFilesExecutable
+- [function makeShellFilesExecutable](./docs/bin/chmod-sh.md) - [Makes all `*.sh` files executable](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L233)
 
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp
@@ -244,10 +220,6 @@ Check to see if the first file is the newest one
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
-#### Usage
-
-    isNewestFile firstFile [ targetFile0 ... ]
-
 #### Arguments
 
 - `sourceFile` - File to check
@@ -265,10 +237,6 @@ Check to see if the first file is the newest one
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
-#### Usage
-
-    isNewestFile firstFile [ targetFile0 ... ]
-
 #### Arguments
 
 - `sourceFile` - File to check
@@ -284,10 +252,6 @@ Otherwise return `1``
 
 Return the oldest file in the list.
 
-#### Usage
-
-    oldestFile file0 [ file1 ... ]
-
 #### Arguments
 
 - `file0` - One or more files to examine
@@ -299,10 +263,6 @@ Return the oldest file in the list.
 ### `newestFile` - Return the newest file in the list
 
 Return the newest file in the list
-
-#### Usage
-
-    newestFile file0 [ file1 ... ]
 
 #### Arguments
 
@@ -332,9 +292,57 @@ Prints seconds since modified
 - `2` - Can not get modification time
 
 
-#### Usage
+### `listFileModificationTimes` - Lists files in a directory recursively along with their modification
 
-    pathConfigure [ --first | --last | path ] ...
+Lists files in a directory recursively along with their modification time in seconds.
+
+Output is unsorted.
+
+#### Arguments
+
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
+
+#### Examples
+
+listFileModificationTimes $myDir ! -path '*/.*'
+
+#### Sample Output
+
+    1705347087 bin/build/tools.sh
+    1704312758 bin/build/deprecated.sh
+    1705442647 bin/build/build.json
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `mostRecentlyModifiedFile` - List the most recently modified file in a directory
+
+List the most recently modified file in a directory
+
+#### Arguments
+
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `mostRecentlyModifiedTimestamp` - List the most recently modified file in a directory
+
+List the most recently modified file in a directory
+
+#### Arguments
+
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 
 #### Arguments
 
@@ -361,10 +369,6 @@ Maintains ordering.
 - `0` - Always succeeds
 
 
-#### Usage
-
-    manPathConfigure [ --first | --last | path ] ...
-
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list
@@ -374,10 +378,6 @@ Maintains ordering.
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Usage
-
-    pathAppend pathValue separator [ --first | --last | path ]
 
 #### Arguments
 
@@ -397,9 +397,74 @@ Maintains ordering.
 - `0` - Always succeeds
 
 
+### `JSON` - Format something neatly as JSON
+
+Format something neatly as JSON
+
+#### Usage
+
+    JSON < inputFile > outputFile
+
 #### Exit codes
 
 - `0` - Always succeeds
+
+
+### `fileOwner` - Outputs the file owner for each file passed on the
+
+Outputs the file owner for each file passed on the command line
+
+#### Arguments
+
+- `file` - File to get the owner for
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Unable to access file
+
+
+### `processMemoryUsage` - Outputs value of resident memory used by a process, value
+
+Outputs value of resident memory used by a process, value is in kilobytes
+
+#### Arguments
+
+- `pid` - Process ID of running process
+
+#### Examples
+
+> processMemoryUsage 23
+
+#### Sample Output
+
+    423
+
+#### Exit codes
+
+- `0` - Success
+- `2` - Argument error
+
+### `processVirtualMemoryAllocation` - Outputs value of virtual memory allocated for a process, value
+
+Outputs value of virtual memory allocated for a process, value is in kilobytes
+
+#### Arguments
+
+- `pid` - Process ID of running process
+
+#### Examples
+
+processVirtualMemoryAllocation 23
+
+#### Sample Output
+
+    423
+
+#### Exit codes
+
+- `0` - Success
+- `2` - Argument error
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -6,32 +6,41 @@
 #
 # Copy this into your project to install the build system during development and in pipelines
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # set -x
 #
-# Change this line when placing in your project
+# Change this line when placing in your project to point to your application root (where `bin/build` will be based)
 #
+#     e.g.
+#     relTop=..
+#     relTop=../../..
+#
+# or wherever you put it in your project to install it
+#
+
 relTop=../..
 
-#
-# Usage: build-setup.sh [ --mock mockBuildRoot ]
-# Deprecated: 2023
-# fn: build-setup.sh
+# Usage: install-bin-build.sh [ --mock mockBuildRoot ]
+# fn: install-bin-build.sh
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
 #
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
-#
-buildSetup() {
-  # IDENTICAL installBinBuild 83
-  local start ignoreFile tarArgs diffLines binName replace
+installBinBuild() {
+  # IDENTICAL installBinBuild 87
+  local start ignoreFile tarArgs diffLines binName replace mockPath
   if [ ! -d bin/build ]; then
     start=$(($(date +%s) + 0))
     if [ "${1-}" = "--mock" ]; then
       shift
-      cp -R "$1" ./bin/build
+      mockPath="${1%%/}/"
+      if [ ! -f "$mockPath/tools.sh" ]; then
+        echo "--mock argument must be bin/build path" 1>&2
+        return 2
+      fi
+      cp -R "${1%%/}/" ./bin/build/
       shift
     else
       curl -L -s "$(curl -s https://api.github.com/repos/zesk/build/releases/latest | jq -r .tarball_url)" -o build.tar.gz
@@ -110,4 +119,4 @@ cd "$(dirname "$myBinary")"
 myBinary="$(pwd)/$me"
 cd "$relTop"
 
-buildSetup "$@"
+installBinBuild "$@"

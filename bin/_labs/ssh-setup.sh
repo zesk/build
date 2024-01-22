@@ -2,7 +2,7 @@
 #
 # Set up SSH for a user with ID and backup keys in `~/.ssh`
 #
-# Copyright &copy; 2023, Market Acumen, Inc.
+# Copyright &copy; 2024, Market Acumen, Inc.
 #
 # Created 2005/01/06 05:45:46 by kent
 #
@@ -18,6 +18,8 @@ errorArgument=2
 sshSetup() {
   local sshHomePath flagForce servers keyType keyBits
 
+  # shellcheck source=/dev/null
+  source "$(dirname "${BASH_SOURCE[0]}")/../build/env/HOME.sh"
   if [ ! -d "${HOME-}" ]; then
     consoleError "$errorArgument" "HOME is not defined and is required"
   fi
@@ -103,6 +105,7 @@ generateSSHKeyPair() {
   keyName="$1"
   ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N ""
 }
+
 #
 # usage [ exitcode ]
 #

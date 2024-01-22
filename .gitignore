@@ -2,9 +2,12 @@
 /.build/
 /.vscode/
 /vendor/
-/.composer/
+.composer/
 /.env*
 /.idea/
 /.build-docs/
 /shaPipe.log
 /.pipeline-key*
+/test/example/simple-php/vendor/
+/test/example/simple-php/.env
+/test/example/simple-php/cache/

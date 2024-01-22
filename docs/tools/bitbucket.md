@@ -32,6 +32,10 @@ On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `sup
 - `varName` - Name of the value to extract from `bitbucket-pipelines.yml`
 - `defaultValue` - Value if not found in pipelines
 
+#### Examples
+
+MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(getFromPipelineYML MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}
+
 #### Exit codes
 
 - `0` - Always succeeds
