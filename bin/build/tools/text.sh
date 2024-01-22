@@ -345,7 +345,9 @@ alignLeft() {
 #
 lowercase() {
   while [ $# -gt 0 ]; do
-    printf %s "$1" | tr '[:upper:]' '[:lower:]'
+    if [ -n "$1" ]; then
+      printf "%s\n" "$1" | tr '[:upper:]' '[:lower:]'
+    fi
     shift
   done
 }

@@ -233,5 +233,113 @@ documentationFunctionIndex() {
     return $?
   fi
   clearLine
-  reportTiming "$start" "$(printf "%s: %s %s %s" "$(consoleRed "${FUNCNAME[0]}")" Completed "$(consoleCode "$codePath")" in)"
+  printf "%s: %s %s %s\n" "$(consoleRed "${FUNCNAME[0]}")" Completed "$(consoleCode "$codePath")" "$(reportTiming "$start" in)"
+}
+
+# Update the documentationPath for all functions defined in documentTemplate
+# Usage: {fn} cacheDirectory documentTemplate documentationPath
+# Argument: cacheDirectory - Required. Cache directory where the indexes live.
+# Argument: documentTemplate - Required. The document template containing functions to index
+# Argument: documentationPath - Required. The path to store as the documentation path.
+#
+# This updates
+#
+#     cacheDirectory/index/functionName
+#
+# and adds the `documentationPath` to it
+#
+# Use with documentationFunctionLookup
+#
+# Exit Code: 0 - If success
+# Exit Code: 1 - Issue with file generation
+# Exit Code: 2 - Argument error
+#
+documentFunctionDocumentationIndex() {
+  local start documentTemplate functionTemplate cacheDirectory checkFiles
+  local me
+  local settingsFile
+  local documentTokensFile modifiedCountFile processed total
+
+  if ! start=$(beginTiming); then
+    consoleError "beginTiming failed" 1>&2
+    return $errorArgument
+  fi
+  cacheDirectory=
+  documentTemplate=
+  documentationPath=
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --force) ;;
+      *)
+        me="(${FUNCNAME[0]})"
+        if [ -z "$cacheDirectory" ]; then
+          cacheDirectory="$1"
+          if [ ! -d "$cacheDirectory" ]; then
+            consoleError "$me cacheDirectory documentTemplate - $cacheDirectory not a directory" 1>&2
+            return $errorArgument
+          fi
+          cacheDirectory=${cacheDirectory%%/}
+        elif [ -z "$documentTemplate" ]; then
+          documentTemplate="$1"
+          if [ ! -f "$documentTemplate" ]; then
+            consoleError "$me cacheDirectory documentTemplate - $documentTemplate not a file" 1>&2
+            return $errorArgument
+          fi
+        elif [ -z "$documentationPath" ]; then
+          documentationPath="$1"
+        else
+          consoleError "$me cacheDirectory documentTemplate - unknown argument" 1>&2
+          return $errorArgument
+        fi
+        ;;
+    esac
+    shift
+  done
+  if [ -z "$cacheDirectory" ]; then
+    consoleError "$me - cacheDirectory required" 1>&2
+    return $errorArgument
+  fi
+  if [ -z "$documentTemplate" ]; then
+    consoleError "$me - documentTemplate required" 1>&2
+    return $errorArgument
+  fi
+  if [ -z "$documentationPath" ]; then
+    consoleError "$me - documentationPath required" 1>&2
+    return $errorArgument
+  fi
+
+  if ! documentTokensFile=$(mktemp) || ! modifiedCountFile=$(mktemp); then
+    rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
+    return $?
+  fi
+  # subshell to hide environment tokens
+  if ! listTokens <"$documentTemplate" >"$documentTokensFile"; then
+    rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
+    return "$errorEnvironment"
+  fi
+  checkFiles=("$functionTemplate" "$documentTemplate")
+  while read -r token; do
+    if ! settingsFile=$(documentationFunctionLookup --settings "$cacheDirectory" "$token"); then
+      continue
+    fi
+    if ! grep -q "'documentationPath'" "$settingsFile"; then
+      statusMessage consoleInfo "Adding documentationPath to $(consoleValue "[$token]") settings" || :
+      if ! __dumpNameValue documentationPath "$documentationPath" >>"$settingsFile"; then
+        consoleError "Error writing documentationPath to $settingsFile" 1>&2
+        break
+      fi
+      if ! printf x >>"$modifiedCountFile"; then
+        consoleError "Error writing count file: $modifiedCountFile" 1>&2
+        break
+      fi
+    fi
+    checkFiles+=("$settingsFile")
+  done <"$documentTokensFile"
+  if ! processed=$(fileSize "$modifiedCountFile" 2>/dev/null); then
+    processed=0
+  fi
+  total="$(trimSpace "$(wc -l <"$documentTokensFile")")"
+  rm "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
+  clearLine || :
+  statusMessage consoleInfo "$(printf "%s %s %s %s %s %s %s %s\n" "$(consoleCyan Indexed)" "$(consoleBoldRed "$processed")" "$(consoleGreen "of $total")" "$(consoleCyan "$(plural "$processed" function functions)")" for "$(consoleCode "$documentationPath")" in "$(reportTiming "$start")")"
 }

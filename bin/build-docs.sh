@@ -21,16 +21,15 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 #
 # Given that bash is not an ideal template language, caching is mandatory.
 #
-# Uses a cache at `buildCacheDirectory build-docs`
-#
-# You can disable this with `--no-cache`.
+# Uses a cache at `buildCacheDirectory`
+#0
 #
 # Argument: --force - Force generation, ignore cache directives
-# Argument: --no-cache - Do not use cache or store cache.
+# Argument: --clean - Erase the cache before starting.
 # Argument: --help - I need somebody
 buildBuildDocumentation() {
   local cacheDirectory theDirectory start documentDirectoryArgs indexArgs=()
-  local functionLinkPattern fileLinkPattern
+  local functionLinkPattern fileLinkPattern documentTemplate templateDirectory
   start=$(beginTiming)
 
   cacheDirectory="$(buildCacheDirectory)"
@@ -38,8 +37,8 @@ buildBuildDocumentation() {
   documentDirectoryArgs=()
   while [ $# -gt 0 ]; do
     case $1 in
-      --no-cache)
-        indexArgs+=(--clean)
+      --clean)
+        indexArgs+=("$1")
         ;;
       --force)
         if ! inArray "$1" "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}"; then
@@ -60,9 +59,28 @@ buildBuildDocumentation() {
   if ! cacheDirectory=$(requireDirectory "$cacheDirectory"); then
     return $errorEnvironment
   fi
+
+  #
+  # Generate or update indexes
+  #
   if ! documentationFunctionIndex "${indexArgs[@]+${indexArgs[@]}}" ./bin/ "$(requireDirectory "$cacheDirectory")"; then
+    consoleError "documentationFunctionIndex failed" 1>&2
     return $errorEnvironment
   fi
+  #
+  # Update indexes with function -> documentationPath
+  #
+  templateDirectory=./docs/_templates
+  find "$templateDirectory" -type f -name '*.md' ! -path '*/__*' | while read -r documentTemplate; do
+    if ! documentFunctionDocumentationIndex "$cacheDirectory" "$documentTemplate" "./docs${documentTemplate#"$templateDirectory"}"; then
+      return $?
+    fi
+  done
+  clearLine
+  reportTiming "$start" "Indexes completed in"
+  #
+  # Build docs
+  #
   if ! documentFunctionTemplateDirectory "${documentDirectoryArgs[@]+${documentDirectoryArgs[@]}}" \
     "$cacheDirectory" ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/; then
     return "$errorEnvironment"
@@ -79,6 +97,9 @@ buildBuildDocumentation() {
       return $errorEnvironment
     fi
   done
+  #
+  # {SEE:foo} gets linked in final documentation where it exists (rewrites file currently)
+  #
   (
     # shellcheck source=/dev/null
     source "$(dirname "${BASH_SOURCE[0]}")/build/env/BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN.sh"

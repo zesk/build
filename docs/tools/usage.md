@@ -95,7 +95,7 @@ Should look into an actual file template, probably
 
 #### See Also
 
-- [function usageDocument](./docs/tools/documentation.md) - [Generates console usage output for a script using documentation tools](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L29)
+- [function usageDocument](./docs//tools/usage.md) - [Generates console usage output for a script using documentation tools](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L29)
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -80,10 +80,10 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/documentation.sh"
 
 # shellcheck source=/dev/null
-. "$toolsDir/documentation-index.sh"
+. "$toolsDir/documentation/index.sh"
 
 # shellcheck source=/dev/null
-. "$toolsDir/documentation-see.sh"
+. "$toolsDir/documentation/see.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/vendor.sh"

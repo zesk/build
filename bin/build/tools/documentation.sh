@@ -60,7 +60,7 @@ usageDocument() {
 }
 
 #
-# Usage: {fn} cacheDirectory documentTemplate functionTemplate targetFile
+# Usage: {fn} cacheDirectory documentTemplate functionTemplate templateFile targetFile
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: documentTemplate - Required. The document template containing functions to define
 # Argument: templateFile - Required. Function template file to generate documentation for functions
@@ -87,40 +87,66 @@ documentFunctionsWithTemplate() {
   local start documentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
 
   local targetDirectory settingsFile
-  local reason base
+  local base
   local error
   local documentTokensFile
 
+  cacheDirectory=
+  documentTemplate=
+  functionTemplate=
+  targetFile=
   forceFlag=
   while [ $# -gt 0 ]; do
     case "$1" in
       --force)
         forceFlag=1
-        shift
-        break
         ;;
       *)
-        break
+        if [ -z "$cacheDirectory" ]; then
+          cacheDirectory=$1
+          cacheDirectory=${cacheDirectory%%/}
+        elif [ -z "$documentTemplate" ]; then
+          documentTemplate=$1
+        elif [ -z "$functionTemplate" ]; then
+          functionTemplate=$1
+        elif [ -z "$targetFile" ]; then
+          targetFile=$1
+        else
+          consoleError "${FUNCNAME[0]} [ --force ] cacheDirectory documentTemplate functionTemplate targetFile - unknown argument" 1>&2
+          return "$errorArgument"
+        fi
         ;;
     esac
-    shift
+    shift || return $errorArgument
   done
 
-  start=$(beginTiming)
-  cacheDirectory=${1-}
-  shift || return $errorArgument
-  documentTemplate="${1-}"
-  shift || return $errorArgument
-  functionTemplate="${1-}"
-  shift || return $errorArgument
-  targetFile="${1-}"
+  if ! start=$(beginTiming); then
+    consoleError "${FUNCNAME[0]} - beginTiming failed" 1>&2
+    return $errorEnvironment
+  fi
+
+  # Validate arguments
+  if [ -z "$cacheDirectory" ]; then
+    consoleError "cacheDirectory is required" 1>&2
+    return "$errorArgument"
+  fi
+  if [ -z "$documentTemplate" ]; then
+    consoleError "documentTemplate is required" 1>&2
+    return "$errorArgument"
+  fi
+  if [ -z "$functionTemplate" ]; then
+    consoleError "functionTemplate is required" 1>&2
+    return "$errorArgument"
+  fi
+  if [ -z "$targetFile" ]; then
+    consoleError "targetFile is required" 1>&2
+    return "$errorArgument"
+  fi
 
   if [ ! -d "$cacheDirectory" ]; then
     consoleError "$cacheDirectory was specified but is not a directory" 1>&2
     return "$errorArgument"
   fi
-  cacheDirectory=${cacheDirectory%%/}
-
   if [ ! -f "$documentTemplate" ]; then
     consoleError "Source file $documentTemplate is not a directory" 1>&2
     return "$errorArgument"
@@ -139,14 +165,16 @@ documentFunctionsWithTemplate() {
   # echo functionTemplate="$functionTemplate"
   # echo targetFile="$targetFile"
 
-  reason=""
   base="$(basename "$targetFile")"
   base="${base%%.md}"
   statusMessage consoleInfo "Generating $base ..."
 
   documentTokensFile=$(mktemp)
-  # subshell to hide environment tokens
+
   listTokens <"$documentTemplate" >"$documentTokensFile"
+  #
+  # Look at source file for each function
+  #
   checkFiles=("$functionTemplate" "$documentTemplate")
   while read -r token; do
     if ! settingsFile=$(documentationFunctionLookup --source "$cacheDirectory" "$token"); then
@@ -154,8 +182,10 @@ documentFunctionsWithTemplate() {
     fi
     checkFiles+=("$settingsFile")
   done <"$documentTokensFile"
+
   if test $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+${checkFiles[@]}}"; then
     (
+      # subshell to hide environment tokens
       set -a
       while read -r token; do
         if ! settingsFile=$(documentationFunctionLookup "$cacheDirectory" "$token"); then
@@ -164,11 +194,7 @@ documentFunctionsWithTemplate() {
           declare "$token"="$error"
           continue
         fi
-        if ! grep -q "'documentationPath'" "$settingsFile"; then
-          statusMessage consoleInfo "Adding documentationPath to $(consoleValue "[$token]") settings"
-          __dumpNameValue documentationPath "$targetFile" >>"$settingsFile"
-        fi
-        statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... $reason"
+        statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ..."
         export "${token?}"
         declare "$token"="$(bashDocumentationTemplate "$settingsFile" "$functionTemplate")"
       done <"$documentTokensFile"
@@ -211,7 +237,7 @@ documentFunctionsWithTemplate() {
 #
 documentFunctionTemplateDirectory() {
   local start templateDirectory functionTemplate targetDirectory cacheDirectory forceFlag=()
-  local reason base targetFile
+  local base targetFile
   local documentTokensFile
 
   while [ $# -gt 0 ]; do
