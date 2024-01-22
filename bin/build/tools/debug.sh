@@ -62,6 +62,22 @@ isErrorExit() {
 }
 
 #
+# Returns whether the shell has the debugging flag set
+#
+# Useful if you need to temporarily enable or disable it.
+#
+# Usage: {fn}
+#
+isBashDebug() {
+  case $- in
+    *x*)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+#
 # Usage: {fn}
 # Example:     save=$(saveErrorExit)
 # Example:     set +x

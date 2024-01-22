@@ -135,12 +135,18 @@ quoteBashString() {
 #
 repeat() {
   local count=$((${1:-2} + 0))
+  local debug
 
+  debug=$(! isBashDebug || printf 1)
+  set +x
   shift
   while [ $count -gt 0 ]; do
     printf %s "$*"
     count=$((count - 1))
   done
+  if test "$debug"; then
+    set -x
+  fi
 }
 
 #

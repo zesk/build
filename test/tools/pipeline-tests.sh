@@ -117,7 +117,7 @@ testMakeEnvironment() {
     export DEPLOYMENT=test-make-env
     export APPLICATION_ID=aabbccdd
 
-    [ -f .env ] && rm .env || return $?
+    [ ! -f .env ] || rm .env
     makeEnvironment TESTING_ENV DSN >.env || return $?
 
     if [ ! -f .env ]; then
