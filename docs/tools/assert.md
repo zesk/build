@@ -61,6 +61,14 @@ assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
 
 File `bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
 
+#### Usage
+
+    assertContains expected actual
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 
 ### `assertGreaterThan` - Assert `leftValue > rightValue`
 
@@ -228,6 +236,34 @@ If this fails it will output an error and exit.
 
 File `bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
 
+
+### `assertOutputEquals` - Assert output of a binary equals a string
+
+Assert output of a binary equals a string
+
+If this fails it will output an error and exit.
+
+#### Usage
+
+    assertOutputEquals expected binary [ parameters ]
+
+#### Arguments
+
+- `expected` - Expected string
+- `binary` - Binary to run and evaluate output
+- `parameters` - Any additional parameters to binary
+
+#### Examples
+
+assertOutputEquals "2023" date +%Y
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertOutputEquals` was reviewed 2023-11-12.
 
 ### `assertOutputContains` - Run a command and expect the output to contain the
 

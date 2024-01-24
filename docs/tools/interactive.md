@@ -22,7 +22,7 @@ Parses text and determines if it's a yes.
 
 #### See Also
 
-- [function lowercase](./docs//tools/text.md) - [Convert text to lowercase](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L345)
+- [function lowercase](./docs/tools/text.md) - [Convert text to lowercase](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L346)
 
 ### `confirmYesNo` - Read user input and return 0 if the user says
 
@@ -71,7 +71,7 @@ Escalation means copying between users. Escalation copy shows differences and pr
 
 #### See Also
 
-- [function copyFileChanged](./docs//tools/interactive.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L161)
+- [function copyFileChanged](./docs/tools/interactive.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L161)
 
 ### `mapCopyFileChanged` - Map a file using environment variables before copying, return 0
 

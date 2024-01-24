@@ -1,11 +1,12 @@
-# daemontools Tools
+# Web Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{daemontoolsInstallService}
+{urlMatchesLocalFileSize} 
+{urlContentLength} 
+{hostIPList} 
+{hostTTFB}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
-
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK})

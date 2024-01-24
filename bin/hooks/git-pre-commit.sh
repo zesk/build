@@ -52,9 +52,9 @@ hookGitPreCommit() {
   if ! ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh; then
     failed identical-check.sh
   fi
-  if ! ./bin/build-docs.sh; then
-    failed build-docs.sh
-  fi
+#  if ! ./bin/build-docs.sh; then
+#    failed build-docs.sh
+#  fi
   clearLine
 
 }

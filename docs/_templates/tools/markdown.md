@@ -1,11 +1,10 @@
-# daemontools Tools
+# Markdown Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{daemontoolsInstallService}
+{markdown_removeUnfinishedSections}
+{markdown_FormatList}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
-
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK})

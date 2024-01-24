@@ -11,10 +11,23 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 source ./bin/build/tools.sh
 
+#
+# Configure the web application server as root
+#
 webApplicationConfigure() {
-    while [ $# -gt 0 ]; do
-        case $1 in
-
-        esac
-    done
+  local start
+  if ! start=$(beginTiming); then
+    return $?
+  fi
+  while [ $# -gt 0 ]; do
+    case $1 in
+      *) ;;
+    esac
+    shift
+  done
+  reportTiming "$start" "${FUNCNAME[0]} completed in"
 }
+
+if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+  webApplicationConfigure "$@"
+fi

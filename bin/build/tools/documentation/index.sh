@@ -2,7 +2,7 @@
 #
 # documentation-index.sh
 #
-# Generate an index of our bash funtions for faster documentation generation.
+# Generate an index of our bash functions for faster documentation generation.
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -30,9 +30,9 @@ errorNotFound=3
 # Argument: --file - `lookupPattern` is a file name. Find files which match this base file name.
 # Argument: cacheDirectory - Directory where we can store cached information
 # Argument: lookupPattern - Token to look up in the index
-# See: documentationFunctionIndex
+# See: documentationIndex_Generate
 #
-documentationFunctionLookup() {
+documentationIndex_Lookup() {
   local mode cacheDirectory shellFile functionName lineNumber indexRoot sourceFile resultFile
 
   cacheDirectory=
@@ -48,7 +48,7 @@ documentationFunctionLookup() {
         if [ -z "$cacheDirectory" ]; then
           cacheDirectory="${1%%/}"
           shift || return "$errorArgument"
-          if ! cacheDirectory="$(_documentationFunctionIndexPath "$cacheDirectory")"; then
+          if ! cacheDirectory="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
             return $?
           fi
         fi
@@ -111,17 +111,17 @@ documentationFunctionLookup() {
 }
 
 #
-# Usage: fn cacheDirectroy
+# Usage: fn cacheDirectory
 # Outputs relative path to cacheDirectory for shared usage
 # Exit Code: 1 - passed in directory must exist
 #
-_documentationFunctionIndexPath() {
+_documentationIndex_GeneratePath() {
   cacheDirectory="$1"
   if [ ! -d "$cacheDirectory" ]; then
     consoleError "$cacheDirectory is not a directory" 1>&2
     return $errorEnvironment
   fi
-  printf "%s" "${cacheDirectory%%/}/documentationFunctionIndex"
+  printf "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
 }
 
 # Generate a function index for bash files
@@ -130,14 +130,14 @@ _documentationFunctionIndexPath() {
 # cacheDirectory/index/functionName
 # cacheDirectory/files/baseName
 #
-# Use with documentationFunctionLookup
+# Use with documentationIndex_Lookup
 #
 # Usage: {fn} [ --clean ] codePath cacheDirectory
 #
 # Argument: codePath - Required. Directory. Path where code is stored (should remain identical between invocations)
 # Argument: cacheDirectory - Required. Directory. Store cached information
-# See: documentationFunctionLookup
-documentationFunctionIndex() {
+# See: documentationIndex_Lookup
+documentationIndex_Generate() {
   local codePath cacheDirectory
   local start shellFile functionName lineNumber fileCacheMarker functionIndex fileIndex
   local cleanFlag=
@@ -159,7 +159,7 @@ documentationFunctionIndex() {
           codePath="${codePath#./}"
           codePath="${codePath%/}"
         elif [ -z "$cacheDirectory" ]; then
-          if ! cacheDirectory="$(_documentationFunctionIndexPath "$1")"; then
+          if ! cacheDirectory="$(_documentationIndex_GeneratePath "$1")"; then
             return $?
           fi
         else
@@ -216,7 +216,7 @@ documentationFunctionIndex() {
       lineNumber="${functionName%%:*}"
       functionName="${functionName#*:}"
       statusMessage consoleInfo "$(printf "Found %s at %s:%s\n" "$(consoleCode "$functionName")" "$(consoleMagenta "$shellFile")" "$(consoleRed "$lineNumber")")"
-      if ! bashExtractDocumentation "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
+      if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
         clearLine
         consoleError "Documentation failed for $functionName" 1>&2
@@ -236,6 +236,169 @@ documentationFunctionIndex() {
   printf "%s: %s %s %s\n" "$(consoleRed "${FUNCNAME[0]}")" Completed "$(consoleCode "$codePath")" "$(reportTiming "$start" in)"
 }
 
+#
+# Displays any functions which are not included in the documentation and the reason why.
+#
+# - Any functions beginning with an **underscore** (`_`) are ignored
+# - Any function which contains ANY `ignore` directive in the comment is ignored
+# - Any function which is unlinked in the source (call `documentationIndex_LinkDocumentationPaths` first)
+#
+# Within your function, add an ignore reason if you wish:
+#
+#     # Ignore: Internal only
+#     userFunction() {
+#     ...
+#     }
+#
+# Usage: {fn} cacheDirectory
+# Argument: cacheDirectory - Required. Directory. Index cache directory.
+# See: documentationIndex_LinkDocumentationPaths
+# See: documentationIndex_FunctionIterator
+#
+documentationIndex_ShowUnlinked() {
+  local cacheDirectory=$1
+  local functionName settingsFile
+  local documentationPath documentationPathUnlinked ignore
+
+  documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
+    if [ "$functionName" = "${functionName#_}" ]; then
+      (
+        set -a
+        documentationPath=
+        documentationPathUnlinked=
+        ignore=
+        # shellcheck source=/dev/null
+        source "$settingsFile"
+        if [ -n "$ignore" ]; then
+          printf "%s %s %s\n" "$(consoleCode "$functionName")" "$(consoleWarning "ignored because")" "$(consoleMagenta "$ignore")"
+        elif [ -z "$documentationPath" ] || [ -n "$documentationPathUnlinked" ]; then
+          printf "%s %s\n" "$(consoleCode "$functionName")" "$(consoleError "not documented anywhere")"
+        fi
+      )
+    else
+      printf "%s %s %s\n" "$(consoleCode "$functionName")" "$(consoleWarning "ignored because")" "$(consoleBlue "begins with underscore")"
+    fi
+  done
+}
+
+#
+# List of functions which are not linked to anywhere in the documentation index
+#
+# Usage: {fn} cacheDirectory target
+# Argument: cacheDirectory - Required. Directory. Index cache directory.
+# Argument: target - Required. String. Path to document path where unlinked functions should link.
+#
+documentationIndex_SetUnlinkedDocumentationPath() {
+  local cacheDirectory="$1" target="$2"
+  local functionName settingsFile
+  documentationIndex_UnlinkedIterator "$cacheDirectory" | while read -r functionName settingsFile; do
+    if ! grep -q "'documentationPath'" "$settingsFile"; then
+      __dumpNameValue documentationPath "$target" >>"$settingsFile"
+      __dumpNameValue documentationPathUnlinked 1 >>"$settingsFile"
+    fi
+    printf '%s %s\n' "$functionName" "$settingsFile"
+  done
+}
+
+#
+# List of functions which are not linked to anywhere in the documentation index
+#
+# Usage: {fn} cacheDirectory
+# Argument: cacheDirectory - Required. Directory. Index cache directory.
+# Exit Code: 0 - The settings file is unlinked within the documentation (not defined anywhere)
+# Exit Code: 1 - The settings file is linked within the documentation
+#
+documentationIndex_UnlinkedIterator() {
+  local cacheDirectory
+  local functionName settingsFile
+  local flagUnderscore=
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --underscore)
+        flagUnderscore=1
+        ;;
+      *)
+        if ! cacheDirectory=$(usageArgumentDirectory _documentationIndex_UnlinkedIteratorUsage cacheDirectory "$1"); then
+          return $?
+        fi
+        ;;
+    esac
+    shift
+  done
+
+  documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
+    # Skip functions beginning with underscores always
+    if [ -z "$flagUnderscore" ] && [ "$functionName" != "${functionName#_}" ]; then
+      continue
+    fi
+    if grep -q "'documentationPathUnlinked'" "$settingsFile"; then
+      printf '%s %s\n' "$functionName" "$settingsFile"
+    elif ! grep -E -q "'(ignore|documentationPath)'" "$settingsFile"; then
+      printf '%s %s\n' "$functionName" "$settingsFile"
+    fi
+  done
+}
+_documentationIndex_UnlinkedIteratorUsage() {
+  usageDocument "${BASH_SOURCE[0]}" documentationIndex_UnlinkedIterator "$@"
+}
+
+#
+# Output a list of all functions in the index as pairs:
+#
+#     functionName functionSettings
+#
+# Usage: {fn} cacheDirectory
+#
+# Argument: cacheDirectory - Required. Directory. Index cache directory.
+# See: documentationIndex_Lookup
+# See: documentationIndex_LinkDocumentationPaths
+#
+documentationIndex_FunctionIterator() {
+  local cacheDirectory functionIndexPath
+  local functionName settingsFile
+  local cleanFlag=
+
+  cacheDirectory=
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --clean)
+        cleanFlag=1
+        ;;
+      *)
+        if [ -z "$cacheDirectory" ]; then
+          cacheDirectory="$1"
+          if [ ! -d "$cacheDirectory" ]; then
+            _documentationIndex_FunctionIteratorUsage "$errorArgument" "cacheDirectory must be a directory"
+            return $?
+          fi
+          if ! functionIndexPath="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
+            _documentationIndex_FunctionIteratorUsage "$errorArgument"
+            return $?
+          fi
+        else
+          _documentationIndex_FunctionIteratorUsage "$errorArgument" "Unknown argument $1"
+          return $?
+        fi
+        ;;
+    esac
+    shift
+  done
+  if [ -z "$cacheDirectory" ]; then
+    _documentationIndex_FunctionIteratorUsage "$errorArgument" "cacheDirectory required"
+    return $?
+  fi
+  find "$functionIndexPath/index" -type f -print | sort | while read -r functionName; do
+    functionName=$(basename "$functionName")
+    if ! settingsFile="$(documentationIndex_Lookup --settings "$cacheDirectory" "$functionName")"; then
+      settingsFile='-'
+    fi
+    printf "%s %s\n" "$functionName" "$settingsFile"
+  done
+}
+_documentationIndex_FunctionIteratorUsage() {
+  usageDocument "${BASH_SOURCE[0]}" documentationIndex_UnlinkedIterator "$@"
+}
+
 # Update the documentationPath for all functions defined in documentTemplate
 # Usage: {fn} cacheDirectory documentTemplate documentationPath
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
@@ -248,13 +411,13 @@ documentationFunctionIndex() {
 #
 # and adds the `documentationPath` to it
 #
-# Use with documentationFunctionLookup
+# Use with documentationIndex_Lookup
 #
 # Exit Code: 0 - If success
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
 #
-documentFunctionDocumentationIndex() {
+documentationIndex_LinkDocumentationPaths() {
   local start documentTemplate functionTemplate cacheDirectory checkFiles
   local me
   local settingsFile
@@ -319,7 +482,7 @@ documentFunctionDocumentationIndex() {
   fi
   checkFiles=("$functionTemplate" "$documentTemplate")
   while read -r token; do
-    if ! settingsFile=$(documentationFunctionLookup --settings "$cacheDirectory" "$token"); then
+    if ! settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$token"); then
       continue
     fi
     if ! grep -q "'documentationPath'" "$settingsFile"; then

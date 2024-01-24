@@ -32,6 +32,7 @@ errorArgument=2
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 #
 quoteSedPattern() {
+  local value
   # IDENTICAL quoteSedPattern 6
   value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
   value="${value//\//\\/}"

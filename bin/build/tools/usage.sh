@@ -71,9 +71,12 @@ usageTemplate() {
   return "$exitCode"
 }
 
+# Parses input stream and generates an argument documentation list
+# Input is in the format with "{argument}{delimiter}{description}{newline}" and generates a list of arguments color coded based
+# on whether the word "require" appears in the description.
 #
-# usageArguments delimiter
-#
+# Usage: usageArguments delimiter
+# Argument: delimiter - Required. String. The character to separate name value pairs in the input
 usageArguments() {
   local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription lastLine
 
@@ -90,8 +93,8 @@ usageArguments() {
       argument="${lineTokens[0]}"
       unset "lineTokens[0]"
       lineTokens=("${lineTokens[@]}")
-      argDescription="${lineTokens[*]}"
-      if [ "${argDescription%*equire*}" != "$argDescription" ]; then
+      argDescription=$(lowercase "${lineTokens[*]}")
+      if [ "${argDescription%*require*}" != "$argDescription" ]; then
         printf " %s%s" "$requiredPrefix" "$argument"
       else
         printf " %s[ %s ]" "$optionalPrefix" "$argument"
@@ -143,39 +146,6 @@ usageGenerator() {
 }
 
 #
-# Usage: usageEnvironment [ env0 ... ]
-# Description: Requires environment variables to be set and non-blank
-# Exit Codes: 1 - If any env0 variables bre not set or bre empty.
-# Arguments: env0 string One or more environment variables which should be set and non-empty
-# Deprecated: 2024-01-01
-#
-usageEnvironment() {
-  local e
-  for e in "$@"; do
-    if [ -z "${!e-}" ]; then
-      usageWrapper 1 "Required $e not set"
-      return 1
-    fi
-  done
-}
-
-#
-# Usage: usageWhich [ binary0 ... ]
-# Exit Codes: 1 - If any binary0 are not available within the current path
-# Description: Requires the binaries to be found via `which`
-# fails if not
-# Deprecated: 2023-01-01 Use `usageRequireBinary usage` as a substitute
-#
-usageWhich() {
-  local b
-  for b in "$@"; do
-    if [ -z "$(which "$b")" ]; then
-      usageWrapper 1 "$b is not available in path, not found: $PATH"
-    fi
-  done
-}
-
-#
 # Summary: Check that one or more binaries are installed
 # Usage: {fn} usageFunction binary0 [ ... ]
 # Argument: usageFunction - Required. `bash` function already defined to output usage
@@ -222,4 +192,86 @@ usageRequireEnvironment() {
       return 1
     fi
   done
+}
+
+# Validates a value is not blank and is a directory
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+# Upon success, outputs the directory name trailing slash stripped
+usageArgumentDirectory() {
+  local usageFunction="${1-}" variableName="${2-}" variableValue="${3-}"
+  local noun
+
+  # shellcheck disable=SC2015
+  shift && shift && shift || :
+  noun="${*-directory}"
+  if [ -z "$variableValue" ]; then
+    "$usageFunction" "$errorArgument" "$variableName $noun is required"
+    return $?
+  fi
+  if [ ! -d "$variableValue" ]; then
+    "$usageFunction" "$errorArgument" "$variableName must be a $noun"
+    return $?
+  fi
+  printf "%s\n" "$variableValue"
+}
+
+# Validates a value is not blank and is a file
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+# Upon success, outputs the file name
+usageArgumentFile() {
+  local usageFunction="${1-}" variableName="${2-}" variableValue="${3-}"
+  local noun
+
+  # shellcheck disable=SC2015
+  shift && shift && shift || :
+  noun="${*-file}"
+  if [ -z "$variableValue" ]; then
+    "$usageFunction" "$errorArgument" "$variableName $noun is required"
+    return $?
+  fi
+  if [ ! -f "$variableValue" ]; then
+    "$usageFunction" "$errorArgument" "$variableName must be a $noun"
+    return $?
+  fi
+  printf "%s\n" "$variableValue"
+}
+
+# Validates a value is not blank and is a path with a directory that exists
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+# Upon success, outputs the file name
+usageArgumentFileDirectory() {
+  local usageFunction="${1-}" variableName="${2-}" variableValue="${3-}"
+  local noun directory
+
+  # shellcheck disable=SC2015
+  shift && shift && shift || :
+  noun="${*-file}"
+  if [ -z "$variableValue" ]; then
+    "$usageFunction" "$errorArgument" "$variableName $noun is required"
+    return $?
+  fi
+  directory="$(dirname "$variableValue")"
+  if [ ! -d "$directory" ]; then
+    "$usageFunction" "$errorArgument" "$variableName $noun must be in a directory which exists: $directory"
+    return $?
+  fi
+  printf "%s\n" "$variableValue"
 }

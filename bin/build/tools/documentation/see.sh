@@ -17,10 +17,13 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+# Summary: Link `{SEE:name}` tokens in documentation
+#
+# Post-processes any documentation and replaces tokens in the form `{SEE:name}` with links to documentation.
 #
 # Usage: {fn} cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
 #
-documentationFunctionSeeLinker() {
+documentationIndex_SeeLinker() {
   local cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
   local start linkPattern linkPatternFile
   local matchingFile matchingToken cleanToken
@@ -114,14 +117,14 @@ documentationFunctionSeeLinker() {
         tokenName="SEE_$cleanToken"
         sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
         {
-          if settingsFile=$(documentationFunctionLookup --settings "$cacheDirectory" "$matchingToken"); then
+          if settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
             cat "$settingsFile"
             linkPattern="$seeFunctionLink"
             templateFile="$seeFunctionTemplate"
             __dumpNameValue "linkType" "function"
-            # __dumpNameValue "file" "$(documentationFunctionLookup --file "$cacheDirectory" "$matchingToken")"
-            __dumpNameValue "line" "$(documentationFunctionLookup --line "$cacheDirectory" "$matchingToken")"
-          elif settingsFile=$(documentationFunctionLookup --file "$cacheDirectory" "$matchingToken"); then
+            # __dumpNameValue "file" "$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken")"
+            __dumpNameValue "line" "$(documentationIndex_Lookup --line "$cacheDirectory" "$matchingToken")"
+          elif settingsFile=$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken"); then
             linkPattern="$seeFileLink"
             templateFile="$seeFileTemplate"
             __dumpNameValue "linkType" "file"

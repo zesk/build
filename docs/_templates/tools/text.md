@@ -3,6 +3,8 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+## Filters
+
 {quoteSedPattern}
 {quoteBashString}
 
@@ -14,6 +16,10 @@
 {trimWords}
 {trimSpace}
 {trimSpacePipe}
+
+{listTokens}
+
+## Finding or Calculating
 
 {stringOffset}
 {maximumFieldLength}
@@ -35,6 +41,7 @@
 
 {lowercase}
 {shaPipe}
+{cachedShaPipe}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

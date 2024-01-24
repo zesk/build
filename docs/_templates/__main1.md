@@ -1,11 +1,11 @@
-# daemontools Tools
+# {title}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{daemontoolsInstallService}
+{content}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK})
+Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})

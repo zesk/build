@@ -16,16 +16,24 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
+- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
 - `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+
+#### Examples
+
+_documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-### `usageArguments` - usageArguments delimiter
+#### Usage
 
-usageArguments delimiter
+    usageArguments delimiter
+
+#### Arguments
+
+- `delimiter` - Required. String. The character to separate name value pairs in the input
 
 #### Exit codes
 
@@ -95,7 +103,59 @@ Should look into an actual file template, probably
 
 #### See Also
 
-- [function usageDocument](./docs//tools/usage.md) - [Generates console usage output for a script using documentation tools](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L29)
+- [function usageDocument](./docs/tools/usage.md) - [Generates console usage output for a script using documentation tools](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L30)
+
+
+### `usageArgumentFileDirectory` - Validates a value is not blank and is a path
+
+Validates a value is not blank and is a path with a directory that exists
+Upon success, outputs the file name
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentFile` - Validates a value is not blank and is a file
+
+Validates a value is not blank and is a file
+Upon success, outputs the file name
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentDirectory` - Validates a value is not blank and is a directory
+
+Validates a value is not blank and is a directory
+Upon success, outputs the directory name trailing slash stripped
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

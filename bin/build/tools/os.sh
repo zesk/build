@@ -32,7 +32,7 @@ buildCacheDirectory() {
     useDir="./"
   fi
   suffix="$(printf "%s/" "$@")"
-  printf "%s/%s/%s" "${useDir%%/}" ".build" "${suffix%%/}"
+  printf "%s/%s/%s\n" "${useDir%%/}" ".build" "${suffix%%/}"
 }
 
 #
@@ -413,7 +413,7 @@ newestFile() {
     fi
     shift
   done
-  printf "%s" "$theFile"
+  printf "%s\n" "$theFile"
 }
 
 #

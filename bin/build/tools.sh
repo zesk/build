@@ -8,6 +8,8 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+# documentTemplate: ./docs/_templates/__function.md
+#
 
 toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
@@ -75,6 +77,9 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
 # shellcheck source=/dev/null
 . "$toolsDir/version.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/markdown.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/documentation.sh"
