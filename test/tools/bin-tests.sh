@@ -16,7 +16,7 @@ testNewRelease() {
 }
 tests+=(testVersionSort)
 testVersionSort() {
-  assertGreaterThan $(($(gitVersionListgits | wc -l) + 0)) 0
+  assertGreaterThan $(($(gitVersionList | wc -l) + 0)) 0
 }
 
 tests+=(testBuildSetup)
