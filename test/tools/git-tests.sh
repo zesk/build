@@ -8,8 +8,14 @@
 #
 declare -a tests
 
+errorEnvironment=1
+
 tests+=(testGitVersionList)
 testGitVersionList() {
+  if ! git pull --tags >/dev/null 2>/dev/null; then
+    consoleError "Unable to pull git tags ... failed" 1>&2
+    return "$errorEnvironment"
+  fi
   echo "PWD: $(pwd)"
   echo Version List:
   gitVersionList

@@ -51,7 +51,10 @@ buildDocsUpdateUnlinked() {
       return $errorEnvironment
     fi
   else
-    cp "$template.$$" "$template"
+    if ! mv -f "$template.$$" "$template"; then
+      consoleError "Unable to replace $template" 1>&2
+      return $errorEnvironment
+    fi
     statusMessage consoleInfo "Updated $template with $total unlinked $(plural "$total" function functions)"
   fi
   rm -f "$unlinkedFunctions" 2>/dev/null || :
