@@ -9,25 +9,6 @@
 set -eou pipefail
 
 declare -a tests
-tests+=(testMarkdownFormatList)
-
-assertMarkdownFormatList() {
-  assertEquals "$1" "$(printf %s "$2" | markdownFormatList)" "markdownFormatList \"$2\" !== \"$1\""
-}
-testMarkdownFormatList() {
-  # shellcheck disable=SC2016
-  assertMarkdownFormatList '- `dude` - Hello' 'dude - Hello' || return $?
-  # shellcheck disable=SC2016
-  assertMarkdownFormatList '- `--extension extension` - A description of extension' '--extension extension - A description of extension' || return $?
-  # shellcheck disable=SC2016
-  assertMarkdownFormatList '- `expected` - Expected string' '- `expected` - Expected string' || return $?
-
-  assertMarkdownFormatList '- Hello' '- Hello' || return $?
-  assertMarkdownFormatList '- Hello' 'Hello' || return $?
-  # shellcheck disable=SC2016
-  assertMarkdownFormatList '- `--arg1` - Argument One' '--arg1 - Argument One' || return $?
-}
-
 tests+=(testDocumentation)
 testDocumentation() {
   local testOutput
@@ -36,7 +17,7 @@ testDocumentation() {
   testOutput=$(mktemp)
   assertExitCode 0 inArray "summary" summary usage argument example reviewed
 
-  bashExtractDocumentation "$(bashFindFunctionFile . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
+  bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
   set -a
   # shellcheck source=/dev/null
   . "$testOutput"
@@ -44,7 +25,7 @@ testDocumentation() {
   assertEquals "Assert two strings are not equal" "${summary}" || return $?
   assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.' "${description}" || return $?
 
-  bashExtractDocumentation "$(bashFindFunctionFile . assertEquals)" assertEquals >"$testOutput" || return $?
+  bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertEquals)" assertEquals >"$testOutput" || return $?
   set -a
   # shellcheck source=/dev/null
   . "$testOutput" || return $?

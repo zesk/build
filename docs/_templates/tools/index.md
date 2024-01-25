@@ -14,11 +14,14 @@ Once included, all functions here are available for use and may affect your buil
 - [Amazon Web Services Functions](./aws.md)
 - [BitBucket Functions](./bitbucket.md)
 - [Color Functions](./colors.md)
+- [Console Color Functions](./consoleColor.md)
 - [Date Functions](./date.md)
 - [Debug Functions](./debug.md)
 - [Docker Functions](./docker.md)
 - [Documentation Functions](./documentation.md)
 - [Git Functions](./git.md)
+- [Interactive Functions](./interactive.md)
+- [log Functions](./log.md)
 - [npm Functions](./npm.md)
 - [Operating System Functions](./os.md)
 - [Pipeline Functions](./pipeline.md)
@@ -29,6 +32,8 @@ Once included, all functions here are available for use and may affect your buil
 - [Usage Functions](./usage.md)
 - [URL Functions](./url.md)
 - [Vendor Functions](./vendor.md)
+- [Version Functions](./version.md)
+- [Web Functions](./web.md)
 
 ## Templates
 

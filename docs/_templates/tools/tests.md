@@ -3,8 +3,9 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{testShellScripts}
 {validateShellScripts}
+{validateShellScript}
+{validateFileExtensionContents}
 {validateFileContents}
 
 [⬅ Return to index](index.md)

@@ -17,30 +17,34 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+# Summary: Link `{SEE:name}` tokens in documentation
+#
+# Post-processes any documentation and replaces tokens in the form `{SEE:name}` with links to documentation.
 #
 # Usage: {fn} cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
 #
-documentationFunctionSeeLinker() {
+documentationIndex_SeeLinker() {
   local cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
   local start linkPattern linkPatternFile
   local matchingFile matchingToken cleanToken
   local seePattern='\{SEE:([^}]+)\}'
 
   start=$(beginTiming)
+  # Argument parsing
   cacheDirectory=
   documentationDirectory=
+  seeFunctionTemplate=
+  seeFunctionLink=
+  seeFileTemplate=
+  seeFileLink=
   while [ $# -gt 0 ]; do
     case $1 in
       --help)
-        usageDocument 0 "${BASH_SOURCE[0]}" "${FUNCNAME[0]}"
+        usageDocument 0 "$(basename "${BASH_SOURCE[0]}")" "${FUNCNAME[0]}"
         return $?
         ;;
       *)
         if [ -z "$cacheDirectory" ]; then
-          if [ ! -d "$1" ]; then
-            consoleError "cacheDirectory is not a directory $cacheDirectory" 1>&2
-            return $errorArgument
-          fi
           cacheDirectory="${1%%/}"
         elif [ -z "$documentationDirectory" ]; then
           if [ ! -d "$1" ]; then
@@ -49,10 +53,6 @@ documentationFunctionSeeLinker() {
           fi
           documentationDirectory="${1%%/}"
         elif [ -z "$seeFunctionTemplate" ]; then
-          if [ ! -f "$1" ]; then
-            consoleError "seeFunctionTemplate is not a file $seeFunctionTemplate" 1>&2
-            return $errorArgument
-          fi
           seeFunctionTemplate="${1##./}"
           shift || :
           if [ $# -eq 0 ]; then
@@ -61,10 +61,6 @@ documentationFunctionSeeLinker() {
           fi
           seeFunctionLink="$1"
         elif [ -z "$seeFileTemplate" ]; then
-          if [ ! -f "$1" ]; then
-            consoleError "$seeFileTemplate is not a file $seeFileTemplate" 1>&2
-            return $errorArgument
-          fi
           seeFileTemplate="${1##./}"
           shift || :
           if [ $# -eq 0 ]; then
@@ -83,6 +79,10 @@ documentationFunctionSeeLinker() {
     consoleError "cacheDirectory is required" 1>&2
     return $errorArgument
   fi
+  if [ ! -d "$cacheDirectory" ]; then
+    consoleError "cacheDirectory is not a directory $cacheDirectory" 1>&2
+    return $errorArgument
+  fi
   if [ -z "$documentationDirectory" ]; then
     consoleError "documentationDirectory is required" 1>&2
     return $errorArgument
@@ -91,10 +91,19 @@ documentationFunctionSeeLinker() {
     consoleError "seeFunctionTemplate is required" 1>&2
     return $errorArgument
   fi
+  if [ ! -f "$seeFunctionTemplate" ]; then
+    consoleError "seeFunctionTemplate is not a file $seeFunctionTemplate" 1>&2
+    return $errorArgument
+  fi
   if [ -z "$seeFileTemplate" ]; then
     consoleError "seeFileTemplate is required" 1>&2
     return $errorArgument
   fi
+  if [ ! -f "$seeFileTemplate" ]; then
+    consoleError "$seeFileTemplate is not a file $seeFileTemplate" 1>&2
+    return $errorArgument
+  fi
+
   seeVariablesFile=$(mktemp)
   linkPatternFile=$(mktemp)
   variablesSedFile=$(mktemp)
@@ -108,17 +117,16 @@ documentationFunctionSeeLinker() {
         tokenName="SEE_$cleanToken"
         sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
         {
-          if settingsFile=$(documentationFunctionLookup --settings "$cacheDirectory" "$matchingToken"); then
+          if settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
             cat "$settingsFile"
             linkPattern="$seeFunctionLink"
             templateFile="$seeFunctionTemplate"
             __dumpNameValue "linkType" "function"
-            # __dumpNameValue "file" "$(documentationFunctionLookup --file "$cacheDirectory" "$matchingToken")"
-            __dumpNameValue "line" "$(documentationFunctionLookup --line "$cacheDirectory" "$matchingToken")"
-          elif settingsFile=$(documentationFunctionLookup --file "$cacheDirectory" "$matchingToken"); then
+            # __dumpNameValue "file" "$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken")"
+            __dumpNameValue "line" "$(documentationIndex_Lookup --line "$cacheDirectory" "$matchingToken")"
+          elif settingsFile=$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken"); then
             linkPattern="$seeFileLink"
             templateFile="$seeFileTemplate"
-            __dumpNameValue "documentationPath" "${settingsFile%%.sh}.md"
             __dumpNameValue "linkType" "file"
             __dumpNameValue "file" "$settingsFile"
           else

@@ -57,5 +57,25 @@ Stop build debugging if it is enabled
 
 - [function buildDebugStart](./docs/tools/debug.md) - [Start build debugging if it is enabled.](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L30)
 
+### `isBashDebug` - Returns whether the shell has the debugging flag set
+
+Returns whether the shell has the debugging flag set
+
+Useful if you need to temporarily enable or disable it.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `isErrorExit` - Returns whether the shell has the error exit flag set
+
+Returns whether the shell has the error exit flag set
+
+Useful if you need to temporarily enable or disable it.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

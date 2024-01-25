@@ -3,6 +3,8 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+## Filters
+
 
 ### `quoteSedPattern` - Quote sed strings for shell use
 
@@ -71,7 +73,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
@@ -95,7 +97,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
@@ -119,7 +121,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
@@ -157,8 +159,7 @@ Remove words from the end of a phrase
 
 #### Examples
 
-printf "%s: %s
-" "Summary:" "$(trimWords 10 $description)"
+printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
 
 #### Exit codes
 
@@ -212,6 +213,38 @@ Removes leading and trailing spaces in input, also removes blank lines I think
 #### Depends
 
     awk
+
+
+### `listTokens` - listTokens
+
+listTokens
+
+#### Usage
+
+    listTokens prefix suffix < input > output
+
+#### Arguments
+
+- `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
+- `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Local cache
+
+None.
+
+#### Environment
+
+None.
+
+#### Depends
+
+    sed quoteSedPattern
+
+## Finding or Calculating
 
 
 ### `stringOffset` - Outputs the integer offset of `needle` if found as substring
@@ -274,8 +307,7 @@ Example:
 #### Examples
 
 count=$(($(wc -l < $foxSightings) + 0))
-    printf "We saw %d %s.
-" "$count" "$(plural $count fox foxes)"
+    printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
     n=$(($(date +%s)) - start))
     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
 
@@ -371,10 +403,8 @@ Format text and align it right using spaces.
 
 #### Examples
 
-printf "%s: %s
-" "$(alignRight 20 Name)" "$name"
-    printf "%s: %s
-" "$(alignRight 20 Profession)" "$occupation"
+printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
+    printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
                 Name: Juanita
           Profession: Engineer
 
@@ -397,10 +427,8 @@ Format text and align it left using spaces.
 
 #### Examples
 
-printf "%s: %s
-" "$(alignLeft 14 Name)" "$name"
-    printf "%s: %s
-" "$(alignLeft 14 Profession)" "$occupation"
+printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
+    printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
     Name          : Tyrone
     Profession    : Engineer
 
@@ -482,6 +510,41 @@ shaPipe < "$fileName"
 #### Environment
 
 DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
+
+#### Depends
+
+    shasum
+
+### `cachedShaPipe` - SHA1 checksum of standard input
+
+Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
+
+You can use this as a pipe or pass in arguments which are files to be hashed.
+
+Speeds up shaPipe using modification dates of the files instead.
+
+The cacheDirectory
+
+#### Usage
+
+    cachedShaPipe cacheDirectory [ filename ]
+
+#### Arguments
+
+- `cacheDirectory` - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+
+#### Examples
+
+cachedShaPipe "$cacheDirectory" < "$fileName"
+    cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
+
+#### Sample Output
+
+    cf7861b50054e8c680a9552917b43ec2b9edae2b
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 #### Depends
 

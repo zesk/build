@@ -5,7 +5,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: nothing
-# Docs: contextOpen ./docs/_templates/tools/vendor.md
+# Docs: o ./docs/_templates/tools/vendor.md
+# Test: o ./docs/_templates/tools/vendor.md
 
 export XPC_SERVICE_NAME
 export VSCODE_SHELL_INTEGRATION

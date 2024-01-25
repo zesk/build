@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# version-list.sh - List versions
+# markdown_removeUnfinishedSections.sh - List versions
 #
 # Depends: git
 #

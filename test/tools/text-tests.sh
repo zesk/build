@@ -18,36 +18,53 @@ testText() {
 
 tests+=(testEscapeSingleQuotes)
 testEscapeSingleQuotes() {
-  assertEquals "Ralph \"Dude\" Brown" "$(escapeSingleQuotes "Ralph \"Dude\" Brown")"
-  assertEquals "Dude\\'s place" "$(escapeSingleQuotes "Dude's place")"
+  assertEquals "Ralph \"Dude\" Brown" "$(escapeSingleQuotes "Ralph \"Dude\" Brown")" || return $?
+  # shellcheck disable=SC1003
+  assertEquals 'Dude\'"'"'s place' "$(escapeSingleQuotes "Dude's place")" || return $?
 }
 testEscapeDoubleQuotes() {
-  assertEquals "Ralph \\\"Dude\\\" Brown" "$(escapeDoubleQuotes "Ralph \"Dude\" Brown")"
-  assertEquals "Dude's place" "$(escapeDoubleQuotes "Dude's place")"
+  assertEquals "Ralph \\\"Dude\\\" Brown" "$(escapeDoubleQuotes "Ralph \"Dude\" Brown")" || return $?
+
+  assertEquals "Dude's place" "$(escapeDoubleQuotes "Dude's place")" || return $?
 }
 
 tests+=(testQuoteSedPattern)
 testQuoteSedPattern() {
-  assertEquals "\\[" "$(quoteSedPattern '[')"
-  assertEquals "\\]" "$(quoteSedPattern ']')"
+  local value mappedValue
+  assertEquals "\\[" "$(quoteSedPattern "[")" || return $?
+  assertEquals "\\]" "$(quoteSedPattern "]")" || return $?
+  # shellcheck disable=SC1003
+  assertEquals '\\' "$(quoteSedPattern '\')" || return $?
+  assertEquals "\\/" "$(quoteSedPattern "/")" || return $?
+  # Fails in code somewhere
+  read -d"" -r value <<'EOF' || :
+  __                  _   _
+ / _|_   _ _ __   ___| |_(_) ___  _ __  ___
+| |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+|  _| |_| | | | | (__| |_| | (_) | | | \__ \
+|_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+EOF
+
+  mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
+  assertEquals "$mappedValue" "$value" || return $?
 }
 
 tests+=(testMapValue)
 testMapValue() {
   tempEnv=$(mktemp)
 
-  assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")"
+  assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
   printf "%s=%s\n" "foo" "bar" >>"$tempEnv"
 
-  assertEquals "bar" "$(mapValue "$tempEnv" "{foo}")"
+  assertEquals "bar" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
   rm "$tempEnv"
 }
 
 tests+=(testLowercase)
 testLowercase() {
-  assertOutputEquals lowercase lowercase LoWerCaSe
+  assertOutputEquals lowercase lowercase LoWerCaSe || return $?
 }
 
 _uptoDateTest() {

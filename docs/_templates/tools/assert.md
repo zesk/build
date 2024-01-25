@@ -5,6 +5,7 @@
 
 {assertEquals}
 {assertNotEquals}
+{assertContains}
 
 {assertGreaterThan}
 {assertGreaterThanOrEqual}
@@ -15,6 +16,7 @@
 {assertExitCode}
 {assertNotExitCode}
 
+{assertOutputEquals}
 {assertOutputContains}
 {assertOutputDoesNotContain}
 

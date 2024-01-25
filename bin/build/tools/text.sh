@@ -33,7 +33,7 @@ errorArgument=2
 #
 quoteSedPattern() {
   # IDENTICAL quoteSedPattern 6
-  value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
+  value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
@@ -60,7 +60,7 @@ escapeDoubleQuotes() {
 # Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeSingleQuotes() {
-  printf %s "${1//\'/\\\'}"
+  printf %s "$1" | sed "s/'/\\\'/g"
 }
 
 #
@@ -345,7 +345,9 @@ alignLeft() {
 #
 lowercase() {
   while [ $# -gt 0 ]; do
-    printf %s "$1" | tr '[:upper:]' '[:lower:]'
+    if [ -n "$1" ]; then
+      printf "%s\n" "$1" | tr '[:upper:]' '[:lower:]'
+    fi
     shift
   done
 }

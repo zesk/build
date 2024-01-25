@@ -20,25 +20,34 @@ errorEnvironment=1
 errorArgument=2
 
 # Usage: usageDocument functionDefinitionFile functionName exitCode [ ... ]
-# Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashFindFunctionFiles` or `bashFindFunctionFile`.
+# Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
 # Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 #
 # Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
 #
 # Simplifies documentation and has it in one place for shell and online.
 #
+# Example:     _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 usageDocument() {
   local functionDefinitionFile functionName exitCode variablesFile
 
-  functionDefinitionFile="$1"
-  shift || return "$errorArgument"
-  functionName="$1"
-  shift || return "$errorArgument"
+  functionDefinitionFile="${1-}"
+  if [ ! -f "$functionDefinitionFile" ]; then
+    _documentationTemplateCompileUsage "$errorArgument" "${FUNCNAME[0]}: File \"$1\" not found" 1>&2
+    return $?
+  fi
+  shift || :
+  functionName="${1}"
+  if [ -z "$functionName" ]; then
+    _documentationTemplateCompileUsage "$errorArgument" "${FUNCNAME[0]}: No function need" 1>&2
+    return $?
+  fi
+  shift || :
   exitCode="${1-0}"
   shift || :
 
   variablesFile=$(mktemp)
-  if ! bashExtractDocumentation "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
+  if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
       consoleError "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" 1>&2
       return $errorEnvironment
@@ -53,85 +62,100 @@ usageDocument() {
 
     # shellcheck source=/dev/null
     source "$variablesFile"
-
     usageTemplate "$fn" "$(printf %s "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | simpleMarkdownToConsole)" "$exitCode" "$@"
   )
   return "$exitCode"
 }
 
+# Summary: Convert a template file to a documentation file using templates
 #
-# Usage: {fn} cacheDirectory documentTemplate functionTemplate targetFile
+# Usage: {fn} [ --env envFile ] cacheDirectory documentTemplate functionTemplate templateFile targetFile
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
+# Argument: --env envFile - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
 # Argument: documentTemplate - Required. The document template containing functions to define
-# Argument: templateFile - Required. Function template file to generate documentation for functions
+# Argument: functionTemplate - Required. The template for individual functions defined in the `documentTemplate`.
 # Argument: targetFile - Required. Target file to generate
-# Summary: Convert a template into documentation for Bash functions
 # Convert a template which contains bash functions into full-fledged documentation.
 #
 # The process:
 #
 # 1. `documentTemplate` is scanned for tokens which are assumed to represent Bash functions
 # 1. `functionTemplate` is used to generate the documentation for each function
-# 1. Functions are looked up in `sourceCodeDirectory` and
+# 1. Functions are looked up in `cacheDirectory` using indexing functions and
 # 1. Template used to generate documentation and compiled to `targetFile`
 #
-# If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
-# to regenerate each time.
+# `cacheDirectory` is required - build an index using `documentationIndexIndex` prior to using this.
 #
-# See: documentFunctionTemplateDirectory
+# See: documentationIndex_Lookup
+# See: documentationIndexIndex
 # Exit Code: 0 - If success
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
 #
-documentFunctionsWithTemplate() {
-  local start documentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
+documentationTemplateCompile() {
+  local start documentTemplate mappedDocumentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
 
   local targetDirectory settingsFile
-  local reason base
-  local error
+  local base
+  local envFiles
+  local error tokenName
   local documentTokensFile
+  local envChecksum envChecksumCache
+  local compiledTemplateCache
 
+  cacheDirectory=
+  documentTemplate=
+  functionTemplate=
+  targetFile=
   forceFlag=
+  envFiles=()
   while [ $# -gt 0 ]; do
+    if [ -z "$1" ]; then
+      _documentationTemplateCompileUsage $errorArgument "Blank argument"
+      return $?
+    fi
     case "$1" in
+      --env)
+        shift || :
+        if [ ! -f "$1" ]; then
+          _documentationTemplateCompileUsage $errorArgument "--env requires a file: $1"
+          return $?
+        fi
+        envFiles+=("$1")
+        ;;
       --force)
         forceFlag=1
-        shift
-        break
         ;;
       *)
-        break
+        # Load arguments one-by-one
+        if [ -z "$cacheDirectory" ]; then
+          cacheDirectory=$1
+        elif [ -z "$documentTemplate" ]; then
+          documentTemplate=$1
+        elif [ -z "$functionTemplate" ]; then
+          functionTemplate=$1
+        elif [ -z "$targetFile" ]; then
+          targetFile=$1
+        else
+          _documentationTemplateCompileUsage $errorArgument "Unknown argument"
+          return $?
+        fi
         ;;
     esac
-    shift
+    shift || :
   done
 
-  start=$(beginTiming)
-  cacheDirectory=${1-}
-  shift || return $errorArgument
-  documentTemplate="${1-}"
-  shift || return $errorArgument
-  functionTemplate="${1-}"
-  shift || return $errorArgument
-  targetFile="${1-}"
+  if ! start=$(beginTiming); then
+    _documentationTemplateCompileUsage $errorEnvironment "beginTiming failed"
+    return $?
+  fi
 
-  if [ ! -d "$cacheDirectory" ]; then
-    consoleError "$cacheDirectory was specified but is not a directory" 1>&2
-    return "$errorArgument"
-  fi
-  cacheDirectory=${cacheDirectory%%/}
-
-  if [ ! -f "$documentTemplate" ]; then
-    consoleError "Source file $documentTemplate is not a directory" 1>&2
-    return "$errorArgument"
-  fi
-  if [ ! -f "$functionTemplate" ]; then
-    consoleError "$functionTemplate is not a template file" 1>&2
-    return "$errorArgument"
-  fi
-  if [ ! -d "$(dirname "$targetFile")" ]; then
-    consoleError "$targetFile directory does not exist" 1>&2
-    return "$errorArgument"
+  # Validate arguments
+  if ! cacheDirectory=$(usageArgumentDirectory _documentationTemplateCompileUsage cacheDirectory "$cacheDirectory") ||
+    ! documentTemplate="$(usageArgumentFile _documentationTemplateCompileUsage documentTemplate "$documentTemplate")" ||
+    ! functionTemplate="$(usageArgumentFile _documentationTemplateCompileUsage functionTemplate "$functionTemplate")" ||
+    ! targetFile="$(usageArgumentFileDirectory _documentationTemplateCompileUsage targetFile "$targetFile")"; then
+    return $?
   fi
 
   # echo cacheDirectory="$cacheDirectory"
@@ -139,38 +163,89 @@ documentFunctionsWithTemplate() {
   # echo functionTemplate="$functionTemplate"
   # echo targetFile="$targetFile"
 
-  reason=""
   base="$(basename "$targetFile")"
   base="${base%%.md}"
   statusMessage consoleInfo "Generating $base ..."
 
   documentTokensFile=$(mktemp)
-  # subshell to hide environment tokens
-  listTokens <"$documentTemplate" >"$documentTokensFile"
-  checkFiles=("$functionTemplate" "$documentTemplate")
-  while read -r token; do
-    if ! settingsFile=$(documentationFunctionLookup --source "$cacheDirectory" "$token"); then
+  mappedDocumentTemplate=$(mktemp)
+  if ! envChecksum=$(
+    set -a
+    for envFile in "${envFiles[@]+${envFiles[@]}}"; do
+      # shellcheck source=/dev/null
+      . "$envFile"
+    done
+    mapEnvironment <"$documentTemplate" >"$mappedDocumentTemplate"
+    if [ ${#envFiles[@]} -gt 0 ]; then
+      shaPipe "${envFiles[@]}" | shaPipe
+    else
+      printf %s 'no-environment'
+    fi
+  ); then
+    _documentationTemplateCompileUsage "$errorEnvironment" "listTokens failed"
+    return $?
+  fi
+
+  if ! listTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
+    _documentationTemplateCompileUsage "$errorEnvironment" "listTokens failed"
+    return $?
+  fi
+  #
+  # Look at source file for each function
+  #
+  if ! envChecksumCache=$(requireDirectory "$cacheDirectory/envChecksum"); then
+    _documentationTemplateCompileUsage "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
+    return $?
+  fi
+  envChecksumCache="$envChecksumCache/$envChecksum"
+  if [ ! -f "$envChecksumCache" ]; then
+    touch "$envChecksumCache"
+  fi
+  if ! compiledTemplateCache=$(requireDirectory "$cacheDirectory/compiledTemplateCache"); then
+    _documentationTemplateCompileUsage "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
+    return $?
+  fi
+  # Environment change will affect this template
+  # Function template change will affect this template
+  checkFiles=("$envChecksumCache" "$functionTemplate")
+  while read -r tokenName; do
+    if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
       continue
     fi
+    # Source file of any token in the documentTemplate change will affect this template
     checkFiles+=("$settingsFile")
   done <"$documentTokensFile"
-  if test $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+${checkFiles[@]}}"; then
+
+  # As well, document template change will affect this template
+  if test $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]}" "$documentTemplate"; then
     (
+      # subshell to hide environment tokens
       set -a
-      while read -r token; do
-        if ! settingsFile=$(documentationFunctionLookup "$cacheDirectory" "$token"); then
-          error="Unable to find \"$token\" (using index \"$cacheDirectory\")"
+      for envFile in "${envFiles[@]+${envFiles[@]}}"; do
+        # shellcheck source=/dev/null
+        . "$envFile"
+      done
+      while read -r tokenName; do
+        if ! settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$tokenName"); then
+          error="Unable to find \"$tokenName\" (using index \"$cacheDirectory\")"
           consoleError "$error" 1>&2
-          declare "$token"="$error"
+          declare "$tokenName"="$error"
           continue
         fi
-        if ! grep -q "'documentationPath'" "$settingsFile"; then
-          statusMessage consoleInfo "Adding documentationPath to $(consoleValue "[$token]") settings"
-          __dumpNameValue documentationPath "$targetFile" >>"$settingsFile"
+        # echo "Checking TEMPLATE files isNewestFile" "$compiledTemplateCache/$tokenName" "$settingsFile" "${checkFiles[@]}"
+        if test $forceFlag || [ ! -f "$compiledTemplateCache/$tokenName" ] || ! isNewestFile "$compiledTemplateCache/$tokenName" "$settingsFile" "${checkFiles[@]}"; then
+          statusMessage consoleInfo "Generating $base ... $(consoleValue "[$tokenName]") ..."
+          export "${tokenName?}"
+          if ! bashDocumentationTemplate "$settingsFile" "$functionTemplate" >"$compiledTemplateCache/$tokenName"; then
+            mv "$compiledTemplateCache/$tokenName" "$compiledTemplateCache/$tokenName.failed"
+            declare "$tokenName"="ExitCode bashDocumentationTemplate $tokenName $settingsFile $functionTemplate: $?"
+          else
+            declare "$tokenName"="$(cat "$compiledTemplateCache/$tokenName")"
+          fi
+        else
+          statusMessage consoleInfo "Using cached $base ... $(consoleValue "[$tokenName]") ..."
+          declare "$tokenName"="$(cat "$compiledTemplateCache/$tokenName")"
         fi
-        statusMessage consoleInfo "Generating $base ... $(consoleValue "[$token]") ... $reason"
-        export "${token?}"
-        declare "$token"="$(bashDocumentationTemplate "$settingsFile" "$functionTemplate")"
       done <"$documentTokensFile"
       if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
         if [ ! -f "$targetFile" ] || ! diff -q "$documentTemplate" "$targetFile" >/dev/null; then
@@ -178,14 +253,19 @@ documentFunctionsWithTemplate() {
           cp "$documentTemplate" "$targetFile"
         fi
       else
-        statusMessage consoleSuccess "Writing $targetFile using $templateFile ..."
-        mapEnvironment <"$templateFile" >"$targetFile"
+        statusMessage consoleSuccess "Writing $targetFile using $documentTemplate ..."
+        mapEnvironment <"$documentTemplate" >"$targetFile"
+        set +a
       fi
       clearLine
       rm "$documentTokensFile"
+      touch "$envChecksumCache"
     )
   fi
   statusMessage consoleSuccess "$(reportTiming "$start" Generated "$targetFile" in)"
+}
+_documentationTemplateCompileUsage() {
+  usageDocument "${BASH_SOURCE[0]}" "documentationTemplateCompile" "$@"
 }
 
 # Usage: {fn} cacheDirectory documentDirectory functionTemplate targetDirectory
@@ -204,54 +284,59 @@ documentFunctionsWithTemplate() {
 # If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 # to regenerate each time.
 #
-# See: documentFunctionsWithTemplate
+# See: documentationTemplateCompile
 # Exit Code: 0 - If success
 # Exit Code: 1 - Any template file failed to generate for any reason
 # Exit Code: 2 - Argument error
 #
-documentFunctionTemplateDirectory() {
-  local start templateDirectory functionTemplate targetDirectory cacheDirectory forceFlag=()
-  local reason base targetFile
+documentationTemplateDirectoryCompile() {
+  local start templateDirectory functionTemplate targetDirectory cacheDirectory passArgs
+  local base targetFile
   local documentTokensFile
 
+  cacheDirectory=
+  templateDirectory=
+  functionTemplate=
+  targetDirectory=
+  passArgs=()
   while [ $# -gt 0 ]; do
+    if [ -z "$1" ]; then
+      _documentationTemplateDirectoryCompileUsage $errorArgument "Blank argument"
+      return $?
+    fi
     case "$1" in
       --force)
-        forceFlag=(--force)
-        shift
-        break
+        passArgs+=("$1")
+        ;;
+      --env)
+        passArgs+=("$1")
+        shift || :
+        passArgs+=("$1")
         ;;
       *)
-        break
+        if [ -z "$cacheDirectory" ]; then
+          cacheDirectory="$1"
+        elif [ -z "$templateDirectory" ]; then
+          templateDirectory="$1"
+        elif [ -z "$functionTemplate" ]; then
+          functionTemplate="$1"
+        elif [ -z "$targetDirectory" ]; then
+          targetDirectory="$1"
+        else
+          _documentationTemplateDirectoryCompileUsage $errorArgument "Unknown argument $1"
+          return $?
+        fi
         ;;
     esac
     shift
   done
 
   start=$(beginTiming)
-  cacheDirectory="$1"
-  shift || return $errorArgument
-  templateDirectory="${1%%/}"
-  shift || return $errorArgument
-  functionTemplate="$1"
-  shift || return $errorArgument
-  targetDirectory="${1%%/}"
-
-  if [ ! -d "$cacheDirectory" ]; then
-    consoleError "$cacheDirectory was specified but is not a directory" 1>&2
-    return "$errorArgument"
-  fi
-  if [ ! -d "$templateDirectory" ]; then
-    consoleError "$templateDirectory is not a directory" 1>&2
-    return "$errorArgument"
-  fi
-  if [ ! -f "$functionTemplate" ]; then
-    consoleError "$functionTemplate is not a template file" 1>&2
-    return "$errorArgument"
-  fi
-  if [ ! -d "$targetDirectory" ]; then
-    consoleError "$targetDirectory is not a directory" 1>&2
-    return "$errorArgument"
+  if ! cacheDirectory=$(usageArgumentDirectory _documentationTemplateDirectoryCompileUsage "cacheDirectory" "$cacheDirectory") ||
+    ! templateDirectory=$(usageArgumentDirectory _documentationTemplateDirectoryCompileUsage "templateDirectory" "$templateDirectory") ||
+    ! functionTemplate=$(usageArgumentFile _documentationTemplateDirectoryCompileUsage "functionTemplate" "$functionTemplate") ||
+    ! targetDirectory=$(usageArgumentDirectory _documentationTemplateDirectoryCompileUsage "targetDirectory" "$targetDirectory"); then
+    return $?
   fi
 
   exitCode=0
@@ -259,7 +344,7 @@ documentFunctionTemplateDirectory() {
   for templateFile in "$templateDirectory/"*.md; do
     base="$(basename "$templateFile")"
     targetFile="$targetDirectory/$base"
-    if ! documentFunctionsWithTemplate "${forceFlag[@]+${forceFlag[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
+    if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       consoleError "Failed to generate $targetFile" 1>&2
       exitCode=$errorEnvironment
     fi
@@ -269,6 +354,9 @@ documentFunctionTemplateDirectory() {
   reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(consoleInfo "$targetDirectory") "
   return $exitCode
 }
+_documentationTemplateDirectoryCompileUsage() {
+  usageDocument "${BASH_SOURCE[0]}" documentationTemplateDirectoryCompile "$@"
+}
 
 #
 # Document a function and generate a function template (markdown)
@@ -276,7 +364,7 @@ documentFunctionTemplateDirectory() {
 # Usage: bashDocumentFunction file function template
 # Argument: file - Required. File in which the function is defined
 # Argument: function - Required. The function name which is defined in `file`
-# Argument: template - Required. A markdown template to use to map values. Post-processed with `removeUnfinishedSections`
+# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
 # Exit code: 0 - Success
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
@@ -294,7 +382,7 @@ bashDocumentFunction() {
   envFile=$(mktemp)
   printf "%s\n" "#!/usr/bin/env bash" >>"$envFile"
   printf "%s\n" "set -eou pipefail" >>"$envFile"
-  if ! bashExtractDocumentation "$file" "$fn" >>"$envFile"; then
+  if ! bashDocumentation_Extract "$file" "$fn" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
   bashDocumentationTemplate "$envFile" "$template"
@@ -305,16 +393,16 @@ bashDocumentFunction() {
 
 # See: bashDocumentFunction
 # Document a function and generate a function template (markdown). To custom format any
-# of the fields in this, write functions in the form `_bashDocumentFormatter_${name}Format` such that
+# of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}Format` such that
 # name matches the variable name (lowercase alphanumeric characters and underscores).
 #
 # Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
-# sample function `_bashDocumentFormatter_exit_code`.
+# sample function `_bashDocumentationFormatter_exit_code`.
 #
-# See: _bashDocumentFormatter_exit_code
+# See: _bashDocumentationFormatter_exit_code
 # Usage: {fn} settingsFile template
 # Argument: settingsFile - Required. Cached documentation settings.
-# Argument: template - Required. A markdown template to use to map values. Post-processed with `removeUnfinishedSections`
+# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
 # Exit code: 0 - Success
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
@@ -342,12 +430,12 @@ bashDocumentationTemplate() {
     fi
     set +a
     while read -r envVar; do
-      formatter="_bashDocumentFormatter_${envVar}"
+      formatter="_bashDocumentationFormatter_${envVar}"
       if [ "$(type -t "$formatter")" = "function" ]; then
         declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
       fi
     done < <(environmentVariables)
-    if ! mapEnvironment <"$template" | grep -v '# shellcheck' | removeUnfinishedSections; then
+    if ! mapEnvironment <"$template" | grep -v '# shellcheck' | markdown_removeUnfinishedSections; then
       return $?
     fi
   ); then
@@ -369,20 +457,21 @@ __dumpNameValue() {
 
 #
 # Usage: __dumpNameValuePrefix prefix name [ value0 value1 ... ]
-# Argument: `prefix` - Literal string value to prefix each argument with
+# Argument: `prefix` - Literal string value to prefix each text line with
 # Argument: `name` - Shell value to output
 # Argument: `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
 #
 __dumpNameValuePrefix() {
   local prefix=$1 varName=$2
-  printf "if ! read -r -d '' '%s' <<'%s'\n" "$varName" "EOF" # Single quote means no interpolation
+  printf "export '%s'; " "$varName"
+  printf "read -r -d '' '%s' <<'%s' || :\n" "$varName" "EOF" # Single quote means no interpolation
   shift
   shift
   while [ $# -gt 0 ]; do
     printf "%s%s\n" "$prefix" "$(escapeSingleQuotes "$1")"
     shift
   done
-  printf "%s\n""then\n    export '%s'\nfi\n" "EOF" "$varName"
+  printf "%s\n" "EOF"
 }
 
 # This basically just does `a=${b}` in the output
@@ -397,7 +486,7 @@ __dumpAliasedValue() {
 }
 
 #
-# Uses `bashFindFunctionFiles` to locate bash function, then
+# Uses `bashDocumentation_FindFunctionDefinitions` to locate bash function, then
 # extracts the comments preceding the function definition and converts it
 # into a set of name/value pairs.
 #
@@ -425,7 +514,7 @@ __dumpAliasedValue() {
 # Argument: `function` - Function defined in `file`
 # Depends: colors.sh text.sh prefixLines
 #
-bashExtractDocumentation() {
+bashDocumentation_Extract() {
   local maxLines=1000 definitionFile=$1 fn=$2 definitionFile
   local line name value desc tempDoc foundNames
   local base
@@ -530,28 +619,28 @@ bashExtractDocumentation() {
 # Note this function succeeds if it finds all occurrences of each function, but
 # may output partial results with a failure.
 #
-# Usage: bashFindFunctionFiles directory fnName0 [ fnName1... ]
+# Usage: bashDocumentation_FindFunctionDefinitions directory fnName0 [ fnName1... ]
 # Argument: `directory` - The directory to search
 # Argument: `fnName0` - A function to find the file in which it is defined
 # Argument: `fnName1...` - Additional functions are found are output as well
 # Exit Code: 0 - if one or more function definitions are found
 # Exit Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
-# Example:     bashFindFunctionFiles . bashFindFunctionFiles
+# Example:     bashDocumentation_FindFunctionDefinitions . bashDocumentation_FindFunctionDefinitions
 # Example:     ./bin/build/tools/autodoc.sh
 # Platform: `stat` is not cross-platform
 # Summary: Find where a function is defined in a directory of shell scripts
 #
-bashFindFunctionFiles() {
+bashDocumentation_FindFunctionDefinitions() {
   local directory="${1%%/}"
-  local functionPattern fn linesOutput phraseCount
+  local functionPattern fn linesOutput phraseCount f
 
   shift
   phraseCount=${#@}
   foundOne=$(mktemp)
   while [ "$#" -gt 0 ]; do
     fn=$1
-    functionPattern="^$fn\(\) \{|^# $fn documentation"
+    functionPattern="^$fn\(\) \{|^function $fn \{"
     find "$directory" -type f -name '*.sh' ! -path '*/.*' | while read -r f; do
       if grep -E -q "$functionPattern" "$f"; then
         printf "%s\n" "$f"
@@ -569,16 +658,16 @@ bashFindFunctionFiles() {
 #
 # Succeeds IFF only one version of a function is found.
 #
-# Usage: bashFindFunctionFile directory fn
+# Usage: bashDocumentation_FindFunctionDefinition directory fn
 # Argument: `directory` - The directory to search
 # Argument: `fn` - A function to find the file in which it is defined
 # Exit Code: 0 - if one or more function definitions are found
 # Exit Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
-# Example:     bashFindFunctionFile . usage
+# Example:     bashDocumentation_FindFunctionDefinition . usage
 # Summary: Find single location where a function is defined in a directory of shell scripts
-#
-bashFindFunctionFile() {
+# See: bashDocumentation_FindFunctionDefinitions
+bashDocumentation_FindFunctionDefinition() {
   local definitionFiles directory="${1%%/}" fn="$2"
 
   if [ ! -d "$directory" ]; then
@@ -590,123 +679,63 @@ bashFindFunctionFile() {
     return $errorArgument
   fi
   definitionFiles=$(mktemp)
-  if ! bashFindFunctionFiles "$directory" "$fn" >"$definitionFiles"; then
+  if ! bashDocumentation_FindFunctionDefinitions "$directory" "$fn" >"$definitionFiles"; then
     rm "$definitionFiles"
     consoleError "$fn not found in $directory" 1>&2
-    return 1
+    return "$errorEnvironment"
   fi
   definitionFile="$(head -1 "$definitionFiles")"
   rm "$definitionFiles"
   if [ -z "$definitionFile" ]; then
     consoleError "No files found for $fn in $directory" 1>&2
-    return 1
+    return "$errorEnvironment"
   fi
   printf %s "$definitionFile"
 }
 
 #
-# Given a file containing Markdown, remove header and any section which has a variable still
+# Format code blocks (does markdown_FormatList)
 #
-# This EXPLICITLY ignores variables with a colon to work with `{SEE:other}` syntax
-#
-# This operates as a filter on a file. A section is any group of contiguous lines beginning with a line
-# which starts with a `#` character and then continuing to but not including the next line which starts with a `#`
-# character or the end of file; which corresponds roughly to headings in Markdown.
-#
-# If a section contains an unused variable in the form `{variable}`, the entire section is removed from the output.
-#
-# This can be used to remove sections which have variables or values which are optional.
-#
-# If you need a section to always be displayed; provide default values or blank values for the variables in those sections
-# to prevent removal.
-#
-# Usage: removeUnfinishedSections < inputFile > outputFile
-# Argument: None
-# Depends: read printf
-# Exit Code: 0
-# Environment: None
-# Example:     map.sh < $templateFile | removeUnfinishedSections
-#
-removeUnfinishedSections() {
-  local section=() foundVar=
-  while IFS= read -r line; do
-    if [ "${line:0:1}" = "#" ]; then
-      if ! test "$foundVar"; then
-        printf '%s\n' "${section[@]+${section[@]}}"
-      fi
-      section=()
-      foundVar=
-    fi
-    if [ "$line" != "$(printf "%s" "$line" | sed 's/{[^:}]*}//g')" ]; then
-      foundVar=1
-    fi
-    section+=("$line")
-  done
-  if ! test $foundVar; then
-    printf '%s\n' "${section[@]+${section[@]}}"
-  fi
-}
-
-#
-# Simple function to make list-like things more list-like in Markdown
-#
-# 1. remove leading "dash space" if it exists (`- `)
-# 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
-# 3. Prefix each line with a "dash space" (`- `)
-#
-markdownFormatList() {
-  local wordClass='[-.`_A-Za-z0-9[:space:]]' spaceClass='[[:space:]]'
-  # shellcheck disable=SC2016
-  sed \
-    -e "s/^- //1" \
-    -e "s/\`\($wordClass*\)\`${spaceClass}-${spaceClass}/\1 - /1" \
-    -e "s/\($wordClass*\)${spaceClass}-${spaceClass}/- \`\1\` - /1" \
-    -e "s/^\([^-]\)/- \1/1"
-}
-
-#
-# Format code blocks (does markdownFormatList)
-#
-_bashDocumentFormatter_exit_code() {
-  markdownFormatList
+_bashDocumentationFormatter_exit_code() {
+  markdown_FormatList
 }
 
 #
 # Format usage blocks (indents as a code block)
 #
-_bashDocumentFormatter_usage() {
+_bashDocumentationFormatter_usage() {
   prefixLines "    "
 }
 
 # #
 # # Format example blocks (indents as a code block)
 # #
-# _bashDocumentFormatter_exampleFormat() {
-#     markdownFormatList
+# _bashDocumentationFormatter_exampleFormat() {
+#     markdown_FormatList
 # }
-_bashDocumentFormatter_output() {
+_bashDocumentationFormatter_output() {
   prefixLines "    "
 }
 
 #
-# Format argument blocks (does markdownFormatList)
+# Format argument blocks (does markdown_FormatList)
 #
-_bashDocumentFormatter_argument() {
-  markdownFormatList
+_bashDocumentationFormatter_argument() {
+  markdown_FormatList
 }
 
 #
 # Format depends blocks (indents as a code block)
 #
-_bashDocumentFormatter_depends() {
+_bashDocumentationFormatter_depends() {
   prefixLines "    "
 }
 
 #
 # Format see block
 #
-_bashDocumentFormatter_see() {
-  local seeItems=()
+_bashDocumentationFormatter_see() {
+  local seeItems
   while IFS=" " read -r -a seeItems; do
     printf "{SEE:%s}\n" "${seeItems[@]+${seeItems[@]}}"
   done || :

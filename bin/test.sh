@@ -69,7 +69,7 @@ _testUsage() {
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 #
 buildTestSuite() {
-  local quietLog allTests runTests
+  local quietLog allTests runTests shortTest
 
   quietLog=$(buildQuietLog "$(basename "${BASH_SOURCE[0]}")")
 
@@ -80,7 +80,13 @@ buildTestSuite() {
   trap messyTestCleanup EXIT QUIT TERM
 
   messyOption=
-  allTests=(version colors type os pipeline identical aws text deploy documentation assert usage docker api tests aws bin)
+  allTests=(git log version colors type os pipeline identical aws text deploy markdown documentation assert usage docker api tests aws bin)
+  while read -r shortTest; do
+    if ! inArray "$shortTest" "${allTests[@]}"; then
+      consoleError "MISSING $shortTest in allTests"
+      allTests+=("$shortTest")
+    fi
+  done < <(shortTestCodes)
   runTests=()
 
   testTracing=options

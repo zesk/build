@@ -21,7 +21,7 @@ set -eou pipefail
 
 quoteSedPattern() {
   # IDENTICAL quoteSedPattern 6
-  value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
+  value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"

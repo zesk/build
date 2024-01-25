@@ -32,7 +32,7 @@ buildCacheDirectory() {
     useDir="./"
   fi
   suffix="$(printf "%s/" "$@")"
-  printf "%s/%s/%s" "${useDir%%/}" ".build" "${suffix%%/}"
+  printf "%s/%s/%s\n" "${useDir%%/}" ".build" "${suffix%%/}"
 }
 
 #
@@ -413,7 +413,7 @@ newestFile() {
     fi
     shift
   done
-  printf "%s" "$theFile"
+  printf "%s\n" "$theFile"
 }
 
 #
@@ -638,4 +638,30 @@ processVirtualMemoryAllocation() {
 
 _processVirtualMemoryAllocationUsage() {
   usageDocument "bin/build/tools/$(basename "${BASH_SOURCE[0]}")" processMemoryUsage "$@"
+}
+
+#
+# Outputs value of virtual memory allocated for a process, value is in kilobytes
+# Usage: {fn} file
+# Argument: file - Required. File to get size of.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Environment error
+#
+fileSize() {
+  local size opts
+
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/OSTYPE.sh"
+
+  case "$(lowercase "${OSTYPE}")" in
+    *darwin*) opts=("-f" "%z") ;;
+    *) opts=('-c%s') ;;
+  esac
+  while [ $# -gt 0 ]; do
+    if ! size="$(stat "${opts[@]}" "$1")"; then
+      return $errorEnvironment
+    fi
+    printf "%s\n" "$size"
+    shift
+  done
 }

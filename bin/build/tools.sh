@@ -8,6 +8,8 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+# documentTemplate: ./docs/_templates/__function.md
+#
 
 toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 
@@ -48,6 +50,8 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/apt.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/os.sh"
+# shellcheck source=/dev/null
+. "$toolsDir/log.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/usage.sh"
@@ -77,13 +81,16 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/version.sh"
 
 # shellcheck source=/dev/null
+. "$toolsDir/markdown.sh"
+
+# shellcheck source=/dev/null
 . "$toolsDir/documentation.sh"
 
 # shellcheck source=/dev/null
-. "$toolsDir/documentation-index.sh"
+. "$toolsDir/documentation/index.sh"
 
 # shellcheck source=/dev/null
-. "$toolsDir/documentation-see.sh"
+. "$toolsDir/documentation/see.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/vendor.sh"

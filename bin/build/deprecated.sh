@@ -38,7 +38,7 @@ deprecatedCleanup() {
     fi
   done
   # v0.6.0
-  bin/build/cannon.sh markdownListify markdownFormatList "${ignoreStuff[@]}"
+  bin/build/cannon.sh markdownListify markdown_FormatList "${ignoreStuff[@]}"
 
   # v0.6.1
   bin/build/cannon.sh 'usageWhich ' 'usageRequireBinary usage ' "${ignoreStuff[@]}"

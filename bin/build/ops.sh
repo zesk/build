@@ -8,7 +8,8 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-
+# documentTemplate: ./docs/_templates/__function.md
+#
 opsDir="$(dirname "${BASH_SOURCE[0]}")/ops"
 
 # shellcheck source=/dev/null

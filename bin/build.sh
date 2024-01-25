@@ -4,6 +4,7 @@
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
+# documentTemplate: ./docs/_templates/__binary.md
 
 set -eou pipefail
 

@@ -53,3 +53,5 @@ File `{file}`, function `{fn}` was reviewed {reviewed}.
 {error}
 
 [⬅ Return to top](index.md)
+
+Copyright &copy; 2024 [{vendor}](https://marketacumen.com/?crcat=code&crsource=zesk/build&crcampaign=docs&crkeyword={title})
