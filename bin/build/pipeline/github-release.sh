@@ -6,7 +6,7 @@
 #
 # Release something on GitHub
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 set -eou pipefail
@@ -79,29 +79,29 @@ githubRelease() {
   repoName="${GITHUB_REPOSITORY_NAME-}"
   while [ $# -gt 0 ]; do
     case "$1" in
-    --token)
-      shift || _githubReleaseUsage $errorArgument "Missing token argument"
-      accessToken="$1"
-      ;;
-    --owner)
-      shift || _githubReleaseUsage $errorArgument "Missing owner argument"
-      repoOwner="$1"
-      ;;
-    --name)
-      shift || _githubReleaseUsage $errorArgument "Missing name argument"
-      repoName="$1"
-      ;;
-    --expire)
-      shift || _githubReleaseUsage $errorArgument "Missing expire argument"
-      accessTokenExpire="$1"
-      ;;
-    *)
-      if [ -z "$1" ]; then
-        _githubReleaseUsage "$errorArgument" "Blank argument"
-        return $?
-      fi
-      extras+=("$1")
-      ;;
+      --token)
+        shift || _githubReleaseUsage $errorArgument "Missing token argument"
+        accessToken="$1"
+        ;;
+      --owner)
+        shift || _githubReleaseUsage $errorArgument "Missing owner argument"
+        repoOwner="$1"
+        ;;
+      --name)
+        shift || _githubReleaseUsage $errorArgument "Missing name argument"
+        repoName="$1"
+        ;;
+      --expire)
+        shift || _githubReleaseUsage $errorArgument "Missing expire argument"
+        accessTokenExpire="$1"
+        ;;
+      *)
+        if [ -z "$1" ]; then
+          _githubReleaseUsage "$errorArgument" "Blank argument"
+          return $?
+        fi
+        extras+=("$1")
+        ;;
     esac
     shift
   done

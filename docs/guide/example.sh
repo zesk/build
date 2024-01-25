@@ -2,7 +2,7 @@
 #
 # Sample Usage generation using comments
 #
-# Copyright &copy; 2023 Market Acument, Inc.
+# Copyright &copy; 2024 Market Acument, Inc.
 set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."

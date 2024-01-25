@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Map environment to values in a target file
 #
@@ -13,23 +13,20 @@
 # Argument: env0 - Optional. If specified, then ONLY these environment variables are mapped; all others are ignored. If not specified, then all environment variables are mapped.
 # Argument: ... - Optional. Additional environment variables to map can be specified as additional arguments
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 errorArgument=1
 
 set -eou pipefail
 
-#
-# Quote sed strings for shell use
-#
-mapQuoteSedPattern() {
-    # IDENTICAL quoteSedPattern 6
-    value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
-    value="${value//\//\\/}"
-    value="${value//[/\\[}"
-    value="${value//]/\\]}"
-    value="${value//$'\n'/\\n}"
-    printf %s "$value"
+quoteSedPattern() {
+  # IDENTICAL quoteSedPattern 6
+  value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value="${value//\//\\/}"
+  value="${value//[/\\[}"
+  value="${value//]/\\]}"
+  value="${value//$'\n'/\\n}"
+  printf %s "$value"
 }
 
 #
@@ -38,26 +35,30 @@ mapQuoteSedPattern() {
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-mapEnvironmentVariables() {
-    # IDENTICAL environmentVariables 1
-    declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+# Usage: {fn}
+#
+environmentVariables() {
+  # IDENTICAL environmentVariables 1
+  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
-generateSedFile() {
-    local sedFile=$1 value
+_mapEnvironmentGenerateSedFile() {
+  # IDENTICAL _mapEnvironmentGenerateSedFile 12
+  local sedFile=$1 value
 
-    shift
-    for i in "$@"; do
-        case "$i" in
-        *[%{}]*) ;;
-        LD_*) ;;
-        *)
-            printf "s/%s/%s/g\n" "$(mapQuoteSedPattern "$prefix$i$suffix")" "$(mapQuoteSedPattern "${!i-}")" >>"$sedFile"
-            ;;
-        esac
-    done
+  shift
+  for i in "$@"; do
+    case "$i" in
+      *[%{}]*) ;;
+      LD_*) ;;
+      *)
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" >>"$sedFile"
+        ;;
+    esac
+  done
 }
 
+#
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
@@ -71,49 +72,50 @@ generateSedFile() {
 # Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world map.sh NAME PLACE
+#
 mapEnvironment() {
-    local prefix suffix sedFile ee e rs
+  # IDENTICAL mapEnvironment 79 120
+  local prefix suffix sedFile ee e rs
 
-    prefix='{'
-    suffix='}'
+  prefix='{'
+  suffix='}'
 
-    while [ $# -gt 0 ]; do
-        case $1 in
-        --prefix)
-            shift || usage $errorArgument "--prefix missing a value"
-            prefix="$1"
-            ;;
-        --suffix)
-            shift || usage $errorArgument "--suffix missing a value"
-            suffix="$1"
-            ;;
-        *)
-            break
-            ;;
-        esac
-        shift
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --prefix)
+        shift || usage $errorArgument "--prefix missing a value"
+        prefix="$1"
+        ;;
+      --suffix)
+        shift || usage $errorArgument "--suffix missing a value"
+        suffix="$1"
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift
+  done
+
+  sedFile=$(mktemp)
+
+  if [ $# -eq 0 ]; then
+    ee=()
+    for e in $(environmentVariables); do
+      ee+=("$e")
     done
+    _mapEnvironmentGenerateSedFile "$sedFile" "${ee[@]}"
+  else
+    _mapEnvironmentGenerateSedFile "$sedFile" "$@"
+  fi
 
-    cd "$(dirname "${BASH_SOURCE[0]}")"
-    sedFile=$(mktemp)
-
-    if [ $# -eq 0 ]; then
-        ee=()
-        for e in $(mapEnvironmentVariables); do
-            ee+=("$e")
-        done
-        generateSedFile "$sedFile" "${ee[@]}"
-    else
-        generateSedFile "$sedFile" "$@"
-    fi
-
-    if ! sed -f "$sedFile"; then
-        rs=$?
-        cat "$sedFile" 1>&2
-        rm "$sedFile"
-        return $rs
-    fi
+  if ! sed -f "$sedFile"; then
+    rs=$?
+    cat "$sedFile" 1>&2
     rm "$sedFile"
+    return $rs
+  fi
+  rm "$sedFile"
 }
 
 mapEnvironment "$@"

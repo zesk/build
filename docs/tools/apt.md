@@ -32,10 +32,6 @@ If fails, runs `buildFailed` and outputs the log file.
 
 Confirms that `binary` is installed after installation succeeds.
 
-#### Usage
-
-    whichApt binary aptInstallPackage
-
 #### Arguments
 
 - `binary` - The binary to look for
@@ -75,6 +71,17 @@ aptInstall shellcheck
 
 - `0` - If `apt-get` is not installed, returns 0.
 - `1` - If `apt-get` fails to install the packages
+
+### `aptUpToDate` - OS upgrade and potential restart
+
+OS upgrade and potential restart
+Progress is written to stderr
+Result is `uptodate` or `restart` written to stdout
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Failed due to issues with environment
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

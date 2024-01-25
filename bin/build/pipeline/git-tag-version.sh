@@ -7,15 +7,12 @@
 #
 # Depends: apt git docker
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
 # IDENTICAL errorArgument 1
 errorArgument=2
-
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
 
 # IDENTICAL bashHeader 5
 set -eou pipefail
@@ -24,16 +21,18 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# shellcheck source=/dev/null
+. ./bin/build/env/BUILD_MAXIMUM_TAGS_PER_VERSION.sh
+
 init=$(beginTiming)
 
 gitInstall
 
 _gitTagVersionUsage() {
-  usageTemplate "./bin/build/pipeline/$me" "gitTagVersion" "$@"
+  usageTemplate "./bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" "gitTagVersion" "$@"
   return $?
 }
 
-export BUILD_MAXIMUM_TAGS_PER_VERSION
 
 # fn: {base}
 #
@@ -63,19 +62,19 @@ gitTagVersion() {
   versionSuffix=
   while [ $# -gt 0 ]; do
     case $1 in
-    --suffix)
-      shift
-      versionSuffix=$1
-      if [ -z "$versionSuffix" ]; then
-        _gitTagVersionUsage $errorArgument "$me: --suffix is blank"
+      --suffix)
+        shift
+        versionSuffix=$1
+        if [ -z "$versionSuffix" ]; then
+          _gitTagVersionUsage $errorArgument "--suffix is blank"
+          return $?
+        fi
+        shift
+        ;;
+      *)
+        _gitTagVersionUsage $errorArgument "Unknown argument: $1"
         return $?
-      fi
-      shift
-      ;;
-    *)
-      _gitTagVersionUsage $errorArgument "$me: Unknown argument: $1"
-      return $?
-      ;;
+        ;;
     esac
   done
 
@@ -97,7 +96,7 @@ gitTagVersion() {
   echo "$(consoleLabel -n "Previous version is: ") $(consoleValue -n "$previousVersion")"
   echo "$(consoleLabel -n " Release version is: ") $(consoleValue -n "$currentVersion")"
 
-  releaseNotes=./docs/release/$currentVersion.md
+  releaseNotes="$(releaseNotes "$currentVersion")"
 
   if [ ! -f "$releaseNotes" ]; then
     consoleError "Version $currentVersion no release notes \"$releaseNotes\" found, stopping." 1>&2

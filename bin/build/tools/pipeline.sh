@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh text.sh
 #
@@ -343,14 +343,16 @@ _makeEnvironmentUsage() {
 applicationEnvironment() {
   local hook
 
-  export BUILD_TIMESTAMP
-  export APPLICATION_BUILD_DATE
-  export APPLICATION_VERSION
-  export APPLICATION_CHECKSUM
-  export APPLICATION_TAG
-
-  BUILD_TIMESTAMP="$(date +%s)"
-  APPLICATION_BUILD_DATE="$(date -u +"%Y-%m-%d %H:%M:%S")"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_TIMESTAMP.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_BUILD_DATE.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_VERSION.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_ID.sh"
+  # shellcheck source=/dev/null
+  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_TAG.sh"
 
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
@@ -359,9 +361,9 @@ applicationEnvironment() {
       return "$errorEnvironment"
     fi
   fi
-  if [ -z "${APPLICATION_CHECKSUM-}" ]; then
-    hook=application-checksum
-    if ! APPLICATION_CHECKSUM="$(runHook "$hook")"; then
+  if [ -z "${APPLICATION_ID-}" ]; then
+    hook=application-id
+    if ! APPLICATION_ID="$(runHook "$hook")"; then
       consoleError "$hook failed $?" 1>&2
       return "$errorEnvironment"
     fi
@@ -373,7 +375,7 @@ applicationEnvironment() {
       return "$errorEnvironment"
     fi
   fi
-  printf "%s " BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_CHECKSUM APPLICATION_TAG
+  printf "%s " BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
 }
 
 showEnvironment() {
@@ -382,7 +384,7 @@ showEnvironment() {
   export BUILD_TIMESTAMP
   export APPLICATION_BUILD_DATE
   export APPLICATION_VERSION
-  export APPLICATION_CHECKSUM
+  export APPLICATION_ID
   export APPLICATION_TAG
 
   #
@@ -416,9 +418,11 @@ showEnvironment() {
   done
   buildEnvironment=("$@")
 
-  consoleInfo -n "Application #$APPLICATION_VERSION on $APPLICATION_BUILD_DATE ... "
+  printf "%s %s %s %s%s\n" "$(consoleInfo "Application")" "$(consoleMagenta "$APPLICATION_VERSION")" "$(consoleInfo "on")" "$(consoleBoldRed "$APPLICATION_BUILD_DATE")" "$(consoleInfo "...")"
   if buildDebugEnabled; then
-    consoleMagenta -n "(checksum \"$APPLICATION_CHECKSUM\", tag \"$APPLICATION_TAG\", timestamp $BUILD_TIMESTAMP)"
+    consoleNameValue 40 Checksum "$APPLICATION_ID"
+    consoleNameValue 40 Tag "$APPLICATION_TAG"
+    consoleNameValue 40 Timestamp "$BUILD_TIMESTAMP"
   fi
   missing=()
   for e in "${requireEnvironment[@]}"; do
@@ -429,7 +433,7 @@ showEnvironment() {
       echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
     fi
   done
-  for e in "${buildEnvironment[@]}"; do
+  for e in "${buildEnvironment[@]+"${buildEnvironment[@]}"}"; do
     if [ -z "${!e:-}" ]; then
       printf "%s %s\n" "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleSuccess "** Blank **")" 1>&2
     else
@@ -449,8 +453,8 @@ showEnvironment() {
 # Create environment file `.env` for build.
 # Environment: APPLICATION_VERSION - reserved and set to `runHook version-current` if not set already
 # Environment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
-# Environment: APPLICATION_TAG - reserved and set to `runHook application-checksum`
-# Environment: APPLICATION_CHECKSUM - reserved and set to `runHook application-tag`
+# Environment: APPLICATION_TAG - reserved and set to `runHook application-id`
+# Environment: APPLICATION_ID - reserved and set to `runHook application-tag`
 #
 makeEnvironment() {
   local missing e requireEnvironment
@@ -488,7 +492,7 @@ makeEnvironment() {
 }
 
 getApplicationDeployVersion() {
-  local p=$1 value appChecksumFile=.deploy/APPLICATION_CHECKSUM
+  local p=$1 value appChecksumFile=.deploy/APPLICATION_ID
 
   if [ ! -d "$p" ]; then
     consoleError "$p is not a directory" 1>&2
@@ -501,7 +505,7 @@ getApplicationDeployVersion() {
   if [ ! -f "$p/.env" ]; then
     return 0
   fi
-  for f in APPLICATION_CHECKSUM APPLICATION_GIT_SHA; do
+  for f in APPLICATION_ID APPLICATION_GIT_SHA; do
     # shellcheck source=/dev/null
     value=$(
       source "$p/.env"
@@ -574,6 +578,7 @@ deployNextVersion() {
     return 1
   fi
 }
+
 #      _   _           _
 #     | | | |_ __   __| | ___
 #     | | | | '_ \ / _` |/ _ \
@@ -612,6 +617,17 @@ undoDeployApplication() {
 
 }
 
+_unwindDeploy() {
+  local deployedApplicationPath=$1
+
+  shift
+  consoleError "$*" 1>&2
+  rm -rf "$deployedApplicationPath" || :
+  return "$errorEnvironment"
+
+}
+
+#
 # Deploy an application from a deployment repository
 #
 # Usage: deployApplication deployHome deployVersion targetPackage applicationPath
@@ -623,9 +639,8 @@ undoDeployApplication() {
 # Example: deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
 deployApplication() {
   local deployHome deployVersion applicationPath deployedApplicationPath
-  local previousApplicationChecksum targetPackageFullPath exitCode=0
+  local previousApplicationPath previousApplicationChecksum targetPackageFullPath exitCode=0
 
-  set -e
   deployHome=$1
   shift
 
@@ -658,21 +673,37 @@ deployApplication() {
 
   if [ ! -d "$deployedApplicationPath" ]; then
     mkdir "$deployedApplicationPath"
-    cd "$deployedApplicationPath"
-    tar xzf "$targetPackageFullPath"
+    if cd "$deployedApplicationPath"; then
+      if ! tar xzf "$targetPackageFullPath"; then
+        return $?
+      fi
+    else
+      _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
+      return $?
+    fi
   fi
 
   deployVersion=$(getApplicationDeployVersion "$deployedApplicationPath")
 
   if [ "$deployVersion" != "$deployVersion" ]; then
-    consoleError "Arg $deployVersion != Computed $deployVersion" 1>&2
-    return 1
+    _unwindDeploy "$deployedApplicationPath" "Arg $deployVersion != Computed $deployVersion"
+    return $?
   fi
 
   if [ -d "$applicationPath/bin/build" ] && [ -d "$applicationPath/bin/hooks" ]; then
-    cd "$applicationPath"
-    runOptionalHook maintenance on
-    cd "$deployedApplicationPath"
+    if cd "$applicationPath"; then
+      if ! runOptionalHook maintenance on; then
+        _unwindDeploy "$deployedApplicationPath" "Turning maintenance on in $applicationPath failed"
+        return $?
+      fi
+      if ! cd "$deployedApplicationPath"; then
+        _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
+        return $?
+      fi
+    else
+      _unwindDeploy "$deployedApplicationPath" "cd $applicationPath failed"
+      return $?
+    fi
   fi
 
   if [ -n "$previousApplicationChecksum" ]; then
@@ -684,43 +715,58 @@ deployApplication() {
   fi
 
   consoleInfo -n "Setting to version $deployVersion ... "
-
-  cd "$deployedApplicationPath"
-  runOptionalHook deploy-start "$applicationPath"
+  if ! cd "$deployedApplicationPath"; then
+    _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
+    return $?
+  fi
+  if ! runOptionalHook deploy-start "$applicationPath"; then
+    _unwindDeploy "$deployedApplicationPath" "runOptionalHook deploy-start failed"
+    return $?
+  fi
   if hasHook deploy-move; then
     runHook deploy-move "$applicationPath"
   else
     if [ ! -d "$deployHome/$previousApplicationChecksum" ]; then
       if ! mkdir -p "$deployHome/$previousApplicationChecksum"; then
-        consoleError "Unable to create deploy home/previous checksum \"$deployHome/$previousApplicationChecksum\"" 1>&2
-        return "$errorEnvironment"
+        _unwindDeploy "$deployedApplicationPath" "Unable to create deploy home/previous checksum \"$deployHome/$previousApplicationChecksum\""
+        return $?
       fi
     fi
-    if [ -d "$deployHome/$previousApplicationChecksum/app" ]; then
-      if ! rm -rf "$deployHome/$previousApplicationChecksum/app"; then
-        consoleError "Unable to delete \"$deployHome/$previousApplicationChecksum/app\"" 1>&2
-        return "$errorEnvironment"
+    previousApplicationPath="$deployHome/$previousApplicationChecksum/app/"
+    if [ -d "$previousApplicationPath" ]; then
+      if ! rm -rf "$previousApplicationPath"; then
+        _unwindDeploy "$deployedApplicationPath" "Unable to delete \"$previousApplicationPath\""
+        return $?
       fi
     fi
     if ! cd "$deployHome"; then
-      consoleError "Unable to cd to \"$deployHome\"" 1>&2
+      _unwindDeploy "$deployedApplicationPath" "Unable to cd to \"$deployHome\""
+      return $?
+    fi
+    # COPY is safest
+    if ! cp -R "${applicationPath%%/}" "$previousApplicationPath"; then
+      _unwindDeploy "$deployedApplicationPath" "Unable to copy \"$applicationPath\" \"$previousApplicationPath\"" 1>&2
       return "$errorEnvironment"
     fi
-    if ! mv "$applicationPath" "$deployHome/$previousApplicationChecksum/app"; then
-      consoleError "Unable to move \"$applicationPath\" \"$deployHome/$previousApplicationChecksum/app\"" 1>&2
-      return "$errorEnvironment"
+    if ! mv "$applicationPath" "$applicationPath.$$"; then
+      _unwindDeploy "$deployedApplicationPath" "Unable to move $applicationPath to $applicationPath.$$"
+      return $?
     fi
-    if ! mv "$deployedApplicationPath" "$applicationPath"; then
+    if mv "$deployedApplicationPath" "$applicationPath"; then
+      if ! rm -rf "$applicationPath.$$"; then
+        consoleError "ERROR: Deleting $applicationPath.$$ resulted in exit code $?" 1>&2
+      fi
+    else
       consoleError "Unable to do FINAL mv \"$deployedApplicationPath\" \"$applicationPath\" attempting UNDO" 1>&2
-      if ! mv "$deployHome/$previousApplicationChecksum/app" "$applicationPath"; then
-        consoleError "Unable to UNDO FINAL mv \"$deployHome/$previousApplicationChecksum/app\" \"$applicationPath\", system is unstable" 1>&2
+      if ! mv "$applicationPath.$$" "$applicationPath"; then
+        _unwindDeploy "$deployedApplicationPath" "Unable to UNDO FINAL mv \"$applicationPath.$$\" \"$applicationPath\", system is BROKEN"
       fi
       return "$errorEnvironment"
     fi
   fi
   if ! cd "$applicationPath"; then
-    consoleError "Unable to do cd \"$applicationPath\" can not run optional hooks - UNSTABLE" 1>&2
-    return "$errorEnvironment"
+    consoleError "$deployedApplicationPath" "Unable to do cd \"$applicationPath\" can not run optional hooks - UNSTABLE" 1>&2
+    exitCode=$errorEnvironment
   fi
   if ! runOptionalHook deploy-finish; then
     consoleError "Deploy finish failed" 1>&2
@@ -732,4 +778,125 @@ deployApplication() {
   fi
   consoleSuccess "Completed"
   return "$exitCode"
+}
+
+_remoteDeployFinishUsage() {
+  usageDocument "bin/build/tools/pipeline.sh" remoteDeployFinish "$@"
+  return $?
+}
+
+# This is run on the remote system after deployment; environment files are correct.
+# It is run inside the deployment home directory in the new application folder.
+#
+# Current working directory on deploy is `deployHome/applicationId/app`.
+# Current working directory on cleanup is `applicationHome/`
+# Current working directory on undo is `applicationHome/`
+#
+# applicationId - Required. String. Should match APPLICATION_ID in .env
+# deployPath - Required. String. Path where the deployments database is on remote system.
+# applicationPath - Required. String. Path on the remote system where the application is live.
+# --undo - Revert changes just made
+# --cleanup - Cleanup after success
+# --debug - Enable debugging. Defaults to `BUILD_DEBUG`
+#
+remoteDeployFinish() {
+  local targetPackage undoFlag cleanupFlag applicationId applicationPath debuggingFlag start width
+
+  if ! usageRequireBinary _remoteDeployFinishUsage git; then
+    return $?
+  fi
+
+  if ! dotEnvConfigure; then
+    consoleError "remoteDeployFinish: Unable to dotEnvConfigure" 1>&2
+    return $?
+  fi
+
+  targetPackage=${BUILD_TARGET:-app.tar.gz}
+
+  undoFlag=
+  cleanupFlag=
+  applicationId=
+  applicationPath=
+  debuggingFlag=
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --debug)
+        debuggingFlag=1
+        ;;
+      --cleanup)
+        cleanupFlag=1
+        ;;
+      --undo)
+        undoFlag=1
+        ;;
+      *)
+        if [ -z "$applicationId" ]; then
+          applicationId=$1
+        elif [ -z "$deployHome" ]; then
+          deployHome=$1
+        elif [ -z "$applicationPath" ]; then
+          applicationPath=$1
+          if [ ! -d "$applicationPath" ]; then
+            if ! mkdir -p "$applicationPath"; then
+              usage "$errorEnvironment" "Can not create $applicationPath"
+            else
+              consoleWarning "Created $applicationPath"
+            fi
+          fi
+        else
+          usage "$errorArgument" "Unknown parameter $1"
+        fi
+        ;;
+    esac
+    shift
+  done
+
+  if test "${BUILD_DEBUG-}"; then
+    debuggingFlag=1
+  fi
+  if test "$debuggingFlag"; then
+    consoleWarning "Debugging is enabled"
+    set -x
+  fi
+
+  #   ____             _
+  #  |  _ \  ___ _ __ | | ___  _   _
+  #  | | | |/ _ \ '_ \| |/ _ \| | | |
+  #  | |_| |  __/ |_) | | (_) | |_| |
+  #  |____/ \___| .__/|_|\___/ \__, |
+  #          |_|            |___/
+  if test $undoFlag && test $cleanupFlag; then
+    _remoteDeployFinishUsage "$errorArgument" "--cleanup and --undo are mutually exclusive"
+  fi
+
+  start=$(beginTiming)
+  width=50
+  consoleNameValue $width "Host:" "$(uname -n)"
+  consoleNameValue $width "Deployment Path:" "$deployHome"
+  consoleNameValue $width "Application path:" "$applicationPath"
+  consoleNameValue $width "Application checksum:" "$applicationId"
+
+  if test $cleanupFlag; then
+    if ! cd "$applicationPath"; then
+      consoleError "Unable to change directory to $applicationPath, exiting" 1>&2
+      return $errorEnvironment
+    fi
+    consoleInfo -n "Cleaning up ..."
+    if hasHook deploy-cleanup; then
+      if ! runHook deploy-cleanup; then
+        consoleError "Cleanup failed"
+        return $errorEnvironment
+      fi
+    else
+      printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
+    fi
+  elif test $undoFlag; then
+    undoDeployApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
+  else
+    if [ -z "$applicationId" ]; then
+      _remoteDeployFinishUsage "$errorArgument" "No argument applicationId passed"
+    fi
+    deployApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
+  fi
+  reportTiming "$start" "Remote deployment finished in"
 }

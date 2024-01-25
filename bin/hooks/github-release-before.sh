@@ -4,7 +4,7 @@
 #
 # Add any files to your repository here and commit them automatically if they need to be
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -18,7 +18,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Optional hook run during `github-release.sh` before tagging and pushing occurs
 #
 hookGithubReleaseBefore() {
-    consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
+  consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
 }
 
 hookGithubReleaseBefore "$@"

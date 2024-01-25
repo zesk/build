@@ -6,7 +6,7 @@
 #
 # Delete any temporary files left over from deployment and finish deployment.
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -24,7 +24,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # should do wahtever is required to ensure that.
 #
 hookDeployCleanup() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 hookDeployCleanup "$@"

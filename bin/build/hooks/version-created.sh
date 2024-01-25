@@ -2,7 +2,7 @@
 #
 # Run during bin/build/new-release.sh when a new version is created
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader 5

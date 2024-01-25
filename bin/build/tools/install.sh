@@ -2,7 +2,7 @@
 #
 # npm functions
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh os.sh apt.sh
 # bin: npm
@@ -27,7 +27,7 @@ errorEnvironment=1
 # Binary: mariadb-client.sh
 #
 mariadbInstall() {
-    whichApt mariadb mariadb-client "$@"
+  whichApt mariadb mariadb-client "$@"
 }
 
 # Install `python`
@@ -43,7 +43,7 @@ mariadbInstall() {
 # Binary: python.sh
 #
 pythonInstall() {
-    whichApt python python-is-python3 python3 python3-pip "$@"
+  whichApt python python-is-python3 python3 python3-pip "$@"
 }
 
 # Install `php`
@@ -59,7 +59,7 @@ pythonInstall() {
 # Binary: php.sh
 #
 phpInstall() {
-    whichApt php php-cli "$@"
+  whichApt php php-cli "$@"
 }
 
 # Install `docker-compose`
@@ -75,29 +75,29 @@ phpInstall() {
 # Binary: docker-compose.sh
 #
 dockerComposeInstall() {
-    local quietLog
+  local quietLog
 
-    if which docker-compose 2>/dev/null 1>&2; then
-        return 0
-    fi
-    if ! quietLog=$(buildQuietLog dockerComposeInstall); then
-        return "$errorEnvironment"
-    fi
-    if ! pythonInstall "$@"; then
-        return "$errorEnvironment"
-    fi
+  if which docker-compose 2>/dev/null 1>&2; then
+    return 0
+  fi
+  if ! quietLog=$(buildQuietLog dockerComposeInstall); then
+    return "$errorEnvironment"
+  fi
+  if ! pythonInstall "$@"; then
+    return "$errorEnvironment"
+  fi
 
-    consoleInfo -n "Installing docker-compose ... "
-    start=$(beginTiming)
-    if ! pip install docker-compose >"$quietLog" 2>&1; then
-        consoleError "pip install docker-compose failed $?"
-        buildFailed "$quietLog"
-        return "$errorEnvironment"
-    fi
-    if ! which docker-compose 2>/dev/null; then
-        consoleError "docker-compose not found after install"
-        buildFailed "$quietLog"
-        return "$errorEnvironment"
-    fi
-    reportTiming "$start" OK
+  consoleInfo -n "Installing docker-compose ... "
+  start=$(beginTiming)
+  if ! pip install docker-compose >"$quietLog" 2>&1; then
+    consoleError "pip install docker-compose failed $?"
+    buildFailed "$quietLog"
+    return "$errorEnvironment"
+  fi
+  if ! which docker-compose 2>/dev/null; then
+    consoleError "docker-compose not found after install"
+    buildFailed "$quietLog"
+    return "$errorEnvironment"
+  fi
+  reportTiming "$start" OK
 }

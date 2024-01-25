@@ -3,30 +3,46 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-## `bashDocumentFunction`
+## Generating documentation
 
 {bashDocumentFunction}
-{documentFunctionsWithTemplate}
-{documentFunctionTemplateDirectory}
+{documentationTemplateCompile}
+{documentationTemplateDirectoryCompile}
+
+## Documentation Indexing
+
+{documentationIndex_Generate}
+{documentationIndex_Lookup}
+
+# Linking documentation 
+
+{documentationIndex_LinkDocumentationPaths}
+{documentationIndex_SetUnlinkedDocumentationPath}
+{documentationIndex_ShowUnlinked}
+{documentationIndex_FunctionIterator}
+{documentationIndex_UnlinkedIterator}
+{documentationIndex_SeeLinker}
 
 ## Finding documentation
 
-{bashExtractDocumentation}
-{bashFindFunctionFiles}
+{bashDocumentation_Extract}
+{bashDocumentation_FindFunctionDefinitions}
+
+## Usage Utilities
+
+{usageDocument}
 
 ## Documentation Utilities
 
-{removeUnfinishedSections}
-{markdownFormatList}
 {__dumpNameValue}
 {__dumpAliasedValue}
 
 ## `bashDocumentFunction` Formatting
 
-{_bashDocumentFunction_exit_codeFormat}
-{_bashDocumentFunction_usageFormat}
-{_bashDocumentFunction_argumentFormat}
-{_bashDocumentFunction_dependsFormat}
+{_bashDocumentationFormatter_exit_code}
+{_bashDocumentationFormatter_usage}
+{_bashDocumentationFormatter_argument}
+{_bashDocumentationFormatter_depends}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

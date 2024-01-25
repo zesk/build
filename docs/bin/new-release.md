@@ -1,5 +1,5 @@
 
-# `new-release.sh` - Generate a new release notes and bump the version
+# `newRelease` - Generate a new release notes and bump the version
 
 [⬅ Return to top](index.md)
 

@@ -2,7 +2,7 @@
 #
 # Run after tests are run to clean up the environment or artifacts from testing
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -17,7 +17,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # fn: {base}
 hookTestCleanup() {
-    consoleSuccess "Test cleanup does nothing - please rewrite"
+  consoleSuccess "Test cleanup does nothing - please rewrite"
 }
 
 hookTestCleanup "$@"

@@ -5,9 +5,9 @@
 
 Makes all `*.sh` files executable
 
-## Usage
+## Arguments
 
-    makeShellFilesExecutable
+- `findArguments` - Optional. Add arguments to exclude files or paths.
 
 ## Exit codes
 
@@ -19,4 +19,4 @@ Works from the current directory
 
 ## See Also
 
-makeShellFilesExecutable
+- [function makeShellFilesExecutable](./docs/tools/os.md) - [Makes all `*.sh` files executable](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L233)

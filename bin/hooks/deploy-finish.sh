@@ -7,7 +7,7 @@
 # End of deployment to system, update local settings or register server before
 # maintenance is turned off.
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -24,7 +24,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # Example: - Move directories to make deployment final
 hookDeployFinish() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 hookDeployFinish

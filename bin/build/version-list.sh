@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# version-list.sh - List versions
+# markdown_removeUnfinishedSections.sh - List versions
 #
 # Depends: git
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader2 5

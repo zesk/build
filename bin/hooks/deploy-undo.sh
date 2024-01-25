@@ -6,7 +6,7 @@
 #
 # Do any steps after a deployment fails to undo and restore the previous deployment on a host
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # Exit code: 0 - This SHOULD exit successfully always
 hookDeployUndo() {
-    consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 hookDeployUndo

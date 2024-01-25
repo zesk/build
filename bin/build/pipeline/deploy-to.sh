@@ -7,14 +7,14 @@
 # Used to track failed or successful host deployment
 # Must be preserved between pipeline steps
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 #
-# /var/www/DEPLOY/app1/applicationChecksum1/app.tar.gz
-# /var/www/DEPLOY/app1/applicationChecksum1/app/... - app files
-# /var/www/DEPLOY/app1/applicationChecksum1.previous
-# /var/www/DEPLOY/app1/applicationChecksum1.next
+# /var/www/DEPLOY/app1/applicationId1/app.tar.gz
+# /var/www/DEPLOY/app1/applicationId1/app/... - app files
+# /var/www/DEPLOY/app1/applicationId1.previous
+# /var/www/DEPLOY/app1/applicationId1.next
 #
 
 # IDENTICAL errorEnvironment 1
@@ -23,15 +23,15 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-# IDENTICAL me 1
-me="$(basename "${BASH_SOURCE[0]}")"
-
 # IDENTICAL bashHeader 5
 set -eou pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
+
+# shellcheck source=/dev/null
+. ./bin/build/env/HOME.sh
 
 sshHome="$HOME/.ssh"
 knownHostsFile="$sshHome/known_hosts"
@@ -40,11 +40,11 @@ deployedHostArtifact="./.deployed-hosts"
 initTime=$(beginTiming)
 
 _deployToUsage() {
-  usageDocument "bin/build/pipeline/$me" deployAction "$@"
+  usageDocument "bin/build/pipeline/$(basename "${BASH_SOURCE[0]}")" deployAction "$@"
   exit $?
 }
 
-if [ ! -d "${HOME:-}" ]; then
+if [ ! -d "$HOME" ]; then
   _deployToUsage $errorEnvironment "No HOME defined or not a directory: $HOME"
 fi
 
@@ -57,63 +57,63 @@ undoFlag=
 debuggingFlag=
 cleanupFlag=
 userHosts=()
-applicationChecksum=
+applicationId=
 remoteDeploymentPath=
 remotePath=
 buildTarget=
 remoteArgs=()
 while [ $# -gt 0 ]; do
   case $1 in
-  --target)
-    shift
-    if [ -n "$buildTarget" ]; then
-      _deployToUsage $errorArgument "--target supplied twice"
-    fi
-    buildTarget=$1
-    if [ -z "$buildTarget" ]; then
-      _deployToUsage $errorArgument "blank --target"
-    fi
-    ;;
-  --help)
-    _deployToUsage 0
-    ;;
-  --deploy)
-    if test "$deployFlag"; then
-      _deployToUsage $errorArgument "--deploy arg passed twice"
-    fi
-    deployFlag=1
-    ;;
-  --debug)
-    debuggingFlag=1
-    ;;
-  --undo)
-    if test "$undoFlag"; then
-      _deployToUsage $errorArgument "--undo specified twice"
-    fi
-    undoFlag=1
-    remoteArgs+=("--undo")
-    ;;
-  --cleanup)
-    if test "$cleanupFlag"; then
-      _deployToUsage $errorArgument "--undo specified twice"
-    fi
-    cleanupFlag=1
-    remoteArgs+=("--cleanup")
-    ;;
-  *)
-    if [ -z "$applicationChecksum" ]; then
-      applicationChecksum=$1
-    elif [ -z "$remoteDeploymentPath" ]; then
-      remoteDeploymentPath=$1
-    elif [ -z "$remotePath" ]; then
-      remotePath=$1
-    else
-      IFS=' ' read -ra tokens <<<"$1"
-      for token in "${tokens[@]}"; do
-        userHosts+=("$token")
-      done
-    fi
-    ;;
+    --target)
+      shift
+      if [ -n "$buildTarget" ]; then
+        _deployToUsage $errorArgument "--target supplied twice"
+      fi
+      buildTarget=$1
+      if [ -z "$buildTarget" ]; then
+        _deployToUsage $errorArgument "blank --target"
+      fi
+      ;;
+    --help)
+      _deployToUsage 0
+      ;;
+    --deploy)
+      if test "$deployFlag"; then
+        _deployToUsage $errorArgument "--deploy arg passed twice"
+      fi
+      deployFlag=1
+      ;;
+    --debug)
+      debuggingFlag=1
+      ;;
+    --undo)
+      if test "$undoFlag"; then
+        _deployToUsage $errorArgument "--undo specified twice"
+      fi
+      undoFlag=1
+      remoteArgs+=("--undo")
+      ;;
+    --cleanup)
+      if test "$cleanupFlag"; then
+        _deployToUsage $errorArgument "--undo specified twice"
+      fi
+      cleanupFlag=1
+      remoteArgs+=("--cleanup")
+      ;;
+    *)
+      if [ -z "$applicationId" ]; then
+        applicationId=$1
+      elif [ -z "$remoteDeploymentPath" ]; then
+        remoteDeploymentPath=$1
+      elif [ -z "$remotePath" ]; then
+        remotePath=$1
+      else
+        IFS=' ' read -ra tokens <<<"$1"
+        for token in "${tokens[@]}"; do
+          userHosts+=("$token")
+        done
+      fi
+      ;;
   esac
   shift
 done
@@ -139,8 +139,8 @@ if test "$deployFlag" && test "$cleanupFlag"; then
 fi
 # Values are not blank
 buildTarget="${buildTarget:-app.tar.gz}"
-if [ -z "$applicationChecksum" ]; then
-  _deployToUsage $errorArgument "Missing applicationChecksum"
+if [ -z "$applicationId" ]; then
+  _deployToUsage $errorArgument "Missing applicationId"
 fi
 if [ -z "$remoteDeploymentPath" ]; then
   _deployToUsage $errorArgument "Missing remoteDeploymentPath"
@@ -161,7 +161,7 @@ showInfo() {
   echo "$(consoleInfo -n "     IP is currently: ") $(consoleRed -n "$currentIP")"
   echo "$(consoleInfo -n "remoteDeploymentPath: ") $(consoleRed -n "$remoteDeploymentPath")"
   echo "$(consoleInfo -n "          remotePath: ") $(consoleRed -n "$remotePath")"
-  echo "$(consoleInfo -n " applicationChecksum: ") $(consoleRed -n "$applicationChecksum")"
+  echo "$(consoleInfo -n " applicationId: ") $(consoleRed -n "$applicationId")"
   echo "$(consoleInfo -n "           Hosts are: ") $(consoleRed -n "${userHosts[*]}")"
 }
 
@@ -199,10 +199,10 @@ generateCommandsFile() {
     echo "export BUILD_DEBUG=1"
     echo "set -x"
   fi
-  echo "cd \"$remoteDeploymentPath/$applicationChecksum\""
+  echo "cd \"$remoteDeploymentPath/$applicationId\""
   printf "%s\n" "$@"
   # shellcheck disable=SC2016
-  echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationChecksum\" \"$remoteDeploymentPath\" \"$remotePath\""
+  echo "./bin/build/pipeline/remote-deploy-finish.sh ${remoteArgs[*]} \"$applicationId\" \"$remoteDeploymentPath\" \"$remotePath\""
 }
 
 undoAction() {
@@ -292,22 +292,21 @@ sshishDeployOptions() {
     # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
     printf %s "-q"
   fi
-
 }
-# fn: {base}
+
 #
-# Summary:Deploy current application to host at remotePath
-# Usage: deploy-to.sh [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'
+# Summary: Deploy current application to one or more hosts
+# Usage: {fn} [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationId remoteDeploymentPath remotePath [ userAtHost ... ]
 # Argument: --target target$ - Optional. String. Build target file, defaults to `app.tar.gz`
 # Argument: --deploy - Default. Flag. deploy an application to a remote host
 # Argument: --undo - Optional. Flag. Reverses a deployment
 # Argument: --cleanup - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
 # Argument: --help - Optional. Flag. Show help
 # Argument: --debug - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
-# Argument: applicationChecksum - Required. String. The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
+# Argument: applicationId - Required. String. The application package will contain a `.env` with `APPLICATION_ID` set to this Value
 # Argument: remoteDeploymentPath - Required. Path. Remote path where we can store deployment state files.
 # Argument: remotePath - Required. Path. Path where the application will be deployed
-# Argument: user1@host1 - Required. Strings. A list of space-separated values or arguments which match users at remote hosts
+# Argument: userAtHost - Required. Strings. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
 #
 # Deploy current application to host at remotePath.
 #
@@ -340,6 +339,10 @@ sshishDeployOptions() {
 # - Deploys the prior version in the same manner, and ... <!-- needs expansion TODO -->
 # - Runs the `deploy-undo` hook afterwards
 #
+# The `userAtHost` can be passed as follows:
+#
+#     deployAction --deploy 5125ab12 /var/www/DEPLOY/coolApp/ /var/www/apps/coolApp/ "www-data@host0 www-data@host1 stageuser@host3" "www-data@host4"
+#
 # Local cache: `remoteDeploymentPath` is considered a state directory so removing entries in this should be managed separately.
 #
 # TODO: add ability to prune past n versions safely on all hosts.
@@ -361,11 +364,11 @@ deployAction() {
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     printf "%s: %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Setting up")"
-    for makeDirectory in "$remotePath" "$remoteDeploymentPath" "$remoteDeploymentPath/$applicationChecksum/app"; do
+    for makeDirectory in "$remotePath" "$remoteDeploymentPath" "$remoteDeploymentPath/$applicationId/app"; do
       printf '[ -d "%s" ] || || mkdir -p "%s" && echo "Created %s"\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
     done | ssh "$(sshishDeployOptions)" -T "$userHost" bash --noprofile -s -e
-    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remoteDeploymentPath/$applicationChecksum/$buildTarget")"
-    printf '@put %s %s' "$buildTarget" "$applicationChecksum/$buildTarget" | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
+    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remoteDeploymentPath/$applicationId/$buildTarget")"
+    printf '@put %s %s' "$buildTarget" "$applicationId/$buildTarget" | sftp "$(sshishDeployOptions)" "$userHost:$remoteDeploymentPath"
     reportTiming "$start" "Completed $(consoleGreen "$userHost")"
   done
 

@@ -45,5 +45,5 @@ Tools: `aws-ip-access.sh`
 
 # Generated
 
-- `APPLICATION_CHECKSUM` - Code checksum representing the unique version of the application code (git commit SHA or equivalent)
+- `APPLICATION_ID` - Code checksum representing the unique version of the application code (git commit SHA or equivalent)
 - `APPLICATION_TAG` - Tag of deployed code (may differ from version)

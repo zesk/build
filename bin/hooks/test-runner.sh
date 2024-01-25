@@ -2,7 +2,7 @@
 #
 # Runs our tests on the built environment
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 
@@ -21,8 +21,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 #
 # fn: {base}
 hookTestRunner() {
-    consoleError "Test runner does nothing, failing, rewrite this."
-    return 99
+  consoleError "Test runner does nothing, failing, rewrite this."
+  return 99
 }
 
 hookTestRunner "$@"

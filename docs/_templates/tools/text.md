@@ -3,36 +3,45 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+## Filters
+
 {quoteSedPattern}
+{quoteBashString}
+
+{escapeQuotes}
+{escapeSingleQuotes}
+{escapeDoubleQuotes}
+{replaceFirstPattern}
+
+{trimWords}
+{trimSpace}
+{trimSpacePipe}
+
+{listTokens}
+
+## Finding or Calculating
+
+{stringOffset}
+{maximumFieldLength}
+
+## Language-related
+
+{plural}
+
+## Decoration
+
 {repeat}
 {echoBar}
 {prefixLines}
-{trimSpace}
-{stringOffset}
-{urlParse}
-{urlParseItem}
-{maximumFieldLength}
-{escapeDoubleQuotes}
-{plural}
-{escapeSingleQuotes}
-{escapeQuotes}
-{trimSpacePipe}
-{dateToFormat}
-
-{dateToTimestamp}
-
-{echoBar}
-{timestampToDate}
-
-{yesterdayDate}
-{prefixLines}
-
 {alignRight}
 {alignLeft}
+{boxedHeading}
+
+## Transformation
 
 {lowercase}
-{boxedHeading}
 {shaPipe}
+{cachedShaPipe}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

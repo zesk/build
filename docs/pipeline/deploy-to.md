@@ -1,5 +1,5 @@
 
-# `deploy-to.sh` - Deploy current application to host at remotePath
+# `deployAction` - Deploy current application to one or more hosts
 
 [⬅ Return to top](index.md)
 
@@ -34,9 +34,9 @@ Operation:
 - Deploys the prior version in the same manner, and ... <!-- needs expansion TODO -->
 - Runs the `deploy-undo` hook afterwards
 
-## Usage
+The `userAtHost` can be passed as follows:
 
-    deploy-to.sh [ --undo | --cleanup | --deploy ] [ --debug ] [ --help ] applicationChecksum remoteDeploymentPath remotePath 'user1@host1 user2@host2'
+    deployAction --deploy 5125ab12 /var/www/DEPLOY/coolApp/ /var/www/apps/coolApp/ "www-data@host0 www-data@host1 stageuser@host3" "www-data@host4"
 
 ## Arguments
 
@@ -46,10 +46,10 @@ Operation:
 - `--cleanup` - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
 - `--help` - Optional. Flag. Show help
 - `--debug` - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
-- `applicationChecksum` - Required. String. The application package will contain a `.env` with `APPLICATION_CHECKSUM` set to this Value
+- `applicationId` - Required. String. The application package will contain a `.env` with `APPLICATION_ID` set to this Value
 - `remoteDeploymentPath` - Required. Path. Remote path where we can store deployment state files.
 - `remotePath` - Required. Path. Path where the application will be deployed
-- user1@- `host1` - Required. Strings. A list of space-separated values or arguments which match users at remote hosts
+- `userAtHost` - Required. Strings. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
 
 ## Exit codes
 

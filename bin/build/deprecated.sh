@@ -2,7 +2,7 @@
 #
 # Run this if you want to upgrade your scripts
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 # IDENTICAL bashHeader2 5
@@ -22,20 +22,32 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # fn: deprecated.sh
 #
 deprecatedCleanup() {
-    local exitCode=0
+  local deprecatedToken deprecatedTokens=(dockerPHPExtensions usageWrapper usageWhich usageEnvironment) exitCode=0 ignoreStuff=() deprecatedIgnoreStuff=()
 
-    bin/build/cannon.sh release-check-version.sh git-tag-version.sh ! -path '*/deprecated.sh' ! -path '*/docs/release/*.md' || :
-    # v0.3.12
-    bin/build/cannon.sh 'failed "' 'buildFailed "' -name '*.sh' ! -path '*/deprecated.sh' ! -path '*/docs/release/*.md' || :
+  ignoreStuff=(! -path '*/deprecated.sh' ! -path '*/docs/release/*.md')
 
-    if find . -type f ! -path '*/.*' -print0 | xargs -0 grep -l dockerPHPExtensions; then
-        consoleError dockerPHPExtensions found
-        exitCode=1
+  deprecatedIgnoreStuff=(! -path '*/tools/usage.sh')
+  bin/build/cannon.sh release-check-version.sh git-tag-version.sh "${ignoreStuff[@]}" || :
+  # v0.3.12
+  bin/build/cannon.sh 'failed "' 'buildFailed "' -name '*.sh' "${ignoreStuff[@]}" || :
+
+  for deprecatedToken in "${deprecatedTokens[@]}"; do
+    if find . -type f ! -path '*/.*' "${ignoreStuff[@]}" "${deprecatedIgnoreStuff[@]}" -print0 | xargs -0 grep -l "$deprecatedToken"; then
+      consoleError "DEPRECATED token \"$deprecatedToken\" found"
+      exitCode=1
     fi
+  done
+  # v0.6.0
+  bin/build/cannon.sh markdownListify markdown_FormatList "${ignoreStuff[@]}"
 
-    # v0.6.0
-    bin/build/cannon.sh markdownListify markdownFormatList
-    return $exitCode
+  # v0.6.1
+  bin/build/cannon.sh 'usageWhich ' 'usageRequireBinary usage ' "${ignoreStuff[@]}"
+
+  # v0.7.0
+  bin/build/cannon.sh 'APPLICATION_CHECKSUM' 'APPLICATION_ID' "${ignoreStuff[@]}"
+  bin/build/cannon.sh 'application-checksum' 'application-id' "${ignoreStuff[@]}"
+
+  return $exitCode
 }
 
 deprecatedCleanup

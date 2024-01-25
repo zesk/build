@@ -13,11 +13,17 @@ The default hook uses most recent tag associated in git or `v0.0.1` if no tags e
 
 - `0` - Always succeeds
 
-### `application-checksum.sh` - Generate a unique checksum for the state of the application
+### `application-id.sh` - Generate a unique ID for the state of the application
 
-Generate a unique checksum for the state of the application files
+Generate a unique ID for the state of the application files
 
-The default hook uses the short git checksum
+The default hook uses the short git sha:
+
+    git rev-parse --short HEAD
+
+#### Examples
+
+885acc3
 
 #### Exit codes
 

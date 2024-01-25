@@ -46,6 +46,6 @@ Thanks to [{credits}]({source}).
 
 File `{file}`, function `{fn}` was reviewed {reviewed}.
 
-## Errors
+#### Errors
 
 {error}

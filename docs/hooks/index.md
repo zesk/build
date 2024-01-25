@@ -50,7 +50,7 @@ And in some cases, a default hook is always available at `bin/build/hooks/`.
 - `version-live.sh` - The current published live version of the software.
 
 - `application-tag.sh` - The current tagged version of the software
-- `application-checksum.sh` - Returns a string checksum of the current application source code (unique checksum for code state)
+- `application-id.sh` - Returns a string checksum of the current application source code (unique checksum for code state)
 
 - `test-setup.sh` - Move or copy files prior to docker-compose build to build test container
 - `test-runner.sh` - Run unit and any other tests inside the container

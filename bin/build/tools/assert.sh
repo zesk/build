@@ -4,10 +4,11 @@
 #
 # Simple assert functions for testing
 #
-# Copyright &copy; 2023 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: colors.sh text.sh prefixLines
 #
+# Docs: contextOpen ./docs/_templates/tools/assert.md
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -32,7 +33,7 @@ assertEquals() {
   shift
   shift
   if [ "$expected" != "$actual" ]; then
-    consoleError "assertEquals \"$expected\" should equal \"$actual\" but does not: ${*-not equal}"
+    consoleError "assertEquals expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}"
     return "$errorEnvironment"
   else
     consoleSuccess "assertEquals \"$expected\" == \"$actual\" (correct)"
@@ -56,7 +57,7 @@ assertNotEquals() {
   shift
   shift
   if [ "$expected" = "$actual" ]; then
-    consoleError "assertNotEquals $expected = $actual but should not: ${*-equals}"
+    consoleError "assertNotEquals expected \"$expected\" equals \"$actual\" but should not: ${*-equals}"
     return $errorEnvironment
   else
     consoleSuccess "assertNotEquals \"$expected\" != \"$actual\" (correct)"
@@ -81,15 +82,19 @@ assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-  local expected=$1 actual bin=$2
+  local expected=$1 actual bin=$2 outputFile saved
 
   shift
   shift
   outputFile=$(mktemp)
+  saved=$(saveErrorExit)
+  set -e
   actual="$(
     "$bin" "$@" >"$outputFile" 2>&1
     printf %d "$?"
   )"
+  restoreErrorExit "$saved"
+
   if [ "$expected" != "$actual" ]; then
     printf "assertExitCode: %s -> %s, expected %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
@@ -116,17 +121,28 @@ assertExitCode() {
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-  local expected=$1 actual bin=$2
+  local expected=$1 actual bin=$2 outputFile savedErrorExit
 
   shift
   shift
-  set +e
+  savedErrorExit=$(saveErrorExit)
+  set -e
+  outputFile=$(mktemp)
   actual=$(
-    "$bin" "$@"
+    "$bin" "$@" >"$outputFile" 2>&1
     echo "$?"
   )
-  set -e
-  assertNotEquals "$expected" "$actual" "\"$*\" exit code should not equal expected $expected ($actual)"
+  restoreErrorExit "$savedErrorExit"
+
+  if [ "$expected" = "$actual" ]; then
+    printf "assertExitCode: %s -> %s, expected NOT %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
+    prefixLines "$(consoleCode)" <"$outputFile" 1>&2
+    consoleReset 1>&2
+    rm "$outputFile"
+    return 1
+  fi
+  rm "$outputFile"
+  return 0
 }
 
 # Usage: assertContains expected actual
@@ -169,11 +185,11 @@ assertContains() {
 # Summary: Test that a directory exists
 #
 assertDirectoryExists() {
-  local d=$1
+  local d=$1 noun=directory
 
   shift
   if [ ! -d "$d" ]; then
-    consoleError "$d was expected to not a directory but is NOT: $*"
+    printf "%s was expected to be a %s but is NOT %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -192,11 +208,65 @@ assertDirectoryExists() {
 # Reviewed: 2023-11-12
 #
 assertDirectoryDoesNotExist() {
-  local d=$1
+  local d=$1 noun=directory
 
   shift
   if [ -d "$d" ]; then
-    consoleError "$d was expected to not be a directory but is: $*"
+    printf "%s was expected NOT to be a %s but is %s (%s)\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    return 1
+  fi
+}
+
+################################################################################################################################
+#
+# ▛▀▘▗▜
+# ▙▄ ▄▐ ▞▀▖
+# ▌  ▐▐ ▛▀
+# ▘  ▀▘▘▝▀▘
+#
+
+#
+# Usage: assertDirectoryExists directory [ message ... ]
+#
+# Argument: - `directory` - Directory that should exist
+# Argument: - `message` - An error message if this fails
+# Exit code: - `0` - If the assertion succeeds
+# Exit code: - `1` - If the assertion fails
+# Local cache: None
+# Environment: - This fails if `directory` is anything but a `directory`
+# Example:     assertDirectoryExists "$HOME" "HOME not found"
+# Summary: Test that a file exists
+#
+assertFileExists() {
+  local d=$1 noun=file
+
+  shift
+  message="$*"
+  if [ ! -f "$d" ]; then
+    printf "%s was expected to be a %s but is NOT %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    return 1
+  fi
+}
+
+#
+# Usage: assertFileDoesNotExist file [ message ... ]
+#
+# Argument: - `file` - Directory that should NOT exist
+# Argument: - `message` - An error message if this fails
+# Exit code: - `0` - If the assertion succeeds
+# Exit code: - `1` - If the assertion fails
+# Local cache: None
+# Environment: - This fails if `file` is anything at all, even a non-directory (such as a link)
+# Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
+# Summary: Test that a file does not exist
+# Reviewed: 2023-11-12
+#
+assertFileDoesNotExist() {
+  local d=$1 noun=file
+
+  shift
+  if [ -f "$d" ]; then
+    printf "%s was expected NOT to be a %s but is %s (%s)\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
     return 1
   fi
 }

@@ -5,6 +5,7 @@
 
 {assertEquals}
 {assertNotEquals}
+{assertContains}
 
 {assertGreaterThan}
 {assertGreaterThanOrEqual}
@@ -15,11 +16,15 @@
 {assertExitCode}
 {assertNotExitCode}
 
+{assertOutputEquals}
 {assertOutputContains}
 {assertOutputDoesNotContain}
 
 {assertDirectoryExists}
 {assertDirectoryDoesNotExist}
+
+{assertFileExists}
+{assertFileDoesNotExist}
 
 {assertFileContains}
 {assertFileDoesNotContain}
