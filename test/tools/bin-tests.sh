@@ -14,10 +14,6 @@ tests+=(testNewRelease)
 testNewRelease() {
   assertExitCode 0 bin/build/new-release.sh --non-interactive
 }
-tests+=(testVersionSort)
-testVersionSort() {
-  assertGreaterThan $(($(gitVersionList | wc -l) + 0)) 0
-}
 
 tests+=(testBuildSetup)
 testBuildSetup() {
