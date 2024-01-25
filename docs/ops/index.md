@@ -49,4 +49,4 @@ Not found
 [⬅ Return to documentation root](index.md)
 [⬅ Return to top](../index.md)
 
-Copyright &copy; 2024 [Market Acumen, Inc.](Unable to find "BUILD_COMPANY_LINK" (using index "/Users/kent/.build/")Unable to find "title" (using index "/Users/kent/.build/"))
+Copyright &copy; 2024 [Market Acumen, Inc.](Unable to find "BUILD_COMPANY_LINK" (using index "/Users/kent/.build")Unable to find "title" (using index "/Users/kent/.build"))

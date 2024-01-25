@@ -40,10 +40,19 @@ buildDocsUpdateUnlinked() {
     set -a
     # shellcheck source=/dev/null
     . "$envFile"
-    title="Missing functions" content="$(cat "./docs/_templates/__todo.md")\n\n$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template"
+    title="Missing functions" content="$(cat "./docs/_templates/__todo.md")\n\n$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
   )
   total=$(wc -l <"$unlinkedFunctions" | trimSpacePipe)
-  statusMessage consoleInfo "Updated $template with $total unlinked $(plural "$total" function functions)"
+  if diff -q "$template" "$template.$$"; then
+    statusMessage consoleInfo "Not updating $template - unchanged $(plural "$total" function functions)"
+    if ! rm "$template.$$"; then
+      consoleError "Unable to delete $template.$$" 1>&2
+      return $errorEnvironment
+    fi
+  else
+    cp "$template.$$" "$template"
+    statusMessage consoleInfo "Updated $template with $total unlinked $(plural "$total" function functions)"
+  fi
   rm -f "$unlinkedFunctions" 2>/dev/null || :
 }
 
