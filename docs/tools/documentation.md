@@ -3,7 +3,7 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-## `bashDocumentFunction`
+## Generating documentation
 
 
 ### `bashDocumentFunction` - Document a function and generate a function template (markdown)
@@ -140,6 +140,9 @@ Looks up information in the function index
 
 - [function documentationIndex_Generate](./docs/tools/documentation.md) - [Generate a function index for bash files](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L139)
 
+# Linking documentation 
+
+
 ### `documentationIndex_LinkDocumentationPaths` - Update the documentationPath for all functions defined in documentTemplate
 
 Update the documentationPath for all functions defined in documentTemplate
@@ -164,6 +167,46 @@ Use with documentationIndex_Lookup
 - `1` - Issue with file generation
 - `2` - Argument error
 
+### `documentationIndex_SetUnlinkedDocumentationPath` - List of functions which are not linked to anywhere in
+
+List of functions which are not linked to anywhere in the documentation index
+
+#### Arguments
+
+- `cacheDirectory` - Required. Directory. Index cache directory.
+- `target` - Required. String. Path to document path where unlinked functions should link.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `documentationIndex_ShowUnlinked` - Displays any functions which are not included in the documentation
+
+Displays any functions which are not included in the documentation and the reason why.
+
+- Any functions beginning with an **underscore** (`_`) are ignored
+- Any function which contains ANY `ignore` directive in the comment is ignored
+- Any function which is unlinked in the source (call `documentationIndex_LinkDocumentationPaths` first)
+
+Within your function, add an ignore reason if you wish:
+
+    userFunction() {
+    ...
+    }
+
+#### Arguments
+
+- `cacheDirectory` - Required. Directory. Index cache directory.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function documentationIndex_LinkDocumentationPaths](./docs/tools/documentation.md) - [Update the documentationPath for all functions defined in documentTemplate](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419)
+- [function documentationIndex_FunctionIterator](./docs/tools/documentation.md) - [Output a list of all functions in the index as](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L355)
+
 ### `documentationIndex_FunctionIterator` - Output a list of all functions in the index as
 
 Output a list of all functions in the index as pairs:
@@ -181,10 +224,24 @@ Output a list of all functions in the index as pairs:
 #### See Also
 
 - [function documentationIndex_Lookup](./docs/tools/documentation.md) - [Looks up information in the function index](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34)
-- [function documentationIndex_LinkDocumentationPaths](./docs/tools/documentation.md) - [Update the documentationPath for all functions defined in documentTemplate](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L308)
+- [function documentationIndex_LinkDocumentationPaths](./docs/tools/documentation.md) - [Update the documentationPath for all functions defined in documentTemplate](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419)
 
-## Documentation "See" Linker
+### `documentationIndex_UnlinkedIterator` - List of functions which are not linked to anywhere in
 
+List of functions which are not linked to anywhere in the documentation index
+
+#### Arguments
+
+- `cacheDirectory` - Required. Directory. Index cache directory.
+
+#### Exit codes
+
+- `0` - The settings file is unlinked within the documentation (not defined anywhere)
+- `1` - The settings file is linked within the documentation
+
+### `documentationIndex_SeeLinker` - Link `Not found` tokens in documentation
+
+$Link `Not found` tokens in documentation
 
 #### Exit codes
 
@@ -290,42 +347,6 @@ _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 
 ## Documentation Utilities
 
-
-#### Usage
-
-    markdown_removeUnfinishedSections < inputFile > outputFile
-
-#### Arguments
-
-- None
-
-#### Examples
-
-map.sh < $templateFile | markdown_removeUnfinishedSections
-
-#### Exit codes
-
-- 0
-
-#### Environment
-
-None
-
-#### Depends
-
-    read printf
-
-### `markdown_FormatList` - Simple function to make list-like things more list-like in Markdown
-
-Simple function to make list-like things more list-like in Markdown
-
-1. remove leading "dash space" if it exists (`- `)
-2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
-3. Prefix each line with a "dash space" (`- `)
-
-#### Exit codes
-
-- `0` - Always succeeds
 
 ### `__dumpNameValue` - Utility to export multi-line values as Bash variables
 

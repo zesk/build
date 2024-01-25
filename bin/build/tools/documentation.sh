@@ -463,7 +463,7 @@ __dumpNameValue() {
 #
 __dumpNameValuePrefix() {
   local prefix=$1 varName=$2
-  printf "%s\n""export '%s'\n" "EOF" "$varName"
+  printf "export '%s'; " "$varName"
   printf "read -r -d '' '%s' <<'%s' || :\n" "$varName" "EOF" # Single quote means no interpolation
   shift
   shift
@@ -471,6 +471,7 @@ __dumpNameValuePrefix() {
     printf "%s%s\n" "$prefix" "$(escapeSingleQuotes "$1")"
     shift
   done
+  printf "%s\n" "EOF"
 }
 
 # This basically just does `a=${b}` in the output
