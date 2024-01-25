@@ -32,9 +32,8 @@ errorArgument=2
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 #
 quoteSedPattern() {
-  local value
   # IDENTICAL quoteSedPattern 6
-  value=$(printf %s "$1" | sed 's/\([.*+?]\)/\\\1/g')
+  value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
@@ -61,7 +60,7 @@ escapeDoubleQuotes() {
 # Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeSingleQuotes() {
-  printf %s "${1//\'/\\\'}"
+  printf %s "$1" | sed "s/'/\\\'/g"
 }
 
 #

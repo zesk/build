@@ -19,7 +19,8 @@ testText() {
 tests+=(testEscapeSingleQuotes)
 testEscapeSingleQuotes() {
   assertEquals "Ralph \"Dude\" Brown" "$(escapeSingleQuotes "Ralph \"Dude\" Brown")" || return $?
-  assertEquals "Dude\\'s place" "$(escapeSingleQuotes "Dude's place")" || return $?
+  # shellcheck disable=SC1003
+  assertEquals 'Dude\'"'"'s place' "$(escapeSingleQuotes "Dude's place")" || return $?
 }
 testEscapeDoubleQuotes() {
   assertEquals "Ralph \\\"Dude\\\" Brown" "$(escapeDoubleQuotes "Ralph \"Dude\" Brown")" || return $?
@@ -33,7 +34,7 @@ testQuoteSedPattern() {
   assertEquals "\\[" "$(quoteSedPattern "[")" || return $?
   assertEquals "\\]" "$(quoteSedPattern "]")" || return $?
   # shellcheck disable=SC1003
-  assertEquals '\\\\' "$(quoteSedPattern "\\")" || return $?
+  assertEquals '\\' "$(quoteSedPattern '\')" || return $?
   assertEquals "\\/" "$(quoteSedPattern "/")" || return $?
   # Fails in code somewhere
   read -d"" -r value <<'EOF' || :

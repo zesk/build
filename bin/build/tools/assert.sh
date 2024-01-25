@@ -33,7 +33,7 @@ assertEquals() {
   shift
   shift
   if [ "$expected" != "$actual" ]; then
-    consoleError "assertEquals \"$expected\" should equal \"$actual\" but does not: ${*-not equal}"
+    consoleError "assertEquals expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}"
     return "$errorEnvironment"
   else
     consoleSuccess "assertEquals \"$expected\" == \"$actual\" (correct)"
@@ -57,7 +57,7 @@ assertNotEquals() {
   shift
   shift
   if [ "$expected" = "$actual" ]; then
-    consoleError "assertNotEquals $expected = $actual but should not: ${*-equals}"
+    consoleError "assertNotEquals expected \"$expected\" equals \"$actual\" but should not: ${*-equals}"
     return $errorEnvironment
   else
     consoleSuccess "assertNotEquals \"$expected\" != \"$actual\" (correct)"
