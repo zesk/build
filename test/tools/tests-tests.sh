@@ -11,8 +11,18 @@ declare -a tests
 tests+=(testWrapperShellScripts)
 testWrapperShellScripts() {
   local quietLog
-  # shellcheck disable=SC2034
+  local findArgs=(! -path '*/vendor/*')
+  local thisYear
+
   quietLog=$1
   shift
-  testShellScripts ! -path '*/vendor/*' "$@"
+
+  thisYear=$(date +%Y)
+  if ! find . -name '*.sh' "${findArgs[@]}" | validateShellScripts >>"$quietLog"; then
+    return $?
+  fi
+  if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" -- "${findArgs[@]}" >>"$quietLog"; then
+    return $?
+  fi
+  printf "\n"
 }

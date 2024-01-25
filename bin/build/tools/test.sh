@@ -45,26 +45,6 @@ dumpFile() {
 }
 
 #
-# testShellScripts [ findArgs ]
-#
-# Requires shellcheck so should be later in the testing process to have a cleaner build
-# This can be run on any directory tree to test scripts in any application.
-#
-# Side-effect: shellcheck is installed
-#
-testShellScripts() {
-  local thisYear
-  thisYear=$(date +%Y)
-  if ! validateShellScripts "$@"; then
-    return $errorEnvironment
-  fi
-  if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" -- "$@"; then
-    return $errorEnvironment
-  fi
-  printf "\n"
-}
-
-#
 # validateShellScripts
 #
 # Requires shellcheck so should be later in the testing process to have a cleaner build
