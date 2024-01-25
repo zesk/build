@@ -27,6 +27,7 @@ buildDocsUpdateUnlinked() {
   local unlinkedFunctions template total
 
   shift || ::
+  shift || ::
   if ! unlinkedFunctions=$(mktemp); then
     consoleError "Unable to create temporary file" 1>&2
     return $errorEnvironment
@@ -40,11 +41,11 @@ buildDocsUpdateUnlinked() {
     set -a
     # shellcheck source=/dev/null
     . "$envFile"
-    title="Missing functions" content="$(cat "./docs/_templates/__todo.md")\n\n$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
+    title="Missing functions" content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
   )
   total=$(wc -l <"$unlinkedFunctions" | trimSpacePipe)
-  if diff -q "$template" "$template.$$"; then
-    statusMessage consoleInfo "Not updating $template - unchanged $(plural "$total" function functions)"
+  if [ -f "$template" ] && diff -q "$template" "$template.$$"; then
+    statusMessage consoleInfo "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
     if ! rm "$template.$$"; then
       consoleError "Unable to delete $template.$$" 1>&2
       return $errorEnvironment
