@@ -24,10 +24,10 @@ Installs the `git` binary
 
 ### `gitEnsureSafeDirectory` - When running git operations on a deployment host, at times
 
-When running git operations on a deployment host, at times it's necessary to
+When running git operations on a deployment host, at times it\'s necessary to
 add the current directory (or a directory) to the git `safe.directory` directive.
 
-This adds the directory passed to that directory in the local user's environment
+This adds the directory passed to that directory in the local user\'s environment
 
 #### Usage
 
@@ -165,7 +165,7 @@ Show changed files from HEAD
 
 Show changed files from HEAD with their status prefix character:
 
-- ' ' = unmodified
+- \' \' = unmodified
 - `M` = modified
 - `A` = added
 - `D` = deleted

@@ -12,7 +12,7 @@ Fetch a value from the pipelines YAML file
 
 Assumes current working directory is project root.
 
-Simple get value of a variable from the `bitbucket-pipelines.yml` file. It's important to note that
+Simple get value of a variable from the `bitbucket-pipelines.yml` file. It\'s important to note that
 this does not parse the YML. This is useful if
 you have a database container as part of your build configuration which requires a root password
 required in other scripts; this means you do not have to replicate the value which can lead to errors.

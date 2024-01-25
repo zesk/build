@@ -223,7 +223,7 @@ vXXX.XXX.XXX
 
 for sort - -k 1.c,1 - the `c` is the 1-based character index, so 2 means skip the 1st character
 
-Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume
+Odd you can\'t globally flip sort order with -r - that only works with non-keyed entries I assume
 
 #### Usage
 
@@ -235,7 +235,7 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 
 #### Examples
 
-git tag | grep -e '^v[0-9.]*$' | versionSort
+git tag | grep -e \'^v[0-9.]*$\' | versionSort
 
 #### Exit codes
 
@@ -306,9 +306,9 @@ deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
 
 _   _           _
     | | | |_ __   __| | ___
-    | | | | '_  / _` |/ _ 
+    | | | | \'_ \ / _` |/ _ \
     | |_| | | | | (_| | (_) |
-     ___/|_| |_|__,_|___/
+     \___/|_| |_|\__,_|\___/
 
 Undo deploying an application from a deployment repository
 

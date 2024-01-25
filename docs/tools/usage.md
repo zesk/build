@@ -16,7 +16,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
+- `functionDefinitionFile` - Required. The file in which the function is defined. If you don\'t know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
 - `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 
 #### Examples
@@ -115,7 +115,7 @@ Upon success, outputs the file name
 
 - `usageFunction` - Required. Function. Run if usage fails
 - `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `variableValue` - Required. String. Required only in that if it\'s blank, it fails.
 - `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 
 #### Exit codes
@@ -132,7 +132,7 @@ Upon success, outputs the file name
 
 - `usageFunction` - Required. Function. Run if usage fails
 - `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `variableValue` - Required. String. Required only in that if it\'s blank, it fails.
 - `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 
 #### Exit codes
@@ -149,7 +149,7 @@ Upon success, outputs the directory name trailing slash stripped
 
 - `usageFunction` - Required. Function. Run if usage fails
 - `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `variableValue` - Required. String. Required only in that if it\'s blank, it fails.
 - `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
 
 #### Exit codes

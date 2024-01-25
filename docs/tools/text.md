@@ -73,7 +73,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
@@ -97,7 +97,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
@@ -121,7 +121,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can't not include this in a bash string."
+escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
@@ -159,8 +159,7 @@ Remove words from the end of a phrase
 
 #### Examples
 
-printf "%s: %s
-" "Summary:" "$(trimWords 10 $description)"
+printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
 
 #### Exit codes
 
@@ -308,8 +307,7 @@ Example:
 #### Examples
 
 count=$(($(wc -l < $foxSightings) + 0))
-    printf "We saw %d %s.
-" "$count" "$(plural $count fox foxes)"
+    printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
     n=$(($(date +%s)) - start))
     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
 
@@ -405,10 +403,8 @@ Format text and align it right using spaces.
 
 #### Examples
 
-printf "%s: %s
-" "$(alignRight 20 Name)" "$name"
-    printf "%s: %s
-" "$(alignRight 20 Profession)" "$occupation"
+printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
+    printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
                 Name: Juanita
           Profession: Engineer
 
@@ -431,10 +427,8 @@ Format text and align it left using spaces.
 
 #### Examples
 
-printf "%s: %s
-" "$(alignLeft 14 Name)" "$name"
-    printf "%s: %s
-" "$(alignLeft 14 Profession)" "$occupation"
+printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
+    printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
     Name          : Tyrone
     Profession    : Engineer
 

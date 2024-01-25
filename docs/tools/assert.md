@@ -338,7 +338,7 @@ File `bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was revi
 
 ### `assertDirectoryExists` - Test that a directory exists
 
-$Test that a directory exists
+$\Test that a directory exists
 
 #### Usage
 
@@ -368,7 +368,7 @@ None
 
 ### `assertDirectoryDoesNotExist` - Test that a directory does not exist
 
-$Test that a directory does not exist
+$\Test that a directory does not exist
 
 #### Usage
 
@@ -399,7 +399,7 @@ File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was rev
 
 ### `assertFileExists` - Test that a file exists
 
-$Test that a file exists
+$\Test that a file exists
 
 #### Usage
 
@@ -429,7 +429,7 @@ None
 
 ### `assertFileDoesNotExist` - Test that a file does not exist
 
-$Test that a file does not exist
+$\Test that a file does not exist
 
 #### Usage
 

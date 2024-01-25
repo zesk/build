@@ -70,7 +70,7 @@ requireDirectory "$cachePath"
 
 ### `runCount` - Run a binary count times
 
-$Run a binary count times
+$\Run a binary count times
 
 #### Arguments
 
@@ -163,7 +163,7 @@ for f in $(environmentVariables); do
 
 ### `reverseFileLines` - Reverse output lines
 
-Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
+Reverses a pipe\'s input lines to output using an awk trick. Do not recommend on big files.
 
 #### Exit codes
 
@@ -227,7 +227,7 @@ Otherwise return `1``
 
 #### Exit codes
 
-- `1` - `sourceFile`, 'targetFile' does not exist, or
+- `1` - `sourceFile`, \'targetFile\' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
 ### `isOldestFile` - Check to see if the first file is the newest
@@ -244,7 +244,7 @@ Otherwise return `1``
 
 #### Exit codes
 
-- `1` - `sourceFile`, 'targetFile' does not exist, or
+- `1` - `sourceFile`, \'targetFile\' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
 
@@ -305,7 +305,7 @@ Output is unsorted.
 
 #### Examples
 
-listFileModificationTimes $myDir ! -path '*/.*'
+listFileModificationTimes $myDir ! -path \'*/.*\'
 
 #### Sample Output
 

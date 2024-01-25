@@ -80,7 +80,7 @@ buildTestSuite() {
   trap messyTestCleanup EXIT QUIT TERM
 
   messyOption=
-  allTests=(version colors type os pipeline identical aws text deploy markdown documentation assert usage docker api tests aws bin)
+  allTests=(log version colors type os pipeline identical aws text deploy markdown documentation assert usage docker api tests aws bin)
   runTests=()
 
   testTracing=options

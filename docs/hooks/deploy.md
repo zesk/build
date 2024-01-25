@@ -76,7 +76,7 @@ should do wahtever is required to ensure that.
 
 ### `deploy-finish.sh` - Deployment "finish" script
 
-$Deployment "finish" script
+$\Deployment "finish" script
 
 #### Examples
 

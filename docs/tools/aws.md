@@ -69,7 +69,7 @@ For security we gotta update our keys every 90 days
 This value would be better encrypted and tied to the AWS_ACCESS_KEY_ID so developers
 can not just update the value to avoid the security issue.
 
-This tool checks the environment `AWS_ACCESS_KEY_DATE` and ensures it's within `upToDateDays` of today; if not this fails.
+This tool checks the environment `AWS_ACCESS_KEY_DATE` and ensures it\'s within `upToDateDays` of today; if not this fails.
 
 It will also fail if:
 

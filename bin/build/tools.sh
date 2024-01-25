@@ -50,6 +50,8 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/apt.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/os.sh"
+# shellcheck source=/dev/null
+. "$toolsDir/log.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/usage.sh"

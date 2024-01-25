@@ -12,7 +12,7 @@ must match each other set of lines with the same prefix, otherwise errors and de
 
 The command to then check would be:
 
-    identicalCheck --extension sh --prefix '# IDENTICAL'
+    identicalCheck --extension sh --prefix \'# IDENTICAL\'
 
 This is largely useful for projects in which specific functions are replicated between scripts for code independence, yet
 should remain identical.

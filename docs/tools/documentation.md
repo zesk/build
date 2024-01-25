@@ -29,7 +29,7 @@ Document a function and generate a function template (markdown)
 
 - [function bashDocumentationTemplate](./docs/tools/todo.md) - [Document a function and generate a function template (markdown). To](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L409)
 - [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L375)
-- [function repeat](./docs/tools/text.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L136)
+- [function repeat](./docs/tools/text.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L135)
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
 
@@ -72,7 +72,7 @@ The process:
 1. `documentDirectory` is scanned for files which look like `*.md`
 1. `documentationTemplateDirectoryCompile` is called for each one
 
-If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
+If the `cacheDirectory` is supplied, it\'s used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
 #### Arguments
@@ -241,7 +241,7 @@ List of functions which are not linked to anywhere in the documentation index
 
 ### `documentationIndex_SeeLinker` - Link `Not found` tokens in documentation
 
-$Link `Not found` tokens in documentation
+$\Link `Not found` tokens in documentation
 
 #### Exit codes
 
@@ -334,7 +334,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
+- `functionDefinitionFile` - Required. The file in which the function is defined. If you don\'t know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
 - `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 
 #### Examples
