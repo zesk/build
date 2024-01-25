@@ -15,6 +15,14 @@ errorEnvironment=1
 
 errorTest=3
 
+shortTestCodes() {
+  local fileName
+  find test/ -type f -name '*-tests.sh' | while IFS= read -r fileName; do
+    fileName=$(basename "$fileName")
+    printf "%s\n" "${fileName%-tests.sh}"
+  done
+}
+
 didAnyTestsFail() {
   if test "$globalTestFailure"; then
     printf %s "$globalTestFailure"

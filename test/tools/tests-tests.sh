@@ -17,11 +17,13 @@ testWrapperShellScripts() {
   quietLog=$1
   shift
 
+    # shellcheck source=/dev/null
+    source ./bin/build/env/BUILD_COMPANY.sh
   thisYear=$(date +%Y)
   if ! find . -name '*.sh' "${findArgs[@]}" | validateShellScripts >>"$quietLog"; then
     return $?
   fi
-  if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" -- "${findArgs[@]}" >>"$quietLog"; then
+  if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}" >>"$quietLog"; then
     return $?
   fi
   printf "\n"
