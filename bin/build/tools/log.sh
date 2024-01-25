@@ -63,8 +63,8 @@ rotateLog() {
     return $?
   fi
 
+  index="$count"
   if [ "$count" -gt 1 ]; then
-    index="$count"
     if [ -f "$logFile.$count" ]; then
       if test "$dryRun"; then
         printf "%s \"%s\"\n" rm "$(escapeDoubleQuotes "$logFile.$count")"
