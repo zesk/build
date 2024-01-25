@@ -218,7 +218,7 @@ usageArgumentDirectory() {
     "$usageFunction" "$errorArgument" "$variableName must be a $noun"
     return $?
   fi
-  printf "%s\n" "$variableValue"
+  printf "%s\n" "${variableValue%%/}"
 }
 
 # Validates a value is not blank and is a file

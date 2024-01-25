@@ -32,7 +32,7 @@ buildDocsUpdateUnlinked() {
     return $errorEnvironment
   fi
   template="./docs/_templates/tools/todo.md"
-  if ! documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "./docs/tools/todo.md" | awk '{ print "{$1}" }' >"$unlinkedFunctions"; then
+  if ! documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "./docs/tools/todo.md" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions"; then
     consoleError "Unable to documentationIndex_SetUnlinkedDocumentationPath" 1>&2
     return $errorEnvironment
   fi
