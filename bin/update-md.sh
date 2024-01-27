@@ -50,9 +50,9 @@ updateMarkdown() {
 
   statusMessage consoleInfo "Generating build.json"
   printf "%s" "{}" | jq --arg version "$(runHook version-current)" \
-    --arg tag "$(runHook application-tag)" \
-    '. + {version: $version, tag: $tag}' >"$buildMarker"
-  git add "$buildMarker"
+    --arg id "$(runHook application-id)" \
+    '. + {version: $version, id: $id}' >"$buildMarker"
+  git add "$buildMarker" || :
 
   #
   # Disable this to see what environment shows up in commit hooks for GIT*=

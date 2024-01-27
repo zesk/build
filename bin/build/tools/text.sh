@@ -49,7 +49,7 @@ quoteSedPattern() {
 # Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeDoubleQuotes() {
-  printf %s "${1//\"/\"}"
+  printf %s "${1//\"/\\\"}"
 }
 
 #
