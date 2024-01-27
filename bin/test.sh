@@ -71,7 +71,7 @@ _testUsage() {
 buildTestSuite() {
   local quietLog allTests runTests shortTest
 
-  quietLog=$(buildQuietLog "$(basename "${BASH_SOURCE[0]}")")
+  quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
   export cleanExit=
   export testTracing
@@ -90,6 +90,7 @@ buildTestSuite() {
   runTests=()
 
   testTracing=options
+  printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
     case $1 in
       --show)
@@ -130,11 +131,15 @@ buildTestSuite() {
 
   for shortTest in "${runTests[@]}"; do
     testTracing="test: $shortTest"
+    requireFileDirectory "$quietLog"
+    printf "%s\n" "$testTracing" >>"$quietLog"
     requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
   done
 
   cd "$top" || return $?
   cleanExit=1
+
+  printf "%s\n" "$testTracing" >>"$quietLog"
   testTracing=cleanup
   messyTestCleanup
 

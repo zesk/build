@@ -5,6 +5,7 @@
 # Depends: colors.sh text.sh
 # bin: head grep
 # Docs: contextOpen ./docs/_templates/tools/docker.md
+# Test: contextOpen ./test/tools/docker-tests.sh
 
 # IDENTICAL errorArgument 1
 errorArgument=2
@@ -71,10 +72,75 @@ checkDockerEnvFile() {
   return "$result"
 }
 
-# Internal
-# See: dockerLocalContainer
-_dockerLocalContainerUsage() {
-  usageDocument "bin/build/tools/docker.sh" dockerLocalContainer "$@"
+# Ensure an environment file is compatible with non-quoted docker environment files
+# Usage: checkDockerEnvFile [ filename ... ]
+# Argument: filename - Docker environment file to check for common issues
+# Exit Code: 1 - if errors occur
+# Exit Code: 0 - if file is valid
+#
+dockerEnvToBash() {
+  local file index envLine result=0
+  for file in "$@"; do
+    if [ ! -f "$file" ]; then
+      consoleError "Not a file $file" 1>&2
+      return $errorArgument
+    fi
+    if ! (
+      index=1
+      while IFS="" read -r envLine; do
+        name="${envLine%%=*}"
+        value="${envLine#*=}"
+        if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
+          if [ -z "$(printf "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
+            printf "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
+          else
+            consoleError "Invalid name at line $index: $name" 1>&2
+            # shellcheck disable=SC2030
+            result=$errorArgument
+          fi
+        else
+          case "$envLine" in
+            [#]* | "")
+              # Comment line
+              printf "%s\n" "$envLine"
+              ;;
+            *)
+              consoleError "Invalid line $index: $envLine" 1>&2
+              result=$errorArgument
+              ;;
+          esac
+        fi
+        index=$((index + 1))
+      done <"$file"
+      return $result
+    ); then
+      result=$errorArgument
+      consoleError "Invalid file: $file" 1>&2
+    fi
+  done
+  return "$result"
+}
+
+# Ensure an environment file is compatible with non-quoted docker environment files
+# Usage: checkDockerEnvFile [ filename ... ]
+# Argument: filename - Docker environment file to check for common issues
+# Exit Code: 1 - if errors occur
+# Exit Code: 0 - if file is valid
+#
+dockerEnvFromBash() {
+  local file envLine
+  for file in "$@"; do
+    if [ ! -f "$file" ]; then
+      consoleError "Not a file $file" 1>&2
+      return $errorArgument
+    fi
+    if ! (
+      env -i bash -c "set -a && source $file 2>/dev/null && env" | grep -E -v '^(PWD|_|SHLVL)='
+    ); then
+      consoleError "$file is not a valid bash file" 1>&2
+      return $errorArgument
+    fi
+  done
 }
 
 #
@@ -84,8 +150,9 @@ _dockerLocalContainerUsage() {
 #
 # fn: {base}
 # Usage: {fn} imageName imageApplicationPath [ envFile ... ] [ extraArgs ... ]
-# Argument: imageName - Required. String. Docker image name to run.
-# Argument: imageApplicationPath - Path. Docker image path to map to current directory.
+# Argument: --image imageName - Optional. String. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
+# Argument: --path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
+# Argument: --platform platform - Optional. String. Platform to run (arm vs cisc).
 # Argument: envFile - Optional. File. One or more environment files which are suitable to load for docker; must be valid
 # Argument: extraArgs - Optional. Mixed. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
 # Exit Code: 1 - If already inside docker, or the environment file passed is not valid
@@ -94,40 +161,93 @@ _dockerLocalContainerUsage() {
 # Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
 #
 dockerLocalContainer() {
-  local imageName imageApplicationPath envFiles extraArgs platform
+  local platform imageName imageApplicationPath
+  local envFiles extraArgs
+  local tempEnvs tempEnv exitCode envName
+  local failedWhy
 
-  platform=${BUILD_DOCKER_PLATFORM-linux/arm64}
-  imageName=${1-}
-  if ! shift; then
-    _dockerLocalContainerUsage "$errorArgument" "Missing imageApplicationPath"
-    return $?
-  fi
-  imageApplicationPath=${1-}
-  shift || :
-  if [ -z "$imageName" ]; then
-    _dockerLocalContainerUsage "$errorArgument" "imageName is empty"
-    return $?
-  fi
-  if [ -z "$imageApplicationPath" ]; then
-    _dockerLocalContainerUsage "$errorArgument" "imageApplicationPath is empty"
-    return $?
-  fi
-  if insideDocker; then
-    consoleError "Already inside docker" 1>&2
-    return 1
-  fi
+  for envName in BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH; do
+    # shellcheck source=/dev/null
+    if ! . "bin/build/env/$envName.sh"; then
+      return $?
+    fi
+  done
+  platform=${BUILD_DOCKER_PLATFORM}
+  imageApplicationPath=${BUILD_DOCKER_PATH}
+  imageName=${BUILD_DOCKER_IMAGE}
+
+  exitCode=0
   envFiles=()
   extraArgs=()
-  while [ $# -gt 0 ] && [ -f "$1" ]; do
-    if ! checkDockerEnvFile "$1" 2>/dev/null; then
-      consoleError "Invalid docker env file: $1$(consoleCode)" 1>&2
-      (checkDockerEnvFile "$1" 2>&1 || :) | prefixLines "$(consoleCode)     " 1>&2
-      printf %s "$(consoleReset)" 1>&2
-      return 1
+  while [ $# -gt 0 ]; do
+    if [ -z "$1" ]; then
+      _dockerLocalContainer "$errorArgument" "Blank argument"
+      return $?
     fi
-    envFiles+=("--env-file" "$1")
+    case "$1" in
+      --image)
+        shift || :
+        imageName="$1"
+        ;;
+      --path)
+        shift || :
+        imageApplicationPath="$1"
+        ;;
+      --env)
+        shift || :
+        if [ ! -f "$1" ]; then
+          [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
+          _dockerLocalContainer "$errorArgument" "--env $1 is not a file"
+          return $?
+        fi
+        if ! checkDockerEnvFile "$1" 2>/dev/null; then
+          tempEnv=$(mktemp)
+          tempEnvs+=("$tempEnv")
+          if ! dockerEnvFromBash "$1" >"$tempEnv" 2>/dev/null; then
+            {
+              printf "%s %s\n" "$(consoleError "Invalid docker env file:")" "$(consoleMagenta "$1")$(consoleCode)"
+              (checkDockerEnvFile "$1" 2>&1 || :) | prefixLines "$(consoleCode)     "
+              printf %s "$(consoleReset)"
+            } 1>&2
+            rm -f "${tempEnvs[@]}" || :
+            return 1
+          else
+            printf "%s: %s\n" "$(consoleWarning "Converted to docker-compatible env")" "$(consoleCode "$1")"
+            envFiles+=("--env-file" "$tempEnv")
+          fi
+        else
+          envFiles+=("--env-file" "$1")
+        fi
+        ;;
+      --platform)
+        shift || :
+        platform="$1"
+        ;;
+      *)
+        extraArgs+=("$1")
+        ;;
+    esac
     shift
   done
-  extraArgs+=("$@")
-  docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}"
+  failedWhy=
+  if [ -z "$imageName" ]; then
+    failedWhy="imageName is empty"
+  elif [ -z "$imageApplicationPath" ]; then
+    failedWhy="imageApplicationPath is empty"
+  elif insideDocker; then
+    failedWhy="Already inside docker"
+  fi
+  if [ -n "$failedWhy" ]; then
+    [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
+    _dockerLocalContainer "$errorArgument" "$failedWhy"
+    return $?
+  fi
+  if ! docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}"; then
+    exitCode=$?
+  fi
+  [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
+  return $exitCode
+}
+_dockerLocalContainer() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
