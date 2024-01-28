@@ -12,10 +12,59 @@ declare -a tests
 tests+=(testCheckDockerEnvFile)
 
 testCheckDockerEnvFile() {
-  local testFile=./test/example/bad.env
-  assertExitCode 1 checkDockerEnvFile $testFile
-  assertOutputContains --exit 1 HELLO checkDockerEnvFile $testFile
-  assertOutputContains --exit 1 TEST_AWS_SECURITY_GROUP checkDockerEnvFile $testFile
-  assertOutputContains --exit 1 DOLLAR checkDockerEnvFile $testFile
-  assertOutputDoesNotContain --exit 1 GOOD checkDockerEnvFile $testFile
+  local testFile=./test/example/bad.env || return $?
+  assertExitCode 1 checkDockerEnvFile $testFile || return $?
+  assertOutputContains --stderr --exit 1 TEST_AWS_SECURITY_GROUP checkDockerEnvFile $testFile || return $?
+  assertOutputContains --stderr --exit 1 DOLLAR checkDockerEnvFile $testFile || return $?
+  assertOutputDoesNotContain --stderr --exit 1 GOOD checkDockerEnvFile $testFile || return $?
+  assertOutputDoesNotContain --stderr --exit 1 HELLO checkDockerEnvFile $testFile || return $?
+
+  assertExitCode 0 dockerEnvToBash $testFile || return $?
+
+  out=$(mktemp)
+  dockerEnvToBash $testFile >"$out" || return $?
+  assertFileContains "$out" '\\"quotes\\"' TEST_AWS_SECURITY_GROUP "DOLLAR=" "QUOTE=" "GOOD=" 'HELLO="W' || return $?
+  rm "$out"
+}
+
+tests+=(testDockerEnvToBash)
+
+testDockerEnvToBash() {
+  local out err
+
+  out=$(mktemp)
+  err=$(mktemp)
+  dockerEnvToBash ./test/example/test.env >"$out" 2>"$err" && return 1
+
+  assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
+  assertFileContains "$err" "01234" "+A" "*A" "+a" "*a" "?a" "test.env" "Invalid name" || return $?
+
+  dockerEnvToBash ./test/example/docker.env >"$out" 2>"$err" || return $?
+  assertEquals 0 "$(fileSize "$err")" || return $?
+  assertFileContains "$out" "host=" "application=\"golden goose\"" "uname=\"localhost\"" "location=" || return $?
+
+  rm -f "$out" "$err" || :
+}
+
+tests+=(testDockerEnvFromBash)
+
+testDockerEnvFromBash() {
+  local out err
+
+  assertExitCode 2 dockerEnvFromBash ./test/example/bad.env || return $?
+
+  out=$(mktemp)
+  err=$(mktemp)
+
+  assertExitCode 0 dockerEnvFromBash ./test/example/bash.env >"$out" 2>"$err" || return $?
+
+  assertFileContains "$out" "host=" "application=beanstalk" "uname="
+  assertEquals 0 "$(fileSize "$err")" || return $?
+
+  dockerEnvFromBash ./test/example/docker.env >"$out" 2>"$err" || return 1
+
+  assertEquals 0 "$(fileSize "$err")" || return $?
+  assertFileContains "$out" "host=" "location=" "uname=" || return $?
+
+  rm -f "$out" "$err" || :
 }

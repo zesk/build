@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 #
 hookApplicationTag() {
   gitEnsureSafeDirectory "$(pwd)"
-  if ! git describe --tags --abbrev=0 2>/dev/null; then
+  if ! git for-each-ref --format '%(refname:short)' refs/tags/ | grep -E '^v[0-9\.]+$' | versionSort -r | head -n 1 2>/dev/null; then
     printf %s "v0.0.1"
   fi
 }

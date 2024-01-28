@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Local local container to test build
+# Bitbucket local container to test pipeline-related things
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -15,4 +15,4 @@ fi
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-dockerLocalContainer "$@"
+bitbucketContainer "$@"

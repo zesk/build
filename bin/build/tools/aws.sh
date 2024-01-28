@@ -54,7 +54,7 @@ awsInstall() {
 
   buildDir="$(buildCacheDirectory awsCache.$$)"
   quietLog="$(buildQuietLog awsInstall)"
-  if ! requireDirectory "$buildDir"; then
+  if ! buildDir=$(requireDirectory "$buildDir"); then
     return "$errorEnvironment"
   fi
   if ! curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then

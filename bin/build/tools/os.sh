@@ -24,15 +24,12 @@ errorArgument=2
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 #
 buildCacheDirectory() {
-  local suffix useDir
+  local suffix
   # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../env/HOME.sh"
-  useDir="$HOME"
-  if [ ! -d "$useDir" ]; then
-    useDir="./"
-  fi
+  source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_CACHE.sh"
+
   suffix="$(printf "%s/" "$@")"
-  printf "%s/%s/%s\n" "${useDir%%/}" ".build" "${suffix%%/}"
+  printf "%s/%s\n" "${BUILD_CACHE%%/}" "${suffix%%/}"
 }
 
 #
@@ -54,14 +51,14 @@ buildQuietLog() {
           return 1
         fi
         logFile="$(buildCacheDirectory "$1.log")"
+        if test "$flagMake" && ! requireFileDirectory "$logFile"; then
+          return $?
+        fi
+        printf %s "$logFile"
         ;;
     esac
     shift
   done
-  if test "$flagMake" && ! requireFileDirectory "$logFile"; then
-    return $?
-  fi
-  printf %s "$logFile"
 }
 
 #

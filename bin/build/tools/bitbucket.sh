@@ -57,6 +57,13 @@ getFromPipelineYML() {
 #
 # Run the default build container for build testing on BitBucket
 #
+# Updated: 2024-01-26
+#
 bitbucketContainer() {
-  dockerLocalContainer atlassian/default-image:4 /opt/atlassian/bitbucketci/agent/build "$@"
+  # shellcheck source=/dev/null
+  . ./bin/build/env/BUILD_DOCKER_BITBUCKET_IMAGE.sh
+  # shellcheck source=/dev/null
+  . ./bin/build/env/BUILD_DOCKER_BITBUCKET_PATH.sh
+
+  dockerLocalContainer --image "${BUILD_DOCKER_BITBUCKET_IMAGE}" --path "${BUILD_DOCKER_BITBUCKET_PATH}" "$@"
 }
