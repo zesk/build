@@ -11,28 +11,39 @@ declare -a tests
 tests+=(testSSHAddKnownHosts)
 testSSHAddKnownHosts() {
   local tempHome originalHome
+  local output
+  local sampleDomainA sampleDomainB
 
   # shellcheck source=/dev/null
   source "./bin/build/env/HOME.sh"
 
   originalHome="$HOME"
-  tempHome="$(mktemp -d)"
+  tempHome="$(mktemp -d)" || return $?
   HOME="$tempHome"
 
+  sampleDomainA=github.com
+  sampleDomainB=bitbucket.org
+  output=$(mktemp) || return $?
+
   assertDirectoryDoesNotExist "$tempHome/.ssh" || return $?
-  sshAddKnownHost || return $?
+
+  sshAddKnownHost >"$output" 1>&2 || return $?
+  assertZeroFileSize "$output" || return $?
+
   assertDirectoryExists "$tempHome/.ssh" || return $?
   assertFileExists "$tempHome/.ssh/known_hosts" || return $?
-  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" github.com
-  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" marketacumen.com
+  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
+  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
 
-  sshAddKnownHost github.com || return $?
-  assertFileContains "$tempHome/.ssh/known_hosts" github.com
-  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" marketacumen.com
+  sshAddKnownHost "$sampleDomainA" >"$output" 1>&2 || return $?
+  assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
+  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
+  assertZeroFileSize "$output" || return $?
 
-  sshAddKnownHost marketacumen.com || return $?
-  assertFileContains "$tempHome/.ssh/known_hosts" github.com
-  assertFileContains "$tempHome/.ssh/known_hosts" marketacumen.com
+  sshAddKnownHost "$sampleDomainB" >"$output" 1>&2 || return $?
+  assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
+  assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
+  assertZeroFileSize "$output" || return $?
 
   HOME="$originalHome"
 

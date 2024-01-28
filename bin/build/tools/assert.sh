@@ -9,6 +9,7 @@
 # Depends: colors.sh text.sh prefixLines
 #
 # Docs: contextOpen ./docs/_templates/tools/assert.md
+# Test: contextOpen ./test/tools/assert-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -33,10 +34,10 @@ assertEquals() {
   shift
   shift
   if [ "$expected" != "$actual" ]; then
-    consoleError "assertEquals expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}"
+    consoleError "${FUNCNAME[0]} expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}"
     return "$errorEnvironment"
   else
-    consoleSuccess "assertEquals \"$expected\" == \"$actual\" (correct)"
+    consoleSuccess "${FUNCNAME[0]} \"$expected\" == \"$actual\" (correct)"
   fi
 }
 
@@ -57,10 +58,10 @@ assertNotEquals() {
   shift
   shift
   if [ "$expected" = "$actual" ]; then
-    consoleError "assertNotEquals expected \"$expected\" equals \"$actual\" but should not: ${*-equals}"
+    consoleError "${FUNCNAME[0]} expected \"$expected\" equals \"$actual\" but should not: ${*-equals}"
     return $errorEnvironment
   else
-    consoleSuccess "assertNotEquals \"$expected\" != \"$actual\" (correct)"
+    consoleSuccess "${FUNCNAME[0]} \"$expected\" != \"$actual\" (correct)"
   fi
 }
 
@@ -96,7 +97,7 @@ assertExitCode() {
   restoreErrorExit "$saved"
 
   if [ "$expected" != "$actual" ]; then
-    printf "assertExitCode: %s -> %s, expected %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
+    printf "%s: %s -> %s, expected %s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
     consoleReset 1>&2
     rm "$outputFile"
@@ -135,7 +136,7 @@ assertNotExitCode() {
   restoreErrorExit "$savedErrorExit"
 
   if [ "$expected" = "$actual" ]; then
-    printf "assertExitCode: %s -> %s, expected NOT %s\n" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
+    printf "%s: %s -> %s, expected NOT %s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
     consoleReset 1>&2
     rm "$outputFile"
@@ -145,7 +146,16 @@ assertNotExitCode() {
   return 0
 }
 
-# Usage: assertContains expected actual
+#
+# Assert one string contains another (case-sensitive)
+#
+# Usage: {fn} needle haystack
+#
+# Argument: needle - Thing we are looking for
+# Argument: haystack - Thing we are looking in
+# Exit Code: 0 - The assertion succeeded
+# Exit Code: 1 - Assertion failed
+# Exit Code: 2 - Bad arguments
 #
 assertContains() {
   local expected=$1 actual=$2 shortActual
@@ -157,10 +167,38 @@ assertContains() {
     shortActual="${shortActual} ..."
   fi
   if ! printf %s "$actual" | grep -q "$expected"; then
-    consoleError "assertContains \"$expected\" \"$shortActual\" but should: ${*-contain}"
+    consoleError "${FUNCNAME[0]} \"$expected\" \"$shortActual\" but should: ${*-contain}"
     return "$errorEnvironment"
   else
-    consoleSuccess "assertContains \"$expected\" == \"$shortActual\" (correct)"
+    consoleSuccess "${FUNCNAME[0]} \"$expected\" == \"$shortActual\" (correct)"
+  fi
+}
+
+#
+# Assert one string does not contains another (case-sensitive)
+#
+# Usage: {fn} needle haystack
+#
+# Argument: needle - Thing we are looking for
+# Argument: haystack - Thing we are looking in
+# Exit Code: 0 - The assertion succeeded
+# Exit Code: 1 - Assertion failed
+# Exit Code: 2 - Bad arguments
+# See: assertContains
+assertNotContains() {
+  local expected=$1 actual=$2 shortActual
+  shift || return "$errorArgument"
+
+  shift || return "$errorArgument"
+  shortActual="$(printf %s "$actual" | head -n 5)"
+  if [ "$shortActual" != "$actual" ]; then
+    shortActual="${shortActual} ..."
+  fi
+  if printf %s "$actual" | grep -q "$expected"; then
+    consoleError "${FUNCNAME[0]} \"$expected\" \"$shortActual\" but should NOT: ${*-contain}"
+    return "$errorEnvironment"
+  else
+    consoleSuccess "${FUNCNAME[0]} \"$expected\" == \"$shortActual\" (correct)"
   fi
 }
 
@@ -189,7 +227,7 @@ assertDirectoryExists() {
 
   shift
   if [ ! -d "$d" ]; then
-    printf "%s was expected to be a %s but is NOT %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    printf "%s: %s was expected to be a %s but is NOT %s\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -212,7 +250,7 @@ assertDirectoryDoesNotExist() {
 
   shift
   if [ -d "$d" ]; then
-    printf "%s was expected NOT to be a %s but is %s (%s)\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
     return 1
   fi
 }
@@ -243,7 +281,7 @@ assertFileExists() {
   shift
   message="$*"
   if [ ! -f "$d" ]; then
-    printf "%s was expected to be a %s but is NOT %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    printf "%s: %s was expected to be a %s but is NOT %s\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -266,7 +304,7 @@ assertFileDoesNotExist() {
 
   shift
   if [ -f "$d" ]; then
-    printf "%s was expected NOT to be a %s but is %s (%s)\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
     return 1
   fi
 }
@@ -423,9 +461,9 @@ assertOutputDoesNotContain() {
   fi
   assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
   if ! grep -q "$expected" "$tempFile"; then
-    consoleSuccess "$expected NOT found in ${commands[*]} output (correct)"
+    consoleSuccess "${FUNCNAME[0]} $expected NOT found in ${commands[*]} output (correct)"
   else
-    consoleError "$expected found in $* output (incorrect)" 1>&2
+    consoleError "${FUNCNAME[0]} $expected found in $* output (incorrect)" 1>&2
     prefixLines "$(consoleCode)" <"$tempFile" 1>&2
     consoleError "$(echoBar)" 1>&2
     return 1
@@ -450,11 +488,11 @@ assertFileContains() {
 
   shift
   if [ ! -f "$f" ]; then
-    consoleError "assertFileContains: $f is not a file: $*"
+    consoleError "${FUNCNAME[0]}: $f is not a file: $*"
   fi
   while [ $# -gt 0 ]; do
     if ! grep -q "$1" "$f"; then
-      consoleError "assertFileContains: $f does not contain string: $1"
+      consoleError "${FUNCNAME[0]}: $f does not contain string: $1"
       dumpFile "$f"
       return 1
     fi
@@ -478,16 +516,96 @@ assertFileDoesNotContain() {
 
   shift
   if [ ! -f "$f" ]; then
-    consoleError "assertFileDoesNotContain: $f is not a file: $*"
+    consoleError "${FUNCNAME[0]}: $f is not a file: $*"
   fi
   while [ $# -gt 0 ]; do
     if grep -q "$1" "$f"; then
-      consoleError "assertFileDoesNotContain: $f does contain string: $1"
+      consoleError "${FUNCNAME[0]}: $f does contain string: $1"
       dumpFile "$f"
       return 1
     fi
     shift
   done
+}
+
+#
+# Usage: {fn} expectedSize [ fileName ... ]
+#
+# Argument: - `expectedSize` - Integer file size which `fileName` should be, in bytes.
+# Argument: - `fileName ...` - One ore more file which should be `expectedSize` bytes in size.
+# Exit code: - `1` - If the assertions fails
+# Exit code: - `0` - If the assertion succeeds
+# Environment: If the file does not exist, this will fail.
+# Example:     {fn} 22 .config
+# Example:     {fn} 0 .env
+#
+assertFileSize() {
+  local expectedSize="${1-}" actualSize
+
+  assertExitCode 0 isInteger "$expectedSize" || return $?
+  shift || :
+  while [ $# -gt 0 ]; do
+    if ! actualSize="$(fileSize "$1")"; then
+      consoleError "${FUNCNAME[0]}: fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?"
+      return $errorArgument
+    fi
+    assertEquals "$expectedSize" "$actualSize" "${FUNCNAME[0]}: File $1 actual size $actualSize is not expected $expectedSize" || return $?
+    shift
+  done
+}
+
+#
+# Usage: {fn} expectedSize [ fileName ... ]
+#
+# Argument: - `expectedSize` - Integer file size which `fileName` should NOT be, in bytes.
+# Argument: - `fileName ...` - One ore more file which should NOT be `expectedSize` bytes in size.
+# Exit code: - `1` - If the assertions fails
+# Exit code: - `0` - If the assertion succeeds
+# Environment: If the file does not exist, this will fail.
+# Example:     {fn} 22 .config
+# Example:     {fn} 0 .env
+#
+assertNotFileSize() {
+  local expectedSize="${1-}" actualSize
+
+  assertExitCode 0 isInteger "$expectedSize" || return $?
+  shift || :
+  while [ $# -gt 0 ]; do
+    if ! actualSize="$(fileSize "$1")"; then
+      consoleError "${FUNCNAME[0]}: fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?"
+      return $errorArgument
+    fi
+    assertNotEquals "$expectedSize" "$actualSize" "${FUNCNAME[0]}: File $1 actual size $actualSize incorrectly matches expected $expectedSize" || return $?
+    shift
+  done
+}
+
+#
+# Usage: {fn} [ fileName ... ]
+#
+# Argument: - `fileName ...` - One ore more file which should be zero bytes in size.
+# Exit code: - `1` - If the assertions fails
+# Exit code: - `0` - If the assertion succeeds
+# Environment: If the file does not exist, this will fail.
+# Example:     {fn} .config
+# Example:     {fn} /var/www/log/error.log
+#
+assertZeroFileSize() {
+  assertFileSize 0 "$@"
+}
+
+#
+# Usage: {fn} [ fileName ... ]
+#
+# Argument: - `fileName ...` - One ore more file which should NOT be zero bytes in size.
+# Exit code: - `1` - If the assertions fails
+# Exit code: - `0` - If the assertion succeeds
+# Environment: If the file does not exist, this will fail.
+# Example:     {fn} 22 .config
+# Example:     {fn} 0 .env
+#
+assertNotZeroFileSize() {
+  assertNotFileSize 0 "$@"
 }
 
 ################################################################################################################################
@@ -509,23 +627,7 @@ assertFileDoesNotContain() {
 # Reviewed: 2023-11-14
 #
 assertGreaterThan() {
-  local leftValue=$1 rightValue=$2
-  shift
-  shift
-  if ! isNumber "$leftValue"; then
-    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $leftValue): $*"
-    return "$errorEnvironment"
-  fi
-  if ! isNumber "$rightValue"; then
-    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $rightValue): $*"
-    return "$errorEnvironment"
-  fi
-  if [ "$leftValue" -gt "$rightValue" ]; then
-    consoleSuccess "assertGreaterThan [ \"$leftValue\" -gt \"$rightValue\" ] (correct)"
-  else
-    consoleError "assertGreaterThan [ \"$leftValue\" -gt \"$rightValue\" ] (FAILED): $*"
-    return "$errorEnvironment"
-  fi
+  _assertNumeric "${FUNCNAME[0]}" -gt "$@"
 }
 
 # Assert `leftValue >= rightValue`
@@ -538,23 +640,7 @@ assertGreaterThan() {
 # Reviewed: 2023-11-12
 # Summary: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
-  local leftValue=$1 rightValue=$2
-  shift
-  shift
-  if ! isNumber "$leftValue"; then
-    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $leftValue): $*"
-    return "$errorEnvironment"
-  fi
-  if ! isNumber "$rightValue"; then
-    consoleError "assertGreaterThanOrEqual [ \"$leftValue\" -gt \"$rightValue\" ] (not number $rightValue): $*"
-    return "$errorEnvironment"
-  fi
-  if [ "$leftValue" -ge "$rightValue" ]; then
-    consoleSuccess "assertGreaterThan [ \"$leftValue\" -ge \"$rightValue\" ] (correct)"
-  else
-    consoleError "assertGreaterThan [ \"$leftValue\" -ge \"$rightValue\" ] (FAILED): $*"
-    return "$errorEnvironment"
-  fi
+  _assertNumeric "${FUNCNAME[0]}" -ge "$@"
 }
 
 #
@@ -569,23 +655,7 @@ assertGreaterThanOrEqual() {
 # Exit code: 0 - expected less than to actual
 # Exit code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
-  local leftValue=$1 rightValue=$2
-  shift
-  shift
-  if ! isNumber "$leftValue"; then
-    consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (not number $leftValue): $*"
-    return "$errorEnvironment"
-  fi
-  if ! isNumber "$rightValue"; then
-    consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (not number $rightValue): $*"
-    return "$errorEnvironment"
-  fi
-  if [ "$leftValue" -gt "$rightValue" ]; then
-    consoleSuccess "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (correct)"
-  else
-    consoleError "assertLessThan [ \"$leftValue\" -lt \"$rightValue\" ] (FAILED): $*"
-    return "$errorEnvironment"
-  fi
+  _assertNumeric "${FUNCNAME[0]}" -lt "$@"
 }
 
 # Assert `leftValue <= rightValue`
@@ -600,21 +670,33 @@ assertLessThan() {
 # Exit code: 1 - expected greater than actual, or invalid numbers
 #
 assertLessThanOrEqual() {
-  local leftValue=$1 rightValue=$2
-  shift
-  shift
+  _assertNumeric "${FUNCNAME[0]}" -le "$@"
+}
+
+#
+_assertNumeric() {
+  local func cmp leftValue rightValue
+  func="$1"
+  shift || return $?
+  cmp="$1"
+  shift || return $?
+  leftValue="$1"
+  shift || return $?
+  rightValue="$1"
+  shift || return $?
+
   if ! isNumber "$leftValue"; then
-    consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (not number $leftValue): $*"
+    consoleError "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (not number $leftValue): $*"
     return "$errorEnvironment"
   fi
   if ! isNumber "$rightValue"; then
-    consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (not number $rightValue): $*"
+    consoleError "$func [ \"$leftValue\" $cmp\"$rightValue\" ] (not number $rightValue): $*"
     return "$errorEnvironment"
   fi
-  if [ "$leftValue" -gt "$rightValue" ]; then
-    consoleSuccess "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (correct)"
+  if test "$leftValue" "$cmp" "$rightValue"; then
+    consoleSuccess "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (correct)"
   else
-    consoleError "assertLessThanOrEqual [ \"$leftValue\" -le \"$rightValue\" ] (FAILED): $*"
+    consoleError "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (FAILED): $*"
     return "$errorEnvironment"
   fi
 }

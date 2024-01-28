@@ -35,7 +35,7 @@ errorEnvironment=1
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
 sshAddKnownHost() {
-  local remoteHost
+  local remoteHost exitCode output
   local sshKnown=.ssh/known_hosts
 
   # shellcheck source=/dev/null
@@ -59,20 +59,21 @@ sshAddKnownHost() {
     return "$errorEnvironment"
   fi
 
-  errorLog=$(mktemp)
+  output=$(mktemp)
   while [ $# -gt 0 ]; do
     remoteHost="$1"
     if grep -q "$remoteHost" "$sshKnown"; then
       consoleInfo "Host $remoteHost already known"
-    elif ! ssh-keyscan "$remoteHost" >>"$sshKnown" 2>>"$errorLog"; then
-      consoleError "Failed to add $remoteHost to $sshKnown" 1>&2
-      cat "$errorLog" 1>&2
-      rm "$errorLog" 2>/dev/null || :
+    elif ! ssh-keyscan "$remoteHost" >"$output" 2>&1; then
+      exitCode=$?
+      printf "%s%s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown:")" "$(consoleCode)$exitCode" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
+      rm "$output" 2>/dev/null || :
       return "$errorEnvironment"
     else
-      consoleSuccess "Added $remoteHost to $sshKnown" 1>&2
+      cat "$output" >>"$sshKnown"
+      consoleSuccess "Added $remoteHost to $sshKnown"
     fi
     shift
   done
-  rm "$errorLog" 2>/dev/null || :
+  rm "$output" 2>/dev/null || :
 }
