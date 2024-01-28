@@ -26,6 +26,7 @@ Once included, all functions here are available for use and may affect your buil
 - [Operating System Functions](./os.md)
 - [Pipeline Functions](./pipeline.md)
 - [Prettier Functions](./prettier.md)
+- [SSH Functions](./ssh.md)
 - [Test Support Functions](./tests.md)
 - [Text Functions](./text.md)
 - [Type Functions](./type.md)

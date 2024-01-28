@@ -65,7 +65,7 @@ sshAddKnownHost() {
     if grep -q "$remoteHost" "$sshKnown"; then
       consoleInfo "Host $remoteHost already known"
     elif ! ssh-keyscan "$remoteHost" >>"$sshKnown" 2>>"$errorLog"; then
-      consoleError "Failed to add $remoteHost to $sshKnown" 1>&2
+      consoleError "Failed to add $remoteHost to $sshKnown: $? LOG: $(cat "$errorLog")" 1>&2
       cat "$errorLog" 1>&2
       rm "$errorLog" 2>/dev/null || :
       return "$errorEnvironment"
