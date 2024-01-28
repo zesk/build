@@ -62,6 +62,8 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 # shellcheck source=/dev/null
 . "$toolsDir/docker.sh"
 # shellcheck source=/dev/null
+. "$toolsDir/ssh.sh"
+# shellcheck source=/dev/null
 . "$toolsDir/npm.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/prettier.sh"

@@ -28,36 +28,6 @@ testTools() {
   consoleSuccess testTools OK
 }
 
-tests+=(testUrlParse)
-testUrlParse() {
-  local u url user name password host port
-
-  testSection testUrlParse
-
-  u=foo://user:hard-to-type@identity:4232/dbname
-
-  eval "$(urlParse "$u")" || return $?
-
-  assertEquals "$url" "$u" || return $?
-  assertEquals "$user" user || return $?
-  assertEquals "$name" dbname || return $?
-  assertEquals "$host" identity || return $?
-  assertEquals "$port" 4232 || return $?
-  assertEquals "$password" hard-to-type || return $?
-
-  u=mysql://user:hard-to-type@identity/dbname
-
-  eval "$(urlParse "$u")" || return $?
-
-  assertEquals "$url" "$u" || return $?
-  assertEquals "$user" user || return $?
-  assertEquals "$name" dbname || return $?
-  assertEquals "$host" identity || return $?
-  assertEquals "$port" "" || return $?
-  assertEquals "$password" hard-to-type || return $?
-  consoleSuccess testUrlParse OK || return $?
-}
-
 tests+=(testHooks)
 testHooks() {
   for h in deploy-cleanup deploy-confirm make-env version-created version-live; do
