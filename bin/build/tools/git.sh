@@ -8,6 +8,7 @@
 # bin: git
 #
 # Docs: contextOpen ./docs/_templates/tools/git.md
+# Test: contextOpen ./test/bin/git-tests.sh
 #
 
 # IDENTICAL errorEnvironment 1
@@ -169,7 +170,7 @@ gitRemoveFileFromHistory() {
 }
 
 #
-# Usage: {f
+# Usage: {fn}
 # Exit Code: 0 - the repo has been modified
 # Exit Code: 1 - the repo has NOT bee modified
 #
@@ -233,10 +234,33 @@ gitInsideHook() {
   [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
 }
 
-# bin/build/local-container.sh
+
 #
+# List remote hosts for the current git repository
+# Parses `user@host:path/project.git` and extracts `host`
+# Not really test
+#
+gitRemoteHosts() {
+  local remoteUrl host
+  git remote -v | awk '{ print $2 }' | while read -r remoteUrl; do
+    if ! host=$(urlParseItem host "$remoteUrl") &&
+      ! host=$(urlParseItem host "git://$remoteUrl"); then
+      consoleError "Unable to parse $remoteUrl" 1>&2
+      return $errorArgument
+    fi
+    printf "%s\n" "$host"
+  done
+}
+
+
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+#
+# Various git environment samples from codebase
+
 # GIT_AUTHOR_DATE=@1702851863 +0000
-# GIT_AUTHOR_EMAIL=kent@marketacumen.com
+# GIT_AUTHOR_EMAIL=kent@example.com
 # GIT_AUTHOR_NAME=root
 # GIT_EDITOR=:
 # GIT_EXEC_PATH=/usr/lib/git-core
@@ -248,7 +272,7 @@ gitInsideHook() {
 #
 # GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
 # GIT_AUTHOR_DATE=@1702851303 -0500
-# GIT_AUTHOR_EMAIL=kent@marketacumen.com
+# GIT_AUTHOR_EMAIL=kent@example.com
 # GIT_AUTHOR_NAME=Kent Davidson
 # GIT_EDITOR=:
 # GIT_EXEC_PATH=/usr/local/Cellar/git/2.28.0/libexec/git-core

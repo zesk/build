@@ -47,8 +47,9 @@ Runs ARM64 by default.
 
 #### Arguments
 
-- `imageName` - Required. String. Docker image name to run.
-- `imageApplicationPath` - Path. Docker image path to map to current directory.
+- `--image imageName` - Optional. String. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
+- `--path imageApplicationPath` - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
+- `--platform platform` - Optional. String. Platform to run (arm vs cisc).
 - `envFile` - Optional. File. One or more environment files which are suitable to load for docker; must be valid
 - `extraArgs` - Optional. Mixed. The first non-file argument to `docker.sh` is passed directly through to `docker run` as arguments
 

@@ -80,7 +80,7 @@ buildTestSuite() {
   trap messyTestCleanup EXIT QUIT TERM
 
   messyOption=
-  allTests=(git log version colors type os pipeline identical aws text deploy markdown documentation assert usage docker api tests aws bin)
+  allTests=(git url ssh log version colors type os pipeline identical aws text deploy markdown documentation assert usage docker api tests aws bin)
   while read -r shortTest; do
     if ! inArray "$shortTest" "${allTests[@]}"; then
       consoleError "MISSING $shortTest in allTests"
