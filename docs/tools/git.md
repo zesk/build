@@ -139,10 +139,6 @@ usually have to `git push --force`
 
 Has a git repository been changed from HEAD?
 
-#### Usage
-
-    {f
-
 #### Exit codes
 
 - `0` - the repo has been modified
