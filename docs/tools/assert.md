@@ -3,6 +3,8 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+## Equality
+
 
 ### `assertEquals` - Assert two strings are equal.
 
@@ -61,13 +63,41 @@ assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
 
 File `bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
 
-#### Usage
+### `assertContains` - Assert one string contains another (case-sensitive)
 
-    assertContains expected actual
+Assert one string contains another (case-sensitive)
+
+#### Arguments
+
+- `needle` - Thing we are looking for
+- `haystack` - Thing we are looking in
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - The assertion succeeded
+- `1` - Assertion failed
+- `2` - Bad arguments
+
+### `assertNotContains` - Assert one string does not contains another (case-sensitive)
+
+Assert one string does not contains another (case-sensitive)
+
+#### Arguments
+
+- `needle` - Thing we are looking for
+- `haystack` - Thing we are looking in
+
+#### Exit codes
+
+- `0` - The assertion succeeded
+- `1` - Assertion failed
+- `2` - Bad arguments
+
+#### See Also
+
+- [function assertContains](./docs/tools/assert.md) - [Assert one string contains another (case-sensitive)](https://github.com/zesk/build/blob/main/bin/build/tools/assert.sh#L159)
+
+## Comparison
 
 
 ### `assertGreaterThan` - Assert `leftValue > rightValue`
@@ -177,6 +207,8 @@ assertLessThanOrEqual 3 $found
 
 File `bin/build/tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
 
+## Exit code 
+
 
 ### `assertExitCode` - Assert a process runs and exits with the correct exit
 
@@ -235,6 +267,8 @@ If this fails it will output an error and exit.
 #### Review Status
 
 File `bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
+
+## Output 
 
 
 ### `assertOutputEquals` - Assert output of a binary equals a string
@@ -335,6 +369,8 @@ None
 
 File `bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
 
+## Directory
+
 
 ### `assertDirectoryExists` - Test that a directory exists
 
@@ -395,6 +431,8 @@ None
 #### Review Status
 
 File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
+
+## File
 
 
 ### `assertFileExists` - Test that a file exists
@@ -511,6 +549,88 @@ assertFileDoesNotContain $logFile error Error ERROR
 #### Environment
 
 If the file does not exist, this will fail.
+
+## FileSize
+
+
+#### Arguments
+
+- `expectedSize` - Integer file size which `fileName` should be, in bytes.
+- `fileName ...` - One ore more file which should be `expectedSize` bytes in size.
+
+#### Examples
+
+assertFileSize 22 .config
+    assertFileSize 0 .env
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+#### Arguments
+
+- `expectedSize` - Integer file size which `fileName` should NOT be, in bytes.
+- `fileName ...` - One ore more file which should NOT be `expectedSize` bytes in size.
+
+#### Examples
+
+assertNotFileSize 22 .config
+    assertNotFileSize 0 .env
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+
+#### Arguments
+
+- `fileName ...` - One ore more file which should be zero bytes in size.
+
+#### Examples
+
+assertZeroFileSize .config
+    assertZeroFileSize /var/www/log/error.log
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+#### Arguments
+
+- `fileName ...` - One ore more file which should NOT be zero bytes in size.
+
+#### Examples
+
+assertNotZeroFileSize 22 .config
+    assertNotZeroFileSize 0 .env
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+
+
+## Random
 
 
 ### `randomString` - Outputs 40 random hexadecimal characters, lowercase.
