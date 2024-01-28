@@ -59,21 +59,21 @@ sshAddKnownHost() {
     return "$errorEnvironment"
   fi
 
-  errorLog=$(mktemp)
+  output=$(mktemp)
   while [ $# -gt 0 ]; do
     remoteHost="$1"
     if grep -q "$remoteHost" "$sshKnown"; then
       consoleInfo "Host $remoteHost already known"
-    elif ! ssh-keyscan "$remoteHost" >>"$sshKnown" 2>>"$errorLog"; then
+    elif ! ssh-keyscan "$remoteHost" >"$output"; then
       exitCode=$?
-      consoleError "Failed to add $remoteHost to $sshKnown: $exitCode LOG: $(cat "$errorLog")" 1>&2
-      cat "$errorLog" 1>&2
-      rm "$errorLog" 2>/dev/null || :
+      printf "%s%s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown:")" "$(consoleCode "$exitCode")" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
+      rm "$output" 2>/dev/null || :
       return "$errorEnvironment"
     else
+      cat "$output" >>"$sshKnown"
       consoleSuccess "Added $remoteHost to $sshKnown" 1>&2
     fi
     shift
   done
-  rm "$errorLog" 2>/dev/null || :
+  rm "$output" 2>/dev/null || :
 }
