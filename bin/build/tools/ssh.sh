@@ -66,7 +66,7 @@ sshAddKnownHost() {
       consoleInfo "Host $remoteHost already known"
     elif ! ssh-keyscan "$remoteHost" >"$output"; then
       exitCode=$?
-      printf "%s%s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown:")" "$(consoleCode "$exitCode")" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
+      printf "%s%s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown:")" "$(consoleCode)$exitCode" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
       rm "$output" 2>/dev/null || :
       return "$errorEnvironment"
     else
