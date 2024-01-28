@@ -35,7 +35,7 @@ errorEnvironment=1
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
 sshAddKnownHost() {
-  local remoteHost
+  local remoteHost exitCode
   local sshKnown=.ssh/known_hosts
 
   # shellcheck source=/dev/null
@@ -65,7 +65,8 @@ sshAddKnownHost() {
     if grep -q "$remoteHost" "$sshKnown"; then
       consoleInfo "Host $remoteHost already known"
     elif ! ssh-keyscan "$remoteHost" >>"$sshKnown" 2>>"$errorLog"; then
-      consoleError "Failed to add $remoteHost to $sshKnown: $? LOG: $(cat "$errorLog")" 1>&2
+      exitCode=$?
+      consoleError "Failed to add $remoteHost to $sshKnown: $exitCode LOG: $(cat "$errorLog")" 1>&2
       cat "$errorLog" 1>&2
       rm "$errorLog" 2>/dev/null || :
       return "$errorEnvironment"
