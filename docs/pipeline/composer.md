@@ -11,6 +11,11 @@ When this tool succeeds the `composer` tool has run on a source tree and the `ve
 
 This tools does not install the `composer` binary into the local environment.
 
+
+
+
+shellcheck disable=SC2120
+
 ## Usage
 
     composer.sh [ --help ] [ installDirectory ]

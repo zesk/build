@@ -44,6 +44,7 @@ Handy tools
 ## Zesk Build Guides
 
 - [Usage formatting](./guide/usage.md)
+- [Documentation](./guide/documentation.md)
 - [Functions to be documented](./tools/todo.md)
 
 ## Zesk Build Reference

@@ -31,7 +31,7 @@ errorEnvironment=1
 # See: usageDocument
 #
 usageTemplate() {
-  local usageString binName options delimiter description exitCode
+  local usageString binName options delimiter description exitCode errorColor
 
   binName="$1"
   shift || return "$errorArgument"
@@ -47,7 +47,11 @@ usageTemplate() {
 
   exec 1>&2
   if [ ${#@} -gt 0 ]; then
-    consoleError "$@"
+    errorColor=consoleError
+    if [ "$exitCode" -eq 0 ]; then
+      errorColor=consoleSuccess
+    fi
+    "$errorColor" "$@"
     echo
   fi
   description=${description:-"No description"}

@@ -21,25 +21,31 @@ If your terminal supports colors, then colors are used to make the help more rea
 
 ## Usage basics
 
-The `usage` function in any form has the following call:
+The `usage` function in your own function in any form has the following call:
 
-    usage exitCode message
+    _usageFunction exitCode message
 
 e.g.
 
-    usage $errorEnvironment "Missing file $file"
+    _myFunction "$errorEnvironment" "Missing file $file"
 
 The `exitCode` is required, and `0` is considered success.
 
-- `usage` implementations SHOULD NOT `exit` unless it's the top-level call in a script file, instead it should return the passed in `exitCode`
+- `usage` implementations SHOULD NEVER `exit`, instead it should return the passed in `exitCode`
 - `message` - Is optional but highly recommended for all errors.
 
 Typically it would be written as follows in your code:
 
-    if ! curl -L "$bigFile" -o - > "$savedFile"; then
-        usage 1 "Unable to download $bigFile"
-        return $?
-    fi
+    myFunction() {
+        if ! curl -L "$bigFile" -o - > "$savedFile"; then
+            _myFunction 1 "Unable to download $bigFile"
+            return $?
+        fi
+        ..
+    }
+    _myFunction() {
+       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    }
 
 Extensions to the basic `usage` model typically prefix additional parameters before the `exitCode`.
 
@@ -67,15 +73,9 @@ and the current file to generate (as the code reads the script to extract the co
     set -eou pipefail
 
     cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-    me=$(basename "${BASH_SOURCE[0]}")
 
     # shellcheck source=/dev/null
     . ./bin/build/tools.sh
-
-    _myCoolScriptUsage() {
-        usageDocument "./docs/guide/$me" "myCoolScript" "$@"
-        exit $?
-    }
 
     # Process a cool file
     # Usage: myCoolScript
@@ -92,6 +92,9 @@ and the current file to generate (as the code reads the script to extract the co
         if [ ! -f "$file" ]; then
             _myCoolScriptUsage 1 "$file is not a file"
         fi
+    }
+    _myCoolScriptUsage() {
+       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
     myCoolScript "$@"
@@ -110,36 +113,6 @@ And the output:
     Process a cool file
 
 As additional features are added (using different arguments), the comment method is likely the best bet long-term.
-
-## Usage function example `usageMain` (first version)
-
-You can define:
-
-- `usageDelimiter` - String which is the character used to separate elements in your options
-- `usageOptions()` - Function which outputs to `stdout` a list of name/value options (separated by `usageDelimiter`)  for this command
-- `usageDescription()` - Function which outputs a description of this command to `stdout`
-
-None can be defined and the command will output a basic usage (albeit minimal).
-
-This uses two utility functions `usageOptions`, `usageTemplate` and `usageArguments` all of which output parts of the usage.
-
-A simple example:
-
-    usageOptions() {
-         cat <<EOF
-    --help${usageDelimiter}This help
-    EOF
-    }
-    usageDescription() {
-         cat <<EOF
-    What I like to do when I run.
-    EOF
-    }
-    usage() {
-       usageMain "$me" "$@"
-    }
-
-The build usage code looks for the definition of these functions and gracefully degrades if they are not defined.
 
 ### English-based Argument Descriptions
 
