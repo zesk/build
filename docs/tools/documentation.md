@@ -29,7 +29,7 @@ Document a function and generate a function template (markdown)
 
 - [function bashDocumentationTemplate](./docs/tools/todo.md) - [Document a function and generate a function template (markdown). To](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L409)
 - [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L375)
-- [function repeat](./docs/tools/text.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L135)
+- [function repeat](./docs/tools/decoration.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh#L144)
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
 

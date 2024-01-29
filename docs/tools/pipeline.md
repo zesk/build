@@ -1,9 +1,5 @@
 # Pipeline Functions
 
-    ░█▀█░▀█▀░█▀█░█▀▀░█░░░▀█▀░█▀█░█▀▀
-    ░█▀▀░░█░░█▀▀░█▀▀░█░░░░█░░█░█░█▀▀
-    ░▀░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
-
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
@@ -248,34 +244,6 @@ Get the current IP address of the host
 #### Exit codes
 
 - `1` - Returns
-
-### `bigText` - smblock (regular)
-
-smblock (regular)
-
-▌  ▗   ▀▛▘     ▐
-▛▀▖▄ ▞▀▌▌▞▀▖▚▗▘▜▀
-▌ ▌▐ ▚▄▌▌▛▀ ▗▚ ▐ ▖
-▀▀ ▀▘▗▄▘▘▝▀▘▘ ▘ ▀
-
-smmono12 (--bigger)
-
-▗▖     █       ▗▄▄▄▖
-▐▌     ▀       ▝▀█▀▘           ▐▌
-▐▙█▙  ██   ▟█▟▌  █   ▟█▙ ▝█ █▘▐███
-▐▛ ▜▌  █  ▐▛ ▜▌  █  ▐▙▄▟▌ ▐█▌  ▐▌
-▐▌ ▐▌  █  ▐▌ ▐▌  █  ▐▛▀▀▘ ▗█▖  ▐▌
-▐█▄█▘▗▄█▄▖▝█▄█▌  █  ▝█▄▄▌ ▟▀▙  ▐▙▄
-▝▘▀▘ ▝▀▀▀▘ ▞▀▐▌  ▀   ▝▀▀ ▝▀ ▀▘  ▀▀
-        ▜█▛▘
-
-#### Usage
-
-    bigText [ --bigger ] Text to output
-
-#### Exit codes
-
-- `0` - Always succeeds
 
 ## Deployment tools
 

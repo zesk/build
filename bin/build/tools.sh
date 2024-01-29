@@ -48,10 +48,14 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/pipeline.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/apt.sh"
+
 # shellcheck source=/dev/null
 . "$toolsDir/os.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/log.sh"
+
+# shellcheck source=/dev/null
+. "$toolsDir/decoration.sh"
 
 # shellcheck source=/dev/null
 . "$toolsDir/usage.sh"
@@ -67,6 +71,9 @@ toolsDir="$(dirname "${BASH_SOURCE[0]}")/tools"
 . "$toolsDir/npm.sh"
 # shellcheck source=/dev/null
 . "$toolsDir/prettier.sh"
+# shellcheck source=/dev/null
+. "$toolsDir/php.sh"
+
 # shellcheck source=/dev/null
 . "$toolsDir/install.sh"
 # shellcheck source=/dev/null

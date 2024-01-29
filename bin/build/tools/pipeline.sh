@@ -336,10 +336,6 @@ bigText() {
   toilet -f $font "$@"
 }
 
-_makeEnvironmentUsage() {
-  usageDocument "./bin/build/tools/pipeline.sh" "makeEnvironment" "$@"
-}
-
 applicationEnvironment() {
   local hook
 
@@ -446,7 +442,6 @@ showEnvironment() {
 }
 
 #
-# fn: {base}
 # Usage: {fn} [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
 # Argument: requireEnv1 - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
 # Argument: optionalEnv1 - Optional. One or more environment variables which are included if blank or not
@@ -462,7 +457,7 @@ makeEnvironment() {
   read -r -a requireEnvironment < <(applicationEnvironment) || :
 
   if ! showEnvironment "$@" >/dev/null; then
-    _makeEnvironmentUsage "$errorEnvironment" "Missing values"
+    _makeEnvironment "$errorEnvironment" "Missing values"
     showEnvironment 1>&2
     return "$errorEnvironment"
   fi
@@ -490,6 +485,10 @@ makeEnvironment() {
     fi
   done
 }
+_makeEnvironment() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 
 getApplicationDeployVersion() {
   local p=$1 value appChecksumFile=.deploy/APPLICATION_ID

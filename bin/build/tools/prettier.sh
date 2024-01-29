@@ -8,6 +8,9 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+# Test: o test/tools/prettier-tools.sh
+# Docs: o docs/_templates/tools/prettier.md
+#
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1

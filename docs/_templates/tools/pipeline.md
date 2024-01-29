@@ -1,9 +1,5 @@
 # Pipeline Functions
 
-    ░█▀█░▀█▀░█▀█░█▀▀░█░░░▀█▀░█▀█░█▀▀
-    ░█▀▀░░█░░█▀▀░█▀▀░█░░░░█░░█░█░█▀▀
-    ░▀░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
-
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
@@ -28,7 +24,6 @@
 {buildFailed}
 {versionSort}
 {ipLookup}
-{bigText}
 
 ## Deployment tools
 

@@ -47,8 +47,14 @@ usageTemplate() {
 
   exec 1>&2
   if [ ${#@} -gt 0 ]; then
-    consoleError "$@"
-    echo
+    if [ "$exitCode" -eq 0 ]; then
+      printf "%s\n\n" "$(consoleSuccess "$@")"
+    elif [ "$exitCode" != "$errorArgument" ]; then
+      printf "%s (-> %s)\n" "$(consoleError "$@")" "$(consoleCode " $exitCode ")"
+      return "$exitCode"
+    else
+      printf "%s (-> %s)\n\n" "$(consoleError "$@")" "$(consoleCode " $exitCode ")"
+    fi
   fi
   description=${description:-"No description"}
   nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
