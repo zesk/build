@@ -19,4 +19,4 @@ Works from the current directory
 
 ## See Also
 
-{SEE:makeShellFilesExecutable}
+- [function makeShellFilesExecutable](./docs/tools/os.md) - [Makes all `*.sh` files executable](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L230)

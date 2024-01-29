@@ -28,7 +28,7 @@ If your project has specific environment variables, you can add them in your `ma
 
 #### See Also
 
-{SEE:makeEnvironment}
+- [function makeEnvironment](./docs/tools/todo.md) - [Create environment file `.env` for build.](https://github.com/zesk/build/blob/main/bin/build/tools/pipeline.sh#L453)
 
 
 ### `deploy-start.sh` - Deployment "start" script

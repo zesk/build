@@ -31,54 +31,6 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 - `0` - Always succeeds
 
-#### Arguments
-
-- `settingsFile` - Required. Cached documentation settings.
-- `template` - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Template file not found
-
-#### See Also
-
-- [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L375)
-- [function _bashDocumentationFormatter_exit_code](./docs/tools/documentation.md) - [Format code blocks (does markdown_FormatList)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L698)
-
-### `bashDocumentation_FindFunctionDefinition` - Find single location where a function is defined in a directory of shell scripts
-
-Finds a function definition and outputs the file in which it is found
-Searches solely `.sh` files. (Bash or sh scripts)
-
-Succeeds IFF only one version of a function is found.
-
-#### Usage
-
-    bashDocumentation_FindFunctionDefinition directory fn
-
-#### Arguments
-
-- `directory` - The directory to search
-- `fn` - A function to find the file in which it is defined
-
-#### Examples
-
-bashDocumentation_FindFunctionDefinition . usage
-
-#### Exit codes
-
-- `0` - if one or more function definitions are found
-- `1` - if no function definitions are found
-
-#### Environment
-
-Generates a temporary file which is removed
-
-#### See Also
-
-- [function bashDocumentation_FindFunctionDefinitions](./docs/tools/documentation.md) - [Find where a function is defined in a directory of shell scripts](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L633)
-
 ### `test.sh` - Run Zesk Build tests
 
 Run Zesk Build tests

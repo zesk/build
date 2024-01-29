@@ -31,7 +31,7 @@ errorEnvironment=1
 # See: usageDocument
 #
 usageTemplate() {
-  local usageString binName options delimiter description exitCode errorColor
+  local usageString binName options delimiter description exitCode
 
   binName="$1"
   shift || return "$errorArgument"
@@ -47,12 +47,14 @@ usageTemplate() {
 
   exec 1>&2
   if [ ${#@} -gt 0 ]; then
-    errorColor=consoleError
     if [ "$exitCode" -eq 0 ]; then
-      errorColor=consoleSuccess
+      printf "%s\n\n" "$(consoleSuccess "$@")"
+    elif [ "$exitCode" != "$errorArgument" ]; then
+      printf "%s (-> %s)\n" "$(consoleError "$@")" "$(consoleCode " $exitCode ")"
+      return "$exitCode"
+    else
+      printf "%s (-> %s)\n\n" "$(consoleError "$@")" "$(consoleCode " $exitCode ")"
     fi
-    "$errorColor" "$@"
-    echo
   fi
   description=${description:-"No description"}
   nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
