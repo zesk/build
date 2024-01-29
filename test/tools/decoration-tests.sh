@@ -11,7 +11,7 @@ declare -a tests
 
 tests+=(testRepeat)
 testRepeat() {
-  assertEquals "$(repeat 10 printf "x")" "xxxxxxxxxx"
+  assertEquals "$(repeat 10 "x")" "xxxxxxxxxx"
 }
 
 tests+=(testAlignRight)
