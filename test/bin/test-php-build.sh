@@ -11,7 +11,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-
 #
 # Usage: {fn} [ --show ] [ --verbose ] [ --keep ]
 # Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.
@@ -38,7 +37,7 @@ testPHPBuild() {
         if [ -d "$1" ]; then
           echo "Home is $1"
         else
-          _testPHPBuildUsage $errorArgument "No arguments"
+          _testPHPBuild $errorArgument "No arguments"
         fi
         ;;
     esac
@@ -142,8 +141,8 @@ testPHPBuild() {
   cd "$here" || :
   consoleSuccess Passed.
 }
-_testPHPBuildUsage() {
-  usageDocument "test/bin/$(basename "${BASH_SOURCE[0]}")" testPHPBuild
+_testPHPBuild() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 testPHPBuild "$@"
