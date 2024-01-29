@@ -2,9 +2,10 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends on no other .sh files
-# Shell Dependencies: awk sed date echo sort printf
-# o ./docs/_templates/tools/text.md
+# Shell Dependencies: awk sed date sort printf
+#
+# Docs: o ./docs/_templates/tools/text.md
+# Test: o ./test/tools/text-tests.sh
 #
 ###############################################################################
 #
@@ -125,77 +126,6 @@ quoteBashString() {
 }
 
 #
-# Usage: repeat count string [ ... ]
-# Argument: `count` - Required, integer count of times to repeat
-# Argument: `string` - A sequence of characters to repeat
-# Argument: ... - Additional arguments are output using shell expansion of `$*`
-# Example:     echo $(repeat 80 =)
-# Example:     echo Hello world
-# Example:     echo $(repeat 80 -)
-#
-repeat() {
-  local count=$((${1:-2} + 0))
-  local debug
-
-  debug=$(! isBashDebug || printf 1)
-  set +x
-  shift
-  while [ $count -gt 0 ]; do
-    printf %s "$*"
-    count=$((count - 1))
-  done
-  if test "$debug"; then
-    set -x
-  fi
-}
-
-#
-# Usage: echoBar [ alternateChar [ offset ] ]
-# Output a bar as wide as the console using the `=` symbol.
-# Argument: alternateChar - Use an alternate character or string output
-# Argument: offset - an integer offset to increase or decrease the size of the bar (default is `0`)
-# Environment: Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
-# Example:     consoleSuccess $(echoBar =-)
-# Example:     consoleSuccess $(echoBar "- Success ")
-# Example:     consoleMagenta $(echoBar +-)
-echoBar() {
-  local c="${1:-=}"
-  local n=$(($(consoleColumns) / ${#c}))
-  local delta=$((${2:-0} + 0))
-
-  n=$((n + delta))
-  repeat "$n" "$c"
-}
-
-#
-# Prefix output lines with a string, useful to format output or add color codes to
-# consoles which do not honor colors line-by-line. Intended to be used as a pipe.
-#
-# Summary: Prefix output lines with a string
-# Usage: prefixLines [ text .. ] < fileToPrefixLines
-# Exit Code: 0
-# Argument: `text` - Prefix each line with this text
-# Example:     cat "$file" | prefixLines "$(consoleCode)"
-# Example:     cat "$errors" | prefixLines "    ERROR: "
-#
-prefixLines() {
-  local prefix="$*"
-  while IFS= read -r line; do
-    printf "%s%s\n" "$prefix" "$line"
-  done
-}
-
-###############################################################################
-#
-#    ▐     ▗
-# ▞▀▘▜▀ ▙▀▖▄ ▛▀▖▞▀▌▞▀▘
-# ▝▀▖▐ ▖▌  ▐ ▌ ▌▚▄▌▝▀▖
-# ▀▀  ▀ ▘  ▀▘▘ ▘▗▄▘▀▀
-#
-#------------------------------------------------------------------------------
-#
-
-#
 # Check if an element exists in an array
 #
 # Usage: inArray element [ arrayElement0 arrayElement1 ... ]
@@ -300,44 +230,6 @@ plural() {
 }
 
 #
-# Format text and align it right using spaces.
-#
-# Usage: alignRight characterWidth text [ ... ]
-# Summary: align text right
-# Argument: `characterWidth` - Characters to align right
-# Argument: `text ...` - Text to align right
-# Example:     printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
-# Example:     printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
-# Example:                 Name: Juanita
-# Example:           Profession: Engineer
-#
-alignRight() {
-  local n=$(($1 + 0))
-  shift
-  printf "%${n}s" "$*"
-}
-
-#
-# Format text and align it left using spaces.
-#
-# Usage: alignLeft characterWidth text [ ... ]
-#
-# Summary: align text left
-# Argument: - characterWidth - Characters to align left
-# Argument: - `text ...` - Text to align left
-#
-# Example:     printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
-# Example:     printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
-# Example:     Name          : Tyrone
-# Example:     Profession    : Engineer
-#
-alignLeft() {
-  local n=$(($1 + 0))
-  shift
-  printf "%-${n}s" "$*"
-}
-
-#
 # Convert text to lowercase
 #
 # Usage: lowercase [ text ... ]
@@ -350,63 +242,6 @@ lowercase() {
     fi
     shift
   done
-}
-
-#
-# Not sure if this works really, need to pair with
-# something in local script to make an array possibly
-#
-argumentsToArray() {
-  local -a a=("$@")
-  echo "${a[@]}"
-}
-
-#
-# Heading for section output
-#
-# Summary: Text heading decoration
-# Usage: boxedHeading [ --size size ] text [ ... ]
-# Argument: --size size - Number of liens to output
-# Argument: text ... - Text to put in the box
-# Example:     boxedHeading Moving ...
-# Output: +================================================================================================+
-# Output: |                                                                                                |
-# Output: | Moving ...                                                                                     |
-# Output: |                                                                                                |
-# Output: +================================================================================================+
-#
-boxedHeading() {
-  local bar spaces text=() textString emptyBar nLines
-
-  nLines=1
-  while [ $# -gt 0 ]; do
-    case $1 in
-      --size)
-        shift
-        nLines="$1"
-        if ! isUnsignedNumber "$nLines"; then
-          consoleError "--size requires an unsigned integer" 1>&2
-          return 1
-        fi
-        ;;
-      *)
-        text+=("$1")
-        ;;
-    esac
-    shift
-  done
-  bar="+$(echoBar '' -2)+"
-  emptyBar="|$(echoBar ' ' -2)|"
-
-  # convert to string
-  textString="${text[*]}"
-
-  spaces=$((${#bar} - ${#textString} - 4))
-  consoleDecoration "$bar"
-  runCount "$nLines" consoleDecoration "$emptyBar"
-  echo "$(consoleDecoration -n \|) $(_consoleInfo "" -n "$textString")$(repeat $spaces " ") $(consoleDecoration -n \|)"
-  runCount "$nLines" consoleDecoration "$emptyBar"
-  consoleDecoration "$bar"
 }
 
 #

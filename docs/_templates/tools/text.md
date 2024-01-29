@@ -28,15 +28,6 @@
 
 {plural}
 
-## Decoration
-
-{repeat}
-{echoBar}
-{prefixLines}
-{alignRight}
-{alignLeft}
-{boxedHeading}
-
 ## Transformation
 
 {lowercase}

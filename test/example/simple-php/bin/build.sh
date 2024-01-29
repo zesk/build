@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Dead simple PHP build
+#
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
@@ -8,12 +10,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 [ -d ./bin/build ] || ./bin/pipeline/install-bin-build.sh
 
-export APP_THING=secret
-
-if ! bin/build/pipeline/php-build.sh --deployment staging --skip-tag APP_THING -- simple.application.php public src docs; then
-  consoleError "Build failed"
+if ! bin/build/tools.sh phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs; then
+  bin/build/tools.sh consoleError "Build failed" 1>&2
   return 1
 fi
-echo "PWD: $(pwd)"
-echo "LS:"
-ls -la

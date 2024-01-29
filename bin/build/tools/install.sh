@@ -46,22 +46,6 @@ pythonInstall() {
   whichApt python python-is-python3 python3 python3-pip "$@"
 }
 
-# Install `php`
-#
-# If this fails it will output the installation log.
-#
-# Usage: phpInstall [ package ... ]
-# Argument: package - Additional packages to install
-# Summary: Install `php`
-# When this tool succeeds the `python` binary is available in the local operating system.
-# Exit Code: 1 - If installation fails
-# Exit Code: 0 - If installation succeeds
-# Binary: php.sh
-#
-phpInstall() {
-  whichApt php php-cli "$@"
-}
-
 # Install `docker-compose`
 #
 # If this fails it will output the installation log.
