@@ -12,6 +12,7 @@
 
 {gitTagDelete}
 {gitTagAgain}
+{gitTagVersion}
 {gitVersionList}
 {gitVersionLast}
 {veeGitTag}

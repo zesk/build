@@ -234,7 +234,6 @@ gitInsideHook() {
   [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
 }
 
-
 #
 # List remote hosts for the current git repository
 # Parses `user@host:path/project.git` and extracts `host`
@@ -252,6 +251,120 @@ gitRemoteHosts() {
   done
 }
 
+# Generates a git tag for a build version, so `v1.0d1`, `v1.0d2`, for version `v1.0`.
+# Tag a version of the software in git and push tags to origin.
+# If this fails it will output the installation log.
+# When this tool succeeds the git repository contains a tag with the suffix and an index which represents the build index.
+#
+# Default is: `--suffix rc` **release candidate**
+#
+# - `d` - for **development**
+# - `s` - for **staging**
+# - `rc` - for **release candidate**
+#
+# Usage: {fn} [ --suffix versionSuffix ] Tag version in git
+# Argument: --suffix - word to use between version and index as: `{current}rc{nextIndex}`
+# Hook: version-current
+# Environment: BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is `rc`.
+# Environment: BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.
+gitTagVersion() {
+  local versionSuffix start currentVersion previousVersion releaseNotes
+  local tagPrefix index tryVersion maximumTagsPerVersion
+
+  # shellcheck source=/dev/null
+  . ./bin/build/env/BUILD_MAXIMUM_TAGS_PER_VERSION.sh
+
+  maximumTagsPerVersion=${BUILD_MAXIMUM_TAGS_PER_VERSION:-1000}
+  init=$(beginTiming)
+
+  start=$(beginTiming)
+  versionSuffix=
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --suffix)
+        shift || :
+        versionSuffix="${1-}"
+        if [ -z "$versionSuffix" ]; then
+          _gitTagVersion $errorArgument "--suffix is blank" || return $?
+        fi
+        shift
+        ;;
+      *)
+        _gitTagVersion $errorArgument "Unknown argument: $1" || return $?
+        ;;
+    esac
+  done
+
+  consoleInfo -n "Pulling tags from origin "
+  if ! git pull --tags origin >/dev/null; then
+    _gitTagVersion "$errorEnvironment" "Pulling tags failed" || return $?
+  fi
+
+  reportTiming "$start" || :
+
+  if ! currentVersion=$(runHook version-current); then
+    _gitTagVersion "$errorEnvironment" "runHook version-current" || return $?
+  fi
+  if ! previousVersion=$(gitVersionLast "$currentVersion"); then
+    _gitTagVersion "$errorEnvironment" "gitVersionLast $currentVersion failed" || return $?
+  fi
+
+  if git show-ref --tags "$currentVersion" --quiet; then
+    consoleError "Version $currentVersion already exists, already tagged." 1>&2
+    return 16
+  fi
+  if [ "$previousVersion" = "$currentVersion" ]; then
+    consoleError "Version $currentVersion up to date, nothing to do." 1>&2
+    return 17
+  fi
+  echo "$(consoleLabel -n "Previous version is: ") $(consoleValue -n "$previousVersion")"
+  echo "$(consoleLabel -n " Release version is: ") $(consoleValue -n "$currentVersion")"
+
+  if ! releaseNotes="$(releaseNotes "$currentVersion")"; then
+    _gitTagVersion "$errorEnvironment" "releaseNotes $currentVersion failed" || return $?
+  fi
+
+  if [ ! -f "$releaseNotes" ]; then
+    consoleError "Version $currentVersion no release notes \"$releaseNotes\" found, stopping." 1>&2
+    return 18
+  fi
+
+  # rc is for release candidate
+  versionSuffix=${versionSuffix:-${BUILD_VERSION_SUFFIX:-rc}}
+  tagPrefix="${currentVersion}${versionSuffix}"
+  index=0
+  while true; do
+    tryVersion="$tagPrefix$index"
+    if ! git show-ref --tags "$tryVersion" --quiet; then
+      break
+    fi
+    index=$((index + 1))
+    if [ $index -gt "$maximumTagsPerVersion" ]; then
+      consoleError "Tag version exceeded maximum of $maximumTagsPerVersion" 1>&2
+      return 19
+    fi
+  done
+
+  consoleInfo "Tagging version $tryVersion and pushing ... " || :
+  if ! git tag "$tryVersion"; then
+    consoleError "Failed to tag $tryVersion"
+    return 20
+  fi
+  if ! git push --tags --quiet; then
+    consoleError "git push --tags failed"
+    return 21
+  fi
+  if ! git fetch -q; then
+    consoleError "git fetch failed"
+    return 212
+  fi
+
+  reportTiming "$init" "Tagged version completed in" || :
+}
+_gitTagVersion() {
+  usageTemplate "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  return $?
+}
 
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
