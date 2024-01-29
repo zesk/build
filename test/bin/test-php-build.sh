@@ -11,10 +11,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-_testPHPBuildUsage() {
-  usageDocument "test/bin/$(basename "${BASH_SOURCE[0]}")" testPHPBuild
-}
-
 #
 # Usage: {fn} [ --show ] [ --verbose ] [ --keep ]
 # Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.
@@ -41,7 +37,7 @@ testPHPBuild() {
         if [ -d "$1" ]; then
           echo "Home is $1"
         else
-          _testPHPBuildUsage $errorArgument "No arguments"
+          _testPHPBuild $errorArgument "No arguments"
         fi
         ;;
     esac
@@ -96,47 +92,57 @@ testPHPBuild() {
 
   assertEquals "${BUILD_TARGET}" "app.tar.gz"
 
-  bin/build.sh
+  # No environment
+  bin/build.sh || return $?
+  assertFileExists "./app.tar.gz" "pwd: $(pwd)" || return $?
+  rm ./app.tar.gz || :
 
-  assertFileExists "./app.tar.gz" "pwd: $(pwd)"
+  export APP_THING=secret
+
+  # Add an environment
+  bin/build.sh APP_THING || return $?
+  assertFileExists "./app.tar.gz" "pwd: $(pwd)" || return $?
 
   BUILD_TARGET=alternate.tar.gz
-  bin/build.sh
-  assertFileExists "$BUILD_TARGET" "pwd: $(pwd)"
+  bin/build.sh || return $?
+  assertFileExists "$BUILD_TARGET" "pwd: $(pwd)" || return $?
 
-  mkdir ./compare-app
-  mkdir ./compare-alternate
-  cd ./compare-app
-  tar xf ../app.tar.gz
+  mkdir ./compare-app || return $?
+  mkdir ./compare-alternate || return $?
+  cd ./compare-app || return $?
+  tar xf ../app.tar.gz || return $?
   # Vendor has random numbers in the classnames
-  rm -rf ./vendor
-  cd ..
+  rm -rf ./vendor || return $?
+  cd .. || return $?
 
-  cd ./compare-alternate
-  tar xf ../alternate.tar.gz
-  rm -rf ./vendor
-  cd ..
+  cd ./compare-alternate || return $?
+  tar xf ../alternate.tar.gz || return $?
+  rm -rf ./vendor || return $?
+  cd .. || return $?
 
   if ! diff -r ./compare-app ./compare-alternate; then
     consoleError "Directories differ - failed"
     return $?
   fi
 
-  manifest=$(mktemp)
-  tar tf app.tar.gz >"$manifest.complete"
-  grep -v 'vendor/' "$manifest.complete" >"$manifest"
+  manifest=$(mktemp) || return $?
+  tar tf app.tar.gz >"$manifest.complete" || return $?
+  grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
   assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env
   assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml
   assertFileContains "$manifest.complete" vendor/zesk vendor/composer
 
   if ! test "$keepFlag"; then
-    consoleWarning Deleting app.tar.gz "$BUILD_TARGET"
-    rm app.tar.gz "$BUILD_TARGET"
+    consoleWarning Deleting app.tar.gz "$BUILD_TARGET" || :
+    rm app.tar.gz "$BUILD_TARGET" || :
     cd "$here" || :
     rm -rf ./compare-app ./compare-alternate "$manifest.complete" "$manifest" ./.testPHPBuild.*
   fi
   cd "$here" || :
   consoleSuccess Passed.
+}
+_testPHPBuild() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 testPHPBuild "$@"

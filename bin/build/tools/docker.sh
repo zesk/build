@@ -179,6 +179,7 @@ dockerLocalContainer() {
   exitCode=0
   envFiles=()
   extraArgs=()
+  tempEnvs=()
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
       _dockerLocalContainer "$errorArgument" "Blank argument"
