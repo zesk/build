@@ -192,7 +192,7 @@ Works from the current directory
 
 #### See Also
 
-- [function makeShellFilesExecutable](./docs/tools/os.md) - [Makes all `*.sh` files executable](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L233)
+- [function makeShellFilesExecutable](./docs/tools/os.md) - [Makes all `*.sh` files executable](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L230)
 
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp

@@ -5,7 +5,10 @@
 # Depends on no other .sh files
 # Shell Dependencies: awk sed date echo sort printf
 #
-###############################################################################
+# Docs: contextOpen ./docs/_templates/tools/url.md
+# Test: contextOpen ./test/tools/url-tests.sh
+#
+# ##############################################################################
 #
 #   _   _ ____  _
 #  | | | |  _ \| |
@@ -29,7 +32,7 @@ errorArgument=2
 # - `port` - Database port
 # - `name` - Database name
 #
-# Does little to no validation of anything so best used for well-formed input.
+# Does little to no validation of any characters so best used for well-formed input.
 #
 # Exit Code: 0 - If parsing succeeds
 # Exit Code: 1 - If parsing fails
@@ -40,60 +43,94 @@ errorArgument=2
 # Example:     echo $name
 #
 urlParse() {
-  local url="${1-}" v name scheme user password host port failed
+  local u="${1-}"
 
-  name=${url##*/}
-  # strip ?
-  name=${name%%\?*}
-  # strip #
-  name=${name%%#*}
+  # parts
+  local url path name scheme user password host port error
 
-  # extract scheme before ://
-  scheme=${url%%://*}
-  # user is after scheme
-  user=${url##*://}
-  # before password
-  user=${user%%:*}
-
-  password=${url%%@*}
-  password=${password##*:}
-
-  host=${url##*@}
-  host=${host%%/*}
-
-  port=${host##*:}
-  if [ "$port" = "$host" ]; then
-    port=
+  # u is scheme://user:pass@host:port/path...
+  url="$u"
+  scheme="${u%%://*}"
+  user=
+  password=
+  host=
+  port=
+  path=
+  name=
+  if [ "$scheme" != "$url" ] && [ -n "$scheme" ]; then
+    # Have a scheme
+    u="${u#*://}"
+    # u is user:pass@host:port/path...
+    # path
+    name="${u#*/}"
+    if [ "$name" != "$u" ]; then
+      path="/$name"
+    else
+      path="/"
+      name=
+    fi
+    u="${u%%/*}"
+    # u now possibly: user:pass@host:port
+    host="${u##*@}"
+    if [ "$host" = "$u" ]; then
+      user=
+      password=
+    else
+      user="${u%@*}"
+      password="${user#*:}"
+      if [ "$password" = "$user" ]; then
+        password=
+      else
+        user="${user%%:*}"
+      fi
+    fi
+    port="${host##*:}"
+    if [ "$port" = "$host" ]; then
+      port=
+    else
+      host="${host%:*}"
+    fi
+    error=
+  else
+    error="no-scheme"
+    scheme=
   fi
-  host=${host%%:*}
 
-  failed=
-  if [ "$scheme" = "$url" ] || [ "$user" = "$url" ] || [ "$password" = "$url" ] || [ "$host" = "$url" ]; then
-    echo "url=$url" 1>&2
-    echo "failed=1" 1>&2
-    return $errorArgument
-  fi
-
-  for v in url scheme name user password host port failed; do
+  for v in url path name scheme user password host port error; do
     printf "%s=%s\n" "$v" "$(quoteBashString "${!v}")"
   done
+  : "$path" # usage warning
+  # Exit code 1 if failed
+  [ -z "$error" ]
 }
 
 #
 # Gets the component of the URL from a given database URL.
 # Summary: Get a database URL component directly
-# Usage: urlParseItem url name
-# Argument: url - a Uniform Resource Locator used to specify a database connection
-# Argument: name - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
-# Example:     consoleInfo "Connecting as $(urlParseItem "$url" user)"
+# Usage: urlParseItem component url0 [ url1 ... ]
+# Argument: url0 - String. URL. Required. A Uniform Resource Locator used to specify a database connection
+# Argument: component - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
+# Example:     consoleInfo "Connecting as $(urlParseItem user "$url")"
 #
 urlParseItem() {
+  local component parsed
   # shellcheck disable=SC2034
-  local scheme url name user password host port failed
-  if [ $# -ne 2 ]; then
-    consoleError "urlParseItem url name" 1>&2
+  local url path name scheme user password host port error
+  if [ $# -lt 2 ]; then
+    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$errorArgument" "Need at least one url"
     return $errorArgument
   fi
-  eval "$(urlParse "$1")"
-  printf "%s\n" "${!2}"
+  component="$1"
+  shift
+  while [ $# -gt 0 ]; do
+    if ! parsed=$(urlParse "$1"); then
+      return $errorArgument
+    fi
+    if ! eval "$parsed"; then
+      consoleError "Failed to eval $parsed" 1>&2
+      return $errorArgument
+    fi
+    printf "%s\n" "${!component-}"
+    shift
+  done
 }

@@ -2,7 +2,7 @@
 #
 # Support scripts to set up a system for running PHP and Apache software
 #
-# Copyright &copy; 2024 Market Acumen, LLC
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 set -eou pipefail
 

@@ -10,8 +10,14 @@ declare -a tests
 
 errorEnvironment=1
 
-tests+=(testGitVersionList)
-testGitVersionList() {
+gitHasAnyRefs() {
+  if [ $((0 + $(git show-ref | grep -c refs/tags))) -gt 0 ]; then
+    return 0
+  fi
+  return 1
+}
+
+gitAddRemotesToSSHKnown() {
   local remoteHost
   local sshKnown=.ssh/known_hosts
 
@@ -35,16 +41,27 @@ testGitVersionList() {
   done
   chmod 700 "$HOME/.ssh" || return $?
   chmod 600 "$sshKnown" || return $?
-  if ! git pull --tags >/dev/null 2>/dev/null; then
-    consoleError "Unable to pull git tags ... failed" 1>&2
-    return "$errorEnvironment"
+}
+
+tests+=(testGitVersionList)
+testGitVersionList() {
+
+  if ! gitHasAnyRefs; then
+    if ! gitAddRemotesToSSHKnown; then
+      return $?
+    fi
+    if ! git pull --tags >/dev/null 2>/dev/null; then
+      consoleError "Unable to pull git tags ... failed" 1>&2
+      return "$errorEnvironment"
+    fi
   fi
-  echo "PWD: $(pwd)"
-  echo Version List:
-  gitVersionList
-  echo "Count: \"$(gitVersionList | wc -l)\""
-  echo "CountT: \"$(gitVersionList | wc -l | trimSpacePipe)\""
-  echo "Count0: \"$(($(gitVersionList | wc -l) + 0))\""
-  echo "Count1: \"$(($(gitVersionList | wc -l) + 0))\""
+
+  #  echo "PWD: $(pwd)"
+  #  echo Version List:
+  #  gitVersionList
+  #  echo "Count: \"$(gitVersionList | wc -l)\""
+  #  echo "CountT: \"$(gitVersionList | wc -l | trimSpacePipe)\""
+  #  echo "Count0: \"$(($(gitVersionList | wc -l) + 0))\""
+  #  echo "Count1: \"$(($(gitVersionList | wc -l) + 0))\""
   assertGreaterThan $(($(gitVersionList | wc -l | trimSpacePipe) + 0)) 0
 }

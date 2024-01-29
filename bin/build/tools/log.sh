@@ -2,7 +2,7 @@
 #
 # Log file management
 #
-# Copyright &copy; 2024 Market Acumen, LLC
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Depends: documentation.sh colors.sh
 # bin: find
