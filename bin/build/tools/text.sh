@@ -454,7 +454,7 @@ stringOffset() {
 # Example:     fi
 #
 isUpToDate() {
-  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate
+  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate keyTimestamp
 
   keyDate="${1-}"
   shift || return "$errorArgument"
@@ -473,11 +473,11 @@ isUpToDate() {
     consoleError "isUpToDate $keyDate $upToDateDays - negative values not allowed" 1>&2
     return 1
   fi
-  if ! dateToTimestamp "$keyDate" >/dev/null; then
+  if ! keyTimestamp=$(dateToTimestamp "$keyDate") >/dev/null; then
     consoleError "isUpToDate $keyDate $upToDateDays - Invalid date $keyDate" 1>&2
     return 1
   fi
-  accessKeyTimestamp=$(($(dateToTimestamp "$keyDate") + 0))
+  accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
   expireDate=$((accessKeyTimestamp + 86400 * upToDateDays))
   todayTimestamp=$(dateToTimestamp "$(todayDate)")
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
@@ -487,16 +487,15 @@ isUpToDate() {
     return 1
   fi
   daysAgo=$((-daysAgo))
+  expireDate=$(timestampToDate "$expireDate" '%A, %B %d, %Y %R')
   if [ $daysAgo -lt 14 ]; then
-    bigText "$daysAgo  $(plural $daysAgo day days)" | prefixLines "$(consoleError)"
-  fi
-  if [ $daysAgo -lt 30 ]; then
-    expireDate=$(timestampToDate "$expireDate" '%A, %B %d, %Y %R')
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+  elif [ $daysAgo -lt 30 ]; then
     # consoleInfo "keyDate $keyDate"
     # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
     # consoleInfo "expireDate $expireDate"
     consoleWarning "Expires on $expireDate, in $daysAgo $(plural $daysAgo day days)"
-    return 0
+    return 04
   fi
   return 0
 }
@@ -571,4 +570,32 @@ mapEnvironment() {
     return $rs
   fi
   rm "$sedFile"
+}
+
+#
+# Usage: {fn} className character0 [ character1 ... ]
+#
+# Poor-man's bash character class matching
+#
+# Returns true if all `characters` are of `className`
+#
+# `className` can be one of:
+#     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
+#     print   punct   space   upper   word    xdigit
+#
+isCharacterClass() {
+  local class="${1-}"
+  case "$class" in
+    alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
+    *)
+      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$errorArgument" "Invalid class: $class" && return $?
+      ;;
+  esac
+  shift || :
+  while [ $# -gt 0 ]; do
+    if ! eval "case \"$1\" in [[:$class:]]) ;; *) return 1 ;; esac"; then
+      return 1
+    fi
+    shift
+  done
 }

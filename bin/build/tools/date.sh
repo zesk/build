@@ -51,7 +51,7 @@ dateToTimestamp() {
 #
 # Converts an integer date to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)
 #
-# timestampToDate 1681948800 %F
+# timestampToDate 1681966800 %F
 #
 # Usage: timestampToDate integerTimestamp format
 
@@ -66,35 +66,40 @@ dateToTimestamp() {
 
 timestampToDate() {
   if date --version 2>/dev/null 1>&2; then
-    date -d "@$1" "+$2"
+    date -u -d "@$1" "+$2"
   else
-    date -r "$1" "+$2"
+    date -u -r "$1" "+$2"
   fi
 }
 
-# `yesterdayDate`
-#
 # Returns yesterday's date, in YYYY-MM-DD format. (same as `%F`)
 #
-# Usage: yesterdayDate
-#
-# Argument: None.
-#
+# Usage: {fn}#
 # Summary: Yesterday's date
-# Environment: Compatible with BSD and GNU date.
-# Example:     rotated="$log.$(yesterdayDate)"
+# Example:     rotated="$log.$({fn})"
 
 yesterdayDate() {
-  timestampToDate "$(($(date +%s) - 86400))" %F
+  timestampToDate "$(($(date -u +%s) - 86400))" %F
+}
+
+# Returns tomorrow's date, in YYYY-MM-DD format. (same as `%F`)
+#
+# Usage: {fn}
+#
+# Summary: Tomorrow's date
+# Example:     rotated="$log.$({fn})"
+
+tomorrowDate() {
+  timestampToDate "$(($(date -u +%s) + 86400))" %F
 }
 
 # Summary: Today's date
 # Returns the current date, in YYYY-MM-DD format. (same as `%F`)
-# Usage: todayDate
+# Usage: {fn}
 # Argument: None.
 # Environment: Compatible with BSD and GNU date.
-# Example:     date="$(todayDate)"
+# Example:     date="$({fn})"
 #
 todayDate() {
-  date +%F
+  date -u +%F
 }
