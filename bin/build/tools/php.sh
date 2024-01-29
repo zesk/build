@@ -231,12 +231,12 @@ phpBuild() {
   DEPLOYMENT="$deployment"
   if hasHook make-env; then
     # this script usually runs ./bin/build/pipeline/make-env.sh
-    if ! runHook make-env "${envVars[@]}" >.env; then
+    if ! runHook make-env "${envVars[@]+${envVars[@]}}" >.env; then
       consoleError "make-env hook failed $?" 1>&2
       return $errorEnvironment
     fi
   else
-    if ! makeEnvironment "${envVars[@]}" >.env; then
+    if ! makeEnvironment "${envVars[@]+${envVars[@]}}" >.env; then
       consoleError makeEnvironment "${envVars[@]}" buildFailed "$?" 1>&2
       return $errorEnvironment
     fi
@@ -252,7 +252,7 @@ phpBuild() {
   set +a
 
   _phpEchoBar || :
-  showEnvironment "${envVars[@]}" || :
+  showEnvironment "${envVars[@]+${envVars[@]}}" || :
 
   if [ -d ./.deploy ] && ! rm -rf ./.deploy; then
     consoleError "Can not delete .deploy" 1>&2
