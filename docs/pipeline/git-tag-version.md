@@ -1,5 +1,5 @@
 
-# `git-tag-version.sh` - Generates a git tag for a build version, so `v1.0d1`,
+# `gitTagVersion` - Generates a git tag for a build version, so `v1.0d1`,
 
 [⬅ Return to top](index.md)
 
@@ -12,10 +12,6 @@ When this tool succeeds the git repository contains a tag with the suffix and an
 - `d` - for **development**
 - `s` - for **staging**
 - `rc` - for **release candidate**
-
-## Usage
-
-    git-tag-version.sh [ --suffix versionSuffix ] Tag version in git
 
 ## Exit codes
 

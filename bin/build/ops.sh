@@ -1,28 +1,38 @@
 #!/usr/bin/env bash
 #
-# Shell colors
+# Operations tools
 #
-# Usage: source ./bin/build/tools.sh
-#
-# Depends: -
+# Usage: # shellcheck source=/dev/null
+# Usage: . ./bin/build/ops.sh
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 # documentTemplate: ./docs/_templates/__function.md
 #
-opsDir="$(dirname "${BASH_SOURCE[0]}")/ops"
 
+loadTools() {
+  local toolsFiles=(daemontools sysvinit)
+  local toolFile here
+
+  if ! here="$(dirname "${BASH_SOURCE[0]}")"; then
+    printf "%s\n" "dirname failed" 1>&2
+    return 1
+  fi
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/tools.sh"
+  if ! . "$here/tools.sh"; then
+    printf "%s\n" "tools.sh failed" 1>&2
+    return 1
+  fi
+  for toolFile in "${toolsFiles[@]}"; do
+    # shellcheck source=/dev/null
+    . "$here/ops/$toolFile.sh" || :
+  done
+  if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+    # Only require when running as a shell command
+    set -eou pipefail
+    # Run remaining command line arguments
+    "$@"
+  fi
+}
 
-# Operations
-
-# shellcheck source=/dev/null
-. "$opsDir/daemontools.sh"
-
-if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
-  # Only require when running as a shell command
-  set -eou pipefail
-  # Run remaining command line arguments
-  "$@"
-fi
+loadTools "$@"

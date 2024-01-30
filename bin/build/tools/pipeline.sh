@@ -4,6 +4,8 @@
 #
 # Depends: colors.sh text.sh
 #
+# Docs: o ./docs/_templates/tools/pipeline.md
+# Test: o ./test/tools/pipeline-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1

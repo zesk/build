@@ -41,10 +41,6 @@ Compatible with BSD and GNU date.
 
 Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 
-#### Usage
-
-    todayDate
-
 #### Arguments
 
 - None.

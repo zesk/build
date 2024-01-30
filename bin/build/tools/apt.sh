@@ -77,7 +77,7 @@ aptInstall() {
     return 0
   fi
 
-  if ! aptUpdateOnce >> "$quietLog" 2>&1; then
+  if ! aptUpdateOnce >>"$quietLog" 2>&1; then
     buildFailed "$quietLog" 1>&2
     return "$errorEnvironment"
   fi
@@ -156,28 +156,28 @@ aptUpToDate() {
   local quietLog upgradeLog restartFlag result
 
   if ! quietLog=$(buildQuietLog "${FUNCNAME[0]}") ||
-    ! restartFlag=$(buildCacheDirectory ".needRestart"); then
+    ! restartFlag=$(buildCacheDirectory ".needRestart") ||
+    ! upgradeLog=$(buildQuietLog "STATE_${FUNCNAME[0]}"); then
     return $errorEnvironment
   fi
   if [ -f "$restartFlag" ]; then
     consoleWarning -i "Restart flag already set. " 1>&2
   fi
   consoleInfo -n "Update ... " 1>&2
-  upgradeLog=$(mktemp)
   if ! aptUpdateOnce >>"$quietLog" 2>&1 ||
     ! aptInstall >>"$quietLog" 2>&1 ||
-    ! DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get -y dist-upgrade | tee "$upgradeLog" >>"$quietLog" 2>&1; then
+    ! DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get -y dist-upgrade | tee -a "$upgradeLog" >>"$quietLog" 2>&1; then
     printf "\n" 1>&2
     buildFailed "$quietLog" 1>&2
-    rm -f "$upgradeLog" || :
     return "$errorEnvironment"
   fi
-  if grep -q " restart " "$upgradeLog"; then
-    date +%s >"$restartFlag"
+  if [ ! -f "$restartFlag" ]; then
+    if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog"; then
+      date +%s >"$restartFlag"
+    fi
+    result=restart
+  else
+    result=uptodate
   fi
-  rm -f "$upgradeLog" || :
-  result=uptodate
-  [ ! -f "$restartFlag" ] || result=restart
   printf "%s\n" "$result"
-  return 0
 }

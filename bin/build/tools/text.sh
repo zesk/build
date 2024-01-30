@@ -593,7 +593,9 @@ isCharacterClass() {
   esac
   shift || :
   while [ $# -gt 0 ]; do
-    if ! eval "case \"$1\" in [[:$class:]]) ;; *) return 1 ;; esac"; then
+    # Not sure how you can hack this function with single character eval injections.
+    # evalCheck: SAFE 2024-01-29 KMD
+    if ! eval "case \"$(escapeDoubleQuotes "${1:0:1}")\" in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
     shift
