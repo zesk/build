@@ -16,8 +16,8 @@ errorEnvironment=1
 errorArgument=2
 
 #
-# Usage: {fn} [ --dry-run ] logPath count
-# Argument: logPath - Required. Path where log files exist.
+# Usage: {fn} [ --dry-run ] logFile count
+# Argument: logFile - Required. A log file which exists.
 # Argument: count - Required. Integer of log files to maintain.
 # Rotate a log file
 #
