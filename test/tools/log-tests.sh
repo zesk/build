@@ -26,10 +26,10 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log" || return $?
   rotateLog "$tempDir/test.log" "$count"
 
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" "$count"
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" NOTINT
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" -423
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" 0
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" "$count" || return $?
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" NOTINT || return $?
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" -423 || return $?
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" 0 || return $?
 
   rotateLog "$tempDir/test.log" "$count" || return $?
 
@@ -122,10 +122,10 @@ testLogFileRotate1() {
   assertExitCode 0 [ -d "$tempDir" ]
   assertFileDoesNotExist "$tempDir/test.log" || return $?
 
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" "$count"
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" NOTINT
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" -423
-  assertNotExitCode 0 rotateLog "$tempDir/test.log" 0
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" "$count" || return $?
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" NOTINT || return $?
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" -423 || return $?
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" 0 || return $?
 
   rotateLog "$tempDir/test.log" "$count" || return $?
 
