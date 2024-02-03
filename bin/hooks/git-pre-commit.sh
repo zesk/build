@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 #
-# cp ./bin/hooks/git-pre-commit.sh .git/hooks/pre-commit
-#
 # Part of build system integration with git
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 

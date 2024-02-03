@@ -85,33 +85,45 @@ replaceFirstPattern() {
 }
 
 #
-# Trim spaces and only spaces
-# Usage: trimSpace text
+# Trim spaces and only spaces from arguments or a pipe
+# Usage: {fn} text
 # Argument: text - Text to remove spaces
 # Output: text
-# Example:     trimSpace "$token"
+# Example:     {fn} "$token"
 # Summary: Trim whitespace of a bash argument
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
 #
 trimSpace() {
-  local var="$1"
-  # remove leading whitespace characters
-  var="${var#"${var%%[![:space:]]*}"}"
-  # remove trailing whitespace characters
-  printf %s "${var%"${var##*[![:space:]]}"}"
+  local var
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      var="$1"
+      # remove leading whitespace characters
+      var="${var#"${var%%[![:space:]]*}"}"
+      # remove trailing whitespace characters
+      if ! shift || ! printf %s "${var%"${var##*[![:space:]]}"}"; then
+        _trimSpace "$errorEnvironment" "printf failed"
+      fi
+    done
+  else
+    awk '{$1=$1};NF'
+  fi
+}
+_trimSpace() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Strip whitespace in input stream
-# Removes leading and trailing spaces in input, also removes blank lines I think
-# Usage: trimSpacePipe < file > output
+# Deprecated: 2024-02
+# trimSpace handles both cases now.
+# Usage: trimSpace < file > output
 # Summary: Trim whitespace in a pipeline
 # Depends: awk
-# Argument: None
+# See: trimSpace
 #
 trimSpacePipe() {
-  awk '{$1=$1};NF'
+  trimSpace "$@"
 }
 
 #
@@ -454,7 +466,7 @@ stringOffset() {
 # Example:     fi
 #
 isUpToDate() {
-  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate
+  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate keyTimestamp
 
   keyDate="${1-}"
   shift || return "$errorArgument"
@@ -473,11 +485,11 @@ isUpToDate() {
     consoleError "isUpToDate $keyDate $upToDateDays - negative values not allowed" 1>&2
     return 1
   fi
-  if ! dateToTimestamp "$keyDate" >/dev/null; then
+  if ! keyTimestamp=$(dateToTimestamp "$keyDate") >/dev/null; then
     consoleError "isUpToDate $keyDate $upToDateDays - Invalid date $keyDate" 1>&2
     return 1
   fi
-  accessKeyTimestamp=$(($(dateToTimestamp "$keyDate") + 0))
+  accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
   expireDate=$((accessKeyTimestamp + 86400 * upToDateDays))
   todayTimestamp=$(dateToTimestamp "$(todayDate)")
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
@@ -487,16 +499,15 @@ isUpToDate() {
     return 1
   fi
   daysAgo=$((-daysAgo))
+  expireDate=$(timestampToDate "$expireDate" '%A, %B %d, %Y %R')
   if [ $daysAgo -lt 14 ]; then
-    bigText "$daysAgo  $(plural $daysAgo day days)" | prefixLines "$(consoleError)"
-  fi
-  if [ $daysAgo -lt 30 ]; then
-    expireDate=$(timestampToDate "$expireDate" '%A, %B %d, %Y %R')
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+  elif [ $daysAgo -lt 30 ]; then
     # consoleInfo "keyDate $keyDate"
     # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
     # consoleInfo "expireDate $expireDate"
     consoleWarning "Expires on $expireDate, in $daysAgo $(plural $daysAgo day days)"
-    return 0
+    return 04
   fi
   return 0
 }
@@ -571,4 +582,37 @@ mapEnvironment() {
     return $rs
   fi
   rm "$sedFile"
+}
+
+#
+# Usage: {fn} className character0 [ character1 ... ]
+#
+# Poor-man's bash character class matching
+#
+# Returns true if all `characters` are of `className`
+#
+# `className` can be one of:
+#     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
+#     print   punct   space   upper   word    xdigit
+#
+isCharacterClass() {
+  local class="${1-}"
+  case "$class" in
+    alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
+    *)
+      _isCharacterClass "$errorArgument" "Invalid class: $class" && return $?
+      ;;
+  esac
+  shift || :
+  while [ $# -gt 0 ]; do
+    # Not sure how you can hack this function with single character eval injections.
+    # evalCheck: SAFE 2024-01-29 KMD
+    if ! eval "case \"$(escapeDoubleQuotes "${1:0:1}")\" in [[:$class:]]) ;; *) return 1 ;; esac"; then
+      return 1
+    fi
+    shift
+  done
+}
+_isCharacterClass() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
