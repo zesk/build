@@ -239,18 +239,19 @@ usageArgumentDirectory() {
 usageArgumentFile() {
   local usageFunction="${1-}" variableName="${2-}" variableValue="${3-}"
   local noun
-
   # shellcheck disable=SC2015
   shift && shift && shift || :
   noun="${*-file}"
   if [ -z "$variableValue" ]; then
+    : Value is empty
     "$usageFunction" "$errorArgument" "$variableName $noun is required"
-    return $?
+    return "$errorArgument"
   fi
   if [ ! -f "$variableValue" ]; then
-    "$usageFunction" "$errorArgument" "$variableName must be a $noun"
-    return $?
+    : Is not a file
+    "$usageFunction" "$errorArgument" "$variableName must be a $noun" || return $?
   fi
+  : Is a file
   printf "%s\n" "$variableValue"
 }
 

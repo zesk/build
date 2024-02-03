@@ -43,9 +43,13 @@ usageDocument() {
     return $?
   fi
   shift || :
-  exitCode="${1-0}"
+  exitCode="${1-NONE}"
   shift || :
 
+  if [ "$exitCode" = "NONE" ]; then
+    consoleError "NO EXIT CODE"
+    exitCode=1
+  fi
   variablesFile=$(mktemp)
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
@@ -155,7 +159,7 @@ documentationTemplateCompile() {
     ! documentTemplate="$(usageArgumentFile _documentationTemplateCompileUsage documentTemplate "$documentTemplate")" ||
     ! functionTemplate="$(usageArgumentFile _documentationTemplateCompileUsage functionTemplate "$functionTemplate")" ||
     ! targetFile="$(usageArgumentFileDirectory _documentationTemplateCompileUsage targetFile "$targetFile")"; then
-    return $?
+    return "$errorArgument"
   fi
 
   # echo cacheDirectory="$cacheDirectory"
