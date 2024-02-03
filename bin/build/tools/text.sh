@@ -85,33 +85,45 @@ replaceFirstPattern() {
 }
 
 #
-# Trim spaces and only spaces
-# Usage: trimSpace text
+# Trim spaces and only spaces from arguments or a pipe
+# Usage: {fn} text
 # Argument: text - Text to remove spaces
 # Output: text
-# Example:     trimSpace "$token"
+# Example:     {fn} "$token"
 # Summary: Trim whitespace of a bash argument
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
 #
 trimSpace() {
-  local var="$1"
-  # remove leading whitespace characters
-  var="${var#"${var%%[![:space:]]*}"}"
-  # remove trailing whitespace characters
-  printf %s "${var%"${var##*[![:space:]]}"}"
+  local var
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      var="$1"
+      # remove leading whitespace characters
+      var="${var#"${var%%[![:space:]]*}"}"
+      # remove trailing whitespace characters
+      if ! shift || ! printf %s "${var%"${var##*[![:space:]]}"}"; then
+        _trimSpace "$errorEnvironment" "printf failed"
+      fi
+    done
+  else
+    awk '{$1=$1};NF'
+  fi
+}
+_trimSpace() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Strip whitespace in input stream
-# Removes leading and trailing spaces in input, also removes blank lines I think
-# Usage: trimSpacePipe < file > output
+# Deprecated: 2024-02
+# trimSpace handles both cases now.
+# Usage: trimSpace < file > output
 # Summary: Trim whitespace in a pipeline
 # Depends: awk
-# Argument: None
+# See: trimSpace
 #
 trimSpacePipe() {
-  awk '{$1=$1};NF'
+  trimSpace "$@"
 }
 
 #
@@ -588,7 +600,7 @@ isCharacterClass() {
   case "$class" in
     alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
     *)
-      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$errorArgument" "Invalid class: $class" && return $?
+      _isCharacterClass "$errorArgument" "Invalid class: $class" && return $?
       ;;
   esac
   shift || :
@@ -600,4 +612,7 @@ isCharacterClass() {
     fi
     shift
   done
+}
+_isCharacterClass() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

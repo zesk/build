@@ -15,42 +15,69 @@ errorArgument=2
 # Usage: {fn} script
 # Argument: binary - Required. String. Binary to install at startup.
 sysvInitScript() {
-  local initHome=/etc/init.d baseName exitCode
+  local initHome=/etc/init.d baseName exitCode removeFlag
 
+  removeFlag=
   if [ ! -d "$initHome" ]; then
     _sysvInitScript "$errorEnvironment" "sysvInit directory does not exist $(consoleCode "$initHome")" || return $?
   fi
   while [ $# -gt 0 ]; do
-    if [ ! -x "$1" ]; then
-      _sysvInitScript "$errorArgument" "Not executable: $1" || return $?
+    if [ -z "$1" ]; then
+      _sysvInitScript "$errorArgument" "Blank argument" || return $?
     fi
-    if ! baseName=$(basename "$1") || [ -z "$baseName" ]; then
-      _sysvInitScript "$errorArgument" "No basename: $1" || return $?
-    fi
-    target="$initHome/$baseName"
-    if [ -f "$target" ]; then
-      if diff -q "$1" "$target"; then
-        statusMessage consoleSucess "sysvInit already installed: $(consoleCode "$baseName")"
-      else
-        _sysvInitScript "$errorEnvironment" "File already exists $(consoleCode "$target")" || return $?
-      fi
-    else
-      statusMessage consoleSucess "installing script: $(consoleCode "$baseName")"
-      if ! cp "$1" "$target"; then
-        _sysvInitScript "$errorEnvironment" "cp $1 $target failed - permissions error" || return $?
-      fi
-    fi
-    statusMessage consoleWarning "Updating mode of $(consoleCode "$baseName") ..."
-    if ! chmod +x "$target"; then
-      _sysvInitScript "$errorEnvironment" "chmod +x $target failed - permissions error" || return $?
-    fi
-    statusMessage consoleWarning "rc.d defaults $(consoleCode "$baseName") ..."
-    if ! update-rc.d "$baseName" defaults; then
-      exitCode=$?
-      _sysvInitScript "$errorEnvironment" "update-rc.d $baseName defaults failed" || return "$exitCode"
-    fi
-    clearLine
-    printf "%s %s\n" "$(consoleSucess "sysvInit installed successfully:")" "$(consoleCode "$baseName")"
+    case "$1" in
+      --remove)
+        removeFlag=1
+        ;;
+      --add)
+        removeFlag=
+        ;;
+      *)
+        if ! baseName=$(basename "$1") || [ -z "$baseName" ]; then
+          _sysvInitScript "$errorArgument" "No basename: $1" || return $?
+        fi
+        target="$initHome/$baseName"
+        if test "$removeFlag"; then
+          if [ -f "$target" ]; then
+            if ! update-rc.d -f "$baseName" remove; then
+              exitCode=$?
+              _sysvInitScript "$errorEnvironment" "update-rc.d $baseName remove failed" || return "$exitCode"
+            fi
+            if ! rm "$target"; then
+              _sysvInitScript "$errorEnvironment" "Can not remove $target" || return "$?"
+            fi
+            printf "%s %s\n" "$(consoleSucess "sysvInit removed")" "$(consoleCode "$baseName")"
+          else
+            printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleWarning "not installed")"
+            return 0
+          fi
+        else
+          if [ ! -x "$1" ]; then
+            _sysvInitScript "$errorArgument" "Not executable: $1" || return $?
+          fi
+          if diff -q "$1" "$target"; then
+            statusMessage consoleSucess "sysvInit already installed: $(consoleCode "$baseName")"
+          else
+            _sysvInitScript "$errorEnvironment" "File already exists $(consoleCode "$target")" || return $?
+          fi
+          statusMessage consoleSucess "installing script: $(consoleCode "$baseName")"
+          if ! cp "$1" "$target"; then
+            _sysvInitScript "$errorEnvironment" "cp $1 $target failed - permissions error" || return $?
+          fi
+          statusMessage consoleWarning "Updating mode of $(consoleCode "$baseName") ..."
+          if ! chmod +x "$target"; then
+            _sysvInitScript "$errorEnvironment" "chmod +x $target failed - permissions error" || return $?
+          fi
+          statusMessage consoleWarning "rc.d defaults $(consoleCode "$baseName") ..."
+          if ! update-rc.d "$baseName" defaults; then
+            exitCode=$?
+            _sysvInitScript "$errorEnvironment" "update-rc.d $baseName defaults failed" || return "$exitCode"
+          fi
+          clearLine
+          printf "%s %s\n" "$(consoleSucess "sysvInit installed successfully")" "$(consoleCode "$baseName")"
+        fi
+        ;;
+    esac
     shift
   done
 }
