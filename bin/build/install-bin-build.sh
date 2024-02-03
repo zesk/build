@@ -22,7 +22,7 @@ set -eou pipefail
 
 # Modify this line locally, it will be preserved on update
 # Points to the project root
-relTop=..
+relTop=../..
 
 hasColors() {
   local nColors
@@ -74,6 +74,8 @@ installBinBuild() {
   local start ignoreFile tarArgs diffLines binName replace mockPath tarBall
   local myBinary myPath osName
   local errorEnvironment=1
+
+  local toolsBin=./bin/build/tools.sh
 
   if test "${BUILD_DEBUG-}"; then
     set -x # Debugging
@@ -130,22 +132,20 @@ installBinBuild() {
         _installBinBuild "$errorEnvironment" "Failed to download from $tarBall:"
         return "$errorEnvironment"
       fi
-      rm build.tar.gz || :
+      rm "build.tar.gz" || :
     fi
-    if [ ! -d bin/build ]; then
-      echo "Unable to download and install zesk/build"
-      return "$errorEnvironment"
+    if [ ! -d "./bin/build" ]; then
+      _installBinBuild "$errorEnvironment" "Unable to download and install zesk/build" || return $?
     fi
 
     # shellcheck source=/dev/null
-    if ! . ./bin/build/tools.sh; then
-      echo "Unable to source ./bin/build/tools.sh"
-      return "$errorEnvironment"
+    if ! . "$toolsBin"; then
+      _installBinBuild "$errorEnvironment" "Unable to source $toolsBin" || return $?
     fi
 
     reportTiming "$start" "Installed zesk/build in" || :
   else
-    if [ ! -f bin/build/tools.sh ]; then
+    if [ ! -f "$toolsBin" ]; then
       exec
       echo "Incorrect build version or broken install (can't find tools.sh):"
       echo
@@ -154,7 +154,9 @@ installBinBuild() {
       return "$errorEnvironment"
     fi
     # shellcheck source=/dev/null
-    . bin/build/tools.sh
+    if ! . "$toolsBin"; then
+      _installBinBuild "$errorEnvironment" "Unable to source $toolsBin" || return $?
+    fi
   fi
 
   ignoreFile=.gitignore
@@ -170,8 +172,7 @@ installBinBuild() {
   binName="./bin/build/install-bin-build.sh"
   if [ -x "$binName" ]; then
     if ! diffLines=$(diff "$binName" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :); then
-      printf "%s\n\n" "failed diffing $binName $myBinary"
-      return "$errorEnvironment"
+      _installBinBuild "$errorEnvironment" "failed diffing $binName $myBinary" || return $?
     fi
     if [ "$diffLines" -eq 0 ]; then
       echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
@@ -179,16 +180,15 @@ installBinBuild() {
     fi
   fi
   if [ "$diffLines" = "NONE" ]; then
-    echo "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)"
-    return "$errorEnvironment"
+    _installBinBuild "$errorEnvironment" "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)"
   fi
 
   replace=$(quoteSedPattern "relTop=$relTop")
 
   myBinary="${BASH_SOURCE[0]}"
-  sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary.$$"
-  chmod +x "$myBinary.$$"
-  (sleep 1 && nohup mv "$myBinary.$$" "$myBinary") &
+  sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary.$"
+  chmod +x "$myBinary.$"
+  (sleep 1 && nohup mv "$myBinary.$" "$myBinary" 2>/dev/null 1>&2) &
   echo "$(consoleValue -n "$myBinary") $(consoleWarning -n was updated.)"
 }
 _installBinBuild() {
