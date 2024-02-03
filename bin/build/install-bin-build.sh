@@ -74,6 +74,7 @@ installBinBuild() {
   local start ignoreFile tarArgs diffLines binName replace mockPath tarBall
   local myBinary myPath osName
   local errorEnvironment=1
+  local errorArgument=2
 
   local toolsBin=./bin/build/tools.sh
 
@@ -96,11 +97,11 @@ installBinBuild() {
       shift || :
       mockPath="${1%%/}/"
       if [ ! -f "$mockPath/tools.sh" ]; then
-        echo "--mock argument must be bin/build path"
-        return 2
+        _installBinBuild "$errorArgument" "--mock argument must be bin/build path" || return $?
       fi
-      cp -R "${1%%/}/" ./bin/build/
-      shift
+      if ! cp -r "${1%%/}/" ./bin/build/; then
+        _installBinBuild "$errorEnvironment" "Unable to copy to bin/build" || return $?
+      fi
     else
       if ! latestVersion=$(mktemp); then
         _installBinBuild "$errorEnvironment" "Unable to create temporary file:" || return $?
@@ -178,6 +179,9 @@ installBinBuild() {
       echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
       return 0
     fi
+    consoleMagenta "XDIFFERENCES: $diffLines"
+    diff "$binName" "$myBinary" | grep -v 'relTop=' || :
+    consoleMagenta "XDIFFERENCES: $diffLines"
   fi
   if [ "$diffLines" = "NONE" ]; then
     _installBinBuild "$errorEnvironment" "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)"
@@ -185,11 +189,16 @@ installBinBuild() {
 
   replace=$(quoteSedPattern "relTop=$relTop")
 
-  myBinary="${BASH_SOURCE[0]}"
-  sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary.$"
-  chmod +x "$myBinary.$"
-  (sleep 1 && nohup mv "$myBinary.$" "$myBinary" 2>/dev/null 1>&2) &
-  echo "$(consoleValue -n "$myBinary") $(consoleWarning -n was updated.)"
+  myBinary="${BASH_SOURCE[0]}.$$"
+  sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary"
+  chmod +x "$myBinary"
+  if test "${BUILD_DIFF-}"; then
+    consoleWarning "DIFFERENCES: $diffLines"
+    diff "$binName" "$myBinary" | grep -v 'relTop=' | prefixLines "$(consoleReset)$(consoleInfo CHANGES)$(consoleCode)" || :
+    consoleMagenta "DIFFERENCES: $diffLines"
+  fi
+  echo "$(consoleValue -n "$(basename "${BASH_SOURCE[0]}")") $(consoleWarning -n was updated.)"
+  (nohup mv "$myBinary" "${BASH_SOURCE[0]}" 2>/dev/null 1>&2)
 }
 _installBinBuild() {
   local exitCode="$1"
