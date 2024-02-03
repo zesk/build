@@ -17,6 +17,10 @@
 {gitVersionLast}
 {veeGitTag}
 
+## git Development
+
+{gitCommit} 
+
 ## git History
 
 {gitRemoveFileFromHistory}

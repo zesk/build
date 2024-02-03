@@ -130,13 +130,16 @@ assertNotExitCode() {
   set -e
   outputFile=$(mktemp)
   actual=$(
-    "$bin" "$@" >"$outputFile" 2>&1
-    echo "$?"
+    if "$bin" "$@" >"$outputFile" 2>&1; then
+      printf %d 0
+    else
+      printf %d "$?"
+    fi
   )
   restoreErrorExit "$savedErrorExit"
 
   if [ "$expected" = "$actual" ]; then
-    printf "%s: %s -> %s, expected NOT %s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
+    printf "%s: %s -> %s, expected NOT %s (incorrect)\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleOrange "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
     consoleReset 1>&2
     rm "$outputFile"

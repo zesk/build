@@ -366,6 +366,57 @@ _gitTagVersion() {
   return $?
 }
 
+#
+# Usage: {fn} [ comment ... ]
+#
+# Commits all files added to git and also update release notes with comment
+#
+# Comment wisely. Does not duplicate comments. Check your release notes.
+#
+gitCommit() {
+  local start current next notes
+
+  comment="$*"
+  if [ -z "$comment" ]; then
+    _gitCommit "$errorArgument" "Need a comment" || return $?
+  fi
+  if ! start=$(pwd); then
+    _gitCommit "$errorEnvironment" "Failed to get pwd" || return $?
+  fi
+  current="$start"
+  while [ "$current" != "/" ]; do
+    if [ -d "$current/.git" ]; then
+      if [ -x "$current/bin/build/release-notes.sh" ]; then
+        if notes="$("$current/bin/build/release-notes.sh")"; then
+          if ! grep -q "$comment" "$notes"; then
+            if ! printf "%s %s\n" "-" "$comment" >>"$notes"; then
+              _gitCommit "$errorEnvironment" "Writing $notes" || return $?
+            fi
+            printf "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")"
+            git add "$notes" || :
+          fi
+        fi
+      fi
+      if ! git commit -a -m "$comment"; then
+        _gitCommit "$errorEnvironment" "Commit failed" || return $?
+      fi
+      return 0
+    fi
+    if ! cd .. || ! next="$(pwd)"; then
+      _gitCommit "$errorArgument" "Failed to traverse up from $current" || return $?
+    fi
+    if [ "$current" = "$next" ]; then
+      break
+    fi
+    current="$next"
+  done
+  _gitCommit "$errorEnvironment" "Unable to find git repository" || return $?
+}
+_gitCommit() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
