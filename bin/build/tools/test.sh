@@ -135,8 +135,10 @@ _validateShellScripts() {
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScript() {
   local f
-  whichApt shellcheck shellcheck
-  whichApt pcre2grep pcre2-utils
+
+  if ! whichApt shellcheck shellcheck; then
+    _validateShellScript "$errorEnvironment" "Can not install shellcheck" || return $?
+  fi
 
   while [ $# -gt 0 ]; do
     f="$1"
@@ -158,6 +160,9 @@ validateShellScript() {
     fi
     shift
   done
+}
+_validateShellScript() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
