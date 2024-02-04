@@ -47,6 +47,8 @@
 {JSON}
 
 {fileOwner}
+{fileSize}
+{betterType}
 
 {processMemoryUsage}
 {processVirtualMemoryAllocation}

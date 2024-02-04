@@ -88,3 +88,17 @@ testEnvironmentVariables() {
   prefixLines "environmentVariables: $(consoleCode)" <"$e"
   rm "$e"
 }
+
+_assertBetterType() {
+  assertEquals "$1" "$(betterType "$2")" "$1 != betterType $2 $(consoleRed "=> $(betterType "$2")")" || return $?
+}
+
+tests+=(testBetterType)
+testBetterType() {
+  _assertBetterType "builtin" return || return $?
+  _assertBetterType "builtin" . || return $?
+  _assertBetterType "function" testBetterType || return $?
+  _assertBetterType "file" "${BASH_SOURCE[0]}" || return $?
+  _assertBetterType "directory" ../. || return $?
+  _assertBetterType "unknown" fairElections || return $?
+}

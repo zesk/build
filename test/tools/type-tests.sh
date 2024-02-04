@@ -95,6 +95,7 @@ EOF
 
 callableFunctions() {
   cat <<EOF
+contextOpen
 executableFiles
 validateMissingItems
 isUnsignedNumber
@@ -102,6 +103,7 @@ isCallable
 EOF
 }
 
+# NOTHING Callable or Executable or Functino
 sampleNotExecutable() {
   cat <<EOF
 notAFile

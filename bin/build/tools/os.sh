@@ -678,3 +678,31 @@ fileSize() {
 _fileSize() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+#
+# Usage: {fn} [ thing ]
+# Better type handling of shell objects
+#
+# Outputs one of `type` output or enhancements:
+# - `builtin`. `function`, `alias`, `file`
+# - `file`, `directory`, `integer`, `unknown`
+#
+betterType() {
+  local t
+  while [ $# -gt 0 ]; do
+    t="$(type -t "$1")" || :
+    if [ -z "$t" ]; then
+      if [ -d "$1" ]; then
+        t="directory"
+      elif [ -f "$1" ]; then
+        t="file"
+      elif isInteger "$1"; then
+        t="integer"
+      else
+        t="unknown"
+      fi
+    fi
+    printf "%s\n" "$t" || return $?
+    shift || :
+  done
+}

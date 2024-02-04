@@ -50,8 +50,9 @@ dumpFile() {
 # Requires shellcheck so should be later in the testing process to have a cleaner build
 # This can be run on any directory tree to test scripts in any application.
 #
-# Usage: validateShellScripts [ file0 ... ]
+# Usage: validateShellScripts [ --exec binary ] [ file0 ... ]
 # Example:     if validateShellScripts; then git commit -m "saving things" -a; fi
+# Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in file names.
 # Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
@@ -61,11 +62,13 @@ dumpFile() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
-  local failedReason failedReasons f
+  local failedFiles failedReason failedReasons f binary
 
   clearLine
   statusMessage consoleInfo "Checking all shell scripts ..."
   failedReasons=()
+  failedFiles=()
+  binary=
   if [ $# -eq 0 ]; then
     while read -r f; do
       statusMessage consoleInfo "Checking $f ..."
@@ -75,10 +78,19 @@ validateShellScripts() {
     done
   else
     while [ $# -gt 0 ]; do
-      f="$1"
-      statusMessage consoleInfo "Checking $f ..."
-      if ! failedReason=$(validateShellScript "$f"); then
-        failedReasons+=("$failedReason")
+      if [ "$1" = "--exec" ]; then
+        shift || :
+        binary="${1}"
+        if ! isCallable "$binary"; then
+          _validateShellScripts "$errorArgument" "--exec $binary is not callable" || return $?
+        fi
+      else
+        f="$1"
+        statusMessage consoleInfo "Checking $f ..."
+        if ! failedReason=$(validateShellScript "$f"); then
+          failedFiles+=("$f")
+          failedReasons+=("$failedReason")
+        fi
       fi
       shift
     done
@@ -90,10 +102,17 @@ validateShellScripts() {
       echo "    $(consoleMagenta -n "$f")" 1>&2
     done
     consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
+    if [ -n "$binary" ]; then
+      if [ ${#failedFiles[@]} -gt 0 ]; then
+        "$binary" "${failedFiles[@]}"
+      fi
+    fi
     return $errorEnvironment
-  else
-    statusMessage consoleSuccess "All scripts passed validation"
   fi
+  statusMessage consoleSuccess "All scripts passed validation"
+}
+_validateShellScripts() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -162,20 +181,38 @@ validateShellScript() {
 validateFileContents() {
   local fileArgs f total
 
-  local textMatches t
-  local failedReasons
+  local textMatches t binary
+  local failedReasons failedFile
 
   fileArgs=()
   while [ $# -gt 0 ]; do
     if [ "$1" == "--" ]; then
-      shift
+      shift || :
       break
     fi
-    if ! usageArgumentFile _validateFileContentsUsage "file${#fileArgs[@]}" "$1" >/dev/null; then
-      return $?
+    if [ -z "$1" ]; then
+      _validateFileContents "$errorArgument" "Blank argument" || return $?
     fi
-    fileArgs+=("$1")
-    shift
+    case "$1" in
+      --)
+        shift
+        break
+        ;;
+      --exec)
+        shift || :
+        binary="$1"
+        if ! isCallable "$binary"; then
+          _validateFileContents "$errorArgument" "--exec $binary Not callable" || return $?
+        fi
+        ;;
+      *)
+        if ! usageArgumentFile _validateFileContents "file${#fileArgs[@]}" "$1" >/dev/null; then
+          return $?
+        fi
+        fileArgs+=("$1")
+        ;;
+    esac
+    shift || :
   done
 
   textMatches=()
@@ -185,22 +222,23 @@ validateFileContents() {
       break
     fi
     if [ -z "$1" ]; then
-      _validateFileContentsUsage "$errorArgument" "Zero size text match passed"
+      _validateFileContents "$errorArgument" "Zero size text match passed"
       return $?
     fi
     textMatches+=("$1")
     shift
   done
   if [ "${#fileArgs[@]}" -eq 0 ]; then
-    _validateFileContentsUsage "$errorArgument" "No extension arguments" 1>&2
+    _validateFileContents "$errorArgument" "No extension arguments" 1>&2
     return $?
   fi
   if [ "${#textMatches[@]}" -eq 0 ]; then
-    _validateFileContentsUsage "$errorArgument" "No text match arguments" 1>&2
+    _validateFileContents "$errorArgument" "No text match arguments" 1>&2
     return $?
   fi
 
   failedReasons=()
+  failedFile=()
   total=0
   total="${#fileArgs[@]}"
   # shellcheck disable=SC2059
@@ -213,6 +251,7 @@ validateFileContents() {
       if ! grep -q "$t" "$f"; then
         failedReasons+=("$f missing \"$t\"")
         statusMessage consoleError "Searching $f ... NOT FOUND"
+        failedFile+=("$f")
       else
         statusMessage consoleSuccess "Searching $f ... found"
       fi
@@ -227,13 +266,16 @@ validateFileContents() {
       echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
     done
     consoleError "done." 1>&2
+    if [ -n "$binary" ]; then
+      "$binary" "${failedFiles[@]}"
+    fi
     return $errorEnvironment
   else
     statusMessage consoleSuccess "All scripts passed"
   fi
 }
-_validateFileContentsUsage() {
-  usageDocument "${BASH_SOURCE[0]}" validateFileContents "$@"
+_validateFileContents() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

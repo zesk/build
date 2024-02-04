@@ -307,7 +307,7 @@ assertFileDoesNotExist() {
 
   shift
   if [ -f "$d" ]; then
-    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(betterType "$d")")"
     return 1
   fi
 }
