@@ -181,20 +181,38 @@ validateShellScript() {
 validateFileContents() {
   local fileArgs f total
 
-  local textMatches t
-  local failedReasons
+  local textMatches t binary
+  local failedReasons failedFile
 
   fileArgs=()
   while [ $# -gt 0 ]; do
     if [ "$1" == "--" ]; then
-      shift
+      shift || :
       break
     fi
-    if ! usageArgumentFile _validateFileContents "file${#fileArgs[@]}" "$1" >/dev/null; then
-      return $?
+    if [ -z "$1" ]; then
+      _validateFileContents "$errorArgument" "Blank argument" || return $?
     fi
-    fileArgs+=("$1")
-    shift
+    case "$1" in
+      --)
+        shift
+        break
+        ;;
+      --exec)
+        shift || :
+        binary="$1"
+        if ! isCallable "$binary"; then
+          _validateFileContents "$errorArgument" "--exec $binary Not callable" || return $?
+        fi
+        ;;
+      *)
+        if ! usageArgumentFile _validateFileContents "file${#fileArgs[@]}" "$1" >/dev/null; then
+          return $?
+        fi
+        fileArgs+=("$1")
+        ;;
+    esac
+    shift || :
   done
 
   textMatches=()
@@ -220,6 +238,7 @@ validateFileContents() {
   fi
 
   failedReasons=()
+  failedFile=()
   total=0
   total="${#fileArgs[@]}"
   # shellcheck disable=SC2059
@@ -232,6 +251,7 @@ validateFileContents() {
       if ! grep -q "$t" "$f"; then
         failedReasons+=("$f missing \"$t\"")
         statusMessage consoleError "Searching $f ... NOT FOUND"
+        failedFile+=("$f")
       else
         statusMessage consoleSuccess "Searching $f ... found"
       fi
@@ -246,6 +266,9 @@ validateFileContents() {
       echo "    $(consoleMagenta -n "$f")$(consoleInfo -n ", ")" 1>&2
     done
     consoleError "done." 1>&2
+    if [ -n "$binary" ]; then
+      "$binary" "${failedFiles[@]}"
+    fi
     return $errorEnvironment
   else
     statusMessage consoleSuccess "All scripts passed"
