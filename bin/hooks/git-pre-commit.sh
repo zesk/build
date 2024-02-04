@@ -54,17 +54,17 @@ hookGitPreCommit() {
   fi
   if [ "${#changedShellFiles[@]}" -gt 0 ]; then
     statusMessage consoleSuccess Running shellcheck ...
-    if ! validateShellScripts "${changedShellFiles[@]}"; then
+    if ! validateShellScripts --exec contextOpen "${changedShellFiles[@]}"; then
       _hookGitPreCommitFailed validateShellScripts
     fi
     year=$(date +%Y)
     # shellcheck source=/dev/null
     source ./bin/build/env/BUILD_COMPANY.sh
-    if ! validateFileContents "${changedShellFiles[@]}" -- "Copyright &copy; $year" "$BUILD_COMPANY"; then
+    if ! validateFileContents --exec contextOpen "${changedShellFiles[@]}" -- "Copyright &copy; $year" "$BUILD_COMPANY"; then
       _hookGitPreCommitFailed "Enforcing copyright and company in shell files"
     fi
     # Unusual quoting here is to avoid having this match as an identical
-    if ! ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh; then
+    if ! identicalCheck --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
       _hookGitPreCommitFailed identical-check.sh
     fi
   fi

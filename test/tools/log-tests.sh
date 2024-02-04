@@ -27,6 +27,14 @@ testLogFileRotate() {
   rotateLog "$tempDir/test.log" "$count"
 
   assertNotExitCode 0 rotateLog "$tempDir/test.log" "$count" || return $?
+
+  # Not a file
+  mkdir "$tempDir/test.log" || :
+  assertNotExitCode 0 rotateLog "$tempDir/test.log" "$count" || return $?
+  rmdir "$tempDir/test.log" || :
+
+  # File now exists
+  touch "$tempDir/test.log"
   assertNotExitCode 0 rotateLog "$tempDir/test.log" NOTINT || return $?
   assertNotExitCode 0 rotateLog "$tempDir/test.log" -423 || return $?
   assertNotExitCode 0 rotateLog "$tempDir/test.log" 0 || return $?
