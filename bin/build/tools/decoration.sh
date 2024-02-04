@@ -146,7 +146,7 @@ repeat() {
   local count=$((${1:-2} + 0))
   local debug
 
-  debug=$(! isBashDebug || printf 1)
+  debug=$(isBashDebug && printf 1)
   set +x
   shift
   while [ $count -gt 0 ]; do

@@ -8,6 +8,7 @@ set -eou pipefail
 
 declare -a tests
 
+tests+=(testLogFileRotate1)
 tests+=(testLogFileRotate)
 testLogFileRotate() {
   local tempDir section
@@ -20,6 +21,7 @@ testLogFileRotate() {
   n=1
 
   section=1
+  #-----------------------------------------------------------------------------------------
   consoleSuccess "SECTION $section"
   section=$((section + 1))
 
@@ -39,8 +41,10 @@ testLogFileRotate() {
   assertNotExitCode 0 rotateLog "$tempDir/test.log" -423 || return $?
   assertNotExitCode 0 rotateLog "$tempDir/test.log" 0 || return $?
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  # Remove for next test which should be clean
+  rm "$tempDir/test.log" || return $?
 
+  #-----------------------------------------------------------------------------------------
   consoleSuccess "SECTION $section"
   section=$((section + 1))
 
@@ -52,6 +56,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.5" || return $?
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
+  #-----------------------------------------------------------------------------------------
   consoleSuccess "SECTION $section"
   section=$((section + 1))
 
@@ -64,6 +69,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.5" || return $?
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
+  #-----------------------------------------------------------------------------------------
   consoleSuccess "SECTION $section"
   section=$((section + 1))
 
@@ -76,6 +82,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.5" || return $?
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
+  #-----------------------------------------------------------------------------------------
   consoleSuccess "SECTION $section"
   section=$((section + 1))
 
@@ -88,6 +95,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.5" || return $?
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
+  #-----------------------------------------------------------------------------------------
   consoleSuccess "SECTION $section"
   section=$((section + 1))
 
@@ -100,6 +108,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.5" || return $?
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
+  #-----------------------------------------------------------------------------------------
   consoleSuccess "SECTION $section"
   section=$((section + 1))
 
@@ -117,7 +126,6 @@ testLogFileRotate() {
   rm -rf "$tempDir" || return $?
 }
 
-tests+=(testLogFileRotate1)
 testLogFileRotate1() {
   local tempDir count=1 i
 
@@ -125,17 +133,34 @@ testLogFileRotate1() {
     return $?
   fi
 
+  i=1
   n=1
-
-  assertExitCode 0 [ -d "$tempDir" ]
+  set -x
+  assertExitCode 0 [ -d "$tempDir" ] || return $?
   assertFileDoesNotExist "$tempDir/test.log" || return $?
 
+  printf "%s %s\n" "${FUNCNAME[0]}" "$i"
+  i=$((i + 1))
+
   assertNotExitCode 0 rotateLog "$tempDir/test.log" "$count" || return $?
+
+  printf "%s %s\n" "${FUNCNAME[0]}" "$i"
+  i=$((i + 1))
+
   assertNotExitCode 0 rotateLog "$tempDir/test.log" NOTINT || return $?
+
+  printf "%s %s\n" "${FUNCNAME[0]}" "$i"
+  i=$((i + 1))
+
   assertNotExitCode 0 rotateLog "$tempDir/test.log" -423 || return $?
+
+  printf "%s %s\n" "${FUNCNAME[0]}" "$i"
+  i=$((i + 1))
+
   assertNotExitCode 0 rotateLog "$tempDir/test.log" 0 || return $?
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  printf "%s %s\n" "${FUNCNAME[0]}" "$i"
+  i=$((i + 1))
 
   printf "%s" "$(repeat "$n" "x")" >"$tempDir/test.log" || return $?
   assertFileDoesNotExist "$tempDir/test.log.1" || return $?
@@ -148,8 +173,8 @@ testLogFileRotate1() {
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
   assertFileExists "$tempDir/test.log.1" || return $?
-  assertEquals "$(fileSize "$tempDir/test.log")" 0 "log 0 was original log after $count rotations"
-  assertEquals "$(fileSize "$tempDir/test.log.1")" 1 "log $count was original log after 1 rotation"
+  assertEquals "$(fileSize "$tempDir/test.log")" 0 "log 0 was original log after $count rotations" || return $?
+  assertEquals "$(fileSize "$tempDir/test.log.1")" 1 "log $count was original log after 1 rotation" || return $?
   assertFileDoesNotExist "$tempDir/test.log.2" || return $?
 
   i=10
@@ -161,8 +186,8 @@ testLogFileRotate1() {
     rotateLog "$tempDir/test.log" "$count" || return $?
     assertFileExists "$tempDir/test.log" || return $?
     assertFileExists "$tempDir/test.log.1" || return $?
-    assertEquals "$(fileSize "$tempDir/test.log")" 0
-    assertEquals "$(fileSize "$tempDir/test.log.1")" 0
+    assertEquals "$(fileSize "$tempDir/test.log")" 0 || return $?
+    assertEquals "$(fileSize "$tempDir/test.log.1")" 0 || return $?
     assertFileDoesNotExist "$tempDir/test.log.2" || return $?
     i=$((i - 1))
   done

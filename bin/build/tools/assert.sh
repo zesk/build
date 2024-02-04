@@ -99,11 +99,11 @@ assertExitCode() {
   if [ "$expected" != "$actual" ]; then
     printf "%s: %s -> %s, expected %s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
-    consoleReset 1>&2
-    rm "$outputFile"
+    consoleReset 1>&2 || :
+    rm "$outputFile" || :
     return 1
   fi
-  rm "$outputFile"
+  rm "$outputFile" || :
   return 0
 }
 
@@ -230,7 +230,7 @@ assertDirectoryExists() {
 
   shift
   if [ ! -d "$d" ]; then
-    printf "%s: %s was expected to be a %s but is NOT %s\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    printf "%s: %s was expected to be a %s but is NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -253,7 +253,7 @@ assertDirectoryDoesNotExist() {
 
   shift
   if [ -d "$d" ]; then
-    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
     return 1
   fi
 }
@@ -284,7 +284,7 @@ assertFileExists() {
   shift
   message="$*"
   if [ ! -f "$d" ]; then
-    printf "%s: %s was expected to be a %s but is NOT %s\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    printf "%s: %s should exist but does NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -307,7 +307,7 @@ assertFileDoesNotExist() {
 
   shift
   if [ -f "$d" ]; then
-    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(betterType "$d")")"
+    printf "%s: %s should not exist but does %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun WAS found}")" "$(consoleWarning "$(betterType "$d")")"
     return 1
   fi
 }
