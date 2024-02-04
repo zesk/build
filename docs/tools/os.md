@@ -423,6 +423,31 @@ Outputs the file owner for each file passed on the command line
 - `0` - Success
 - `1` - Unable to access file
 
+### `fileSize` - Outputs value of virtual memory allocated for a process, value
+
+Outputs value of virtual memory allocated for a process, value is in kilobytes
+
+#### Arguments
+
+- `file` - Required. File to get size of.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+
+### `betterType` - Better type handling of shell objects
+
+Better type handling of shell objects
+
+Outputs one of `type` output or enhancements:
+- `builtin`. `function`, `alias`, `file`
+- `file`, `directory`, `integer`, `unknown`
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 
 ### `processMemoryUsage` - Outputs value of resident memory used by a process, value
 

@@ -95,7 +95,7 @@ Assert one string does not contains another (case-sensitive)
 
 #### See Also
 
-- [function assertContains](./docs/tools/assert.md) - [Assert one string contains another (case-sensitive)](https://github.com/zesk/build/blob/main/bin/build/tools/assert.sh#L159)
+- [function assertContains](./docs/tools/assert.md) - [Assert one string contains another (case-sensitive)](https://github.com/zesk/build/blob/main/bin/build/tools/assert.sh#L162)
 
 ## Comparison
 

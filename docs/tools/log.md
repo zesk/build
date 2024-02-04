@@ -21,7 +21,7 @@ But maintains file descriptors for `logFile`.
 
 #### Arguments
 
-- `logPath` - Required. Path where log files exist.
+- `logFile` - Required. A log file which exists.
 - `count` - Required. Integer of log files to maintain.
 
 #### Exit codes
