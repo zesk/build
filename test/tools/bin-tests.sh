@@ -10,9 +10,18 @@ errorEnvironment=1
 
 declare -a tests
 
+tests+=(testVersionLive)
+testVersionLive() {
+  set -x
+  assertExitCode 0 runHook version-live
+  set +x
+}
+
 tests+=(testNewRelease)
 testNewRelease() {
-  assertExitCode 0 bin/build/new-release.sh --non-interactive
+  set -x
+  assertExitCode 0 newRelease --non-interactive
+  set +x
 }
 
 tests+=(testBuildSetup)
