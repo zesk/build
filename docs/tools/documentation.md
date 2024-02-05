@@ -27,8 +27,8 @@ Document a function and generate a function template (markdown)
 
 #### See Also
 
-- [function bashDocumentationTemplate](./docs/tools/todo.md) - [Document a function and generate a function template (markdown). To](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L409)
-- [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L375)
+- [function bashDocumentationTemplate](./docs/tools/todo.md) - [Document a function and generate a function template (markdown). To](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L413)
+- [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L379)
 - [function repeat](./docs/tools/decoration.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh#L144)
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
@@ -90,7 +90,7 @@ to regenerate each time.
 
 #### See Also
 
-- [function documentationTemplateCompile](./docs/tools/documentation.md) - [Convert a template file to a documentation file using templates](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L94)
+- [function documentationTemplateCompile](./docs/tools/documentation.md) - [Convert a template file to a documentation file using templates](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L98)
 
 ## Documentation Indexing
 

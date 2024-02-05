@@ -124,28 +124,9 @@ shellcheck disable=SC2120
 - `0` - Always succeeds
 
 
-### `hasColors` - This tests whether `TERM` is set, and if not, uses
-
-This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
-
-Exit Code; 1 - No colors
-
-#### Usage
-
-    hasColors
-
 #### Exit codes
 
-- `0` - Console or output supports colors
-
-#### Local cache
-
-this value is cached in BUILD_COLORS if it is not set.
-
-#### Environment
-
-BUILD_COLORS - Override value for this
+- `0` - Always succeeds
 
 ### `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation
 

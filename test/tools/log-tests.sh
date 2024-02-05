@@ -135,7 +135,6 @@ testLogFileRotate1() {
 
   i=1
   n=1
-  set -x
   assertExitCode 0 [ -d "$tempDir" ] || return $?
   assertFileDoesNotExist "$tempDir/test.log" || return $?
 

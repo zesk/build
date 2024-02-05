@@ -13,10 +13,11 @@ This can be run on any directory tree to test scripts in any application.
 
 #### Usage
 
-    validateShellScripts [ file0 ... ]
+    validateShellScripts [ --exec binary ] [ file0 ... ]
 
 #### Arguments
 
+- `--exec binary` - Run binary with files as an argument for any failed files. Only works if you pass in file names.
 - `findArgs` - Additional find arguments for .sh files (or exclude directories).
 
 #### Examples

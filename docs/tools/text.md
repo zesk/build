@@ -167,11 +167,7 @@ printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
 
 ### `trimSpace` - Trim whitespace of a bash argument
 
-Trim spaces and only spaces
-
-#### Usage
-
-    trimSpace text
+Trim spaces and only spaces from arguments or a pipe
 
 #### Arguments
 
@@ -195,16 +191,11 @@ Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228
 
 ### `trimSpacePipe` - Trim whitespace in a pipeline
 
-Strip whitespace in input stream
-Removes leading and trailing spaces in input, also removes blank lines I think
+trimSpace handles both cases now.
 
 #### Usage
 
-    trimSpacePipe < file > output
-
-#### Arguments
-
-- None
+    trimSpace < file > output
 
 #### Exit codes
 
@@ -213,6 +204,10 @@ Removes leading and trailing spaces in input, also removes blank lines I think
 #### Depends
 
     awk
+
+#### See Also
+
+- [function trimSpace](./docs/tools/text.md) - [Trim whitespace of a bash argument](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L96)
 
 
 ### `listTokens` - listTokens

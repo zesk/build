@@ -138,6 +138,19 @@ Delete the old tag as well
 
 - `0` - Always succeeds
 
+## git Development
+
+
+### `gitCommit` - Commits all files added to git and also update release
+
+Commits all files added to git and also update release notes with comment
+
+Comment wisely. Does not duplicate comments. Check your release notes.
+
+#### Exit codes
+
+- `0` - Always succeeds 
+
 ## git History
 
 

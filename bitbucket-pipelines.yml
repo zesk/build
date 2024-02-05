@@ -6,7 +6,6 @@
 # Test run:
 #
 # bin/build/local-container.sh .env.PRODUCTION
-# inside: bin/reset-test.sh
 #
 image: atlassian/default-image:4
 

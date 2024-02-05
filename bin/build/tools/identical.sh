@@ -47,6 +47,8 @@ identicalCheck() {
   local tokenLineCount tokenFileName compareFile badFiles
 
   me="$(basename "${BASH_SOURCE[0]}")"
+
+  binary=
   rootDir=.
   findArgs=()
   badFiles=()
