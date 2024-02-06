@@ -13,13 +13,13 @@ declare -a tests
 
 tests+=(testBinaryTypes)
 testBinaryTypes() {
-  assertExitCode 0 isExecutable ./bin/build/map.sh
-  assertExitCode 0 isExecutable ./bin/build/tools.sh
+  assertExitCode 0 isExecutable ./bin/build/map.sh || return $?
+  assertExitCode 0 isExecutable ./bin/build/tools.sh || return $?
 
-  assertNotExitCode 0 isCallable ./bin/build/LICENSE.md
-  assertNotExitCode 0 isCallable ./bin/MISSING
-  assertNotExitCode 0 isExecutable ./bin/build/LICENSE.md
-  assertNotExitCode 0 isExecutable ./bin/MISSING
+  assertNotExitCode 0 isCallable ./bin/build/LICENSE.md || return $?
+  assertNotExitCode 0 isCallable ./bin/MISSING || return $?
+  assertNotExitCode 0 isExecutable ./bin/build/LICENSE.md || return $?
+  assertNotExitCode 0 isExecutable ./bin/MISSING || return $?
 }
 _testLineLabel() {
   printf "%s %s\n" "$(consoleInfo "$1")" "$(consoleCode "$2")"
@@ -267,11 +267,11 @@ testSignedUnsignedIntegerNumber() {
 
   # Unsigned/Signed integers are signed
   consoleInfo "signedIntegerSamples"
-  signedIntegerSamples | validateSignedInteger
-  signedIntegerSamples | validateSignedNumber
+  signedIntegerSamples | validateSignedInteger  || return $?
+  signedIntegerSamples | validateSignedNumber || return $?
   # Signed integers is not unsigned anything
-  signedIntegerSamples | validateNotUnsignedInteger
-  signedIntegerSamples | validateNotUnsignedNumber
+  signedIntegerSamples | validateNotUnsignedInteger || return $?
+  signedIntegerSamples | validateNotUnsignedNumber || return $?
 
   #
   # unsigned Integer
@@ -279,22 +279,22 @@ testSignedUnsignedIntegerNumber() {
 
   consoleInfo "unsignedIntegerSamples"
   # Unsigned integers are just unsigned
-  unsignedIntegerSamples | validateUnsignedInteger
-  unsignedIntegerSamples | validateNotSignedInteger
-  unsignedIntegerSamples | validateSignedInteger
+  unsignedIntegerSamples | validateUnsignedInteger || return $?
+  unsignedIntegerSamples | validateNotSignedInteger || return $?
+  unsignedIntegerSamples | validateSignedInteger || return $?
   # Unsigned integers are both signed and unsigned numbers
-  unsignedIntegerSamples | validateUnsignedNumber
-  unsignedIntegerSamples | validateSignedNumber
+  unsignedIntegerSamples | validateUnsignedNumber || return $?
+  unsignedIntegerSamples | validateSignedNumber || return $?
 
   #
   # signed Number
   #
   consoleInfo "signedNumberSamples"
-  signedNumberSamples | validateSignedNumber
-  signedNumberSamples | validateNotUnsignedNumber
+  signedNumberSamples | validateSignedNumber || return $?
+  signedNumberSamples | validateNotUnsignedNumber || return $?
   # signed numbers are not integers, ever
-  signedNumberSamples | validateNotSignedInteger
-  signedNumberSamples | validateNotUnsignedInteger
+  signedNumberSamples | validateNotSignedInteger || return $?
+  signedNumberSamples | validateNotUnsignedInteger || return $?
 
   #
   # unsigned Number
@@ -302,18 +302,18 @@ testSignedUnsignedIntegerNumber() {
   consoleInfo "unsignedNumberSamples"
 
   # Number are neither signed nor unsigned
-  unsignedNumberSamples | validateUnsignedNumber
-  unsignedNumberSamples | validateSignedNumber
+  unsignedNumberSamples | validateUnsignedNumber || return $?
+  unsignedNumberSamples | validateSignedNumber || return $?
   # unsigned numbers are not integers, ever
-  unsignedNumberSamples | validateNotSignedInteger
-  unsignedNumberSamples | validateNotUnsignedInteger
+  unsignedNumberSamples | validateNotSignedInteger || return $?
+  unsignedNumberSamples | validateNotUnsignedInteger || return $?
 
   consoleInfo "badNumericSamples"
   #
   # Nothing is good
   #
-  badNumericSamples | validateNotSignedInteger
-  badNumericSamples | validateNotUnsignedInteger
-  badNumericSamples | validateNotSignedNumber
-  badNumericSamples | validateNotUnsignedNumber
+  badNumericSamples | validateNotSignedInteger || return $?
+  badNumericSamples | validateNotUnsignedInteger || return $?
+  badNumericSamples | validateNotSignedNumber || return $?
+  badNumericSamples | validateNotUnsignedNumber || return $?
 }

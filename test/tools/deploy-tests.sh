@@ -19,9 +19,9 @@ deployApplicationTest() {
 
   cd "$d" || exit
   consoleNameValue 20 "Deploy Root" "$d"
-  mkdir live-app
-  mkdir -p app/.deploy
-  mkdir -p app/bin/build
+  mkdir live-app || return $?
+  mkdir -p app/.deploy || return $?
+  mkdir -p app/bin/build || return $?
   echo "Hello, world" >app/index.php
   cp -R "$home/bin/build" "app/bin"
   cd app || exit
@@ -36,38 +36,38 @@ deployApplicationTest() {
   rm -rf app
 
   for t in 1a 2b 3c 4d; do
-    assertExitCode 0 deployHasVersion "$d/DEPLOY" $t
-    assertExitCode 0 deployApplication "$d/DEPLOY" "$t" app.tar.gz "$d/live-app"
-    assertEquals "$t" "$(getApplicationDeployVersion "$d/live-app")"
+    assertExitCode 0 deployHasVersion "$d/DEPLOY" $t || return $?
+    assertExitCode 0 deployApplication "$d/DEPLOY" "$t" app.tar.gz "$d/live-app" || return $?
+    assertEquals "$t" "$(getApplicationDeployVersion "$d/live-app")" || return $?
   done
 
-  assertNotExitCode 0 deployHasVersion "$d/DEPLOY" "2a"
+  assertNotExitCode 0 deployHasVersion "$d/DEPLOY" "2a" || return $?
 
-  assertEquals "" "$(deployPreviousVersion "$d/DEPLOY" "1a")"
-  assertEquals "1a" "$(deployPreviousVersion "$d/DEPLOY" "2b")" deployPreviousVersion "$d/DEPLOY" "2b"
-  assertEquals "2b" "$(deployPreviousVersion "$d/DEPLOY" "3c")"
-  assertEquals "3c" "$(deployPreviousVersion "$d/DEPLOY" "4d")"
+  assertEquals "" "$(deployPreviousVersion "$d/DEPLOY" "1a")" || return $?
+  assertEquals "1a" "$(deployPreviousVersion "$d/DEPLOY" "2b")" deployPreviousVersion "$d/DEPLOY" "2b" || return $?
+  assertEquals "2b" "$(deployPreviousVersion "$d/DEPLOY" "3c")" || return $?
+  assertEquals "3c" "$(deployPreviousVersion "$d/DEPLOY" "4d")" || return $?
 
-  assertEquals "2b" "$(deployNextVersion "$d/DEPLOY" "1a")" deployNextVersion "$d/DEPLOY" "1a"
-  assertEquals "3c" "$(deployNextVersion "$d/DEPLOY" "2b")" deployNextVersion "$d/DEPLOY" "2b"
-  assertEquals "4d" "$(deployNextVersion "$d/DEPLOY" "3c")" deployNextVersion "$d/DEPLOY" "3c"
-  assertEquals "" "$(deployNextVersion "$d/DEPLOY" "4d")" deployNextVersion "$d/DEPLOY" "4d"
+  assertEquals "2b" "$(deployNextVersion "$d/DEPLOY" "1a")" deployNextVersion "$d/DEPLOY" "1a" || return $?
+  assertEquals "3c" "$(deployNextVersion "$d/DEPLOY" "2b")" deployNextVersion "$d/DEPLOY" "2b" || return $?
+  assertEquals "4d" "$(deployNextVersion "$d/DEPLOY" "3c")" deployNextVersion "$d/DEPLOY" "3c" || return $?
+  assertEquals "" "$(deployNextVersion "$d/DEPLOY" "4d")" deployNextVersion "$d/DEPLOY" "4d" || return $?
 
-  undoDeployApplication "$d/DEPLOY" "4d" app.tar.gz "$d/live-app"
-  deployApplication "$d/DEPLOY" "1a" app.tar.gz "$d/live-app"
-  deployApplication "$d/DEPLOY" "3c" app.tar.gz "$d/live-app"
+  undoDeployApplication "$d/DEPLOY" "4d" app.tar.gz "$d/live-app" || return $?
+  deployApplication "$d/DEPLOY" "1a" app.tar.gz "$d/live-app" || return $?
+  deployApplication "$d/DEPLOY" "3c" app.tar.gz "$d/live-app" || return $?
 
-  assertNotExitCode 0 deployApplication "$d/DEPLOY" "3g" app.tar.gz "$d/live-app"
+  assertNotExitCode 0 deployApplication "$d/DEPLOY" "3g" app.tar.gz "$d/live-app" || return $?
 
-  assertEquals "" "$(deployPreviousVersion "$d/DEPLOY" "1a")"
-  assertEquals "1a" "$(deployPreviousVersion "$d/DEPLOY" "2b")"
-  assertEquals "2b" "$(deployPreviousVersion "$d/DEPLOY" "3c")"
-  assertEquals "3c" "$(deployPreviousVersion "$d/DEPLOY" "4d")"
+  assertEquals "" "$(deployPreviousVersion "$d/DEPLOY" "1a")" || return $?
+  assertEquals "1a" "$(deployPreviousVersion "$d/DEPLOY" "2b")" || return $?
+  assertEquals "2b" "$(deployPreviousVersion "$d/DEPLOY" "3c")" || return $?
+  assertEquals "3c" "$(deployPreviousVersion "$d/DEPLOY" "4d")" || return $?
 
-  assertEquals "2b" "$(deployNextVersion "$d/DEPLOY" "1a")"
-  assertEquals "3c" "$(deployNextVersion "$d/DEPLOY" "2b")"
-  assertEquals "4d" "$(deployNextVersion "$d/DEPLOY" "3c")"
-  assertEquals "" "$(deployNextVersion "$d/DEPLOY" "4d")"
+  assertEquals "2b" "$(deployNextVersion "$d/DEPLOY" "1a")" || return $?
+  assertEquals "3c" "$(deployNextVersion "$d/DEPLOY" "2b")" || return $?
+  assertEquals "4d" "$(deployNextVersion "$d/DEPLOY" "3c")" || return $?
+  assertEquals "" "$(deployNextVersion "$d/DEPLOY" "4d")" || return $?
 
   cd "$d" || return 1
 

@@ -15,12 +15,12 @@ testDocumentation() {
   local summary description
 
   testOutput=$(mktemp)
-  assertExitCode 0 inArray "summary" summary usage argument example reviewed
+  assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
 
   bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
   set -a
   # shellcheck source=/dev/null
-  . "$testOutput"
+  . "$testOutput" || return $?
   set +a
   assertEquals "Assert two strings are not equal" "${summary}" || return $?
   assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.' "${description}" || return $?
@@ -35,5 +35,5 @@ testDocumentation() {
   assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
   assertEquals "Assert two strings are equal." "${summary}" || return $?
 
-  rm "$testOutput"
+  rm "$testOutput" || :
 }

@@ -17,8 +17,8 @@ testWrapperShellScripts() {
   quietLog=$1
   shift
 
-    # shellcheck source=/dev/null
-    source ./bin/build/env/BUILD_COMPANY.sh
+  # shellcheck source=/dev/null
+  source ./bin/build/env/BUILD_COMPANY.sh
   thisYear=$(date +%Y)
   if ! find . -name '*.sh' "${findArgs[@]}" | validateShellScripts >>"$quietLog"; then
     return $?

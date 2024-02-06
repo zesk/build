@@ -6,6 +6,4 @@
 #
 # documentTemplate: ./docs/_templates/__function.md
 #
-set -eou pipefail
-here=$(dirname "${BASH_SOURCE[0]}")
-"$here/install/webApplication.sh" "$@"
+"$(dirname "${BASH_SOURCE[0]}")/install/webApplication.sh" "$@"

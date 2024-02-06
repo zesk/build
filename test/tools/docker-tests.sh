@@ -8,6 +8,8 @@
 #
 set -eou pipefail
 
+errorEnvironment=1
+
 declare -a tests
 tests+=(testCheckDockerEnvFile)
 
@@ -21,7 +23,9 @@ testCheckDockerEnvFile() {
 
   assertExitCode 0 dockerEnvToBash $testFile || return $?
 
-  out=$(mktemp)
+  if ! out=$(mktemp); then
+    return "$errorEnvironment"
+  fi
   dockerEnvToBash $testFile >"$out" || return $?
   assertFileContains "$out" '\\"quotes\\"' TEST_AWS_SECURITY_GROUP "DOLLAR=" "QUOTE=" "GOOD=" 'HELLO="W' || return $?
   rm "$out"
@@ -32,8 +36,12 @@ tests+=(testDockerEnvToBash)
 testDockerEnvToBash() {
   local out err
 
-  out=$(mktemp)
-  err=$(mktemp)
+  if ! out=$(mktemp); then
+    return "$errorEnvironment"
+  fi
+  if ! err=$(mktemp); then
+    return "$errorEnvironment"
+  fi
   dockerEnvToBash ./test/example/test.env >"$out" 2>"$err" && return 1
 
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
@@ -53,8 +61,12 @@ testDockerEnvFromBash() {
 
   assertExitCode 2 dockerEnvFromBash ./test/example/bad.env || return $?
 
-  out=$(mktemp)
-  err=$(mktemp)
+  if ! out=$(mktemp); then
+    return "$errorEnvironment"
+  fi
+  if ! err=$(mktemp); then
+    return "$errorEnvironment"
+  fi
 
   assertExitCode 0 dockerEnvFromBash ./test/example/bash.env >"$out" 2>"$err" || return $?
 
