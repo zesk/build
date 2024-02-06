@@ -19,15 +19,15 @@ testRepeat() {
 
 tests+=(testAlignRight)
 testAlignRight() {
-  assertEquals "$(alignRight 10 "Dogmatic")" "   Dogmatic" || return $?
-  assertEquals "$(alignRight 10 "")" "           " || return $?
+  assertEquals "$(alignRight 10 "Dogmatic")" "  Dogmatic" || return $?
+  assertEquals "$(alignRight 10 "")"         "          " || return $?
   assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic" || return $?
   assertEquals "$(alignRight 2 "")" "  " || return $?
 }
 tests+=(testAlignLeft)
 testAlignLeft() {
-  assertEquals "$(alignRight 10 "Dogmatic")" "Dogmatic   " || return $?
-  assertEquals "$(alignRight 10 "")" "           " || return $?
-  assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic" || return $?
-  assertEquals "$(alignRight 2 "")" "  " || return $?
+  assertEquals "$(alignLeft 10 "Dogmatic")" "Dogmatic  " || return $?
+  assertEquals "$(alignLeft 10 "")" "          " || return $?
+  assertEquals "$(alignLeft 2 "Dogmatic")" "Dogmatic" || return $?
+  assertEquals "$(alignLeft 2 "")" "  " || return $?
 }
