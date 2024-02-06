@@ -31,6 +31,7 @@ while IFS= read -r changedGitFile; do
   fi
 done < <(git diff --name-only --cached --diff-filter=ACMR)
 
+clearLine
 consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed"
 
 _hookGitPreCommitFailed() {
