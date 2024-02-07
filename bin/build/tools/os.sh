@@ -13,6 +13,44 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+#
+# Usage: {fn} source target
+#
+# Copy directory over another sort-of-atomically
+#
+directoryClobber() {
+  local source target targetPath targetName sourceStage targetBackup
+
+  if ! source=$(usageArgumentDirectory "_${FUNCNAME[0]}" source "$1"); then
+    return $?
+  fi
+  shift || :
+  target="${1-}"
+  if ! targetPath="$(dirname "$target")" || [ ! -d "$targetPath" ]; then
+    _directoryClobber "$errorArgument" "$targetPath parent directory does not exist" || return $?
+  fi
+  if ! targetName="$(basename "$target")"; then
+    _directoryClobber "$errorArgument" "basename $target failed" || return $?
+  fi
+  sourceStage="$targetPath/.NEW.$$.$targetName"
+  targetBackup="$targetPath/.OLD.$$.$targetName"
+  if ! mv -f "$source" "$sourceStage"; then
+    _directoryClobber "$errorEnvironment" "mv -f $source $sourceStage failed" || return $?
+  fi
+  if ! mv -f "$target" "$targetBackup"; then
+    _directoryClobber "$errorEnvironment" "mv -f $target" "$targetBackup failed" || return $?
+  fi
+  if ! mv -f "$sourceStage" "$target"; then
+    mv -f "$targetBackup" "$target" || consoleError "Unable to revert $targetBackup -> $target"
+    mv -f "$sourceStage" "$source" || consoleError "Unable to revert $sourceStage -> $source"
+    _directoryClobber "$errorEnvironment" "Clobber failed" || return $?
+  fi
+  rm -rf "$targetBackup" || _directoryClobber "$errorEnvironment" "Unable to delete $targetBackup" || return $?
+}
+_directoryClobber() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Path to cache directory for build system.
 #
 # Defaults to `$HOME/.build` unless `$HOME` is not a directory.

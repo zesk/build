@@ -18,12 +18,15 @@ _testDeployApplicationSetup() {
   fi
 
   cd "$d" || exit
-  mkdir live-app || return $?
+  mkdir -p live-app/public || return $?
+  echo "start" >live-app/public/index.php
+
+  # app
   mkdir -p app/.deploy || return $?
   mkdir -p app/bin/build || return $?
   cp -R "$home/bin/build" "app/bin" || return $?
   mkdir -p "app/public"
-  printf "%s\n%s\n" "<?php" "echo php_uname('n') . ' ' . file_get_contents(dirname(__DIR__) . '/timestamp.txt');" >"app/public/index.php"
+  printf '%s\n%s\n' "<?php" 'echo file_get_contents(dirname(__DIR__) . "/.deploy/APPLICATION_ID");' >./app/public/index.php
 
   cd app || return $?
   ts=$(date +%s)
@@ -42,7 +45,7 @@ _testDeployApplicationSetup() {
 }
 
 _deployShowFiles() {
-  find "$1" -type f ! -path '*/bin/build/*' -or -type d | prefixLines "$(consoleCode "DEPLOY root files:    ")$(consoleMagenta)"
+  find "$1" ! -path '*/bin/build/*' | prefixLines "$(consoleCode "DEPLOY root files:    ")$(consoleMagenta)"
   return $errorEnvironment
 }
 
@@ -62,8 +65,46 @@ _testAssertDeploymentLinkages() {
   assertEquals "" "$(deployNextVersion "$d/DEPLOY" "4d")" deployNextVersion "$d/DEPLOY" "4d" || return $?
 }
 
+_simplePHPServer() {
+  local quietLog
+  quietLog="$(buildQuietLog php-server)"
+  php -S 127.0.0.1:6543 -t "$1/public/" >>"$quietLog" 2>&1 &
+  printf %d $!
+}
+
+_simplePHPRequest() {
+  curl -s "http://127.0.0.1:6543/index.php"
+}
+_warmupServer() {
+  local start delta value
+
+  start=$(beginTiming)
+  consoleInfo -n "Warming server ..."
+  while ! value="$(_simplePHPRequest)" || [ -z "$value" ]; do
+    sleep 1
+    delta=$(($(beginTiming) - start))
+    if [ "$delta" -gt 5 ]; then
+      consoleError "_warmupServer failed"
+      return "$errorEnvironment"
+    fi
+    consoleGreen -n .
+  done
+  clearLine
+  printf "%s %s\n" "$(consoleInfo "Server warmed up with value:")" "$(consoleCode "$value")"
+}
+
 testDeployApplication() {
-  local d
+  local d phpPid quietLog
+
+  quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
+  if ! whichApt curl curl; then
+    consoleError "Failed to install curl" 1>&2
+    return $errorEnvironment
+  fi
+  if ! phpInstall; then
+    consoleError "Failed to install phpInstall" 1>&2
+    return $errorEnvironment
+  fi
 
   set -eou pipefail
 
@@ -75,6 +116,22 @@ testDeployApplication() {
   fi
   consoleNameValue 20 "Deploy Root" "$d"
 
+  if ! phpPid=$(_simplePHPServer "$d/live-app"); then
+    consoleError _simplePHPServer failed
+    buildFailed "$quietLog"
+    return "$errorEnvironment"
+  fi
+  if ! _warmupServer; then
+    return $errorEnvironment
+  fi
+
+  consoleInfo _simplePHPServer started "$phpPid"
+  # shellcheck disable=SC2064
+  trap "kill $phpPid" INT TERM
+
+  consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  assertEquals "start" "$(_simplePHPRequest)" "initial state of PHP server" || return $?
+
   for t in 1a 2b 3c 4d; do
     consoleInfo deployHasVersion $t test 1
     assertExitCode 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
@@ -85,7 +142,17 @@ testDeployApplication() {
   firstArgs=(--first)
   for t in 1a 2b 3c 4d; do
     assertExitCode 0 deployHasVersion "$d/DEPLOY" $t || return $?
-    assertExitCode 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" "$d/DEPLOY" "$t" "$d/live-app" || _deployShowFiles "$d" || return $?
+    if ! deployApplication "${firstArgs[@]+${firstArgs[@]}}" "$d/DEPLOY" "$t" "$d/live-app"; then
+      consoleError "Deployment of $t failed"
+      _deployShowFiles "$d" || return $?
+    fi
+
+    sleep 1
+    consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+
+    assertEquals "$t" "$(_simplePHPRequest)" "PHP application new version $t" || return $?
+    clearLine
+    _deployShowFiles "$d" || :
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     if [ -n "$lastOne" ]; then
       assertFileExists "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
@@ -111,21 +178,35 @@ testDeployApplication() {
 
   consoleInfo undoDeployApplication tests
 
+  t=4d
   for t in 4d 3c 2b; do
+    consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+
+    assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
+
     consoleRed "undoDeployApplication $t"
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     undoDeployApplication "$d/DEPLOY" "$t" "$d/live-app" || return $?
-
     _testAssertDeploymentLinkages "$d" || return $?
+
+    sleep 1
   done
 
-  assertEquals "1a" "$(deployApplicationVersion "$d/live-app")" || return $?
+  t=1a
+  assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
+
+  consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
 
   consoleInfo No previous version
-  assertExitCodeNotZero undoDeployApplication "$d/DEPLOY" "1a" "$d/live-app"
+  assertNotExitCode 0 undoDeployApplication "$d/DEPLOY" "1a" "$d/live-app"
 
-  consoleInfo Jump versions to end
-  deployApplication "$d/DEPLOY" "4d" "$d/live-app" || return $?
+  t=4d
+  consoleInfo Jump versions to end $t
+  deployApplication "$d/DEPLOY" "$t" "$d/live-app" || return $?
+
+  consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
 
   _testAssertDeploymentLinkages "$d" || return $?
 
@@ -134,9 +215,6 @@ testDeployApplication() {
 
   _testAssertDeploymentLinkages "$d" || return $?
 
-  cd "$d" || return 1
-
-  # find . -type f
-
-  cd "$home"
+  echo "GOING TO: kill ::::$phpPid:::: My PID is $$"
+  kill -TERM "$phpPid" || :
 }

@@ -199,8 +199,8 @@ _deployNextVersion() {
 # Example: deployApplication /var/www/DEPLOY 10c2fab1 /var/www/apps/cool-app
 #
 deployApplication() {
-  local deployHome deployVersion applicationPath deployedApplicationPath firstDeployment undoDeployment name
-  local previousApplicationPath previousApplicationChecksum targetPackageFullPath exitCode=0
+  local deployHome currentlyDeployedVersion deployVersion applicationPath deployedApplicationPath firstDeployment undoDeployment name
+  local previousApplicationChecksum targetPackageFullPath exitCode=0
 
   # Arguments
 
@@ -256,126 +256,146 @@ deployApplication() {
     fi
   done
 
-  # If we are doing and undo then there's no previous - this is the previous
-  if ! test $undoDeployment; then
-    deployedApplicationPath="$deployHome/$deployVersion/app"
-    if ! previousApplicationChecksum=$(deployApplicationVersion "$applicationPath") || [ -z "$previousApplicationChecksum" ]; then
-      previousApplicationChecksum=
-      if ! test "$firstDeployment"; then
-        _deployApplication "$errorEnvironment" "deployApplication: No previous version, failing without --first" || return $?
-      fi
-    fi
-  fi
+  #
+  # Arguments are all parsed by here
+  #
 
   targetPackageFullPath="$deployHome/$deployVersion/$targetPackage"
   if [ ! -f "$targetPackageFullPath" ]; then
     _deployApplication "$errorEnvironment" "deployApplication: Missing target file $targetPackageFullPath" || return $?
   fi
 
-  # _unwindDeploy after this
-  if [ ! -d "$deployedApplicationPath" ]; then
-    if ! mkdir "$deployedApplicationPath"; then
-      _unwindDeploy "$deployedApplicationPath" "mkdir $deployedApplicationPath failed" || return $?
-    fi
-    if ! cd "$deployedApplicationPath"; then
-      _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed" || return $?
-    fi
-    if ! tar xzf "$targetPackageFullPath"; then
-      _unwindDeploy "$deployedApplicationPath" "tar xvf $targetPackageFullPath failed" || return $?
+  # If we are doing and undo then there's no previous - this is the previous
+  previousApplicationChecksum=
+  if ! test $undoDeployment; then
+    if ! previousApplicationChecksum=$(deployApplicationVersion "$applicationPath") || [ -z "$previousApplicationChecksum" ]; then
+      if ! test "$firstDeployment"; then
+        _deployApplication "$errorEnvironment" "deployApplication: No previous version, failing without --first" || return $?
+      fi
+      previousApplicationChecksum=
     fi
   fi
 
-  if ! deployVersion=$(deployApplicationVersion "$deployedApplicationPath"); then
+  #
+  # Generates deployHome/{newVersion}/app and deletes on failure
+  #
+  # START _unwindDeploy
+  #
+  # `_unwindDeploy` after this guarantees this and always exits non-zero
+  #
+  deployedApplicationPath="$deployHome/$deployVersion/app"
+  if [ -d "$deployedApplicationPath" ]; then
+    if ! rm -rf "$deployedApplicationPath"; then
+      _unwindDeploy "$deployedApplicationPath" "rm $deployedApplicationPath failed" || return $?
+    fi
+  fi
+  if ! mkdir "$deployedApplicationPath"; then
+    _unwindDeploy "$deployedApplicationPath" "mkdir $deployedApplicationPath failed" || return $?
+  fi
+  if ! cd "$deployedApplicationPath"; then
+    _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed" || return $?
+  fi
+
+  # CWD "$deployedApplicationPath"
+
+  if ! tar xzf "$targetPackageFullPath"; then
+    _unwindDeploy "$deployedApplicationPath" "tar xvf $targetPackageFullPath failed" || return $?
+  fi
+
+  if ! currentlyDeployedVersion=$(deployApplicationVersion "$deployedApplicationPath"); then
     _unwindDeploy "$deployedApplicationPath" "deployApplicationVersion $deployedApplicationPath failed" || return $?
   fi
 
-  if [ "$deployVersion" != "$deployVersion" ]; then
-    _unwindDeploy "$deployedApplicationPath" "Arg $deployVersion != Computed $deployVersion" || return $?
+  if [ "$currentlyDeployedVersion" != "$deployVersion" ]; then
+    _unwindDeploy "$deployedApplicationPath" "Deployed version $currentlyDeployedVersion != Requested $deployVersion" || return $?
   fi
 
-  if [ -d "$applicationPath/bin/build" ] && [ -d "$applicationPath/bin/hooks" ]; then
-    if cd "$applicationPath"; then
-      if ! runOptionalHook maintenance on; then
-        _unwindDeploy "$deployedApplicationPath" "Turning maintenance on in $applicationPath failed"
-        return $?
-      fi
-      if ! cd "$deployedApplicationPath"; then
-        _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
-        return $?
-      fi
-    else
-      _unwindDeploy "$deployedApplicationPath" "cd $applicationPath failed"
+  #
+  # Old Application
+  #
+  if ! cd "$applicationPath"; then
+    _unwindDeploy "$deployedApplicationPath" "cd $applicationPath failed" || return $?
+  fi
+
+  # CWD "$applicationPath"
+
+  if hasHook maintenance; then
+    printf "%s %s\n" "$(consoleWarning "Turning maintenance")" "$(consoleGreen "$(consoleCode " ON ")")"
+    if ! runHook maintenance on; then
+      _unwindDeploy "$deployedApplicationPath" "Turning maintenance on in $applicationPath failed"
       return $?
     fi
+  else
+    printf "%s\n" "$(consoleInfo "No maintenance hook")"
+  fi
+  if hasHook deploy-shutdown; then
+    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-shutdown ")")"
+    if ! runHook deploy-shutdown; then
+      _unwindDeploy "$deployedApplicationPath" "Running hook deploy-shutdown failed" || return $?
+    fi
+  else
+    printf "%s\n" "$(consoleInfo "No deploy-shutdown hook")"
   fi
 
+  #
+  # Link
+  #
   if [ -n "$previousApplicationChecksum" ]; then
     if [ ! -f "$deployHome/$deployVersion.previous" ] && [ ! -f "$deployHome/$previousApplicationChecksum.next" ]; then
+      printf "%s %s -> %s\n" "$(consoleInfo "Linking versions:")" "$(consoleOrange "$previousApplicationChecksum")" "$(consoleGreen "$deployVersion")"
       # Linked list forward only
       if ! printf "%s" "$previousApplicationChecksum" >"$deployHome/$deployVersion.previous" ||
         ! printf "%s" "$deployVersion" >"$deployHome/$previousApplicationChecksum.next"; then
         rm -rf "$deployHome/$deployVersion.previous" "$deployHome/$deployVersion.next" || :
-        _unwindDeploy "$deployedApplicationPath" "Linking $deployHome failed" || return $?
+        _unwindDeploy "$deployedApplicationPath" "Linking $deployHome/$deployVersion failed" || return $?
       fi
     fi
   fi
 
+  #
+  # Link
+  #
+  # deployedApplicationPath is the new version of the application source code root
   consoleInfo -n "Setting to version $deployVersion ... "
   if ! cd "$deployedApplicationPath"; then
-    _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed"
-    return $?
+    _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed" || return $?
   fi
-  if ! runOptionalHook deploy-start "$applicationPath"; then
-    _unwindDeploy "$deployedApplicationPath" "runOptionalHook deploy-start failed"
-    return $?
-  fi
-  if hasHook deploy-move; then
-    runHook deploy-move "$applicationPath"
+
+  # CWD "$deployedApplicationPath"
+  if hasHook deploy-start; then
+    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-start ")")"
+    if ! runHook deploy-start; then
+      _unwindDeploy "$deployedApplicationPath" "Running hook deploy-start failed" || return $?
+    fi
   else
-    if [ ! -d "$deployHome/$previousApplicationChecksum" ]; then
-      if ! mkdir -p "$deployHome/$previousApplicationChecksum"; then
-        _unwindDeploy "$deployedApplicationPath" "Unable to create deploy home/previous checksum \"$deployHome/$previousApplicationChecksum\""
-        return $?
-      fi
+    printf "%s\n" "$(consoleInfo "No deploy-start hook")"
+  fi
+
+  if hasHook deploy-move; then
+    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-move ")")" || :
+    if ! runHook deploy-move "$applicationPath"; then
+      _unwindDeploy "$deployedApplicationPath" "runHook deploy-move failed" || return $?
     fi
-    previousApplicationPath="$deployHome/$previousApplicationChecksum/app/"
-    if [ -d "$previousApplicationPath" ]; then
-      if ! rm -rf "$previousApplicationPath"; then
-        _unwindDeploy "$deployedApplicationPath" "Unable to delete \"$previousApplicationPath\""
-        return $?
-      fi
-    fi
-    if ! cd "$deployHome"; then
-      _unwindDeploy "$deployedApplicationPath" "Unable to cd to \"$deployHome\""
-      return $?
-    fi
-    # COPY is safest
-    if ! cp -R "${applicationPath%%/}" "$previousApplicationPath"; then
-      _unwindDeploy "$deployedApplicationPath" "Unable to copy \"$applicationPath\" \"$previousApplicationPath\"" || return $?
-    fi
-    if ! mv "$applicationPath" "$applicationPath.$$"; then
-      _unwindDeploy "$deployedApplicationPath" "Unable to move $applicationPath to $applicationPath.$$" || return $?
-    fi
-    if mv "$deployedApplicationPath" "$applicationPath"; then
-      if ! rm -rf "$applicationPath.$$"; then
-        consoleError "ERROR: Deleting $applicationPath.$$ resulted in exit code $?" 1>&2
-      fi
-    else
-      consoleError "Unable to do FINAL mv \"$deployedApplicationPath\" \"$applicationPath\" attempting UNDO" 1>&2
-      if ! mv "$applicationPath.$$" "$applicationPath"; then
-        _unwindDeploy "$deployedApplicationPath" "Unable to UNDO FINAL mv \"$applicationPath.$$\" \"$applicationPath\", system is BROKEN"
-      fi
-      return "$errorEnvironment"
+  else
+    printf "%s %s\n" "$(consoleSuccess "Moving to")" "$(consoleGreen "$(consoleCode " $applicationPath ")")" || :
+    if ! deployMove "$applicationPath"; then
+      _unwindDeploy "$deployedApplicationPath" "deployMove $applicationPath failed" || return $?
     fi
   fi
+  # STOP _unwindDeploy
+
   if ! cd "$applicationPath"; then
     _deployApplication "$errorEnvironment" "Unable to do cd \"$applicationPath\" can not run optional hooks - UNSTABLE" || exitCode=$?
+  else
+    if ! runOptionalHook deploy-finish; then
+      _deployApplication "$errorEnvironment" "Deploy finish failed" || exitCode=$?
+    fi
+    if ! runOptionalHook maintenance off; then
+      _deployApplication "$errorEnvironment" "maintenance off failed" || exitCode=$?
+    fi
   fi
-  if ! runOptionalHook deploy-finish; then
-    _deployApplication "$errorEnvironment" "Deploy finish failed" || exitCode=$?
-  fi
-  if ! runOptionalHook maintenance off; then
-    _deployApplication "$errorEnvironment" "maintenance off failed" || exitCode=$?
+  if [ -d "$deployedApplicationPath" ]; then
+    consoleWarning "$deployedApplicationPath still exists after deploy, removing" || return $?
   fi
   if [ $exitCode -eq 0 ]; then
     consoleSuccess "Completed"
@@ -392,12 +412,35 @@ _unwindDeploy() {
 
   shift || :
   if [ -d "$deployedApplicationPath" ]; then
-    printf "%s %s\n" "$(consoleError "Deleting")" "$(console "$deployedApplicationPath")"
+    printf "%s %s\n" "$(consoleError "Deleting")" "$(consoleCode "$deployedApplicationPath")"
     rm -rf "$deployedApplicationPath" || consoleError "Delete failed" 1>&2
   else
     consoleError "Delete failed" 1>&2
   fi
   _deployApplication "$errorEnvironment" "$@"
+}
+
+#
+# Safe application deployment
+#
+# Usage: {fn} applicationPath
+#
+# Deploy current application to target path
+#
+deployMove() {
+  local applicationPath newApplicationSource
+
+  if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" applicationPath "$1"); then
+    return "$errorArgument"
+  fi
+  shift || :
+  if ! newApplicationSource=$(pwd); then
+    _deployMove "$errorEnvironment" "Unable to get pwd" || return $?
+  fi
+  directoryClobber "$newApplicationSource" "$applicationPath"
+}
+_deployMove() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
