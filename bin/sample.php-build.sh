@@ -19,4 +19,4 @@ files=(bin src etc public)
 ./bin/install-bin-build.sh
 ./bin/build/pipeline/php-build.sh "${extraEnvs[@]}" -- "${files[@]}"
 
-# Artifacts: .build.env app.tar.gz
+# Artifacts: .build.env BUILD_TARGET

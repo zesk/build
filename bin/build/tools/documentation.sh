@@ -468,7 +468,7 @@ __dumpNameValue() {
 __dumpNameValuePrefix() {
   local prefix=$1 varName=$2
   printf "export '%s'; " "$varName"
-  printf "read -r -d '' '%s' <<'%s' || :\n" "$varName" "EOF" # Single quote means no interpolation
+  printf "IFS='' read -r -d '' '%s' <<'%s' || :\n" "$varName" "EOF" # Single quote means no interpolation
   shift
   shift
   while [ $# -gt 0 ]; do

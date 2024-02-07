@@ -6,16 +6,14 @@
 #
 set -eou pipefail
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-me=$(basename "${BASH_SOURCE[0]}")
+errorEnvironment=1
+
+errorArgument=2
+
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit "$errorEnvironment"
 
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
-
-_myCoolScriptUsage() {
-    usageDocument "./docs/guide/$me" "myCoolScript" "$@"
-    exit $?
-}
 
 # Summary: Cool file processor
 #
@@ -26,8 +24,8 @@ _myCoolScriptUsage() {
 # - Lists look like lists in text largely because markdown is just pretty text
 #
 # Usage: myCoolScript
-# Argument: file - Required. File. The file to cool
-# Argument: directory - Required. Directory. The place to put the file
+# Argument: fileArg - Required. File. The file to cool
+# Argument: directoryArg - Required. Directory. The place to put the cool file
 # Argument: --help - Show this help and exit
 # Example:      myCoolScript my.cool ./coolOutput/
 # This is added to the description.
@@ -35,15 +33,22 @@ _myCoolScriptUsage() {
 # Example:      myCoolScript another.cool ./coolerOutput/
 #
 myCoolScript() {
-    file="${1-}"
-    # ...
-    if [ -z "$file" ]; then
-        _myCoolScriptUsage 1 "Requries a file"
-    fi
-    if [ ! -f "$file" ]; then
-        _myCoolScriptUsage 1 "$file is not a file"
-    fi
-    # cool things
+  local fileArg directoryArg
+
+  if ! fileArg="$(usageArgumentFile "_${FUNCNAME[0]}" fileArg "$1")"; then
+    return $errorArgument
+  fi
+  shift || return $errorArgument
+  if ! directoryArg="$(usageArgumentDirectory "_${FUNCNAME[0]}" directoryArg "$1")"; then
+    return $errorArgument
+  fi
+  shift || return $errorArgument
+
+  # cool things
+  printf "%s -> %s\n" "$(basename "$fileArg")" "$directoryArg"
+}
+_myCoolScript() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 myCoolScript "$@"
