@@ -34,7 +34,10 @@ errorArgument=2
 #
 bigText() {
   local font=smblock
-  whichApt toilet toilet
+  if ! whichApt toilet toilet; then
+    consoleGreen "BIG TEXT: $*"
+    return 0
+  fi
   if [ "$1" = "--bigger" ]; then
     font=smmono12
     shift

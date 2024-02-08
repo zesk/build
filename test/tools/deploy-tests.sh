@@ -92,6 +92,23 @@ _warmupServer() {
   clearLine
   printf "%s %s\n" "$(consoleInfo "Server warmed up with value:")" "$(consoleCode "$value")"
 }
+_waitForValue() {
+  local start delta value
+
+  start=$(beginTiming)
+  consoleInfo -n "Waiting for value $1"
+  while ! value="$(_simplePHPRequest)" || [ -z "$value" ] || [ "$value" != "$1" ]; do
+    sleep 1
+    delta=$(($(beginTiming) - start))
+    if [ "$delta" -gt 5 ]; then
+      consoleError "_waitForValue failed"
+      return "$errorEnvironment"
+    fi
+    consoleGreen -n .
+  done
+  clearLine
+  printf "%s %s\n" "$(consoleInfo "Server found value:")" "$(consoleCode "$value")"
+}
 
 testDeployApplication() {
   local d phpPid quietLog
@@ -147,8 +164,8 @@ testDeployApplication() {
       _deployShowFiles "$d" || return $?
     fi
 
-    sleep 1
     consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+    _waitForValue "$t" || return $?
 
     assertEquals "$t" "$(_simplePHPRequest)" "PHP application new version $t" || return $?
     clearLine
@@ -181,6 +198,7 @@ testDeployApplication() {
   t=4d
   for t in 4d 3c 2b; do
     consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+    _waitForValue "$t" || return $?
 
     assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
 
@@ -196,6 +214,8 @@ testDeployApplication() {
   assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
 
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  _waitForValue "$t" || return $?
+
   assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
 
   consoleInfo No previous version
@@ -206,6 +226,8 @@ testDeployApplication() {
   deployApplication "$d/DEPLOY" "$t" "$d/live-app" || return $?
 
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  _waitForValue "$t" || return $?
+
   assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
 
   _testAssertDeploymentLinkages "$d" || return $?

@@ -65,7 +65,7 @@ aptUpdateOnce() {
 #
 aptInstall() {
   local installedLog quietLog
-  local actualPackages=() packages=(apt-utils figlet jq pcregrep "$@")
+  local actualPackages=() packages=(apt-utils figlet toilet toilet-fonts jq pcregrep "$@")
   local apt start
 
   start=$(beginTiming)

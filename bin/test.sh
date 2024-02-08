@@ -81,7 +81,7 @@ buildTestSuite() {
 
   messyOption=
   allTests=(git decoration url ssh log version colors type os pipeline identical)
-  allTests+=(text deploy markdown documentation assert usage docker api tests aws php bin)
+  allTests+=(text markdown documentation assert usage docker api tests aws php bin deploy)
   allTests+=(sysvinit)
   while read -r shortTest; do
     if ! inArray "$shortTest" "${allTests[@]}"; then

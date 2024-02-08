@@ -12,16 +12,12 @@ declare -a tests
 
 tests+=(testVersionLive)
 testVersionLive() {
-  set -x
   assertExitCode 0 runHook version-live
-  set +x
 }
 
 tests+=(testNewRelease)
 testNewRelease() {
-  set -x
   assertExitCode 0 newRelease --non-interactive
-  set +x
 }
 
 tests+=(testBuildSetup)
@@ -135,12 +131,14 @@ testScriptInstallations() {
     __doesScriptInstall docker-compose dockerComposeInstall || return $?
   fi
 
-  __doesScriptInstall php phpInstall || return $?
+  if ! which php >/dev/null; then
+    __doesScriptInstall php phpInstall || return $?
+  fi
   __doesScriptInstall python pythonInstall || return $?
   __doesScriptInstall mariadb mariadbInstall || return $?
   # requires docker
-  d=$(mkdtemp -d)
-  cp ./test/sample/simple-php/composer.json "$d/"
+  d=$(mktemp -d)
+  cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/"
   phpComposer "$d"
   if [ ! -d "$d/vendor" ] || [ ! -f "$d/composer.lock" ]; then
     consoleError "composer failed"

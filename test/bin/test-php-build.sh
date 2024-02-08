@@ -65,37 +65,45 @@ testPHPBuild() {
   echo "PWD: $(pwd)"
 
   # shellcheck source=/dev/null
-  . ./bin/build/env/BUILD_TARGET.sh
+  if ! . ./bin/build/env/BUILD_TARGET.sh; then
+    return "$errorEnvironment"
+  fi
   # shellcheck source=/dev/null
-  . ./bin/build/env/BUILD_TIMESTAMP.sh
+  if ! . ./bin/build/env/BUILD_TIMESTAMP.sh; then
+    return "$errorEnvironment"
+  fi
 
-  assertEquals "${BUILD_TARGET}" "app.tar.gz"
+  assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
   mkdir -p "$testPath/$appName/bin/pipeline" || return $errorEnvironment
   cp ./bin/build/install-bin-build.sh "$testPath/$appName/bin/pipeline/install-bin-build.sh" || return $errorEnvironment
 
-  here=$(pwd)
+  if ! here=$(pwd); then
+    return $errorEnvironment
+  fi
 
   set +x
-  consoleInfo "Test build directory is: $testPath"
+  consoleInfo "Test build directory is: $testPath" || :
 
-  cd "$testPath/$appName"
-  assertFileDoesNotExist "./app.tar.gz"
-  assertDirectoryDoesNotExist bin/build
+  if ! cd "$testPath/$appName"; then
+    return $errorEnvironment
+  fi
+  assertFileDoesNotExist "./app.tar.gz" || return $?
+  assertDirectoryDoesNotExist bin/build || return $?
 
-  assertFileExists ./bin/pipeline/install-bin-build.sh
+  assertFileExists ./bin/pipeline/install-bin-build.sh || return $?
 
-  ./bin/pipeline/install-bin-build.sh --mock "$here/bin/build"
-  assertDirectoryExists bin/build
+  ./bin/pipeline/install-bin-build.sh --mock "$here/bin/build" || return $?
+  assertDirectoryExists bin/build || return $?
 
-  consoleWarning "Building PHP app"
+  consoleWarning "Building PHP app" || :
 
-  assertEquals "${BUILD_TARGET}" "app.tar.gz"
+  assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
   # No environment
   bin/build.sh || return $?
   assertFileExists "./app.tar.gz" "pwd: $(pwd)" || return $?
-  rm ./app.tar.gz || :
+  rm ./app.tar.gz || return $?
 
   export APP_THING=secret
 
@@ -120,17 +128,17 @@ testPHPBuild() {
   rm -rf ./vendor || return $?
   cd .. || return $?
 
-  if ! diff -r ./compare-app ./compare-alternate; then
-    consoleError "Directories differ - failed"
-    return $?
+  if ! assertOutputContains --exit 1 'APP_THING="secret"' diff -r ./compare-app ./compare-alternate; then
+    consoleError "MISSING changes in app"
+    return $errorEnvironment
   fi
 
   manifest=$(mktemp) || return $?
   tar tf app.tar.gz >"$manifest.complete" || return $?
   grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
-  assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env
-  assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml
-  assertFileContains "$manifest.complete" vendor/zesk vendor/composer
+  assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
+  assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
+  assertFileContains "$manifest.complete" vendor/zesk vendor/composer || return $?
 
   if ! test "$keepFlag"; then
     consoleWarning Deleting app.tar.gz "$BUILD_TARGET" || :

@@ -348,7 +348,7 @@ assertOutputEquals() {
 #
 # If this fails it will output the command result to stdout.
 #
-# Usage: assertOutputContains expected command [ arguments ... ]
+# Usage: {fn} expected command [ arguments ... ]
 # Argument: - `expected` - A string to expect in the output
 # Argument: - `command` - The command to run
 # Argument: - `arguments` - Any arguments to pass to the command to run
@@ -356,8 +356,7 @@ assertOutputEquals() {
 # Argument: - `--stderr` - Also include standard error in output checking
 # Exit code: 0 - If the output contains at least one occurrence of the string
 # Exit code: 1 - If output does not contain string
-# Local cache: None
-# Example:     assertOutputContains Success complex-thing.sh --dry-run
+# Example:     {fn} Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
