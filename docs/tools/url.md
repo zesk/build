@@ -20,6 +20,7 @@ Does little to no validation of any characters so best used for well-formed inpu
 #### Usage
 
     urlParse url
+    
 
 #### Arguments
 
@@ -27,7 +28,7 @@ Does little to no validation of any characters so best used for well-formed inpu
 
 #### Examples
 
-eval "$(urlParse scheme://user:password@host:port/path)"
+    eval "$(urlParse scheme://user:password@host:port/path)"
     echo $name
 
 #### Exit codes
@@ -42,6 +43,7 @@ Gets the component of the URL from a given database URL.
 #### Usage
 
     urlParseItem component url0 [ url1 ... ]
+    
 
 #### Arguments
 
@@ -50,7 +52,7 @@ Gets the component of the URL from a given database URL.
 
 #### Examples
 
-consoleInfo "Connecting as $(urlParseItem user "$url")"
+    consoleInfo "Connecting as $(urlParseItem user "$url")"
 
 #### Exit codes
 

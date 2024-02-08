@@ -11,6 +11,7 @@ Does various checks for deprecated code and updates code.
 ## Usage
 
     deprecated.sh
+    
 
 ## Exit codes
 

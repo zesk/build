@@ -9,6 +9,7 @@ Typically used to output text to the console using pretty colors and ANSI art.
 #### Usage
 
     repeat count string [ ... ]
+    
 
 #### Arguments
 
@@ -18,7 +19,7 @@ Typically used to output text to the console using pretty colors and ANSI art.
 
 #### Examples
 
-echo $(repeat 80 =)
+    echo $(repeat 80 =)
     echo Hello world
     echo $(repeat 80 -)
 
@@ -33,6 +34,7 @@ Output a bar as wide as the console using the `=` symbol.
 #### Usage
 
     echoBar [ alternateChar [ offset ] ]
+    
 
 #### Arguments
 
@@ -41,7 +43,7 @@ Output a bar as wide as the console using the `=` symbol.
 
 #### Examples
 
-consoleSuccess $(echoBar =-)
+    consoleSuccess $(echoBar =-)
     consoleSuccess $(echoBar "- Success ")
     consoleMagenta $(echoBar +-)
 
@@ -61,6 +63,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #### Usage
 
     prefixLines [ text .. ] < fileToPrefixLines
+    
 
 #### Arguments
 
@@ -68,7 +71,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Examples
 
-cat "$file" | prefixLines "$(consoleCode)"
+    cat "$file" | prefixLines "$(consoleCode)"
     cat "$errors" | prefixLines "    ERROR: "
 
 #### Exit codes
@@ -82,6 +85,7 @@ Format text and align it right using spaces.
 #### Usage
 
     alignRight characterWidth text [ ... ]
+    
 
 #### Arguments
 
@@ -90,7 +94,7 @@ Format text and align it right using spaces.
 
 #### Examples
 
-printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
+    printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
     printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
                 Name: Juanita
           Profession: Engineer
@@ -106,6 +110,7 @@ Format text and align it left using spaces.
 #### Usage
 
     alignLeft characterWidth text [ ... ]
+    
 
 #### Arguments
 
@@ -114,7 +119,7 @@ Format text and align it left using spaces.
 
 #### Examples
 
-printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
+    printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
     printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
     Name          : Tyrone
     Profession    : Engineer
@@ -130,6 +135,7 @@ Heading for section output
 #### Usage
 
     boxedHeading [ --size size ] text [ ... ]
+    
 
 #### Arguments
 
@@ -138,7 +144,7 @@ Heading for section output
 
 #### Examples
 
-boxedHeading Moving ...
+    boxedHeading Moving ...
 
 #### Sample Output
 
@@ -147,6 +153,7 @@ boxedHeading Moving ...
     | Moving ...                                                                                     |
     |                                                                                                |
     +================================================================================================+
+    
 
 #### Exit codes
 
@@ -175,6 +182,7 @@ smmono12 (--bigger)
 #### Usage
 
     bigText [ --bigger ] Text to output
+    
 
 #### Exit codes
 

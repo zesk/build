@@ -13,6 +13,7 @@ Parses text and determines if it\'s a yes.
 #### Usage
 
     yesNo text
+    
 
 #### Exit codes
 
@@ -22,7 +23,13 @@ Parses text and determines if it\'s a yes.
 
 #### See Also
 
-- [function lowercase](./docs/tools/text.md) - [Convert text to lowercase](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L249)
+- [function lowercase
+](./docs/tools/text.md
+) - [Convert text to lowercase
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh
+#L249
+)
+{SEE:}
 
 ### `confirmYesNo` - Read user input and return 0 if the user says
 
@@ -45,6 +52,7 @@ Escalation means copying between users. Escalation copy shows differences and pr
 #### Usage
 
     copyFileChanged source destination
+    
 
 #### Arguments
 
@@ -59,6 +67,7 @@ Escalation means copying between users. Escalation copy shows differences and pr
 #### Usage
 
     copyFileChangedQuiet source destination
+    
 
 #### Arguments
 
@@ -71,7 +80,12 @@ Escalation means copying between users. Escalation copy shows differences and pr
 
 #### See Also
 
-- [function copyFileChanged](./docs/tools/interactive.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L161)
+- [function copyFileChanged
+](./docs/tools/interactive.md
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh
+#L161
+)
+{SEE:}
 
 ### `mapCopyFileChanged` - Map a file using environment variables before copying, return 0
 
@@ -80,6 +94,7 @@ Map a file using environment variables before copying, return 0 if something cha
 #### Usage
 
     mapCopyFileChanged source destination
+    
 
 #### Arguments
 
@@ -94,6 +109,7 @@ Map a file using environment variables before copying, return 0 if something cha
 #### Usage
 
     escalatedCopyFileChanged source destination
+    
 
 #### Arguments
 
@@ -113,6 +129,7 @@ escalation privileges. Maps the file using local environment.
 #### Usage
 
     escalatedCopyFileChanged source destination
+    
 
 #### Arguments
 

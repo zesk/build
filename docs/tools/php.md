@@ -15,6 +15,7 @@ When this tool succeeds the `python` binary is available in the local operating 
 #### Usage
 
     phpInstall [ package ... ]
+    
 
 #### Arguments
 
@@ -43,6 +44,7 @@ shellcheck disable=SC2120
 #### Usage
 
     composer.sh [ --help ] [ installDirectory ]
+    
 
 #### Arguments
 
@@ -51,7 +53,7 @@ shellcheck disable=SC2120
 
 #### Examples
 
-bin/build/pipeline/composer.sh ./app/
+    bin/build/pipeline/composer.sh ./app/
 
 #### Exit codes
 
@@ -68,7 +70,7 @@ BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run co
 ### `phpBuild` - Build deployment using composer, adding environment values to .env and
 
 Build deployment using composer, adding environment values to .env and packaging vendor and additional
-files into target file, usually `BUILD_TARGET` defaults to `app.tar.gz`.
+files into target file, usually `BUILD_TARGET`
 
 Override target file generated with environment variable `BUILD_TARGET` which must ae set during build
 and on remote systems during deployment.
@@ -103,6 +105,14 @@ Files are specified from the application root directory.
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### See Also
+
+- [Source BUILD_TARGET.sh
+](https://github.com/zesk/build/blob/main/bin/build/env/BUILD_TARGET.sh
+#L{line}
+)
+{SEE:}
 
 ### `phpLog` - Outputs the path to the PHP log file
 

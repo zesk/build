@@ -13,6 +13,7 @@ Quote a string to be used in a sed pattern on the command line.
 #### Usage
 
     quoteSedPattern text
+    
 
 #### Arguments
 
@@ -20,11 +21,12 @@ Quote a string to be used in a sed pattern on the command line.
 
 #### Examples
 
-sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 
 #### Sample Output
 
     string quoted and appropriate to insert in a sed search or replacement phrase
+    
 
 #### Exit codes
 
@@ -37,6 +39,7 @@ Quote bash strings for inclusion as single-quoted for eval
 #### Usage
 
     quoteBashString text
+    
 
 #### Arguments
 
@@ -44,11 +47,12 @@ Quote bash strings for inclusion as single-quoted for eval
 
 #### Examples
 
-name="$(quoteBashString "$name")"
+    name="$(quoteBashString "$name")"
 
 #### Sample Output
 
     string quoted and appropriate to assign to a value in the shell
+    
 
 #### Exit codes
 
@@ -57,6 +61,7 @@ name="$(quoteBashString "$name")"
 #### Depends
 
     sed
+    
 
 
 ### `escapeQuotes` - Quote strings for inclusion in shell quoted strings
@@ -66,6 +71,7 @@ Quote strings for inclusion in shell quoted strings
 #### Usage
 
     escapeSingleQuotes text
+    
 
 #### Arguments
 
@@ -73,11 +79,12 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can\'t not include this in a bash string."
+    escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
     Single quotes are prefixed with a backslash
+    
 
 #### Exit codes
 
@@ -90,6 +97,7 @@ Quote strings for inclusion in shell quoted strings
 #### Usage
 
     escapeSingleQuotes text
+    
 
 #### Arguments
 
@@ -97,11 +105,12 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can\'t not include this in a bash string."
+    escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
     Single quotes are prefixed with a backslash
+    
 
 #### Exit codes
 
@@ -114,6 +123,7 @@ Quote strings for inclusion in shell quoted strings
 #### Usage
 
     escapeSingleQuotes text
+    
 
 #### Arguments
 
@@ -121,11 +131,12 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-escapeSingleQuotes "Now I can\'t not include this in a bash string."
+    escapeSingleQuotes "Now I can\'t not include this in a bash string."
 
 #### Sample Output
 
     Single quotes are prefixed with a backslash
+    
 
 #### Exit codes
 
@@ -138,6 +149,7 @@ Replaces the first and only the first occurrence of a pattern in a line with a r
 #### Usage
 
     replaceFirstPattern pattern replacement
+    
 
 #### Exit codes
 
@@ -151,6 +163,7 @@ Remove words from the end of a phrase
 #### Usage
 
     trimWords [ wordCount [ word0 ... ] ]
+    
 
 #### Arguments
 
@@ -159,7 +172,7 @@ Remove words from the end of a phrase
 
 #### Examples
 
-printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
+    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
 
 #### Exit codes
 
@@ -175,11 +188,12 @@ Trim spaces and only spaces from arguments or a pipe
 
 #### Examples
 
-trimSpace "$token"
+    trimSpace "$token"
 
 #### Sample Output
 
     text
+    
 
 #### Exit codes
 
@@ -196,6 +210,7 @@ trimSpace handles both cases now.
 #### Usage
 
     trimSpace < file > output
+    
 
 #### Exit codes
 
@@ -204,10 +219,17 @@ trimSpace handles both cases now.
 #### Depends
 
     awk
+    
 
 #### See Also
 
-- [function trimSpace](./docs/tools/text.md) - [Trim whitespace of a bash argument](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L96)
+- [function trimSpace
+](./docs/tools/text.md
+) - [Trim whitespace of a bash argument
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh
+#L96
+)
+{SEE:}
 
 
 ### `listTokens` - listTokens
@@ -217,6 +239,7 @@ listTokens
 #### Usage
 
     listTokens prefix suffix < input > output
+    
 
 #### Arguments
 
@@ -238,6 +261,7 @@ None.
 #### Depends
 
     sed quoteSedPattern
+    
 
 ## Finding or Calculating
 
@@ -250,6 +274,7 @@ If `haystack` is not found, -1 is output
 #### Usage
 
     stringOffset needle haystack
+    
 
 #### Exit codes
 
@@ -264,6 +289,7 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 #### Usage
 
     maximumFieldLength [ fieldIndex [ separatorChar ] ] < fieldBasedFile
+    
 
 #### Arguments
 
@@ -273,7 +299,7 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 #### Examples
 
-usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
+    usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
 
 #### Exit codes
 
@@ -292,6 +318,7 @@ Example:
 #### Usage
 
     plural number singular plural
+    
 
 #### Arguments
 
@@ -301,7 +328,7 @@ Example:
 
 #### Examples
 
-count=$(($(wc -l < $foxSightings) + 0))
+    count=$(($(wc -l < $foxSightings) + 0))
     printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
     n=$(($(date +%s)) - start))
     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
@@ -321,6 +348,7 @@ Convert text to lowercase
 #### Usage
 
     lowercase [ text ... ]
+    
 
 #### Exit codes
 
@@ -335,6 +363,7 @@ You can use this as a pipe or pass in arguments which are files to be hashed.
 #### Usage
 
     shaPipe [ filename ... ]
+    
 
 #### Arguments
 
@@ -342,12 +371,13 @@ You can use this as a pipe or pass in arguments which are files to be hashed.
 
 #### Examples
 
-shaPipe < "$fileName"
+    shaPipe < "$fileName"
     shaPipe "$fileName0" "$fileName1"
 
 #### Sample Output
 
     cf7861b50054e8c680a9552917b43ec2b9edae2b
+    
 
 #### Exit codes
 
@@ -360,6 +390,7 @@ DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe ca
 #### Depends
 
     shasum
+    
 
 ### `cachedShaPipe` - SHA1 checksum of standard input
 
@@ -374,6 +405,7 @@ The cacheDirectory
 #### Usage
 
     cachedShaPipe cacheDirectory [ filename ]
+    
 
 #### Arguments
 
@@ -381,12 +413,13 @@ The cacheDirectory
 
 #### Examples
 
-cachedShaPipe "$cacheDirectory" < "$fileName"
+    cachedShaPipe "$cacheDirectory" < "$fileName"
     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
 
 #### Sample Output
 
     cf7861b50054e8c680a9552917b43ec2b9edae2b
+    
 
 #### Exit codes
 
@@ -395,6 +428,7 @@ cachedShaPipe "$cacheDirectory" < "$fileName"
 #### Depends
 
     shasum
+    
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -15,6 +15,7 @@ If this fails it will output an error and exit.
 #### Usage
 
     assertEquals expected actual [ message ]
+    
 
 #### Arguments
 
@@ -24,7 +25,7 @@ If this fails it will output an error and exit.
 
 #### Examples
 
-assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+    assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
 
 #### Exit codes
 
@@ -43,6 +44,7 @@ If this fails it will output an error and exit.
 #### Usage
 
     assertNotEquals expected actual [ message ]
+    
 
 #### Arguments
 
@@ -52,7 +54,7 @@ If this fails it will output an error and exit.
 
 #### Examples
 
-assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
+    assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
     Single quote break-s
 
 #### Exit codes
@@ -95,7 +97,13 @@ Assert one string does not contains another (case-sensitive)
 
 #### See Also
 
-- [function assertContains](./docs/tools/assert.md) - [Assert one string contains another (case-sensitive)](https://github.com/zesk/build/blob/main/bin/build/tools/assert.sh#L162)
+- [function assertContains
+](./docs/tools/assert.md
+) - [Assert one string contains another (case-sensitive)
+](https://github.com/zesk/build/blob/main/bin/build/tools/assert.sh
+#L162
+)
+{SEE:}
 
 ## Comparison
 
@@ -107,6 +115,7 @@ Assert `leftValue > rightValue`
 #### Usage
 
     assertGreaterThan expected actual [ message ]
+    
 
 #### Arguments
 
@@ -116,7 +125,7 @@ Assert `leftValue > rightValue`
 
 #### Examples
 
-assertGreaterThan 3 "$found"
+    assertGreaterThan 3 "$found"
 
 #### Exit codes
 
@@ -133,6 +142,7 @@ Assert `leftValue >= rightValue`
 #### Usage
 
     assertNotEquals expected actual [ message ]
+    
 
 #### Arguments
 
@@ -142,7 +152,7 @@ Assert `leftValue >= rightValue`
 
 #### Examples
 
-assertGreaterThanOrEqual 3 $found
+    assertGreaterThanOrEqual 3 $found
 
 #### Exit codes
 
@@ -160,6 +170,7 @@ Assert `leftValue < rightValue`
 #### Usage
 
     assertLessThan expected actual [ message ]
+    
 
 #### Arguments
 
@@ -169,7 +180,7 @@ Assert `leftValue < rightValue`
 
 #### Examples
 
-assertLessThan 3 $found
+    assertLessThan 3 $found
 
 #### Exit codes
 
@@ -187,6 +198,7 @@ Assert `leftValue <= rightValue`
 #### Usage
 
     assertLessThanOrEqual leftValue rightValue [ message ]
+    
 
 #### Arguments
 
@@ -196,7 +208,7 @@ Assert `leftValue <= rightValue`
 
 #### Examples
 
-assertLessThanOrEqual 3 $found
+    assertLessThanOrEqual 3 $found
 
 #### Exit codes
 
@@ -219,6 +231,7 @@ If this fails it will output an error and exit.
 #### Usage
 
     assertExitCode expectedExitCode command [ arguments ... ]
+    
 
 #### Arguments
 
@@ -252,6 +265,7 @@ If this fails it will output an error and exit.
 #### Usage
 
     assertNotExitCode expectedExitCode command [ arguments ... ]
+    
 
 #### Arguments
 
@@ -280,6 +294,7 @@ If this fails it will output an error and exit.
 #### Usage
 
     assertOutputEquals expected binary [ parameters ]
+    
 
 #### Arguments
 
@@ -289,7 +304,7 @@ If this fails it will output an error and exit.
 
 #### Examples
 
-assertOutputEquals "2023" date +%Y
+    assertOutputEquals "2023" date +%Y
 
 #### Exit codes
 
@@ -305,10 +320,6 @@ Run a command and expect the output to contain the occurrence of a string.
 
 If this fails it will output the command result to stdout.
 
-#### Usage
-
-    assertOutputContains expected command [ arguments ... ]
-
 #### Arguments
 
 - `expected` - A string to expect in the output
@@ -319,16 +330,12 @@ If this fails it will output the command result to stdout.
 
 #### Examples
 
-assertOutputContains Success complex-thing.sh --dry-run
+    assertOutputContains Success complex-thing.sh --dry-run
 
 #### Exit codes
 
 - `0` - If the output contains at least one occurrence of the string
 - `1` - If output does not contain string
-
-#### Local cache
-
-None
 
 #### Review Status
 
@@ -343,6 +350,7 @@ If this fails it will output the command result to stdout.
 #### Usage
 
     assertOutputDoesNotContain expected command [ arguments ... ]
+    
 
 #### Arguments
 
@@ -354,7 +362,7 @@ If this fails it will output the command result to stdout.
 
 #### Examples
 
-assertOutputDoesNotContain Success complex-thing.sh --dry-run
+    assertOutputDoesNotContain Success complex-thing.sh --dry-run
 
 #### Exit codes
 
@@ -379,6 +387,7 @@ $\Test that a directory exists
 #### Usage
 
     assertDirectoryExists directory [ message ... ]
+    
 
 #### Arguments
 
@@ -387,7 +396,7 @@ $\Test that a directory exists
 
 #### Examples
 
-assertDirectoryExists "$HOME" "HOME not found"
+    assertDirectoryExists "$HOME" "HOME not found"
 
 #### Exit codes
 
@@ -409,6 +418,7 @@ $\Test that a directory does not exist
 #### Usage
 
     assertDirectoryDoesNotExist directory [ message ... ]
+    
 
 #### Arguments
 
@@ -442,6 +452,7 @@ $\Test that a file exists
 #### Usage
 
     assertDirectoryExists directory [ message ... ]
+    
 
 #### Arguments
 
@@ -450,7 +461,7 @@ $\Test that a file exists
 
 #### Examples
 
-assertDirectoryExists "$HOME" "HOME not found"
+    assertDirectoryExists "$HOME" "HOME not found"
 
 #### Exit codes
 
@@ -472,6 +483,7 @@ $\Test that a file does not exist
 #### Usage
 
     assertFileDoesNotExist file [ message ... ]
+    
 
 #### Arguments
 
@@ -499,6 +511,7 @@ File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed
 #### Usage
 
     assertFileContains fileName string0 [ ... ]
+    
 
 #### Arguments
 
@@ -507,7 +520,7 @@ File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed
 
 #### Examples
 
-assertFileContains $logFile Success
+    assertFileContains $logFile Success
     assertFileContains $logFile "is up to date"
 
 #### Exit codes
@@ -530,6 +543,7 @@ File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 202
 #### Usage
 
     assertFileDoesNotContain fileName string0 [ ... ]
+    
 
 #### Arguments
 
@@ -538,7 +552,7 @@ File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 202
 
 #### Examples
 
-assertFileDoesNotContain $logFile error Error ERROR
+    assertFileDoesNotContain $logFile error Error ERROR
     assertFileDoesNotContain $logFile warning Warning WARNING
 
 #### Exit codes
@@ -560,7 +574,7 @@ If the file does not exist, this will fail.
 
 #### Examples
 
-assertFileSize 22 .config
+    assertFileSize 22 .config
     assertFileSize 0 .env
 
 #### Exit codes
@@ -579,7 +593,7 @@ If the file does not exist, this will fail.
 
 #### Examples
 
-assertNotFileSize 22 .config
+    assertNotFileSize 22 .config
     assertNotFileSize 0 .env
 
 #### Exit codes
@@ -598,7 +612,7 @@ If the file does not exist, this will fail.
 
 #### Examples
 
-assertZeroFileSize .config
+    assertZeroFileSize .config
     assertZeroFileSize /var/www/log/error.log
 
 #### Exit codes
@@ -616,7 +630,7 @@ If the file does not exist, this will fail.
 
 #### Examples
 
-assertNotZeroFileSize 22 .config
+    assertNotZeroFileSize 22 .config
     assertNotZeroFileSize 0 .env
 
 #### Exit codes
@@ -640,14 +654,16 @@ Outputs 40 random hexadecimal characters, lowercase.
 #### Usage
 
     randomString [ ... ]
+    
 
 #### Examples
 
-testPassword="$(randomString)"
+    testPassword="$(randomString)"
 
 #### Sample Output
 
     cf7861b50054e8c680a9552917b43ec2b9edae2b
+    
 
 #### Exit codes
 
@@ -656,6 +672,7 @@ testPassword="$(randomString)"
 #### Depends
 
     shasum, /dev/random
+    
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

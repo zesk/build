@@ -8,6 +8,7 @@ Get the last reported version.
 ## Usage
 
     gitVersionLast [ ignorePattern ]
+    
 
 ## Arguments
 

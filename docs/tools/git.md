@@ -13,6 +13,7 @@ Installs the `git` binary
 #### Usage
 
     gitInstall [ package ... ]
+    
 
 #### Arguments
 
@@ -32,6 +33,7 @@ This adds the directory passed to that directory in the local user\'s environmen
 #### Usage
 
     gitEnsureSafeDirectory [ directory ... ]
+    
 
 #### Arguments
 
@@ -53,6 +55,7 @@ Delete git tag locally and at origin
 #### Usage
 
     gitTagDelete [ tag ... ]
+    
 
 #### Arguments
 
@@ -69,6 +72,7 @@ Remove a tag everywhere and tag again on the current branch
 #### Usage
 
     gitTagDelete [ tag ... ]
+    
 
 #### Arguments
 
@@ -107,6 +111,7 @@ them sorted by version correctly.
 #### Usage
 
     gitVersionList
+    
 
 #### Exit codes
 
@@ -120,6 +125,7 @@ Get the last reported version.
 #### Usage
 
     gitVersionLast [ ignorePattern ]
+    
 
 #### Arguments
 
@@ -185,6 +191,7 @@ Show changed files from HEAD
 #### Usage
 
     gitShowChanges
+    
 
 #### Exit codes
 
@@ -208,6 +215,7 @@ Show changed files from HEAD with their status prefix character:
 #### Usage
 
     gitShowStatus
+    
 
 #### Exit codes
 

@@ -21,6 +21,7 @@ If your project has specific environment variables, you can add them in your `ma
 #### Usage
 
     runHook make-env [ requiredEnvironment0 ... ] [ -- optionalEnvironment0 ... ]
+    
 
 #### Exit codes
 
@@ -28,7 +29,13 @@ If your project has specific environment variables, you can add them in your `ma
 
 #### See Also
 
-- [function makeEnvironment](./docs/tools/todo.md) - [Create environment file `.env` for build.](https://github.com/zesk/build/blob/main/bin/build/tools/pipeline.sh#L455)
+- [function makeEnvironment
+](./docs/tools/todo.md
+) - [Create environment file `.env` for build.
+](https://github.com/zesk/build/blob/main/bin/build/tools/pipeline.sh
+#L424
+)
+{SEE:}
 
 
 ### `deploy-start.sh` - Deployment "start" script

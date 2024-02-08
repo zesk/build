@@ -55,12 +55,15 @@ sysvInitScript() {
           if [ ! -x "$1" ]; then
             _sysvInitScript "$errorArgument" "Not executable: $1" || return $?
           fi
-          if diff -q "$1" "$target"; then
-            statusMessage consoleSucess "sysvInit already installed: $(consoleCode "$baseName")"
+          if [ -f "$target" ]; then
+            if diff -q "$1" "$target"; then
+              statusMessage consoleSucess "reinstalling script: $(consoleCode "$baseName")"
+            else
+              _sysvInitScript "$errorEnvironment" "File already exists $(consoleCode "$target")" || return $?
+            fi
           else
-            _sysvInitScript "$errorEnvironment" "File already exists $(consoleCode "$target")" || return $?
+            statusMessage consoleSucess "installing script: $(consoleCode "$baseName")"
           fi
-          statusMessage consoleSucess "installing script: $(consoleCode "$baseName")"
           if ! cp "$1" "$target"; then
             _sysvInitScript "$errorEnvironment" "cp $1 $target failed - permissions error" || return $?
           fi
