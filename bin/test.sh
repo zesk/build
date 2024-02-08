@@ -22,7 +22,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 top=$(pwd)
 
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+. ./bin/build/ops.sh
 
 # shellcheck source=/dev/null
 if ! . ./test/test-tools.sh; then
