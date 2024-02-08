@@ -55,8 +55,14 @@ testDates() {
   local t y
   assertEquals "$(timestampToDate 1697666075 %F)" "2023-10-18" || return $?
   assertEquals "$(todayDate)" "$(date +%F)" || return $?
-  t="$(todayDate)"
-  y="$(yesterdayDate)"
+  if ! t="$(todayDate)"; then
+    consoleError todayDate failed
+    return $errorEnvironment
+  fi
+  if ! y="$(yesterdayDate)"; then
+    consoleError yesterdayDate failed
+    return $errorEnvironment
+  fi
   assertEquals "${#t}" "${#y}" || return $?
 
   if [[ "$y" < "$t" ]]; then

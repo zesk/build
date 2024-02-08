@@ -48,7 +48,7 @@ testGitVersionList() {
 
   if ! gitHasAnyRefs; then
     if ! gitAddRemotesToSSHKnown; then
-      return $?
+      return "$errorEnvironment"
     fi
     if ! git pull --tags >/dev/null 2>/dev/null; then
       consoleError "Unable to pull git tags ... failed" 1>&2
@@ -63,5 +63,5 @@ testGitVersionList() {
   #  echo "CountT: \"$(gitVersionList | wc -l | trimSpacePipe)\""
   #  echo "Count0: \"$(($(gitVersionList | wc -l) + 0))\""
   #  echo "Count1: \"$(($(gitVersionList | wc -l) + 0))\""
-  assertGreaterThan $(($(gitVersionList | wc -l | trimSpacePipe) + 0)) 0
+  assertGreaterThan $(($(gitVersionList | wc -l | trimSpacePipe) + 0)) 0 || return $?
 }

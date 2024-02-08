@@ -11,20 +11,23 @@ declare -a tests
 
 tests+=(testRepeat)
 testRepeat() {
-  assertEquals "$(repeat 10 "x")" "xxxxxxxxxx"
+  assertEquals "$(repeat 10 "x")" "xxxxxxxxxx" || return $?
+  assertEquals "$(repeat 11 "x")" "xxxxxxxxxxx" || return $?
+  assertEquals "$(repeat 1 "x")" "x" || return $?
+  assertEquals "$(repeat 0 "x")" "" || return $?
 }
 
 tests+=(testAlignRight)
 testAlignRight() {
-  assertEquals "$(alignRight 10 "Dogmatic")" "   Dogmatic"
-  assertEquals "$(alignRight 10 "")" "           "
-  assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic"
-  assertEquals "$(alignRight 2 "")" "  "
+  assertEquals "$(alignRight 10 "Dogmatic")" "  Dogmatic" || return $?
+  assertEquals "$(alignRight 10 "")"         "          " || return $?
+  assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic" || return $?
+  assertEquals "$(alignRight 2 "")" "  " || return $?
 }
 tests+=(testAlignLeft)
 testAlignLeft() {
-  assertEquals "$(alignRight 10 "Dogmatic")" "Dogmatic   "
-  assertEquals "$(alignRight 10 "")" "           "
-  assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic"
-  assertEquals "$(alignRight 2 "")" "  "
+  assertEquals "$(alignLeft 10 "Dogmatic")" "Dogmatic  " || return $?
+  assertEquals "$(alignLeft 10 "")" "          " || return $?
+  assertEquals "$(alignLeft 2 "Dogmatic")" "Dogmatic" || return $?
+  assertEquals "$(alignLeft 2 "")" "  " || return $?
 }

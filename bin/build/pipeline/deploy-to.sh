@@ -11,8 +11,8 @@
 #
 
 #
-# /var/www/DEPLOY/app1/applicationId1/app.tar.gz
-# /var/www/DEPLOY/app1/applicationId1/app/... - app files
+# /var/www/DEPLOY/app1/applicationId1/package.tar.gz
+# /var/www/DEPLOY/app1/applicationId1/app/... - package files
 # /var/www/DEPLOY/app1/applicationId1.previous
 # /var/www/DEPLOY/app1/applicationId1.next
 #

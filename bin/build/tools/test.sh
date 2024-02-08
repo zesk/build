@@ -139,6 +139,9 @@ validateShellScript() {
   if ! whichApt shellcheck shellcheck; then
     _validateShellScript "$errorEnvironment" "Can not install shellcheck" || return $?
   fi
+  if ! whichApt pcregrep pcregrep; then
+    _validateShellScript "$errorEnvironment" "Can not install pcregrep" || return $?
+  fi
 
   while [ $# -gt 0 ]; do
     f="$1"
@@ -154,7 +157,7 @@ validateShellScript() {
       printf "shellcheck %s" "$f"
       return "$errorEnvironment"
     fi
-    if pcre2grep -l -M '\n\}\n#' "$f"; then
+    if pcregrep -l -M '\n\}\n#' "$f"; then
       printf "contextOpen %s # newline before comment start required" "$f"
       return "$errorEnvironment"
     fi

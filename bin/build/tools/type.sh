@@ -81,7 +81,7 @@ isInteger() {
 # Exit Code: 1 - if it is not an unsigned integer
 #
 isUnsignedInteger() {
-  case $1 in
+  case "${1#+}" in
     '' | *[!0-9]*)
       return 1
       ;;

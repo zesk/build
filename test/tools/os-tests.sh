@@ -28,9 +28,18 @@ testNewestAndOldest() {
   sleep "$waitSeconds"
   date >"c"
 
-  aTime=$(modificationTime "a")
-  bTime=$(modificationTime "b")
-  cTime=$(modificationTime "c")
+  if ! aTime=$(modificationTime "a"); then
+    consoleError modificationTime a failed
+    return 1
+  fi
+  if ! bTime=$(modificationTime "b"); then
+    consoleError modificationTime b failed
+    return 1
+  fi
+  if ! cTime=$(modificationTime "c"); then
+    consoleError modificationTime c failed
+    return 1
+  fi
 
   if ! assertOutputEquals "a" oldestFile "a" "b" "c" ||
     ! assertOutputEquals "a" oldestFile "c" "b" "a" ||
@@ -57,8 +66,14 @@ tests+=(testMemoryRelated)
 testMemoryRelated() {
   local rss vsz
 
-  rss=$(processMemoryUsage $$)
-  vsz=$(processVirtualMemoryAllocation $$)
+  if ! rss=$(processMemoryUsage $$); then
+    consoleError processMemoryUsage $$ failed
+    return 1
+  fi
+  if ! vsz=$(processVirtualMemoryAllocation $$); then
+    consoleError processVirtualMemoryAllocation $$ failed
+    return 1
+  fi
 
   assertExitCode 0 isInteger "$rss" || return $?
   assertExitCode 0 isInteger "$vsz" || return $?
@@ -83,7 +98,10 @@ testEnvironmentVariables() {
   local e
   e=$(mktemp)
   export BUILD_TEST_UNIQUE=1
-  environmentVariables >"$e"
+  if ! environmentVariables >"$e"; then
+    consoleError environmentVariables failed
+    return 1
+  fi
   assertFileContains "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
   prefixLines "environmentVariables: $(consoleCode)" <"$e"
   rm "$e"

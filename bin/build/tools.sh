@@ -26,7 +26,7 @@ loadTools() {
   toolsFiles=()
 
   # Core stuff
-  toolsFiles+=(debug type text date url colors sed assert pipeline apt os log decoration usage security test version vendor)
+  toolsFiles+=(debug type text date url colors sed assert pipeline deploy apt os log decoration usage security test version vendor)
 
   # More complex tools
   toolsFiles+=(security markdown documentation "documentation/index" "documentation/see" interactive identical)

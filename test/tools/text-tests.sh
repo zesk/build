@@ -13,7 +13,7 @@ errorEnvironment=1
 
 tests+=(testText)
 testText() {
-  assertOutputContains Hello boxedHeading Hello
+  assertOutputContains Hello boxedHeading Hello || return $?
 }
 
 tests+=(testEscapeSingleQuotes)

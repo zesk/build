@@ -15,7 +15,10 @@ testSSHAddKnownHosts() {
   local sampleDomainA sampleDomainB
 
   # shellcheck source=/dev/null
-  source "./bin/build/env/HOME.sh"
+  if ! source "./bin/build/env/HOME.sh"; then
+    consoleError HOME.sh failed
+    return 1
+  fi
 
   originalHome="$HOME"
   tempHome="$(mktemp -d)" || return $?
