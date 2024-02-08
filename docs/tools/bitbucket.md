@@ -34,7 +34,7 @@ On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `sup
 
 #### Examples
 
-MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(getFromPipelineYML MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}
+    MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(getFromPipelineYML MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}
 
 #### Exit codes
 

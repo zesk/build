@@ -18,7 +18,7 @@ When this tool succeeds it outputs the path to the current release notes file
 
 #### Examples
 
-open $(bin/build/release-notes.sh)
+    open $(bin/build/release-notes.sh)
     vim $(releaseNotes)
 
 #### Exit codes

@@ -13,6 +13,7 @@ Simplifies documentation and has it in one place for shell and online.
 #### Usage
 
     usageDocument functionDefinitionFile functionName exitCode [ ... ]
+    
 
 #### Arguments
 
@@ -21,7 +22,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Examples
 
-_documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
+    _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 
 #### Exit codes
 
@@ -30,6 +31,7 @@ _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 #### Usage
 
     usageArguments delimiter
+    
 
 #### Arguments
 
@@ -96,6 +98,7 @@ Should look into an actual file template, probably
 #### Usage
 
     usageTemplate binName options delimiter description exitCode message
+    
 
 #### Exit codes
 
@@ -103,7 +106,13 @@ Should look into an actual file template, probably
 
 #### See Also
 
-- [function usageDocument](./docs/tools/usage.md) - [Generates console usage output for a script using documentation tools](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L30)
+- [function usageDocument
+](./docs/tools/usage.md
+) - [Generates console usage output for a script using documentation tools
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
+#L30
+)
+{SEE:}
 
 
 ### `usageArgumentFileDirectory` - Validates a value is not blank and is a path

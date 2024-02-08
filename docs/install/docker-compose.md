@@ -12,6 +12,7 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 ## Usage
 
     dockerComposeInstall [ package ... ]
+    
 
 ## Arguments
 

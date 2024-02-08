@@ -7,6 +7,7 @@
 #### Usage
 
     markdown_removeUnfinishedSections < inputFile > outputFile
+    
 
 #### Arguments
 
@@ -14,7 +15,7 @@
 
 #### Examples
 
-map.sh < $templateFile | markdown_removeUnfinishedSections
+    map.sh < $templateFile | markdown_removeUnfinishedSections
 
 #### Exit codes
 
@@ -27,6 +28,7 @@ None
 #### Depends
 
     read printf
+    
 
 ### `markdown_FormatList` - Simple function to make list-like things more list-like in Markdown
 

@@ -21,6 +21,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 #### Usage
 
     awsInstall [ package ... ]
+    
 
 #### Arguments
 
@@ -33,6 +34,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 #### Depends
 
     apt-get
+    
 
 ### `awsCredentialsFile` - Get the path to the AWS credentials file
 
@@ -47,11 +49,12 @@ If not found, returns with exit code 1.
 
 #### Usage
 
-    awsCredentialsFile [ verboseFlag ]
+     awsCredentialsFile [ verboseFlag ]
+    
 
 #### Examples
 
-if ! awsCredentialsFile 1 >/dev/null; then
+    if ! awsCredentialsFile 1 >/dev/null; then
     consoleError "No AWS credentials"
     exit 1
     fi
@@ -81,10 +84,11 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 #### Usage
 
     isAWSKeyUpToDate upToDateDays
+    
 
 #### Examples
 
-if !isAWSKeyUpToDate 90; then
+    if !isAWSKeyUpToDate 90; then
     bigText Failed, update key and reset date
     exit 99
     fi
@@ -104,7 +108,7 @@ Exits successfully if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
 
 #### Examples
 
-if needAWSEnvironment; then
+    if needAWSEnvironment; then
    ...
     fi
 
@@ -128,6 +132,7 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 #### Usage
 
     awsEnvironment profileName
+    
 
 #### Arguments
 
@@ -135,7 +140,7 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 
 #### Examples
 
-setFile=$(mktemp)
+    setFile=$(mktemp)
     if awsEnvironment "$profile" > "$setFile"; then
     eval $(cat "$setFile")
     rm "$setFile"

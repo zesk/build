@@ -22,6 +22,7 @@ The previous version of this function was `dotEnvConfig` and is now deprecated, 
 #### Usage
 
     dotEnvConfigure
+    
 
 #### Exit codes
 
@@ -35,6 +36,7 @@ Loads `./.env` and `./.env.local`, use with caution.
 #### See Also
 
 Not found
+{SEE:}
 
 ## Hooks
 
@@ -57,10 +59,11 @@ Default hooks (scripts) can be found in `bin/build/hooks/`
 #### Usage
 
     runHook hookName [ arguments ... ]
+    
 
 #### Examples
 
-version="$(runHook version-current)"
+    version="$(runHook version-current)"
 
 #### Exit codes
 
@@ -85,10 +88,11 @@ Default hooks (scripts) can be found in `bin/build/hooks/`
 #### Usage
 
     runOptionalHook hookName [ arguments ... ]
+    
 
 #### Examples
 
-if ! runOptionalHook test-cleanup >>"$quietLog"; then
+    if ! runOptionalHook test-cleanup >>"$quietLog"; then
         buildFailed "$quietLog"
     fi
 
@@ -106,6 +110,7 @@ Check if one or more hook exists. All hooks must exist to succeed.
 #### Usage
 
     hasHook [ hookName ... ]
+    
 
 #### Arguments
 
@@ -129,6 +134,7 @@ If a file named `hookName` with the extension `.sh` is found which is executable
 #### Usage
 
     whichHook hookName
+    
 
 #### Exit codes
 
@@ -144,10 +150,11 @@ Outputs the offset in seconds from January 1, 1970.
 #### Usage
 
     beginTiming
+    
 
 #### Examples
 
-init=$(beginTiming)
+    init=$(beginTiming)
     ...
     reportTiming "$init" "Completed in"
 
@@ -164,6 +171,7 @@ Outputs a nice colorful message showing the number of seconds elapsed as well as
 #### Usage
 
     reportTiming startOffset [ message ... ]
+    
 
 #### Arguments
 
@@ -172,7 +180,7 @@ Outputs a nice colorful message showing the number of seconds elapsed as well as
 
 #### Examples
 
-init=$(beginTiming)
+   init=$(beginTiming)
    ...
    reportTiming "$init" "Deploy completed in"
 
@@ -194,6 +202,7 @@ Outputs debugging information after build fails:
 #### Usage
 
     buildFailed logFile
+    
 
 #### Arguments
 
@@ -201,7 +210,7 @@ Outputs debugging information after build fails:
 
 #### Examples
 
-quietLog="$(buildQuietLog "$me")"
+    quietLog="$(buildQuietLog "$me")"
     if ! ./bin/deploy.sh >>"$quietLog"; then
         consoleError "Deploy failed"
         buildFailed "$quietLog"
@@ -224,6 +233,7 @@ Odd you can\'t globally flip sort order with -r - that only works with non-keyed
 #### Usage
 
     versionSort [ -r ]
+    
 
 #### Arguments
 
@@ -231,7 +241,7 @@ Odd you can\'t globally flip sort order with -r - that only works with non-keyed
 
 #### Examples
 
-git tag | grep -e \'^v[0-9.]*$\' | versionSort
+   git tag | grep -e \'^v[0-9.]*$\' | versionSort
 
 #### Exit codes
 
@@ -248,23 +258,30 @@ Get the current IP address of the host
 ## Deployment tools
 
 
-### `deployApplication` - Deploy an application from a deployment repository
+### `deployApplication` - ____ _
+
+     ____             _
+    |  _ \  ___ _ __ | | ___  _   _
+    | | | |/ _ \ \'_ \| |/ _ \| | | |
+    | |_| |  __/ |_) | | (_) | |_| |
+    |____/ \___| .__/|_|\___/ \__, |
+               |_|            |___/
+
 
 Deploy an application from a deployment repository
 
-#### Usage
-
-    deployApplication deployHome deployVersion targetPackage applicationPath
-
 #### Arguments
 
-- `deployHome` - The deployment repository home
-- `deployVersion` - The version to deploy
-- targetPackage -
+- `--first` - Optional. Flag. The first one does not require a backup version to exist.
+- `--undo` - Optional. Flag. Means this is part of the undo process of a deployment.
+- `deployHome` - Required. Directory. The deployment repository database home.
+- `deployVersion` - The version to deploy (string)
+- `applicationPath` - Required. Directory. The application deployed path.
+- `targetPackage` - Optional. Filename. Package name, defaults to `app.tar.gz`
 
 #### Examples
 
-deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
+deployApplication /var/www/DEPLOY 10c2fab1 /var/www/apps/cool-app
 
 #### Exit codes
 
@@ -272,45 +289,69 @@ deployApplication /var/www/DEPLOY 10c2fab1 app.tar.gz /var/www/apps/cool-app
 
 ### `undoDeployApplication` - _ _ _
 
-_   _           _
+     _   _           _
     | | | |_ __   __| | ___
-    | | | | \'_ \ / _` |/ _ \
+    | | | |  _ \ / _  |/ _ \
     | |_| | | | | (_| | (_) |
      \___/|_| |_|\__,_|\___/
 
 Undo deploying an application from a deployment repository
 
-#### Usage
+#### Arguments
 
-    undoDeployApplication deployHome deployVersion targetPackage applicationPath
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `deployNextVersion` - deployNextVersion deployHome versionName
-
-deployNextVersion deployHome versionName
+- `--first` - Optional. Flag. Undo the first deployment.
+- `deployHome` - Required. Directory. The deployment repository database home.
+- `deployVersion` - Required. The version to deploy (string)
+- `applicationPath` - Required. Directory. The application deployed path.
+- `targetPackage` - Optional. Filename. Package name, defaults to `BUILD_TARGET`
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-### `deployPreviousVersion` - deployPreviousVersion deployHome versionName
+#### See Also
 
-deployPreviousVersion deployHome versionName
+- [Source BUILD_TARGET.sh
+](https://github.com/zesk/build/blob/main/bin/build/env/BUILD_TARGET.sh
+#L{line}
+)
+{SEE:}
+
+### `deployNextVersion` - Get the next version of the supplied version
+
+Get the next version of the supplied version
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-### `deployHasVersion` - deployHasVersion deployHome versionName
+### `deployPreviousVersion` - Get the previous version of the supplied version
 
-deployHasVersion deployHome versionName
+Get the previous version of the supplied version
+
+#### Exit codes
+
+- `1` - No version exists
+- `2` - Argument error
+
+### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
+
+Does a deploy version exist? versionName is the version identifier for deployments
 
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `deployApplicationVersion` - Extracts version from an application either from `.deploy` files or
+
+Extracts version from an application either from `.deploy` files or from the the `.env` if
+that does not exist.
+
+Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
+
+#### Arguments
+
+- `applicationHome` - Required. Directory. Application home to get the version from.
 
 #### Exit codes
 

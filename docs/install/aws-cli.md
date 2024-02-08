@@ -10,6 +10,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 ## Usage
 
     awsInstall [ package ... ]
+    
 
 ## Arguments
 
@@ -22,3 +23,4 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 ## Depends
 
     apt-get
+    

@@ -54,10 +54,11 @@ Intended to be run on an interactive console, this clears the current line of an
 #### Usage
 
     clearLine
+    
 
 #### Examples
 
-statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
+    statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
     clearLine
 
 #### Exit codes
@@ -81,6 +82,7 @@ shellcheck disable=SC2120
 #### Usage
 
     statusMessage consoleAction message [ ... ]
+    
 
 #### Arguments
 
@@ -89,7 +91,7 @@ shellcheck disable=SC2120
 
 #### Examples
 
-statusMessage Loading...
+    statusMessage Loading...
     bin/load.sh >>"$loadLogFile"
     clearLine
 
@@ -112,6 +114,7 @@ shellcheck disable=SC2120
 #### Usage
 
     consoleNameValue characterWidth name [ value ... ]
+    
 
 #### Arguments
 
@@ -135,6 +138,7 @@ Exit Code; 1 - Does not support console animation
 #### Usage
 
     hasConsoleAnimation
+    
 
 #### Exit codes
 
@@ -168,6 +172,7 @@ Converts backticks, bold and italic to console colors.
 #### Usage
 
     simpleMarkdownToConsole < $markdownFile
+    
 
 #### Exit codes
 
@@ -186,6 +191,7 @@ shellcheck disable=SC2120
 #### Usage
 
     statusMessage consoleAction message [ ... ]
+    
 
 #### Arguments
 
@@ -194,7 +200,7 @@ shellcheck disable=SC2120
 
 #### Examples
 
-statusMessage Loading...
+    statusMessage Loading...
     bin/load.sh >>"$loadLogFile"
     clearLine
 
@@ -215,10 +221,11 @@ Output the number of columns in the terminal. Default is 80 if not able to be de
 #### Usage
 
     consoleColumns
+    
 
 #### Examples
 
-repeat $(consoleColumns)
+    repeat $(consoleColumns)
 
 #### Exit codes
 
@@ -235,6 +242,7 @@ Converts backticks, bold and italic to console colors.
 #### Usage
 
     simpleMarkdownToConsole < $markdownFile
+    
 
 #### Exit codes
 

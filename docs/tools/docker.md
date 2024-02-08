@@ -29,6 +29,7 @@ Ensure an environment file is compatible with non-quoted docker environment file
 #### Usage
 
     checkDockerEnvFile [ filename ... ]
+    
 
 #### Arguments
 

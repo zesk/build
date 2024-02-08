@@ -9,6 +9,7 @@ them sorted by version correctly.
 ## Usage
 
     gitVersionList
+    
 
 ## Exit codes
 

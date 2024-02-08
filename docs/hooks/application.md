@@ -23,7 +23,7 @@ The default hook uses the short git sha:
 
 #### Examples
 
-885acc3
+    885acc3
 
 #### Exit codes
 

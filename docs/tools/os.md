@@ -18,7 +18,7 @@ Appends any passed in arguments as path segments.
 
 #### Examples
 
-logFile=$(buildCacheDirectory test.log)
+    logFile=$(buildCacheDirectory test.log)
 
 #### Exit codes
 
@@ -42,7 +42,7 @@ Creates the directories for all files passed in.
 
 #### Examples
 
-logFile=./.build/$me.log
+    logFile=./.build/$me.log
     requireFileDirectory "$logFile"
 
 #### Exit codes
@@ -61,7 +61,7 @@ Creates the directories for all files passed in.
 
 #### Examples
 
-requireDirectory "$cachePath"
+    requireDirectory "$cachePath"
 
 #### Exit codes
 
@@ -104,7 +104,7 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 
 #### Examples
 
-renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
+    renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
     ...
     renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
 
@@ -122,6 +122,7 @@ Platform agnostic tar cfz which ignores owner and attributes
 #### Usage
 
     createTarFile target files
+    
 
 #### Arguments
 
@@ -145,16 +146,18 @@ Returns the list of defined environment variables exported in the current bash c
 #### Usage
 
     environmentVariables
+    
 
 #### Examples
 
-for f in $(environmentVariables); do
+    for f in $(environmentVariables); do
     echo "$f"
     done
 
 #### Sample Output
 
     Environment variable names, one per line.
+    
 
 #### Exit codes
 
@@ -192,7 +195,13 @@ Works from the current directory
 
 #### See Also
 
-- [function makeShellFilesExecutable](./docs/tools/os.md) - [Makes all `*.sh` files executable](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L230)
+- [function makeShellFilesExecutable
+](./docs/tools/os.md
+) - [Makes all `*.sh` files executable
+](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh
+#L268
+)
+{SEE:}
 
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp
@@ -202,10 +211,11 @@ Fetch the modification time of a file as a timestamp
 #### Usage
 
     modificationTime filename0 [ filename1 ... ]
+    
 
 #### Examples
 
-modificationTime ~/.bash_profile
+    modificationTime ~/.bash_profile
 
 #### Exit codes
 
@@ -312,6 +322,7 @@ listFileModificationTimes $myDir ! -path \'*/.*\'
     1705347087 bin/build/tools.sh
     1704312758 bin/build/deprecated.sh
     1705442647 bin/build/build.json
+    
 
 #### Exit codes
 
@@ -363,6 +374,7 @@ Maintains ordering.
 #### Usage
 
     pathCleanDuplicates
+    
 
 #### Exit codes
 
@@ -404,6 +416,7 @@ Format something neatly as JSON
 #### Usage
 
     JSON < inputFile > outputFile
+    
 
 #### Exit codes
 
@@ -459,11 +472,12 @@ Outputs value of resident memory used by a process, value is in kilobytes
 
 #### Examples
 
-> processMemoryUsage 23
+    > processMemoryUsage 23
 
 #### Sample Output
 
     423
+    
 
 #### Exit codes
 
@@ -480,11 +494,12 @@ Outputs value of virtual memory allocated for a process, value is in kilobytes
 
 #### Examples
 
-processVirtualMemoryAllocation 23
+    processVirtualMemoryAllocation 23
 
 #### Sample Output
 
     423
+    
 
 #### Exit codes
 

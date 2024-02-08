@@ -8,6 +8,7 @@ Installs the `git` binary
 ## Usage
 
     gitInstall [ package ... ]
+    
 
 ## Arguments
 
