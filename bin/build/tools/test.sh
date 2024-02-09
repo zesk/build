@@ -190,7 +190,7 @@ validateFileContents() {
   local fileArgs f total
 
   local textMatches t binary
-  local failedReasons failedFile
+  local failedReasons failedFiles
 
   fileArgs=()
   while [ $# -gt 0 ]; do
@@ -246,7 +246,7 @@ validateFileContents() {
   fi
 
   failedReasons=()
-  failedFile=()
+  failedFiles=()
   total=0
   total="${#fileArgs[@]}"
   # shellcheck disable=SC2059
@@ -259,7 +259,7 @@ validateFileContents() {
       if ! grep -q "$t" "$f"; then
         failedReasons+=("$f missing \"$t\"")
         statusMessage consoleError "Searching $f ... NOT FOUND"
-        failedFile+=("$f")
+        failedFiles+=("$f")
       else
         statusMessage consoleSuccess "Searching $f ... found"
       fi
