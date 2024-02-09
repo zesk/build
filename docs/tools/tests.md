@@ -13,19 +13,22 @@ This can be run on any directory tree to test scripts in any application.
 
 #### Usage
 
-    validateShellScripts [ file0 ... ]
+    validateShellScripts [ --exec binary ] [ file0 ... ]
+    
 
 #### Arguments
 
+- `--exec binary` - Run binary with files as an argument for any failed files. Only works if you pass in file names.
 - `findArgs` - Additional find arguments for .sh files (or exclude directories).
 
 #### Examples
 
-if validateShellScripts; then git commit -m "saving things" -a; fi
+    if validateShellScripts; then git commit -m "saving things" -a; fi
 
 #### Sample Output
 
     This outputs `statusMessage`s to `stdout` and errors to `stderr`.
+    
 
 #### Exit codes
 
@@ -52,11 +55,12 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 #### Examples
 
-validateShellScript goo.sh
+    validateShellScript goo.sh
 
 #### Sample Output
 
     This outputs `statusMessage`s to `stdout` and errors to `stderr`.
+    
 
 #### Exit codes
 
@@ -74,6 +78,7 @@ By default, any directory which begins with a dot `.` will be ignored.
 #### Usage
 
     validateFileExtensionContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
+    
 
 #### Arguments
 
@@ -109,7 +114,7 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 #### Examples
 
-validateFileContents foo.sh my.sh -- "Copyright 2024" "Company, LLC"
+    validateFileContents foo.sh my.sh -- "Copyright 2024" "Company, LLC"
 
 #### Exit codes
 

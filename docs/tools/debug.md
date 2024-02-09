@@ -11,6 +11,7 @@ Is build debugging enabled?
 #### Usage
 
     buildDebugEnabled
+    
 
 #### Exit codes
 
@@ -30,10 +31,11 @@ Use it to debug when you can not figure out what is happening internally.
 #### Usage
 
     buildDebugStart
+    
 
 #### Examples
 
-buildDebugStart
+    buildDebugStart
     # ... complex code here
     buildDebugStop
 
@@ -48,6 +50,7 @@ Stop build debugging if it is enabled
 #### Usage
 
     buildDebugStop
+    
 
 #### Exit codes
 
@@ -55,7 +58,13 @@ Stop build debugging if it is enabled
 
 #### See Also
 
-- [function buildDebugStart](./docs/tools/debug.md) - [Start build debugging if it is enabled.](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L30)
+- [function buildDebugStart
+](./docs/tools/debug.md
+) - [Start build debugging if it is enabled.
+](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh
+#L30
+)
+{SEE:}
 
 ### `isBashDebug` - Returns whether the shell has the debugging flag set
 

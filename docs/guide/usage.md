@@ -38,8 +38,7 @@ Typically it would be written as follows in your code:
 
     myFunction() {
         if ! curl -L "$bigFile" -o - > "$savedFile"; then
-            _myFunction 1 "Unable to download $bigFile"
-            return $?
+            _myFunction 1 "Unable to download $bigFile" || return $?
         fi
         ..
     }

@@ -34,7 +34,10 @@ errorArgument=2
 #
 bigText() {
   local font=smblock
-  whichApt toilet toilet
+  if ! whichApt toilet toilet; then
+    consoleGreen "BIG TEXT: $*"
+    return 0
+  fi
   if [ "$1" = "--bigger" ]; then
     font=smmono12
     shift
@@ -146,7 +149,7 @@ repeat() {
   local count=$((${1:-2} + 0))
   local debug
 
-  debug=$(! isBashDebug || printf 1)
+  debug=$(isBashDebug && printf 1)
   set +x
   shift
   while [ $count -gt 0 ]; do

@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 #
-# cp ./bin/hooks/git-pre-commit.sh .git/hooks/pre-commit
-#
 # Part of build system integration with git
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
@@ -32,11 +31,12 @@ while IFS= read -r changedGitFile; do
   fi
 done < <(git diff --name-only --cached --diff-filter=ACMR)
 
+clearLine
 consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed"
 
 _hookGitPreCommitFailed() {
   printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")"
-  exit "$errorEnvironment"
+  return "$errorEnvironment"
 }
 
 #
@@ -47,26 +47,26 @@ _hookGitPreCommitFailed() {
 hookGitPreCommit() {
   statusMessage consoleSuccess Making shell files executable ...
   if ! ./bin/build/chmod-sh.sh >/dev/null; then
-    _hookGitPreCommitFailed chmod-sh.sh
+    _hookGitPreCommitFailed chmod-sh.sh || return $?
   fi
   statusMessage consoleSuccess Updating help files ...
   if ! ./bin/update-md.sh >/dev/null; then
-    _hookGitPreCommitFailed update-md.sh
+    _hookGitPreCommitFailed update-md.sh || return $?
   fi
   if [ "${#changedShellFiles[@]}" -gt 0 ]; then
     statusMessage consoleSuccess Running shellcheck ...
-    if ! validateShellScripts "${changedShellFiles[@]}"; then
-      _hookGitPreCommitFailed validateShellScripts
+    if ! validateShellScripts --exec contextOpen "${changedShellFiles[@]}"; then
+      _hookGitPreCommitFailed validateShellScripts || return $?
     fi
     year=$(date +%Y)
     # shellcheck source=/dev/null
     source ./bin/build/env/BUILD_COMPANY.sh
-    if ! validateFileContents "${changedShellFiles[@]}" -- "Copyright &copy; $year" "$BUILD_COMPANY"; then
-      _hookGitPreCommitFailed "Enforcing copyright and company in shell files"
+    if ! validateFileContents --exec contextOpen "${changedShellFiles[@]}" -- "Copyright &copy; $year" "$BUILD_COMPANY"; then
+      _hookGitPreCommitFailed "Enforcing copyright and company in shell files" || return $?
     fi
     # Unusual quoting here is to avoid having this match as an identical
-    if ! ./bin/build/identical-check.sh --prefix '# ''IDENTICAL' --extension sh; then
-      _hookGitPreCommitFailed identical-check.sh
+    if ! identicalCheck --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
+      _hookGitPreCommitFailed identical-check.sh || return $?
     fi
   fi
   # Too slow

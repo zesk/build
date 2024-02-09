@@ -11,6 +11,7 @@ Check if an element exists in an array
 #### Usage
 
     inArray element [ arrayElement0 arrayElement1 ... ]
+    
 
 #### Arguments
 
@@ -44,6 +45,7 @@ Test if an argument is a floating point number
 #### Usage
 
     isInteger argument
+    
 
 #### Exit codes
 
@@ -61,6 +63,7 @@ Test if an argument is a signed integer
 #### Usage
 
     isInteger argument
+    
 
 #### Exit codes
 
@@ -92,6 +95,7 @@ Test if an argument is a floating point number
 #### Usage
 
     isInteger argument
+    
 
 #### Exit codes
 

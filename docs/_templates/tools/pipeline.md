@@ -32,7 +32,7 @@
 {deployNextVersion}
 {deployPreviousVersion}
 {deployHasVersion}
-{getApplicationDeployVersion}
+{deployApplicationVersion}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

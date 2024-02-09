@@ -9,6 +9,7 @@ will overwrite this binary with the latest version after installation.
 ## Usage
 
     install-bin-build.sh [ --mock mockBuildRoot ]
+    
 
 ## Exit codes
 

@@ -13,6 +13,7 @@ Installs the `git` binary
 #### Usage
 
     gitInstall [ package ... ]
+    
 
 #### Arguments
 
@@ -32,6 +33,7 @@ This adds the directory passed to that directory in the local user\'s environmen
 #### Usage
 
     gitEnsureSafeDirectory [ directory ... ]
+    
 
 #### Arguments
 
@@ -53,6 +55,7 @@ Delete git tag locally and at origin
 #### Usage
 
     gitTagDelete [ tag ... ]
+    
 
 #### Arguments
 
@@ -69,6 +72,7 @@ Remove a tag everywhere and tag again on the current branch
 #### Usage
 
     gitTagDelete [ tag ... ]
+    
 
 #### Arguments
 
@@ -78,6 +82,27 @@ Remove a tag everywhere and tag again on the current branch
 
 - `2` - Any stage fails will result in this exit code. Partial deletion may occur.
 
+### `gitTagVersion` - Generates a git tag for a build version, so `v1.0d1`,
+
+Generates a git tag for a build version, so `v1.0d1`, `v1.0d2`, for version `v1.0`.
+Tag a version of the software in git and push tags to origin.
+If this fails it will output the installation log.
+When this tool succeeds the git repository contains a tag with the suffix and an index which represents the build index.
+
+
+- `d` - for **development**
+- `s` - for **staging**
+- `rc` - for **release candidate**
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is `rc`.
+BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.
+
 ### `gitVersionList` - Fetches a list of tags from git and filters those
 
 Fetches a list of tags from git and filters those which start with v and a digit and returns
@@ -86,6 +111,7 @@ them sorted by version correctly.
 #### Usage
 
     gitVersionList
+    
 
 #### Exit codes
 
@@ -99,6 +125,7 @@ Get the last reported version.
 #### Usage
 
     gitVersionLast [ ignorePattern ]
+    
 
 #### Arguments
 
@@ -116,6 +143,19 @@ Delete the old tag as well
 #### Exit codes
 
 - `0` - Always succeeds
+
+## git Development
+
+
+### `gitCommit` - Commits all files added to git and also update release
+
+Commits all files added to git and also update release notes with comment
+
+Comment wisely. Does not duplicate comments. Check your release notes.
+
+#### Exit codes
+
+- `0` - Always succeeds 
 
 ## git History
 
@@ -151,6 +191,7 @@ Show changed files from HEAD
 #### Usage
 
     gitShowChanges
+    
 
 #### Exit codes
 
@@ -174,6 +215,7 @@ Show changed files from HEAD with their status prefix character:
 #### Usage
 
     gitShowStatus
+    
 
 #### Exit codes
 

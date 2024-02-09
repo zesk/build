@@ -91,28 +91,19 @@ __consoleEscape() {
   fi
 }
 
+# IDENTICAL __consoleOutput 13
 __consoleOutput() {
-  local prefix=$1 start=$2 end=$3 nl="\n"
+  local prefix="${1}" start="${2-}" end="${3}" nl="\n"
 
-  shift
-  shift
-  shift
+  shift && shift && shift
   if [ "${1-}" = "-n" ]; then
-    nl=
     shift
+    nl=
   fi
   if hasColors; then
-    if [ -z "$*" ]; then
-      printf "%s$start" ""
-    else
-      printf "$start%s$end$nl" "$*"
-    fi
-  elif [ -n "$*" ]; then
-    if [ -n "$prefix" ]; then
-      printf "%s: %s$nl" "$prefix" "$*"
-    else
-      printf "%s$nl" "$*"
-    fi
+    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$nl" "$*"; fi
+  elif [ $# -eq 0 ]; then
+    if [ -n "$prefix" ]; then printf "%s: %s$nl" "$prefix" "$*"; else printf "%s$nl" "$*"; fi
   fi
 }
 
@@ -165,11 +156,13 @@ colorTest() {
 consoleRed() {
   _consoleRed '' "$@"
 }
+
 _consoleRed() {
   local label="$1"
   shift
   __consoleOutput "$label" '\033[31m' '\033[0m' "$@"
 }
+
 consoleGreen() {
   _consoleGreen "" "$@"
 }
@@ -260,10 +253,18 @@ _consoleInfo() {
 #
 # code or variables in output
 #
+# IDENTICAL consoleCode 4
 # shellcheck disable=SC2120
 consoleCode() {
   __consoleOutput '' '\033[30;102m' '\033[0m' "$@"
 }
+
+# IDENTICAL consoleError 4
+# shellcheck disable=SC2120
+consoleError() {
+  __consoleOutput ERROR '\033[1;31m' '\033[0m' "$@"
+}
+
 
 #
 # warning things are not normal
@@ -292,10 +293,6 @@ consoleDecoration() {
 #
 # things went poorly
 #
-# shellcheck disable=SC2120
-consoleError() {
-  __consoleOutput ERROR '\033[1;31m' '\033[0m' "$@"
-}
 
 #
 # Name/Value pairs

@@ -13,6 +13,7 @@ Document a function and generate a function template (markdown)
 #### Usage
 
     bashDocumentFunction file function template
+    
 
 #### Arguments
 
@@ -27,9 +28,24 @@ Document a function and generate a function template (markdown)
 
 #### See Also
 
-- [function bashDocumentationTemplate](./docs/tools/todo.md) - [Document a function and generate a function template (markdown). To](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L409)
-- [function bashDocumentFunction](./docs/tools/documentation.md) - [Document a function and generate a function template (markdown)](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L375)
-- [function repeat](./docs/tools/decoration.md) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh#L144)
+- [function bashDocumentationTemplate
+](./docs/tools/todo.md
+) - [Document a function and generate a function template (markdown). To
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
+#L413
+)
+- [function bashDocumentFunction
+](./docs/tools/documentation.md
+) - [Document a function and generate a function template (markdown)
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
+#L379
+)
+- [function repeat
+](./docs/tools/decoration.md
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh
+#L147
+)
+{SEE:}
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
 
@@ -60,8 +76,14 @@ The process:
 
 #### See Also
 
-- [function documentationIndex_Lookup](./docs/tools/documentation.md) - [Looks up information in the function index](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34)
+- [function documentationIndex_Lookup
+](./docs/tools/documentation.md
+) - [Looks up information in the function index
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
+#L34
+)
 Not found
+{SEE:}
 
 ### `documentationTemplateDirectoryCompile` - Convert a directory of templates into documentation for Bash functions
 
@@ -90,7 +112,13 @@ to regenerate each time.
 
 #### See Also
 
-- [function documentationTemplateCompile](./docs/tools/documentation.md) - [Convert a template file to a documentation file using templates](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L94)
+- [function documentationTemplateCompile
+](./docs/tools/documentation.md
+) - [Convert a template file to a documentation file using templates
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
+#L98
+)
+{SEE:}
 
 ## Documentation Indexing
 
@@ -116,7 +144,13 @@ Use with documentationIndex_Lookup
 
 #### See Also
 
-- [function documentationIndex_Lookup](./docs/tools/documentation.md) - [Looks up information in the function index](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34)
+- [function documentationIndex_Lookup
+](./docs/tools/documentation.md
+) - [Looks up information in the function index
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
+#L34
+)
+{SEE:}
 
 ### `documentationIndex_Lookup` - Looks up information in the function index
 
@@ -138,7 +172,13 @@ Looks up information in the function index
 
 #### See Also
 
-- [function documentationIndex_Generate](./docs/tools/documentation.md) - [Generate a function index for bash files](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L139)
+- [function documentationIndex_Generate
+](./docs/tools/documentation.md
+) - [Generate a function index for bash files
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
+#L139
+)
+{SEE:}
 
 # Linking documentation 
 
@@ -204,8 +244,19 @@ Within your function, add an ignore reason if you wish:
 
 #### See Also
 
-- [function documentationIndex_LinkDocumentationPaths](./docs/tools/documentation.md) - [Update the documentationPath for all functions defined in documentTemplate](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419)
-- [function documentationIndex_FunctionIterator](./docs/tools/documentation.md) - [Output a list of all functions in the index as](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L355)
+- [function documentationIndex_LinkDocumentationPaths
+](./docs/tools/documentation.md
+) - [Update the documentationPath for all functions defined in documentTemplate
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
+#L419
+)
+- [function documentationIndex_FunctionIterator
+](./docs/tools/documentation.md
+) - [Output a list of all functions in the index as
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
+#L355
+)
+{SEE:}
 
 ### `documentationIndex_FunctionIterator` - Output a list of all functions in the index as
 
@@ -223,8 +274,19 @@ Output a list of all functions in the index as pairs:
 
 #### See Also
 
-- [function documentationIndex_Lookup](./docs/tools/documentation.md) - [Looks up information in the function index](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34)
-- [function documentationIndex_LinkDocumentationPaths](./docs/tools/documentation.md) - [Update the documentationPath for all functions defined in documentTemplate](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419)
+- [function documentationIndex_Lookup
+](./docs/tools/documentation.md
+) - [Looks up information in the function index
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
+#L34
+)
+- [function documentationIndex_LinkDocumentationPaths
+](./docs/tools/documentation.md
+) - [Update the documentationPath for all functions defined in documentTemplate
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
+#L419
+)
+{SEE:}
 
 ### `documentationIndex_UnlinkedIterator` - List of functions which are not linked to anywhere in
 
@@ -286,6 +348,7 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 #### Depends
 
     colors.sh text.sh prefixLines
+    
 
 ### `bashDocumentation_FindFunctionDefinitions` - Find where a function is defined in a directory of shell scripts
 
@@ -298,6 +361,7 @@ may output partial results with a failure.
 #### Usage
 
     bashDocumentation_FindFunctionDefinitions directory fnName0 [ fnName1... ]
+    
 
 #### Arguments
 
@@ -307,7 +371,7 @@ may output partial results with a failure.
 
 #### Examples
 
-bashDocumentation_FindFunctionDefinitions . bashDocumentation_FindFunctionDefinitions
+    bashDocumentation_FindFunctionDefinitions . bashDocumentation_FindFunctionDefinitions
     ./bin/build/tools/autodoc.sh
 
 #### Exit codes
@@ -331,6 +395,7 @@ Simplifies documentation and has it in one place for shell and online.
 #### Usage
 
     usageDocument functionDefinitionFile functionName exitCode [ ... ]
+    
 
 #### Arguments
 
@@ -339,7 +404,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Examples
 
-_documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
+    _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 
 #### Exit codes
 
@@ -355,6 +420,7 @@ Utility to export multi-line values as Bash variables
 #### Usage
 
     __dumpNameValue name [ value0 value1 ... ]
+    
 
 #### Arguments
 
@@ -368,6 +434,7 @@ Utility to export multi-line values as Bash variables
 #### Usage
 
     __dumpAliasedValue variable alias
+    
 
 #### Arguments
 

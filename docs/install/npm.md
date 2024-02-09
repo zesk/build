@@ -10,6 +10,7 @@ When this tool succeeds the `npm` binary is available in the local operating sys
 ## Usage
 
     npmInstall npmVersion
+    
 
 ## Exit codes
 

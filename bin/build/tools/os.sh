@@ -13,6 +13,44 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+#
+# Usage: {fn} source target
+#
+# Copy directory over another sort-of-atomically
+#
+directoryClobber() {
+  local source target targetPath targetName sourceStage targetBackup
+
+  if ! source=$(usageArgumentDirectory "_${FUNCNAME[0]}" source "$1"); then
+    return $?
+  fi
+  shift || :
+  target="${1-}"
+  if ! targetPath="$(dirname "$target")" || [ ! -d "$targetPath" ]; then
+    _directoryClobber "$errorArgument" "$targetPath parent directory does not exist" || return $?
+  fi
+  if ! targetName="$(basename "$target")"; then
+    _directoryClobber "$errorArgument" "basename $target failed" || return $?
+  fi
+  sourceStage="$targetPath/.NEW.$$.$targetName"
+  targetBackup="$targetPath/.OLD.$$.$targetName"
+  if ! mv -f "$source" "$sourceStage"; then
+    _directoryClobber "$errorEnvironment" "mv -f $source $sourceStage failed" || return $?
+  fi
+  if ! mv -f "$target" "$targetBackup"; then
+    _directoryClobber "$errorEnvironment" "mv -f $target" "$targetBackup failed" || return $?
+  fi
+  if ! mv -f "$sourceStage" "$target"; then
+    mv -f "$targetBackup" "$target" || consoleError "Unable to revert $targetBackup -> $target"
+    mv -f "$sourceStage" "$source" || consoleError "Unable to revert $sourceStage -> $source"
+    _directoryClobber "$errorEnvironment" "Clobber failed" || return $?
+  fi
+  rm -rf "$targetBackup" || _directoryClobber "$errorEnvironment" "Unable to delete $targetBackup" || return $?
+}
+_directoryClobber() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Path to cache directory for build system.
 #
 # Defaults to `$HOME/.build` unless `$HOME` is not a directory.
@@ -581,11 +619,14 @@ fileOwner() {
   while [ $# -gt 0 ]; do
     # shellcheck disable=SC2012
     if ! uid="$(ls -ld "$1" | awk '{ print $3 }')"; then
-      return "$errorEnvironment"
+      _fileOwner "$errorEnvironment" "Running ls -ls $1" || return $?
     fi
     printf "%s\n" "$uid"
     shift
   done
+}
+_fileOwner() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -602,13 +643,22 @@ processMemoryUsage() {
   while [ $# -gt 0 ]; do
     pid="$1"
     if ! isInteger "$pid"; then
-      _processMemoryUsageUsage "$errorArgument" "Not an integer"
+      _processMemoryUsage "$errorArgument" "Not an integer"
       return $?
     fi
     # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
-    printf %d $(("$(ps -o rss -p "$pid" | tail -n 1)" * 1))
+    if ! value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)"; then
+      _processMemoryUsage "$errorEnvironment" "Failed to get process status for $pid" || return $?
+    fi
+    if ! isInteger "$value"; then
+      _processMemoryUsage "$errorEnvironment" "Bad memory value for $pid: $value" || return $?
+    fi
+    printf %d $((value * 1))
     shift
   done
+}
+_processMemoryUsage() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -625,16 +675,15 @@ processVirtualMemoryAllocation() {
   while [ $# -gt 0 ]; do
     pid="$1"
     if ! isInteger "$pid"; then
-      _processVirtualMemoryAllocationUsage "$errorArgument" "Not an integer"
+      _processVirtualMemoryAllocation "$errorArgument" "Not an integer"
       return $?
     fi
     printf %d $(("$(ps -o vsz -p "$pid" | tail -n 1)" * 1))
     shift
   done
 }
-
-_processVirtualMemoryAllocationUsage() {
-  usageDocument "bin/build/tools/$(basename "${BASH_SOURCE[0]}")" processMemoryUsage "$@"
+_processVirtualMemoryAllocation() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -648,7 +697,9 @@ fileSize() {
   local size opts
 
   # shellcheck source=/dev/null
-  . "$(dirname "${BASH_SOURCE[0]}")/../env/OSTYPE.sh"
+  if ! . "$(dirname "${BASH_SOURCE[0]}")/../env/OSTYPE.sh"; then
+    _fileSize "$errorEnvironment" "No OSTYPE environment file" || return $?
+  fi
 
   case "$(lowercase "${OSTYPE}")" in
     *darwin*) opts=("-f" "%z") ;;
@@ -656,9 +707,40 @@ fileSize() {
   esac
   while [ $# -gt 0 ]; do
     if ! size="$(stat "${opts[@]}" "$1")"; then
-      return $errorEnvironment
+      _fileSize "$errorEnvironment" "Unable to stat ${opts[*]} $1"
     fi
-    printf "%s\n" "$size"
-    shift
+    printf "%s\n" "$size" || :
+    shift || :
+  done
+}
+_fileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} [ thing ]
+# Better type handling of shell objects
+#
+# Outputs one of `type` output or enhancements:
+# - `builtin`. `function`, `alias`, `file`
+# - `file`, `directory`, `integer`, `unknown`
+#
+betterType() {
+  local t
+  while [ $# -gt 0 ]; do
+    t="$(type -t "$1")" || :
+    if [ -z "$t" ]; then
+      if [ -d "$1" ]; then
+        t="directory"
+      elif [ -f "$1" ]; then
+        t="file"
+      elif isInteger "$1"; then
+        t="integer"
+      else
+        t="unknown"
+      fi
+    fi
+    printf "%s\n" "$t" || return $?
+    shift || :
   done
 }

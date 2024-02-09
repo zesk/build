@@ -9,11 +9,11 @@
 set -eou pipefail
 
 declare -a tests
-tests+=(testIdenticalCheckBinary)
+tests+=(testIdenticalCheck)
 
-testIdenticalCheckBinary() {
+testIdenticalCheck() {
   #
   # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
   #
-  ./bin/build/identical-check.sh --extension sh --prefix '# ''IDENTICAL' || return $?
+  identicalCheck --extension sh --prefix '# ''IDENTICAL' || return $?
 }

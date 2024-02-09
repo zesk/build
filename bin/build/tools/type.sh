@@ -5,8 +5,9 @@
 # Depends on no other .sh files
 #
 # Shell Dependencies: awk sed date echo sort printf
-# o ./docs/_templates/tools/type.md
-# o ./test/tools/type-tests.sh
+#
+# Docs: o ./docs/_templates/tools/type.md
+# Test: o ./test/tools/type-tests.sh
 #
 
 ###############################################################################
@@ -80,7 +81,7 @@ isInteger() {
 # Exit Code: 1 - if it is not an unsigned integer
 #
 isUnsignedInteger() {
-  case $1 in
+  case "${1#+}" in
     '' | *[!0-9]*)
       return 1
       ;;
@@ -150,7 +151,7 @@ isCallable() {
     return 1
   fi
   while [ $# -gt 0 ]; do
-    if ! isFunction "$1" || ! isExecutable "$1"; then
+    if ! isFunction "$1" && ! isExecutable "$1"; then
       return 1
     fi
     shift

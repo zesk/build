@@ -19,6 +19,7 @@ shellcheck disable=SC2120
 ## Usage
 
     composer.sh [ --help ] [ installDirectory ]
+    
 
 ## Arguments
 
@@ -27,7 +28,7 @@ shellcheck disable=SC2120
 
 ## Examples
 
-bin/build/pipeline/composer.sh ./app/
+    bin/build/pipeline/composer.sh ./app/
 
 ## Exit codes
 

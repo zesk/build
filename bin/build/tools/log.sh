@@ -16,8 +16,8 @@ errorEnvironment=1
 errorArgument=2
 
 #
-# Usage: {fn} [ --dry-run ] logPath count
-# Argument: logPath - Required. Path where log files exist.
+# Usage: {fn} [ --dry-run ] logFile count
+# Argument: logFile - Required. A log file which exists.
 # Argument: count - Required. Integer of log files to maintain.
 # Rotate a log file
 #
@@ -45,24 +45,22 @@ rotateLog() {
         elif [ -z "$count" ]; then
           count="$1"
         else
-          _rotateLogUsage "$errorArgument" "${FUNCNAME[0]} Unknown argument $1"
+          _rotateLog "$errorArgument" "${FUNCNAME[0]} Unknown argument $1"
         fi
         ;;
     esac
     shift
   done
-  if ! logFile=$(usageArgumentFile _rotateLogUsage logFile "$logFile"); then
-    return $?
+
+  if ! logFile="$(usageArgumentFile _rotateLog logFile "$logFile")"; then
+    return "$errorArgument"
   fi
   if ! isInteger "$count"; then
-    _rotateLogUsage "$errorArgument" "${FUNCNAME[0]} count $count must be a positive integer"
-    return $?
+    _rotateLog "$errorArgument" "${FUNCNAME[0]} count $count must be a positive integer" || return $?
   fi
   if [ "$count" -le 0 ]; then
-    _rotateLogUsage "$errorArgument" "${FUNCNAME[0]} count $count must be a positive integer greater than zero"
-    return $?
+    _rotateLog "$errorArgument" "${FUNCNAME[0]} count $count must be a positive integer greater than zero" || return $?
   fi
-
   index="$count"
   if [ "$count" -gt 1 ]; then
     if [ -f "$logFile.$count" ]; then
@@ -70,12 +68,12 @@ rotateLog() {
         printf "%s \"%s\"\n" rm "$(escapeDoubleQuotes "$logFile.$count")"
       else
         if ! rm "$logFile.$count"; then
-          _rotateLogUsage "$errorEnvironment" "${FUNCNAME[0]} Can not remove $logFile.$count"
-          return $?
+          _rotateLog "$errorEnvironment" "${FUNCNAME[0]} Can not remove $logFile.$count" || return $?
         fi
       fi
     fi
   fi
+
   index=$((index - 1))
   while [ "$index" -ge 1 ]; do
     if [ -f "$logFile.$index" ]; then
@@ -83,8 +81,7 @@ rotateLog() {
         printf "%s \"%s\" \"%s\"\n" mv "$(escapeDoubleQuotes "$logFile.$index")" "$(escapeDoubleQuotes "$logFile.$((index + 1))")"
       else
         if ! mv "$logFile.$index" "$logFile.$((index + 1))"; then
-          _rotateLogUsage "$errorEnvironment" "${FUNCNAME[0]} Failed to mv $logFile.$index -> $logFile.$((index + 1))"
-          return $?
+          _rotateLog "$errorEnvironment" "${FUNCNAME[0]} Failed to mv $logFile.$index -> $logFile.$((index + 1))" || return $?
         fi
       fi
     fi
@@ -97,17 +94,16 @@ rotateLog() {
     printf "printf \"\">\"%s\"\n" "$(escapeDoubleQuotes "$logFile")"
   else
     if ! cp "$logFile" "$logFile.$index"; then
-      _rotateLogUsage "$errorEnvironment" "${FUNCNAME[0]} Failed to copy $logFile $logFile.$index"
-      return $?
+      _rotateLog "$errorEnvironment" "${FUNCNAME[0]} Failed to copy $logFile $logFile.$index" || return $?
     fi
     if ! printf "" >"$logFile"; then
-      _rotateLogUsage "$errorEnvironment" "${FUNCNAME[0]} Failed to truncate $logFile"
-      return $?
+      _rotateLog "$errorEnvironment" "${FUNCNAME[0]} Failed to truncate $logFile" || return $?
     fi
   fi
+  set +x
 }
-_rotateLogUsage() {
-  usageDocument "${BASH_SOURCE[0]}" rotateLog "$@"
+_rotateLog() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?
 }
 
 # Usage: {fn} [ --dry-run ] logPath count
@@ -130,21 +126,21 @@ rotateLogs() {
         elif [ -z "$count" ]; then
           count="$1"
         else
-          _rotateLogsUsage "$errorArgument" "${FUNCNAME[0]} Unknown argument $1"
+          _rotateLogs "$errorArgument" "${FUNCNAME[0]} Unknown argument $1"
         fi
         ;;
     esac
     shift
   done
-  if ! logPath=$(usageArgumentDirectory _rotateLogsUsage logPath "$logPath"); then
+  if ! logPath=$(usageArgumentDirectory _rotateLogs logPath "$logPath"); then
     return $?
   fi
   if ! isInteger "$count"; then
-    _rotateLogsUsage "$errorArgument" "${FUNCNAME[0]} count $count must be an integer"
+    _rotateLogs "$errorArgument" "${FUNCNAME[0]} count $count must be an integer"
     return $?
   fi
   if [ "$count" -le 0 ]; then
-    _rotateLogUsage "$errorArgument" "${FUNCNAME[0]} count $count must be a positive integer greater than zero"
+    _rotateLog "$errorArgument" "${FUNCNAME[0]} count $count must be a positive integer greater than zero"
     return $?
   fi
 
@@ -157,6 +153,6 @@ rotateLogs() {
   done
   clearLine
 }
-_rotateLogsUsage() {
-  usageDocument "${BASH_SOURCE[0]}" rotateLogs "$@"
+_rotateLogs() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

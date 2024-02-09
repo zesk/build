@@ -99,11 +99,11 @@ assertExitCode() {
   if [ "$expected" != "$actual" ]; then
     printf "%s: %s -> %s, expected %s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
-    consoleReset 1>&2
-    rm "$outputFile"
+    consoleReset 1>&2 || :
+    rm "$outputFile" || :
     return 1
   fi
-  rm "$outputFile"
+  rm "$outputFile" || :
   return 0
 }
 
@@ -130,13 +130,16 @@ assertNotExitCode() {
   set -e
   outputFile=$(mktemp)
   actual=$(
-    "$bin" "$@" >"$outputFile" 2>&1
-    echo "$?"
+    if "$bin" "$@" >"$outputFile" 2>&1; then
+      printf %d 0
+    else
+      printf %d "$?"
+    fi
   )
   restoreErrorExit "$savedErrorExit"
 
   if [ "$expected" = "$actual" ]; then
-    printf "%s: %s -> %s, expected NOT %s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
+    printf "%s: %s -> %s, expected NOT %s (incorrect)\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleOrange "$expected")" 1>&2
     prefixLines "$(consoleCode)" <"$outputFile" 1>&2
     consoleReset 1>&2
     rm "$outputFile"
@@ -227,7 +230,7 @@ assertDirectoryExists() {
 
   shift
   if [ ! -d "$d" ]; then
-    printf "%s: %s was expected to be a %s but is NOT %s\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    printf "%s: %s was expected to be a %s but is NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -250,7 +253,7 @@ assertDirectoryDoesNotExist() {
 
   shift
   if [ -d "$d" ]; then
-    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
     return 1
   fi
 }
@@ -281,7 +284,7 @@ assertFileExists() {
   shift
   message="$*"
   if [ ! -f "$d" ]; then
-    printf "%s: %s was expected to be a %s but is NOT %s\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
+    printf "%s: %s should exist but does NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun not found}")"
     return 1
   fi
 }
@@ -304,7 +307,7 @@ assertFileDoesNotExist() {
 
   shift
   if [ -f "$d" ]; then
-    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "${FUNCNAME[0]}" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
+    printf "%s: %s should not exist but does %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun WAS found}")" "$(consoleWarning "$(betterType "$d")")"
     return 1
   fi
 }
@@ -345,7 +348,7 @@ assertOutputEquals() {
 #
 # If this fails it will output the command result to stdout.
 #
-# Usage: assertOutputContains expected command [ arguments ... ]
+# Usage: {fn} expected command [ arguments ... ]
 # Argument: - `expected` - A string to expect in the output
 # Argument: - `command` - The command to run
 # Argument: - `arguments` - Any arguments to pass to the command to run
@@ -353,8 +356,7 @@ assertOutputEquals() {
 # Argument: - `--stderr` - Also include standard error in output checking
 # Exit code: 0 - If the output contains at least one occurrence of the string
 # Exit code: 1 - If output does not contain string
-# Local cache: None
-# Example:     assertOutputContains Success complex-thing.sh --dry-run
+# Example:     {fn} Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {

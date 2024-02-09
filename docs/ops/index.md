@@ -35,7 +35,7 @@ Any files not found are skipped. Note that environment values are not carried be
 
 #### Examples
 
-crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/applications
+    crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/applications
     crontab-application-sync.sh /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 
 #### Exit codes
@@ -45,6 +45,7 @@ crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/a
 #### See Also
 
 Not found
+{SEE:}
 
 [⬅ Return to documentation root](index.md)
 [⬅ Return to top](../index.md)

@@ -71,7 +71,7 @@ _deploymentGenerateValue() {
 
 #
 # Build deployment using composer, adding environment values to .env and packaging vendor and additional
-# files into target file, usually `BUILD_TARGET` defaults to `app.tar.gz`.
+# files into target file, usually `BUILD_TARGET`
 #
 # Override target file generated with environment variable `BUILD_TARGET` which must ae set during build
 # and on remote systems during deployment.
@@ -101,7 +101,7 @@ _deploymentGenerateValue() {
 # Argument: ENV_VAR1 - Optional. Environment variables to build into the deployed .env file
 # Argument: -- - Required. Separates environment variables to file list
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
-#
+# See: BUILD_TARGET.sh
 phpBuild() {
   local e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment
   local targetName

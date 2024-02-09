@@ -15,6 +15,7 @@ Converts a date to an integer timestamp
 #### Usage
 
     dateToTimestamp date
+    
 
 #### Arguments
 
@@ -22,7 +23,7 @@ Converts a date to an integer timestamp
 
 #### Examples
 
-timestamp=$(dateToTimestamp \'2023-10-15\')
+    timestamp=$(dateToTimestamp \'2023-10-15\')
 
 #### Exit codes
 
@@ -41,17 +42,13 @@ Compatible with BSD and GNU date.
 
 Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 
-#### Usage
-
-    todayDate
-
 #### Arguments
 
 - None.
 
 #### Examples
 
-date="$(todayDate)"
+    date="$(todayDate)"
 
 #### Exit codes
 

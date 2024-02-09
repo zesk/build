@@ -13,13 +13,13 @@ declare -a tests
 
 tests+=(testBinaryTypes)
 testBinaryTypes() {
-  assertExitCode 0 isExecutable ./bin/build/map.sh
-  assertExitCode 0 isExecutable ./bin/build/tools.sh
+  assertExitCode 0 isExecutable ./bin/build/map.sh || return $?
+  assertExitCode 0 isExecutable ./bin/build/tools.sh || return $?
 
-  assertNotExitCode 0 isCallable ./bin/build/LICENSE.md
-  assertNotExitCode 0 isCallable ./bin/MISSING
-  assertNotExitCode 0 isExecutable ./bin/build/LICENSE.md
-  assertNotExitCode 0 isExecutable ./bin/MISSING
+  assertNotExitCode 0 isCallable ./bin/build/LICENSE.md || return $?
+  assertNotExitCode 0 isCallable ./bin/MISSING || return $?
+  assertNotExitCode 0 isExecutable ./bin/build/LICENSE.md || return $?
+  assertNotExitCode 0 isExecutable ./bin/MISSING || return $?
 }
 _testLineLabel() {
   printf "%s %s\n" "$(consoleInfo "$1")" "$(consoleCode "$2")"
@@ -95,6 +95,7 @@ EOF
 
 callableFunctions() {
   cat <<EOF
+contextOpen
 executableFiles
 validateMissingItems
 isUnsignedNumber
@@ -102,6 +103,7 @@ isCallable
 EOF
 }
 
+# NOTHING Callable or Executable or Functino
 sampleNotExecutable() {
   cat <<EOF
 notAFile
@@ -142,29 +144,37 @@ signedIntegerSamples() {
 EOF
 }
 
+# must have no negative signs
 unsignedIntegerSamples() {
   cat <<EOF
 1
++0
++1
 23
-+4592312
+4592312
 4912391293231
++4912391293231
 987654321
-+5318008
+5318008
 EOF
 }
 
+# must be negative floats
 signedNumberSamples() {
   cat <<EOF
--9999999999999
+-9999999999999.0
 -512.4
 -0.1
 -1.0
 -99.99
 -531.8008
--6.02214076e23
+-6.022140769836232
+-0.0
+-1.0
 EOF
 }
 
+# must have decimal
 unsignedNumberSamples() {
   cat <<EOF
 512.4
@@ -173,9 +183,13 @@ unsignedNumberSamples() {
 99.99
 531.8008
 6.0221407623
+0.000
+1.9999999999999999999999999999
+111111111111111111111111111111.9999999999999999999999999999
 EOF
 }
 
+# just plain bad
 badNumericSamples() {
   cat <<'EOF'
 -6.02214076e23
@@ -189,6 +203,14 @@ null
 --
 -
 *
++-1
+--0
++0+
+-0-
+1-
+0+
+12+
+12^
 EOF
 }
 
@@ -257,19 +279,22 @@ validateNotSignedNumber() {
   done
 }
 
-tests+=(testSignedUnsignedIntegerNumber)
-testSignedUnsignedIntegerNumber() {
+tests+=(testSignedIntegerSamples)
+testSignedIntegerSamples() {
   #
   # signed Integer
   #
 
   # Unsigned/Signed integers are signed
-  consoleInfo "signedIntegerSamples"
-  signedIntegerSamples | validateSignedInteger
-  signedIntegerSamples | validateSignedNumber
+  signedIntegerSamples | validateSignedInteger || return $?
+  signedIntegerSamples | validateSignedNumber || return $?
   # Signed integers is not unsigned anything
-  signedIntegerSamples | validateNotUnsignedInteger
-  signedIntegerSamples | validateNotUnsignedNumber
+  signedIntegerSamples | validateNotUnsignedInteger || return $?
+  signedIntegerSamples | validateNotUnsignedNumber || return $?
+}
+
+tests+=(testUnsignedIntegerSamples)
+testUnsignedIntegerSamples() {
 
   #
   # unsigned Integer
@@ -277,41 +302,60 @@ testSignedUnsignedIntegerNumber() {
 
   consoleInfo "unsignedIntegerSamples"
   # Unsigned integers are just unsigned
-  unsignedIntegerSamples | validateUnsignedInteger
-  unsignedIntegerSamples | validateNotSignedInteger
-  unsignedIntegerSamples | validateSignedInteger
+  consoleInfo validateUnsignedInteger
+  unsignedIntegerSamples | validateUnsignedInteger || return $?
+  consoleInfo validateSignedInteger
+  unsignedIntegerSamples | validateSignedInteger || return $?
   # Unsigned integers are both signed and unsigned numbers
-  unsignedIntegerSamples | validateUnsignedNumber
-  unsignedIntegerSamples | validateSignedNumber
+  consoleInfo validateUnsignedNumber
+  unsignedIntegerSamples | validateUnsignedNumber || return $?
+  consoleInfo validateSignedNumber
+  unsignedIntegerSamples | validateSignedNumber || return $?
+}
+
+tests+=(testSignedNumberSamples)
+testSignedNumberSamples() {
 
   #
   # signed Number
   #
-  consoleInfo "signedNumberSamples"
-  signedNumberSamples | validateSignedNumber
-  signedNumberSamples | validateNotUnsignedNumber
+  consoleCode validateSignedNumber
+  signedNumberSamples | validateSignedNumber || return $?
+  consoleCode validateNotUnsignedNumber
+  signedNumberSamples | validateNotUnsignedNumber || return $?
   # signed numbers are not integers, ever
-  signedNumberSamples | validateNotSignedInteger
-  signedNumberSamples | validateNotUnsignedInteger
+  consoleCode validateNotSignedInteger
+  signedNumberSamples | validateNotSignedInteger || return $?
+  consoleCode validateNotUnsignedInteger
+  signedNumberSamples | validateNotUnsignedInteger || return $?
+}
 
-  #
-  # unsigned Number
-  #
-  consoleInfo "unsignedNumberSamples"
+tests+=(testUnsignedNumberSamples)
+testUnsignedNumberSamples() {
 
   # Number are neither signed nor unsigned
-  unsignedNumberSamples | validateUnsignedNumber
-  unsignedNumberSamples | validateSignedNumber
+  consoleCode validateUnsignedNumber
+  unsignedNumberSamples | validateUnsignedNumber || return $?
+  consoleCode validateSignedNumber
+  unsignedNumberSamples | validateSignedNumber || return $?
   # unsigned numbers are not integers, ever
-  unsignedNumberSamples | validateNotSignedInteger
-  unsignedNumberSamples | validateNotUnsignedInteger
+  consoleCode validateNotSignedInteger
+  unsignedNumberSamples | validateNotSignedInteger || return $?
+  consoleCode validateNotUnsignedInteger
+  unsignedNumberSamples | validateNotUnsignedInteger || return $?
+}
 
-  consoleInfo "badNumericSamples"
+tests+=(testBadNumericSamples)
+testBadNumericSamples() {
   #
   # Nothing is good
   #
-  badNumericSamples | validateNotSignedInteger
-  badNumericSamples | validateNotUnsignedInteger
-  badNumericSamples | validateNotSignedNumber
-  badNumericSamples | validateNotUnsignedNumber
+  consoleCode validateNotSignedInteger
+  badNumericSamples | validateNotSignedInteger || return $?
+  consoleCode validateNotUnsignedInteger
+  badNumericSamples | validateNotUnsignedInteger || return $?
+  consoleCode validateNotSignedNumber
+  badNumericSamples | validateNotSignedNumber || return $?
+  consoleCode validateNotUnsignedNumber
+  badNumericSamples | validateNotUnsignedNumber || return $?
 }

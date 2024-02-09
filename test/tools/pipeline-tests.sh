@@ -16,7 +16,7 @@ tests+=(testDotEnvConfigure)
 testDotEnvConfigure() {
   local tempDir="$$.dotEnvConfig"
   mkdir "$tempDir"
-  cd "$tempDir" || exit
+  cd "$tempDir" || return "$errorEnvironment"
   consoleInfo "$(pwd)"
   touch .env
   if ! dotEnvConfigure || [ -n "$(dotEnvConfigure)" ]; then
@@ -28,8 +28,8 @@ testDotEnvConfigure() {
     consoleError "dotEnvConfigure failed with both .env"
     return "$errorEnvironment"
   fi
-  cd ..
-  rm -rf "$tempDir"
+  cd .. || return $?
+  rm -rf "$tempDir" || return $?
   consoleSuccess dotEnvConfigure works AOK
 }
 
@@ -37,8 +37,12 @@ tests+=(testHookSystem)
 testHookSystem() {
   local testDir here randomApp randomDefault path
 
-  testDir=$(mktemp -d)
-  here=$(pwd)
+  if ! testDir=$(mktemp -d); then
+    return 1
+  fi
+  if ! here=$(pwd); then
+    return 1
+  fi
 
   randomApp=$(randomString)
   randomDefault=$(randomString)

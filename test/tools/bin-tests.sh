@@ -10,9 +10,14 @@ errorEnvironment=1
 
 declare -a tests
 
+tests+=(testVersionLive)
+testVersionLive() {
+  assertExitCode 0 runHook version-live
+}
+
 tests+=(testNewRelease)
 testNewRelease() {
-  assertExitCode 0 bin/build/new-release.sh --non-interactive
+  assertExitCode 0 newRelease --non-interactive
 }
 
 tests+=(testBuildSetup)
@@ -123,34 +128,36 @@ testMapPortability() {
 tests+=(testScriptInstallations)
 testScriptInstallations() {
   if ! which docker-compose >/dev/null; then
-    __doesScriptInstall docker-compose "bin/build/install/docker-compose.sh"
+    __doesScriptInstall docker-compose dockerComposeInstall || return $?
   fi
 
-  __doesScriptInstall php "bin/build/install/php-cli.sh"
-  __doesScriptInstall python "bin/build/install/python.sh"
-  __doesScriptInstall mariadb "bin/build/install/mariadb-client.sh"
+  if ! which php >/dev/null; then
+    __doesScriptInstall php phpInstall || return $?
+  fi
+  __doesScriptInstall python pythonInstall || return $?
+  __doesScriptInstall mariadb mariadbInstall || return $?
   # requires docker
-  if which docker >/dev/null; then
-    echo "{}" >composer.json
-    "bin/build/pipeline/composer.sh"
-    if [ ! -d "vendor" ] || [ ! -f composer.lock ]; then
-      consoleError "composer failed"
-    fi
+  d=$(mktemp -d)
+  cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/"
+  phpComposer "$d"
+  if [ ! -d "$d/vendor" ] || [ ! -f "$d/composer.lock" ]; then
+    consoleError "composer failed"
+    return "$errorEnvironment"
   fi
 
   if ! which git >/dev/null; then
-    __doesScriptInstall git "bin/build/install/git.sh"
+    __doesScriptInstall git gitInstall || return $?
   fi
   if ! which npm >/dev/null; then
     # npm 18 installed in this image
-    __doesScriptInstall npm "bin/build/install/npm.sh"
+    __doesScriptInstall npm npmInstall || return $?
   fi
-  __doesScriptInstall prettier "bin/build/install/prettier.sh"
-
-  __doesScriptInstall terraform "bin/build/install/terraform.sh"
+  __doesScriptInstall prettier prettierInstall || return $?
+  __doesScriptInstall terraform terraformInstall || return $?
 }
 
-tests=(testAdditionalBins "${tests[@]}")
+# tests=(testAdditionalBins "${tests[@]}")
+tests+=(testAdditionalBins)
 testAdditionalBins() {
   for binTest in ./test/bin/*.sh; do
     testHeading "$(cleanTestName "$(basename "$binTest")")"

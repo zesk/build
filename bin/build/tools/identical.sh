@@ -8,18 +8,6 @@ errorArgument=2
 
 errorFailures=100
 
-#
-# Usage tool for identicalCheck
-# See: identicalCheck
-#
-_identicalCheckUsage() {
-  local me
-
-  me="$(basename "${BASH_SOURCE[0]}")"
-  usageDocument "./bin/build/tools/$me" "identicalCheck" "$@"
-  return $?
-}
-
 # Usage: {fn} --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
 # Argument: --extension extension - Required. One or more extensions to search for in the current directory.
 # Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
@@ -56,25 +44,41 @@ identicalCheck() {
   local me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
-  local tokenLineCount tokenFileName compareFile
+  local tokenLineCount tokenFileName compareFile badFiles
 
   me="$(basename "${BASH_SOURCE[0]}")"
+
+  binary=
   rootDir=.
   findArgs=()
+  badFiles=()
   prefixes=()
   while [ $# -gt 0 ]; do
+    if [ -z "$1" ]; then
+      _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
+    fi
     case "$1" in
       --cd)
         shift || :
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
-          _identicalCheckUsage $errorArgument "--cd \"$1\" is not a directory"
+          _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
           return $?
         fi
         ;;
       --extension)
         shift || :
         findArgs+=("-name" "*.$1")
+        ;;
+      --exec)
+        shift || :
+        if [ -z "$1" ]; then
+          _identicalCheck "$errorArgument" "--exec \"$1\" can not be blank"
+        fi
+        if ! isCallable "$1"; then
+          _identicalCheck "$errorArgument" "--exec \"$1\" is not callable"
+        fi
+        binary="$1"
         ;;
       --prefix)
         shift || :
@@ -85,17 +89,17 @@ identicalCheck() {
   done
 
   if [ ${#findArgs[@]} -eq 0 ]; then
-    _identicalCheckUsage $errorArgument "--extension not specified" $errorArgument "Need to specify at least one extension"
+    _identicalCheck "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one extension"
     return $?
   fi
   if [ ${#prefixes[@]} -eq 0 ]; then
-    _identicalCheckUsage $errorArgument "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
+    _identicalCheck "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
     return $?
   fi
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")"
   resultsFile=$(mktemp)
-  find "$rootDir" "${findArgs[@]}" ! -path "*/.*" | sort | while IFS= read -r searchFile; do
+  while IFS= read -r searchFile; do
     if [ "$(basename "$searchFile")" = "$me" ]; then
       # We are exceptional ;)
       continue
@@ -104,7 +108,7 @@ identicalCheck() {
     for prefix in "${prefixes[@]}"; do
       [ -d "$tempDirectory/$prefixIndex" ] || mkdir "$tempDirectory/$prefixIndex"
       totalLines=$(wc -l <"$searchFile")
-      grep -n "$prefix" "$searchFile" | while read -r identicalLine; do
+      while read -r identicalLine; do
         # DEBUG # consoleBoldRed "$identicalLine" # DEBUG
         lineNumber=${identicalLine%%:*}
         lineNumber=$((lineNumber + 1))
@@ -119,11 +123,13 @@ identicalCheck() {
           printf "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
           clearLine 1>&2
           printf "%s %s in %s\n" "$(consoleWarning -n "Count is not a number")" "$(consoleCode "$count")" "$(consoleError "$searchFile")" 1>&2
+          badFiles+=("$searchFile")
           continue
         fi
         if [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
           if [ "$line0" -ge "$line1" ]; then
             printf "%s in %s\n\n > %s\n" "$(consoleWarning -n "Count range is out of order")" "$(consoleError "$searchFile")" "$(consoleCode "$identicalLine")" 1>&2
+            badFiles+=("$searchFile")
             continue
           fi
           count=$((line1 - line0))
@@ -133,6 +139,8 @@ identicalCheck() {
           tokenLineCount=$(head -1 "$tokenFile")
           tokenFileName=$(tail -1 "$tokenFile")
           if [ ! -f "$countFile" ]; then
+            badFiles+=("$tokenFileName")
+            badFiles+=("$searchFile")
             clearLine 1>&2
             printf "%s: %s\n" "$(consoleInfo "$token")" "$(consoleError -n "Token counts do not match:")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode -n "$tokenFileName")" "$(consoleSuccess -n "$tokenLineCount")" 1>&2
@@ -145,12 +153,15 @@ identicalCheck() {
             # 10 lines in file, line 10 means: tail -n 1
             tail -n $((totalLines - lineNumber + 1)) "$searchFile" | head -n "$count" >"$compareFile"
             if [ "$(grep -c "$prefix" "$compareFile")" -gt 0 ]; then
+              badFiles+=("$searchFile")
               clearLine 1>&2
               printf "%s: %s\n< %s%s\n" "$(consoleInfo "$token")" "$(consoleError -n "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" 1>&2
               prefixLines "$(consoleCode)    " <"$compareFile" 1>&2
               consoleReset 1>&2
               break
             elif ! diff -q "$countFile" "${countFile}.compare" >/dev/null; then
+              badFiles+=("$tokenFileName")
+              badFiles+=("$searchFile")
               clearLine 1>&2
               printf "%s: %s\n< %s\n> %s%s\n" "$(consoleInfo "$token")" "$(consoleError -n "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
               diff "$countFile" "${countFile}.compare" | prefixLines "$(consoleCode)    " 1>&2
@@ -165,10 +176,14 @@ identicalCheck() {
           tail -n $((totalLines - lineNumber + 1)) "$searchFile" | head -n "$count" >"$countFile"
           statusMessage consoleInfo "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(consoleCode "$token")" "$(consoleValue "$searchFile")")"
         fi
-      done || :
+      done < <(grep -n "$prefix" "$searchFile") || :
       prefixIndex=$((prefixIndex + 1))
     done
-  done 2>"$resultsFile"
+  done < <(find "$rootDir" "${findArgs[@]}" ! -path "*/.*" | sort) 2>"$resultsFile"
+
+  if [ -n "$binary" ] && [ ${#badFiles[@]} -gt 0 ]; then
+    "$binary" "${badFiles[@]}"
+  fi
   clearLine
   exitCode=0
   find "$tempDirectory" -type f -name '*.match' | while read -r matchFile; do
@@ -178,7 +193,11 @@ identicalCheck() {
       token="${token%%.match}"
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
-      printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$(tail -n 1 "$tokenFile")")" >>"$resultsFile"
+      tokenFile="$(tail -n 1 "$tokenFile")"
+      printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")" >>"$resultsFile"
+      if [ -n "$binary" ]; then
+        "$binary" "$tokenFile"
+      fi
       exitCode=$errorFailures
     fi
   done
@@ -192,4 +211,8 @@ identicalCheck() {
   rm "$resultsFile"
   clearLine
   return "$exitCode"
+}
+_identicalCheck() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  return $?
 }

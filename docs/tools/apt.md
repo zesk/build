@@ -12,6 +12,7 @@ once an hour as well (when testing)
 #### Usage
 
     aptUpdateOnce
+    
 
 #### Exit codes
 
@@ -39,7 +40,7 @@ Confirms that `binary` is installed after installation succeeds.
 
 #### Examples
 
-whichApt shellcheck shellcheck
+    whichApt shellcheck shellcheck
     whichApt mariadb mariadb-client
 
 #### Exit codes
@@ -58,6 +59,7 @@ and assumes packages will be available.
 #### Usage
 
     aptInstall [ package ... ]
+    
 
 #### Arguments
 
@@ -65,7 +67,7 @@ and assumes packages will be available.
 
 #### Examples
 
-aptInstall shellcheck
+    aptInstall shellcheck
 
 #### Exit codes
 

@@ -64,7 +64,7 @@ releaseNotes() {
   fi
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_RELEASE_NOTES.sh"
-  printf "%s/%s.md" "${BUILD_RELEASE_NOTES%%/}" "$version"
+  printf "%s/%s.md\n" "${BUILD_RELEASE_NOTES%%/}" "$version"
 
 }
 
