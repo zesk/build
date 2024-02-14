@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Run during bin/build/pipeline/report-deploy-finish.sh
+# Run during bin/build/pipeline/deploy-remote-finish.sh
 #
 # Run ON THE REMOTE SYSTEM, not in the pipeline so assume little.
 #

@@ -6,12 +6,14 @@ Deployment occurs as follows:
 
 - `make-env` - Optional. Run on deployment system. Create environment file for remote system.
 - `deploy-start` - Optional. Run on each remote system.
-- `deploy-move` - Optional. Run on each remote system.
+- `deploy-activate` - Optional. Run on each remote system.
 - `deploy-finish` - Optional. Run on each remote system.
 - `deploy-confirm` - Optional. Run on deployment system.
-- `deploy-undo` - Optional. Run on each remote system.
+- `deploy-revert` - Optional. Run on each remote system.
 
+## Ordering of hooks
 
+## Hook detai
 ### `runHook make-env` - Generate an environment file with environment variables (must be `export`ed)
 
 Generate an environment file with environment variables (must be `export`ed)
@@ -68,7 +70,7 @@ should do wahtever is required to ensure that.
 #### Exit codes
 
 - `0` - Continue with deployment
-- `Non-zero` - Any non-zero exit code will run `deploy-undo` hook on all systems and cancel deployment
+- `Non-zero` - Any non-zero exit code will run `deploy-revert` hook on all systems and cancel deployment
 
 ### `deploy-cleanup.sh` - Run after a successful deployment
 
@@ -93,7 +95,7 @@ $\Deployment "finish" script
 
 - `0` - This SHOULD exit successfully always
 
-### `deploy-undo.sh` - Deployment "undo" script
+### `deploy-revert.sh` - Deployment "undo" script
 
 After a deployment was successful on a host, this undos that deployment and goes back to the previous version.
 

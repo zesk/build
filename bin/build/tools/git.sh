@@ -380,7 +380,7 @@ gitCommit() {
   if [ -z "$comment" ]; then
     _gitCommit "$errorArgument" "Need a comment" || return $?
   fi
-  if ! start=$(pwd); then
+  if ! start="$(pwd -P 2>/dev/null)"; then
     _gitCommit "$errorEnvironment" "Failed to get pwd" || return $?
   fi
   current="$start"
@@ -415,7 +415,6 @@ gitCommit() {
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------

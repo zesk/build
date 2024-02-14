@@ -65,3 +65,9 @@ testGitVersionList() {
   #  echo "Count1: \"$(($(gitVersionList | wc -l) + 0))\""
   assertGreaterThan $(($(gitVersionList | wc -l | trimSpacePipe) + 0)) 0 || return $?
 }
+
+tests+=(testGitCommit)
+testGitCommit() {
+  assertExitCode --stderr-ok 2 gitCommit
+
+}

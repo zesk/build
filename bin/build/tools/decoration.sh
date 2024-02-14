@@ -144,21 +144,26 @@ _labeledBigText() {
 # Example:     echo $(repeat 80 =)
 # Example:     echo Hello world
 # Example:     echo $(repeat 80 -)
-#
+# Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
 repeat() {
   local count=$((${1:-2} + 0))
-  local debug
+  local powers=() curPow
 
-  debug=$(isBashDebug && printf 1)
-  set +x
-  shift
-  while [ $count -gt 0 ]; do
-    printf %s "$*"
-    count=$((count - 1))
+  shift || :
+  powers=("$*")
+  curPow=${#powers[@]}
+  while [ $((2 ** curPow)) -lt $count ]; do
+    powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
+    curPow=$((curPow + 1))
   done
-  if test "$debug"; then
-    set -x
-  fi
+  curPow=0
+  while [ $count -gt 0 ] && [ $curPow -lt ${#powers[@]} ]; do
+    if [ $((count & (2 ** curPow))) -ne 0 ]; then
+      printf "%s" "${powers[$curPow]}"
+      count=$((count - (2 ** curPow)))
+    fi
+    curPow=$((curPow + 1))
+  done
 }
 
 #
@@ -176,7 +181,7 @@ echoBar() {
   local delta=$((${2:-0} + 0))
 
   n=$((n + delta))
-  repeat "$n" "$c"
+  printf "%s\n" "$(repeat "$n" "$c")"
 }
 
 #

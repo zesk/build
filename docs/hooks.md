@@ -24,11 +24,11 @@ Most hooks are optional unless specified.
 - `deploy-start` - Run on deployed system. Begin deployment, after maintenance has been enabled (delete caches, etc.)
 - `deploy-finish.sh` After new code is deployed (update local files or register server etc.)
 - `deploy-confirm.sh` After new code is deployed make sure it is running correctly
-- `deploy-move` - Run on deployed system. During deployment install passed directory as new version of the app in current directory
+- `deploy-activate` - Run on deployed system. During deployment install passed directory as new version of the app in current directory
 - `deploy-finish` - Run on deployed system. Deployment is finished (before maintenance is turned off)
 - `deploy-confirm` - Run on pipeline systems. Before finish, check that deployment succeeded remotely via an alternate mechanism (smoke tests)
 - `deploy-cleanup` - Run on deployed system. After deployment, delete stray files or left overs from deployment if necessary.
-- `deploy-undo` - Run on deployed system. After failed deployment, revert to previous version.
+- `deploy-revert` - Run on deployed system. After failed deployment, revert to previous version.
 
 ## [Application Hooks](hooks/application.md)
 

@@ -82,29 +82,95 @@ assertNotEquals() {
 # Exit code: 0 - If the process exits with the provided exit code
 # Exit code: 1 - If the process exits with a different exit code
 #
-assertExitCode() {
-  local expected=$1 actual bin=$2 outputFile saved
+_assertExitCode() {
+  local isExitCode errorsOk
+  local expected bin
+  local outputFile errorFile
+  local saved actual failureText
 
-  shift
-  shift
-  outputFile=$(mktemp)
+  # --not
+  isExitCode=1
+  # --stderr-ok
+  errorsOk=
+
+  # expected
+  expected=
+  # binary ...
+  bin=
+  failureText="expected"
+
+  while [ $# -gt 0 ]; do
+    if [ -z "$1" ]; then
+      __assertExitCode "$errorArgument" "Blank argument" || return $?
+    fi
+    case "$1" in
+      --stderr-ok)
+        errorsOk=1
+        ;;
+      --not)
+        isExitCode=
+        failureText="expected NOT"
+        ;;
+      *)
+        if [ -z "$expected" ]; then
+          expected="$1"
+          if ! isInteger "$expected"; then
+            __assertExitCode "$errorArgument" "Expected should be an integer" || return $?
+          fi
+        elif [ -z "$bin" ]; then
+          bin="$1"
+          shift
+          break
+        fi
+        ;;
+    esac
+    shift
+  done
+  if ! outputFile=$(mktemp) || ! errorFile=$(mktemp); then
+    consoleError "${FUNCNAME[0]}: INTERNAL unable to mktemp" 1>&2
+    return "$errorEnvironment"
+  fi
+
   saved=$(saveErrorExit)
   set -e
   actual="$(
-    "$bin" "$@" >"$outputFile" 2>&1
+    "$bin" "$@" >"$outputFile" 2>"$errorFile"
     printf %d "$?"
   )"
   restoreErrorExit "$saved"
-
-  if [ "$expected" != "$actual" ]; then
-    printf "%s: %s -> %s, expected %s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleSuccess "$expected")" 1>&2
-    prefixLines "$(consoleCode)" <"$outputFile" 1>&2
-    consoleReset 1>&2 || :
-    rm "$outputFile" || :
-    return 1
+  if ! test $errorsOk && [ -s "$errorFile" ]; then
+    printf "%s %s -> %s %s\n%s\n" "$(consoleCode "$bin")" "$(consoleInfo "$*")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(prefixLines "$(consoleError ERROR:) $(consoleCode)" <"$errorFile")"
+    return $errorEnvironment
   fi
-  rm "$outputFile" || :
+  if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
+    # Failure
+    printf "%s: %s -> %s, %s %s\n%s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$failureText" "$(consoleSuccess "$expected")" "$(wrapLines "> $(consoleCode)" "$(consoleReset)" <"$outputFile")" 1>&2
+    rm -rf "$outputFile" "$errorFile" || :
+    return $errorEnvironment
+  fi
+  rm -rf "$outputFile" "$errorFile" || :
   return 0
+}
+
+#
+# Assert a process runs and exits with the correct exit code.
+#
+# If this fails it will output an error and exit.
+#
+# Usage: assertExitCode expectedExitCode command [ arguments ... ]
+#
+# Argument: - `expectedExitCode` - A numeric exit code expected from the command
+# Argument: - `command` - The command to run
+# Argument: - `arguments` - Any arguments to pass to the command to run
+# Local cache: None.
+# Environment: None.
+# Examples: assertExitCode 0 hasHook version-current
+# Reviewed: 2023-11-12
+# Exit code: 0 - If the process exits with the provided exit code
+# Exit code: 1 - If the process exits with a different exit code
+#
+assertExitCode() {
+  _assertExitCode "$@"
 }
 
 #
@@ -122,31 +188,7 @@ assertExitCode() {
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-  local expected=$1 actual bin=$2 outputFile savedErrorExit
-
-  shift
-  shift
-  savedErrorExit=$(saveErrorExit)
-  set -e
-  outputFile=$(mktemp)
-  actual=$(
-    if "$bin" "$@" >"$outputFile" 2>&1; then
-      printf %d 0
-    else
-      printf %d "$?"
-    fi
-  )
-  restoreErrorExit "$savedErrorExit"
-
-  if [ "$expected" = "$actual" ]; then
-    printf "%s: %s -> %s, expected NOT %s (incorrect)\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$(consoleOrange "$expected")" 1>&2
-    prefixLines "$(consoleCode)" <"$outputFile" 1>&2
-    consoleReset 1>&2
-    rm "$outputFile"
-    return 1
-  fi
-  rm "$outputFile"
-  return 0
+  _assertExitCode --not "$@"
 }
 
 #

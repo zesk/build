@@ -2,7 +2,7 @@
 
 - `deploy.sh` - No test
  - `deploy-to.sh` - No test
- - `remote-deploy-finish.sh` - No test
+ - `deploy-remote-finish.sh` - No test
 - `php-build.sh` - No test
 - `php-test.sh` - No test
 - `undeploy.sh` - No test

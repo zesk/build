@@ -143,7 +143,7 @@ testFailed() {
 requireTestFiles() {
   testTracing="$2"
   if ! loadTestFiles "$@"; then
-    testFailed "$(consoleI ssnfo -n "$*")"
+    testFailed "$(consoleInfo -n "$*")"
   fi
 }
 

@@ -10,7 +10,10 @@ _BUILD_CACHE_DEFAULT() {
   useDir="$HOME"
   if [ ! -d "$useDir" ]; then
     # Should be application home
-    useDir="$(pwd)"
+    if ! useDir="$(pwd -P 2>/dev/null)"; then
+      consoleError "Unable to pwd" 1>&2
+      return 1
+    fi
   fi
   printf "%s/%s\n" "${useDir%%/}" ".build"
 }

@@ -125,7 +125,10 @@ testDeployApplication() {
 
   set -eou pipefail
 
-  home=$(pwd)
+  if ! home=$(pwd -P 2>/dev/null); then
+    consoleError "Unable to pwd" 1>&2
+    return $errorEnvironment
+  fi
 
   if ! d="$(_testDeployApplicationSetup "$home")"; then
     consoleError _testDeployApplicationSetup failed
@@ -193,7 +196,7 @@ testDeployApplication() {
 
   _testAssertDeploymentLinkages "$d" || return $?
 
-  consoleInfo undoDeployApplication tests
+  consoleInfo deployRevertApplication tests
 
   t=4d
   for t in 4d 3c 2b; do
@@ -202,9 +205,9 @@ testDeployApplication() {
 
     assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
 
-    consoleRed "undoDeployApplication $t"
+    consoleRed "deployRevertApplication $t"
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
-    undoDeployApplication "$d/DEPLOY" "$t" "$d/live-app" || return $?
+    deployRevertApplication "$d/DEPLOY" "$t" "$d/live-app" || return $?
     _testAssertDeploymentLinkages "$d" || return $?
 
     sleep 1
@@ -219,7 +222,7 @@ testDeployApplication() {
   assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
 
   consoleInfo No previous version
-  assertNotExitCode 0 undoDeployApplication "$d/DEPLOY" "1a" "$d/live-app"
+  assertNotExitCode 0 deployRevertApplication "$d/DEPLOY" "1a" "$d/live-app"
 
   t=4d
   consoleInfo Jump versions to end $t
@@ -239,4 +242,28 @@ testDeployApplication() {
 
   echo "GOING TO: kill ::::$phpPid:::: My PID is $$"
   kill -TERM "$phpPid" || :
+}
+
+tests=(testDeployPackageName "${tests[@]}")
+testDeployPackageName() {
+  assertExitCode --stderr-ok 2 deployPackageName "$(pwd)/nothere" || return $?
+  assertExitCode --stderr-contains 'deployHome required' 1 deployPackageName || return $?
+  assertExitCode 0 deployPackageName "$(pwd)" || return $?
+  assertEquals "app.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
+
+  # shellcheck source=/dev/null
+  source bin/build/env/BUILD_TARGET.sh || return $?
+
+  export BUILD_TARGET
+
+  BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz"
+
+  assertEquals "bummer-of-a-birthmark-hal" "$(deployPackageName "$(pwd)")" || return $?
+
+  unset BUILD_TARGET
+
+  # shellcheck source=/dev/null
+  source bin/build/env/BUILD_TARGET.sh || return $?
+
+  assertEquals "app.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
 }
