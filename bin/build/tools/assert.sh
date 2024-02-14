@@ -70,7 +70,7 @@ assertNotEquals() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertExitCode expectedExitCode command [ arguments ... ]
+# Usage: {fn} usageFunction expectedExitCode command [ arguments ... ]
 #
 # Argument: - `expectedExitCode` - A numeric exit code expected from the command
 # Argument: - `command` - The command to run
@@ -82,7 +82,8 @@ assertNotEquals() {
 # Exit code: 0 - If the process exits with the provided exit code
 # Exit code: 1 - If the process exits with a different exit code
 #
-_assertExitCode() {
+_assertExitCodeHelper() {
+  local usageFunction
   local isExitCode errorsOk
   local expected bin
   local outputFile errorFile
@@ -99,9 +100,12 @@ _assertExitCode() {
   bin=
   failureText="expected"
 
+  usageFunction="$1"
+  shift || :
+
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      __assertExitCode "$errorArgument" "Blank argument" || return $?
+      "$usageFunction" "$errorArgument" "Blank argument" || return $?
     fi
     case "$1" in
       --stderr-ok)
@@ -115,7 +119,7 @@ _assertExitCode() {
         if [ -z "$expected" ]; then
           expected="$1"
           if ! isInteger "$expected"; then
-            __assertExitCode "$errorArgument" "Expected should be an integer" || return $?
+            "$usageFunction" "$errorArgument" "Expected should be an integer" || return $?
           fi
         elif [ -z "$bin" ]; then
           bin="$1"
@@ -127,8 +131,7 @@ _assertExitCode() {
     shift
   done
   if ! outputFile=$(mktemp) || ! errorFile=$(mktemp); then
-    consoleError "${FUNCNAME[0]}: INTERNAL unable to mktemp" 1>&2
-    return "$errorEnvironment"
+    "$usageFunction" $errorEnvironment "INTERNAL unable to mktemp" || return $?
   fi
 
   saved=$(saveErrorExit)
@@ -170,7 +173,10 @@ _assertExitCode() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-  _assertExitCode "$@"
+  _assertExitCodeHelper "_${FUNCNAME[0]}" "$@"
+}
+_assertExitCode() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -179,16 +185,19 @@ assertExitCode() {
 # If this fails it will output an error and exit.
 #
 # Usage: assertNotExitCode expectedExitCode command [ arguments ... ]
-# Argument: - `expectedExitCode` - A numeric exit code not expected from the command
-# Argument: - `command` - The command to run
-# Argument: - `arguments` - Any arguments to pass to the command to run
+# Argument: expectedExitCode - A numeric exit code not expected from the command
+# Argument: command - The command to run
+# Argument: arguments - Any arguments to pass to the command to run
 # Examples: assertNotExitCode 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with a different exit code
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-  _assertExitCode --not "$@"
+  _assertExitCodeHelper "_${FUNCNAME[0]}" --not "$@"
+}
+_assertNotExitCode() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
