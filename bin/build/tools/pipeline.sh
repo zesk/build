@@ -93,6 +93,7 @@ reportTiming() {
     _reportTiming "$errorArgument" "start \"$start\" - Not an integer" || return $?
   fi
   shift || :
+  prefix=
   if [ $# -gt 0 ]; then
     prefix="$(consoleGreen "$@") "
   fi

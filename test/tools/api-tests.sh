@@ -16,7 +16,7 @@ testTools() {
   assertEquals "$(plural 1 singular plural)" "singular" || return $?
   assertEquals "$(plural 2 singular plural)" "plural" || return $?
   assertEquals "$(plural -1 singular plural)" "plural" || return $?
-  assertExitCode 1 plural X singular plural || return $?
+  assertExitCode --stderr-ok 1 plural X singular plural || return $?
 
   assertEquals "$(alignRight 20 012345)" "              012345" || return $?
   assertEquals "$(alignRight 5 012345)" "012345" || return $?
