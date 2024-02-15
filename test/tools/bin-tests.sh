@@ -12,12 +12,12 @@ declare -a tests
 
 tests+=(testVersionLive)
 testVersionLive() {
-  assertExitCode 0 runHook version-live
+  assertExitCode 0 runHook version-live || return $?
 }
 
 tests+=(testNewRelease)
 testNewRelease() {
-  assertExitCode 0 newRelease --non-interactive
+  assertExitCode 0 newRelease --non-interactive || return $?
 }
 
 tests+=(testBuildSetup)
@@ -118,7 +118,7 @@ testMapPortability() {
   cp ./bin/build/map.sh "./random.$$/"
   export DUDE=ax
   export WILD=m
-  assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum"
+  assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
   rm -rf "$tempDir"
 }
 

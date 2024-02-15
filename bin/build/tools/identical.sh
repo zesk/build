@@ -159,7 +159,7 @@ identicalCheck() {
               prefixLines "$(consoleCode)    " <"$compareFile" 1>&2
               consoleReset 1>&2
               break
-            elif ! diff -q "$countFile" "${countFile}.compare" >/dev/null; then
+            elif ! diff -b -q "$countFile" "${countFile}.compare" >/dev/null; then
               badFiles+=("$tokenFileName")
               badFiles+=("$searchFile")
               clearLine 1>&2

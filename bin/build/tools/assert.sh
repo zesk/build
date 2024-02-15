@@ -88,6 +88,7 @@ _assertExitCodeHelper() {
   local expected bin
   local outputFile errorFile
   local saved actual failureText
+  local outputContains outputNotContains stderrContains stderrNotContains
 
   # --not
   isExitCode=1
@@ -103,6 +104,11 @@ _assertExitCodeHelper() {
   usageFunction="$1"
   shift || :
 
+  outputContains=()
+  outputNotContains=()
+  stderrContains=()
+  stderrNotContains=()
+
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
       "$usageFunction" "$errorArgument" "Blank argument" || return $?
@@ -110,6 +116,24 @@ _assertExitCodeHelper() {
     case "$1" in
       --stderr-ok)
         errorsOk=1
+        ;;
+      --stderr-match)
+        shift || :
+        stderrContains+=("$1")
+        errorsOk=1
+        ;;
+      --stderr-no-match)
+        shift || :
+        stderrNotContains+=("$1")
+        errorsOk=1
+        ;;
+      --stdout-match)
+        shift || :
+        stderrContains+=("$1")
+        ;;
+      --stdout-no-match)
+        shift || :
+        outputNotContains+=("$1")
         ;;
       --not)
         isExitCode=
@@ -119,7 +143,7 @@ _assertExitCodeHelper() {
         if [ -z "$expected" ]; then
           expected="$1"
           if ! isInteger "$expected"; then
-            "$usageFunction" "$errorArgument" "Expected should be an integer" || return $?
+            "$usageFunction" "$errorArgument" "Expected \"$(consoleCode "$expected")\" should be an integer" || return $?
           fi
         elif [ -z "$bin" ]; then
           bin="$1"
@@ -141,9 +165,22 @@ _assertExitCodeHelper() {
     printf %d "$?"
   )"
   restoreErrorExit "$saved"
+
   if ! test $errorsOk && [ -s "$errorFile" ]; then
     printf "%s %s -> %s %s\n%s\n" "$(consoleCode "$bin")" "$(consoleInfo "$*")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(prefixLines "$(consoleError ERROR:) $(consoleCode)" <"$errorFile")"
     return $errorEnvironment
+  fi
+  if [ ${#stderrContains[@]} -gt 0 ]; then
+    assertFileContains "$errorFile" "${stderrContains[@]}" || return $?
+  fi
+  if [ ${#stderrNotContains[@]} -gt 0 ]; then
+    assertFileDoesNotContain "$errorFile" "${stderrNotContains[@]}" || return $?
+  fi
+  if [ ${#outputContains[@]} -gt 0 ]; then
+    assertFileContains "$outputFile" "${outputContains[@]}" || return $?
+  fi
+  if [ ${#outputNotContains[@]} -gt 0 ]; then
+    assertFileDoesNotContain "$outputFile" "${outputNotContains[@]}" || return $?
   fi
   if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     # Failure

@@ -149,6 +149,12 @@ deployRemoteFinish() {
   if [ -z "$targetPackage" ] && ! targetPackage="$(deployPackageName "$deployHome")"; then
     return $errorArgument
   fi
+  # Check arguments are non-blank and actually supplied
+  for name in deployHome applicationId applicationPath; do
+    if [ -z "${!name}" ]; then
+      "_${FUNCNAME[0]}" "$errorArgument" "$name is required" || return $?
+    fi
+  done
 
   if test "${BUILD_DEBUG-}"; then
     debuggingFlag=1
