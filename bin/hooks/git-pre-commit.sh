@@ -69,7 +69,8 @@ hookGitPreCommit() {
       _hookGitPreCommitFailed identical-check.sh || return $?
     fi
 
-    if ! findUncaughtAssertions test/tools --list --exec contextOpen; then
+    if ! findUncaughtAssertions test/tools --list; then
+      findUncaughtAssertions test/tools --exec contextOpen &
       _hookGitPreCommitFailed findUncaughtAssertions || return $?
     fi
   fi
