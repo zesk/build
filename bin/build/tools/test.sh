@@ -429,6 +429,7 @@ findUncaughtAssertions() {
   # test/tools/assert-tests.sh:3:# assert-tests.sh
   # test/tools/os-tests.sh:110:_assertBetterType() {
 
+  problemFiles=()
   if ! tempFile=$(mktemp); then
     "_${FUNCNAME[0]}" "$errorEnvironment" "mktemp failed" || return $?
   fi
@@ -436,7 +437,6 @@ findUncaughtAssertions() {
     consoleSuccess "All files AOK."
   else
     if [ -n "$binary" ] || test $listFlag; then
-      problemFiles=()
       problemFile=
       lastProblemFile=
       while IFS='' read -r problemFile; do

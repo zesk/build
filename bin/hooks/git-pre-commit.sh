@@ -72,7 +72,9 @@ hookGitPreCommit() {
     if ! findUncaughtAssertions test/tools --list; then
       findUncaughtAssertions test/tools --exec contextOpen &
       _hookGitPreCommitFailed findUncaughtAssertions || return $?
+      echo HERE
     fi
+    echo AND_HERE
   fi
   # Too slow
   #  if ! ./bin/build-docs.sh; then
