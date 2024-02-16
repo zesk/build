@@ -119,8 +119,8 @@ testLogFileRotate() {
   assertFileExists "$tempDir/test.log.3" || return $?
   assertFileExists "$tempDir/test.log.4" || return $?
   assertFileExists "$tempDir/test.log.5" || return $?
-  assertEquals "$(fileSize "$tempDir/test.log.5")" 1 "log $count was original log after $count rotations"
-  assertEquals "$(fileSize "$tempDir/test.log.1")" 0 "log 1 is zero-sized"
+  assertEquals "$(fileSize "$tempDir/test.log.5")" 1 "log $count was original log after $count rotations" || return $?
+  assertEquals "$(fileSize "$tempDir/test.log.1")" 0 "log 1 is zero-sized" || return $?
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   rm -rf "$tempDir" || return $?

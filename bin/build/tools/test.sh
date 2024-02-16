@@ -465,7 +465,7 @@ findUncaughtAssertions() {
     fi
   fi
   rm "$tempFile" || "_${FUNCNAME[0]}" "$errorEnvironment" "Unable to delete $tempFile" || return $?
-  [ ${#problemFiles[@]} -gt 0 ]
+  [ ${#problemFiles[@]} -eq 0 ]
 }
 _findUncaughtAssertions() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -71,7 +71,7 @@ testDockerEnvFromBash() {
 
   assertExitCode 0 dockerEnvFromBash ./test/example/bash.env >"$out" 2>"$err" || return $?
 
-  assertFileContains "$out" "host=" "application=beanstalk" "uname="
+  assertFileContains "$out" "host=" "application=beanstalk" "uname=" || return $?
   assertEquals 0 "$(fileSize "$err")" || return $?
 
   dockerEnvFromBash ./test/example/docker.env >"$out" 2>"$err" || return 1

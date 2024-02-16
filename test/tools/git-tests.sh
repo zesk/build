@@ -68,6 +68,5 @@ testGitVersionList() {
 
 tests+=(testGitCommit)
 testGitCommit() {
-  assertExitCode --stderr-ok 2 gitCommit
-
+  assertExitCode --stderr-ok 2 gitCommit || return $?
 }
