@@ -73,16 +73,38 @@ _waitForDeath() {
   done
 }
 export PHP_SERVER_PID
-export PHP_REQUEST_INDEX=0
+export PHP_SERVER_ROOT
+PHP_SERVER_PID=
+PHP_SERVER_PORT=6543
+PHP_SERVER_HOST=127.0.0.1
+PHP_SERVER_ROOT=
 
 _simplePHPServer() {
-  if [ "$1" = "--kill" ] && isInteger "$PHP_SERVER_PID"; then
+  local decoration
+  if [ "${1-}" = "--kill" ] && isInteger "$PHP_SERVER_PID"; then
     if kill -TERM "$PHP_SERVER_PID"; then
       _waitForDeath "$PHP_SERVER_PID"
     fi
     shift || :
   fi
-  php -S 127.0.0.1:6543 -t "$1/public/" &
+  if [ -z "${PHP_SERVER_ROOT-}" ]; then
+    consoleError "PHP_SERVER_ROOT is blank" 1>&2
+    return $errorEnvironment
+  fi
+  if [ ! -d "${PHP_SERVER_ROOT-}" ]; then
+    consoleError "PHP_SERVER_ROOT is not a directory" 1>&2
+    return $errorEnvironment
+  fi
+  decoration="$(echoBar ':.')"
+  printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
+    "$(consoleMagenta "$decoration")" "$(consoleBlue "$decoration")" \
+    "$(consoleSuccess "Starting PHP Server")" \
+    "$(consoleCyan "$decoration")" \
+    "$(consoleNameValue 40 "Server Root" "$PHP_SERVER_ROOT")" \
+    "$(consoleNameValue 40 "Server Host" "$PHP_SERVER_HOST:$PHP_SERVER_PORT")" \
+    "$(consoleBlue "$decoration")" "$(consoleMagenta "$decoration")"
+
+  php -S "$PHP_SERVER_HOST:$PHP_SERVER_PORT" -t "$PHP_SERVER_ROOT" &
   export PHP_SERVER_PID
   PHP_SERVER_PID=$!
   consoleInfo "Running PHP server $PHP_SERVER_PID"
@@ -93,9 +115,9 @@ _simplePHPRequest() {
   local indexValue
 
   indexFile="$(buildCacheDirectory PHP_REQUEST_INDEX)"
-  indexValue="$(cat "$indexFile")"
+  indexValue="$([ -f "$indexFile" ] && cat "$indexFile" || printf 0)"
   indexValue=$((indexValue + 1))
-  curl -s "http://127.0.0.1:6543/index.php?request=$indexValue"
+  curl -s "http://$PHP_SERVER_HOST:$PHP_SERVER_PORT/index.php?request=$indexValue"
   printf %d $indexValue >"$indexFile"
 }
 _warmupServer() {
@@ -115,7 +137,10 @@ _warmupServer() {
   clearLine
   printf "%s %s\n" "$(consoleInfo "Server warmed up with value:")" "$(consoleCode "$value")"
 }
-_waitForValue() {
+
+errorTimeout=20
+
+_waitForValueTimeout() {
   local start delta value
 
   start=$(beginTiming)
@@ -131,7 +156,7 @@ _waitForValue() {
       delta=$(($(beginTiming) - start))
       if [ "$delta" -gt 5 ]; then
         printf "%s %s %s %s\n" "$(consoleError "Waiting for")" "$(consoleCode "$1")" "$(consoleError " failed, found: ")" "$(consoleRed "$value")"
-        return "$errorEnvironment"
+        return "$errorTimeout"
       fi
       consoleGreen -n .
     else
@@ -142,8 +167,29 @@ _waitForValue() {
   printf "%s %s\n" "$(consoleInfo "Server found value:")" "$(consoleCode "$value")"
 }
 
+_waitForValue() {
+  local exitCode
+  if _waitForValueTimeout "$@"; then
+    return 0
+  fi
+  exitCode=$?
+  if [ "$exitCode" -eq "$errorTimeout" ]; then
+    consoleWarning "Timed out ... restarting server and trying again"
+    _simplePHPServer --kill
+    if _waitForValueTimeout "$@"; then
+      consoleSuccess "*** Restarting server worked! ***"
+      return 0
+    fi
+    exitCode=$?
+    if [ "$exitCode" -eq "$errorTimeout" ]; then
+      consoleError "Timed out ... FAILED" 1>&2
+    fi
+  fi
+  return $exitCode
+}
+
 testDeployApplication() {
-  local d quietLog migrateVersion
+  local d quietLog migrateVersion startingValue
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
   if ! whichApt curl curl; then
@@ -168,22 +214,28 @@ testDeployApplication() {
   fi
   consoleNameValue 20 "Deploy Root" "$d"
 
-  if ! _simplePHPServer "$d/live-app"; then
+  export PHP_SERVER_ROOT
+  PHP_SERVER_ROOT="$d/live-app/public"
+
+  if ! _simplePHPServer; then
     consoleError _simplePHPServer failed
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
   consoleNameValue 20 "PHP Process" "$PHP_SERVER_PID"
-  if ! _warmupServer; then
-    return $errorEnvironment
-  fi
 
   consoleInfo _simplePHPServer started "$PHP_SERVER_PID"
   # shellcheck disable=SC2064
   trap "kill ${PHP_SERVER_PID-}" INT TERM
+  startingValue=start
+
+  if ! _waitForValueTimeout "$startingValue"; then
+    consoleError "Unable to find starting value $startingValue"
+    return $errorEnvironment
+  fi
 
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
-  assertEquals "start" "$(_simplePHPRequest)" "initial state of PHP server" || return $?
+  assertEquals "$startingValue" "$(_simplePHPRequest)" "initial state of PHP server" || return $?
 
   for t in 1a 2b 3c 4d; do
     consoleInfo deployHasVersion $t test 1
@@ -198,7 +250,7 @@ testDeployApplication() {
   testSection deployApplication fails on top of a directory
   t=1a
   assertNotExitCode --stderr-match "should be a link" 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --home "$d/DEPLOY" --id "$t" || return $?
-  _waitForValue "start" || return $?
+  _waitForValue "$startingValue" || return $?
 
   #
   # deployMigrateDirectoryToLink
@@ -208,7 +260,7 @@ testDeployApplication() {
   testSection deployMigrateDirectoryToLink fails on with no version in the application
 
   assertNotExitCode --stderr-match "deployment version" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
-  _waitForValue "start" || return $?
+  _waitForValue "$startingValue" || return $?
 
   migrateVersion="O66"
   mkdir -p "$d/live-app/.deploy" || return $?
@@ -218,7 +270,7 @@ testDeployApplication() {
   testSection deployMigrateDirectoryToLink fails on with no version in the DEPLOYMENT directory
 
   assertNotExitCode --stderr-match "not found in" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
-  _waitForValue "start" || return $?
+  _waitForValue "$startingValue" || return $?
 
   mkdir -p "$d/DEPLOY/$migrateVersion"
   assertExitCode 0 test -d "$d/DEPLOY/$migrateVersion" || return $?
@@ -231,7 +283,7 @@ testDeployApplication() {
   if ! deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app"; then
     _deployShowFiles "$d" || return $?
   fi
-  _waitForValue "start" || return $?
+  _waitForValue "$startingValue" || return $?
 
   assertExitCode 0 test -d "$d/DEPLOY/O66/app" || return $?
   assertExitCode 0 test -L "$d/live-app" || return $?

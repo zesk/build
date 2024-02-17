@@ -129,7 +129,7 @@ _assertExitCodeHelper() {
         ;;
       --stdout-match)
         shift || :
-        stderrContains+=("$1")
+        outputContains+=("$1")
         ;;
       --stdout-no-match)
         shift || :
