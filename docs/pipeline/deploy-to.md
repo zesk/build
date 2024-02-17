@@ -10,7 +10,7 @@ If this fails it will output the installation log.
 When this tool succeeds the application:
 
 - `--deploy` - has been deployed in the remote systems successfully but temporary files may still exist
-- `--undo` - No changes should have occurred on the remote host (not guaranteed)
+- `--revert` - No changes should have occurred on the remote host (not guaranteed)
 - `--cleanup` - has been installed in the remote systems successfully
 
 Operation:
@@ -19,20 +19,20 @@ Operation:
 
 - On each host, `app.tar.gz` is uploaded to the `remotePath` first
 - On each host, via the shell, change to the `remotePath` directory
-- Decompress the application package, and run the `remote-deploy-finish.sh` script
+- Decompress the application package, and run the `deploy-remote-finish.sh` script
 
 ## Cleanup `--cleanup` Operation
 
 - On each host, via the shell, change to the `remotePath` directory
-- Run the `remote-deploy-finish.sh` script which ...
+- Run the `deploy-remote-finish.sh` script which ...
 - Deletes the application package if it still exists, and runs the `deploy-cleanup` hook
 
-## Undo `--undo` Operation
+## Undo `--revert` Operation
 
 - On each host, via the shell, change to the `remotePath` directory
-- Run the `remote-deploy-finish.sh` script which ...
+- Run the `deploy-remote-finish.sh` script which ...
 - Deploys the prior version in the same manner, and ... <!-- needs expansion TODO -->
-- Runs the `deploy-undo` hook afterwards
+- Runs the `deploy-revert` hook afterwards
 
 The `userAtHost` can be passed as follows:
 
@@ -42,7 +42,7 @@ The `userAtHost` can be passed as follows:
 
 --target target$- `` - Optional. String. Build target file, defaults to `app.tar.gz`
 - `--deploy` - Default. Flag. deploy an application to a remote host
-- `--undo` - Optional. Flag. Reverses a deployment
+- `--revert` - Optional. Flag. Reverses a deployment
 - `--cleanup` - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
 - `--help` - Optional. Flag. Show help
 - `--debug` - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)

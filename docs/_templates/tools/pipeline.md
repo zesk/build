@@ -28,7 +28,7 @@
 ## Deployment tools
 
 {deployApplication}
-{undoDeployApplication}
+{deployRevertApplication}
 {deployNextVersion}
 {deployPreviousVersion}
 {deployHasVersion}

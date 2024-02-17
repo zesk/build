@@ -18,6 +18,7 @@ _testDeployApplicationSetup() {
   fi
 
   cd "$d" || exit
+  # OLD METHOD
   mkdir -p live-app/public || return $?
   echo "start" >live-app/public/index.php
 
@@ -53,7 +54,7 @@ _testAssertDeploymentLinkages() {
   local d="$1"
 
   consoleInfo _testAssertDeploymentLinkages deployPreviousVersion tests
-  assertEquals "" "$(deployPreviousVersion "$d/DEPLOY" "1a")" deployPreviousVersion "$d/DEPLOY" "1a" || return $?
+  assertEquals "O66" "$(deployPreviousVersion "$d/DEPLOY" "1a")" deployPreviousVersion "$d/DEPLOY" "1a" || return $?
   assertEquals "1a" "$(deployPreviousVersion "$d/DEPLOY" "2b")" deployPreviousVersion "$d/DEPLOY" "2b" || return $?
   assertEquals "2b" "$(deployPreviousVersion "$d/DEPLOY" "3c")" deployPreviousVersion "$d/DEPLOY" "3c" || return $?
   assertEquals "3c" "$(deployPreviousVersion "$d/DEPLOY" "4d")" deployPreviousVersion "$d/DEPLOY" "4d" || return $?
@@ -65,15 +66,59 @@ _testAssertDeploymentLinkages() {
   assertEquals "" "$(deployNextVersion "$d/DEPLOY" "4d")" deployNextVersion "$d/DEPLOY" "4d" || return $?
 }
 
+_waitForDeath() {
+  while kill -0 "$1" 2>/dev/null; do
+    sleep 1
+    consoleInfo "Waiting for death of $1"
+  done
+}
+export PHP_SERVER_PID
+export PHP_SERVER_ROOT
+PHP_SERVER_PID=
+PHP_SERVER_PORT=6543
+PHP_SERVER_HOST=127.0.0.1
+PHP_SERVER_ROOT=
+
 _simplePHPServer() {
-  local quietLog
-  quietLog="$(buildQuietLog php-server)"
-  php -S 127.0.0.1:6543 -t "$1/public/" >>"$quietLog" 2>&1 &
-  printf %d $!
+  local decoration
+  if [ "${1-}" = "--kill" ] && isInteger "$PHP_SERVER_PID"; then
+    if kill -TERM "$PHP_SERVER_PID"; then
+      _waitForDeath "$PHP_SERVER_PID"
+    fi
+    shift || :
+  fi
+  if [ -z "${PHP_SERVER_ROOT-}" ]; then
+    consoleError "PHP_SERVER_ROOT is blank" 1>&2
+    return $errorEnvironment
+  fi
+  if [ ! -d "${PHP_SERVER_ROOT-}" ]; then
+    consoleError "PHP_SERVER_ROOT is not a directory" 1>&2
+    return $errorEnvironment
+  fi
+  decoration="$(echoBar ':.')"
+  printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
+    "$(consoleMagenta "$decoration")" "$(consoleBlue "$decoration")" \
+    "$(consoleSuccess "Starting PHP Server")" \
+    "$(consoleCyan "$decoration")" \
+    "$(consoleNameValue 40 "Server Root" "$PHP_SERVER_ROOT")" \
+    "$(consoleNameValue 40 "Server Host" "$PHP_SERVER_HOST:$PHP_SERVER_PORT")" \
+    "$(consoleBlue "$decoration")" "$(consoleMagenta "$decoration")"
+
+  php -S "$PHP_SERVER_HOST:$PHP_SERVER_PORT" -t "$PHP_SERVER_ROOT" &
+  export PHP_SERVER_PID
+  PHP_SERVER_PID=$!
+  consoleInfo "Running PHP server $PHP_SERVER_PID"
 }
 
 _simplePHPRequest() {
-  curl -s "http://127.0.0.1:6543/index.php"
+  local indexFile
+  local indexValue
+
+  indexFile="$(buildCacheDirectory PHP_REQUEST_INDEX)"
+  indexValue="$([ -f "$indexFile" ] && cat "$indexFile" || printf 0)"
+  indexValue=$((indexValue + 1))
+  curl -s "http://$PHP_SERVER_HOST:$PHP_SERVER_PORT/index.php?request=$indexValue"
+  printf %d $indexValue >"$indexFile"
 }
 _warmupServer() {
   local start delta value
@@ -92,26 +137,59 @@ _warmupServer() {
   clearLine
   printf "%s %s\n" "$(consoleInfo "Server warmed up with value:")" "$(consoleCode "$value")"
 }
-_waitForValue() {
+
+errorTimeout=20
+
+_waitForValueTimeout() {
   local start delta value
 
   start=$(beginTiming)
   consoleInfo -n "Waiting for value $1"
-  while ! value="$(_simplePHPRequest)" || [ -z "$value" ] || [ "$value" != "$1" ]; do
-    sleep 1
-    delta=$(($(beginTiming) - start))
-    if [ "$delta" -gt 5 ]; then
-      consoleError "_waitForValue failed"
-      return "$errorEnvironment"
+  while true; do
+    if ! value="$(_simplePHPRequest)"; then
+      consoleError "Request failed"
+      return $errorEnvironment
     fi
-    consoleGreen -n .
+    if [ -z "$value" ] || [ "$value" != "$1" ]; then
+      printf "%s %s %s %s\n" "$(consoleCode "Waiting for")" "$(consoleCode "$1")" "$(consoleInfo ", received")" "$(consoleRed "$value")"
+      sleep 1
+      delta=$(($(beginTiming) - start))
+      if [ "$delta" -gt 5 ]; then
+        printf "%s %s %s %s\n" "$(consoleError "Waiting for")" "$(consoleCode "$1")" "$(consoleError " failed, found: ")" "$(consoleRed "$value")"
+        return "$errorTimeout"
+      fi
+      consoleGreen -n .
+    else
+      break
+    fi
   done
   clearLine
   printf "%s %s\n" "$(consoleInfo "Server found value:")" "$(consoleCode "$value")"
 }
 
+_waitForValue() {
+  local exitCode
+  if _waitForValueTimeout "$@"; then
+    return 0
+  fi
+  exitCode=$?
+  if [ "$exitCode" -eq "$errorTimeout" ]; then
+    consoleWarning "Timed out ... restarting server and trying again"
+    _simplePHPServer --kill
+    if _waitForValueTimeout "$@"; then
+      consoleSuccess "*** Restarting server worked! ***"
+      return 0
+    fi
+    exitCode=$?
+    if [ "$exitCode" -eq "$errorTimeout" ]; then
+      consoleError "Timed out ... FAILED" 1>&2
+    fi
+  fi
+  return $exitCode
+}
+
 testDeployApplication() {
-  local d phpPid quietLog
+  local d quietLog migrateVersion startingValue
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
   if ! whichApt curl curl; then
@@ -125,7 +203,10 @@ testDeployApplication() {
 
   set -eou pipefail
 
-  home=$(pwd)
+  if ! home=$(pwd -P 2>/dev/null); then
+    consoleError "Unable to pwd" 1>&2
+    return $errorEnvironment
+  fi
 
   if ! d="$(_testDeployApplicationSetup "$home")"; then
     consoleError _testDeployApplicationSetup failed
@@ -133,21 +214,28 @@ testDeployApplication() {
   fi
   consoleNameValue 20 "Deploy Root" "$d"
 
-  if ! phpPid=$(_simplePHPServer "$d/live-app"); then
+  export PHP_SERVER_ROOT
+  PHP_SERVER_ROOT="$d/live-app/public"
+
+  if ! _simplePHPServer; then
     consoleError _simplePHPServer failed
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
-  if ! _warmupServer; then
+  consoleNameValue 20 "PHP Process" "$PHP_SERVER_PID"
+
+  consoleInfo _simplePHPServer started "$PHP_SERVER_PID"
+  # shellcheck disable=SC2064
+  trap "kill ${PHP_SERVER_PID-}" INT TERM
+  startingValue=start
+
+  if ! _waitForValueTimeout "$startingValue"; then
+    consoleError "Unable to find starting value $startingValue"
     return $errorEnvironment
   fi
 
-  consoleInfo _simplePHPServer started "$phpPid"
-  # shellcheck disable=SC2064
-  trap "kill $phpPid" INT TERM
-
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
-  assertEquals "start" "$(_simplePHPRequest)" "initial state of PHP server" || return $?
+  assertEquals "$startingValue" "$(_simplePHPRequest)" "initial state of PHP server" || return $?
 
   for t in 1a 2b 3c 4d; do
     consoleInfo deployHasVersion $t test 1
@@ -157,13 +245,68 @@ testDeployApplication() {
   _deployShowFiles "$d" || :
   lastOne=
   firstArgs=(--first)
+
+  # ________________________________________________________________________________________________________________________________
+  testSection deployApplication fails on top of a directory
+  t=1a
+  assertNotExitCode --stderr-match "should be a link" 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --home "$d/DEPLOY" --id "$t" || return $?
+  _waitForValue "$startingValue" || return $?
+
+  #
+  # deployMigrateDirectoryToLink
+  #
+
+  # ________________________________________________________________________________________________________________________________
+  testSection deployMigrateDirectoryToLink fails on with no version in the application
+
+  assertNotExitCode --stderr-match "deployment version" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
+  _waitForValue "$startingValue" || return $?
+
+  migrateVersion="O66"
+  mkdir -p "$d/live-app/.deploy" || return $?
+  printf "%s" "$migrateVersion" >"$d/live-app/.deploy/APPLICATION_ID" || return $?
+
+  # ________________________________________________________________________________________________________________________________
+  testSection deployMigrateDirectoryToLink fails on with no version in the DEPLOYMENT directory
+
+  assertNotExitCode --stderr-match "not found in" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
+  _waitForValue "$startingValue" || return $?
+
+  mkdir -p "$d/DEPLOY/$migrateVersion"
+  assertExitCode 0 test -d "$d/DEPLOY/$migrateVersion" || return $?
+  # Create tar file BUT it's corrupt!
+  touch "$d/DEPLOY/$migrateVersion/$(deployPackageName "$d/DEPLOY")"
+
+  # ________________________________________________________________________________________________________________________________
+  testSection deployMigrateDirectoryToLink succeeds - now deployApplication should work - does not check old TAR
+
+  if ! deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app"; then
+    _deployShowFiles "$d" || return $?
+  fi
+  _waitForValue "$startingValue" || return $?
+
+  assertExitCode 0 test -d "$d/DEPLOY/O66/app" || return $?
+  assertExitCode 0 test -L "$d/live-app" || return $?
+
+  #
+  # Now that it's a link we have to restart our server
+  #
   for t in 1a 2b 3c 4d; do
     assertExitCode 0 deployHasVersion "$d/DEPLOY" $t || return $?
-    if ! deployApplication "${firstArgs[@]+${firstArgs[@]}}" "$d/DEPLOY" "$t" "$d/live-app"; then
+
+    # ________________________________________________________________________________________________________________________________
+    testSection deployApplication "$t"
+    if ! deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --id "$t" --home "$d/DEPLOY"; then
       consoleError "Deployment of $t failed"
       _deployShowFiles "$d" || return $?
     fi
 
+    #    if ! _simplePHPServer --kill "$d/live-app"; then
+    #      consoleError _simplePHPServer restart failed
+    #      buildFailed "$quietLog"
+    #      return "$errorEnvironment"
+    #    fi
+    #
     consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
     _waitForValue "$t" || return $?
 
@@ -175,7 +318,12 @@ testDeployApplication() {
       assertFileExists "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
       assertFileExists "$d/DEPLOY/$lastOne.next" || _deployShowFiles "$d" || return $?
     else
-      assertFileDoesNotExist "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+      # First one links back to bad version
+      if [ "$t" = "1a" ]; then
+        assertFileExists "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+      else
+        assertFileDoesNotExist "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+      fi
       assertFileDoesNotExist "$d/DEPLOY/$t.next" || _deployShowFiles "$d" || return $?
     fi
     lastOne="$t"
@@ -188,26 +336,24 @@ testDeployApplication() {
   done
   for t in null "" 3g 999999 $'\n'; do
     consoleInfo deployHasVersion "$t" BAD test
-    assertNotExitCode 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
+    assertNotExitCode --stderr-ok 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
 
   _testAssertDeploymentLinkages "$d" || return $?
 
-  consoleInfo undoDeployApplication tests
+  consoleInfo deployRevertApplication tests
 
   t=4d
   for t in 4d 3c 2b; do
     consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
     _waitForValue "$t" || return $?
 
-    assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
-
-    consoleRed "undoDeployApplication $t"
+    assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
+    # ________________________________________________________________________________________________________________________________
+    testSection "deployApplication --revert $t"
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
-    undoDeployApplication "$d/DEPLOY" "$t" "$d/live-app" || return $?
+    deployApplication --revert --home "$d/DEPLOY" --id "$t" --application "$d/live-app" || return $?
     _testAssertDeploymentLinkages "$d" || return $?
-
-    sleep 1
   done
 
   t=1a
@@ -216,27 +362,72 @@ testDeployApplication() {
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
   _waitForValue "$t" || return $?
 
-  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
+  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
 
-  consoleInfo No previous version
-  assertNotExitCode 0 undoDeployApplication "$d/DEPLOY" "1a" "$d/live-app"
+  # ________________________________________________________________________________________________________________________________
+  testSection No previous version
+  assertNotExitCode --stderr-ok 0 deployApplication --revert --home "$d/DEPLOY" --id "1a" --application "$d/live-app" || return $?
 
-  t=4d
-  consoleInfo Jump versions to end $t
-  deployApplication "$d/DEPLOY" "$t" "$d/live-app" || return $?
+  # ________________________________________________________________________________________________________________________________
+  t=4dshellcheck bin/build/hooks/maintenance.sh
+  testSection Jump versions to end $t
+  deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" || return $?
 
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
   _waitForValue "$t" || return $?
 
-  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed"
+  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
-  consoleInfo deployApplication fail tests
-  assertNotExitCode 0 deployApplication "$d/DEPLOY" "3g" "$d/live-app" || return $?
+  # ________________________________________________________________________________________________________________________________
+  testSection deployApplication fail bad version
+  assertNotExitCode 0 --stderr-ok deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
-  echo "GOING TO: kill ::::$phpPid:::: My PID is $$"
-  kill -TERM "$phpPid" || :
+  # ________________________________________________________________________________________________________________________________
+  t=1a
+  testSection deployApplication fail incorrect target $t
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" --target ap.tar.gz || return $?
+
+  testSection deployApplication fail missing or blank arguments $t
+  assertNotExitCode --stderr-ok 0 deployApplication --home "" --id "$t" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --id "$t" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" || return $?
+
+  _testAssertDeploymentLinkages "$d" || return $?
+
+  # ________________________________________________________________________________________________________________________________
+  echo "GOING TO: kill ::::$PHP_SERVER_PID:::: My PID is $$"
+  kill -TERM "$PHP_SERVER_PID" || :
+  PHP_SERVER_PID=
+  _waitForDeath "$PHP_SERVER_PID"
+}
+
+tests=(testDeployPackageName "${tests[@]}")
+testDeployPackageName() {
+  assertExitCode --stderr-ok 2 deployPackageName "$(pwd)/notThere" || return $?
+  assertExitCode --stderr-match 'deployHome required' 2 deployPackageName || return $?
+  assertExitCode 0 deployPackageName "$(pwd)" || return $?
+  assertEquals "app.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
+
+  # shellcheck source=/dev/null
+  source bin/build/env/BUILD_TARGET.sh || return $?
+
+  export BUILD_TARGET
+
+  BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz"
+
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
+
+  unset BUILD_TARGET
+
+  # shellcheck source=/dev/null
+  source bin/build/env/BUILD_TARGET.sh || return $?
+
+  assertEquals "app.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
 }

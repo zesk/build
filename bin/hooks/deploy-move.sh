@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Run during bin/build/pipeline/report-deploy-finish.sh
+# Run during bin/build/pipeline/deploy-remote-finish.sh
 #
 # Run ON THE REMOTE SYSTEM, not in the pipeline so assume little.
 #
@@ -23,7 +23,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # in order to activate it.
 #
 # Summary: Deployment move script
-# Usage: runHook deploy-move applicationPath
+# Usage: runHook deploy-activate applicationPath
 # Argument: applicationPath - This is the target for the current application
 # Exit code: 0 - This is called to replace the running application in-place
 #

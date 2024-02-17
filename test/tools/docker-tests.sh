@@ -15,7 +15,7 @@ tests+=(testCheckDockerEnvFile)
 
 testCheckDockerEnvFile() {
   local testFile=./test/example/bad.env || return $?
-  assertExitCode 1 checkDockerEnvFile $testFile || return $?
+  assertExitCode --stderr-ok 1 checkDockerEnvFile $testFile || return $?
   assertOutputContains --stderr --exit 1 TEST_AWS_SECURITY_GROUP checkDockerEnvFile $testFile || return $?
   assertOutputContains --stderr --exit 1 DOLLAR checkDockerEnvFile $testFile || return $?
   assertOutputDoesNotContain --stderr --exit 1 GOOD checkDockerEnvFile $testFile || return $?
@@ -42,7 +42,8 @@ testDockerEnvToBash() {
   if ! err=$(mktemp); then
     return "$errorEnvironment"
   fi
-  dockerEnvToBash ./test/example/test.env >"$out" 2>"$err" && return 1
+  consoleInfo "PWD is $(pwd)"
+  dockerEnvToBash ./test/example/test.env >"$out" 2>"$err" && return $?
 
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
   assertFileContains "$err" "01234" "+A" "*A" "+a" "*a" "?a" "test.env" "Invalid name" || return $?
@@ -59,7 +60,9 @@ tests+=(testDockerEnvFromBash)
 testDockerEnvFromBash() {
   local out err
 
-  assertExitCode 2 dockerEnvFromBash ./test/example/bad.env || return $?
+  assertExitCode --stderr-ok 2 dockerEnvFromBash ./test/example/bad.env || return $?
+
+  assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBash ./test/example/bash.env || return $?
 
   if ! out=$(mktemp); then
     return "$errorEnvironment"
@@ -67,12 +70,6 @@ testDockerEnvFromBash() {
   if ! err=$(mktemp); then
     return "$errorEnvironment"
   fi
-
-  assertExitCode 0 dockerEnvFromBash ./test/example/bash.env >"$out" 2>"$err" || return $?
-
-  assertFileContains "$out" "host=" "application=beanstalk" "uname="
-  assertEquals 0 "$(fileSize "$err")" || return $?
-
   dockerEnvFromBash ./test/example/docker.env >"$out" 2>"$err" || return 1
 
   assertEquals 0 "$(fileSize "$err")" || return $?

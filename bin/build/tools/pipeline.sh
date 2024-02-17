@@ -53,139 +53,12 @@ dotEnvConfigure() {
   set +a
 }
 
+# Deprecated:
+# See: dotEnvConfigure
 dotEnvConfig() {
   consoleWarning "dotEnvConfig is DEPRECATED - use dotEnvConfigure instead" 1>&2
   dotEnvConfigure "$@"
 }
-
-# Run a hook in the project located at `./bin/hooks/`
-#
-# See (Hooks documentation)[../hooks/index.md] for available hooks.
-#
-# Summary: Run a project hook
-# Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
-# So the hook for `version-current` would be a file at:
-#
-#     bin/hooks/version-current.sh
-#
-# Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
-#
-# Default hooks (scripts) can be found in `bin/build/hooks/`
-#
-# Usage: runHook hookName [ arguments ... ]
-# Exit code: Any - The hook exit code is returned if it is run
-# Exit code: 1 - is returned if the hook is not found
-# Example:     version="$(runHook version-current)"
-# Test: testHookSystem
-runHook() {
-  local binary=$1 hook
-
-  shift
-  hook=$(whichHook "$binary")
-  if [ -z "$hook" ]; then
-    consoleWarning "No hook for $binary with arguments: $*"
-    return "$errorEnvironment"
-  fi
-  "$hook" "$@"
-}
-
-#
-# See `runHook`, the behavior is identical except exit code zero is returned if the hook is not found..
-#
-# See (Hooks documentation)[../hooks/index.md] for available hooks.
-#
-# Summary: Run a hook if it exists otherwise succeed
-# Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
-# So the hook for `version-current` would be a file at:
-#
-#     bin/hooks/version-current.sh
-#
-# Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
-#
-# Default hooks (scripts) can be found in `bin/build/hooks/`
-#
-# Usage: runOptionalHook hookName [ arguments ... ]
-# Exit code: Any - The hook exit code is returned if it is run
-# Exit code: 0 - is returned if the hook is not found
-# Example:     if ! runOptionalHook test-cleanup >>"$quietLog"; then
-# Example:         buildFailed "$quietLog"
-# Example:     fi
-# Test: testHookSystem
-runOptionalHook() {
-  local binary=$1 hook
-
-  shift
-  if ! hasHook "$binary"; then
-    if buildDebugEnabled; then
-      consoleWarning "No hook $binary in this project"
-    fi
-    return 0
-  fi
-  if buildDebugEnabled; then
-    consoleSuccess "Running hook $binary $*"
-  fi
-  "$(whichHook "$binary")" "$@"
-}
-
-#
-# Does a hook exist in the local project?
-#
-# Check if one or more hook exists. All hooks must exist to succeed.
-# Summary: Determine if a hook exists
-# Usage: hasHook [ hookName ... ]
-# Argument: hookName - one or more hook names which must exist
-# Exit Code: 0 - If all hooks exist
-# Test: testHookSystem
-hasHook() {
-  local binary
-  while [ $# -gt 0 ]; do
-    if ! binary=$(whichHook "$1") || [ ! -x "$binary" ]; then
-      return 1
-    fi
-    shift
-  done
-  return 0
-}
-
-#
-# Summary: Find the path to a hook binary file
-#
-# Does a hook exist in the local project?
-#
-# Find the path to a hook. The search path is:
-#
-# - `./bin/hooks/`
-# - `./bin/build/hooks/`
-#
-# If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
-# Usage: whichHook hookName
-# Arguments: hookName - Hook to locate
-#
-# Test: testHookSystem
-whichHook() {
-  local binary=$1 paths=("./bin/hooks" "./bin/build/hooks") extensions=("" ".sh")
-  local p e
-  for p in "${paths[@]}"; do
-    for e in "${extensions[@]}"; do
-      if [ -x "${p%%/}/$binary$e" ]; then
-        printf %s "${p%%/}/$binary$e"
-        return 0
-      fi
-      if [ -f "$p/$binary$e" ]; then
-        consoleWarning "$p/$binary$e exists but is not executable and will be ignored" 1>&2
-      fi
-    done
-  done
-  return 1
-}
-
-#
-# start=$(beginTiming)
-# consoleInfo -n "Doing something really long ..."
-# # that thing
-# reportTiming "$start" Done
-# non-`tools.sh`` replacement:
-#
 
 #
 # Summary: Start a timer for a section of the build
@@ -198,30 +71,37 @@ whichHook() {
 # Example:     reportTiming "$init" "Completed in"
 #
 beginTiming() {
-  echo "$(($(date +%s) + 0))"
+  printf %d "$(($(date +%s) + 0))"
 }
 
-# Outputs the timing in Magenta optionally prefixed by a message in green
+# Outputs the timing in magenta optionally prefixed by a message in green
 #
 # Usage: reportTiming "$startTime" outputText...
 # Summary: Output the time elapsed
 # Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
-# Usage: reportTiming startOffset [ message ... ]
-# Argument: startOffset - Unix timestamp seconds of start timestamp
+# Usage: reportTiming start [ message ... ]
+# Argument: start - Unix timestamp seconds of start timestamp
 # Argument: message - Any additional arguments are output before the elapsed value computed
 # Exit code: 0 - Exits with exit code zero
 # Example:    init=$(beginTiming)
 # Example:    ...
 # Example:    reportTiming "$init" "Deploy completed in"
 reportTiming() {
-  local start delta
-  start=$1
-  shift
-  if [ -n "$*" ]; then
-    consoleGreen -n "$* "
+  local start prefix delta
+  start=${1-}
+  if ! isInteger "$start"; then
+    _reportTiming "$errorArgument" "start \"$start\" - Not an integer" || return $?
+  fi
+  shift || :
+  prefix=
+  if [ $# -gt 0 ]; then
+    prefix="$(consoleGreen "$@") "
   fi
   delta=$(($(date +%s) - start))
-  consoleBoldMagenta "$delta $(plural $delta second seconds)"
+  printf "%s%s\n" "$prefix" "$(consoleBoldMagenta "$delta $(plural $delta second seconds)")"
+}
+_reportTiming() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -253,17 +133,15 @@ ___dumpLines() {
 # Example:     fi
 # Exit Code: 1 - Always fails
 buildFailed() {
-  local quietLog=$1 bigLines=50 recentLines=3
-  shift
-  printf "\n"
-  ___dumpLines $bigLines "$quietLog"
-  echo
-  consoleMagenta "BUILD FAILED"
-  consoleMagenta "$(echoBar)"
-  echo
-  bigText Failed | prefixLines "$(consoleError)"
-  echo
-  ___dumpLines $recentLines "$quietLog"
+  local quietLog=$1 bigLines=50 recentLines=3 failBar
+  shift || :
+
+  clearLine || :
+  failBar="$(consoleReset)$(consoleMagenta "$(repeat 80 "❌")")"
+  printf "\n%s\n""%s\n\n""%s\n%s\n%s\n" \
+    "$(___dumpLines $bigLines "$quietLog")" \
+    "$failBar" \
+    "$(labeledBigText --top "$(consoleInfo "Hey! ") " --tween "$(consoleError)" Build Failed)" "$failBar" "$(___dumpLines $recentLines "$quietLog")" || :
   return "$errorEnvironment"
 }
 

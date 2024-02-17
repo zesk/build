@@ -12,7 +12,7 @@ declare -a tests
 tests+=(testMarkdownFormatList)
 
 assertMarkdownFormatList() {
-  assertEquals "$1" "$(printf %s "$2" | markdown_FormatList)" "markdown_FormatList \"$2\" !== \"$1\""
+  assertEquals "$1" "$(printf %s "$2" | markdown_FormatList)" "markdown_FormatList \"$2\" !== \"$1\"" || return $?
 }
 testMarkdownFormatList() {
   # shellcheck disable=SC2016

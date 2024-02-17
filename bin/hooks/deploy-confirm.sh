@@ -20,7 +20,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Summary: Deployment confirmation script
 #
 # Exit code: 0 - Continue with deployment
-# Exit code: Non-zero - Any non-zero exit code will run `deploy-undo` hook on all systems and cancel deployment
+# Exit code: Non-zero - Any non-zero exit code will run `deploy-revert` hook on all systems and cancel deployment
 # should do wahtever is required to ensure that.
 #
 # Example: - Enable a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)

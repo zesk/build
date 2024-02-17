@@ -68,6 +68,11 @@ hookGitPreCommit() {
     if ! identicalCheck --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
       _hookGitPreCommitFailed identical-check.sh || return $?
     fi
+
+    if ! findUncaughtAssertions test/tools --list; then
+      findUncaughtAssertions test/tools --exec contextOpen &
+      _hookGitPreCommitFailed findUncaughtAssertions || return $?
+    fi
   fi
   # Too slow
   #  if ! ./bin/build-docs.sh; then

@@ -16,7 +16,7 @@ testTools() {
   assertEquals "$(plural 1 singular plural)" "singular" || return $?
   assertEquals "$(plural 2 singular plural)" "plural" || return $?
   assertEquals "$(plural -1 singular plural)" "plural" || return $?
-  assertExitCode 1 plural X singular plural || return $?
+  assertExitCode --stderr-ok 1 plural X singular plural || return $?
 
   assertEquals "$(alignRight 20 012345)" "              012345" || return $?
   assertEquals "$(alignRight 5 012345)" "012345" || return $?
@@ -75,20 +75,20 @@ testDates() {
 
 tests+=(testMapPrefixSuffix)
 testMapPrefixSuffix() {
-  local assertItem=1
-  assertEquals "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world bin/build/map.sh --prefix '[' --suffix ']')" "#$assertItem failed" || return $?
-  assertItem=$((assertItem + 1))
-  assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh)" "#$assertItem failed" || return $?
-  assertItem=$((assertItem + 1))
-  assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAME PLACE)" "#$assertItem failed" || return $?
-  assertItem=$((assertItem + 1))
-  assertEquals "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAME)" "#$assertItem failed" || return $?
-  assertItem=$((assertItem + 1))
-  assertEquals "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh PLACE)" "#$assertItem failed" || return $?
-  assertItem=$((assertItem + 1))
-  assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAM PLAC)" "#$assertItem failed" || return $?
-  assertItem=$((assertItem + 1))
-  assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh AME LACE)" "#$assertItem failed" || return $?
-  assertItem=$((assertItem + 1))
+  local itemIndex=1
+  assertEquals "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world bin/build/map.sh --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?
+  itemIndex=$((itemIndex + 1))
+  assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh)" "#$itemIndex failed" || return $?
+  itemIndex=$((itemIndex + 1))
+  assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAME PLACE)" "#$itemIndex failed" || return $?
+  itemIndex=$((itemIndex + 1))
+  assertEquals "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAME)" "#$itemIndex failed" || return $?
+  itemIndex=$((itemIndex + 1))
+  assertEquals "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh PLACE)" "#$itemIndex failed" || return $?
+  itemIndex=$((itemIndex + 1))
+  assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh NAM PLAC)" "#$itemIndex failed" || return $?
+  itemIndex=$((itemIndex + 1))
+  assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh AME LACE)" "#$itemIndex failed" || return $?
+  itemIndex=$((itemIndex + 1))
   consoleSuccess testMapPrefixSuffix OK
 }
