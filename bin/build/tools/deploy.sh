@@ -533,7 +533,7 @@ deployLink() {
     fi
   fi
   newApplicationLinkPath="$applicationLinkPath.READY.$$"
-  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! mv -fT "$newApplicationLinkPath" "$applicationLinkPath"; then
+  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! renameLink "$newApplicationLinkPath" "$applicationLinkPath"; then
     rm -rf "$newApplicationLinkPath" 2>/dev/null
     _deployLink $errorEnvironment "Unable to link and rename" || return $?
   fi
@@ -595,13 +595,14 @@ deployMigrateDirectoryToLink() {
     return $errorEnvironment
   fi
   # Now move our folder and the link to where the folder was in one fell swoop
-  if ! mv -Tf "$applicationPath" "$deployHome/$appVersion/app"; then
+  # or mv -hf
+  if ! mv -f "$applicationPath" "$deployHome/$appVersion/app"; then
     _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
   fi
 
   if ! mv -f "$tempAppLink" "$applicationPath"; then
     # Like really? Like really? Something is likely F U B A R
-    if ! mv -Tf "$deployHome/$appVersion/app" "$applicationPath"; then
+    if ! mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
       consoleError "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
     else
       consoleSuccess "Successfully recovered application to $applicationPath - stable"

@@ -744,3 +744,16 @@ betterType() {
     shift || :
   done
 }
+
+#
+# Usage: {fn} {from} {to}
+#
+# Uses mv and clobbers always
+#
+renameLink() {
+  if ! mv --version 2>/dev/null; then
+    mv -fhv "$@"
+  else
+    mv -fTv "$@"
+  fi
+}
