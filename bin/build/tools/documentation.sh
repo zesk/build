@@ -472,7 +472,7 @@ __dumpNameValuePrefix() {
   shift
   shift
   while [ $# -gt 0 ]; do
-    printf "%s%s\n" "$prefix" "$(escapeSingleQuotes "$1")"
+    printf "%s%s\n" "$prefix" "$1"
     shift
   done
   printf "%s\n" "EOF"
