@@ -151,7 +151,7 @@ usageGenerator() {
     if test $lastLine; then
       break
     fi
-  done
+  done | simpleMarkdownToConsole
 
 }
 

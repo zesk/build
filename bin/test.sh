@@ -73,8 +73,13 @@ buildTestSuite() {
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
+  export BUILD_COLORS_MODE
   export cleanExit=
   export testTracing
+
+  BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+
+  printf "%s %s\n" "$(consoleInfo "Color mode is")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
   trap messyTestCleanup EXIT QUIT TERM

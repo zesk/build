@@ -58,32 +58,32 @@ identicalCheck() {
       _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
     fi
     case "$1" in
-      --cd)
-        shift || :
-        rootDir=$1
-        if [ ! -d "$rootDir" ]; then
-          _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
-          return $?
-        fi
-        ;;
-      --extension)
-        shift || :
-        findArgs+=("-name" "*.$1")
-        ;;
-      --exec)
-        shift || :
-        if [ -z "$1" ]; then
-          _identicalCheck "$errorArgument" "--exec \"$1\" can not be blank"
-        fi
-        if ! isCallable "$1"; then
-          _identicalCheck "$errorArgument" "--exec \"$1\" is not callable"
-        fi
-        binary="$1"
-        ;;
-      --prefix)
-        shift || :
-        prefixes+=("$1")
-        ;;
+    --cd)
+      shift || :
+      rootDir=$1
+      if [ ! -d "$rootDir" ]; then
+        _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
+        return $?
+      fi
+      ;;
+    --extension)
+      shift || :
+      findArgs+=("-name" "*.$1")
+      ;;
+    --exec)
+      shift || :
+      if [ -z "$1" ]; then
+        _identicalCheck "$errorArgument" "--exec \"$1\" can not be blank"
+      fi
+      if ! isCallable "$1"; then
+        _identicalCheck "$errorArgument" "--exec \"$1\" is not callable"
+      fi
+      binary="$1"
+      ;;
+    --prefix)
+      shift || :
+      prefixes+=("$1")
+      ;;
     esac
     shift
   done
@@ -164,8 +164,7 @@ identicalCheck() {
               badFiles+=("$searchFile")
               clearLine 1>&2
               printf "%s: %s\n< %s\n> %s%s\n" "$(consoleInfo "$token")" "$(consoleError -n "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
-              diff "$countFile" "${countFile}.compare" | prefixLines "$(consoleCode)    " 1>&2
-              consoleReset 1>&2
+              diff "$countFile" "${countFile}.compare" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" 1>&2
               break
             else
               statusMessage consoleSuccess "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))"

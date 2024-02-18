@@ -31,6 +31,8 @@ Color commands intended to convey status of messages. Try `colorTest` to see all
 
 Colors vary depending on the console and the terminal. Try `colorTest` to see all colors.
 
+### Standard ANSI Colors
+
 - `consoleRed`
 - `consoleGreen`
 - `consoleCyan`
@@ -39,10 +41,24 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 - `consoleMagenta`
 - `consoleBlack`
 - `consoleWhite`
-- `consoleBoldMagenta`
+
+### Text decoration
+
 - `consoleUnderline`
 - `consoleBold`
+
+### Bold Colors
+
 - `consoleBoldRed`
+- `consoleBoldGreen`
+- `consoleBoldCyan`
+- `consoleBoldBlue`
+- `consoleBoldOrange`
+- `consoleBoldMagenta`
+- `consoleBoldBlack`
+- `consoleBoldWhite`
+
+## Additional commands
 
 {clearLine}
 {statusMessage}
