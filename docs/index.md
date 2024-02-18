@@ -43,6 +43,7 @@ Handy tools
 
 ## Zesk Build Guides
 
+- [Coding Practices](./coding.md)
 - [Usage formatting](./guide/usage.md)
 - [Documentation](./guide/documentation.md)
 - [Functions to be documented](./tools/todo.md)

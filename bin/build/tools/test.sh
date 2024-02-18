@@ -190,7 +190,7 @@ validateFileContents() {
   local fileArgs f total
 
   local textMatches t binary
-  local failedReasons failedFile
+  local failedReasons failedFiles
 
   fileArgs=()
   while [ $# -gt 0 ]; do
@@ -246,7 +246,7 @@ validateFileContents() {
   fi
 
   failedReasons=()
-  failedFile=()
+  failedFiles=()
   total=0
   total="${#fileArgs[@]}"
   # shellcheck disable=SC2059
@@ -259,7 +259,7 @@ validateFileContents() {
       if ! grep -q "$t" "$f"; then
         failedReasons+=("$f missing \"$t\"")
         statusMessage consoleError "Searching $f ... NOT FOUND"
-        failedFile+=("$f")
+        failedFiles+=("$f")
       else
         statusMessage consoleSuccess "Searching $f ... found"
       fi
@@ -377,4 +377,96 @@ validateFileExtensionContents() {
   else
     statusMessage consoleSuccess "All scripts passed"
   fi
+}
+
+#
+# Usage: {fn} [ --exec binary ] [ directory ]
+#
+findUncaughtAssertions() {
+  local listFlag binary directory problemFiles lastProblemFile problemLine problemLines
+
+  # --list
+  listFlag=
+
+  # --exec
+  binary=
+  # Argument
+  directory=
+  while [ $# -gt 0 ]; do
+    if [ -z "$1" ]; then
+      "_${FUNCNAME[0]}" "$errorArgument" "Blank argument"
+    fi
+    case "$1" in
+      --exec)
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "--exec missing argument"
+        binary="$1"
+        ;;
+      --list)
+        listFlag=1
+        ;;
+      *)
+        if [ -n "$directory" ]; then
+          "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument"
+        fi
+        if ! directory=$(usageArgumentDirectory "_${FUNCNAME[0]}" "directory" "$1"); then
+          return $errorArgument
+        fi
+        ;;
+    esac
+    shift || "_${FUNCNAME[0]}" "$errorArgument" "Shift failed"
+  done
+
+  if [ -z "$directory" ]; then
+    directory=.
+  fi
+
+  #
+  # All OK with "assert"
+  #
+  # local assertThing
+  # assertEquals "a" "a" || return $?
+  # if ! assertEquals "a" "a" || \
+  # test/tools/assert-tests.sh:3:# assert-tests.sh
+  # test/tools/os-tests.sh:110:_assertBetterType() {
+
+  problemFiles=()
+  if ! tempFile=$(mktemp); then
+    "_${FUNCNAME[0]}" "$errorEnvironment" "mktemp failed" || return $?
+  fi
+  if ! find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n assert | grep -E -v '(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)' >"$tempFile"; then
+    consoleSuccess "All files AOK."
+  else
+    if [ -n "$binary" ] || test $listFlag; then
+      problemFile=
+      lastProblemFile=
+      while IFS='' read -r problemFile; do
+        problemLine="${problemFile##*:}"
+        problemFile="${problemFile%:*}"
+        if [ "$problemFile" != "$lastProblemFile" ]; then
+          # IDENTICAL findUncaughtAssertions-loop 3
+          if test $listFlag && [ -n "$lastProblemFile" ]; then
+            printf "%s (Lines %s)\n" "$(consoleCode "$lastProblemFile")" "$(IFS=, consoleMagenta "${problemLines[*]}")"
+          fi
+          problemFiles+=("$problemFile")
+          lastProblemFile=$problemFile
+          problemLines=()
+        fi
+        problemLines+=("$problemLine")
+      done < <(cut -d : -f 1,2 <"$tempFile" | sort -u)
+      # IDENTICAL findUncaughtAssertions-loop 3
+      if test $listFlag && [ -n "$lastProblemFile" ]; then
+        printf "%s (Lines %s)\n" "$(consoleCode "$lastProblemFile")" "$(IFS=, consoleMagenta "${problemLines[*]}")"
+      fi
+      if [ ${#problemFiles[@]} -gt 0 ] && [ -n "$binary" ]; then
+        "$binary" "${problemFiles[@]}"
+      fi
+    else
+      cat "$tempFile"
+    fi
+  fi
+  rm "$tempFile" || "_${FUNCNAME[0]}" "$errorEnvironment" "Unable to delete $tempFile" || return $?
+  [ ${#problemFiles[@]} -eq 0 ]
+}
+_findUncaughtAssertions() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

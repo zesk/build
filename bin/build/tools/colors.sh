@@ -139,7 +139,7 @@ allColorTest() {
 #
 colorTest() {
   local i colors=(
-    consoleRed consoleGreen consoleCyan consoleBlue consoleOrange
+    consoleRed consoleGreen consoleBoldGreen consoleCyan consoleBlue consoleOrange
     consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
     consoleBold consoleBoldRed consoleCode consoleWarning consoleSuccess
     consoleDecoration consoleError consoleLabel consoleValue
@@ -171,6 +171,9 @@ _consoleGreen() {
   shift
   __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
 }
+consoleBoldGreen() {
+  __consoleOutput "" '\033[1;92m' '\033[0m' "$@"
+}
 
 # shellcheck disable=SC2120
 consoleCyan() {
@@ -183,6 +186,9 @@ _consoleCyan() {
 }
 consoleBlue() {
   __consoleEscape '\033[94m' '\033[0m' "$@"
+}
+consoleBoldBlue() {
+  __consoleEscape '\033[1;94m' '\033[0m' "$@"
 }
 consoleBlackBackground() {
   __consoleEscape '\033[48;5;0m' '\033[0m' "$@"

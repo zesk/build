@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Run during bin/build/pipeline/report-deploy-finish.sh
+# Run during bin/build/pipeline/deploy-remote-finish.sh
 #
 # Run ON THE REMOTE SYSTEM, not in the pipeline so assume little.
 #
@@ -21,8 +21,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Summary: Deployment "undo" script
 #
 # Exit code: 0 - This SHOULD exit successfully always
-hookDeployUndo() {
+hookDeployRevert() {
   consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
-hookDeployUndo
+hookDeployRevert

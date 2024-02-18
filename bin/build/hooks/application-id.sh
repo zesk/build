@@ -14,6 +14,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 # fn: {base}
 # Usage: {fn}
 #
@@ -26,8 +29,17 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # Example:     885acc3
 #
 hookApplicationChecksum() {
-  gitEnsureSafeDirectory "$(pwd)"
+  local here
+  if ! here="$(pwd -P 2>/dev/null)"; then
+    return 1
+  fi
+  if ! gitEnsureSafeDirectory "$here"; then
+    _hookApplicationChecksum "$errorEnvironment" "Unable to gitEnsureSafeDirectory $here"
+    return 1
+  fi
   git rev-parse --short HEAD
 }
-
+_hookApplicationChecksum() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 hookApplicationChecksum

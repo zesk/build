@@ -33,16 +33,20 @@ errorEnvironment=1
 usageTemplate() {
   local usageString binName options delimiter description exitCode
 
-  binName="$1"
+  binName="$(trimSpace "$1")"
   shift || return "$errorArgument"
-  options="$(printf "%s\n" "$1")"
+  options="$1"
   shift || return "$errorArgument"
   delimiter="$1"
   shift || return "$errorArgument"
   description="$1"
   shift || return "$errorArgument"
   exitCode="${1-0}"
-  usageString="$(consoleBoldRed Usage)"
+  if [ "$exitCode" -eq 0 ]; then
+    usageString="$(consoleBoldGreen Usage)"
+  else
+    usageString="$(consoleBoldGreen Usage)"
+  fi
   shift || :
 
   exec 1>&2
@@ -62,9 +66,9 @@ usageTemplate() {
   if [ -n "$delimiter" ] && [ -n "$options" ]; then
     printf "%s: %s%s\n\n%s\n\n%s\n\n" \
       "$usageString" \
-      "$(consoleInfo -n "$binName")" \
-      "$(printf %s "$options" | usageArguments "$delimiter")" \
-      "$(printf %s "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | prefixLines "    ")" \
+      "$(consoleInfo "$binName")" \
+      "$(printf "%s\n" "$options" | usageArguments "$delimiter")" \
+      "$(printf "%s\n" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | prefixLines "    ")" \
       "$(consoleReset)$description"
   else
     printf "%s: %s\n\n%s\n\n" \

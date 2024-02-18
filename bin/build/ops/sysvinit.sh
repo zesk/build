@@ -46,7 +46,7 @@ sysvInitScript() {
             if ! rm "$target"; then
               _sysvInitScript "$errorEnvironment" "Can not remove $target" || return "$?"
             fi
-            printf "%s %s\n" "$(consoleSucess "sysvInit removed")" "$(consoleCode "$baseName")"
+            printf "%s %s\n" "$(consoleSuccess "sysvInit removed")" "$(consoleCode "$baseName")"
           else
             printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleWarning "not installed")"
             return 0
@@ -57,12 +57,12 @@ sysvInitScript() {
           fi
           if [ -f "$target" ]; then
             if diff -q "$1" "$target"; then
-              statusMessage consoleSucess "reinstalling script: $(consoleCode "$baseName")"
+              statusMessage consoleSuccess "reinstalling script: $(consoleCode "$baseName")"
             else
               _sysvInitScript "$errorEnvironment" "File already exists $(consoleCode "$target")" || return $?
             fi
           else
-            statusMessage consoleSucess "installing script: $(consoleCode "$baseName")"
+            statusMessage consoleSuccess "installing script: $(consoleCode "$baseName")"
           fi
           if ! cp "$1" "$target"; then
             _sysvInitScript "$errorEnvironment" "cp $1 $target failed - permissions error" || return $?
@@ -77,7 +77,7 @@ sysvInitScript() {
             _sysvInitScript "$errorEnvironment" "update-rc.d $baseName defaults failed" || return "$exitCode"
           fi
           clearLine
-          printf "%s %s\n" "$(consoleSucess "sysvInit installed successfully")" "$(consoleCode "$baseName")"
+          printf "%s %s\n" "$(consoleSuccess "sysvInit installed successfully")" "$(consoleCode "$baseName")"
         fi
         ;;
     esac

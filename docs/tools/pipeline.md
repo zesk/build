@@ -273,7 +273,7 @@ Deploy an application from a deployment repository
 #### Arguments
 
 - `--first` - Optional. Flag. The first one does not require a backup version to exist.
-- `--undo` - Optional. Flag. Means this is part of the undo process of a deployment.
+- `--revert` - Optional. Flag. Means this is part of the undo process of a deployment.
 - `deployHome` - Required. Directory. The deployment repository database home.
 - `deployVersion` - The version to deploy (string)
 - `applicationPath` - Required. Directory. The application deployed path.
@@ -287,7 +287,7 @@ deployApplication /var/www/DEPLOY 10c2fab1 /var/www/apps/cool-app
 
 - `0` - Always succeeds
 
-### `undoDeployApplication` - _ _ _
+### `deployRevertApplication` - _ _ _
 
      _   _           _
     | | | |_ __   __| | ___

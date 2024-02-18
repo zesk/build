@@ -70,12 +70,17 @@ _deployApplicationVersion() {
 #
 # Outputs the build target name which is based on the global `BUILD_TARGET` or
 # optionally may be added in the future to the `deployHome` structure instead.
+# If this is called on a non-deployment system, use the application root instead of
+# `deployHome` for compatibility.
 #
 deployPackageName() {
   local deployHome
 
+  if [ $# -eq 0 ]; then
+    _deployPackageName "$errorArgument" "deployHome required" || return $?
+  fi
   # May allow local override later so this is here
-  if ! deployHome="$(usageArgumentDirectory "_${BASH_SOURCE[0]}" deployHome "$1")"; then
+  if ! deployHome="$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "$1")"; then
     return "$errorArgument"
   fi
   shift || return "$errorArgument"
@@ -94,13 +99,15 @@ _deployPackageName() {
 
 #
 # Usage: {fn} deployHome versionName [ targetPackage ]
+# Argument: deployHome - Required. Directory. Deployment database home.
+# Argument: versionName - Required. String. Application ID to look for
 #
 # Does a deploy version exist? versionName is the version identifier for deployments
 #
 deployHasVersion() {
   local deployHome versionName targetPackage
 
-  if ! deployHome=$(usageArgumentDirectory "_${BASH_SOURCE[0]}" deployHome "${1-}"); then
+  if ! deployHome=$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "${1-}"); then
     return "$errorArgument"
   fi
   shift || :
@@ -127,7 +134,7 @@ _deployHasVersion() {
 #
 # See: deployPreviousVersion deployNextVersion
 #
-_deployVersionLink() {
+_applicationIdLink() {
   local usageFunction fileSuffix deployHome versionName targetPackage
   usageFunction="$1"
   shift || return "$errorArgument"
@@ -159,7 +166,7 @@ _deployVersionLink() {
 # Exit Code: 2 - Argument error
 #
 deployPreviousVersion() {
-  _deployVersionLink "_${FUNCNAME[0]}" previous "$@"
+  _applicationIdLink "_${FUNCNAME[0]}" previous "$@"
 }
 _deployPreviousVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -171,7 +178,7 @@ _deployPreviousVersion() {
 # Get the next version of the supplied version
 #
 deployNextVersion() {
-  _deployVersionLink "_${FUNCNAME[0]}" next "$@"
+  _applicationIdLink "_${FUNCNAME[0]}" next "$@"
 }
 _deployNextVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -187,60 +194,81 @@ _deployNextVersion() {
 #
 # Deploy an application from a deployment repository
 #
-# Usage: {fn} deployHome deployVersion applicationPath [ targetPackage ]
+# Usage: {fn} deployHome applicationId applicationPath [ targetPackage ]
 #
 # Argument: --first - Optional. Flag. The first one does not require a backup version to exist.
-# Argument: --undo - Optional. Flag. Means this is part of the undo process of a deployment.
-# Argument: deployHome - Required. Directory. The deployment repository database home.
-# Argument: deployVersion - The version to deploy (string)
-# Argument: applicationPath - Required. Directory. The application deployed path.
-# Argument: targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
+# Argument: --revert - Optional. Flag. Means this is part of the undo process of a deployment.
+# Argument: --home deployHome - Required. Directory. Path where the deployments database is on remote system.
+# Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` in `.env`
+# Argument: --application applicationPath - Required. String. Path on the remote system where the application is live
+# Argument: --target targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
+# Argument: --message message - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
 #
 # Example: deployApplication /var/www/DEPLOY 10c2fab1 /var/www/apps/cool-app
-#
+# Use-Hook: maintenance
+# Use-Hook: deploy-shutdown
+# Use-Hook: deploy-activate deploy-start deploy-finish
 deployApplication() {
-  local deployHome currentlyDeployedVersion deployVersion applicationPath deployedApplicationPath firstDeployment undoDeployment name
-  local previousApplicationChecksum targetPackageFullPath exitCode=0
+  local firstFlag revertFlag
+  local name
+  local deployHome applicationPath deployedApplicationPath targetPackageFullPath
+  local newApplicationId applicationId currentApplicationId exitCode
+  local unwindArgs requiredArgs
 
+  exitCode=0
   # Arguments
 
   # --first
-  firstDeployment=
-  # --undo
-  undoDeployment=
+  firstFlag=
+  # --revert
+  revertFlag=
 
   # Arguments in order
   deployHome=
-  deployVersion=
+  applicationId=
   applicationPath=
   targetPackage=
+  requiredArgs=()
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
       _deployApplication "$errorArgument" "Blank argument" || return $?
     fi
     case "$1" in
-      --first)
-        firstDeployment=1
+      --message)
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "Missing --message argument" || return $?
+        message="$1"
         ;;
-      --undo)
-        undoDeployment=1
+      --first)
+        firstFlag=1
+        ;;
+      --revert)
+        revertFlag=1
+        ;;
+      --home)
+        shift || :
+        if ! deployHome=$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "${1-}"); then
+          return "$errorArgument"
+        fi
+        ;;
+      --id)
+        shift || :
+        if [ -z "$1" ]; then
+          "_${FUNCNAME[0]}" "$errorArgument" "Blank --id"
+        fi
+        applicationId="$1"
+        ;;
+      --application)
+        shift || :
+        if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" applicationPath "$1"); then
+          return "$errorArgument"
+        fi
+        ;;
+      --package)
+        shift || :
+        targetPackage="${1-}"
         ;;
       *)
-        if [ -z "$deployHome" ]; then
-          if ! deployHome=$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "$1"); then
-            return "$errorArgument"
-          fi
-        elif [ -z "$deployVersion" ]; then
-          deployVersion="$1"
-        elif [ -z "$applicationPath" ]; then
-          if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" applicationPath "$1"); then
-            return "$errorArgument"
-          fi
-        elif [ -z "$targetPackage" ]; then
-          targetPackage="$1"
-        else
-          "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument $1" || return $?
-        fi
+        "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument $1" || return $?
         ;;
     esac
     shift || :
@@ -248,32 +276,46 @@ deployApplication() {
   if [ -z "$targetPackage" ] && ! targetPackage="$(deployPackageName "$deployHome")"; then
     return $errorArgument
   fi
+  if ! test "$revertFlag"; then
+    requiredArgs+=(applicationId)
+  fi
 
   # Check arguments are non-blank and actually supplied
-  for name in deployHome deployVersion applicationPath; do
+  requiredArgs+=(deployHome applicationPath)
+  for name in "${requiredArgs[@]}"; do
     if [ -z "${!name}" ]; then
-      _deployApplication "$errorArgument" "$name is required" || return $?
+      "_${FUNCNAME[0]}" "$errorArgument" "$name is required" || return $?
     fi
   done
+
+  if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
+    if ! test $firstFlag; then
+      _deployApplication "$errorEnvironment" "Can not fetch version from $applicationPath, need --first" || return $?
+    fi
+    currentApplicationId=
+  fi
+
+  if test "$revertFlag"; then
+    #
+    # If reverting, check the application ID (if supplied) is correct otherwise fail
+    #
+    if ! newApplicationId=$(deployPreviousVersion "$deployHome" "$currentApplicationId"); then
+      _deployApplication "$errorEnvironment" "--revert can not find previous version of $currentApplicationId ($deployHome)" || return $?
+    fi
+
+    if [ -n "$applicationId" ] && [ "$applicationId" != "$currentApplicationId" ]; then
+      _deployApplication "$errorArgument" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
+    fi
+    applicationId="$newApplicationId"
+    printf "%s %s %s %s\n" "$(consoleInfo "Reverting from")" "$(consoleOrange "$currentApplicationId")" "$(consoleInfo "->")" "$(consoleGreen "$applicationId")"
+  fi
 
   #
   # Arguments are all parsed by here
   #
-
-  targetPackageFullPath="$deployHome/$deployVersion/$targetPackage"
+  targetPackageFullPath="$deployHome/$applicationId/$targetPackage"
   if [ ! -f "$targetPackageFullPath" ]; then
     _deployApplication "$errorEnvironment" "deployApplication: Missing target file $targetPackageFullPath" || return $?
-  fi
-
-  # If we are doing and undo then there's no previous - this is the previous
-  previousApplicationChecksum=
-  if ! test $undoDeployment; then
-    if ! previousApplicationChecksum=$(deployApplicationVersion "$applicationPath") || [ -z "$previousApplicationChecksum" ]; then
-      if ! test "$firstDeployment"; then
-        _deployApplication "$errorEnvironment" "deployApplication: No previous version, failing without --first" || return $?
-      fi
-      previousApplicationChecksum=
-    fi
   fi
 
   #
@@ -283,55 +325,49 @@ deployApplication() {
   #
   # `_unwindDeploy` after this guarantees this and always exits non-zero
   #
-  deployedApplicationPath="$deployHome/$deployVersion/app"
+  deployedApplicationPath="$deployHome/$applicationId/app"
+  unwindArgs=("$applicationPath" "$deployedApplicationPath")
+
   if [ -d "$deployedApplicationPath" ]; then
     if ! rm -rf "$deployedApplicationPath"; then
-      _unwindDeploy "$deployedApplicationPath" "rm $deployedApplicationPath failed" || return $?
+      _unwindDeploy "${unwindArgs[@]}" "rm $deployedApplicationPath failed" || return $?
     fi
   fi
   if ! mkdir "$deployedApplicationPath"; then
-    _unwindDeploy "$deployedApplicationPath" "mkdir $deployedApplicationPath failed" || return $?
-  fi
-  if ! cd "$deployedApplicationPath"; then
-    _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed" || return $?
+    _unwindDeploy "${unwindArgs[@]}" "mkdir $deployedApplicationPath failed" || return $?
   fi
 
-  # CWD "$deployedApplicationPath"
-
-  if ! tar xzf "$targetPackageFullPath"; then
-    _unwindDeploy "$deployedApplicationPath" "tar xvf $targetPackageFullPath failed" || return $?
+  if ! tar -C "$deployedApplicationPath" -xzf "$targetPackageFullPath"; then
+    _unwindDeploy "${unwindArgs[@]}" "tar -C \"$deployedApplicationPath\" -xzf \"$targetPackageFullPath\" failed" || return $?
   fi
 
-  if ! currentlyDeployedVersion=$(deployApplicationVersion "$deployedApplicationPath"); then
-    _unwindDeploy "$deployedApplicationPath" "deployApplicationVersion $deployedApplicationPath failed" || return $?
+  if ! newApplicationId=$(deployApplicationVersion "$deployedApplicationPath"); then
+    _unwindDeploy "${unwindArgs[@]}" "deployApplicationVersion $deployedApplicationPath failed" || return $?
   fi
 
-  if [ "$currentlyDeployedVersion" != "$deployVersion" ]; then
-    _unwindDeploy "$deployedApplicationPath" "Deployed version $currentlyDeployedVersion != Requested $deployVersion" || return $?
+  if [ "$newApplicationId" != "$applicationId" ]; then
+    _unwindDeploy "${unwindArgs[@]}" "Deployed version $newApplicationId != Requested $applicationId, tar file is likely incorrect" || return $?
   fi
 
   #
   # Old Application
   #
-  if ! cd "$applicationPath"; then
-    _unwindDeploy "$deployedApplicationPath" "cd $applicationPath failed" || return $?
-  fi
-
-  # CWD "$applicationPath"
-
-  if hasHook maintenance; then
+  if hasHook --application "$applicationPath" maintenance; then
     printf "%s %s\n" "$(consoleWarning "Turning maintenance")" "$(consoleGreen "$(consoleCode " ON ")")"
-    if ! runHook maintenance on; then
-      _unwindDeploy "$deployedApplicationPath" "Turning maintenance on in $applicationPath failed"
+    if [ -z "$message" ]; then
+      message="Upgrading to $newApplicationId"
+    fi
+    if ! runHook --application "$applicationPath" maintenance --message "$message" on; then
+      _unwindDeploy "${unwindArgs[@]}" "Turning maintenance on in $applicationPath failed"
       return $?
     fi
   else
     printf "%s\n" "$(consoleInfo "No maintenance hook")"
   fi
-  if hasHook deploy-shutdown; then
+  if hasHook --application "$applicationPath" deploy-shutdown; then
     printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-shutdown ")")"
-    if ! runHook deploy-shutdown; then
-      _unwindDeploy "$deployedApplicationPath" "Running hook deploy-shutdown failed" || return $?
+    if ! runHook --application "$applicationPath" deploy-shutdown; then
+      _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-shutdown failed" || return $?
     fi
   else
     printf "%s\n" "$(consoleInfo "No deploy-shutdown hook")"
@@ -340,14 +376,14 @@ deployApplication() {
   #
   # Link
   #
-  if [ -n "$previousApplicationChecksum" ]; then
-    if [ ! -f "$deployHome/$deployVersion.previous" ] && [ ! -f "$deployHome/$previousApplicationChecksum.next" ]; then
-      printf "%s %s -> %s\n" "$(consoleInfo "Linking versions:")" "$(consoleOrange "$previousApplicationChecksum")" "$(consoleGreen "$deployVersion")"
+  if [ -n "$currentApplicationId" ]; then
+    if [ ! -f "$deployHome/$applicationId.previous" ] && [ ! -f "$deployHome/$currentApplicationId.next" ]; then
+      printf "%s %s -> %s\n" "$(consoleInfo "Linking versions:")" "$(consoleOrange "$currentApplicationId")" "$(consoleGreen "$applicationId")"
       # Linked list forward only
-      if ! printf "%s" "$previousApplicationChecksum" >"$deployHome/$deployVersion.previous" ||
-        ! printf "%s" "$deployVersion" >"$deployHome/$previousApplicationChecksum.next"; then
-        rm -rf "$deployHome/$deployVersion.previous" "$deployHome/$deployVersion.next" || :
-        _unwindDeploy "$deployedApplicationPath" "Linking $deployHome/$deployVersion failed" || return $?
+      if ! printf "%s" "$currentApplicationId" >"$deployHome/$applicationId.previous" ||
+        ! printf "%s" "$applicationId" >"$deployHome/$currentApplicationId.next"; then
+        rm -rf "$deployHome/$applicationId.previous" "$deployHome/$applicationId.next" || :
+        _unwindDeploy "${unwindArgs[@]}" "Linking $deployHome/$applicationId failed" || return $?
       fi
     fi
   fi
@@ -356,46 +392,34 @@ deployApplication() {
   # Link
   #
   # deployedApplicationPath is the new version of the application source code root
-  consoleInfo -n "Setting to version $deployVersion ... "
-  if ! cd "$deployedApplicationPath"; then
-    _unwindDeploy "$deployedApplicationPath" "cd $deployedApplicationPath failed" || return $?
-  fi
-
-  # CWD "$deployedApplicationPath"
-  if hasHook deploy-start; then
+  consoleInfo -n "Setting to version $applicationId ... "
+  if hasHook --application "$deployedApplicationPath" deploy-start; then
     printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-start ")")"
-    if ! runHook deploy-start; then
-      _unwindDeploy "$deployedApplicationPath" "Running hook deploy-start failed" || return $?
+    if ! runHook --application "$deployedApplicationPath" deploy-start; then
+      _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-start failed" || return $?
     fi
   else
     printf "%s\n" "$(consoleInfo "No deploy-start hook")"
   fi
 
-  if hasHook deploy-move; then
-    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-move ")")" || :
-    if ! runHook deploy-move "$applicationPath"; then
-      _unwindDeploy "$deployedApplicationPath" "runHook deploy-move failed" || return $?
+  if hasHook --application "$deployedApplicationPath" deploy-activate; then
+    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-activate ")")" || :
+    if ! runHook --application "$deployedApplicationPath" deploy-activate "$applicationPath"; then
+      _unwindDeploy "${unwindArgs[@]}" "runHook deploy-activate failed" || return $?
     fi
   else
-    printf "%s %s\n" "$(consoleSuccess "Moving to")" "$(consoleGreen "$(consoleCode " $applicationPath ")")" || :
-    if ! deployMove "$applicationPath"; then
-      _unwindDeploy "$deployedApplicationPath" "deployMove $applicationPath failed" || return $?
+    printf "%s %s -> %s\n" "$(consoleSuccess "Activating application")" "$(consoleCode " $applicationPath ")" "$(consoleGreen "$applicationId")" || :
+    if ! deployLink "$applicationPath" "$deployedApplicationPath"; then
+      _unwindDeploy "${unwindArgs[@]}" "deployLink $applicationPath $deployedApplicationPath failed" || return $?
     fi
   fi
   # STOP _unwindDeploy
 
-  if ! cd "$applicationPath"; then
-    _deployApplication "$errorEnvironment" "Unable to do cd \"$applicationPath\" can not run optional hooks - UNSTABLE" || exitCode=$?
-  else
-    if ! runOptionalHook deploy-finish; then
-      _deployApplication "$errorEnvironment" "Deploy finish failed" || exitCode=$?
-    fi
-    if ! runOptionalHook maintenance off; then
-      _deployApplication "$errorEnvironment" "maintenance off failed" || exitCode=$?
-    fi
+  if ! runOptionalHook --application "$applicationPath" deploy-finish; then
+    _deployApplication "$errorEnvironment" "Deploy finish failed" || exitCode=$?
   fi
-  if [ -d "$deployedApplicationPath" ]; then
-    consoleWarning "$deployedApplicationPath still exists after deploy, removing" || return $?
+  if ! runOptionalHook --application "$applicationPath" maintenance off; then
+    _deployApplication "$errorEnvironment" "maintenance off failed" || exitCode=$?
   fi
   if [ $exitCode -eq 0 ]; then
     consoleSuccess "Completed"
@@ -408,20 +432,27 @@ _deployApplication() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _unwindDeploy() {
-  local deployedApplicationPath="${1-}"
+  local applicationPath="$1"
+  local deployedApplicationPath="${2-}"
 
   shift || :
+  shift || :
+  if ! runOptionalHook --application "$applicationPath" maintenance off; then
+    consoleError "Unable to enable maintenance - system is unstable" 1>&2
+  else
+    consoleSuccess "Maintenance was enabled again"
+  fi
   if [ -d "$deployedApplicationPath" ]; then
     printf "%s %s\n" "$(consoleError "Deleting")" "$(consoleCode "$deployedApplicationPath")"
-    rm -rf "$deployedApplicationPath" || consoleError "Delete failed" 1>&2
+    rm -rf "$deployedApplicationPath" || consoleError "Delete $deployedApplicationPath failed" 1>&2
   else
-    consoleError "Delete failed" 1>&2
+    printf "%s %s %s\n" "$(consoleError "Unwind")" "$(consoleCode "$deployedApplicationPath")" "$(consoleError "does not exist")"
   fi
   _deployApplication "$errorEnvironment" "$@"
 }
 
 #
-# Safe application deployment
+# Safe application deployment by moving
 #
 # Usage: {fn} applicationPath
 #
@@ -443,200 +474,146 @@ _deployMove() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Usage: {fn} applicationLinkPath
+# Environment: PWD
+# Argument: applicationLinkPath - Path. Required. Path where the link is created.
+# Argument: applicationPath - Path. Optional. Path where the link will point to. If not supplied uses current working directory.
 #
-# This is run on the remote system after deployment; environment files are correct.
-# It is run inside the deployment home directory in the new application folder.
+# Link new version of application.
 #
-# Current working directory on deploy is `deployHome/applicationId/app`.
-# Current working directory on cleanup is `applicationHome/`
-# Current working directory on undo is `applicationHome/`
+# When called, current directory is the **new** application and the `applicationLinkPath` which is
+# passed as an argument is the place where the **new** application should be linked to
+# in order to activate it.
 #
-# Argument: deployPath - Required. Directory. Path where the deployments database is on remote system.
-# Argument: applicationId - Required. String. Should match `APPLICATION_ID` in `.env`
-# Argument: applicationPath - Required. String. Path on the remote system where the application is live.
-# Argument: targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
-# Argument: --undo - Revert changes just made
-# Argument: --cleanup - Cleanup after success
-# Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
+# Summary: Link deployment to new version of the application
+# Argument: applicationLinkPath - This is the target for the current application
+# Exit code: 0 - Success
+# Exit code: 1 - Environment error
+# Exit code: 2 - Argument error
 #
-remoteDeployFinish() {
-  local targetPackage undoFlag cleanupFlag applicationId applicationPath debuggingFlag start width
+deployLink() {
+  local applicationLinkPath currentApplicationHome newApplicationLinkPath
 
-  if ! usageRequireBinary _remoteDeployFinish git; then
-    return $?
-  fi
-
-  if ! dotEnvConfigure; then
-    consoleError "remoteDeployFinish: Unable to dotEnvConfigure" 1>&2
-    return $?
-  fi
-
-  targetPackage=
-  undoFlag=
-  cleanupFlag=
-  applicationId=
-  applicationPath=
-  debuggingFlag=
+  applicationLinkPath=
+  currentApplicationHome=
   while [ $# -gt 0 ]; do
-    case $1 in
-      --debug)
-        debuggingFlag=1
-        ;;
-      --cleanup)
-        cleanupFlag=1
-        ;;
-      --undo)
-        undoFlag=1
-        ;;
-      *)
-        if [ -z "$deployHome" ]; then
-          if ! deployHome=$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "$1"); then
-            return "$errorArgument"
-          fi
-        elif [ -z "$deployVersion" ]; then
-          deployVersion="$1"
-        elif [ -z "$applicationPath" ]; then
-          if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" applicationPath "$1"); then
-            return "$errorArgument"
-          fi
-        elif [ -z "$targetPackage" ]; then
-          targetPackage="$1"
-        else
-          "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument $1" || return $?
-        fi
-        ;;
-    esac
-    shift || "_${FUNCNAME[0]}" "$errorArgument" "shift failed" || return $?
-  done
-  if [ -z "$targetPackage" ] && ! targetPackage="$(deployPackageName "$deployHome")"; then
-    return $errorArgument
-  fi
-
-  if test "${BUILD_DEBUG-}"; then
-    debuggingFlag=1
-  fi
-  if test "$debuggingFlag"; then
-    consoleWarning "Debugging is enabled"
-    set -x
-  fi
-
-  if test $undoFlag && test $cleanupFlag; then
-    _remoteDeployFinish "$errorArgument" "--cleanup and --undo are mutually exclusive"
-  fi
-
-  start=$(beginTiming)
-  width=50
-  consoleNameValue $width "Host:" "$(uname -n)"
-  consoleNameValue $width "Deployment Path:" "$deployHome"
-  consoleNameValue $width "Application path:" "$applicationPath"
-  consoleNameValue $width "Application checksum:" "$applicationId"
-
-  if test $cleanupFlag; then
-    if ! cd "$applicationPath"; then
-      consoleError "Unable to change directory to $applicationPath, exiting" 1>&2
-      return "$errorEnvironment"
+    if [ -z "$1" ]; then
+      _deployLink "$errorArgument" "Blank argument" || return $?
     fi
-    consoleInfo -n "Cleaning up ..."
-    if hasHook deploy-cleanup; then
-      if ! runHook deploy-cleanup; then
-        consoleError "Cleanup failed"
-        return "$errorEnvironment"
+    if [ -z "$applicationLinkPath" ]; then
+      applicationLinkPath="$1"
+      if [ -e "$applicationLinkPath" ]; then
+        if [ ! -L "$applicationLinkPath" ]; then
+          if [ -d "$applicationLinkPath" ]; then
+            _deployLink "$errorArgument" "$applicationLinkPath is directory (should be a link)" || return $?
+          fi
+          # Not a link or directory
+          _deployLink "$errorArgument" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
+        fi
+      fi
+    elif [ -z "$currentApplicationHome" ]; then
+      # No checking - allows pre-linking
+      currentApplicationHome="$1"
+      if [ ! -d "$currentApplicationHome" ]; then
+        consoleWarning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
       fi
     else
-      printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
+      _deployLink "$errorArgument" "Unknown argument $1" || return $?
     fi
-  elif test $undoFlag; then
-    undoDeployApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
-  else
-    if [ -z "$applicationId" ]; then
-      _remoteDeployFinish "$errorArgument" "No argument applicationId passed"
+    shift || :
+  done
+  if [ -z "$currentApplicationHome" ]; then
+    if ! currentApplicationHome="$(pwd -P 2>/dev/null)"; then
+      _deployLink "$errorEnvironment" "pwd failed" || return $?
     fi
-    deployApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
   fi
-  reportTiming "$start" "Remote deployment finished in"
+  newApplicationLinkPath="$applicationLinkPath.READY.$$"
+  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! mv -fT "$newApplicationLinkPath" "$applicationLinkPath"; then
+    rm -rf "$newApplicationLinkPath" 2>/dev/null
+    _deployLink $errorEnvironment "Unable to link and rename" || return $?
+  fi
 }
-_remoteDeployFinish() {
+_deployLink() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#      _   _           _
-#     | | | |_ __   __| | ___
-#     | | | |  _ \ / _  |/ _ \
-#     | |_| | | | | (_| | (_) |
-#      \___/|_| |_|\__,_|\___/
+# Usage: {fn} deployHome applicationPath
 #
-# Undo deploying an application from a deployment repository
+# Automatically convert application deployments using non-links to links.
 #
-# Usage: {fn} [ --first ] deployHome deployVersion applicationPath [ targetPackage ]
-# Argument: --first - Optional. Flag. Undo the first deployment.
-# Argument: deployHome - Required. Directory. The deployment repository database home.
-# Argument: deployVersion - Required. The version to deploy (string)
-# Argument: applicationPath - Required. Directory. The application deployed path.
-# Argument: targetPackage - Optional. Filename. Package name, defaults to `BUILD_TARGET`
-# See: BUILD_TARGET.sh
-undoDeployApplication() {
-  local firstDeployment name deployHome versionName previousChecksum targetPackage
+deployMigrateDirectoryToLink() {
+  local start deployHome applicationPath tempAppLink appVersion
 
-  # --first
-  firstDeployment=
-
-  # Arguments in order
+  start=$(beginTiming) || :
   deployHome=
-  deployVersion=
   applicationPath=
-  targetPackage=
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _undoDeployApplication "$errorArgument" "Blank argument" || return $?
+      _deployMigrateDirectoryToLink "$errorArgument" "Blank argument" || return $?
     fi
-    case "$1" in
-      --first)
-        firstDeployment=1
-        ;;
-      *)
-        if [ -z "$deployHome" ]; then
-          if ! deployHome=$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "$1"); then
-            return "$errorArgument"
-          fi
-        elif [ -z "$deployVersion" ]; then
-          deployVersion="$1"
-        elif [ -z "$applicationPath" ]; then
-          if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" applicationPath "$1"); then
-            return "$errorArgument"
-          fi
-        elif [ -z "$targetPackage" ]; then
-          targetPackage="$1"
-        else
-          "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument $1" || return $?
-        fi
-        ;;
-    esac
+    if [ -z "$deployHome" ]; then
+      if ! deployHome="$(usageArgumentDirectory "_${FUNCNAME[0]}" "deployHome" "$1")"; then
+        return "$errorArgument"
+      fi
+    elif [ -z "$applicationPath" ]; then
+      if ! applicationPath="$(usageArgumentDirectory "_${FUNCNAME[0]}" "applicationPath" "$1")"; then
+        return "$errorArgument"
+      fi
+    else
+      _deployMigrateDirectoryToLink "$errorArgument" "Unknown argument $1" || return $?
+    fi
+    # TODO
     shift || :
   done
-  if [ -z "$targetPackage" ] && ! targetPackage="$(deployPackageName "$deployHome")"; then
-    return $errorArgument
+  if ! appVersion=$(deployApplicationVersion "$applicationPath"); then
+    _deployMigrateDirectoryToLink "$errorEnvironment" "No application deployment version" || return $?
+  fi
+  if [ -L "$applicationPath" ]; then
+    printf "%s %s %s\n" "$(consoleCode "$applicationPath")" "$(consoleSuccess "is already a link to")" "$(consoleRed "$appVersion")"
+    return 0
+  fi
+  if ! deployHasVersion "$deployHome" "$appVersion"; then
+    _deployMigrateDirectoryToLink "$errorEnvironment" "Application version $appVersion not found in $deployHome" || return $?
+  fi
+  if [ -d "$deployHome/$appVersion/app" ]; then
+    _deployMigrateDirectoryToLink "$errorEnvironment" "Old app directory $deployHome/$appVersion/app exists, stopping" || return $?
+  fi
+  if ! runOptionalHook --application "$applicationPath" maintenance on; then
+    _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to enable maintenance" || return $?
+  fi
+  tempAppLink="$applicationPath.$$.${FUNCNAME[0]}"
+  # Create a temporary link to ensure it works
+  if ! deployLink "$tempAppLink" "$deployHome/$appVersion/app"; then
+    if ! runOptionalHook maintenance off; then
+      consoleError "Maintenance off FAILED, system may be unstable" 1>&2
+    fi
+    return $errorEnvironment
+  fi
+  # Now move our folder and the link to where the folder was in one fell swoop
+  if ! mv -Tf "$applicationPath" "$deployHome/$appVersion/app"; then
+    _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
   fi
 
-  for name in deployHome deployVersion applicationPath; do
-    if [ -z "${!name}" ]; then
-      _undoDeployApplication "$errorArgument" "$name is required" || return $?
+  if ! mv -f "$tempAppLink" "$applicationPath"; then
+    # Like really? Like really? Something is likely F U B A R
+    if ! mv -Tf "$deployHome/$appVersion/app" "$applicationPath"; then
+      consoleError "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
+    else
+      consoleSuccess "Successfully recovered application to $applicationPath - stable"
     fi
-  done
-  if ! previousChecksum=$(deployPreviousVersion "$deployHome" "$deployVersion") || [ -z "$previousChecksum" ]; then
-    if ! test "$firstDeployment"; then
-      _undoDeployApplication "$errorEnvironment" "Unable to get previous checksum for $versionName" || return $?
-    fi
-  else
-    printf "%s %s -> %s\n" "$(consoleInfo "Reverting installation")" "$(consoleOrange "$deployVersion")" "$(consoleGreen "$previousChecksum")"
-    if ! deployApplication --undo "$deployHome" "$previousChecksum" "$applicationPath" "$targetPackage"; then
-      _undoDeployApplication "$errorEnvironment" "Undo deployment to $previousChecksum failed $applicationPath - system is unstable" || return $?
-    fi
+    _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to move live link $tempAppLink -> $applicationPath" || return $?
   fi
-  if ! runOptionalHook deploy-undo "$deployHome" "$deployVersion"; then
-    printf "%s %s\n" "$(consoleCode "deploy-undo")" "$(consoleError "hook failed, continuing anyway")"
+  if ! runOptionalHook --application "$applicationPath" maintenance off; then
+    consoleError "Maintenance ON FAILED, system may be unstable" 1>&2
   fi
-  return 0
+  {
+    consoleSuccess "Successfully migrated:"
+    consoleNameValue 20 "Link:" "$applicationPath"
+    consoleNameValue 20 "Installed:" "$deployHome/$appVersion/app"
+    # Move directory, then re-link
+  }
+  reportTiming "$start" "Completed in"
 }
-_undoDeployApplication() {
+_deployMigrateDirectoryToLink() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

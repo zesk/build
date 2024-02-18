@@ -53,4 +53,4 @@ if ! usageRequireEnvironment _undeployUsage "${requireEnvironments[@]}"; then
   return $?
 fi
 
-./bin/build/pipeline/deploy-to.sh --undo "$APPLICATION_ID" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"
+./bin/build/pipeline/deploy-to.sh --revert "$APPLICATION_ID" "$DEPLOY_REMOTE_PATH" "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS"

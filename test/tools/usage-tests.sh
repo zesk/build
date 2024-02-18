@@ -16,7 +16,7 @@ usageTests() {
 --value name
 EOF
 
-  assertEquals " --name [ --value ]" "$(cat "$results")"
+  assertEquals " --name [ --value ]" "$(cat "$results")" || return $?
 
   cat <<EOF | usageGenerator >/dev/null
     --name value
