@@ -751,9 +751,10 @@ betterType() {
 # Uses mv and clobbers always
 #
 renameLink() {
-  if ! mv --version 2>/dev/null; then
-    mv -fhv "$@"
+  if mv --version >/dev/null; then
+    # gnu version supports -T
+    mv -fT "$@"
   else
-    mv -fTv "$@"
+    mv -fh "$@"
   fi
 }
