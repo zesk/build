@@ -119,4 +119,21 @@ testBetterType() {
   _assertBetterType "file" "${BASH_SOURCE[0]}" || return $?
   _assertBetterType "directory" ../. || return $?
   _assertBetterType "unknown" fairElections || return $?
+
+  local d
+  d=$(mktemp -d)
+  requireDirectory "$d/food"
+  ln -s "$d/food" "$d/food-link"
+
+  touch "$d/goof"
+  ln -s "$d/no-goof" "$d/no-goof-link"
+  ln -s "$d/goof" "$d/goof-link"
+
+  _assertBetterType "directory" "$d/food" || return $?
+  _assertBetterType "link-directory" "$d/food-link" || return $?
+  _assertBetterType "file" "$d/goof" || return $?
+  _assertBetterType "link-unknown" "$d/no-goof-link" || return $?
+  _assertBetterType "link-file" "$d/goof-link" || return $?
+
+  rm -rf "$d"
 }
