@@ -21,11 +21,12 @@ errorArgument=2
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 #
 consoleGetColor() {
-  local xtermCode sttyOld color colors success result
+  local xtermCode sttyOld color colors success result noTTY
 
   # set -x
   success=false
 
+  noTTY=false
   xtermCode="11"
   while [ $# -gt 0 ]; do
     case "$1" in
@@ -41,11 +42,12 @@ consoleGetColor() {
     esac
     shift || _consoleGetColor "$errorArgument" "Shift failed" || return $?
   done
-  if ! sttyOld=$(stty -g); then
-    _consoleGetColor "$errorEnvironment" "stty -g failed" || return $?
-  fi
-  if ! stty raw -echo min 0 time 0; then
-    _consoleGetColor "$errorEnvironment" "stty raw failed" || return $?
+  if ! sttyOld=$(stty -g 2>/dev/null); then
+    noTTY=true
+  else
+    if ! stty raw -echo min 0 time 0; then
+      _consoleGetColor "$errorEnvironment" "stty raw failed" || return $?
+    fi
   fi
 
   # term needs the sleep (or "time 1", but that is 1/10th second).
@@ -54,13 +56,13 @@ consoleGetColor() {
   fi
   sleep 0.0001 || :
   colors=()
-  if ! read -r result </dev/tty; then
+  if ! read -t 2 -r result </dev/tty; then
     success=true
     result="${result#*;}"
     result="${result#rgb:}"
     IFS='/' read -r -a colors < <(printf "%s\\n" "$result" | sed 's/[^a-f0-9/]//g')
   fi
-  if ! stty "$sttyOld"; then
+  if ! "$noTTY" && ! stty "$sttyOld"; then
     _consoleGetColor "$errorEnvironment" "stty reset to \"$sttyOld\" failed" || return $?
   fi
   if $success; then
