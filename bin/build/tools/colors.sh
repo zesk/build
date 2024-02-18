@@ -62,6 +62,11 @@ consoleColorMode() {
 # Environment: CI - If this has a non-blank value, this returns true (supports animation)
 #
 hasConsoleAnimation() {
+  # shellcheck source=/dev/null
+  if ! source "./bin/build/env/CI.sh"; then
+    return 1
+  fi
+  export CI
   [ -z "${CI-}" ]
 }
 

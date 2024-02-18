@@ -4,7 +4,7 @@
 #
 # Depends: usage.sh
 # bin: printf stty
-# Docs: o ./docs/_templates/tools/colors.md
+# Docs: o ./docs/_templates/tools/console.md
 # Test: o ./test/tools/colors-tests.sh
 
 # IDENTICAL errorEnvironment 1
