@@ -35,10 +35,13 @@ testSimpleMarkdownToConsole() {
 
   expected="Code text is italic and bold"
 
+  aptInstall xxd || return $?
+
   echo "EXPECTED:"
   echo "$expected" | xxd
   echo "ACTUAL:"
   echo "$actual" | xxd
+
   assertEquals "$actual" "$expected" || return $?
 }
 
