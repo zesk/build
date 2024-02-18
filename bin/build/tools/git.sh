@@ -374,11 +374,16 @@ _gitTagVersion() {
 # Comment wisely. Does not duplicate comments. Check your release notes.
 #
 gitCommit() {
-  local start current next notes
+  local start current next notes appendLast
 
   comment="$*"
+  appendLast=
   if [ -z "$comment" ]; then
     _gitCommit "$errorArgument" "Need a comment" || return $?
+  fi
+  if [ "$comment" = "last" ]; then
+    appendLast=1
+    consoleInfo "Using last commit message ..."
   fi
   if ! start="$(pwd -P 2>/dev/null)"; then
     _gitCommit "$errorEnvironment" "Failed to get pwd" || return $?
@@ -386,7 +391,12 @@ gitCommit() {
   current="$start"
   while [ "$current" != "/" ]; do
     if [ -d "$current/.git" ]; then
-      if [ -x "$current/bin/build/release-notes.sh" ]; then
+      if test "$appendLast"; then
+        if ! git commit --reuse-message=HEAD --reset-author -a; then
+          _gitCommit "$errorEnvironment" "Commit failed" || return $?
+        fi
+        return 0
+      elif [ -x "$current/bin/build/release-notes.sh" ]; then
         if notes="$("$current/bin/build/release-notes.sh")"; then
           if ! grep -q "$comment" "$notes"; then
             if ! printf "%s %s\n" "-" "$comment" >>"$notes"; then
