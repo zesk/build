@@ -49,7 +49,7 @@ __consoleOutput() {
 # IDENTICAL consoleCode 4
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleOutput '' '\033[48;5;19;1;38;5;15m' '\033[0m' "$@"
+  __consoleOutput '' '\033[1;44m' '\033[0m' "$@"
 }
 
 # IDENTICAL consoleError 4

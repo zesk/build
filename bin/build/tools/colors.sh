@@ -369,7 +369,7 @@ _consoleInfo() {
 # IDENTICAL consoleCode 4
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleOutput '' '\033[48;5;19;1;38;5;15m' '\033[0m' "$@"
+  __consoleOutput '' '\033[1;44m' '\033[0m' "$@"
 }
 
 # IDENTICAL consoleError 4
@@ -383,7 +383,7 @@ consoleError() {
 #
 # shellcheck disable=SC2120
 consoleWarning() {
-  __consoleOutput "Warning" '\033[38;5;125;48;5;228;1m' '\033[0m' "$@"
+  __consoleOutput "Warning" '\033[1;93;41m' '\033[0m' "$@"
 }
 
 #
@@ -418,7 +418,7 @@ consoleSubtle() {
 #
 # shellcheck disable=SC2120
 consoleLabel() {
-  __consoleOutput '' '\033[1;38;5;195;48;5;39m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[36m' '\033[1;96m' '\033[0m' "$@"
 }
 
 #
@@ -426,8 +426,7 @@ consoleLabel() {
 #
 # shellcheck disable=SC2120
 consoleValue() {
-
-  __consoleOutput '' '\033[1;38;5;0;48;5;15m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[1;47;33m' '\033[1;33m' '\033[0m' "$@"
 }
 
 #
