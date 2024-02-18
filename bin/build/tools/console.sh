@@ -83,8 +83,7 @@ _consoleGetColor() {
 # Return an integer between 0 and 100
 colorBrightness() {
   local r g b
-  # https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11
-  # 0.299 R + 0.587 G + 0.144 B
+  # 0.299 R + 0.587 G + 0.114 B
   read -r r g b || :
   printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
 }
