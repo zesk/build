@@ -355,7 +355,12 @@ __consoleOutputMode() {
 #
 # shellcheck disable=SC2120
 consoleInfo() {
-  __consoleOutputMode "Info" '\033[38;5;20m' '\033[38;5;159m' '\033[0m' "$@"
+  _consoleInfo "Info" "$@"
+}
+_consoleInfo() {
+  local label="$1"
+  shift || :
+  __consoleOutputMode "$label" '\033[38;5;20m' '\033[38;5;159m' '\033[0m' "$@"
 }
 
 #
