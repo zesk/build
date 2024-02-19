@@ -66,33 +66,22 @@ _deployApplicationVersion() {
 
 #
 # Usage: {fn} deployHome
-# Argument: deployHome - Required. Directory. Deployment database home.
 #
-# Outputs the build target name which is based on the global `BUILD_TARGET` or
-# optionally may be added in the future to the `deployHome` structure instead.
+# Outputs the build target name which is based on the environment `BUILD_TARGET`.
+#
 # If this is called on a non-deployment system, use the application root instead of
 # `deployHome` for compatibility.
 #
 deployPackageName() {
-  local deployHome
-
-  if [ $# -eq 0 ]; then
-    _deployPackageName "$errorArgument" "deployHome required" || return $?
-  fi
-  # May allow local override later so this is here
-  if ! deployHome="$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "$1")"; then
-    return "$errorArgument"
-  fi
-  shift || return "$errorArgument"
-
-  export BUILD_TARGET
   # shellcheck source=/dev/null
   if ! source ./bin/build/env/BUILD_TARGET.sh; then
     _deployPackageName "$errorEnvironment" "Unable to load BUILD_TARGET" || return $?
   fi
 
-  printf "%s\n" "$BUILD_TARGET"
+  export BUILD_TARGET
+  printf "%s\n" "${BUILD_TARGET-}"
 }
+
 _deployPackageName() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -117,7 +106,7 @@ deployHasVersion() {
   fi
   shift || :
 
-  targetPackage="${1-$(deployPackageName "$deployHome")}"
+  targetPackage="${1-$(deployPackageName)}"
   shift || :
 
   if [ ! -d "$deployHome/$versionName" ]; then
@@ -278,7 +267,7 @@ deployApplication() {
     esac
     shift || :
   done
-  if [ -z "$targetPackage" ] && ! targetPackage="$(deployPackageName "$deployHome")"; then
+  if [ -z "$targetPackage" ] && ! targetPackage="$(deployPackageName)"; then
     return $errorArgument
   fi
   if ! test "$revertFlag"; then
