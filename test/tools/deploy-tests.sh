@@ -169,22 +169,18 @@ _waitForValueTimeout() {
 
 _waitForValue() {
   local exitCode
-  if _waitForValueTimeout "$@"; then
-    return 0
-  fi
+  _waitForValueTimeout "$@"
   exitCode=$?
-  if [ "$exitCode" -eq "$errorTimeout" ]; then
+  if [ "$exitCode" = "0" ]; then
+    consoleSuccess "*** Found it first round ***"
+  elif [ "$exitCode" = "$errorTimeout" ]; then
     consoleWarning "Timed out ... restarting server and trying again"
     _simplePHPServer --kill
-    if _waitForValueTimeout "$@"; then
-      consoleSuccess "*** Restarting server worked! ***"
-      return 0
-    fi
+    _waitForValueTimeout "$@"
     exitCode=$?
-    if [ "$exitCode" -eq "$errorTimeout" ]; then
-      consoleError "Timed out ... FAILED" 1>&2
+    if [ "$exitCode" = "0" ]; then
+      consoleSuccess "*** Restarting server worked! ***"
     fi
-  else
     consoleWarning "_waitForValueTimeout failed exitCode=$exitCode"
   fi
   return $exitCode
