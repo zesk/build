@@ -122,7 +122,7 @@ labeledBigText() {
   banner="$(bigText "$@")"
   nLines=$(printf "%s\n" "$banner" | wc -l)
   plainLabel="$(printf "%s\n" "$label" | stripAnsi)"
-  tweenNonLabel="x${#plainLabel}x$(repeat "$((${#plainLabel}))" " ")zz$tweenNonLabel"
+  tweenNonLabel="$(repeat "$((${#plainLabel}))" " ")$tweenNonLabel"
   if test $isBottom; then
     printf "%s%s\n""%s%s%s\n" \
       "$(printf "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | head -n "$((nLines - 1))")" "$lineSuffix" \
@@ -219,8 +219,7 @@ wrapLines() {
   shift || :
   suffix="${*-}"
   while IFS= read -r line; do
-    printf "%s::%s++%s\n" "$prefix" "$line" "$suffix"
-    # KMD TODO
+    printf "%s%s%s\n" "$prefix" "$line" "$suffix"
   done
 }
 
