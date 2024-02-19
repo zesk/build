@@ -671,14 +671,18 @@ _processMemoryUsage() {
 # Exit Code: 0 - Success
 # Exit Code: 2 - Argument error
 processVirtualMemoryAllocation() {
-  local pid
+  local pid value
   while [ $# -gt 0 ]; do
     pid="$1"
     if ! isInteger "$pid"; then
       _processVirtualMemoryAllocation "$errorArgument" "Not an integer"
       return $?
     fi
-    printf %d $(("$(ps -o vsz -p "$pid" | tail -n 1)" * 1))
+    value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
+    if ! isInteger "$value"; then
+      _processVirtualMemoryAllocation "$errorEnvironment" "ps returned non-integer: \"$(consoleCode "$value")\"" || return $?
+    fi
+    printf %d $((value * 1))
     shift
   done
 }
@@ -723,14 +727,23 @@ _fileSize() {
 #
 # Outputs one of `type` output or enhancements:
 # - `builtin`. `function`, `alias`, `file`
-# - `file`, `directory`, `integer`, `unknown`
+# - `link-directory`, `link-file`, `directory`, `integer`, `unknown`
 #
 betterType() {
   local t
   while [ $# -gt 0 ]; do
     t="$(type -t "$1")" || :
     if [ -z "$t" ]; then
-      if [ -d "$1" ]; then
+      if [ -L "$1" ]; then
+        local ll
+        if ! ll=$(readlink "$1"); then
+          t="link-fail"
+        elif [ -e "$ll" ]; then
+          t="link-$(betterType "$ll")"
+        else
+          t="link-unknown"
+        fi
+      elif [ -d "$1" ]; then
         t="directory"
       elif [ -f "$1" ]; then
         t="file"
@@ -743,4 +756,18 @@ betterType() {
     printf "%s\n" "$t" || return $?
     shift || :
   done
+}
+
+#
+# Usage: {fn} {from} {to}
+#
+# Uses mv and clobbers always
+#
+renameLink() {
+  if mv --version >/dev/null; then
+    # gnu version supports -T
+    mv -fT "$@"
+  else
+    mv -fh "$@"
+  fi
 }

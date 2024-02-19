@@ -196,15 +196,16 @@ _deployNextVersion() {
 #
 # Usage: {fn} deployHome applicationId applicationPath [ targetPackage ]
 #
-# Argument: --first - Optional. Flag. The first one does not require a backup version to exist.
+# Argument: --help - Optional. Flag. This help.
+# Argument: --first - Optional. Flag. The first deployment has no prior version and can not be reverted.
 # Argument: --revert - Optional. Flag. Means this is part of the undo process of a deployment.
 # Argument: --home deployHome - Required. Directory. Path where the deployments database is on remote system.
-# Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` in `.env`
+# Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
 # Argument: --application applicationPath - Required. String. Path on the remote system where the application is live
-# Argument: --target targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
+# Argument: --target targetPackage - Optional. Filename. Package name, defaults to `BUILD_TARGET`
 # Argument: --message message - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
-#
-# Example: deployApplication /var/www/DEPLOY 10c2fab1 /var/www/apps/cool-app
+# Environment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG
+# Example: {fn} --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
 # Use-Hook: maintenance
 # Use-Hook: deploy-shutdown
 # Use-Hook: deploy-activate deploy-start deploy-finish
@@ -234,6 +235,10 @@ deployApplication() {
       _deployApplication "$errorArgument" "Blank argument" || return $?
     fi
     case "$1" in
+      --help)
+        "_${FUNCNAME[0]}" 0
+        return $?
+        ;;
       --message)
         shift || "_${FUNCNAME[0]}" "$errorArgument" "Missing --message argument" || return $?
         message="$1"
@@ -528,7 +533,7 @@ deployLink() {
     fi
   fi
   newApplicationLinkPath="$applicationLinkPath.READY.$$"
-  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! mv -fT "$newApplicationLinkPath" "$applicationLinkPath"; then
+  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! renameLink "$newApplicationLinkPath" "$applicationLinkPath"; then
     rm -rf "$newApplicationLinkPath" 2>/dev/null
     _deployLink $errorEnvironment "Unable to link and rename" || return $?
   fi
@@ -590,13 +595,14 @@ deployMigrateDirectoryToLink() {
     return $errorEnvironment
   fi
   # Now move our folder and the link to where the folder was in one fell swoop
-  if ! mv -Tf "$applicationPath" "$deployHome/$appVersion/app"; then
+  # or mv -hf
+  if ! mv -f "$applicationPath" "$deployHome/$appVersion/app"; then
     _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
   fi
 
   if ! mv -f "$tempAppLink" "$applicationPath"; then
     # Like really? Like really? Something is likely F U B A R
-    if ! mv -Tf "$deployHome/$appVersion/app" "$applicationPath"; then
+    if ! mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
       consoleError "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
     else
       consoleSuccess "Successfully recovered application to $applicationPath - stable"

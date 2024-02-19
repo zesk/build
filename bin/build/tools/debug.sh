@@ -4,7 +4,8 @@
 #
 # Depends: -
 # bin: set test
-# Docs: contextOpen ./docs/_templates/tools/debug.md
+# Docs: o ./docs/_templates/tools/debug.md
+# Test: o ./test/tools/debug-tests.sh
 
 #
 # Is build debugging enabled?
@@ -15,6 +16,13 @@
 # Environment: BUILD_DEBUG - Set to 1 to enable debugging, blank to disable
 #
 buildDebugEnabled() {
+  # shellcheck source=/dev/null
+  if ! source bin/build/env/BUILD_DEBUG.sh; then
+    consoleError "BUILD_DEBUG.sh failed" 1>&2
+    return 1
+  fi
+  export BUILD_DEBUG
+
   test "${BUILD_DEBUG-}"
 }
 
@@ -46,22 +54,6 @@ buildDebugStop() {
 }
 
 #
-# Returns whether the shell has the error exit flag set
-#
-# Useful if you need to temporarily enable or disable it.
-#
-# Usage: {fn}
-#
-isErrorExit() {
-  case $- in
-    *e*)
-      return 0
-      ;;
-  esac
-  return 1
-}
-
-#
 # Returns whether the shell has the debugging flag set
 #
 # Useful if you need to temporarily enable or disable it.
@@ -78,6 +70,22 @@ isBashDebug() {
 }
 
 #
+# Returns whether the shell has the error exit flag set
+#
+# Useful if you need to temporarily enable or disable it.
+#
+# Usage: {fn}
+#
+isErrorExit() {
+  case $- in
+    *e*)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+#
 # Usage: {fn}
 # Example:     save=$(saveErrorExit)
 # Example:     set +x
@@ -86,7 +94,7 @@ isBashDebug() {
 # See: restoreErrorExit
 saveErrorExit() {
   if isErrorExit; then
-    echo 1
+    printf %d 1
   fi
 }
 
@@ -98,8 +106,8 @@ saveErrorExit() {
 # See: saveErrorExit
 restoreErrorExit() {
   if [ "$1" = "1" ]; then
-    set -x
+    set -e
   else
-    set +x
+    set +e
   fi
 }

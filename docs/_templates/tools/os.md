@@ -43,6 +43,7 @@
 {pathAppend}
 
 {realPath}
+{renameLink}
 
 {JSON}
 

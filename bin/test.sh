@@ -73,14 +73,19 @@ buildTestSuite() {
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
+  export BUILD_COLORS_MODE
   export cleanExit=
   export testTracing
+
+  BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+
+  printf "%s %s\n" "$(consoleInfo "Color mode is")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
   trap messyTestCleanup EXIT QUIT TERM
 
   messyOption=
-  allTests=(git decoration url ssh log version colors type os hook pipeline identical)
+  allTests=(debug git decoration url ssh log version colors type os hook pipeline identical)
   allTests+=(text markdown documentation assert usage docker api tests aws php bin deploy deployment)
   allTests+=(sysvinit)
   while read -r shortTest; do

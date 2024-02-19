@@ -64,6 +64,12 @@ cleanTestName() {
   printf %s "$testName"
 }
 
+#
+# Load one or more test files and run the tests defined within
+#
+# Usage: {fn} filename [ ... ]
+# Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
+#
 loadTestFiles() {
   local fileCount testCount tests testName quietLog=$1 testDirectory resultCode=0 resultReason
 
@@ -84,7 +90,10 @@ loadTestFiles() {
     else
       testCount=${#tests[@]}
       # shellcheck source=/dev/null
-      . "./test/tools/$1"
+      if ! . "./test/tools/$1"; then
+        resultReason="Include $1 failed"
+        resultCode="$errorEnvironment"
+      fi
       clearLine
       if [ "${#tests[@]}" -le "$testCount" ]; then
         consoleError "No tests defined in ./test/tools/$1"
@@ -106,15 +115,20 @@ loadTestFiles() {
     else
       # Test
       testSection "${test#\#}"
-      printf "%s %s ...\n" "$(consoleCyan "Running")" "$(consoleCode "$test")"
+      printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$test")"
+      set -eou pipefail
       if ! "$test" "$quietLog"; then
-        cd "$testDirectory" || return $?
+        resultCode=$errorTest
+      fi
+      set +x
+      set -eou pipefail
+      cd "$testDirectory" || _loadTestFiles "$errorEnvironment" "Unable to cd $testDirectory" || return $?
+      if [ "$resultCode" -ne 0 ]; then
         printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleRed "FAILED")" 1>&2
         buildFailed "$quietLog" || :
         resultReason="test failed"
-        return "$errorTest"
+        return "$resultCode"
       fi
-      cd "$testDirectory" || return $?
       printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleGreen "passed")"
     fi
     unset 'tests[0]'
@@ -128,6 +142,9 @@ loadTestFiles() {
     printf "resultReason: %s\n" "$(consoleMagenta "$resultReason")"
   fi
   return $resultCode
+}
+_loadTestFiles() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 testFailed() {

@@ -147,12 +147,12 @@ _labeledBigText() {
 # Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
 repeat() {
   local count=$((${1:-2} + 0))
-  local powers=() curPow
+  local powers=() curPow IFS
 
   shift || :
   powers=("$*")
   curPow=${#powers[@]}
-  while [ $((2 ** curPow)) -lt $count ]; do
+  while [ $((2 ** curPow)) -le $count ]; do
     powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
     curPow=$((curPow + 1))
   done

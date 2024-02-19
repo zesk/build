@@ -184,6 +184,8 @@ _waitForValue() {
     if [ "$exitCode" -eq "$errorTimeout" ]; then
       consoleError "Timed out ... FAILED" 1>&2
     fi
+  else
+    consoleWarning "_waitForValueTimeout failed exitCode=$exitCode"
   fi
   return $exitCode
 }

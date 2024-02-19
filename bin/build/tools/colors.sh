@@ -30,12 +30,43 @@ consoleReset() {
 }
 
 #
+# Set colors to deal with dark or light-background consoles
+#
+consoleColorMode() {
+  # shellcheck source=/dev/null
+  if ! source "bin/build/env/BUILD_COLORS_MODE.sh"; then
+    consoleError "Unable to load BUILD_COLORS_MODE" 1>&2
+    return 1
+  fi
+
+  export BUILD_COLORS_MODE
+
+  case "$1" in
+    --dark)
+      BUILD_COLORS_MODE=dark
+      ;;
+    --light)
+      BUILD_COLORS_MODE=light
+      ;;
+    *)
+      consoleError "Unknown console mode $1" 1>&2
+      return 1
+      ;;
+  esac
+}
+
+#
 # Usage: hasConsoleAnimation
 # Exit Code: 0 - Supports console animation
 # Exit Code; 1 - Does not support console animation
 # Environment: CI - If this has a non-blank value, this returns true (supports animation)
 #
 hasConsoleAnimation() {
+  # shellcheck source=/dev/null
+  if ! source "./bin/build/env/CI.sh"; then
+    return 1
+  fi
+  export CI
   [ -z "${CI-}" ]
 }
 
@@ -139,12 +170,57 @@ allColorTest() {
 #
 colorTest() {
   local i colors=(
-    consoleRed consoleGreen consoleBoldGreen consoleCyan consoleBlue consoleOrange
-    consoleMagenta consoleBlack consoleWhite consoleBoldMagenta consoleUnderline
-    consoleBold consoleBoldRed consoleCode consoleWarning consoleSuccess
-    consoleDecoration consoleError consoleLabel consoleValue
+    consoleRed consoleBoldRed
+    consoleGreen consoleBoldGreen
+    consoleBlue consoleBoldBlue
+    consoleCyan consoleBoldCyan
+    consoleOrange consoleBoldOrange
+    consoleMagenta consoleBoldMagenta
+    consoleBlack consoleBoldBlack
+    consoleWhite consoleBoldWhite
+    consoleUnderline
+    consoleBold
+    consoleCode
+    consoleSuccess
+    consoleError
+    consoleLabel
+    consoleValue
+    consoleWarning
+    consoleDecoration
+    consoleSubtle
   )
   for i in "${colors[@]}"; do
+    consoleReset
+    $i "$i: The quick brown fox jumped over the lazy dog."
+  done
+}
+
+# Summary: Output colors
+# Outputs sample sentences for the `consoleAction` commands to see what they look like.
+#
+semanticColorTest() {
+  local i colors=(
+    consoleInfo
+    consoleSuccess
+    consoleWarning
+    consoleError
+    consoleCode
+    consoleLabel
+    consoleValue
+    consoleDecoration
+    consoleSubtle
+  )
+
+  # shellcheck source=/dev/null
+  if ! source "bin/build/env/BUILD_COLORS_MODE.sh"; then
+    consoleError "Unable to load BUILD_COLORS_MODE" 1>&2
+    return 1
+  fi
+
+  export BUILD_COLORS_MODE
+  consoleNameValue 30 "BUILD_COLORS_MODE" "$BUILD_COLORS_MODE"
+  for i in "${colors[@]}"; do
+    consoleReset
     $i "$i: The quick brown fox jumped over the lazy dog."
   done
 }
@@ -161,6 +237,9 @@ _consoleRed() {
   local label="$1"
   shift
   __consoleOutput "$label" '\033[31m' '\033[0m' "$@"
+}
+consoleBoldRed() {
+  __consoleEscape '\033[31;1m' '\033[0m' "$@"
 }
 
 consoleGreen() {
@@ -183,6 +262,9 @@ _consoleCyan() {
   local label="$1"
   shift
   __consoleOutput "$label" '\033[36m' '\033[0m' "$@"
+}
+consoleBoldCyan() {
+  __consoleOutput "" '\033[36;1m' '\033[0m' "$@"
 }
 consoleBlue() {
   __consoleEscape '\033[94m' '\033[0m' "$@"
@@ -207,6 +289,9 @@ _consoleOrange() {
   # see https://i.stack.imgur.com/KTSQa.png
   __consoleOutput "$label" '\033[38;5;214m' '\033[0m' "$@"
 }
+consoleBoldOrange() {
+  __consoleOutput "" '\033[38;5;214;1m' '\033[0m' "$@"
+}
 
 # shellcheck disable=SC2120
 consoleMagenta() {
@@ -214,6 +299,12 @@ consoleMagenta() {
 }
 consoleBlack() {
   __consoleEscape '\033[30m' '\033[0m' "$@"
+}
+consoleBoldBlack() {
+  __consoleEscape '\033[30;1m' '\033[0m' "$@"
+}
+consoleBoldWhite() {
+  __consoleEscape '\033[48;5;0;37;1m' '\033[0m' "$@"
 }
 consoleWhite() {
   __consoleEscape '\033[48;5;0;37m' '\033[0m' "$@"
@@ -229,10 +320,7 @@ consoleUnderline() {
   __consoleEscape '\033[4m' '\033[24m' "$@"
 }
 consoleBold() {
-  __consoleEscape '\033[1m' '\033[21m' "$@"
-}
-consoleBoldRed() {
-  __consoleEscape '\033[31m' '\033[0m' "$@"
+  __consoleEscape '\033[1m' '\033[0m' "$@"
 }
 consoleNoBold() {
   echo -en '\033[21m'
@@ -244,16 +332,35 @@ consoleNoUnderline() {
 #
 # Semantics-based
 #
+# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
+#
+__consoleOutputMode() {
+  local label="$1" start
+  export BUILD_COLORS_MODE
+
+  shift || :
+  if [ "${BUILD_COLORS_MODE-}" = "dark" ]; then
+    shift || :
+    __consoleOutput "$label" "$@"
+  else
+    start="$1"
+    shift || :
+    shift || :
+    __consoleOutput "$label" "$start" "$@"
+  fi
+}
 
 #
 # info
 #
 # shellcheck disable=SC2120
 consoleInfo() {
-  _consoleCyan Info "$@"
+  _consoleInfo "Info" "$@"
 }
 _consoleInfo() {
-  _consoleCyan "$@"
+  local label="$1"
+  shift || :
+  __consoleOutputMode "$label" '\033[38;5;20m' '\033[38;5;159m' '\033[0m' "$@"
 }
 
 #
@@ -262,22 +369,21 @@ _consoleInfo() {
 # IDENTICAL consoleCode 4
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleOutput '' '\033[30;102m' '\033[0m' "$@"
+  __consoleOutput '' '\033[1;44m' '\033[0m' "$@"
 }
 
 # IDENTICAL consoleError 4
 # shellcheck disable=SC2120
 consoleError() {
-  __consoleOutput ERROR '\033[1;31m' '\033[0m' "$@"
+  __consoleOutput ERROR '\033[1;38;5;255;48;5;9m' '\033[0m' "$@"
 }
-
 
 #
 # warning things are not normal
 #
 # shellcheck disable=SC2120
 consoleWarning() {
-  _consoleOrange Warning "$@"
+  __consoleOutput "Warning" '\033[1;93;41m' '\033[0m' "$@"
 }
 
 #
@@ -285,7 +391,7 @@ consoleWarning() {
 #
 # shellcheck disable=SC2120
 consoleSuccess() {
-  _consoleGreen SUCCESS "$@"
+  __consoleOutput "SUCCESS" '\033[1;38;5;10;48;5;232m' '\033[0m' "$@"
 }
 
 #
@@ -293,7 +399,14 @@ consoleSuccess() {
 #
 # shellcheck disable=SC2120
 consoleDecoration() {
-  consoleBoldMagenta "$@"
+  __consoleOutput '' '\033[1;48;5;10;38;5;16;1m' '\033[0m' "$@"
+}
+
+#
+# Keep things subtle
+#
+consoleSubtle() {
+  __consoleOutputMode '' '\033[1;38;5;252m' '\033[1;38;5;240m' '\033[0m' "$@"
 }
 
 #
@@ -305,7 +418,7 @@ consoleDecoration() {
 #
 # shellcheck disable=SC2120
 consoleLabel() {
-  consoleOrange "$@"
+  __consoleOutputMode '' '\033[36m' '\033[1;96m' '\033[0m' "$@"
 }
 
 #
@@ -313,9 +426,10 @@ consoleLabel() {
 #
 # shellcheck disable=SC2120
 consoleValue() {
-  consoleMagenta "$@"
+  __consoleOutputMode '' '\033[1;47;33m' '\033[1;33m' '\033[0m' "$@"
 }
 
+#
 # Summary: Output a name value pair
 #
 # Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output

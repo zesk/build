@@ -8,7 +8,7 @@
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh prefixLines
+# Depends: colors.sh text.sh prefixLines usage.sh
 #
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
@@ -33,22 +33,19 @@ usageDocument() {
 
   functionDefinitionFile="${1-}"
   if [ ! -f "$functionDefinitionFile" ]; then
-    _documentationTemplateCompileUsage "$errorArgument" "${FUNCNAME[0]}: File \"$1\" not found" 1>&2
-    return $?
+    _usageDocument "$errorArgument" "${FUNCNAME[0]}: File \"$1\" not found" || return $?
   fi
-  shift || :
-  functionName="${1}"
+  shift || _usageDocument "$errorArgument" "shift failed"
+  functionName="${1-}"
   if [ -z "$functionName" ]; then
-    _documentationTemplateCompileUsage "$errorArgument" "${FUNCNAME[0]}: No function need" 1>&2
-    return $?
+    _usageDocument "$errorArgument" "functionName required" || return $?
   fi
-  shift || :
+  shift || _usageDocument "$errorArgument" "shift failed"
   exitCode="${1-NONE}"
   shift || :
-
   if [ "$exitCode" = "NONE" ]; then
-    consoleError "NO EXIT CODE"
-    exitCode=1
+    consoleError "NO EXIT CODE" 1>&2
+    exitCode="$errorEnvironment"
   fi
   variablesFile=$(mktemp)
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
@@ -472,7 +469,7 @@ __dumpNameValuePrefix() {
   shift
   shift
   while [ $# -gt 0 ]; do
-    printf "%s%s\n" "$prefix" "$(escapeSingleQuotes "$1")"
+    printf "%s%s\n" "$prefix" "$1"
     shift
   done
   printf "%s\n" "EOF"

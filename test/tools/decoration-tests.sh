@@ -20,7 +20,7 @@ testRepeat() {
 tests+=(testAlignRight)
 testAlignRight() {
   assertEquals "$(alignRight 10 "Dogmatic")" "  Dogmatic" || return $?
-  assertEquals "$(alignRight 10 "")"         "          " || return $?
+  assertEquals "$(alignRight 10 "")" "          " || return $?
   assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic" || return $?
   assertEquals "$(alignRight 2 "")" "  " || return $?
 }
@@ -30,4 +30,14 @@ testAlignLeft() {
   assertEquals "$(alignLeft 10 "")" "          " || return $?
   assertEquals "$(alignLeft 2 "Dogmatic")" "Dogmatic" || return $?
   assertEquals "$(alignLeft 2 "")" "  " || return $?
+}
+
+tests+=(testRepeat2)
+testRepeat2() {
+  local expected
+
+  expected="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  for n in $(seq 1 ${#expected}); do
+    assertEquals "${expected:0:$n}" "$(repeat "$n" x)" "Failed to match repeat $n" || return $?
+  done
 }
