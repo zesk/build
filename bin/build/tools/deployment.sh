@@ -47,9 +47,10 @@ deployBuildEnvironment() {
     return "$errorEnvironment"
   fi
 
-  deployArgs=(--id "$APPLICATION_ID" --home "$DEPLOY_REMOTE_PATH" --application "$APPLICATION_REMOTE_PATH" "$DEPLOY_USER_HOSTS")
+  deployArgs=(--id "$APPLICATION_ID" --home "${DEPLOY_REMOTE_PATH%/}" --application "${APPLICATION_REMOTE_PATH%/}" "$DEPLOY_USER_HOSTS")
   if ! deployToRemote --deploy "${deployArgs[@]}"; then
-    deploymentCleanup "Deployment failed" || :
+    consoleError "Deployment failed, reverting ..." || :
+    deployToRemote --revert "${deployArgs[@]}" || :
     return "$errorEnvironment"
   fi
   if hasHook deploy-confirm && ! runHook deploy-confirm; then
@@ -345,7 +346,7 @@ _deploySuccessful() {
 #
 # Test: testDeployToRemote - INCOMPLETE
 deployToRemote() {
-  local initTime start deployArgs
+  local initTime start deployArgs exitCode
   local makeDirectory
 
   local deployFlag revertFlag debuggingFlag cleanupFlag
@@ -357,19 +358,19 @@ deployToRemote() {
 
   # shellcheck source=/dev/null
   if ! source ./bin/build/env/HOME.sh; then
-    _deployToRemote $errorEnvironment "HOME.sh failed" || return $?
+    _deployToRemote "$errorEnvironment" "HOME.sh failed" || return $?
   fi
 
   initTime=$(beginTiming)
 
   if [ ! -d "$HOME" ]; then
-    _deployToRemote $errorEnvironment "No HOME defined or not a directory: $HOME" || return $?
+    _deployToRemote "$errorEnvironment" "No HOME defined or not a directory: $HOME" || return $?
   fi
 
   # dotEnvConfigure
 
   # DEBUGGING # consoleWarning "ARGS: $*"
-
+  exitCode=0
   deployFlag=
   revertFlag=
   debuggingFlag=
@@ -382,30 +383,34 @@ deployToRemote() {
   remoteArgs=()
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _deployToRemote $errorArgument "Blank argument" || return $?
+      _deployToRemote "$errorArgument" "Blank argument" || return $?
     fi
     case $1 in
       --target)
+        shift || :
         if [ -n "$buildTarget" ]; then
-          _deployToRemote $errorArgument "--target supplied twice" || return $?
+          _deployToRemote "$errorArgument" "--target supplied twice" || return $?
         fi
         buildTarget="$1"
         ;;
       --home)
+        shift || :
         if [ -n "$deployHome" ]; then
-          _deployToRemote $errorArgument "--home supplied twice" || return $?
+          _deployToRemote "$errorArgument" "--home supplied twice" || return $?
         fi
         deployHome="$1"
         ;;
       --application)
+        shift || :
         if [ -n "$applicationPath" ]; then
-          _deployToRemote $errorArgument "--application supplied twice" || return $?
+          _deployToRemote "$errorArgument" "--application supplied twice" || return $?
         fi
         applicationPath="$1"
         ;;
       --id)
+        shift || :
         if [ -n "$applicationId" ]; then
-          _deployToRemote $errorArgument "--id supplied twice" || return $?
+          _deployToRemote "$errorArgument" "--id supplied twice" || return $?
         fi
         applicationId="$1"
         ;;
@@ -415,21 +420,21 @@ deployToRemote() {
         ;;
       --deploy)
         if test "$deployFlag"; then
-          _deployToRemote $errorArgument "--deploy arg passed twice" || return $?
+          _deployToRemote "$errorArgument" "--deploy arg passed twice" || return $?
         fi
         deployFlag=1
         remoteArgs+=("$1")
         ;;
       --revert)
         if test "$revertFlag"; then
-          _deployToRemote $errorArgument "--revert specified twice" || return $?
+          _deployToRemote "$errorArgument" "--revert specified twice" || return $?
         fi
         revertFlag=1
         remoteArgs+=("$1")
         ;;
       --cleanup)
         if test "$cleanupFlag"; then
-          _deployToRemote $errorArgument "--cleanup specified twice" || return $?
+          _deployToRemote "$errorArgument" "--cleanup specified twice" || return $?
         fi
         cleanupFlag=1
         remoteArgs+=("$1")
@@ -459,38 +464,38 @@ deployToRemote() {
 
   # Flag semantics
   if test "$revertFlag" && test "$cleanupFlag"; then
-    _deployToRemote $errorArgument "--revert and --cleanup are mutually exclusive" || return $?
+    _deployToRemote "$errorArgument" "--revert and --cleanup are mutually exclusive" || return $?
   fi
   if test "$revertFlag" && test "$deployFlag"; then
-    _deployToRemote $errorArgument "--revert and --deploy are mutually exclusive" || return $?
+    _deployToRemote "$errorArgument" "--revert and --deploy are mutually exclusive" || return $?
   fi
   if test "$deployFlag" && test "$cleanupFlag"; then
-    _deployToRemote $errorArgument "--deploy and --cleanup are mutually exclusive" || return $?
+    _deployToRemote "$errorArgument" "--deploy and --cleanup are mutually exclusive" || return $?
   fi
   # Values are supplied (required)
   if [ -z "$applicationId" ]; then
-    _deployToRemote $errorArgument "Missing applicationId" || return $?
+    _deployToRemote "$errorArgument" "Missing applicationId" || return $?
   fi
   if [ -z "$deployHome" ]; then
-    _deployToRemote $errorArgument "Missing deployHome" || return $?
+    _deployToRemote "$errorArgument" "Missing deployHome" || return $?
   fi
   if [ -z "$applicationPath" ]; then
-    _deployToRemote $errorArgument "Missing applicationPath" || return $?
+    _deployToRemote "$errorArgument" "Missing applicationPath" || return $?
   fi
   if [ -z "$buildTarget" ]; then
     if ! buildTarget=$(deployPackageName "$deployHome"); then
-      _deployToRemote $errorEnvironment "Missing applicationPath" || return $?
+      _deployToRemote "$errorEnvironment" "Missing applicationPath" || return $?
     fi
   fi
   #
   # Current IP
   #
   if ! currentIP=$(ipLookup) || [ -z "$currentIP" ]; then
-    _deployToRemote $errorEnvironment "Unable to determine IP address: $currentIP" || return $?
+    _deployToRemote "$errorEnvironment" "Unable to determine IP address: $currentIP" || return $?
   fi
 
   if [ 0 -eq ${#userHosts[@]} ]; then
-    _deployToRemote $errorEnvironment "No user hosts provided?" || return $?
+    _deployToRemote "$errorEnvironment" "No user hosts provided?" || return $?
   fi
 
   {
@@ -538,7 +543,7 @@ deployToRemote() {
 
     # reset artifact file
     if ! temporaryCommandsFile=$(mktemp); then
-      _deployToRemote $errorEnvironment "mktemp failed" || return $?
+      _deployToRemote "$errorEnvironment" "mktemp failed" || return $?
     fi
     printf "" >"$deployedHostArtifact"
     #
@@ -547,21 +552,28 @@ deployToRemote() {
     for userHost in "${userHosts[@]}"; do
       start=$(beginTiming) || :
       printf "%s: %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Setting up")"
-      for makeDirectory in "$applicationPath" "$deployHome" "$deployHome/$applicationId/app"; do
+      if ! for makeDirectory in "$applicationPath" "$deployHome" "$deployHome/$applicationId"; do
         printf 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
-      done | ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e
+      done | ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e; then
+        _deployToRemote "$errorEnvironment" "No permission to create directories" || return $?
+      fi
       printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$deployHome/$applicationId/$buildTarget")"
-      printf '@put %s %s' "$buildTarget" "$deployHome/$applicationId/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost"
+      if ! printf '@put %s %s' "$buildTarget" "$deployHome/$applicationId/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
+        _deployToRemote "$errorEnvironment" "$userHost failed" || return $?
+      fi
       reportTiming "$start" "Deployment setup completed on $(consoleGreen "$userHost") in " || :
     done
-
+    if ! __deployCommandsFile "$deployHome/$applicationId/app" \
+      "rm -rf \"$deployHome/$applicationId/app\"" \
+      "mkdir \"$deployHome/$applicationId/app\"" \
+      "tar -C \"$deployHome/$applicationId/app\" -zxf \"$deployHome/$applicationId/$buildTarget\" --no-xattrs" "--deploy" >"$temporaryCommandsFile"; then
+      _deployToRemote "$errorEnvironment" "Generating commands file for $buildTarget expansion" || return $?
+    fi
+    wrapLines "COMMANDS: $(consodeCode)" "$(consoleReset)" <"$temporaryCommandsFile"
     for userHost in "${userHosts[@]}"; do
       start=$(beginTiming) || :
 
       host="${userHost##*@}"
-      if ! __deployCommandsFile "$deployHome/$applicationId" "tar -C app zxf $buildTarget --no-xattrs" >"$temporaryCommandsFile"; then
-        _deployToRemote $errorEnvironment "Generating commands file for $buildTarget expansion" || return $?
-      fi
       printf "%s %s: %s\n%s\n" "$(consoleInfo -n Deploying the code to)" "$(consoleGreen "$userHost")" "$(consoleRed "$applicationPath")" "$(consoleInfo "SSH output BEGIN >>>")"
       if buildDebugEnabled; then
         consoleInfo "DEBUG: Commands file is:"
@@ -570,7 +582,7 @@ deployToRemote() {
       ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
       consoleInfo "<<< SSH output END"
       if ! printf "%s\n" "$host" >>"$deployedHostArtifact"; then
-        _deployToRemote $errorEnvironment "Unable to write $host to $deployedHostArtifact" || return $?
+        _deployToRemote "$errorEnvironment" "Unable to write $host to $deployedHostArtifact" || return $?
       fi
       reportTiming "$start" "Deployed to $(consoleGreen "$userHost")" || :
     done
@@ -607,14 +619,26 @@ _deployToRemote() {
 # Usage: {fn} remoteDirectory  [ --deploy | --revert | --finish ] applicationId deployHome applicationPath
 #
 __deployCommandsFile() {
+  local appHome
   if buildDebugEnabled; then
     # Debugging remote shell
     printf "%s\n%s\n" "export BUILD_DEBUG=1" "set -x"
   fi
-  printf "cd \"%s\"" "$1"
+  appHome="$1"
   shift || :
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -*)
+        break
+        ;;
+      *)
+        printf "%s || exit \$?\n" "$1"
+        ;;
+    esac
+    shift || :
+  done
   # shellcheck disable=SC2016
-  echo "./bin/build/tools.sh deployRemoteFinish $(printf '"%s" ' "$@")"
+  printf "%s/%s\n" "$appHome" "bin/build/tools.sh deployRemoteFinish $(printf '"%s" ' "$@") || exit \$?"
 }
 
 #

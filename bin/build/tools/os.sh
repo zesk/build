@@ -213,18 +213,19 @@ renameFiles() {
 createTarFile() {
   local target="${1-}"
 
+  # -h means follow symlinks
   shift || return "$errorArgument"
   if tar --version | grep -q GNU; then
     # GNU
     # > tar --version
     # tar (GNU tar) 1.34
     # ...
-    tar czf "$target" --owner=0 --group=0 --no-xattrs "$@"
+    tar -czf "$target" --owner=0 --group=0 --no-xattrs -h "$@"
   else
     # BSD
     # > tar --version
     # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
-    tar czf "$target" --uid 0 --gid 0 --no-xattrs "$@"
+    tar -czf "$target" --uid 0 --gid 0 --no-xattrs -h "$@"
   fi
 }
 
