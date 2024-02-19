@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh
+# Depends: colors.sh documentation.sh
 # bin: git
 #
 # Docs: contextOpen ./docs/_templates/tools/git.md
@@ -423,6 +423,61 @@ gitCommit() {
   _gitCommit "$errorEnvironment" "Unable to find git repository" || return $?
 }
 _gitCommit() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: gitMainly
+# Exit Code: 1 - Already in main, staging, or HEAD, or git merge failed
+# Exit Code: 0 - git merge succeeded
+# Merge `staging` and `main` branches of a Git repository into the current branch.
+#
+# Will merge `origin/staging` and `origin/main` after doing a `--pull` for both of them
+#
+# Current repository should be clean and have no modified files.
+#
+gitMainly() {
+  local branch returnCode updateOther
+
+  if ! branch=$(git rev-parse --abbrev-ref HEAD); then
+    consoleError "Git not present" 1>&2
+    return "$errorEnvironment"
+  fi
+  case "$branch" in
+    main | staging)
+      _gitMainly "$errorEnvironment" "Already in branch $(consoleCode "$branch")" || return $?
+      ;;
+    HEAD)
+      _gitMainly "$errorEnvironment" "Ignore branches named $(consoleCode "$branch")" || return $?
+      ;;
+    *)
+      returnCode=0
+      for updateOther in staging main; do
+        if ! git checkout "$updateOther" 2>/dev/null; then
+          printf "%s %s\n" "$(consoleError "Unable to update branch")" "$(consoleCode "$updateOther")" 1>&2
+          git status -s || consoleError "git status failed?" || :
+          returnCode="$errorEnvironment"
+          break
+        elif ! git pull; then
+          consoleError "Unable to update $updateOther" 1>&2
+          returnCode="$errorEnvironment"
+        fi
+      done
+      if [ "$returnCode" -ne 0 ]; then
+        return "$returnCode"
+      fi
+      if ! git checkout "$branch"; then
+        consoleError "Unable to switch bach to $branch" 1>&2
+        returnCode="$errorEnvironment"
+      fi
+      if git merge -m "Merging staging and main with $branch" origin/staging origin/main; then
+        printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
+        return "$returnCode"
+      fi
+      return $errorEnvironment
+      ;;
+  esac
+}
+_gitMainly() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

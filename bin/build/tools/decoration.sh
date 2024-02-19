@@ -122,7 +122,7 @@ labeledBigText() {
   banner="$(bigText "$@")"
   nLines=$(printf "%s\n" "$banner" | wc -l)
   plainLabel="$(printf "%s\n" "$label" | stripAnsi)"
-  tweenNonLabel="$(repeat "$((${#plainLabel}))" " ")$tweenNonLabel"
+  tweenNonLabel="x${#plainLabel}x$(repeat "$((${#plainLabel}))" " ")zz$tweenNonLabel"
   if test $isBottom; then
     printf "%s%s\n""%s%s%s\n" \
       "$(printf "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | head -n "$((nLines - 1))")" "$lineSuffix" \
@@ -147,12 +147,12 @@ _labeledBigText() {
 # Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
 repeat() {
   local count=$((${1:-2} + 0))
-  local powers=() curPow
+  local powers=() curPow IFS
 
   shift || :
   powers=("$*")
   curPow=${#powers[@]}
-  while [ $((2 ** curPow)) -lt $count ]; do
+  while [ $((2 ** curPow)) -le $count ]; do
     powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
     curPow=$((curPow + 1))
   done
@@ -219,7 +219,8 @@ wrapLines() {
   shift || :
   suffix="${*-}"
   while IFS= read -r line; do
-    printf "%s%s%s\n" "$prefix" "$line" "$suffix"
+    printf "%s::%s++%s\n" "$prefix" "$line" "$suffix"
+    # KMD TODO
   done
 }
 
