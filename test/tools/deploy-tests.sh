@@ -273,7 +273,7 @@ testDeployApplication() {
   mkdir -p "$d/DEPLOY/$migrateVersion"
   assertExitCode 0 test -d "$d/DEPLOY/$migrateVersion" || return $?
   # Create tar file BUT it's corrupt!
-  touch "$d/DEPLOY/$migrateVersion/$(deployPackageName "$d/DEPLOY")"
+  touch "$d/DEPLOY/$migrateVersion/$(deployPackageName)"
 
   # ________________________________________________________________________________________________________________________________
   testSection deployMigrateDirectoryToLink succeeds - now deployApplication should work - does not check old TAR
@@ -408,10 +408,12 @@ testDeployApplication() {
 
 tests=(testDeployPackageName "${tests[@]}")
 testDeployPackageName() {
-  assertExitCode --stderr-ok 2 deployPackageName "$(pwd)/notThere" || return $?
-  assertExitCode --stderr-match 'deployHome required' 2 deployPackageName || return $?
-  assertExitCode 0 deployPackageName "$(pwd)" || return $?
-  assertEquals "app.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
+  local saveTarget
+
+  saveTarget=${BUILD_TARGET-}
+
+  assertExitCode 0 deployPackageName || return $?
+  assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 
   # shellcheck source=/dev/null
   source bin/build/env/BUILD_TARGET.sh || return $?
@@ -420,12 +422,14 @@ testDeployPackageName() {
 
   BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz"
 
-  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName)" || return $?
 
   unset BUILD_TARGET
 
   # shellcheck source=/dev/null
   source bin/build/env/BUILD_TARGET.sh || return $?
 
-  assertEquals "app.tar.gz" "$(deployPackageName "$(pwd)")" || return $?
+  assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
+
+  BUILD_TARGET="$saveTarget"
 }
