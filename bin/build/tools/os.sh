@@ -678,9 +678,9 @@ processVirtualMemoryAllocation() {
       _processVirtualMemoryAllocation "$errorArgument" "Not an integer"
       return $?
     fi
-    value="$(ps -o vsz -p "$pid" | tail -n 1)"
+    value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
     if ! isInteger "$value"; then
-      _processVirtualMemoryAllocation "$errorEnvironment" "ps returned non-integer" || return $?
+      _processVirtualMemoryAllocation "$errorEnvironment" "ps returned non-integer: \"$(consoleCode "$value")\"" || return $?
     fi
     printf %d $((value * 1))
     shift
