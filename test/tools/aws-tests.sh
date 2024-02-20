@@ -37,11 +37,11 @@ testAWSIPAccess() {
   # Work using environment variables
   testSection "CLI IP and env credentials"
   start=$(beginTiming)
-  if ! bin/build/pipeline/aws-ip-access.sh --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
-  if ! bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! awsIPAccess --revoke --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
@@ -57,7 +57,7 @@ testAWSIPAccess() {
 
   testSection "CLI IP and no credentials - fails"
   start=$(beginTiming)
-  if bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP" 2>/dev/null >>"$quietLog"; then
+  if awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" 2>/dev/null >>"$quietLog"; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
@@ -73,11 +73,11 @@ testAWSIPAccess() {
   testSection "CLI IP and file system credentials"
   start=$(beginTiming)
   # Work using environment variables
-  if ! bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
-  if ! bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
@@ -86,11 +86,11 @@ testAWSIPAccess() {
   testSection "Generated IP and file system credentials"
   start=$(beginTiming)
   # Work using environment variables
-  if ! bin/build/pipeline/aws-ip-access.sh --services ssh,http --id robot@zesk/build-autoip "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
-  if ! bin/build/pipeline/aws-ip-access.sh --revoke --services ssh,http --id robot@zesk/build-autoip "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog"
     return "$errorEnvironment"
   fi
