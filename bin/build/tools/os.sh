@@ -213,18 +213,19 @@ renameFiles() {
 createTarFile() {
   local target="${1-}"
 
+  # -h means follow symlinks
   shift || return "$errorArgument"
   if tar --version | grep -q GNU; then
     # GNU
     # > tar --version
     # tar (GNU tar) 1.34
     # ...
-    tar czf "$target" --owner=0 --group=0 --no-xattrs "$@"
+    tar -czf "$target" --owner=0 --group=0 --no-xattrs -h "$@"
   else
     # BSD
     # > tar --version
     # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
-    tar czf "$target" --uid 0 --gid 0 --no-xattrs "$@"
+    tar -czf "$target" --uid 0 --gid 0 --no-acls --no-fflags --no-xattrs -h "$@"
   fi
 }
 
@@ -770,4 +771,80 @@ renameLink() {
   else
     mv -fh "$@"
   fi
+}
+
+# Hard-coded services for:
+#
+# - `ssh` -> 22
+# - `http`-> 80
+# - `https`-> 80
+# - `postgres`-> 5432
+# - `mariadb`-> 3306
+# - `mysql`-> 3306
+#
+# Backup when `/etc/services` does not exist.
+#
+# Usage: {fn} service [ ... ]
+# Argument: service - A unix service typically found in `/etc/services`
+# Output: Port number of associated service (integer) one per line
+# Exit Code: 1 - service not found
+# Exit Code: 0 - service found and output is an integer
+# See: serviceToPort
+#
+serviceToStandardPort() {
+  local port
+  if [ $# -eq 0 ]; then
+    return $errorArgument
+  fi
+  while [ $# -gt 0 ]; do
+    case "$(trimSpace "${1-}")" in
+      ssh) port=22 ;;
+      http) port=80 ;;
+      https) port=443 ;;
+      mariadb | mysql) port=3306 ;;
+      postgres) port=5432 ;;
+      *) return $errorEnvironment ;;
+    esac
+    printf "%d\n" "$port"
+    shift || return "$errorArgument"
+  done
+}
+
+# Get the port number associated with a service
+#
+# Usage: {fn} service [ ... ]
+# Argument: service - A unix service typically found in `/etc/services`
+# Output: Port number of associated service (integer) one per line
+# Exit Code: 1 - service not found
+# Exit Code: 2 - bad argument or invalid port
+# Exit Code: 0 - service found and output is an integer
+#
+serviceToPort() {
+  local port servicesFile service
+
+  servicesFile=/etc/services
+  if [ ! -f "$servicesFile" ]; then
+    serviceToStandardPort "$@"
+  else
+    if [ $# -eq 0 ]; then
+      _serviceToPort "$errorArgument" "Require at least one service" || return $?
+    fi
+    while [ $# -gt 0 ]; do
+      service="$(trimSpace "${1-}")"
+      if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
+        if ! isInteger "$port"; then
+          _serviceToPort "$errorEnvironment" "Port found in $servicesFile is not an integer: $port" || return $?
+        fi
+      else
+        if ! port="$(serviceToStandardPort "$service")"; then
+          return $errorEnvironment
+        fi
+      fi
+      printf "%d\n" "$port"
+      shift || _serviceToPort "$errorArgument" "shift failed" || return $?
+    done
+  fi
+}
+_serviceToPort() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
