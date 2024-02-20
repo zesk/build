@@ -5,7 +5,12 @@
 # Depends: colors.sh text.sh
 # bin: test echo date
 #
+
+# IDENTICAL errorEnvironment 1
 errorEnvironment=1
+
+# IDENTICAL errorArgument 1
+errorArgument=2
 
 ###############################################################################
 #
@@ -29,6 +34,7 @@ errorEnvironment=1
 # Exit Code: if `aptInstall` fails, the exit code is returned
 # Depends: apt-get
 #
+# shellcheck disable=SC2120
 awsInstall() {
   local zipFile=awscliv2.zip
   local url buildDir quietLog
@@ -192,4 +198,310 @@ awsEnvironment() {
     fi
   fi
   return "$errorEnvironment"
+}
+
+# Usage: {fn} --add --group group [ --region region ] --port port --description description --ip ip
+# Usage: {fn} --remove --group group [ --region region ] --description description
+# Argument: --remove - Optional. Flag. Remove instead of add - only `group`, and `description` required.
+# Argument: --add - Optional. Flag. Add to security group (default).
+# Argument: --group group - Required. String. Security Group ID
+# Argument: --region region - Optional. String. AWS region, defaults to `AWS_REGION`. Must be supplied.
+# Argument: --port port - Required for `--add` only. Integer. service port
+# Argument: --description description - Required. String. Description to identify this record.
+# Argument: --ip ip - Required for `--add` only. String. IP Address to add or remove.
+#
+#
+awsSecurityGroupIPModify() {
+  local arg group port description start region addingFlag ip tempErrorFile
+  local savedArgs
+
+  savedArgs=("$@")
+
+  # shellcheck source=/dev/null
+  if ! source ./bin/build/env/AWS_REGION.sh; then
+    _awsSecurityGroupIPModify $errorEnvironment "AWS_REGION.sh" || return $?
+  fi
+
+  export AWS_REGION
+
+  start=$(beginTiming)
+  addingFlag=true
+  group=
+  port=
+  description=
+  region="${AWS_REGION-}"
+  ip=
+  while [ $# -gt 0 ]; do
+    arg="${1-}"
+    if [ -z "$arg" ]; then
+      _awsSecurityGroupIPModify "$errorArgument" "Blank argument" || return $?
+    fi
+    case "$1" in
+      --group)
+        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        group="$1"
+        ;;
+      --port)
+        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        port="$1"
+        ;;
+      --description)
+        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        description="$1"
+        ;;
+      --ip)
+        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        ip="$1"
+        ;;
+      --add)
+        addingFlag=true
+        ;;
+      --remove)
+        addingFlag=false
+        ;;
+      --region)
+        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        region="$1"
+        ;;
+      *)
+        _awsSecurityGroupIPModify "$errorArgument" "Unknown argument $arg" || return $?
+        ;;
+
+    esac
+    shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+  done
+  for arg in group description region; do
+    if [ -z "${!arg}" ]; then
+      _awsSecurityGroupIPModify "$errorArgument" "--$arg is required (${savedArgs[*]})" || return $?
+    fi
+  done
+
+  if ! tempErrorFile=$(mktemp); then
+    _awsSecurityGroupIPModify "$errorArgument" "mktemp failed" || return $?
+  fi
+  if $addingFlag; then
+    for arg in ip port; do
+      if [ -z "${!arg}" ]; then
+        _awsSecurityGroupIPModify "$errorArgument" "--$arg is required for --add (${savedArgs[*]})" || return $?
+      fi
+    done
+    printf "%s %s %s %s %s %s %s" "$(consoleInfo "Adding new IP:")" "$(consoleGreen "$ip")" \
+      "$(consoleLabel "to group-id:")" "$(consoleValue "$group")" \
+      "$(consoleLabel "port:")" "$(consoleValue "$port")" \
+      "$(consoleInfo "... ")" || :
+
+    json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
+
+    if ! aws --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
+      if grep -q "Duplicate" "$tempErrorFile"; then
+        printf "%s %s\n" "$(consoleYellow "duplicate")" "$(reportTiming "$start" "found in")"
+        rm -f "$tempErrorFile" || :
+        return 0
+      else
+        printf "%s %s\n" "$(consoleError "Failed")" "$(reportTiming "$start" "Operation took")"
+        wrapLines "$(consoleError "ERROR : : : : ") $(consoleCode)" "$(consoleBlue ": : : : ERROR")$(consoleReset)" <"$tempErrorFile" 1>&2
+        rm -f "$tempErrorFile" || :
+        return "$errorEnvironment"
+      fi
+    fi
+    reportTiming "$start" "in"
+  else
+    if ! aws ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile"; then
+      _awsSecurityGroupIPModify "$errorArgument" "aws ec2 describe-security-groups failed" || return $?
+    fi
+    if ! ip=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || [ -z "$ip" ]; then
+      return 0
+    fi
+    printf "%s %s %s %s %s %s " "$(consoleInfo "Removing old IP:")" "$(consoleRed "$ip")" "$(consoleLabel "from group-id:")" "$(consoleValue "$group")" "$(consoleLabel "port:")" "$(consoleValue "$port")"
+    if ! aws --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$ip" >/dev/null; then
+      consoleError "revoke-security-group-ingress FAILED" || :
+      return $errorEnvironment
+    fi
+    reportTiming "$start" Completed in
+  fi
+}
+_awsSecurityGroupIPModify() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+#
+#
+awsSecurityGroupIPRegister() {
+  awsSecurityGroupIPModify --remove "$@" || :
+  awsSecurityGroupIPModify --add "$@" || return $?
+}
+
+# Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
+# Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
+# Argument: --profile awsProfile - Use this AWS profile when connecting using ~/.aws/credentials
+# Argument: --services service0,service1,... - Required. List of services to add or remove (maps to ports)
+# Argument: --id developerId - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+# Argument: --ip ip - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+# Argument: --revoke - Flag. Remove permissions
+# Argument: --help - Flag. Show this help
+#
+# Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
+# Use this during deployment to grant temporary access to your systems during deployment only.
+# Build scripts should have a $(consoleCode --revoke) step afterward, always.
+# services are looked up in /etc/services and match /tcp services only for port selection
+#
+# If no `/etc/services` matches the default values are supported within the script: `mysql`,`postgres`,`ssh`,`http`,`https`
+#
+# Environment: AWS_REGION - Where to update the security group
+# Environment: DEVELOPER_ID - Developer used to register rules in Amazon
+# Environment: AWS_ACCESS_KEY_ID - Amazon IAM ID
+# Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
+#
+awsIPAccess() {
+  local services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
+  local sgArgs
+  export AWS_ACCESS_KEY_ID
+  export AWS_SECRET_ACCESS_KEY
+
+  services=()
+  optionRevoke=
+  awsProfile=
+  currentIP=
+  developerId=
+  securityGroups=()
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --services)
+        shift
+        IFS=', ' read -r -a services <<<"$1"
+        ;;
+      --profile)
+        if [ -n "$awsProfile" ]; then
+          _awsIPAccess $errorArgument "--profile already specified: $awsProfile"
+        fi
+        shift || _awsIPAccess $errorArgument "shift failed" || return $?
+        awsProfile=$1
+        ;;
+      --help)
+        _awsIPAccess 0
+        return $?
+        ;;
+      --revoke)
+        optionRevoke=1
+        ;;
+      --group)
+        shift || _awsIPAccess $errorArgument "shift failed" || return $?
+        securityGroups+=("$1")
+        ;;
+      --ip)
+        shift || _awsIPAccess $errorArgument "shift failed" || return $?
+        currentIP="$1"
+        ;;
+      --id)
+        shift || _awsIPAccess $errorArgument "shift failed" || return $?
+        developerId="$1"
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift || _awsIPAccess $errorArgument "shift failed" || return $?
+  done
+
+  buildDebugStart || :
+  if [ -z "$developerId" ]; then
+    _awsIPAccess $errorArgument "Empty --id or DEVELOPER_ID environment" || return $?
+  fi
+
+  if [ "${#services[@]}" -eq 0 ]; then
+    _awsIPAccess $errorArgument "Supply one or more services" || return $?
+  fi
+  awsProfile=${awsProfile:=default}
+
+  if [ ${#securityGroups[@]} -eq 0 ]; then
+    _awsIPAccess $errorArgument "One or more --group is required" || return $?
+  fi
+  if [ -z "$currentIP" ]; then
+    if ! currentIP=$(ipLookup) || [ -z "$currentIP" ]; then
+      _awsIPAccess $errorEnvironment "Unable to determine IP address" || return $?
+    fi
+  fi
+  currentIP="$currentIP/32"
+
+  # shellcheck disable=SC2119
+  if ! awsInstall; then
+    _awsIPAccess $errorEnvironment "awsInstall failed" || return $?
+  fi
+
+  if needAWSEnvironment; then
+    consoleInfo "Need AWS Environment: $awsProfile" || :
+    if awsEnvironment "$awsProfile" >/dev/null; then
+      if ! eval "$(awsEnvironment "$awsProfile")"; then
+        _awsIPAccess $errorEnvironment "eval $(awsEnvironment "$awsProfile") failed" || return $?
+
+      fi
+    else
+      _awsIPAccess $errorEnvironment "No AWS credentials available: $awsProfile" || return $?
+    fi
+  fi
+
+  usageRequireEnvironment _awsIPAccess AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
+  usageRequireBinary _awsIPAccess aws || return $?
+
+  clearLine || :
+  if test $optionRevoke; then
+    bigText "Closing ..." | prefixLines "$(consoleMagenta)"
+  else
+    bigText "Opening ..." | prefixLines "$(consoleBlue)"
+  fi
+  consoleNameValue 40 ID "$developerId" || :
+  consoleNameValue 40 IP "$currentIP" || :
+  consoleNameValue 40 "Security Groups" "${securityGroups[@]}" || :
+  consoleNameValue 40 Region "$AWS_REGION" || :
+  consoleNameValue 40 AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
+
+  for s in "${services[@]}"; do
+    if ! serviceToPort "$s" >/dev/null; then
+      _awsIPAccess "$errorArgument" "Invalid service $s provided"
+    fi
+  done
+  for securityGroupId in "${securityGroups[@]}"; do
+    for s in "${services[@]}"; do
+      if ! port=$(serviceToPort "$s"); then
+        _awsIPAccess "$errorEnvironment" "serviceToPort $s failed 2nd round?"
+      fi
+      sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$s" --ip "$currentIP")
+      if test $optionRevoke; then
+        if ! awsSecurityGroupIPModify --remove "${sgArgs[@]}"; then
+          _awsIPAccess "$errorEnvironment" "Unable to awsSecurityGroupIPModify $securityGroupId $port $developerId-$s" || return $?
+        fi
+      else
+        if ! awsSecurityGroupIPRegister "${sgArgs[@]}"; then
+          _awsIPAccess "$errorEnvironment" "Unable to awsSecurityGroupIPRegister $securityGroupId $port $developerId-$s" || return $?
+        fi
+      fi
+    done
+  done
+  buildDebugStop || :
+}
+_awsIPAccess() {
+  buildDebugStop || :
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} region
+# Argument: region - The AWS Region to validate
+# Exit Code: 0 - Region is a valid AWS region
+# Exit Code: 1 - Region is NOT a valid AWS region
+#
+awsValidRegion() {
+  case "${1-}" in
+    eu-north-1) return 0 ;;
+    eu-central-1) return 0 ;;
+    eu-west-1 | eu-west-2 | eu-west-3) return 0 ;;
+    ap-south-1) return 0 ;;
+    ap-southeast-1 | ap-southeast-2) return 0 ;;
+    ap-northeast-3 | ap-northeast-2 | ap-northeast-1) return 0 ;;
+    ca-central-1) return 0 ;;
+    sa-east-1) return 0 ;;
+    us-east-1 | us-east-2 | us-west-1 | us-west-2) return 0 ;;
+  esac
+  return 1
 }

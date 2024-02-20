@@ -32,7 +32,7 @@ loadTools() {
   toolsFiles+=(security markdown documentation "documentation/index" "documentation/see" interactive identical)
 
   # Technology Integration
-  toolsFiles+=(aws docker ssh npm prettier php install terraform)
+  toolsFiles+=(aws web docker ssh npm prettier php install terraform)
 
   # Code
   toolsFiles+=(bitbucket git)

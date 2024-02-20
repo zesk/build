@@ -167,8 +167,10 @@ _assertExitCodeHelper() {
   restoreErrorExit "$saved"
 
   if ! test $errorsOk && [ -s "$errorFile" ]; then
-    printf "%s %s -> %s %s\n%s\n" "$(consoleCode "$bin")" "$(consoleInfo "$*")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(prefixLines "$(consoleError ERROR:) $(consoleCode)" <"$errorFile")"
-    return $errorEnvironment
+    $usageFunction $errorEnvironment "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usageFunction#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(prefixLines "$(consoleError ERROR:) $(consoleCode)" <"$errorFile")")" || return $?
+  fi
+  if test $errorsOk && [ ! -s "$errorFile" ]; then
+    consoleWarning "--stderr-ok used but is NOT necessary: $(consoleCode "${usageFunction#_} $bin $*")"
   fi
   if [ ${#stderrContains[@]} -gt 0 ]; then
     assertFileContains "$errorFile" "${stderrContains[@]}" || return $?

@@ -66,7 +66,7 @@ consoleGetColor() {
     _consoleGetColor "$errorEnvironment" "stty reset to \"$sttyOld\" failed" || return $?
   fi
   if $success; then
-    for color in "${colors[@]}"; do
+    for color in "${colors[@]+${colors[@]}}"; do
       case "$color" in
         [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])
           printf "%d " $(((0x$color + 0) / 256))
