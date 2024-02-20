@@ -63,7 +63,7 @@ consoleColorMode() {
 #
 hasConsoleAnimation() {
   # shellcheck source=/dev/null
-  if ! source "./bin/build/env/CI.sh"; then
+  if ! source "$(dirname "${BASH_SOURCE[0]}")/../env/CI.sh"; then
     return 1
   fi
   export CI

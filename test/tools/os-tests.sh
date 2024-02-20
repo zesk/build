@@ -121,13 +121,13 @@ testBetterType() {
   _assertBetterType "unknown" fairElections || return $?
 
   local d
-  d=$(mktemp -d)
-  requireDirectory "$d/food"
-  ln -s "$d/food" "$d/food-link"
+  d=$(mktemp -d) || return $?
+  requireDirectory "$d/food" >/dev/null || return $?
+  ln -s "$d/food" "$d/food-link" || return $?
 
-  touch "$d/goof"
-  ln -s "$d/no-goof" "$d/no-goof-link"
-  ln -s "$d/goof" "$d/goof-link"
+  touch "$d/goof" || return $?
+  ln -s "$d/no-goof" "$d/no-goof-link" || return $?
+  ln -s "$d/goof" "$d/goof-link" || return $?
 
   _assertBetterType "directory" "$d/food" || return $?
   _assertBetterType "link-directory" "$d/food-link" || return $?
@@ -135,5 +135,46 @@ testBetterType() {
   _assertBetterType "link-unknown" "$d/no-goof-link" || return $?
   _assertBetterType "link-file" "$d/goof-link" || return $?
 
-  rm -rf "$d"
+  rm -rf "$d" || return $?
+}
+
+tests+=(testServiceToPortStandard)
+testServiceToPortStandard() {
+  assertEquals "$(serviceToStandardPort ssh)" 22 ssh || return $?
+  assertEquals "$(serviceToStandardPort "ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToStandardPort " ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToStandardPort http)" 80 http || return $?
+  assertEquals "$(serviceToStandardPort "         http     ")" 80 http || return $?
+  assertEquals "$(serviceToStandardPort https)" 443 https || return $?
+  assertEquals "$(serviceToStandardPort mariadb)" 3306 mariadb || return $?
+  assertEquals "$(serviceToStandardPort mysql)" 3306 mysql || return $?
+  assertEquals "$(serviceToStandardPort postgres)" 5432 postgres || return $?
+  assertNotExitCode 0 serviceToStandardPort || return $?
+  assertNotExitCode 0 serviceToStandardPort rtmp || return $?
+  assertNotExitCode 0 serviceToStandardPort echo || return $?
+  assertNotExitCode 0 serviceToStandardPort "" || return $?
+  assertNotExitCode 0 serviceToStandardPort "22" || return $?
+  assertNotExitCode 0 serviceToStandardPort ".https" || return $?
+  assertNotExitCode 0 serviceToStandardPort " " || return $?
+}
+
+tests+=(testServiceToPort)
+testServiceToPort() {
+  assertEquals "$(serviceToPort ssh)" 22 ssh || return $?
+  assertEquals "$(serviceToPort "ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToPort " ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToPort http)" 80 http || return $?
+  assertEquals "$(serviceToPort "         http     ")" 80 http || return $?
+  assertEquals "$(serviceToPort https)" 443 https || return $?
+  assertEquals "$(serviceToPort mariadb)" 3306 mariadb || return $?
+  assertEquals "$(serviceToPort mysql)" 3306 mysql || return $?
+  assertEquals "$(serviceToPort postgres)" 5432 postgres || return $?
+  assertEquals "$(serviceToPort echo)" 7 echo || return $?
+
+  assertNotExitCode --stderr-ok 0 serviceToPort || return $?
+
+  assertNotExitCode --stderr-ok 0 serviceToPort "" || return $?
+  assertNotExitCode 0 serviceToPort "22" || return $?
+  assertNotExitCode 0 serviceToPort ".https" || return $?
+  assertNotExitCode --stderr-ok 0 serviceToPort " " || return $?
 }

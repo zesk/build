@@ -94,7 +94,7 @@ _deployBuildEnvironment() {
 # Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
-  local targetPackage undoFlag cleanupFlag applicationId applicationPath debuggingFlag start width
+  local targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width
 
   if ! dotEnvConfigure; then
     consoleError "deployRemoteFinish: Unable to dotEnvConfigure" 1>&2
@@ -102,7 +102,7 @@ deployRemoteFinish() {
   fi
 
   targetPackage=
-  undoFlag=
+  revertFlag=
   cleanupFlag=
   applicationId=
   applicationPath=
@@ -116,7 +116,7 @@ deployRemoteFinish() {
         cleanupFlag=1
         ;;
       --revert)
-        undoFlag=1
+        revertFlag=1
         ;;
       --home)
         shift || :
@@ -165,7 +165,7 @@ deployRemoteFinish() {
     set -x
   fi
 
-  if test $undoFlag && test $cleanupFlag; then
+  if test $revertFlag && test $cleanupFlag; then
     _deployRemoteFinish "$errorArgument" "--cleanup and --revert are mutually exclusive"
   fi
 
@@ -190,7 +190,7 @@ deployRemoteFinish() {
     else
       printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
     fi
-  elif test $undoFlag; then
+  elif test $revertFlag; then
     _deployRevertApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
   else
     if [ -z "$applicationId" ]; then
@@ -348,6 +348,7 @@ _deploySuccessful() {
 deployToRemote() {
   local initTime start deployArgs exitCode
   local makeDirectory
+  local commandSuffix
 
   local deployFlag revertFlag debuggingFlag cleanupFlag
 
@@ -498,16 +499,6 @@ deployToRemote() {
     _deployToRemote "$errorEnvironment" "No user hosts provided?" || return $?
   fi
 
-  {
-    consoleNameValue $nameWidth "Current IP:" "$currentIP"
-    consoleNameValue $nameWidth "deployHome:" "$deployHome"
-    consoleNameValue $nameWidth "applicationPath:" "$applicationPath"
-    consoleNameValue $nameWidth "applicationId:" "$applicationId"
-    for userHost in "${userHosts[@]}"; do
-      consoleNameValue $nameWidth "Host:" "${userHost}"
-    done
-  } || :
-
   # sshAddKnownHost
   for userHost in "${userHosts[@]}"; do
     host="${userHost##*@}"
@@ -523,13 +514,17 @@ deployToRemote() {
       _deploySuccessful
       return 0
     fi
+    bigText "$verb" | prefixLines "$(consoleOrange)"
   elif test $cleanupFlag; then
+    # Clean up deployed target
+    applicationPath="$deployHome/$applicationId/app"
     verb="Clean up"
     deployArgs=--cleanup
     if [ ! -f "$deployedHostArtifact" ]; then
       consoleError "$deployedHostArtifact file NOT found ... no remotes changed"
       exit 99
     fi
+    bigText "$verb" | prefixLines "$(consoleBoldBlue)"
   else
 
     #
@@ -540,6 +535,16 @@ deployToRemote() {
     #
     verb="Deploy"
     bigText "$verb" | prefixLines "$(consoleGreen)"
+
+    {
+      consoleNameValue $nameWidth "Current IP:" "$currentIP"
+      consoleNameValue $nameWidth "deployHome:" "$deployHome"
+      consoleNameValue $nameWidth "applicationPath:" "$applicationPath"
+      consoleNameValue $nameWidth "applicationId:" "$applicationId"
+      for userHost in "${userHosts[@]}"; do
+        consoleNameValue $nameWidth "Host:" "${userHost}"
+      done
+    } || :
 
     # reset artifact file
     if ! temporaryCommandsFile=$(mktemp); then
@@ -563,24 +568,31 @@ deployToRemote() {
       fi
       reportTiming "$start" "Deployment setup completed on $(consoleGreen "$userHost") in " || :
     done
+    commandSuffix=''
     if ! __deployCommandsFile "$deployHome/$applicationId/app" \
-      "rm -rf \"$deployHome/$applicationId/app\"" \
-      "mkdir \"$deployHome/$applicationId/app\"" \
-      "tar -C \"$deployHome/$applicationId/app\" -zxf \"$deployHome/$applicationId/$buildTarget\" --no-xattrs" "--deploy" >"$temporaryCommandsFile"; then
+      "printf '%s' \"Sweeping stage for $applicationId\" && rm -rf \"$deployHome/$applicationId/app.$$\"$commandSuffix" \
+      "printf '%s\n' \"Setting stage for $applicationId\" && mkdir \"$deployHome/$applicationId/app.$$\"$commandSuffix" \
+      "printf '%s\n' \"Opening package for $applicationId\" && tar -C \"$deployHome/$applicationId/app.$$\" -zxf \"$deployHome/$applicationId/$buildTarget\" --no-xattrs$commandSuffix" \
+      "printf '%s\n' \"Hiding old $applicationId package\" && [ ! -d \"$deployHome/$applicationId/app\" ] || mv -f \"$deployHome/$applicationId/app\" \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
+      "printf '%s\n' \"Moving new $applicationId package\" && mv -f \"$deployHome/$applicationId/app.$$\" \"$deployHome/$applicationId/app\"$commandSuffix" \
+      "printf '%s\n' \"Cleaning old $applicationId package\" && rm -rf \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
+      "--deploy" >"$temporaryCommandsFile"; then
       _deployToRemote "$errorEnvironment" "Generating commands file for $buildTarget expansion" || return $?
     fi
-    wrapLines "COMMANDS: $(consodeCode)" "$(consoleReset)" <"$temporaryCommandsFile"
+    # wrapLines "COMMANDS: $(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"
     for userHost in "${userHosts[@]}"; do
       start=$(beginTiming) || :
 
       host="${userHost##*@}"
-      printf "%s %s: %s\n%s\n" "$(consoleInfo -n Deploying the code to)" "$(consoleGreen "$userHost")" "$(consoleRed "$applicationPath")" "$(consoleInfo "SSH output BEGIN >>>")"
+      printf "%s %s: %s\n%s\n" "$(consoleInfo "Deploying the code to")" "$(consoleGreen "$userHost")" "$(consoleRed "$applicationPath")" "$(consoleInfo "$host output BEGIN :::")"
       if buildDebugEnabled; then
         consoleInfo "DEBUG: Commands file is:"
         prefixLines "$(consoleCode)" <"$temporaryCommandsFile"
       fi
-      ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"
-      consoleInfo "<<< SSH output END"
+      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | prefixLines "$(consoleBoldBlue)"; then
+        _deployToRemote "$errorEnvironment" "Unable to deploy to $host" || return $?
+      fi
+      consoleInfo "::: END $host output"
       if ! printf "%s\n" "$host" >>"$deployedHostArtifact"; then
         _deployToRemote "$errorEnvironment" "Unable to write $host to $deployedHostArtifact" || return $?
       fi
@@ -591,21 +603,21 @@ deployToRemote() {
     return 0
   fi
 
-  bigText "$verb" | prefixLines "$(consoleOrange)"
   for userHost in "${userHosts[@]}"; do
-    if grep -q "$userHost" "$deployedHostArtifact"; then
-      printf "%s %s\n" "$(consoleWarning "$verb")" "$(consoleCode "$userHost")"
+    start=$(beginTiming)
+    host="${userHost##*@}"
+    if grep -q "$host" "$deployedHostArtifact"; then
+      printf "%s %s (%s) " "$(consoleSuccess "$verb")" "$(consoleCode "$userHost")" "$(consoleBoldRed "$applicationPath")"
       if ! __deployRemoteAction "$userHost" "$applicationPath" "$deployArgs" "$@"; then
         printf "%s %s %s\n" "$(consoleError "$verb failed on")" "$(consoleCode "$userHost")" "$(consoleError "- continuing")"
         exitCode=1
       fi
     else
-      printf "%s %s\n" "$(consoleCode "$userHost")" "$(consoleSuccess "did not deploy, so no $verb")"
+      printf "%s %s\n" "$(consoleCode "$host")" "$(consoleSuccess "no artifact, so no $verb")"
     fi
+    reportTiming "$start"
   done
-  rm "$deployedHostArtifact" || :
-
-  reportTiming "$initTime" "$verb completed in" || :
+  reportTiming "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
   return "$exitCode"
 }
 _deployToRemote() {
@@ -646,7 +658,7 @@ __deployCommandsFile() {
 #
 #
 __deployRemoteAction() {
-  local start userHost remoteContext deployArg
+  local userHost remoteContext deployArg
 
   userHost="${1-}"
   shift || :
@@ -655,13 +667,10 @@ __deployRemoteAction() {
   deployArg="${1-}"
   shift || :
 
-  start=$(beginTiming) || :
-  printf "%s %s" "$(consoleInfo "${deployArg#--} application at")" "$(consoleRed "$applicationPath")" || :
   if ! __deployCommandsFile "$remoteContext" "$deployArg" "$@" | ssh -T "$userHost" bash --noprofile -s -e; then
     consoleError "Failed to __deployCommandsFile $remoteContext $deployArg $* - $userHost" 1>&2
     return "$errorEnvironment"
   fi
-  reportTiming "$start" "${deployArg#--} completed in"
 }
 
 __deploySSHOptions() {
