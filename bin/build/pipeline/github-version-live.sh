@@ -6,19 +6,8 @@
 #
 # Get the live version from the GitHub API
 #
-# Usage:
-#
-#  github-version-live.sh owner/repo
+# See: githubLatestRelease
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-
-set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
-
-whichApt curl curl
-
-curl -o - -s "https://api.github.com/repos/$1/releases/latest" | jq -r .name
+"$(dirname "${BASH_SOURCE[0]}")/../tools.sh" githubLatestRelease "$@"
