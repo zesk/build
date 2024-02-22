@@ -6,8 +6,14 @@
 {consoleBlackBackground}
 {consoleBlack}
 {consoleBlue}
+{consoleBoldBlack}
+{consoleBoldBlue}
+{consoleBoldCyan}
+{consoleBoldGreen}
+{consoleBoldOrange}
 {consoleBoldMagenta}
 {consoleBoldRed}
+{consoleBoldWhite}
 {consoleBold}
 {consoleCode}
 {consoleCyan}
@@ -22,6 +28,7 @@
 {consoleOrange}
 {consoleRed}
 {consoleReset}
+{consoleSubtle}
 {consoleSuccess}
 {consoleUnderline}
 {consoleValue}

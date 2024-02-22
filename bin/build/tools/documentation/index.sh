@@ -293,7 +293,7 @@ documentationIndex_SetUnlinkedDocumentationPath() {
   local functionName settingsFile
   documentationIndex_UnlinkedIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     if ! grep -q "'documentationPath'" "$settingsFile"; then
-      __dumpNameValue documentationPath "$target" >>"$settingsFile"
+      __dumpNameValue documentationPath "$(trimSpace "$target")" >>"$settingsFile"
       __dumpNameValue documentationPathUnlinked 1 >>"$settingsFile"
     fi
     printf '%s %s\n' "$functionName" "$settingsFile"
@@ -487,7 +487,7 @@ documentationIndex_LinkDocumentationPaths() {
     fi
     if ! grep -q "'documentationPath'" "$settingsFile"; then
       statusMessage consoleInfo "Adding documentationPath to $(consoleValue "[$token]") settings" || :
-      if ! __dumpNameValue documentationPath "$documentationPath" >>"$settingsFile"; then
+      if ! __dumpNameValue documentationPath "$(trimSpace "$documentationPath")" >>"$settingsFile"; then
         consoleError "Error writing documentationPath to $settingsFile" 1>&2
         break
       fi

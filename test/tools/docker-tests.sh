@@ -43,7 +43,7 @@ testDockerEnvToBash() {
     return "$errorEnvironment"
   fi
   consoleInfo "PWD is $(pwd)"
-  dockerEnvToBash ./test/example/test.env >"$out" 2>"$err" && return $?
+  dockerEnvToBash ./test/example/test.env >"$out" 2>"$err" || return $?
 
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
   assertFileContains "$err" "01234" "+A" "*A" "+a" "*a" "?a" "test.env" "Invalid name" || return $?

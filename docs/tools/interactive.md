@@ -6,9 +6,9 @@
 ## User prompts
 
 
-### `yesNo` - Parses text and determines if it\'s a yes.
+### `yesNo` - Parses text and determines if it's a yes.
 
-Parses text and determines if it\'s a yes.
+Parses text and determines if it's a yes.
 
 #### Usage
 
@@ -29,7 +29,6 @@ Parses text and determines if it\'s a yes.
 ](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh
 #L249
 )
-{SEE:}
 
 ### `confirmYesNo` - Read user input and return 0 if the user says
 
@@ -85,7 +84,6 @@ Escalation means copying between users. Escalation copy shows differences and pr
 ) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh
 #L161
 )
-{SEE:}
 
 ### `mapCopyFileChanged` - Map a file using environment variables before copying, return 0
 

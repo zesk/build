@@ -28,24 +28,22 @@ Document a function and generate a function template (markdown)
 
 #### See Also
 
-- [function bashDocumentationTemplate
-](./docs/tools/todo.md
-) - [Document a function and generate a function template (markdown). To
+- [function _bashDocumentation_Template
+]({documentationPath}) - [Document a function and generate a function template (markdown). To
 ](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L413
+#L410
 )
 - [function bashDocumentFunction
 ](./docs/tools/documentation.md
 ) - [Document a function and generate a function template (markdown)
 ](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L379
+#L376
 )
 - [function repeat
 ](./docs/tools/decoration.md
 ) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh
 #L147
 )
-{SEE:}
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
 
@@ -83,7 +81,6 @@ The process:
 #L34
 )
 Not found
-{SEE:}
 
 ### `documentationTemplateDirectoryCompile` - Convert a directory of templates into documentation for Bash functions
 
@@ -94,7 +91,7 @@ The process:
 1. `documentDirectory` is scanned for files which look like `*.md`
 1. `documentationTemplateDirectoryCompile` is called for each one
 
-If the `cacheDirectory` is supplied, it\'s used to store values and hashes of the various files to avoid having
+If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
 #### Arguments
@@ -116,9 +113,8 @@ to regenerate each time.
 ](./docs/tools/documentation.md
 ) - [Convert a template file to a documentation file using templates
 ](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L98
+#L95
 )
-{SEE:}
 
 ## Documentation Indexing
 
@@ -150,7 +146,6 @@ Use with documentationIndex_Lookup
 ](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
 #L34
 )
-{SEE:}
 
 ### `documentationIndex_Lookup` - Looks up information in the function index
 
@@ -178,7 +173,6 @@ Looks up information in the function index
 ](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
 #L139
 )
-{SEE:}
 
 # Linking documentation 
 
@@ -256,7 +250,6 @@ Within your function, add an ignore reason if you wish:
 ](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
 #L355
 )
-{SEE:}
 
 ### `documentationIndex_FunctionIterator` - Output a list of all functions in the index as
 
@@ -286,7 +279,6 @@ Output a list of all functions in the index as pairs:
 ](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
 #L419
 )
-{SEE:}
 
 ### `documentationIndex_UnlinkedIterator` - List of functions which are not linked to anywhere in
 
@@ -383,6 +375,45 @@ may output partial results with a failure.
 
 Generates a temporary file which is removed
 
+### `bashDocumentation_FindFunctionDefinition` - Find single location where a function is defined in a directory of shell scripts
+
+Finds a function definition and outputs the file in which it is found
+Searches solely `.sh` files. (Bash or sh scripts)
+
+Succeeds IFF only one version of a function is found.
+
+#### Usage
+
+    bashDocumentation_FindFunctionDefinition directory fn
+    
+
+#### Arguments
+
+- `directory` - The directory to search
+- `fn` - A function to find the file in which it is defined
+
+#### Examples
+
+    bashDocumentation_FindFunctionDefinition . usage
+
+#### Exit codes
+
+- `0` - if one or more function definitions are found
+- `1` - if no function definitions are found
+
+#### Environment
+
+Generates a temporary file which is removed
+
+#### See Also
+
+- [function bashDocumentation_FindFunctionDefinitions
+](./docs/tools/documentation.md
+) - [Find where a function is defined in a directory of shell scripts
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
+#L634
+)
+
 ## Usage Utilities
 
 
@@ -399,7 +430,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. The file in which the function is defined. If you don\'t know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
+- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
 - `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 
 #### Examples

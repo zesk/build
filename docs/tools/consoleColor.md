@@ -6,7 +6,6 @@
 
 ### `consoleBlackBackground` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -14,7 +13,6 @@ shellcheck disable=SC2120
 
 ### `consoleBlack` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -22,7 +20,35 @@ shellcheck disable=SC2120
 
 ### `consoleBlue` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `consoleBoldBlack` - shellcheck disable=SC2120
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `consoleBoldBlue` - shellcheck disable=SC2120
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `consoleBoldCyan` - shellcheck disable=SC2120
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 #### Exit codes
 
@@ -30,15 +56,17 @@ shellcheck disable=SC2120
 
 ### `consoleBoldMagenta` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-### `consoleBoldRed` - Styles
+#### Exit codes
 
-Styles
+- `0` - Always succeeds
+
+### `consoleBoldWhite` - shellcheck disable=SC2120
+
 
 #### Exit codes
 
@@ -55,7 +83,6 @@ Styles
 ### `consoleCode` - IDENTICAL consoleCode 4
 
 IDENTICAL consoleCode 4
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -63,7 +90,6 @@ shellcheck disable=SC2120
 
 ### `consoleCyan` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -73,7 +99,6 @@ shellcheck disable=SC2120
 
 decorations to output (like bars and lines)
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -82,7 +107,6 @@ shellcheck disable=SC2120
 ### `consoleError` - IDENTICAL consoleError 4
 
 IDENTICAL consoleError 4
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -96,7 +120,6 @@ shellcheck disable=SC2120
 
 info
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -106,7 +129,6 @@ shellcheck disable=SC2120
 
 Name/Value pairs
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -114,7 +136,6 @@ shellcheck disable=SC2120
 
 ### `consoleMagenta` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -138,7 +159,6 @@ Styles
 
 ### `consoleOrange` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -148,7 +168,6 @@ shellcheck disable=SC2120
 
 Color-based
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -176,11 +195,18 @@ It does *not* take the optional `-n` argument ever, and outputs the reset escape
 
 - `0` - Always succeeds
 
+### `consoleSubtle` - Keep things subtle
+
+Keep things subtle
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `consoleSuccess` - things went well
 
 things went well
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -198,7 +224,6 @@ Styles
 
 Name/Value pairs
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -208,7 +233,6 @@ shellcheck disable=SC2120
 
 warning things are not normal
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -216,7 +240,6 @@ shellcheck disable=SC2120
 
 ### `consoleWhite` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 
@@ -224,7 +247,6 @@ shellcheck disable=SC2120
 
 ### `consoleYellow` - shellcheck disable=SC2120
 
-shellcheck disable=SC2120
 
 #### Exit codes
 

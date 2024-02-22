@@ -23,6 +23,5 @@ Works from the current directory
 ](./docs/tools/os.md
 ) - [Makes all `*.sh` files executable
 ](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh
-#L268
+#L269
 )
-{SEE:}

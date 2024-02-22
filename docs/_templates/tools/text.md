@@ -3,6 +3,10 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+## Patterns
+
+{isCharacterClass}
+
 ## Filters
 
 {quoteSedPattern}
@@ -33,6 +37,7 @@
 {lowercase}
 {shaPipe}
 {cachedShaPipe}
+{cannon}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

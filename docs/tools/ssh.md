@@ -30,5 +30,15 @@ If no arguments are passed, the default behavior is to set up the `~/.ssh` direc
 - `1` - Environment errors
 - `0` - All hosts exist in or were successfully added to the known hosts file
 
+### `sshSetup` - Set up SSH for a user with ID and backup
+
+Set up SSH for a user with ID and backup keys in `~/.ssh`
+
+Create a key for a user for SSH authentication to other servers.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

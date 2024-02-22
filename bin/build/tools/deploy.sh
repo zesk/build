@@ -173,6 +173,8 @@ _deployNextVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Deploy an application from a deployment repository
+#
 #      ____             _
 #     |  _ \  ___ _ __ | | ___  _   _
 #     | | | |/ _ \ '_ \| |/ _ \| | | |
@@ -180,8 +182,7 @@ _deployNextVersion() {
 #     |____/ \___| .__/|_|\___/ \__, |
 #                |_|            |___/
 #
-#
-# Deploy an application from a deployment repository
+# This acts on the local file system only but used in tandem with `deployment.sh` functions.
 #
 # Usage: {fn} deployHome applicationId applicationPath [ targetPackage ]
 #
@@ -198,6 +199,8 @@ _deployNextVersion() {
 # Use-Hook: maintenance
 # Use-Hook: deploy-shutdown
 # Use-Hook: deploy-activate deploy-start deploy-finish
+# See: deployToRemote
+#
 deployApplication() {
   local firstFlag revertFlag
   local name

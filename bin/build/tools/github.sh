@@ -62,10 +62,10 @@ _githubLatestRelease() {
 #  - Found here: https://github.com/settings/tokens
 #
 # Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
+# TODO: GITHUB_ACCESS_TOKEN_EXPIRE is ignored
 githubRelease() {
   local start arg descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName
   local host
-  export DEBIAN_FRONTEND=noninteractive
 
   export GITHUB_ACCESS_TOKEN
   export GITHUB_ACCESS_TOKEN_EXPIRE
