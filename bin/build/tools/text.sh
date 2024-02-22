@@ -441,7 +441,6 @@ stringOffset() {
   printf %d "$offset"
 }
 
-#
 # For security one should update keys every N days
 #
 # This value would be better encrypted and tied to the key itself so developers
@@ -518,7 +517,9 @@ isUpToDate() {
   fi
   return 0
 }
-
+_isUpToDate() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 _mapEnvironmentGenerateSedFile() {
   # IDENTICAL _mapEnvironmentGenerateSedFile 12
   local sedFile=$1 value
