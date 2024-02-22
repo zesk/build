@@ -465,7 +465,9 @@ stringOffset() {
 # Example:     fi
 #
 isUpToDate() {
-  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate keyTimestamp
+  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp
+  local label deltaDays maxDays daysAgo expireTimestamp expireDate keyTimestamp
+  local timeText
 
   if ! todayTimestamp=$(dateToTimestamp "$(todayDate)"); then
     _isUpToDate $errorEnvironment "Unable to generate todayDate" || return $?
@@ -488,22 +490,23 @@ isUpToDate() {
     _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
   fi
   accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
-  expireDate=$((accessKeyTimestamp + 86400 * upToDateDays))
+  expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
+  expireDate=$(timestampToDate "$expireTimestamp" '%A, %B %d, %Y %R')
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))
-  if [ "$todayTimestamp" -gt "$expireDate" ]; then
-    printf "%s %s %s %s %s\n" \
-      "$(consoleError "Key expired on ")" \
-      "$(consoleRed "$keyDate")" \
-      "$(consoleWarning ",")" \
-      "$(consoleMagenta "$daysAgo $(plural $daysAgo day days)")" \
-      "$(consoleWarning " ago")"
+  if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
+    label=$(printf "%s %s\n" "$(consoleError "Key expired on ")" "$(consoleRed "$keyDate")")
+    case "$daysAgo" in
+      0) timeText="Today" ;;
+      1) timeText="Yesterday" ;;
+      *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
+    esac
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "$label" "EXPIRED $timeText"
     return 1
   fi
   daysAgo=$((-daysAgo))
-  expireDate=$(timestampToDate "$expireDate" '%A, %B %d, %Y %R')
   if [ $daysAgo -lt 14 ]; then
-    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleOrange)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
   elif [ $daysAgo -lt 30 ]; then
     # consoleInfo "keyDate $keyDate"
     # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"

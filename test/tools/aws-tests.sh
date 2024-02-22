@@ -176,11 +176,15 @@ testAWSExpiration() {
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
 
   AWS_ACCESS_KEY_DATE=$(todayDate)
+
   expirationDays=0
+  testSection todayDate $expirationDays
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
   expirationDays=1
+  testSection todayDate $expirationDays
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
   expirationDays=2
+  testSection todayDate $expirationDays
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
 
   reportTiming "$start" Done
