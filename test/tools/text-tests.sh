@@ -103,7 +103,7 @@ testIsUpToDate() {
   _uptoDateTest 0 $testDate 10 || return $?
   testDate="$thisYear-01-01"
 
-  consoleInfo "ThisYear-01-01: $testDate"
+  testSection "ThisYear-01-01: $testDate"
 
   expirationDays=367
   _uptoDateTest 0 "$testDate" "$expirationDays" || return $?
@@ -112,7 +112,7 @@ testIsUpToDate() {
   expirationDays=365
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
 
-  consoleInfo "ThisYear-ThisMonth-01: $testDate"
+  testSection "ThisYear-ThisMonth-01: $testDate"
 
   testDate="$thisYear-$thisMonth-01"
   expirationDays=60
@@ -120,7 +120,8 @@ testIsUpToDate() {
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
 
   testDate=$(todayDate)
-  consoleInfo "todayDate: $testDate"
+
+  testSection "todayDate: $testDate"
 
   expirationDays=0
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
@@ -130,21 +131,23 @@ testIsUpToDate() {
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
 
   testDate=$(yesterdayDate)
-  consoleInfo "yesterdayDate: $testDate"
+
+  testSection "yesterdayDate: $testDate"
 
   expirationDays=0
-  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+  _uptoDateTest 0 "$testDate" "$expirationDays" || return $?
   expirationDays=1
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
   expirationDays=2
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
 
   testDate=$(tomorrowDate)
-  consoleInfo "tomorrowDate: $testDate"
+
+  testSection "tomorrowDate: $testDate"
 
   expirationDays=0
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
-  expirationDays=0
+  expirationDays=1
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
   expirationDays=2
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?

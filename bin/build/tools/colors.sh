@@ -70,6 +70,8 @@ hasConsoleAnimation() {
   [ -z "${CI-}" ]
 }
 
+# IDENTICAL hasColors 34
+
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
 # If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
 #
