@@ -67,7 +67,7 @@ If not found, returns with exit code 1.
 - `1` - If `$HOME` is not a directory or credentials file does not exist
 - `0` - If credentials file is found and output to stdout
 
-### `isAWSKeyUpToDate` - Test whether the AWS keys do not need to be updated
+### `awsIsKeyUpToDate` - Test whether the AWS keys do not need to be updated
 
 For security we gotta update our keys every 90 days
 
@@ -85,7 +85,7 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 #### Examples
 
-    if !isAWSKeyUpToDate 90; then
+    if !awsIsKeyUpToDate 90; then
         bigText Failed, update key and reset date
         exit 99
     fi
