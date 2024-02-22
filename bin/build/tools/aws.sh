@@ -141,7 +141,7 @@ awsCredentialsFile() {
 # Example:     fi
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
-isAWSKeyUpToDate() {
+awsIsKeyUpToDate() {
   # shellcheck source=/dev/null
   if ! source ./bin/build/env/AWS_ACCESS_KEY_DATE.sh; then
     return $errorEnvironment

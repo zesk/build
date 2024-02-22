@@ -13,7 +13,7 @@
 
 {awsInstall}
 {awsCredentialsFile}
-{isAWSKeyUpToDate}
+{awsIsKeyUpToDate}
 {awsHasEnvironment}
 {awsEnvironment}
 {awsIPAccess}
