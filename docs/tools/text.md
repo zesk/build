@@ -3,6 +3,23 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+## Patterns
+
+
+### `isCharacterClass` - Poor-man's bash character class matching
+
+Poor-man's bash character class matching
+
+Returns true if all `characters` are of `className`
+
+`className` can be one of:
+    alnum   alpha   ascii   blank   cntrl   digit   graph   lower
+    print   punct   space   upper   word    xdigit
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ## Filters
 
 
@@ -79,7 +96,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-    escapeSingleQuotes "Now I can\'t not include this in a bash string."
+    escapeSingleQuotes "Now I can't not include this in a bash string."
 
 #### Sample Output
 
@@ -105,7 +122,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-    escapeSingleQuotes "Now I can\'t not include this in a bash string."
+    escapeSingleQuotes "Now I can't not include this in a bash string."
 
 #### Sample Output
 
@@ -131,7 +148,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Examples
 
-    escapeSingleQuotes "Now I can\'t not include this in a bash string."
+    escapeSingleQuotes "Now I can't not include this in a bash string."
 
 #### Sample Output
 
@@ -229,7 +246,6 @@ trimSpace handles both cases now.
 ](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh
 #L96
 )
-{SEE:}
 
 
 ### `listTokens` - listTokens
@@ -429,6 +445,27 @@ The cacheDirectory
 
     shasum
     
+
+### `cannon.sh` - Replace text `fromText` with `toText` in files, using `findArgs` to
+
+Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
+
+This can break your files so use with caution.
+
+#### Arguments
+
+- `fromText` - Required. String of text to search for.
+- `toText` - Required. String of text to replace.
+- `findArgs ...` - Any additional arguments are meant to filter files.
+
+#### Examples
+
+    cannon master main ! -path '*/old-version/*')
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Arguments are identical
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

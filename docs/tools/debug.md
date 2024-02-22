@@ -62,9 +62,8 @@ Stop build debugging if it is enabled
 ](./docs/tools/debug.md
 ) - [Start build debugging if it is enabled.
 ](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh
-#L30
+#L38
 )
-{SEE:}
 
 ### `isBashDebug` - Returns whether the shell has the debugging flag set
 

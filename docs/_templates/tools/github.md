@@ -1,13 +1,10 @@
-# Web Functions
+# GitHub Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{urlMatchesLocalFileSize} 
-{urlContentLength} 
-{hostIPList} 
-{hostTTFB}
-{websiteScrape}
+{githubLatestRelease}
+{githubRelease}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

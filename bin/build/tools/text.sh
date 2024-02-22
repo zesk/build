@@ -600,10 +600,10 @@ isCharacterClass() {
   case "$class" in
     alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
     *)
-      _isCharacterClass "$errorArgument" "Invalid class: $class" && return $?
+      _isCharacterClass "$errorArgument" "Invalid class: $class" || return $?
       ;;
   esac
-  shift || :
+  shift || _isCharacterClass "$errorArgument" "shift failed" || return $?
   while [ $# -gt 0 ]; do
     # Not sure how you can hack this function with single character eval injections.
     # evalCheck: SAFE 2024-01-29 KMD
@@ -614,5 +614,55 @@ isCharacterClass() {
   done
 }
 _isCharacterClass() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# fn: cannon.sh
+# Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
+#
+# This can break your files so use with caution.
+#
+# Example:     cannon master main ! -path '*/old-version/*')
+# _cannon: cannon fromText toText [ findArgs ... ]
+# Argument: fromText - Required. String of text to search for.
+# Argument: toText - Required. String of text to replace.
+# Argument: findArgs ... - Any additional arguments are meant to filter files.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Arguments are identical
+#
+#
+cannon() {
+  local search searchQuoted replaceQuoted cannonLog count
+
+  if [ -z "${1-}" ]; then
+    _cannon "$errorArgument" "Empty search string"
+    return $?
+  fi
+  search=${1-}
+  searchQuoted=$(quoteSedPattern "$search")
+  shift || _cannon "$errorArgument" "Missing replacement argument"
+  if [ -z "${1-}" ]; then
+    _cannon "$errorArgument" "Empty replacement string"
+    return $?
+  fi
+  replaceQuoted=$(quoteSedPattern "${1-}")
+  shift
+  if [ "$searchQuoted" = "$replaceQuoted" ]; then
+    _cannon "$errorArgument" "from to \"$search\" are identical"
+  fi
+
+  cannonLog=$(mktemp)
+  if ! find . -type f ! -path '*/.*' "$@" -print0 >"$cannonLog"; then
+    printf "%s\n" "$(consoleSucces "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
+    rm "$cannonLog" || :
+    return 0
+  fi
+  xargs -0 grep -l "$search" <"$cannonLog" | tee "$cannonLog.found" | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
+  count="$(wc -l <"$cannonLog.found" | trimSpace)"
+  consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
+  rm -f "$cannonLog" "$cannonLog.found" || :
+}
+_cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -19,4 +19,3 @@ Argument-passed or entire environment variables which are exported are used and 
 ](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh
 #L394
 )
-{SEE:}

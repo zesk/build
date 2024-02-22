@@ -39,7 +39,6 @@ Are we within the JetBrains PHPStorm terminal?
 ](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh
 #L55
 )
-{SEE:}
 
 ### `isPyCharm` - Are we within the JetBrains PyCharm terminal?
 
@@ -63,7 +62,6 @@ Are we within the JetBrains PyCharm terminal?
 ](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh
 #L55
 )
-{SEE:}
 
 ### `isVisualStudioCode` - Are we within the Microsoft Visual Studio Code terminal?
 
@@ -87,7 +85,6 @@ Are we within the Microsoft Visual Studio Code terminal?
 ](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh
 #L55
 )
-{SEE:}
 
 #### Exit codes
 

@@ -14,6 +14,10 @@ Examples:
     cat $file | prefixLines "$(consoleGreen)"
     consoleInfo Starting to deploy ...
 
+## Color Mode
+
+Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use `consoleColorMode`.
+
 ## Semantic color commands
 
 Color commands intended to convey status of messages. Try `colorTest` to see all colors.
@@ -60,19 +64,29 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 
 ## Additional commands
 
+{consoleColorMode}
+
 {clearLine}
+
 {statusMessage}
+
 {consoleNameValue}
 
 {hasColors}
+
 {hasConsoleAnimation}
 
 {colorTest}
+
+{semanticColorTest}
+
 {allColorTest}
+
 {simpleMarkdownToConsole}
+
 {statusMessage}
+
 {consoleColumns}
-{simpleMarkdownToConsole}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

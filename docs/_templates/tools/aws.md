@@ -14,8 +14,12 @@
 {awsInstall}
 {awsCredentialsFile}
 {isAWSKeyUpToDate}
-{needAWSEnvironment}
+{awsHasEnvironment}
 {awsEnvironment}
+{awsIPAccess}
+{awsSecurityGroupIPModify}
+{awsSecurityGroupIPRegister}
+{awsValidRegion}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

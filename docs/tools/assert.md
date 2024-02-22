@@ -101,9 +101,8 @@ Assert one string does not contains another (case-sensitive)
 ](./docs/tools/assert.md
 ) - [Assert one string contains another (case-sensitive)
 ](https://github.com/zesk/build/blob/main/bin/build/tools/assert.sh
-#L162
+#L252
 )
-{SEE:}
 
 ## Comparison
 

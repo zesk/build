@@ -109,13 +109,13 @@ _isAWSKeyUpToDateTest() {
 
   shift
   if [ "$pass" = "1" ]; then
-    if ! isAWSKeyUpToDate "$@"; then
-      consoleError "isAWSKeyUpToDate $* should be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE+null})" 1>&2
+    if ! awsIsKeyUpToDate "$@"; then
+      consoleError "awsIsKeyUpToDate $* should be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE+null})" 1>&2
       return "$errorEnvironment"
     fi
   else
-    if isAWSKeyUpToDate "$@"; then
-      consoleError "isAWSKeyUpToDate $* should NOT be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE+null})" 1>&2
+    if awsIsKeyUpToDate "$@"; then
+      consoleError "awsIsKeyUpToDate $* should NOT be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE+null})" 1>&2
       return "$errorEnvironment"
     fi
   fi
@@ -126,18 +126,18 @@ testAWSExpiration() {
   local thisYear thisMonth expirationDays start
 
   start=$(beginTiming)
-  testSection "AWS_ACCESS_KEY_DATE/isAWSKeyUpToDate testing"
+  testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDatetesting"
   thisYear=$(($(date +%Y) + 0))
   thisMonth="$(date +%m)"
   unset AWS_ACCESS_KEY_DATE
   _isAWSKeyUpToDateTest 0 || return $?
   export AWS_ACCESS_KEY_DATE=
-  _isAWSKeyUpToDateTest 0 || consoleError "invalid $AWS_ACCESS_KEY_DATE" 1>&2 && return $?
+  _isAWSKeyUpToDateTest 0 || consoleError "invalid $AWS_ACCESS_KEY_DATE" 1>&2 && return $errorEnvironment
   _isAWSKeyUpToDateTest 0 || return $?
   AWS_ACCESS_KEY_DATE=99999
-  _isAWSKeyUpToDateTest 0 || consoleError "invalid $AWS_ACCESS_KEY_DATE" 1>&2 && return $?
+  _isAWSKeyUpToDateTest 0 || consoleError "invalid $AWS_ACCESS_KEY_DATE" 1>&2 && return $errorEnvironment
   AWS_ACCESS_KEY_DATE=2020-01-01
-  _isAWSKeyUpToDateTest 0 || consoleError "should be expired" 1>&2 && return $?
+  _isAWSKeyUpToDateTest 0 || consoleError "should be expired" 1>&2 && return $errorEnvironment
   AWS_ACCESS_KEY_DATE="$thisYear-01-01"
   expirationDays=366
   _isAWSKeyUpToDateTest 0 "$expirationDays" || return $?

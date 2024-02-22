@@ -7,6 +7,8 @@ aws Command-Line install
 
 Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
+
+
 ## Usage
 
     awsInstall [ package ... ]

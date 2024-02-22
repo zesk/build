@@ -40,73 +40,39 @@ documentationIndex_SeeLinker() {
   while [ $# -gt 0 ]; do
     case $1 in
       --help)
-        usageDocument 0 "$(basename "${BASH_SOURCE[0]}")" "${FUNCNAME[0]}"
+        _documentationIndex_SeeLinker 0
         return $?
         ;;
       *)
         if [ -z "$cacheDirectory" ]; then
-          cacheDirectory="${1%%/}"
+          cacheDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "cacheDirectory" "${1%%/}") || return $?
         elif [ -z "$documentationDirectory" ]; then
-          if [ ! -d "$1" ]; then
-            consoleError "documentationDirectory is not a directory $documentationDirectory" 1>&2
-            return $errorArgument
-          fi
-          documentationDirectory="${1%%/}"
+          documentationDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "documentationDirectory" "${1%%/}") || return $?
         elif [ -z "$seeFunctionTemplate" ]; then
-          seeFunctionTemplate="${1##./}"
+          seeFunctionTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFunctionTemplate "${1##./}") || return $?
           shift || :
-          if [ $# -eq 0 ]; then
-            consoleError "seeFunctionLink required" 1>&2
-            return $errorArgument
-          fi
           seeFunctionLink="$1"
         elif [ -z "$seeFileTemplate" ]; then
-          seeFileTemplate="${1##./}"
-          shift || :
-          if [ $# -eq 0 ]; then
-            consoleError "seeFileLink required" 1>&2
-            return $errorArgument
-          fi
+          seeFileTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFileTemplate "${1##./}") || return $?
+          shift || _documentationIndex_SeeLinker "$errorArgument" "seeFileLink required" || return $?
           seeFileLink="$1"
         else
           break
         fi
         ;;
     esac
-    shift
+    shift || _documentationIndex_SeeLinker "$errorArgument" "shift failed" || return $?
   done
-  if [ -z "$cacheDirectory" ]; then
-    consoleError "cacheDirectory is required" 1>&2
-    return $errorArgument
+  for arg in cacheDirectory documentationDirectory seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
+    if [ -z "${!arg}" ]; then
+      _documentationIndex_SeeLinker "$errorArgument" "$arg is required" || return $?
+    fi
+  done
+  if ! seeVariablesFile=$(mktemp); then
+    _documentationIndex_SeeLinker "$errorEnvironment" "mktemp failed" || return $?
   fi
-  if [ ! -d "$cacheDirectory" ]; then
-    consoleError "cacheDirectory is not a directory $cacheDirectory" 1>&2
-    return $errorArgument
-  fi
-  if [ -z "$documentationDirectory" ]; then
-    consoleError "documentationDirectory is required" 1>&2
-    return $errorArgument
-  fi
-  if [ -z "$seeFunctionTemplate" ]; then
-    consoleError "seeFunctionTemplate is required" 1>&2
-    return $errorArgument
-  fi
-  if [ ! -f "$seeFunctionTemplate" ]; then
-    consoleError "seeFunctionTemplate is not a file $seeFunctionTemplate" 1>&2
-    return $errorArgument
-  fi
-  if [ -z "$seeFileTemplate" ]; then
-    consoleError "seeFileTemplate is required" 1>&2
-    return $errorArgument
-  fi
-  if [ ! -f "$seeFileTemplate" ]; then
-    consoleError "$seeFileTemplate is not a file $seeFileTemplate" 1>&2
-    return $errorArgument
-  fi
-
-  seeVariablesFile=$(mktemp)
-  linkPatternFile=$(mktemp)
-  variablesSedFile=$(mktemp)
+  linkPatternFile="$seeVariablesFile.linkPatterns"
+  variablesSedFile="$seeVariablesFile.variablesSedFile"
   if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 |
     xargs -0 pcre2grep -l "$seePattern" |
     while read -r matchingFile; do
@@ -138,7 +104,7 @@ documentationIndex_SeeLinker() {
         } >"$linkPatternFile"
 
         # shellcheck disable=SC2094
-        __dumpNameValue "sourceLink" "$(mapValue "$linkPatternFile" "$linkPattern")" >>"$linkPatternFile"
+        __dumpNameValue "sourceLink" "$(mapValue "$linkPatternFile" "$linkPattern" | trimSpace)" >>"$linkPatternFile"
         if [ -z "$templateFile" ]; then
           __dumpNameValue "$tokenName" "Not found" >>"$seeVariablesFile"
         else
@@ -161,9 +127,11 @@ documentationIndex_SeeLinker() {
       fi
     done; then
     clearLine
-    consoleWarning "No matching see directives found" 1>&2
+    consoleWarning "No matching see directives found" || :
   fi
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
-  clearLine
-  reportTiming "$start" "See completed in"
+  reportTiming "$start" "$(clearLine)See completed in" || :
+}
+_documentationIndex_SeeLinker() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -4,6 +4,62 @@
 [⬅ Return to top](../index.md)
 
 
+### `serviceToPort` - Get the port number associated with a service
+
+Get the port number associated with a service
+
+#### Arguments
+
+- `service` - A unix service typically found in `/etc/services`
+
+#### Sample Output
+
+    Port number of associated service (integer) one per line
+    
+
+#### Exit codes
+
+- `1` - service not found
+- `2` - bad argument or invalid port
+- `0` - service found and output is an integer
+
+### `serviceToStandardPort` - Hard-coded services for:
+
+Hard-coded services for:
+
+- `ssh` -> 22
+- `http`-> 80
+- `https`-> 80
+- `postgres`-> 5432
+- `mariadb`-> 3306
+- `mysql`-> 3306
+
+Backup when `/etc/services` does not exist.
+
+#### Arguments
+
+- `service` - A unix service typically found in `/etc/services`
+
+#### Sample Output
+
+    Port number of associated service (integer) one per line
+    
+
+#### Exit codes
+
+- `1` - service not found
+- `0` - service found and output is an integer
+
+#### See Also
+
+- [function serviceToPort
+](./docs/tools/todo.md
+) - [Get the port number associated with a service
+](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh
+#L821
+)
+
+
 ### `buildCacheDirectory` - Path to cache directory for build system.
 
 Path to cache directory for build system.
@@ -166,7 +222,7 @@ Returns the list of defined environment variables exported in the current bash c
 
 ### `reverseFileLines` - Reverse output lines
 
-Reverses a pipe\'s input lines to output using an awk trick. Do not recommend on big files.
+Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
 
 #### Exit codes
 
@@ -199,14 +255,31 @@ Works from the current directory
 ](./docs/tools/os.md
 ) - [Makes all `*.sh` files executable
 ](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh
-#L268
+#L269
 )
-{SEE:}
 
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp
 
 Fetch the modification time of a file as a timestamp
+
+#### Usage
+
+    modificationTime filename0 [ filename1 ... ]
+    
+
+#### Examples
+
+    modificationTime ~/.bash_profile
+
+#### Exit codes
+
+- `2` - If file does not exist
+- `0` - If file exists and modification times are output, one per line
+
+### `modificationSeconds` - Fetch the modification time in seconds from now of a
+
+Fetch the modification time in seconds from now of a file as a timestamp
 
 #### Usage
 
@@ -237,7 +310,7 @@ Otherwise return `1``
 
 #### Exit codes
 
-- `1` - `sourceFile`, \'targetFile\' does not exist, or
+- `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
 ### `isOldestFile` - Check to see if the first file is the newest
@@ -254,7 +327,7 @@ Otherwise return `1``
 
 #### Exit codes
 
-- `1` - `sourceFile`, \'targetFile\' does not exist, or
+- `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
 
@@ -315,7 +388,7 @@ Output is unsorted.
 
 #### Examples
 
-listFileModificationTimes $myDir ! -path \'*/.*\'
+listFileModificationTimes $myDir ! -path '*/.*'
 
 #### Sample Output
 
@@ -408,6 +481,14 @@ Maintains ordering.
 
 - `0` - Always succeeds
 
+### `renameLink` - Uses mv and clobbers always
+
+Uses mv and clobbers always
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 
 ### `JSON` - Format something neatly as JSON
 
@@ -455,7 +536,7 @@ Better type handling of shell objects
 
 Outputs one of `type` output or enhancements:
 - `builtin`. `function`, `alias`, `file`
-- `file`, `directory`, `integer`, `unknown`
+- `link-directory`, `link-file`, `directory`, `integer`, `unknown`
 
 #### Exit codes
 

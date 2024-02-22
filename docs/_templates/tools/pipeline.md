@@ -27,6 +27,7 @@
 
 ## Deployment tools
 
+{makeEnvironment}
 {deployApplication}
 {deployRevertApplication}
 {deployNextVersion}

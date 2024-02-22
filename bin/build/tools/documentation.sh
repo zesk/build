@@ -237,9 +237,9 @@ documentationTemplateCompile() {
         if test $forceFlag || [ ! -f "$compiledTemplateCache/$tokenName" ] || ! isNewestFile "$compiledTemplateCache/$tokenName" "$settingsFile" "${checkFiles[@]}"; then
           statusMessage consoleInfo "Generating $base ... $(consoleValue "[$tokenName]") ..."
           export "${tokenName?}"
-          if ! bashDocumentationTemplate "$settingsFile" "$functionTemplate" >"$compiledTemplateCache/$tokenName"; then
+          if ! _bashDocumentation_Template "$settingsFile" "$functionTemplate" >"$compiledTemplateCache/$tokenName"; then
             mv "$compiledTemplateCache/$tokenName" "$compiledTemplateCache/$tokenName.failed"
-            declare "$tokenName"="ExitCode bashDocumentationTemplate $tokenName $settingsFile $functionTemplate: $?"
+            declare "$tokenName"="ExitCode _bashDocumentation_Template $tokenName $settingsFile $functionTemplate: $?"
           else
             declare "$tokenName"="$(cat "$compiledTemplateCache/$tokenName")"
           fi
@@ -370,7 +370,7 @@ _documentationTemplateDirectoryCompileUsage() {
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
 # Deprecated: 2023-01-18
-# See: bashDocumentationTemplate
+# See: _bashDocumentation_Template
 # See: bashDocumentFunction
 # See: repeat
 #
@@ -386,7 +386,7 @@ bashDocumentFunction() {
   if ! bashDocumentation_Extract "$file" "$fn" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
-  bashDocumentationTemplate "$envFile" "$template"
+  _bashDocumentation_Template "$envFile" "$template"
   exitCode=$?
   rm "$envFile" || :
   return $exitCode
@@ -408,7 +408,7 @@ bashDocumentFunction() {
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
 #
-bashDocumentationTemplate() {
+_bashDocumentation_Template() {
   local envFile=$1 template=$2
   if [ ! -f "$envFile" ]; then
     consoleError "Settings file $envFile not found" 1>&2
@@ -436,7 +436,7 @@ bashDocumentationTemplate() {
         declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
       fi
     done < <(environmentVariables)
-    if ! mapEnvironment <"$template" | grep -v '# shellcheck' | markdown_removeUnfinishedSections; then
+    if ! mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections; then
       return $?
     fi
   ); then
@@ -736,8 +736,13 @@ _bashDocumentationFormatter_depends() {
 # Format see block
 #
 _bashDocumentationFormatter_see() {
-  local seeItems
+  local seeItem seeItems
   while IFS=" " read -r -a seeItems; do
-    printf "{SEE:%s}\n" "${seeItems[@]+${seeItems[@]}}"
+    for seeItem in "${seeItems[@]+${seeItems[@]}}"; do
+      seeItem="$(trimSpace "$seeItem")"
+      if [ -n "$seeItem" ]; then
+        printf "{SEE:%s}\n" "$seeItem"
+      fi
+    done
   done || :
 }

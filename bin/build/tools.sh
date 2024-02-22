@@ -35,7 +35,7 @@ loadTools() {
   toolsFiles+=(aws web docker ssh npm prettier php install terraform)
 
   # Code
-  toolsFiles+=(bitbucket git)
+  toolsFiles+=(bitbucket git github)
 
   for toolFile in "${toolsFiles[@]}"; do
     # shellcheck source=/dev/null
