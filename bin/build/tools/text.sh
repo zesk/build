@@ -441,7 +441,6 @@ stringOffset() {
   printf %d "$offset"
 }
 
-#
 # For security one should update keys every N days
 #
 # This value would be better encrypted and tied to the key itself so developers
@@ -457,7 +456,7 @@ stringOffset() {
 # Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
 #
 # Summary: Test whether the key needs to be updated
-# Usage: isUpToDate keyDate upToDateDays
+# Usage: {fn} keyDate upToDateDays
 # Argument: keyDate - Date formatted like `YYYY-MM-DD`
 # Argument: upToDateDays - Days that key expires after `keyDate`
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
@@ -468,34 +467,37 @@ stringOffset() {
 isUpToDate() {
   local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate keyTimestamp
 
+  if ! todayTimestamp=$(dateToTimestamp "$(todayDate)"); then
+    _isUpToDate $errorEnvironment "Unable to generate todayDate" || return $?
+  fi
   keyDate="${1-}"
-  shift || return "$errorArgument"
-  if [ -z "${1-}" ]; then
+  shift || _isUpToDate "$errorArgument" "Missing keyDate" || return $?
+  if ! keyTimestamp=$(dateToTimestamp "$keyDate"); then
     consoleError "Invalid date $keyDate" 1>&2
     return "$errorArgument"
   fi
   upToDateDays="${1-}"
-  upToDateDays=$((upToDateDays + 0))
+  if ! isInteger "$upToDateDays"; then
+    _isUpToDate "$errorArgument" "upToDateDays is not an integer $upToDateDays" || return $?
+  fi
   maxDays=366
-  if [ $upToDateDays -gt $maxDays ]; then
-    consoleError "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" 1>&2
-    return 1
+  if [ "$upToDateDays" -gt "$maxDays" ]; then
+    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
   fi
-  if [ $upToDateDays -lt 0 ]; then
-    consoleError "isUpToDate $keyDate $upToDateDays - negative values not allowed" 1>&2
-    return 1
-  fi
-  if ! keyTimestamp=$(dateToTimestamp "$keyDate") >/dev/null; then
-    consoleError "isUpToDate $keyDate $upToDateDays - Invalid date $keyDate" 1>&2
-    return 1
+  if [ "$upToDateDays" -lt 0 ]; then
+    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
   fi
   accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
   expireDate=$((accessKeyTimestamp + 86400 * upToDateDays))
-  todayTimestamp=$(dateToTimestamp "$(todayDate)")
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))
-  if [ $daysAgo -gt 0 ]; then
-    consoleError "Expired $keyDate, $daysAgo" 1>&2
+  if [ "$todayTimestamp" -gt "$expireDate" ]; then
+    printf "%s %s %s %s %s\n" \
+      "$(consoleError "Key expired on ")" \
+      "$(consoleRed "$keyDate")" \
+      "$(consoleWarning ",")" \
+      "$(consoleMagenta "$daysAgo $(plural $daysAgo day days)")" \
+      "$(consoleWarning " ago")"
     return 1
   fi
   daysAgo=$((-daysAgo))
@@ -506,12 +508,18 @@ isUpToDate() {
     # consoleInfo "keyDate $keyDate"
     # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
     # consoleInfo "expireDate $expireDate"
-    consoleWarning "Expires on $expireDate, in $daysAgo $(plural $daysAgo day days)"
-    return 04
+    printf "%s %s %s %s\n" \
+      "$(consoleWarning "Expires on")" \
+      "$(consoleRed "$expireDate")" \
+      "$(consoleWarning ", in")" \
+      "$(consoleMagenta "$daysAgo $(plural $daysAgo day days)")"
+    return 0
   fi
   return 0
 }
-
+_isUpToDate() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 _mapEnvironmentGenerateSedFile() {
   # IDENTICAL _mapEnvironmentGenerateSedFile 12
   local sedFile=$1 value
