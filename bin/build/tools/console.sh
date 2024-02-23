@@ -23,7 +23,6 @@ errorArgument=2
 consoleGetColor() {
   local xtermCode sttyOld color colors success result noTTY
 
-  # set -x
   success=false
 
   noTTY=false
@@ -45,7 +44,7 @@ consoleGetColor() {
   if ! sttyOld=$(stty -g 2>/dev/null); then
     noTTY=true
     # 3 is a copy of stdin
-    exec 3>&0
+    exec 3<&0
     # 4 is a copy of stdout
     exec 4>&1
   else
@@ -53,9 +52,9 @@ consoleGetColor() {
       _consoleGetColor "$errorEnvironment" "stty raw failed" || return $?
     fi
     # 3 is a redirect to file /dev/tty
-    exec 3>/dev/tty
+    exec 3</dev/tty
     # 4 is also a redirect to file /dev/tty
-    exec 4</dev/tty
+    exec 4>/dev/tty
   fi
 
   # term needs the sleep (or "time 1", but that is 1/10th second).
@@ -66,6 +65,7 @@ consoleGetColor() {
   colors=()
   if ! read -t 2 -r result <&3; then
     success=true
+    # remove escape chars
     result="${result#*;}"
     result="${result#rgb:}"
     IFS='/' read -r -a colors < <(printf "%s\\n" "$result" | sed 's/[^a-f0-9/]//g')
