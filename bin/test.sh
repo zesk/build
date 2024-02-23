@@ -85,7 +85,7 @@ buildTestSuite() {
   trap messyTestCleanup EXIT QUIT TERM
 
   messyOption=
-  allTests=(debug git decoration url ssh log version colors type os hook pipeline identical)
+  allTests=(colors debug git decoration url ssh log version type os hook pipeline identical)
   allTests+=(text markdown documentation assert usage docker api tests aws php bin deploy deployment)
   allTests+=(sysvinit)
   while read -r shortTest; do

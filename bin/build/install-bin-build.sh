@@ -208,9 +208,9 @@ installBinBuild() {
       echo "$(consoleValue -n "$myBinary") $(consoleSuccess -n is up to date.)"
       return 0
     fi
-    consoleMagenta "XDIFFERENCES: $diffLines"
+    consoleMagenta "--- Changes: $diffLines ---"
     diff "$binName" "$myBinary" | grep -v 'relTop=' || :
-    consoleMagenta "XDIFFERENCES: $diffLines"
+    consoleMagenta "--- End of changes ---"
   fi
   if [ "$diffLines" = "NONE" ]; then
     _installBinBuild "$errorEnvironment" "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)"

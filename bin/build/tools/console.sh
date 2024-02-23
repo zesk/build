@@ -43,27 +43,19 @@ consoleGetColor() {
   done
   if ! sttyOld=$(stty -g 2>/dev/null); then
     noTTY=true
-    # 3 is a copy of stdin
-    exec 3<&0
-    # 4 is a copy of stdout
-    exec 4>&1
   else
     if ! stty raw -echo min 0 time 0; then
       _consoleGetColor "$errorEnvironment" "stty raw failed" || return $?
     fi
-    # 3 is a redirect to file /dev/tty
-    exec 3</dev/tty
-    # 4 is also a redirect to file /dev/tty
-    exec 4>/dev/tty
   fi
 
-  # term needs the sleep (or "time 1", but that is 1/10th second).
-  if ! printf "\e]%d;?\e\\" "${xtermCode}" >&4; then
+  if ! printf "\e]%d;?\e\\" "${xtermCode}"; then
     _consoleGetColor "$errorEnvironment" "tty message failed" || return $?
   fi
+  # term needs the sleep (or "time 1", but that is 1/10th second).
   sleep 0.0001 || :
   colors=()
-  if ! read -t 2 -r result <&3; then
+  if ! read -t 2 -r result; then
     success=true
     # remove escape chars
     result="${result#*;}"
@@ -95,17 +87,29 @@ colorBrightness() {
   local r g b
   # 0.299 R + 0.587 G + 0.114 B
   read -r r g b || :
-  printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+  if ! isUnsignedInteger "$r" "$g" "$b"; then
+    printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+  else
+    consoleError "Not integers: \"$r\" \"$g\" \"$b\"" 1>&2
+    return $errorArgument
+  fi
 }
 
+#
+# Usage: {fn}
+#
+# Print the suggested color mode for the current environment
+#
 consoleConfigureColorMode() {
-  local brightness
+  local brightness colorMode
 
-  brightness=$(colorBrightness < <(consoleGetColor --background))
-
-  if [ "$brightness" -lt 50 ]; then
-    printf "%s\n" dark
-  else
-    printf "%s\n" light
+  colorMode=light
+  if brightness=$(colorBrightness 2>/dev/null < <(consoleGetColor --background)); then
+    if [ "$brightness" -lt 50 ]; then
+      colorMode=dark
+    fi
+  elif isBitBucketPipeline; then
+    colorMode=dark
   fi
+  printf "%s\n" "$colorMode"
 }

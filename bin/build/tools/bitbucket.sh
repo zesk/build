@@ -67,3 +67,17 @@ bitbucketContainer() {
 
   dockerLocalContainer --image "${BUILD_DOCKER_BITBUCKET_IMAGE}" --path "${BUILD_DOCKER_BITBUCKET_PATH}" "$@"
 }
+
+#
+# Usage: {fn}
+# Exit Code: 0 - is BitBucket pipeline
+# Exit Code: 1 - Not a BitBucket pipeline
+#
+isBitBucketPipeline() {
+  export BITBUCKET_WORKSPACE CI
+  # shellcheck source=/dev/null
+  source ./bin/build/env/BITBUCKET_WORKSPACE.sh
+  # shellcheck source=/dev/null
+  source ./bin/build/env/CI.sh
+  [ -n "${BITBUCKET_WORKSPACE-}" ] && test "$CI"
+}
