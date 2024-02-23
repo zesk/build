@@ -133,7 +133,7 @@ githubRelease() {
   #
   # Preflight our environment to make sure we have the basics defined in the calling script
   #
-  if ! aptWhich curl curl; then
+  if ! whichApt curl curl; then
     _githubRelease "$errorEnvironment" "curl is required" || return $?
   fi
 

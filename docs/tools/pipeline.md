@@ -76,8 +76,7 @@ Not found
 - [function runOptionalHook
 ](./docs/tools/pipeline.md
 ) - [Identical to `runHook` but returns exit code zero if the
-](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh
-#L110
+](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L110
 )
 
 ### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
@@ -101,8 +100,7 @@ Not found
 - [function runHook
 ](./docs/tools/pipeline.md
 ) - [Run a project hook
-](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh
-#L92
+](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L92
 )
 
 ### `hasHook` - Determine if a hook exists
@@ -318,8 +316,7 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 - [function deployToRemote
 ](./docs/tools/todo.md
 ) - [Deploy current application to one or more hosts
-](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh
-#L347
+](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L347
 )
 Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 

@@ -30,19 +30,16 @@ Document a function and generate a function template (markdown)
 
 - [function _bashDocumentation_Template
 ]({documentationPath}) - [Document a function and generate a function template (markdown). To
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L410
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L410
 )
 - [function bashDocumentFunction
 ](./docs/tools/documentation.md
 ) - [Document a function and generate a function template (markdown)
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L376
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L376
 )
 - [function repeat
 ](./docs/tools/decoration.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh
-#L147
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh#L147
 )
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
@@ -77,8 +74,7 @@ The process:
 - [function documentationIndex_Lookup
 ](./docs/tools/documentation.md
 ) - [Looks up information in the function index
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
-#L34
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34
 )
 Not found
 
@@ -112,8 +108,7 @@ to regenerate each time.
 - [function documentationTemplateCompile
 ](./docs/tools/documentation.md
 ) - [Convert a template file to a documentation file using templates
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L95
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L95
 )
 
 ## Documentation Indexing
@@ -143,8 +138,7 @@ Use with documentationIndex_Lookup
 - [function documentationIndex_Lookup
 ](./docs/tools/documentation.md
 ) - [Looks up information in the function index
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
-#L34
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34
 )
 
 ### `documentationIndex_Lookup` - Looks up information in the function index
@@ -170,8 +164,7 @@ Looks up information in the function index
 - [function documentationIndex_Generate
 ](./docs/tools/documentation.md
 ) - [Generate a function index for bash files
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
-#L139
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L139
 )
 
 # Linking documentation 
@@ -241,14 +234,12 @@ Within your function, add an ignore reason if you wish:
 - [function documentationIndex_LinkDocumentationPaths
 ](./docs/tools/documentation.md
 ) - [Update the documentationPath for all functions defined in documentTemplate
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
-#L419
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419
 )
 - [function documentationIndex_FunctionIterator
 ](./docs/tools/documentation.md
 ) - [Output a list of all functions in the index as
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
-#L355
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L355
 )
 
 ### `documentationIndex_FunctionIterator` - Output a list of all functions in the index as
@@ -270,14 +261,12 @@ Output a list of all functions in the index as pairs:
 - [function documentationIndex_Lookup
 ](./docs/tools/documentation.md
 ) - [Looks up information in the function index
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
-#L34
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34
 )
 - [function documentationIndex_LinkDocumentationPaths
 ](./docs/tools/documentation.md
 ) - [Update the documentationPath for all functions defined in documentTemplate
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh
-#L419
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419
 )
 
 ### `documentationIndex_UnlinkedIterator` - List of functions which are not linked to anywhere in
@@ -410,8 +399,7 @@ Generates a temporary file which is removed
 - [function bashDocumentation_FindFunctionDefinitions
 ](./docs/tools/documentation.md
 ) - [Find where a function is defined in a directory of shell scripts
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L634
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L634
 )
 
 ## Usage Utilities

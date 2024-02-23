@@ -16,12 +16,7 @@ Examples:
 
 ## Color Mode
 
-Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-).
+Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use `consoleColorMode`.
 
 ## Semantic color commands
 
@@ -78,15 +73,6 @@ Set colors to deal with dark or light-background consoles
 
 - `0` - Always succeeds
 
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
-
 
 ### `clearLine` - Clear a line in the console
 
@@ -112,15 +98,6 @@ Intended to be run on an interactive console, this clears the current line of an
 
 Intended to be run on an interactive console. Should support `tput cols`.
 
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
-
 
 ### `statusMessage` - Output a status message with no newline
 
@@ -154,15 +131,6 @@ Clears the line and outputs a message using a color command. Meant to show statu
 #### Environment
 
 Intended to be run on an interactive console. Should support $(tput cols).
-
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
 
 
 ### `consoleNameValue` - Output a name value pair
@@ -187,28 +155,30 @@ right-aligned to the `characterWidth` given and colored using `consoleLabel`; th
 
 - `0` - Always succeeds
 
-#### Errors
 
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
+### `hasColors` - This tests whether `TERM` is set, and if not, uses
 
+This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
+If `TERM` is set then uses the `tput colors` call to determine the console support for colors.
+
+Exit Code; 1 - No colors
+
+#### Usage
+
+    hasColors
+    
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Console or output supports colors
 
-#### Errors
+#### Local cache
 
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
+this value is cached in BUILD_COLORS if it is not set.
+
+#### Environment
+
+BUILD_COLORS - Override value for this
 
 
 ### `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation
@@ -228,15 +198,6 @@ Exit Code; 1 - Does not support console animation
 
 CI - If this has a non-blank value, this returns true (supports animation)
 
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
-
 
 ### `colorTest` - Output colors
 
@@ -245,15 +206,6 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
 
 
 ### `semanticColorTest` - Output colors
@@ -264,15 +216,6 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 
 - `0` - Always succeeds
 
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
-
 
 ### `allColorTest` - Alternate color output
 
@@ -281,15 +224,6 @@ If you want to explore what colors are available in your terminal, try this.
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
 
 
 ### `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
@@ -304,15 +238,6 @@ Converts backticks, bold and italic to console colors.
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
 
 
 ### `statusMessage` - Output a status message with no newline
@@ -348,15 +273,6 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 Intended to be run on an interactive console. Should support $(tput cols).
 
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
-
 
 ### `consoleColumns` - Column count in current console
 
@@ -380,15 +296,6 @@ Output the number of columns in the terminal. Default is 80 if not able to be de
 #### Environment
 
 Uses the `tput cols` tool to find the value if `TERM` is non-blank.
-
-#### Errors
-
-Unable to find "Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use - [function consoleColorMode
-](./docs/tools/todo.md
-) - [Set colors to deal with dark or light-background consoles
-](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh
-#L34
-)" (using index "/Users/kent/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
