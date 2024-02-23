@@ -457,8 +457,8 @@ stringOffset() {
 #
 # Summary: Test whether the key needs to be updated
 # Usage: {fn} keyDate upToDateDays
-# Argument: keyDate - Date formatted like `YYYY-MM-DD`
-# Argument: upToDateDays - Days that key expires after `keyDate`
+# Argument: keyDate - Required. Date. Formatted like `YYYY-MM-DD`
+# Argument: upToDateDays - Required. Integer. Days that key expires after `keyDate`.
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
 # Example:       bigText Failed, update key and reset date
 # Example:       exit 99
