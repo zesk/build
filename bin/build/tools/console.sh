@@ -43,17 +43,13 @@ consoleGetColor() {
   done
   if ! sttyOld=$(stty -g 2>/dev/null); then
     noTTY=true
-    # 4 is a copy of stdout
-    exec 4>&1
   else
     if ! stty raw -echo min 0 time 0; then
       _consoleGetColor "$errorEnvironment" "stty raw failed" || return $?
     fi
-    # 4 is a redirect to file /dev/tty
-    exec 4>/dev/tty
   fi
 
-  if ! printf "\e]%d;?\e\\" "${xtermCode}" >&4; then
+  if ! printf "\e]%d;?\e\\" "${xtermCode}"; then
     _consoleGetColor "$errorEnvironment" "tty message failed" || return $?
   fi
   # term needs the sleep (or "time 1", but that is 1/10th second).
