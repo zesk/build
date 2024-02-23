@@ -243,8 +243,7 @@ trimSpace handles both cases now.
 - [function trimSpace
 ](./docs/tools/text.md
 ) - [Trim whitespace of a bash argument
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh
-#L96
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L96
 )
 
 

@@ -4,10 +4,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-# set -x # Debugging
-
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
+"$(dirname "${BASH_SOURCE[0]}")/build/tools.sh" deployApplication
 
 # This is copied into local project after first install
 ./bin/install-bin-build.sh

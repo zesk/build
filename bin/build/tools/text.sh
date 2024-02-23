@@ -414,6 +414,35 @@ mapValue() {
   )
 }
 
+# Maps a string using an environment file
+#
+# Usage: mapValue mapFile [ value ... ]
+# Argument: mapFile - a file containing bash environment definitions
+# Argument: value - One or more values to map using said environment file
+#
+mapValueTrim() {
+  local name value replace searchToken mapFile="${1-}"
+
+  shift
+  if [ ! -f "$mapFile" ]; then
+    consoleError "mapValue - \"$mapFile\" is not a file" 1>&2
+    return $errorArgument
+  fi
+  (
+    set -a
+    # shellcheck source=/dev/null
+    source "$mapFile"
+    set +a
+    value="$*"
+    while read -r name; do
+      searchToken='{'"$name"'}'
+      replace="$(trimSpace "${!name-}")"
+      value="${value/${searchToken}/${replace}}"
+    done < <(environmentVariables)
+    printf "%s" "$value"
+  )
+}
+
 #
 # Usage: randomString [ ... ]
 # Arguments: Ignored

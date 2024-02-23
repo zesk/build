@@ -22,6 +22,5 @@ Works from the current directory
 - [function makeShellFilesExecutable
 ](./docs/tools/os.md
 ) - [Makes all `*.sh` files executable
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh
-#L269
+](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L269
 )

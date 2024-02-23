@@ -104,7 +104,7 @@ documentationIndex_SeeLinker() {
         } >"$linkPatternFile"
 
         # shellcheck disable=SC2094
-        __dumpNameValue "sourceLink" "$(mapValue "$linkPatternFile" "$linkPattern" | trimSpace)" >>"$linkPatternFile"
+        __dumpNameValue "sourceLink" "$(mapValueTrim "$linkPatternFile" "$linkPattern")" >>"$linkPatternFile"
         if [ -z "$templateFile" ]; then
           __dumpNameValue "$tokenName" "Not found" >>"$seeVariablesFile"
         else
