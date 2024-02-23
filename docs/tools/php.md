@@ -39,7 +39,6 @@ This tools does not install the `composer` binary into the local environment.
 
 
 
-shellcheck disable=SC2120
 
 #### Usage
 
@@ -112,7 +111,6 @@ Files are specified from the application root directory.
 ](https://github.com/zesk/build/blob/main/bin/build/env/BUILD_TARGET.sh
 #L{line}
 )
-{SEE:}
 
 ### `phpLog` - Outputs the path to the PHP log file
 

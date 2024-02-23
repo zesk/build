@@ -70,6 +70,8 @@ hasConsoleAnimation() {
   [ -z "${CI-}" ]
 }
 
+# IDENTICAL hasColors 34
+
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
 # If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
 #
@@ -218,6 +220,9 @@ semanticColorTest() {
   fi
 
   export BUILD_COLORS_MODE
+  if [ -z "$BUILD_COLORS_MODE" ]; then
+    BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+  fi
   consoleNameValue 30 "BUILD_COLORS_MODE" "$BUILD_COLORS_MODE"
   for i in "${colors[@]}"; do
     consoleReset
@@ -369,7 +374,7 @@ _consoleInfo() {
 # IDENTICAL consoleCode 4
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleOutput '' '\033[1;44m' '\033[0m' "$@"
+  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
 }
 
 # IDENTICAL consoleError 4
@@ -399,7 +404,7 @@ consoleSuccess() {
 #
 # shellcheck disable=SC2120
 consoleDecoration() {
-  __consoleOutput '' '\033[1;48;5;10;38;5;16;1m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[30;105m' '\033[30;105m' '\033[0m' "$@"
 }
 
 #
@@ -418,7 +423,7 @@ consoleSubtle() {
 #
 # shellcheck disable=SC2120
 consoleLabel() {
-  __consoleOutputMode '' '\033[36m' '\033[1;96m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[34;103m' '\033[1;96m' '\033[0m' "$@"
 }
 
 #
@@ -426,7 +431,7 @@ consoleLabel() {
 #
 # shellcheck disable=SC2120
 consoleValue() {
-  __consoleOutputMode '' '\033[1;47;33m' '\033[1;33m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[1;40;97m' '\033[1;97m' '\033[0m' "$@"
 }
 
 #

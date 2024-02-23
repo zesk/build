@@ -25,10 +25,10 @@ Installs the `git` binary
 
 ### `gitEnsureSafeDirectory` - When running git operations on a deployment host, at times
 
-When running git operations on a deployment host, at times it\'s necessary to
+When running git operations on a deployment host, at times it's necessary to
 add the current directory (or a directory) to the git `safe.directory` directive.
 
-This adds the directory passed to that directory in the local user\'s environment
+This adds the directory passed to that directory in the local user's environment
 
 #### Usage
 
@@ -202,7 +202,7 @@ Show changed files from HEAD
 
 Show changed files from HEAD with their status prefix character:
 
-- \' \' = unmodified
+- ' ' = unmodified
 - `M` = modified
 - `A` = added
 - `D` = deleted
@@ -237,6 +237,15 @@ Tests non-blank strings in our environment.
 
 GIT_EXEC_PATH - Must be set to pass
 GIT_INDEX_FILE - Must be set to pass
+
+### `gitRemoteHosts` - List remote hosts for the current git repository
+
+List remote hosts for the current git repository
+Not really test
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

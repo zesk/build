@@ -5,12 +5,13 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL bashHeader2 5
-set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
+loadTools() {
+  # shellcheck source=/dev/null
+  if ! source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
+    printf "%s\n" "Failed to load tools.sh" 1>&2
+    return 1
+  fi
+}
 
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on
 # a clean build checkout and examine changes manually each time.
@@ -27,27 +28,44 @@ deprecatedCleanup() {
   ignoreStuff=(! -path '*/deprecated.sh' ! -path '*/docs/release/*.md')
 
   deprecatedIgnoreStuff=(! -path '*/tools/usage.sh')
-  bin/build/cannon.sh release-check-version.sh git-tag-version.sh "${ignoreStuff[@]}" || :
+  statusMessage consoleWarning "release-check-version.sh "
+  cannon release-check-version.sh git-tag-version.sh "${ignoreStuff[@]}" || :
+
   # v0.3.12
-  bin/build/cannon.sh 'failed "' 'buildFailed "' -name '*.sh' "${ignoreStuff[@]}" || :
+  statusMessage consoleWarning "buildFailed "
+  cannon 'failed "' 'buildFailed "' -name '*.sh' "${ignoreStuff[@]}" || :
 
   for deprecatedToken in "${deprecatedTokens[@]}"; do
+    statusMessage consoleWarning "$deprecatedToken "
     if find . -type f ! -path '*/.*' "${ignoreStuff[@]}" "${deprecatedIgnoreStuff[@]}" -print0 | xargs -0 grep -l "$deprecatedToken"; then
-      consoleError "DEPRECATED token \"$deprecatedToken\" found"
+      clearLine || :
+      consoleError "DEPRECATED token \"$deprecatedToken\" found" || :
       exitCode=1
     fi
   done
   # v0.6.0
-  bin/build/cannon.sh markdownListify markdown_FormatList "${ignoreStuff[@]}"
+  statusMessage consoleWarning "markdownListify "
+  cannon markdownListify markdown_FormatList "${ignoreStuff[@]}"
 
   # v0.6.1
-  bin/build/cannon.sh 'usageWhich ' 'usageRequireBinary usage ' "${ignoreStuff[@]}"
+  statusMessage consoleWarning "usageWhich "
+  cannon 'usageWhich ' 'usageRequireBinary usage ' "${ignoreStuff[@]}"
 
   # v0.7.0
-  bin/build/cannon.sh 'APPLICATION_CHECKSUM' 'APPLICATION_ID' "${ignoreStuff[@]}"
-  bin/build/cannon.sh 'application-checksum' 'application-id' "${ignoreStuff[@]}"
+  statusMessage consoleWarning "APPLICATION_CHECKSUM "
+  cannon 'APPLICATION_CHECKSUM' 'APPLICATION_ID' "${ignoreStuff[@]}"
+  cannon 'application-checksum' 'application-id' "${ignoreStuff[@]}"
+
+  # v0.7.9
+  statusMessage consoleWarning "awsHasEnvironment "
+  cannon 'needAWS''Environment' 'awsHasEnvironment' "${ignoreStuff[@]}"
+  statusMessage consoleWarning "awsIsKeyUpToDate "
+  cannon 'isAWSKey''UpToDate ' 'awsIsKeyUpToDate' "${ignoreStuff[@]}"
+
+  clearLine
+  consoleSuccess "Completed deprecated script for Build $(consoleCode "$(jq -r .version "$(dirname "${BASH_SOURCE[0]}")/build.json")")"
 
   return $exitCode
 }
 
-deprecatedCleanup
+loadTools && deprecatedCleanup

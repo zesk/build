@@ -441,7 +441,6 @@ stringOffset() {
   printf %d "$offset"
 }
 
-#
 # For security one should update keys every N days
 #
 # This value would be better encrypted and tied to the key itself so developers
@@ -457,7 +456,7 @@ stringOffset() {
 # Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
 #
 # Summary: Test whether the key needs to be updated
-# Usage: isUpToDate keyDate upToDateDays
+# Usage: {fn} keyDate upToDateDays
 # Argument: keyDate - Date formatted like `YYYY-MM-DD`
 # Argument: upToDateDays - Days that key expires after `keyDate`
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
@@ -466,52 +465,64 @@ stringOffset() {
 # Example:     fi
 #
 isUpToDate() {
-  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp deltaDays maxDays daysAgo expireDate keyTimestamp
+  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp
+  local label deltaDays maxDays daysAgo expireTimestamp expireDate keyTimestamp
+  local timeText
 
+  if ! todayTimestamp=$(dateToTimestamp "$(todayDate)"); then
+    _isUpToDate $errorEnvironment "Unable to generate todayDate" || return $?
+  fi
   keyDate="${1-}"
-  shift || return "$errorArgument"
-  if [ -z "${1-}" ]; then
+  shift || _isUpToDate "$errorArgument" "Missing keyDate" || return $?
+  if ! keyTimestamp=$(dateToTimestamp "$keyDate"); then
     consoleError "Invalid date $keyDate" 1>&2
     return "$errorArgument"
   fi
   upToDateDays="${1-}"
-  upToDateDays=$((upToDateDays + 0))
+  if ! isInteger "$upToDateDays"; then
+    _isUpToDate "$errorArgument" "upToDateDays is not an integer $upToDateDays" || return $?
+  fi
   maxDays=366
-  if [ $upToDateDays -gt $maxDays ]; then
-    consoleError "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" 1>&2
-    return 1
+  if [ "$upToDateDays" -gt "$maxDays" ]; then
+    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
   fi
-  if [ $upToDateDays -lt 0 ]; then
-    consoleError "isUpToDate $keyDate $upToDateDays - negative values not allowed" 1>&2
-    return 1
-  fi
-  if ! keyTimestamp=$(dateToTimestamp "$keyDate") >/dev/null; then
-    consoleError "isUpToDate $keyDate $upToDateDays - Invalid date $keyDate" 1>&2
-    return 1
+  if [ "$upToDateDays" -lt 0 ]; then
+    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
   fi
   accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
-  expireDate=$((accessKeyTimestamp + 86400 * upToDateDays))
-  todayTimestamp=$(dateToTimestamp "$(todayDate)")
+  expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
+  expireDate=$(timestampToDate "$expireTimestamp" '%A, %B %d, %Y %R')
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))
-  if [ $daysAgo -gt 0 ]; then
-    consoleError "Expired $keyDate, $daysAgo" 1>&2
+  if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
+    label=$(printf "%s %s\n" "$(consoleError "Key expired on ")" "$(consoleRed "$keyDate")")
+    case "$daysAgo" in
+      0) timeText="Today" ;;
+      1) timeText="Yesterday" ;;
+      *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
+    esac
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "$label" "EXPIRED $timeText"
     return 1
   fi
   daysAgo=$((-daysAgo))
-  expireDate=$(timestampToDate "$expireDate" '%A, %B %d, %Y %R')
   if [ $daysAgo -lt 14 ]; then
-    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleOrange)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
   elif [ $daysAgo -lt 30 ]; then
     # consoleInfo "keyDate $keyDate"
     # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
     # consoleInfo "expireDate $expireDate"
-    consoleWarning "Expires on $expireDate, in $daysAgo $(plural $daysAgo day days)"
-    return 04
+    printf "%s %s %s %s\n" \
+      "$(consoleWarning "Expires on")" \
+      "$(consoleRed "$expireDate")" \
+      "$(consoleWarning ", in")" \
+      "$(consoleMagenta "$daysAgo $(plural $daysAgo day days)")"
+    return 0
   fi
   return 0
 }
-
+_isUpToDate() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 _mapEnvironmentGenerateSedFile() {
   # IDENTICAL _mapEnvironmentGenerateSedFile 12
   local sedFile=$1 value
@@ -600,10 +611,10 @@ isCharacterClass() {
   case "$class" in
     alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
     *)
-      _isCharacterClass "$errorArgument" "Invalid class: $class" && return $?
+      _isCharacterClass "$errorArgument" "Invalid class: $class" || return $?
       ;;
   esac
-  shift || :
+  shift || _isCharacterClass "$errorArgument" "shift failed" || return $?
   while [ $# -gt 0 ]; do
     # Not sure how you can hack this function with single character eval injections.
     # evalCheck: SAFE 2024-01-29 KMD
@@ -614,5 +625,55 @@ isCharacterClass() {
   done
 }
 _isCharacterClass() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# fn: cannon.sh
+# Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
+#
+# This can break your files so use with caution.
+#
+# Example:     cannon master main ! -path '*/old-version/*')
+# _cannon: cannon fromText toText [ findArgs ... ]
+# Argument: fromText - Required. String of text to search for.
+# Argument: toText - Required. String of text to replace.
+# Argument: findArgs ... - Any additional arguments are meant to filter files.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Arguments are identical
+#
+#
+cannon() {
+  local search searchQuoted replaceQuoted cannonLog count
+
+  if [ -z "${1-}" ]; then
+    _cannon "$errorArgument" "Empty search string"
+    return $?
+  fi
+  search=${1-}
+  searchQuoted=$(quoteSedPattern "$search")
+  shift || _cannon "$errorArgument" "Missing replacement argument"
+  if [ -z "${1-}" ]; then
+    _cannon "$errorArgument" "Empty replacement string"
+    return $?
+  fi
+  replaceQuoted=$(quoteSedPattern "${1-}")
+  shift
+  if [ "$searchQuoted" = "$replaceQuoted" ]; then
+    _cannon "$errorArgument" "from to \"$search\" are identical"
+  fi
+
+  cannonLog=$(mktemp)
+  if ! find . -type f ! -path '*/.*' "$@" -print0 >"$cannonLog"; then
+    printf "%s\n" "$(consoleSucces "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
+    rm "$cannonLog" || :
+    return 0
+  fi
+  xargs -0 grep -l "$search" <"$cannonLog" | tee "$cannonLog.found" | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
+  count="$(wc -l <"$cannonLog.found" | trimSpace)"
+  consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
+  rm -f "$cannonLog" "$cannonLog.found" || :
+}
+_cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -14,7 +14,6 @@ This tools does not install the `composer` binary into the local environment.
 
 
 
-shellcheck disable=SC2120
 
 ## Usage
 

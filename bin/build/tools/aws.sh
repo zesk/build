@@ -134,37 +134,40 @@ awsCredentialsFile() {
 #
 # Environment: AWS_ACCESS_KEY_DATE - Variable used to test
 # Summary: Test whether the AWS keys do not need to be updated
-# Usage: isAWSKeyUpToDate upToDateDays
-# Example:     if !isAWSKeyUpToDate 90; then
-# Example:     bigText Failed, update key and reset date
-# Example:     exit 99
+# Usage: {fn} upToDateDays
+# Example:     if !{fn} 90; then
+# Example:         bigText Failed, update key and reset date
+# Example:         exit 99
 # Example:     fi
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
-isAWSKeyUpToDate() {
+awsIsKeyUpToDate() {
+  # shellcheck source=/dev/null
+  if ! source ./bin/build/env/AWS_ACCESS_KEY_DATE.sh; then
+    return $errorEnvironment
+  fi
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 
 #
-# This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if either is empty, returns exit code 0 (success), otherwise returns exit code 1.
-# Exits successfully if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
+# This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
+# Fails if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
 #
 # Exit Code: 0 - If environment needs to be updated
 # Exit Code: 1 - If the environment seems to be set already
 # Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
 # Environment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)
-# Example:     if needAWSEnvironment; then
+# Example:     if awsHasEnvironment; then
 # Example:    ...
 # Example:     fi
 # Summary: Test whether the AWS environment variables are set or not
 #
-needAWSEnvironment() {
-  export AWS_ACCESS_KEY_ID
-  export AWS_SECRET_ACCESS_KEY
-  if [ -z ${AWS_ACCESS_KEY_ID+x} ] || [ -z ${AWS_SECRET_ACCESS_KEY+x} ]; then
-    return 0
+awsHasEnvironment() {
+  # shellcheck source=/dev/null
+  if ! source ./bin/build/env/AWS_ACCESS_KEY_ID.sh || ! source ./bin/build/env/AWS_SECRET_ACCESS_KEY.sh; then
+    return $errorEnvironment
   fi
-  return 1
+  [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
 }
 
 #
@@ -181,7 +184,7 @@ needAWSEnvironment() {
 # Example:     eval $(cat "$setFile")
 # Example:     rm "$setFile"
 # Example:     else
-# Example:     consoleError "Need $profile profile in aws credentials file"
+# Example:     consoleError "Need $profile profile in aws credentials file"`
 # Example:     exit 1
 # Example:     fi
 #
@@ -429,7 +432,7 @@ awsIPAccess() {
     _awsIPAccess $errorEnvironment "awsInstall failed" || return $?
   fi
 
-  if needAWSEnvironment; then
+  if ! awsHasEnvironment; then
     consoleInfo "Need AWS Environment: $awsProfile" || :
     if awsEnvironment "$awsProfile" >/dev/null; then
       if ! eval "$(awsEnvironment "$awsProfile")"; then

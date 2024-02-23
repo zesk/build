@@ -1,7 +1,18 @@
+# GitHub Functions
 
-# `githubRelease` - Generate a release on GitHub using API
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)
 
-[⬅ Return to top](index.md)
+
+### `githubLatestRelease` - Get the latest release version
+
+Get the latest release version
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `githubRelease` - Generate a release on GitHub using API
 
 Use GitHub API to generate a release
 
@@ -12,7 +23,7 @@ GitHub MUST have two sets of credentials enabled:
 
 Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
 
-## Arguments
+#### Arguments
 
 - `--token token` - Optional. Uses `GITHUB_ACCESS_TOKEN` if not supplied. Access token for GitHub REST API.
 - `--owner owner` - Optional. Uses `GITHUB_REPOSITORY_OWNER` if not supplied. Repository owner of release.
@@ -22,13 +33,16 @@ Think of them of the "source" (user) and "target" (ssh key) access. Both must ex
 - `releaseName` - Required. String. Name of the release (e.g. `v1.0.0`)
 - `commitish` - Required. String. The GIT short SHA tag for the release
 
-## Exit codes
+#### Exit codes
 
 - `0` - Always succeeds
 
-## Environment
+#### Environment
 
 GITHUB_ACCESS_TOKEN - Access to GitHub to publish releases
 GITHUB_ACCESS_TOKEN_EXPIRE - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
 GITHUB_REPOSITORY_OWNER - Owner of the repository (`https://github.com/owner`)
 GITHUB_REPOSITORY_NAME - Name of the repository (`https://github.com/owner/name`)
+
+[⬅ Return to index](index.md)
+[⬅ Return to top](../index.md)

@@ -107,17 +107,19 @@ testAWSIPAccess() {
 _isAWSKeyUpToDateTest() {
   local pass=$1
 
-  shift
+  shift || :
   if [ "$pass" = "1" ]; then
-    if ! isAWSKeyUpToDate "$@"; then
-      consoleError "isAWSKeyUpToDate $* should be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE+null})" 1>&2
+    if ! awsIsKeyUpToDate "$@"; then
+      consoleError "awsIsKeyUpToDate $* should be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" 1>&2
       return "$errorEnvironment"
     fi
+    printf "%s\n" "$(consoleSuccess "Success: ")$(consoleCode "awsIsKeyUpToDate $*")"
   else
-    if isAWSKeyUpToDate "$@"; then
-      consoleError "isAWSKeyUpToDate $* should NOT be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE+null})" 1>&2
+    if awsIsKeyUpToDate "$@"; then
+      consoleError "awsIsKeyUpToDate $* should NOT be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" 1>&2
       return "$errorEnvironment"
     fi
+    printf "%s\n" "$(consoleSuccess "Correctly failed: ")$(consoleCode "awsIsKeyUpToDate $*")"
   fi
 }
 
@@ -126,41 +128,63 @@ testAWSExpiration() {
   local thisYear thisMonth expirationDays start
 
   start=$(beginTiming)
-  testSection "AWS_ACCESS_KEY_DATE/isAWSKeyUpToDate testing"
+  testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
   thisYear=$(($(date +%Y) + 0))
   thisMonth="$(date +%m)"
+
+  testSection null AWS_ACCESS_KEY_DATE
   unset AWS_ACCESS_KEY_DATE
   _isAWSKeyUpToDateTest 0 || return $?
+
+  testSection blank AWS_ACCESS_KEY_DATE
   export AWS_ACCESS_KEY_DATE=
-  _isAWSKeyUpToDateTest 0 || consoleError "invalid $AWS_ACCESS_KEY_DATE" 1>&2 && return $?
   _isAWSKeyUpToDateTest 0 || return $?
+
+  testSection bad AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=99999
-  _isAWSKeyUpToDateTest 0 || consoleError "invalid $AWS_ACCESS_KEY_DATE" 1>&2 && return $?
+  _isAWSKeyUpToDateTest 0 || return $?
+
+  testSection OLD AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=2020-01-01
-  _isAWSKeyUpToDateTest 0 || consoleError "should be expired" 1>&2 && return $?
+  _isAWSKeyUpToDateTest 0 || return $?
+
+  testSection THIS-01-01 366
   AWS_ACCESS_KEY_DATE="$thisYear-01-01"
   expirationDays=366
-  _isAWSKeyUpToDateTest 0 "$expirationDays" || return $?
+  _isAWSKeyUpToDateTest 1 "$expirationDays" || return $?
+
+  testSection LAST-01-01 365
   AWS_ACCESS_KEY_DATE="$((thisYear - 1))-01-01"
   expirationDays=365
-  _isAWSKeyUpToDateTest 1 "$expirationDays" || return $?
+  _isAWSKeyUpToDateTest 0 "$expirationDays" || return $?
+
+  testSection THIS-THIS-01 365
   AWS_ACCESS_KEY_DATE="$thisYear-$thisMonth-01"
   _isAWSKeyUpToDateTest 1 "$expirationDays" || return $?
 
+  testSection yesterdayDate 0
   AWS_ACCESS_KEY_DATE=$(yesterdayDate)
   expirationDays=0
   _isAWSKeyUpToDateTest 0 $expirationDays || return $?
+
+  testSection yesterdayDate 1
   expirationDays=1
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
+
+  testSection yesterdayDate 2
   expirationDays=2
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
 
   AWS_ACCESS_KEY_DATE=$(todayDate)
+
   expirationDays=0
+  testSection todayDate $expirationDays
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
   expirationDays=1
+  testSection todayDate $expirationDays
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
   expirationDays=2
+  testSection todayDate $expirationDays
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
 
   reportTiming "$start" Done

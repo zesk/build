@@ -18,6 +18,8 @@ aws Command-Line install
 
 Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
+
+
 #### Usage
 
     awsInstall [ package ... ]
@@ -65,14 +67,14 @@ If not found, returns with exit code 1.
 - `1` - If `$HOME` is not a directory or credentials file does not exist
 - `0` - If credentials file is found and output to stdout
 
-### `isAWSKeyUpToDate` - Test whether the AWS keys do not need to be updated
+### `awsIsKeyUpToDate` - Test whether the AWS keys do not need to be updated
 
 For security we gotta update our keys every 90 days
 
 This value would be better encrypted and tied to the AWS_ACCESS_KEY_ID so developers
 can not just update the value to avoid the security issue.
 
-This tool checks the environment `AWS_ACCESS_KEY_DATE` and ensures it\'s within `upToDateDays` of today; if not this fails.
+This tool checks the environment `AWS_ACCESS_KEY_DATE` and ensures it's within `upToDateDays` of today; if not this fails.
 
 It will also fail if:
 
@@ -81,16 +83,11 @@ It will also fail if:
 
 Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `AWS_ACCESS_KEY_DATE` has not exceeded the number of days.
 
-#### Usage
-
-    isAWSKeyUpToDate upToDateDays
-    
-
 #### Examples
 
-    if !isAWSKeyUpToDate 90; then
-    bigText Failed, update key and reset date
-    exit 99
+    if !awsIsKeyUpToDate 90; then
+        bigText Failed, update key and reset date
+        exit 99
     fi
 
 #### Exit codes
@@ -101,14 +98,14 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 
-### `needAWSEnvironment` - Test whether the AWS environment variables are set or not
+### `awsHasEnvironment` - Test whether the AWS environment variables are set or not
 
-This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if either is empty, returns exit code 0 (success), otherwise returns exit code 1.
-Exits successfully if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
+This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
+Fails if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
 
 #### Examples
 
-    if needAWSEnvironment; then
+    if awsHasEnvironment; then
    ...
     fi
 
@@ -145,13 +142,67 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
     eval $(cat "$setFile")
     rm "$setFile"
     else
-    consoleError "Need $profile profile in aws credentials file"
+    consoleError "Need $profile profile in aws credentials file"`
     exit 1
     fi
 
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `awsIPAccess` - Grant access to AWS security group for this IP only using Amazon IAM credentials
+
+Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
+Use this during deployment to grant temporary access to your systems during deployment only.
+Build scripts should have a $(consoleCode --revoke) step afterward, always.
+services are looked up in /etc/services and match /tcp services only for port selection
+
+#### Arguments
+
+- `--profile awsProfile` - Use this AWS profile when connecting using ~/.aws/credentials
+--services service0,service1,- `...` - Required. List of services to add or remove (maps to ports)
+- `--id developerId` - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+- `--ip ip` - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+- `--revoke` - Flag. Remove permissions
+- `--help` - Flag. Show this help
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+AWS_REGION - Where to update the security group
+DEVELOPER_ID - Developer used to register rules in Amazon
+AWS_ACCESS_KEY_ID - Amazon IAM ID
+AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
+
+#### Arguments
+
+- `--remove - Optional. Flag. Remove instead of add` - only `group`, and `description` required.
+- `--add` - Optional. Flag. Add to security group (default).
+- `--group group` - Required. String. Security Group ID
+- `--region region` - Optional. String. AWS region, defaults to `AWS_REGION`. Must be supplied.
+- `--port port` - Required for `--add` only. Integer. service port
+- `--description description` - Required. String. Description to identify this record.
+- `--ip ip` - Required for `--add` only. String. IP Address to add or remove.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Arguments
+
+- `region` - The AWS Region to validate
+
+#### Exit codes
+
+- `0` - Region is a valid AWS region
+- `1` - Region is NOT a valid AWS region
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

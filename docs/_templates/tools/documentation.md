@@ -27,6 +27,7 @@
 
 {bashDocumentation_Extract}
 {bashDocumentation_FindFunctionDefinitions}
+{bashDocumentation_FindFunctionDefinition}
 
 ## Usage Utilities
 

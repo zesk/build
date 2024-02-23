@@ -1,13 +1,9 @@
-# Web Functions
+# Apache Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{urlMatchesLocalFileSize} 
-{urlContentLength} 
-{hostIPList} 
-{hostTTFB}
-{websiteScrape}
+{installApacheConfiguration}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
