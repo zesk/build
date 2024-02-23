@@ -87,17 +87,29 @@ colorBrightness() {
   local r g b
   # 0.299 R + 0.587 G + 0.114 B
   read -r r g b || :
-  printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+  if ! isUnsignedInteger "$r" "$g" "$b"; then
+    printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+  else
+    consoleError "Not integers: \"$r\" \"$g\" \"$b\"" 1>&2
+    return $errorArgument
+  fi
 }
 
+#
+# Usage: {fn}
+#
+# Print the suggested color mode for the current environment
+#
 consoleConfigureColorMode() {
-  local brightness
+  local brightness colorMode
 
-  brightness=$(colorBrightness < <(consoleGetColor --background))
-
-  if [ "$brightness" -lt 50 ]; then
-    printf "%s\n" dark
-  else
-    printf "%s\n" light
+  colorMode=light
+  if brightness=$(colorBrightness 2>/dev/null < <(consoleGetColor --background)); then
+    if [ "$brightness" -lt 50 ]; then
+      colorMode=dark
+    fi
+  elif isBitBucketPipeline; then
+    colorMode=dark
   fi
+  printf "%s\n" "$colorMode"
 }
