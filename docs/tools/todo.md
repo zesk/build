@@ -32,30 +32,36 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 - `0` - Always succeeds
 
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `build-docs.sh` - Build documentation for build system.
+
+Build documentation for build system.
+
+Given that bash is not an ideal template language, caching is mandatory.
+
+Uses a cache at `buildCacheDirectory`
+
 #### Arguments
 
-- `settingsFile` - Required. Cached documentation settings.
-- `template` - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
+- `--force` - Force generation, ignore cache directives
+- `--unlinked` - Show unlinked functions
+- `--unlinked-update` - Update unlinked document file
+- `--clean` - Erase the cache before starting.
+- `--help` - I need somebody
 
 #### Exit codes
 
 - `0` - Success
-- `1` - Template file not found
+- `1` - Issue with environment
+- `2` - Argument error
 
-#### See Also
+#### Arguments
 
-- [function bashDocumentFunction
-](./docs/tools/documentation.md
-) - [Document a function and generate a function template (markdown)
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L376
-)
-- [function _bashDocumentationFormatter_exit_code
-](./docs/tools/documentation.md
-) - [Format code blocks (does markdown_FormatList)
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh
-#L699
-)
+- `cacheDirectory` - Required. Directory. Cache directory.
+- `envFile` - Required. File. Environment file used as base environment for all template generation.
 
 #### Exit codes
 
@@ -72,58 +78,6 @@ Run Zesk Build tests
 - `--help` - Optional. This help.
 - `--clean` - Optional. Delete test artifact files before starting.
 - `--messy` - Optional. Do not delete test artifact files afterwards.
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `consoleBoldBlack` - shellcheck disable=SC2120
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `consoleBoldBlue` - shellcheck disable=SC2120
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `consoleBoldCyan` - shellcheck disable=SC2120
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `consoleBoldWhite` - shellcheck disable=SC2120
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `consoleColorMode` - Set colors to deal with dark or light-background consoles
-
-Set colors to deal with dark or light-background consoles
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `consoleSubtle` - Keep things subtle
-
-Keep things subtle
 
 #### Exit codes
 
@@ -207,41 +161,13 @@ The `userAtHost` can be passed as follows:
 
 `deployHome` is considered a state directory so removing entries in this should be managed separately.
 
-### `dockerEnvFromBash` - Ensure an environment file is compatible with non-quoted docker environment
+### `directoryClobber` - Copy directory over another sort-of-atomically
 
-Ensure an environment file is compatible with non-quoted docker environment files
-
-#### Usage
-
-    checkDockerEnvFile [ filename ... ]
-    
-
-#### Arguments
-
-- `filename` - Docker environment file to check for common issues
+Copy directory over another sort-of-atomically
 
 #### Exit codes
 
-- `1` - if errors occur
-- `0` - if file is valid
-
-### `dockerEnvToBash` - Ensure an environment file is compatible with non-quoted docker environment
-
-Ensure an environment file is compatible with non-quoted docker environment files
-
-#### Usage
-
-    checkDockerEnvFile [ filename ... ]
-    
-
-#### Arguments
-
-- `filename` - Docker environment file to check for common issues
-
-#### Exit codes
-
-- `1` - if errors occur
-- `0` - if file is valid
+- `0` - Always succeeds
 
 ### `dotEnvConfig` - Deprecated:
 
@@ -256,13 +182,16 @@ Deprecated:
 - [function dotEnvConfigure
 ](./docs/tools/pipeline.md
 ) - [Load `.env` and optional `.env.local` into bash context
-](https://github.com/zesk/build/blob/main/bin/build/tools/pipeline.sh
-#L41
+](https://github.com/zesk/build/blob/main/bin/build/tools/pipeline.sh#L41
 )
 
 ### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
 
 dumpFile fileName0 [ fileName1 ... ]
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 #### Exit codes
 
@@ -294,14 +223,17 @@ Current repository should be clean and have no modified files.
 - `1` - Already in main, staging, or HEAD, or git merge failed
 - `0` - git merge succeeded
 
-### `gitRemoteHosts` - List remote hosts for the current git repository
+### `deploy-shutdown.sh` - Deployment "start" script
 
-List remote hosts for the current git repository
-Not really test
+Deployment "start" script
+
+#### Examples
+
+- Move directories to make deployment final
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - This SHOULD exit successfully always
 
 ### `maintenance.sh
  [ --message message ] maintenanceSetting` - Toggle maintenance on or off. The default version of this
@@ -323,93 +255,31 @@ and dynamically adding or removing any line which matches the MAINTENANCE variab
 
 BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 
-### `installApacheConfiguration` - Configures Apache
-
-Configures Apache
-
-                     ▗▖         ▄▄▖
-                     ▐▌        ▐▀▀█▖
-  ▟██▖▐▙█▙  ▟██▖ ▟██▖▐▙██▖ ▟█▙    ▐▌
-  ▘▄▟▌▐▛ ▜▌ ▘▄▟▌▐▛  ▘▐▛ ▐▌▐▙▄▟▌  ▗▛
- ▗█▀▜▌▐▌ ▐▌▗█▀▜▌▐▌   ▐▌ ▐▌▐▛▀▀▘ ▗▛
- ▐▙▄█▌▐█▄█▘▐▙▄█▌▝█▄▄▌▐▌ ▐▌▝█▄▄▌▗█▄▄▖
-  ▀▀▝▘▐▌▀▘  ▀▀▝▘ ▝▀▀ ▝▘ ▝▘ ▝▀▀ ▝▀▀▀▘
-      ▐▌
-
-#### Arguments
-
-- `applicationsHome` - Home directory for the application. User is derived from the owner.
-- `--site-remove siteName` - Explicitly disable site
-
 #### Exit codes
 
 - `0` - Always succeeds
 
-#### Environment
+### `mapValueTrim` - Maps a string using an environment file
 
-APPLICATION_USER - Automatically defined and used to map `.conf` files
-APPLICATION_PATH - Automatically defined and used to map `.conf` files
-APPLICATION_NAME - Automatically defined and used to map `.conf` files
-
-### `isCharacterClass` - Poor-man's bash character class matching
-
-Poor-man's bash character class matching
-
-Returns true if all `characters` are of `className`
-
-`className` can be one of:
-    alnum   alpha   ascii   blank   cntrl   digit   graph   lower
-    print   punct   space   upper   word    xdigit
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `makeEnvironment` - Create environment file `.env` for build.
-
-Create environment file `.env` for build.
-
-#### Arguments
-
-- `requireEnv1` - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
-- `optionalEnv1` - Optional. One or more environment variables which are included if blank or not
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Environment
-
-APPLICATION_VERSION - reserved and set to `runHook version-current` if not set already
-APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
-APPLICATION_TAG - reserved and set to `runHook application-id`
-APPLICATION_ID - reserved and set to `runHook application-tag`
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `modificationSeconds` - Fetch the modification time in seconds from now of a
-
-Fetch the modification time in seconds from now of a file as a timestamp
+Maps a string using an environment file
 
 #### Usage
 
-    modificationTime filename0 [ filename1 ... ]
+    mapValue mapFile [ value ... ]
     
 
-#### Examples
+#### Arguments
 
-    modificationTime ~/.bash_profile
+- `mapFile` - a file containing bash environment definitions
+- `value` - One or more values to map using said environment file
 
 #### Exit codes
 
-- `2` - If file does not exist
-- `0` - If file exists and modification times are output, one per line
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ### `php-test.sh` - Test a docker-based PHP application during build
 
@@ -438,8 +308,7 @@ Test a docker-based PHP application during build
 
 - [function saveErrorExit
 ](./docs/tools/todo.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh
-#L94
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L94
 )
 
 #### Examples
@@ -457,17 +326,8 @@ Test a docker-based PHP application during build
 
 - [function restoreErrorExit
 ](./docs/tools/todo.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh
-#L106
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L106
 )
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `semanticColorTest` - Output colors
-
-Outputs sample sentences for the `consoleAction` commands to see what they look like.
 
 #### Exit codes
 
@@ -496,61 +356,6 @@ Specify actions more than once on the command line to specify more than one set 
 #### Exit codes
 
 - `0` - Always succeeds
-
-### `serviceToPort` - Get the port number associated with a service
-
-Get the port number associated with a service
-
-#### Arguments
-
-- `service` - A unix service typically found in `/etc/services`
-
-#### Sample Output
-
-    Port number of associated service (integer) one per line
-    
-
-#### Exit codes
-
-- `1` - service not found
-- `2` - bad argument or invalid port
-- `0` - service found and output is an integer
-
-### `serviceToStandardPort` - Hard-coded services for:
-
-Hard-coded services for:
-
-- `ssh` -> 22
-- `http`-> 80
-- `https`-> 80
-- `postgres`-> 5432
-- `mariadb`-> 3306
-- `mysql`-> 3306
-
-Backup when `/etc/services` does not exist.
-
-#### Arguments
-
-- `service` - A unix service typically found in `/etc/services`
-
-#### Sample Output
-
-    Port number of associated service (integer) one per line
-    
-
-#### Exit codes
-
-- `1` - service not found
-- `0` - service found and output is an integer
-
-#### See Also
-
-- [function serviceToPort
-](./docs/tools/todo.md
-) - [Get the port number associated with a service
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh
-#L821
-)
 
 #### Exit codes
 
@@ -591,24 +396,6 @@ A contrived function to show some features and patterns.
 
 - `0` - Always succeeds
 
-### `sshSetup` - Set up SSH for a user with ID and backup
-
-Set up SSH for a user with ID and backup keys in `~/.ssh`
-
-Create a key for a user for SSH authentication to other servers.
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `sysvInitScript` - Install a script to run upon initialization.
-
-Install a script to run upon initialization.
-
-#### Arguments
-
-- `binary` - Required. String. Binary to install at startup.
-
 #### Exit codes
 
 - `0` - Always succeeds
@@ -647,15 +434,6 @@ Configure the web application server as root
     #### Exit codes
     
     - `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `websiteScrape` - Uses wget to fetch a site, convert it to HTML
-
-Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
-SIte is stored in a directory called `host` for the URL requested
 
 #### Exit codes
 

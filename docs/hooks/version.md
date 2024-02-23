@@ -40,8 +40,7 @@ If implemented, `new-release.sh` will create a release only when needed.
 #### See Also
 
 - [Source github-version-live.sh
-](https://github.com/zesk/build/blob/main/bin/build/pipeline/github-version-live.sh
-#L{line}
+](https://github.com/zesk/build/blob/main/bin/build/pipeline/github-version-live.sh#L{line}
 )
 
 # `new-release.sh` Hooks

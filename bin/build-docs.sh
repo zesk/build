@@ -81,10 +81,11 @@ buildDocsBuild() {
   local functionLinkPattern fileLinkPattern documentTemplate templateDirectory
   local start envFile exitCode
 
+  export BUILD_COLORS_MODE
+  BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+
   exitCode=0
   start=$(beginTiming)
-
-  cacheDirectory="$(buildCacheDirectory)"
 
   # shellcheck source=/dev/null
   . ./bin/build/env/BUILD_COMPANY.sh
@@ -92,6 +93,10 @@ buildDocsBuild() {
   # shellcheck source=/dev/null
   . ./bin/build/env/BUILD_COMPANY_LINK.sh
 
+  if ! cacheDirectory="$(buildCacheDirectory)" || ! cacheDirectory=$(requireDirectory "$cacheDirectory"); then
+    _buildDocsBuild "$errorEnvironment" "Unable to create $cacheDirectory" || return $?
+  fi
+  # consoleNameValue 40 cacheDirectory "$cacheDirectory"
   docArgs=()
   envFile=$(mktemp)
   {
@@ -132,11 +137,11 @@ buildDocsBuild() {
         fi
         ;;
       --help)
-        _buildDocsBuildUsage 0
+        _buildDocsBuild 0
         return $?
         ;;
       *)
-        _buildDocsBuildUsage "$errorArgument" "Unknown argument $1"
+        _buildDocsBuild "$errorArgument" "Unknown argument $1"
         return $?
         ;;
     esac
@@ -218,9 +223,9 @@ buildDocsBuild() {
 # 2023-11-22 This file layout is easier to follow and puts the documentation at top, try and do this more
 #
 
-# Output _buildDocsBuildUsage and exit
+# Output _buildDocsBuild and exit
 # Ignore: Usage
-_buildDocsBuildUsage() {
+_buildDocsBuild() {
   usageDocument "./bin/$(basename "${BASH_SOURCE[0]}")" "buildDocsBuild" "$@"
   return $?
 }
