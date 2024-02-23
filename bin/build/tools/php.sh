@@ -429,3 +429,112 @@ _phpComposer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   return "$?"
 }
+
+# fn: {base}
+# Usage: {fn} deployment
+# Argument: deployment - Required. String. `production` or `develop`
+# Test a docker-based PHP application during build
+#
+# Hook: test-setup - Move or copy files prior to docker-compose build to build test container"
+# Hook: test-runner - Run PHP Unit and any other tests inside the container"
+# Hook: test-cleanup - Reverse of test-setup hook actions"
+phpTest() {
+  local init start quietLog success
+
+  #                   _
+  #   _ __ ___   __ _(_)_ __
+  #  | '_ ` _ \ / _` | | '_ \
+  #  | | | | | | (_| | | | | |
+  #  |_| |_| |_|\__,_|_|_| |_|
+  #
+
+  init=$(beginTiming) || :
+  if ! quietLog="$(buildQuietLog "${FUNCNAME[0]}")"; then
+    _phpTest "$errorEnvironment" "No buildQuietLog" || return $?
+  fi
+
+  buildDebugStart || :
+
+  if ! dockerComposeInstall; then
+    _phpTest "$errorEnvironment" "dockerComposeInstall failed" || return $?
+  fi
+  if ! phpComposer; then
+    _phpTest "$errorEnvironment" "phpComposer failed" || return $?
+  fi
+
+  consoleInfo "Building test container" || :
+
+  start=$(beginTiming) || :
+  if ! _phpTestSetup; then
+    _phpTest "$errorEnvironment" "phpComposer failed" || return $?
+  fi
+  if ! runOptionalHook test-setup; then
+    _phpTestCleanupFailed "test-setup failed" || return $?
+  fi
+
+  export DOCKER_BUILDKIT=0
+  if ! docker-compose -f "./docker-compose.yml" build >>"$quietLog"; then
+    buildFailed "$quietLog"
+    _phpTestCleanupFailed "docker-compose failed" || return $?
+  fi
+  reportTiming "$start" "Built in" || :
+
+  consoleInfo "Bringing up containers ..."
+
+  start=$(beginTiming)
+  if ! docker-compose up -d >>"$quietLog" 2>&1; then
+    buildFailed "$quietLog"
+    _phpTestCleanupFailed "docker-compose up failed" || return $?
+  fi
+  reportTiming "$start" "Up in"
+
+  start=$(beginTiming) || :
+  success=true
+  if ! runHook test-runner; then
+    success=false
+    _phpTestResult Failed "$(consoleOrange)" "❌" "🔥" 13 2
+  else
+    _phpTestResult "  Success " "$(consoleGreen)" "☘️ " "💙" 18 4
+  fi
+  consoleInfo "Bringing down containers ..." || :
+  start=$(beginTiming) || :
+  if ! docker-compose down 2>/dev/null; then
+    _phpTestCleanupFailed "docker-compose DOWN failed" || return $?
+  fi
+  # Reset test environment ASAP
+  _phpTestCleanup || :
+  reportTiming "$start" "Down in" || :
+  if ! runOptionalHook test-cleanup; then
+    consoleError "test-cleanup ALSO failed"
+    success=false
+  fi
+  buildDebugStop || :
+
+  reportTiming "$init" "PHP Test completed in" || :
+  $success
+}
+_phpTest() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+_phpTestSetup() {
+  renameFiles "" ".$$.backup" hiding .env .env.local
+}
+_phpTestCleanup() {
+  for i in .env .env.local ./vendor; do
+    if [ -f "$i" ] || [ -d "$i" ]; then
+      rm -rf "$i" || :
+    fi
+  done
+  renameFiles ".$$.backup" "" restoring .env .env.local || :
+}
+_phpTestCleanupFailed() {
+  _phpTestCleanup || :
+  _phpTest "$errorEnvironment" "$@" || return $?
+}
+_phpTestResult() {
+  local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"
+  local gap="    "
+  repeat "$thick" "$(printf "%s" "$(repeat "$width" "$top")")"$'\n'
+  bigText "$message" | wrapLines "$top$gap$color" "$(consoleReset)$gap$bottom"
+  repeat "$thick" "$(printf "%s" "$(repeat "$width" "$bottom")")"$'\n'
+}

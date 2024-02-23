@@ -23,8 +23,10 @@ loadTools() {
 # fn: deprecated.sh
 #
 deprecatedCleanup() {
-  local deprecatedToken deprecatedTokens=(dockerPHPExtensions usageWrapper usageWhich usageEnvironment) exitCode=0 ignoreStuff=() deprecatedIgnoreStuff=()
+  local deprecatedToken deprecatedTokens exitCode ignoreStuff deprecatedIgnoreStuff
 
+  exitCode=0
+  deprecatedTokens=()
   ignoreStuff=(! -path '*/deprecated.sh' ! -path '*/docs/release/*.md')
 
   deprecatedIgnoreStuff=(! -path '*/tools/usage.sh')
@@ -35,14 +37,6 @@ deprecatedCleanup() {
   statusMessage consoleWarning "buildFailed "
   cannon 'failed "' 'buildFailed "' -name '*.sh' "${ignoreStuff[@]}" || :
 
-  for deprecatedToken in "${deprecatedTokens[@]}"; do
-    statusMessage consoleWarning "$deprecatedToken "
-    if find . -type f ! -path '*/.*' "${ignoreStuff[@]}" "${deprecatedIgnoreStuff[@]}" -print0 | xargs -0 grep -l "$deprecatedToken"; then
-      clearLine || :
-      consoleError "DEPRECATED token \"$deprecatedToken\" found" || :
-      exitCode=1
-    fi
-  done
   # v0.6.0
   statusMessage consoleWarning "markdownListify "
   cannon markdownListify markdown_FormatList "${ignoreStuff[@]}"
@@ -55,6 +49,7 @@ deprecatedCleanup() {
   statusMessage consoleWarning "APPLICATION_CHECKSUM "
   cannon 'APPLICATION_CHECKSUM' 'APPLICATION_ID' "${ignoreStuff[@]}"
   cannon 'application-checksum' 'application-id' "${ignoreStuff[@]}"
+  deprecatedTokens+=(dockerPHPExtensions usageWrapper usageWhich usageEnvironment)
 
   # v0.7.9
   statusMessage consoleWarning "awsHasEnvironment "
@@ -62,7 +57,20 @@ deprecatedCleanup() {
   statusMessage consoleWarning "awsIsKeyUpToDate "
   cannon 'isAWSKey''UpToDate ' 'awsIsKeyUpToDate' "${ignoreStuff[@]}"
 
+  # v0.7.10
+  deprecatedToken+=('bin/build/pipeline')
+
   clearLine
+  # Do all deprecations
+  for deprecatedToken in "${deprecatedTokens[@]}"; do
+    statusMessage consoleWarning "$deprecatedToken "
+    if find . -type f ! -path '*/.*' "${ignoreStuff[@]}" "${deprecatedIgnoreStuff[@]}" -print0 | xargs -0 grep -l "$deprecatedToken"; then
+      clearLine || :
+      consoleError "DEPRECATED token \"$deprecatedToken\" found" || :
+      exitCode=1
+    fi
+  done
+  clearLine || :
   consoleSuccess "Completed deprecated script for Build $(consoleCode "$(jq -r .version "$(dirname "${BASH_SOURCE[0]}")/build.json")")"
 
   return $exitCode

@@ -2,10 +2,7 @@
 #
 # Deploy an application to a server host and path
 #
-# Artifact: .deployed-hosts
-#
-# Used to track failed or successful host deployment
-# Must be preserved between pipeline steps
+# See: deployToRemote
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #

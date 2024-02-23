@@ -21,53 +21,62 @@
 # Test if an argument is a positive floating point number
 # (`1e3` notation NOT supported)
 #
-# Usage: {fn} argument
+# Usage: {fn} argument ...
 # Exit Code: 0 - if it is a number equal to or greater than zero
 # Exit Code: 1 - if it is not a number equal to or greater than zero
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isUnsignedNumber() {
-  case ${1#+} in
-    '' | . | *[!0-9.]* | *.*.*)
-      return 1
-      ;;
-  esac
+  while [ $# -gt 0 ]; do
+    case ${1#+} in
+      '' | . | *[!0-9.]* | *.*.*)
+        return 1
+        ;;
+    esac
+    shift || :
+  done
 }
 
 #
 # Test if an argument is a floating point number
 # (`1e3` notation NOT supported)
 #
-# Usage: isInteger argument
+# Usage: {fn} argument ...
 # Exit Code: 0 - if it is a floating point number
 # Exit Code: 1 - if it is not a floating point number
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isNumber() {
-  case ${1#[-+]} in
-    '' | . | *[!0-9.]* | *.*.*)
-      return 1
-      ;;
-  esac
+  while [ $# -gt 0 ]; do
+    case ${1#[-+]} in
+      '' | . | *[!0-9.]* | *.*.*)
+        return 1
+        ;;
+    esac
+    shift || :
+  done
 }
 
 #
 # Test if an argument is a signed integer
 #
-# Usage: isInteger argument
+# Usage: {fn} argument ...
 # Exit Code: 0 - if it is a signed integer
 # Exit Code: 1 - if it is not a signed integer
 # Credits: F. Hauri - Give Up GitHub (isuint_Case)
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isInteger() {
-  case ${1#[-+]} in
-    '' | *[!0-9]*)
-      return 1
-      ;;
-  esac
+  while [ $# -gt 0 ]; do
+    case ${1#[-+]} in
+      '' | *[!0-9]*)
+        return 1
+        ;;
+    esac
+    shift || :
+  done
 }
 
 #
@@ -76,16 +85,19 @@ isInteger() {
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
-# Usage: {fn} string
+# Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 #
 isUnsignedInteger() {
-  case "${1#+}" in
-    '' | *[!0-9]*)
-      return 1
-      ;;
-  esac
+  while [ $# -gt 0 ]; do
+    case "${1#+}" in
+      '' | *[!0-9]*)
+        return 1
+        ;;
+    esac
+    shift || :
+  done
 }
 
 #

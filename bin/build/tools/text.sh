@@ -687,7 +687,7 @@ cannon() {
     return $?
   fi
   replaceQuoted=$(quoteSedPattern "${1-}")
-  shift
+  shift || _cannon "$errorArgument" "shift fail" || return $?
   if [ "$searchQuoted" = "$replaceQuoted" ]; then
     _cannon "$errorArgument" "from to \"$search\" are identical"
   fi
