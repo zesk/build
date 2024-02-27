@@ -24,6 +24,7 @@ Once included, all functions here are available for use and may affect your buil
 - [Documentation Functions](./documentation.md)
 - [Git Functions](./git.md)
 - [GitHub Functions](./github.md)
+- [Installation Functions](./install.md)
 - [Interactive Functions](./interactive.md)
 - [Log Functions](./log.md)
 - [npm Functions](./npm.md)

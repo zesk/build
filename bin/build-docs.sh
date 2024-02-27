@@ -191,7 +191,7 @@ buildDocsBuild() {
     rm "$envFile" || :
     return "$errorEnvironment"
   fi
-  for theDirectory in bin install pipeline; do
+  for theDirectory in bin install; do
     if ! documentationTemplateDirectoryCompile "${docArgs[@]}" \
       "$cacheDirectory" ./docs/_templates/$theDirectory/ ./docs/_templates/__binary.md ./docs/$theDirectory/; then
       rm "$envFile" || :
