@@ -246,6 +246,40 @@ trimSpace handles both cases now.
 ](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L96
 )
 
+### `stripAnsi` - Strip ANSI console escape sequences from a file
+
+Strip ANSI console escape sequences from a file
+
+#### Usage
+
+    stripAnsi < input > output
+    
+
+#### Arguments
+
+- None.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Local cache
+
+None.
+
+#### Environment
+
+None.
+
+#### Depends
+
+    sed
+    
+
+#### Credits
+
+Thanks to [commandlinefu tripleee](https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc).
+
 
 ### `listTokens` - listTokens
 
@@ -277,6 +311,25 @@ None.
 
     sed quoteSedPattern
     
+
+
+### `mapValue` - Maps a string using an environment file
+
+Maps a string using an environment file
+
+#### Usage
+
+    mapValue mapFile [ value ... ]
+    
+
+#### Arguments
+
+- `mapFile` - a file containing bash environment definitions
+- `value` - One or more values to map using said environment file
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ## Finding or Calculating
 

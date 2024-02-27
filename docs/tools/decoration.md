@@ -78,6 +78,30 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 - 0
 
+### `wrapLines` - Prefix output lines with a string
+
+Wrap lines with a string, useful to format output or add color codes to
+consoles which do not honor colors line-by-line. Intended to be used as a pipe.
+
+#### Usage
+
+    wrapLines [ prefix [ suffix ... ] ] < fileToPrefixLines
+    
+
+#### Arguments
+
+- `prefix` - Prefix each line with this text
+- `suffix` - Prefix each line with this text
+
+#### Examples
+
+    cat "$file" | prefixLines "$(consoleCode)"
+    cat "$errors" | prefixLines "    ERROR: "
+
+#### Exit codes
+
+- 0
+
 ### `alignRight` - align text right
 
 Format text and align it right using spaces.

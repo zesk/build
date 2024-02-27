@@ -8,6 +8,9 @@
 #
 set -eou pipefail
 
+# IDENTICAL errorEnvironment 1
+errorEnvironment=1
+
 # IDENTICAL errorArgument 1
 errorArgument=2
 
@@ -15,8 +18,17 @@ errorArgument=2
 #
 # Create a key for a user for SSH authentication to other servers.
 #
+#
+# Add .ssh key for current user
+#
+# Usage: {fn} [ --force ] [ server ... ]
+# Argument: --force Force the program to create a new key if one exists
+# Argument: server- Servers to connect to to set up authorization
+#
+# You will need the password for this server for the current user.
+#
 sshSetup() {
-  local sshHomePath flagForce servers keyType keyBits
+  local arg sshHomePath flagForce servers keyType keyBits
 
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../build/env/HOME.sh"
@@ -25,40 +37,43 @@ sshSetup() {
   fi
   sshHomePath="$HOME/.ssh/"
   flagForce=0
-  servers=
+  servers=()
   keyType=ed25519
   keyBits=2048
 
   while [ $# != 0 ]; do
-    case $1 in
+    arg="$1"
+    if [ -z "$arg" ]; then
+      _sshSetup "$errorArgument" "Empty argument" || return $?
+    fi
+    case "$arg" in
       --type)
-        shift
-        case $1 in
+        shift || _sshSetup "$errorArgument" "Missing $arg" || return $?
+        case "$1" in
           ed25519 | rsa | dsa)
             keyType=$1
             ;;
           *)
-            consoleError "$errorArgument" "Key type $1 is not known: ed25519 | rsa | dsa" 1>&2
-            return $errorArgument
+            _sshSetup "$errorArgument" "Key type $1 is not known: ed25519 | rsa | dsa" || return $?
             ;;
         esac
         ;;
       --bits)
-        shift
+        shift || _sshSetup "$errorArgument" "Missing $arg" || return $?
         minBits=512
         if [ "$(("$1" + 0))" -lt "$minBits" ]; then
-          consoleError "Key bits is too $minBits: $1 -> $(("$1" + 0))" 1>&2
-          return $errorArgument
+          _sshSetup "$errorArgument" "Key bits is too $minBits: $1 -> $(("$1" + 0))" || return $?
         fi
         ;;
       --help)
         usage 0
+        return 0
         ;;
       --force)
         flagForce=1
         ;;
       *)
-        servers="$servers $1"
+        servers+=("$arg")
         ;;
     esac
     shift
@@ -73,7 +88,7 @@ sshSetup() {
   user="$(whoami)"
   keyName="$user@$(uname -n)"
   if [ $flagForce = 0 ] && [ -f "$keyName" ]; then
-    if [ "$servers" = "" ]; then
+    if [ ${#servers[@]} = 0 ]; then
       echo "Key $keyName already exists, exiting." 1>&2
       exit $errorArgument
     fi
@@ -83,21 +98,22 @@ sshSetup() {
     cp "$keyName" id_"$keyType"
     cp "$keyName".pub id_"$keyType".pub
   fi
-  for s in $servers; do
+  for s in "${servers[@]}"; do
     echo "Uploading key and modifying authorized_keys with $s"
     echo "(Please enter password twice)"
-    echo "cd .ssh
-		put $keyName.pub
-		quit" | sftp "$s" >/dev/null
-    echo "cd ~\
-		cd .ssh\
-		cat *pub > authorized_keys\
-		exit" | ssh -T "$s" >/dev/null
+    if ! printf "cd .ssh\n""put %s\n""quit" "$keyName.pub" | sftp "$s" >/dev/null; then
+      _sshSetup $errorEnvironment "$s failed to upload key" || return $?
+    fi
+    if ! printf "cd ~\\n""cd .ssh\n""cat *pub > authorized_keys\n""exit" | ssh -T "$s" >/dev/null; then
+      _sshSetup "$errorEnvironment" "$s failed to add to authorized keys" || return $?
+    fi
   done
 
 }
-
-generateSSHKeyPair() {
+_sshSetup() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+_generateSSHKeyPair() {
   local keyName keyType keyBits
 
   keyType=ed25519
@@ -106,19 +122,4 @@ generateSSHKeyPair() {
   ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N ""
 }
 
-#
-# usage [ exitcode ]
-#
-usage() {
-  echo
-  echo "$ME"": Add .ssh key for current user: $(whoami)"
-  echo
-  echo "$ME" [ --force ] [ server ... ]
-  echo
-  echo --force Force the program to create a new key if one exists
-  echo server Servers to connect to to set up authorization
-  echo You will need the password for this server for the current user.
-  echo
-
-  exit "$1"
-}
+sshSetup "$@"

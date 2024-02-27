@@ -122,6 +122,14 @@ Creates the directories for all files passed in.
 
 - `0` - Always succeeds
 
+### `directoryClobber` - Copy directory over another sort-of-atomically
+
+Copy directory over another sort-of-atomically
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 
 ### `runCount` - Run a binary count times
 

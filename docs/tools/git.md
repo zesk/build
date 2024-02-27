@@ -155,7 +155,25 @@ Comment wisely. Does not duplicate comments. Check your release notes.
 
 #### Exit codes
 
-- `0` - Always succeeds 
+- `0` - Always succeeds
+
+### `gitMainly` - Merge `staging` and `main` branches of a Git repository into
+
+Merge `staging` and `main` branches of a Git repository into the current branch.
+
+Will merge `origin/staging` and `origin/main` after doing a `--pull` for both of them
+
+Current repository should be clean and have no modified files.
+
+#### Usage
+
+    gitMainly
+    
+
+#### Exit codes
+
+- `1` - Already in main, staging, or HEAD, or git merge failed
+- `0` - git merge succeeded
 
 ## git History
 

@@ -252,6 +252,38 @@ Get the current IP address of the host
 
 - `1` - Returns
 
+### `isUpToDate` - Test whether the key needs to be updated
+
+For security one should update keys every N days
+
+This value would be better encrypted and tied to the key itself so developers
+can not just update the value to avoid the security issue.
+
+This tool checks the value and checks if it is `upToDateDays` of today; if not this fails.
+
+It will also fail if:
+
+- `upToDateDays` is less than zero or greater than 366
+- `keyDate` is empty or has an invalid value
+
+Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
+
+#### Arguments
+
+- `keyDate` - Required. Date. Formatted like `YYYY-MM-DD`
+- `upToDateDays` - Required. Integer. Days that key expires after `keyDate`.
+
+#### Examples
+
+    if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
+      bigText Failed, update key and reset date
+      exit 99
+    fi
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ## Deployment tools
 
 
@@ -314,7 +346,7 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 #### See Also
 
 - [function deployToRemote
-](./docs/tools/todo.md
+](./docs/tools/deployment.md
 ) - [Deploy current application to one or more hosts
 ](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L347
 )
