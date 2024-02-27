@@ -302,8 +302,7 @@ documentationTemplateDirectoryCompile() {
   passArgs=()
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _documentationTemplateDirectoryCompileUsage $errorArgument "Blank argument"
-      return $?
+      _documentationTemplateDirectoryCompileUsage $errorArgument "Blank argument" || return $?
     fi
     case "$1" in
       --force)
@@ -324,8 +323,7 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-          _documentationTemplateDirectoryCompileUsage $errorArgument "Unknown argument $1"
-          return $?
+          _documentationTemplateDirectoryCompileUsage $errorArgument "Unknown argument $1" || return $?
         fi
         ;;
     esac

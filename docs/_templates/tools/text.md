@@ -25,6 +25,7 @@
 {listTokens}
 
 {mapValue}
+{mapValueTrim}
 
 ## Finding or Calculating
 

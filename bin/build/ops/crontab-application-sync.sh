@@ -20,9 +20,11 @@
 #
 set -eou pipefail
 
-#
-# Does NOT depend on anything in build!
-#
+#################################################
+#                                               #
+# *** Does NOT depend on anything in build! *** #
+#                                               #
+#################################################
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -34,9 +36,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 _crontabApplicationSyncUsage() {
   local errorCode=$1
-   shift
-   printf "ERROR: %d %s\n" "$errorCode" "$*" 1>&2
-   return "$errorCode"
+  shift
+  printf "ERROR: %d %s\n" "$errorCode" "$*" 1>&2
+  return "$errorCode"
 }
 
 _crontabGenerate() {
@@ -103,53 +105,49 @@ crontabApplicationSync() {
   local rootEnv appPath user flagShow environmentMapper newCrontab
   rootEnv=
   appPath=
-  user=$(whoami)
+  if ! user=$(whoami); then
+    _crontabApplicationSyncUsage "$errorEnvironment" "whoami failed" || return $?
+  fi
+  if [ -z "$user" ]; then
+    _crontabApplicationSyncUsage "$errorEnvironment" "whoami user is blank" || return $?
+  fi
   flagShow=
   environmentMapper=
   while [ $# -gt 0 ]; do
     case $1 in
       --help)
         _crontabApplicationSyncUsage 0
+        return 0
         ;;
       --env)
         if [ -n "$rootEnv" ]; then
-          _crontabApplicationSyncUsage "$errorArgument" "--env only once"
+          _crontabApplicationSyncUsage "$errorArgument" "--env only once" || return $?
         fi
         shift
         rootEnv=$1
         if [ ! -f "$rootEnv" ]; then
-          _crontabApplicationSyncUsage "$errorArgument" "--env must supply a file that exists"
-          return $?
+          _crontabApplicationSyncUsage "$errorArgument" "--env must supply a file that exists" || return $?
         fi
         ;;
       --mapper)
         if [ -n "$environmentMapper" ]; then
-          _crontabApplicationSyncUsage "$errorArgument" "$environmentMapper already set"
-          return $?
+          _crontabApplicationSyncUsage "$errorArgument" "$environmentMapper already set" || return $?
         fi
-        shift
+        shift || _crontabApplicationSyncUsage "$errorArgument" "--mapper missing" || return $?
         environmentMapper=$1
-        if [ ! -x "$mapper" ] && [ "$(type -t "$mapper")" != "function" ]; then
-          _crontabApplicationSyncUsage $errorEnvironment "$environmentMapper is not executable, failing"
-          return $?
+        if [ ! -x "$environmentMapper" ] && [ "$(type -t "$environmentMapper")" != "function" ]; then
+          _crontabApplicationSyncUsage $errorEnvironment "$environmentMapper is not executable, failing" || return $?
         fi
         ;;
       --user)
-        shift || :
+        shift || _crontabApplicationSyncUsage "$errorArgument" "--user missing" || return $?
         user="${1-}"
-        if [ -z "$user" ]; then
-          _crontabApplicationSyncUsage $errorArgument "--user should be non-blank"
-          return $?
-        fi
         ;;
       --show)
         flagShow=1
         ;;
       *)
         appPath=$1
-        if [ ! -d "$appPath" ]; then
-          _crontabApplicationSyncUsage $errorEnvironment "App path $appPath is not a directory"
-        fi
         ;;
     esac
     shift
@@ -158,14 +156,15 @@ crontabApplicationSync() {
   if [ -z "$environmentMapper" ]; then
     if [ -x ./map.sh ]; then
       environmentMapper="$(pwd)/map.sh"
-    elif which map.sh >/dev/null; then
-      environmentMapper="$(which map.sh)"
-    else
+    elif ! environmentMapper="$(which map.sh)"; then
       _crontabApplicationSyncUsage $errorArgument "Need to specify --mapper, none found nearby"
     fi
   fi
   if [ -z "$appPath" ]; then
     _crontabApplicationSyncUsage $errorArgument "Need to specify application path"
+  fi
+  if [ ! -d "$appPath" ]; then
+    _crontabApplicationSyncUsage $errorEnvironment "App path $appPath is not a directory"
   fi
   if [ -z "$user" ]; then
     _crontabApplicationSyncUsage $errorArgument "Need to specify user"

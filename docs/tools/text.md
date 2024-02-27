@@ -331,6 +331,24 @@ Maps a string using an environment file
 
 - `0` - Always succeeds
 
+### `mapValueTrim` - Maps a string using an environment file
+
+Maps a string using an environment file
+
+#### Usage
+
+    mapValue mapFile [ value ... ]
+    
+
+#### Arguments
+
+- `mapFile` - a file containing bash environment definitions
+- `value` - One or more values to map using said environment file
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ## Finding or Calculating
 
 
