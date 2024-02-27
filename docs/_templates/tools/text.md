@@ -20,8 +20,12 @@
 {trimWords}
 {trimSpace}
 {trimSpacePipe}
+{stripAnsi}
 
 {listTokens}
+
+{mapValue}
+{mapValueTrim}
 
 ## Finding or Calculating
 

@@ -1,10 +1,15 @@
 # daemontools Tools
 
-[⬅ Return to index](index.md)
+Tools to with with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).
+
+[⬅ Return to index](crontab)
 [⬅ Return to top](../index.md)
 
 
-### `daemontoolsInstallService` - Installs a `daemontools` service with an optional logging daemon process.
+### `daemontoolsInstallService` - Install a daemontools service which runs a binary as the
+
+Install a daemontools service which runs a binary as the file owner.
+
 
 Installs a `daemontools` service with an optional logging daemon process. Uses `_generic-service.sh` and `_generic-log.sh` files as templates.
 
@@ -19,7 +24,19 @@ Installs a `daemontools` service with an optional logging daemon process. Uses `
 
 - `0` - Always succeeds
 
-[⬅ Return to index](index.md)
+### `daemontoolsRemoveService` - Remove a daemontools service by name
+
+Remove a daemontools service by name
+
+#### Arguments
+
+- `serviceName` - String. Required. Service name to remove.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+[⬅ Return to index](crontab)
 [⬅ Return to top](../index.md)
 
 Copyright &copy; 2024 [Market Acumen, Inc.](Unable to find "BUILD_COMPANY_LINK" (using index "/Users/kent/.build"))

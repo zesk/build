@@ -225,8 +225,7 @@ usageArgumentDirectory() {
     return $?
   fi
   if [ ! -d "$variableValue" ]; then
-    "$usageFunction" "$errorArgument" "$variableName must be a $noun"
-    return $?
+    "$usageFunction" "$errorArgument" "$variableName must be a $noun (\"$(consoleCode "$variableValue")\")" || return $?
   fi
   printf "%s\n" "${variableValue%%/}"
 }

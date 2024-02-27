@@ -19,7 +19,8 @@
 
 ## git Development
 
-{gitCommit} 
+{gitCommit}
+{gitMainly}
 
 ## git History
 

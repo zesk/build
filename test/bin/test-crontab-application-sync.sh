@@ -14,7 +14,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-echo "PWD: ${BASH_SOURCE[0]} $(pwd)"
 set -eou pipefail
 
 # IDENTICAL errorEnvironment 1
@@ -28,118 +27,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-usageOptions() {
-  echo "--show        Print the displayed test crontab file to stdout"
-  echo "--verbose|-v  Be chatty"
-  echo "--keep        Do not delete artifacts when done, print created values"
-}
-usage() {
-  local rs
-  rs=$1
-  shift
-  exec 1>&2
-  if [ -n "$*" ]; then
-    echo "$*"
-    echo
-  fi
-  echo "$(basename "${BASH_SOURCE[0]}") [ -k | --keep ] [ -v | --verbose ] [ -s | --show ]" | usageGenerator
-  echo
-  consoleInfo "Test script for crontab-application-sync.sh"
-  echo
-  usageOptions | usageGenerator $(($(usageOptions | maximumFieldLength) + 2))
-  echo
-  exit "$rs"
-}
-
-verboseFlag=
-keepFlag=
-showFlag=
-while [ $# -gt 0 ]; do
-  case $1 in
-    -v | --verbose)
-      verboseFlag=1
-      echo "Verbosity on" 1>&2
-      ;;
-    -k | --keep)
-      keepFlag=1
-      echo "Keeping test artifacts" 1>&2
-      ;;
-    -s | --show)
-      showFlag=1
-      ;;
-    *)
-      if [ -d "$1" ]; then
-        echo "Home is $1"
-      else
-        usage $errorArgument "No arguments"
-      fi
-      ;;
-  esac
-  shift
-done
-
-testEnv=$(mktemp)
-tempDir="$(dirname "$testEnv")/testApps$$"
-
-printBasics() {
-  echo "Test application directory: $tempDir"
-  echo "Top environment file: $testEnv"
-}
-
-if test $verboseFlag; then
-  printBasics
-fi
-{
-  echo "FOO=top"
-  echo "DOG=Chihuahua"
-  echo "BAR=one"
-  echo "APPLICATION_PATH=hello"
-} >>"$testEnv"
-
-mkdir -p "$tempDir"/app1
-mkdir -p "$tempDir"/app2
-mkdir -p "$tempDir"/app3
-
-{
-  echo "FOO=lover"
-  echo "DOG=Chihuahua"
-  echo "APPNAME=app1"
-  echo "APPLICATION_PATH=world"
-} >>"$tempDir/app1/.env"
-{
-  echo "FOO=not-foo"
-  echo "APPLICATION_PATH=world"
-} >>"$tempDir/app2/.env"
-{
-  echo "FOO=fighter"
-  echo "APPNAME=app2"
-  echo "APPLICATION_PATH=really"
-} >>"$tempDir/app2/.env.local"
-{
-  echo "FOO=Three"
-  echo "APPNAME=app3"
-  echo "BAR=fomo"
-  echo "APPLICATION_PATH=never-set"
-} >>"$tempDir/app3/.env.local"
-
-{
-  echo "# {APPNAME} Crontab {BAR}"
-  echo "* * * * * : {FOO}; {APPLICATION_PATH}/cron.sh {DOG} {BAR}"
-  echo
-} >>"$tempDir"/app1/user.crontab
-cp "$tempDir"/app1/user.crontab "$tempDir"/app2/user.crontab
-cp "$tempDir"/app1/user.crontab "$tempDir"/app3/user.crontab
-
-results=$(mktemp)
-./bin/build/ops/crontab-application-sync.sh --user user --show "$tempDir" --env "$testEnv" >>"$results"
-
-if test $showFlag; then
-  cat "$results"
-fi
-if test $verboseFlag; then
-  echo "Results file has $(($(wc -l <"$results") + 0)) lines"
-fi
-
 # Sample output (delete first 2 characters on each line to remove comments)
 #
 # # app1 Crontab {BAR}
@@ -151,13 +38,12 @@ fi
 # # app3 Crontab fomo
 # * * * * * : Three; /var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/testApps47204/app3/cron.sh Chihuahua fomo
 find_count() {
-  local n found
+  local n found results
   n=$1
   shift
+  results=$1
+  shift
   found=$(grep -c "$*" "$results" || :)
-  if test $verboseFlag; then
-    echo "found $n x $*"
-  fi
   if [ "$found" -ne "$n" ]; then
     consoleError "Match $* should occur $n times, found $found"
     consoleError "$(echoBar)"
@@ -166,37 +52,140 @@ find_count() {
   fi
   return 0
 }
+printBasics() {
+  consoleNameValue 40 "Test application directory:" "$1"
+  consoleNameValue 40 "Top environment file:" "$2"
+}
 
-# set -x
-find_count 1 "lover"
-find_count 1 "fighter"
-find_count 1 "Three"
-find_count 1 "app1 Crontab"
-find_count 1 "app2 Crontab"
-find_count 1 "app3 Crontab"
-find_count 1 "app1/cron.sh Chihuahua"
-find_count 1 "app2/cron.sh Chihuahua"
-find_count 1 "app3/cron.sh Chihuahua"
-find_count 3 "Chihuahua"
-find_count 3 "$tempDir"
-find_count 2 "fomo"
-find_count 0 "{"
-find_count 0 "}"
+# Argument: --show - Print the displayed test crontab file to stdout
+# Argument: --verbose - Be verbose
+# Argument: --keep - Do not delete artifacts when done, print created values
+# Test script for crontab-application-sync.sh"
+#
+testCrontabApplicationSync() {
+  local verboseFlag keepFlag showFlag testEnv tempDir results
+  verboseFlag=
+  keepFlag=
+  showFlag=
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -v | --verbose)
+        verboseFlag=1
+        consoleInfo "Verbosity on" 1>&2
+        ;;
+      -k | --keep)
+        keepFlag=1
+        consoleWarning "Keeping test artifacts" 1>&2
+        ;;
+      -s | --show)
+        showFlag=1
+        ;;
+      *)
+        if [ -d "$1" ]; then
+          consoleInfo "Home is $1"
+        else
+          _testCrontabApplicationSync "$errorArgument" "No arguments" || return $?
+        fi
+        ;;
+    esac
+    shift || _testCrontabApplicationSync "$errorArgument" "shift failed" || return $?
+  done
 
-if test $keepFlag; then
-  if ! test $verboseFlag; then
-    if ! test $showFlag; then
-      echo "============================================"
-    fi
-    printBasics
-  fi
-  exit "$errorEnvironment"
-else
-  rm -rf "$tempDir"
-  rm "$testEnv"
-  rm "$results"
+  testEnv=$(mktemp)
+  tempDir="$(dirname "$testEnv")/testApps$$"
+
   if test $verboseFlag; then
-    echo "Removed temporary files"
+    printBasics "$tempDir" "$testEnv"
   fi
-fi
-consoleSuccess Passed.
+  {
+    echo "FOO=top"
+    echo "DOG=Chihuahua"
+    echo "BAR=one"
+    echo "APPLICATION_PATH=hello"
+  } >>"$testEnv"
+
+  mkdir -p "$tempDir"/app1
+  mkdir -p "$tempDir"/app2
+  mkdir -p "$tempDir"/app3
+
+  {
+    echo "FOO=lover"
+    echo "DOG=Chihuahua"
+    echo "APPNAME=app1"
+    echo "APPLICATION_PATH=world"
+  } >>"$tempDir/app1/.env"
+  {
+    echo "FOO=not-foo"
+    echo "APPLICATION_PATH=world"
+  } >>"$tempDir/app2/.env"
+  {
+    echo "FOO=fighter"
+    echo "APPNAME=app2"
+    echo "APPLICATION_PATH=really"
+  } >>"$tempDir/app2/.env.local"
+  {
+    echo "FOO=Three"
+    echo "APPNAME=app3"
+    echo "BAR=fomo"
+    echo "APPLICATION_PATH=never-set"
+  } >>"$tempDir/app3/.env.local"
+
+  {
+    echo "# {APPNAME} Crontab {BAR}"
+    echo "* * * * * : {FOO}; {APPLICATION_PATH}/cron.sh {DOG} {BAR}"
+    echo
+  } >>"$tempDir"/app1/user.crontab
+  cp "$tempDir"/app1/user.crontab "$tempDir"/app2/user.crontab
+  cp "$tempDir"/app1/user.crontab "$tempDir"/app3/user.crontab
+
+  results=$(mktemp)
+  if ! ./bin/build/ops/crontab-application-sync.sh --user user --show "$tempDir" --env "$testEnv" >>"$results"; then
+    _testCrontabApplicationSync $errorEnvironment "crontab-application-sync.sh" || return $?
+  fi
+
+  if test $showFlag; then
+    cat "$results"
+  fi
+  if test $verboseFlag; then
+    echo "Results file has $(($(wc -l <"$results") + 0)) lines"
+  fi
+
+  # set -x
+  find_count 1 "$results" "lover" || return $?
+  find_count 1 "$results" "fighter" || return $?
+  find_count 1 "$results" "Three" || return $?
+  find_count 1 "$results" "app1 Crontab" || return $?
+  find_count 1 "$results" "app2 Crontab" || return $?
+  find_count 1 "$results" "app3 Crontab" || return $?
+  find_count 1 "$results" "app1/cron.sh Chihuahua" || return $?
+  find_count 1 "$results" "app2/cron.sh Chihuahua" || return $?
+  find_count 1 "$results" "app3/cron.sh Chihuahua" || return $?
+  find_count 3 "$results" "Chihuahua" || return $?
+  find_count 3 "$results" "$tempDir" || return $?
+  find_count 2 "$results" "fomo" || return $?
+  find_count 0 "$results" "{" || return $?
+  find_count 0 "$results" "}" || return $?
+
+  if test $keepFlag; then
+    if ! test $verboseFlag; then
+      if ! test $showFlag; then
+        echo "============================================"
+      fi
+      printBasics "$tempDir" "$testEnv"
+    fi
+    return "$errorEnvironment"
+  else
+    rm -rf "$tempDir"
+    rm "$testEnv"
+    rm "$results"
+    if test $verboseFlag; then
+      echo "Removed temporary files"
+    fi
+  fi
+  consoleSuccess Passed.
+}
+_testCrontabApplicationSync() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+testCrontabApplicationSync "$@"

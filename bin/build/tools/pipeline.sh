@@ -337,3 +337,89 @@ makeEnvironment() {
 _makeEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+
+
+
+# For security one should update keys every N days
+#
+# This value would be better encrypted and tied to the key itself so developers
+# can not just update the value to avoid the security issue.
+#
+# This tool checks the value and checks if it is `upToDateDays` of today; if not this fails.
+#
+# It will also fail if:
+#
+# - `upToDateDays` is less than zero or greater than 366
+# - `keyDate` is empty or has an invalid value
+#
+# Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
+#
+# Summary: Test whether the key needs to be updated
+# Usage: {fn} keyDate upToDateDays
+# Argument: keyDate - Required. Date. Formatted like `YYYY-MM-DD`
+# Argument: upToDateDays - Required. Integer. Days that key expires after `keyDate`.
+# Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
+# Example:       bigText Failed, update key and reset date
+# Example:       exit 99
+# Example:     fi
+#
+isUpToDate() {
+  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp
+  local label deltaDays maxDays daysAgo expireTimestamp expireDate keyTimestamp
+  local timeText
+
+  if ! todayTimestamp=$(dateToTimestamp "$(todayDate)"); then
+    _isUpToDate $errorEnvironment "Unable to generate todayDate" || return $?
+  fi
+  keyDate="${1-}"
+  shift || _isUpToDate "$errorArgument" "Missing keyDate" || return $?
+  if ! keyTimestamp=$(dateToTimestamp "$keyDate"); then
+    consoleError "Invalid date $keyDate" 1>&2
+    return "$errorArgument"
+  fi
+  upToDateDays="${1-}"
+  if ! isInteger "$upToDateDays"; then
+    _isUpToDate "$errorArgument" "upToDateDays is not an integer $upToDateDays" || return $?
+  fi
+  maxDays=366
+  if [ "$upToDateDays" -gt "$maxDays" ]; then
+    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
+  fi
+  if [ "$upToDateDays" -lt 0 ]; then
+    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
+  fi
+  accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
+  expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
+  expireDate=$(timestampToDate "$expireTimestamp" '%A, %B %d, %Y %R')
+  deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
+  daysAgo=$((deltaDays - upToDateDays))
+  if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
+    label=$(printf "%s %s\n" "$(consoleError "Key expired on ")" "$(consoleRed "$keyDate")")
+    case "$daysAgo" in
+      0) timeText="Today" ;;
+      1) timeText="Yesterday" ;;
+      *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
+    esac
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "$label" "EXPIRED $timeText"
+    return 1
+  fi
+  daysAgo=$((-daysAgo))
+  if [ $daysAgo -lt 14 ]; then
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleOrange)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+  elif [ $daysAgo -lt 30 ]; then
+    # consoleInfo "keyDate $keyDate"
+    # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
+    # consoleInfo "expireDate $expireDate"
+    printf "%s %s %s %s\n" \
+      "$(consoleWarning "Expires on")" \
+      "$(consoleRed "$expireDate")" \
+      "$(consoleWarning ", in")" \
+      "$(consoleMagenta "$daysAgo $(plural $daysAgo day days)")"
+    return 0
+  fi
+  return 0
+}
+_isUpToDate() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

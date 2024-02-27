@@ -24,6 +24,7 @@
 {buildFailed}
 {versionSort}
 {ipLookup}
+{isUpToDate}
 
 ## Deployment tools
 

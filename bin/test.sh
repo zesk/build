@@ -111,7 +111,7 @@ buildTestSuite() {
         ;;
       --help)
         _testUsage 0
-        _textExit $?ƒ
+        _textExit $?
         ;;
       --clean)
         consoleWarning -n "Cleaning ... "

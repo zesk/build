@@ -87,6 +87,10 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 - `0` - Always succeeds
 
+#### Exit codes
+
+- `0` - is BitBucket pipeline
+- `1` - Not a BitBucket pipeline
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
