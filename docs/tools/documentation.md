@@ -30,12 +30,12 @@ Document a function and generate a function template (markdown)
 
 - [function _bashDocumentation_Template
 ]({documentationPath}) - [Document a function and generate a function template (markdown). To
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L410
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L408
 )
 - [function bashDocumentFunction
 ](./docs/tools/documentation.md
 ) - [Document a function and generate a function template (markdown)
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L376
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L374
 )
 - [function repeat
 ](./docs/tools/decoration.md
@@ -432,23 +432,10 @@ Simplifies documentation and has it in one place for shell and online.
 ## Documentation Utilities
 
 
-### `__dumpNameValue` - Utility to export multi-line values as Bash variables
-
-Utility to export multi-line values as Bash variables
-
 #### Usage
 
     __dumpNameValue name [ value0 value1 ... ]
     
-
-#### Arguments
-
-- `name` - Shell value to output
-- `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
-
-#### Exit codes
-
-- `0` - Always succeeds
 
 #### Usage
 

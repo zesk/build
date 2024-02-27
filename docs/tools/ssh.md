@@ -36,6 +36,17 @@ Set up SSH for a user with ID and backup keys in `~/.ssh`
 
 Create a key for a user for SSH authentication to other servers.
 
+
+Add .ssh key for current user
+
+
+You will need the password for this server for the current user.
+
+#### Arguments
+
+--force Force the program to create a new key if one exists
+- server- Servers to connect to to set up authorization
+
 #### Exit codes
 
 - `0` - Always succeeds

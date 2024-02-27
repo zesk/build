@@ -186,25 +186,28 @@ buildDocsBuild() {
   fi
   clearLine
 
+  # Was a loop
+  theDirectory=tools
+  if ! documentationTemplateDirectoryCompile "${docArgs[@]}" \
+    "$cacheDirectory" ./docs/_templates/$theDirectory/ ./docs/_templates/__function.md ./docs/$theDirectory/; then
+    rm "$envFile" || :
+    return $errorEnvironment
+  fi
+
   if ! documentationTemplateDirectoryCompile "${docArgs[@]}" \
     "$cacheDirectory" ./docs/_templates/hooks/ ./docs/_templates/__hook.md ./docs/hooks/; then
     rm "$envFile" || :
     return "$errorEnvironment"
   fi
-  for theDirectory in bin install pipeline; do
-    if ! documentationTemplateDirectoryCompile "${docArgs[@]}" \
-      "$cacheDirectory" ./docs/_templates/$theDirectory/ ./docs/_templates/__binary.md ./docs/$theDirectory/; then
-      rm "$envFile" || :
-      return $errorEnvironment
-    fi
-  done
-  for theDirectory in ops tools; do
-    if ! documentationTemplateDirectoryCompile "${docArgs[@]}" \
-      "$cacheDirectory" ./docs/_templates/$theDirectory/ ./docs/_templates/__function.md ./docs/$theDirectory/; then
-      rm "$envFile" || :
-      return $errorEnvironment
-    fi
-  done
+
+  # Was a loop
+  theDirectory=bin
+  if ! documentationTemplateDirectoryCompile "${docArgs[@]}" \
+    "$cacheDirectory" ./docs/_templates/$theDirectory/ ./docs/_templates/__binary.md ./docs/$theDirectory/; then
+    rm "$envFile" || :
+    return $errorEnvironment
+  fi
+
   #
   # {SEE:foo} gets linked in final documentation where it exists (rewrites file currently)
   #

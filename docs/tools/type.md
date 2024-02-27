@@ -42,11 +42,6 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if an argument is a floating point number
 (`1e3` notation NOT supported)
 
-#### Usage
-
-    isInteger argument
-    
-
 #### Exit codes
 
 - `0` - if it is a floating point number
@@ -59,11 +54,6 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 ### `isInteger` - Test if an argument is a signed integer
 
 Test if an argument is a signed integer
-
-#### Usage
-
-    isInteger argument
-    
 
 #### Exit codes
 
@@ -91,11 +81,6 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 
 Test if an argument is a floating point number
 (`1e3` notation NOT supported)
-
-#### Usage
-
-    isInteger argument
-    
 
 #### Exit codes
 

@@ -119,5 +119,17 @@ Outputs the path to the PHP log file
 
 - `0` - Always succeeds
 
+### `php.sh` - Test a docker-based PHP application during build
+
+Test a docker-based PHP application during build
+
+#### Arguments
+
+- `deployment` - Required. String. `production` or `develop`
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

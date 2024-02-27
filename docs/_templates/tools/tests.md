@@ -7,6 +7,8 @@
 {validateShellScript}
 {validateFileExtensionContents}
 {validateFileContents}
+{evalCheck}
+{findUncaughtAssertions}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

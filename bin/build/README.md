@@ -49,7 +49,7 @@ A `./.build` directory is created at your `$HOME` directory, or the project root
 
 You can preserve the build directory post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
 
-A `./.deploy` directory is created for the `php-build.sh` steps and contains metadata about the deployment.
+A `./.deploy` directory is created for build steps and contains metadata about the deployment. 
 
 ## Operations
 
@@ -65,8 +65,7 @@ Operations support is currently sparse by goal is to support **setup and configu
 
 Scripts are written so you can load a `.env` and then run commands directly in a test container:
 
-    bin/build/local-container.sh .env.MYTESTENV -- bin/test.sh --clean
-
+    bin/build/bitbucket-container.sh --env .env.MYTESTENV bin/test.sh
 
 ## Tested operating systems
 
@@ -75,6 +74,7 @@ Main issues between platforms are differences between BSD, GNU or POSIX standard
 - Darwin (Mac OS X)
 - Ubuntu 22
 - debian:latest
+- BitBucket Pipelines
 
 If you test on another OS or need support, report an issue.
 

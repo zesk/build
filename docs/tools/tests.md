@@ -122,5 +122,13 @@ By default, any directory which begins with a dot `.` will be ignored.
 - `1` - One or more files does not contain all text string or strings
 - `2` - Arguments error (missing extension or text)
 
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -11,6 +11,7 @@
 
 {requireFileDirectory}
 {requireDirectory}
+{directoryClobber}
 
 {runCount}
 

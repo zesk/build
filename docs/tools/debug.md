@@ -84,5 +84,41 @@ Useful if you need to temporarily enable or disable it.
 
 - `0` - Always succeeds
 
+#### Examples
+
+    save=$(saveErrorExit)
+    set +x
+    ... some nasty stuff
+    restoreErrorExit "$save"
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function saveErrorExit
+](./docs/tools/debug.md
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L94
+)
+
+#### Examples
+
+    save=$(saveErrorExit)
+    set +x
+    ... some nasty stuff
+    restoreErrorExit "$save"
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function restoreErrorExit
+](./docs/tools/debug.md
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L106
+)
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

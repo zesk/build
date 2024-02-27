@@ -20,6 +20,10 @@ Return an integer between 0 and 100
 
 - `0` - Always succeeds
 
+### `consoleConfigureColorMode` - Print the suggested color mode for the current environment
+
+Print the suggested color mode for the current environment
+
 #### Exit codes
 
 - `0` - Always succeeds

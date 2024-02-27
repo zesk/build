@@ -8,6 +8,8 @@
 {buildDebugStop}
 {isBashDebug}
 {isErrorExit}
+{restoreErrorExit}
+{saveErrorExit}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
