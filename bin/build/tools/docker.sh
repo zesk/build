@@ -72,53 +72,66 @@ checkDockerEnvFile() {
   return "$result"
 }
 
+#
 # Ensure an environment file is compatible with non-quoted docker environment files
-# Usage: checkDockerEnvFile [ filename ... ]
+# May take a list of files to convert or stdin piped in
+#
+# Outputs bash-compatible entries to stdout
+# Any output to stdout is considered valid output
+# Any output to stderr is errors in the file but is written to be compatible with a bash
+#
+# Usage: {fn} [ filename ... ]
 # Argument: filename - Docker environment file to check for common issues
 # Exit Code: 1 - if errors occur
 # Exit Code: 0 - if file is valid
 #
 dockerEnvToBash() {
   local file index envLine result=0
-  for file in "$@"; do
-    if [ ! -f "$file" ]; then
-      consoleError "Not a file $file" 1>&2
-      return $errorArgument
+  if [ $# -eq 0 ]; then
+    _dockerEnvToBashPipe
+  else
+    for file in "$@"; do
+      if [ ! -f "$file" ]; then
+        _dockerEnvToBash "$errorArgument" "Not a file $file" || return $?
+      fi
+      if ! _dockerEnvToBashPipe <"$file"; then
+        _dockerEnvToBash "$errorArgument" "Invalid file: $file" || return $?
+      fi
+    done
+  fi
+}
+_dockerEnvToBashPipe() {
+  local file index envLine result
+  result=0
+  while IFS="" read -r envLine; do
+    name="${envLine%%=*}"
+    value="${envLine#*=}"
+    if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
+      if [ -z "$(printf "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
+        printf "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
+      else
+        consoleError "Invalid name at line $index: $name" 1>&2
+        # shellcheck disable=SC2030
+        result=$errorArgument
+      fi
+    else
+      case "$envLine" in
+        [#]* | "")
+          # Comment line
+          printf "%s\n" "$envLine"
+          ;;
+        *)
+          consoleError "Invalid line $index: $envLine" 1>&2
+          result=$errorArgument
+          ;;
+      esac
     fi
-    if ! (
-      index=1
-      while IFS="" read -r envLine; do
-        name="${envLine%%=*}"
-        value="${envLine#*=}"
-        if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
-          if [ -z "$(printf "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
-            printf "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
-          else
-            consoleError "Invalid name at line $index: $name" 1>&2
-            # shellcheck disable=SC2030
-            result=$errorArgument
-          fi
-        else
-          case "$envLine" in
-            [#]* | "")
-              # Comment line
-              printf "%s\n" "$envLine"
-              ;;
-            *)
-              consoleError "Invalid line $index: $envLine" 1>&2
-              result=$errorArgument
-              ;;
-          esac
-        fi
-        index=$((index + 1))
-      done <"$file"
-      return $result
-    ); then
-      result=$errorArgument
-      consoleError "Invalid file: $file" 1>&2
-    fi
+    index=$((index + 1))
   done
-  return "$result"
+  return $result
+}
+_dockerEnvToBash() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Ensure an environment file is compatible with non-quoted docker environment files
