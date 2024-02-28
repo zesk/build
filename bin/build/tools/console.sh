@@ -19,6 +19,7 @@ errorArgument=2
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 # Credit: https://stackoverflow.com/questions/16914418/how-to-manipulate-hexadecimal-value-in-bash
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
+# See: consoleColorMode
 #
 consoleGetColor() {
   local xtermCode sttyOld color colors success result noTTY
