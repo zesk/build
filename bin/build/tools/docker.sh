@@ -103,6 +103,7 @@ dockerEnvToBash() {
 _dockerEnvToBashPipe() {
   local file index envLine result
   result=0
+  index=0
   while IFS="" read -r envLine; do
     name="${envLine%%=*}"
     value="${envLine#*=}"
