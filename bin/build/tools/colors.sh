@@ -31,6 +31,7 @@ consoleReset() {
 
 #
 # Set colors to deal with dark or light-background consoles
+# See:
 #
 consoleColorMode() {
   # shellcheck source=/dev/null

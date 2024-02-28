@@ -19,6 +19,7 @@ errorArgument=2
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 # Credit: https://stackoverflow.com/questions/16914418/how-to-manipulate-hexadecimal-value-in-bash
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
+# See: consoleColorMode
 #
 consoleGetColor() {
   local xtermCode sttyOld color colors success result noTTY
@@ -103,12 +104,14 @@ colorBrightness() {
 consoleConfigureColorMode() {
   local brightness colorMode
 
-  colorMode=light
+  colorMode=
   if brightness=$(colorBrightness 2>/dev/null < <(consoleGetColor --background)); then
     if [ "$brightness" -lt 50 ]; then
       colorMode=dark
     fi
   elif isBitBucketPipeline; then
+    colorMode=dark
+  elif isPHPStorm; then
     colorMode=dark
   fi
   printf "%s\n" "$colorMode"
