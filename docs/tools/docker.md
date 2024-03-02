@@ -64,7 +64,7 @@ Runs ARM64 by default.
 
 BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
 
-### `dockerEnvFromBash` - Ensure an environment file is compatible with non-quoted docker environment
+### `dockerEnvFromBashEnv` - Ensure an environment file is compatible with non-quoted docker environment
 
 Ensure an environment file is compatible with non-quoted docker environment files
 

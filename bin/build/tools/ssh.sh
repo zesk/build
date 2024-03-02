@@ -38,8 +38,9 @@ sshAddKnownHost() {
   local remoteHost exitCode output
   local sshKnown=.ssh/known_hosts
 
-  # shellcheck source=/dev/null
-  source "./bin/build/env/HOME.sh"
+  if ! buildEnvironmentLoad HOME; then
+    return 1
+  fi
 
   if [ ! -d "$HOME" ]; then
     consoleError "HOME directory does not exist: $HOME" 1>&2

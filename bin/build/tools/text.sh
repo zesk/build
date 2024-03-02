@@ -54,6 +54,21 @@ escapeDoubleQuotes() {
 }
 
 #
+# Usage: {fn} [ text }
+# Converts strings to shell escaped strings
+#
+escapeBash() {
+  local jqArgs
+
+  jqArgs=(-r --raw-input '@sh')
+  if [ $# -gt 0 ]; then
+    printf "%s\n" "$@" | jq "${jqArgs[@]}"
+  else
+    jq "${jqArgs[@]}"
+  fi
+}
+
+#
 # Quote strings for inclusion in shell quoted strings
 # Usage: escapeSingleQuotes text
 # Argument: text - Text to quote
@@ -542,6 +557,10 @@ mapEnvironment() {
   rm "$sedFile"
 }
 
+characterClasses() {
+  printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
+}
+
 #
 # Usage: {fn} className character0 [ character1 ... ]
 #
@@ -565,7 +584,7 @@ isCharacterClass() {
   while [ $# -gt 0 ]; do
     # Not sure how you can hack this function with single character eval injections.
     # evalCheck: SAFE 2024-01-29 KMD
-    if ! eval "case \"$(escapeDoubleQuotes "${1:0:1}")\" in [[:$class:]]) ;; *) return 1 ;; esac"; then
+    if ! eval "case $(escapeBash "${1:0:1}") in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
     shift
@@ -573,6 +592,87 @@ isCharacterClass() {
 }
 _isCharacterClass() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Given a list of integers, output the character codes associated with them
+# Credit: dsmsk80
+# See: chr
+# Source: https://mywiki.wooledge.org/BashFAQ/071
+characterFromInteger() {
+  while [ $# -gt 0 ]; do
+    if ! isUnsignedInteger "$1"; then
+      _characterFromInteger "$errorArgument" "Not integer: \"$1\"" || return $?
+    fi
+    if [ "$1" -ge 256 ]; then
+      _characterFromInteger "$errorArgument" "Integer out of range: \"$1\"" || return $?
+    fi
+    # shellcheck disable=SC2059
+    printf "\\$(printf '%03o' "$1")"
+    shift || :
+  done
+}
+_characterFromInteger() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} [ character ... ]
+# Convert one or more characters from their ascii representation to an integer value.
+# Requires a single character to be passed
+#
+characterToInteger() {
+  local index
+
+  index=0
+  while [ $# -gt 0 ]; do
+    index=$((index + 1))
+    if [ "${#1}" != 1 ]; then
+      _characterToInteger "$errorArgument" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    fi
+    if ! LC_CTYPE=C printf '%d' "'$1"; then
+      _characterToInteger "$errorEnvironment" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    fi
+    shift || :
+  done
+}
+_characterToInteger() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn}
+#
+# Write a report of the character classes
+#
+characterClassReport() {
+  local arg character class index matched total
+
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    if [ -z "$arg" ]; then
+      _characterClassReport "$errorArgument" "blank argument" || return $?
+    fi
+    shift || _characterClassReport "$errorArgument" "shift $arg failed" || return $?
+  done
+  total=0
+  for class in $(characterClasses); do
+    matched=0
+    printf "%s: " "$(consoleLabel "$(alignLeft 10 "$class")")"
+    for index in $(seq 0 127); do
+      character=$(characterFromInteger "$index")
+      if isCharacterClass "$class" "$character"; then
+        matched=$((matched + 1))
+        if ! isCharacterClass print "$character"; then
+          consoleSubtle -n "$(printf "x%x " "$index")"
+        else
+          printf "%s " "$(consoleBlue "$(characterFromInteger "$index")")"
+        fi
+      fi
+    done
+    printf "[%s %s]\n" "$(consoleBoldMagenta "$matched")" "$(consoleSubtle "$(plural "$matched" character characters)")"
+    total=$((total + matched))
+  done
+  printf "%s total %s\n" "$(consoleBoldRed "$total")" "$(consoleRed "$(plural "$total" character characters)")"
 }
 
 #
@@ -620,6 +720,7 @@ cannon() {
   count="$(wc -l <"$cannonLog.found" | trimSpace)"
   consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
   rm -f "$cannonLog" "$cannonLog.found" || :
+
 }
 _cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -60,12 +60,14 @@ getFromPipelineYML() {
 # Updated: 2024-01-26
 #
 bitbucketContainer() {
-  # shellcheck source=/dev/null
-  . ./bin/build/env/BUILD_DOCKER_BITBUCKET_IMAGE.sh
-  # shellcheck source=/dev/null
-  . ./bin/build/env/BUILD_DOCKER_BITBUCKET_PATH.sh
-
+  export BUILD_DOCKER_BITBUCKET_IMAGE BUILD_DOCKER_BITBUCKET_PATH
+  if ! buildEnvironmentLoad BUILD_DOCKER_BITBUCKET_IMAGE BUILD_DOCKER_BITBUCKET_PATH; then
+    return 1
+  fi
   dockerLocalContainer --image "${BUILD_DOCKER_BITBUCKET_IMAGE}" --path "${BUILD_DOCKER_BITBUCKET_PATH}" "$@"
+}
+_bitbucketContainer() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -74,10 +76,9 @@ bitbucketContainer() {
 # Exit Code: 1 - Not a BitBucket pipeline
 #
 isBitBucketPipeline() {
-  export BITBUCKET_WORKSPACE CI
-  # shellcheck source=/dev/null
-  source ./bin/build/env/BITBUCKET_WORKSPACE.sh
-  # shellcheck source=/dev/null
-  source ./bin/build/env/CI.sh
-  [ -n "${BITBUCKET_WORKSPACE-}" ] && test "$CI"
+  export BUILD_DEBUG
+  if ! buildEnvironmentLoad BITBUCKET_WORKSPACE CI; then
+    return 1
+  fi
+  [ -n "${BITBUCKET_WORKSPACE-}" ] && test "${CI-}"
 }

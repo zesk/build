@@ -271,10 +271,11 @@ gitTagVersion() {
   local versionSuffix start currentVersion previousVersion releaseNotes
   local tagPrefix index tryVersion maximumTagsPerVersion
 
-  # shellcheck source=/dev/null
-  . ./bin/build/env/BUILD_MAXIMUM_TAGS_PER_VERSION.sh
+  if ! buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION; then
+    return 1
+  fi
 
-  maximumTagsPerVersion=${BUILD_MAXIMUM_TAGS_PER_VERSION:-1000}
+  maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
   init=$(beginTiming)
 
   start=$(beginTiming)
@@ -306,7 +307,7 @@ gitTagVersion() {
     _gitTagVersion "$errorEnvironment" "runHook version-current" || return $?
   fi
   if ! previousVersion=$(gitVersionLast "$currentVersion"); then
-    _gitTagVersion "$errorEnvironment" "gitVersionLast $currentVersion failed" || return $?
+    previousVersion="none"
   fi
 
   if git show-ref --tags "$currentVersion" --quiet; then

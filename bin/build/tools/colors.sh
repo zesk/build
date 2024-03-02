@@ -34,13 +34,12 @@ consoleReset() {
 # See:
 #
 consoleColorMode() {
+  export BUILD_COLORS_MODE
+
   # shellcheck source=/dev/null
-  if ! source "bin/build/env/BUILD_COLORS_MODE.sh"; then
-    consoleError "Unable to load BUILD_COLORS_MODE" 1>&2
+  if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
     return 1
   fi
-
-  export BUILD_COLORS_MODE
 
   case "$1" in
     --dark)
@@ -60,18 +59,14 @@ consoleColorMode() {
 # Usage: hasConsoleAnimation
 # Exit Code: 0 - Supports console animation
 # Exit Code; 1 - Does not support console animation
-# Environment: CI - If this has a non-blank value, this returns true (supports animation)
 #
 hasConsoleAnimation() {
-  # shellcheck source=/dev/null
-  if ! source "$(dirname "${BASH_SOURCE[0]}")/../env/CI.sh"; then
-    return 1
-  fi
+  # Important: This can *not* use loadBuildEnvironment
   export CI
   [ -z "${CI-}" ]
 }
 
-# IDENTICAL hasColors 34
+# IDENTICAL hasColors 32
 
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
 # If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
@@ -82,10 +77,8 @@ hasConsoleAnimation() {
 # Local Cache: this value is cached in BUILD_COLORS if it is not set.
 # Environment: BUILD_COLORS - Override value for this
 hasColors() {
-  export BUILD_COLORS
-  export TERM
-  export DISPLAY
-
+  export BUILD_COLORS TERM DISPLAY
+  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
   BUILD_COLORS="${BUILD_COLORS-z}"
   if [ "z" = "$BUILD_COLORS" ]; then
     if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
@@ -202,7 +195,9 @@ colorTest() {
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 semanticColorTest() {
-  local i colors=(
+  local i colors extra
+
+  colors=(
     consoleInfo
     consoleSuccess
     consoleWarning
@@ -214,17 +209,19 @@ semanticColorTest() {
     consoleSubtle
   )
 
-  # shellcheck source=/dev/null
-  if ! source "bin/build/env/BUILD_COLORS_MODE.sh"; then
-    consoleError "Unable to load BUILD_COLORS_MODE" 1>&2
+  if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
     return 1
   fi
-
-  export BUILD_COLORS_MODE
+  extra=
   if [ -z "$BUILD_COLORS_MODE" ]; then
     BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+    extra="$(consoleMagenta Computed)"
   fi
-  consoleNameValue 30 "BUILD_COLORS_MODE" "$BUILD_COLORS_MODE"
+  if [ -z "$BUILD_COLORS_MODE" ]; then
+    consoleError "BUILD_COLORS_MODE not set"
+  else
+    printf "%s%s\n" "$(consoleNameValue 25 "BUILD_COLORS_MODE:" "$BUILD_COLORS_MODE")" "$extra"
+  fi
   for i in "${colors[@]}"; do
     consoleReset
     $i "$i: The quick brown fox jumped over the lazy dog."

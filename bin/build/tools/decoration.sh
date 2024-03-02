@@ -70,7 +70,6 @@ bigText() {
 # Exaxmple:           ▌ ▌▌ ▌▌ ▌▛▀
 # Exaxmple:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
 labeledBigText() {
-
   local label banner linePrefix lineSuffix tweenLabel tweenNonLabel nLines plainLabel isBottom
 
   label=
@@ -84,6 +83,9 @@ labeledBigText() {
       _labeledBigText "$errorArgument" "Blank argument" || return $?
     fi
     case "$1" in
+      --help)
+        "_${FUNCNAME[0]}" 0 && return $?
+        ;;
       --top)
         isBottom=
         ;;
