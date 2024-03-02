@@ -357,9 +357,8 @@ deployToRemote() {
 
   local nameWidth=50
 
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/HOME.sh; then
-    _deployToRemote "$errorEnvironment" "HOME.sh failed" || return $?
+  if ! buildEnvironmentLoad HOME BUILD_DEBUG; then
+    _deployToRemote "$errorEnvironment" "HOME BUILD_DEBUG environment failed" || return $?
   fi
 
   initTime=$(beginTiming)

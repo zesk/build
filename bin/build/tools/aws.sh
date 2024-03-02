@@ -142,8 +142,7 @@ awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 awsIsKeyUpToDate() {
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/AWS_ACCESS_KEY_DATE.sh; then
+  if ! buildEnvironmentLoad AWS_ACCESS_KEY_DATE; then
     return $errorEnvironment
   fi
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
@@ -164,7 +163,7 @@ awsIsKeyUpToDate() {
 #
 awsHasEnvironment() {
   # shellcheck source=/dev/null
-  if ! source ./bin/build/env/AWS_ACCESS_KEY_ID.sh || ! source ./bin/build/env/AWS_SECRET_ACCESS_KEY.sh; then
+  if ! buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; then
     return $errorEnvironment
   fi
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
@@ -220,12 +219,9 @@ awsSecurityGroupIPModify() {
 
   savedArgs=("$@")
 
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/AWS_REGION.sh; then
-    _awsSecurityGroupIPModify $errorEnvironment "AWS_REGION.sh" || return $?
+  if ! buildEnvironmentLoad AWS_REGION; then
+    return 1
   fi
-
-  export AWS_REGION
 
   start=$(beginTiming)
   addingFlag=true

@@ -102,7 +102,7 @@ usageArguments() {
     if [ ${#lineTokens[@]} -gt 0 ]; then
       argument="${lineTokens[0]}"
       unset "lineTokens[0]"
-      lineTokens=("${lineTokens[@]}")
+      lineTokens=("${lineTokens[@]+${lineTokens[@]}}")
       argDescription=$(lowercase "${lineTokens[*]}")
       if [ "${argDescription%*require*}" != "$argDescription" ]; then
         printf " %s%s" "$requiredPrefix" "$argument"
@@ -204,30 +204,77 @@ usageRequireEnvironment() {
   done
 }
 
-# Validates a value is not blank and is a directory
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
-# Argument: variableName - Required. String. Name of variable being tested
-# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
-# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
-# Upon success, outputs the directory name trailing slash stripped
-usageArgumentDirectory() {
-  local usageFunction="${1-}" variableName="${2-}" variableValue="${3-}"
-  local noun
+# Arguments: defaultNoun - Default noun if user noun is empty
+# Arguments: usageFunction - Error handler
+# Arguments: variableName - Name to test
+# Arguments: variableValue - Value to test
+# Arguments: noun - Noun passed by user
+# Arguments: test commands ... - Test commands to run on value
+# Utility function to handle all usage
+#
+__usageArgumentHelper() {
+  local defaultNoun usageFunction variableName variableValue noun
 
-  # shellcheck disable=SC2015
-  shift && shift && shift || :
-  noun="${*-directory}"
+  defaultNoun="${1-}"
+  shift || :
+  usageFunction="${1-}"
+  shift || :
+  variableName="${1-}"
+  shift || :
+  variableValue="${1-}"
+  shift || :
+  noun="${1-:"$defaultNoun"}"
+  shift || :
   if [ -z "$variableValue" ]; then
     "$usageFunction" "$errorArgument" "$variableName $noun is required"
     return $?
   fi
-  if [ ! -d "$variableValue" ]; then
-    "$usageFunction" "$errorArgument" "$variableName must be a $noun (\"$(consoleCode "$variableValue")\")" || return $?
+  # Remaining parameters are the test
+  if ! "$@" "$variableValue"; then
+    "$usageFunction" "$errorArgument" "$variableName must be $noun (\"$(consoleCode "$variableValue")\")"
+    return $?
   fi
-  printf "%s\n" "${variableValue%%/}"
+  printf "%s\n" "$variableValue"
+}
+
+# Validates a value is an integer
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+# Upon success, outputs the directory name trailing slash stripped
+usageArgumentInteger() {
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    "$1" "$errorArgument" "Need 4 arguments"
+    return $errorArgument
+  fi
+  __usageArgumentHelper integer "${args[@]}" isInteger
+}
+
+# Validates a value is an unsigned integer
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+# Upon success, outputs the directory name trailing slash stripped
+usageArgumentUnsignedInteger() {
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    return $?
+  fi
+  __usageArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
 }
 
 # Validates a value is not blank and is a file
@@ -240,22 +287,34 @@ usageArgumentDirectory() {
 # Exit Code: 0 - Success
 # Upon success, outputs the file name
 usageArgumentFile() {
-  local usageFunction="${1-}" variableName="${2-}" variableValue="${3-}"
-  local noun
-  # shellcheck disable=SC2015
-  shift && shift && shift || :
-  noun="${*-file}"
-  if [ -z "$variableValue" ]; then
-    : Value is empty
-    "$usageFunction" "$errorArgument" "$variableName $noun is required"
-    return "$errorArgument"
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    return $?
   fi
-  if [ ! -f "$variableValue" ]; then
-    : Is not a file
-    "$usageFunction" "$errorArgument" "$variableName must be a $noun" || return $?
+  __usageArgumentHelper "file" "${args[@]}" test -f
+}
+
+# Validates a value is not blank and is a directory
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+# Upon success, outputs the directory name trailing slash stripped
+usageArgumentDirectory() {
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    return $?
   fi
-  : Is a file
-  printf "%s\n" "$variableValue"
+  __usageArgumentHelper "directory" "${args[@]}" test -d
 }
 
 # Validates a value is not blank and is a path with a directory that exists
@@ -268,20 +327,46 @@ usageArgumentFile() {
 # Exit Code: 0 - Success
 # Upon success, outputs the file name
 usageArgumentFileDirectory() {
-  local usageFunction="${1-}" variableName="${2-}" variableValue="${3-}"
-  local noun directory
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    return $?
+  fi
+  __usageArgumentHelper "file" "${args[@]}" fileDirectoryExists
+}
 
-  # shellcheck disable=SC2015
-  shift && shift && shift || :
-  noun="${*-file}"
-  if [ -z "$variableValue" ]; then
-    "$usageFunction" "$errorArgument" "$variableName $noun is required"
-    return $?
+# Validates a value is not blank and is an environment file which is loaded immediately.
+#
+# Usage: {fn} processPid usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+# Upon success, outputs the file name to stdout, outputs a console message to stderr
+usageArgumentLoadEnvironmentFile() {
+  local envFile bashEnv usageFunction returnCode count
+
+  usageFunction="$1"
+  if ! envFile=$(usageArgumentFile "$@"); then
+    return "$errorArgument"
   fi
-  directory="$(dirname "$variableValue")"
-  if [ ! -d "$directory" ]; then
-    "$usageFunction" "$errorArgument" "$variableName $noun must be in a directory which exists: $directory"
-    return $?
+  if ! bashEnv=$(anyEnvToBashEnv "$envFile"); then
+    $usageFunction "$errorEnvironment" "Unable to convert $envFile to bash-compatible" || return $?
   fi
-  printf "%s\n" "$variableValue"
+  count=$(($(wc -l <"$bashEnv") + 0))
+  set -a
+  # shellcheck source=/dev/null
+  source "$bashEnv"
+  returnCode=$?
+  set +a
+  rm -f "$bashEnv" || :
+  if [ $returnCode -ne 0 ]; then
+    "$usageFunction" "$returnCode" "source $envFile -> $bashEnv failed" || return $?
+  fi
+  printf "%s %s\n" "$(consoleBoldBlack "$count")" "$(consoleBoldBlue "$(plural "$count" variable variables)")" 1>&2
+  printf "%s\n" "$envFile"
 }

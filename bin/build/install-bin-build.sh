@@ -24,7 +24,7 @@ set -eou pipefail
 # Points to the project root
 relTop=../..
 
-# IDENTICAL hasColors 34
+# IDENTICAL hasColors 32
 
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
 # If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
@@ -35,10 +35,8 @@ relTop=../..
 # Local Cache: this value is cached in BUILD_COLORS if it is not set.
 # Environment: BUILD_COLORS - Override value for this
 hasColors() {
-  export BUILD_COLORS
-  export TERM
-  export DISPLAY
-
+  export BUILD_COLORS TERM DISPLAY
+  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
   BUILD_COLORS="${BUILD_COLORS-z}"
   if [ "z" = "$BUILD_COLORS" ]; then
     if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then

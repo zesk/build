@@ -16,13 +16,10 @@
 # Environment: BUILD_DEBUG - Set to 1 to enable debugging, blank to disable
 #
 buildDebugEnabled() {
-  # shellcheck source=/dev/null
-  if ! source bin/build/env/BUILD_DEBUG.sh; then
-    consoleError "BUILD_DEBUG.sh failed" 1>&2
+  export BUILD_DEBUG
+  if ! buildEnvironmentLoad BUILD_DEBUG; then
     return 1
   fi
-  export BUILD_DEBUG
-
   test "${BUILD_DEBUG-}"
 }
 
@@ -110,4 +107,24 @@ restoreErrorExit() {
   else
     set +e
   fi
+}
+
+_debuggingStackCodeList() {
+  local tick item
+  tick='`'
+  for item in "$@"; do
+    printf '%s %s%s%s\n' - "$tick" "$item" "$tick"
+  done
+}
+
+#
+# Usage: {fn}
+#
+debuggingStack() {
+  printf "STACK:\n"
+  _debuggingStackCodeList "${FUNCNAME[@]}" || :
+  printf "SOURCE:\n"
+  _debuggingStackCodeList "${BASH_SOURCE[@]}" || :
+  printf "EXPORTS:\n"
+  declare -px || :
 }
