@@ -80,7 +80,7 @@ Tested bash versions:
 
 - 3.2.57 (`Darwin`)
 - 5.1.16 (`Ubuntu`)
-- 
+
 If you test on another OS or need support on a specific platform, report an issue.
 
 ## Known issues and workarounds
