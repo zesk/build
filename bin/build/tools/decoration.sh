@@ -209,7 +209,7 @@ prefixLines() {
 # consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #
 # Summary: Prefix output lines with a string
-# Usage: wrapLines [ prefix [ suffix ... ] ] < fileToPrefixLines
+# Usage: wrapLines [ prefix [ suffix ... ] ] < fileToWrapLines
 # Exit Code: 0
 # Argument: `prefix` - Prefix each line with this text
 # Argument: `suffix` - Prefix each line with this text

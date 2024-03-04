@@ -42,6 +42,11 @@ usageTemplate() {
   description="$1"
   shift || return "$errorArgument"
   exitCode="${1-0}"
+  if ! isInteger "$exitCode"; then
+    consoleError "$exitCode is not integer"
+    debuggingStack
+    return 1
+  fi
   if [ "$exitCode" -eq 0 ]; then
     usageString="$(consoleBoldGreen Usage)"
   else

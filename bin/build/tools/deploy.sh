@@ -79,8 +79,8 @@ deployPackageName() {
   if [ -z "$BUILD_TARGET" ]; then
     _deployPackageName "$errorEnvironment" "BUILD_TARGET is blank" || return $?
   fi
-  if ! stringValidate "$BUILD_TARGET" alnum ; then
-    _deployPackageName "$errorEnvironment" "BUILD_TARGET is blank" || return $?
+  if ! stringValidate "${BUILD_TARGET%%.tar.gz}" alnum ; then
+    _deployPackageName "$errorEnvironment" "BUILD_TARGET is not valid" || return $?
   fi
   printf "%s\n" "${BUILD_TARGET-}"
 }

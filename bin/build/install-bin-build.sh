@@ -24,90 +24,103 @@ set -eou pipefail
 # Points to the project root
 relTop=../..
 
-# IDENTICAL hasColors 32
-
-# This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-# If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
-#
-# Usage: hasColors
-# Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - No colors
-# Local Cache: this value is cached in BUILD_COLORS if it is not set.
-# Environment: BUILD_COLORS - Override value for this
-hasColors() {
-  export BUILD_COLORS TERM DISPLAY
-  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
-  BUILD_COLORS="${BUILD_COLORS-z}"
-  if [ "z" = "$BUILD_COLORS" ]; then
-    if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
-      if [ -n "${DISPLAY-}" ]; then
-        BUILD_COLORS=1
-      else
-        BUILD_COLORS=
-      fi
-    elif [ "$(tput colors)" -ge 8 ]; then
-      BUILD_COLORS=1
-    else
-      BUILD_COLORS=
-    fi
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
-    # Values allowed for this global are 1 and blank only
-    BUILD_COLORS=
-  fi
-  test "$BUILD_COLORS"
-}
-
-# IDENTICAL __consoleOutput 13
-__consoleOutput() {
-  local prefix="${1}" start="${2-}" end="${3}" nl="\n"
-
-  shift && shift && shift
-  if [ "${1-}" = "-n" ]; then
-    shift
-    nl=
-  fi
-  if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$nl" "$*"; fi
-  elif [ $# -eq 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s$nl" "$prefix" "$*"; else printf "%s$nl" "$*"; fi
-  fi
-}
-
-# IDENTICAL consoleCode 4
-# shellcheck disable=SC2120
-consoleCode() {
-  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
-}
-
-# IDENTICAL consoleError 4
-# shellcheck disable=SC2120
-consoleError() {
-  __consoleOutput ERROR '\033[1;38;5;255;48;5;9m' '\033[0m' "$@"
-}
-
-# shellcheck disable=SC2120
-consoleOrange() {
-  __consoleOutput "" '\033[38;5;214m' '\033[0m' "$@"
-}
-
 # Usage: install-bin-build.sh [ --mock mockBuildRoot ]
 # fn: install-bin-build.sh
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
+# Determines the most recent version using GitHub API unless --url or --mock is specified.
 #
+# Argument: --mock mockBuildRoot - Optional. Directory. Diretory of an existing bin/build installation to mock behavior for testing
+# Argument: --url url - Optional. URL of a tar.gz. file. Download source code from here.
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
 installBinBuild() {
-  local start ignoreFile tarArgs diffLines binName replace mockPath tarBall
-  local myBinary myPath osName
+  local arg start ignoreFile tarArgs showDiffFlag diffLines binName replace
+  local forceFlag mockFlag mockPath
+  local myBinary myPath osName url
   local errorEnvironment=1
   local errorArgument=2
 
   local toolsBin=./bin/build/tools.sh
 
   if test "${BUILD_DEBUG-}"; then
+    consoleOrange "BUILD_DEBUG on"
     set -x # Debugging
   fi
+
+  url=
+  showDiffFlag=false
+  mockFlag=false
+  mockPath=
+  forceFlag=false
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    if [ -z "$arg" ]; then
+      _installBinBuild "$errorArgument" "blank argument" || return $?
+    fi
+    case "$arg" in
+      --debug)
+        consoleOrange "Debug on"
+        set -x # Debugging
+        ;;
+      --diff)
+        showDiffFlag=true
+        ;;
+      --force)
+        forceFlag=true
+        ;;
+      --mock)
+        if [ -n "$mockPath" ]; then
+          _installBinBuild "$errorArgument" "--mock argument twice" || return $?
+        fi
+        mockFlag=true
+        shift || _installBinBuild "$errorArgument" "$arg missing value" || return $?
+        mockPath="${1%%/}/"
+        if [ ! -f "$mockPath/tools.sh" ]; then
+          _installBinBuild "$errorArgument" "--mock argument must be path to bin/build containing tools.sh" || return $?
+        fi
+        ;;
+      --url)
+        if [ -n "$url" ]; then
+          _installBinBuild "$errorArgument" "--url argument twice" || return $?
+        fi
+        shift || _installBinBuild "$errorArgument" "$arg missing value" || return $?
+        url="$1"
+        if [ -z "$url" ]; then
+          _installBinBuild "$errorArgument" "blank url" || return $?
+        fi
+        ;;
+    esac
+    shift || _installBinBuild "$errorArgument" "shift after $arg failed" || return $?
+  done
+
+  if [ -z "$url" ]; then
+    if ! latestVersion=$(mktemp); then
+      _installBinBuild "$errorEnvironment" "Unable to create temporary file:" || return $?
+    fi
+    if ! curl -s "https://api.github.com/repos/zesk/build/releases/latest" >"$latestVersion"; then
+      _installBinBuild "$errorEnvironment" "Unable to fetch latest JSON:"
+      cat "$latestVersion" 1>&2
+      rm "$latestVersion" || :
+      return "$errorEnvironment"
+    fi
+    if ! url=$(jq -r .tarball_url <"$latestVersion"); then
+      _installBinBuild "$errorEnvironment" "Unable to fetch .tarball_url JSON:"
+      cat "$latestVersion" 1>&2
+      rm "$latestVersion" || :
+      return "$errorEnvironment"
+    fi
+  elif $mockFlag; then
+    _installBinBuild "$errorArgument" "--mock and --url are mutually exclusive" || return $?
+  fi
+
+  if [ "${url#https://}" == "$url" ]; then
+    _installBinBuild "$errorArgument" "URL must begin with https://" || return $?
+  fi
+
+  #
+  # Arguments are all validated by here (mostly - url syntax may be bonkers)
+  #
 
   myBinary="${BASH_SOURCE[0]}"
   if ! myPath="$(dirname "$myBinary")"; then
@@ -117,36 +130,25 @@ installBinBuild() {
     _installBinBuild "$errorEnvironment" "Can not cd $myPath/$relTop" || return $?
   fi
   if [ ! -d bin/build ]; then
+    if $forceFlag; then
+      printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBlue "directory does not exist")"
+    fi
+    forceFlag=true
+  elif $forceFlag; then
+    printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBoldBlue "directory exists")"
+  fi
+  if $forceFlag; then
     if ! start=$(($(date +%s) + 0)); then
       _installBinBuild "$errorEnvironment" "date failed" || return $?
     fi
-    if [ "${1-}" = "--mock" ]; then
-      shift || :
-      mockPath="${1%%/}/"
-      if [ ! -f "$mockPath/tools.sh" ]; then
-        _installBinBuild "$errorArgument" "--mock argument must be bin/build path" || return $?
-      fi
-      if ! cp -r "${1%%/}/" ./bin/build/; then
+
+    if $mockFlag; then
+      if ! cp -r "$mockPath" ./bin/build/; then
         _installBinBuild "$errorEnvironment" "Unable to copy to bin/build" || return $?
       fi
     else
-      if ! latestVersion=$(mktemp); then
-        _installBinBuild "$errorEnvironment" "Unable to create temporary file:" || return $?
-      fi
-      if ! curl -s "https://api.github.com/repos/zesk/build/releases/latest" >"$latestVersion"; then
-        _installBinBuild "$errorEnvironment" "Unable to fetch latest JSON:"
-        cat "$latestVersion" 1>&2
-        rm "$latestVersion" || :
-        return "$errorEnvironment"
-      fi
-      if ! tarBall=$(jq -r .tarball_url <"$latestVersion"); then
-        _installBinBuild "$errorEnvironment" "Unable to fetch .tarball_url JSON:"
-        cat "$latestVersion" 1>&2
-        rm "$latestVersion" || :
-        return "$errorEnvironment"
-      fi
-      if ! curl -L -s "$tarBall" -o build.tar.gz; then
-        _installBinBuild "$errorEnvironment" "Unable to unwrap $tarBall as build.tar.gz"
+      if ! curl -L -s "$url" -o build.tar.gz; then
+        _installBinBuild "$errorEnvironment" "Unable to download $url"
         cat "$latestVersion" 1<&2
         rm "$latestVersion" || :
         return "$errorEnvironment"
@@ -157,7 +159,7 @@ installBinBuild() {
         tarArgs=(--include='*/bin/build/*')
       fi
       if ! tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}"; then
-        _installBinBuild "$errorEnvironment" "Failed to download from $tarBall:"
+        _installBinBuild "$errorEnvironment" "Failed to download from $url:"
         return "$errorEnvironment"
       fi
       rm "build.tar.gz" || :
@@ -165,12 +167,10 @@ installBinBuild() {
     if [ ! -d "./bin/build" ]; then
       _installBinBuild "$errorEnvironment" "Unable to download and install zesk/build" || return $?
     fi
-
     # shellcheck source=/dev/null
     if ! . "$toolsBin"; then
       _installBinBuild "$errorEnvironment" "Unable to source $toolsBin" || return $?
     fi
-
     reportTiming "$start" "Installed zesk/build in" || :
   else
     if [ ! -f "$toolsBin" ]; then
@@ -217,9 +217,9 @@ installBinBuild() {
   replace=$(quoteSedPattern "relTop=$relTop")
 
   myBinary="${BASH_SOURCE[0]}.$$"
-  sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary"
+  sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary" || :
   chmod +x "$myBinary"
-  if test "${BUILD_DIFF-}"; then
+  if $showDiffFlag; then
     consoleWarning "DIFFERENCES: $diffLines"
     diff "$binName" "$myBinary" | grep -v 'relTop=' | prefixLines "$(consoleReset)$(consoleInfo CHANGES)$(consoleCode)" || :
     consoleMagenta "DIFFERENCES: $diffLines"
@@ -232,6 +232,93 @@ _installBinBuild() {
   shift || :
   printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
   return "$exitCode"
+}
+
+# Copy from _colors.sh
+
+# IDENTICAL _colors 83
+
+# This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
+# If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
+#
+# Usage: hasColors
+# Exit Code: 0 - Console or output supports colors
+# Exit Code; 1 - No colors
+# Local Cache: this value is cached in BUILD_COLORS if it is not set.
+# Environment: BUILD_COLORS - Override value for this
+hasColors() {
+  export BUILD_COLORS TERM DISPLAY
+  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
+  BUILD_COLORS="${BUILD_COLORS-z}"
+  if [ "z" = "$BUILD_COLORS" ]; then
+    if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
+      if [ -n "${DISPLAY-}" ]; then
+        BUILD_COLORS=1
+      else
+        BUILD_COLORS=
+      fi
+    elif [ "$(tput colors)" -ge 8 ]; then
+      BUILD_COLORS=1
+    else
+      BUILD_COLORS=
+    fi
+  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
+    # Values allowed for this global are 1 and blank only
+    BUILD_COLORS=
+  fi
+  test "$BUILD_COLORS"
+}
+
+__consoleOutput() {
+  local prefix="${1}" start="${2-}" end="${3}" nl="\n"
+
+  shift && shift && shift
+  if [ "${1-}" = "-n" ]; then
+    shift
+    nl=
+  fi
+  if hasColors; then
+    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$nl" "$*"; fi
+  elif [ $# -eq 0 ]; then
+    if [ -n "$prefix" ]; then printf "%s: %s$nl" "$prefix" "$*"; else printf "%s$nl" "$*"; fi
+  fi
+}
+
+#
+# code or variables in output
+#
+# shellcheck disable=SC2120
+consoleCode() {
+  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
+}
+
+#
+# errors
+#
+# shellcheck disable=SC2120
+consoleError() {
+  __consoleOutput ERROR '\033[1;38;5;255;48;5;9m' '\033[0m' "$@"
+}
+
+#
+# Orange
+#
+# shellcheck disable=SC2120
+consoleOrange() {
+  __consoleOutput "" '\033[38;5;214m' '\033[0m' "$@"
+}
+
+#
+# Blue
+#
+# shellcheck disable=SC2120
+consoleBlue() {
+  __consoleEscape '\033[94m' '\033[0m' "$@"
+}
+
+# shellcheck disable=SC2120
+consoleBoldBlue() {
+  __consoleEscape '\033[1;94m' '\033[0m' "$@"
 }
 
 installBinBuild "$@"

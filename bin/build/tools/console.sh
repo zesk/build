@@ -108,11 +108,15 @@ consoleConfigureColorMode() {
   if brightness=$(colorBrightness 2>/dev/null < <(consoleGetColor --background)); then
     if [ "$brightness" -lt 50 ]; then
       colorMode=dark
+    else
+      colorMode=light
     fi
   elif isBitBucketPipeline; then
     colorMode=dark
   elif isPHPStorm; then
     colorMode=dark
+  else
+    colorMode=
   fi
   printf "%s\n" "$colorMode"
 }

@@ -199,3 +199,12 @@ testValidateCharacterClass() {
   fi
   rm "$temp" || :
 }
+
+tests=(testStringValidate "${tests[@]}")
+testStringValidate() {
+  assertExitCode 0 stringValidate string alpha || return $?
+  assertExitCode 0 stringValidate string alnum || return $?
+  assertNotExitCode 0 stringValidate str0ng alpha || return $?
+  assertExitCode 0 stringValidate str0ng alnum || return $?
+  assertExitCode 0 stringValidate string alpha alnum || return $?
+}

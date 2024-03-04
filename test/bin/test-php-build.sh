@@ -64,14 +64,7 @@ testPHPBuild() {
   fi
   echo "PWD: $(pwd)"
 
-  # shellcheck source=/dev/null
-  if ! . ./bin/build/env/BUILD_TARGET.sh; then
-    return "$errorEnvironment"
-  fi
-  # shellcheck source=/dev/null
-  if ! . ./bin/build/env/BUILD_TIMESTAMP.sh; then
-    return "$errorEnvironment"
-  fi
+  buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
   assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
@@ -118,12 +111,17 @@ testPHPBuild() {
   mkdir ./compare-app || return $?
   mkdir ./compare-alternate || return $?
   cd ./compare-app || return $?
+
+  consoleInfo "Extracting app.tar.gz ... "
   tar xf ../app.tar.gz || return $?
   # Vendor has random numbers in the classnames
   rm -rf ./vendor || return $?
   cd .. || return $?
 
   cd ./compare-alternate || return $?
+
+
+  consoleInfo "Extracting alternate.tar.gz ... "
   tar xf ../alternate.tar.gz || return $?
   rm -rf ./vendor || return $?
   cd .. || return $?
@@ -134,6 +132,8 @@ testPHPBuild() {
   fi
 
   manifest=$(mktemp) || return $?
+
+  consoleInfo "Extracting app.tar.gz manifest ... "
   tar tf app.tar.gz >"$manifest.complete" || return $?
   grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
   assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?

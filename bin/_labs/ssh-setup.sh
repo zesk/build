@@ -30,10 +30,11 @@ errorArgument=2
 sshSetup() {
   local arg sshHomePath flagForce servers keyType keyBits
 
-  # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../build/env/HOME.sh"
+  if ! buildEnvironmentLoad HOME; then
+    "_${FUNCNAME[0]}" "$errorEnvironment" "buildEnvironmentLoad HOME failed" || return $?
+  fi
   if [ ! -d "${HOME-}" ]; then
-    consoleError "$errorArgument" "HOME is not defined and is required"
+    _sshSetup "$errorEnvironment" "HOME is not defined and is required" || return $?
   fi
   sshHomePath="$HOME/.ssh/"
   flagForce=0

@@ -54,13 +54,13 @@ hookGitPreCommit() {
   clearLine
   consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed"
 
-  if ! buildEnvironmentLoad BUILD_COMPANY; then
-    _hookGitPreCommitFailed "buildEnvironmentLoad BUILD_COMPANY failed" || return $?
-  fi
   if [ -z "${BUILD_COMPANY-}" ]; then
-    # shellcheck source=/dev/null
-    source "./bin/build/env/BUILD_COMPANY.sh"
-    _hookGitPreCommitFailed "BUILD_COMPANY is blank - $BUILD_COMPANY" || return $?
+    if ! buildEnvironmentLoad BUILD_COMPANY; then
+      "_${FUNCNAME[0]}" "buildEnvironmentLoad BUILD_COMPANY failed" || return $?
+    fi
+    if [ -z "${BUILD_COMPANY-}" ]; then
+      "_${FUNCNAME[0]}" "buildEnvironmentLoad BUILD_COMPANY is undefined" || return $?
+    fi
   fi
   statusMessage consoleSuccess Making shell files executable ...
   if ! ./bin/build/chmod-sh.sh >/dev/null; then
