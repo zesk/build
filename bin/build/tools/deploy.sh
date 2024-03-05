@@ -73,10 +73,11 @@ _deployApplicationVersion() {
 # `deployHome` for compatibility.
 #
 deployPackageName() {
+  export BUILD_TARGET
   if ! buildEnvironmentLoad BUILD_TARGET; then
     _deployPackageName "$errorEnvironment" "Unable to load BUILD_TARGET" || return $?
   fi
-  if [ -z "$BUILD_TARGET" ]; then
+  if [ -z "${BUILD_TARGET-}" ]; then
     _deployPackageName "$errorEnvironment" "BUILD_TARGET is blank" || return $?
   fi
   if ! stringValidate "${BUILD_TARGET%%.tar.gz}" alnum ; then
