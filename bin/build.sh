@@ -6,12 +6,17 @@
 #
 # documentTemplate: ./docs/_templates/__binary.md
 
-set -eou pipefail
+# IDENTICAL zesk-build-bin-header 10
+_fail() {
+  printf "%s\n" "$*" 1>&2
+  exit 1
+}
 
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
-
+set -eou pipefail || _fail "set -eou pipefail fail?"
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd $(dirname "${BASH_SOURCE[0]}")/.. failed"
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+. ./bin/build/tools.sh || _fail "tools.sh failed"
+# zesk-build-bin-header
 
 buildBuild() {
   if ! ./bin/update-md.sh --skip-commit; then
@@ -32,4 +37,3 @@ buildBuild() {
 }
 
 buildBuild "$@"
-bin/build/tools/pipeline.sh

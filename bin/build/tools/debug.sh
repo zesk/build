@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: -
+# Depends: buildEnvironmentLoad
 # bin: set test
 # Docs: o ./docs/_templates/tools/debug.md
 # Test: o ./test/tools/debug-tests.sh
@@ -120,11 +120,15 @@ _debuggingStackCodeList() {
 #
 # Usage: {fn}
 #
+# Dump the function and include stacks and the current environment
+#
 debuggingStack() {
+  local prefix
   printf "STACK:\n"
   _debuggingStackCodeList "${FUNCNAME[@]}" || :
   printf "SOURCE:\n"
   _debuggingStackCodeList "${BASH_SOURCE[@]}" || :
   printf "EXPORTS:\n"
-  declare -px || :
+  prefix="declare -x "
+  declare -px | cut -c "$((${#prefix} + 1))-"
 }

@@ -66,39 +66,6 @@ hasConsoleAnimation() {
   [ -z "${CI-}" ]
 }
 
-# IDENTICAL hasColors 32
-
-# This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-# If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
-#
-# Usage: hasColors
-# Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - No colors
-# Local Cache: this value is cached in BUILD_COLORS if it is not set.
-# Environment: BUILD_COLORS - Override value for this
-hasColors() {
-  export BUILD_COLORS TERM DISPLAY
-  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
-  BUILD_COLORS="${BUILD_COLORS-z}"
-  if [ "z" = "$BUILD_COLORS" ]; then
-    if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
-      if [ -n "${DISPLAY-}" ]; then
-        BUILD_COLORS=1
-      else
-        BUILD_COLORS=
-      fi
-    elif [ "$(tput colors)" -ge 8 ]; then
-      BUILD_COLORS=1
-    else
-      BUILD_COLORS=
-    fi
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
-    # Values allowed for this global are 1 and blank only
-    BUILD_COLORS=
-  fi
-  test "$BUILD_COLORS"
-}
-
 __consoleEscape() {
   local start=$1 end=$2 nl="\n"
   shift
@@ -115,22 +82,6 @@ __consoleEscape() {
     fi
   else
     printf "%s$nl" "$*"
-  fi
-}
-
-# IDENTICAL __consoleOutput 13
-__consoleOutput() {
-  local prefix="${1}" start="${2-}" end="${3}" nl="\n"
-
-  shift && shift && shift
-  if [ "${1-}" = "-n" ]; then
-    shift
-    nl=
-  fi
-  if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$nl" "$*"; fi
-  elif [ $# -eq 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s$nl" "$prefix" "$*"; else printf "%s$nl" "$*"; fi
   fi
 }
 
@@ -269,12 +220,6 @@ _consoleCyan() {
 consoleBoldCyan() {
   __consoleOutput "" '\033[36;1m' '\033[0m' "$@"
 }
-consoleBlue() {
-  __consoleEscape '\033[94m' '\033[0m' "$@"
-}
-consoleBoldBlue() {
-  __consoleEscape '\033[1;94m' '\033[0m' "$@"
-}
 consoleBlackBackground() {
   __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
 }
@@ -282,16 +227,6 @@ consoleYellow() {
   __consoleEscape '\033[48;5;16;38;5;11m' '\033[0m' "$@"
 }
 
-consoleOrange() {
-  _consoleOrange "" "$@"
-}
-
-_consoleOrange() {
-  local label="$1"
-  shift
-  # see https://i.stack.imgur.com/KTSQa.png
-  __consoleOutput "$label" '\033[38;5;214m' '\033[0m' "$@"
-}
 consoleBoldOrange() {
   __consoleOutput "" '\033[38;5;214;1m' '\033[0m' "$@"
 }
@@ -366,20 +301,6 @@ _consoleInfo() {
   __consoleOutputMode "$label" '\033[38;5;20m' '\033[38;5;159m' '\033[0m' "$@"
 }
 
-#
-# code or variables in output
-#
-# IDENTICAL consoleCode 4
-# shellcheck disable=SC2120
-consoleCode() {
-  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
-}
-
-# IDENTICAL consoleError 4
-# shellcheck disable=SC2120
-consoleError() {
-  __consoleOutput ERROR '\033[1;38;5;255;48;5;9m' '\033[0m' "$@"
-}
 
 #
 # warning things are not normal

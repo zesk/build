@@ -87,11 +87,7 @@ buildDocsBuild() {
   exitCode=0
   start=$(beginTiming)
 
-  # shellcheck source=/dev/null
-  . ./bin/build/env/BUILD_COMPANY.sh
-
-  # shellcheck source=/dev/null
-  . ./bin/build/env/BUILD_COMPANY_LINK.sh
+  buildEnvironmentLoad BUILD_COMPANY BUILD_COMPANY_LINK
 
   if ! cacheDirectory="$(buildCacheDirectory)" || ! cacheDirectory=$(requireDirectory "$cacheDirectory"); then
     _buildDocsBuild "$errorEnvironment" "Unable to create $cacheDirectory" || return $?
@@ -213,7 +209,9 @@ buildDocsBuild() {
   #
   (
     # shellcheck source=/dev/null
-    source "$(dirname "${BASH_SOURCE[0]}")/build/env/BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN.sh"
+    if ! buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN; then
+      "_${FUNCNAME[0]}" "BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN failed" || return $?
+    fi
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}

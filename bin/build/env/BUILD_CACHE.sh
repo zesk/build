@@ -7,6 +7,7 @@ _BUILD_CACHE_DEFAULT() {
   local useDir
   export HOME
 
+  # Do not use buildEnvironmentLoad
   # shellcheck source=/dev/null
   source "${BUILD_HOME:-.}/bin/build/env/HOME.sh" || :
   useDir="${HOME-}"

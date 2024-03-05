@@ -12,9 +12,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # shellcheck source=/dev/null
 . ./bin/build/tools.sh
 
-# shellcheck source=/dev/null
-. ./bin/build/env/BUILD_VERSION_NO_OPEN.sh
-
 # fn: {base}
 #
 # Run whenever `new-version.sh` is run and a version already exists
@@ -30,7 +27,7 @@ hookVersionAlready() {
   releaseNotes=$1
   shift
 
-  if ! test "$BUILD_VERSION_NO_OPEN"; then
+  if ! buildEnvironmentLoad BUILD_VERSION_NO_OPEN && ! test "$BUILD_VERSION_NO_OPEN"; then
     printf "%s %s %s %s\n" "$(consoleSuccess "Opening")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes at")" "$(consoleValue "$releaseNotes")"
     contextOpen "$releaseNotes"
   else

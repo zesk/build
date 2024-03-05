@@ -4,13 +4,22 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
 
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
+# zesk-build-bin-header-install 10
+_fail() {
+  printf "%s\n" "$*" 1>&2
+  exit 1
+}
 
-[ -d ./bin/build ] || ./bin/pipeline/install-bin-build.sh
+set -eou pipefail || _fail "set -eou pipefail fail?"
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd $(dirname "${BASH_SOURCE[0]}")/.. failed"
 
-if ! bin/build/tools.sh phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs; then
-  bin/build/tools.sh consoleError "Build failed" 1>&2
-  return 1
+[ -d ./bin/build ] || ./bin/pipeline/install-bin-build.sh || _fail "install-bin-build.sh failed"
+
+# shellcheck source=/dev/null
+. ./bin/build/tools.sh || _fail "tools.sh failed"
+# zesk-build-bin-header-install
+
+if ! phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs; then
+  _fail "Build failed"
 fi
