@@ -109,11 +109,9 @@ phpBuild() {
 
   usageRequireBinary "_${FUNCNAME[0]}" tar
 
-  for e in BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG; do
-    # shellcheck source=/dev/null
-    . "bin/build/env/$e.sh" || return "$errorEnvironment"
-  done
-
+  if ! buildEnvironmentLoad BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG; then
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Missing environment" || return $?
+  fi
   targetName="$(deployPackageName)"
   tagDeploymentFlag=1
   debuggingFlag=
@@ -141,7 +139,7 @@ phpBuild() {
       --composer)
         shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
         if [ -z "$1" ]; then
-          "_${FUNCNAME[0]}" "$errorArgument" "blank --composer argument" || return $?``
+          "_${FUNCNAME[0]}" "$errorArgument" "blank --composer argument" || return $?$()
         fi
         composerArgs+=("$1")
         ;;
@@ -313,7 +311,6 @@ phpBuild() {
   _phpBuildBanner "Application Tag" "$APPLICATION_TAG" || :
   _phpEchoBar || :
 
-  echo createTarFile "$targetName" .env vendor/ .deploy/ "$@"
   if ! createTarFile "$targetName" .env vendor/ .deploy/ "$@"; then
     "_${FUNCNAME[0]}" "$errorEnvironment" "createTarFile $targetName failed" || return $?
   fi
@@ -327,10 +324,10 @@ _phpBuild() {
 _phpBuildBanner() {
   local label="$1"
   shift
-  labeledBigText --top --prefix "PHP $(consoleMagenta). . . . $(consoleOrange)$(consoleBold) " --suffix "$(consoleReset)" --tween " $(consoleGreen)" "$label: " "$@"
+  labeledBigText --top --prefix "$(consoleBlue PHP) $(consoleMagenta). . . . $(consoleReset)$(consoleBoldOrange) " --suffix "$(consoleReset)" --tween " $(consoleReset)$(consoleGreen)" "$label: " "$@"
 }
 _phpEchoBar() {
-  consoleBoldRed "$(echoBar '.-+^`^+-')" || :
+  consoleBoldBlue "$(echoBar '.-+^`^+-')" || :
 }
 
 #
