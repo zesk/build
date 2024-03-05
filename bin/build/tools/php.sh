@@ -95,6 +95,7 @@ _deploymentGenerateValue() {
 #
 # Usage: {fn} [ --name tarFileName ] [ --deployment deployment ] [ --suffix versionSuffix ] [ --debug ] [ ENV_VAR1 ... ] -- file1 [ file2 ... ]
 # Argument: --name tarFileName - Set BUILD_TARGET via command line (wins)
+# Argument: --composer arg - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
 # Argument: --deployment deployment - Set DEPLOYMENT via command line (wins)
 # Argument: --suffix versionSuffix - Set tag suffix via command line (wins, default inferred from deployment)
 # Argument: --debug - Enable debugging. Defaults to BUILD_DEBUG.
@@ -103,7 +104,7 @@ _deploymentGenerateValue() {
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
 # See: BUILD_TARGET.sh
 phpBuild() {
-  local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment
+  local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment composerArgs
   local targetName
 
   usageRequireBinary "_${FUNCNAME[0]}" tar
@@ -120,6 +121,7 @@ phpBuild() {
   optClean=
   versionSuffix=
   envVars=()
+  composerArgs=()
   while [ $# -gt 0 ]; do
     arg="$1"
     if [ -z "$arg" ]; then
@@ -135,6 +137,13 @@ phpBuild() {
         ;;
       --no-tag | --skip-tag)
         tagDeploymentFlag=
+        ;;
+      --composer)
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
+        if [ -z "$1" ]; then
+          "_${FUNCNAME[0]}" "$errorArgument" "blank --composer argument" || return $?``
+        fi
+        composerArgs+=("$1")
         ;;
       --name)
         shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
@@ -290,7 +299,7 @@ phpBuild() {
 
   clearLine || :
   # shellcheck disable=SC2119
-  if ! phpComposer; then
+  if ! phpComposer "${composerArgs[@]+${composerArgs[@]}}"; then
     "_${FUNCNAME[0]}" "$errorEnvironment" "Composer failed" || return $?
   fi
 
