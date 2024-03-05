@@ -422,7 +422,7 @@ testDeployPackageName() {
 
   BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz"
 
-  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName)" || return $?
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz" deployPackageName)" || return $?
 
   unset BUILD_TARGET
 
