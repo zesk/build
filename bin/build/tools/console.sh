@@ -5,7 +5,7 @@
 # Depends: usage.sh
 # bin: printf stty
 # Docs: o ./docs/_templates/tools/console.md
-# Test: o ./test/tools/colors-tests.sh
+# Test: o ./test/tools/console-tests.sh
 
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
@@ -19,7 +19,6 @@ errorArgument=2
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 # Credit: https://stackoverflow.com/questions/16914418/how-to-manipulate-hexadecimal-value-in-bash
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
-# See: consoleColorMode
 #
 consoleGetColor() {
   local xtermCode sttyOld color colors success result noTTY
@@ -42,21 +41,23 @@ consoleGetColor() {
     esac
     shift || _consoleGetColor "$errorArgument" "Shift failed" || return $?
   done
+  colors=()
   if ! sttyOld=$(stty -g 2>/dev/null); then
     noTTY=true
+    printf "\e]%d;?\e\\" "${xtermCode}" || :
+    sleep 0.0001 || :
+    read -t 2 -r result
+    exitCode=$?
   else
     if ! stty raw -echo min 0 time 0; then
       _consoleGetColor "$errorEnvironment" "stty raw failed" || return $?
     fi
+    printf "\e]%d;?\e\\" "${xtermCode}" >/dev/tty || :
+    sleep 0.0001 || :
+    read -t 2 -r result </dev/tty
+    exitCode=$?
   fi
-
-  if ! printf "\e]%d;?\e\\" "${xtermCode}"; then
-    _consoleGetColor "$errorEnvironment" "tty message failed" || return $?
-  fi
-  # term needs the sleep (or "time 1", but that is 1/10th second).
-  sleep 0.0001 || :
-  colors=()
-  if ! read -t 2 -r result; then
+  if [ $exitCode -ne 0 ]; then
     success=true
     # remove escape chars
     result="${result#*;}"
@@ -84,16 +85,35 @@ _consoleGetColor() {
 
 # Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11
 # Return an integer between 0 and 100
+# Colors are between 0 and 255
+# Usage: {fn}
+# shellcheck disable=SC2120
 colorBrightness() {
   local r g b
-  # 0.299 R + 0.587 G + 0.114 B
-  read -r r g b || :
-  if ! isUnsignedInteger "$r" "$g" "$b"; then
+  if [ $# -gt 0 ]; then
+    if [ $# -ne 3 ]; then
+      _colorBrightness $errorArgument "Requires 3 arguments" || return $?
+    fi
+    r=$1 g=$2 b=$3
+  else
+    # 0.299 R + 0.587 G + 0.114 B
+    read -r r g b || :
+  fi
+  if isUnsignedInteger "$r" "$g" "$b"; then
     printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
   else
-    consoleError "Not integers: \"$r\" \"$g\" \"$b\"" 1>&2
-    return $errorArgument
+    _colorBrightness $errorArgument "Not integers: \"$r\" \"$g\" \"$b\"" || return $?
   fi
+}
+_colorBrightness() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} [ --background | --foreground ]
+#
+consoleBrightness() {
+  colorBrightness 2>/dev/null < <(consoleGetColor "$@")
 }
 
 #
@@ -104,19 +124,13 @@ colorBrightness() {
 consoleConfigureColorMode() {
   local brightness colorMode
 
-  colorMode=
-  if brightness=$(colorBrightness 2>/dev/null < <(consoleGetColor --background)); then
+  colorMode=light
+  if brightness=$(consoleBrightness --background); then
     if [ "$brightness" -lt 50 ]; then
       colorMode=dark
-    else
-      colorMode=light
     fi
   elif isBitBucketPipeline; then
     colorMode=dark
-  elif isPHPStorm; then
-    colorMode=dark
-  else
-    colorMode=
   fi
   printf "%s\n" "$colorMode"
 }
