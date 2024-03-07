@@ -18,6 +18,24 @@ errorEnvironment=1
 errorArgument=2
 
 #
+# Decorations
+#
+_symbolSuccess() {
+  printf %s "✅ "
+}
+_symbolFail() {
+  printf %s "❌ "
+}
+_assertFailure() {
+  printf "%s %s\n" "$(_symbolFail)" "$(consoleError "$@")" 1>&2
+  return $errorEnvironment
+}
+_assertSuccess() {
+  printf "%s %s\n" "$(_symbolSuccess)" "$(consoleSuccess "$@")" 1>&2
+  return 0
+}
+
+#
 # Assert two strings are equal.
 #
 # If this fails it will output an error and exit.
@@ -31,13 +49,12 @@ errorArgument=2
 #
 assertEquals() {
   local expected=$1 actual=$2
-  shift
-  shift
-  if [ "$expected" != "$actual" ]; then
-    consoleError "${FUNCNAME[0]} expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}"
-    return "$errorEnvironment"
+  shift || _assertFailure "missing expected arg" || return $?
+  shift || _assertFailure "missing actual arg" || return $?
+  if [ "$expected" = "$actual" ]; then
+    _assertSuccess "${FUNCNAME[0]} \"$expected\" == \"$actual\" (correct)"
   else
-    consoleSuccess "${FUNCNAME[0]} \"$expected\" == \"$actual\" (correct)"
+    _assertFailure "${FUNCNAME[0]} expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}"
   fi
 }
 
@@ -57,11 +74,10 @@ assertNotEquals() {
   local expected=$1 actual=$2
   shift
   shift
-  if [ "$expected" = "$actual" ]; then
-    consoleError "${FUNCNAME[0]} expected \"$expected\" equals \"$actual\" but should not: ${*-equals}"
-    return $errorEnvironment
+  if [ "$expected" != "$actual" ]; then
+    _assertSuccess "${FUNCNAME[0]} \"$expected\" != \"$actual\" (correct)"
   else
-    consoleSuccess "${FUNCNAME[0]} \"$expected\" != \"$actual\" (correct)"
+    _assertFailure "${FUNCNAME[0]} expected \"$expected\" equals \"$actual\" but should not: ${*-equals}"
   fi
 }
 
@@ -186,10 +202,14 @@ _assertExitCodeHelper() {
   fi
   if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     # Failure
-    printf "%s: %s -> %s, %s %s\n%s\n" "${FUNCNAME[0]}" "$(consoleCode "$bin $*")" "$(consoleError "$actual")" "$failureText" "$(consoleSuccess "$expected")" "$(wrapLines "> $(consoleCode)" "$(consoleReset)" <"$outputFile")" 1>&2
+    printf "%s %s %s: %s -> %s, %s\n%s\n" \
+      "$(_symbolFail)" "${usageFunction#_}" "$(consoleCode "$bin $*")" \
+      "$(consoleError "$actual")" "$failureText" "$(consoleSuccess "$expected")" \
+      "$(wrapLines "$(consoleCode)" "$(consoleReset)" <"$outputFile")" 1>&2
     rm -rf "$outputFile" "$errorFile" || :
     return $errorEnvironment
   fi
+  printf "%s %s: %s -> %s\n" "$(_symbolSuccess)" "$(consoleSuccess "${usageFunction#_}")" "$(consoleCode "$bin $*")" "$(consoleSuccess "$actual")"
   rm -rf "$outputFile" "$errorFile" || :
   return 0
 }
@@ -260,10 +280,9 @@ assertContains() {
     shortActual="${shortActual} ..."
   fi
   if ! printf %s "$actual" | grep -q "$expected"; then
-    consoleError "${FUNCNAME[0]} \"$expected\" \"$shortActual\" but should: ${*-contain}"
-    return "$errorEnvironment"
+    _assertFailure "${FUNCNAME[0]} \"$expected\" \"$shortActual\" but should: ${*-contain}"
   else
-    consoleSuccess "${FUNCNAME[0]} \"$expected\" == \"$shortActual\" (correct)"
+    _assertSuccess "${FUNCNAME[0]} \"$expected\" == \"$shortActual\" (correct)"
   fi
 }
 
@@ -288,10 +307,9 @@ assertNotContains() {
     shortActual="${shortActual} ..."
   fi
   if printf %s "$actual" | grep -q "$expected"; then
-    consoleError "${FUNCNAME[0]} \"$expected\" \"$shortActual\" but should NOT: ${*-contain}"
-    return "$errorEnvironment"
+    _assertFailure "${FUNCNAME[0]} \"$expected\" \"$shortActual\" but should NOT: ${*-contain}"
   else
-    consoleSuccess "${FUNCNAME[0]} \"$expected\" == \"$shortActual\" (correct)"
+    _assertSuccess "${FUNCNAME[0]} \"$expected\" == \"$shortActual\" (correct)"
   fi
 }
 
@@ -318,10 +336,11 @@ assertNotContains() {
 assertDirectoryExists() {
   local d=$1 noun=directory
 
-  shift
+  shift || _assertFailure "${FUNCNAME[0]} Missing directory argument"
   if [ ! -d "$d" ]; then
-    printf "%s: %s was expected to be a %s but is NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")"
-    return 1
+    _assertFailure "$(printf "%s: %s was expected to be a %s but is NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")")"
+  else
+    _assertSuccess "${FUNCNAME[0]} $d is a directory"
   fi
 }
 
@@ -341,10 +360,11 @@ assertDirectoryExists() {
 assertDirectoryDoesNotExist() {
   local d=$1 noun=directory
 
-  shift
+  shift || _assertFailure "${FUNCNAME[0]} Missing directory argument"
   if [ -d "$d" ]; then
-    printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")"
-    return 1
+    _assertFailure "$(printf "%s: %s was expected NOT to be a %s but is %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")")"
+  else
+    _assertSuccess "${FUNCNAME[0]} $d is a directory"
   fi
 }
 
@@ -374,8 +394,10 @@ assertFileExists() {
   shift
   message="$*"
   if [ ! -f "$d" ]; then
-    printf "%s: %s should exist but does NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun not found}")"
+    _assertFailure "$(printf "%s: %s should exist but does NOT %s\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun not found}")")"
     return 1
+  else
+    _assertSuccess "${FUNCNAME[0]} $d is a file"
   fi
 }
 
@@ -397,8 +419,10 @@ assertFileDoesNotExist() {
 
   shift
   if [ -f "$d" ]; then
-    printf "%s: %s should not exist but does %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun WAS found}")" "$(consoleWarning "$(betterType "$d")")"
+    _assertFailure "$(printf "%s: %s should not exist but does %s (%s)\n" "$(consoleCode "${FUNCNAME[0]}")" "$(consoleError "$d")" "$(consoleError "${message-$noun WAS found}")" "$(consoleWarning "$(betterType "$d")")")"
     return 1
+  else
+    _assertSuccess "${FUNCNAME[0]} $d file does not exist"
   fi
 }
 
@@ -426,10 +450,9 @@ assertOutputEquals() {
   shift
   actual=$("$@" || printf "exited with code %d" "$?")
   if [ "$expected" != "$actual" ]; then
-    consoleError "assertOutputEquals \"$expected\" \"$actual\" (output of \"$*\")"
-    return "$errorEnvironment"
+    _assertFailure "${FUNCNAME[0]} \"$expected\" \"$actual\" (output of \"$*\")"
   else
-    consoleSuccess "assertOutputEquals \"$expected\" \"$actual\" (CORRECT: $1)"
+    _assertSuccess "${FUNCNAME[0]} \"$expected\" \"$actual\" (CORRECT: $1)"
   fi
 }
 
@@ -487,15 +510,14 @@ assertOutputContains() {
   fi
   assertEquals "$exitCode" "$actual" "Exit code should be $exitCode ($actual)"
   if grep -q "$expected" "$tempFile"; then
-    consoleSuccess "\"$expected\" found in \"${commands[*]}\" output"
+    _assertSuccess "\"$expected\" found in \"${commands[*]}\" output"
   else
-    printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)" 1>&2
     consoleInfo "$(echoBar)" 1>&2
     prefixLines "$(consoleCode)" <"$tempFile" 1>&2
     consoleError "$(echoBar)" 1>&2
     nLines=$(($(wc -l <"$tempFile") + 0))
     consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")" 1>&2
-    return 1
+    _assertFailure "$(printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)")"
   fi
 }
 
@@ -553,12 +575,11 @@ assertOutputDoesNotContain() {
   fi
   assertEquals "$exitCode" "$actual" "Exit code should be $exitCode"
   if ! grep -q "$expected" "$tempFile"; then
-    consoleSuccess "${FUNCNAME[0]} $expected NOT found in ${commands[*]} output (correct)"
+    _assertSuccess "${FUNCNAME[0]} $expected NOT found in ${commands[*]} output (correct)"
   else
-    consoleError "${FUNCNAME[0]} $expected found in $* output (incorrect)" 1>&2
     prefixLines "$(consoleCode)" <"$tempFile" 1>&2
     consoleError "$(echoBar)" 1>&2
-    return 1
+    _assertFailure "${FUNCNAME[0]} $expected found in $* output (incorrect)"
   fi
 }
 
@@ -576,20 +597,22 @@ assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  local f=$1
+  local f=$1 args
 
-  shift
+  args=("$@")
+  shift || _assertFailure "Missing argument" || return $?
   if [ ! -f "$f" ]; then
     consoleError "${FUNCNAME[0]}: $f is not a file: $*"
   fi
   while [ $# -gt 0 ]; do
     if ! grep -q "$1" "$f"; then
-      consoleError "${FUNCNAME[0]}: $f does not contain string: $1"
       dumpFile "$f"
+      _assertFailure "${FUNCNAME[0]}: $f does not contain string: $1"
       return 1
     fi
     shift
   done
+  _assertSuccess "${FUNCNAME[0]}: $f contains strings: $(consoleCode "$(printf "%s" "${args[@]+${args[@]}}")")"
 }
 
 #
@@ -604,20 +627,22 @@ assertFileContains() {
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
-  local f=$1
+  local f=$1 args
 
-  shift
+  args=("$@")
+  shift || _assertFailure "Missing argument" || return $?
   if [ ! -f "$f" ]; then
     consoleError "${FUNCNAME[0]}: $f is not a file: $*"
   fi
   while [ $# -gt 0 ]; do
     if grep -q "$1" "$f"; then
-      consoleError "${FUNCNAME[0]}: $f does contain string: $1"
       dumpFile "$f"
+      _assertFailure "${FUNCNAME[0]}: $f does contain string: $1"
       return 1
     fi
     shift
   done
+  _assertSuccess "${FUNCNAME[0]}: $f does not contain strings: $(consoleCode "$(printf "%s" "${args[@]+${args[@]}}")")"
 }
 
 #
@@ -638,7 +663,7 @@ assertFileSize() {
   shift || :
   while [ $# -gt 0 ]; do
     if ! actualSize="$(fileSize "$1")"; then
-      consoleError "${FUNCNAME[0]}: fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?"
+      _assertFailure "${FUNCNAME[0]}: fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?"
       return $errorArgument
     fi
     assertEquals "$expectedSize" "$actualSize" "${FUNCNAME[0]}: File $1 actual size $actualSize is not expected $expectedSize" || return $?
@@ -664,7 +689,7 @@ assertNotFileSize() {
   shift || :
   while [ $# -gt 0 ]; do
     if ! actualSize="$(fileSize "$1")"; then
-      consoleError "${FUNCNAME[0]}: fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?"
+      _assertFailure "${FUNCNAME[0]}: fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?"
       return $errorArgument
     fi
     assertNotEquals "$expectedSize" "$actualSize" "${FUNCNAME[0]}: File $1 actual size $actualSize incorrectly matches expected $expectedSize" || return $?
@@ -778,17 +803,17 @@ _assertNumeric() {
   shift || return $?
 
   if ! isNumber "$leftValue"; then
-    consoleError "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (not number $leftValue): $*"
+    _assertFailure "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (not number $leftValue): $*"
     return "$errorEnvironment"
   fi
   if ! isNumber "$rightValue"; then
-    consoleError "$func [ \"$leftValue\" $cmp\"$rightValue\" ] (not number $rightValue): $*"
+    _assertFailure "$func [ \"$leftValue\" $cmp\"$rightValue\" ] (not number $rightValue): $*"
     return "$errorEnvironment"
   fi
   if test "$leftValue" "$cmp" "$rightValue"; then
-    consoleSuccess "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (correct)"
+    _assertSuccess "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (correct)"
   else
-    consoleError "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (FAILED): $*"
+    _assertFailure "$func [ \"$leftValue\" $cmp \"$rightValue\" ] (FAILED): $*"
     return "$errorEnvironment"
   fi
 }
