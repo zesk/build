@@ -55,7 +55,7 @@ Backup when `/etc/services` does not exist.
 - [function serviceToPort
 ](./docs/tools/os.md
 ) - [Get the port number associated with a service
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L821
+](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L904
 )
 
 
@@ -261,7 +261,7 @@ Works from the current directory
 - [function makeShellFilesExecutable
 ](./docs/tools/os.md
 ) - [Makes all `*.sh` files executable
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L269
+](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L352
 )
 
 

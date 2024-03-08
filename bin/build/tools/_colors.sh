@@ -81,10 +81,10 @@ consoleOrange() {
 #
 # shellcheck disable=SC2120
 consoleBlue() {
-  __consoleEscape '\033[94m' '\033[0m' "$@"
+  __consoleOutput "" '\033[94m' '\033[0m' "$@"
 }
 
 # shellcheck disable=SC2120
 consoleBoldBlue() {
-  __consoleEscape '\033[1;94m' '\033[0m' "$@"
+  __consoleOutput "" '\033[1;94m' '\033[0m' "$@"
 }

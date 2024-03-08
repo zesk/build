@@ -85,7 +85,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Usage
 
-    wrapLines [ prefix [ suffix ... ] ] < fileToPrefixLines
+    wrapLines [ prefix [ suffix ... ] ] < fileToWrapLines
     
 
 #### Arguments
@@ -163,7 +163,7 @@ Heading for section output
 
 #### Arguments
 
-- `--size size` - Number of liens to output
+- `--size size` - Optional. Integer. Number of liens to output. Defaults to 1.
 - `text ...` - Text to put in the box
 
 #### Examples

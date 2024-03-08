@@ -30,16 +30,16 @@ Document a function and generate a function template (markdown)
 
 - [function _bashDocumentation_Template
 ]({documentationPath}) - [Document a function and generate a function template (markdown). To
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L408
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L411
 )
 - [function bashDocumentFunction
 ](./docs/tools/documentation.md
 ) - [Document a function and generate a function template (markdown)
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L374
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L377
 )
 - [function repeat
 ](./docs/tools/decoration.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh#L147
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh#L149
 )
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
@@ -108,7 +108,7 @@ to regenerate each time.
 - [function documentationTemplateCompile
 ](./docs/tools/documentation.md
 ) - [Convert a template file to a documentation file using templates
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L95
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L98
 )
 
 ## Documentation Indexing
@@ -399,7 +399,7 @@ Generates a temporary file which is removed
 - [function bashDocumentation_FindFunctionDefinitions
 ](./docs/tools/documentation.md
 ) - [Find where a function is defined in a directory of shell scripts
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L634
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L635
 )
 
 ## Usage Utilities
@@ -432,10 +432,23 @@ Simplifies documentation and has it in one place for shell and online.
 ## Documentation Utilities
 
 
+### `__dumpNameValue` - Utility to export multi-line values as Bash variables
+
+Utility to export multi-line values as Bash variables
+
 #### Usage
 
     __dumpNameValue name [ value0 value1 ... ]
     
+
+#### Arguments
+
+- `name` - Shell value to output
+- `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 #### Usage
 

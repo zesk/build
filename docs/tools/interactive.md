@@ -26,7 +26,7 @@ Parses text and determines if it's a yes.
 - [function lowercase
 ](./docs/tools/text.md
 ) - [Convert text to lowercase
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L249
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L279
 )
 
 ### `confirmYesNo` - Read user input and return 0 if the user says

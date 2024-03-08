@@ -15,6 +15,7 @@ Get the RGB color of the terminal (usually for background colors)
 ### `colorBrightness` - Return an integer between 0 and 100
 
 Return an integer between 0 and 100
+Colors are between 0 and 255
 
 #### Exit codes
 
