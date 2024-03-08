@@ -173,8 +173,8 @@ testServiceToPort() {
 
   assertNotExitCode --stderr-ok 0 serviceToPort || return $?
 
-  assertNotExitCode --stderr-ok 0 serviceToPort "" || return $?
+  assertNotExitCode 0 serviceToPort "" || return $?
   assertNotExitCode 0 serviceToPort "22" || return $?
   assertNotExitCode 0 serviceToPort ".https" || return $?
-  assertNotExitCode --stderr-ok 0 serviceToPort " " || return $?
+  assertNotExitCode 0 serviceToPort " " || return $?
 }

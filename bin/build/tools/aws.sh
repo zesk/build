@@ -332,10 +332,11 @@ awsSecurityGroupIPRegister() {
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
-# Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
+# Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
 # Argument: --profile awsProfile - Use this AWS profile when connecting using ~/.aws/credentials
 # Argument: --services service0,service1,... - Required. List of services to add or remove (maps to ports)
 # Argument: --id developerId - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+# Argument: --group securityGroup - Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
 # Argument: --ip ip - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
 # Argument: --revoke - Flag. Remove permissions
 # Argument: --help - Flag. Show this help

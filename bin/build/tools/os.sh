@@ -75,7 +75,9 @@ buildCacheDirectory() {
     return 1
   fi
   suffix="$(printf "%s/" "$@")"
-  printf "%s/%s\n" "${BUILD_CACHE%%/}" "${suffix%%/}"
+  suffix="${suffix%/}"
+  suffix="$(printf "%s/%s" "${BUILD_CACHE%/}" "${suffix%/}")"
+  printf "%s\n" "${suffix%/}"
 }
 _buildCacheDirectory() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -67,6 +67,9 @@ usageDocument() {
   )
   return "$exitCode"
 }
+_usageDocument() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Summary: Convert a template file to a documentation file using templates
 #
