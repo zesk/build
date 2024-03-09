@@ -112,6 +112,24 @@ allColorTest() {
   done
 }
 
+colorComboTest() {
+  local fg bg text
+  text="${*-" ABC "}"
+  padding="$(repeat $((${#text} - 3)) " ")"
+  printf "   "
+  for fg in $(seq 30 37) $(seq 90 97); do
+    printf "\033[%dm%3d%s\033[0m " "$fg" "$fg" "$padding"
+  done
+  printf "\n"
+  for bg in $(seq 40 47) $(seq 100 107); do
+    printf "\033[%dm%3d\033[0m " "$bg" "$bg"
+    for fg in $(seq 30 37) $(seq 90 97); do
+      printf "\033[%d;%dm$text\033[0m " "$fg" "$bg"
+    done
+    printf "\n"
+  done
+}
+
 # Summary: Output colors
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
@@ -227,19 +245,15 @@ consoleYellow() {
   __consoleEscape '\033[48;5;16;38;5;11m' '\033[0m' "$@"
 }
 
-consoleBoldOrange() {
-  __consoleOutput "" '\033[38;5;214;1m' '\033[0m' "$@"
-}
-
 # shellcheck disable=SC2120
 consoleMagenta() {
   __consoleEscape '\033[35m' '\033[0m' "$@"
 }
 consoleBlack() {
-  __consoleEscape '\033[30m' '\033[0m' "$@"
+  __consoleEscape '\033[109;7m' '\033[0m' "$@"
 }
 consoleBoldBlack() {
-  __consoleEscape '\033[30;1m' '\033[0m' "$@"
+  __consoleEscape '\033[109;7;1m' '\033[0m' "$@"
 }
 consoleBoldWhite() {
   __consoleEscape '\033[48;5;0;37;1m' '\033[0m' "$@"
@@ -301,7 +315,6 @@ _consoleInfo() {
   __consoleOutputMode "$label" '\033[38;5;20m' '\033[38;5;159m' '\033[0m' "$@"
 }
 
-
 #
 # warning things are not normal
 #
@@ -323,7 +336,7 @@ consoleSuccess() {
 #
 # shellcheck disable=SC2120
 consoleDecoration() {
-  __consoleOutputMode '' '\033[30;105m' '\033[30;105m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[105;97m' '\033[105;30m' '\033[0m' "$@"
 }
 
 #

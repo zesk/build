@@ -31,7 +31,7 @@ _assertFailure() {
   return $errorEnvironment
 }
 _assertSuccess() {
-  printf "%s %s\n" "$(_symbolSuccess)" "$(consoleSuccess "$@")" 1>&2
+  printf "%s %s\n" "$(_symbolSuccess)" "$(consoleSuccess "$@")"
   return 0
 }
 
