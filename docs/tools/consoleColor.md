@@ -18,7 +18,9 @@
 
 - `0` - Always succeeds
 
-### `consoleBlue` - shellcheck disable=SC2120
+### `consoleBlue` - Blue
+
+Blue
 
 
 #### Exit codes
@@ -80,9 +82,10 @@ Styles
 
 - `0` - Always succeeds
 
-### `consoleCode` - IDENTICAL consoleCode 4
+### `consoleCode` - code or variables in output
 
-IDENTICAL consoleCode 4
+code or variables in output
+
 
 #### Exit codes
 
@@ -104,9 +107,10 @@ decorations to output (like bars and lines)
 
 - `0` - Always succeeds
 
-### `consoleError` - IDENTICAL consoleError 4
+### `consoleError` - errors
 
-IDENTICAL consoleError 4
+errors
+
 
 #### Exit codes
 
@@ -157,7 +161,9 @@ Styles
 
 - `0` - Always succeeds
 
-### `consoleOrange` - shellcheck disable=SC2120
+### `consoleOrange` - Orange
+
+Orange
 
 
 #### Exit codes

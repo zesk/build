@@ -31,15 +31,15 @@ consoleReset() {
 
 #
 # Set colors to deal with dark or light-background consoles
+# See:
 #
 consoleColorMode() {
+  export BUILD_COLORS_MODE
+
   # shellcheck source=/dev/null
-  if ! source "bin/build/env/BUILD_COLORS_MODE.sh"; then
-    consoleError "Unable to load BUILD_COLORS_MODE" 1>&2
+  if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
     return 1
   fi
-
-  export BUILD_COLORS_MODE
 
   case "$1" in
     --dark)
@@ -59,50 +59,11 @@ consoleColorMode() {
 # Usage: hasConsoleAnimation
 # Exit Code: 0 - Supports console animation
 # Exit Code; 1 - Does not support console animation
-# Environment: CI - If this has a non-blank value, this returns true (supports animation)
 #
 hasConsoleAnimation() {
-  # shellcheck source=/dev/null
-  if ! source "$(dirname "${BASH_SOURCE[0]}")/../env/CI.sh"; then
-    return 1
-  fi
+  # Important: This can *not* use loadBuildEnvironment
   export CI
   [ -z "${CI-}" ]
-}
-
-# IDENTICAL hasColors 34
-
-# This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-# If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
-#
-# Usage: hasColors
-# Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - No colors
-# Local Cache: this value is cached in BUILD_COLORS if it is not set.
-# Environment: BUILD_COLORS - Override value for this
-hasColors() {
-  export BUILD_COLORS
-  export TERM
-  export DISPLAY
-
-  BUILD_COLORS="${BUILD_COLORS-z}"
-  if [ "z" = "$BUILD_COLORS" ]; then
-    if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
-      if [ -n "${DISPLAY-}" ]; then
-        BUILD_COLORS=1
-      else
-        BUILD_COLORS=
-      fi
-    elif [ "$(tput colors)" -ge 8 ]; then
-      BUILD_COLORS=1
-    else
-      BUILD_COLORS=
-    fi
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
-    # Values allowed for this global are 1 and blank only
-    BUILD_COLORS=
-  fi
-  test "$BUILD_COLORS"
 }
 
 __consoleEscape() {
@@ -121,22 +82,6 @@ __consoleEscape() {
     fi
   else
     printf "%s$nl" "$*"
-  fi
-}
-
-# IDENTICAL __consoleOutput 13
-__consoleOutput() {
-  local prefix="${1}" start="${2-}" end="${3}" nl="\n"
-
-  shift && shift && shift
-  if [ "${1-}" = "-n" ]; then
-    shift
-    nl=
-  fi
-  if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$nl" "$*"; fi
-  elif [ $# -eq 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s$nl" "$prefix" "$*"; else printf "%s$nl" "$*"; fi
   fi
 }
 
@@ -164,6 +109,24 @@ allColorTest() {
     done
     printf "\n"
     i=$((i + 1))
+  done
+}
+
+colorComboTest() {
+  local fg bg text
+  text="${*-" ABC "}"
+  padding="$(repeat $((${#text} - 3)) " ")"
+  printf "   "
+  for fg in $(seq 30 37) $(seq 90 97); do
+    printf "\033[%dm%3d%s\033[0m " "$fg" "$fg" "$padding"
+  done
+  printf "\n"
+  for bg in $(seq 40 47) $(seq 100 107); do
+    printf "\033[%dm%3d\033[0m " "$bg" "$bg"
+    for fg in $(seq 30 37) $(seq 90 97); do
+      printf "\033[%d;%dm$text\033[0m " "$fg" "$bg"
+    done
+    printf "\n"
   done
 }
 
@@ -201,7 +164,9 @@ colorTest() {
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 semanticColorTest() {
-  local i colors=(
+  local i colors extra
+
+  colors=(
     consoleInfo
     consoleSuccess
     consoleWarning
@@ -213,17 +178,19 @@ semanticColorTest() {
     consoleSubtle
   )
 
-  # shellcheck source=/dev/null
-  if ! source "bin/build/env/BUILD_COLORS_MODE.sh"; then
-    consoleError "Unable to load BUILD_COLORS_MODE" 1>&2
+  if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
     return 1
   fi
-
-  export BUILD_COLORS_MODE
+  extra=
   if [ -z "$BUILD_COLORS_MODE" ]; then
     BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+    extra="$(consoleMagenta Computed)"
   fi
-  consoleNameValue 30 "BUILD_COLORS_MODE" "$BUILD_COLORS_MODE"
+  if [ -z "$BUILD_COLORS_MODE" ]; then
+    consoleError "BUILD_COLORS_MODE not set"
+  else
+    printf "%s%s\n" "$(consoleNameValue 25 "BUILD_COLORS_MODE:" "$BUILD_COLORS_MODE")" "$extra"
+  fi
   for i in "${colors[@]}"; do
     consoleReset
     $i "$i: The quick brown fox jumped over the lazy dog."
@@ -271,12 +238,6 @@ _consoleCyan() {
 consoleBoldCyan() {
   __consoleOutput "" '\033[36;1m' '\033[0m' "$@"
 }
-consoleBlue() {
-  __consoleEscape '\033[94m' '\033[0m' "$@"
-}
-consoleBoldBlue() {
-  __consoleEscape '\033[1;94m' '\033[0m' "$@"
-}
 consoleBlackBackground() {
   __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
 }
@@ -284,29 +245,15 @@ consoleYellow() {
   __consoleEscape '\033[48;5;16;38;5;11m' '\033[0m' "$@"
 }
 
-consoleOrange() {
-  _consoleOrange "" "$@"
-}
-
-_consoleOrange() {
-  local label="$1"
-  shift
-  # see https://i.stack.imgur.com/KTSQa.png
-  __consoleOutput "$label" '\033[38;5;214m' '\033[0m' "$@"
-}
-consoleBoldOrange() {
-  __consoleOutput "" '\033[38;5;214;1m' '\033[0m' "$@"
-}
-
 # shellcheck disable=SC2120
 consoleMagenta() {
   __consoleEscape '\033[35m' '\033[0m' "$@"
 }
 consoleBlack() {
-  __consoleEscape '\033[30m' '\033[0m' "$@"
+  __consoleEscape '\033[109;7m' '\033[0m' "$@"
 }
 consoleBoldBlack() {
-  __consoleEscape '\033[30;1m' '\033[0m' "$@"
+  __consoleEscape '\033[109;7;1m' '\033[0m' "$@"
 }
 consoleBoldWhite() {
   __consoleEscape '\033[48;5;0;37;1m' '\033[0m' "$@"
@@ -369,21 +316,6 @@ _consoleInfo() {
 }
 
 #
-# code or variables in output
-#
-# IDENTICAL consoleCode 4
-# shellcheck disable=SC2120
-consoleCode() {
-  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
-}
-
-# IDENTICAL consoleError 4
-# shellcheck disable=SC2120
-consoleError() {
-  __consoleOutput ERROR '\033[1;38;5;255;48;5;9m' '\033[0m' "$@"
-}
-
-#
 # warning things are not normal
 #
 # shellcheck disable=SC2120
@@ -404,7 +336,7 @@ consoleSuccess() {
 #
 # shellcheck disable=SC2120
 consoleDecoration() {
-  __consoleOutputMode '' '\033[30;105m' '\033[30;105m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[30;94m' '\033[45;94m' '\033[0m' "$@"
 }
 
 #

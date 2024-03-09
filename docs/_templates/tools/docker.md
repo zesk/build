@@ -7,7 +7,7 @@
 {insideDocker}
 {checkDockerEnvFile}
 {dockerLocalContainer}
-{dockerEnvFromBash}
+{dockerEnvFromBashEnv}
 {dockerEnvToBash}
 
 [⬅ Return to index](index.md)

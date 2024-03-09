@@ -25,7 +25,7 @@ top=$(pwd)
 . ./bin/build/ops.sh
 
 # shellcheck source=/dev/null
-if ! . ./test/test-tools.sh; then
+if ! source ./test/test-tools.sh; then
   consoleError "Unable to load test tools library" 1>&2
   return $errorEnvironment
 fi

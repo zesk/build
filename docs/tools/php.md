@@ -94,6 +94,7 @@ Files are specified from the application root directory.
 #### Arguments
 
 - `--name tarFileName` - Set BUILD_TARGET via command line (wins)
+- `--composer arg` - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
 - `--deployment deployment` - Set DEPLOYMENT via command line (wins)
 - `--suffix versionSuffix` - Set tag suffix via command line (wins, default inferred from deployment)
 - `--debug` - Enable debugging. Defaults to BUILD_DEBUG.

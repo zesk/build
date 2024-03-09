@@ -45,6 +45,12 @@ testSimpleMarkdownToConsole() {
   assertEquals "$actual" "$expected" || return $?
 }
 
-tests+=(allColorTest)
+testColorComboTest() {
+  colorComboTest " ZB "
+}
+
+tests+=(testColorComboTest)
 
 tests+=(colorTest)
+
+tests+=(allColorTest)

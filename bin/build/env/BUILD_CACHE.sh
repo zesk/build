@@ -5,9 +5,12 @@
 export BUILD_CACHE
 _BUILD_CACHE_DEFAULT() {
   local useDir
+  export HOME
+
+  # Do not use buildEnvironmentLoad
   # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../env/HOME.sh"
-  useDir="$HOME"
+  source "${BUILD_HOME:-.}/bin/build/env/HOME.sh" || :
+  useDir="${HOME-}"
   if [ ! -d "$useDir" ]; then
     # Should be application home
     if ! useDir="$(pwd -P 2>/dev/null)"; then
@@ -17,4 +20,4 @@ _BUILD_CACHE_DEFAULT() {
   fi
   printf "%s/%s\n" "${useDir%%/}" ".build"
 }
-BUILD_CACHE="${BUILD_CACHE-"$(_BUILD_CACHE_DEFAULT)"}"
+BUILD_CACHE="${BUILD_CACHE:-"$(_BUILD_CACHE_DEFAULT)"}"

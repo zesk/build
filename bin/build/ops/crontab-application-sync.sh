@@ -102,7 +102,7 @@ _crontabGenerate() {
 # Example:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 # See: whoami
 crontabApplicationSync() {
-  local rootEnv appPath user flagShow environmentMapper newCrontab
+  local rootEnv appPath user flagShow flagDiff environmentMapper newCrontab
   rootEnv=
   appPath=
   if ! user=$(whoami); then
@@ -112,6 +112,7 @@ crontabApplicationSync() {
     _crontabApplicationSyncUsage "$errorEnvironment" "whoami user is blank" || return $?
   fi
   flagShow=
+  flagDiff=
   environmentMapper=
   while [ $# -gt 0 ]; do
     case $1 in
@@ -146,6 +147,9 @@ crontabApplicationSync() {
       --show)
         flagShow=1
         ;;
+      --diff)
+        flagDiff=1
+        ;;
       *)
         appPath=$1
         ;;
@@ -175,18 +179,28 @@ crontabApplicationSync() {
     return 0
   fi
   newCrontab=$(mktemp)
-  _crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" >"$newCrontab"
+  _crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" >"$newCrontab" || return $?
 
+  if test $flagDiff; then
+    printf "%s\n" "$(consoleRed "Differences")"
+    crontab -u "$user" -l | diff "$newCrontab" - | wrapLines ">>> $(consoleCode)" "$(consoleReset) <<<"
+    return $?
+  fi
   #
   # Update crontab
   #
   if crontab -u "$user" -l | diff -q "$newCrontab" -; then
-    rm -f "$newCrontab"
+    rm -f "$newCrontab" || :
     return 0
   fi
-  printf "Updating crontab on %s\n" "$(date)"
-  crontab -u "$user" - <"$newCrontab"
-  rm -f "$newCrontab"
+  printf "Updating crontab on %s ...\n" "$(date)"
+  crontab -u "$user" - <"$newCrontab" 2>/dev/null
+  returnCode=$?
+  rm -f "$newCrontab" || :
+  if [ $returnCode -ne 0 ]; then
+    printf "%s\n" "crontab failed"
+  fi
+  return "$returnCode"
 }
 
 crontabApplicationSync "$@"

@@ -4,10 +4,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL DAEMONTOOLS_HOME 2
-export DAEMONTOOLS_HOME
-DAEMONTOOLS_HOME=${DAEMONTOOLS_HOME-/etc/service}
-
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
@@ -49,6 +45,8 @@ serviceControlDaemon() {
   services=()
   files=()
   actions=()
+
+  buildEnvironmentLoad DAEMONTOOLS_HOME
 
   currentActions=("restart")
   intervalSeconds=10

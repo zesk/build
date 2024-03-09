@@ -70,7 +70,6 @@ bigText() {
 # Exaxmple:           ▌ ▌▌ ▌▌ ▌▛▀
 # Exaxmple:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
 labeledBigText() {
-
   local label banner linePrefix lineSuffix tweenLabel tweenNonLabel nLines plainLabel isBottom
 
   label=
@@ -84,6 +83,9 @@ labeledBigText() {
       _labeledBigText "$errorArgument" "Blank argument" || return $?
     fi
     case "$1" in
+      --help)
+        "_${FUNCNAME[0]}" 0 && return $?
+        ;;
       --top)
         isBottom=
         ;;
@@ -207,7 +209,7 @@ prefixLines() {
 # consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #
 # Summary: Prefix output lines with a string
-# Usage: wrapLines [ prefix [ suffix ... ] ] < fileToPrefixLines
+# Usage: wrapLines [ prefix [ suffix ... ] ] < fileToWrapLines
 # Exit Code: 0
 # Argument: `prefix` - Prefix each line with this text
 # Argument: `suffix` - Prefix each line with this text
@@ -266,7 +268,7 @@ alignLeft() {
 #
 # Summary: Text heading decoration
 # Usage: boxedHeading [ --size size ] text [ ... ]
-# Argument: --size size - Number of liens to output
+# Argument: --size size - Optional. Integer. Number of liens to output. Defaults to 1.
 # Argument: text ... - Text to put in the box
 # Example:     boxedHeading Moving ...
 # Output: +================================================================================================+
@@ -276,17 +278,29 @@ alignLeft() {
 # Output: +================================================================================================+
 #
 boxedHeading() {
-  local bar spaces text=() textString emptyBar nLines
+  local arg bar spaces text=() textString emptyBar nLines shrink
 
   nLines=1
+  shrink=0
   while [ $# -gt 0 ]; do
-    case $1 in
+    arg="$1"
+    if [ -z "$arg" ]; then
+      _boxedHeading "$errorArgument" "Blank argument" || return $?
+    fi
+    case "$arg" in
+      --help)
+        _boxedHeading 0
+        return 0
+        ;;
+      --shrink)
+        shift || _boxedHeading "$errorArgument" "Missing $arg" || return $?
+        shrink=$(usageArgumentUnsignedInteger "_${FUNCNAME[0]}" "shrink" "$1") || return $?
+        ;;
       --size)
         shift
         nLines="$1"
         if ! isUnsignedNumber "$nLines"; then
-          consoleError "--size requires an unsigned integer" 1>&2
-          return 1
+          _boxedHeading "$errorArgument" "--size requires an unsigned integer" || return $?
         fi
         ;;
       *)
@@ -295,8 +309,10 @@ boxedHeading() {
     esac
     shift
   done
-  bar="+$(echoBar '' -2)+"
-  emptyBar="|$(echoBar ' ' -2)|"
+  # Default is -2
+  shrink=$((-(shrink+2)))
+  bar="+$(echoBar '' $shrink)+"
+  emptyBar="|$(echoBar ' ' $shrink)|"
 
   # convert to string
   textString="${text[*]}"
@@ -304,7 +320,10 @@ boxedHeading() {
   spaces=$((${#bar} - ${#textString} - 4))
   consoleDecoration "$bar"
   runCount "$nLines" consoleDecoration "$emptyBar"
-  echo "$(consoleDecoration -n \|) $(_consoleInfo "" -n "$textString")$(repeat $spaces " ") $(consoleDecoration -n \|)"
+  printf "%s%s%s%s\n" "$(consoleDecoration -n "| ")" "$(consoleDecoration "$textString")" "$(consoleDecoration "$(repeat $spaces " ")")" "$(consoleDecoration -n " |")"
   runCount "$nLines" consoleDecoration "$emptyBar"
   consoleDecoration "$bar"
+}
+_boxedHeading() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -113,6 +113,22 @@ Should look into an actual file template, probably
 )
 
 
+### `usageArgumentFileDirectory` - Validates a value is not blank and is a path
+
+Validates a value is not blank and is a path with a directory that exists
+Upon success, outputs the file name
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
 
 ### `usageArgumentFile` - Validates a value is not blank and is a file
 

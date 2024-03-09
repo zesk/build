@@ -142,8 +142,7 @@ awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 awsIsKeyUpToDate() {
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/AWS_ACCESS_KEY_DATE.sh; then
+  if ! buildEnvironmentLoad AWS_ACCESS_KEY_DATE; then
     return $errorEnvironment
   fi
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
@@ -163,8 +162,9 @@ awsIsKeyUpToDate() {
 # Summary: Test whether the AWS environment variables are set or not
 #
 awsHasEnvironment() {
+  export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
-  if ! source ./bin/build/env/AWS_ACCESS_KEY_ID.sh || ! source ./bin/build/env/AWS_SECRET_ACCESS_KEY.sh; then
+  if ! buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; then
     return $errorEnvironment
   fi
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
@@ -220,12 +220,9 @@ awsSecurityGroupIPModify() {
 
   savedArgs=("$@")
 
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/AWS_REGION.sh; then
-    _awsSecurityGroupIPModify $errorEnvironment "AWS_REGION.sh" || return $?
+  if ! buildEnvironmentLoad AWS_REGION; then
+    return 1
   fi
-
-  export AWS_REGION
 
   start=$(beginTiming)
   addingFlag=true
@@ -336,10 +333,11 @@ awsSecurityGroupIPRegister() {
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
-# Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
+# Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
 # Argument: --profile awsProfile - Use this AWS profile when connecting using ~/.aws/credentials
 # Argument: --services service0,service1,... - Required. List of services to add or remove (maps to ports)
 # Argument: --id developerId - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+# Argument: --group securityGroup - Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
 # Argument: --ip ip - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
 # Argument: --revoke - Flag. Remove permissions
 # Argument: --help - Flag. Show this help

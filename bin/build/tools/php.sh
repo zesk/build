@@ -95,6 +95,7 @@ _deploymentGenerateValue() {
 #
 # Usage: {fn} [ --name tarFileName ] [ --deployment deployment ] [ --suffix versionSuffix ] [ --debug ] [ ENV_VAR1 ... ] -- file1 [ file2 ... ]
 # Argument: --name tarFileName - Set BUILD_TARGET via command line (wins)
+# Argument: --composer arg - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
 # Argument: --deployment deployment - Set DEPLOYMENT via command line (wins)
 # Argument: --suffix versionSuffix - Set tag suffix via command line (wins, default inferred from deployment)
 # Argument: --debug - Enable debugging. Defaults to BUILD_DEBUG.
@@ -103,16 +104,14 @@ _deploymentGenerateValue() {
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
 # See: BUILD_TARGET.sh
 phpBuild() {
-  local e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment
+  local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment composerArgs
   local targetName
 
-  usageRequireBinary _phpBuild tar
+  usageRequireBinary "_${FUNCNAME[0]}" tar
 
-  for e in BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG; do
-    # shellcheck source=/dev/null
-    . "bin/build/env/$e.sh" || return "$errorEnvironment"
-  done
-
+  if ! buildEnvironmentLoad BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG; then
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Missing environment" || return $?
+  fi
   targetName="$(deployPackageName)"
   tagDeploymentFlag=1
   debuggingFlag=
@@ -120,34 +119,43 @@ phpBuild() {
   optClean=
   versionSuffix=
   envVars=()
+  composerArgs=()
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _phpBuild "$errorArgument" "Blank argument" || return $?
+    arg="$1"
+    if [ -z "$arg" ]; then
+      "_${FUNCNAME[0]}" "$errorArgument" "Blank argument" || return $?
     fi
     case $1 in
       --debug)
         debuggingFlag=1
         ;;
       --deployment)
-        shift || _phpBuild "$errorArgument" "shift failed" || return $?
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
         deployment=$1
         ;;
       --no-tag | --skip-tag)
         tagDeploymentFlag=
         ;;
+      --composer)
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
+        if [ -z "$1" ]; then
+          "_${FUNCNAME[0]}" "$errorArgument" "blank --composer argument" || return $?$()
+        fi
+        composerArgs+=("$1")
+        ;;
       --name)
-        shift || _phpBuild "$errorArgument" "shift failed" || return $?
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
         targetName=$1
         ;;
       --)
-        shift || _phpBuild "$errorArgument" "shift failed" || return $?
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
         break
         ;;
       --clean)
         optClean=1
         ;;
       --suffix)
-        shift || _phpBuild "$errorArgument" "shift failed" || return $?
+        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
         versionSuffix=$1
         ;;
       *)
@@ -165,8 +173,11 @@ phpBuild() {
     set -x
   fi
 
+  if [ -z "$targetName" ]; then
+    "_${FUNCNAME[0]}" "$errorArgument" "--name is blank" || return $?
+  fi
   if [ $# -eq 0 ]; then
-    _phpBuild $errorEnvironment "Need to supply a list of files for application $targetName" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Need to supply a list of files for application $targetName" || return $?
   fi
   missingFile=()
   for tarFile in "$@"; do
@@ -175,7 +186,7 @@ phpBuild() {
     fi
   done
   if [ ${#missingFile[@]} -gt 0 ]; then
-    _phpBuild $errorEnvironment "Missing files: ${missingFile[*]}" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Missing files: ${missingFile[*]}" || return $?
   fi
 
   # Sets the DEFAULT - can override with command line argument --suffix
@@ -186,15 +197,15 @@ phpBuild() {
       staging) versionSuffix=s ;;
       test) versionSuffix=t ;;
       *)
-        _phpBuild $errorArgument "--deployment $deployment unknown - can not set versionSuffix" || return $?
+        "_${FUNCNAME[0]}" "$errorArgument" "--deployment $deployment unknown - can not set versionSuffix" || return $?
         ;;
     esac
     if [ -z "$versionSuffix" ]; then
-      _phpBuild $errorArgument "No version --suffix defined - usually unknown DEPLOYMENT: $deployment" || return $?
+      "_${FUNCNAME[0]}" "$errorArgument" "No version --suffix defined - usually unknown DEPLOYMENT: $deployment" || return $?
     fi
   fi
   if ! initTime=$(beginTiming); then
-    _phpBuild $errorEnvironment "beginTiming failed" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "beginTiming failed" || return $?
   fi
 
   #
@@ -209,16 +220,16 @@ phpBuild() {
 
   # Ensure we're up to date
   if ! aptInstall; then
-    _phpBuild $errorArgument "Failed to install operating system basics" || return $?
+    "_${FUNCNAME[0]}" "$errorArgument" "Failed to install operating system basics" || return $?
   fi
   clearLine || :
   # Ensure we're up to date
   if ! gitInstall; then
-    _phpBuild $errorArgument "Failed to install git" || return $?
+    "_${FUNCNAME[0]}" "$errorArgument" "Failed to install git" || return $?
   fi
   # shellcheck disable=SC2119
   if ! phpInstall git; then
-    _phpBuild $errorArgument "Failed to install php" || return $?
+    "_${FUNCNAME[0]}" "$errorArgument" "Failed to install php" || return $?
   fi
   if test "$tagDeploymentFlag"; then
     consoleInfo "Tagging $deployment deployment with $versionSuffix ..."
@@ -235,17 +246,17 @@ phpBuild() {
   if hasHook make-env; then
     # this script usually runs ./bin/build/pipeline/make-env.sh
     if ! runHook make-env "${envVars[@]+${envVars[@]}}" >.env; then
-      _phpBuild $errorEnvironment "make-env hook failed $?" || return $?
+      "_${FUNCNAME[0]}" "$errorEnvironment" "make-env hook failed $?" || return $?
     fi
   else
     if ! makeEnvironment "${envVars[@]+${envVars[@]}}" >.env; then
-      _phpBuild $errorEnvironment makeEnvironment "${envVars[@]}" buildFailed "$?" || return $?
+      "_${FUNCNAME[0]}" "$errorEnvironment" makeEnvironment "${envVars[@]}" buildFailed "$?" || return $?
     fi
   fi
   if ! grep -q APPLICATION .env; then
     consoleError ".env file seems to be invalid:" 1>&2
     buildFailed ".env"
-    return $errorEnvironment
+    return "$errorEnvironment"
   fi
   set -a
   # shellcheck source=/dev/null
@@ -256,21 +267,21 @@ phpBuild() {
   showEnvironment "${envVars[@]+${envVars[@]}}" || :
 
   if [ -d ./.deploy ] && ! rm -rf ./.deploy; then
-    _phpBuild $errorEnvironment "Can not delete .deploy" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Can not delete .deploy" || return $?
   fi
   if ! mkdir -p ./.deploy; then
-    _phpBuild $errorEnvironment "Can not create .deploy" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Can not create .deploy" || return $?
   fi
   if ! APPLICATION_ID=$(_deploymentGenerateValue APPLICATION_ID application-id); then
-    _phpBuild $errorEnvironment "APPLICATION_ID generation failed" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "APPLICATION_ID generation failed" || return $?
   fi
   if ! APPLICATION_TAG=$(_deploymentGenerateValue APPLICATION_TAG application-tag); then
-    _phpBuild $errorEnvironment "APPLICATION_TAG generation failed" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "APPLICATION_TAG generation failed" || return $?
   fi
 
   # Save clean build environment to .build.env for other steps
   if ! declare -px >.build.env; then
-    _phpBuild $errorEnvironment "Generating .build.env failed" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Generating .build.env failed" || return $?
   fi
 
   #==========================================================================================
@@ -280,18 +291,18 @@ phpBuild() {
   if [ -d ./vendor ] || test $optClean; then
     statusMessage consoleWarning "vendor directory should not exist before composer, deleting"
     if ! rm -rf ./vendor; then
-      _phpBuild $errorEnvironment "Unable to delete ./vendor" || return $?
+      "_${FUNCNAME[0]}" "$errorEnvironment" "Unable to delete ./vendor" || return $?
     fi
   fi
 
   clearLine || :
   # shellcheck disable=SC2119
-  if ! phpComposer; then
-    _phpBuild $errorEnvironment "Composer failed" || return $?
+  if ! phpComposer "${composerArgs[@]+${composerArgs[@]}}"; then
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Composer failed" || return $?
   fi
 
   if [ ! -d ./vendor ]; then
-    _phpBuild "$errorEnvironment" "Composer step did not create the vendor directory" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "Composer step did not create the vendor directory" || return $?
   fi
 
   _phpEchoBar || :
@@ -301,7 +312,7 @@ phpBuild() {
   _phpEchoBar || :
 
   if ! createTarFile "$targetName" .env vendor/ .deploy/ "$@"; then
-    _phpBuild "$errorEnvironment" "createTarFile $targetName failed" || return $?
+    "_${FUNCNAME[0]}" "$errorEnvironment" "createTarFile $targetName failed" || return $?
   fi
 
   reportTiming "$initTime" "PHP built $(consoleCode "$targetName") in"
@@ -313,10 +324,10 @@ _phpBuild() {
 _phpBuildBanner() {
   local label="$1"
   shift
-  labeledBigText --top --prefix "PHP $(consoleMagenta). . . . $(consoleOrange)$(consoleBold) " --suffix "$(consoleReset)" --tween " $(consoleGreen)" "$label: " "$@"
+  labeledBigText --top --prefix "$(consoleBlue PHP) $(consoleMagenta). . . . $(consoleReset)$(consoleBoldOrange) " --suffix "$(consoleReset)" --tween " $(consoleReset)$(consoleGreen)" "$label: " "$@"
 }
 _phpEchoBar() {
-  consoleBoldRed "$(echoBar '.-+^`^+-')" || :
+  consoleBoldBlue "$(echoBar '.-+^`^+-')" || :
 }
 
 #

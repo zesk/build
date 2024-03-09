@@ -32,7 +32,6 @@ testCheckDockerEnvFile() {
 }
 
 tests+=(testDockerEnvToBash)
-
 testDockerEnvToBash() {
   local out err
 
@@ -47,7 +46,9 @@ testDockerEnvToBash() {
     return $errorEnvironment
   fi
 
+  # Different than testDockerEnvToBashPipe
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
+  # Different than testDockerEnvToBashPipe
   assertFileContains "$err" "01234" "+A" "*A" "+a" "*a" "?a" "test.env" "Invalid name" || return $?
 
   dockerEnvToBash ./test/example/docker.env >"$out" 2>"$err" || return $?
@@ -57,14 +58,42 @@ testDockerEnvToBash() {
   rm -f "$out" "$err" || :
 }
 
-tests+=(testDockerEnvFromBash)
+# Same as above but this is a pipe
+tests+=(testDockerEnvToBashPipe)
+testDockerEnvToBashPipe() {
+  local out err
 
+  if ! out=$(mktemp); then
+    return "$errorEnvironment"
+  fi
+  err="$out.err"
+
+  consoleInfo "PWD is $(pwd)"
+  if dockerEnvToBash <./test/example/test.env >"$out" 2>"$err"; then
+    consoleError "dockerEnvToBash SHOULD fail"
+    return $errorEnvironment
+  fi
+
+  assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
+  # Different than testDockerEnvToBash
+  assertFileContains "$err" "01234" "+A" "*A" "+a" "*a" "?a" "Invalid name" || return $?
+  # Different than testDockerEnvToBash
+  assertFileDoesNotContain "$err" "test.env" || return $?
+
+  dockerEnvToBash <./test/example/docker.env >"$out" 2>"$err" || return $?
+  assertEquals 0 "$(fileSize "$err")" || return $?
+  assertFileContains "$out" "host=" "application=\"golden goose\"" "uname=\"localhost\"" "location=" || return $?
+
+  rm -f "$out" "$err" || :
+}
+
+tests+=(testDockerEnvFromBash)
 testDockerEnvFromBash() {
   local out err
 
-  assertExitCode --stderr-ok 2 dockerEnvFromBash ./test/example/bad.env || return $?
+  assertExitCode --stderr-ok 2 dockerEnvFromBashEnv ./test/example/bad.env || return $?
 
-  assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBash ./test/example/bash.env || return $?
+  assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv ./test/example/bash.env || return $?
 
   if ! out=$(mktemp); then
     return "$errorEnvironment"
@@ -72,7 +101,7 @@ testDockerEnvFromBash() {
   if ! err=$(mktemp); then
     return "$errorEnvironment"
   fi
-  dockerEnvFromBash ./test/example/docker.env >"$out" 2>"$err" || return 1
+  dockerEnvFromBashEnv ./test/example/docker.env >"$out" 2>"$err" || return 1
 
   assertEquals 0 "$(fileSize "$err")" || return $?
   assertFileContains "$out" "host=" "location=" "uname=" || return $?

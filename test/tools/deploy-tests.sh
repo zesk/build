@@ -422,7 +422,11 @@ testDeployPackageName() {
 
   BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz"
 
+  assertExitCode 0 deployPackageName || return $?
+
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" || return $?
   assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName)" || return $?
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(_exportWorksRight)" || return $?
 
   unset BUILD_TARGET
 
@@ -432,4 +436,9 @@ testDeployPackageName() {
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 
   BUILD_TARGET="$saveTarget"
+}
+
+_exportWorksRight() {
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" 2>/dev/null 1>&2 || return $?
+  printf "%s" "$BUILD_TARGET"
 }

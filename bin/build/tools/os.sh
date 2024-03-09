@@ -41,8 +41,14 @@ directoryClobber() {
     _directoryClobber "$errorEnvironment" "mv -f $target" "$targetBackup failed" || return $?
   fi
   if ! mv -f "$sourceStage" "$target"; then
-    mv -f "$targetBackup" "$target" || consoleError "Unable to revert $targetBackup -> $target"
-    mv -f "$sourceStage" "$source" || consoleError "Unable to revert $sourceStage -> $source"
+    if ! mv -f "$targetBackup" "$target"; then
+      consoleError "Unable to revert $targetBackup -> $target" || :
+      return "$errorEnvironment"
+    fi
+    if ! mv -f "$sourceStage" "$source"; then
+      consoleError "Unable to revert $sourceStage -> $source" || :
+      return "$errorEnvironment"
+    fi
     _directoryClobber "$errorEnvironment" "Clobber failed" || return $?
   fi
   rm -rf "$targetBackup" || _directoryClobber "$errorEnvironment" "Unable to delete $targetBackup" || return $?
@@ -64,10 +70,70 @@ _directoryClobber() {
 buildCacheDirectory() {
   local suffix
   # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_CACHE.sh"
-
+  if ! buildEnvironmentLoad BUILD_CACHE; then
+    printf "%s\n" "BUILD_CACHE failed" 1>&2
+    return 1
+  fi
   suffix="$(printf "%s/" "$@")"
-  printf "%s/%s\n" "${BUILD_CACHE%%/}" "${suffix%%/}"
+  suffix="${suffix%/}"
+  suffix="$(printf "%s/%s" "${BUILD_CACHE%/}" "${suffix%/}")"
+  printf "%s\n" "${suffix%/}"
+}
+_buildCacheDirectory() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Load on or more environment settings from bin/build/env
+#
+# Usage: {fn} [ envName ... ]
+# Argument: envName - The environment name to load
+#
+buildEnvironmentLoad() {
+  local env file found
+
+  if ! export BUILD_HOME "${@+$@}"; then
+    _buildEnvironmentLoad "$errorEnvironment" "Exporting BUILD_HOME $* failed" || return $?
+  fi
+  if [ -z "${BUILD_HOME-}" ]; then
+    # shellcheck source=/dev/null
+    if ! source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh"; then
+      _buildEnvironmentLoad "$errorEnvironment" "Loading BUILD_HOME $* failed" || return $?
+    fi
+    if [ -z "${BUILD_HOME-}" ]; then
+      _buildEnvironmentLoad "$errorEnvironment" "BUILD_HOME STILL blank" || return $?
+    fi
+  fi
+  for env in "$@"; do
+    found=false
+    for file in "${BUILD_HOME-}/bin/build/env/$env.sh" "${BUILD_HOME-}/bin/env/$env.sh"; do
+      if [ -f "$file" ]; then
+        if ! $found && ! export "${env?}"; then
+          _buildEnvironmentLoad "$errorArgument" "export $env failed" || return $?
+        fi
+        found=true
+        set -a
+        # shellcheck source=/dev/null
+        if ! source "$file"; then
+          set +a
+          _buildEnvironmentLoad "$errorEnvironment" "Loading $file failed" || return $?
+        fi
+        set +a
+      fi
+    done
+    if ! $found; then
+      _buildEnvironmentLoad "$errorEnvironment" "Missing $file" || return $?
+    fi
+  done
+}
+_buildEnvironmentLoad() {
+  local exitCode
+
+  exitCode="${1-}"
+  shift || :
+  printf "bin/build/env ERROR: %s\n" "$@" 1>&2
+  debuggingStack
+  return "$exitCode"
 }
 
 #
@@ -118,6 +184,23 @@ requireFileDirectory() {
       return "$rs"
     fi
     shift
+  done
+}
+
+#
+# Does the file's directory exist?
+#
+fileDirectoryExists() {
+  local path
+  [ $# -eq 0 ] && return $errorArgument
+  while [ $# -gt 0 ]; do
+    if ! path=$(dirname "$1"); then
+      return "$errorEnvironment"
+    fi
+    if [ ! -d "$path" ]; then
+      return "$errorEnvironment"
+    fi
+    shift || return "$errorEnvironment"
   done
 }
 

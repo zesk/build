@@ -6,7 +6,7 @@ Pipeline, build, and operations tools which are useful across a variety of proje
 - Build and deployment tools
 - Operational scripts for managing live production systems (system setup, services, cron, permissions separations)
 
-This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries.
+This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries, as of 2024 there are no dependencies on Bash 4. 
 
 This toolkit makes the following assumptions:
 
@@ -76,7 +76,12 @@ Main issues between platforms are differences between BSD, GNU or POSIX standard
 - debian:latest
 - BitBucket Pipelines
 
-If you test on another OS or need support, report an issue.
+Tested bash versions:
+
+- 3.2.57 (`Darwin`)
+- 5.1.16 (`Ubuntu`)
+
+If you test on another OS or need support on a specific platform, report an issue.
 
 ## Known issues and workarounds
 

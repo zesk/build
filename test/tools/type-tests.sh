@@ -96,7 +96,7 @@ EOF
 callableFunctions() {
   cat <<EOF
 contextOpen
-executableFiles
+callableExecutables
 validateMissingItems
 isUnsignedNumber
 isCallable
@@ -120,17 +120,17 @@ EOF
 
 tests+=(testNotExecutable)
 testNotExecutable() {
-  sampleNotExecutable | validateMissingItems
+  sampleNotExecutable | validateMissingItems || return $?
 }
 
 tests+=(testExecutableCallable)
 testExecutableCallable() {
-  callableExecutables | validateExecutable
-  callableExecutables | validateCallable
-  callableExecutables | validateNotFunction
-  callableFunctions | validateNotExecutable
-  callableFunctions | validateCallable
-  callableFunctions | validateNotExecutable
+  callableExecutables | validateExecutable || return $?
+  callableExecutables | validateCallable || return $?
+  callableExecutables | validateNotFunction || return $?
+  callableFunctions | validateNotExecutable || return $?
+  callableFunctions | validateCallable || return $?
+  callableFunctions | validateNotExecutable || return $?
 }
 
 signedIntegerSamples() {

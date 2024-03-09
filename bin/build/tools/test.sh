@@ -62,9 +62,13 @@ dumpFile() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
-  local failedFiles failedReason failedReasons f binary
+  local arg failedFiles failedReason failedReasons binary interactive sleepDelay prefix
 
+  if ! buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH; then
+    return $errorEnvironment
+  fi
   clearLine
+  sleepDelay="$BUILD_INTERACTIVE_REFRESH"
   statusMessage consoleInfo "Checking all shell scripts ..."
   failedReasons=()
   failedFiles=()
@@ -78,34 +82,56 @@ validateShellScripts() {
     done
   else
     while [ $# -gt 0 ]; do
-      if [ "$1" = "--exec" ]; then
-        shift || :
-        binary="${1}"
-        if ! isCallable "$binary"; then
-          _validateShellScripts "$errorArgument" "--exec $binary is not callable" || return $?
-        fi
-      else
-        f="$1"
-        statusMessage consoleInfo "Checking $f ..."
-        if ! failedReason=$(validateShellScript "$f"); then
-          failedFiles+=("$f")
-          failedReasons+=("$failedReason")
-        fi
+      arg="$1"
+      if [ -z "$arg" ]; then
+        "_${FUNCNAME[0]}" "$errorArgument" "blank argument" || return $?
       fi
-      shift
+      case "$arg" in
+        --delay)
+          shift || "_${FUNCNAME[0]}" "$errorArgument" "$arg missing" || return $?
+          sleepDelay="$1"
+          ;;
+        --exec)
+          shift || "_${FUNCNAME[0]}" "$errorArgument" "$arg missing" || return $?
+          binary="${1}"
+          if ! isCallable "$binary"; then
+            "_${FUNCNAME[0]}" "$errorArgument" "--exec $binary is not callable" || return $?
+          fi
+          ;;
+        --interactive)
+          interactive=true
+          ;;
+        *)
+          statusMessage consoleInfo "Checking $arg ..."
+          if ! failedReason=$(validateShellScript "$arg"); then
+            failedFiles+=("$arg")
+            failedReasons+=("$failedReason")
+          fi
+          ;;
+      esac
+      shift || "_${FUNCNAME[0]}" "$errorArgument" "shift failed" || return $?
     done
   fi
+  if ! sleepDelay=$(usageArgumentUnsignedInteger "_${FUNCNAME[0]}" "sleepDelay" "$sleepDelay"); then
+    return $errorArgument
+  fi
+
   if [ "${#failedReasons[@]}" -gt 0 ]; then
+    prefix="$(consoleBoldRed "- ")"
+
     clearLine
     consoleError "# The following scripts failed:" 1>&2
-    for f in "${failedReasons[@]}"; do
-      echo "    $(consoleMagenta -n "$f")" 1>&2
+    for arg in "${failedReasons[@]}"; do
+      echo "    $(consoleMagenta -n "$arg")" 1>&2
     done
     consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
-    if [ -n "$binary" ]; then
+    if ! "$interactive" [ -n "$binary" ]; then
       if [ ${#failedFiles[@]} -gt 0 ]; then
         "$binary" "${failedFiles[@]}"
       fi
+    fi
+    if $interactive; then
+      validateShellScriptsInteractive "$sleepDelay" "${failedFiles[@]}"
     fi
     return $errorEnvironment
   fi
@@ -113,6 +139,45 @@ validateShellScripts() {
 }
 _validateShellScripts() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+validateShellScriptsInteractive() {
+  local sleepDelay
+
+  sleepDelay=$1
+  shift || :
+
+  printf "%s\n%s\n%s\n" "$(consoleRed "BEFORE")" \
+    "$(consoleLabel "Queue")" \
+    "$(consoleSubtle "$(printf "$prefix%s\n" "$@")")"
+
+  while [ "$#" -gt 0 ]; do
+    printf "%s\n%s\n%s\n" "$(consoleRed "LOOP")" \
+      "$(consoleLabel "Queue")" \
+      "$(consoleSubtle "$(printf "$prefix%s\n" "$@")")"
+
+    arg="$1"
+    if [ -z "$arg" ]; then
+      shift
+      contiuhe
+    fi
+    consoleBlue "$(echoBar "+-")"
+    consoleInfo "$# $(plural $# file files) remain"
+    if failedReason=$(validateShellScript --verbose "$1"); then
+      bigText "SUCCESS $(basename "$arg")" | wrapLines "$(consoleGreen)" "$(consoleReset)"
+      boxedHeading "$arg now passes" | wrapLines "$(consoleBoldGreen)" "$(consoleReset)"
+      shift
+      consoleOrange "$(echoBar "*")"
+    else
+      bigText "FAIL $(basename "$arg")" | wrapLines "$(consoleSubtle shellcheck)  $(consoleBoldRed)" "$(consoleReset)"
+      printf "%s\n%s\n%s\n" "$(consoleRed "$failedReason")" \
+        "$(consoleLabel "Queue")" \
+        "$(consoleSubtle "$(printf "$prefix%s\n" "${failedFiles[@]+${failedFiles[@]}}")")"
+
+      sleep "$sleepDelay"
+      clear
+    fi
+  done
 }
 
 #
@@ -143,24 +208,40 @@ validateShellScript() {
     _validateShellScript "$errorEnvironment" "Can not install pcregrep" || return $?
   fi
 
+  exec 3>/dev/null
   while [ $# -gt 0 ]; do
-    f="$1"
-    if [ ! -f "$f" ]; then
-      printf "Not a file: %s" "$f"
-      return "$errorEnvironment"
+    arg="$1"
+    if [ -z "$arg" ]; then
+      _validateShellScript "$errorArgument" "blank argument" || return $?
     fi
-    if ! bash -n "$f" >/dev/null; then
-      printf "bash -n %s" "$f"
-      return "$errorEnvironment"
-    fi
-    if ! shellcheck "$f" >/dev/null; then
-      printf "shellcheck %s" "$f"
-      return "$errorEnvironment"
-    fi
-    if pcregrep -l -M '\n\}\n#' "$f"; then
-      printf "contextOpen %s # newline before comment start required" "$f"
-      return "$errorEnvironment"
-    fi
+    case "$arg" in
+      --verbose)
+        consoleWarning "Verbose on"
+        exec 3>&1
+        ;;
+      *)
+        f="$1"
+        if [ ! -f "$f" ]; then
+          printf "%s: %s" "$(consoleError "Not a file")" "$(consoleCode "$f")"
+          return "$errorEnvironment"
+        fi
+        # shellcheck disable=SC2210
+        if ! bash -n "$f" 1>&3; then
+          printf "%s %s\n" "$(consoleError "bash -n")" "$(consoleCode "$f")"
+          return "$errorEnvironment"
+        fi
+
+        # shellcheck disable=SC2210
+        if ! shellcheck "$f" 1>&3; then
+          printf "%s %s" "$(consoleError "shellcheck")" "$(consoleCode "$f")"
+          return "$errorEnvironment"
+        fi
+        if pcregrep -l -M '\n\}\n#' "$f"; then
+          printf "contextOpen %s # newline before comment start required" "$f"
+          return "$errorEnvironment"
+        fi
+        ;;
+    esac
     shift
   done
 }

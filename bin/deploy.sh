@@ -7,11 +7,17 @@
 # IDENTICAL errorEnvironment 1
 errorEnvironment=1
 
-set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
+# IDENTICAL zesk-build-bin-header 10
+_fail() {
+  printf "%s\n" "$*" 1>&2
+  exit 1
+}
 
+set -eou pipefail || _fail "set -eou pipefail fail?"
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd $(dirname "${BASH_SOURCE[0]}")/.. failed"
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+. ./bin/build/tools.sh || _fail "tools.sh failed"
+# zesk-build-bin-header
 
 buildDeploy() {
   local start appId notes

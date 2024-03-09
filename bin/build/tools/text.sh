@@ -54,6 +54,21 @@ escapeDoubleQuotes() {
 }
 
 #
+# Usage: {fn} [ text }
+# Converts strings to shell escaped strings
+#
+escapeBash() {
+  local jqArgs
+
+  jqArgs=(-r --raw-input '@sh')
+  if [ $# -gt 0 ]; then
+    printf "%s\n" "$@" | jq "${jqArgs[@]}"
+  else
+    jq "${jqArgs[@]}"
+  fi
+}
+
+#
 # Quote strings for inclusion in shell quoted strings
 # Usage: escapeSingleQuotes text
 # Argument: text - Text to quote
@@ -208,6 +223,21 @@ maximumFieldLength() {
     separatorChar=()
   fi
   awk "${separatorChar[@]}" "{ print length(\$$index) }" | sort -rn | head -1
+}
+
+#
+# Usage: {fn}
+# Outputs the maximum line length passed into stdin
+#
+maximumLineLength() {
+  local max
+  max=0
+  while IFS= read -r line; do
+    if [ "${#line}" -gt "$max" ]; then
+      max=${#line}
+    fi
+  done
+  printf "%d" "$max"
 }
 
 #
@@ -542,6 +572,10 @@ mapEnvironment() {
   rm "$sedFile"
 }
 
+characterClasses() {
+  printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
+}
+
 #
 # Usage: {fn} className character0 [ character1 ... ]
 #
@@ -554,25 +588,205 @@ mapEnvironment() {
 #     print   punct   space   upper   word    xdigit
 #
 isCharacterClass() {
-  local class="${1-}"
+  local class="${1-}" character
   case "$class" in
     alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
     *)
-      _isCharacterClass "$errorArgument" "Invalid class: $class" || return $?
+      "_${FUNCNAME[0]}" "$errorArgument" "Invalid class: $class" || return $?
       ;;
   esac
-  shift || _isCharacterClass "$errorArgument" "shift failed" || return $?
+  shift || "_${FUNCNAME[0]}" "$errorArgument" "shift failed" || return $?
   while [ $# -gt 0 ]; do
+    character="${1:0:1}"
+    character="$(escapeBash "$character")"
     # Not sure how you can hack this function with single character eval injections.
     # evalCheck: SAFE 2024-01-29 KMD
-    if ! eval "case \"$(escapeDoubleQuotes "${1:0:1}")\" in [[:$class:]]) ;; *) return 1 ;; esac"; then
+    if ! eval "case $character in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
-    shift
+    shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $character failed" || return $?
   done
 }
 _isCharacterClass() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Does this character match one or more character classes?
+#
+# Usage: {fn} character [ class0 class1 ... ]
+#
+isCharacterClasses() {
+  local character class
+
+  character="${1-}"
+  if [ "${#character}" -ne 1 ]; then
+    "_${FUNCNAME[0]}" "$errorArgument" "Non-single character: \"$character\"" || return $?
+  fi
+  if ! shift || [ $# -eq 0 ]; then
+    "_${FUNCNAME[0]}" "$errorArgument" "Need at least one class" || return $?
+  fi
+  while [ "$#" -gt 0 ]; do
+    class="$1"
+    if ! isCharacterClass "$class" "$character"; then
+      return 1
+    fi
+    shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $class failed" || return $?
+  done
+}
+_isCharacterClasses() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
+# Credit: dsmsk80
+#
+# Source: https://mywiki.wooledge.org/BashFAQ/071
+characterFromInteger() {
+  local arg
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    if ! isUnsignedInteger "$arg"; then
+      _characterFromInteger "$errorArgument" "Not integer: \"$arg\"" || return $?
+    fi
+    if [ "$arg" -ge 256 ]; then
+      _characterFromInteger "$errorArgument" "Integer out of range: \"$arg\"" || return $?
+    fi
+    # shellcheck disable=SC2059
+    printf "\\$(printf '%03o' "$arg")"
+    shift || _characterFromInteger "$errorArgument" "shift $arg failed" || return $?
+  done
+}
+_characterFromInteger() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} text class0 [ ... ]
+# Argument: text - Text to validate
+# Argument: class0 - One ore more character classes that the characters in string should match
+#
+stringValidate() {
+  local text character
+
+  text="${1-}"
+  shift || _stringValidate "$errorArgument" "Missing text" || return $?
+  [ $# -gt 0 ] || _stringValidate "$errorArgument" "Missing class" || return $?
+  for character in $(printf "%s" "$text" | grep -o .); do
+    if ! isCharacterClasses "$character" "$@"; then
+      return 1
+    fi
+  done
+}
+_stringValidate() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} [ character ... ]
+# Convert one or more characters from their ascii representation to an integer value.
+# Requires a single character to be passed
+#
+characterToInteger() {
+  local index
+
+  index=0
+  while [ $# -gt 0 ]; do
+    index=$((index + 1))
+    if [ "${#1}" != 1 ]; then
+      _characterToInteger "$errorArgument" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    fi
+    if ! LC_CTYPE=C printf '%d' "'$1"; then
+      _characterToInteger "$errorEnvironment" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    fi
+    shift || :
+  done
+}
+_characterToInteger() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn}
+#
+# Write a report of the character classes
+#
+characterClassReport() {
+  local arg character classList indexList outer matched total classOuter outerList innerList nouns outerText width
+
+  classOuter=false
+  while [ $# -gt 0 ]; do
+    arg="$1"
+    if [ -z "$arg" ]; then
+      _characterClassReport "$errorArgument" "blank argument" || return $?
+    fi
+    case "$arg" in
+      --class)
+        classOuter=true
+        ;;
+      --char)
+        classOuter=false
+        ;;
+    esac
+    shift || _characterClassReport "$errorArgument" "shift $arg failed" || return $?
+  done
+  classList=()
+  for arg in $(characterClasses); do
+    classList+=("$arg")
+  done
+  # shellcheck disable=SC2207
+  indexList=($(seq 0 127))
+
+  if $classOuter; then
+    outerList=("${classList[@]}")
+    innerList=("${indexList[@]}")
+    nouns=("character" "characters")
+  else
+    # shellcheck disable=SC2207
+    outerList=("${indexList[@]}")
+    innerList=("${classList[@]}")
+    nouns=("class" "classes")
+  fi
+  total=0
+  for outer in "${outerList[@]}"; do
+    matched=0
+    if $classOuter; then
+      class="$outer"
+      outerText="$(consoleLabel "$(alignRight 10 "$outer")")"
+    else
+      character=$(characterFromInteger "$outer")
+      if ! isCharacterClass print "$character"; then
+        outerText="$(printf "x%x " "$outer")"
+        outerText="$(alignRight 5 "$outerText")"
+        outerText="$(consoleSubtle "$outerText")"
+      else
+        outerText="$(consoleBlue "$(alignRight 5 "$character")")"
+      fi
+    fi
+    printf "%s: " "$(alignLeft "$width" "$outerText")"
+    for inner in "${innerList[@]}"; do
+      if $classOuter; then
+        character=$(characterFromInteger "$inner")
+      else
+        class="$inner"
+      fi
+      if isCharacterClass "$class" "$character"; then
+        matched=$((matched + 1))
+        if $classOuter; then
+          if ! isCharacterClass print "$character"; then
+            consoleSubtle -n "$(printf "x%x " "$inner")"
+          else
+            printf "%s " "$(consoleBlue "$(characterFromInteger "$inner")")"
+          fi
+        else
+          printf "%s " "$(consoleBlue "$class")"
+        fi
+      fi
+    done
+    printf "[%s %s]\n" "$(consoleBoldMagenta "$matched")" "$(consoleSubtle "$(plural "$matched" "${nouns[@]}")")"
+    total=$((total + matched))
+  done
+  printf "%s total %s\n" "$(consoleBoldRed "$total")" "$(consoleRed "$(plural "$total" "${nouns[@]}")")"
 }
 
 #
@@ -620,6 +834,7 @@ cannon() {
   count="$(wc -l <"$cannonLog.found" | trimSpace)"
   consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
   rm -f "$cannonLog" "$cannonLog.found" || :
+
 }
 _cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

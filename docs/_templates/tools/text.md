@@ -15,6 +15,7 @@
 {escapeQuotes}
 {escapeSingleQuotes}
 {escapeDoubleQuotes}
+{escapeBash}
 {replaceFirstPattern}
 
 {trimWords}

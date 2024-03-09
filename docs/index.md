@@ -53,6 +53,6 @@ Handy tools
 - [Environment variables which affect build](env.md)
 - [Deprecated functionality](./deprecated.md)
 
-## Copyright
+## Copyright and License
 
 Copyright &copy; 2024 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](../LICENSE.md).

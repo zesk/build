@@ -73,12 +73,13 @@ _deployApplicationVersion() {
 # `deployHome` for compatibility.
 #
 deployPackageName() {
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/BUILD_TARGET.sh; then
+  export BUILD_TARGET
+  if ! buildEnvironmentLoad BUILD_TARGET; then
     _deployPackageName "$errorEnvironment" "Unable to load BUILD_TARGET" || return $?
   fi
-
-  export BUILD_TARGET
+  if [ -z "${BUILD_TARGET-}" ]; then
+    _deployPackageName "$errorEnvironment" "BUILD_TARGET is blank" || return $?
+  fi
   printf "%s\n" "${BUILD_TARGET-}"
 }
 

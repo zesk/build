@@ -162,6 +162,7 @@ services are looked up in /etc/services and match /tcp services only for port se
 - `--profile awsProfile` - Use this AWS profile when connecting using ~/.aws/credentials
 --services service0,service1,- `...` - Required. List of services to add or remove (maps to ports)
 - `--id developerId` - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+- `--group securityGroup` - Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
 - `--ip ip` - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
 - `--revoke` - Flag. Remove permissions
 - `--help` - Flag. Show this help
