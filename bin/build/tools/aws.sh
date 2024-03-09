@@ -162,6 +162,7 @@ awsIsKeyUpToDate() {
 # Summary: Test whether the AWS environment variables are set or not
 #
 awsHasEnvironment() {
+  export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
   if ! buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; then
     return $errorEnvironment
