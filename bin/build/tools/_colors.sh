@@ -73,7 +73,12 @@ consoleError() {
 #
 # shellcheck disable=SC2120
 consoleOrange() {
-  __consoleOutput "" '\033[38;5;214m' '\033[0m' "$@"
+  __consoleOutput "" '\033[33m' '\033[0m' "$@"
+}
+
+# shellcheck disable=SC2120
+consoleBoldOrange() {
+  __consoleOutput "" '\033[33;1m' '\033[0m' "$@"
 }
 
 #
