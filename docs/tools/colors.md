@@ -68,6 +68,7 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 ### `consoleColorMode` - Set colors to deal with dark or light-background consoles
 
 Set colors to deal with dark or light-background consoles
+See:
 
 #### Exit codes
 
@@ -193,10 +194,6 @@ Exit Code; 1 - Does not support console animation
 #### Exit codes
 
 - `0` - Supports console animation
-
-#### Environment
-
-CI - If this has a non-blank value, this returns true (supports animation)
 
 
 ### `colorTest` - Output colors

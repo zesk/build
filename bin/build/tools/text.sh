@@ -226,6 +226,21 @@ maximumFieldLength() {
 }
 
 #
+# Usage: {fn}
+# Outputs the maximum line length passed into stdin
+#
+maximumLineLength() {
+  local max
+  max=0
+  while IFS= read -r line; do
+    if [ "${#line}" -gt "$max" ]; then
+      max=${#line}
+    fi
+  done
+  printf "%d" "$max"
+}
+
+#
 # Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
 #
 # Short description: Output numeric messages which are grammatically accurate

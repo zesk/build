@@ -159,6 +159,14 @@ Quote strings for inclusion in shell quoted strings
 
 - `0` - Always succeeds
 
+### `escapeBash` - Converts strings to shell escaped strings
+
+Converts strings to shell escaped strings
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `replaceFirstPattern` - Replaces the first and only the first occurrence of a
 
 Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
@@ -243,7 +251,7 @@ trimSpace handles both cases now.
 - [function trimSpace
 ](./docs/tools/text.md
 ) - [Trim whitespace of a bash argument
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L96
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L111
 )
 
 ### `stripAnsi` - Strip ANSI console escape sequences from a file

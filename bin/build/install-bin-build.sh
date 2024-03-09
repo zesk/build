@@ -18,13 +18,15 @@
 #
 # or wherever you put it in your project to install it
 #
-set -eou pipefail
+set -eou pipefail || exit 99 # problems
 
 # Modify this line locally, it will be preserved on update
 # Points to the project root
 relTop=../..
 
-# Usage: install-bin-build.sh [ --mock mockBuildRoot ]
+# -- DO NOT EDIT ANYTHING BELOW THIS LINE IT WILL BE OVERWRITTEN --
+
+# Usage: install-bin-build.sh [ --mock mockBuildRoot ] [ --url url ]
 # fn: install-bin-build.sh
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
@@ -313,12 +315,12 @@ consoleOrange() {
 #
 # shellcheck disable=SC2120
 consoleBlue() {
-  __consoleEscape '\033[94m' '\033[0m' "$@"
+  __consoleOutput "" '\033[94m' '\033[0m' "$@"
 }
 
 # shellcheck disable=SC2120
 consoleBoldBlue() {
-  __consoleEscape '\033[1;94m' '\033[0m' "$@"
+  __consoleOutput "" '\033[1;94m' '\033[0m' "$@"
 }
 
 installBinBuild "$@"
