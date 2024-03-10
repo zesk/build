@@ -61,20 +61,23 @@ sshAddKnownHost() {
   fi
 
   output=$(mktemp)
+  buildDebugStart ssh || :
   while [ $# -gt 0 ]; do
     remoteHost="$1"
     if grep -q "$remoteHost" "$sshKnown"; then
       consoleInfo "Host $remoteHost already known"
-    elif ! ssh-keyscan "$remoteHost" >"$output" 2>&1; then
-      exitCode=$?
-      printf "%s%s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown:")" "$(consoleCode)$exitCode" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
-      rm "$output" 2>/dev/null || :
-      return "$errorEnvironment"
-    else
+    elif ssh-keyscan "$remoteHost" >"$output" 2>&1; then
       cat "$output" >>"$sshKnown"
       consoleSuccess "Added $remoteHost to $sshKnown"
+    else
+      exitCode=$?
+      printf "%s: %s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
+      rm "$output" 2>/dev/null || :
+      set +x
+      return "$errorEnvironment"
     fi
     shift
   done
+  buildDebugStop ssh || :
   rm "$output" 2>/dev/null || :
 }

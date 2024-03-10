@@ -10,17 +10,28 @@
 #
 # Is build debugging enabled?
 #
-# Usage: buildDebugEnabled
-# Exit Code: 1 - Debugging is not enabled
+# Usage: {fn} [ moduleName ... ]
+# Argument: moduleName - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
+# Exit Code: 1 - Debugging is not enabled (for any module)
 # Exit Code: 0 - Debugging is enabled
-# Environment: BUILD_DEBUG - Set to 1 to enable debugging, blank to disable
+# Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. BUILD_DEBUG may be a comma-separated list of modules to target debugging.
 #
 buildDebugEnabled() {
+  local debugString
   export BUILD_DEBUG
+  # NOTE: This allows runtime changing of this value
   if ! buildEnvironmentLoad BUILD_DEBUG; then
     return 1
   fi
-  test "${BUILD_DEBUG-}"
+  debugString="${BUILD_DEBUG-}"
+  if test "$debugString"; then
+    [ $# -eq 0 ] && return 0
+    debugString=",$debugString,"
+    while [ $# -gt 0 ]; do
+      [ "${debugString/,$1,/}" != "${debugString}" ] && return 0
+    done
+  fi
+  return 1
 }
 
 #
@@ -28,13 +39,14 @@ buildDebugEnabled() {
 # This does `set -x` which traces and outputs every shell command
 # Use it to debug when you can not figure out what is happening internally.
 #
-# Usage: buildDebugStart
+# Usage: {fn} [ moduleName ... ]
+# Argument: moduleName - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
 # Example:     buildDebugStart
 # Example:     # ... complex code here
 # Example:     buildDebugStop
 #
 buildDebugStart() {
-  if buildDebugEnabled; then
+  if buildDebugEnabled "$@"; then
     set -x # Outputs each command for debugging
   fi
 }
@@ -45,7 +57,7 @@ buildDebugStart() {
 # See: buildDebugStart
 #
 buildDebugStop() {
-  if buildDebugEnabled; then
+  if buildDebugEnabled "$@"; then
     set +x # Debugging off
   fi
 }
