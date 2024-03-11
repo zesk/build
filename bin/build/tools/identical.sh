@@ -44,7 +44,7 @@ identicalCheck() {
   local arg fail me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
-  local tokenLineCount tokenFileName compareFile badFiles
+  local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
 
   fail="_${FUNCNAME[0]}"
   me="$(basename "${BASH_SOURCE[0]}")"
@@ -182,7 +182,8 @@ identicalCheck() {
   fi
   clearLine
   exitCode=0
-  find "$tempDirectory" -type f -name '*.match' | while read -r matchFile; do
+  foundSingles=()
+  while read -r matchFile; do
     if [ ! -f "$matchFile.compare" ]; then
       tokenFile="$(dirname "$matchFile")"
       token="$(basename "$matchFile")"
@@ -192,6 +193,7 @@ identicalCheck() {
       tokenFile="$(tail -n 1 "$tokenFile")"
       if inArray "$token" "${singles[@]}"; then
         printf "%s: %s in %s\n" "$(consoleSuccess "Single instance of token ok:")" "$(consoleCode "$token")" "$(consoleInfo "$tokenFile")"
+        foundSingles+=("$token")
       else
         printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")" >>"$resultsFile"
         if [ -n "$binary" ]; then
@@ -199,6 +201,11 @@ identicalCheck() {
         fi
         exitCode=$errorFailures
       fi
+    fi
+  done < <(find "$tempDirectory" -type f -name '*.match')
+  for token in "${singles[@]}"; do
+    if ! inArray "$token" "${foundSingles[@]}"; then
+      printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token NOT found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
     fi
   done
   # DEBUG # echo "tempDirectory: $tempDirectory STOPPING"
