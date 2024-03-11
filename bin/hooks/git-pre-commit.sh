@@ -81,7 +81,7 @@ hookGitPreCommit() {
       _hookGitPreCommitFailed "Enforcing copyright and company in shell files" || return $?
     fi
     # Unusual quoting here is to avoid having this match as an identical
-    if ! identicalCheck --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
+    if ! identicalCheck --single _sugar --single _clearLine --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
       _hookGitPreCommitFailed identical-check.sh || return $?
     fi
 

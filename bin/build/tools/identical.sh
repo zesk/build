@@ -41,51 +41,48 @@ errorFailures=100
 # This is best used as a pre-commit check, for example. Wink.
 #
 identicalCheck() {
-  local me
+  local arg fail me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
   local tokenLineCount tokenFileName compareFile badFiles
 
+  fail="_${FUNCNAME[0]}"
   me="$(basename "${BASH_SOURCE[0]}")"
 
   binary=
   rootDir=.
+  singles=()
   findArgs=()
   badFiles=()
   prefixes=()
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
-    fi
-    case "$1" in
-    --cd)
-      shift || :
-      rootDir=$1
-      if [ ! -d "$rootDir" ]; then
-        _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
-        return $?
-      fi
-      ;;
-    --extension)
-      shift || :
-      findArgs+=("-name" "*.$1")
-      ;;
-    --exec)
-      shift || :
-      if [ -z "$1" ]; then
-        _identicalCheck "$errorArgument" "--exec \"$1\" can not be blank"
-      fi
-      if ! isCallable "$1"; then
-        _identicalCheck "$errorArgument" "--exec \"$1\" is not callable"
-      fi
-      binary="$1"
-      ;;
-    --prefix)
-      shift || :
-      prefixes+=("$1")
-      ;;
+    arg="$1"
+    [ -n "$arg" ] || __usageArgument "$fail" "Blank argument" || return $?
+    shift || __usageArgument "$fail" "Missing $arg" || return $?
+    [ -n "$1" ] || __usageArgument "$fail" "Blank $arg" || return $?
+    case "$arg" in
+      --cd)
+        rootDir=$1
+        if [ ! -d "$rootDir" ]; then
+          _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
+          return $?
+        fi
+        ;;
+      --extension)
+        findArgs+=("-name" "*.$1")
+        ;;
+      --exec)
+        binary="$1"
+        isCallable "$binary" || __usageArgument "$fail" "$arg \"$binary\" is not callable" || return $?
+        ;;
+      --single)
+        singles+=("$1")
+        ;;
+      --prefix)
+        prefixes+=("$1")
+        ;;
     esac
-    shift
+    shift || __usageArgument "$fail" "shift failed" || return $?
   done
 
   if [ ${#findArgs[@]} -eq 0 ]; then
@@ -193,11 +190,15 @@ identicalCheck() {
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
       tokenFile="$(tail -n 1 "$tokenFile")"
-      printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")" >>"$resultsFile"
-      if [ -n "$binary" ]; then
-        "$binary" "$tokenFile"
+      if inArray "$token" "${singles[@]}"; then
+        printf "%s: %s in %s\n" "$(consoleSuccess "Single instance of token ok:")" "$(consoleCode "$token")" "$(consoleInfo "$tokenFile")"
+      else
+        printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")" >>"$resultsFile"
+        if [ -n "$binary" ]; then
+          "$binary" "$tokenFile"
+        fi
+        exitCode=$errorFailures
       fi
-      exitCode=$errorFailures
     fi
   done
   # DEBUG # echo "tempDirectory: $tempDirectory STOPPING"

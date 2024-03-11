@@ -20,9 +20,7 @@ buildDebugEnabled() {
   local debugString
   export BUILD_DEBUG
   # NOTE: This allows runtime changing of this value
-  if ! buildEnvironmentLoad BUILD_DEBUG; then
-    return 1
-  fi
+  __environment buildEnvironmentLoad BUILD_DEBUG || return $?
   debugString="${BUILD_DEBUG-}"
   if test "$debugString"; then
     [ $# -eq 0 ] && return 0

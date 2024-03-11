@@ -385,9 +385,7 @@ consoleValue() {
 # shellcheck disable=SC2120
 consoleNameValue() {
   local characterWidth=$1 name=$2
-  shift
-  shift
-  printf "%s %s\n" "$(alignRight "$characterWidth" "$(consoleLabel "$name")")" "$(consoleValue "$@")"
+  shift && shift && printf "%s %s\n" "$(consoleLabel "$(alignLeft "$characterWidth" "$name")")" "$(consoleValue "$@")"
 }
 
 #
@@ -405,6 +403,12 @@ clearLine() {
   if hasConsoleAnimation; then
     echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
   fi
+}
+
+# IDENTICAL _clearLine 4
+_clearLine() {
+  local width
+  read -d' ' -r width < <(stty size) || : && printf "\r%s\r" "$(jot -s'' ' ' -b '' "$width")"
 }
 
 #

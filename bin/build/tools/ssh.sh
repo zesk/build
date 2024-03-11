@@ -35,8 +35,11 @@ errorEnvironment=1
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
 sshAddKnownHost() {
-  local remoteHost exitCode output
-  local sshKnown=.ssh/known_hosts
+  local remoteHost output sshKnown verbose exitCode
+
+  sshKnown=.ssh/known_hosts
+  exitCode=0
+  verbose=false
 
   if ! buildEnvironmentLoad HOME; then
     return 1
@@ -63,21 +66,26 @@ sshAddKnownHost() {
   output=$(mktemp)
   buildDebugStart ssh || :
   while [ $# -gt 0 ]; do
-    remoteHost="$1"
-    if grep -q "$remoteHost" "$sshKnown"; then
-      consoleInfo "Host $remoteHost already known"
-    elif ssh-keyscan "$remoteHost" >"$output" 2>&1; then
-      cat "$output" >>"$sshKnown"
-      consoleSuccess "Added $remoteHost to $sshKnown"
-    else
-      exitCode=$?
-      printf "%s: %s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
-      rm "$output" 2>/dev/null || :
-      set +x
-      return "$errorEnvironment"
-    fi
+    case "$1" in
+      --verbose)
+        verbose=true
+        ;;
+      *)
+        remoteHost="$1"
+        if grep -q "$remoteHost" "$sshKnown"; then
+          ! $verbose || consoleInfo "Host $remoteHost already known"
+        elif ssh-keyscan "$remoteHost" >"$output" 2>&1; then
+          cat "$output" >>"$sshKnown"
+          ! $verbose || consoleSuccess "Added $remoteHost to $sshKnown"
+        else
+          printf "%s: %s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
+          exitCode=$errorEnvironment
+        fi
+        ;;
+    esac
     shift
   done
   buildDebugStop ssh || :
   rm "$output" 2>/dev/null || :
+  return $exitCode
 }
