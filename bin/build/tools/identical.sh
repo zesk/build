@@ -64,7 +64,7 @@ identicalCheck() {
       --cd)
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
-          _identicalCheck "$errorArgument" "--cd \"$1\" is not a directory"
+          "$fail" "$errorArgument" "--cd \"$1\" is not a directory"
           return $?
         fi
         ;;
@@ -86,11 +86,11 @@ identicalCheck() {
   done
 
   if [ ${#findArgs[@]} -eq 0 ]; then
-    _identicalCheck "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one extension"
+    "$fail" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one extension"
     return $?
   fi
   if [ ${#prefixes[@]} -eq 0 ]; then
-    _identicalCheck "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
+    "$fail" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
     return $?
   fi
 
