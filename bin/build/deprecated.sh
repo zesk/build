@@ -73,6 +73,13 @@ deprecatedCleanup() {
   clearLine || :
   consoleSuccess "Completed deprecated script for Build $(consoleCode "$(jq -r .version "$(dirname "${BASH_SOURCE[0]}")/build.json")")"
 
+  # Release v0.7.13
+  cannon 'env''map.sh' 'map.sh'
+  cannon 'mapCopyFileChanged' 'copyFileChanged --map'
+  cannon 'escalatedMapCopyFileChanged' 'copyFileChanged --map --escalate'
+  cannon 'escalatedCopyFileChanged' 'copyFileChanged --escalate'
+  cannon 'yesNo ' 'parseBoolean '
+
   return $exitCode
 }
 

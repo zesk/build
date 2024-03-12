@@ -113,18 +113,23 @@ allColorTest() {
 }
 
 colorComboTest() {
-  local fg bg text
+  local fg bg text extra
+  extra=
+  if [ "$1" = "--bold" ]; then
+    shift || :
+    extra=";1"
+  fi
   text="${*-" ABC "}"
   padding="$(repeat $((${#text} - 3)) " ")"
   printf "   "
   for fg in $(seq 30 37) $(seq 90 97); do
-    printf "\033[%dm%3d%s\033[0m " "$fg" "$fg" "$padding"
+    printf "\033[%d%sm%3d%s\033[0m " "$fg" "$extra" "$fg" "$padding"
   done
   printf "\n"
   for bg in $(seq 40 47) $(seq 100 107); do
-    printf "\033[%dm%3d\033[0m " "$bg" "$bg"
+    printf "\033[%d%sm%3d\033[0m " "$bg" "$extra" "$bg"
     for fg in $(seq 30 37) $(seq 90 97); do
-      printf "\033[%d;%dm$text\033[0m " "$fg" "$bg"
+      printf "\033[%d;%d%sm$text\033[0m " "$fg" "$bg" "$extra"
     done
     printf "\n"
   done
@@ -328,7 +333,7 @@ consoleWarning() {
 #
 # shellcheck disable=SC2120
 consoleSuccess() {
-  __consoleOutput "SUCCESS" '\033[1;38;5;10;48;5;232m' '\033[0m' "$@"
+  __consoleOutput "SUCCESS" '\033[1;42;97m' '\033[0m' "$@"
 }
 
 #
@@ -380,9 +385,7 @@ consoleValue() {
 # shellcheck disable=SC2120
 consoleNameValue() {
   local characterWidth=$1 name=$2
-  shift
-  shift
-  printf "%s %s\n" "$(alignRight "$characterWidth" "$(consoleLabel "$name")")" "$(consoleValue "$@")"
+  shift && shift && printf "%s %s\n" "$(consoleLabel "$(alignLeft "$characterWidth" "$name")")" "$(consoleValue "$@")"
 }
 
 #
@@ -400,6 +403,12 @@ clearLine() {
   if hasConsoleAnimation; then
     echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
   fi
+}
+
+# IDENTICAL _clearLine 4
+_clearLine() {
+  local width
+  read -d' ' -r width < <(stty size) || : && printf "\r%s\r" "$(jot -s'' ' ' -b '' "$width")"
 }
 
 #
