@@ -55,7 +55,7 @@ hostTTFB() {
 }
 
 _watchFile() {
-  tail -F "$1" | prefixLines "$(clearLine)$(consoleGreen)" | sed 's/^.*--  //g'
+  tail -F "$1" | wrapLines "$(clearLine)$(consoleGreen)" "$(consoleReset)" | sed 's/^.*--  //g'
 }
 
 #

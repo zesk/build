@@ -46,7 +46,7 @@ _testDeployApplicationSetup() {
 }
 
 _deployShowFiles() {
-  find "$1" ! -path '*/bin/build/*' | prefixLines "$(consoleCode "DEPLOY root files:    ")$(consoleMagenta)"
+  find "$1" ! -path '*/bin/build/*' | wrapLines "$(consoleCode "DEPLOY root files:    ")$(consoleMagenta)" "$(consoleReset)"
   return $errorEnvironment
 }
 

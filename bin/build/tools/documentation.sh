@@ -427,7 +427,7 @@ _bashDocumentation_Template() {
     if ! source "$envFile"; then
       set +a
       consoleError "$envFile Failed"
-      prefixLines "$(consoleCode)" <"$envFile"
+      wrapLines "$(consoleCode)" "$(consoleReset)" <"$envFile"
       return $errorEnvironment
     fi
     set +a
@@ -706,7 +706,7 @@ _bashDocumentationFormatter_exit_code() {
 # Format usage blocks (indents as a code block)
 #
 _bashDocumentationFormatter_usage() {
-  prefixLines "    "
+  wrapLines "    " ""
 }
 
 # #
@@ -716,7 +716,7 @@ _bashDocumentationFormatter_usage() {
 #     markdown_FormatList
 # }
 _bashDocumentationFormatter_output() {
-  prefixLines "    "
+  wrapLines "    " ""
 }
 
 #
@@ -730,7 +730,7 @@ _bashDocumentationFormatter_argument() {
 # Format depends blocks (indents as a code block)
 #
 _bashDocumentationFormatter_depends() {
-  prefixLines "    "
+  wrapLines "    " ""
 }
 
 #

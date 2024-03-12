@@ -103,7 +103,7 @@ testEnvironmentVariables() {
     return 1
   fi
   assertFileContains "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
-  prefixLines "environmentVariables: $(consoleCode)" <"$e"
+  wrapLines "environmentVariables: $(consoleCode)" "$(consoleReset)" <"$e"
   rm "$e"
 }
 

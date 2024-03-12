@@ -30,7 +30,8 @@ testSugar() {
   assertExitCode --stderr-ok 2 _argument a b c || return $?
 
   # __execute
-  assertExitCode --stderr-match foo 1 __execute _argument "foo" || return $?
+  assertExitCode --stderr-match foo 1 __execute _environment "foo" || return $?
+  assertExitCode --stderr-match foo 2 __execute _argument "foo" || return $?
   # __echo
-  assertExitCode --stdout-match "Running: echo Hello" 0 __echo echo "%s" "Hello" || return $?
+  assertExitCode --stdout-match "Running: echo %s Hello" --stdout-match "echo Hello" 0 __echo echo "%s" "Hello" || return $?
 }

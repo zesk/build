@@ -150,7 +150,7 @@ buildTestSuite() {
   testTracing=cleanup
   messyTestCleanup
 
-  bigText Passed | prefixLines "$(consoleSuccess)"
+  bigText Passed | wrapLines "$(consoleSuccess)" "$(consoleReset)"
   consoleReset
 }
 

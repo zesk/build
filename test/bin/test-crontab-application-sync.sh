@@ -47,7 +47,7 @@ find_count() {
   if [ "$found" -ne "$n" ]; then
     consoleError "Match $* should occur $n times, found $found"
     consoleError "$(echoBar)"
-    prefixLines "$(consoleCode)" <"$results"
+    wrapLines "$(consoleCode)" "$(consoleReset)" <"$results"
     exit "$errorEnvironment"
   fi
   return 0

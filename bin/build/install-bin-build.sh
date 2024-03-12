@@ -223,7 +223,7 @@ installBinBuild() {
   chmod +x "$myBinary"
   if $showDiffFlag; then
     consoleWarning "DIFFERENCES: $diffLines"
-    diff "$binName" "$myBinary" | grep -v 'relTop=' | prefixLines "$(consoleReset)$(consoleInfo CHANGES)$(consoleCode)" || :
+    diff "$binName" "$myBinary" | grep -v 'relTop=' | wrapLines "$(consoleReset)$(consoleInfo CHANGES)$(consoleCode)" "$(consoleReset)" || :
     consoleMagenta "DIFFERENCES: $diffLines"
   fi
   echo "$(consoleValue -n "$(basename "${BASH_SOURCE[0]}")") $(consoleWarning -n was updated.)"

@@ -43,7 +43,7 @@ buildDeploy() {
   if ! notes=$(releaseNotes) || [ ! -f "$notes" ]; then
     _buildDeploy $errorEnvironment "Missing release notes at $notes" || return $?
   fi
-  bigText "$currentVersion" | prefixLines "$(consoleMagenta)" || :
+  bigText "$currentVersion" | wrapLines "$(consoleMagenta)" "$(consoleReset)" || :
   consoleInfo "Deploying a new release ... " || :
 
   if ! githubRelease "$notes" "$currentVersion" "$appId"; then

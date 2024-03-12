@@ -29,7 +29,7 @@ buildBuild() {
 
   if gitRepositoryChanged; then
     printf "%s\n" "CHANGES:"
-    gitShowChanges | prefixLines "$(consoleCode)    "
+    gitShowChanges | wrapLines "$(consoleCode)    " "$(consoleReset)"
     git commit -m "Build version $(runHook version-current)" -a || :
     git push origin
   fi

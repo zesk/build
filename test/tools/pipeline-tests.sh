@@ -59,7 +59,7 @@ testMakeEnvironment() {
     for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DSN; do
       if ! grep -q "$v" .env; then
         consoleError "makeEnvironment > .env file does not contain $v"
-        prefixLines "$(consoleCode)    " <.env
+        wrapLines "$(consoleCode)    " "$(consoleReset)" <.env
         return "$errorEnvironment"
       fi
     done
