@@ -153,7 +153,7 @@ identicalCheck() {
               badFiles+=("$searchFile")
               clearLine 1>&2
               printf "%s: %s\n< %s%s\n" "$(consoleInfo "$token")" "$(consoleError -n "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" 1>&2
-              prefixLines "$(consoleCode)    " <"$compareFile" 1>&2
+              wrapLines "$(consoleCode)    " "$(consoleReset)" <"$compareFile" 1>&2
               consoleReset 1>&2
               break
             elif ! diff -b -q "$countFile" "${countFile}.compare" >/dev/null; then

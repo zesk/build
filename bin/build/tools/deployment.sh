@@ -69,7 +69,7 @@ deployBuildEnvironment() {
     fi
     return "$errorEnvironment"
   fi
-  bigText Success | prefixLines "$(consoleSuccess)"
+  bigText Success | wrapLines "$(consoleSuccess)" "$(consoleReset)"
 }
 _deployBuildEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCMAME[0]#_}" "$@"
@@ -281,7 +281,7 @@ __deployRevertApplication() {
 }
 
 _deploySuccessful() {
-  bigText Deployed AOK | prefixLines "$(consoleGreen)"
+  bigText Deployed AOK | wrapLines "$(consoleGreen)" "$(consoleReset)"
   echo
   consoleWarning "No $deployedHostArtifact file found ..."
   consoleSuccess "Nothing deployed or clean exit."
@@ -513,7 +513,7 @@ deployToRemote() {
       _deploySuccessful
       return 0
     fi
-    bigText "$verb" | prefixLines "$(consoleOrange)"
+    bigText "$verb" | wrapLines "$(consoleOrange)" "$(consoleReset)"
   elif test $cleanupFlag; then
     # Clean up deployed target
     applicationPath="$deployHome/$applicationId/app"
@@ -523,7 +523,7 @@ deployToRemote() {
       consoleError "$deployedHostArtifact file NOT found ... no remotes changed"
       exit 99
     fi
-    bigText "$verb" | prefixLines "$(consoleBoldBlue)"
+    bigText "$verb" | wrapLines "$(consoleBoldBlue)" "$(consoleReset)"
   else
 
     #
@@ -533,7 +533,7 @@ deployToRemote() {
     #  ▀▀ ▀▀▘▘  ▀▀▘▝▀  ▘
     #
     verb="Deploy"
-    bigText "$verb" | prefixLines "$(consoleGreen)"
+    bigText "$verb" | wrapLines "$(consoleGreen)" "$(consoleReset)"
 
     {
       consoleNameValue $nameWidth "Current IP:" "$currentIP"
@@ -586,9 +586,9 @@ deployToRemote() {
       printf "%s %s: %s\n%s\n" "$(consoleInfo "Deploying the code to")" "$(consoleGreen "$userHost")" "$(consoleRed "$applicationPath")" "$(consoleInfo "$host output BEGIN :::")"
       if buildDebugEnabled; then
         consoleInfo "DEBUG: Commands file is:"
-        prefixLines "$(consoleCode)" <"$temporaryCommandsFile"
+        wrapLines "$(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"
       fi
-      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | prefixLines "$(consoleBoldBlue)"; then
+      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | wrapLines "$(consoleBoldBlue)" "$(consoleReset)"; then
         _deployToRemote "$errorEnvironment" "Unable to deploy to $host" || return $?
       fi
       consoleInfo "::: END $host output"

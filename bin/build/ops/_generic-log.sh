@@ -5,20 +5,24 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 name="$(basename "$(dirname "$(pwd)")")"
-printf "Logging for %s" "$name"
+printf "Logging for %s\n" "$name"
 logPath="{LOG_PATH}/$1"
 if [ ! -d "$logPath" ]; then
   mkdir -p "$logPath"
 fi
-chown -R "{APPLICATION_USER}" "$logPath"
+chown -R "{APPLICATION_USER}:" "$logPath"
 chmod 775 "$logPath"
 cd "$logPath" || return 1
 
-applicationUserOwner() {
+_setApplicationUserOwner() {
   if [ -n "$(find "$logPath" -type f -print -quit)" ]; then
-    find "$logPath" -type f -print0 | xargs -0 chown "{APPLICATION_USER}"
+    if ! find "$logPath" -type f -print0 | xargs -0 chown "{APPLICATION_USER}:"; then
+      printf "%s: %s\n" "No files found in" "$logPath"
+    else
+      printf "%s: %s\n" "Modified owner of files in" "$logPath"
+    fi
   fi
 }
 
-applicationUserOwner
+_setApplicationUserOwner
 exec setuidgid "{APPLICATION_USER}" multilog t "$logPath"

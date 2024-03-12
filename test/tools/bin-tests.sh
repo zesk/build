@@ -57,7 +57,7 @@ testBuildSetup() {
   fi
   if grep -q "$marker" "$testBinary"; then
     consoleError "binary $testBinary did not update itself as it should have ($marker found)"
-    tail -n 20 "$testBinary" | prefixLines "$(consoleCode)"
+    tail -n 20 "$testBinary" | wrapLines "$(consoleCode)" "$(consoleReset)"
     return "$errorEnvironment"
   fi
 

@@ -447,9 +447,9 @@ awsIPAccess() {
 
   clearLine || :
   if test $optionRevoke; then
-    bigText "Closing ..." | prefixLines "$(consoleMagenta)"
+    bigText "Closing ..." | wrapLines "$(consoleMagenta)" "$(consoleReset)"
   else
-    bigText "Opening ..." | prefixLines "$(consoleBlue)"
+    bigText "Opening ..." | wrapLines "$(consoleBlue)" "$(consoleReset)"
   fi
   consoleNameValue 40 ID "$developerId" || :
   consoleNameValue 40 IP "$currentIP" || :

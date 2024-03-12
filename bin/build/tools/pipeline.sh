@@ -112,7 +112,7 @@ ___dumpLines() {
   consoleError "$(echoBar)"
   echo "$(consoleInfo "$(consoleBold "$quietLog")")$(consoleBlack ": Last $nLines lines ...")"
   consoleError "$(echoBar)"
-  tail -n "$nLines" "$quietLog" | prefixLines "$(consoleYellow)"
+  tail -n "$nLines" "$quietLog" | wrapLines "$(consoleYellow)" "$(consoleReset)"
 }
 
 # Summary: Output debugging information when the build fails

@@ -71,7 +71,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Examples
 
-    cat "$file" | prefixLines "$(consoleCode)"
+    cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
     cat "$errors" | prefixLines "    ERROR: "
 
 #### Exit codes
@@ -95,7 +95,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Examples
 
-    cat "$file" | prefixLines "$(consoleCode)"
+    cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
     cat "$errors" | prefixLines "    ERROR: "
 
 #### Exit codes

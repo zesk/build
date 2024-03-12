@@ -33,7 +33,7 @@ dumpDockerTestFile() {
 
   if [ -f "$proc1File" ]; then
     bigText $proc1File
-    prefixLines "$(consoleMagenta)" <"$proc1File"
+    wrapLines "$(consoleMagenta)" "$(consoleReset)" <"$proc1File"
   else
     consoleWarning "Missing $proc1File"
   fi

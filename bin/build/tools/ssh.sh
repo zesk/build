@@ -78,7 +78,7 @@ sshAddKnownHost() {
           cat "$output" >>"$sshKnown"
           ! $verbose || consoleSuccess "Added $remoteHost to $sshKnown"
         else
-          printf "%s: %s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(prefixLines "$(consoleCode)" <"$output")" 1>&2
+          printf "%s: %s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(wrapLines "$(consoleCode)" "$(consoleReset)" <"$output")" 1>&2
           exitCode=$errorEnvironment
         fi
         ;;
