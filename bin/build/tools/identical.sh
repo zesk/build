@@ -191,7 +191,7 @@ identicalCheck() {
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
       tokenFile="$(tail -n 1 "$tokenFile")"
-      if inArray "$token" "${singles[@]}"; then
+      if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
         printf "%s: %s in %s\n" "$(consoleSuccess "Single instance of token ok:")" "$(consoleCode "$token")" "$(consoleInfo "$tokenFile")"
         foundSingles+=("$token")
       else
@@ -203,8 +203,8 @@ identicalCheck() {
       fi
     fi
   done < <(find "$tempDirectory" -type f -name '*.match')
-  for token in "${singles[@]}"; do
-    if ! inArray "$token" "${foundSingles[@]}"; then
+  for token in "${singles[@]+"${singles[@]}"}"; do
+    if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
       printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token NOT found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
     fi
   done
