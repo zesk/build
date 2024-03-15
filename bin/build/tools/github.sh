@@ -157,7 +157,7 @@ githubRelease() {
   fi
 
   consoleDecoration "$(echoBar)" || :
-  bigText "$releaseName" | prefixLines "$(consoleMagenta)" || :
+  bigText "$releaseName" | wrapLines "$(consoleMagenta)" "$(consoleReset)" || :
   consoleDecoration "$(echoBar)" || :
   printf "%s %s (%s) %s\n" "$(consoleGreen Tagging)" "$(consoleCode "$releaseName")" "$(consoleMagenta "$commitish")" "$(consoleGreen "and pushing ... ")" || :
 
@@ -189,14 +189,14 @@ githubRelease() {
     "https://api.github.com/repos/$repoOwner/$repoName/releases" \
     -d "$JSON" >"$resultsFile"; then
     consoleError "POST failed to GitHub" 1>&2 || :
-    prefixLines "$(consoleInfo)JSON: $(consoleCode)" <"$JSON" 1>&2 || :
+    wrapLines "$(consoleInfo)JSON: $(consoleCode)" "$(consoleReset)" <"$JSON" 1>&2 || :
     buildFailed "$resultsFile" 1>&2 || return $?
   fi
   url="$(jq .html_url <"$resultsFile")"
   if [ -z "$url" ] || [ "$url" = "null" ]; then
     consoleError "Results had no html_url" 1>&2 || :
     consoleError "Access token length ${#accessToken}" 1>&2 || :
-    printf %s "$JSON" | prefixLines "$(consoleInfo)Submitted JSON: $(consoleCode)" 1>&2 || :
+    printf %s "$JSON" | wrapLines "$(consoleInfo)Submitted JSON: $(consoleCode)" "$(consoleReset)" 1>&2 || :
     buildFailed "$resultsFile" 1>&2 || return $?
   fi
   printf "%s: %s\n" "$(consoleInfo URL)" "$(consoleOrange "$url")" || :

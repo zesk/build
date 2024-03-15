@@ -34,6 +34,7 @@ _daemontoolsInstallServiceUsage() {
 daemontoolsInstallService() {
   local arg serviceHome serviceName source target logPath logSource logTarget appUser
 
+  __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
   if ! source ./bin/build/env/DAEMONTOOLS_HOME.sh; then
     _daemontoolsInstallServiceUsage "$errorEnvironment" "DAEMONTOOLS_HOME.sh failed" || return $?
   fi

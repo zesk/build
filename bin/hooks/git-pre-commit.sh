@@ -31,6 +31,17 @@ fi
 hookGitPreCommit() {
   local changedGitFiles changedShellFiles blank
 
+  # IDENTICAL loadSingles 9
+  local single singles
+  singles=()
+  while read -r single; do
+    single="${single#"${single%%[![:space:]]*}"}"
+    single="${single%"${single##*[![:space:]]}"}"
+    if [ "${single###}" = "${single}" ]; then
+      singles+=(--single "$single")
+    fi
+  done <./etc/identical-check-singles.txt
+
   # shellcheck source=/dev/null
   if ! source "./bin/build/tools.sh"; then
     # poor man's clearLine
@@ -81,7 +92,7 @@ hookGitPreCommit() {
       _hookGitPreCommitFailed "Enforcing copyright and company in shell files" || return $?
     fi
     # Unusual quoting here is to avoid having this match as an identical
-    if ! identicalCheck --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
+    if ! identicalCheck "${singles[@]+"${singles[@]}"}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
       _hookGitPreCommitFailed identical-check.sh || return $?
     fi
 

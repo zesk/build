@@ -36,7 +36,7 @@ dumpFile() {
         echoBar " "
         head -$showLines "$1"
         echoBar " "
-      } | prefixLines "$(consoleCode)    "
+      } | wrapLines "$(consoleCode)    " "$(consoleReset)"
     else
       consoleError "dumpFile: $1 is not a file"
     fi

@@ -183,7 +183,7 @@ _assertExitCodeHelper() {
   restoreErrorExit "$saved"
 
   if ! test $errorsOk && [ -s "$errorFile" ]; then
-    $usageFunction $errorEnvironment "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usageFunction#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(prefixLines "$(consoleError ERROR:) $(consoleCode)" <"$errorFile")")" || return $?
+    $usageFunction $errorEnvironment "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usageFunction#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
   fi
   if test $errorsOk && [ ! -s "$errorFile" ]; then
     consoleWarning "--stderr-ok used but is NOT necessary: $(consoleCode "${usageFunction#_} $bin $*")"
@@ -513,7 +513,7 @@ assertOutputContains() {
     _assertSuccess "\"$expected\" found in \"${commands[*]}\" output"
   else
     consoleInfo "$(echoBar)" 1>&2
-    prefixLines "$(consoleCode)" <"$tempFile" 1>&2
+    wrapLines "$(consoleCode)" "$(consoleReset)" <"$tempFile" 1>&2
     consoleError "$(echoBar)" 1>&2
     nLines=$(($(wc -l <"$tempFile") + 0))
     consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")" 1>&2
@@ -577,7 +577,7 @@ assertOutputDoesNotContain() {
   if ! grep -q "$expected" "$tempFile"; then
     _assertSuccess "${FUNCNAME[0]} $expected NOT found in ${commands[*]} output (correct)"
   else
-    prefixLines "$(consoleCode)" <"$tempFile" 1>&2
+    wrapLines "$(consoleCode)" "$(consoleReset)" <"$tempFile" 1>&2
     consoleError "$(echoBar)" 1>&2
     _assertFailure "${FUNCNAME[0]} $expected found in $* output (incorrect)"
   fi

@@ -42,7 +42,7 @@ testHeading() {
   printf "%s" "$(consoleCode)"
   consoleOrange "$(echoBar '*')"
   printf "%s" "$(consoleCode)$(clearLine)"
-  bigText "$@" | prefixLines "  $(consoleCode)"
+  bigText "$@" | wrapLines "  $(consoleCode)" "$(consoleReset)"
   consoleOrange "$(echoBar)"
   consoleReset
 }

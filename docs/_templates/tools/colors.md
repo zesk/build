@@ -11,7 +11,7 @@ All console functions in the form `consoleAction` where `Action` is a color name
 
 Examples:
 
-    cat $file | prefixLines "$(consoleGreen)"
+    cat $file | wrapLines "$(consoleGreen)" "$(consoleReset)"
     consoleInfo Starting to deploy ...
 
 ## Color Mode

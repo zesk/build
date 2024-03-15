@@ -697,19 +697,48 @@ JSON() {
 # Outputs the file owner for each file passed on the command line
 # Exit code: 0 - Success
 # Exit code: 1 - Unable to access file
-#
-fileOwner() {
-  local uid
+# Depends: ls
+_fileListColumn() {
+  local usageFunction column result
+  usageFunction="$1"
+  shift || :
+  column="$1"
+  shift || :
   while [ $# -gt 0 ]; do
     # shellcheck disable=SC2012
-    if ! uid="$(ls -ld "$1" | awk '{ print $3 }')"; then
-      _fileOwner "$errorEnvironment" "Running ls -ls $1" || return $?
+    if ! result="$(ls -ld "$1" | awk '{ print $'"$column"' }')"; then
+      "$usageFunction" "$errorEnvironment" "Running ls -ld \"$1\"" || return $?
     fi
-    printf "%s\n" "$uid"
+    printf "%s\n" "$result"
     shift
   done
 }
+
+#
+# Usage: {fn} file ...
+# Argument: file - File to get the owner for
+# Outputs the file owner for each file passed on the command line
+# Exit code: 0 - Success
+# Exit code: 1 - Unable to access file
+#
+fileOwner() {
+  _fileListColumn "_${FUNCNAME[0]}" 3 "$@"
+}
 _fileOwner() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} file ...
+# Argument: file - File to get the owner for
+# Outputs the file group for each file passed on the command line
+# Exit code: 0 - Success
+# Exit code: 1 - Unable to access file
+#
+fileGroup() {
+  _fileListColumn "_${FUNCNAME[0]}" 4 "$@"
+}
+_fileGroup() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -194,8 +194,8 @@ echoBar() {
 # Usage: prefixLines [ text .. ] < fileToPrefixLines
 # Exit Code: 0
 # Argument: `text` - Prefix each line with this text
-# Example:     cat "$file" | prefixLines "$(consoleCode)"
-# Example:     cat "$errors" | prefixLines "    ERROR: "
+# Example:     cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
+# Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
 #
 prefixLines() {
   local prefix="$*"
@@ -213,8 +213,8 @@ prefixLines() {
 # Exit Code: 0
 # Argument: `prefix` - Prefix each line with this text
 # Argument: `suffix` - Prefix each line with this text
-# Example:     cat "$file" | prefixLines "$(consoleCode)"
-# Example:     cat "$errors" | prefixLines "    ERROR: "
+# Example:     cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
+# Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
 #
 wrapLines() {
   local prefix="${1-}" suffix

@@ -24,6 +24,26 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
+# Parses text and determines if it's true-ish
+#
+# Usage: {fn} text
+# Exit Code: 0 - true
+# Exit Code: 1 - false
+# Exit Code: 2 - Neither
+# See: lowercase
+#
+parseBoolean() {
+  case "$(lowercase "$1")" in
+    y | yes | 1 | true)
+      return 0
+      ;;
+    n | no | 0 | false)
+      return 1
+      ;;
+  esac
+  return 2
+}
+
 #
 # Summary: Quote sed strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
@@ -615,6 +635,8 @@ _isCharacterClass() {
 # Does this character match one or more character classes?
 #
 # Usage: {fn} character [ class0 class1 ... ]
+# Argument: character - Required. Single character to test.
+# Argument: class0 - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
 #
 isCharacterClasses() {
   local character class
@@ -628,7 +650,11 @@ isCharacterClasses() {
   fi
   while [ "$#" -gt 0 ]; do
     class="$1"
-    if ! isCharacterClass "$class" "$character"; then
+    if [ "${#class}" -eq 1 ]; then
+      if [ "$class" = "$character" ]; then
+        return 0
+      fi
+    elif ! isCharacterClass "$class" "$character"; then
       return 1
     fi
     shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $class failed" || return $?
