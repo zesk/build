@@ -8,19 +8,18 @@
 
 Is build debugging enabled?
 
-#### Usage
+#### Arguments
 
-    buildDebugEnabled
-    
+- `moduleName` - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
 
 #### Exit codes
 
-- `1` - Debugging is not enabled
+- `1` - Debugging is not enabled (for any module)
 - `0` - Debugging is enabled
 
 #### Environment
 
-BUILD_DEBUG - Set to 1 to enable debugging, blank to disable
+BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. BUILD_DEBUG may be a comma-separated list of modules to target debugging.
 
 ### `buildDebugStart` - Start build debugging if it is enabled.
 
@@ -28,10 +27,9 @@ Start build debugging if it is enabled.
 This does `set -x` which traces and outputs every shell command
 Use it to debug when you can not figure out what is happening internally.
 
-#### Usage
+#### Arguments
 
-    buildDebugStart
-    
+- `moduleName` - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
 
 #### Examples
 
@@ -61,7 +59,7 @@ Stop build debugging if it is enabled
 - [function buildDebugStart
 ](./docs/tools/debug.md
 ) - [Start build debugging if it is enabled.
-](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L35
+](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L45
 )
 
 ### `isBashDebug` - Returns whether the shell has the debugging flag set
@@ -99,7 +97,7 @@ Useful if you need to temporarily enable or disable it.
 
 - [function saveErrorExit
 ](./docs/tools/debug.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L91
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L101
 )
 
 #### Examples
@@ -117,7 +115,7 @@ Useful if you need to temporarily enable or disable it.
 
 - [function restoreErrorExit
 ](./docs/tools/debug.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L103
+) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L113
 )
 
 [⬅ Return to index](index.md)

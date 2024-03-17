@@ -226,7 +226,7 @@ installBinBuild() {
     diff "$binName" "$myBinary" | grep -v 'relTop=' | wrapLines "$(consoleReset)$(consoleInfo CHANGES)$(consoleCode)" "$(consoleReset)" || :
     consoleMagenta "DIFFERENCES: $diffLines"
   fi
-  echo "$(consoleValue -n "$(basename "${BASH_SOURCE[0]}")") $(consoleWarning -n was updated.)"
+  echo "$(consoleValue -n "$(basename "${BASH_SOURCE[0]}")") $(consoleWarning -n was updated to version "$(consoleCode "$(jq -r .version <"./bin/build/build.json")")")"
   (nohup mv "$myBinary" "${BASH_SOURCE[0]}" 2>/dev/null 1>&2)
 }
 _installBinBuild() {
@@ -235,8 +235,6 @@ _installBinBuild() {
   printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
   return "$exitCode"
 }
-
-# Copy from _colors.sh
 
 # IDENTICAL _colors 83
 
@@ -249,6 +247,7 @@ _installBinBuild() {
 # Local Cache: this value is cached in BUILD_COLORS if it is not set.
 # Environment: BUILD_COLORS - Override value for this
 hasColors() {
+  local termColors
   export BUILD_COLORS TERM DISPLAY
   # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
   BUILD_COLORS="${BUILD_COLORS-z}"
@@ -259,10 +258,13 @@ hasColors() {
       else
         BUILD_COLORS=
       fi
-    elif [ "$(tput colors)" -ge 8 ]; then
-      BUILD_COLORS=1
     else
-      BUILD_COLORS=
+      termColors="$(tput colors 2>/dev/null)"
+      if [ "${termColors-:2}" -ge 8 ]; then
+        BUILD_COLORS=1
+      else
+        BUILD_COLORS=
+      fi
     fi
   elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
     # Values allowed for this global are 1 and blank only

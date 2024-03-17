@@ -251,7 +251,7 @@ trimSpace handles both cases now.
 - [function trimSpace
 ](./docs/tools/text.md
 ) - [Trim whitespace of a bash argument
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L111
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L131
 )
 
 ### `stripAnsi` - Strip ANSI console escape sequences from a file

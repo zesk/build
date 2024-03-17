@@ -56,10 +56,6 @@ Returns a temporary file which should be deleted.
 
 - `0` - Always succeeds
 
-#### Exit codes
-
-- `0` - Always succeeds
-
 ### `build-docs.sh` - Build documentation for build system.
 
 Build documentation for build system.
@@ -176,6 +172,19 @@ Does the file's directory exist?
 
 - `0` - Always succeeds
 
+### `fileGroup` - Outputs the file group for each file passed on the
+
+Outputs the file group for each file passed on the command line
+
+#### Arguments
+
+- `file` - File to get the owner for
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Unable to access file
+
 ### `deploy-shutdown.sh` - Deployment "start" script
 
 Deployment "start" script
@@ -212,6 +221,11 @@ BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable
 
 Does this character match one or more character classes?
 
+#### Arguments
+
+- `character` - Required. Single character to test.
+- `class0` - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -231,6 +245,24 @@ Outputs the maximum line length passed into stdin
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `parseBoolean` - Parses text and determines if it's true-ish
+
+Parses text and determines if it's true-ish
+
+#### Exit codes
+
+- `0` - true
+- `1` - false
+- `2` - Neither
+
+#### See Also
+
+- [function lowercase
+](./docs/tools/text.md
+) - [Convert text to lowercase
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L299
+)
 
 #### Exit codes
 

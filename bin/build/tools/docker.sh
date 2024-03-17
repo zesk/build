@@ -236,6 +236,7 @@ _dockerEnvFromBashEnv() {
 #
 # fn: {base}
 # Usage: {fn} imageName imageApplicationPath [ envFile ... ] [ extraArgs ... ]
+# Argument: --help - Optional. Flag. This help.
 # Argument: --image imageName - Optional. String. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
 # Argument: --path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
 # Argument: --platform platform - Optional. String. Platform to run (arm vs intel).
@@ -247,11 +248,12 @@ _dockerEnvFromBashEnv() {
 # Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
 #
 dockerLocalContainer() {
-  local arg platform imageName imageApplicationPath
+  local fail arg platform imageName imageApplicationPath
   local envFiles extraArgs
   local tempEnvs tempEnv exitCode
   local failedWhy
 
+  fail="_${FUNCNAME[0]}"
   if ! buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH; then
     _deployToRemote "$errorEnvironment" "HOME BUILD_DEBUG environment failed" || return $?
   fi
@@ -267,31 +269,35 @@ dockerLocalContainer() {
   while [ $# -gt 0 ]; do
     arg="$1"
     if [ -z "$arg" ]; then
-      "_${FUNCNAME[0]}" "$errorArgument" "Blank argument"
+      "$fail" "$errorArgument" "Blank argument"
       return $?
     fi
     case "$arg" in
+      --help)
+        "$fail" 0
+        return 0
+        ;;
       --image)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "Missing $arg" || return $?
+        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
         imageName="$1"
         ;;
       --path)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "Missing $arg" || return $?
+        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
         imageApplicationPath="$1"
         ;;
       --env)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "Missing $arg" || return $?
-        if ! envFile=$(usageArgumentFile "_${FUNCNAME[0]}" "envFile" "$1"); then
+        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
+        if ! envFile=$(usageArgumentFile "$fail" "envFile" "$1"); then
           return $errorArgument
         fi
         if ! tempEnv=$(anyEnvToDockerEnv "$envFile"); then
-          "_${FUNCNAME[0]}" "$errorArgument" "$arg $envFile unable to convert" || return $?
+          "$fail" "$errorArgument" "$arg $envFile unable to convert" || return $?
         fi
         tempEnvs+=("$tempEnv")
         envFiles+=("--env-file" "$tempEnv")
         ;;
       --platform)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "Missing $arg" || return $?
+        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
         platform="$1"
         ;;
       *)
@@ -310,7 +316,7 @@ dockerLocalContainer() {
   fi
   if [ -n "$failedWhy" ]; then
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
-    "_${FUNCNAME[0]}" "$errorArgument" "$failedWhy"
+    "$fail" "$errorArgument" "$failedWhy"
     return $?
   fi
   if ! docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}"; then
