@@ -48,6 +48,7 @@ Runs ARM64 by default.
 
 #### Arguments
 
+- `--help` - Optional. Flag. This help.
 - `--image imageName` - Optional. String. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
 - `--path imageApplicationPath` - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
 - `--platform platform` - Optional. String. Platform to run (arm vs intel).

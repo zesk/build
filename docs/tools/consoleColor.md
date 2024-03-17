@@ -52,6 +52,9 @@ Blue
 
 - `0` - Always succeeds
 
+### `consoleBoldOrange` - shellcheck disable=SC2120
+
+
 #### Exit codes
 
 - `0` - Always succeeds

@@ -55,7 +55,7 @@ Backup when `/etc/services` does not exist.
 - [function serviceToPort
 ](./docs/tools/os.md
 ) - [Get the port number associated with a service
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L904
+](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L933
 )
 
 

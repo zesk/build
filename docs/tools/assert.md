@@ -97,7 +97,11 @@ Assert one string does not contains another (case-sensitive)
 
 #### See Also
 
-{SEE:assertContains}
+- [function assertContains
+](./docs/tools/assert.md
+) - [Assert one string contains another (case-sensitive)
+](https://github.com/zesk/build/blob/main/bin/build/tools/assert.sh#L272
+)
 
 ## Comparison
 
@@ -279,35 +283,394 @@ File `bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023
 ## Output 
 
 
-ExitCode _bashDocumentation_Template assertOutputContains  ./docs/_templates/__function.md: 1
-ExitCode _bashDocumentation_Template assertOutputDoesNotContain  ./docs/_templates/__function.md: 1
+### `assertOutputEquals` - Assert output of a binary equals a string
+
+Assert output of a binary equals a string
+
+If this fails it will output an error and exit.
+
+#### Usage
+
+    assertOutputEquals expected binary [ parameters ]
+    
+
+#### Arguments
+
+- `expected` - Expected string
+- `binary` - Binary to run and evaluate output
+- `parameters` - Any additional parameters to binary
+
+#### Examples
+
+    assertOutputEquals "2023" date +%Y
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertOutputEquals` was reviewed 2023-11-12.
+
+### `assertOutputContains` - Run a command and expect the output to contain the
+
+Run a command and expect the output to contain the occurrence of a string.
+
+If this fails it will output the command result to stdout.
+
+#### Arguments
+
+- `expected` - A string to expect in the output
+- `command` - The command to run
+- `arguments` - Any arguments to pass to the command to run
+- `--exit` - Assert exit status of process to be this number
+- `--stderr` - Also include standard error in output checking
+
+#### Examples
+
+    assertOutputContains Success complex-thing.sh --dry-run
+
+#### Exit codes
+
+- `0` - If the output contains at least one occurrence of the string
+- `1` - If output does not contain string
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
+
+### `assertOutputDoesNotContain` - Run a command and expect the output to not contain
+
+Run a command and expect the output to not contain the occurrence of a string.
+
+If this fails it will output the command result to stdout.
+
+#### Usage
+
+    assertOutputDoesNotContain expected command [ arguments ... ]
+    
+
+#### Arguments
+
+- `expected` - A string to NOT expect in the output
+- `command` - The command to run
+- `arguments` - Any arguments to pass to the command to run
+- `--exit` - Assert exit status of process to be this number
+- `--stderr` - Also include standard error in output checking
+
+#### Examples
+
+    assertOutputDoesNotContain Success complex-thing.sh --dry-run
+
+#### Exit codes
+
+- `0` - If the output contains at least one occurrence of the string
+- `1` - If output does not contain string
+
+#### Local cache
+
+None
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
 
 ## Directory
 
-ExitCode _bashDocumentation_Template assertDirectoryExists  ./docs/_templates/__function.md: 1
-ExitCode _bashDocumentation_Template assertDirectoryDoesNotExist  ./docs/_templates/__function.md: 1
+
+### `assertDirectoryExists` - Test that a directory exists
+
+$\Test that a directory exists
+
+#### Usage
+
+    assertDirectoryExists directory [ message ... ]
+    
+
+#### Arguments
+
+- `directory` - Directory that should exist
+- `message` - An error message if this fails
+
+#### Examples
+
+    assertDirectoryExists "$HOME" "HOME not found"
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+- This fails if `directory` is anything but a `directory`
+
+### `assertDirectoryDoesNotExist` - Test that a directory does not exist
+
+$\Test that a directory does not exist
+
+#### Usage
+
+    assertDirectoryDoesNotExist directory [ message ... ]
+    
+
+#### Arguments
+
+- `directory` - Directory that should NOT exist
+- `message` - An error message if this fails
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+- This fails if `directory` is anything at all, even a non-directory (such as a link)
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 
 ## File
 
-ExitCode _bashDocumentation_Template assertFileExists  ./docs/_templates/__function.md: 1
-ExitCode _bashDocumentation_Template assertFileDoesNotExist  ./docs/_templates/__function.md: 1
 
-ExitCode _bashDocumentation_Template assertFileContains  ./docs/_templates/__function.md: 1
-ExitCode _bashDocumentation_Template assertFileDoesNotContain  ./docs/_templates/__function.md: 1
+### `assertFileExists` - Test that a file exists
+
+$\Test that a file exists
+
+#### Usage
+
+    assertDirectoryExists directory [ message ... ]
+    
+
+#### Arguments
+
+- `directory` - Directory that should exist
+- `message` - An error message if this fails
+
+#### Examples
+
+    assertDirectoryExists "$HOME" "HOME not found"
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+- This fails if `directory` is anything but a `directory`
+
+### `assertFileDoesNotExist` - Test that a file does not exist
+
+$\Test that a file does not exist
+
+#### Usage
+
+    assertFileDoesNotExist file [ message ... ]
+    
+
+#### Arguments
+
+- `file` - Directory that should NOT exist
+- `message` - An error message if this fails
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+- This fails if `file` is anything at all, even a non-directory (such as a link)
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed 2023-11-12.
+
+
+#### Usage
+
+    assertFileContains fileName string0 [ ... ]
+    
+
+#### Arguments
+
+- `fileName` - File to search
+- `string0 ...` - One or more strings which must be found on at least one line in the file
+
+#### Examples
+
+    assertFileContains $logFile Success
+    assertFileContains $logFile "is up to date"
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
+
+#### Usage
+
+    assertFileDoesNotContain fileName string0 [ ... ]
+    
+
+#### Arguments
+
+- `fileName` - File to search
+- `string0 ...` - One or more strings which must NOT be found anywhere in `fileName`
+
+#### Examples
+
+    assertFileDoesNotContain $logFile error Error ERROR
+    assertFileDoesNotContain $logFile warning Warning WARNING
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
 
 ## FileSize
 
-ExitCode _bashDocumentation_Template assertFileSize  ./docs/_templates/__function.md: 1
-ExitCode _bashDocumentation_Template assertNotFileSize  ./docs/_templates/__function.md: 1
 
-ExitCode _bashDocumentation_Template assertZeroFileSize  ./docs/_templates/__function.md: 1
-ExitCode _bashDocumentation_Template assertNotZeroFileSize  ./docs/_templates/__function.md: 1
+#### Arguments
+
+- `expectedSize` - Integer file size which `fileName` should be, in bytes.
+- `fileName ...` - One ore more file which should be `expectedSize` bytes in size.
+
+#### Examples
+
+    assertFileSize 22 .config
+    assertFileSize 0 .env
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+#### Arguments
+
+- `expectedSize` - Integer file size which `fileName` should NOT be, in bytes.
+- `fileName ...` - One ore more file which should NOT be `expectedSize` bytes in size.
+
+#### Examples
+
+    assertNotFileSize 22 .config
+    assertNotFileSize 0 .env
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+
+#### Arguments
+
+- `fileName ...` - One ore more file which should be zero bytes in size.
+
+#### Examples
+
+    assertZeroFileSize .config
+    assertZeroFileSize /var/www/log/error.log
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
+
+#### Arguments
+
+- `fileName ...` - One ore more file which should NOT be zero bytes in size.
+
+#### Examples
+
+    assertNotZeroFileSize 22 .config
+    assertNotZeroFileSize 0 .env
+
+#### Exit codes
+
+- `1` - If the assertions fails
+- `0` - If the assertion succeeds
+
+#### Environment
+
+If the file does not exist, this will fail.
 
 
 
 ## Random
 
-ExitCode _bashDocumentation_Template randomString  ./docs/_templates/__function.md: 1
+
+### `randomString` - Outputs 40 random hexadecimal characters, lowercase.
+
+Outputs 40 random hexadecimal characters, lowercase.
+
+#### Usage
+
+    randomString [ ... ]
+    
+
+#### Examples
+
+    testPassword="$(randomString)"
+
+#### Sample Output
+
+    cf7861b50054e8c680a9552917b43ec2b9edae2b
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Depends
+
+    shasum, /dev/random
+    
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

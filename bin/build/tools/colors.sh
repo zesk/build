@@ -408,7 +408,7 @@ clearLine() {
 # IDENTICAL _clearLine 4
 _clearLine() {
   local width
-  read -d' ' -r width < <(stty size) || : && printf "\r%s\r" "$(jot -s'' ' ' -b '' "$width")"
+  read -d' ' -r width < <(stty size) || : && printf "\r%s\r" "$(seq -s' ' "$((width + 1))" | sed 's/[0-9]//g')"
 }
 
 #
