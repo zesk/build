@@ -15,6 +15,7 @@
 # Local Cache: this value is cached in BUILD_COLORS if it is not set.
 # Environment: BUILD_COLORS - Override value for this
 hasColors() {
+  local termColors
   export BUILD_COLORS TERM DISPLAY
   # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
   BUILD_COLORS="${BUILD_COLORS-z}"
@@ -25,10 +26,13 @@ hasColors() {
       else
         BUILD_COLORS=
       fi
-    elif [ "$(tput colors)" -ge 8 ]; then
-      BUILD_COLORS=1
     else
-      BUILD_COLORS=
+      termColors="$(tput colors 2>/dev/null)"
+      if [ "${termColors-:2}" -ge 8 ]; then
+        BUILD_COLORS=1
+      else
+        BUILD_COLORS=
+      fi
     fi
   elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
     # Values allowed for this global are 1 and blank only

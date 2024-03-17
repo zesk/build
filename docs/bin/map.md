@@ -16,5 +16,5 @@ Argument-passed or entire environment variables which are exported are used and 
 - [function mapValue
 ](./docs/tools/text.md
 ) - [Maps a string using an environment file
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L424
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L444
 )
