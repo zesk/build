@@ -78,7 +78,7 @@ testsWhichAppearToWork() {
 
 _assertSubProcessValue() {
   printf "%s %s" "$(consoleCode "$(alignLeft "$width" "$2") ")" " -> "
-  assertEquals "$1" "$(_subprocessSavedValue)" "_assertSubProcessValue $2 failed " || _fail "_assertSubProcessValue $*"
+  assertEquals "$1" "$(_subprocessSavedValue)" "_assertSubProcessValue $2 buildFailed " || _fail "_assertSubProcessValue $*"
 }
 _scopeAssert() {
   printf "%s %s" "$(consoleCode "$(alignLeft "$width" "$3") ")" " -> "

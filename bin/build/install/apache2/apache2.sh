@@ -144,7 +144,7 @@ installApacheConfiguration() {
     done
   )
   local envName=envvars-webApplication
-  if escalatedMapCopyFileChanged "./bin/build/install/lib/$envName" /etc/apache2/$envName; then
+  if copyFileChanged --map --escalate "./bin/build/install/lib/$envName" /etc/apache2/$envName; then
     apacheNeedsRestart=1
   fi
   if ! grep -q /etc/apache2/$envName /etc/apache2/envvars; then
