@@ -79,7 +79,7 @@ installApacheConfiguration() {
 
   sectionHeading "$APACHE_HOME/mods-available"
   # PHP_FPM_PROXY_MAX PHP_FPM_SOCKET
-  if mapCopyFileChanged "./bin/build/install/apache2/php8.1-fpm.conf" "$APACHE_HOME/conf-available/php8.1-fpm.conf"; then
+  if copyFileChanged --map  "./bin/build/install/apache2/php8.1-fpm.conf" "$APACHE_HOME/conf-available/php8.1-fpm.conf"; then
     apacheNeedsRestart=1
   fi
 
@@ -134,7 +134,7 @@ installApacheConfiguration() {
       siteName="$(basename "$site")"
       siteName="${siteName%%.conf}"
       [ -L "$APACHE_HOME/sites-available/$siteName.conf" ] && rm "$APACHE_HOME/sites-available/$siteName.conf"
-      if mapCopyFileChanged "$site" "$APACHE_HOME/sites-available/$siteName.conf"; then
+      if copyFileChanged --map "$site" "$APACHE_HOME/sites-available/$siteName.conf"; then
         apacheNeedsRestart=1
         consoleNotice "$siteName ($site)"
       else

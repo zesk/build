@@ -31,8 +31,6 @@ errorUnchanged=11
 ####################################################################################################
 ####################################################################################################
 
-#
-#
 # Usage: {fn} [ --map ] [ --escalate ] source destination
 # Argument: --map - Flag. Optional. Map environment values into file before copying.
 # Argument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation.
@@ -40,7 +38,6 @@ errorUnchanged=11
 # Argument: destination - File. Required. Destination path
 # Exit Code: 0 - Something changed
 # Exit Code: 1 - Nothing changed
-#
 copyFileChanged() {
   local arg source destination
   local mapFlag copyFunction actualSource mappedSource verb prefix
