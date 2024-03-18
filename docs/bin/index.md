@@ -11,7 +11,6 @@ They are intended to be standalone tools useful for a variety of installation an
 - [`cannon.sh`](cannon.md) - Map strings in files to make global changes. Dangerous.
 - [`identical-check.sh`](identical-check.md) - Look for identical code in many files and ensure it matches. Good for pre-commits.
 - [`chmod-sh.sh`](chmod-sh.md) - Make `.sh` files executable. Also good for pre-commits.
-- [`map.sh`](envmap.md) - Deprecated. See [`map.sh`](map.md)
 - [`install-bin-build.sh`](install-bin-build.md) - Install this package from GitHub. Useful for build setup.
 - [`map.sh`](map.md) - Map environment values into files. Useful for generating configuration files.
 - [`new-release.sh`](new-release.md) - Create a new release for the current project.
