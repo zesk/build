@@ -101,14 +101,14 @@ daemontoolsInstallService() {
   source="./bin/build/ops/_generic-service.sh"
   target="$DAEMONTOOLS_HOME/$serviceName"
   [ -d "$target" ] || (mkdir "$target" && echo "Created $target")
-  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile escalatedMapCopyFileChanged "$source" "$target/run"; then
+  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileChanged --map --escalate "$source" "$target/run"; then
     svc -t "$target"
   fi
   if [ -n "$logPath" ]; then
     logSource="./build/ops/_generic-log.sh"
     logTarget="$DAEMONTOOLS_HOME/$serviceName/log"
     [ -d "$logTarget" ] || (mkdir "$logTarget" && echo "Created $logTarget")
-    if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile escalatedCopyFileChanged "$logSource" "$logTarget/run"; then
+    if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileChanged --escalate "$logSource" "$logTarget/run"; then
       svc -t "$logTarget"
     fi
   fi

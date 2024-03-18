@@ -1,4 +1,4 @@
-# `envmap.sh` is deprecated
+# `map.sh` is deprecated
 
 See [`map.sh`](map.sh) documentation here.
 

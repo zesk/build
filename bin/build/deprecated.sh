@@ -74,11 +74,11 @@ deprecatedCleanup() {
   consoleSuccess "Completed deprecated script for Build $(consoleCode "$(jq -r .version "$(dirname "${BASH_SOURCE[0]}")/build.json")")"
 
   # Release v0.7.13
-  cannon 'env''map.sh' 'map.sh'
-  cannon 'copyFileChanged --map ' 'copyFileChanged --map'
-  cannon 'escalatedMapCopyFileChanged' 'copyFileChanged --map --escalate'
-  cannon 'escalatedCopyFileChanged' 'copyFileChanged --escalate'
-  cannon 'yesNo ' 'parseBoolean '
+  cannon 'env''map.sh' 'map.sh' "${ignoreStuff[@]}"
+  cannon 'mapCopyFileChanged' 'copyFileChanged --map' "${ignoreStuff[@]}"
+  cannon 'escalateMapCopyFileChanged' 'copyFileChanged --map --escalate' "${ignoreStuff[@]}"
+  cannon 'escalateCopyFileChanged' 'copyFileChanged --escalate' "${ignoreStuff[@]}"
+  cannon 'yesNo ' 'parseBoolean ' "${ignoreStuff[@]}"
 
   return $exitCode
 }
