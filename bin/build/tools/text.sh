@@ -654,11 +654,12 @@ isCharacterClasses() {
       if [ "$class" = "$character" ]; then
         return 0
       fi
-    elif ! isCharacterClass "$class" "$character"; then
-      return 1
+    elif isCharacterClass "$class" "$character"; then
+      return 0
     fi
     shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $class failed" || return $?
   done
+  return 1
 }
 _isCharacterClasses() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
