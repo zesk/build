@@ -47,7 +47,7 @@ copyFileChanged() {
   copyFunction=_copyFileRegular
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -z "$arg" ] && _argument "Blank argument" || return $?
+    [ -n "$arg" ] || _argument "Blank argument" || return $?
     case "$arg" in
       --map)
         mapFlag=true
@@ -62,7 +62,7 @@ copyFileChanged() {
           return $errorUnchanged
         fi
         shift || _argument "Missing destination" || return $?
-        destination=$(usageArgumentDirectoryFile _argument "destination" "$1") || return $?
+        destination=$(usageArgumentFileDirectory _argument "destination" "$1") || return $?
         shift || _argument "shift failed" || return $?
         [ $# -eq 0 ] || _argument "Unknown argument $1"
         if $mapFlag; then
