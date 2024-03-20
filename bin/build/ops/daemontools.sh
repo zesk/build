@@ -7,19 +7,6 @@
 # Docs: o ./docs/_templates/ops/daemontools.md
 # Test: o ./test/tools/daemontools-tests.sh
 
-# shellcheck source=/dev/null
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-_daemontoolsInstallServiceUsage() {
-  usageDocument bin/build/tools/daemontools.sh daemontoolsInstallService "$@"
-  return $?
-}
-
 # Install a daemontools service which runs a binary as the file owner.
 #
 # Usage: {fn} serviceFile [ serviceName ] [ --log-path path ]
@@ -32,86 +19,72 @@ _daemontoolsInstallServiceUsage() {
 # Argument: --log logPath - Optional. Path. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
 #
 daemontoolsInstallService() {
-  local arg serviceHome serviceName source target logPath logSource logTarget appUser
+  local this usage arg serviceHome serviceName source target logPath logSource logTarget appUser
 
+  this="${FUNCNAME[0]}"
+  usage="_$this"
   __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-  if ! source ./bin/build/env/DAEMONTOOLS_HOME.sh; then
-    _daemontoolsInstallServiceUsage "$errorEnvironment" "DAEMONTOOLS_HOME.sh failed" || return $?
-  fi
   serviceHome="${DAEMONTOOLS_HOME}"
-  if [ ! -d "$serviceHome " ]; then
-    _daemontoolsInstallServiceUsage "$errorEnvironment" "DAEMONTOOLS_HOME=\"$DAEMONTOOLS_HOME\" is not a directory" || return $?
-  fi
 
   logPath=
   while [ $# -gt 0 ]; do
     arg=$1
-    if [ -z "$arg" ]; then
-      _daemontoolsInstallServiceUsage "$errorArgument" "Blank argument" || return $?
-    fi
+    [ -z "$arg" ] || __failArgument "$usage" "$this: Blank argument" || return $?
     case "$arg" in
       --home)
         shift || :
         serviceHome="${1-}"
-        if [ ! -d "$serviceHome" ]; then
-          _daemontoolsInstallServiceUsage "$errorArgument" "$arg $serviceHome must be executable"
-          return $?
-        fi
         ;;
       --log)
         shift || :
         logPath=${1-}
-        if [ ! -d "$logPath" ]; then
-          _daemontoolsInstallServiceUsage "$errorEnvironment" "$arg $logPath must be a directory"
-          return $?
-        fi
+        [ -d "$logPath" ] || __failEnvironment "$usage" "$this: $arg $logPath must be a directory" || return $?
         ;;
       *)
         if [ -z "$serviceFile" ]; then
           serviceFile="$1"
-          if [ ! -x "$serviceFile" ]; then
-            _daemontoolsInstallServiceUsage "$errorEnvironment" "$serviceFile must be executable"
-            return $?
-
-          fi
+          [ -x "$serviceFile" ] || __failEnvironment "$usage" "$serviceFile must be executable" || return $?
         elif [ -z "$serviceName" ]; then
           serviceName="$1"
         else
-          _daemontoolsInstallServiceUsage "$errorArgument" "Extra argument $1"
-          return $?
+          __failArgument "$usage" "Extra argument $1" || return $?
         fi
         ;;
     esac
   done
-  if [ -z "$serviceFile" ]; then
-    _daemontoolsInstallServiceUsage "$errorArgument" "$serviceFile is required"
-    return $?
-  fi
+
+  [ -d "$serviceHome " ] || __failEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
+
+  [ -n "$serviceFile" ] || __failArgument "$usage" "$serviceFile is required" || return $?
   if [ -z "$serviceName" ]; then
     serviceName="$(basename "$serviceFile")"
     serviceName="${serviceName%%.*}"
   fi
-
-  appUser=$(fileOwner "$serviceFile")
-  if [ -z "$appUser" ]; then
-    _daemontoolsInstallServiceUsage "$errorArgument" "Unable to get owner name of $serviceFile"
-    return $?
-  fi
+  appUser=$(fileOwner "$serviceFile") || __failEnvironment "fileOwner $serviceFile failed" || return $?
+  [ -n "$appUser" ] || __failEnvironment "fileOwner $serviceFile returned blank" || return $?
 
   source="./bin/build/ops/_generic-service.sh"
   target="$DAEMONTOOLS_HOME/$serviceName"
   [ -d "$target" ] || (mkdir "$target" && echo "Created $target")
-  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileChanged --map --escalate "$source" "$target/run"; then
-    svc -t "$target"
+
+  args=(--map "$source" "$target/run")
+  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileWouldChange "${args[@]}"; then
+    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile __environment copyFile "${args[@]}" || return $?
+    __environment svc -t "$target" || return $?
   fi
   if [ -n "$logPath" ]; then
     logSource="./build/ops/_generic-log.sh"
     logTarget="$DAEMONTOOLS_HOME/$serviceName/log"
     [ -d "$logTarget" ] || (mkdir "$logTarget" && echo "Created $logTarget")
-    if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileChanged --escalate "$logSource" "$logTarget/run"; then
-      svc -t "$logTarget"
+    args=(--map "$logSource" "$logTarget/run")
+    if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileWouldChange "${args[@]}"; then
+      LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile __environment copyFile "${args[@]}" || return $?
+      __environment svc -t "$logTarget" || return $?
     fi
   fi
+}
+_daemontoolsInstallService() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -120,60 +93,45 @@ daemontoolsInstallService() {
 # Usage: {fn} serviceName
 # Argument: serviceName - String. Required. Service name to remove.
 daemontoolsRemoveService() {
-  local arg serviceHome serviceName
+  local this usage arg serviceHome serviceName
 
-  if ! source ./bin/build/env/DAEMONTOOLS_HOME.sh; then
-    _daemontoolsInstallServiceUsage "$errorEnvironment" "DAEMONTOOLS_HOME.sh failed" || return $?
-  fi
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+  __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
   serviceHome="${DAEMONTOOLS_HOME}"
-  if [ ! -d "$serviceHome " ]; then
-    _daemontoolsInstallServiceUsage "$errorEnvironment" "DAEMONTOOLS_HOME=\"$DAEMONTOOLS_HOME\" is not a directory" || return $?
-  fi
 
   logPath=
   while [ $# -gt 0 ]; do
     arg=$1
+    [ -z "$arg" ] || __failArgument "$usage" "$this: Blank argument" || return $?
     case "$arg" in
       --home)
         shift || :
         serviceHome="${1-}"
-        if [ ! -d "$serviceHome" ]; then
-          _daemontoolsInstallServiceUsage "$errorArgument" "$arg $serviceHome must be executable"
-          return $?
-        fi
-        ;;
-      --log)
-        shift || :
-        logPath=${1-}
-        if [ ! -d "$logPath" ]; then
-          _daemontoolsInstallServiceUsage "$errorEnvironment" "$arg $logPath must be a directory"
-          return $?
-        fi
         ;;
       *)
         if [ -z "$serviceFile" ]; then
           serviceFile="$1"
-          if [ ! -x "$serviceFile" ]; then
-            _daemontoolsInstallServiceUsage "$errorEnvironment" "$serviceFile must be executable"
-            return $?
-
-          fi
+          [ -x "$serviceFile" ] || __failEnvironment "$usage" "$serviceFile must be executable" || return $?
         elif [ -z "$serviceName" ]; then
           serviceName="$1"
         else
-          _daemontoolsInstallServiceUsage "$errorArgument" "Extra argument $1"
-          return $?
+          __failArgument "$usage" "Extra argument $1" || return $?
         fi
         ;;
     esac
   done
-  if [ -z "$serviceFile" ]; then
-    _daemontoolsInstallServiceUsage "$errorArgument" "$serviceFile is required"
-    return $?
-  fi
+
+  [ -d "$serviceHome " ] || __failEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
+
+  [ -n "$serviceFile" ] || __failArgument "$usage" "$serviceFile is required" || return $?
   if [ -z "$serviceName" ]; then
     serviceName="$(basename "$serviceFile")"
     serviceName="${serviceName%%.*}"
   fi
-
+  [ -d "$serviceHome/$serviceName" ] || __failEnvironment "$usage" "$serviceHome/$serviceName does not exist" || return $?
+  __environment pushd "$serviceHome/$serviceName" >/dev/null || return $?
+  __environment rm -rf "$serviceHome/$serviceName" || return $?
+  __environment svc -dx . log || return $?
+  __environment popd >/dev/null || return $?
 }

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2024 Market Acumen, Inc.
+# Docs: o ./docs/_templates/tools/_sugar.md
+# Test: o ./test/tools/sugar-tests.sh
 # -- CUT HERE --
 
-# IDENTICAL _sugar 84
+# IDENTICAL _sugar 102
 errorEnvironment=1
 errorArgument=2
 errorCritical=99
@@ -22,7 +24,7 @@ _exit() {
   export BUILD_DEBUG
   # shellcheck disable=SC2016
   exec 1>&2 && shift && _list "$title" "$(printf '%s ' "$@")"
-  if test "${BUILD_DEBUG-}"; then
+  if "${BUILD_DEBUG-false}"; then
     _list "Stack" "${FUNCNAME[@]}" || :
     _list "Sources" "${BASH_SOURCE[@]}" || :
   fi
@@ -33,20 +35,27 @@ _exit() {
 # _return related
 #
 
+# Return code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} code command || return $?
+# Argument: code - Integer. Required. Return code.
+# Argument: message ... - String. Optional. Message to output.
 _return() {
   local code
   code="${1-1}" && shift && printf "%s failed (%d)\n" "${*-"$emptyArgument"}" "$code" 1>&2 && return "$code"
 }
 
-# Usage: foo || _environment "bad env" || return $?
-# Always fails
+# Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
+# Usage: {fn} message ...
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 1
 _environment() {
   _return "$errorEnvironment" "$@" || return $?
 }
 
-# Usage: foo || _argument "bad arg" || return $?
-# Always fails
+# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+# Usage: {fn} message ..`.
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 2
 _argument() {
   _return "$errorArgument" "$@" || return $?
 }
@@ -55,33 +64,44 @@ _argument() {
 # RUN related
 #
 
-# Usage: {fn} command || return $?
+# Run `command ...` (with any arguments) and then `_return` if it fails.
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
 __execute() {
   "$@" && return 0
   _return $? "${*-"$emptyArgument"}" && return $?
 }
 
-# Exit if a command fails.
-# Usage: {fn} command
+# Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: None
 __try() {
   __execute "$@" || _exit "Exit code: $?" "$@"
 }
 
-# Usage: __echo command
+# Output the `command ...` to stdout prior to running, then `__execute` it
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: Any
 __echo() {
   printf "Running: %s\n" "${*-"$emptyArgument"}" && __execute "$@"
 }
 
-# Run `command`, return environment error upon failure
+# Run `command ...` (with any arguments) and then `_environment` if it fails.
 # Usage: {fn} command ...
-# Argument: command - Required. Command to run.
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Failed
 __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# Run `command`, return argument error upon failure
+# Run `command ...` (with any arguments) and then `_argument` if it fails.
 # Usage: {fn} command ...
-# Argument: command - Required. Command to run.
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: 0 - Success
+# Exit Code: 2 - Failed
 __argument() {
   "$@" || _argument "$@" || return $?
 }
