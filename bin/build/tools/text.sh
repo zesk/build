@@ -338,7 +338,7 @@ listTokens() {
   local prefix suffix removeQuotesPattern
 
   prefix="$(quoteSedPattern "${1-{}")"
-  suffix="${2-\\}}"
+  suffix="$(quoteSedPattern "${2-"}"}")"
 
   removeQuotesPattern="s/.*$prefix\([a-zA-Z0-9_]*\)$suffix.*/\1/g"
 

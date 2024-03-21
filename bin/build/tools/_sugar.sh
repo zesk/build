@@ -85,7 +85,7 @@ __try() {
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: Any
 __echo() {
-  printf "Running: %s\n" "${*-"$emptyArgument"}" && __execute "$@"
+  printf "Running: %s\n" "${*-"$emptyArgument"}" && __execute "$@" || return $?
 }
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
@@ -98,7 +98,7 @@ __environment() {
 }
 
 # Run `command ...` (with any arguments) and then `_argument` if it fails.
-# Usage: {fn} command ...
+# Usage: {fn} command ...FUNCNAME
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: 0 - Success
 # Exit Code: 2 - Failed

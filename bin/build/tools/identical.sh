@@ -41,12 +41,12 @@ errorFailures=100
 # This is best used as a pre-commit check, for example. Wink.
 #
 identicalCheck() {
-  local arg fail me
+  local arg usage me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
 
-  fail="_${FUNCNAME[0]}"
+  usage="_${FUNCNAME[0]}"
   me="$(basename "${BASH_SOURCE[0]}")"
 
   binary=
@@ -57,14 +57,14 @@ identicalCheck() {
   prefixes=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __usageArgument "$fail" "Blank argument" || return $?
-    shift || __usageArgument "$fail" "Missing $arg" || return $?
-    [ -n "$1" ] || __usageArgument "$fail" "Blank $arg" || return $?
+    [ -n "$arg" ] || __usageArgument "$usage" "Blank argument" || return $?
+    shift || __usageArgument "$usage" "Missing $arg" || return $?
+    [ -n "$1" ] || __usageArgument "$usage" "Blank $arg" || return $?
     case "$arg" in
       --cd)
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
-          "$fail" "$errorArgument" "--cd \"$1\" is not a directory"
+          "$usage" "$errorArgument" "--cd \"$1\" is not a directory"
           return $?
         fi
         ;;
@@ -73,7 +73,7 @@ identicalCheck() {
         ;;
       --exec)
         binary="$1"
-        isCallable "$binary" || __usageArgument "$fail" "$arg \"$binary\" is not callable" || return $?
+        isCallable "$binary" || __usageArgument "$usage" "$arg \"$binary\" is not callable" || return $?
         ;;
       --single)
         singles+=("$1")
@@ -82,15 +82,15 @@ identicalCheck() {
         prefixes+=("$1")
         ;;
     esac
-    shift || __usageArgument "$fail" "shift failed" || return $?
+    shift || __usageArgument "$usage" "shift failed" || return $?
   done
 
   if [ ${#findArgs[@]} -eq 0 ]; then
-    "$fail" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one extension"
+    "$usage" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one extension"
     return $?
   fi
   if [ ${#prefixes[@]} -eq 0 ]; then
-    "$fail" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
+    "$usage" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
     return $?
   fi
 

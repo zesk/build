@@ -27,7 +27,6 @@ errorArgument=2
 #
 # Simplifies documentation and has it in one place for shell and online.
 #
-# Example:     _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 usageDocument() {
   local functionDefinitionFile functionName exitCode variablesFile
 
@@ -97,15 +96,19 @@ _usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateCompile() {
+  local this usage argument
   local start documentTemplate mappedDocumentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
 
   local targetDirectory settingsFile
   local base
-  local envFiles
+  local envFiles envFile
   local error tokenName
   local documentTokensFile
   local envChecksum envChecksumCache
   local compiledTemplateCache
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   cacheDirectory=
   documentTemplate=
@@ -114,18 +117,13 @@ documentationTemplateCompile() {
   forceFlag=
   envFiles=()
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _documentationTemplateCompileUsage $errorArgument "Blank argument"
-      return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --env)
-        shift || :
-        if [ ! -f "$1" ]; then
-          _documentationTemplateCompileUsage $errorArgument "--env requires a file: $1"
-          return $?
-        fi
-        envFiles+=("$1")
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
+        envFiles+=("$envFile")
         ;;
       --force)
         forceFlag=1
@@ -141,7 +139,7 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-          _documentationTemplateCompileUsage $errorArgument "Unknown argument"
+          "$usage" $errorArgument "Unknown argument"
           return $?
         fi
         ;;
@@ -149,25 +147,20 @@ documentationTemplateCompile() {
     shift || :
   done
 
-  if ! start=$(beginTiming); then
-    _documentationTemplateCompileUsage $errorEnvironment "beginTiming failed"
-    return $?
-  fi
+  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
 
   # Validate arguments
-  if ! cacheDirectory=$(usageArgumentDirectory _documentationTemplateCompileUsage cacheDirectory "$cacheDirectory") ||
-    ! documentTemplate="$(usageArgumentFile _documentationTemplateCompileUsage documentTemplate "$documentTemplate")" ||
-    ! functionTemplate="$(usageArgumentFile _documentationTemplateCompileUsage functionTemplate "$functionTemplate")" ||
-    ! targetFile="$(usageArgumentFileDirectory _documentationTemplateCompileUsage targetFile "$targetFile")"; then
-    return "$errorArgument"
-  fi
+  cacheDirectory=$(usageArgumentDirectory "$usage" cacheDirectory "$cacheDirectory") || return $?
+  documentTemplate="$(usageArgumentFile "$usage" documentTemplate "$documentTemplate")" || return $?
+  functionTemplate="$(usageArgumentFile "$usage" functionTemplate "$functionTemplate")" || return $?
+  targetFile="$(usageArgumentFileDirectory "$usage" targetFile "$targetFile")" || return $?
 
   # echo cacheDirectory="$cacheDirectory"
   # echo documentTemplate="$documentTemplate"
   # echo functionTemplate="$functionTemplate"
   # echo targetFile="$targetFile"
 
-  base="$(basename "$targetFile")"
+  base="$(basename "$targetFile")" || __failEnvironment "$usage" basename "$targetFile" || return $?
   base="${base%%.md}"
   statusMessage consoleInfo "Generating $base ..."
 
@@ -186,19 +179,21 @@ documentationTemplateCompile() {
       printf %s 'no-environment'
     fi
   ); then
-    _documentationTemplateCompileUsage "$errorEnvironment" "listTokens failed"
+    "$usage" "$errorEnvironment" "listTokens failed"
     return $?
   fi
+  echo "MAPPED DOCUMENT TEMPLATE: $mappedDocumentTemplate"
+  read -r || :
 
   if ! listTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
-    _documentationTemplateCompileUsage "$errorEnvironment" "listTokens failed"
+    "$usage" "$errorEnvironment" "listTokens failed"
     return $?
   fi
   #
   # Look at source file for each function
   #
   if ! envChecksumCache=$(requireDirectory "$cacheDirectory/envChecksum"); then
-    _documentationTemplateCompileUsage "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
+    "$usage" "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
     return $?
   fi
   envChecksumCache="$envChecksumCache/$envChecksum"
@@ -206,7 +201,7 @@ documentationTemplateCompile() {
     touch "$envChecksumCache"
   fi
   if ! compiledTemplateCache=$(requireDirectory "$cacheDirectory/compiledTemplateCache"); then
-    _documentationTemplateCompileUsage "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
+    "$usage" "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
     return $?
   fi
   # Environment change will affect this template
@@ -233,7 +228,9 @@ documentationTemplateCompile() {
         if ! settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$tokenName"); then
           error="Unable to find \"$tokenName\" (using index \"$cacheDirectory\")"
           consoleError "$error" 1>&2
-          declare "$tokenName"="$error"
+          if [ "${tokenName#* }" = "${tokenName}" ]; then
+            declare "$tokenName"="$error"
+          fi
           continue
         fi
         # echo "Checking TEMPLATE files isNewestFile" "$compiledTemplateCache/$tokenName" "$settingsFile" "${checkFiles[@]}"
@@ -242,6 +239,7 @@ documentationTemplateCompile() {
           export "${tokenName?}"
           if ! _bashDocumentation_Template "$settingsFile" "$functionTemplate" >"$compiledTemplateCache/$tokenName"; then
             mv "$compiledTemplateCache/$tokenName" "$compiledTemplateCache/$tokenName.failed"
+            # shellcheck disable=SC2140
             declare "$tokenName"="ExitCode _bashDocumentation_Template $tokenName $settingsFile $functionTemplate: $?"
           else
             declare "$tokenName"="$(cat "$compiledTemplateCache/$tokenName")"
@@ -294,26 +292,28 @@ _documentationTemplateCompileUsage() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateDirectoryCompile() {
+  local this usage argument
   local start templateDirectory functionTemplate targetDirectory cacheDirectory passArgs
   local base targetFile
   local documentTokensFile
 
+  this="${FUNCNAME[0]}"
+  usage="_$this"
   cacheDirectory=
   templateDirectory=
   functionTemplate=
   targetDirectory=
   passArgs=()
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _documentationTemplateDirectoryCompileUsage $errorArgument "Blank argument" || return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" $errorArgument "$this: Blank argument" || return $?
+    case "$argument" in
       --force)
-        passArgs+=("$1")
+        passArgs+=("$argument")
         ;;
       --env)
-        passArgs+=("$1")
-        shift || :
+        passArgs+=("$argument")
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         passArgs+=("$1")
         ;;
       *)
@@ -326,20 +326,18 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-          _documentationTemplateDirectoryCompileUsage $errorArgument "Unknown argument $1" || return $?
+          __failArgument "$usage" "Unknown argument $argument" || return $?
         fi
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "shift after $argument failed" || return $?
   done
 
   start=$(beginTiming)
-  if ! cacheDirectory=$(usageArgumentDirectory _documentationTemplateDirectoryCompileUsage "cacheDirectory" "$cacheDirectory") ||
-    ! templateDirectory=$(usageArgumentDirectory _documentationTemplateDirectoryCompileUsage "templateDirectory" "$templateDirectory") ||
-    ! functionTemplate=$(usageArgumentFile _documentationTemplateDirectoryCompileUsage "functionTemplate" "$functionTemplate") ||
-    ! targetDirectory=$(usageArgumentDirectory _documentationTemplateDirectoryCompileUsage "targetDirectory" "$targetDirectory"); then
-    return $?
-  fi
+  cacheDirectory=$(usageArgumentDirectory "$usage" "cacheDirectory" "$cacheDirectory") || return $?
+  templateDirectory=$(usageArgumentDirectory "$usage" "templateDirectory" "$templateDirectory") || return $?
+  functionTemplate=$(usageArgumentFile "$usage" "functionTemplate" "$functionTemplate") || return $?
+  targetDirectory=$(usageArgumentDirectory "$usage" "targetDirectory" "$targetDirectory") || return $?
 
   exitCode=0
   fileCount=0

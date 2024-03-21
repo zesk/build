@@ -28,112 +28,118 @@ _setupGit() {
   usageDocument "$scriptStart/${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$@"
 }
 
-testDir=$(mktemp -d)
-testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-if ! cd "$testDir"; then
-  _setupGit "$errorEnvironment" "cd $testDir failed"
-fi
+setupGitTest() {
+  local testDir testBinBuild title section logFile
 
-if ! mkdir -p bin/pipeline; then
-  _setupGit "$errorEnvironment" "cd $testDir failed"
-fi
-cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild"
-echo '# this make the file different' >>"$testBinBuild"
+  testDir=$(mktemp -d)
+  testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
+  if ! cd "$testDir"; then
+    _setupGit "$errorEnvironment" "cd $testDir failed"
+  fi
 
-# --------------------------------------------------------------------------------
-#
-title="No .gitignore, was updated, same name"
-#
-section=$((section + 1))
-labeledBigText "$title" "Section #$section"
-logFile=$section.log
+  if ! mkdir -p bin/pipeline; then
+    _setupGit "$errorEnvironment" "cd $testDir failed"
+  fi
+  cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild"
+  echo '# this make the file different' >>"$testBinBuild"
 
-assertDirectoryDoesNotExist bin/build
-export BUILD_DIFF=1
+  # --------------------------------------------------------------------------------
+  #
+  title="No .gitignore, was updated, same name"
+  #
+  section=$((section + 1))
+  labeledBigText "$title" "Section #$section"
+  logFile=$section.log
 
-assertFileContains "$testBinBuild" "make the file different"
+  assertDirectoryDoesNotExist bin/build || return $?
+  export BUILD_DIFF=1
 
-if ! bin/pipeline/install-bin-build.sh --mock "$buildHome/bin/build" >"$logFile" 2>&1; then
-  buildFailed "$logFile" || :
-  _setupGit "$errorEnvironment" "install-bin-build.sh failed"
-fi
-sleep 1 || :
+  assertFileContains "$testBinBuild" "make the file different" || return $?
 
-assertDirectoryExists bin/build
-assertFileContains "$logFile" install-bin-build.sh
-assertFileContains "$logFile" "was updated"
-assertFileDoesNotContain "$logFile" "is up to date" "does not ignore"
-assertFileDoesNotContain "$testBinBuild" "make the file different"
+  if ! bin/pipeline/install-bin-build.sh --mock "$buildHome/bin/build" >"$logFile" 2>&1; then
+    buildFailed "$logFile" || :
+    _setupGit "$errorEnvironment" "install-bin-build.sh failed"
+  fi
+  sleep 1 || :
 
-rm -rf bin/build
-set +x
+  assertDirectoryExists bin/build || return $?
+  assertFileContains "$logFile" install-bin-build.sh || return $?
+  assertFileContains "$logFile" "was updated" || return $?
+  assertFileDoesNotContain "$logFile" "is up to date" "does not ignore" || return $?
+  assertFileDoesNotContain "$testBinBuild" "make the file different" || return $?
 
-consoleSuccess Success
+  rm -rf bin/build || return $?
+  set +x
 
-# --------------------------------------------------------------------------------
-#
-title="Has gitignore (missing), up to date, different name"
-#
-section=$((section + 1))
-labeledBigText "$title" "Section #$section"
-logFile=$section.log
+  consoleSuccess Success
 
-assertDirectoryDoesNotExist bin/build
+  # --------------------------------------------------------------------------------
+  #
+  title="Has gitignore (missing), up to date, different name"
+  #
+  section=$((section + 1))
+  labeledBigText "$title" "Section #$section"
+  logFile=$section.log
 
-touch .gitignore
-mv bin/pipeline/install-bin-build.sh bin/pipeline/we-like-head-rubs.sh
+  assertDirectoryDoesNotExist bin/build || return $?
 
-if ! bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
-  buildFailed "$logFile"
-  _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
-fi
-sleep 1 || :
+  touch .gitignore || return $?
+  mv bin/pipeline/install-bin-build.sh bin/pipeline/we-like-head-rubs.sh || return $?
 
-if ! assertDirectoryExists bin/build ||
-  ! assertFileContains "$logFile" we-like-head-rubs.sh ||
-  ! assertFileDoesNotContain "$logFile" "install-bin-build.sh" ||
-  ! assertFileContains "$logFile" "we-like-head-rubs.sh" ||
-  ! assertFileContains "$logFile" "is up to date" ||
-  ! assertFileDoesNotContain "$logFile" "was updated" ||
-  ! assertFileContains "$logFile" "does not ignore" ||
-  ! assertFileContains "$logFile" ".gitignore"; then
-  buildFailed "$logFile" || :
-  _setupGit "$errorEnvironment" "install-bin-build.sh failed"
-  return $?
-fi
-rm -rf bin/build
+  if ! bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
+    buildFailed "$logFile"
+    _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
+  fi
+  sleep 1 || :
 
-consoleSuccess Success, wanrnings were shown
+  if ! assertDirectoryExists bin/build ||
+    ! assertFileContains "$logFile" we-like-head-rubs.sh ||
+    ! assertFileDoesNotContain "$logFile" "install-bin-build.sh" ||
+    ! assertFileContains "$logFile" "we-like-head-rubs.sh" ||
+    ! assertFileContains "$logFile" "is up to date" ||
+    ! assertFileDoesNotContain "$logFile" "was updated" ||
+    ! assertFileContains "$logFile" "does not ignore" ||
+    ! assertFileContains "$logFile" ".gitignore"; then
+    buildFailed "$logFile" || :
+    _setupGit "$errorEnvironment" "install-bin-build.sh failed"
+    return $?
+  fi
+  rm -rf bin/build
 
-# --------------------------------------------------------------------------------
-#
-title="Has gitignore (good), needs update, different name"
-#
-section=$((section + 1))
-labeledBigText "$title" "Section #$section"
-logFile=$section.log
+  consoleSuccess Success, wanrnings were shown
 
-assertDirectoryDoesNotExist bin/build
+  # --------------------------------------------------------------------------------
+  #
+  title="Has gitignore (good), needs update, different name"
+  #
+  section=$((section + 1))
+  labeledBigText "$title" "Section #$section"
+  logFile=$section.log
 
-echo "/bin/build/" >>.gitignore
+  assertDirectoryDoesNotExist bin/build || return $?
 
-if ! bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
-  buildFailed "$logFile"
-  _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
-fi
-sleep 1 || :
+  echo "/bin/build/" >>.gitignore
 
-if ! assertDirectoryExists bin/build ||
-  ! assertFileContains "$logFile" we-like-head-rubs.sh ||
-  ! assertFileDoesNotContain "$logFile" "install-bin-build.sh" ||
-  ! assertFileContains "$logFile" "is up to date" ||
-  ! assertFileDoesNotContain "$logFile" "was updated" ||
-  ! assertFileDoesNotContain "$logFile" "does not ignore" ||
-  ! assertFileDoesNotContain "$logFile" ".gitignore"; then
-  buildFailed "$logFile"
-  _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
-fi
+  if ! bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
+    buildFailed "$logFile"
+    _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
+  fi
+  sleep 1 || :
 
-rm -rf bin/build
+  if ! assertDirectoryExists bin/build ||
+    ! assertFileContains "$logFile" we-like-head-rubs.sh ||
+    ! assertFileDoesNotContain "$logFile" "install-bin-build.sh" ||
+    ! assertFileContains "$logFile" "is up to date" ||
+    ! assertFileDoesNotContain "$logFile" "was updated" ||
+    ! assertFileDoesNotContain "$logFile" "does not ignore" ||
+    ! assertFileDoesNotContain "$logFile" ".gitignore"; then
+    buildFailed "$logFile"
+    _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
+  fi
 
-consoleSuccess Success
+  rm -rf bin/build
+
+  consoleSuccess Success
+}
+
+setupGitTest "$@"

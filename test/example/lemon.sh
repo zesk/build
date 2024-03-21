@@ -7,6 +7,7 @@
 odd() {
   [ "$1" -eq $(($(($1 / 2)) * 2)) ]
 }
+printf "%s started on %s\n" "${BASH_SOURCE[0]}" "$(date "+%F %T")"
 while true; do
   random=$(od -A n -t d -N 1 /dev/urandom)
   if odd "$random"; then

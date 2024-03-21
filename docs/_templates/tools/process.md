@@ -1,9 +1,9 @@
-# Apache Functions
+# Process Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{installApacheConfiguration}
+{processWait}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -514,7 +514,14 @@ findUncaughtAssertions() {
   if ! tempFile=$(mktemp); then
     "_${FUNCNAME[0]}" "$errorEnvironment" "mktemp failed" || return $?
   fi
-  if ! find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n assert | grep -E -v '(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)' >"$tempFile"; then
+  suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
+  {
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '_(argument|environment|return)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
+  } >"$tempFile"
+
+  if [ ! -s "$tempFile" ]; then
     consoleSuccess "All files AOK."
   else
     if [ -n "$binary" ] || test $listFlag; then

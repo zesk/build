@@ -25,35 +25,36 @@ Read user input and return 0 if the user says yes
 #### Arguments
 
 - `--map` - Flag. Optional. Map environment values into file before copying.
+- `source` - File. Required. Source path
+- `destination` - File. Required. Destination path
+
+#### Exit codes
+
+- `0` - Something would change
+- `1` - Nothing would change
+
+#### Arguments
+
+- `--map` - Flag. Optional. Map environment values into file before copying.
 - `--escalate` - Flag. Optional. The file is a privilege escalation and needs visual confirmation.
 - `source` - File. Required. Source path
 - `destination` - File. Required. Destination path
 
 #### Exit codes
 
-- `0` - Something changed
-- `1` - Nothing changed
+- `0` - Success
+- `1` - Failed
 
-#### Usage
+## Examples
 
-    copyFileChangedQuiet source destination
-    
+Example:
 
-#### Arguments
+    args=(--map configure/sshd_config /etc/ssh/sshd_config)
+    if copyFileWouldChange "${args[@]}"; then
+        __environment copyFile "${args[@]}" || return $?
+        __environment service ssh restart || return $?
+    fi
 
-- `source` - Source file path
-- `destination` - Destination file path
-
-#### Exit codes
-
-- `0` - Never fails
-
-#### See Also
-
-- [function copyFileChanged
-](./docs/tools/interactive.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L43
-)
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

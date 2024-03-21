@@ -76,9 +76,9 @@ testsWhichAppearToWork() {
   printf "%s\n" scopeTestExport scopeTestNada scopeTestSetA scopeDeleteIt
 }
 
-_assertSubProcessValue() {
+_subprocessAssertValue() {
   printf "%s %s" "$(consoleCode "$(alignLeft "$width" "$2") ")" " -> "
-  assertEquals "$1" "$(_subprocessSavedValue)" "_assertSubProcessValue $2 buildFailed " || _fail "_assertSubProcessValue $*"
+  assertEquals "$1" "$(_subprocessSavedValue)" "_subprocessAssertValue $2 buildFailed " || _fail "_subprocessAssertValue $*"
 }
 _scopeAssert() {
   printf "%s %s" "$(consoleCode "$(alignLeft "$width" "$3") ")" " -> "
@@ -104,13 +104,13 @@ for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
   _scopeAssert "" "${TESTING-}" "$fullName init"
-  _assertSubProcessValue "" "$fullName init"
+  _subprocessAssertValue "" "$fullName init"
   # -- test --
   if ! "$func"; then
     _fail "$func failed"
   fi
   _scopeAssert "" "${TESTING-}" "$fullName"
-  _assertSubProcessValue "Totally" "$fullName"
+  _subprocessAssertValue "Totally" "$fullName"
   # -- cleanup --
   export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 done
@@ -118,13 +118,13 @@ for func in $(testsWhichAppearToWork); do
   fullName="$testName $func"
   # -- precondition --
   _scopeAssert "" "${TESTING-}" "$fullName init"
-  _assertSubProcessValue "" "$fullName init"
+  _subprocessAssertValue "" "$fullName init"
   # -- test --
   if ! "$func"; then
     _fail "$func failed"
   fi
   _scopeAssert "Totally" "${TESTING-}" "$fullName"
-  _assertSubProcessValue "Totally" "$fullName"
+  _subprocessAssertValue "Totally" "$fullName"
   # -- cleanup --
   export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 done
@@ -141,14 +141,14 @@ for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
   _scopeAssert "" "${TESTING-}" "$fullName init"
-  _assertSubProcessValue "" "$fullName init"
+  _subprocessAssertValue "" "$fullName init"
   # -- test --
   export TESTING
   if ! "$func"; then
     _fail "$func failed"
   fi
   _scopeAssert "" "${TESTING-}" "$fullName"
-  _assertSubProcessValue "Totally" "$fullName"
+  _subprocessAssertValue "Totally" "$fullName"
   # -- cleanup --
   export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 done
@@ -157,13 +157,13 @@ for func in $(testsWhichAppearToWork); do
   fullName="$testName $func"
   # -- precondition --
   _scopeAssert "" "${TESTING-}" "$fullName init"
-  _assertSubProcessValue "" "$fullName init"
+  _subprocessAssertValue "" "$fullName init"
   # -- test --
   if ! "$func"; then
     _fail "$func failed"
   fi
   _scopeAssert "Totally" "${TESTING-}" "$fullName"
-  _assertSubProcessValue "Totally" "$fullName"
+  _subprocessAssertValue "Totally" "$fullName"
 
   # -- cleanup --
   export -n TESTING && unset TESTING && set +a && _subprocessClearValue
@@ -182,14 +182,14 @@ for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
   _scopeAssert "" "${TESTING-}" "$fullName init"
-  _assertSubProcessValue "" "$fullName init"
+  _subprocessAssertValue "" "$fullName init"
   # -- test --
   set -a
   if ! "$func"; then
     _fail "$func failed"
   fi
   _scopeAssert "" "${TESTING-}" "$fullName"
-  _assertSubProcessValue "Totally" "$fullName"
+  _subprocessAssertValue "Totally" "$fullName"
   # -- cleanup --
   export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 done
@@ -197,13 +197,13 @@ for func in $(testsWhichAppearToWork); do
   fullName="$testName $func"
   # -- precondition --
   _scopeAssert "" "${TESTING-}" "$fullName init"
-  _assertSubProcessValue "" "$fullName init"
+  _subprocessAssertValue "" "$fullName init"
   # -- test --
   if ! "$func"; then
     _fail "$func failed"
   fi
   _scopeAssert "${TESTING-}" "Totally" "$fullName"
-  _assertSubProcessValue "Totally" "$fullName"
+  _subprocessAssertValue "Totally" "$fullName"
   # -- cleanup --
   export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 done
@@ -225,13 +225,13 @@ function testLocalScope() {
     fullName="$testName $func"
     # -- precondition --
     _scopeAssert "" "${TESTING-}" "$fullName init"
-    _assertSubProcessValue "" "$fullName init"
+    _subprocessAssertValue "" "$fullName init"
     # -- test --
     if ! "$func"; then
       _fail "$func failed"
     fi
     _scopeAssert "${TESTING-}" "" "$fullName"
-    _assertSubProcessValue "Totally" "$fullName"
+    _subprocessAssertValue "Totally" "$fullName"
     # -- cleanup --
     export -n TESTING && unset TESTING && set +a && _subprocessClearValue
   done
@@ -239,13 +239,13 @@ function testLocalScope() {
     fullName="$testName $func"
     # -- precondition --
     _scopeAssert "" "${TESTING-}" "$fullName init"
-    _assertSubProcessValue "" "$fullName init"
+    _subprocessAssertValue "" "$fullName init"
     # -- test --
     if ! "$func"; then
       _fail "$func failed"
     fi
     _scopeAssert "${TESTING-}" "Totally" "$fullName"
-    _assertSubProcessValue "Totally" "$testName $func"
+    _subprocessAssertValue "Totally" "$testName $func"
     # -- cleanup --
     export -n TESTING && unset TESTING && set +a && _subprocessClearValue
   done

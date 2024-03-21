@@ -70,7 +70,7 @@ _copyFileEscalated() {
     "$(consoleCode "$3")" \
     "$(consoleRed Yes)" \
     "$(consoleGreen No)" "$(consoleRed Yes)")"; then
-    __execute cp "$2" "$3"
+    __execute cp "$2" "$3" || return $?
     return $?
   fi
   printf "%s \"%s\"\n" "$(consoleError "Used declined update of")" "$(consoleRed "$3")" 1>&2
@@ -85,7 +85,7 @@ _copyFileEscalated() {
 _copyFileRegular() {
   local displaySource="$1" source="$2" destination="$3" verb="$4"
   consoleReset || _copyFilePrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
-  __execute cp "$source" "$destination"
+  __execute cp "$source" "$destination" || return $?
 }
 
 _copyFilePrompt() {
@@ -119,8 +119,6 @@ _copyFileShowNew() {
 
 ####################################################################################################
 ####################################################################################################
-
-
 
 # Usage: {fn} [ --map ] [ --escalate ] source destination
 # Argument: --map - Flag. Optional. Map environment values into file before copying.
@@ -169,9 +167,9 @@ copyFile() {
         fi
         if [ -f "$destination" ]; then
           if ! diff -q "$actualSource" "$destination"; then
-            prefix="$(consoleSubtle "$(basename "$source")")"
+            prefix="$(consoleSubtle "$(basename "$source")"): "
             _copyFilePrompt "$source" "$destination" "Changes" || :
-            diff "$source" "$destination" | sed '1d' | wrapLines "$prefix$(consoleCode)" "$(consoleReset)" || :
+            diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(consoleCode)" "$(consoleReset)" || :
             verb="File changed${verb}"
           else
             return 0
