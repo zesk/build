@@ -182,9 +182,6 @@ documentationTemplateCompile() {
     "$usage" "$errorEnvironment" "listTokens failed"
     return $?
   fi
-  echo "MAPPED DOCUMENT TEMPLATE: $mappedDocumentTemplate"
-  read -r || :
-
   if ! listTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
     "$usage" "$errorEnvironment" "listTokens failed"
     return $?
