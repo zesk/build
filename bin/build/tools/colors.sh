@@ -385,7 +385,7 @@ consoleValue() {
 # shellcheck disable=SC2120
 consoleNameValue() {
   local characterWidth=$1 name=$2
-  shift && shift && printf "%s %s\n" "$(consoleLabel "$(alignLeft "$characterWidth" "$name")")" "$(consoleValue "$@")"
+  shift 2 && printf "%s %s\n" "$(consoleLabel "$(alignLeft "$characterWidth" "$name")")" "$(consoleValue "$@")"
 }
 
 #

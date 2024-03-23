@@ -31,6 +31,7 @@ _setupGit() {
 setupGitTest() {
   local testDir testBinBuild title section logFile
 
+  section=0
   testDir=$(mktemp -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
   if ! cd "$testDir"; then
