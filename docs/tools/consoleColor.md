@@ -85,9 +85,9 @@ Styles
 
 - `0` - Always succeeds
 
-### `consoleCode` - code or variables in output
+### `consoleCode` - Code or variables in output
 
-code or variables in output
+Code or variables in output
 
 
 #### Exit codes
@@ -110,9 +110,9 @@ decorations to output (like bars and lines)
 
 - `0` - Always succeeds
 
-### `consoleError` - errors
+### `consoleError` - Errors
 
-errors
+Errors
 
 
 #### Exit codes

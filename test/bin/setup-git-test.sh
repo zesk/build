@@ -10,26 +10,19 @@
 #
 set -eou pipefail
 
-section=0
-errorEnvironment=1
-
-buildHome=$1
-shift || :
-
-# shellcheck source=/dev/null
-. "$buildHome/bin/build/tools.sh"
-
-scriptStart=$(pwd)
 #
 # fn: {base}
 # Usage: {fn} buildHome
 #
-_setupGit() {
-  usageDocument "$scriptStart/${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$@"
-}
-
 setupGitTest() {
+  buildHome=$1
+  shift || :
+
+  # shellcheck source=/dev/null
+  . "$buildHome/bin/build/tools.sh"
+
   local testDir testBinBuild title section logFile
+  local errorEnvironment=1
 
   section=0
   testDir=$(mktemp -d)
@@ -138,9 +131,12 @@ setupGitTest() {
     _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
   fi
 
-  rm -rf bin/build
+  rm -rf bin/build || :
 
   consoleSuccess Success
+}
+_setupGitTest() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 setupGitTest "$@"
