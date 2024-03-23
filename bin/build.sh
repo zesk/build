@@ -8,30 +8,35 @@
 
 # IDENTICAL zesk-build-bin-header 10
 _fail() {
+  local errorEnvironment=1
   printf "%s\n" "$*" 1>&2
-  exit 1
+  return "$errorEnvironment"
+}
+_init() {
+  cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd .. failed" || return $?
+  # shellcheck source=/dev/null
+  . ./bin/build/tools.sh || return $?
 }
 
-set -eou pipefail || _fail "set -eou pipefail fail?"
-cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd $(dirname "${BASH_SOURCE[0]}")/.. failed"
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh || _fail "tools.sh failed"
-# zesk-build-bin-header
-
+#
+# Build Zesk Build
+#
 buildBuild() {
+  set -eou  pipefail
+
+  _init || _fail "_init failed" || return $?
   if ! ./bin/update-md.sh --skip-commit; then
-    consoleError "Can not update the Markdown files" 1>&2
-    return 1
+    _fail "Can not update the Markdown files" || return $?
   fi
 
   # This takes a long time, keep as pre-commit
   # ./bin/build-docs.sh
 
   if gitRepositoryChanged; then
-    printf "%s\n" "CHANGES:"
+    printf "%s\n" "CHANGES:" || :
     gitShowChanges | wrapLines "$(consoleCode)    " "$(consoleReset)"
     git commit -m "Build version $(runHook version-current)" -a || :
-    git push origin
+    git push origin || :
   fi
   consoleSuccess Built successfully.
 }

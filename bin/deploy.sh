@@ -9,18 +9,24 @@ errorEnvironment=1
 
 # IDENTICAL zesk-build-bin-header 10
 _fail() {
+  local errorEnvironment=1
   printf "%s\n" "$*" 1>&2
-  exit 1
+  return "$errorEnvironment"
+}
+_init() {
+  cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd .. failed" || return $?
+  # shellcheck source=/dev/null
+  . ./bin/build/tools.sh || return $?
 }
 
-set -eou pipefail || _fail "set -eou pipefail fail?"
-cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd $(dirname "${BASH_SOURCE[0]}")/.. failed"
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh || _fail "tools.sh failed"
-# zesk-build-bin-header
-
+#
+# Deploy Zesk Build
+#
 buildDeploy() {
   local fail start appId notes
+
+  set -eou pipefail
+  _init || _fail "_init failed" || return $?
 
   fail="_${FUNCNAME[0]}"
   if ! start=$(beginTiming); then
