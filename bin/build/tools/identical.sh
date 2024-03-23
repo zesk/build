@@ -11,6 +11,7 @@ errorFailures=100
 # Usage: {fn} --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
 # Argument: --extension extension - Required. One or more extensions to search for in the current directory.
 # Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
+# Argument: --exclude pattern - Optional. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 # Argument: --cd directory - Optional. Change to this directory before running. Defaults to current directory.
 # Argument: --help - Optional. This help.
 #
@@ -45,7 +46,7 @@ identicalCheck() {
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
-
+  local excludes
   usage="_${FUNCNAME[0]}"
   me="$(basename "${BASH_SOURCE[0]}")"
 
@@ -55,12 +56,17 @@ identicalCheck() {
   findArgs=()
   badFiles=()
   prefixes=()
+  excludes=()
   while [ $# -gt 0 ]; do
     arg="$1"
     [ -n "$arg" ] || __usageArgument "$usage" "Blank argument" || return $?
     shift || __usageArgument "$usage" "Missing $arg" || return $?
     [ -n "$1" ] || __usageArgument "$usage" "Blank $arg" || return $?
     case "$arg" in
+      --help)
+        "$usage" 0
+        return 0
+        ;;
       --cd)
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
@@ -80,6 +86,11 @@ identicalCheck() {
         ;;
       --prefix)
         prefixes+=("$1")
+        ;;
+      --exclude)
+        shift || __failArgument "$usage" "No $arg argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Empty $arg argument" || return $?
+        excludes+=(! -path "$1")
         ;;
     esac
     shift || __usageArgument "$usage" "shift failed" || return $?
@@ -175,7 +186,7 @@ identicalCheck() {
       done < <(grep -n "$prefix" "$searchFile") || :
       prefixIndex=$((prefixIndex + 1))
     done
-  done < <(find "$rootDir" "${findArgs[@]}" ! -path "*/.*" | sort) 2>"$resultsFile"
+  done < <(find "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}" | sort) 2>"$resultsFile"
 
   if [ -n "$binary" ] && [ ${#badFiles[@]} -gt 0 ]; then
     "$binary" "${badFiles[@]}"

@@ -5,9 +5,14 @@
 
 Makes all `*.sh` files executable
 
+## Usage
+
+    chmod-sh.sh [ findArguments ... ]
+    
+
 ## Arguments
 
-- `findArguments` - Optional. Add arguments to exclude files or paths.
+
 
 ## Exit codes
 

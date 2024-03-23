@@ -17,9 +17,7 @@ Document a function and generate a function template (markdown)
 
 #### Arguments
 
-- `file` - Required. File in which the function is defined
-- `function` - Required. The function name which is defined in `file`
-- `template` - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
+
 
 #### Exit codes
 
@@ -55,13 +53,14 @@ The process:
 
 `cacheDirectory` is required - build an index using `documentationIndexIndex` prior to using this.
 
+#### Usage
+
+    documentationTemplateCompile [ --env envFile ] cacheDirectory documentTemplate functionTemplate templateFile targetFile
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. Cache directory where the indexes live.
-- `--env envFile` - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
-- `documentTemplate` - Required. The document template containing functions to define
-- `functionTemplate` - Required. The template for individual functions defined in the `documentTemplate`.
-- `targetFile` - Required. Target file to generate
+
 
 #### Exit codes
 
@@ -90,12 +89,14 @@ The process:
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
 
+#### Usage
+
+    documentationTemplateDirectoryCompile cacheDirectory documentDirectory functionTemplate targetDirectory
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. The directory where function index exists and additional cache files can be stored.
-- `documentDirectory` - Required. Directory containing documentation templates
-- `templateFile` - Required. Function template file to generate documentation for functions
-- `targetDirectory` - Required. Directory to create generated documentation
+
 
 #### Exit codes
 
@@ -108,7 +109,7 @@ to regenerate each time.
 - [function documentationTemplateCompile
 ](./docs/tools/documentation.md
 ) - [Convert a template file to a documentation file using templates
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L98
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L97
 )
 
 ## Documentation Indexing
@@ -124,10 +125,14 @@ cacheDirectory/files/baseName
 
 Use with documentationIndex_Lookup
 
+#### Usage
+
+    documentationIndex_Generate [ --clean ] codePath cacheDirectory
+    
+
 #### Arguments
 
-- `codePath` - Required. Directory. Path where code is stored (should remain identical between invocations)
-- `cacheDirectory` - Required. Directory. Store cached information
+
 
 #### Exit codes
 
@@ -145,15 +150,14 @@ Use with documentationIndex_Lookup
 
 Looks up information in the function index
 
+#### Usage
+
+    documentationIndex_Lookup [ --settings | --source | --line | --combined | --file ] cacheDirectory lookupPattern
+    
+
 #### Arguments
 
-- `--settings` - `lookupPattern` is a function name. Outputs a file containing function settings
-- `--source` - `lookupPattern` is a function name. Outputs the source code path to where the function is defined
-- `--line` - `lookupPattern` is a function name. Outputs the source code line where the function is defined
-- `--combined` - `lookupPattern` is a function name. Outputs the source code path and line where the function is defined as `path:line`
-- `--file` - `lookupPattern` is a file name. Find files which match this base file name.
-- `cacheDirectory` - Directory where we can store cached information
-- `lookupPattern` - Token to look up in the index
+
 
 #### Exit codes
 
@@ -182,11 +186,14 @@ and adds the `documentationPath` to it
 
 Use with documentationIndex_Lookup
 
+#### Usage
+
+    documentationIndex_LinkDocumentationPaths cacheDirectory documentTemplate documentationPath
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. Cache directory where the indexes live.
-- `documentTemplate` - Required. The document template containing functions to index
-- `documentationPath` - Required. The path to store as the documentation path.
+
 
 #### Exit codes
 
@@ -198,10 +205,14 @@ Use with documentationIndex_Lookup
 
 List of functions which are not linked to anywhere in the documentation index
 
+#### Usage
+
+    documentationIndex_SetUnlinkedDocumentationPath cacheDirectory target
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. Directory. Index cache directory.
-- `target` - Required. String. Path to document path where unlinked functions should link.
+
 
 #### Exit codes
 
@@ -221,9 +232,14 @@ Within your function, add an ignore reason if you wish:
     ...
     }
 
+#### Usage
+
+    documentationIndex_ShowUnlinked cacheDirectory
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. Directory. Index cache directory.
+
 
 #### Exit codes
 
@@ -248,9 +264,14 @@ Output a list of all functions in the index as pairs:
 
     functionName functionSettings
 
+#### Usage
+
+    documentationIndex_FunctionIterator cacheDirectory
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. Directory. Index cache directory.
+
 
 #### Exit codes
 
@@ -273,9 +294,14 @@ Output a list of all functions in the index as pairs:
 
 List of functions which are not linked to anywhere in the documentation index
 
+#### Usage
+
+    documentationIndex_UnlinkedIterator cacheDirectory
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. Directory. Index cache directory.
+
 
 #### Exit codes
 
@@ -285,6 +311,11 @@ List of functions which are not linked to anywhere in the documentation index
 ### `documentationIndex_SeeLinker` - Link `Not found` tokens in documentation
 
 $\Link `Not found` tokens in documentation
+
+#### Usage
+
+    documentationIndex_SeeLinker cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
+    
 
 #### Exit codes
 
@@ -317,10 +348,14 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 - `example` - An example of usage (code, many)
 - `depends` - Any dependencies (list)
 
+#### Usage
+
+    bashDocumentation_Extract definitionFile function
+    
+
 #### Arguments
 
-- `definitionFile` - File in which function is defined
-- `function` - Function defined in `file`
+
 
 #### Exit codes
 
@@ -346,9 +381,7 @@ may output partial results with a failure.
 
 #### Arguments
 
-- `directory` - The directory to search
-- `fnName0` - A function to find the file in which it is defined
-- `fnName1...` - Additional functions are found are output as well
+
 
 #### Examples
 
@@ -378,8 +411,7 @@ Succeeds IFF only one version of a function is found.
 
 #### Arguments
 
-- `directory` - The directory to search
-- `fn` - A function to find the file in which it is defined
+
 
 #### Examples
 
@@ -418,12 +450,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
-- `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 
-#### Examples
-
-    _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 
 #### Exit codes
 
@@ -443,8 +470,7 @@ Utility to export multi-line values as Bash variables
 
 #### Arguments
 
-- `name` - Shell value to output
-- `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
+
 
 #### Exit codes
 
@@ -457,8 +483,7 @@ Utility to export multi-line values as Bash variables
 
 #### Arguments
 
-- `variable` - shell variable to set
-- `alias` - The shell variable to assign to `variable`
+
 
 #### Exit codes
 

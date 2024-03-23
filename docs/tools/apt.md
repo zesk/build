@@ -29,10 +29,14 @@ The assumption here is that `aptInstallPackage` will install the desired `binary
 
 Confirms that `binary` is installed after installation succeeds.
 
+#### Usage
+
+    whichApt binary aptInstallPackage ...
+    
+
 #### Arguments
 
-- `binary` - The binary to look for
-- `aptInstallPackage` - The package name to install if the binary is not found in the `$PATH`.
+
 
 #### Examples
 
@@ -61,7 +65,7 @@ and assumes packages will be available.
 
 #### Arguments
 
-- `package` - One or more packages to install
+
 
 #### Examples
 
@@ -77,6 +81,11 @@ and assumes packages will be available.
 OS upgrade and potential restart
 Progress is written to stderr
 Result is `uptodate` or `restart` written to stdout
+
+#### Usage
+
+    aptUpToDate
+    
 
 #### Exit codes
 

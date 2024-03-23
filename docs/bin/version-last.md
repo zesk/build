@@ -12,7 +12,7 @@ Get the last reported version.
 
 ## Arguments
 
-- `ignorePattern` - Optional. Specify a grep pattern to ignore; allows you to ignore current version
+
 
 ## Exit codes
 

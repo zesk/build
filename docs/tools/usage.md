@@ -17,12 +17,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
-- `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 
-#### Examples
-
-    _documentationTemplateCompileUsage "$errorEnvironment" "Something is awry"
 
 #### Exit codes
 
@@ -35,7 +30,7 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-- `delimiter` - Required. String. The character to separate name value pairs in the input
+
 
 #### Exit codes
 
@@ -52,10 +47,7 @@ use with maximumFieldLength 1 to generate widths
 
 #### Arguments
 
-- `nSpaces` - Required. Integer. Number of spaces to indent arguments.
-- `separatorChar` - Optional. String. Default is space.
-- `labelPrefix` - Optional. String. Defaults to blue color text.
-- `valuePrefix` - Optional. String. Defaults to red color text.
+
 
 #### Exit codes
 
@@ -67,10 +59,14 @@ Requires the binaries to be found via `which`
 
 Runs `usageFunction` on failure
 
+#### Usage
+
+    usageRequireBinary usageFunction binary0 [ ... ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. `bash` function already defined to output usage
-- `binary0` - Required. Binary which must have a `which` path.
+
 
 #### Exit codes
 
@@ -80,10 +76,14 @@ Runs `usageFunction` on failure
 
 Requires environment variables to be set and non-blank
 
+#### Usage
+
+    usageRequireEnvironment usageFunction [ env0 ... ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. `bash` function already defined to output usage
-- `env0` - Optional. String. One or more environment variables which should be set and non-empty.
+
 
 #### Exit codes
 
@@ -109,7 +109,7 @@ Should look into an actual file template, probably
 - [function usageDocument
 ](./docs/tools/usage.md
 ) - [Generates console usage output for a script using documentation tools
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L30
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L29
 )
 
 
@@ -118,12 +118,14 @@ Should look into an actual file template, probably
 Validates a value is not blank and is a path with a directory that exists
 Upon success, outputs the file name
 
+#### Usage
+
+    usageArgumentFileDirectory usageFunction variableName variableValue [ noun ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
 
 #### Exit codes
 
@@ -135,12 +137,14 @@ Upon success, outputs the file name
 Validates a value is not blank and is a file
 Upon success, outputs the file name
 
+#### Usage
+
+    usageArgumentFile usageFunction variableName variableValue [ noun ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
 
 #### Exit codes
 
@@ -152,12 +156,14 @@ Upon success, outputs the file name
 Validates a value is not blank and is a directory
 Upon success, outputs the directory name trailing slash stripped
 
+#### Usage
+
+    usageArgumentDirectory usageFunction variableName variableValue [ noun ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
+
 
 #### Exit codes
 

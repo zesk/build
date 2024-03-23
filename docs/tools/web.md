@@ -25,6 +25,11 @@
 Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
 SIte is stored in a directory called `host` for the URL requested
 
+#### Usage
+
+    websiteScrape siteURL
+    
+
 #### Exit codes
 
 - `0` - Always succeeds

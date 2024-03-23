@@ -16,6 +16,11 @@ Returns true if all `characters` are of `className`
     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
     print   punct   space   upper   word    xdigit
 
+#### Usage
+
+    isCharacterClass className character0 [ character1 ... ]
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -34,7 +39,7 @@ Quote a string to be used in a sed pattern on the command line.
 
 #### Arguments
 
-- `text` - Text to quote
+
 
 #### Examples
 
@@ -60,7 +65,7 @@ Quote bash strings for inclusion as single-quoted for eval
 
 #### Arguments
 
-- `text` - Text to quote
+
 
 #### Examples
 
@@ -92,7 +97,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Arguments
 
-- `text` - Text to quote
+
 
 #### Examples
 
@@ -118,7 +123,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Arguments
 
-- `text` - Text to quote
+
 
 #### Examples
 
@@ -144,7 +149,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Arguments
 
-- `text` - Text to quote
+
 
 #### Examples
 
@@ -162,6 +167,11 @@ Quote strings for inclusion in shell quoted strings
 ### `escapeBash` - Converts strings to shell escaped strings
 
 Converts strings to shell escaped strings
+
+#### Usage
+
+    escapeBash [ text }
+    
 
 #### Exit codes
 
@@ -192,8 +202,7 @@ Remove words from the end of a phrase
 
 #### Arguments
 
-- `wordCount` - Words to output
-- `word0` - One or more words to output
+
 
 #### Examples
 
@@ -207,9 +216,14 @@ Remove words from the end of a phrase
 
 Trim spaces and only spaces from arguments or a pipe
 
+#### Usage
+
+    trimSpace text
+    
+
 #### Arguments
 
-- `text` - Text to remove spaces
+
 
 #### Examples
 
@@ -251,7 +265,7 @@ trimSpace handles both cases now.
 - [function trimSpace
 ](./docs/tools/text.md
 ) - [Trim whitespace of a bash argument
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L131
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L132
 )
 
 ### `stripAnsi` - Strip ANSI console escape sequences from a file
@@ -265,7 +279,7 @@ Strip ANSI console escape sequences from a file
 
 #### Arguments
 
-- None.
+
 
 #### Exit codes
 
@@ -300,8 +314,7 @@ listTokens
 
 #### Arguments
 
-- `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
-- `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
+
 
 #### Exit codes
 
@@ -332,8 +345,7 @@ Maps a string using an environment file
 
 #### Arguments
 
-- `mapFile` - a file containing bash environment definitions
-- `value` - One or more values to map using said environment file
+
 
 #### Exit codes
 
@@ -350,8 +362,7 @@ Maps a string using an environment file
 
 #### Arguments
 
-- `mapFile` - a file containing bash environment definitions
-- `value` - One or more values to map using said environment file
+
 
 #### Exit codes
 
@@ -387,9 +398,7 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 #### Arguments
 
-- `fieldIndex` - The field to compute the maximum length for
-- `separatorChar` - The separator character to delineate fields
-- `fieldBasedFile` - A file with fields
+
 
 #### Examples
 
@@ -416,9 +425,7 @@ Example:
 
 #### Arguments
 
-- `number` - An integer or floating point number
-- `singular` - The singular form of a noun
-- `plural` - The plural form of a noun
+
 
 #### Examples
 
@@ -461,7 +468,7 @@ You can use this as a pipe or pass in arguments which are files to be hashed.
 
 #### Arguments
 
-- `filename` - One or more filenames to generate a checksum for
+
 
 #### Examples
 
@@ -503,7 +510,7 @@ The cacheDirectory
 
 #### Arguments
 
-- `cacheDirectory` - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+
 
 #### Examples
 
@@ -532,9 +539,7 @@ This can break your files so use with caution.
 
 #### Arguments
 
-- `fromText` - Required. String of text to search for.
-- `toText` - Required. String of text to replace.
-- `findArgs ...` - Any additional arguments are meant to filter files.
+
 
 #### Examples
 

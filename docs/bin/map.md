@@ -1,7 +1,12 @@
 
+## Usage
+
+    mapEnvironment [ environmentName0 environmentName1 ... ]
+    
+
 ## Arguments
 
-- `environmentName0` - Map this value only. If not specified, all environment variables are mapped.
+
 
 ## Exit codes
 
@@ -16,5 +21,5 @@ Argument-passed or entire environment variables which are exported are used and 
 - [function mapValue
 ](./docs/tools/text.md
 ) - [Maps a string using an environment file
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L444
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L447
 )

@@ -37,10 +37,14 @@ Critical exit `errorCritical` - exit immediately
 
 Return code always. Outputs `message ...` to `stderr`.
 
+#### Usage
+
+    _return code command || return $?
+    
+
 #### Arguments
 
-- `code` - Integer. Required. Return code.
-- `message ...` - String. Optional. Message to output.
+
 
 #### Exit codes
 
@@ -50,9 +54,14 @@ Return code always. Outputs `message ...` to `stderr`.
 
 Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
+#### Usage
+
+    _environment message ...
+    
+
 #### Arguments
 
-- `message ...` - String. Optional. Message to output.
+
 
 #### Exit codes
 
@@ -62,9 +71,14 @@ Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
 Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 
+#### Usage
+
+    _argument message ..`.
+    
+
 #### Arguments
 
-- `message ...` - String. Optional. Message to output.
+
 
 #### Exit codes
 
@@ -74,9 +88,14 @@ Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 
 Run `command ...` (with any arguments) and then `_return` if it fails.
 
+#### Usage
+
+    __execute command ...
+    
+
 #### Arguments
 
-- `command ...` - Any command and arguments to run.
+
 
 #### Exit codes
 
@@ -86,9 +105,14 @@ Run `command ...` (with any arguments) and then `_return` if it fails.
 
 Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
 
+#### Usage
+
+    __try command ...
+    
+
 #### Arguments
 
-- `command ...` - Any command and arguments to run.
+
 
 #### Exit codes
 
@@ -98,9 +122,14 @@ Run `command ...` (with any arguments) and then `_exit` if it fails. Critical co
 
 Output the `command ...` to stdout prior to running, then `__execute` it
 
+#### Usage
+
+    __echo command ...
+    
+
 #### Arguments
 
-- `command ...` - Any command and arguments to run.
+
 
 #### Exit codes
 
@@ -110,9 +139,14 @@ Output the `command ...` to stdout prior to running, then `__execute` it
 
 Run `command ...` (with any arguments) and then `_environment` if it fails.
 
+#### Usage
+
+    __environment command ...
+    
+
 #### Arguments
 
-- `command ...` - Any command and arguments to run.
+
 
 #### Exit codes
 
@@ -123,9 +157,14 @@ Run `command ...` (with any arguments) and then `_environment` if it fails.
 
 Run `command ...` (with any arguments) and then `_argument` if it fails.
 
+#### Usage
+
+    __argument command ...FUNCNAME
+    
+
 #### Arguments
 
-- `command ...` - Any command and arguments to run.
+
 
 #### Exit codes
 
@@ -139,6 +178,11 @@ Run `command ...` (with any arguments) and then `_argument` if it fails.
 
 Output a titled list
 
+#### Usage
+
+    _list title [ items ... ]
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -146,3 +190,5 @@ Output a titled list
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Unable to find "title" (using index "/Users/kent/.build"))

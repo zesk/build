@@ -58,6 +58,7 @@ quoteSedPattern() {
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
+  value="${value//&/\&}"
   value="${value//$'\n'/\\n}"
   printf %s "$value"
 }
@@ -337,16 +338,18 @@ stripAnsi() {
 listTokens() {
   local prefix suffix removeQuotesPattern
 
-  prefix="$(quoteSedPattern "${1-{}")"
+  prefix="$(quoteSedPattern "${1-"{"}")"
   suffix="$(quoteSedPattern "${2-"}"}")"
 
-  removeQuotesPattern="s/.*$prefix\([a-zA-Z0-9_]*\)$suffix.*/\1/g"
+  removeQuotesPattern="s/.*$prefix\([^$suffix]*\)$suffix.*/\1/g"
 
+  # insert newline before all found prefix
   # insert newline after all found suffix
-  # remove lines missing a prefix and missing a suffix
+  # remove lines missing a prefix OR missing a suffix
   # remove all content before prefix and after suffix
-  # remaining lines are our tokens
-  sed "s/$suffix/$suffix\n/g" | sed -e "/$prefix/!d" -e "/$suffix/!d" -e "$removeQuotesPattern"
+  # remaining lines are our raw tokens
+  # tokens may be any character except prefix or suffix or nul
+  sed -e "s/$prefix/\n$prefix/g" -e "s/$suffix/$suffix\n/g" | sed -e "/$prefix/!d" -e "/$suffix/!d" -e "$removeQuotesPattern"
 }
 
 # Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -521,16 +524,15 @@ stringOffset() {
 }
 
 _mapEnvironmentGenerateSedFile() {
-  # IDENTICAL _mapEnvironmentGenerateSedFile 12
-  local sedFile=$1 value
+  # IDENTICAL _mapEnvironmentGenerateSedFile 11
+  local i
 
-  shift
   for i in "$@"; do
     case "$i" in
       *[%{}]*) ;;
       LD_*) ;;
       *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" >>"$sedFile"
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")"
         ;;
     esac
   done
@@ -548,48 +550,50 @@ _mapEnvironmentGenerateSedFile() {
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 mapEnvironment() {
-  # IDENTICAL mapEnvironment 745 786
+  # IDENTICAL mapEnvironment 94 137
+  local this argument
   local prefix suffix sedFile ee e rs
 
+  this="${FUNCNAME[0]}"
   prefix='{'
   suffix='}'
 
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || _argument "$this: Blank argument" || return $?
+    case "$argument" in
       --prefix)
-        shift || usage $errorArgument "--prefix missing a value"
+        shift || _argument "$this: missing $argument argument" || return $?
         prefix="$1"
         ;;
       --suffix)
-        shift || usage $errorArgument "--suffix missing a value"
+        shift || _argument "$this: missing $argument argument" || return $?
         suffix="$1"
         ;;
       *)
         break
         ;;
     esac
-    shift
+    shift || _argument "shift failed after $argument" || return $?
   done
 
-  sedFile=$(mktemp)
-
+  ee=("$@")
   if [ $# -eq 0 ]; then
-    ee=()
-    for e in $(environmentVariables); do
-      ee+=("$e")
-    done
-    _mapEnvironmentGenerateSedFile "$sedFile" "${ee[@]}"
+    while read -r e; do ee+=("$e"); done < <(environmentVariables)
+    for e in $(environmentVariables); do ee+=("$e"); done
+  fi
+  sedFile=$(mktemp) || _environment "mktemp failed" || return $?
+  rs=0
+  if __environment _mapEnvironmentGenerateSedFile "${ee[@]}" >"$sedFile"; then
+    if ! sed -f "$sedFile"; then
+      rs=$?
+      cat "$sedFile" 1>&2
+    fi
   else
-    _mapEnvironmentGenerateSedFile "$sedFile" "$@"
-  fi
-
-  if ! sed -f "$sedFile"; then
     rs=$?
-    cat "$sedFile" 1>&2
-    rm "$sedFile"
-    return $rs
   fi
-  rm "$sedFile"
+  rm -f "$sedFile" || :
+  return $rs
 }
 
 characterClasses() {

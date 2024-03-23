@@ -26,12 +26,14 @@ Feasibly for each file, the following environment files are loaded:
 
 Any files not found are skipped. Note that environment values are not carried between applications.
 
+#### Usage
+
+    crontab-application-sync.sh [ --env environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
+    
+
 #### Arguments
 
-- `--env environment` - Top-level environment file to pass variables into the user `crontab` template
-- `--show` - Show the crontab instead of installing it
-- `--user user` - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.
-- `--mapper envMapper` - Optional. Binary. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
+
 
 #### Examples
 
@@ -49,4 +51,4 @@ Not found
 [⬅ Return to documentation root](crontab)
 [⬅ Return to top](../index.md)
 
-Copyright &copy; 2024 [Market Acumen, Inc.](Unable to find "BUILD_COMPANY_LINK" (using index "/Users/kent/.build")Unable to find "title" (using index "/Users/kent/.build"))
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Unable to find "title" (using index "/Users/kent/.build"))

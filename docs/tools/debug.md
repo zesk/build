@@ -8,9 +8,14 @@
 
 Is build debugging enabled?
 
+#### Usage
+
+    buildDebugEnabled [ moduleName ... ]
+    
+
 #### Arguments
 
-- `moduleName` - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
+
 
 #### Exit codes
 
@@ -27,9 +32,14 @@ Start build debugging if it is enabled.
 This does `set -x` which traces and outputs every shell command
 Use it to debug when you can not figure out what is happening internally.
 
+#### Usage
+
+    buildDebugStart [ moduleName ... ]
+    
+
 #### Arguments
 
-- `moduleName` - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
+
 
 #### Examples
 
@@ -68,6 +78,11 @@ Returns whether the shell has the debugging flag set
 
 Useful if you need to temporarily enable or disable it.
 
+#### Usage
+
+    isBashDebug
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -78,9 +93,19 @@ Returns whether the shell has the error exit flag set
 
 Useful if you need to temporarily enable or disable it.
 
+#### Usage
+
+    isErrorExit
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Usage
+
+    restoreErrorExit
+    
 
 #### Examples
 
@@ -99,6 +124,11 @@ Useful if you need to temporarily enable or disable it.
 ](./docs/tools/debug.md
 ) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L101
 )
+
+#### Usage
+
+    saveErrorExit
+    
 
 #### Examples
 

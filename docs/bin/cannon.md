@@ -9,9 +9,7 @@ This can break your files so use with caution.
 
 ## Arguments
 
-- `fromText` - Required. String of text to search for.
-- `toText` - Required. String of text to replace.
-- `findArgs ...` - Any additional arguments are meant to filter files.
+
 
 ## Examples
 

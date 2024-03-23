@@ -100,6 +100,10 @@ hookGitPreCommit() {
       findUncaughtAssertions test/tools --exec contextOpen &
       _hookGitPreCommitFailed findUncaughtAssertions || return $?
     fi
+    if ! findUncaughtAssertions bin/build --list; then
+      findUncaughtAssertions bin/build --exec contextOpen &
+      _hookGitPreCommitFailed findUncaughtAssertions || return $?
+    fi
   fi
   # Too slow
   #  if ! ./bin/build-docs.sh; then

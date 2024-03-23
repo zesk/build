@@ -18,8 +18,7 @@ This can be run on any directory tree to test scripts in any application.
 
 #### Arguments
 
-- `--exec binary` - Run binary with files as an argument for any failed files. Only works if you pass in file names.
-- `findArgs` - Additional find arguments for .sh files (or exclude directories).
+
 
 #### Examples
 
@@ -49,9 +48,14 @@ Shell comments must not be immediately after a function end, e.g. this is invali
     }
     # Hey
 
+#### Usage
+
+    validateShellScript [ script ... ]
+    
+
 #### Arguments
 
-- `script` - Shell script to validate
+
 
 #### Examples
 
@@ -82,11 +86,11 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 #### Arguments
 
-- `extension0 - Required` - the extension to search for (`*.extension`)
-- `--` - Required. Separates extensions from text
-- `text0` - Required. Text which must exist in each file with the extension given.
-- `--` - Optional. Final delimiter to specify find arguments.
-- `findArgs` - Optional. Limit find to additional conditions.
+
+
+#### Examples
+
+    validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2024'
 
 #### Exit codes
 
@@ -106,11 +110,14 @@ This can be run on any directory tree to test files in any application.
 
 By default, any directory which begins with a dot `.` will be ignored.
 
+#### Usage
+
+    validateFileContents file0 [ file1 ... ] -- text0 [ text1 ... ]
+    
+
 #### Arguments
 
-- `file0 - Required` - a file to look for matches in
-- `--` - Required. Separates files from text
-- `text0` - Required. Text which must exist in each file
+
 
 #### Examples
 
@@ -125,6 +132,11 @@ By default, any directory which begins with a dot `.` will be ignored.
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Usage
+
+    findUncaughtAssertions [ --exec binary ] [ directory ]
+    
 
 #### Exit codes
 

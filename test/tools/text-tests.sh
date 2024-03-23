@@ -31,6 +31,7 @@ testEscapeDoubleQuotes() {
 tests+=(testQuoteSedPattern)
 testQuoteSedPattern() {
   local value mappedValue
+  assertEquals "\\&" "$(quoteSedPattern "&")" || return $?
   assertEquals "\\[" "$(quoteSedPattern "[")" || return $?
   assertEquals "\\]" "$(quoteSedPattern "]")" || return $?
   # shellcheck disable=SC1003
@@ -157,7 +158,7 @@ testIsUpToDate() {
 
 tests+=(testIsCharacterClass)
 testIsCharacterClass() {
-  local first header c characters=(0 1 2 3 4 5 6 7 8 9 a b c d e f g h w x y z A B C D E F G W X Y Z ' ' '!' '%' "'" @ ^ - '=' )
+  local first header c characters=(0 1 2 3 4 5 6 7 8 9 a b c d e f g h w x y z A B C D E F G W X Y Z ' ' '!' '%' "'" @ ^ - '=')
   local class line temp token firstColumnWidth=7
   local sep="" cellWidth=2
   header=
@@ -200,7 +201,7 @@ testValidateCharacterClass() {
   rm "$temp" || :
 }
 
-tests=(testStringValidate "${tests[@]}")
+tests+=(testStringValidate)
 testStringValidate() {
   assertExitCode 0 stringValidate string alpha || return $?
   assertExitCode 0 stringValidate string alnum || return $?
@@ -211,4 +212,12 @@ testStringValidate() {
   assertExitCode 0 stringValidate string digit alpha || return $?
   assertExitCode 0 stringValidate A_B_C upper _ || return $?
   assertExitCode 1 stringValidate A_B_C lower _ || return $?
+}
+
+tests=(testListTokens "${tests[@]}")
+testListTokens() {
+  echo | assertExitCode 0 listTokens || return $?
+  assertEquals "" "$(echo | listTokens)" || return $?
+  assertEquals "$(printf "%s\n" a b c)" "$(echo '{a}{b}{c}' | listTokens)" || return $?
+  assertEquals "$(printf "%s\n" confirmYesNo copyFileWouldChange copyFile 'args[@]' 'args[@]')" "$(listTokens <"./test/example/listTokensBad.md")" || return $?
 }

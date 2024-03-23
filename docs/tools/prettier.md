@@ -17,7 +17,7 @@ When this tool succeeds the `prettier` binary is available in the local operatin
 
 #### Arguments
 
-- `npmVersion` - Optional. String. npm version to install.
+
 
 #### Exit codes
 

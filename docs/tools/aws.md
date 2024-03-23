@@ -27,7 +27,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 #### Arguments
 
-- `package` - One or more packages to install using `apt-get` prior to installing AWS
+
 
 #### Exit codes
 
@@ -83,6 +83,11 @@ It will also fail if:
 
 Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `AWS_ACCESS_KEY_DATE` has not exceeded the number of days.
 
+#### Usage
+
+    awsIsKeyUpToDate upToDateDays
+    
+
 #### Examples
 
     if !awsIsKeyUpToDate 90; then
@@ -133,7 +138,7 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 
 #### Arguments
 
-- `profileName` - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+
 
 #### Examples
 
@@ -157,15 +162,14 @@ Use this during deployment to grant temporary access to your systems during depl
 Build scripts should have a $(consoleCode --revoke) step afterward, always.
 services are looked up in /etc/services and match /tcp services only for port selection
 
+#### Usage
+
+    awsIPAccess --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
+    
+
 #### Arguments
 
-- `--profile awsProfile` - Use this AWS profile when connecting using ~/.aws/credentials
---services service0,service1,- `...` - Required. List of services to add or remove (maps to ports)
-- `--id developerId` - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
-- `--group securityGroup` - Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
-- `--ip ip` - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
-- `--revoke` - Flag. Remove permissions
-- `--help` - Flag. Show this help
+
 
 #### Exit codes
 
@@ -178,15 +182,15 @@ DEVELOPER_ID - Developer used to register rules in Amazon
 AWS_ACCESS_KEY_ID - Amazon IAM ID
 AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 
+#### Usage
+
+    awsSecurityGroupIPModify --add --group group [ --region region ] --port port --description description --ip ip
+    awsSecurityGroupIPModify --remove --group group [ --region region ] --description description
+    
+
 #### Arguments
 
-- `--remove - Optional. Flag. Remove instead of add` - only `group`, and `description` required.
-- `--add` - Optional. Flag. Add to security group (default).
-- `--group group` - Required. String. Security Group ID
-- `--region region` - Optional. String. AWS region, defaults to `AWS_REGION`. Must be supplied.
-- `--port port` - Required for `--add` only. Integer. service port
-- `--description description` - Required. String. Description to identify this record.
-- `--ip ip` - Required for `--add` only. String. IP Address to add or remove.
+
 
 #### Exit codes
 
@@ -196,9 +200,14 @@ AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 
 - `0` - Always succeeds
 
+#### Usage
+
+    awsValidRegion region
+    
+
 #### Arguments
 
-- `region` - The AWS Region to validate
+
 
 #### Exit codes
 

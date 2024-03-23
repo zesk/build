@@ -19,7 +19,7 @@ Converts a date to an integer timestamp
 
 #### Arguments
 
-- `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
+
 
 #### Examples
 
@@ -42,9 +42,14 @@ Compatible with BSD and GNU date.
 
 Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 
+#### Usage
+
+    todayDate
+    
+
 #### Arguments
 
-- None.
+
 
 #### Examples
 

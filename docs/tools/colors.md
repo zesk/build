@@ -116,8 +116,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Arguments
 
-- `consoleAction` - Required. String. Is one of **Semantic color commands** above or **Color commands** above
-- `message ...` - Message to output
+
 
 #### Examples
 
@@ -148,9 +147,7 @@ right-aligned to the `characterWidth` given and colored using `consoleLabel`; th
 
 #### Arguments
 
-- `characterWidth` - Required. Number of characters to format the value for spacing
-- `name` - Required. Name to output
-- `value ...` - Optional. One or more Value to output
+
 
 #### Exit codes
 
@@ -253,8 +250,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Arguments
 
-- `consoleAction` - Required. String. Is one of **Semantic color commands** above or **Color commands** above
-- `message ...` - Message to output
+
 
 #### Examples
 

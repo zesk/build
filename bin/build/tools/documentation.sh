@@ -168,6 +168,8 @@ documentationTemplateCompile() {
   mappedDocumentTemplate=$(mktemp)
   if ! envChecksum=$(
     set -a
+    title="$(grep -E '^# ' -m 1 | cut -c 3-)"
+    title="${title:-notitle}"
     for envFile in "${envFiles[@]+${envFiles[@]}}"; do
       # shellcheck source=/dev/null
       . "$envFile"
@@ -225,7 +227,7 @@ documentationTemplateCompile() {
         if ! settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$tokenName"); then
           error="Unable to find \"$tokenName\" (using index \"$cacheDirectory\")"
           consoleError "$error" 1>&2
-          if [ "${tokenName#* }" = "${tokenName}" ]; then
+          if [ "${tokenName#* }${tokenName#*@}" = "${tokenName}${tokenName}" ]; then
             declare "$tokenName"="$error"
           fi
           continue
@@ -247,20 +249,21 @@ documentationTemplateCompile() {
         fi
       done <"$documentTokensFile"
       if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
-        if [ ! -f "$targetFile" ] || ! diff -q "$documentTemplate" "$targetFile" >/dev/null; then
-          printf "%s -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
-          cp "$documentTemplate" "$targetFile"
+        if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
+          printf "%s (mapped) -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
+          cp "$mappedDocumentTemplate" "$targetFile"
         fi
       else
-        statusMessage consoleSuccess "Writing $targetFile using $documentTemplate ..."
-        mapEnvironment <"$documentTemplate" >"$targetFile"
-        set +a
+        statusMessage consoleSuccess "Writing $targetFile using $documentTemplate (mapped) ..."
+        mapEnvironment <"$mappedDocumentTemplate" >"$targetFile"
       fi
       clearLine
-      rm "$documentTokensFile"
       touch "$envChecksumCache"
+      set +a
     )
   fi
+  rm -f "$documentTokensFile" || :
+  rm -f "$mappedDocumentTemplate" || :
   statusMessage consoleSuccess "$(reportTiming "$start" Generated "$targetFile" in)"
 }
 _documentationTemplateCompileUsage() {
@@ -330,7 +333,7 @@ documentationTemplateDirectoryCompile() {
     shift || __failArgument "$usage" "shift after $argument failed" || return $?
   done
 
-  start=$(beginTiming)
+  start=$(beginTiming) || __failEnvironment beginTiming || return $?
   cacheDirectory=$(usageArgumentDirectory "$usage" "cacheDirectory" "$cacheDirectory") || return $?
   templateDirectory=$(usageArgumentDirectory "$usage" "templateDirectory" "$templateDirectory") || return $?
   functionTemplate=$(usageArgumentFile "$usage" "functionTemplate" "$functionTemplate") || return $?
@@ -339,7 +342,7 @@ documentationTemplateDirectoryCompile() {
   exitCode=0
   fileCount=0
   for templateFile in "$templateDirectory/"*.md; do
-    base="$(basename "$templateFile")"
+    base="$(basename "$templateFile")" || __failEnvironment "$usage" "basename $templateFile" || return $?
     targetFile="$targetDirectory/$base"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       consoleError "Failed to generate $targetFile" 1>&2
@@ -347,12 +350,12 @@ documentationTemplateDirectoryCompile() {
     fi
     fileCount=$((fileCount + 1))
   done
-  clearLine
+  clearLine || :
   reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(consoleInfo "$targetDirectory") "
   return $exitCode
 }
-_documentationTemplateDirectoryCompileUsage() {
-  usageDocument "${BASH_SOURCE[0]}" documentationTemplateDirectoryCompile "$@"
+_documentationTemplateDirectoryCompile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

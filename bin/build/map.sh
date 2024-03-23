@@ -16,15 +16,53 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 errorArgument=1
+errorEnvironment=1
+emptyArgument="§"
 
 set -eou pipefail
 
+# Return code always. Outputs `message ...` to `stderr`.
+# Usage: {fn} code command || return $?
+# Argument: code - Integer. Required. Return code.
+# Argument: message ... - String. Optional. Message to output.
+_return() {
+  local code
+  code="${1-1}" && shift && printf "%s failed (%d)\n" "${*-"$emptyArgument"}" "$code" 1>&2 && return "$code"
+}
+
+# Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
+# Usage: {fn} message ...
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 1
+_environment() {
+  _return "$errorEnvironment" "$@" || return $?
+}
+
+# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+# Usage: {fn} message ..`.
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 2
+_argument() {
+  _return "$errorArgument" "$@" || return $?
+}
+
+# Run `command ...` (with any arguments) and then `_environment` if it fails.
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Failed
+__environment() {
+  "$@" || _environment "$@" || return $?
+}
+
+# DO NOT EDIT THIS ONE
 quoteSedPattern() {
   # IDENTICAL quoteSedPattern 6
   value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
+  value="${value//&/\&}"
   value="${value//$'\n'/\\n}"
   printf %s "$value"
 }
@@ -43,16 +81,15 @@ environmentVariables() {
 }
 
 _mapEnvironmentGenerateSedFile() {
-  # IDENTICAL _mapEnvironmentGenerateSedFile 12
-  local sedFile=$1 value
+  # IDENTICAL _mapEnvironmentGenerateSedFile 11
+  local i
 
-  shift
   for i in "$@"; do
     case "$i" in
       *[%{}]*) ;;
       LD_*) ;;
       *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" >>"$sedFile"
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")"
         ;;
     esac
   done
@@ -74,48 +111,50 @@ _mapEnvironmentGenerateSedFile() {
 # Example:     echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world map.sh NAME PLACE
 #
 mapEnvironment() {
-  # IDENTICAL mapEnvironment 79 120
+  # IDENTICAL mapEnvironment 94 137
+  local this argument
   local prefix suffix sedFile ee e rs
 
+  this="${FUNCNAME[0]}"
   prefix='{'
   suffix='}'
 
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || _argument "$this: Blank argument" || return $?
+    case "$argument" in
       --prefix)
-        shift || usage $errorArgument "--prefix missing a value"
+        shift || _argument "$this: missing $argument argument" || return $?
         prefix="$1"
         ;;
       --suffix)
-        shift || usage $errorArgument "--suffix missing a value"
+        shift || _argument "$this: missing $argument argument" || return $?
         suffix="$1"
         ;;
       *)
         break
         ;;
     esac
-    shift
+    shift || _argument "shift failed after $argument" || return $?
   done
 
-  sedFile=$(mktemp)
-
+  ee=("$@")
   if [ $# -eq 0 ]; then
-    ee=()
-    for e in $(environmentVariables); do
-      ee+=("$e")
-    done
-    _mapEnvironmentGenerateSedFile "$sedFile" "${ee[@]}"
+    while read -r e; do ee+=("$e"); done < <(environmentVariables)
+    for e in $(environmentVariables); do ee+=("$e"); done
+  fi
+  sedFile=$(mktemp) || _environment "mktemp failed" || return $?
+  rs=0
+  if __environment _mapEnvironmentGenerateSedFile "${ee[@]}" >"$sedFile"; then
+    if ! sed -f "$sedFile"; then
+      rs=$?
+      cat "$sedFile" 1>&2
+    fi
   else
-    _mapEnvironmentGenerateSedFile "$sedFile" "$@"
-  fi
-
-  if ! sed -f "$sedFile"; then
     rs=$?
-    cat "$sedFile" 1>&2
-    rm "$sedFile"
-    return $rs
   fi
-  rm "$sedFile"
+  rm -f "$sedFile" || :
+  return $rs
 }
 
 mapEnvironment "$@"
