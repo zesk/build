@@ -292,9 +292,7 @@ daemontoolsTerminate() {
     consoleWarning "daemontools is not running"
   else
     statusMessage consoleWarning "Shutting down processes ..."
-    echo
-    _list "processIds" "${processIds[@]}"
-    echo
+    printf "\n%s\n\n" "$(_list "processIds" "${processIds[@]}")"
     kill -TERM "${processIds[@]}" || _environment "Unable to kill daemontools processes: ${processIds[*]}" || return $?
     clearLine
     __environment processWait --timeout "$timeout" "${processIds[@]}" || return $?
