@@ -11,6 +11,8 @@ Install software as `root` or superuser.
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available.
 
+
+
 #### Usage
 
     aptInstall [ package ... ]
@@ -18,7 +20,7 @@ and assumes packages will be available.
 
 #### Arguments
 
-- `package` - One or more packages to install
+
 
 #### Examples
 
@@ -44,7 +46,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 #### Arguments
 
-- `package` - One or more packages to install using `apt-get` prior to installing AWS
+
 
 #### Exit codes
 
@@ -70,7 +72,7 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 
 #### Arguments
 
-- `package` - Additional packages to install (using apt)
+
 
 #### Exit codes
 
@@ -88,7 +90,7 @@ Installs the `git` binary
 
 #### Arguments
 
-- `package` - Additional packages to install
+
 
 #### Exit codes
 
@@ -102,9 +104,15 @@ If this fails it will output the installation log.
 
 When this tool succeeds the `mariadb` binary is available in the local operating system.
 
+#### Usage
+
+    mariadbInstall [ package ]
+    mariadbInstall [ package ... ]
+    
+
 #### Arguments
 
-- `package` - Additional packages to install
+
 
 #### Exit codes
 
@@ -150,7 +158,7 @@ When this tool succeeds the `python` binary is available in the local operating 
 
 #### Arguments
 
-- `package` - Additional packages to install
+
 
 #### Exit codes
 
@@ -170,7 +178,7 @@ When this tool succeeds the `prettier` binary is available in the local operatin
 
 #### Arguments
 
-- `npmVersion` - Optional. String. npm version to install.
+
 
 #### Exit codes
 
@@ -196,7 +204,7 @@ When this tool succeeds the `python` binary is available in the local operating 
 
 #### Arguments
 
-- `package` - Additional packages to install
+
 
 #### Exit codes
 
@@ -214,7 +222,7 @@ Install terraform binary
 
 #### Arguments
 
-- `package` - Additional packages to install using `apt`
+
 
 #### Exit codes
 

@@ -39,18 +39,17 @@ dumpDockerTestFile() {
   fi
 }
 
-#
 # Are we inside a docker container right now?
 #
 # Exit Code: 0 - Yes
 # Exit Code: 1 - No
 #
 insideDocker() {
-  if [ ! -f /proc/1/sched ]; then
+  if [ ! -f /proc/1/cmdline ]; then
     # Not inside
     return 1
   fi
-  if head -n 1 /proc/1/sched | grep -q init; then
+  if grep -q init /proc/1/cmdline; then
     # Not inside
     return 1
   fi

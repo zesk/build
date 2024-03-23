@@ -6,7 +6,7 @@
 #
 name="$(basename "$(dirname "$(pwd)")")"
 printf "Logging for %s\n" "$name"
-logPath="{LOG_PATH}/$1"
+logPath="{LOG_PATH}/$name"
 if [ ! -d "$logPath" ]; then
   mkdir -p "$logPath"
 fi

@@ -63,11 +63,14 @@ aptUpdateOnce() {
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
 # Default: apt-utils figlet jq pcregrep
 #
+# shellcheck disable=SC2120
 aptInstall() {
   local installedLog quietLog
-  local actualPackages=() packages=(apt-utils figlet toilet toilet-fonts jq pcregrep "$@")
+  local actualPackages packages
   local apt start
 
+  actualPackages=()
+  packages=(apt-utils figlet toilet toilet-fonts jq pcregrep "$@")
   start=$(beginTiming)
   quietLog=$(buildQuietLog "${FUNCNAME[0]}")
   installedLog="$(buildCacheDirectory apt.packages)"
@@ -81,15 +84,13 @@ aptInstall() {
     buildFailed "$quietLog" 1>&2
     return "$errorEnvironment"
   fi
-  if ! requireFileDirectory "$installedLog"; then
-    return "$errorEnvironment"
-  fi
-  touch "$installedLog" || return $?
+  __environment requireFileDirectory "$installedLog" || return $?
+  __environment touch "$installedLog" || return $?
 
   for p in "${packages[@]}"; do
     if ! grep -q -e "^$p$" "$installedLog"; then
       actualPackages+=("$p")
-      printf "%s\n" "$p" >>"$installedLog"
+      __environment printf "%s\n" "$p" >>"$installedLog" || return $?
     fi
   done
 
@@ -107,18 +108,13 @@ aptInstall() {
   reportTiming "$start" OK
 }
 
-#
-# whichApt binary aptInstallPackage
-#
 # Installs an apt package if a binary does not exist in the which path.
 # The assumption here is that `aptInstallPackage` will install the desired `binary`.
-#
-# If fails, runs `buildFailed` and outputs the log file.
 #
 # Confirms that `binary` is installed after installation succeeds.
 #
 # Summary: Install tools using `apt-get` if they are not found
-# Usage: {fn} binary aptInstallPackage
+# Usage: {fn} binary aptInstallPackage ...
 # Example:     whichApt shellcheck shellcheck
 # Example:     whichApt mariadb mariadb-client
 # Argument: binary - The binary to look for
@@ -127,18 +123,15 @@ aptInstall() {
 #
 whichApt() {
   local binary=$1
-  shift
+  shift || _argument "Missing aptInstallPackage" || return $?
   if which "$binary" >/dev/null; then
     return 0
   fi
-  if ! aptInstall "$@"; then
-    return $errorEnvironment
-  fi
+  __environment aptInstall "$@" || return $?
   if which "$binary" >/dev/null; then
     return 0
   fi
-  consoleError "Apt packages \"$*\" did not add $binary to the PATH: ${PATH-}" 1>&2
-  return $errorEnvironment
+  _environment "Apt packages \"$*\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
 
 #

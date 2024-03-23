@@ -25,12 +25,14 @@ Failures are considered:
 
 This is best used as a pre-commit check, for example. Wink.
 
+## Usage
+
+    identicalCheck --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
+    
+
 ## Arguments
 
-- `--extension extension` - Required. One or more extensions to search for in the current directory.
-- `--prefix prefix` - Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
-- `--cd directory` - Optional. Change to this directory before running. Defaults to current directory.
-- `--help` - Optional. This help.
+
 
 ## Exit codes
 

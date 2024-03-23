@@ -5,8 +5,17 @@ Tools to with with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.h
 [⬅ Return to index](crontab)
 [⬅ Return to top](../index.md)
 
+{daemontoolsHome}
+{daemontoolsInstall}
 {daemontoolsInstallService}
+{daemontoolsIsRunning}
+{daemontoolsProcessIds}
 {daemontoolsRemoveService}
+
+# Non-production starting/stopping
+
+{daemontoolsExecute}
+{daemontoolsTerminate}
 
 [⬅ Return to index](crontab)
 [⬅ Return to top](../index.md)

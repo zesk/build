@@ -14,8 +14,7 @@ Determines the most recent version using GitHub API unless --url or --mock is sp
 
 ## Arguments
 
-- `--mock mockBuildRoot` - Optional. Directory. Diretory of an existing bin/build installation to mock behavior for testing
-- `--url url` - Optional. URL of a tar.gz. file. Download source code from here.
+
 
 ## Exit codes
 

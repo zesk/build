@@ -11,6 +11,7 @@ errorFailures=100
 # Usage: {fn} --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
 # Argument: --extension extension - Required. One or more extensions to search for in the current directory.
 # Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
+# Argument: --exclude pattern - Optional. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 # Argument: --cd directory - Optional. Change to this directory before running. Defaults to current directory.
 # Argument: --help - Optional. This help.
 #
@@ -41,12 +42,12 @@ errorFailures=100
 # This is best used as a pre-commit check, for example. Wink.
 #
 identicalCheck() {
-  local arg fail me
+  local arg usage me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
-
-  fail="_${FUNCNAME[0]}"
+  local excludes
+  usage="_${FUNCNAME[0]}"
   me="$(basename "${BASH_SOURCE[0]}")"
 
   binary=
@@ -55,16 +56,21 @@ identicalCheck() {
   findArgs=()
   badFiles=()
   prefixes=()
+  excludes=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __usageArgument "$fail" "Blank argument" || return $?
-    shift || __usageArgument "$fail" "Missing $arg" || return $?
-    [ -n "$1" ] || __usageArgument "$fail" "Blank $arg" || return $?
+    [ -n "$arg" ] || __usageArgument "$usage" "Blank argument" || return $?
+    shift || __usageArgument "$usage" "Missing $arg" || return $?
+    [ -n "$1" ] || __usageArgument "$usage" "Blank $arg" || return $?
     case "$arg" in
+      --help)
+        "$usage" 0
+        return 0
+        ;;
       --cd)
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
-          "$fail" "$errorArgument" "--cd \"$1\" is not a directory"
+          "$usage" "$errorArgument" "--cd \"$1\" is not a directory"
           return $?
         fi
         ;;
@@ -73,7 +79,7 @@ identicalCheck() {
         ;;
       --exec)
         binary="$1"
-        isCallable "$binary" || __usageArgument "$fail" "$arg \"$binary\" is not callable" || return $?
+        isCallable "$binary" || __usageArgument "$usage" "$arg \"$binary\" is not callable" || return $?
         ;;
       --single)
         singles+=("$1")
@@ -81,16 +87,21 @@ identicalCheck() {
       --prefix)
         prefixes+=("$1")
         ;;
+      --exclude)
+        shift || __failArgument "$usage" "No $arg argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Empty $arg argument" || return $?
+        excludes+=(! -path "$1")
+        ;;
     esac
-    shift || __usageArgument "$fail" "shift failed" || return $?
+    shift || __usageArgument "$usage" "shift failed" || return $?
   done
 
   if [ ${#findArgs[@]} -eq 0 ]; then
-    "$fail" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one extension"
+    "$usage" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one extension"
     return $?
   fi
   if [ ${#prefixes[@]} -eq 0 ]; then
-    "$fail" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
+    "$usage" "$errorArgument" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')"
     return $?
   fi
 
@@ -175,7 +186,7 @@ identicalCheck() {
       done < <(grep -n "$prefix" "$searchFile") || :
       prefixIndex=$((prefixIndex + 1))
     done
-  done < <(find "$rootDir" "${findArgs[@]}" ! -path "*/.*" | sort) 2>"$resultsFile"
+  done < <(find "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}" | sort) 2>"$resultsFile"
 
   if [ -n "$binary" ] && [ ${#badFiles[@]} -gt 0 ]; then
     "$binary" "${badFiles[@]}"

@@ -87,7 +87,7 @@ buildTestSuite() {
   messyOption=
   allTests=(sugar colors console debug git decoration url ssh log version type os hook pipeline identical)
   allTests+=(text markdown documentation assert usage docker api tests aws php bin deploy deployment)
-  allTests+=(sysvinit)
+  allTests+=(daemontools sysvinit)
   while read -r shortTest; do
     if ! inArray "$shortTest" "${allTests[@]}"; then
       consoleError "MISSING $shortTest in allTests"

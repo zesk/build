@@ -24,19 +24,19 @@ Stores state files in `./.build/` directory which is created if it does not exis
 
 ### `whichApt` - Install tools using `apt-get` if they are not found
 
-whichApt binary aptInstallPackage
-
 Installs an apt package if a binary does not exist in the which path.
 The assumption here is that `aptInstallPackage` will install the desired `binary`.
 
-If fails, runs `buildFailed` and outputs the log file.
-
 Confirms that `binary` is installed after installation succeeds.
+
+#### Usage
+
+    whichApt binary aptInstallPackage ...
+    
 
 #### Arguments
 
-- `binary` - The binary to look for
-- `aptInstallPackage` - The package name to install if the binary is not found in the `$PATH`.
+
 
 #### Examples
 
@@ -56,6 +56,8 @@ Technically this will install the binary and any related files as a package.
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available.
 
+
+
 #### Usage
 
     aptInstall [ package ... ]
@@ -63,7 +65,7 @@ and assumes packages will be available.
 
 #### Arguments
 
-- `package` - One or more packages to install
+
 
 #### Examples
 
@@ -79,6 +81,11 @@ and assumes packages will be available.
 OS upgrade and potential restart
 Progress is written to stderr
 Result is `uptodate` or `restart` written to stdout
+
+#### Usage
+
+    aptUpToDate
+    
 
 #### Exit codes
 

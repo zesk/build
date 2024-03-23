@@ -32,6 +32,7 @@ Once included, all functions here are available for use and may affect your buil
 - [PHP Functions](./php.md)
 - [Pipeline Functions](./pipeline.md)
 - [Prettier Functions](./prettier.md)
+- [Process Functions](./process.md)
 - [System V Init Functions](./sysvinit.md)
 - [Test Support Functions](./tests.md)
 - [Text Functions](./text.md)

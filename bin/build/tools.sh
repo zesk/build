@@ -35,7 +35,7 @@ loadTools() {
   toolsFiles=()
 
   # Core stuff
-  toolsFiles+=(_sugar sugar debug type os text date url _colors colors sed assert hook)
+  toolsFiles+=(_sugar sugar debug type process os text date url _colors colors sed assert hook)
   toolsFiles+=(pipeline deploy deployment apt log decoration usage console security test version vendor)
 
   # More complex tools

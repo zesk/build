@@ -12,9 +12,14 @@ If this fails it outputs an error to stderr
 
 When this tool succeeds it outputs the path to the current release notes file
 
+#### Usage
+
+    releaseNotes [ version ]
+    
+
 #### Arguments
 
-- `version` - Optional. String. Version for the release notes path. If not specified uses the current version.
+
 
 #### Examples
 
@@ -45,8 +50,7 @@ also added to `git` the first time.
 
 #### Arguments
 
-- `--non-interactive` - Optional. If new version is needed, use default version
-- `versionName` - Optional. Set the new version name to this.
+
 
 #### Exit codes
 
@@ -56,6 +60,11 @@ also added to `git` the first time.
 ### `nextMinorVersion` - Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 
 Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
+
+#### Usage
+
+    nextMinorVersion lastVersion
+    
 
 #### Exit codes
 

@@ -10,9 +10,14 @@ For systems with an `/etc/init.d` start up script system.
 
 Install a script to run upon initialization.
 
+#### Usage
+
+    sysvInitScript script
+    
+
 #### Arguments
 
-- `binary` - Required. String. Binary to install at startup.
+
 
 #### Exit codes
 

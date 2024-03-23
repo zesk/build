@@ -17,8 +17,7 @@ also added to `git` the first time.
 
 ## Arguments
 
-- `--non-interactive` - Optional. If new version is needed, use default version
-- `versionName` - Optional. Set the new version name to this.
+
 
 ## Exit codes
 

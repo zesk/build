@@ -34,15 +34,14 @@ Current working directory on cleanup is `applicationHome/`
 Current working directory on undo is `applicationHome/`
 Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 
+#### Usage
+
+    deployRemoteFinish [ --revert | --cleanup ] [ --debug ] deployPath applicationId applicationPath
+    
+
 #### Arguments
 
-- `--home deployPath` - Required. Directory. Path where the deployments database is on remote system.
-- `--id applicationId` - Required. String. Should match `APPLICATION_ID` in `.env`
-- `--application applicationPath` - Required. String. Path on the remote system where the application is live
-- `--target targetPackage` - Optional. Filename. Package name, defaults to `app.tar.gz`
-- `--revert` - Revert changes just made
-- `--cleanup` - Cleanup after success
-- `--debug` - Enable debugging. Defaults to `BUILD_DEBUG`
+
 
 #### Exit codes
 
@@ -85,18 +84,14 @@ The `userAtHost` can be passed as follows:
 
     deployDeployAction --deploy 5125ab12 /var/www/DEPLOY/coolApp/ /var/www/apps/coolApp/ "www-data@host0 www-data@host1 stageuser@host3" "www-data@host4"
 
+#### Usage
+
+    deployToRemote [ --revert | --cleanup | --deploy ] [ --debug ] [ --help ] applicationId deployHome applicationPath [ userAtHost ... ]
+    
+
 #### Arguments
 
-- `--target target` - Optional. String. Build target file base name, defaults to `app.tar.gz`
-- `--deploy` - Default. Flag. deploy an application to a remote host
-- `--revert` - Optional. Flag. Reverses a deployment
-- `--cleanup` - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
-- `--help` - Optional. Flag. Show help
-- `--debug` - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
-- `--versions - deployHome` - Required. Path. Remote path where we can store deployment state files.
-- `--id applicationId` - Required. String. The application package will contain a `.env` with `APPLICATION_ID` set to this Value
-- `--application applicationPath` - Required. Path. Path where the application will be deployed
-- `userAtHost` - Required. Strings. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
+
 
 #### Exit codes
 
@@ -113,6 +108,11 @@ The `userAtHost` can be passed as follows:
 
 - `0` - Always succeeds
 
+#### Usage
+
+    __deployRemoteAction userHost remoteContext deployArg [ ... ]
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -122,6 +122,11 @@ The `userAtHost` can be passed as follows:
 Generate our commands file
 
 Argument commands must cd such that current directory is a project directory
+
+#### Usage
+
+    __deployCommandsFile remoteDirectory  [ --deploy | --revert | --finish ] applicationId deployHome applicationPath
+    
 
 #### Exit codes
 

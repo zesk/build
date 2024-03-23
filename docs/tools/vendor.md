@@ -87,6 +87,11 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 - `0` - Always succeeds
 
+#### Usage
+
+    isBitBucketPipeline
+    
+
 #### Exit codes
 
 - `0` - is BitBucket pipeline
