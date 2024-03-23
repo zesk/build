@@ -58,7 +58,7 @@ quoteSedPattern() {
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
-  value="${value//&/\&}"
+  value="${value//&/\\&}"
   value="${value//$'\n'/\\n}"
   printf %s "$value"
 }
