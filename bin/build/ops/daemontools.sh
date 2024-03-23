@@ -247,10 +247,11 @@ daemontoolsProcessIds() {
 
 #
 # Terminate daemontools as gracefully as possible
-# Usage: {fn}
+# Usage: {fn} [ --timeout seconds ]
+# Argument: --timeout seconds - Integer. Optional.
 daemontoolsTerminate() {
-  local this usage
-  local home service processIds processId remaining
+  local this usage argument
+  local home service processIds processId remaining timeout
 
   this="${FUNCNAME[0]}"
   usage="_$this"
@@ -259,6 +260,20 @@ daemontoolsTerminate() {
   home="${home%/}"
   usageRequireBinary "$usage" svscanboot id svc svstat || return $?
 
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --timeout)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        timeout=$(usageArgumentInteger "$usage" "seconds" "$1") || return $?
+        ;;
+      *)
+        __failArgument "$usage" "Unknown argument $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift $argument failed" || return $?
+  done
   clearLine
   statusMessage consoleWarning "Shutting down services ..."
   while read -r service; do
@@ -282,7 +297,7 @@ daemontoolsTerminate() {
     echo
     kill -TERM "${processIds[@]}" || _environment "Unable to kill daemontools processes: ${processIds[*]}" || return $?
     clearLine
-    __environment processWait --timeout 10 "${processIds[@]}" || return $?
+    __environment processWait --timeout "$timeout" "${processIds[@]}" || return $?
     remaining="$(daemontoolsProcessIds)"
     if [ -n "$remaining" ]; then
       _environment "daemontools processes still exist: $remaining" || return $?
