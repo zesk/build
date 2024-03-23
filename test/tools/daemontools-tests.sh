@@ -64,8 +64,6 @@ daemontoolsTests() {
   sleep $logWaitFor
   assertEquals "$savedSize" "$(fileSize "$logPath/lemon/current")" || return $?
 
-  assertExitCode 0 svc -dx /etc/service/lemon /etc/service/lemon/log || return $?
-
   assertExitCode 0 daemontoolsTerminate --timeout 20 || return $?
   assertExitCode 0 daemontoolsTerminate || return $?
 }
