@@ -62,7 +62,7 @@ dumpFile() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
-  local arg failedFiles failedReason failedReasons binary interactive sleepDelay prefix
+  local arg failedFiles failedReason failedReasons binary interactive sleepDelay
 
   if ! buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH; then
     return $errorEnvironment
@@ -117,8 +117,6 @@ validateShellScripts() {
   fi
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
-    prefix="$(consoleBoldRed "- ")"
-
     clearLine
     consoleError "# The following scripts failed:" 1>&2
     for arg in "${failedReasons[@]}"; do
@@ -149,12 +147,12 @@ validateShellScriptsInteractive() {
 
   printf "%s\n%s\n%s\n" "$(consoleRed "BEFORE")" \
     "$(consoleLabel "Queue")" \
-    "$(consoleSubtle "$(printf "$prefix%s\n" "$@")")"
+    "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
 
   while [ "$#" -gt 0 ]; do
     printf "%s\n%s\n%s\n" "$(consoleRed "LOOP")" \
       "$(consoleLabel "Queue")" \
-      "$(consoleSubtle "$(printf "$prefix%s\n" "$@")")"
+      "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
 
     arg="$1"
     if [ -z "$arg" ]; then
@@ -172,7 +170,7 @@ validateShellScriptsInteractive() {
       bigText "FAIL $(basename "$arg")" | wrapLines "$(consoleSubtle shellcheck)  $(consoleBoldRed)" "$(consoleReset)"
       printf "%s\n%s\n%s\n" "$(consoleRed "$failedReason")" \
         "$(consoleLabel "Queue")" \
-        "$(consoleSubtle "$(printf "$prefix%s\n" "${failedFiles[@]+${failedFiles[@]}}")")"
+        "$(consoleSubtle "$(printf -- "- %s\n" "${failedFiles[@]+${failedFiles[@]}}")")"
 
       sleep "$sleepDelay"
       clear

@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL _colors 83
+# IDENTICAL _colors 86
 
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
 # If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
@@ -22,29 +22,25 @@ hasColors() {
   if [ "z" = "$BUILD_COLORS" ]; then
     if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
       if [ -n "${DISPLAY-}" ]; then
-        BUILD_COLORS=1
-      else
-        BUILD_COLORS=
+        BUILD_COLORS=true
       fi
     else
       termColors="$(tput colors 2>/dev/null)"
       if [ "${termColors-:2}" -ge 8 ]; then
-        BUILD_COLORS=1
-      else
-        BUILD_COLORS=
+        BUILD_COLORS=true
       fi
     fi
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
-    # Values allowed for this global are 1 and blank only
-    BUILD_COLORS=
   fi
-  test "$BUILD_COLORS"
+  if [ "$BUILD_COLORS" != "true" ]; then
+    # Values allowed for this global are true and false only
+    BUILD_COLORS=false
+  fi
+  "$BUILD_COLORS"
 }
 
 __consoleOutput() {
   local prefix="${1}" start="${2-}" end="${3}" nl="\n"
-
-  shift && shift && shift
+  shift 3 || :
   if [ "${1-}" = "-n" ]; then
     shift
     nl=
@@ -57,7 +53,7 @@ __consoleOutput() {
 }
 
 #
-# code or variables in output
+# Code or variables in output
 #
 # shellcheck disable=SC2120
 consoleCode() {
@@ -65,7 +61,7 @@ consoleCode() {
 }
 
 #
-# errors
+# Errors
 #
 # shellcheck disable=SC2120
 consoleError() {
