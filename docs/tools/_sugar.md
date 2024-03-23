@@ -191,4 +191,4 @@ Output a titled list
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Unable to find "title" (using index "/Users/kent/.build"))
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Sugar Core)
