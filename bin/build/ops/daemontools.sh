@@ -237,8 +237,7 @@ _daemontoolsExecute() {
 daemontoolsProcessIds() {
   local processIds processId
   processIds=()
-  while read -r processId; do processIds+=("$processId"); done < <(pgrep svscan)
-  while read -r processId; do processIds+=("$processId"); done < <(pgrep svscanboot)
+  while read -r processId; do processIds+=("$processId"); done < <(pgrep 'svscan*')
   if [ ${#processIds[@]} -eq 0 ]; then
     return 0
   fi
