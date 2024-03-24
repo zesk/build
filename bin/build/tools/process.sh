@@ -22,6 +22,7 @@ _processSignal() {
     fi
     shift
   done
+  [ ${#signals[@]} -eq 0 ] && return 0
   printf "%s\n" "${signals[@]}"
 }
 
@@ -40,7 +41,7 @@ processWait() {
   local signals signal sendSignals
   local processIds aliveIds
   local requireFlag verboseFlag signals signal
-  local statusThreshold=10
+  local STATUS_THRESHOLD=10
   local processTemp
 
   this="${FUNCNAME[0]}"
@@ -93,6 +94,7 @@ processWait() {
   start=$(date +%s) || __failEnvironment "$usage" "date failed" || return $?
   sendSignals=("${signals[@]+"${signals[@]}"}")
   lastSignal=0
+  elapsed=0
   processTemp=$(mktemp)
   while [ ${#processIds[@]} -gt 0 ]; do
     __environment _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
@@ -104,45 +106,42 @@ processWait() {
       # First - check --required - all processes must be running
       # And ensure they match (all processes running) and then clear the requireFlag
       if [ ${#processIds[@]} -ne ${#aliveIds[@]} ]; then
-        __failEnvironment "$usage" "All processes must be alive to start: ${processIds[*]} (Alive: ${aliveIds[*]})" || return $?
+        __failEnvironment "$usage" "All processes must be alive to start: ${processIds[*]} (Alive: ${aliveIds[*]-none})" || return $?
       fi
       # Just the first time
       requireFlag=false
     fi
-    processIds=("${aliveIds[@]}")
+    processIds=("${aliveIds[@]+"${aliveIds[@]}"}")
     if [ "${#processIds[@]}" -eq 0 ]; then
       break
     fi
-
     now=$(date +%s)
     elapsed=$((now - start))
     sinceLastSignal=$((now - lastSignal))
     if [ "$sinceLastSignal" -gt "$signalTimeout" ]; then
-      if [ ${#sendSignals[@]} -eq 0 ]; then
-        signal=0
-      else
+      if [ ${#sendSignals[@]} -gt 0 ]; then
         signal="${sendSignals[0]}"
         unset 'sendSignals[0]'
         sendSignals=("${sendSignals[@]}")
+        # Reset aliveIds, load them from _processSignal
+        ! $verboseFlag || statusMessage consoleInfo "Sending $(consoleLabel "$signal") to $(IFS=, consoleCode "${processIds[*]}")"
+        __environment _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
+        aliveIds=()
+        while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
+        ! $verboseFlag && IFS=, statusMessage consoleInfo "Processes: ${processIds[*]} -> Alive: $(IFS=, consoleCode "${aliveIds[*]-none}")"
       fi
-      # Reset aliveIds, load them from _processSignal
-      ! $verboseFlag || statusMessage consoleInfo "Sending $(consoleLabel "$signal") to $(IFS=, consoleCode "${processIds[*]}")"
-      __environment _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
-      aliveIds=()
-      while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
-      ! $verboseFlag && IFS=, statusMessage consoleInfo "Processes: ${processIds[*]} -> Alive: $(IFS=, consoleCode "${aliveIds[*]}")"
       lastSignal=$now
-    else
-      if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ] && [ ${#sendSignals[@]} -eq 0 ]; then
-        __failEnvironment "$usage" "Failed after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]}) Alive: ${aliveIds[*]}" || return $?
-      fi
-      if [ "$elapsed" -gt "$statusThreshold" ] || $verboseFlag; then
-        statusMessage consoleInfo "$this ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
-      fi
-      sleep 1 || __failEnvironment "sleep interrupted" || return $?
+      sinceLastSignal=0
     fi
+    if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ] && [ ${#sendSignals[@]} -eq 0 ]; then
+      __failEnvironment "$usage" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
+    fi
+    if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
+      statusMessage consoleInfo "$this ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
+    fi
+    sleep 1 || __failEnvironment "sleep interrupted" || return $?
   done
-  if [ "$elapsed" -gt "$statusThreshold" ] || $verboseFlag; then
+  if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
     clearLine
   fi
 }
