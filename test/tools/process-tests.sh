@@ -24,7 +24,7 @@ testProcessWait() {
   disown
   background=$!
 
-  assertNotExitCode --stderr-match expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?
+  assertNotExitCode --stderr-match Expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?
   assertExitCode 0 kill -0 "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
