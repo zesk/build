@@ -66,6 +66,8 @@ daemontoolsTests() {
     assertEquals "$savedSize" "$(fileSize "$logPath/lemon/current")" || return $?
   fi
 
+  consoleInfo "svscan Processes"
+  pgrep 'svscan*'
   daemontoolsTerminate --timeout 20 || return $?
   # assertExitCode 0  || return $?
   assertExitCode 0 daemontoolsTerminate || return $?
