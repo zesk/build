@@ -21,9 +21,14 @@ If this function fails then ~/.ssh/known_hosts may be modified for any hosts whi
 
 If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 
+#### Usage
+
+    sshAddKnownHost [ host0 ]
+    
+
 #### Arguments
 
-- `host0` - String. Optional. One ore more hosts to add to the known hosts file
+
 
 #### Exit codes
 
@@ -42,10 +47,14 @@ Add .ssh key for current user
 
 You will need the password for this server for the current user.
 
+#### Usage
+
+    sshSetup [ --force ] [ server ... ]
+    
+
 #### Arguments
 
---force Force the program to create a new key if one exists
-- server- Servers to connect to to set up authorization
+
 
 #### Exit codes
 

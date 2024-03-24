@@ -13,9 +13,7 @@ Typically used to output text to the console using pretty colors and ANSI art.
 
 #### Arguments
 
-- `count` - Required, integer count of times to repeat
-- `string` - A sequence of characters to repeat
-- `...` - Additional arguments are output using shell expansion of `$*`
+
 
 #### Examples
 
@@ -38,8 +36,7 @@ Output a bar as wide as the console using the `=` symbol.
 
 #### Arguments
 
-- `alternateChar` - Use an alternate character or string output
-- `offset` - an integer offset to increase or decrease the size of the bar (default is `0`)
+
 
 #### Examples
 
@@ -67,7 +64,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Arguments
 
-- `text` - Prefix each line with this text
+
 
 #### Examples
 
@@ -90,8 +87,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Arguments
 
-- `prefix` - Prefix each line with this text
-- `suffix` - Prefix each line with this text
+
 
 #### Examples
 
@@ -113,8 +109,7 @@ Format text and align it right using spaces.
 
 #### Arguments
 
-- `characterWidth` - Characters to align right
-- `text ...` - Text to align right
+
 
 #### Examples
 
@@ -138,8 +133,7 @@ Format text and align it left using spaces.
 
 #### Arguments
 
-- `characterWidth` - Characters to align left
-- `text ...` - Text to align left
+
 
 #### Examples
 
@@ -163,8 +157,7 @@ Heading for section output
 
 #### Arguments
 
-- `--size size` - Optional. Integer. Number of liens to output. Defaults to 1.
-- `text ...` - Text to put in the box
+
 
 #### Examples
 
@@ -218,15 +211,14 @@ Outputs a label before a bigText for output.
 
 This function will strip any ANSI from the label to calculate correct string sizes.
 
+#### Usage
+
+    labeledBigText [ --top | --bottom ] [ --prefix prefix ] label Text ...
+    
+
 #### Arguments
 
-- `--top` - Optional. Flag. Place label at the top.
-- `--bottom` - Optional. Flag. Place label at the bottom.
-- `--prefix prefixText` - Optional. String. Optional prefix on each line.
-- `--tween tweenText` - Optional. String. Optional between text after label and before `bigText` on each line (allows coloring or other decorations).
-- `--suffix suffixText` - Optional. String. Optional suffix on each line.
-- `label` - Required. String. Label to place on the left of big text.
-- `text` - Required. String. Text for `bigText`.
+
 
 #### Exit codes
 

@@ -55,11 +55,14 @@ Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
 
 Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
 
+#### Usage
+
+    runHook [ --application applicationHome ] hookName [ arguments ... ]
+    
+
 #### Arguments
 
-- `--application applicationHome` - Path. Optional. Directory of alternate application home.
-- `hookName` - String. Required. Hook name to run.
-- `arguments` - Optional. Arguments are passed to `hookName`.
+
 
 #### Examples
 
@@ -82,6 +85,11 @@ Not found
 ### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
 
 Identical to `runHook` but returns exit code zero if the hook does not exist.
+
+#### Usage
+
+    runOptionalHook hookName [ arguments ... ]
+    
 
 #### Examples
 
@@ -109,10 +117,14 @@ Does a hook exist in the local project?
 
 Check if one or more hook exists. All hooks must exist to succeed.
 
+#### Usage
+
+    hasHook [ --application applicationHome ] hookName0 [ hookName1 ... ]
+    
+
 #### Arguments
 
-- `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
-- `hookName0` - one or more hook names which must exist
+
 
 #### Exit codes
 
@@ -129,9 +141,14 @@ Find the path to a hook. The search path is:
 
 If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
 
+#### Usage
+
+    whichHook [ --application applicationHome ] hookName0 [ hookName1 ... ]
+    
+
 #### Arguments
 
-- `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+
 
 #### Exit codes
 
@@ -172,8 +189,7 @@ Outputs a nice colorful message showing the number of seconds elapsed as well as
 
 #### Arguments
 
-- `start` - Unix timestamp seconds of start timestamp
-- `message` - Any additional arguments are output before the elapsed value computed
+
 
 #### Examples
 
@@ -203,7 +219,7 @@ Outputs debugging information after build fails:
 
 #### Arguments
 
-- `logFile` - the most recent log from the current script
+
 
 #### Examples
 
@@ -234,7 +250,7 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 
 #### Arguments
 
-- `-r` - Reverse the sort order (optional)
+
 
 #### Examples
 
@@ -268,10 +284,14 @@ It will also fail if:
 
 Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
 
+#### Usage
+
+    isUpToDate keyDate upToDateDays
+    
+
 #### Arguments
 
-- `keyDate` - Required. Date. Formatted like `YYYY-MM-DD`
-- `upToDateDays` - Required. Integer. Days that key expires after `keyDate`.
+
 
 #### Examples
 
@@ -291,10 +311,14 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 Create environment file `.env` for build.
 
+#### Usage
+
+    makeEnvironment [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
+    
+
 #### Arguments
 
-- `requireEnv1` - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
-- `optionalEnv1` - Optional. One or more environment variables which are included if blank or not
+
 
 #### Exit codes
 
@@ -320,16 +344,14 @@ Deploy an application from a deployment repository
 
 This acts on the local file system only but used in tandem with `deployment.sh` functions.
 
+#### Usage
+
+    deployApplication deployHome applicationId applicationPath [ targetPackage ]
+    
+
 #### Arguments
 
-- `--help` - Optional. Flag. This help.
-- `--first` - Optional. Flag. The first deployment has no prior version and can not be reverted.
-- `--revert` - Optional. Flag. Means this is part of the undo process of a deployment.
-- `--home deployHome` - Required. Directory. Path where the deployments database is on remote system.
-- `--id applicationId` - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
-- `--application applicationPath` - Required. String. Path on the remote system where the application is live
-- `--target targetPackage` - Optional. Filename. Package name, defaults to `BUILD_TARGET`
-- `--message message` - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
+
 
 #### Examples
 
@@ -356,6 +378,11 @@ Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 
 Get the next version of the supplied version
 
+#### Usage
+
+    deployNextVersion deployHome versionName
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -367,6 +394,11 @@ Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 ### `deployPreviousVersion` - Get the previous version of the supplied version
 
 Get the previous version of the supplied version
+
+#### Usage
+
+    deployPreviousVersion deployHome versionName
+    
 
 #### Exit codes
 
@@ -381,10 +413,14 @@ Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 
 Does a deploy version exist? versionName is the version identifier for deployments
 
+#### Usage
+
+    deployHasVersion deployHome versionName [ targetPackage ]
+    
+
 #### Arguments
 
-- `deployHome` - Required. Directory. Deployment database home.
-- `versionName` - Required. String. Application ID to look for
+
 
 #### Exit codes
 
@@ -401,9 +437,14 @@ that does not exist.
 
 Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
+#### Usage
+
+    deployApplicationVersion applicationHome
+    
+
 #### Arguments
 
-- `applicationHome` - Required. Directory. Application home to get the version from.
+
 
 #### Exit codes
 

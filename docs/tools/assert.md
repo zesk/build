@@ -19,9 +19,7 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
-- `expected` - Expected string
-- `actual` - Actual string
-- `message` - Message to output if the assertion fails
+
 
 #### Examples
 
@@ -48,9 +46,7 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
-- `expected` - Required. Expected string.
-- `actual` - Required. Actual string.
-- `message` - Message to output if the assertion fails. Optional.
+
 
 #### Examples
 
@@ -69,10 +65,14 @@ File `bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-1
 
 Assert one string contains another (case-sensitive)
 
+#### Usage
+
+    assertContains needle haystack
+    
+
 #### Arguments
 
-- `needle` - Thing we are looking for
-- `haystack` - Thing we are looking in
+
 
 #### Exit codes
 
@@ -84,10 +84,14 @@ Assert one string contains another (case-sensitive)
 
 Assert one string does not contains another (case-sensitive)
 
+#### Usage
+
+    assertNotContains needle haystack
+    
+
 #### Arguments
 
-- `needle` - Thing we are looking for
-- `haystack` - Thing we are looking in
+
 
 #### Exit codes
 
@@ -117,9 +121,7 @@ Assert `leftValue > rightValue`
 
 #### Arguments
 
-- `leftValue` - Value to compare on the left hand side of the comparison
-- `rightValue` - Value to compare on the right hand side of the comparison
-- `message` - Message to output if the assertion fails
+
 
 #### Examples
 
@@ -144,9 +146,7 @@ Assert `leftValue >= rightValue`
 
 #### Arguments
 
-- `leftValue` - Value to compare on the left hand side of the comparison
-- `rightValue` - Value to compare on the right hand side of the comparison
-- `message` - Message to output if the assertion fails
+
 
 #### Examples
 
@@ -172,9 +172,7 @@ Assert `leftValue < rightValue`
 
 #### Arguments
 
-- `leftValue` - Value to compare on the left hand side of the comparison
-- `rightValue` - Value to compare on the right hand side of the comparison
-- `message` - Message to output if the assertion fails
+
 
 #### Examples
 
@@ -200,9 +198,7 @@ Assert `leftValue <= rightValue`
 
 #### Arguments
 
-- `leftValue` - Value to compare on the left hand side of the comparison
-- `rightValue` - Value to compare on the right hand side of the comparison
-- `message` - Message to output if the assertion fails
+
 
 #### Examples
 
@@ -233,9 +229,7 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
-- `expectedExitCode` - A numeric exit code expected from the command
-- `command` - The command to run
-- `arguments` - Any arguments to pass to the command to run
+
 
 #### Exit codes
 
@@ -267,9 +261,7 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
-- `expectedExitCode` - A numeric exit code not expected from the command
-- `command` - The command to run
-- `arguments` - Any arguments to pass to the command to run
+
 
 #### Exit codes
 
@@ -296,9 +288,7 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
-- `expected` - Expected string
-- `binary` - Binary to run and evaluate output
-- `parameters` - Any additional parameters to binary
+
 
 #### Examples
 
@@ -318,13 +308,14 @@ Run a command and expect the output to contain the occurrence of a string.
 
 If this fails it will output the command result to stdout.
 
+#### Usage
+
+    assertOutputContains expected command [ arguments ... ]
+    
+
 #### Arguments
 
-- `expected` - A string to expect in the output
-- `command` - The command to run
-- `arguments` - Any arguments to pass to the command to run
-- `--exit` - Assert exit status of process to be this number
-- `--stderr` - Also include standard error in output checking
+
 
 #### Examples
 
@@ -352,11 +343,7 @@ If this fails it will output the command result to stdout.
 
 #### Arguments
 
-- `expected` - A string to NOT expect in the output
-- `command` - The command to run
-- `arguments` - Any arguments to pass to the command to run
-- `--exit` - Assert exit status of process to be this number
-- `--stderr` - Also include standard error in output checking
+
 
 #### Examples
 
@@ -389,8 +376,7 @@ $\Test that a directory exists
 
 #### Arguments
 
-- `directory` - Directory that should exist
-- `message` - An error message if this fails
+
 
 #### Examples
 
@@ -420,8 +406,7 @@ $\Test that a directory does not exist
 
 #### Arguments
 
-- `directory` - Directory that should NOT exist
-- `message` - An error message if this fails
+
 
 #### Exit codes
 
@@ -454,8 +439,7 @@ $\Test that a file exists
 
 #### Arguments
 
-- `directory` - Directory that should exist
-- `message` - An error message if this fails
+
 
 #### Examples
 
@@ -485,8 +469,7 @@ $\Test that a file does not exist
 
 #### Arguments
 
-- `file` - Directory that should NOT exist
-- `message` - An error message if this fails
+
 
 #### Exit codes
 
@@ -513,8 +496,7 @@ File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed
 
 #### Arguments
 
-- `fileName` - File to search
-- `string0 ...` - One or more strings which must be found on at least one line in the file
+
 
 #### Examples
 
@@ -545,8 +527,7 @@ File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 202
 
 #### Arguments
 
-- `fileName` - File to search
-- `string0 ...` - One or more strings which must NOT be found anywhere in `fileName`
+
 
 #### Examples
 
@@ -565,10 +546,14 @@ If the file does not exist, this will fail.
 ## FileSize
 
 
+#### Usage
+
+    assertFileSize expectedSize [ fileName ... ]
+    
+
 #### Arguments
 
-- `expectedSize` - Integer file size which `fileName` should be, in bytes.
-- `fileName ...` - One ore more file which should be `expectedSize` bytes in size.
+
 
 #### Examples
 
@@ -584,10 +569,14 @@ If the file does not exist, this will fail.
 
 If the file does not exist, this will fail.
 
+#### Usage
+
+    assertNotFileSize expectedSize [ fileName ... ]
+    
+
 #### Arguments
 
-- `expectedSize` - Integer file size which `fileName` should NOT be, in bytes.
-- `fileName ...` - One ore more file which should NOT be `expectedSize` bytes in size.
+
 
 #### Examples
 
@@ -604,9 +593,14 @@ If the file does not exist, this will fail.
 If the file does not exist, this will fail.
 
 
+#### Usage
+
+    assertZeroFileSize [ fileName ... ]
+    
+
 #### Arguments
 
-- `fileName ...` - One ore more file which should be zero bytes in size.
+
 
 #### Examples
 
@@ -622,9 +616,14 @@ If the file does not exist, this will fail.
 
 If the file does not exist, this will fail.
 
+#### Usage
+
+    assertNotZeroFileSize [ fileName ... ]
+    
+
 #### Arguments
 
-- `fileName ...` - One ore more file which should NOT be zero bytes in size.
+
 
 #### Examples
 

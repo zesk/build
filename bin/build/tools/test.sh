@@ -62,7 +62,7 @@ dumpFile() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
-  local arg failedFiles failedReason failedReasons binary interactive sleepDelay prefix
+  local arg failedFiles failedReason failedReasons binary interactive sleepDelay
 
   if ! buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH; then
     return $errorEnvironment
@@ -117,8 +117,6 @@ validateShellScripts() {
   fi
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
-    prefix="$(consoleBoldRed "- ")"
-
     clearLine
     consoleError "# The following scripts failed:" 1>&2
     for arg in "${failedReasons[@]}"; do
@@ -149,12 +147,12 @@ validateShellScriptsInteractive() {
 
   printf "%s\n%s\n%s\n" "$(consoleRed "BEFORE")" \
     "$(consoleLabel "Queue")" \
-    "$(consoleSubtle "$(printf "$prefix%s\n" "$@")")"
+    "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
 
   while [ "$#" -gt 0 ]; do
     printf "%s\n%s\n%s\n" "$(consoleRed "LOOP")" \
       "$(consoleLabel "Queue")" \
-      "$(consoleSubtle "$(printf "$prefix%s\n" "$@")")"
+      "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
 
     arg="$1"
     if [ -z "$arg" ]; then
@@ -172,7 +170,7 @@ validateShellScriptsInteractive() {
       bigText "FAIL $(basename "$arg")" | wrapLines "$(consoleSubtle shellcheck)  $(consoleBoldRed)" "$(consoleReset)"
       printf "%s\n%s\n%s\n" "$(consoleRed "$failedReason")" \
         "$(consoleLabel "Queue")" \
-        "$(consoleSubtle "$(printf "$prefix%s\n" "${failedFiles[@]+${failedFiles[@]}}")")"
+        "$(consoleSubtle "$(printf -- "- %s\n" "${failedFiles[@]+${failedFiles[@]}}")")"
 
       sleep "$sleepDelay"
       clear
@@ -514,7 +512,14 @@ findUncaughtAssertions() {
   if ! tempFile=$(mktemp); then
     "_${FUNCNAME[0]}" "$errorEnvironment" "mktemp failed" || return $?
   fi
-  if ! find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n assert | grep -E -v '(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)' >"$tempFile"; then
+  suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
+  {
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '_(argument|environment|return)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
+  } >"$tempFile"
+
+  if [ ! -s "$tempFile" ]; then
     consoleSuccess "All files AOK."
   else
     if [ -n "$binary" ] || test $listFlag; then

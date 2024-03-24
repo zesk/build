@@ -24,7 +24,7 @@ Does little to no validation of any characters so best used for well-formed inpu
 
 #### Arguments
 
-- `url` - a Uniform Resource Locator used to specify a database connection
+
 
 #### Examples
 
@@ -47,8 +47,7 @@ Gets the component of the URL from a given database URL.
 
 #### Arguments
 
-- `url0` - String. URL. Required. A Uniform Resource Locator used to specify a database connection
-- `component` - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
+
 
 #### Examples
 

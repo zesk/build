@@ -8,9 +8,14 @@
 
 Get the port number associated with a service
 
+#### Usage
+
+    serviceToPort service [ ... ]
+    
+
 #### Arguments
 
-- `service` - A unix service typically found in `/etc/services`
+
 
 #### Sample Output
 
@@ -36,9 +41,14 @@ Hard-coded services for:
 
 Backup when `/etc/services` does not exist.
 
+#### Usage
+
+    serviceToStandardPort service [ ... ]
+    
+
 #### Arguments
 
-- `service` - A unix service typically found in `/etc/services`
+
 
 #### Sample Output
 
@@ -67,9 +77,14 @@ Defaults to `$HOME/.build` unless `$HOME` is not a directory.
 
 Appends any passed in arguments as path segments.
 
+#### Usage
+
+    buildCacheDirectory [ pathSegment ... ]
+    
+
 #### Arguments
 
-- `pathSegment` - One or more directory or file path, concatenated as path segments using `/`
+
 
 #### Examples
 
@@ -79,10 +94,14 @@ Appends any passed in arguments as path segments.
 
 - `0` - Always succeeds
 
+#### Usage
+
+    buildQuietLog name
+    
+
 #### Arguments
 
-- `name` - The log file name
-- `--no-create` - Optional. Do not require creation of the directory where the log file will appear.
+
 
 #### Exit codes
 
@@ -94,6 +113,11 @@ Appends any passed in arguments as path segments.
 Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
+
+#### Usage
+
+    requireFileDirectory file1 file2 ...
+    
 
 #### Examples
 
@@ -110,9 +134,14 @@ Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
 
+#### Usage
+
+    requireDirectory dir1 [ dir2 ... ]
+    
+
 #### Arguments
 
-- `dir1` - One or more directories to create
+
 
 #### Examples
 
@@ -126,6 +155,11 @@ Creates the directories for all files passed in.
 
 Copy directory over another sort-of-atomically
 
+#### Usage
+
+    directoryClobber source target
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -135,11 +169,14 @@ Copy directory over another sort-of-atomically
 
 $\Run a binary count times
 
+#### Usage
+
+    runCount count binary [ args ... ]
+    
+
 #### Arguments
 
-- `count` - The number of times to run the binary
-- `binary` - The binary to run
-- `args ...` - Any arguments to pass to the binary each run
+
 
 #### Exit codes
 
@@ -158,12 +195,14 @@ Used to move files, temporarily, sometimes and then move back easily.
 
 Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 
+#### Usage
+
+    renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
+    
+
 #### Arguments
 
-- `oldSuffix` - Required. String. Old suffix to look rename from.
-- `newSuffix` - Required. String. New suffix to rename to.
-- `actionVerb` - Required. String. Description to output for found files.
-- `file0` - Required. String. One or more files to rename, if found, renaming occurs.
+
 
 #### Examples
 
@@ -189,8 +228,7 @@ Platform agnostic tar cfz which ignores owner and attributes
 
 #### Arguments
 
-- `target` - The tar.gz file to create
-- `files` - A list of files to include in the tar file
+
 
 #### Exit codes
 
@@ -244,9 +282,14 @@ Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://studen
 
 Makes all `*.sh` files executable
 
+#### Usage
+
+    chmod-sh.sh [ findArguments ... ]
+    
+
 #### Arguments
 
-- `findArguments` - Optional. Add arguments to exclude files or paths.
+
 
 #### Exit codes
 
@@ -309,10 +352,14 @@ Check to see if the first file is the newest one
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
+#### Usage
+
+    isNewestFile firstFile [ targetFile0 ... ]
+    
+
 #### Arguments
 
-- `sourceFile` - File to check
-- `targetFile0` - One or more files to compare
+
 
 #### Exit codes
 
@@ -326,10 +373,14 @@ Check to see if the first file is the newest one
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
+#### Usage
+
+    isOldestFile firstFile [ targetFile0 ... ]
+    
+
 #### Arguments
 
-- `sourceFile` - File to check
-- `targetFile0` - One or more files to compare
+
 
 #### Exit codes
 
@@ -341,9 +392,14 @@ Otherwise return `1``
 
 Return the oldest file in the list.
 
+#### Usage
+
+    oldestFile file0 [ file1 ... ]
+    
+
 #### Arguments
 
-- `file0` - One or more files to examine
+
 
 #### Exit codes
 
@@ -353,9 +409,14 @@ Return the oldest file in the list.
 
 Return the newest file in the list
 
+#### Usage
+
+    newestFile file0 [ file1 ... ]
+    
+
 #### Arguments
 
-- `file0` - One or more files to examine
+
 
 #### Exit codes
 
@@ -375,6 +436,11 @@ Prints days (integer) since modified
 
 Prints seconds since modified
 
+#### Usage
+
+    modifiedSeconds file
+    
+
 #### Exit codes
 
 - `0` - Success
@@ -387,10 +453,14 @@ Lists files in a directory recursively along with their modification time in sec
 
 Output is unsorted.
 
+#### Usage
+
+    listFileModificationTimes directory [ findArgs ... ]
+    
+
 #### Arguments
 
-- `directory - Required. Directory. Must exists` - directory to list.
-- `findArgs` - Optional additional arguments to modify the find query
+
 
 #### Examples
 
@@ -411,10 +481,14 @@ listFileModificationTimes $myDir ! -path '*/.*'
 
 List the most recently modified file in a directory
 
+#### Usage
+
+    mostRecentlyModifiedFile directory [ findArgs ... ]
+    
+
 #### Arguments
 
-- `directory - Required. Directory. Must exists` - directory to list.
-- `findArgs` - Optional additional arguments to modify the find query
+
 
 #### Exit codes
 
@@ -424,21 +498,28 @@ List the most recently modified file in a directory
 
 List the most recently modified file in a directory
 
+#### Usage
+
+    mostRecentlyModifiedTimestamp directory [ findArgs ... ]
+    
+
 #### Arguments
 
-- `directory - Required. Directory. Must exists` - directory to list.
-- `findArgs` - Optional additional arguments to modify the find query
+
 
 #### Exit codes
 
 - `0` - Always succeeds
 
 
+#### Usage
+
+    pathConfigure [ --first | --last | path ] ...
+    
+
 #### Arguments
 
-- `--first` - Optional. Place any paths after this flag first in the list
-- `--last` - Optional. Place any paths after this flag last in the list. Default.
-- `path` - the path to be added to the `PATH` environment
+
 
 #### Exit codes
 
@@ -460,23 +541,27 @@ Maintains ordering.
 - `0` - Always succeeds
 
 
+#### Usage
+
+    manPathConfigure [ --first | --last | path ] ...
+    
+
 #### Arguments
 
-- `--first` - Optional. Place any paths after this flag first in the list
-- `--last` - Optional. Place any paths after this flag last in the list. Default.
-- `path` - the path to be added to the `MANPATH` environment
+
 
 #### Exit codes
 
 - `0` - Always succeeds
 
+#### Usage
+
+    pathAppend pathValue separator [ --first | --last | path ]
+    
+
 #### Arguments
 
-- `pathValue` - Required. Path value to modify.
-- `separator` - Required. Separator string for path values (typically `:`)
-- `--first` - Optional. Place any paths after this flag first in the list
-- `--last` - Optional. Place any paths after this flag last in the list. Default.
-- `path` - the path to be added to the `pathValue`
+
 
 #### Exit codes
 
@@ -514,9 +599,14 @@ Format something neatly as JSON
 
 Outputs the file owner for each file passed on the command line
 
+#### Usage
+
+    fileOwner file ...
+    
+
 #### Arguments
 
-- `file` - File to get the owner for
+
 
 #### Exit codes
 
@@ -527,9 +617,14 @@ Outputs the file owner for each file passed on the command line
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
 
+#### Usage
+
+    fileSize file
+    
+
 #### Arguments
 
-- `file` - Required. File to get size of.
+
 
 #### Exit codes
 
@@ -544,6 +639,11 @@ Outputs one of `type` output or enhancements:
 - `builtin`. `function`, `alias`, `file`
 - `link-directory`, `link-file`, `directory`, `integer`, `unknown`
 
+#### Usage
+
+    betterType [ thing ]
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -553,9 +653,14 @@ Outputs one of `type` output or enhancements:
 
 Outputs value of resident memory used by a process, value is in kilobytes
 
+#### Usage
+
+    processMemoryUsage pid
+    
+
 #### Arguments
 
-- `pid` - Process ID of running process
+
 
 #### Examples
 
@@ -575,9 +680,14 @@ Outputs value of resident memory used by a process, value is in kilobytes
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
 
+#### Usage
+
+    processVirtualMemoryAllocation pid
+    
+
 #### Arguments
 
-- `pid` - Process ID of running process
+
 
 #### Examples
 

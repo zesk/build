@@ -15,8 +15,7 @@ Check if an element exists in an array
 
 #### Arguments
 
-- `element` - Thing to search for
-- `arrayElement0` - One or more array elements to match
+
 
 #### Exit codes
 
@@ -27,6 +26,11 @@ Check if an element exists in an array
 
 Test if an argument is a positive floating point number
 (`1e3` notation NOT supported)
+
+#### Usage
+
+    isUnsignedNumber argument ...
+    
 
 #### Exit codes
 
@@ -42,6 +46,11 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if an argument is a floating point number
 (`1e3` notation NOT supported)
 
+#### Usage
+
+    isNumber argument ...
+    
+
 #### Exit codes
 
 - `0` - if it is a floating point number
@@ -55,6 +64,11 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 
 Test if an argument is a signed integer
 
+#### Usage
+
+    isInteger argument ...
+    
+
 #### Exit codes
 
 - `0` - if it is a signed integer
@@ -67,6 +81,11 @@ Thanks to [F. Hauri - Give Up GitHub (isuint_Case)](https://stackoverflow.com/qu
 ### `isUnsignedInteger` - Test if an argument is an unsigned integer
 
 Test if an argument is an unsigned integer
+
+#### Usage
+
+    isUnsignedInteger argument ...
+    
 
 #### Exit codes
 
@@ -82,6 +101,11 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if an argument is a floating point number
 (`1e3` notation NOT supported)
 
+#### Usage
+
+    isNumber argument ...
+    
+
 #### Exit codes
 
 - `0` - if it is a floating point number
@@ -96,9 +120,14 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if all arguments are bash functions
 If no arguments are passed, returns exit code 1.
 
+#### Usage
+
+    isFunction string0 [ string1 ... ]
+    
+
 #### Arguments
 
-- `string` - Required. String to test if it is a bash function.
+
 
 #### Exit codes
 
@@ -110,9 +139,14 @@ If no arguments are passed, returns exit code 1.
 Test if all arguments are executable binaries
 If no arguments are passed, returns exit code 1.
 
+#### Usage
+
+    isExecutable string0 [ string1 ... ]
+    
+
 #### Arguments
 
-- `string` - Required. Path to binary to test if it is executable.
+
 
 #### Exit codes
 
@@ -124,9 +158,14 @@ If no arguments are passed, returns exit code 1.
 Test if all arguments are callable as a command
 If no arguments are passed, returns exit code 1.
 
+#### Usage
+
+    isCallable string0 [ string1 ... ]
+    
+
 #### Arguments
 
-- `string` - Required. Path to binary to test if it is executable.
+
 
 #### Exit codes
 

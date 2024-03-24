@@ -19,7 +19,7 @@ When this tool succeeds the `python` binary is available in the local operating 
 
 #### Arguments
 
-- `package` - Additional packages to install
+
 
 #### Exit codes
 
@@ -47,8 +47,7 @@ This tools does not install the `composer` binary into the local environment.
 
 #### Arguments
 
-- `installDirectory` - You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
-- `--help` - This help
+
 
 #### Examples
 
@@ -91,16 +90,14 @@ Files are specified from the application root directory.
 - `s` - staging
 - `t` - test
 
+#### Usage
+
+    phpBuild [ --name tarFileName ] [ --deployment deployment ] [ --suffix versionSuffix ] [ --debug ] [ ENV_VAR1 ... ] -- file1 [ file2 ... ]
+    
+
 #### Arguments
 
-- `--name tarFileName` - Set BUILD_TARGET via command line (wins)
-- `--composer arg` - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
-- `--deployment deployment` - Set DEPLOYMENT via command line (wins)
-- `--suffix versionSuffix` - Set tag suffix via command line (wins, default inferred from deployment)
-- `--debug` - Enable debugging. Defaults to BUILD_DEBUG.
-- `ENV_VAR1` - Optional. Environment variables to build into the deployed .env file
-- `--` - Required. Separates environment variables to file list
-- `file1 file2 dir3 ...` - Required. List of files and directories to build into the application package.
+
 
 #### Exit codes
 
@@ -116,6 +113,11 @@ Files are specified from the application root directory.
 
 Outputs the path to the PHP log file
 
+#### Usage
+
+    phpLog
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -124,9 +126,14 @@ Outputs the path to the PHP log file
 
 Test a docker-based PHP application during build
 
+#### Usage
+
+    php.sh deployment
+    
+
 #### Arguments
 
-- `deployment` - Required. String. `production` or `develop`
+
 
 #### Exit codes
 

@@ -17,7 +17,7 @@ Installs the `git` binary
 
 #### Arguments
 
-- `package` - Additional packages to install
+
 
 #### Exit codes
 
@@ -37,7 +37,7 @@ This adds the directory passed to that directory in the local user's environment
 
 #### Arguments
 
-- `directory` - The directory to add to the `git` `safe.directory` configuration directive
+
 
 #### Exit codes
 
@@ -59,7 +59,7 @@ Delete git tag locally and at origin
 
 #### Arguments
 
-- `tag` - The tag to delete locally and remote
+
 
 #### Exit codes
 
@@ -76,7 +76,7 @@ Remove a tag everywhere and tag again on the current branch
 
 #### Arguments
 
-- `tag` - The tag to delete locally and remote
+
 
 #### Exit codes
 
@@ -93,6 +93,15 @@ When this tool succeeds the git repository contains a tag with the suffix and an
 - `d` - for **development**
 - `s` - for **staging**
 - `rc` - for **release candidate**
+
+#### Usage
+
+    gitTagVersion [ --suffix versionSuffix ] Tag version in git
+    
+
+#### Arguments
+
+
 
 #### Exit codes
 
@@ -129,7 +138,7 @@ Get the last reported version.
 
 #### Arguments
 
-- `ignorePattern` - Optional. Specify a grep pattern to ignore; allows you to ignore current version
+
 
 #### Exit codes
 
@@ -152,6 +161,11 @@ Delete the old tag as well
 Commits all files added to git and also update release notes with comment
 
 Comment wisely. Does not duplicate comments. Check your release notes.
+
+#### Usage
+
+    gitCommit [ comment ... ]
+    
 
 #### Exit codes
 
@@ -196,6 +210,11 @@ usually have to `git push --force`
 ### `gitRepositoryChanged` - Has a git repository been changed from HEAD?
 
 Has a git repository been changed from HEAD?
+
+#### Usage
+
+    gitRepositoryChanged
+    
 
 #### Exit codes
 
@@ -245,6 +264,11 @@ Show changed files from HEAD with their status prefix character:
 Are we currently inside a git hook?
 
 Tests non-blank strings in our environment.
+
+#### Usage
+
+    gitInsideHook
+    
 
 #### Exit codes
 

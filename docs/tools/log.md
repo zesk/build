@@ -19,10 +19,14 @@ Backs up files as:
 
 But maintains file descriptors for `logFile`.
 
+#### Usage
+
+    rotateLog [ --dry-run ] logFile count
+    
+
 #### Arguments
 
-- `logFile` - Required. A log file which exists.
-- `count` - Required. Integer of log files to maintain.
+
 
 #### Exit codes
 
@@ -33,10 +37,14 @@ But maintains file descriptors for `logFile`.
 Rotate log files
 For all log files in logPath with extension `.log`, rotate them safely
 
+#### Usage
+
+    rotateLogs [ --dry-run ] logPath count
+    
+
 #### Arguments
 
-- `logPath` - Required. Path where log files exist.
-- `count` - Required. Integer of log files to maintain.
+
 
 #### Exit codes
 

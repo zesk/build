@@ -13,9 +13,14 @@ that does not exist.
 
 Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
+#### Usage
+
+    deployApplicationVersion applicationHome
+    
+
 #### Arguments
 
-- `applicationHome` - Required. Directory. Application home to get the version from.
+
 
 #### Exit codes
 
@@ -28,6 +33,11 @@ Outputs the build target name which is based on the environment `BUILD_TARGET`.
 If this is called on a non-deployment system, use the application root instead of
 `deployHome` for compatibility.
 
+#### Usage
+
+    deployPackageName deployHome
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -36,10 +46,14 @@ If this is called on a non-deployment system, use the application root instead o
 
 Does a deploy version exist? versionName is the version identifier for deployments
 
+#### Usage
+
+    deployHasVersion deployHome versionName [ targetPackage ]
+    
+
 #### Arguments
 
-- `deployHome` - Required. Directory. Deployment database home.
-- `versionName` - Required. String. Application ID to look for
+
 
 #### Exit codes
 
@@ -49,6 +63,11 @@ Does a deploy version exist? versionName is the version identifier for deploymen
 
 Get the previous version of the supplied version
 
+#### Usage
+
+    deployPreviousVersion deployHome versionName
+    
+
 #### Exit codes
 
 - `1` - No version exists
@@ -57,6 +76,11 @@ Get the previous version of the supplied version
 ### `deployNextVersion` - Get the next version of the supplied version
 
 Get the next version of the supplied version
+
+#### Usage
+
+    deployNextVersion deployHome versionName
+    
 
 #### Exit codes
 
@@ -78,16 +102,14 @@ Deploy an application from a deployment repository
 
 This acts on the local file system only but used in tandem with `deployment.sh` functions.
 
+#### Usage
+
+    deployApplication deployHome applicationId applicationPath [ targetPackage ]
+    
+
 #### Arguments
 
-- `--help` - Optional. Flag. This help.
-- `--first` - Optional. Flag. The first deployment has no prior version and can not be reverted.
-- `--revert` - Optional. Flag. Means this is part of the undo process of a deployment.
-- `--home deployHome` - Required. Directory. Path where the deployments database is on remote system.
-- `--id applicationId` - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
-- `--application applicationPath` - Required. String. Path on the remote system where the application is live
-- `--target targetPackage` - Optional. Filename. Package name, defaults to `BUILD_TARGET`
-- `--message message` - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
+
 
 #### Examples
 
@@ -119,6 +141,11 @@ Safe application deployment by moving
 
 Deploy current application to target path
 
+#### Usage
+
+    deployMove applicationPath
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -126,6 +153,11 @@ Deploy current application to target path
 ### `deployMigrateDirectoryToLink` - Automatically convert application deployments using non-links to links.
 
 Automatically convert application deployments using non-links to links.
+
+#### Usage
+
+    deployMigrateDirectoryToLink deployHome applicationPath
+    
 
 #### Exit codes
 
@@ -139,9 +171,14 @@ When called, current directory is the **new** application and the `applicationLi
 passed as an argument is the place where the **new** application should be linked to
 in order to activate it.
 
+#### Usage
+
+    deployLink applicationLinkPath
+    
+
 #### Arguments
 
-- `applicationLinkPath` - This is the target for the current application
+
 
 #### Exit codes
 
@@ -163,15 +200,14 @@ Current working directory on cleanup is `applicationHome/`
 Current working directory on undo is `applicationHome/`
 Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 
+#### Usage
+
+    deployRemoteFinish [ --revert | --cleanup ] [ --debug ] deployPath applicationId applicationPath
+    
+
 #### Arguments
 
-- `--home deployPath` - Required. Directory. Path where the deployments database is on remote system.
-- `--id applicationId` - Required. String. Should match `APPLICATION_ID` in `.env`
-- `--application applicationPath` - Required. String. Path on the remote system where the application is live
-- `--target targetPackage` - Optional. Filename. Package name, defaults to `app.tar.gz`
-- `--revert` - Revert changes just made
-- `--cleanup` - Cleanup after success
-- `--debug` - Enable debugging. Defaults to `BUILD_DEBUG`
+
 
 #### Exit codes
 

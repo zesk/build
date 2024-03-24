@@ -24,29 +24,9 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 - `0` - Always succeeds
 
-### `anyEnvToBashEnv` - Takes any environment file and makes it bash-compatible
-
-Takes any environment file and makes it bash-compatible
-
-Returns a temporary file which should be deleted.
-
-#### Arguments
-
-- `filename` - Required. File. One or more files to convert.
-
 #### Exit codes
 
 - `0` - Always succeeds
-
-### `anyEnvToDockerEnv` - Takes any environment file and makes it docker-compatible
-
-Takes any environment file and makes it docker-compatible
-
-Returns a temporary file which should be deleted.
-
-#### Arguments
-
-- `filename` - Required. File. One or more files to convert.
 
 #### Exit codes
 
@@ -66,11 +46,7 @@ Uses a cache at `buildCacheDirectory`
 
 #### Arguments
 
-- `--force` - Force generation, ignore cache directives
-- `--unlinked` - Show unlinked functions
-- `--unlinked-update` - Update unlinked document file
-- `--clean` - Erase the cache before starting.
-- `--help` - I need somebody
+
 
 #### Exit codes
 
@@ -78,10 +54,14 @@ Uses a cache at `buildCacheDirectory`
 - `1` - Issue with environment
 - `2` - Argument error
 
+#### Usage
+
+    buildDocsUpdateUnlinked cacheDirectory envFile
+    
+
 #### Arguments
 
-- `cacheDirectory` - Required. Directory. Cache directory.
-- `envFile` - Required. File. Environment file used as base environment for all template generation.
+
 
 #### Exit codes
 
@@ -91,33 +71,14 @@ Uses a cache at `buildCacheDirectory`
 
 Load on or more environment settings from bin/build/env
 
-#### Arguments
+#### Usage
 
-- `envName` - The environment name to load
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `test.sh` - Run Zesk Build tests
-
-Run Zesk Build tests
+    buildEnvironmentLoad [ envName ... ]
+    
 
 #### Arguments
 
-- `--one test` - Optional. Add one test to run.
-- `--show` - Optional. Flag. List all tests.
-- `--help` - Optional. This help.
-- `--clean` - Optional. Delete test artifact files before starting.
-- `--messy` - Optional. Do not delete test artifact files afterwards.
 
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `characterClassReport` - Write a report of the character classes
-
-Write a report of the character classes
 
 #### Exit codes
 
@@ -127,22 +88,10 @@ Write a report of the character classes
 
 - `0` - Always succeeds
 
-### `characterFromInteger` - Given a list of integers, output the character codes associated
+#### Usage
 
-Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `characterToInteger` - Convert one or more characters from their ascii representation to
-
-Convert one or more characters from their ascii representation to an integer value.
-Requires a single character to be passed
-
-#### Exit codes
-
-- `0` - Always succeeds
+    consoleBrightness [ --background | --foreground ]
+    
 
 #### Exit codes
 
@@ -152,17 +101,30 @@ Requires a single character to be passed
 
 Dump the function and include stacks and the current environment
 
-#### Exit codes
+#### Usage
 
-- `0` - Always succeeds
-
-### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
-
-dumpFile fileName0 [ fileName1 ... ]
+    debuggingStack
+    
 
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `dotEnvConfig` - Deprecated:
+
+Deprecated:
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function dotEnvConfigure
+](./docs/tools/pipeline.md
+) - [Load `.env` and optional `.env.local` into bash context
+](https://github.com/zesk/build/blob/main/bin/build/tools/pipeline.sh#L41
+)
 
 ### `fileDirectoryExists` - Does the file's directory exist?
 
@@ -176,9 +138,14 @@ Does the file's directory exist?
 
 Outputs the file group for each file passed on the command line
 
+#### Usage
+
+    fileGroup file ...
+    
+
 #### Arguments
 
-- `file` - File to get the owner for
+
 
 #### Exit codes
 
@@ -206,8 +173,7 @@ and dynamically adding or removing any line which matches the MAINTENANCE variab
 
 #### Arguments
 
-- `message` - Required. String. Maintenance setting: `on | 1 | true | off 0 | false`
-- `maintenanceSetting` - Required. String. Maintenance setting: `on | 1 | true | off 0 | false`
+
 
 #### Exit codes
 
@@ -216,53 +182,6 @@ and dynamically adding or removing any line which matches the MAINTENANCE variab
 #### Environment
 
 BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
-
-### `isCharacterClasses` - Does this character match one or more character classes?
-
-Does this character match one or more character classes?
-
-#### Arguments
-
-- `character` - Required. Single character to test.
-- `class0` - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `maximumLineLength` - Outputs the maximum line length passed into stdin
-
-Outputs the maximum line length passed into stdin
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `parseBoolean` - Parses text and determines if it's true-ish
-
-Parses text and determines if it's true-ish
-
-#### Exit codes
-
-- `0` - true
-- `1` - false
-- `2` - Neither
-
-#### See Also
-
-- [function lowercase
-](./docs/tools/text.md
-) - [Convert text to lowercase
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L299
-)
 
 #### Exit codes
 
@@ -278,15 +197,14 @@ Allows control across user boundaries.
 
 Specify actions more than once on the command line to specify more than one set of permissions.
 
+#### Usage
+
+    serviceControlDaemon [ --interval seconds ] [ --stat statFile ] [ --action actions ] service0 file0 [ service1 file1 ]
+    
+
 #### Arguments
 
-- `--home serviceHome` - Optional. Service directory home. Defaults to `/etc/service`.
-- `--interval intervalSeconds` - Optional. Number of seconds to check for presence of the file. Defaults to 10.
-- `--stat statFile` - Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.
-- `--chirp chirpSeconds` - Optional. Output a message saying we're alive every `chirpSeconds` seconds.
-- `--action actions` - Optional. String. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.
-- `service0` - Required. Directory. Service to control (e.g. `/etc/service/application/`)
-- `file1` - Required. File. Absolute path to a file. Presence of  `file` triggers `action`
+
 
 #### Exit codes
 
@@ -309,36 +227,39 @@ Open a file in a shell using the program we are using. Supports VSCode and PHPSt
 EDITOR - Used as a default editor (first)
 VISUAL - Used as another default editor (last)
 
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `simpleBashFunction` - A contrived function to show some features and patterns.
 
 A contrived function to show some features and patterns.
 
+#### Usage
+
+    simpleBashFunction [ --debug ] [ --cleanup ] [ --undo ] [ --id id ] --home home --target target --application application
+    
+
 #### Arguments
 
-- `--debug` - Flag. Optional. Debugging mode.
-- `--cleanup` - Flag. Optional. Debugging mode.
-- `--undo` - Flag. Optional. Debugging mode.
-- `--home homePath` - Required. Directory. Home path to show off directory validation.
-- `--target target` - Required. File. Target file to show off file validation.
-- `--id id` - Optional. String. Just an argument with a value.
-- `--application applicationPath` - Required. Directory. Application path to show off directory validation.
+
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-#### Arguments
-
-- `text` - Text to validate
-- `class0` - One ore more character classes that the characters in string should match
-
 #### Exit codes
 
 - `0` - Always succeeds
 
+#### Usage
+
+    updateMarkdown [ --skip-commit ]
+    
+
 #### Arguments
 
-- `--skip-commit` - Skip the commit if the files change
+
 
 #### Exit codes
 
@@ -349,12 +270,14 @@ A contrived function to show some features and patterns.
 Validates a value is an integer
 Upon success, outputs the directory name trailing slash stripped
 
+#### Usage
+
+    usageArgumentInteger usageFunction variableName variableValue [ noun ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
+
 
 #### Exit codes
 
@@ -367,12 +290,14 @@ Validates a value is not blank and is an environment file which is loaded immedi
 
 Upon success, outputs the file name to stdout, outputs a console message to stderr
 
+#### Usage
+
+    usageArgumentLoadEnvironmentFile processPid usageFunction variableName variableValue [ noun ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
 
 #### Exit codes
 
@@ -384,21 +309,19 @@ Upon success, outputs the file name to stdout, outputs a console message to stde
 Validates a value is an unsigned integer
 Upon success, outputs the directory name trailing slash stripped
 
+#### Usage
+
+    usageArgumentUnsignedInteger usageFunction variableName variableValue [ noun ]
+    
+
 #### Arguments
 
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
+
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
-#### Exit codes
-
-- `0` - Always succeeds
 
 ### `webApplicationConfigure` - Configure the web application server as root
 
@@ -411,4 +334,4 @@ Configure the web application server as root
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-Copyright &copy; 2024 [Market Acumen, Inc.]('https://marketacumen.com?crcat=codeUnable to find "BUILD_COMPANY_LINK" (using index "/Users/kent/.build")crsource=zesk/buildUnable to find "BUILD_COMPANY_LINK" (using index "/Users/kent/.build")crcampaign=docsUnable to find "BUILD_COMPANY_LINK" (using index "/Users/kent/.build")crkw='Missing functions)
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Missing functions)

@@ -27,10 +27,14 @@ An example `bitbucket-pipelines.yml` file may have a header which looks like thi
 
 On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `super-secret`; it uses `grep` and `sed` to extract the value.
 
+#### Usage
+
+    getFromPipelineYML varName defaultValue
+    
+
 #### Arguments
 
-- `varName` - Name of the value to extract from `bitbucket-pipelines.yml`
-- `defaultValue` - Value if not found in pipelines
+
 
 #### Examples
 
@@ -44,10 +48,14 @@ On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `sup
 
 Run the default build container for build testing on BitBucket
 
+#### Usage
+
+    bitbucket.sh [ envFile ... ] [ extraArgs ... ]
+    
+
 #### Arguments
 
-- `envFile` - One or more environment files which are suitable to load for docker; must be valid
-- `extraArgs` - The first non-file argument to `bitbucket.sh` is passed directly through to `docker run` as arguments
+
 
 #### Exit codes
 

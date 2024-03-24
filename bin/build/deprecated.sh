@@ -80,6 +80,8 @@ deprecatedCleanup() {
   cannon 'escalateCopyFileChanged' 'copyFileChanged --escalate' "${ignoreStuff[@]}"
   cannon 'yesNo ' 'parseBoolean ' "${ignoreStuff[@]}"
 
+  # Relesae v0.8.4
+  cannon 'copyFile''ChangedQuiet' 'copyFile' "${ignoreStuff[@]}"
   return $exitCode
 }
 

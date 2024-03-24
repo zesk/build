@@ -53,10 +53,11 @@ __failArgument() {
   return $errorArgument
 }
 
+# Logs all deprecated functions to application root in a file called `.deprecated`
 # Usage: {fn} command ...
 # Argument: function - Required. String. Function which is deprecated.
 # Example:     {fn} "${FUNCNAME[0]}"
 _deprecated() {
   printf "DEPRECATED: %s" "$@" 1>&2
-  printf "%s" "$@" >>"$(dirname "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")/._deprecated"
+  printf "$(date "+%F %T"),%s\n" "$@" >>"$(dirname "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")/.deprecated"
 }

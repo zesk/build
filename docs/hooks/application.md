@@ -21,6 +21,11 @@ The default hook uses the short git sha:
 
     git rev-parse --short HEAD
 
+#### Usage
+
+    application-id.sh
+    
+
 #### Examples
 
     885acc3
