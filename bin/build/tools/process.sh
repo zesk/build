@@ -133,7 +133,7 @@ processWait() {
       ! $verboseFlag && IFS=, statusMessage consoleInfo "Processes: ${processIds[*]} -> Alive: $(IFS=, consoleCode "${aliveIds[*]}")"
       lastSignal=$now
     else
-      if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ]; then
+      if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ] && [ ${#sendSignals[@]} -eq 0 ]; then
         __failEnvironment "$usage" "Failed after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]}) Alive: ${aliveIds[*]}" || return $?
       fi
       if [ "$elapsed" -gt "$statusThreshold" ] || $verboseFlag; then
