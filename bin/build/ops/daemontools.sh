@@ -293,9 +293,7 @@ daemontoolsTerminate() {
   else
     statusMessage consoleWarning "Shutting down processes ..."
     printf "\n%s\n\n" "$(_list "processIds" "${processIds[@]}")"
-    kill -TERM "${processIds[@]}" || _environment "Unable to kill daemontools processes: ${processIds[*]}" || return $?
-    clearLine
-    __environment processWait --timeout "$timeout" "${processIds[@]}" || return $?
+    __environment processWait --verbose --signals TERM,QUIT,KILL --timeout "$timeout" "${processIds[@]}" || return $?
     remaining="$(daemontoolsProcessIds)"
     if [ -n "$remaining" ]; then
       _environment "daemontools processes still exist: $remaining" || return $?

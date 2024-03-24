@@ -295,13 +295,28 @@ plural() {
 #
 # Convert text to lowercase
 #
-# Usage: lowercase [ text ... ]
+# Usage: {fn} [ text ... ]
 # Arguments: text - text to convert to lowercase
 #
 lowercase() {
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then
       printf "%s\n" "$1" | tr '[:upper:]' '[:lower:]'
+    fi
+    shift
+  done
+}
+
+#
+# Convert text to uppercase
+#
+# Usage: {fn} [ text ... ]
+# Arguments: text - text to convert to uppercase
+#
+uppercase() {
+  while [ $# -gt 0 ]; do
+    if [ -n "$1" ]; then
+      printf "%s\n" "$1" | tr '[:lower:]' '[:upper:]'
     fi
     shift
   done

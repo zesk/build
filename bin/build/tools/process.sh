@@ -7,24 +7,51 @@
 # Test: o test/tools/process-tests.sh
 # Docs: o docs/_templates/tools/process.md
 
-# Wait for processes not owned by this process to exit.
+#
+# status to stdout
+#
+_processSignal() {
+  local signal="$1"
+  local signals
+
+  shift || _argument "missing signal" || return $?
+  signals=()
+  while [ $# -gt 0 ]; do
+    if kill "-$signal" "$1" 2>/dev/null; then
+      signals+=("$1")
+    fi
+    shift
+  done
+  printf "%s\n" "${signals[@]}"
+}
+
+# Wait for processes not owned by this process to exit, and send signals to terminate processes.
 #
 # Usage: {fn} processId ...
 # Argument: processId - Integer. Required. Wait for process ID to exit.
-# Argument: --timeout seconds - Integer. Optional. Wait for this long. If not supplied waits forever (but displays a status message to `stdout` after 10 seconds)
+# Argument: --timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.
+# Argument: --signals signal - List of strings. Optional. Send each signal to processes, in order.
 # Argument: --require - Flag. Optional. Require all processes to be alive upon first invocation.
 #
 processWait() {
   local usage this argument
-  local start elapsed timeout processIds aliveIds
-  local requireFlag
+  local start elapsed lastSignal sinceLastSignal now
+  local timeout signalTimeout
+  local signals signal sendSignals
+  local processIds aliveIds
+  local requireFlag verboseFlag signals signal
+  local statusThreshold=10
+  local processTemp
 
   this="${FUNCNAME[0]}"
   usage="_$this"
 
   processIds=()
   requireFlag=false
+  verboseFlag=false
   timeout=-1
+  signalTimeout=1
+  signals=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
@@ -32,9 +59,25 @@ processWait() {
       --require)
         requireFlag=true
         ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      --signals)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        IFS=',' read -r -a signals < <(uppercase "$1")
+        for signal in "${signals[@]}"; do
+          case "$signal" in
+            STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
+            *)
+              __failArgument "$usage" "Invalid signal $signal" || return $?
+              ;;
+          esac
+        done
+        ;;
       --timeout)
         shift || __failArgument "$usage" "Missing $argument" || return $?
         timeout=$(usageArgumentInteger "$usage" "timeout" "$1") || return $?
+        signalTimeout=$timeout
         ;;
       *)
         processId=$(usageArgumentInteger "$usage" "processId" "$1") || return $?
@@ -47,34 +90,59 @@ processWait() {
     __failArgument "$usage" "Requires at least one processId" || return $?
   fi
 
-  elapsed=0
   start=$(date +%s) || __failEnvironment "$usage" "date failed" || return $?
+  sendSignals=("${signals[@]+"${signals[@]}"}")
+  lastSignal=0
+  processTemp=$(mktemp)
   while [ ${#processIds[@]} -gt 0 ]; do
+    __environment _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
+    # Reset aliveIds, load them from _processSignal
     aliveIds=()
-    elapsed=$(($(date +%s) - start))
-    for processId in "${processIds[@]}"; do
-      if kill -0 "$processId" 2>/dev/null; then
-        aliveIds+=("$processId")
-      else
-        consoleInfo "Process $processId terminated after $elapsed $(plural "$elapsed" second seconds)"
-      fi
-    done
+    while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
+    rm -f "$processTemp" || :
     if $requireFlag; then
+      # First - check --required - all processes must be running
+      # And ensure they match (all processes running) and then clear the requireFlag
       if [ ${#processIds[@]} -ne ${#aliveIds[@]} ]; then
-        __failEnvironment "$usage" "All processes must be alive to start: ${processIds[*]}" || return $?
+        __failEnvironment "$usage" "All processes must be alive to start: ${processIds[*]} (Alive: ${aliveIds[*]})" || return $?
       fi
       # Just the first time
       requireFlag=false
     fi
     processIds=("${aliveIds[@]}")
-    if [ "$timeout" -gt 0 ] && [ "$elapsed" -ge "$timeout" ]; then
-      __failEnvironment "$usage" "timeout of $elapsed $(plural "$elapsed" second seconds) expired. Alive: ${aliveIds[*]}" || return $?
+    if [ "${#processIds[@]}" -eq 0 ]; then
+      break
     fi
-    if [ "$elapsed" -gt 10 ]; then
-      statusMessage consoleInfo "$this ${processIds[*]} - $elapsed seconds"
+
+    now=$(date +%s)
+    elapsed=$((now - start))
+    sinceLastSignal=$((now - lastSignal))
+    if [ "$sinceLastSignal" -gt "$signalTimeout" ]; then
+      if [ ${#sendSignals[@]} -eq 0 ]; then
+        signal=0
+      else
+        signal="${sendSignals[0]}"
+        unset 'sendSignals[0]'
+        sendSignals=("${sendSignals[@]}")
+      fi
+      # Reset aliveIds, load them from _processSignal
+      ! $verboseFlag || statusMessage consoleInfo "Sending $(consoleLabel "$signal") to $(IFS=, consoleCode "${processIds[*]}")"
+      __environment _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
+      aliveIds=()
+      while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
+      ! $verboseFlag && IFS=, statusMessage consoleInfo "Processes: ${processIds[*]} -> Alive: $(IFS=, consoleCode "${aliveIds[*]}")"
+      lastSignal=$now
+    else
+      if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ]; then
+        __failEnvironment "$usage" "Failed after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]}) Alive: ${aliveIds[*]}" || return $?
+      fi
+      if [ "$elapsed" -gt "$statusThreshold" ] || $verboseFlag; then
+        statusMessage consoleInfo "$this ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
+      fi
+      sleep 1 || __failEnvironment "sleep interrupted" || return $?
     fi
   done
-  if [ "$elapsed" -gt 10 ]; then
+  if [ "$elapsed" -gt "$statusThreshold" ] || $verboseFlag; then
     clearLine
   fi
 }
