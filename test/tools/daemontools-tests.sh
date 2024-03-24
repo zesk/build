@@ -67,7 +67,9 @@ daemontoolsTests() {
   fi
 
   consoleInfo "svscan Processes"
-  pgrep 'svscan*'
+  # shellcheck disable=SC2009
+  ps aux | grep svscan
+
   daemontoolsTerminate --timeout 20 || return $?
   # assertExitCode 0  || return $?
   assertExitCode 0 daemontoolsTerminate || return $?
