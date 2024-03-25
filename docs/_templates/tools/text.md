@@ -18,15 +18,21 @@
 {escapeBash}
 {replaceFirstPattern}
 
-{trimWords}
-{trimSpace}
-{trimSpacePipe}
 {stripAnsi}
 
 {listTokens}
 
 {mapValue}
 {mapValueTrim}
+
+### Space trimming
+
+{trimWords}
+{trimSpace}
+{trimSpacePipe}
+{trimHead}
+{trimTail}
+{singleBlankLines}
 
 ## Finding or Calculating
 

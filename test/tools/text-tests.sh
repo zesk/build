@@ -11,6 +11,32 @@ declare -a tests
 
 errorEnvironment=1
 
+tests+=(testTrimHeadTail)
+testTrimHeadTail() {
+  local topSpace bottomSpace
+
+  topSpace=$(printf "\n\n\n\n\n\n\nip")
+  bottomSpace=$(printf "ip\n\n\n\n\n\n\n")
+
+  assertEquals "$(printf "%s" "$topSpace" | trimHead)" "ip" || return $?
+  assertEquals "$(printf "%s" "$topSpace" | trimTail)" "$topSpace" || return $?
+  assertEquals "$(printf "%s" "$bottomSpace" | trimHead)" "$bottomSpace" || return $?
+  assertEquals "$(printf "%s" "$bottomSpace" | trimTail)" "ip" || return $?
+}
+
+tests+=(testSingleBlankLines)
+testSingleBlankLines() {
+  local topSpace bottomSpace
+
+  topSpace=$(printf "\n\n\n\n\n\n\nip")
+  bottomSpace=$(printf "ip\n\n\n\n\n\n\n")
+  middleSpace=$(printf "\n\n\nip\n\n\n\n\n\n\n")
+
+  assertEquals "$(printf "\nip")" "$(printf "%s\n" "$topSpace" | singleBlankLines)" || return $?
+  assertEquals "$(printf "ip\n")" "$(printf "%s\n" "$bottomSpace" | singleBlankLines)" || return $?
+  assertEquals "$(printf "\nip\n")" "$(printf "%s\n" "$middleSpace" | singleBlankLines)" || return $?
+}
+
 tests+=(testText)
 testText() {
   assertOutputContains Hello boxedHeading Hello || return $?

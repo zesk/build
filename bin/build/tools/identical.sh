@@ -42,12 +42,14 @@ errorFailures=100
 # This is best used as a pre-commit check, for example. Wink.
 #
 identicalCheck() {
-  local arg usage me
+  local this arg usage me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
   local excludes
-  usage="_${FUNCNAME[0]}"
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
   me="$(basename "${BASH_SOURCE[0]}")"
 
   binary=
@@ -59,15 +61,14 @@ identicalCheck() {
   excludes=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __usageArgument "$usage" "Blank argument" || return $?
-    shift || __usageArgument "$usage" "Missing $arg" || return $?
-    [ -n "$1" ] || __usageArgument "$usage" "Blank $arg" || return $?
+    [ -n "$arg" ] || __usageArgument "$usage" "$this: Blank argument" || return $?
     case "$arg" in
       --help)
         "$usage" 0
         return 0
         ;;
       --cd)
+        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
           "$usage" "$errorArgument" "--cd \"$1\" is not a directory"
@@ -75,20 +76,24 @@ identicalCheck() {
         fi
         ;;
       --extension)
+        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
         findArgs+=("-name" "*.$1")
         ;;
       --exec)
+        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
         binary="$1"
         isCallable "$binary" || __usageArgument "$usage" "$arg \"$binary\" is not callable" || return $?
         ;;
       --single)
+        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
         singles+=("$1")
         ;;
       --prefix)
+        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
         prefixes+=("$1")
         ;;
       --exclude)
-        shift || __failArgument "$usage" "No $arg argument" || return $?
+        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
         [ -n "$1" ] || __failArgument "$usage" "Empty $arg argument" || return $?
         excludes+=(! -path "$1")
         ;;
