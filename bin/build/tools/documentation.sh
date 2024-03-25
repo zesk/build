@@ -62,7 +62,7 @@ usageDocument() {
 
     # shellcheck source=/dev/null
     source "$variablesFile"
-    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | simpleMarkdownToConsole)" "$exitCode" "$@"
+    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$@"
   )
   return "$exitCode"
 }

@@ -477,38 +477,41 @@ simpleMarkdownToConsole() {
 _toggleCharacterToColor() {
   local sequence line code reset lastItem lastLine=
 
-  # shellcheck disable=SC2119
   sequence="$(quoteSedPattern "$1")"
-  # sequence="$1"
   code="$2"
   reset="${3-$(consoleReset)}"
   while true; do
     if ! IFS= read -r line; then
       lastLine=1
     fi
-    lastItem=
-    odd=0
-    while true; do
-      # shellcheck disable=SC2295
-      text="${line%%$sequence*}"
-      # shellcheck disable=SC2295
-      remain="${line#*$sequence}"
-      if [ "$text" = "$remain" ]; then
-        lastItem=1
-      else
-        line="$remain"
-      fi
-      if [ $((odd & 1)) -eq 1 ]; then
-        printf "%s%s%s" "$code" "$text" "$reset"
-      else
-        printf "%s" "$text"
-      fi
-      if test $lastItem; then
-        printf "\n"
-        break
-      fi
-      odd=$((odd + 1))
-    done
+    if [ -z "$line" ]; then
+      printf "\n"
+    else
+      lastItem=
+      odd=0
+      while true; do
+        # shellcheck disable=SC2295
+        text="${line%%$sequence*}"
+        # shellcheck disable=SC2295
+        remain="${line#*$sequence}"
+        if [ "$text" = "$remain" ]; then
+          lastItem=1
+        else
+          line="$remain"
+        fi
+        if [ $((odd & 1)) -eq 1 ]; then
+          printf "%s%s%s" "$code" "$text" "$reset"
+        else
+          printf "%s" "$text"
+        fi
+        if test $lastItem; then
+          printf "\n"
+          lastItem=
+          break
+        fi
+        odd=$((odd + 1))
+      done
+    fi
     if test "$lastLine"; then
       return 0
     fi

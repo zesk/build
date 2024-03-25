@@ -121,6 +121,30 @@ replaceFirstPattern() {
 }
 
 #
+# Usage: {fn}
+# Removes any blank lines from the beginning of a stream
+#
+trimHead() {
+  sed -e "/./!d" -e :r -e n -e br
+}
+
+#
+# Usage: {fn}
+# Removes any blank lines from the end of a stream
+#
+trimTail() {
+  sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
+}
+
+#
+# Usage: {fn}
+# Ensures blank lines are singular
+#
+singleBlankLines() {
+  sed '/^$/N;/^\n$/D'
+}
+
+#
 # Trim spaces and only spaces from arguments or a pipe
 # Usage: {fn} text
 # Argument: text - Text to remove spaces
