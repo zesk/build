@@ -69,20 +69,18 @@ usageTemplate() {
   nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
 
   if [ -n "$delimiter" ] && [ -n "$options" ]; then
-    printf "%s: %s%s\n\n%s\n\n%s\n\n" \
+    printf -- "%s: %s%s\n\n%s\n\n%s\n" \
       "$usageString" \
       "$(consoleInfo "$binName")" \
-      "$(printf "%s\n" "$options" | usageArguments "$delimiter")" \
-      "$(printf "%s\n" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | prefixLines "    ")" \
-      "$(consoleReset)$description"
+      "$(printf "%s" "$options" | usageArguments "$delimiter")" \
+      "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | wrapLines "    " "$(consoleReset)")" \
+      "$description"
   else
     printf "%s: %s\n\n%s\n\n" \
       "$usageString" \
       "$(consoleInfo "$binName")" \
-      "$(consoleReset)$description"
-    echo
+      "$description"
   fi
-
   return "$exitCode"
 }
 
@@ -141,23 +139,31 @@ usageGenerator() {
   # shellcheck disable=SC2119
   valuePrefix=${5-"$(consoleValue)"}
   lastLine=
+  blankLine=false
 
   while true; do
     if ! IFS= read -r line; then
       lastLine=1
     fi
-    capsLine="$(lowercase "$line")"
-    if [ "${capsLine##*required}" != "$capsLine" ]; then
-      labelPrefix=$labelRequiredPrefix
+    if [ -z "$(trimSpace "$line")" ]; then
+      blankLine=true
     else
-      labelPrefix=$labelOptionalPrefix
+      capsLine="$(lowercase "$line")"
+      if [ "${capsLine##*required}" != "$capsLine" ]; then
+        labelPrefix=$labelRequiredPrefix
+      else
+        labelPrefix=$labelOptionalPrefix
+      fi
+      if $blankLine; then
+        printf "\n"
+        blankLine=false
+      fi
+      printf "%s\n" "$line" | awk "-F$separatorChar" "{ print \"$labelPrefix\" sprintf(\"%-\" $nSpaces \"s\", \$1) \"$valuePrefix\" substr(\$0, index(\$0, \"$separatorChar\") + 1) }"
     fi
-    printf "%s\n" "$line" | awk "-F$separatorChar" "{ print \"$labelPrefix\" sprintf(\"%-\" $nSpaces \"s\", \$1) \"$valuePrefix\" substr(\$0, index(\$0, \"$separatorChar\") + 1) }"
     if test $lastLine; then
       break
     fi
-  done | simpleMarkdownToConsole
-
+  done | simpleMarkdownToConsole | trimTail
 }
 
 #

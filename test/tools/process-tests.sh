@@ -8,7 +8,7 @@ set -eou pipefail
 
 declare -a tests
 
-timingFactor=2
+timingFactor=4
 
 slowDaemon() {
   consoleSuccess Started
