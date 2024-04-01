@@ -234,7 +234,7 @@ __usageArgumentHelper() {
   shift || :
   variableValue="${1-}"
   shift || :
-  noun="${1-:"$defaultNoun"}"
+  noun="${1:-"$defaultNoun"}"
   shift || :
   if [ -z "$variableValue" ]; then
     "$usageFunction" "$errorArgument" "$variableName $noun is required"

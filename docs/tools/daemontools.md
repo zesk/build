@@ -105,8 +105,12 @@ Terminate daemontools as gracefully as possible
 
 #### Usage
 
-    daemontoolsTerminate
+    daemontoolsTerminate [ --timeout seconds ]
     
+
+#### Arguments
+
+
 
 #### Exit codes
 

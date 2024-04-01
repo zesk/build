@@ -191,83 +191,6 @@ Replaces the first and only the first occurrence of a pattern in a line with a r
 - `0` - Always succeeds
 
 
-### `trimWords` - Remove words from the end of a phrase
-
-Remove words from the end of a phrase
-
-#### Usage
-
-    trimWords [ wordCount [ word0 ... ] ]
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `trimSpace` - Trim whitespace of a bash argument
-
-Trim spaces and only spaces from arguments or a pipe
-
-#### Usage
-
-    trimSpace text
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    trimSpace "$token"
-
-#### Sample Output
-
-    text
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Credits
-
-Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
-
-### `trimSpacePipe` - Trim whitespace in a pipeline
-
-trimSpace handles both cases now.
-
-#### Usage
-
-    trimSpace < file > output
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Depends
-
-    awk
-    
-
-#### See Also
-
-- [function trimSpace
-](./docs/tools/text.md
-) - [Trim whitespace of a bash argument
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L132
-)
-
 ### `stripAnsi` - Strip ANSI console escape sequences from a file
 
 Strip ANSI console escape sequences from a file
@@ -363,6 +286,125 @@ Maps a string using an environment file
 #### Arguments
 
 
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### Space trimming
+
+
+### `trimWords` - Remove words from the end of a phrase
+
+Remove words from the end of a phrase
+
+#### Usage
+
+    trimWords [ wordCount [ word0 ... ] ]
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `trimSpace` - Trim whitespace of a bash argument
+
+Trim spaces and only spaces from arguments or a pipe
+
+#### Usage
+
+    trimSpace text
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    trimSpace "$token"
+
+#### Sample Output
+
+    text
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Credits
+
+Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
+
+### `trimSpacePipe` - Trim whitespace in a pipeline
+
+trimSpace handles both cases now.
+
+#### Usage
+
+    trimSpace < file > output
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Depends
+
+    awk
+    
+
+#### See Also
+
+- [function trimSpace
+](./docs/tools/text.md
+) - [Trim whitespace of a bash argument
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L156
+)
+
+### `trimHead` - Removes any blank lines from the beginning of a stream
+
+Removes any blank lines from the beginning of a stream
+
+#### Usage
+
+    trimHead
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `trimTail` - Removes any blank lines from the end of a stream
+
+Removes any blank lines from the end of a stream
+
+#### Usage
+
+    trimTail
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `singleBlankLines` - Ensures blank lines are singular
+
+Ensures blank lines are singular
+
+#### Usage
+
+    singleBlankLines
+    
 
 #### Exit codes
 
