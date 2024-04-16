@@ -211,11 +211,6 @@ usually have to `git push --force`
 
 Has a git repository been changed from HEAD?
 
-#### Usage
-
-    gitRepositoryChanged
-    
-
 #### Exit codes
 
 - `0` - the repo has been modified
@@ -264,11 +259,6 @@ Show changed files from HEAD with their status prefix character:
 Are we currently inside a git hook?
 
 Tests non-blank strings in our environment.
-
-#### Usage
-
-    gitInsideHook
-    
 
 #### Exit codes
 
