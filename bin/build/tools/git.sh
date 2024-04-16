@@ -170,7 +170,6 @@ gitRemoveFileFromHistory() {
 }
 
 #
-# Usage: {fn}
 # Exit Code: 0 - the repo has been modified
 # Exit Code: 1 - the repo has NOT bee modified
 #
@@ -226,7 +225,6 @@ gitShowStatus() {
 #
 # Environment: GIT_EXEC_PATH - Must be set to pass
 # Environment: GIT_INDEX_FILE - Must be set to pass
-# Usage: {fn}
 # Exit Code: 0 - We are, semantically, inside a git hook
 # Exit Code: 1 - We are NOT, semantically, inside a git hook
 #
@@ -375,33 +373,34 @@ _gitTagVersion() {
 # Comment wisely. Does not duplicate comments. Check your release notes.
 #
 gitCommit() {
-  local start current next notes appendLast
+  local usage start current next notes appendLast
 
+  usage="_${FUNCNAME[0]}"
   comment="$*"
   appendLast=
   if [ -z "$comment" ]; then
-    _gitCommit "$errorArgument" "Need a comment" || return $?
+    "$usage" "$errorArgument" "Need a comment" || return $?
   fi
   if [ "$comment" = "last" ]; then
     appendLast=1
     consoleInfo "Using last commit message ..."
   fi
   if ! start="$(pwd -P 2>/dev/null)"; then
-    _gitCommit "$errorEnvironment" "Failed to get pwd" || return $?
+    __failEnvironment "$usage" "Failed to get pwd" || return $?
   fi
   current="$start"
   while [ "$current" != "/" ]; do
     if [ -d "$current/.git" ]; then
       if test "$appendLast"; then
         if ! git commit --reuse-message=HEAD --reset-author -a; then
-          _gitCommit "$errorEnvironment" "Commit failed" || return $?
+          __failEnvironment "$usage" "Commit failed" || return $?
         fi
         return 0
       elif [ -x "$current/bin/build/release-notes.sh" ]; then
         if notes="$("$current/bin/build/release-notes.sh")"; then
           if ! grep -q "$comment" "$notes"; then
             if ! printf "%s %s\n" "-" "$comment" >>"$notes"; then
-              _gitCommit "$errorEnvironment" "Writing $notes" || return $?
+              __failEnvironment "$usage" "Writing $notes" || return $?
             fi
             printf "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")"
             git add "$notes" || :
@@ -409,7 +408,7 @@ gitCommit() {
         fi
       fi
       if ! git commit -a -m "$comment"; then
-        _gitCommit "$errorEnvironment" "Commit failed" || return $?
+        __failEnvironment "$usage" "Commit failed" || return $?
       fi
       return 0
     fi

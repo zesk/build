@@ -234,17 +234,13 @@ __usageArgumentHelper() {
   shift || :
   variableValue="${1-}"
   shift || :
-  noun="${1-:"$defaultNoun"}"
+  noun="${1:-"$defaultNoun"}"
   shift || :
-  if [ -z "$variableValue" ]; then
-    "$usageFunction" "$errorArgument" "$variableName $noun is required"
-    return $?
-  fi
+  [ -n "$variableValue" ] || __failArgument "$usageFunction" "$variableName $noun is required" || return $?
+
   # Remaining parameters are the test
-  if ! "$@" "$variableValue"; then
-    "$usageFunction" "$errorArgument" "$variableName must be $noun (\"$(consoleCode "$variableValue")\")"
-    return $?
-  fi
+  "$@" "$variableValue" || __failArgument "$usageFunction" "$variableName must be $noun (\"$(consoleCode "$variableValue")$(consoleError '")')" || return $?
+
   printf "%s\n" "$variableValue"
 }
 
@@ -261,10 +257,7 @@ usageArgumentInteger() {
   local args
   args=("$@")
   args[3]="${4-}"
-  if [ ${#args[@]} -ne 4 ]; then
-    "$1" "$errorArgument" "Need 4 arguments"
-    return $errorArgument
-  fi
+  [ ${#args[@]} -eq 4 ] || __failArgument "$1" "Need 4 arguments" || return $?
   __usageArgumentHelper integer "${args[@]}" isInteger
 }
 

@@ -4,9 +4,9 @@
 [⬅ Return to top](../index.md)
 
 
-### `processWait` - Wait for processes not owned by this process to exit.
+### `processWait` - Wait for processes not owned by this process to exit,
 
-Wait for processes not owned by this process to exit.
+Wait for processes not owned by this process to exit, and send signals to terminate processes.
 
 #### Usage
 

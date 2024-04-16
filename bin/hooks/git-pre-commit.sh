@@ -56,6 +56,7 @@ hookGitPreCommit() {
   changedGitFiles=()
   changedShellFiles=()
   while IFS= read -r changedGitFile; do
+    [ -n "$changedGitFile" ] || continue
     changedGitFiles+=("$changedGitFile")
     if [ "$changedGitFile" != "${changedGitFile%.sh}" ]; then
       changedShellFiles+=("$changedGitFile")
@@ -64,6 +65,7 @@ hookGitPreCommit() {
 
   clearLine
   consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed"
+  printf -- "- %s\n" "${changedGitFiles[@]}"
 
   if [ -z "${BUILD_COMPANY-}" ]; then
     if ! buildEnvironmentLoad BUILD_COMPANY; then
@@ -74,7 +76,7 @@ hookGitPreCommit() {
     fi
   fi
   statusMessage consoleSuccess Making shell files executable ...
-  if ! ./bin/build/chmod-sh.sh >/dev/null; then
+  if ! makeShellFilesExecutable >/dev/null; then
     _hookGitPreCommitFailed chmod-sh.sh || return $?
   fi
   statusMessage consoleSuccess Updating help files ...
