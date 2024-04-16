@@ -62,59 +62,54 @@ dumpFile() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
-  local arg failedFiles failedReason failedReasons binary interactive sleepDelay
+  local this usage arg failedFiles failedReason failedReasons binary interactive sleepDelay
 
-  if ! buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH; then
-    return $errorEnvironment
-  fi
-  clearLine
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
+
+  clearLine || :
   sleepDelay="$BUILD_INTERACTIVE_REFRESH"
-  statusMessage consoleInfo "Checking all shell scripts ..."
+  statusMessage consoleInfo "Checking all shell scripts ..." || :
   failedReasons=()
   failedFiles=()
   binary=
   if [ $# -eq 0 ]; then
-    while read -r f; do
-      statusMessage consoleInfo "Checking $f ..."
-      if ! failedReason=$(validateShellScript "$f"); then
+    while read -r arg; do
+      statusMessage consoleInfo "👀 Checking \"$arg\" (stdin) ..." || :
+      if ! failedReason=$(validateShellScript "$arg"); then
         failedReasons+=("$failedReason")
       fi
     done
   else
     while [ $# -gt 0 ]; do
       arg="$1"
-      if [ -z "$arg" ]; then
-        "_${FUNCNAME[0]}" "$errorArgument" "blank argument" || return $?
-      fi
+      [ -n "$arg" ] || __usageArgument "$usage" "blank argument" || return $?
       case "$arg" in
         --delay)
-          shift || "_${FUNCNAME[0]}" "$errorArgument" "$arg missing" || return $?
+          shift || __usageArgument "$usage" "$arg missing argument" || return $?
           sleepDelay="$1"
           ;;
         --exec)
-          shift || "_${FUNCNAME[0]}" "$errorArgument" "$arg missing" || return $?
+          shift || __usageArgument "$usage" "$arg missing argument" || return $?
           binary="${1}"
-          if ! isCallable "$binary"; then
-            "_${FUNCNAME[0]}" "$errorArgument" "--exec $binary is not callable" || return $?
-          fi
+          __usageEnvironment "$usage" isCallable "$binary" || return $?
           ;;
         --interactive)
           interactive=true
           ;;
         *)
-          statusMessage consoleInfo "Checking $arg ..."
+          statusMessage consoleInfo "👀 Checking \"$arg\" ..." || :
           if ! failedReason=$(validateShellScript "$arg"); then
             failedFiles+=("$arg")
             failedReasons+=("$failedReason")
           fi
           ;;
       esac
-      shift || "_${FUNCNAME[0]}" "$errorArgument" "shift failed" || return $?
+      shift || __usageArgument "$usage" "shift after $arg failed" || return $?
     done
   fi
-  if ! sleepDelay=$(usageArgumentUnsignedInteger "_${FUNCNAME[0]}" "sleepDelay" "$sleepDelay"); then
-    return $errorArgument
-  fi
+  sleepDelay=$(usageArgumentUnsignedInteger "$usage" "sleepDelay" "$sleepDelay") || return $?
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
     clearLine
@@ -197,50 +192,36 @@ validateShellScriptsInteractive() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScript() {
+  local this usage argument
   local f
 
-  if ! whichApt shellcheck shellcheck; then
-    _validateShellScript "$errorEnvironment" "Can not install shellcheck" || return $?
-  fi
-  if ! whichApt pcregrep pcregrep; then
-    _validateShellScript "$errorEnvironment" "Can not install pcregrep" || return $?
-  fi
+  this=${FUNCNAME[0]}
+  usage="_$this"
+  whichApt shellcheck shellcheck || __failEnvironment "$usage" "Can not install shellcheck" || return $?
+  whichApt pcregrep pcregrep || __failEnvironment "$usage" "Can not install pcregrep" || return $?
 
+  # Open 3 to pipe to nowhere
   exec 3>/dev/null
   while [ $# -gt 0 ]; do
-    arg="$1"
-    if [ -z "$arg" ]; then
-      _validateShellScript "$errorArgument" "blank argument" || return $?
-    fi
-    case "$arg" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --verbose)
         consoleWarning "Verbose on"
         exec 3>&1
         ;;
       *)
-        f="$1"
-        if [ ! -f "$f" ]; then
-          printf "%s: %s" "$(consoleError "Not a file")" "$(consoleCode "$f")"
-          return "$errorEnvironment"
-        fi
+        [ -f "$argument" ] || __failEnvironment "$(printf "%s: %s" "Not a file" "$(consoleCode "$argument")")" || return $?
         # shellcheck disable=SC2210
-        if ! bash -n "$f" 1>&3; then
-          printf "%s %s\n" "$(consoleError "bash -n")" "$(consoleCode "$f")"
-          return "$errorEnvironment"
-        fi
-
+        __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
-        if ! shellcheck "$f" 1>&3; then
-          printf "%s %s" "$(consoleError "shellcheck")" "$(consoleCode "$f")"
-          return "$errorEnvironment"
-        fi
-        if pcregrep -l -M '\n\}\n#' "$f"; then
-          printf "contextOpen %s # newline before comment start required" "$f"
-          return "$errorEnvironment"
+        __usageEnvironment "$usage" shellcheck "$argument" 1>&3 || return $?
+        if pcregrep -l -M '\n\}\n#' "$argument"; then
+          __failEnvironment "$usage" "pcregrep found }\\n#" || return $?
         fi
         ;;
     esac
-    shift
+    shift || __failArgument "shifting $argument failed" || return $?
   done
 }
 _validateShellScript() {
@@ -266,19 +247,24 @@ _validateShellScript() {
 # Exit Code: 2 - Arguments error (missing extension or text)
 #
 validateFileContents() {
+  local this usage argument
   local fileArgs f total
 
   local textMatches t binary
   local failedReasons failedFiles
 
+  this=${FUNCNAME[0]}
+  usage="_$this"
+
   fileArgs=()
   while [ $# -gt 0 ]; do
-    if [ "$1" == "--" ]; then
+    argument="$1"
+    if [ "$argument" == "--" ]; then
       shift || :
       break
     fi
     if [ -z "$1" ]; then
-      _validateFileContents "$errorArgument" "Blank argument" || return $?
+      "$usage" "$errorArgument" "Blank argument" || return $?
     fi
     case "$1" in
       --)
@@ -289,11 +275,11 @@ validateFileContents() {
         shift || :
         binary="$1"
         if ! isCallable "$binary"; then
-          _validateFileContents "$errorArgument" "--exec $binary Not callable" || return $?
+          "$usage" "$errorArgument" "--exec $binary Not callable" || return $?
         fi
         ;;
       *)
-        if ! usageArgumentFile _validateFileContents "file${#fileArgs[@]}" "$1" >/dev/null; then
+        if ! usageArgumentFile "$usage" "file${#fileArgs[@]}" "$1" >/dev/null; then
           return $?
         fi
         fileArgs+=("$1")
@@ -309,18 +295,18 @@ validateFileContents() {
       break
     fi
     if [ -z "$1" ]; then
-      _validateFileContents "$errorArgument" "Zero size text match passed"
+      "$usage" "$errorArgument" "Zero size text match passed"
       return $?
     fi
     textMatches+=("$1")
     shift
   done
   if [ "${#fileArgs[@]}" -eq 0 ]; then
-    _validateFileContents "$errorArgument" "No extension arguments" 1>&2
+    "$usage" "$errorArgument" "No extension arguments" 1>&2
     return $?
   fi
   if [ "${#textMatches[@]}" -eq 0 ]; then
-    _validateFileContents "$errorArgument" "No text match arguments" 1>&2
+    "$usage" "$errorArgument" "No text match arguments" 1>&2
     return $?
   fi
 
@@ -387,6 +373,7 @@ _validateFileContents() {
 # Exit Code: 2 - Arguments error (missing extension or text)
 #
 validateFileExtensionContents() {
+  local this usage
   local failedReasons f foundFiles
   local extensionArgs textMatches extensions
 
@@ -462,7 +449,7 @@ validateFileExtensionContents() {
 # Usage: {fn} [ --exec binary ] [ directory ]
 #
 findUncaughtAssertions() {
-  local listFlag binary directory problemFiles lastProblemFile problemLine problemLines
+  local this usage listFlag binary directory problemFiles lastProblemFile problemLine problemLines
 
   # --list
   listFlag=
@@ -473,11 +460,11 @@ findUncaughtAssertions() {
   directory=
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      "_${FUNCNAME[0]}" "$errorArgument" "Blank argument"
+      "$usage" "$errorArgument" "Blank argument"
     fi
     case "$1" in
       --exec)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "--exec missing argument"
+        shift || "$usage" "$errorArgument" "--exec missing argument"
         binary="$1"
         ;;
       --list)
@@ -485,14 +472,14 @@ findUncaughtAssertions() {
         ;;
       *)
         if [ -n "$directory" ]; then
-          "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument"
+          "$usage" "$errorArgument" "Unknown argument"
         fi
-        if ! directory=$(usageArgumentDirectory "_${FUNCNAME[0]}" "directory" "$1"); then
+        if ! directory=$(usageArgumentDirectory "$usage" "directory" "$1"); then
           return $errorArgument
         fi
         ;;
     esac
-    shift || "_${FUNCNAME[0]}" "$errorArgument" "Shift failed"
+    shift || "$usage" "$errorArgument" "Shift failed"
   done
 
   if [ -z "$directory" ]; then
@@ -510,7 +497,7 @@ findUncaughtAssertions() {
 
   problemFiles=()
   if ! tempFile=$(mktemp); then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "mktemp failed" || return $?
+    "$usage" "$errorEnvironment" "mktemp failed" || return $?
   fi
   suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
@@ -550,7 +537,7 @@ findUncaughtAssertions() {
       cat "$tempFile"
     fi
   fi
-  rm "$tempFile" || "_${FUNCNAME[0]}" "$errorEnvironment" "Unable to delete $tempFile" || return $?
+  rm "$tempFile" || "$usage" "$errorEnvironment" "Unable to delete $tempFile" || return $?
   [ ${#problemFiles[@]} -eq 0 ]
 }
 _findUncaughtAssertions() {

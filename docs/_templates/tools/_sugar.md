@@ -10,6 +10,13 @@ The functions are grouped as follows;
 - `_` - Single underscore prefixed functions means "return" a failure value
 - `__` - Double underscore prefixed functions means "run the command" and handle the failure value
 
+Most functions are used in the form suffixed with `|| return $?` which takes the returned code and returns immediately from the function.
+
+    _return 1 "This failed" || return $?
+    __argument isInteger "$1" || return $?
+
+Alternately, these can be used within an `if` or other compound statement but the return code should be returned to the user, typically.
+
 Quick guide:
 
 - `_exit message ...` - Exits with exit code 99 always. Outputs `message ...` to `stderr`. If `BUILD_DEBUG` environment is set to `true` will output debugging information. Should be used for script initialization which is critical, otherwise avoid it and use `_return`.

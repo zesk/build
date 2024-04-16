@@ -195,6 +195,64 @@ Convert text to uppercase
 
 - `0` - Always succeeds
 
+### `usageArgumentInteger` - Validates a value is an integer
+
+Validates a value is an integer
+Upon success, outputs the directory name trailing slash stripped
+
+#### Usage
+
+    usageArgumentInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
+
+Validates a value is not blank and is an environment file which is loaded immediately.
+
+Upon success, outputs the file name to stdout, outputs a console message to stderr
+
+#### Usage
+
+    usageArgumentLoadEnvironmentFile processPid usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
+
+Validates a value is an unsigned integer
+Upon success, outputs the directory name trailing slash stripped
+
+#### Usage
+
+    usageArgumentUnsignedInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
 #### Exit codes
 
 - `0` - Always succeeds
