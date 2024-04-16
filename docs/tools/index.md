@@ -22,7 +22,6 @@ Once included, all functions here are available for use and may affect your buil
 - [Deployment Functions](./deployment.md)
 - [Docker Functions](./docker.md)
 - [Documentation Functions](./documentation.md)
-- [Floating-Point Functions](./float.md)
 - [Git Functions](./git.md)
 - [GitHub Functions](./github.md)
 - [Installation Functions](./install.md)

@@ -16,9 +16,11 @@ errorArgument=2
 # Usage: {fn} code fail command ...
 # Argument: code - Required. Integer. Exit code to return
 # Argument: fail - Required. String. Failure command
+# Argument: command - Required. String. Command to run and run failure if it fails with the exit code.
 __usage() {
-  local code fail
-  code="${1-0}" && shift && fail="${1}" && shift && "$@" || "$fail" "$code" "$* failed" || return $?
+  local code fail command
+  # shellcheck disable=SC2016
+  code="${1-0}" && shift && fail="${1}" && shift && command="${1?}" && shift && "$command" "$@" || "$fail" "$code" "$command$(printf ' "%s"' "$@") failed" || return $?
 }
 
 # Run `command`, upon failure run `fail` with an environment error
