@@ -29,7 +29,9 @@ fi
 #
 # fn: {base}
 hookGitPreCommit() {
-  local changedGitFiles changedShellFiles blank
+  local this changedGitFiles changedShellFiles blank
+
+  this="${FUNCNAME[0]}"
 
   # IDENTICAL loadSingles 9
   local single singles
@@ -64,7 +66,7 @@ hookGitPreCommit() {
   done < <(git diff --name-only --cached --diff-filter=ACMR)
 
   clearLine
-  printf "%s: %s\n" "$(consoleSuccess "pre-commit")" "$(consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed")"
+  printf "%s: %s\n" "$(consoleSuccess "$this")" "$(consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed")"
 
   if [ ${#changedGitFiles[@]} -gt 0 ]; then
     printf -- "- %s\n" "${changedGitFiles[@]}"
