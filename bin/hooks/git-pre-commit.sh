@@ -65,7 +65,7 @@ hookGitPreCommit() {
 
   clearLine
   consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed"
-  printf -- "- %s\n" "${changedGitFiles[@]}"
+  printf -- "- %s\n" "${changedGitFiles[@]+${changedGitFiles[@]}}"
 
   if [ -z "${BUILD_COMPANY-}" ]; then
     if ! buildEnvironmentLoad BUILD_COMPANY; then
