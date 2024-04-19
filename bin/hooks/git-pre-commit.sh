@@ -64,7 +64,8 @@ hookGitPreCommit() {
   done < <(git diff --name-only --cached --diff-filter=ACMR)
 
   clearLine
-  consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed"
+  printf "%s: %s\n" "$(consoleSuccess "pre-commit")" "$(consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed")"
+
   if [ ${#changedGitFiles[@]} -gt 0 ]; then
     printf -- "- %s\n" "${changedGitFiles[@]}"
   else
