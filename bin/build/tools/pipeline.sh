@@ -47,11 +47,17 @@ dotEnvConfigure() {
   [ -f "$dotEnv" ] || _environment "Missing ./.env $suffix" || return $?
   set -a
   # shellcheck source=/dev/null
-  source "$dotEnv" || set +a && _environment "Loading $dotEnv failed $suffix" || return $?
+  if ! source "$dotEnv"; then
+    set +a || :
+    _environment "Loading $dotEnv failed $suffix" || return $?
+  fi
   dotEnv="./.env.local"
   if [ -f "$dotEnv" ]; then
     # shellcheck source=/dev/null
-    source "$dotEnv" || set +a && _environment "Loading $dotEnv failed $suffix" || return $?
+    if ! source "$dotEnv"; then
+      set +a || :
+      _environment "Loading $dotEnv failed $suffix" || return $?
+    fi
   fi
   set +a || :
 }
@@ -202,7 +208,7 @@ applicationEnvironment() {
   local hook here env
   local variables=()
 
-  read -r -a variables <applicationEnvironmentVariables || :
+  IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
   export "${variables[@]}"
 
   here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]} failed" || return $?
@@ -233,14 +239,14 @@ applicationEnvironment() {
       return "$errorEnvironment"
     fi
   fi
-  printf "%s " "${variables[@]}"
+  printf "%s\n" "${variables[@]}"
 }
 
 showEnvironment() {
   local start missing e requireEnvironment buildEnvironment tempEnv
   local variables=()
 
-  read -r -a variables <applicationEnvironmentVariables || :
+  IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
   export "${variables[@]}"
 
   #
@@ -257,7 +263,7 @@ showEnvironment() {
     rm "$tempEnv" || :
     return "$errorEnvironment"
   fi
-  read -r -a requireEnvironment <"$tempEnv" || :
+  IFS=$'\n' read -d '' -r -a requireEnvironment <"$tempEnv" || :
   rm "$tempEnv" || :
   # Will be exported to the environment file, only if defined
   while [ $# -gt 0 ]; do
@@ -314,7 +320,7 @@ showEnvironment() {
 makeEnvironment() {
   local missing e requireEnvironment
 
-  read -r -a requireEnvironment < <(applicationEnvironment) || :
+  IFS=$'\n' read -d '' -r -a requireEnvironment < <(applicationEnvironment) || :
 
   if ! showEnvironment "$@" >/dev/null; then
     _makeEnvironment "$errorEnvironment" "Missing values"
