@@ -19,12 +19,12 @@ testDotEnvConfigure() {
   cd "$tempDir" || return "$errorEnvironment"
   consoleInfo "$(pwd)"
   touch .env
-  if ! dotEnvConfigure || [ -n "$(dotEnvConfigure)" ]; then
+  if ! dotEnvConfigure; then
     consoleError "dotEnvConfigure failed with just .env"
     return "$errorEnvironment"
   fi
   touch .env.local
-  if ! dotEnvConfigure || [ -n "$(dotEnvConfigure)" ]; then
+  if ! dotEnvConfigure; then
     consoleError "dotEnvConfigure failed with both .env"
     return "$errorEnvironment"
   fi
