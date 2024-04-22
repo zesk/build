@@ -40,24 +40,26 @@ errorArgument=2
 # Exit code: 1 - if `.env` does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 dotEnvConfigure() {
-  if [ ! -f ./.env ]; then
-    consoleError "Missing ./.env" 1>&2
-    return "$errorEnvironment"
-  fi
+  local dotEnv suffix
 
+  dotEnv="./.env"
+  suffix="(pwd: $(pwd))" || :
+  [ -f "$dotEnv" ] || _environment "Missing ./.env $suffix" || return $?
   set -a
   # shellcheck source=/dev/null
-  . ./.env
-  # shellcheck source=/dev/null
-  [ -f ./.env.local ] && . ./.env.local
-  set +a
-}
-
-# Deprecated:
-# See: dotEnvConfigure
-dotEnvConfig() {
-  consoleWarning "dotEnvConfig is DEPRECATED - use dotEnvConfigure instead" 1>&2
-  dotEnvConfigure "$@"
+  if ! source "$dotEnv"; then
+    set +a || :
+    _environment "Loading $dotEnv failed $suffix" || return $?
+  fi
+  dotEnv="./.env.local"
+  if [ -f "$dotEnv" ]; then
+    # shellcheck source=/dev/null
+    if ! source "$dotEnv"; then
+      set +a || :
+      _environment "Loading $dotEnv failed $suffix" || return $?
+    fi
+  fi
+  set +a || :
 }
 
 #
@@ -185,19 +187,36 @@ ipLookup() {
   curl -s "${IP_URL:-$default}"
 }
 
-applicationEnvironment() {
-  local hook
+applicationEnvironmentVariables() {
+  cat <<EOF
+BUILD_TIMESTAMP
+APPLICATION_BUILD_DATE
+APPLICATION_VERSION
+APPLICATION_ID
+APPLICATION_TAG
+EOF
+}
 
-  # shellcheck source=/dev/null
-  . "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_TIMESTAMP.sh"
-  # shellcheck source=/dev/null
-  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_BUILD_DATE.sh"
-  # shellcheck source=/dev/null
-  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_VERSION.sh"
-  # shellcheck source=/dev/null
-  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_ID.sh"
-  # shellcheck source=/dev/null
-  . "$(dirname "${BASH_SOURCE[0]}")/../env/APPLICATION_TAG.sh"
+#
+# Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
+# Environment: BUILD_TIMESTAMP
+# Environment: APPLICATION_BUILD_DATE
+# Environment: APPLICATION_VERSION
+# Environment: APPLICATION_ID
+# Environment: APPLICATION_TAG
+applicationEnvironment() {
+  local hook here env
+  local variables=()
+
+  IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
+  export "${variables[@]}"
+
+  here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]} failed" || return $?
+
+  for env in "${variables[@]}"; do
+    # shellcheck source=/dev/null
+    source "$here/../env/$env.sh" || _environment "source $env.sh failed" || return $?
+  done
 
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
@@ -220,17 +239,15 @@ applicationEnvironment() {
       return "$errorEnvironment"
     fi
   fi
-  printf "%s " BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
+  printf "%s\n" "${variables[@]}"
 }
 
 showEnvironment() {
   local start missing e requireEnvironment buildEnvironment tempEnv
+  local variables=()
 
-  export BUILD_TIMESTAMP
-  export APPLICATION_BUILD_DATE
-  export APPLICATION_VERSION
-  export APPLICATION_ID
-  export APPLICATION_TAG
+  IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
+  export "${variables[@]}"
 
   #
   # e.g.
@@ -246,7 +263,7 @@ showEnvironment() {
     rm "$tempEnv" || :
     return "$errorEnvironment"
   fi
-  read -r -a requireEnvironment <"$tempEnv" || :
+  IFS=$'\n' read -d '' -r -a requireEnvironment <"$tempEnv" || :
   rm "$tempEnv" || :
   # Will be exported to the environment file, only if defined
   while [ $# -gt 0 ]; do
@@ -303,7 +320,7 @@ showEnvironment() {
 makeEnvironment() {
   local missing e requireEnvironment
 
-  read -r -a requireEnvironment < <(applicationEnvironment) || :
+  IFS=$'\n' read -d '' -r -a requireEnvironment < <(applicationEnvironment) || :
 
   if ! showEnvironment "$@" >/dev/null; then
     _makeEnvironment "$errorEnvironment" "Missing values"
@@ -337,9 +354,6 @@ makeEnvironment() {
 _makeEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
-
-
 
 # For security one should update keys every N days
 #
