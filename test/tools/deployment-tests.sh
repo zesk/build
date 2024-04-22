@@ -13,7 +13,7 @@ testDeployToRemote() {
   return 0
 }
 
-tests+=(deployRemoteFinish)
+tests+=(testDeployRemoteFinish)
 testDeployRemoteFinish() {
   return 0
 }
