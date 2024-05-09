@@ -125,7 +125,11 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
 #### See Also
 
-{SEE:deployToRemote}
+- [function deployToRemote
+](./docs/tools/deployment.md
+) - [Deploy current application to one or more hosts
+](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L335
+)
 
 ## Utilities
 

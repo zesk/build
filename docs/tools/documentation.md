@@ -28,12 +28,12 @@ Document a function and generate a function template (markdown)
 
 - [function _bashDocumentation_Template
 ]({documentationPath}) - [Document a function and generate a function template (markdown). To
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L409
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L401
 )
 - [function bashDocumentFunction
 ](./docs/tools/documentation.md
 ) - [Document a function and generate a function template (markdown)
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L375
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L367
 )
 - [function repeat
 ](./docs/tools/decoration.md
@@ -109,7 +109,7 @@ to regenerate each time.
 - [function documentationTemplateCompile
 ](./docs/tools/documentation.md
 ) - [Convert a template file to a documentation file using templates
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L97
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L94
 )
 
 ## Documentation Indexing
@@ -431,7 +431,7 @@ Generates a temporary file which is removed
 - [function bashDocumentation_FindFunctionDefinitions
 ](./docs/tools/documentation.md
 ) - [Find where a function is defined in a directory of shell scripts
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L633
+](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L615
 )
 
 ## Usage Utilities

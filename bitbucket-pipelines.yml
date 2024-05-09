@@ -11,6 +11,15 @@ image: atlassian/default-image:4
 
 pipelines:
   branches:
+    docs:
+      - step:
+          deployment: docs
+          name: Build documentation
+          services:
+            - docker
+          script:
+            - bin/build-docs.sh
+            - ! bin/build/tools.sh gitRepositoryChanged || git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a
     staging:
       - step:
           deployment: staging

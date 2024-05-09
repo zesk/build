@@ -368,7 +368,7 @@ trimSpace handles both cases now.
 - [function trimSpace
 ](./docs/tools/text.md
 ) - [Trim whitespace of a bash argument
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L156
+](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L150
 )
 
 ### `trimHead` - Removes any blank lines from the beginning of a stream

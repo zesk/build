@@ -370,7 +370,7 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 - [function deployToRemote
 ](./docs/tools/deployment.md
 ) - [Deploy current application to one or more hosts
-](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L347
+](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L335
 )
 Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 
