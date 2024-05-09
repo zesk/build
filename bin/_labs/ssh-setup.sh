@@ -8,12 +8,6 @@
 #
 set -eou pipefail
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 # Set up SSH for a user with ID and backup keys in `~/.ssh`
 #
 # Create a key for a user for SSH authentication to other servers.
@@ -29,13 +23,15 @@ errorArgument=2
 #
 sshSetup() {
   local arg sshHomePath flagForce servers keyType keyBits
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if ! buildEnvironmentLoad HOME; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "buildEnvironmentLoad HOME failed" || return $?
-  fi
-  if [ ! -d "${HOME-}" ]; then
-    _sshSetup "$errorEnvironment" "HOME is not defined and is required" || return $?
-  fi
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
+  [ -d "${HOME-}" ] || __failEnvironment "$usage" "HOME is not defined and is required" || return $?
+
   sshHomePath="$HOME/.ssh/"
   flagForce=0
   servers=()
@@ -44,27 +40,23 @@ sshSetup() {
 
   while [ $# != 0 ]; do
     arg="$1"
-    if [ -z "$arg" ]; then
-      _sshSetup "$errorArgument" "Empty argument" || return $?
-    fi
+    [ -n "$arg" ] || __failArgument "$usage" "$this: Blank argument" || return $?
     case "$arg" in
       --type)
-        shift || _sshSetup "$errorArgument" "Missing $arg" || return $?
+        shift || __failArgument "$usage" "Missing $arg" || return $?
         case "$1" in
           ed25519 | rsa | dsa)
             keyType=$1
             ;;
           *)
-            _sshSetup "$errorArgument" "Key type $1 is not known: ed25519 | rsa | dsa" || return $?
+            __failArgument "$usage" "Key type $1 is not known: ed25519 | rsa | dsa" || return $?
             ;;
         esac
         ;;
       --bits)
-        shift || _sshSetup "$errorArgument" "Missing $arg" || return $?
+        shift || __failArgument "$usage" "Missing $arg" || return $?
         minBits=512
-        if [ "$(("$1" + 0))" -lt "$minBits" ]; then
-          _sshSetup "$errorArgument" "Key bits is too $minBits: $1 -> $(("$1" + 0))" || return $?
-        fi
+        [ "$(("$1" + 0))" -ge "$minBits" ] || __failArgument "$usage" "Key bits is too small $minBits: $1 -> $(("$1" + 0))" || return $?
         ;;
       --help)
         usage 0
@@ -80,36 +72,29 @@ sshSetup() {
     shift
   done
 
-  if [ ! -d "$sshHomePath" ] && ! mkdir -p .ssh/; then
-    consoleError "Can't create $sshHomePath" 1>&2
-    return 1
-  fi
-  chmod 700 "$sshHomePath"
-  cd "$sshHomePath"
-  user="$(whoami)"
-  keyName="$user@$(uname -n)"
+  [ -d "$sshHomePath" ] || mkdir -p .ssh/ || __failEnvironment "$usage" "Can not create $sshHomePath" || return $?
+  __usageEnvironment "$usage" chmod 700 "$sshHomePath" || return $?
+  __usageEnvironment "$usage" cd "$sshHomePath" || return $?
+  user="$(whoami)" || __failEnvironment "$usage" "whoami failed" || return $?
+  keyName="$user@$(uname -n)" || __failEnvironment "$usage" "uname -n failed" || return $?
   if [ $flagForce = 0 ] && [ -f "$keyName" ]; then
-    if [ ${#servers[@]} = 0 ]; then
-      echo "Key $keyName already exists, exiting." 1>&2
-      exit $errorArgument
-    fi
+    [ ${#servers[@]} -gt 0 ] || _argument "Key $keyName already exists, exiting." || return $?
   else
-    echo "Generating $keyName (keyType $keyType $keyBits keyBits)"
-    ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N ""
-    cp "$keyName" id_"$keyType"
-    cp "$keyName".pub id_"$keyType".pub
+    statusMessage consoleInfo "Generating $keyName (keyType $keyType $keyBits keyBits)"
+    __usageEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N "" || return $?
+    __usageEnvironment "$usage" cp "$keyName" id_"$keyType" || return $?
+    __usageEnvironment "$usage" cp "$keyName".pub id_"$keyType".pub || return $?
   fi
   for s in "${servers[@]}"; do
     echo "Uploading key and modifying authorized_keys with $s"
     echo "(Please enter password twice)"
     if ! printf "cd .ssh\n""put %s\n""quit" "$keyName.pub" | sftp "$s" >/dev/null; then
-      _sshSetup $errorEnvironment "$s failed to upload key" || return $?
+      __failEnvironment "$usage" "$s failed to upload key" || return $?
     fi
     if ! printf "cd ~\\n""cd .ssh\n""cat *pub > authorized_keys\n""exit" | ssh -T "$s" >/dev/null; then
-      _sshSetup "$errorEnvironment" "$s failed to add to authorized keys" || return $?
+      __failEnvironment "$usage" "$s failed to add to authorized keys" || return $?
     fi
   done
-
 }
 _sshSetup() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
