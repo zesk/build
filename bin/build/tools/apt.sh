@@ -9,9 +9,6 @@
 # Docs: o ./docs/_templates/tools/apt.md
 # Test: o ./test/tools/apt-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 #
 # Run apt-get update once and only once in the pipeline, at least
 # once an hour as well (when testing)
@@ -26,9 +23,7 @@ aptUpdateOnce() {
 
   quietLog=$(buildQuietLog aptUpdateOnce)
   name=$(buildCacheDirectory "$cacheFile")
-  if ! requireFileDirectory "$name"; then
-    return "$errorEnvironment"
-  fi
+  __environment requireFileDirectory "$name" || return $?
   if [ -f "$name" ]; then
     lastModified="$(modificationSeconds "$name")"
     # once an hour, technically
@@ -36,18 +31,15 @@ aptUpdateOnce() {
       return 0
     fi
   fi
-  if ! which apt-get >/dev/null; then
-    consoleError "No apt-get available" 1>&2
-    return 1
-  fi
+  which apt-get >/dev/null || _environment "No apt-get available" || return $?
   start=$(beginTiming)
   consoleInfo -n "apt-get update ... "
   if ! DEBIAN_FRONTEND=noninteractive apt-get update -y >"$quietLog" 2>&1; then
-    buildFailed "$quietLog" 1>&2
-    return "$errorEnvironment"
+    buildFailed "$quietLog" 1>&2 || :
+    _environment "apt-get update failed" || return $?
   fi
-  reportTiming "$start" OK 1>&2
-  date >"$name"
+  reportTiming "$start" OK 1>&2 || :
+  date >"$name" || :
 }
 
 #
@@ -68,6 +60,11 @@ aptInstall() {
   local installedLog quietLog
   local actualPackages packages
   local apt start
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   actualPackages=()
   packages=(apt-utils figlet toilet toilet-fonts jq pcregrep "$@")
@@ -80,10 +77,7 @@ aptInstall() {
     return 0
   fi
 
-  if ! aptUpdateOnce >>"$quietLog" 2>&1; then
-    buildFailed "$quietLog" 1>&2
-    return "$errorEnvironment"
-  fi
+  __usageEnvironmentQuiet "$usage" "$quietLog" aptUpdateOnce || return $?
   __environment requireFileDirectory "$installedLog" || return $?
   __environment touch "$installedLog" || return $?
 
@@ -101,10 +95,7 @@ aptInstall() {
     return 0
   fi
   consoleInfo -n "Installing ${actualPackages[*]} ... "
-  if ! DEBIAN_FRONTEND=noninteractive "$apt" install -y "${actualPackages[@]}" >>"$quietLog" 2>&1; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
-  fi
+  __usageEnvironmentQuiet "$usage" "$quietLog" DEBIAN_FRONTEND=noninteractive "$apt" install -y "${actualPackages[@]}" || return $?
   reportTiming "$start" OK
 }
 
@@ -151,7 +142,7 @@ aptUpToDate() {
   if ! quietLog=$(buildQuietLog "${FUNCNAME[0]}") ||
     ! restartFlag=$(buildCacheDirectory ".needRestart") ||
     ! upgradeLog=$(buildQuietLog "STATE_${FUNCNAME[0]}"); then
-    return $errorEnvironment
+    _environment "Unable to create log files" || return $?
   fi
   if [ -f "$restartFlag" ]; then
     consoleWarning -i "Restart flag already set. " 1>&2
@@ -162,7 +153,7 @@ aptUpToDate() {
     ! DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get -y dist-upgrade | tee -a "$upgradeLog" >>"$quietLog" 2>&1; then
     printf "\n" 1>&2
     buildFailed "$quietLog" 1>&2
-    return "$errorEnvironment"
+    _environment "dist-upgrade failed" || return $?
   fi
   if [ ! -f "$restartFlag" ]; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog"; then

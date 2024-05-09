@@ -61,14 +61,14 @@ identicalCheck() {
   excludes=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __usageArgument "$usage" "$this: Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "$this: Blank argument" || return $?
     case "$arg" in
       --help)
         "$usage" 0
         return 0
         ;;
       --cd)
-        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
           "$usage" "$errorArgument" "--cd \"$1\" is not a directory"
@@ -76,29 +76,29 @@ identicalCheck() {
         fi
         ;;
       --extension)
-        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
         findArgs+=("-name" "*.$1")
         ;;
       --exec)
-        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
         binary="$1"
-        isCallable "$binary" || __usageArgument "$usage" "$arg \"$binary\" is not callable" || return $?
+        isCallable "$binary" || __failArgument "$usage" "$arg \"$binary\" is not callable" || return $?
         ;;
       --single)
-        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
         singles+=("$1")
         ;;
       --prefix)
-        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
         prefixes+=("$1")
         ;;
       --exclude)
-        shift || __usageArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
         [ -n "$1" ] || __failArgument "$usage" "Empty $arg argument" || return $?
         excludes+=(! -path "$1")
         ;;
     esac
-    shift || __usageArgument "$usage" "shift failed" || return $?
+    shift || __failArgument "$usage" "shift failed" || return $?
   done
 
   if [ ${#findArgs[@]} -eq 0 ]; then

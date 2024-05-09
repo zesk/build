@@ -18,12 +18,6 @@
 #------------------------------------------------------------------------------
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 # Parses text and determines if it's true-ish
 #
 # Usage: {fn} text
@@ -156,15 +150,19 @@ singleBlankLines() {
 #
 trimSpace() {
   local var
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
       var="$1"
       # remove leading whitespace characters
       var="${var#"${var%%[![:space:]]*}"}"
       # remove trailing whitespace characters
-      if ! shift || ! printf %s "${var%"${var##*[![:space:]]}"}"; then
-        _trimSpace "$errorEnvironment" "printf failed"
-      fi
+      shift && printf %s "${var%"${var##*[![:space:]]}"}" || __failEnvironment "$usage" "printf failed" || return $?
     done
   else
     awk '{$1=$1};NF'
@@ -407,15 +405,12 @@ listTokens() {
 shaPipe() {
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
-      if [ ! -f "$1" ]; then
-        consoleError "$1 is not a file" 1>&2
-        return "$errorArgument"
-      fi
+      [ -f "$1" ] || _argument "$1 is not a file" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
         printf "%s: %s\n" "$(date +"%FT%T")" "$1" >shaPipe.log
       fi
       shasum <"$1" | cut -f 1 -d ' '
-      shift
+      shift || _argument "shift failed" || return $?
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then
@@ -451,26 +446,18 @@ cachedShaPipe() {
     return $?
   fi
 
-  if [ ! -d "$cacheDirectory" ]; then
-    consoleError "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" 1>&2
-    return $errorArgument
-  fi
+  [ -d "$cacheDirectory" ] || _argument "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
-      if [ ! -f "$1" ]; then
-        consoleError "$1 is not a file" 1>&2
-        return "$errorArgument"
-      fi
+      [ -f "$1" ] || _argument "$1 is not a file" || return $?
       cacheFile="$cacheDirectory/${1##/}"
-      if ! requireFileDirectory "$cacheFile"; then
-        return "$errorEnvironment"
-      fi
+      __environment requireFileDirectory "$cacheFile" || return $?
       if [ -f "$cacheFile" ] && isNewestFile "$cacheFile" "$1"; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
         shaPipe "$1" | tee "$cacheFile"
       fi
-      shift
+      shift || _argument "shift failed" || return $?
     done
   else
     shaPipe
@@ -486,12 +473,14 @@ cachedShaPipe() {
 #
 mapValue() {
   local name value searchToken mapFile="${1-}"
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   shift
-  if [ ! -f "$mapFile" ]; then
-    consoleError "mapValue - \"$mapFile\" is not a file" 1>&2
-    return $errorArgument
-  fi
+  [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
   (
     set -a
     # shellcheck source=/dev/null
@@ -514,12 +503,14 @@ mapValue() {
 #
 mapValueTrim() {
   local name value replace searchToken mapFile="${1-}"
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   shift
-  if [ ! -f "$mapFile" ]; then
-    consoleError "mapValue - \"$mapFile\" is not a file" 1>&2
-    return $errorArgument
-  fi
+  [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
   (
     set -a
     # shellcheck source=/dev/null
@@ -652,13 +643,19 @@ characterClasses() {
 #
 isCharacterClass() {
   local class="${1-}" character
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
   case "$class" in
     alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
     *)
-      "_${FUNCNAME[0]}" "$errorArgument" "Invalid class: $class" || return $?
+      __failArgument "$usage" "Invalid class: $class" || return $?
       ;;
   esac
-  shift || "_${FUNCNAME[0]}" "$errorArgument" "shift failed" || return $?
+  shift || __failArgument "$usage" "shift failed" || return $?
   while [ $# -gt 0 ]; do
     character="${1:0:1}"
     character="$(escapeBash "$character")"
@@ -667,7 +664,7 @@ isCharacterClass() {
     if ! eval "case $character in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
-    shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $character failed" || return $?
+    shift || __failArgument "$usage" "shift $character failed" || return $?
   done
 }
 _isCharacterClass() {
@@ -683,13 +680,16 @@ _isCharacterClass() {
 #
 isCharacterClasses() {
   local character class
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   character="${1-}"
-  if [ "${#character}" -ne 1 ]; then
-    "_${FUNCNAME[0]}" "$errorArgument" "Non-single character: \"$character\"" || return $?
-  fi
+  [ "${#character}" -eq 1 ] || __failArgument "$usage" "Non-single character: \"$character\"" || return $?
   if ! shift || [ $# -eq 0 ]; then
-    "_${FUNCNAME[0]}" "$errorArgument" "Need at least one class" || return $?
+    __failArgument "$usage" "Need at least one class" || return $?
   fi
   while [ "$#" -gt 0 ]; do
     class="$1"
@@ -700,7 +700,7 @@ isCharacterClasses() {
     elif isCharacterClass "$class" "$character"; then
       return 0
     fi
-    shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $class failed" || return $?
+    shift || __failArgument "$usage" "shift $class failed" || return $?
   done
   return 1
 }
@@ -716,15 +716,11 @@ characterFromInteger() {
   local arg
   while [ $# -gt 0 ]; do
     arg="$1"
-    if ! isUnsignedInteger "$arg"; then
-      _characterFromInteger "$errorArgument" "Not integer: \"$arg\"" || return $?
-    fi
-    if [ "$arg" -ge 256 ]; then
-      _characterFromInteger "$errorArgument" "Integer out of range: \"$arg\"" || return $?
-    fi
+    __usageArgument "$usage" isUnsignedInteger "$arg" || return $?
+    [ "$arg" -lt 256 ] || __failArgument "$usage" "Integer out of range: \"$arg\"" || return $?
     # shellcheck disable=SC2059
     printf "\\$(printf '%03o' "$arg")"
-    shift || _characterFromInteger "$errorArgument" "shift $arg failed" || return $?
+    shift || __failArgument "$usage" "shift $arg failed" || return $?
   done
 }
 _characterFromInteger() {
@@ -738,10 +734,15 @@ _characterFromInteger() {
 #
 stringValidate() {
   local text character
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   text="${1-}"
-  shift || _stringValidate "$errorArgument" "Missing text" || return $?
-  [ $# -gt 0 ] || _stringValidate "$errorArgument" "Missing class" || return $?
+  shift || __failArgument "$usage" "Missing text" || return $?
+  [ $# -gt 0 ] || __failArgument "$usage" "Missing class" || return $?
   for character in $(printf "%s" "$text" | grep -o .); do
     if ! isCharacterClasses "$character" "$@"; then
       return 1
@@ -763,13 +764,9 @@ characterToInteger() {
   index=0
   while [ $# -gt 0 ]; do
     index=$((index + 1))
-    if [ "${#1}" != 1 ]; then
-      _characterToInteger "$errorArgument" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    fi
-    if ! LC_CTYPE=C printf '%d' "'$1"; then
-      _characterToInteger "$errorEnvironment" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    fi
-    shift || :
+    [ "${#1}" = 1 ] || __failArgument "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    LC_CTYPE=C printf '%d' "'$1" || __failEnvironment "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    shift || __failArgument "$usage" "shift failed" || return $?
   done
 }
 _characterToInteger() {
@@ -787,9 +784,7 @@ characterClassReport() {
   classOuter=false
   while [ $# -gt 0 ]; do
     arg="$1"
-    if [ -z "$arg" ]; then
-      _characterClassReport "$errorArgument" "blank argument" || return $?
-    fi
+    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case "$arg" in
       --class)
         classOuter=true
@@ -798,7 +793,7 @@ characterClassReport() {
         classOuter=false
         ;;
     esac
-    shift || _characterClassReport "$errorArgument" "shift $arg failed" || return $?
+    shift || __failArgument "$usage" "shift $arg failed" || return $?
   done
   classList=()
   for arg in $(characterClasses); do
@@ -875,25 +870,33 @@ characterClassReport() {
 #
 #
 cannon() {
-  local search searchQuoted replaceQuoted cannonLog count
+  local search searchQuoted replace replaceQuoted cannonLog count
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if [ -z "${1-}" ]; then
-    _cannon "$errorArgument" "Empty search string"
-    return $?
-  fi
-  search=${1-}
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  search=
+  replace=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      *)
+        if [ -z "$search" ]; then
+          search="$argument"
+        elif [ -z "$replace" ]; then
+          replace="$argument"
+        else
+          __failArgument "$usage" "Unknown argument $argument" || return $?
+        fi
+        ;;
+    esac
+  done
   searchQuoted=$(quoteSedPattern "$search")
-  shift || _cannon "$errorArgument" "Missing replacement argument"
-  if [ -z "${1-}" ]; then
-    _cannon "$errorArgument" "Empty replacement string"
-    return $?
-  fi
-  replaceQuoted=$(quoteSedPattern "${1-}")
-  shift || _cannon "$errorArgument" "shift fail" || return $?
-  if [ "$searchQuoted" = "$replaceQuoted" ]; then
-    _cannon "$errorArgument" "from to \"$search\" are identical"
-  fi
-
+  replaceQuoted=$(quoteSedPattern "$replace")
+  [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(mktemp)
   if ! find . -type f ! -path '*/.*' "$@" -print0 >"$cannonLog"; then
     printf "%s\n" "$(consoleSucces "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
@@ -904,7 +907,6 @@ cannon() {
   count="$(wc -l <"$cannonLog.found" | trimSpace)"
   consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
   rm -f "$cannonLog" "$cannonLog.found" || :
-
 }
 _cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

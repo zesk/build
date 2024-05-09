@@ -9,9 +9,6 @@
 # Binary paths are at bin/build/install
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 # Install `mariadb`
 #
 # If this fails it will output the installation log.
@@ -59,29 +56,23 @@ pythonInstall() {
 # Binary: docker-compose.sh
 #
 dockerComposeInstall() {
-  local quietLog
+  local quietLog start
 
   if which docker-compose 2>/dev/null 1>&2; then
     return 0
   fi
-  if ! quietLog=$(buildQuietLog dockerComposeInstall); then
-    return "$errorEnvironment"
-  fi
-  if ! pythonInstall "$@"; then
-    return "$errorEnvironment"
-  fi
+  quietLog=$(buildQuietLog dockerComposeInstall) || _environment "buildQuietLog dockerComposeInstall failed" || return $?
+  __environment pythonInstall "$@" || return $?
 
   consoleInfo -n "Installing docker-compose ... "
   start=$(beginTiming)
   if ! pip install docker-compose >"$quietLog" 2>&1; then
-    consoleError "pip install docker-compose failed $?"
     buildFailed "$quietLog"
-    return "$errorEnvironment"
+    _environment "pip install docker-compose failed" || return $?
   fi
   if ! which docker-compose 2>/dev/null; then
-    consoleError "docker-compose not found after install"
     buildFailed "$quietLog"
-    return "$errorEnvironment"
+    _environment "docker-compose not found after install" || return $?
   fi
   reportTiming "$start" OK
 }

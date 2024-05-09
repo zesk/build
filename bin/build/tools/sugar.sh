@@ -12,47 +12,55 @@
 errorEnvironment=1
 errorArgument=2
 
-# Run `command` and fail with `code` by running `fail`
-# Usage: {fn} code fail command ...
+# Run `command` and usage with `code` by running `usage`
+# Usage: {fn} code usage command ...
 # Argument: code - Required. Integer. Exit code to return
-# Argument: fail - Required. String. Failure command
-# Argument: command - Required. String. Command to run and run failure if it fails with the exit code.
+# Argument: usage - Required. String. Failure command
+# Argument: command - Required. String. Command to run and run failure if it usages with the exit code.
 __usage() {
-  local code fail command
+  local code usage command
   # shellcheck disable=SC2016
-  code="${1-0}" && shift && fail="${1}" && shift && command="${1?}" && shift && "$command" "$@" || "$fail" "$code" "$command$(printf ' "%s"' "$@") failed" || return $?
+  code="${1-0}" && shift && usage="${1}" && shift && command="${1?}" && shift && "$command" "$@" || "$usage" "$code" "$command$(printf ' "%s"' "$@") failed" || return $?
 }
 
-# Run `command`, upon failure run `fail` with an environment error
-# Usage: {fn} fail command ...
-# Argument: fail - Required. String. Failure command
+# Run `command`, upon failure run `usage` with an environment error
+# Usage: {fn} usage command ...
+# Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageEnvironment() {
   __usage "$errorEnvironment" "$@"
 }
 
-# Run `command`, upon failure run `fail` with an argument error
-# Usage: {fn} fail command ...
-# Argument: fail - Required. String. Failure command
+# Run `command`, upon failure run `usage` with an argument error
+# Usage: {fn} usage command ...
+# Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageArgument() {
   __usage "$errorArgument" "$@"
 }
 
-# Run `fail` with an environment error
-# Usage: {fn} fail ...
+# Run `usage` with an environment error
+# Usage: {fn} usage ...
 __failEnvironment() {
-  local fail
-  fail="$1" && shift && "$fail" "$errorEnvironment" "$@"
+  local usage
+  usage="$1" && shift && "$usage" "$errorEnvironment" "$@"
   return $errorEnvironment
 }
 
-# Run `fail` with an argument error
-# Usage: {fn} fail ...
+# Run `usage` with an argument error
+# Usage: {fn} usage ...
 __failArgument() {
-  local fail
-  fail="$1" && shift && "$fail" "$errorArgument" "$@"
+  local usage
+  usage="$1" && shift && "$usage" "$errorArgument" "$@"
   return $errorArgument
+}
+
+# Run `usage` with an environment error
+# Usage: {fn} usage quietLog message ...
+__usageEnvironmentQuiet() {
+  local usage quietLog
+  usage="$1" && shift && quietLog="$1" && shift || __failArgument "$usage" "missing quietLog" || return $?
+  "$@" >>"$quietLog" 2>&1 || __failEnvironment "$usage" "$@" || return $?
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`

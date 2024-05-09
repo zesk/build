@@ -9,17 +9,6 @@
 # Test: o test/tools/php-tools.sh
 # Docs: o docs/_templates/tools/php.md
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-#
-#
-#
-errorBuild=1000
-
 # Install `php`
 #
 # If this fails it will output the installation log.
@@ -41,10 +30,7 @@ phpInstall() {
 # Outputs the path to the PHP log file
 #
 phpLog() {
-  if ! php -r "echo ini_get('error_log');" 2>/dev/null; then
-    consoleError "php appears to be uninstalled" 1>&2
-    return "$errorEnvironment"
-  fi
+  php -r "echo ini_get('error_log');" 2>/dev/null || _environment "php not installed" || return $?
 }
 
 #
@@ -59,13 +45,11 @@ phpLog() {
 _deploymentGenerateValue() {
   local e=$1 hook=$2
 
-  shift
+  shift || :
   if [ -z "${!e}" ]; then
-    if ! runHook "$hook" | tee "./.deploy/$e"; then
-      return $errorEnvironment
-    fi
+    runHook "$hook" | tee "./.deploy/$e" || _environment runHook "$hook" || return $?
   else
-    printf %s "${!e}" | tee "./.deploy/$e"
+    printf %s "${!e}" | tee "./.deploy/$e" || _environment "writing .deploy/$e failed" || return $?
   fi
 }
 
@@ -106,12 +90,15 @@ _deploymentGenerateValue() {
 phpBuild() {
   local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment composerArgs
   local targetName
+  # IDENTICAL this_usage 4
+  local this usage
 
-  usageRequireBinary "_${FUNCNAME[0]}" tar
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
-  if ! buildEnvironmentLoad BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Missing environment" || return $?
-  fi
+  usageRequireBinary "$usage" tar
+
+  __usageArgument "$usage" buildEnvironmentLoad BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG || return $?
   targetName="$(deployPackageName)"
   tagDeploymentFlag=1
   debuggingFlag=
@@ -122,40 +109,36 @@ phpBuild() {
   composerArgs=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    if [ -z "$arg" ]; then
-      "_${FUNCNAME[0]}" "$errorArgument" "Blank argument" || return $?
-    fi
+    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
     case $1 in
       --debug)
         debuggingFlag=1
         ;;
       --deployment)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
+        shift || __failArgument "$usage" "$arg argument missing" || return $?
         deployment=$1
         ;;
       --no-tag | --skip-tag)
         tagDeploymentFlag=
         ;;
       --composer)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
-        if [ -z "$1" ]; then
-          "_${FUNCNAME[0]}" "$errorArgument" "blank --composer argument" || return $?$()
-        fi
+        shift || __failArgument "$usage" "$arg argument missing" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "$arg argument blank" || return $?
         composerArgs+=("$1")
         ;;
       --name)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
+        shift || __failArgument "$usage" "$arg argument missing" || return $?
         targetName=$1
         ;;
       --)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
+        shift || __failArgument "$usage" "$arg argument missing" || return $?
         break
         ;;
       --clean)
         optClean=1
         ;;
       --suffix)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift $arg failed" || return $?
+        shift || __failArgument "$usage" "$arg argument missing" || return $?
         versionSuffix=$1
         ;;
       *)
@@ -172,22 +155,15 @@ phpBuild() {
     consoleWarning "Debugging is enabled"
     set -x
   fi
-
-  if [ -z "$targetName" ]; then
-    "_${FUNCNAME[0]}" "$errorArgument" "--name is blank" || return $?
-  fi
-  if [ $# -eq 0 ]; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Need to supply a list of files for application $targetName" || return $?
-  fi
+  [ -n "$targetName" ] || __failArgument "$usage" "--name argument blank" || return $?
+  [ $# -gt 0 ] || __failEnvironment "$usage" "Need to supply a list of files for application $targetName" || return $?
   missingFile=()
   for tarFile in "$@"; do
     if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
       missingFile+=("$tarFile")
     fi
   done
-  if [ ${#missingFile[@]} -gt 0 ]; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Missing files: ${missingFile[*]}" || return $?
-  fi
+  [ ${#missingFile[@]} -eq 0 ] || __failEnvironment "$usage" "Missing files: ${missingFile[*]}" || return $?
 
   # Sets the DEFAULT - can override with command line argument --suffix
   if [ -z "$versionSuffix" ]; then
@@ -197,16 +173,13 @@ phpBuild() {
       staging) versionSuffix=s ;;
       test) versionSuffix=t ;;
       *)
-        "_${FUNCNAME[0]}" "$errorArgument" "--deployment $deployment unknown - can not set versionSuffix" || return $?
+        __failArgument "$usage" "--deployment $deployment unknown - can not set versionSuffix" || return $?
         ;;
     esac
-    if [ -z "$versionSuffix" ]; then
-      "_${FUNCNAME[0]}" "$errorArgument" "No version --suffix defined - usually unknown DEPLOYMENT: $deployment" || return $?
-    fi
+    [ -n "$versionSuffix" ] || __failArgument "$usage" "No version --suffix defined - usually unknown DEPLOYMENT: $deployment" || return $?
+
   fi
-  if ! initTime=$(beginTiming); then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "beginTiming failed" || return $?
-  fi
+  initTime=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
 
   #
   # Everything above here is basically argument parsing and validation
@@ -219,24 +192,21 @@ phpBuild() {
   consoleInfo "Installing build tools ..." || :
 
   # Ensure we're up to date
-  if ! aptInstall; then
-    "_${FUNCNAME[0]}" "$errorArgument" "Failed to install operating system basics" || return $?
-  fi
+  aptInstall || __failEnvironment "$usage" "Failed to install operating system basics" || return $?
+
   clearLine || :
   # Ensure we're up to date
-  if ! gitInstall; then
-    "_${FUNCNAME[0]}" "$errorArgument" "Failed to install git" || return $?
-  fi
+  gitInstall || __failEnvironment "$usage" "Failed to install git" || return $?
+
   # shellcheck disable=SC2119
-  if ! phpInstall git; then
-    "_${FUNCNAME[0]}" "$errorArgument" "Failed to install php" || return $?
-  fi
+  phpInstall git || __failEnvironment "$usage" "Failed to install php" || return $?
+
   if test "$tagDeploymentFlag"; then
     consoleInfo "Tagging $deployment deployment with $versionSuffix ..."
-    ./bin/build/pipeline/git-tag-version.sh --suffix "$versionSuffix"
+    __usageEnvironment "$usage" gitTagVersion --suffix "$versionSuffix" || return $?
   else
-    clearLine
-    consoleInfo "No tagging of this deployment"
+    clearLine || :
+    consoleInfo "No tagging of this deployment" || :
   fi
   #==========================================================================================
   #
@@ -245,44 +215,32 @@ phpBuild() {
   DEPLOYMENT="$deployment"
   if hasHook make-env; then
     # this script usually runs ./bin/build/pipeline/make-env.sh
-    if ! runHook make-env "${envVars[@]+${envVars[@]}}" >.env; then
-      "_${FUNCNAME[0]}" "$errorEnvironment" "make-env hook failed $?" || return $?
-    fi
+    __usageEnvironment "$usage" runHook make-env "${envVars[@]+${envVars[@]}}" >.env || return $?
   else
-    if ! makeEnvironment "${envVars[@]+${envVars[@]}}" >.env; then
-      "_${FUNCNAME[0]}" "$errorEnvironment" makeEnvironment "${envVars[@]}" buildFailed "$?" || return $?
-    fi
+    __usageEnvironment "$usage" makeEnvironment "${envVars[@]+${envVars[@]}}" >.env || return $?
   fi
   if ! grep -q APPLICATION .env; then
-    consoleError ".env file seems to be invalid:" 1>&2
     buildFailed ".env"
-    return "$errorEnvironment"
+    __failEnvironment "$usage" ".env file seems to be invalid:" || return $?
   fi
   set -a
   # shellcheck source=/dev/null
-  source .env
+  source .env || __failEnvironment "$usage" "source .env failed" || return $?
   set +a
 
   _phpEchoBar || :
   showEnvironment "${envVars[@]+${envVars[@]}}" || :
 
-  if [ -d ./.deploy ] && ! rm -rf ./.deploy; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Can not delete .deploy" || return $?
-  fi
-  if ! mkdir -p ./.deploy; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Can not create .deploy" || return $?
-  fi
-  if ! APPLICATION_ID=$(_deploymentGenerateValue APPLICATION_ID application-id); then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "APPLICATION_ID generation failed" || return $?
-  fi
-  if ! APPLICATION_TAG=$(_deploymentGenerateValue APPLICATION_TAG application-tag); then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "APPLICATION_TAG generation failed" || return $?
-  fi
+  [ ! -d ./.deploy ] || rm -rf ./.deploy || __failEnvironment "$usage" "Can not delete .deploy" || return $?
+
+  mkdir -p ./.deploy || __failEnvironment "$usage" "Can not create .deploy" || return $?
+
+  APPLICATION_ID=$(_deploymentGenerateValue APPLICATION_ID application-id) || __failEnvironment "$usage" "APPLICATION_ID generation failed" || return $?
+
+  APPLICATION_TAG=$(_deploymentGenerateValue APPLICATION_TAG application-tag) || __failEnvironment "$usage" "APPLICATION_TAG generation failed" || return $?
 
   # Save clean build environment to .build.env for other steps
-  if ! declare -px >.build.env; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Generating .build.env failed" || return $?
-  fi
+  declare -px >.build.env || __failEnvironment "$usage" "Generating .build.env failed" || return $?
 
   #==========================================================================================
   #
@@ -290,20 +248,14 @@ phpBuild() {
   #
   if [ -d ./vendor ] || test $optClean; then
     statusMessage consoleWarning "vendor directory should not exist before composer, deleting"
-    if ! rm -rf ./vendor; then
-      "_${FUNCNAME[0]}" "$errorEnvironment" "Unable to delete ./vendor" || return $?
-    fi
+    __usageEnvironment "$usage" rm -rf ./vendor || return $?
   fi
 
   clearLine || :
   # shellcheck disable=SC2119
-  if ! phpComposer "${composerArgs[@]+${composerArgs[@]}}"; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Composer failed" || return $?
-  fi
+  __usageEnvironment "$usage" phpComposer "${composerArgs[@]+${composerArgs[@]}}" || return $?
 
-  if [ ! -d ./vendor ]; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "Composer step did not create the vendor directory" || return $?
-  fi
+  [ -d ./vendor ] || __failEnvironment "$usage" "Composer step did not create the vendor directory" || return $?
 
   _phpEchoBar || :
   _phpBuildBanner "Application ID" "$APPLICATION_ID" || :
@@ -311,9 +263,7 @@ phpBuild() {
   _phpBuildBanner "Application Tag" "$APPLICATION_TAG" || :
   _phpEchoBar || :
 
-  if ! createTarFile "$targetName" .env vendor/ .deploy/ "$@"; then
-    "_${FUNCNAME[0]}" "$errorEnvironment" "createTarFile $targetName failed" || return $?
-  fi
+  __usageEnvironment "$usage" createTarFile "$targetName" .env vendor/ .deploy/ "$@" || return $?
 
   reportTiming "$initTime" "PHP built $(consoleCode "$targetName") in"
 }
@@ -353,34 +303,35 @@ _phpEchoBar() {
 #
 # shellcheck disable=SC2120
 phpComposer() {
-  local start forceDocker installArgs quietLog dockerImage cacheDir composerBin composerDirectory savedWorking
+  local argument start forceDocker installArgs quietLog dockerImage cacheDir composerBin composerDirectory savedWorking
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
   composerDirectory=.
   cacheDir=.composer
-  forceDocker=
+  forceDocker=false
   start=$(beginTiming)
 
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --docker)
         consoleWarning "Requiring docker composer"
-        forceDocker=1
+        forceDocker=true
         ;;
       --help)
-        _phpComposer 0
-        return $?
+        "$usage" 0
+        return 0
         ;;
       *)
-        if [ "$composerDirectory" != "." ]; then
-          _phpComposer "$errorArgument" "Unknown argument $1"
-          return $?
-        fi
-        if [ ! -d "$1" ]; then
-          _phpComposer "$errorArgument" "Directory does not exist: $1"
-          return $?
-        fi
-        composerDirectory=$1
+        [ "$composerDirectory" = "." ] || __failArgument "$usage" "Unknown argument $1" || return $?
+        [ -d "$argument" ] || __failArgument "$usage" "Directory does not exist: $argument" || return $?
+        composerDirectory="$argument"
         consoleInfo "Using composer directory: $composerDirectory"
         ;;
     esac
@@ -397,22 +348,14 @@ phpComposer() {
 
   if test $forceDocker; then
     consoleWarning -n "pulling ... "
-    if ! docker pull "$dockerImage" >>"$quietLog" 2>&1; then
-      consoleError "Failed to pull image $dockerImage" 1>&2
-      buildFailed "$quietLog" 1>&2
-      return "$errorBuild"
-    fi
+    __usageEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
     composerBin+=("-v" "$composerDirectory:/app")
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
   else
     consoleWarning -n "installing ... "
-    if ! aptInstall composer composer >>"$quietLog" 2>&1; then
-      consoleError "Failed to install composer" 1>&2
-      buildFailed "$quietLog" 1>&2
-      return "$errorBuild"
-    fi
+    __usageEnvironmentQuiet "$usage" "$quietLog" aptInstall composer composer || return $?
     composerBin=(composer)
   fi
   consoleInfo -n "validating ... "
@@ -422,19 +365,17 @@ phpComposer() {
   printf "%s\n" "Running: ${composerBin[*]} validate" >>"$quietLog"
   if ! "${composerBin[@]}" validate >>"$quietLog" 2>&1; then
     cd "$savedWorking" || :
-    buildFailed "$quietLog"
-    return "$errorBuild"
+    buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
   fi
 
-  consoleInfo -n "installing ... "
-  printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog"
+  consoleInfo -n "installing ... " || :
+  printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   if ! "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1; then
     cd "$savedWorking" || :
-    buildFailed "$quietLog" 1>&2
-    return "$errorBuild"
+    buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
   fi
   cd "$savedWorking" || :
-  reportTiming "$start" "completed in"
+  reportTiming "$start" "completed in" || :
 }
 _phpComposer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -451,6 +392,11 @@ _phpComposer() {
 # Hook: test-cleanup - Reverse of test-setup hook actions"
 phpTest() {
   local init start quietLog success
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   #                   _
   #   _ __ ___   __ _(_)_ __
@@ -460,43 +406,29 @@ phpTest() {
   #
 
   init=$(beginTiming) || :
-  if ! quietLog="$(buildQuietLog "${FUNCNAME[0]}")"; then
-    _phpTest "$errorEnvironment" "No buildQuietLog" || return $?
-  fi
+  quietLog="$(buildQuietLog "$this")" || __failEnvironment "$usage" "No buildQuietLog" || return $?
 
   buildDebugStart || :
 
-  if ! dockerComposeInstall; then
-    _phpTest "$errorEnvironment" "dockerComposeInstall failed" || return $?
-  fi
-  if ! phpComposer; then
-    _phpTest "$errorEnvironment" "phpComposer failed" || return $?
-  fi
+  __usageEnvironment "$usage" dockerComposeInstall || return $?
+  __usageEnvironment "$usage" phpComposer || return $?
 
   consoleInfo "Building test container" || :
 
   start=$(beginTiming) || :
-  if ! _phpTestSetup; then
-    _phpTest "$errorEnvironment" "phpComposer failed" || return $?
-  fi
-  if ! runOptionalHook test-setup; then
-    _phpTestCleanupFailed "test-setup failed" || return $?
-  fi
+  __usageEnvironment "$usage" _phpTestSetup || return $?
+  __usageEnvironment "$usage" runOptionalHook test-setup || return $?
 
   export DOCKER_BUILDKIT=0
-  if ! docker-compose -f "./docker-compose.yml" build >>"$quietLog"; then
-    buildFailed "$quietLog"
-    _phpTestCleanupFailed "docker-compose failed" || return $?
-  fi
+  # shellcheck disable=SC2094
+  __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose -f "./docker-compose.yml" build || return $?
   reportTiming "$start" "Built in" || :
 
   consoleInfo "Bringing up containers ..."
 
   start=$(beginTiming)
-  if ! docker-compose up -d >>"$quietLog" 2>&1; then
-    buildFailed "$quietLog"
-    _phpTestCleanupFailed "docker-compose up failed" || return $?
-  fi
+  # shellcheck disable=SC2094
+  __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose up -d || return $?
   reportTiming "$start" "Up in"
 
   start=$(beginTiming) || :
@@ -539,8 +471,11 @@ _phpTestCleanup() {
   renameFiles ".$$.backup" "" restoring .env .env.local || :
 }
 _phpTestCleanupFailed() {
+  local usage
+
+  usage=_phpTest
   _phpTestCleanup || :
-  _phpTest "$errorEnvironment" "$@" || return $?
+  __failEnvironment "$usage" "$@" || return $?
 }
 _phpTestResult() {
   local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"
