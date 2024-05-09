@@ -95,8 +95,11 @@ aptInstall() {
     return 0
   fi
   consoleInfo -n "Installing ${actualPackages[*]} ... "
-  __usageEnvironmentQuiet "$usage" "$quietLog" DEBIAN_FRONTEND=noninteractive "$apt" install -y "${actualPackages[@]}" || return $?
+  DEBIAN_FRONTEND=noninteractive __usageEnvironmentQuiet "$usage" "$quietLog" "$apt" install -y "${actualPackages[@]}" || return $?
   reportTiming "$start" OK
+}
+_aptInstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installs an apt package if a binary does not exist in the which path.
