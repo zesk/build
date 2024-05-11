@@ -25,7 +25,7 @@
 # But maintains file descriptors for `logFile`.
 #
 rotateLog() {
-  local logFile count index dryRun
+  local argument logFile count index dryRun
   # IDENTICAL this_usage 4
   local this usage
 
@@ -36,6 +36,7 @@ rotateLog() {
   count=
   dryRun=
   while [ $# -gt 0 ]; do
+    argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$1" in
       --dry-run) dryRun=1 ;;
