@@ -22,7 +22,7 @@
 #     logFile.2
 #     logFile.3
 #
-# But maintains file descriptors for `logFile`.
+# But maintains file` descriptors for `logFile`.
 #
 rotateLog() {
   local argument logFile count index dryRun

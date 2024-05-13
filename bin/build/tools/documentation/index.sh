@@ -418,69 +418,54 @@ _documentationIndex_FunctionIteratorUsage() {
 # Exit Code: 2 - Argument error
 #
 documentationIndex_LinkDocumentationPaths() {
-  local start documentTemplate functionTemplate cacheDirectory checkFiles
-  local me
+  local this
+  local argument
+  local start documentTemplate cacheDirectory checkFiles
   local settingsFile
   local documentTokensFile modifiedCountFile processed total
 
-  if ! start=$(beginTiming); then
-    consoleError "beginTiming failed" 1>&2
-    return $errorArgument
-  fi
+  this="${FUNCNAME[0]}"
+
+  start=$(beginTiming) || _environment "beginTiming failed" || return $?
   cacheDirectory=
   documentTemplate=
   documentationPath=
   while [ $# -gt 0 ]; do
-    case "$1" in
+    argument="$1"
+    [ -z "$argument" ] || _argument "$this: Blank argument" || return $?
+    case "$argument" in
       --force) ;;
       *)
-        me="(${FUNCNAME[0]})"
         if [ -z "$cacheDirectory" ]; then
           cacheDirectory="$1"
-          if [ ! -d "$cacheDirectory" ]; then
-            consoleError "$me cacheDirectory documentTemplate - $cacheDirectory not a directory" 1>&2
-            return $errorArgument
-          fi
-          cacheDirectory=${cacheDirectory%%/}
+          [ -d "$cacheDirectory" ] || _argument "$this: cacheDirectory documentTemplate - $cacheDirectory not a directory" || return $?
+          cacheDirectory="${cacheDirectory%%/}"
         elif [ -z "$documentTemplate" ]; then
           documentTemplate="$1"
-          if [ ! -f "$documentTemplate" ]; then
-            consoleError "$me cacheDirectory documentTemplate - $documentTemplate not a file" 1>&2
-            return $errorArgument
-          fi
+          [ -f "$documentTemplate" ] || _argument "$this: cacheDirectory documentTemplate - $documentTemplate not a file" || return $?
         elif [ -z "$documentationPath" ]; then
           documentationPath="$1"
         else
-          consoleError "$me cacheDirectory documentTemplate - unknown argument" 1>&2
-          return $errorArgument
+          _argument "$this cacheDirectory documentTemplate - unknown argument" || return $?
         fi
         ;;
     esac
-    shift
+    shift || _argument "shift $argument failed" || return $?
   done
-  if [ -z "$cacheDirectory" ]; then
-    consoleError "$me - cacheDirectory required" 1>&2
-    return $errorArgument
-  fi
-  if [ -z "$documentTemplate" ]; then
-    consoleError "$me - documentTemplate required" 1>&2
-    return $errorArgument
-  fi
-  if [ -z "$documentationPath" ]; then
-    consoleError "$me - documentationPath required" 1>&2
-    return $errorArgument
-  fi
+  [ -n "$cacheDirectory" ] || _argument "$this - cacheDirectory required" || return $?
+  [ -n "$documentTemplate" ] || _argument "$this - documentTemplate required" || return $?
+  [ -n "$documentationPath" ] || _argument "$this - documentationPath required" || return $?
 
   if ! documentTokensFile=$(mktemp) || ! modifiedCountFile=$(mktemp); then
     rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-    return $?
+    _argument "mktemp failed" || return $?
   fi
   # subshell to hide environment tokens
   if ! listTokens <"$documentTemplate" >"$documentTokensFile"; then
     rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-    return "$errorEnvironment"
+    _environment "listTokens failed" || return $?
   fi
-  checkFiles=("$functionTemplate" "$documentTemplate")
+  checkFiles=("$documentTemplate")
   while read -r token; do
     if ! settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$token"); then
       continue
