@@ -481,6 +481,17 @@ _gitMainly() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Get the current branch name
+#
+gitCurrentBranch() {
+  # git rev-parse --abbrev-ref HEAD
+  git symbolic-ref --short HEAD
+}
+_gitCurrentBranch() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------

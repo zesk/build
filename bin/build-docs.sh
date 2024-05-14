@@ -64,6 +64,31 @@ _buildDocumentationUpdateUnlinked() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Just merge into docs branch
+#
+buildDocumentationBuildGit() {
+  local branch
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  branch=$(gitCurrentBranch) || __failEnvironment "$usage" gitCurrentBranch || return $?
+  if [ "$branch" = "docs" ]; then
+    __failEnvironment "$usage" "Already on docs branch" || return $?
+  fi
+  __usageEnvironment "$usage" git checkout docs || return $?
+  __usageEnvironment "$usage" git merge -m "$this" "$branch" || return $?
+  __usageEnvironment "$usage" git push || return $?
+  __usageEnvironment "$usage" git checkout "$branch" || return $?
+}
+_buildDocumentationBuildGit() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+
+}
+
 _buildDocumentationGenerateEnvironment() {
   envFile=$(mktemp) || __failEnvironment "mktemp failed" || return $?
   {
@@ -130,6 +155,10 @@ buildDocumentationBuild() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
+      --git)
+        buildDocumentationBuildGit
+        return $?
+        ;;
       --clean)
         indexArgs+=("$argument")
         ;;
