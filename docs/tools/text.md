@@ -28,27 +28,9 @@ Returns true if all `characters` are of `className`
 ## Filters
 
 
-### `quoteSedPattern` - Quote sed strings for shell use
+### `quoteSedPattern` - DO NOT EDIT THIS ONE
 
-Quote a string to be used in a sed pattern on the command line.
-
-#### Usage
-
-    quoteSedPattern text
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-
-#### Sample Output
-
-    string quoted and appropriate to insert in a sed search or replacement phrase
-    
+DO NOT EDIT THIS ONE
 
 #### Exit codes
 
