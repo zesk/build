@@ -66,11 +66,7 @@ Stop build debugging if it is enabled
 
 #### See Also
 
-- [function buildDebugStart
-](./docs/tools/debug.md
-) - [Start build debugging if it is enabled.
-](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L45
-)
+{SEE:buildDebugStart}
 
 ### `isBashDebug` - Returns whether the shell has the debugging flag set
 
@@ -120,10 +116,7 @@ Useful if you need to temporarily enable or disable it.
 
 #### See Also
 
-- [function saveErrorExit
-](./docs/tools/debug.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L101
-)
+{SEE:saveErrorExit}
 
 #### Usage
 
@@ -143,10 +136,7 @@ Useful if you need to temporarily enable or disable it.
 
 #### See Also
 
-- [function restoreErrorExit
-](./docs/tools/debug.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L113
-)
+{SEE:restoreErrorExit}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

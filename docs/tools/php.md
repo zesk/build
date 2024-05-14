@@ -105,9 +105,7 @@ Files are specified from the application root directory.
 
 #### See Also
 
-- [Source BUILD_TARGET.sh
-](https://github.com/zesk/build/blob/main/bin/build/env/BUILD_TARGET.sh#L{line}
-)
+{SEE:BUILD_TARGET.sh}
 
 ### `phpLog` - Outputs the path to the PHP log file
 

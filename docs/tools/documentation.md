@@ -26,19 +26,9 @@ Document a function and generate a function template (markdown)
 
 #### See Also
 
-- [function _bashDocumentation_Template
-]({documentationPath}) - [Document a function and generate a function template (markdown). To
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L401
-)
-- [function bashDocumentFunction
-](./docs/tools/documentation.md
-) - [Document a function and generate a function template (markdown)
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L367
-)
-- [function repeat
-](./docs/tools/decoration.md
-) - [{summary}](https://github.com/zesk/build/blob/main/bin/build/tools/decoration.sh#L149
-)
+{SEE:_bashDocumentation_Template}
+{SEE:bashDocumentFunction}
+{SEE:repeat}
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
 
@@ -70,12 +60,8 @@ The process:
 
 #### See Also
 
-- [function documentationIndex_Lookup
-](./docs/tools/documentation.md
-) - [Looks up information in the function index
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34
-)
-Not found
+{SEE:documentationIndex_Lookup}
+{SEE:documentationIndexIndex}
 
 ### `documentationTemplateDirectoryCompile` - Convert a directory of templates into documentation for Bash functions
 
@@ -106,11 +92,7 @@ to regenerate each time.
 
 #### See Also
 
-- [function documentationTemplateCompile
-](./docs/tools/documentation.md
-) - [Convert a template file to a documentation file using templates
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L94
-)
+{SEE:documentationTemplateCompile}
 
 ## Documentation Indexing
 
@@ -140,11 +122,7 @@ Use with documentationIndex_Lookup
 
 #### See Also
 
-- [function documentationIndex_Lookup
-](./docs/tools/documentation.md
-) - [Looks up information in the function index
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34
-)
+{SEE:documentationIndex_Lookup}
 
 ### `documentationIndex_Lookup` - Looks up information in the function index
 
@@ -165,11 +143,7 @@ Looks up information in the function index
 
 #### See Also
 
-- [function documentationIndex_Generate
-](./docs/tools/documentation.md
-) - [Generate a function index for bash files
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L139
-)
+{SEE:documentationIndex_Generate}
 
 # Linking documentation 
 
@@ -247,16 +221,8 @@ Within your function, add an ignore reason if you wish:
 
 #### See Also
 
-- [function documentationIndex_LinkDocumentationPaths
-](./docs/tools/documentation.md
-) - [Update the documentationPath for all functions defined in documentTemplate
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419
-)
-- [function documentationIndex_FunctionIterator
-](./docs/tools/documentation.md
-) - [Output a list of all functions in the index as
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L355
-)
+{SEE:documentationIndex_LinkDocumentationPaths}
+{SEE:documentationIndex_FunctionIterator}
 
 ### `documentationIndex_FunctionIterator` - Output a list of all functions in the index as
 
@@ -279,16 +245,8 @@ Output a list of all functions in the index as pairs:
 
 #### See Also
 
-- [function documentationIndex_Lookup
-](./docs/tools/documentation.md
-) - [Looks up information in the function index
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L34
-)
-- [function documentationIndex_LinkDocumentationPaths
-](./docs/tools/documentation.md
-) - [Update the documentationPath for all functions defined in documentTemplate
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation/index.sh#L419
-)
+{SEE:documentationIndex_Lookup}
+{SEE:documentationIndex_LinkDocumentationPaths}
 
 ### `documentationIndex_UnlinkedIterator` - List of functions which are not linked to anywhere in
 
@@ -308,9 +266,9 @@ List of functions which are not linked to anywhere in the documentation index
 - `0` - The settings file is unlinked within the documentation (not defined anywhere)
 - `1` - The settings file is linked within the documentation
 
-### `documentationIndex_SeeLinker` - Link `Not found` tokens in documentation
+### `documentationIndex_SeeLinker` - Link `{SEE:name}` tokens in documentation
 
-$\Link `Not found` tokens in documentation
+$\Link `{SEE:name}` tokens in documentation
 
 #### Usage
 
@@ -428,11 +386,7 @@ Generates a temporary file which is removed
 
 #### See Also
 
-- [function bashDocumentation_FindFunctionDefinitions
-](./docs/tools/documentation.md
-) - [Find where a function is defined in a directory of shell scripts
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L615
-)
+{SEE:bashDocumentation_FindFunctionDefinitions}
 
 ## Usage Utilities
 

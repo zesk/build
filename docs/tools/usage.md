@@ -106,11 +106,7 @@ Should look into an actual file template, probably
 
 #### See Also
 
-- [function usageDocument
-](./docs/tools/usage.md
-) - [Generates console usage output for a script using documentation tools
-](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L23
-)
+{SEE:usageDocument}
 
 
 ### `usageArgumentFileDirectory` - Validates a value is not blank and is a path

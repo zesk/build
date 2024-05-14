@@ -62,11 +62,7 @@ Backup when `/etc/services` does not exist.
 
 #### See Also
 
-- [function serviceToPort
-](./docs/tools/os.md
-) - [Get the port number associated with a service
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L933
-)
+{SEE:serviceToPort}
 
 
 ### `buildCacheDirectory` - Path to cache directory for build system.
@@ -301,11 +297,7 @@ Works from the current directory
 
 #### See Also
 
-- [function makeShellFilesExecutable
-](./docs/tools/os.md
-) - [Makes all `*.sh` files executable
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L352
-)
+{SEE:makeShellFilesExecutable}
 
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp
