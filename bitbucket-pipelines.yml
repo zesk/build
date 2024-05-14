@@ -20,7 +20,7 @@ pipelines:
           script:
             - bin/build/tools.sh aptInstall
             - bin/build-docs.sh
-            - ! bin/build/tools.sh gitRepositoryChanged || git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a
+            - ! bin/build/tools.sh gitRepositoryChanged || git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a && git push
     staging:
       - step:
           deployment: staging
