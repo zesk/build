@@ -227,8 +227,7 @@ documentationIndex_Generate() {
     touch "$fileCacheMarker/.marker"
     count="$(find "$fileCacheMarker" -type f | wc -l | trimSpacePipe)"
     count=$((count - 1))
-    clearLine
-    consoleInfo -n "Generated $count functions for $shellFile "
+    statusMessage consoleSuccess "Generated $count functions for $shellFile "
   done; then
     return $?
   fi
@@ -432,7 +431,7 @@ documentationIndex_LinkDocumentationPaths() {
   documentationPath=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -z "$argument" ] || _argument "$this: Blank argument" || return $?
+    [ -n "$argument" ] || _argument "Blank argument" || return $?
     case "$argument" in
       --force) ;;
       *)

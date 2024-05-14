@@ -40,7 +40,7 @@ sshSetup() {
 
   while [ $# != 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "$this: Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$arg" in
       --type)
         shift || __failArgument "$usage" "Missing $arg" || return $?

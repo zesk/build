@@ -487,7 +487,7 @@ deployLink() {
   currentApplicationHome=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "$this: Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
       --help)
         $usage 0
@@ -546,7 +546,7 @@ deployMigrateDirectoryToLink() {
   applicationPath=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "$this: Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0

@@ -590,7 +590,7 @@ mapEnvironment() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || _argument "$this: Blank argument" || return $?
+    [ -n "$argument" ] || _argument "Blank argument" || return $?
     case "$argument" in
       --prefix)
         shift || _argument "$this: missing $argument argument" || return $?
