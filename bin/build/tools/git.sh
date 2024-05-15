@@ -366,61 +366,87 @@ _gitTagVersion() {
 }
 
 #
-# Usage: {fn} [ comment ... ]
+# Usage: {fn} [ --last ] [ -- ] [ comment ... ]
 #
 # Commits all files added to git and also update release notes with comment
 #
 # Comment wisely. Does not duplicate comments. Check your release notes.
 #
+# Example:     c last
+# Example:     c --last
+# Example:     c --
+#
+# Example: ... are all equivalent.
 gitCommit() {
-  local usage start current next notes appendLast
+  local updateReleaseNotes appendLast argument start current next notes comment
+  local this usage
 
-  usage="_${FUNCNAME[0]}"
-  comment="$*"
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  appendLast=false
+  updateReleaseNotes=false
+  comment=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgumebt "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --)
+        updateReleaseNotes=false
+        ;;
+      --last)
+        appendLast=true
+        ;;
+      *)
+        comment="$*"
+        ;;
+    esac
+    shift || __failArgumebt "$usage" "Shift $argument failed" || return $?
+  done
+
   appendLast=
-  if [ -z "$comment" ]; then
-    "$usage" "$errorArgument" "Need a comment" || return $?
-  fi
   if [ "$comment" = "last" ]; then
-    appendLast=1
-    consoleInfo "Using last commit message ..."
+    appendLast=true
   fi
-  if ! start="$(pwd -P 2>/dev/null)"; then
-    __failEnvironment "$usage" "Failed to get pwd" || return $?
-  fi
+  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   current="$start"
   while [ "$current" != "/" ]; do
-    if [ -d "$current/.git" ]; then
-      if test "$appendLast"; then
-        if ! git commit --reuse-message=HEAD --reset-author -a; then
-          __failEnvironment "$usage" "Commit failed" || return $?
-        fi
-        return 0
-      elif [ -x "$current/bin/build/release-notes.sh" ]; then
-        if notes="$("$current/bin/build/release-notes.sh")"; then
-          if ! grep -q "$comment" "$notes"; then
-            if ! printf "%s %s\n" "-" "$comment" >>"$notes"; then
-              __failEnvironment "$usage" "Writing $notes" || return $?
-            fi
-            printf "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")"
-            git add "$notes" || :
-          fi
-        fi
+    if [ ! -d "$current/.git" ]; then
+      cd .. && next="$(pwd)" || __failArgument "$usage" "Failed to traverse up from $current" || return $?
+      if [ "$current" = "$next" ]; then
+        break
       fi
-      if ! git commit -a -m "$comment"; then
-        __failEnvironment "$usage" "Commit failed" || return $?
+      current="$next"
+    else
+      if $updateReleaseNotes && [ -n "$comment" ]; then
+        statusMessage consoleInfo "Updating release notes ..."
+        notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
+        __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
       fi
+      if $appendLast || [ -z "$comment" ]; then
+        statusMessage consoleInfo "Using last commit message ..."
+        __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
+      else
+        statusMessage consoleInfo "Using commit comment \"$comment\" ..."
+        __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
+      fi
+      __usageEnvironment "$usage" cd "$start" || return $?
       return 0
     fi
-    if ! cd .. || ! next="$(pwd)"; then
-      _gitCommit "$errorArgument" "Failed to traverse up from $current" || return $?
-    fi
-    if [ "$current" = "$next" ]; then
-      break
-    fi
-    current="$next"
   done
-  _gitCommit "$errorEnvironment" "Unable to find git repository" || return $?
+
+  cd "$start" || :
+  __failEnvironment "$usage" "Unable to find git repository" || return $?
+}
+__gitCommitReleaseNotesUpdate() {
+  local comment="$1" notes="$2"
+
+  if ! grep -q "$comment" "$notes"; then
+    __environment printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
+    __environment printf -- "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")" || return $?
+    __environment git add "$notes" || return $?
+  fi
+
 }
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
