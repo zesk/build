@@ -6,7 +6,10 @@
 set -eou pipefail
 
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh"
+if ! source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh"; then
+  printf "%s: %d\n" "tools.sh failed" $? 1>&2
+  exit 1
+fi
 
 #
 # Usage: {fn} cacheDirectory envFile
