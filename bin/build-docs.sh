@@ -176,7 +176,9 @@ buildDocumentationBuild() {
   export BUILD_COLORS_MODE
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
-  __usageEnvironment "$usage" aptInstall pcregrep || return $?
+  if ! which pcregrep >/dev/null; then
+    __usageEnvironment "$usage" aptInstall pcregrep || return $?
+  fi
 
   exitCode=0
   start=$(beginTiming) || __failEnvironment beginTiming || return $?
