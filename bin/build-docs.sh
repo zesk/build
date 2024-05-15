@@ -16,7 +16,7 @@ fi
 # Argument: cacheDirectory - Required. Directory. Cache directory.
 # Argument: envFile - Required. File. Environment file used as base environment for all template generation.
 #
-buildDocumentationUpdateUnlinked() {
+buildDocumentation_UpdateUnlinked() {
   local argument cacheDirectory envFile unlinkedFunctions template total
   # IDENTICAL this_usage 4
   local this usage
@@ -63,14 +63,14 @@ buildDocumentationUpdateUnlinked() {
   fi
   rm -f "$unlinkedFunctions" || :
 }
-_buildDocumentationUpdateUnlinked() {
+_buildDocumentation_UpdateUnlinked() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Just merge into docs branch
 #
-buildDocumentationBuildGit() {
+buildDocumentation_MergeWithDocsBranch() {
   local branch
   # IDENTICAL this_usage 4
   local this usage
@@ -87,14 +87,14 @@ buildDocumentationBuildGit() {
   __usageEnvironment "$usage" git push || return $?
   __usageEnvironment "$usage" git checkout "$branch" || return $?
 }
-_buildDocumentationBuildGit() {
+_buildDocumentation_MergeWithDocsBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Just merge into docs branch
 #
-buildDocumentationRecommit() {
+buildDocumentation_Recommit() {
   local branch
   # IDENTICAL this_usage 4
   local this usage
@@ -116,7 +116,7 @@ buildDocumentationRecommit() {
     consoleInfo "Branch $branch is unchanged"
   fi
 }
-_buildDocumentationRecommit() {
+_buildDocumentation_Recommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -191,11 +191,11 @@ buildDocumentationBuild() {
     [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
       --git)
-        buildDocumentationBuildGit
+        buildDocumentation_MergeWithDocsBranch
         return $?
         ;;
       --commit)
-        buildDocumentationRecommit
+        buildDocumentation_Recommit
         return $?
         ;;
       --clean)
@@ -207,7 +207,7 @@ buildDocumentationBuild() {
         ;;
       --unlinked-update)
         envFile=$(_buildDocumentationGenerateEnvironment) || return $?
-        buildDocumentationUpdateUnlinked "$cacheDirectory" "$envFile" || exitCode=$?
+        buildDocumentation_UpdateUnlinked "$cacheDirectory" "$envFile" || exitCode=$?
         rm -f "$envFile" || :
         printf "\n" || :
         return $exitCode
@@ -250,7 +250,7 @@ buildDocumentationBuild() {
 
   # Update unlinked document
   envFile=$(_buildDocumentationGenerateEnvironment) || return $?
-  __usageEnvironment "$usage" buildDocumentationUpdateUnlinked "$cacheDirectory" "$envFile" || return $?
+  __usageEnvironment "$usage" buildDocumentation_UpdateUnlinked "$cacheDirectory" "$envFile" || return $?
   clearLine || :
 
   docArgs=()
