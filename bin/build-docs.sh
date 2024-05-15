@@ -89,7 +89,35 @@ buildDocumentationBuildGit() {
 }
 _buildDocumentationBuildGit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
+#
+# Just merge into docs branch
+#
+buildDocumentationRecommit() {
+  local branch
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  branch=$(gitCurrentBranch) || __failEnvironment "$usage" gitCurrentBranch || return $?
+  if [ "$branch" = "docs" ]; then
+    __failEnvironment "$usage" "Already on docs branch" || return $?
+  fi
+  if gitRepositoryChanged; then
+    statusMessage consoleWarning "Committing to branch $branch ..."
+    __usageEnvironment "$usage" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
+    statusMessage consoleInfo "Pushing branch $branch ..."
+    __usageEnvironment "$usage" git push || return $?
+    statusMessage consoleSuccess "Documentation committed"
+  else
+    consoleInfo "Branch $branch is unchanged"
+  fi
+}
+_buildDocumentationRecommit() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _buildDocumentationGenerateEnvironment() {
@@ -124,6 +152,8 @@ EOF
 #
 # Uses a cache at `buildCacheDirectory`
 #
+# Argument: --git - Merge current branch in with `docs` branch
+# Argument: --commit - Commit docs to non-docs branch
 # Argument: --force - Force generation, ignore cache directives
 # Argument: --unlinked - Show unlinked functions
 # Argument: --unlinked-update - Update unlinked document file
@@ -144,12 +174,14 @@ buildDocumentationBuild() {
   usage="_$this"
 
   export BUILD_COLORS_MODE
-  BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+  BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
+
+  __usageEnvironment "$usage" aptInstall pcregrep || return $?
 
   exitCode=0
-  start=$(beginTiming)
+  start=$(beginTiming) || __failEnvironment beginTiming || return $?
 
-  buildEnvironmentLoad BUILD_COMPANY BUILD_COMPANY_LINK
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
   cacheDirectory="$(buildCacheDirectory)" && cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "$usage" "Create $cacheDirectory failed" || return $?
 
@@ -160,6 +192,10 @@ buildDocumentationBuild() {
     case "$argument" in
       --git)
         buildDocumentationBuildGit
+        return $?
+        ;;
+      --commit)
+        buildDocumentationRecommit
         return $?
         ;;
       --clean)

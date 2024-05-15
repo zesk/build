@@ -5,7 +5,7 @@
 #
 # Test run:
 #
-# bin/build/local-container.sh .env.PRODUCTION
+# bin/build/bitbucket-container.sh --env .env.PRODUCTION
 #
 image: atlassian/default-image:4
 
@@ -18,9 +18,9 @@ pipelines:
           services:
             - docker
           script:
-            - bin/build/tools.sh aptInstall
+            - bin/build/tools.sh aptInstall pcregrep
             - bin/build-docs.sh
-            - ! bin/build/tools.sh gitRepositoryChanged || git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a && git push
+            - bin/build-docs.sh --commit
     staging:
       - step:
           deployment: staging
