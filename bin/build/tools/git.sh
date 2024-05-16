@@ -442,9 +442,9 @@ __gitCommitReleaseNotesUpdate() {
   local comment="$1" notes="$2"
 
   if ! grep -q "$comment" "$notes"; then
-    __environment printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __environment printf -- "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")" || return $?
-    __environment git add "$notes" || return $?
+    __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")" || return $?
+    __usageEnvironment "$usage" git add "$notes" || return $?
   fi
 
 }
