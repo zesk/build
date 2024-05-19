@@ -44,6 +44,34 @@ Returns a temporary file which should be deleted.
 
 - `0` - Always succeeds
 
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `applicationEnvironment` - Loads application environment variables, set them to their default values
+
+Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+BUILD_TIMESTAMP
+APPLICATION_BUILD_DATE
+APPLICATION_VERSION
+APPLICATION_ID
+APPLICATION_TAG
+
+### `buildDocumentationBuildGit` - Just merge into docs branch
+
+Just merge into docs branch
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `test.sh` - Run Zesk Build tests
 
 Run Zesk Build tests
@@ -61,52 +89,42 @@ Run Zesk Build tests
 
 - `0` - Always succeeds
 
-### `characterClassReport` - Write a report of the character classes
+### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
 
-Write a report of the character classes
+dumpFile fileName0 [ fileName1 ... ]
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `gitCurrentBranch` - Get the current branch name
+
+Get the current branch name
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageArgumentInteger` - Validates a value is an integer
+
+Validates a value is an integer
+Upon success, outputs the directory name trailing slash stripped
 
 #### Usage
 
-    characterClassReport
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `characterFromInteger` - Given a list of integers, output the character codes associated
-
-Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `characterToInteger` - Convert one or more characters from their ascii representation to
-
-Convert one or more characters from their ascii representation to an integer value.
-Requires a single character to be passed
-
-#### Usage
-
-    characterToInteger [ character ... ]
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `isCharacterClasses` - Does this character match one or more character classes?
-
-Does this character match one or more character classes?
-
-#### Usage
-
-    isCharacterClasses character [ class0 class1 ... ]
+    usageArgumentInteger usageFunction variableName variableValue [ noun ]
     
 
 #### Arguments
@@ -115,55 +133,18 @@ Does this character match one or more character classes?
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `2` - Argument error
+- `0` - Success
 
-#### Exit codes
+### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
 
-- `0` - Always succeeds
+Validates a value is not blank and is an environment file which is loaded immediately.
 
-### `maximumLineLength` - Outputs the maximum line length passed into stdin
-
-Outputs the maximum line length passed into stdin
-
-#### Usage
-
-    maximumLineLength
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `parseBoolean` - Parses text and determines if it's true-ish
-
-Parses text and determines if it's true-ish
+Upon success, outputs the file name to stdout, outputs a console message to stderr
 
 #### Usage
 
-    parseBoolean text
-    
-
-#### Exit codes
-
-- `0` - true
-- `1` - false
-- `2` - Neither
-
-#### See Also
-
-- [function lowercase
-](./docs/tools/text.md
-) - [Convert text to lowercase
-](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L324
-)
-
-#### Usage
-
-    stringValidate text class0 [ ... ]
+    usageArgumentLoadEnvironmentFile processPid usageFunction variableName variableValue [ noun ]
     
 
 #### Arguments
@@ -172,16 +153,27 @@ Parses text and determines if it's true-ish
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `2` - Argument error
+- `0` - Success
 
-### `uppercase` - Convert text to uppercase
+### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
 
-Convert text to uppercase
+Validates a value is an unsigned integer
+Upon success, outputs the directory name trailing slash stripped
 
 #### Usage
 
-    uppercase [ text ... ]
+    usageArgumentUnsignedInteger usageFunction variableName variableValue [ noun ]
     
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
 
 #### Exit codes
 

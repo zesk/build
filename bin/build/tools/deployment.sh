@@ -48,7 +48,7 @@ deployBuildEnvironment() {
   if ! deployToRemote --deploy "${deployArgs[@]}"; then
     consoleError "Deployment failed, reverting ..." || :
     deployToRemote --revert "${deployArgs[@]}" || :
-    __failEnvironment "$usage" deployToRemote --deploy "${deployArgs[@]}" failed
+    __usageEnvironment "$usage" deployToRemote --deploy "${deployArgs[@]}" failed
     return $?
   fi
   if hasHook deploy-confirm && ! runHook deploy-confirm; then
@@ -57,7 +57,7 @@ deployBuildEnvironment() {
       consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
       return 99
     fi
-    __failEnvironment "$usage" runHook deploy-confirm failed
+    __usageEnvironment "$usage" runHook deploy-confirm failed
     return $?
   fi
   if ! deployToRemote --cleanup "${deployArgs[@]}"; then
@@ -66,7 +66,7 @@ deployBuildEnvironment() {
       consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
       return 99
     fi
-    __failEnvironment "$usage" deployToRemote --cleanup "${deployArgs[@]}" failed
+    __usageEnvironment "$usage" deployToRemote --cleanup "${deployArgs[@]}" failed
     return $?
   fi
   bigText Success | wrapLines "$(consoleSuccess)" "$(consoleReset)"
@@ -242,7 +242,7 @@ _deployRevertApplication() {
     esac
     shift || :
   done
-  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __failArgument deployPackageName "$deployHome" failed || return $?
+  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __failArgument "$usage" "deployPackageName \"$deployHome\" failed" || return $?
 
   for name in deployHome applicationId applicationPath; do
     if [ -z "${!name}" ]; then
@@ -626,7 +626,8 @@ __deployCommandsFile() {
     shift || :
   done
   # shellcheck disable=SC2016
-  printf "%s/%s\n" "$appHome" "bin/build/tools.sh deployRemoteFinish $(printf '"%s" ' "$@") || exit \$?"
+  printf "cd \"%s\" || exit \$?\n" "$appHome"
+  printf "%s/bin/build/tools.sh deployRemoteFinish %s || exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")"
 }
 
 #

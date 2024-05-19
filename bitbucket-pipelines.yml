@@ -5,12 +5,22 @@
 #
 # Test run:
 #
-# bin/build/local-container.sh .env.PRODUCTION
+# bin/build/bitbucket-container.sh --env .env.PRODUCTION
 #
 image: atlassian/default-image:4
 
 pipelines:
   branches:
+    docs:
+      - step:
+          deployment: docs
+          name: Build documentation
+          services:
+            - docker
+          script:
+            - bin/build/tools.sh aptInstall pcregrep
+            - bin/build-docs.sh
+            - bin/build-docs.sh --commit
     staging:
       - step:
           deployment: staging

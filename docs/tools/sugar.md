@@ -18,13 +18,13 @@ This groupings of functions are related to a `usage` function to handle errors:
 ## Usage Sugar References
 
 
-### `__usage` - Run `command` and fail with `code` by running `fail`
+### `__usage` - Run `command` and usage with `code` by running `usage`
 
-Run `command` and fail with `code` by running `fail`
+Run `command` and usage with `code` by running `usage`
 
 #### Usage
 
-    __usage code fail command ...
+    __usage code usage command ...
     
 
 #### Arguments
@@ -35,13 +35,13 @@ Run `command` and fail with `code` by running `fail`
 
 - `0` - Always succeeds
 
-### `__usageEnvironment` - Run `command`, upon failure run `fail` with an environment error
+### `__usageEnvironment` - Run `command`, upon failure run `usage` with an environment error
 
-Run `command`, upon failure run `fail` with an environment error
+Run `command`, upon failure run `usage` with an environment error
 
 #### Usage
 
-    __usageEnvironment fail command ...
+    __usageEnvironment usage command ...
     
 
 #### Arguments
@@ -52,13 +52,13 @@ Run `command`, upon failure run `fail` with an environment error
 
 - `0` - Always succeeds
 
-### `__usageArgument` - Run `command`, upon failure run `fail` with an argument error
+### `__usageArgument` - Run `command`, upon failure run `usage` with an argument error
 
-Run `command`, upon failure run `fail` with an argument error
+Run `command`, upon failure run `usage` with an argument error
 
 #### Usage
 
-    __usageArgument fail command ...
+    __usageArgument usage command ...
     
 
 #### Arguments
@@ -69,26 +69,26 @@ Run `command`, upon failure run `fail` with an argument error
 
 - `0` - Always succeeds
 
-### `__failEnvironment` - Run `fail` with an environment error
+### `__failEnvironment` - Run `usage` with an environment error
 
-Run `fail` with an environment error
+Run `usage` with an environment error
 
 #### Usage
 
-    __failEnvironment fail ...
+    __failEnvironment usage ...
     
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-### `__failArgument` - Run `fail` with an argument error
+### `__failArgument` - Run `usage` with an argument error
 
-Run `fail` with an argument error
+Run `usage` with an argument error
 
 #### Usage
 
-    __failArgument fail ...
+    __failArgument usage ...
     
 
 #### Exit codes

@@ -170,15 +170,15 @@ gitRemoveFileFromHistory() {
 }
 
 #
+# Exit Code: 1 - the repo has NOT been modified
 # Exit Code: 0 - the repo has been modified
-# Exit Code: 1 - the repo has NOT bee modified
 #
 # Has a git repository been changed from HEAD?
 # Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339
 # Credit: Chris Johnsen
 #
 gitRepositoryChanged() {
-  git diff-index --quiet "$@" HEAD
+  ! git diff-index --quiet HEAD
 }
 
 #
@@ -191,7 +191,7 @@ gitRepositoryChanged() {
 # Credit: Chris Johnsen
 #
 gitShowChanges() {
-  git diff-index --name-only "$@" HEAD
+  git diff-index --name-only HEAD
 }
 
 #
@@ -478,6 +478,17 @@ gitMainly() {
   esac
 }
 _gitMainly() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Get the current branch name
+#
+gitCurrentBranch() {
+  # git rev-parse --abbrev-ref HEAD
+  git symbolic-ref --short HEAD
+}
+_gitCurrentBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -7,7 +7,7 @@
 # IDENTICAL _colors 86
 
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-# If `TERM1` is set then uses the `tput colors` call to determine the console support for colors.
+# If `TERM` is set then uses the `tput colors` call to determine the console support for colors.
 #
 # Usage: hasColors
 # Exit Code: 0 - Console or output supports colors
@@ -38,16 +38,16 @@ hasColors() {
 }
 
 __consoleOutput() {
-  local prefix="${1}" start="${2-}" end="${3}" nl="\n"
+  local prefix="${1}" start="${2-}" end="${3}" newline="\n"
   shift 3 || :
   if [ "${1-}" = "-n" ]; then
-    shift
-    nl=
+    shift || :
+    newline=
   fi
   if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$nl" "$*"; fi
+    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$newline" "$*"; fi
   elif [ $# -eq 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s$nl" "$prefix" "$*"; else printf "%s$nl" "$*"; fi
+    if [ -n "$prefix" ]; then printf "%s: %s$newline" "$prefix" "$*"; else printf "%s$newline" "$*"; fi
   fi
 }
 

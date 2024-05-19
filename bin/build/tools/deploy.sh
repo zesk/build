@@ -33,10 +33,7 @@ deployApplicationVersion() {
   local tryVariables=(APPLICATION_ID APPLICATION_TAG)
   local appChecksumFile=.deploy/APPLICATION_ID
 
-  if [ ! -d "$p" ]; then
-    consoleError "$p is not a directory" 1>&2
-    return "$errorEnvironment"
-  fi
+  [ -d "$p" ] || __failEnvironment "$usage" "$p is not a directory" || return $?
   for f in "${tryVariables[@]}"; do
     appChecksumFile="$p/.deploy/$f"
     if [ -f "$appChecksumFile" ]; then
@@ -44,9 +41,7 @@ deployApplicationVersion() {
       return 0
     fi
   done
-  if [ ! -f "$p/.env" ]; then
-    return "$errorEnvironment"
-  fi
+  [ -f "$p/.env" ] || __failEnvironment "$usage" "$p/.env does not exist" || return $?
   for f in "${tryVariables[@]}"; do
     # shellcheck source=/dev/null
     value=$(
@@ -58,7 +53,7 @@ deployApplicationVersion() {
       return 0
     fi
   done
-  return "$errorEnvironment"
+  __failEnvironment "$usage" "No application version found" || return $?
 }
 _deployApplicationVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -73,16 +68,17 @@ _deployApplicationVersion() {
 # `deployHome` for compatibility.
 #
 deployPackageName() {
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
   export BUILD_TARGET
-  if ! buildEnvironmentLoad BUILD_TARGET; then
-    _deployPackageName "$errorEnvironment" "Unable to load BUILD_TARGET" || return $?
-  fi
-  if [ -z "${BUILD_TARGET-}" ]; then
-    _deployPackageName "$errorEnvironment" "BUILD_TARGET is blank" || return $?
-  fi
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_TARGET || return $?
+  [ -n "${BUILD_TARGET-}" ] || __usageEnvironment "$usage" "BUILD_TARGET is blank" || return $?
   printf "%s\n" "${BUILD_TARGET-}"
 }
-
 _deployPackageName() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -97,7 +93,7 @@ _deployPackageName() {
 deployHasVersion() {
   local deployHome versionName targetPackage
 
-  if ! deployHome=$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "${1-}"); then
+  if ! deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}"); then
     return "$errorArgument"
   fi
   shift || :
@@ -156,7 +152,7 @@ _applicationIdLink() {
 # Exit Code: 2 - Argument error
 #
 deployPreviousVersion() {
-  _applicationIdLink "_${FUNCNAME[0]}" previous "$@"
+  _applicationIdLink "$usage" previous "$@"
 }
 _deployPreviousVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -168,7 +164,7 @@ _deployPreviousVersion() {
 # Get the next version of the supplied version
 #
 deployNextVersion() {
-  _applicationIdLink "_${FUNCNAME[0]}" next "$@"
+  _applicationIdLink "$usage" next "$@"
 }
 _deployNextVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -208,14 +204,19 @@ deployApplication() {
   local deployHome applicationPath deployedApplicationPath targetPackageFullPath
   local newApplicationId applicationId currentApplicationId exitCode
   local unwindArgs requiredArgs
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   exitCode=0
   # Arguments
 
   # --first
-  firstFlag=
+  firstFlag=false
   # --revert
-  revertFlag=
+  revertFlag=false
 
   # Arguments in order
   deployHome=
@@ -224,85 +225,72 @@ deployApplication() {
   targetPackage=
   requiredArgs=()
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _deployApplication "$errorArgument" "Blank argument" || return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --help)
-        "_${FUNCNAME[0]}" 0
+        "$usage" 0
         return $?
         ;;
       --message)
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "Missing --message argument" || return $?
+        shift || "$usage" "$errorArgument" "Missing --message argument" || return $?
         message="$1"
         ;;
       --first)
-        firstFlag=1
+        firstFlag=true
         ;;
       --revert)
-        revertFlag=1
+        revertFlag=true
         ;;
       --home)
-        shift || :
-        if ! deployHome=$(usageArgumentDirectory "_${FUNCNAME[0]}" deployHome "${1-}"); then
-          return "$errorArgument"
-        fi
+        shift || __failArgument "$usage" "Shift $argument failed" || return $?
+        deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
         ;;
       --id)
-        shift || :
-        if [ -z "$1" ]; then
-          "_${FUNCNAME[0]}" "$errorArgument" "Blank --id"
-        fi
+        shift || __failArgument "$usage" "Shift $argument failed" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Blank --id" || return $?
         applicationId="$1"
         ;;
       --application)
-        shift || :
-        if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" applicationPath "$1"); then
-          return "$errorArgument"
-        fi
+        shift || __failArgument "$usage" "Shift $argument failed" || return $?
+        applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
         ;;
       --package)
-        shift || :
+        shift || __failArgument "$usage" "Shift $argument failed" || return $?
         targetPackage="${1-}"
         ;;
       *)
-        "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument $1" || return $?
+        __failArgument "$usage" "Unknown argument $argument" || return $?
         ;;
     esac
-    shift || :
+    shift || __failArgument "$usage" "shift argument $argument failed" || return $?
   done
-  if [ -z "$targetPackage" ] && ! targetPackage="$(deployPackageName)"; then
-    return $errorArgument
-  fi
-  if ! test "$revertFlag"; then
+  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName)" || __failArgument "$usage" "No package name" || return $?
+  if $revertFlag; then
     requiredArgs+=(applicationId)
   fi
 
   # Check arguments are non-blank and actually supplied
   requiredArgs+=(deployHome applicationPath)
   for name in "${requiredArgs[@]}"; do
-    if [ -z "${!name}" ]; then
-      "_${FUNCNAME[0]}" "$errorArgument" "$name is required" || return $?
-    fi
+    [ -n "${!name}" ] || __failArgument "$usage" "$name is required" || return $?
   done
 
   if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
-    if ! test $firstFlag; then
-      _deployApplication "$errorEnvironment" "Can not fetch version from $applicationPath, need --first" || return $?
+    if ! $firstFlag; then
+      "$usage" "$errorEnvironment" "Can not fetch version from $applicationPath, need --first" || return $?
     fi
     currentApplicationId=
   fi
 
-  if test "$revertFlag"; then
+  if $revertFlag; then
     #
     # If reverting, check the application ID (if supplied) is correct otherwise fail
     #
-    if ! newApplicationId=$(deployPreviousVersion "$deployHome" "$currentApplicationId"); then
-      _deployApplication "$errorEnvironment" "--revert can not find previous version of $currentApplicationId ($deployHome)" || return $?
-    fi
+    newApplicationId=$(deployPreviousVersion "$deployHome" "$currentApplicationId") || __failEnvironment "$usage" "--revert can not find previous version of $currentApplicationId ($deployHome)" || return $?
 
     if [ -n "$applicationId" ] && [ "$applicationId" != "$currentApplicationId" ]; then
-      _deployApplication "$errorArgument" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
+      __failArgument "$usage" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
     fi
     applicationId="$newApplicationId"
     printf "%s %s %s %s\n" "$(consoleInfo "Reverting from")" "$(consoleOrange "$currentApplicationId")" "$(consoleInfo "->")" "$(consoleGreen "$applicationId")"
@@ -312,9 +300,7 @@ deployApplication() {
   # Arguments are all parsed by here
   #
   targetPackageFullPath="$deployHome/$applicationId/$targetPackage"
-  if [ ! -f "$targetPackageFullPath" ]; then
-    _deployApplication "$errorEnvironment" "deployApplication: Missing target file $targetPackageFullPath" || return $?
-  fi
+  [ -f "$targetPackageFullPath" ] || __failArgument "$usage" "deployApplication: Missing target file $targetPackageFullPath" || return $?
 
   #
   # Generates deployHome/{newVersion}/app and deletes on failure
@@ -356,8 +342,7 @@ deployApplication() {
       message="Upgrading to $newApplicationId"
     fi
     if ! runHook --application "$applicationPath" maintenance --message "$message" on; then
-      _unwindDeploy "${unwindArgs[@]}" "Turning maintenance on in $applicationPath failed"
-      return $?
+      _unwindDeploy "${unwindArgs[@]}" "Turning maintenance on in $applicationPath failed" || return $?
     fi
   else
     printf "%s\n" "$(consoleInfo "No maintenance hook")"
@@ -414,10 +399,10 @@ deployApplication() {
   # STOP _unwindDeploy
 
   if ! runOptionalHook --application "$applicationPath" deploy-finish; then
-    _deployApplication "$errorEnvironment" "Deploy finish failed" || exitCode=$?
+    "$usage" "$errorEnvironment" "Deploy finish failed" || exitCode=$?
   fi
   if ! runOptionalHook --application "$applicationPath" maintenance off; then
-    _deployApplication "$errorEnvironment" "maintenance off failed" || exitCode=$?
+    "$usage" "$errorEnvironment" "maintenance off failed" || exitCode=$?
   fi
   if [ $exitCode -eq 0 ]; then
     consoleSuccess "Completed"
@@ -426,12 +411,9 @@ deployApplication() {
   fi
   return "$exitCode"
 }
-_deployApplication() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 _unwindDeploy() {
-  local applicationPath="$1"
-  local deployedApplicationPath="${2-}"
+  local applicationPath="$1" deployedApplicationPath="${2-}" this="${FUNCNAME[0]}"
+  local usage="_deployApplication"
 
   shift || :
   shift || :
@@ -446,7 +428,10 @@ _unwindDeploy() {
   else
     printf "%s %s %s\n" "$(consoleError "Unwind")" "$(consoleCode "$deployedApplicationPath")" "$(consoleError "does not exist")"
   fi
-  _deployApplication "$errorEnvironment" "$@"
+  __failEnvironment "$usage" "$@"
+}
+_deployApplication() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -458,14 +443,15 @@ _unwindDeploy() {
 #
 deployMove() {
   local applicationPath newApplicationSource
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" applicationPath "$1"); then
-    return "$errorArgument"
-  fi
-  shift || :
-  if ! newApplicationSource=$(pwd); then
-    _deployMove "$errorEnvironment" "Unable to get pwd" || return $?
-  fi
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  applicationPath=$(usageArgumentDirectory "$usage" applicationPath "${1-}") || return $?
+  shift || __failArgument "$usage" "missing argument" || return $?
+  newApplicationSource=$(pwd) || __failEnvironment "$usage" "Unable to get pwd" || return $?
   directoryClobber "$newApplicationSource" "$applicationPath"
 }
 _deployMove() {
@@ -491,44 +477,52 @@ _deployMove() {
 #
 deployLink() {
   local applicationLinkPath currentApplicationHome newApplicationLinkPath
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   applicationLinkPath=
   currentApplicationHome=
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _deployLink "$errorArgument" "Blank argument" || return $?
-    fi
-    if [ -z "$applicationLinkPath" ]; then
-      applicationLinkPath="$1"
-      if [ -e "$applicationLinkPath" ]; then
-        if [ ! -L "$applicationLinkPath" ]; then
-          if [ -d "$applicationLinkPath" ]; then
-            _deployLink "$errorArgument" "$applicationLinkPath is directory (should be a link)" || return $?
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        $usage 0
+        return 0
+        ;;
+      *)
+        if [ -z "$applicationLinkPath" ]; then
+          applicationLinkPath="$argument"
+          if [ -e "$applicationLinkPath" ]; then
+            if [ ! -L "$applicationLinkPath" ]; then
+              [ ! -d "$applicationLinkPath" ] || __failArgument "$usage" "$applicationLinkPath is directory (should be a link)" || return $?
+              # Not a link or directory
+              __failArgument "$usage" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
+            fi
           fi
-          # Not a link or directory
-          _deployLink "$errorArgument" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
+        elif [ -z "$currentApplicationHome" ]; then
+          # No checking - allows pre-linking
+          currentApplicationHome="$argument"
+          if [ ! -d "$currentApplicationHome" ]; then
+            consoleWarning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
+          fi
+        else
+          __failArgument "$usage" "Unknown argument $argument" || return $?
         fi
-      fi
-    elif [ -z "$currentApplicationHome" ]; then
-      # No checking - allows pre-linking
-      currentApplicationHome="$1"
-      if [ ! -d "$currentApplicationHome" ]; then
-        consoleWarning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
-      fi
-    else
-      _deployLink "$errorArgument" "Unknown argument $1" || return $?
-    fi
+        ;;
+    esac
     shift || :
   done
   if [ -z "$currentApplicationHome" ]; then
-    if ! currentApplicationHome="$(pwd -P 2>/dev/null)"; then
-      _deployLink "$errorEnvironment" "pwd failed" || return $?
-    fi
+    currentApplicationHome="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "pwd failed" || return $?
   fi
   newApplicationLinkPath="$applicationLinkPath.READY.$$"
   if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! renameLink "$newApplicationLinkPath" "$applicationLinkPath"; then
     rm -rf "$newApplicationLinkPath" 2>/dev/null
-    _deployLink $errorEnvironment "Unable to link and rename" || return $?
+    __failEnvironment "$usage" "Unable to link and rename" || return $?
   fi
 }
 _deployLink() {
@@ -541,57 +535,55 @@ _deployLink() {
 #
 deployMigrateDirectoryToLink() {
   local start deployHome applicationPath tempAppLink appVersion
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   start=$(beginTiming) || :
   deployHome=
   applicationPath=
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _deployMigrateDirectoryToLink "$errorArgument" "Blank argument" || return $?
-    fi
-    if [ -z "$deployHome" ]; then
-      if ! deployHome="$(usageArgumentDirectory "_${FUNCNAME[0]}" "deployHome" "$1")"; then
-        return "$errorArgument"
-      fi
-    elif [ -z "$applicationPath" ]; then
-      if ! applicationPath="$(usageArgumentDirectory "_${FUNCNAME[0]}" "applicationPath" "$1")"; then
-        return "$errorArgument"
-      fi
-    else
-      _deployMigrateDirectoryToLink "$errorArgument" "Unknown argument $1" || return $?
-    fi
-    # TODO
-    shift || :
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return 0
+        ;;
+      *)
+        if [ -z "$deployHome" ]; then
+          deployHome="$(usageArgumentDirectory "$usage" "deployHome" "$1")" || return $?
+        elif [ -z "$applicationPath" ]; then
+          applicationPath="$(usageArgumentDirectory "$usage" "applicationPath" "$1")" || return $?
+        else
+          __failArgument "$usage" "Unknown argument $argument" || return $?
+        fi
+        shift || __failArgument "$usage" "shift after $argument failed" || return $?
+        ;;
+    esac
   done
-  if ! appVersion=$(deployApplicationVersion "$applicationPath"); then
-    _deployMigrateDirectoryToLink "$errorEnvironment" "No application deployment version" || return $?
-  fi
+  appVersion=$(deployApplicationVersion "$applicationPath") || __failEnvironment "$usage" "No application deployment version" || return $?
   if [ -L "$applicationPath" ]; then
     printf "%s %s %s\n" "$(consoleCode "$applicationPath")" "$(consoleSuccess "is already a link to")" "$(consoleRed "$appVersion")"
     return 0
   fi
-  if ! deployHasVersion "$deployHome" "$appVersion"; then
-    _deployMigrateDirectoryToLink "$errorEnvironment" "Application version $appVersion not found in $deployHome" || return $?
-  fi
-  if [ -d "$deployHome/$appVersion/app" ]; then
-    _deployMigrateDirectoryToLink "$errorEnvironment" "Old app directory $deployHome/$appVersion/app exists, stopping" || return $?
-  fi
-  if ! runOptionalHook --application "$applicationPath" maintenance on; then
-    _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to enable maintenance" || return $?
-  fi
+  deployHasVersion "$deployHome" "$appVersion" || __failEnvironment "$usage" "Application version $appVersion not found in $deployHome" || return $?
+
+  [ ! -d "$deployHome/$appVersion/app" ] || __failEnvironment "$usage" "Old app directory $deployHome/$appVersion/app exists, stopping" || return $?
+  runOptionalHook --application "$applicationPath" maintenance on || __failEnvironment "$usage" "Unable to enable maintenance" || return $?
   tempAppLink="$applicationPath.$$.${FUNCNAME[0]}"
   # Create a temporary link to ensure it works
   if ! deployLink "$tempAppLink" "$deployHome/$appVersion/app"; then
     if ! runOptionalHook maintenance off; then
       consoleError "Maintenance off FAILED, system may be unstable" 1>&2
     fi
-    return $errorEnvironment
+    __failEnvironment "$usage" "deployLink failed" || return $?
   fi
   # Now move our folder and the link to where the folder was in one fell swoop
   # or mv -hf
-  if ! mv -f "$applicationPath" "$deployHome/$appVersion/app"; then
-    _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
-  fi
+  mv -f "$applicationPath" "$deployHome/$appVersion/app" || __failEnvironment "$usage" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
 
   if ! mv -f "$tempAppLink" "$applicationPath"; then
     # Like really? Like really? Something is likely F U B A R
@@ -600,7 +592,7 @@ deployMigrateDirectoryToLink() {
     else
       consoleSuccess "Successfully recovered application to $applicationPath - stable"
     fi
-    _deployMigrateDirectoryToLink "$errorEnvironment" "Unable to move live link $tempAppLink -> $applicationPath" || return $?
+    __failEnvironment "$usage" "Unable to move live link $tempAppLink -> $applicationPath" || return $?
   fi
   if ! runOptionalHook --application "$applicationPath" maintenance off; then
     consoleError "Maintenance ON FAILED, system may be unstable" 1>&2

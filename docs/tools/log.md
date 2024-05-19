@@ -17,7 +17,7 @@ Backs up files as:
     logFile.2
     logFile.3
 
-But maintains file descriptors for `logFile`.
+But maintains file` descriptors for `logFile`.
 
 #### Usage
 
