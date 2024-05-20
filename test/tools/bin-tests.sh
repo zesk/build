@@ -122,6 +122,18 @@ testMapPortability() {
   rm -rf "$tempDir"
 }
 
+_testComposerTempDirectory() {
+  export BITBUCKET_CLONE_DIR
+  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
+  loadEnvironment BITBUCKET_CLONE_DIR || return $?
+  if [ -z "$BITBUCKET_CLONE_DIR" ]; then
+    mktemp -d
+  else
+    [ -d "$BITBUCKET_CLONE_DIR" ] || _environment "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
+    mktemp -d --tmpdir="$BITBUCKET_CLONE_DIR"
+  fi
+}
+
 #
 # Side-effect: installs scripts
 #
@@ -137,7 +149,9 @@ testScriptInstallations() {
   __doesScriptInstall python pythonInstall || return $?
   __doesScriptInstall mariadb mariadbInstall || return $?
   # requires docker
-  d=$(mktemp -d)
+  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
+
+  d=$(_testComposerTempDirectory) || _environment "_testComposerTempDirectory" | return $?
   cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/"
   phpComposer "$d"
   if [ ! -d "$d/vendor" ] || [ ! -f "$d/composer.lock" ]; then
