@@ -68,5 +68,15 @@ testGitVersionList() {
 
 tests+=(testGitCommit)
 testGitCommit() {
-  assertExitCode --stderr-ok 2 gitCommit || return $?
+  local here tempDirectory
+
+  assertExitCode --stderr-ok Blank 2 gitCommit "" || return $?
+  assertExitCode --stderr-ok 1 gitCommit || return $?
+  here=$(pwd) || _environment pwd || return $?
+  tempDirectory=$(mktemp -d) || _environment "mktemp" || return $?
+  __environment cd "$tempDirectory" || return $?
+  __environment rm -rf "$tempDirectory" || return $?
+  assertExitCode --stderr-match "pwd" 1 gitCommit last || return $?
+  __environment cd "$here" || return $?
+  assertExitCode --stderr-match "No changes" 1 gitCommit last || return $?
 }

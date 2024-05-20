@@ -385,11 +385,11 @@ gitCommit() {
   usage="_$this"
 
   appendLast=false
-  updateReleaseNotes=false
+  updateReleaseNotes=true
   comment=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgumebt "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
       --)
         updateReleaseNotes=false
@@ -399,14 +399,16 @@ gitCommit() {
         ;;
       *)
         comment="$*"
+        break
         ;;
     esac
-    shift || __failArgumebt "$usage" "Shift $argument failed" || return $?
+    shift || :
   done
 
   appendLast=
   if [ "$comment" = "last" ]; then
     appendLast=true
+    comment=
   fi
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   current="$start"
@@ -418,6 +420,7 @@ gitCommit() {
       fi
       current="$next"
     else
+      gitRepositoryChanged || __failEnvironment "No changes to commit" || return $?
       if $updateReleaseNotes && [ -n "$comment" ]; then
         statusMessage consoleInfo "Updating release notes ..."
         notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
