@@ -466,43 +466,37 @@ _gitCommit() {
 #
 gitMainly() {
   local branch returnCode updateOther
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if ! branch=$(git rev-parse --abbrev-ref HEAD); then
-    consoleError "Git not present" 1>&2
-    return "$errorEnvironment"
-  fi
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
     main | staging)
-      _gitMainly "$errorEnvironment" "Already in branch $(consoleCode "$branch")" || return $?
+      __failEnvironment "$usage" "Already in branch $(consoleCode "$branch")" || return $?
       ;;
     HEAD)
-      _gitMainly "$errorEnvironment" "Ignore branches named $(consoleCode "$branch")" || return $?
+      __failEnvironment "$usage" "Ignore branches named $(consoleCode "$branch")" || return $?
       ;;
     *)
       returnCode=0
       for updateOther in staging main; do
         if ! git checkout "$updateOther" 2>/dev/null; then
           printf "%s %s\n" "$(consoleError "Unable to update branch")" "$(consoleCode "$updateOther")" 1>&2
-          git status -s || consoleError "git status failed?" || :
-          returnCode="$errorEnvironment"
+          git status -s || _environment "git status failed?" || returnCode="$?"
           break
-        elif ! git pull; then
-          consoleError "Unable to update $updateOther" 1>&2
-          returnCode="$errorEnvironment"
+        else
+          git pull || _environment "Unable to update $updateOther" || returnCode=$?
         fi
       done
       if [ "$returnCode" -ne 0 ]; then
         return "$returnCode"
       fi
-      if ! git checkout "$branch"; then
-        consoleError "Unable to switch bach to $branch" 1>&2
-        returnCode="$errorEnvironment"
-      fi
-      if git merge -m "Merging staging and main with $branch" origin/staging origin/main; then
-        printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
-        return "$returnCode"
-      fi
-      return $errorEnvironment
+      git checkout "$branch" || _environment "Unable to switch bach to $branch" || returnCode="$?"
+      git merge -m "Merging staging and main with $branch" origin/staging origin/main || _environment "merge staging and main failed" || return $?
+      printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
       ;;
   esac
 }

@@ -28,19 +28,18 @@ gitAddRemotesToSSHKnown() {
   requireFileDirectory "$sshKnown" || return $?
 
   [ -f "$sshKnown" ] || touch "$sshKnown"
+  __environment chmod 700 "$HOME/.ssh" || return $?
+  __environment chmod 600 "$sshKnown" || return $?
 
   git remote -v | awk '{ print $2 }' | cut -f 1 -d : | cut -f 2 -d @ | sort -u | while read -r remoteHost; do
     if grep -q "$remoteHost" "$sshKnown"; then
       consoleInfo "Host $remoteHost already known"
-    elif ! ssh-keyscan "$remoteHost" >"$sshKnown"; then
-      consoleError "Failed to add $remoteHost to $sshKnown" 1>&2
-      return "$errorEnvironment"
+    elif ssh-keyscan "$remoteHost" >"$sshKnown"; then
+      printf "%s %s %s %s\n" "$(consoleSuccess "Added")" "$(consoleInfo "$remoteHost")" "$(consoleSuccess "to")" "$(consoleCode "$sshKnown")"
     else
-      consoleSuccess "Added $remoteHost to $sshKnown" 1>&2
+      _environment "$(printf "%s %s %s %s\n" "$(consoleError "Failed to add")" "$(consoleInfo "$remoteHost")" "$(consoleError "to")" "$(consoleCode "$sshKnown")")" || return $?
     fi
   done
-  chmod 700 "$HOME/.ssh" || return $?
-  chmod 600 "$sshKnown" || return $?
 }
 
 tests+=(testGitVersionList)
@@ -50,10 +49,7 @@ testGitVersionList() {
     if ! gitAddRemotesToSSHKnown; then
       return "$errorEnvironment"
     fi
-    if ! git pull --tags >/dev/null 2>/dev/null; then
-      consoleError "Unable to pull git tags ... failed" 1>&2
-      return "$errorEnvironment"
-    fi
+    git pull --tags >/dev/null 1>&2 || _environment "Unable to pull git tags ... failed" || return $?
   fi
 
   #  echo "PWD: $(pwd)"
@@ -70,7 +66,7 @@ tests+=(testGitCommit)
 testGitCommit() {
   local here tempDirectory
 
-  assertExitCode --stderr-ok Blank 2 gitCommit "" || return $?
+  assertExitCode --stderr-ok 2 gitCommit "" || return $?
   assertExitCode --stderr-ok 1 gitCommit || return $?
   here=$(pwd) || _environment pwd || return $?
   tempDirectory=$(mktemp -d) || _environment "mktemp" || return $?

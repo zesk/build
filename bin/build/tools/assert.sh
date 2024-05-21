@@ -163,7 +163,7 @@ _assertExitCodeHelper() {
         if [ -z "$expected" ]; then
           expected="$1"
           if ! isInteger "$expected"; then
-            "$usageFunction" "$errorArgument" "Expected \"$(consoleCode "$expected")\" should be an integer" || return $?
+            "$usageFunction" "$errorArgument" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
           fi
         elif [ -z "$bin" ]; then
           bin="$1"
