@@ -484,6 +484,7 @@ assertOutputEquals() {
 #
 assertOutputContains() {
   local nLines expected="" commands=() tempFile exitCode=0 pipeStdErr=""
+  local this="${FUNCNAME[0]}"
 
   while [ $# -gt 0 ]; do
     case $1 in
@@ -518,7 +519,7 @@ assertOutputContains() {
       echo $?
     )
   fi
-  assertEquals "$exitCode" "$actual" "Exit code should be $exitCode ($actual)" || return $?
+  assertEquals "$exitCode" "$actual" "$(printf -- "%s %s %s (%s)" "$(consoleInfo "$this")" "$(consoleError "Exit code should be")" "$(consoleGreen "$exitCode")" "$(consoleError "$actual")")" || return $?
   if grep -q "$expected" "$tempFile"; then
     _assertSuccess "$this" "\"$expected\" found in \"${commands[*]}\" output" || return $?
   else
