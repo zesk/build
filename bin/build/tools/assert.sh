@@ -850,7 +850,7 @@ _assertNumeric() {
     _assertFailure "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (not number $leftValue): $*" || return $?
   fi
   if ! isNumber "$rightValue"; then
-    _assertFailure "$func" "[ \"$leftValue\" $cmp\"$rightValue\" ] (not number $rightValue): $*" || return $?
+    _assertFailure "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (not number $rightValue): $*" || return $?
   fi
   if test "$leftValue" "$cmp" "$rightValue"; then
     _assertSuccess "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (correct)" || return $?
