@@ -42,7 +42,27 @@ To install it in the operating system:
 
 ## Other binaries
 
-`bin/build/` contains other tools for simple templating (`map.sh`, global changes `cannon.sh`, release utilities `new-release.sh` and `version-last.sh`.
+`bin/build/` contains other tools for simple templating (`map.sh`, global changes `cannon.sh`, release utilities `new-release.sh` and `version-last.sh`. Add `./bin/build/` your `PATH` to get access to these easily.
+
+    export PATH="$PATH:$BUILD_HOME/bin/build"
+
+Binaries are:
+
+- `cannon.sh` - `cannon` - replace strings in many files. Destructive! Warning! Danger!
+- `chmod-sh.sh` - `makeShellFilesExecutable` - Makes `.sh` files `+x`
+- `deprecated.sh` - Run this on your code to update it to the latest. May break it, so use source control.
+- `identical-check.sh` - `identicalCheck`
+- `local-container.sh` - `dockerLocalContainer`
+- `map.sh` - `mapEnvironment`
+- `new-release.sh` - `newRelease`
+- `release-notes.sh` - `releaseNotes`
+- `version-last.sh` - `gitVersionLast`
+- `version-list.sh` - `gitVersionList`
+
+Two special binaries can be used to load and run commands:
+
+- `tools.sh` - `Zesk Tools - loads or runs tools`
+- `ops.sh` - `Zesk Operations Tools - loads or runs tools`
 
 ## Artifacts: Build Directory and `.deploy`
 
