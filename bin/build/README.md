@@ -2,28 +2,29 @@
 
 Pipeline, build, and operations tools which are useful across a variety of projects.
 
-- Abstracted bash scripts which work on Unix-style operating system
-- Build and deployment tools
+- Abstracted bash scripts which work on all Unix-style operating system
+- Build and deployment tools for pipelines and software platforms and languages
 - Operational scripts for managing live production systems (system setup, services, cron, permissions separations)
 
 This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries, as of 2024 there are no dependencies on Bash 4. 
 
 This toolkit makes the following assumptions:
 
-- You are using this with another project to help with your pipeline, build or operations
-- Binaries from this project installed at `./bin/build/`
-- Files containing bash code end with `.sh`
-- Release notes are located in a dedicated subdirectory, named `v1.0.0.md` which match version names (`v1.0.0`)
-- A central `$HOME/.build` directory is created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used.
+- Binaries from this project installed at `./bin/build/` (required)
+- Files containing bash code end with `.sh` (assumed)
+- Release notes are located in a dedicated subdirectory (can be configured per-project), files are named `v1.0.0.md` which match version names (`v1.0.0`) (required)
+- A central `$HOME/.build` directory is created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used. (configurable)
 
 To use in your pipeline:
 
 - copy `bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually (this line is the only thing that survives updates)
-- run it before you need this code (installed at `bin/build`)
+- run it before you need this code (will be installed at `bin/build`)
+- installation pulls from `github.com` using `curl`
 
 To install it in the operating system:
 
-- Installation can ba accomplished by copying `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and running it as `root`.
+- Installation can ba accomplished by copying `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and running it as `root`
+- installation pulls from `github.com` using `curl`
 
 ## Main entry points
 
@@ -91,5 +92,7 @@ If you test on another OS or need support on a specific platform, report an issu
 ## Copyright &copy; 2024 Market Acumen, Inc
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
+
+Reviewed: 2024-05-22
 
 (this file is a copy - please modify the original)
