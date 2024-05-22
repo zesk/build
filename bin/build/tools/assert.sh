@@ -11,9 +11,6 @@
 # Docs: contextOpen ./docs/_templates/tools/assert.md
 # Test: contextOpen ./test/tools/assert-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 # IDENTICAL errorArgument 1
 errorArgument=2
 
@@ -103,6 +100,7 @@ assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 _assertExitCodeHelper() {
+  local argument
   local usageFunction
   local isExitCode errorsOk
   local expected bin
@@ -130,29 +128,32 @@ _assertExitCodeHelper() {
   stderrNotContains=()
 
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      "$usageFunction" "$errorArgument" "Blank argument" || return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgment "$usageFunction" "Blank argument" || return $?
+    case "$argument" in
       --stderr-ok)
         errorsOk=1
         ;;
       --stderr-match)
         shift || :
+        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
         stderrContains+=("$1")
         errorsOk=1
         ;;
       --stderr-no-match)
         shift || :
+        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
         stderrNotContains+=("$1")
         errorsOk=1
         ;;
       --stdout-match)
         shift || :
+        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
         outputContains+=("$1")
         ;;
       --stdout-no-match)
         shift || :
+        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
         outputNotContains+=("$1")
         ;;
       --not)
@@ -161,48 +162,43 @@ _assertExitCodeHelper() {
         ;;
       *)
         if [ -z "$expected" ]; then
-          expected="$1"
-          if ! isInteger "$expected"; then
-            "$usageFunction" "$errorArgument" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
-          fi
+          expected="$argument"
+          isInteger "$expected" || __failArgment "$usageFunction" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
         elif [ -z "$bin" ]; then
-          bin="$1"
-          shift
+          bin="$argument"
+          shift || :
           break
         fi
         ;;
     esac
-    shift
+    shift || :
   done
-  if ! outputFile=$(mktemp) || ! errorFile=$(mktemp); then
-    "$usageFunction" $errorEnvironment "INTERNAL unable to mktemp" || return $?
-  fi
-
-  saved=$(saveErrorExit)
+  outputFile=$(mktemp) && errorFile=$(mktemp) || __failEnvironment "$usageFunction" "INTERNAL unable to mktemp" || return $?
+  saved=$(saveErrorExit) || __failEnvironment "$usageFunction" saveErrorExit failed || return $?
   set -e
   actual="$(
     "$bin" "$@" >"$outputFile" 2>"$errorFile"
     printf %d "$?"
   )"
-  restoreErrorExit "$saved"
+  __usageEnvironment "$usageFunction" restoreErrorExit "$saved"
 
   if ! test $errorsOk && [ -s "$errorFile" ]; then
-    $usageFunction $errorEnvironment "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usageFunction#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
+    __failEnvironment "$usageFunction" "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usageFunction#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
   fi
   if test $errorsOk && [ ! -s "$errorFile" ]; then
     consoleWarning "--stderr-ok used but is NOT necessary: $(consoleCode "${usageFunction#_} $bin $*")"
   fi
   if [ ${#stderrContains[@]} -gt 0 ]; then
-    assertFileContains "$errorFile" "${stderrContains[@]}" || return $?
+    __assertFileContainsThis "$this" "$errorFile" "${stderrContains[@]}" || return $?
   fi
   if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    assertFileDoesNotContain "$errorFile" "${stderrNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$this" "$errorFile" "${stderrNotContains[@]}" || return $?
   fi
   if [ ${#outputContains[@]} -gt 0 ]; then
-    assertFileContains "$outputFile" "${outputContains[@]}" || return $?
+    __assertFileContainsThis "$this" "$outputFile" "${outputContains[@]}" || return $?
   fi
   if [ ${#outputNotContains[@]} -gt 0 ]; then
-    assertFileDoesNotContain "$outputFile" "${outputNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$this" "$outputFile" "${outputNotContains[@]}" || return $?
   fi
   if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     # Failure
@@ -211,7 +207,7 @@ _assertExitCodeHelper() {
       "$(consoleError "$actual")" "$failureText" "$(consoleSuccess "$expected")" \
       "$(wrapLines "$(consoleCode)" "$(consoleReset)" <"$outputFile")" 1>&2
     rm -rf "$outputFile" "$errorFile" || :
-    return $errorEnvironment
+    _environment "${usageFunction#_} Failed" || return $?
   fi
   printf "%s %s: %s -> %s\n" "$(_symbolSuccess)" "$(consoleSuccess "${usageFunction#_}")" "$(consoleCode "$bin $*")" "$(consoleSuccess "$actual")"
   rm -rf "$outputFile" "$errorFile" || :
@@ -599,13 +595,35 @@ assertOutputDoesNotContain() {
   fi
 }
 
+# Usage: {fn} thisName fileName string0 [ ... ]
+# Argument: thisName - Reported function for success or failure
+# See: assertFileContains
+__assertFileContainsThis() {
+  local this="$1"
+  local f="$2" args
+  shift
+
+  args=("$@")
+  shift || _assertFailure "$this" "Missing argument" || return $?
+  [ -f "$f" ] || _assertFailure "$this" "$f is not a file: $*"
+  while [ $# -gt 0 ]; do
+    if ! grep -q "$1" "$f"; then
+      dumpFile "$f"
+      _assertFailure "$this" "$(consoleInfo "$f") does not contain string: $(consoleCode "$1")" || return $?
+    fi
+    shift
+  done
+  # shellcheck disable=SC2059
+  _assertSuccess "$this" "$(consoleInfo "$f") contains strings: $(printf -- "\n- \"$(consoleCode "%s")\"" "${args[@]+${args[@]}}")" || return $?
+}
+
 # Usage: assertFileContains fileName string0 [ ... ]
 #
-# Argument: - `fileName` - File to search
-# Argument: - `string0 ...` - One or more strings which must be found on at least one line in the file
+# Argument: fileName - File to search
+# Argument: string0 ... - One or more strings which must be found on at least one line in the file
 #
-# Exit code: - `0` - If the assertion succeeds
-# Exit code: - `1` - If the assertion fails
+# Exit code: 0 - If the assertion succeeds
+# Exit code: 1 - If the assertion fails
 # Local cache: None
 # Environment: If the file does not exist, this will fail.
 # Example:     assertFileContains $logFile Success
@@ -613,45 +631,32 @@ assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  local f=$1 args
-  local this="${FUNCNAME[0]}"
-
-  args=("$@")
-  shift || _assertFailure "$this" "Missing argument" || return $?
-  [ -f "$f" ] || _assertFailure "$this: $f is not a file: $*"
-  while [ $# -gt 0 ]; do
-    if ! grep -q "$1" "$f"; then
-      dumpFile "$f"
-      _assertFailure "$this: $(consoleInfo "$f") does not contain string: $(consoleCode "$1")" || return $?
-    fi
-    shift
-  done
-  # shellcheck disable=SC2059
-  _assertSuccess "$this: $(consoleInfo "$f") contains strings: $(printf -- "\n- \"$(consoleCode "%s")\"" "${args[@]+${args[@]}}")" || return $?
+  __assertFileContainsThis "${FUNCNAME[0]}" "$@" || return $?
 }
 
+# Usage: __assertFileDoesNotContainThis thisName fileName string0 [ ... ]
 #
-# Usage: assertFileDoesNotContain fileName string0 [ ... ]
-#
-# Argument: - `fileName` - File to search
-# Argument: - `string0 ...` - One or more strings which must NOT be found anywhere in `fileName`
-# Exit code: - `1` - If the assertions fails
-# Exit code: - `0` - If the assertion succeeds
+# Argument: thisName - Reported function for success or failure
+# Argument: fileName - File to search
+# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
+# Exit code: 1 - If the assertions fails
+# Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
-# Example:     assertFileDoesNotContain $logFile error Error ERROR
-# Example:     assertFileDoesNotContain $logFile warning Warning WARNING
+# Example:     assertFileDoesNotContain "$logFile" error Error ERROR
+# Example:     assertFileDoesNotContain "$logFile" warning Warning WARNING
 #
-assertFileDoesNotContain() {
-  local f=$1 args
-  local this="${FUNCNAME[0]}"
+__assertFileDoesNotContainThis() {
+  local this="$1"
+  local f="$2" args
 
+  shift || :
   args=("$@")
   shift || _assertFailure "$this" "Missing argument" || return $?
-  [ -f "$f" ] || _assertFailure "$this: $f is not a file: $*"
+  [ -f "$f" ] || _assertFailure "$this" "$f is not a file: $*"
   while [ $# -gt 0 ]; do
     if grep -q "$1" "$f"; then
       dumpFile "$f"
-      _assertFailure "$this: $(consoleInfo "$f") does not contain string: $(consoleCode "$1")" || return $?
+      _assertFailure "$this" "$(consoleInfo "$f") does not contain string: $(consoleCode "$1")" || return $?
     fi
     shift
   done
@@ -661,12 +666,27 @@ assertFileDoesNotContain() {
 }
 
 #
+# Usage: assertFileDoesNotContain fileName string0 [ ... ]
+#
+# Argument: fileName - File to search
+# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
+# Exit code: 1 - If the assertions fails
+# Exit code: 0 - If the assertion succeeds
+# Environment: If the file does not exist, this will fail.
+# Example:     assertFileDoesNotContain $logFile error Error ERROR
+# Example:     assertFileDoesNotContain $logFile warning Warning WARNING
+#
+assertFileDoesNotContain() {
+  __assertFileDoesNotContainThis "${FUNCNAME[0]}" "$@" || return $?
+}
+
+#
 # Usage: {fn} expectedSize [ fileName ... ]
 #
-# Argument: - `expectedSize` - Integer file size which `fileName` should be, in bytes.
-# Argument: - `fileName ...` - One ore more file which should be `expectedSize` bytes in size.
-# Exit code: - `1` - If the assertions fails
-# Exit code: - `0` - If the assertion succeeds
+# Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
+# Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
+# Exit code: 1 - If the assertions fails
+# Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} 22 .config
 # Example:     {fn} 0 .env

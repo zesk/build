@@ -447,7 +447,7 @@ __gitCommitReleaseNotesUpdate() {
   if ! grep -q "$comment" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
     __usageEnvironment "$usage" clearLine || return $?
-    __usageEnvironment "$usage" printf -- "%s to %s:\n\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
   else
     __usageEnvironment "$usage" clearLine || return $?
