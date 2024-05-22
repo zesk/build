@@ -23,6 +23,9 @@ __environment source ./test/test-tools.sh || return $?
 
 messyTestCleanup() {
   local fn exitCode=$?
+
+  export cleanExit
+  cleanExit="${cleanExit-}"
   if ! test "$cleanExit"; then
     consoleInfo -n "Stack:"
     for fn in "${FUNCNAME[@]}"; do
