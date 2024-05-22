@@ -446,10 +446,14 @@ __gitCommitReleaseNotesUpdate() {
 
   if ! grep -q "$comment" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __usageEnvironment "$usage" printf -- "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")" || return $?
+    __usageEnvironment "$usage" clearLine || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
+  else
+    __usageEnvironment "$usage" clearLine || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
   fi
-
+  __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes"
 }
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
