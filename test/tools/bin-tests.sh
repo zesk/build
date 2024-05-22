@@ -125,7 +125,7 @@ testMapPortability() {
 _testComposerTempDirectory() {
   export BITBUCKET_CLONE_DIR
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
-  loadEnvironment BITBUCKET_CLONE_DIR || return $?
+  buildEnvironmentLoad BITBUCKET_CLONE_DIR || return $?
   if [ -z "$BITBUCKET_CLONE_DIR" ]; then
     mktemp -d
   else

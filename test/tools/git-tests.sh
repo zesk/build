@@ -8,8 +8,6 @@
 #
 declare -a tests
 
-errorEnvironment=1
-
 gitHasAnyRefs() {
   if [ $((0 + $(git show-ref | grep -c refs/tags))) -gt 0 ]; then
     return 0
@@ -46,9 +44,7 @@ tests+=(testGitVersionList)
 testGitVersionList() {
 
   if ! gitHasAnyRefs; then
-    if ! gitAddRemotesToSSHKnown; then
-      return "$errorEnvironment"
-    fi
+    gitAddRemotesToSSHKnown || return $?
     git pull --tags >/dev/null 1>&2 || _environment "Unable to pull git tags ... failed" || return $?
   fi
 

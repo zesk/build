@@ -76,10 +76,10 @@ hookGitPreCommit() {
 
   if [ -z "${BUILD_COMPANY-}" ]; then
     if ! buildEnvironmentLoad BUILD_COMPANY; then
-      "_${FUNCNAME[0]}" "buildEnvironmentLoad BUILD_COMPANY failed" || return $?
+      _hookGitPreCommitFailed "buildEnvironmentLoad BUILD_COMPANY failed" || return $?
     fi
     if [ -z "${BUILD_COMPANY-}" ]; then
-      "_${FUNCNAME[0]}" "buildEnvironmentLoad BUILD_COMPANY is undefined" || return $?
+      _hookGitPreCommitFailed "buildEnvironmentLoad BUILD_COMPANY is undefined" || return $?
     fi
   fi
   statusMessage consoleSuccess Making shell files executable ...

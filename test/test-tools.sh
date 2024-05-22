@@ -10,9 +10,6 @@
 export testTracing
 export globalTestFailure=
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 errorTest=3
 
 shortTestCodes() {
@@ -24,6 +21,9 @@ shortTestCodes() {
 }
 
 didAnyTestsFail() {
+  export globalTestFailure
+
+  globalTestFailure=${globalTestFailure:-}
   if test "$globalTestFailure"; then
     printf %s "$globalTestFailure"
     return 0
@@ -35,10 +35,7 @@ testSection() {
 }
 
 testHeading() {
-  if ! whichApt toilet toilet 2>/dev/null 1>&2; then
-    consoleError "Unable to install toilet" 1>&2
-    return $errorEnvironment
-  fi
+  whichApt toilet toilet 2>/dev/null 1>&2 || _environment "Unable to install toilet" || return $?
   printf "%s" "$(consoleCode)"
   consoleOrange "$(echoBar '*')"
   printf "%s" "$(consoleCode)$(clearLine)"
@@ -71,13 +68,17 @@ cleanTestName() {
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 loadTestFiles() {
-  local fileCount testCount tests testName quietLog=$1 testDirectory resultCode=0 resultReason
+  local testCount tests showTests testName quietLog=$1 testDirectory resultCode=0 resultReason
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   export tests
   resultReason="Success"
   shift
   statusMessage consoleWarning "Loading tests ..."
-  fileCount="$#"
   tests=()
   while [ "$#" -gt 0 ]; do
     testName="$(cleanTestName "$1")"
@@ -90,9 +91,11 @@ loadTestFiles() {
     else
       testCount=${#tests[@]}
       # shellcheck source=/dev/null
-      if ! . "./test/tools/$1"; then
+      if . "./test/tools/$1"; then
+        :
+      else
         resultReason="Include $1 failed"
-        resultCode="$errorEnvironment"
+        resultCode="$?"
       fi
       clearLine
       if [ "${#tests[@]}" -le "$testCount" ]; then
@@ -103,8 +106,14 @@ loadTestFiles() {
     fi
     shift
   done
-  testCount=$((${#tests[@]} - fileCount))
-  statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${tests[*]}\" ..."
+  showTests=()
+  for test in "${tests[@]}"; do
+    if [ "${test#\#}" = "$test" ]; then
+      showTests+=("$test")
+    fi
+  done
+  testCount="${#showTests[@]}"
+  statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${showTests[*]}\" ..."
   printf "\n"
   testDirectory=$(pwd)
   while [ ${#tests[@]} -gt 0 ]; do
@@ -122,7 +131,7 @@ loadTestFiles() {
       fi
       set +x
       set -eou pipefail
-      cd "$testDirectory" || _loadTestFiles "$errorEnvironment" "Unable to cd $testDirectory" || return $?
+      __usageEnvironment "$usage" cd "$testDirectory" || return $?
       if [ "$resultCode" -ne 0 ]; then
         printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleRed "FAILED")" 1>&2
         buildFailed "$quietLog" || :
