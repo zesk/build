@@ -40,9 +40,9 @@ _assertSuccess() {
 # If this fails it will output an error and exit.
 #
 # Usage: assertEquals expected actual [ message ]
-# Argument: - `expected` - Expected string
-# Argument: - `actual` - Actual string
-# Argument: - `message` - Message to output if the assertion fails
+# Argument: expected - Expected string
+# Argument: actual - Actual string
+# Argument: message - Message to output if the assertion fails
 # Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
 # Reviewed: 2023-11-12
 #
@@ -89,9 +89,9 @@ assertNotEquals() {
 #
 # Usage: {fn} usageFunction expectedExitCode command [ arguments ... ]
 #
-# Argument: - `expectedExitCode` - A numeric exit code expected from the command
-# Argument: - `command` - The command to run
-# Argument: - `arguments` - Any arguments to pass to the command to run
+# Argument: expectedExitCode - A numeric exit code expected from the command
+# Argument: command - The command to run
+# Argument: arguments - Any arguments to pass to the command to run
 # Local cache: None.
 # Environment: None.
 # Examples: assertExitCode 0 hasHook version-current
@@ -221,9 +221,9 @@ _assertExitCodeHelper() {
 #
 # Usage: assertExitCode expectedExitCode command [ arguments ... ]
 #
-# Argument: - `expectedExitCode` - A numeric exit code expected from the command
-# Argument: - `command` - The command to run
-# Argument: - `arguments` - Any arguments to pass to the command to run
+# Argument: expectedExitCode - A numeric exit code expected from the command
+# Argument: command - The command to run
+# Argument: arguments - Any arguments to pass to the command to run
 # Local cache: None.
 # Environment: None.
 # Examples: assertExitCode 0 hasHook version-current
@@ -328,10 +328,10 @@ assertNotContains() {
 #
 # Usage: assertDirectoryExists directory [ message ... ]
 #
-# Argument: - `directory` - Directory that should exist
-# Argument: - `message` - An error message if this fails
-# Exit code: - `0` - If the assertion succeeds
-# Exit code: - `1` - If the assertion fails
+# Argument: directory - Directory that should exist
+# Argument: message - An error message if this fails
+# Exit code: 0 - If the assertion succeeds
+# Exit code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
@@ -352,10 +352,10 @@ assertDirectoryExists() {
 #
 # Usage: assertDirectoryDoesNotExist directory [ message ... ]
 #
-# Argument: - `directory` - Directory that should NOT exist
-# Argument: - `message` - An error message if this fails
-# Exit code: - `0` - If the assertion succeeds
-# Exit code: - `1` - If the assertion fails
+# Argument: directory - Directory that should NOT exist
+# Argument: message - An error message if this fails
+# Exit code: 0 - If the assertion succeeds
+# Exit code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything at all, even a non-directory (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
@@ -385,10 +385,10 @@ assertDirectoryDoesNotExist() {
 #
 # Usage: assertDirectoryExists directory [ message ... ]
 #
-# Argument: - `directory` - Directory that should exist
-# Argument: - `message` - An error message if this fails
-# Exit code: - `0` - If the assertion succeeds
-# Exit code: - `1` - If the assertion fails
+# Argument: directory - Directory that should exist
+# Argument: message - An error message if this fails
+# Exit code: 0 - If the assertion succeeds
+# Exit code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
@@ -411,10 +411,10 @@ assertFileExists() {
 #
 # Usage: assertFileDoesNotExist file [ message ... ]
 #
-# Argument: - `file` - Directory that should NOT exist
-# Argument: - `message` - An error message if this fails
-# Exit code: - `0` - If the assertion succeeds
-# Exit code: - `1` - If the assertion fails
+# Argument: file - Directory that should NOT exist
+# Argument: message - An error message if this fails
+# Exit code: 0 - If the assertion succeeds
+# Exit code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `file` is anything at all, even a non-directory (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
@@ -447,9 +447,9 @@ assertFileDoesNotExist() {
 # If this fails it will output an error and exit.
 #
 # Usage: assertOutputEquals expected binary [ parameters ]
-# Argument: - `expected` - Expected string
-# Argument: - `binary` - Binary to run and evaluate output
-# Argument: - `parameters` - Any additional parameters to binary
+# Argument: expected - Expected string
+# Argument: binary - Binary to run and evaluate output
+# Argument: parameters - Any additional parameters to binary
 # Example:     assertOutputEquals "2023" date +%Y
 # Reviewed: 2023-11-12
 #
@@ -472,9 +472,9 @@ assertOutputEquals() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: {fn} expected command [ arguments ... ]
-# Argument: - `expected` - A string to expect in the output
-# Argument: - `command` - The command to run
-# Argument: - `arguments` - Any arguments to pass to the command to run
+# Argument: expected - A string to expect in the output
+# Argument: command - The command to run
+# Argument: arguments - Any arguments to pass to the command to run
 # Argument: - `--exit` - Assert exit status of process to be this number
 # Argument: - `--stderr` - Also include standard error in output checking
 # Exit code: 0 - If the output contains at least one occurrence of the string
@@ -538,9 +538,9 @@ assertOutputContains() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: assertOutputDoesNotContain expected command [ arguments ... ]
-# Argument: - `expected` - A string to NOT expect in the output
-# Argument: - `command` - The command to run
-# Argument: - `arguments` - Any arguments to pass to the command to run
+# Argument: expected - A string to NOT expect in the output
+# Argument: command - The command to run
+# Argument: arguments - Any arguments to pass to the command to run
 # Argument: - `--exit` - Assert exit status of process to be this number
 # Argument: - `--stderr` - Also include standard error in output checking
 # Exit code: 0 - If the output contains at least one occurrence of the string
@@ -709,10 +709,10 @@ assertFileSize() {
 #
 # Usage: {fn} expectedSize [ fileName ... ]
 #
-# Argument: - `expectedSize` - Integer file size which `fileName` should NOT be, in bytes.
+# Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
 # Argument: - `fileName ...` - One ore more file which should NOT be `expectedSize` bytes in size.
-# Exit code: - `1` - If the assertions fails
-# Exit code: - `0` - If the assertion succeeds
+# Exit code: 1 - If the assertions fails
+# Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} 22 .config
 # Example:     {fn} 0 .env
@@ -736,8 +736,8 @@ assertNotFileSize() {
 # Usage: {fn} [ fileName ... ]
 #
 # Argument: - `fileName ...` - One ore more file which should be zero bytes in size.
-# Exit code: - `1` - If the assertions fails
-# Exit code: - `0` - If the assertion succeeds
+# Exit code: 1 - If the assertions fails
+# Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} .config
 # Example:     {fn} /var/www/log/error.log
@@ -750,8 +750,8 @@ assertZeroFileSize() {
 # Usage: {fn} [ fileName ... ]
 #
 # Argument: - `fileName ...` - One ore more file which should NOT be zero bytes in size.
-# Exit code: - `1` - If the assertions fails
-# Exit code: - `0` - If the assertion succeeds
+# Exit code: 1 - If the assertions fails
+# Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} 22 .config
 # Example:     {fn} 0 .env
@@ -789,7 +789,7 @@ assertGreaterThan() {
 # Usage: assertNotEquals expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
-# Argument: - `message` - Message to output if the assertion fails
+# Argument: message - Message to output if the assertion fails
 # Example:     assertGreaterThanOrEqual 3 $found
 # Reviewed: 2023-11-12
 # Summary: Assert actual value is greater than or equal to expected value
@@ -805,7 +805,7 @@ assertGreaterThanOrEqual() {
 # Usage: assertLessThan expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
-# Argument: - `message` - Message to output if the assertion fails
+# Argument: message - Message to output if the assertion fails
 # Example:     assertLessThan 3 $found
 # Reviewed: 2023-11-12
 # Exit code: 0 - expected less than to actual
@@ -821,7 +821,7 @@ assertLessThan() {
 # Usage: assertLessThanOrEqual leftValue rightValue [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
-# Argument: - `message` - Message to output if the assertion fails
+# Argument: message - Message to output if the assertion fails
 # Example:     assertLessThanOrEqual 3 $found
 # Reviewed: 2023-11-12
 # Exit code: 0 - expected less than or equal to actual
@@ -850,7 +850,7 @@ _assertNumeric() {
     _assertFailure "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (not number $leftValue): $*" || return $?
   fi
   if ! isNumber "$rightValue"; then
-    _assertFailure "$func" "[ \"$leftValue\" $cmp\"$rightValue\" ] (not number $rightValue): $*" || return $?
+    _assertFailure "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (not number $rightValue): $*" || return $?
   fi
   if test "$leftValue" "$cmp" "$rightValue"; then
     _assertSuccess "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (correct)" || return $?
