@@ -66,11 +66,11 @@ Two special binaries can be used to load and run commands:
 
 ## Artifacts: Build Directory and `.deploy`
 
-A `./.build` directory is created at your `$HOME` directory, or the project root (if `$HOME` is not set) where log files are generated.
+A `./.build` directory is created at a configured location set by the environment variable `BUILD_CACHE`. If not set, it uses a default location your `$HOME` directory, or the project root (if `$HOME` is not set).
 
 You can preserve the build directory post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
 
-A `./.deploy` directory is created for build steps and contains metadata about the deployment. 
+A `./.deploy` directory is created for build steps and contains metadata about the deployment. This is always created in the project root and the expectation is that it will be included in any deployments as metadata. 
 
 ## Operations
 
@@ -82,11 +82,15 @@ Operations support is currently sparse by goal is to support **setup and configu
 - `crontab`
 - `daemontools` 
 
+System patches and updates are also planned to be a part of the operations functionality.
+
 ## Run tests in docker
 
 Scripts are written so you can load a `.env` and then run commands directly in a test container:
 
     bin/build/bitbucket-container.sh --env .env.MYTESTENV bin/test.sh
+
+`.env` appears to have various machinations such that it's difficult at best to have a single format which works in your projects. The solution is simple: detect whether a `.env` is formatted to support **Docker** or not and convert it appropriately on-the-fly as needed; Zesk Build supports this detection and conversion.
 
 ## Tested operating systems
 
