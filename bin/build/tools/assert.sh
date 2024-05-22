@@ -305,6 +305,8 @@ assertContains() {
 # See: assertContains
 assertNotContains() {
   local expected=$1 actual=$2 shortActual
+  local this="${FUNCNAME[0]}"
+
   shift || return "$errorArgument"
 
   shift || return "$errorArgument"
@@ -456,7 +458,9 @@ assertFileDoesNotExist() {
 # Reviewed: 2023-11-12
 #
 assertOutputEquals() {
-  local expected=$1 actual this="${FUNCNAME[0]}"
+  local expected=$1 actual
+  local this="${FUNCNAME[0]}"
+
   shift
   actual=$("$@" || printf "exited with code %d" "$?")
   if [ "$expected" != "$actual" ]; then
@@ -610,9 +614,7 @@ assertOutputDoesNotContain() {
 #
 assertFileContains() {
   local f=$1 args
-  local this
-
-  this="${FUNCNAME[0]}"
+  local this="${FUNCNAME[0]}"
 
   args=("$@")
   shift || _assertFailure "$this" "Missing argument" || return $?
@@ -641,9 +643,7 @@ assertFileContains() {
 #
 assertFileDoesNotContain() {
   local f=$1 args
-  local this
-
-  this="${FUNCNAME[0]}"
+  local this="${FUNCNAME[0]}"
 
   args=("$@")
   shift || _assertFailure "$this" "Missing argument" || return $?
@@ -759,7 +759,9 @@ assertNotZeroFileSize() {
 # Reviewed: 2023-11-14
 #
 assertGreaterThan() {
-  _assertNumeric "${FUNCNAME[0]}" -gt "$@" || return $?
+  local this="${FUNCNAME[0]}"
+
+  _assertNumeric "$this" -gt "$@" || return $?
 }
 
 # Assert `leftValue >= rightValue`
@@ -772,7 +774,9 @@ assertGreaterThan() {
 # Reviewed: 2023-11-12
 # Summary: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
-  _assertNumeric "${FUNCNAME[0]}" -ge "$@" || return $?
+  local this="${FUNCNAME[0]}"
+
+  _assertNumeric "$this" -ge "$@" || return $?
 }
 
 #
@@ -787,7 +791,9 @@ assertGreaterThanOrEqual() {
 # Exit code: 0 - expected less than to actual
 # Exit code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
-  _assertNumeric "${FUNCNAME[0]}" -lt "$@" || return $?
+  local this="${FUNCNAME[0]}"
+
+  _assertNumeric "$this" -lt "$@" || return $?
 }
 
 # Assert `leftValue <= rightValue`
@@ -802,10 +808,13 @@ assertLessThan() {
 # Exit code: 1 - expected greater than actual, or invalid numbers
 #
 assertLessThanOrEqual() {
-  _assertNumeric "${FUNCNAME[0]}" -le "$@" || return $?
+  local this="${FUNCNAME[0]}"
+
+  _assertNumeric "$this" -le "$@" || return $?
 }
 
-#
+# Helper function
+# Usage: {fn} function comparison leftValue rightValue
 _assertNumeric() {
   local func cmp leftValue rightValue
   func="$1"
