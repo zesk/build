@@ -18,9 +18,9 @@ This groupings of functions are related to a `usage` function to handle errors:
 ## Usage Sugar References
 
 
-### `__usage` - Run `command` and usage with `code` by running `usage`
+### `__usage` - Run `command`, handle failure with `usage` with `code` and `command`
 
-Run `command` and usage with `code` by running `usage`
+Run `command`, handle failure with `usage` with `code` and `command` as error
 
 #### Usage
 
