@@ -4,10 +4,7 @@
 # Test: o ./test/tools/sugar-tests.sh
 # -- CUT HERE --
 
-# IDENTICAL _sugar 102
-errorEnvironment=1
-errorArgument=2
-errorCritical=99
+# IDENTICAL _sugar 104
 emptyArgument="§"
 
 # Output a titled list
@@ -20,6 +17,7 @@ _list() {
 # Critical exit `errorCritical` - exit immediately
 # Usage: {fn} {title} [ items ... ]
 _exit() {
+  local errorCritical=99
   local title="${1-"$emptyArgument"}"
   export BUILD_DEBUG
   # shellcheck disable=SC2016
@@ -49,6 +47,8 @@ _return() {
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 _environment() {
+  # IDENTICAL errorEnvironmentLocal 1
+  local errorEnvironment=1
   _return "$errorEnvironment" "$@" || return $?
 }
 
@@ -57,6 +57,8 @@ _environment() {
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 _argument() {
+  # IDENTICAL errorArgumentLocal 1
+  local errorArgument=2
   _return "$errorArgument" "$@" || return $?
 }
 

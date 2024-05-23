@@ -11,9 +11,6 @@
 # Docs: contextOpen ./docs/_templates/tools/assert.md
 # Test: contextOpen ./test/tools/assert-tests.sh
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Decorations
 #
@@ -180,9 +177,9 @@ _assertExitCodeHelper() {
     "$bin" "$@" >"$outputFile" 2>"$errorFile"
     printf %d "$?"
   )"
-  __usageEnvironment "$usageFunction" restoreErrorExit "$saved"
+  restoreErrorExit "$saved" || :
 
-  if ! test $errorsOk && [ -s "$errorFile" ]; then
+  if ! test "$errorsOk" && [ -s "$errorFile" ]; then
     __failEnvironment "$usageFunction" "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usageFunction#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
   fi
   if test $errorsOk && [ ! -s "$errorFile" ]; then
@@ -274,9 +271,8 @@ assertContains() {
   local expected=$1 actual=$2 shortActual
   local this="${FUNCNAME[0]}"
 
-  shift || return "$errorArgument"
-
-  shift || return "$errorArgument"
+  shift || _argument "missing expected argument" || return $?
+  shift || _argument "missing actual argument" || return $?
   shortActual="$(printf %s "$actual" | head -n 5)"
   if [ "$shortActual" != "$actual" ]; then
     shortActual="${shortActual} ..."
@@ -303,9 +299,8 @@ assertNotContains() {
   local expected=$1 actual=$2 shortActual
   local this="${FUNCNAME[0]}"
 
-  shift || return "$errorArgument"
-
-  shift || return "$errorArgument"
+  shift || _argument "missing expected argument" || return $?
+  shift || _argument "missing actual argument" || return $?
   shortActual="$(printf %s "$actual" | head -n 5)"
   if [ "$shortActual" != "$actual" ]; then
     shortActual="${shortActual} ..."
@@ -781,7 +776,7 @@ assertNotZeroFileSize() {
 assertGreaterThan() {
   local this="${FUNCNAME[0]}"
 
-  _assertNumeric "$this" -gt "$@" || return $?
+  __assertNumeric "$this" -gt "$@" || return $?
 }
 
 # Assert `leftValue >= rightValue`
@@ -796,7 +791,7 @@ assertGreaterThan() {
 assertGreaterThanOrEqual() {
   local this="${FUNCNAME[0]}"
 
-  _assertNumeric "$this" -ge "$@" || return $?
+  __assertNumeric "$this" -ge "$@" || return $?
 }
 
 #
@@ -813,7 +808,7 @@ assertGreaterThanOrEqual() {
 assertLessThan() {
   local this="${FUNCNAME[0]}"
 
-  _assertNumeric "$this" -lt "$@" || return $?
+  __assertNumeric "$this" -lt "$@" || return $?
 }
 
 # Assert `leftValue <= rightValue`
@@ -830,12 +825,12 @@ assertLessThan() {
 assertLessThanOrEqual() {
   local this="${FUNCNAME[0]}"
 
-  _assertNumeric "$this" -le "$@" || return $?
+  __assertNumeric "$this" -le "$@" || return $?
 }
 
 # Helper function
 # Usage: {fn} function comparison leftValue rightValue
-_assertNumeric() {
+__assertNumeric() {
   local func cmp leftValue rightValue
   func="$1"
   shift || return $?
