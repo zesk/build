@@ -7,18 +7,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-# IDENTICAL bashHeader 5
 set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh" || exit 1
 
 envFile=.env.local
 
@@ -29,9 +21,8 @@ setMaintenanceValue() {
     printf "%s %s %s\n" "$(consoleWarning "Created")" "$(consoleCode "$envFile")" "$(consoleWarning "(maintenance - did not exist)")" 1>&2
   fi
   grep -v "$variable" "$envFile" >"$envFile.$$" || :
-  if ! printf "%s=%s\n" "$variable" "$value" >>"$envFile.$$" || ! mv -f "$envFile.$$" "$envFile"; then
-    return "$errorEnvironment"
-  fi
+  printf "%s=%s\n" "$variable" "$value" >>"$envFile.$$" || _environment "writing temp $envFile" || return $?
+  __environment mv -f "$envFile.$$" "$envFile" || return $?
 }
 
 #
@@ -45,37 +36,32 @@ setMaintenanceValue() {
 # Environment: BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 #
 hookMaintenance() {
-  local enable message variable messageVariable messageColor messageValue maintenanceValue
+  local argument enable message variable messageVariable messageColor messageValue maintenanceValue
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   export BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE
 
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/BUILD_MAINTENANCE_VARIABLE.sh; then
-    _hookMaintenance "$errorEnvironment" "BUILD_MAINTENANCE_VARIABLE.sh failed" || return $?
-  fi
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/env/BUILD_MAINTENANCE_MESSAGE_VARIABLE.sh; then
-    _hookMaintenance "$errorEnvironment" "BUILD_MAINTENANCE_MESSAGE_VARIABLE.sh failed" || return $?
-  fi
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
 
   variable=${BUILD_MAINTENANCE_VARIABLE-}
   messageVariable=${BUILD_MAINTENANCE_MESSAGE_VARIABLE-}
 
-  if [ -z "$variable" ]; then
-    _hookMaintenance "$errorEnvironment" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
-  fi
+  [ -n "$variable" ] || __failEnvironment "$usage" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
   message=
-  enable=
+  enable=false
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _hookMaintenance "$errorArgument" "Blank argument" || return $?
-    fi
-    case "$(lowercase "$1")" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$(lowercase "$argument")" in
       on | 1 | true | enable)
-        enable=1
+        enable=true
         ;;
       off | 0 | false | disabled)
-        enable=
+        enable=false
         ;;
       --message)
         shift || :
@@ -85,7 +71,7 @@ hookMaintenance() {
         message="$1"
         ;;
       *)
-        usage "$errorArgument" "Unknown argument $1" || return $?
+        __failArgument "$usage" "Unknown argument $argument" || return $?
         ;;
     esac
     shift
@@ -101,12 +87,8 @@ hookMaintenance() {
     maintenanceValue=
     messageSuffix=$(consoleBoldMagenta "Now LIVE")
   fi
-  if ! setMaintenanceValue "$variable" "$maintenanceValue"; then
-    _hookMaintenance "$errorEnvironment" "Unable to set $variable to $maintenanceValue" || return $?
-  fi
-  if ! setMaintenanceValue "$messageVariable" "$message"; then
-    consoleWarning "Maintenance message not set, continuing with errors"
-  fi
+  setMaintenanceValue "$variable" "$maintenanceValue" || __failEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
+  setMaintenanceValue "$messageVariable" "$message" || consoleWarning "Maintenance message not set, continuing with errors"
   printf "%s %s - %s\n" "$("$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }
 _hookMaintenance() {

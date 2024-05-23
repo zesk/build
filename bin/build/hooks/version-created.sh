@@ -5,12 +5,13 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL bashHeader 5
 set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
+  printf "tools.sh failed" 1>&2
+  exit 1
+fi
 
 export BUILD_VERSION_NO_OPEN
 BUILD_VERSION_NO_OPEN=${BUILD_VERSION_NO_OPEN-}
@@ -30,7 +31,8 @@ hookVersionCreated() {
   shift
 
   printf "%s %s %s %s\n" "$(consoleSuccess "Created")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes are")" "$(consoleValue "$currentVersion")"
-  if ! test "$BUILD_VERSION_NO_OPEN"; then
+  if buildEnvironmentLoad BUILD_VERSION_NO_OPEN && ! test "$BUILD_VERSION_NO_OPEN"; then
+    printf "%s %s %s %s\n" "$(consoleSuccess "Opening")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes at")" "$(consoleValue "$releaseNotes")"
     contextOpen "$releaseNotes"
   fi
 }

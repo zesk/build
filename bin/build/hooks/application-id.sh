@@ -7,15 +7,13 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL bashHeader 5
 set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
-
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
+if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
+  printf "tools.sh failed" 1>&2
+  exit 1
+fi
 
 # fn: {base}
 # Usage: {fn}
@@ -29,17 +27,34 @@ errorEnvironment=1
 # Example:     885acc3
 #
 hookApplicationChecksum() {
-  local here
-  if ! here="$(pwd -P 2>/dev/null)"; then
-    return 1
-  fi
-  if ! gitEnsureSafeDirectory "$here"; then
-    _hookApplicationChecksum "$errorEnvironment" "Unable to gitEnsureSafeDirectory $here"
-    return 1
-  fi
-  git rev-parse --short HEAD
+  local here argument
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return 0
+        ;;
+      *)
+        __failArgument "Unknown argument: $argument" || return $?
+        ;;
+    esac
+    shift || :
+  done
+
+  here="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "pwd failed" || return $?
+  __usageEnvironment "$usage" gitEnsureSafeDirectory "$here" || return $?
+  __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
 _hookApplicationChecksum() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-hookApplicationChecksum
+
+hookApplicationChecksum "$@"

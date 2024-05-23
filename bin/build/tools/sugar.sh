@@ -9,14 +9,11 @@
 # Docs: contextOpen ./docs/_templates/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
-errorEnvironment=1
-errorArgument=2
-
-# Run `command` and usage with `code` by running `usage`
+# Run `command`, handle failure with `usage` with `code` and `command` as error
 # Usage: {fn} code usage command ...
 # Argument: code - Required. Integer. Exit code to return
-# Argument: usage - Required. String. Failure command
-# Argument: command - Required. String. Command to run and run failure if it usages with the exit code.
+# Argument: usage - Required. String. Failure command, passed remaining arguments and error code.
+# Argument: command - Required. String. Command to run.
 __usage() {
   local code usage command
   # shellcheck disable=SC2016
@@ -28,6 +25,8 @@ __usage() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageEnvironment() {
+  # IDENTICAL errorEnvironmentLocal 1
+  local errorEnvironment=1
   __usage "$errorEnvironment" "$@"
 }
 
@@ -36,12 +35,16 @@ __usageEnvironment() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageArgument() {
+  # IDENTICAL errorArgumentLocal 1
+  local errorArgument=2
   __usage "$errorArgument" "$@"
 }
 
 # Run `usage` with an environment error
 # Usage: {fn} usage ...
 __failEnvironment() {
+  # IDENTICAL errorEnvironmentLocal 1
+  local errorEnvironment=1
   local usage
   usage="$1" && shift && "$usage" "$errorEnvironment" "$@"
   return $errorEnvironment
@@ -50,6 +53,8 @@ __failEnvironment() {
 # Run `usage` with an argument error
 # Usage: {fn} usage ...
 __failArgument() {
+  # IDENTICAL errorArgumentLocal 1
+  local errorArgument=2
   local usage
   usage="$1" && shift && "$usage" "$errorArgument" "$@"
   return $errorArgument
@@ -69,5 +74,5 @@ __usageEnvironmentQuiet() {
 # Example:     {fn} "${FUNCNAME[0]}"
 _deprecated() {
   printf "DEPRECATED: %s" "$@" 1>&2
-  printf "$(date "+%F %T"),%s\n" "$@" >>"$(dirname "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")/.deprecated"
+  printf -- "$(date "+%F %T"),%s\n" "$@" >>"$(dirname "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")/.deprecated"
 }

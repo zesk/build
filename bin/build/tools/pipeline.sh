@@ -218,25 +218,25 @@ applicationEnvironment() {
   IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
   export "${variables[@]}"
 
-  here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]} failed" || return $?
+  here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]}" || return $?
 
   for env in "${variables[@]}"; do
     # shellcheck source=/dev/null
-    source "$here/../env/$env.sh" || _environment "source $env.sh failed" || return $?
+    source "$here/../env/$env.sh" || _environment "source $env.sh" || return $?
   done
 
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
-    APPLICATION_VERSION="$(runHook "$hook")" || _environment "runHook \"$hook\" failed" || return $?
+    APPLICATION_VERSION="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
   fi
   if [ -z "${APPLICATION_ID-}" ]; then
     hook=application-id
-    APPLICATION_ID="$(runHook "$hook")" || _environment "runHook \"$hook\" failed" || return $?
+    APPLICATION_ID="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
 
   fi
   if [ -z "${APPLICATION_TAG-}" ]; then
     hook=application-tag
-    APPLICATION_TAG="$(runHook "$hook")" || _environment "runHook \"$hook\" failed" || return $?
+    APPLICATION_TAG="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
   fi
   printf "%s\n" "${variables[@]}"
 }
@@ -244,11 +244,6 @@ applicationEnvironment() {
 showEnvironment() {
   local start missing e requireEnvironment buildEnvironment tempEnv
   local variables=()
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
 
   IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
   export "${variables[@]}"
@@ -265,7 +260,7 @@ showEnvironment() {
   tempEnv=$(mktemp)
   if ! applicationEnvironment >"$tempEnv"; then
     rm -f "$tempEnv" || :
-    __usageEnvironment "$usage" applicationEnvironment || return $?
+    _environment applicationEnvironment || return $?
   fi
   IFS=$'\n' read -d '' -r -a requireEnvironment <"$tempEnv" || :
   rm "$tempEnv" || :
@@ -306,7 +301,7 @@ showEnvironment() {
       echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || __failEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?
+  [ ${#missing[@]} -eq 0 ] || _environment "Missing environment" "${missing[@]}" || return $?
 }
 
 #
@@ -321,6 +316,11 @@ showEnvironment() {
 #
 makeEnvironment() {
   local missing e requireEnvironment
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   IFS=$'\n' read -d '' -r -a requireEnvironment < <(applicationEnvironment) || :
 
@@ -330,16 +330,18 @@ makeEnvironment() {
   fi
 
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --)
-        shift
+        shift || :
         break
         ;;
       *)
-        requireEnvironment+=("$1")
+        requireEnvironment+=("$argument")
         ;;
     esac
-    shift
+    shift || :
   done
 
   #==========================================================================================

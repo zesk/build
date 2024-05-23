@@ -12,6 +12,8 @@ tests+=(testSugar)
 testSugar() {
   local code
 
+  # set -x
+
   assertEquals "$(printf "Hello\n- a\n- b\n- c\n- d e\n")" "$(_list "Hello" "a" "b" "c" "d e")" || return $?
 
   # _exit
@@ -34,4 +36,6 @@ testSugar() {
   assertExitCode --stderr-match foo 2 __execute _argument "foo" || return $?
   # __echo
   assertExitCode --stdout-match "Running: printf %s Hello" --stdout-match "Hello" 0 __echo printf "%s" "Hello" || return $?
+
+  # set +x
 }
