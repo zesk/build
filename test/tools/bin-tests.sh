@@ -153,11 +153,8 @@ testScriptInstallations() {
 
   d=$(_testComposerTempDirectory) || _environment "_testComposerTempDirectory" | return $?
   cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/"
-  phpComposer "$d"
-  if [ ! -d "$d/vendor" ] || [ ! -f "$d/composer.lock" ]; then
-    consoleError "composer failed"
-    return "$errorEnvironment"
-  fi
+  __environment phpComposer "$d" || return $?
+  [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
 
   if ! which git >/dev/null; then
     __doesScriptInstall git gitInstall || return $?
