@@ -346,7 +346,7 @@ phpComposer() {
   consoleBoldRed -n "Composer ... "
   bigText "Install vendor" >>"$quietLog"
 
-  if test $forceDocker; then
+  if $forceDocker; then
     consoleWarning -n "pulling ... "
     __usageEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
