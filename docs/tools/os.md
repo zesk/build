@@ -62,11 +62,7 @@ Backup when `/etc/services` does not exist.
 
 #### See Also
 
-- [function serviceToPort
-](./docs/tools/os.md
-) - [Get the port number associated with a service
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L933
-)
+{SEE:serviceToPort}
 
 
 ### `buildCacheDirectory` - Path to cache directory for build system.
@@ -235,29 +231,16 @@ Platform agnostic tar cfz which ignores owner and attributes
 - `0` - Always succeeds
 
 
-### `environmentVariables` - Fetch a list of environment variable names
+### `environmentVariables` - Output a list of environment variables and ignore function definitions
 
 Output a list of environment variables and ignore function definitions
 
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
-Returns the list of defined environment variables exported in the current bash context.
-
 #### Usage
 
     environmentVariables
-    
-
-#### Examples
-
-    for f in $(environmentVariables); do
-    echo "$f"
-    done
-
-#### Sample Output
-
-    Environment variable names, one per line.
     
 
 #### Exit codes
@@ -301,11 +284,7 @@ Works from the current directory
 
 #### See Also
 
-- [function makeShellFilesExecutable
-](./docs/tools/os.md
-) - [Makes all `*.sh` files executable
-](https://github.com/zesk/build/blob/main/bin/build/tools/os.sh#L352
-)
+{SEE:makeShellFilesExecutable}
 
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp

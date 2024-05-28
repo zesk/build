@@ -13,12 +13,6 @@
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 # Usage: usageDocument functionDefinitionFile functionName exitCode [ ... ]
 # Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
 # Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
@@ -29,31 +23,34 @@ errorArgument=2
 #
 usageDocument() {
   local functionDefinitionFile functionName exitCode variablesFile
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   functionDefinitionFile="${1-}"
   if [ ! -f "$functionDefinitionFile" ]; then
-    _usageDocument "$errorArgument" "${FUNCNAME[0]}: File \"$1\" not found" || return $?
+    __failArgument "$usage" "${FUNCNAME[0]}: File \"$1\" not found" || return $?
   fi
-  shift || _usageDocument "$errorArgument" "shift failed"
+  shift || __failArgument "$usage" "shift failed"
   functionName="${1-}"
   if [ -z "$functionName" ]; then
-    _usageDocument "$errorArgument" "functionName required" || return $?
+    __failArgument "$usage" "functionName required" || return $?
   fi
-  shift || _usageDocument "$errorArgument" "shift failed"
+  shift || __failArgument "$usage" "shift failed"
   exitCode="${1-NONE}"
   shift || :
   if [ "$exitCode" = "NONE" ]; then
     consoleError "NO EXIT CODE" 1>&2
-    exitCode="$errorEnvironment"
+    exitCode=1
   fi
   variablesFile=$(mktemp)
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
-      consoleError "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" 1>&2
-      return $errorEnvironment
+      _environment "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
     fi
-    consoleError "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" 1>&2
-    return $errorArgument
+    __failArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
   fi
   (
     set -a
@@ -139,15 +136,14 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-          "$usage" $errorArgument "Unknown argument"
-          return $?
+          __failArgument "$usage" "Unknown argument" || return $?
         fi
         ;;
     esac
     shift || :
   done
 
-  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  start=$(beginTiming) || __failArgument "$usage" beginTiming || return $?
 
   # Validate arguments
   cacheDirectory=$(usageArgumentDirectory "$usage" cacheDirectory "$cacheDirectory") || return $?
@@ -160,7 +156,7 @@ documentationTemplateCompile() {
   # echo functionTemplate="$functionTemplate"
   # echo targetFile="$targetFile"
 
-  base="$(basename "$targetFile")" || __failEnvironment "$usage" basename "$targetFile" || return $?
+  base="$(basename "$targetFile")" || __failArgument "$usage" basename "$targetFile" || return $?
   base="${base%%.md}"
   statusMessage consoleInfo "Generating $base ..."
 
@@ -181,27 +177,23 @@ documentationTemplateCompile() {
       printf %s 'no-environment'
     fi
   ); then
-    "$usage" "$errorEnvironment" "listTokens failed"
-    return $?
+    __failEnvironment "$usage" "listTokens failed" || return $?
   fi
   if ! listTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
-    "$usage" "$errorEnvironment" "listTokens failed"
-    return $?
+    __failEnvironment "$usage" "listTokens failed" || return $?
   fi
   #
   # Look at source file for each function
   #
   if ! envChecksumCache=$(requireDirectory "$cacheDirectory/envChecksum"); then
-    "$usage" "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
-    return $?
+    __failEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
   fi
   envChecksumCache="$envChecksumCache/$envChecksum"
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
   if ! compiledTemplateCache=$(requireDirectory "$cacheDirectory/compiledTemplateCache"); then
-    "$usage" "$errorEnvironment" "create $cacheDirectory/envChecksum failed"
-    return $?
+    __failEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
   fi
   # Environment change will affect this template
   # Function template change will affect this template
@@ -221,7 +213,7 @@ documentationTemplateCompile() {
       set -a
       for envFile in "${envFiles[@]+${envFiles[@]}}"; do
         # shellcheck source=/dev/null
-        . "$envFile"
+        . "$envFile" || __failEnvironment "$usage" "source $envFile failed" || return $?
       done
       while read -r tokenName; do
         if ! settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$tokenName"); then
@@ -306,7 +298,7 @@ documentationTemplateDirectoryCompile() {
   passArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" $errorArgument "$this: Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
       --force)
         passArgs+=("$argument")
@@ -333,7 +325,7 @@ documentationTemplateDirectoryCompile() {
     shift || __failArgument "$usage" "shift after $argument failed" || return $?
   done
 
-  start=$(beginTiming) || __failEnvironment beginTiming || return $?
+  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
   cacheDirectory=$(usageArgumentDirectory "$usage" "cacheDirectory" "$cacheDirectory") || return $?
   templateDirectory=$(usageArgumentDirectory "$usage" "templateDirectory" "$templateDirectory") || return $?
   functionTemplate=$(usageArgumentFile "$usage" "functionTemplate" "$functionTemplate") || return $?
@@ -346,7 +338,7 @@ documentationTemplateDirectoryCompile() {
     targetFile="$targetDirectory/$base"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       consoleError "Failed to generate $targetFile" 1>&2
-      exitCode=$errorEnvironment
+      exitCode=1
     fi
     fileCount=$((fileCount + 1))
   done
@@ -409,14 +401,8 @@ bashDocumentFunction() {
 #
 _bashDocumentation_Template() {
   local envFile=$1 template=$2
-  if [ ! -f "$envFile" ]; then
-    consoleError "Settings file $envFile not found" 1>&2
-    return $errorArgument
-  fi
-  if [ ! -f "$template" ]; then
-    consoleError "Template $template not found" 1>&2
-    return $errorArgument
-  fi
+  [ -f "$envFile" ] || _argument "Settings file $envFile not found" || return $?
+  [ -f "$template" ] || _argument "Template $template not found" || return $?
   if ! (
     # subshell this does not affect anything except these commands
     set -eou pipefail
@@ -424,9 +410,8 @@ _bashDocumentation_Template() {
     # shellcheck source=/dev/null
     if ! source "$envFile"; then
       set +a
-      consoleError "$envFile Failed"
       wrapLines "$(consoleCode)" "$(consoleReset)" <"$envFile"
-      return $errorEnvironment
+      _environment "$envFile Failed" || return $?
     fi
     set +a
     while read -r envVar; do
@@ -435,12 +420,9 @@ _bashDocumentation_Template() {
         declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
       fi
     done < <(environmentVariables)
-    if ! mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections; then
-      return $?
-    fi
+    mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || return $?
   ); then
-    consoleError "Template $template not found" 1>&2
-    return $errorEnvironment
+    _environment "Template $template not found" || return $?
   fi
 }
 
@@ -670,25 +652,18 @@ bashDocumentation_FindFunctionDefinitions() {
 bashDocumentation_FindFunctionDefinition() {
   local definitionFiles directory="${1%%/}" fn="$2"
 
-  if [ ! -d "$directory" ]; then
-    consoleError "$directory is not a directory" 1>&2
-    return $errorArgument
-  fi
-  if [ -z "$fn" ]; then
-    consoleError "Need a function to find is not a directory" 1>&2
-    return $errorArgument
-  fi
+  [ -d "$directory" ] || _argument "$directory is not a directory" || return $?
+  [ -n "$fn" ] || _argument "Need a function to find is not a directory" || return $?
+
   definitionFiles=$(mktemp)
   if ! bashDocumentation_FindFunctionDefinitions "$directory" "$fn" >"$definitionFiles"; then
     rm "$definitionFiles"
-    consoleError "$fn not found in $directory" 1>&2
-    return "$errorEnvironment"
+    _environment "$fn not found in $directory" || return $?
   fi
   definitionFile="$(head -1 "$definitionFiles")"
   rm "$definitionFiles"
   if [ -z "$definitionFile" ]; then
-    consoleError "No files found for $fn in $directory" 1>&2
-    return "$errorEnvironment"
+    _environment "No files found for $fn in $directory" || return $?
   fi
   printf %s "$definitionFile"
 }

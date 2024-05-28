@@ -170,15 +170,15 @@ gitRemoveFileFromHistory() {
 }
 
 #
+# Exit Code: 1 - the repo has NOT been modified
 # Exit Code: 0 - the repo has been modified
-# Exit Code: 1 - the repo has NOT bee modified
 #
 # Has a git repository been changed from HEAD?
 # Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339
 # Credit: Chris Johnsen
 #
 gitRepositoryChanged() {
-  git diff-index --quiet "$@" HEAD
+  ! git diff-index --quiet HEAD
 }
 
 #
@@ -191,7 +191,7 @@ gitRepositoryChanged() {
 # Credit: Chris Johnsen
 #
 gitShowChanges() {
-  git diff-index --name-only "$@" HEAD
+  git diff-index --name-only HEAD
 }
 
 #
@@ -366,61 +366,94 @@ _gitTagVersion() {
 }
 
 #
-# Usage: {fn} [ comment ... ]
+# Usage: {fn} [ --last ] [ -- ] [ comment ... ]
 #
 # Commits all files added to git and also update release notes with comment
 #
 # Comment wisely. Does not duplicate comments. Check your release notes.
 #
+# Example:     c last
+# Example:     c --last
+# Example:     c --
+#
+# Example: ... are all equivalent.
 gitCommit() {
-  local usage start current next notes appendLast
+  local updateReleaseNotes appendLast argument start current next notes comment
+  local this usage
 
-  usage="_${FUNCNAME[0]}"
-  comment="$*"
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  appendLast=false
+  updateReleaseNotes=true
+  comment=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --)
+        updateReleaseNotes=false
+        ;;
+      --last)
+        appendLast=true
+        ;;
+      *)
+        comment="$*"
+        break
+        ;;
+    esac
+    shift || :
+  done
+
   appendLast=
-  if [ -z "$comment" ]; then
-    "$usage" "$errorArgument" "Need a comment" || return $?
-  fi
   if [ "$comment" = "last" ]; then
-    appendLast=1
-    consoleInfo "Using last commit message ..."
+    appendLast=true
+    comment=
   fi
-  if ! start="$(pwd -P 2>/dev/null)"; then
-    __failEnvironment "$usage" "Failed to get pwd" || return $?
-  fi
+  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   current="$start"
   while [ "$current" != "/" ]; do
-    if [ -d "$current/.git" ]; then
-      if test "$appendLast"; then
-        if ! git commit --reuse-message=HEAD --reset-author -a; then
-          __failEnvironment "$usage" "Commit failed" || return $?
-        fi
-        return 0
-      elif [ -x "$current/bin/build/release-notes.sh" ]; then
-        if notes="$("$current/bin/build/release-notes.sh")"; then
-          if ! grep -q "$comment" "$notes"; then
-            if ! printf "%s %s\n" "-" "$comment" >>"$notes"; then
-              __failEnvironment "$usage" "Writing $notes" || return $?
-            fi
-            printf "%s to %s: %s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(consoleMagenta "$comment")"
-            git add "$notes" || :
-          fi
-        fi
+    if [ ! -d "$current/.git" ]; then
+      cd .. && next="$(pwd)" || __failArgument "$usage" "Failed to traverse up from $current" || return $?
+      if [ "$current" = "$next" ]; then
+        break
       fi
-      if ! git commit -a -m "$comment"; then
-        __failEnvironment "$usage" "Commit failed" || return $?
+      current="$next"
+    else
+      gitRepositoryChanged || __failEnvironment "No changes to commit" || return $?
+      if $updateReleaseNotes && [ -n "$comment" ]; then
+        statusMessage consoleInfo "Updating release notes ..."
+        notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
+        __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
       fi
+      if $appendLast || [ -z "$comment" ]; then
+        statusMessage consoleInfo "Using last commit message ..."
+        __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
+      else
+        statusMessage consoleInfo "Using commit comment \"$comment\" ..."
+        __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
+      fi
+      __usageEnvironment "$usage" cd "$start" || return $?
       return 0
     fi
-    if ! cd .. || ! next="$(pwd)"; then
-      _gitCommit "$errorArgument" "Failed to traverse up from $current" || return $?
-    fi
-    if [ "$current" = "$next" ]; then
-      break
-    fi
-    current="$next"
   done
-  _gitCommit "$errorEnvironment" "Unable to find git repository" || return $?
+
+  cd "$start" || :
+  __failEnvironment "$usage" "Unable to find git repository" || return $?
+}
+__gitCommitReleaseNotesUpdate() {
+  local comment="$1" notes="$2"
+
+  if ! grep -q "$comment" "$notes"; then
+    __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
+    __usageEnvironment "$usage" clearLine || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
+    __usageEnvironment "$usage" git add "$notes" || return $?
+  else
+    __usageEnvironment "$usage" clearLine || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
+  fi
+  __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes"
 }
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -437,47 +470,52 @@ _gitCommit() {
 #
 gitMainly() {
   local branch returnCode updateOther
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if ! branch=$(git rev-parse --abbrev-ref HEAD); then
-    consoleError "Git not present" 1>&2
-    return "$errorEnvironment"
-  fi
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
     main | staging)
-      _gitMainly "$errorEnvironment" "Already in branch $(consoleCode "$branch")" || return $?
+      __failEnvironment "$usage" "Already in branch $(consoleCode "$branch")" || return $?
       ;;
     HEAD)
-      _gitMainly "$errorEnvironment" "Ignore branches named $(consoleCode "$branch")" || return $?
+      __failEnvironment "$usage" "Ignore branches named $(consoleCode "$branch")" || return $?
       ;;
     *)
       returnCode=0
       for updateOther in staging main; do
         if ! git checkout "$updateOther" 2>/dev/null; then
           printf "%s %s\n" "$(consoleError "Unable to update branch")" "$(consoleCode "$updateOther")" 1>&2
-          git status -s || consoleError "git status failed?" || :
-          returnCode="$errorEnvironment"
+          git status -s || _environment "git status failed?" || returnCode="$?"
           break
-        elif ! git pull; then
-          consoleError "Unable to update $updateOther" 1>&2
-          returnCode="$errorEnvironment"
+        else
+          git pull || _environment "Unable to update $updateOther" || returnCode=$?
         fi
       done
       if [ "$returnCode" -ne 0 ]; then
         return "$returnCode"
       fi
-      if ! git checkout "$branch"; then
-        consoleError "Unable to switch bach to $branch" 1>&2
-        returnCode="$errorEnvironment"
-      fi
-      if git merge -m "Merging staging and main with $branch" origin/staging origin/main; then
-        printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
-        return "$returnCode"
-      fi
-      return $errorEnvironment
+      git checkout "$branch" || _environment "Unable to switch bach to $branch" || returnCode="$?"
+      git merge -m "Merging staging and main with $branch" origin/staging origin/main || _environment "merge staging and main failed" || return $?
+      printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
       ;;
   esac
 }
 _gitMainly() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Get the current branch name
+#
+gitCurrentBranch() {
+  # git rev-parse --abbrev-ref HEAD
+  git symbolic-ref --short HEAD
+}
+_gitCurrentBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

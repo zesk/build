@@ -52,7 +52,7 @@ daemontoolsInstallService() {
   logPath=
   while [ $# -gt 0 ]; do
     arg=$1
-    [ -n "$arg" ] || __failArgument "$usage" "$this: Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$arg" in
       --home)
         shift || :
@@ -152,7 +152,7 @@ daemontoolsRemoveService() {
   logPath=
   while [ $# -gt 0 ]; do
     arg=$1
-    [ -n "$arg" ] || __failArgument "$usage" "$this: Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$arg" in
       --home)
         shift || :

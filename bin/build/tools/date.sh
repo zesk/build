@@ -55,8 +55,8 @@ dateToTimestamp() {
 #
 # Usage: timestampToDate integerTimestamp format
 
-# Argument: - `integerTimestamp` - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
-# Argument: - `format` - How to output the date (e.g. `%F` - no `+` is required)
+# Argument: integerTimestamp - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
+# Argument: format - How to output the date (e.g. `%F` - no `+` is required)
 
 # Environment: Compatible with BSD and GNU date.
 

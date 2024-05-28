@@ -254,10 +254,10 @@ __usageArgumentHelper() {
 # Exit Code: 0 - Success
 # Upon success, outputs the directory name trailing slash stripped
 usageArgumentInteger() {
-  local args
+  local args usage="$1"
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __failArgument "$1" "Need 4 arguments" || return $?
+  [ ${#args[@]} -eq 4 ] || __failArgument "$usage" "Need 4 arguments" || return $?
   __usageArgumentHelper integer "${args[@]}" isInteger
 }
 

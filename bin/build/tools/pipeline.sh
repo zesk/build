@@ -7,12 +7,6 @@
 # Docs: o ./docs/_templates/tools/pipeline.md
 # Test: o ./test/tools/pipeline-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 ###############################################################################
 #
 # ░█▀█░▀█▀░█▀█░█▀▀░█░░░▀█▀░█▀█░█▀▀
@@ -90,11 +84,15 @@ beginTiming() {
 # Example:    reportTiming "$init" "Deploy completed in"
 reportTiming() {
   local start prefix delta
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
   start=${1-}
-  if ! isInteger "$start"; then
-    _reportTiming "$errorArgument" "start \"$start\" - Not an integer" || return $?
-  fi
-  shift || :
+  __usageArgument "$usage" isInteger "$start" || return $?
+  shift || __failArgument "$usage" "Missing argument" || return $?
   prefix=
   if [ $# -gt 0 ]; then
     prefix="$(consoleGreen "$@") "
@@ -140,11 +138,12 @@ buildFailed() {
 
   clearLine || :
   failBar="$(consoleReset)$(consoleMagenta "$(repeat 80 "❌")")"
+  [ "$#" -eq 0 ] || printf "%s %s\n" "$(consoleLabel "Build failed:")" "$(consoleError "$@")" || :
   printf "\n%s\n""%s\n\n""%s\n%s\n%s\n" \
     "$(___dumpLines $bigLines "$quietLog")" \
     "$failBar" \
     "$(labeledBigText --top "$(consoleInfo "Hey! ") " --tween "$(consoleError)" Build Failed)" "$failBar" "$(___dumpLines $recentLines "$quietLog")" || :
-  return "$errorEnvironment"
+  _environment "$@" || return $?
 }
 
 # Summary: Sort versions in the format v0.0.0
@@ -163,16 +162,24 @@ buildFailed() {
 #
 versionSort() {
   local r=
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
   if [ $# -gt 0 ]; then
     if [ "$1" = "-r" ]; then
       r=r
-      shift
+      shift || __failArgument "$usage" "shift failed" || return $?
     else
-      consoleError "Unknown argument: $1" 1>&2
-      return "$errorArgument"
+      __failArgument "$usage" "Unknown argument: $1" || return $?
     fi
   fi
   sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
+}
+_versionSort() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -211,33 +218,25 @@ applicationEnvironment() {
   IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
   export "${variables[@]}"
 
-  here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]} failed" || return $?
+  here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]}" || return $?
 
   for env in "${variables[@]}"; do
     # shellcheck source=/dev/null
-    source "$here/../env/$env.sh" || _environment "source $env.sh failed" || return $?
+    source "$here/../env/$env.sh" || _environment "source $env.sh" || return $?
   done
 
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
-    if ! APPLICATION_VERSION="$(runHook "$hook")"; then
-      consoleError "$hook failed $?" 1>&2
-      return "$errorEnvironment"
-    fi
+    APPLICATION_VERSION="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
   fi
   if [ -z "${APPLICATION_ID-}" ]; then
     hook=application-id
-    if ! APPLICATION_ID="$(runHook "$hook")"; then
-      consoleError "$hook failed $?" 1>&2
-      return "$errorEnvironment"
-    fi
+    APPLICATION_ID="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
+
   fi
   if [ -z "${APPLICATION_TAG-}" ]; then
     hook=application-tag
-    if ! APPLICATION_TAG="$(runHook "$hook")"; then
-      consoleError "$hook failed $?" 1>&2
-      return "$errorEnvironment"
-    fi
+    APPLICATION_TAG="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
   fi
   printf "%s\n" "${variables[@]}"
 }
@@ -260,8 +259,8 @@ showEnvironment() {
 
   tempEnv=$(mktemp)
   if ! applicationEnvironment >"$tempEnv"; then
-    rm "$tempEnv" || :
-    return "$errorEnvironment"
+    rm -f "$tempEnv" || :
+    _environment applicationEnvironment || return $?
   fi
   IFS=$'\n' read -d '' -r -a requireEnvironment <"$tempEnv" || :
   rm "$tempEnv" || :
@@ -302,9 +301,7 @@ showEnvironment() {
       echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
     fi
   done
-  if [ ${#missing[@]} -gt 0 ]; then
-    return "$errorEnvironment"
-  fi
+  [ ${#missing[@]} -eq 0 ] || _environment "Missing environment" "${missing[@]}" || return $?
 }
 
 #
@@ -319,26 +316,32 @@ showEnvironment() {
 #
 makeEnvironment() {
   local missing e requireEnvironment
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   IFS=$'\n' read -d '' -r -a requireEnvironment < <(applicationEnvironment) || :
 
   if ! showEnvironment "$@" >/dev/null; then
-    _makeEnvironment "$errorEnvironment" "Missing values"
     showEnvironment 1>&2
-    return "$errorEnvironment"
+    __failEnvironment "$usage" "Missing values" || return $?
   fi
 
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --)
-        shift
+        shift || :
         break
         ;;
       *)
-        requireEnvironment+=("$1")
+        requireEnvironment+=("$argument")
         ;;
     esac
-    shift
+    shift || :
   done
 
   #==========================================================================================
@@ -382,27 +385,24 @@ isUpToDate() {
   local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp
   local label deltaDays maxDays daysAgo expireTimestamp expireDate keyTimestamp
   local timeText
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if ! todayTimestamp=$(dateToTimestamp "$(todayDate)"); then
-    _isUpToDate $errorEnvironment "Unable to generate todayDate" || return $?
-  fi
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __failEnvironment "$usage" "Unable to generate todayDate" || return $?
+
   keyDate="${1-}"
-  shift || _isUpToDate "$errorArgument" "Missing keyDate" || return $?
-  if ! keyTimestamp=$(dateToTimestamp "$keyDate"); then
-    consoleError "Invalid date $keyDate" 1>&2
-    return "$errorArgument"
-  fi
+  shift || __failArgument "$usage" "Missing keyDate" || return $?
+  keyTimestamp=$(dateToTimestamp "$keyDate") || __failArgument "$usage" "Invalid date $keyDate" || return $?
   upToDateDays="${1-}"
-  if ! isInteger "$upToDateDays"; then
-    _isUpToDate "$errorArgument" "upToDateDays is not an integer $upToDateDays" || return $?
-  fi
+  isInteger "$upToDateDays" || __failArgument "$usage" "upToDateDays is not an integer $upToDateDays" || return $?
+
   maxDays=366
-  if [ "$upToDateDays" -gt "$maxDays" ]; then
-    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
-  fi
-  if [ "$upToDateDays" -lt 0 ]; then
-    _isUpToDate "$errorArgument" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
-  fi
+  [ "$upToDateDays" -le "$maxDays" ] || __failArgument "$usage" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
+  [ "$upToDateDays" -ge 0 ] || __failArgument "$usage" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
+
   accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
   expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
   expireDate=$(timestampToDate "$expireTimestamp" '%A, %B %d, %Y %R')

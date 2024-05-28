@@ -122,6 +122,18 @@ testMapPortability() {
   rm -rf "$tempDir"
 }
 
+_testComposerTempDirectory() {
+  export BITBUCKET_CLONE_DIR
+  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
+  buildEnvironmentLoad BITBUCKET_CLONE_DIR || return $?
+  if [ -z "$BITBUCKET_CLONE_DIR" ]; then
+    mktemp -d
+  else
+    [ -d "$BITBUCKET_CLONE_DIR" ] || _environment "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
+    mktemp -d --tmpdir="$BITBUCKET_CLONE_DIR"
+  fi
+}
+
 #
 # Side-effect: installs scripts
 #
@@ -137,13 +149,12 @@ testScriptInstallations() {
   __doesScriptInstall python pythonInstall || return $?
   __doesScriptInstall mariadb mariadbInstall || return $?
   # requires docker
-  d=$(mktemp -d)
+  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
+
+  d=$(_testComposerTempDirectory) || _environment "_testComposerTempDirectory" | return $?
   cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/"
-  phpComposer "$d"
-  if [ ! -d "$d/vendor" ] || [ ! -f "$d/composer.lock" ]; then
-    consoleError "composer failed"
-    return "$errorEnvironment"
-  fi
+  __environment phpComposer "$d" || return $?
+  [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
 
   if ! which git >/dev/null; then
     __doesScriptInstall git gitInstall || return $?

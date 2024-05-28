@@ -164,8 +164,15 @@ Comment wisely. Does not duplicate comments. Check your release notes.
 
 #### Usage
 
-    gitCommit [ comment ... ]
+    gitCommit [ --last ] [ -- ] [ comment ... ]
     
+
+#### Examples
+
+    c last
+    c --last
+    c --
+... are all equivalent.
 
 #### Exit codes
 
@@ -213,8 +220,8 @@ Has a git repository been changed from HEAD?
 
 #### Exit codes
 
+- `1` - the repo has NOT been modified
 - `0` - the repo has been modified
-- `1` - the repo has NOT bee modified
 
 ### `gitShowChanges` - Show changed files from HEAD
 

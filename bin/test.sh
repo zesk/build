@@ -10,12 +10,6 @@
 # bin/local-container.sh
 # . bin/test-reset.sh; bin/test.sh
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 set -eou pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -25,13 +19,13 @@ top=$(pwd)
 . ./bin/build/ops.sh
 
 # shellcheck source=/dev/null
-if ! source ./test/test-tools.sh; then
-  consoleError "Unable to load test tools library" 1>&2
-  return $errorEnvironment
-fi
+__environment source ./test/test-tools.sh || return $?
 
 messyTestCleanup() {
   local fn exitCode=$?
+
+  export cleanExit
+  cleanExit="${cleanExit-}"
   if ! test "$cleanExit"; then
     consoleInfo -n "Stack:"
     for fn in "${FUNCNAME[@]}"; do
@@ -52,24 +46,24 @@ _textExit() {
   exit "$@"
 }
 
-_testUsage() {
-  usageDocument "bin/$(basename "${BASH_SOURCE[0]}")" buildTestSuite "$@"
-  return "$?"
-}
-
 #
 # fn: {base}
 # Usage: {fn} [ --help ] [ --clean ] [ --messy ]
-# Run Zesk Build tests
+# Run Zesk Build test suites
 #
-# Argument: --one test - Optional. Add one test to run.
-# Argument: --show - Optional. Flag. List all tests.
+# Argument: --one test - Optional. Add one test suite to run.
+# Argument: --show - Optional. Flag. List all test suites.
 # Argument: --help - Optional. This help.
 # Argument: --clean - Optional. Delete test artifact files before starting.
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 #
 buildTestSuite() {
   local quietLog allTests runTests shortTest
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
@@ -100,19 +94,20 @@ buildTestSuite() {
   testTracing=options
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    case "$argument" in
       --show)
         printf "%s\n" "${allTests[@]}"
         _textExit 0
         ;;
       --one)
-        shift || return $?
-        printf "%s %s\n" "$(consoleWarning "Adding one test:")" "$(consoleBoldRed "$1")"
+        shift || __failArgument "Missing $argument argument" || return $?
+        printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
         runTests+=("$1")
         ;;
       --help)
-        _testUsage 0
-        _textExit $?
+        "$usage" 0
+        _textExit 0
         ;;
       --clean)
         consoleWarning -n "Cleaning ... "
@@ -123,8 +118,7 @@ buildTestSuite() {
         messyOption=1
         ;;
       *)
-        _testUsage "$errorArgument" "Unknown argument $1"
-        _textExit $?
+        __failArgument "$usage" "Unknown argument $1" || _textExit $? || return $?
         ;;
     esac
     shift
@@ -139,8 +133,8 @@ buildTestSuite() {
 
   for shortTest in "${runTests[@]}"; do
     testTracing="test: $shortTest"
-    requireFileDirectory "$quietLog"
-    printf "%s\n" "$testTracing" >>"$quietLog"
+    __environment requireFileDirectory "$quietLog" || return $?
+    printf "%s\n" "$testTracing" >>"$quietLog" || _environment "Failed to write $quietLog" || return $?
     requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
   done
 
@@ -153,6 +147,9 @@ buildTestSuite() {
 
   bigText Passed | wrapLines "$(consoleSuccess)" "$(consoleReset)"
   consoleReset
+}
+_buildTestSuite() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 buildTestSuite "$@"

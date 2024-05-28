@@ -30,7 +30,6 @@
 
 {makeEnvironment}
 {deployApplication}
-{deployRevertApplication}
 {deployNextVersion}
 {deployPreviousVersion}
 {deployHasVersion}

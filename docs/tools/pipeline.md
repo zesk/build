@@ -35,7 +35,7 @@ Loads `./.env` and `./.env.local`, use with caution.
 
 #### See Also
 
-Not found
+{SEE:toDockerEnv}
 
 ## Hooks
 
@@ -75,12 +75,8 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 #### See Also
 
-Not found
-- [function runOptionalHook
-](./docs/tools/pipeline.md
-) - [Identical to `runHook` but returns exit code zero if the
-](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L110
-)
+{SEE:hooks.md}
+{SEE:runOptionalHook}
 
 ### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
 
@@ -104,12 +100,8 @@ Identical to `runHook` but returns exit code zero if the hook does not exist.
 
 #### See Also
 
-Not found
-- [function runHook
-](./docs/tools/pipeline.md
-) - [Run a project hook
-](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L92
-)
+{SEE:hooks.md}
+{SEE:runHook}
 
 ### `hasHook` - Determine if a hook exists
 
@@ -367,12 +359,7 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
 #### See Also
 
-- [function deployToRemote
-](./docs/tools/deployment.md
-) - [Deploy current application to one or more hosts
-](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L347
-)
-Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
+{SEE:deployToRemote}
 
 ### `deployNextVersion` - Get the next version of the supplied version
 
@@ -387,10 +374,6 @@ Get the next version of the supplied version
 
 - `0` - Always succeeds
 
-#### Errors
-
-Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
-
 ### `deployPreviousVersion` - Get the previous version of the supplied version
 
 Get the previous version of the supplied version
@@ -404,10 +387,6 @@ Get the previous version of the supplied version
 
 - `1` - No version exists
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
@@ -425,10 +404,6 @@ Does a deploy version exist? versionName is the version identifier for deploymen
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 
 ### `deployApplicationVersion` - Extracts version from an application either from `.deploy` files or
 
@@ -449,10 +424,6 @@ Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "deployRevertApplication" (using index "/Users/kent/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -5,12 +5,13 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL bashHeader 5
 set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
+  printf "tools.sh failed" 1>&2
+  exit 1
+fi
 
 # shellcheck source=/dev/null
 . ./bin/build/env/BUILD_RELEASE_NOTES.sh
@@ -25,11 +26,21 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../../.."
 # Environment: EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 #
 hookVersionCurrent() {
-  cd "${BUILD_RELEASE_NOTES}"
+  export BUILD_RELEASE_NOTES
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
+  __usageEnvironment "$usage" cd "${BUILD_RELEASE_NOTES}" || return $?
   for f in *.md; do
     f=${f%.md}
     echo "$f"
   done | versionSort -r | head -1
 }
-
+_hookVersionCurrent() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 hookVersionCurrent
