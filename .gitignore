@@ -12,3 +12,4 @@
 /test/example/simple-php/.env
 /test/example/simple-php/cache/
 /.test*
+/scratch.txt
