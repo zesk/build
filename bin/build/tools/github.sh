@@ -133,10 +133,10 @@ githubRelease() {
   if git remote | grep -q github; then
     printf "%s %s %s" "$(consoleInfo Remote)" "$(consoleMagenta github)" "$(consoleInfo exists, not adding again.) " || :
   else
-    __usageEnvironment git remote add github "git@github.com:$repoOwner/$repoName.git" || return $?
+    __usageEnvironment "$usage" git remote add github "git@github.com:$repoOwner/$repoName.git" || return $?
   fi
 
-  __usageEnvironment runOptionalHook github-release-before || return $?
+  __usageEnvironment "$usage" runOptionalHook github-release-before || return $?
 
   resultsFile="$(buildCacheDirectory results.json)" || __failEnvironment "$usage" "Unable create cache directory" || return $?
   __usageEnvironment "$usage" requireFileDirectory "$resultsFile" || return $?
