@@ -220,7 +220,7 @@ validateShellScript() {
         exec 3>&1
         ;;
       *)
-        [ -f "$argument" ] || __usageEnvironment "$usage" "$(printf "%s: %s" "Not a file" "$(consoleCode "$argument")")" || return $?
+        [ -f "$argument" ] || __failArgument "$usage" "$(printf "%s: %s" "Not a file" "$(consoleCode "$argument")")" || return $?
         # shellcheck disable=SC2210
         __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
