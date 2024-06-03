@@ -8,12 +8,22 @@ set -eou pipefail
 
 declare -a tests
 
-timingFactor=4
+if isBitBucketPipeline; then
+  timingFactor=10
+else
+  timingFactor=4
+fi
 
 slowDaemon() {
-  consoleSuccess Started
-  sleep $timingFactor
-  consoleSuccess Finished
+  local start
+  local this
+
+  this="${FUNCNAME[0]}"
+
+  start=$(beginTiming) || _environment "$this beginTiming failed" || return $?
+  consoleSuccess "Started $this for $timingFactor seconds"
+  sleep "$timingFactor"
+  reportTiming "$start" "$this finished in"
 }
 
 tests+=(testProcessWait)
