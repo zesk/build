@@ -147,6 +147,8 @@ githubRelease() {
   printf "%s %s (%s) %s\n" "$(consoleGreen Tagging)" "$(consoleCode "$releaseName")" "$(consoleMagenta "$commitish")" "$(consoleGreen "and pushing ... ")" || :
 
   start=$(beginTiming)
+
+  statusMessage consoleWarning "Deleting any trace of the $releaseName tag"
   git tag -d "$releaseName" 2>/dev/null || :
   git push origin ":$releaseName" --quiet 2>/dev/null || :
   git push github ":$releaseName" --quiet 2>/dev/null || :

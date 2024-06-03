@@ -30,9 +30,12 @@ buildDeploy() {
   usage="_$this"
 
   start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
-  __usageEnvironment "$usage" gitTagVersion || return $?
-  currentVersion="$(runHook version-current)" || __failEnvironment "$usage" "runHook version-current" || return $?
 
+  statusMessage consoleInfo "Fetching deep copy of repository ..." || :
+  __usageEnvironment "$usage" git fetch --unshallow || return $?
+
+  statusMessage consoleInfo "Collecting application version and ID ..." || :
+  currentVersion="$(runHook version-current)" || __failEnvironment "$usage" "runHook version-current" || return $?
   appId=$(runHook application-id) || __failEnvironment "$usage" "runHook application-id" || return $?
 
   [ -n "$currentVersion" ] || __failEnvironment "$usage" "Blank version-current" || return $?
@@ -41,7 +44,7 @@ buildDeploy() {
   notes=$(releaseNotes) || __failEnvironment "$usage" "releaseNotes" || return $?
   [ -f "$notes" ] || __failEnvironment "$usage" "$notes does not exist" || return $?
 
-  bigText "$currentVersion" | wrapLines "$(consoleMagenta)" "$(consoleReset)" || :
+  bigText "$currentVersion" | wrapLines "    $(consoleGreen "Zesk BUILD    🛠️️ ") $(consoleMagenta)" "$(consoleGreen " ⚒️ ")" || :
   consoleInfo "Deploying a new release ... " || :
 
   if ! githubRelease "$notes" "$currentVersion" "$appId"; then
