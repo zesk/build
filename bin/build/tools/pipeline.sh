@@ -132,6 +132,7 @@ ___dumpLines() {
 # Example:         buildFailed "$quietLog"
 # Example:     fi
 # Exit Code: 1 - Always fails
+# Output: stdout
 buildFailed() {
   local quietLog=$1 bigLines=50 recentLines=3 failBar
   shift || :
@@ -373,8 +374,9 @@ _makeEnvironment() {
 # Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
 #
 # Summary: Test whether the key needs to be updated
-# Usage: {fn} keyDate upToDateDays
+# Usage: {fn} [ --name name ] keyDate upToDateDays
 # Argument: keyDate - Required. Date. Formatted like `YYYY-MM-DD`
+# Argument: --name name - Optional. Name of the expiring item for error messages.
 # Argument: upToDateDays - Required. Integer. Days that key expires after `keyDate`.
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
 # Example:       bigText Failed, update key and reset date
@@ -384,20 +386,42 @@ _makeEnvironment() {
 isUpToDate() {
   local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp
   local label deltaDays maxDays daysAgo expireTimestamp expireDate keyTimestamp
-  local timeText
+  local name argument timeText
   # IDENTICAL this_usage 4
   local this usage
 
   this="${FUNCNAME[0]}"
   usage="_$this"
 
-  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __failEnvironment "$usage" "Unable to generate todayDate" || return $?
+  name=Key
+  keyDate=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --name)
+        shift || :
+        name="$1"
+        ;;
+      *)
+        if [ -z "$keyDate" ]; then
+          keyDate="$argument"
+        elif [ -n "$upToDateDays" ]; then
+          upToDateDays="$argument"
+        else
+          __failArgument "$usage" "Unknown argument $argument" || return $?
+        fi
+        ;;
+    esac
+    shift || __failArgument "shift $argument" || return $?
+  done
 
-  keyDate="${1-}"
-  shift || __failArgument "$usage" "Missing keyDate" || return $?
+  [ -z "$name" ] || name="$name "
+  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __failEnvironment "$usage" "Unable to generate todayDate" || return $?
+  [ -n "$keyDate" ] || __failArgument "$usage" "Missing keyDate" || return $?
+
   keyTimestamp=$(dateToTimestamp "$keyDate") || __failArgument "$usage" "Invalid date $keyDate" || return $?
-  upToDateDays="${1-}"
-  isInteger "$upToDateDays" || __failArgument "$usage" "upToDateDays is not an integer $upToDateDays" || return $?
+  isInteger "$upToDateDays" || __failArgument "$usage" "upToDateDays is not an integer ($upToDateDays)" || return $?
 
   maxDays=366
   [ "$upToDateDays" -le "$maxDays" ] || __failArgument "$usage" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
@@ -409,7 +433,7 @@ isUpToDate() {
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))
   if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
-    label=$(printf "%s %s\n" "$(consoleError "Key expired on ")" "$(consoleRed "$keyDate")")
+    label=$(printf "%s %s\n" "$(consoleError "${name}expired on ")" "$(consoleRed "$keyDate")")
     case "$daysAgo" in
       0) timeText="Today" ;;
       1) timeText="Yesterday" ;;
@@ -420,13 +444,13 @@ isUpToDate() {
   fi
   daysAgo=$((-daysAgo))
   if [ $daysAgo -lt 14 ]; then
-    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleOrange)" "Expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleOrange)" "${name}expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
   elif [ $daysAgo -lt 30 ]; then
     # consoleInfo "keyDate $keyDate"
     # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
     # consoleInfo "expireDate $expireDate"
     printf "%s %s %s %s\n" \
-      "$(consoleWarning "Expires on")" \
+      "$(consoleWarning "${name}expires on")" \
       "$(consoleRed "$expireDate")" \
       "$(consoleWarning ", in")" \
       "$(consoleMagenta "$daysAgo $(plural $daysAgo day days)")"
