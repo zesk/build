@@ -152,7 +152,6 @@ githubRelease() {
   git push github ":$releaseName" --quiet 2>/dev/null || :
 
   __usageEnvironment "$usage" git tag "$releaseName" || return $?
-  __usageEnvironment "$usage" git push origin --all --quiet || return $?
   __usageEnvironment "$usage" git push origin --tags --quiet || return $?
   __usageEnvironment "$usage" git push github --tags --force --quiet || return $?
   __usageEnvironment "$usage" git push github --all --force --quiet || return $?
