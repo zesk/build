@@ -256,7 +256,7 @@ documentationTemplateCompile() {
   fi
   rm -f "$documentTokensFile" || :
   rm -f "$mappedDocumentTemplate" || :
-  statusMessage consoleSuccess "$(reportTiming "$start" Generated "$targetFile" in)"
+  statusMessage consoleInfo "$(reportTiming "$start" Generated "$targetFile" in)"
 }
 _documentationTemplateCompileUsage() {
   usageDocument "${BASH_SOURCE[0]}" "documentationTemplateCompile" "$@"
