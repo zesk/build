@@ -267,43 +267,41 @@ gitRemoteHosts() {
 # Environment: BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.
 gitTagVersion() {
   local versionSuffix start currentVersion previousVersion releaseNotes
-  local tagPrefix index tryVersion maximumTagsPerVersion
+  local argument tagPrefix index tryVersion maximumTagsPerVersion
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if ! buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION; then
-    return 1
-  fi
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
 
   maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
-  init=$(beginTiming)
+  init=$(beginTiming) || __failEnvironment beginTiming || return $?
 
-  start=$(beginTiming)
+  start=$(beginTiming) || __failEnvironment beginTiming || return $?
   versionSuffix=
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --suffix)
-        shift || :
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         versionSuffix="${1-}"
-        if [ -z "$versionSuffix" ]; then
-          _gitTagVersion $errorArgument "--suffix is blank" || return $?
-        fi
-        shift
+        [ -n "$versionSuffix" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         ;;
       *)
-        _gitTagVersion $errorArgument "Unknown argument: $1" || return $?
+        __failArgument "$usage" $errorArgument "Unknown argument: $argument" || return $?
         ;;
     esac
+    shift || __failArgument "$usage" "shift $argument" || return $?
   done
 
   consoleInfo -n "Pulling tags from origin "
-  if ! git pull --tags origin >/dev/null; then
-    _gitTagVersion "$errorEnvironment" "Pulling tags failed" || return $?
-  fi
-
+  git pull --tags origin >/dev/null || __failEnvironment "$usage" "Pulling tags failed" || return $?
   reportTiming "$start" || :
 
-  if ! currentVersion=$(runHook version-current); then
-    _gitTagVersion "$errorEnvironment" "runHook version-current" || return $?
-  fi
+  currentVersion=$(runHook version-current) || __failEnvironment "$usage" "runHook version-current" || return $?
   if ! previousVersion=$(gitVersionLast "$currentVersion"); then
     previousVersion="none"
   fi
@@ -316,12 +314,11 @@ gitTagVersion() {
     consoleError "Version $currentVersion up to date, nothing to do." 1>&2
     return 17
   fi
-  echo "$(consoleLabel -n "Previous version is: ") $(consoleValue -n "$previousVersion")"
-  echo "$(consoleLabel -n " Release version is: ") $(consoleValue -n "$currentVersion")"
+  printf "%s %s\n%s %s\n" \
+    "$(consoleLabel "Previous version is: ")" "$(consoleValue "$previousVersion")" \
+    "$(consoleLabel " Release version is: ")" "$(consoleValue "$currentVersion")"
 
-  if ! releaseNotes="$(releaseNotes "$currentVersion")"; then
-    _gitTagVersion "$errorEnvironment" "releaseNotes $currentVersion failed" || return $?
-  fi
+  releaseNotes="$(releaseNotes "$currentVersion")" || __failEnvironment "$usage" "releaseNotes $currentVersion failed" || return $?
 
   if [ ! -f "$releaseNotes" ]; then
     consoleError "Version $currentVersion no release notes \"$releaseNotes\" found, stopping." 1>&2
@@ -355,7 +352,7 @@ gitTagVersion() {
   fi
   if ! git fetch -q; then
     consoleError "git fetch failed"
-    return 212
+    return 22
   fi
 
   reportTiming "$init" "Tagged version completed in" || :
