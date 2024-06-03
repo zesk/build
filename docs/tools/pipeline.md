@@ -221,6 +221,11 @@ Outputs debugging information after build fails:
         buildFailed "$quietLog"
     fi
 
+#### Sample Output
+
+    stdout
+    
+
 #### Exit codes
 
 - `1` - Always fails
@@ -278,7 +283,7 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 #### Usage
 
-    isUpToDate keyDate upToDateDays
+    isUpToDate [ --name name ] keyDate upToDateDays
     
 
 #### Arguments

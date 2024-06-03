@@ -68,7 +68,7 @@ identicalCheck() {
         return 0
         ;;
       --cd)
-        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $arg argument" || return $?
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
           "$usage" "$errorArgument" "--cd \"$1\" is not a directory"
@@ -76,24 +76,24 @@ identicalCheck() {
         fi
         ;;
       --extension)
-        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $arg argument" || return $?
         findArgs+=("-name" "*.$1")
         ;;
       --exec)
-        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $arg argument" || return $?
         binary="$1"
         isCallable "$binary" || __failArgument "$usage" "$arg \"$binary\" is not callable" || return $?
         ;;
       --single)
-        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $arg argument" || return $?
         singles+=("$1")
         ;;
       --prefix)
-        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $arg argument" || return $?
         prefixes+=("$1")
         ;;
       --exclude)
-        shift || __failArgument "$usage" "$this: Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $arg argument" || return $?
         [ -n "$1" ] || __failArgument "$usage" "Empty $arg argument" || return $?
         excludes+=(! -path "$1")
         ;;
@@ -167,12 +167,14 @@ identicalCheck() {
             tail -n $((totalLines - lineNumber + 1)) "$searchFile" | head -n "$count" >"$compareFile"
             if [ "$(grep -c "$prefix" "$compareFile")" -gt 0 ]; then
               badFiles+=("$searchFile")
-              clearLine 1>&2
-              printf "%s: %s\n< %s%s\n" "$(consoleInfo "$token")" "$(consoleError -n "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" 1>&2
-              wrapLines "$(consoleCode)    " "$(consoleReset)" <"$compareFile" 1>&2
-              consoleReset 1>&2
-              break
-            elif ! diff -b -q "$countFile" "${countFile}.compare" >/dev/null; then
+              {
+                clearLine || :
+                printf "%s: %s\n< %s\n%s" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
+                grep "$prefix" "$compareFile" | wrapLines "$(consoleCode)    " "$(consoleReset)" || :
+                consoleReset || :
+              } 1>&2
+            fi
+            if ! diff -b -q "$countFile" "${countFile}.compare" >/dev/null; then
               badFiles+=("$tokenFileName")
               badFiles+=("$searchFile")
               clearLine 1>&2

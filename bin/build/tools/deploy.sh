@@ -76,7 +76,7 @@ deployPackageName() {
 
   export BUILD_TARGET
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_TARGET || return $?
-  [ -n "${BUILD_TARGET-}" ] || __usageEnvironment "$usage" "BUILD_TARGET is blank" || return $?
+  [ -n "${BUILD_TARGET-}" ] || __failEnvironment "$usage" "BUILD_TARGET is blank" || return $?
   printf "%s\n" "${BUILD_TARGET-}"
 }
 _deployPackageName() {
