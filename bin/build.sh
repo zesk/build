@@ -6,25 +6,23 @@
 #
 # documentTemplate: ./docs/_templates/__binary.md
 
-# IDENTICAL zesk-build-bin-header 10
+# IDENTICAL zesk-build-bin-header 11
+set -eou pipefail
+
 _fail() {
-  local errorEnvironment=1
-  printf "%s\n" "$*" 1>&2
-  return "$errorEnvironment"
+  local exit="$1"
+  shift || :
+  printf -- "ERROR: %s\n" "$*" 1>&2
+  return "$exit"
 }
-_init() {
-  cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd .. failed" || return $?
-  # shellcheck source=/dev/null
-  . ./bin/build/tools.sh || return $?
-}
+
+# shellcheck source=/dev/null
+source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh" || _fail $? "source tools.sh" || return $?
 
 #
 # Build Zesk Build
 #
 buildBuild() {
-  set -eou  pipefail
-
-  _init || _fail "_init failed" || return $?
   if ! ./bin/update-md.sh --skip-commit; then
     _fail "Can not update the Markdown files" || return $?
   fi

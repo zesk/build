@@ -4,65 +4,55 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
 
-# IDENTICAL zesk-build-bin-header 10
+# IDENTICAL zesk-build-bin-header 11
+set -eou pipefail
+
 _fail() {
-  local errorEnvironment=1
-  printf "%s\n" "$*" 1>&2
-  return "$errorEnvironment"
+  local exit="$1"
+  shift || :
+  printf -- "ERROR: %s\n" "$*" 1>&2
+  return "$exit"
 }
-_init() {
-  cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd .. failed" || return $?
-  # shellcheck source=/dev/null
-  . ./bin/build/tools.sh || return $?
-}
+
+# shellcheck source=/dev/null
+source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh" || _fail $? "source tools.sh" || return $?
 
 #
 # Deploy Zesk Build
 #
 buildDeploy() {
-  local fail start appId notes
+  local start appId notes
+  # IDENTICAL this_usage 4
+  local this usage
 
-  set -eou pipefail
-  _init || _fail "_init failed" || return $?
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
-  fail="_${FUNCNAME[0]}"
-  if ! start=$(beginTiming); then
-    "$fail" $errorEnvironment "beginTiming failed" || return $?
-  fi
-  if ! gitTagVersion; then
-    "$fail" $errorEnvironment "Unable to tag version" || return $?
-  fi
-  if ! currentVersion="$(runHook version-current)"; then
-    "$fail" $errorEnvironment "runHook version-current failed" || return $?
-  fi
-  if ! appId=$(runHook application-id); then
-    "$fail" $errorEnvironment "runHook application-id failed" || return $?
-  fi
-  if [ -z "$currentVersion" ]; then
-    "$fail" $errorEnvironment "No current version" || return $?
-  fi
-  if [ -z "$appId" ]; then
-    "$fail" $errorEnvironment "No application ID (blank?)" || return $?
-  fi
-  if ! notes=$(releaseNotes) || [ ! -f "$notes" ]; then
-    "$fail" $errorEnvironment "Missing release notes at $notes" || return $?
-  fi
+  start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
+  __usageEnvironment "$usage" gitTagVersion || return $?
+  currentVersion="$(runHook version-current)" || __failEnvironment "$usage" "runHook version-current" || return $?
+
+  appId=$(runHook application-id) || __failEnvironment "$usage" "runHook application-id" || return $?
+
+  [ -n "$currentVersion" ] || __failEnvironment "$usage" "Blank version-current" || return $?
+  [ -n "$appId" ] || __failEnvironment "$usage" "No application ID (blank?)" || return $?
+
+  notes=$(releaseNotes) || __failEnvironment "$usage" "releaseNotes" || return $?
+  [ -f "$notes" ] || __failEnvironment "$usage" "$notes does not exist" || return $?
+
   bigText "$currentVersion" | wrapLines "$(consoleMagenta)" "$(consoleReset)" || :
   consoleInfo "Deploying a new release ... " || :
 
   if ! githubRelease "$notes" "$currentVersion" "$appId"; then
     consoleWarning "Deleting tagged version ... " || :
     gitTagDelete "$currentVersion" || consoleError "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
-    "$fail" $errorEnvironment "githubRelease FAILED" || return $?
+    __failEnvironment "$usage" "githubRelease" || return $?
   fi
-  reportTiming "$start" Release completed in || :
-
+  reportTiming "$start" "Release completed in" || :
 }
 _buildDeploy() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-buildDeploy
+buildDeploy "$@"

@@ -64,13 +64,18 @@ _githubLatestRelease() {
 # Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
 # TODO: GITHUB_ACCESS_TOKEN_EXPIRE is ignored
 githubRelease() {
-  local start arg descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName
+  local start argument descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName
   local host
 
   export GITHUB_ACCESS_TOKEN
   export GITHUB_ACCESS_TOKEN_EXPIRE
   export GITHUB_REPOSITORY_OWNER
   export GITHUB_REPOSITORY_NAME
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   extras=()
   accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}"
@@ -78,25 +83,23 @@ githubRelease() {
   repoOwner="${GITHUB_REPOSITORY_OWNER-}"
   repoName="${GITHUB_REPOSITORY_NAME-}"
   while [ $# -gt 0 ]; do
-    arg="$1"
-    if [ -z "$arg" ]; then
-      _githubRelease $errorArgument "Blank argument" || return $?
-    fi
-    case "$arg" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --token)
-        shift || _githubRelease $errorArgument "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         accessToken="$1"
         ;;
       --owner)
-        shift || _githubRelease $errorArgument "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         repoOwner="$1"
         ;;
       --name)
-        shift || _githubRelease $errorArgument "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         repoName="$1"
         ;;
       --expire)
-        shift || _githubRelease $errorArgument "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         accessTokenExpire="$1"
         ;;
       *)
@@ -105,56 +108,38 @@ githubRelease() {
     esac
     shift
   done
-  if [ ${#extras[@]} -ne 3 ]; then
-    _githubRelease $errorArgument "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
-    return $?
-  fi
+
+  [ ${#extras[@]} -eq 3 ] || __failArgument "$usage" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
 
   descriptionFile="${extras[0]}"
   releaseName="${extras[1]}"
   commitish="${extras[2]}"
 
-  if ! isUpToDate "$accessTokenExpire" 0; then
-    _githubRelease "$errorEnvironment" "Need to update the GitHub access token, expired" || return $?
-  fi
+  isUpToDate "$accessTokenExpire" 0 || __failEnvironment "$usage" "Need to update the GitHub access token, expired" || return $?
   # descriptionFile
-  if [ ! -f "$descriptionFile" ]; then
-    _githubRelease "$errorArgument" "Description file is not a file" || return $?
-  fi
-  if [ -z "$repoOwner" ]; then
-    _githubRelease "$errorArgument" "Repository owner is blank" || return $?
-  fi
-  if [ -z "$repoName" ]; then
-    _githubRelease "$errorArgument" "Repository name is blank" || return $?
-  fi
-  if [ -z "$accessToken" ]; then
-    _githubRelease "$errorArgument" "Access token is blank" || return $?
-  fi
+  [ -f "$descriptionFile" ] || __failEnvironment "$usage" "Description file $descriptionFile is not a file" || return $?
+  [ -n "$repoOwner" ] || __failArgument "$usage" "Repository owner is blank" || return $?
+  [ -n "$repoName" ] || __failArgument "$usage" "Repository name is blank" || return $?
+  [ -n "$accessToken" ] || __failArgument "$usage" "Access token is blank" || return $?
+
   #
   # Preflight our environment to make sure we have the basics defined in the calling script
   #
-  if ! whichApt curl curl; then
-    _githubRelease "$errorEnvironment" "curl is required" || return $?
-  fi
+  __usageEnvironment "$usage" whichApt curl curl || return $?
 
   host=github.com
-  if ! sshAddKnownHost "$host"; then
-    _githubRelease "$errorEnvironment" "Unable to add known host $host" || return $?
-  fi
+  __usageEnvironment "$usage" sshAddKnownHost "$host" || return $?
+
   if git remote | grep -q github; then
-    printf "%s %s %s" "$(consoleInfo Remote)" "$(consoleMagenta github)" "$(consoleInfo exists, not adding again.) "
+    printf "%s %s %s" "$(consoleInfo Remote)" "$(consoleMagenta github)" "$(consoleInfo exists, not adding again.) " || :
   else
-    git remote add github "git@github.com:$repoOwner/$repoName.git"
+    __usageEnvironment git remote add github "git@github.com:$repoOwner/$repoName.git" || return $?
   fi
 
-  if ! runOptionalHook github-release-before; then
-    _githubRelease "$errorEnvironment" "github-release-before failed" || return $?
-  fi
+  __usageEnvironment runOptionalHook github-release-before || return $?
 
-  resultsFile="$(buildCacheDirectory results.json)"
-  if ! requireFileDirectory "$resultsFile"; then
-    _githubRelease "$errorEnvironment" "Unable to create cache directory" || return $?
-  fi
+  resultsFile="$(buildCacheDirectory results.json)" || __failEnvironment "$usage" "Unable create cache directory" || return $?
+  __usageEnvironment "$usage" requireFileDirectory "$resultsFile" || return $?
 
   consoleDecoration "$(echoBar)" || :
   bigText "$releaseName" | wrapLines "$(consoleMagenta)" "$(consoleReset)" || :
@@ -165,20 +150,19 @@ githubRelease() {
   git tag -d "$releaseName" 2>/dev/null || :
   git push origin ":$releaseName" --quiet 2>/dev/null || :
   git push github ":$releaseName" --quiet 2>/dev/null || :
-  if ! git tag "$releaseName" ||
-    ! git push origin --all --quiet ||
-    ! git push origin --tags --quiet ||
-    ! git push github --tags --force --quiet ||
-    ! git push github --all --force --quiet; then
-    _githubRelease "$errorEnvironment" "git operations failed" || return $?
-  fi
+
+  __usageEnvironment "$usage" git tag "$releaseName" || return $?
+  __usageEnvironment "$usage" git push origin --all --quiet || return $?
+  __usageEnvironment "$usage" git push origin --tags --quiet || return $?
+  __usageEnvironment "$usage" git push github --tags --force --quiet || return $?
+  __usageEnvironment "$usage" git push github --all --force --quiet || return $?
   reportTiming "$start" "Completed in" || :
 
   # passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github)
   # that's good enough
 
   JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-  JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')"
+  JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')" || __failEnvironment "$usage" "Generating JSON" || return $?
 
   consoleInfo
   if ! curl -s -L \

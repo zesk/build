@@ -43,7 +43,7 @@ hookApplicationChecksum() {
         return 0
         ;;
       *)
-        __failArgument "Unknown argument: $argument" || return $?
+        __failArgument "$usage" "Unknown argument: $argument" || return $?
         ;;
     esac
     shift || :

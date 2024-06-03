@@ -420,7 +420,7 @@ gitCommit() {
       fi
       current="$next"
     else
-      gitRepositoryChanged || __failEnvironment "No changes to commit" || return $?
+      gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
       if $updateReleaseNotes && [ -n "$comment" ]; then
         statusMessage consoleInfo "Updating release notes ..."
         notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?

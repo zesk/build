@@ -101,7 +101,7 @@ buildTestSuite() {
         _textExit 0
         ;;
       --one)
-        shift || __failArgument "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
         runTests+=("$1")
         ;;
