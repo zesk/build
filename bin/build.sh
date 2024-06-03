@@ -23,9 +23,6 @@ source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh" || _fail $? "source tools
 # Build Zesk Build
 #
 buildBuild() {
-  set -eou  pipefail
-
-  _init || _fail "_init failed" || return $?
   if ! ./bin/update-md.sh --skip-commit; then
     _fail "Can not update the Markdown files" || return $?
   fi
