@@ -25,9 +25,7 @@ __usage() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageEnvironment() {
-  # IDENTICAL errorEnvironmentLocal 1
-  local errorEnvironment=1
-  __usage "$errorEnvironment" "$@"
+  __usage 1 "$@"
 }
 
 # Run `command`, upon failure run `usage` with an argument error
@@ -35,29 +33,23 @@ __usageEnvironment() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageArgument() {
-  # IDENTICAL errorArgumentLocal 1
-  local errorArgument=2
-  __usage "$errorArgument" "$@"
+  __usage 2 "$@"
 }
 
 # Run `usage` with an environment error
 # Usage: {fn} usage ...
 __failEnvironment() {
-  # IDENTICAL errorEnvironmentLocal 1
-  local errorEnvironment=1
   local usage
-  usage="$1" && shift && "$usage" "$errorEnvironment" "$@"
-  return $errorEnvironment
+  usage="$1" && shift && "$usage" 1 "$@"
+  return $?
 }
 
 # Run `usage` with an argument error
 # Usage: {fn} usage ...
 __failArgument() {
-  # IDENTICAL errorArgumentLocal 1
-  local errorArgument=2
   local usage
-  usage="$1" && shift && "$usage" "$errorArgument" "$@"
-  return $errorArgument
+  usage="$1" && shift && "$usage" 2 "$@"
+  return $?
 }
 
 # Run `usage` with an environment error
