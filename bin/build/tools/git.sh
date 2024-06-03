@@ -509,8 +509,14 @@ _gitMainly() {
 # Get the current branch name
 #
 gitCurrentBranch() {
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
   # git rev-parse --abbrev-ref HEAD
-  git symbolic-ref --short HEAD
+  __usageEnvironment "$usage" git symbolic-ref --short HEAD || return $?
 }
 _gitCurrentBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
