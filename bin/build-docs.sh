@@ -50,7 +50,7 @@ buildDocumentation_UpdateUnlinked() {
   (
     set -a
     # shellcheck source=/dev/null
-    source "$envFile" || __failEnvironment "source $envFile" || return $?
+    source "$envFile" || __failEnvironment "$usage" "source $envFile" || return $?
     title="Missing functions" content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
   ) || return $?
   total=$(wc -l <"$unlinkedFunctions" | trimSpacePipe)
@@ -121,7 +121,7 @@ _buildDocumentation_Recommit() {
 }
 
 _buildDocumentationGenerateEnvironment() {
-  envFile=$(mktemp) || __failEnvironment "mktemp failed" || return $?
+  envFile=$(mktemp) || __failEnvironment "$usage" "mktemp failed" || return $?
   {
     __dumpNameValue summary "{fn}"
     __dumpNameValue vendor "$BUILD_COMPANY"
@@ -130,7 +130,7 @@ _buildDocumentationGenerateEnvironment() {
     __dumpNameValue BUILD_COMPANY_LINK "$BUILD_COMPANY_LINK"
 
     __dumpNameValue year "$(date +%Y)"
-  } >>"$envFile" || __failEnvironment "Saving to $envFile failed" || return $?
+  } >>"$envFile" || __failEnvironment "$usage" "Saving to $envFile failed" || return $?
   printf "%s\n" "$envFile"
 }
 
@@ -224,12 +224,12 @@ buildDocumentationBuild() {
         return 0
         ;;
       *)
-        __failArgument "Unknown argument $argument" || return $?
+        __failArgument "$usage" "Unknown argument $argument" || return $?
         ;;
     esac
     shift
   done
-  cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "Unable to create $cacheDirectory" || return $?
+  cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
   #
   # Generate or update indexes

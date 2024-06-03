@@ -113,7 +113,7 @@ rotateLogs() {
   dryRunArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
       --dry-run) dryRunArgs=(--dry-run) ;;
       *)
