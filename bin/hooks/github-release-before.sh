@@ -15,10 +15,10 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 # fn: {base}
 #
-# Optional hook run during `github-release.sh` before tagging and pushing occurs
+# We need to fetch an unshallow version for deployment to GitHub
 #
 hookGithubReleaseBefore() {
-  consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
+  consoleInfo "${FUNCNAME[0]} does nothing. Nice!"
 }
 
 hookGithubReleaseBefore "$@"
