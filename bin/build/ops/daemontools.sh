@@ -303,3 +303,46 @@ daemontoolsTerminate() {
 _daemontoolsTerminate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Usage: {fn}
+# Restart the daemontools processes from scratch.
+# Dangerous. Stops any running services and restarts them.
+daemontoolsRestart() {
+  local killLoop foundOne maxLoops
+
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  export DAEMONTOOLS_HOME
+
+  __failEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  statusMessage consoleInfo "Restarting daemontools ..."
+  killLoop=0
+  maxLoops=4
+  foundOne=true
+  while $foundOne; do
+    foundOne=false
+    while read -r pid name; do
+      statusMessage consoleInfo "$(printf "Killing %s %s " "$name" "$(consoleValue "($pid)")")"
+      kill -9 "$pid" || printf "kill %s FAILED (?: %d) " "$name" $?
+      foundOne=true
+    done < <(pgrep svscan -l)
+    killLoop=$((killLoop + 1))
+    [ $killLoop -le $maxLoops ] || __failEnvironment "$usage" "Unable to kill svscan processes after $maxLoops attempts" || return $?
+  done
+  pkill svscan -t KILL
+  svc -dx /etc/service/* /etc/service/*/log
+
+  nohup svscanboot 2>/dev/null &
+
+  echo "Waiting 5 seconds ..."
+  sleep 5
+  svstat /etc/service
+  echo "Done."
+}
+_daemontoolsRestart() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

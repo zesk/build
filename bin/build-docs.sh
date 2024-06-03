@@ -181,7 +181,7 @@ buildDocumentationBuild() {
   fi
 
   exitCode=0
-  start=$(beginTiming) || __failEnvironment beginTiming || return $?
+  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
