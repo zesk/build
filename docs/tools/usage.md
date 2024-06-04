@@ -109,10 +109,9 @@ Should look into an actual file template, probably
 {SEE:usageDocument}
 
 
-### `usageArgumentFileDirectory` - Validates a value is not blank and is a path
+### `usageArgumentFileDirectory` - Validates a value is not blank and is a file
 
-Validates a value is not blank and is a path with a directory that exists
-Upon success, outputs the file name
+Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
 
 #### Usage
 
@@ -128,9 +127,9 @@ Upon success, outputs the file name
 - `2` - Argument error
 - `0` - Success
 
-### `usageArgumentFile` - Validates a value is not blank and is a file
+### `usageArgumentFile` - Validates a value is not blank and is a file.
 
-Validates a value is not blank and is a file
+Validates a value is not blank and is a file.
 Upon success, outputs the file name
 
 #### Usage
@@ -147,10 +146,65 @@ Upon success, outputs the file name
 - `2` - Argument error
 - `0` - Success
 
-### `usageArgumentDirectory` - Validates a value is not blank and is a directory
+### `usageArgumentInteger` - Validates a value is an integer
 
-Validates a value is not blank and is a directory
-Upon success, outputs the directory name trailing slash stripped
+Validates a value is an integer
+
+#### Usage
+
+    usageArgumentInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
+
+Validates a value is not blank and is an environment file which is loaded immediately.
+
+Upon success, outputs the file name to stdout, outputs a console message to stderr
+
+#### Usage
+
+    usageArgumentLoadEnvironmentFile processPid usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
+
+Validates a value is an unsigned integer
+
+#### Usage
+
+    usageArgumentUnsignedInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentDirectory` - Validates a value is not blank and is a directory.
+
+Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
 
 #### Usage
 

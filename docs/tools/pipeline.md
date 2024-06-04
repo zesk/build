@@ -301,7 +301,7 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 - `0` - Always succeeds
 
-## Deployment tools
+## Application Environment
 
 
 ### `makeEnvironment` - Create environment file `.env` for build.
@@ -327,6 +327,38 @@ APPLICATION_VERSION - reserved and set to `runHook version-current` if not set a
 APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 APPLICATION_TAG - reserved and set to `runHook application-id`
 APPLICATION_ID - reserved and set to `runHook application-tag`
+Unable to find "showEnviornment" (using index "/root/.build")
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Errors
+
+Unable to find "showEnviornment" (using index "/root/.build")
+
+### `applicationEnvironment` - Loads application environment variables, set them to their default values
+
+Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+BUILD_TIMESTAMP
+APPLICATION_BUILD_DATE
+APPLICATION_VERSION
+APPLICATION_ID
+APPLICATION_TAG
+
+#### Errors
+
+Unable to find "showEnviornment" (using index "/root/.build")
+
+## Deployment tools
+
 
 ### `deployApplication` - Deploy an application from a deployment repository
 
@@ -366,6 +398,10 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
 {SEE:deployToRemote}
 
+#### Errors
+
+Unable to find "showEnviornment" (using index "/root/.build")
+
 ### `deployNextVersion` - Get the next version of the supplied version
 
 Get the next version of the supplied version
@@ -378,6 +414,10 @@ Get the next version of the supplied version
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "showEnviornment" (using index "/root/.build")
 
 ### `deployPreviousVersion` - Get the previous version of the supplied version
 
@@ -392,6 +432,10 @@ Get the previous version of the supplied version
 
 - `1` - No version exists
 - `2` - Argument error
+
+#### Errors
+
+Unable to find "showEnviornment" (using index "/root/.build")
 
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
@@ -409,6 +453,10 @@ Does a deploy version exist? versionName is the version identifier for deploymen
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "showEnviornment" (using index "/root/.build")
 
 ### `deployApplicationVersion` - Extracts version from an application either from `.deploy` files or
 
@@ -429,6 +477,10 @@ Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "showEnviornment" (using index "/root/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -71,6 +71,10 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
 
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `validateFileExtensionContents` - Check files for the existence of a string
 
 Search for file extensions and ensure that text is found in each file.
