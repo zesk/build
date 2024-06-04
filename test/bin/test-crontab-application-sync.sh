@@ -23,7 +23,7 @@ errorEnvironment=1
 errorArgument=2
 
 # shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/tools.sh" || exit 99
+source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || exit 99
 
 # Sample output (delete first 2 characters on each line to remove comments)
 #
