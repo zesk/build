@@ -47,9 +47,7 @@ _return() {
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 _environment() {
-  # IDENTICAL errorEnvironmentLocal 1
-  local errorEnvironment=1
-  _return "$errorEnvironment" "$@" || return $?
+  _return 1 "$@" || return $?
 }
 
 # Return `$errorArgument` always. Outputs `message ...` to `stderr`.
@@ -57,9 +55,7 @@ _environment() {
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 _argument() {
-  # IDENTICAL errorArgumentLocal 1
-  local errorArgument=2
-  _return "$errorArgument" "$@" || return $?
+  _return 2 "$@" || return $?
 }
 
 #

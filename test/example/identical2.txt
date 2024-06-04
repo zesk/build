@@ -12,6 +12,16 @@ All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 
+# OVERLAP_IDENTICAL 8
+A
+B
+# OVERLAP_IDENTICAL 2
+D
+E
+F
+G
+H
+
 # dIDENTICAL test4 50
 A => B C => D e => F
 `Quote`
