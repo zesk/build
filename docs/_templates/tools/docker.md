@@ -9,6 +9,8 @@
 {dockerLocalContainer}
 {dockerEnvFromBashEnv}
 {dockerEnvToBash}
+{anyEnvToBashEnv}
+{anyEnvToDockerEnv}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

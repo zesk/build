@@ -26,9 +26,15 @@
 {ipLookup}
 {isUpToDate}
 
-## Deployment tools
+## Application Environment
 
 {makeEnvironment}
+{showEnviornment}
+{applicationEnvironmentVariables}
+{applicationEnvironment}
+
+## Deployment tools
+
 {deployApplication}
 {deployNextVersion}
 {deployPreviousVersion}

@@ -5,6 +5,7 @@
 
 {validateShellScripts}
 {validateShellScript}
+{validateShellScriptsInteractive}
 {validateFileExtensionContents}
 {validateFileContents}
 {evalCheck}

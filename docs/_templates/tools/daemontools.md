@@ -11,6 +11,7 @@ Tools to with with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.h
 {daemontoolsIsRunning}
 {daemontoolsProcessIds}
 {daemontoolsRemoveService}
+{daemontoolsRestart}
 
 # Non-production starting/stopping
 

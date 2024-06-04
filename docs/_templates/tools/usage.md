@@ -12,6 +12,9 @@
 
 {usageArgumentFileDirectory}
 {usageArgumentFile}
+{usageArgumentInteger}
+{usageArgumentLoadEnvironmentFile}
+{usageArgumentUnsignedInteger}
 {usageArgumentDirectory}
 
 [⬅ Return to index](index.md)

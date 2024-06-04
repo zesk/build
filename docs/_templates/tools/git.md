@@ -33,6 +33,7 @@
 {gitShowStatus}
 {gitInsideHook}
 {gitRemoteHosts}
+{gitCurrentBranch}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

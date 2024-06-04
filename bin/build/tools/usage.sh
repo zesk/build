@@ -252,7 +252,6 @@ __usageArgumentHelper() {
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
-# Upon success, outputs the directory name trailing slash stripped
 usageArgumentInteger() {
   local args usage="$1"
   args=("$@")
@@ -269,7 +268,6 @@ usageArgumentInteger() {
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
-# Upon success, outputs the directory name trailing slash stripped
 usageArgumentUnsignedInteger() {
   local args
   args=("$@")
@@ -281,7 +279,8 @@ usageArgumentUnsignedInteger() {
   __usageArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
 }
 
-# Validates a value is not blank and is a file
+# Validates a value is not blank and is a file.
+# Upon success, outputs the file name
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if usage fails
 # Argument: variableName - Required. String. Name of variable being tested
@@ -289,7 +288,6 @@ usageArgumentUnsignedInteger() {
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
-# Upon success, outputs the file name
 usageArgumentFile() {
   local args
   args=("$@")
@@ -301,7 +299,7 @@ usageArgumentFile() {
   __usageArgumentHelper "file" "${args[@]}" test -f
 }
 
-# Validates a value is not blank and is a directory
+# Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if usage fails
 # Argument: variableName - Required. String. Name of variable being tested
@@ -309,7 +307,6 @@ usageArgumentFile() {
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
-# Upon success, outputs the directory name trailing slash stripped
 usageArgumentDirectory() {
   local args
   args=("$@")
@@ -321,7 +318,7 @@ usageArgumentDirectory() {
   __usageArgumentHelper "directory" "${args[@]}" test -d
 }
 
-# Validates a value is not blank and is a path with a directory that exists
+# Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if usage fails
 # Argument: variableName - Required. String. Name of variable being tested
@@ -329,7 +326,6 @@ usageArgumentDirectory() {
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
-# Upon success, outputs the file name
 usageArgumentFileDirectory() {
   local args
   args=("$@")
