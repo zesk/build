@@ -4,7 +4,7 @@
 # Test: o ./test/tools/sugar-tests.sh
 # -- CUT HERE --
 
-# IDENTICAL _sugar 104
+# IDENTICAL _sugar 100
 emptyArgument="§"
 
 # Output a titled list
