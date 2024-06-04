@@ -286,5 +286,13 @@ Not really test
 
 - `0` - Always succeeds
 
+### `gitCurrentBranch` - Get the current branch name
+
+Get the current branch name
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
