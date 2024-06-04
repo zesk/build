@@ -381,8 +381,6 @@ gitCommit() {
   this="${FUNCNAME[0]}"
   usage="_$this"
 
-  set -x
-
   appendLast=false
   updateReleaseNotes=true
   comment=
@@ -403,8 +401,6 @@ gitCommit() {
     esac
     shift || :
   done
-
-  set +x
 
   appendLast=
   if [ "$comment" = "last" ]; then
