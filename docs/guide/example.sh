@@ -6,14 +6,8 @@
 #
 set -eou pipefail
 
-errorEnvironment=1
-
-errorArgument=2
-
-cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit "$errorEnvironment"
-
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+source "$(dirname "${BASH_SOURCE[0]}")/tools.sh" || exit 99
 
 # Summary: Cool file processor
 #
@@ -33,16 +27,35 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit "$errorEnvironment"
 # Example:      myCoolScript another.cool ./coolerOutput/
 #
 myCoolScript() {
-  local fileArg directoryArg
+  local argument fileArg directoryArg
+  # IDENTICAL this_usage 4
+  local this usage
 
-  if ! fileArg="$(usageArgumentFile "_${FUNCNAME[0]}" fileArg "$1")"; then
-    return $errorArgument
-  fi
-  shift || return $errorArgument
-  if ! directoryArg="$(usageArgumentDirectory "_${FUNCNAME[0]}" directoryArg "$1")"; then
-    return $errorArgument
-  fi
-  shift || return $errorArgument
+  this="${FUNCNAME[0]}"
+  usage="_$this"
+
+  fileArg=
+  directoryArg=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return 0
+        ;;
+      *)
+        if [ -z "$fileArg" ]; then
+          fileArg="$(usageArgumentFile "$usage" fileArg "$argument")" || return $?
+        elif [ -z "$directoryArg" ]; then
+          directoryArg="$(usageArgumentDirectory "$usage" directoryArg "$argument")" || return $?
+        else
+          __failArgument "Unknown argument: $argument" || return $?
+        fi
+        ;;
+    esac
+    shift || :
+  done
 
   # cool things
   printf "%s -> %s\n" "$(basename "$fileArg")" "$directoryArg"

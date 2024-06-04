@@ -81,6 +81,20 @@ Remove a daemontools service by name
 
 - `0` - Always succeeds
 
+### `daemontoolsRestart` - Restart the daemontools processes from scratch.
+
+Restart the daemontools processes from scratch.
+Dangerous. Stops any running services and restarts them.
+
+#### Usage
+
+    daemontoolsRestart
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 # Non-production starting/stopping
 
 

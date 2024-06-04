@@ -22,10 +22,8 @@ errorEnvironment=1
 # IDENTICAL errorArgument 1
 errorArgument=2
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
 # shellcheck source=/dev/null
-. ./bin/build/tools.sh
+source "$(dirname "${BASH_SOURCE[0]}")/tools.sh" || exit 99
 
 # Sample output (delete first 2 characters on each line to remove comments)
 #

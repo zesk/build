@@ -186,16 +186,16 @@ _assertExitCodeHelper() {
     consoleWarning "--stderr-ok used but is NOT necessary: $(consoleCode "${usageFunction#_} $bin $*")"
   fi
   if [ ${#stderrContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$this" "$errorFile" "${stderrContains[@]}" || return $?
+    __assertFileContainsThis "$usageFunction" "$errorFile" "${stderrContains[@]}" || return $?
   fi
   if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$this" "$errorFile" "${stderrNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$usageFunction" "$errorFile" "${stderrNotContains[@]}" || return $?
   fi
   if [ ${#outputContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$this" "$outputFile" "${outputContains[@]}" || return $?
+    __assertFileContainsThis "$usageFunction" "$outputFile" "${outputContains[@]}" || return $?
   fi
   if [ ${#outputNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$this" "$outputFile" "${outputNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$usageFunction" "$outputFile" "${outputNotContains[@]}" || return $?
   fi
   if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     # Failure

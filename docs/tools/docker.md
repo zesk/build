@@ -106,5 +106,43 @@ Any output to stderr is errors in the file but is written to be compatible with 
 - `1` - if errors occur
 - `0` - if file is valid
 
+### `anyEnvToBashEnv` - Takes any environment file and makes it bash-compatible
+
+Takes any environment file and makes it bash-compatible
+
+Returns a temporary file which should be deleted.
+
+#### Usage
+
+    anyEnvToBashEnv filename [ ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `anyEnvToDockerEnv` - Takes any environment file and makes it docker-compatible
+
+Takes any environment file and makes it docker-compatible
+
+Returns a temporary file which should be deleted.
+
+#### Usage
+
+    anyEnvToDockerEnv filename [ ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

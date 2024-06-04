@@ -231,16 +231,29 @@ Platform agnostic tar cfz which ignores owner and attributes
 - `0` - Always succeeds
 
 
-### `environmentVariables` - Output a list of environment variables and ignore function definitions
+### `environmentVariables` - Fetch a list of environment variable names
 
 Output a list of environment variables and ignore function definitions
 
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
+Returns the list of defined environment variables exported in the current bash context.
+
 #### Usage
 
     environmentVariables
+    
+
+#### Examples
+
+    for f in $(environmentVariables); do
+    echo "$f"
+    done
+
+#### Sample Output
+
+    Environment variable names, one per line.
     
 
 #### Exit codes
