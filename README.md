@@ -29,11 +29,11 @@ To install it in the operating system:
 ## Main entry points
 
 - `bin/build/tools.sh` - The only include required for all build tools functions (does **NOT** include operations), also can be used as `tools.sh identicalCheck ...`
-- `bin/build/ops.sh` - The only include required for all operations tools functions (includes all of `tools.sh` as well), also can be used to run operations commands. (e.g. `ops.sh daemontoollsInstalService ...`)
+- `bin/build/ops.sh` - The only include required for all operations tools functions (includes all of `tools.sh` as well), also can be used to run operations commands. (e.g. `ops.sh daemontoolsInstallService ...`)
 
 ## Project structure
 
-- `bin/build/env/*.sh` - Any external environment variable is referenced 
+- `bin/build/env/*.sh` - Any external environment variable is referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files.
 - `bin/build/tools/*.sh` - Build tools function implementations.
 - `bin/build/pipeline/*.sh` - Tools or steps for deployment
 - `bin/build/install/*.sh` - Install dependencies in the pipeline (most of these exist as functions)
