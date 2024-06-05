@@ -95,7 +95,7 @@ _deployBuildEnvironment() {
 # Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
-  local targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width
+  local targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome
   # IDENTICAL this_usage 4
   local this usage
 
@@ -110,6 +110,7 @@ deployRemoteFinish() {
   applicationId=
   applicationPath=
   debuggingFlag=false
+  deployHome=
   while [ $# -gt 0 ]; do
     case $1 in
       --debug)
@@ -150,7 +151,6 @@ deployRemoteFinish() {
     esac
     shift || __failArgument "$usage" "shift failed" || return $?
   done
-  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __failArgument "$usage" "deployPackageName $deployHome failed" || return $?
 
   # Check arguments are non-blank and actually supplied
   for name in deployHome applicationId applicationPath; do
@@ -158,6 +158,8 @@ deployRemoteFinish() {
       __failArgument "$usage" "$name is required" || return $?
     fi
   done
+
+  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __failArgument "$usage" "deployPackageName $deployHome failed" || return $?
 
   if test "${BUILD_DEBUG-}"; then
     debuggingFlag=true
@@ -561,7 +563,10 @@ deployToRemote() {
       "printf '%s\n' \"Hiding old $applicationId package\" && [ ! -d \"$deployHome/$applicationId/app\" ] || mv -f \"$deployHome/$applicationId/app\" \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
       "printf '%s\n' \"Moving new $applicationId package\" && mv -f \"$deployHome/$applicationId/app.$$\" \"$deployHome/$applicationId/app\"$commandSuffix" \
       "printf '%s\n' \"Cleaning old $applicationId package\" && rm -rf \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
-      "--deploy" >"$temporaryCommandsFile"; then
+      "--deploy" \
+      "--home" "$deployHome" \
+      "--id" "$applicationId" \
+      "--application" "$applicationPath" >"$temporaryCommandsFile"; then
       __failEnvironment "$usage" "Generating commands file for $buildTarget expansion" || return $?
     fi
     # wrapLines "COMMANDS: $(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"

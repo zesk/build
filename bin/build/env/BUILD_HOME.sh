@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Constant for turning debugging on during build to find errors in the build scripts.
+# BUILD_HOME at . where this is installed at ./bin/build
 # Copyright &copy; 2024 Market Acumen, Inc.
 export BUILD_HOME
 
