@@ -5,23 +5,29 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 set -eou pipefail
 
-export BUILD_COMPANY
+# Output a titled list
+# Usage: {fn} title [ items ... ]
+_list() {
+  local title
+  title="${1-"$emptyArgument"}" && shift && printf "%s\n%s\n" "$title" "$(printf -- "- %s\n" "$@")"
+}
 
-if ! cd "$(dirname "${BASH_SOURCE[0]}")/../.."; then
-  printf "%s\n" "cd failed" 1>&2
-fi
-
-fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
-if ! diff -q "${fromTo[@]}" >/dev/null; then
-  printf %s "Git pre-commit hook was updated ..."
-  cp "${fromTo[@]}"
-  exec "${fromTo[1]}" "$@"
-fi
+# Critical exit `errorCritical` - exit immediately
+# Usage: {fn} {title} [ items ... ]
+_fail() {
+  local errorCritical=99
+  local title="${1-"$emptyArgument"}"
+  export BUILD_DEBUG
+  # shellcheck disable=SC2016
+  exec 1>&2 && shift && _list "$title" "$(printf '%s ' "$@")"
+  if "${BUILD_DEBUG-false}"; then
+    _list "Stack" "${FUNCNAME[@]}" || :
+    _list "Sources" "${BASH_SOURCE[@]}" || :
+  fi
+  return "$errorCritical"
+}
 
 #
 # The `git-pre-commit` hook will be installed as a `git` pre-commit hook in your project and will
@@ -29,7 +35,23 @@ fi
 #
 # fn: {base}
 hookGitPreCommit() {
-  local this changedGitFiles changedShellFiles blank
+  local this changedGitFiles changedShellFiles
+  local fromTo
+
+  if ! cd "$(dirname "${BASH_SOURCE[0]}")/../.."; then
+    _fail "$(printf "%s\n" "cd failed")" "$@" || return $?
+  fi
+
+  fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
+  if ! diff -q "${fromTo[@]}" >/dev/null; then
+    printf "Git %s hook was updated" "$(basename "${fromTo[0]}")" && cp "${fromTo[@]}" && exec "${fromTo[1]}" "$@"
+    _fail "$(printf "%s\n" "${fromTo[*]} failed")" "$@" || return $?
+  fi
+
+  # shellcheck source=/dev/null
+  if ! source ./bin/build/tools.sh; then
+    _fail "$(printf "%s\n" "${fromTo[*]} failed")" || return $?
+  fi
 
   this="${FUNCNAME[0]}"
 
@@ -43,17 +65,6 @@ hookGitPreCommit() {
       singles+=(--single "$single")
     fi
   done <./etc/identical-check-singles.txt
-
-  # shellcheck source=/dev/null
-  if ! source "./bin/build/tools.sh"; then
-    # poor man's clearLine
-    blank=" "
-    while [ ${#blank} -lt 80 ]; do
-      blank="$blank$blank"
-    done
-    printf "\r%s\r%s\n" "$blank" "tools.sh failed" 1>&2
-    return $errorEnvironment
-  fi
 
   changedGitFiles=()
   changedShellFiles=()
@@ -73,6 +84,8 @@ hookGitPreCommit() {
   else
     return 0
   fi
+
+  export BUILD_COMPANY
 
   if [ -z "${BUILD_COMPANY-}" ]; then
     if ! buildEnvironmentLoad BUILD_COMPANY; then
@@ -121,8 +134,7 @@ hookGitPreCommit() {
   clearLine
 }
 _hookGitPreCommitFailed() {
-  printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")"
-  return "$errorEnvironment"
+  _fail "$(printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")")" || return $?
 }
 
 hookGitPreCommit "$@"
