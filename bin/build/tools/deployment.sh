@@ -179,7 +179,7 @@ deployRemoteFinish() {
 
   if $cleanupFlag; then
     __usageEnvironment "$usage" cd "$applicationPath" || return $?
-    consoleInfo -n "Cleaning up ..."
+    consoleInfo "Cleaning up ... "
     if hasHook deploy-cleanup; then
       __usageEnvironment "$usage" runHook deploy-cleanup || return $?
     else
@@ -189,7 +189,7 @@ deployRemoteFinish() {
     __usageEnvironment "$usage" _deployRevertApplication "$deployHome" "$applicationId" "$applicationPath" "$targetPackage" || return $?
   else
     if [ -z "$applicationId" ]; then
-      __failArgument "$usage" "No argument applicationId passed"
+      __failArgument "$usage" "No argument applicationId passed" || return $?
     fi
     __usageEnvironment "$usage" deployApplication --home "$deployHome" --id "$applicationId" --target "$targetPackage" --application "$applicationPath" || return $?
   fi
