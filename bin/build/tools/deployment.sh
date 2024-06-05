@@ -186,12 +186,12 @@ deployRemoteFinish() {
       printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
     fi
   elif $revertFlag; then
-    _deployRevertApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
+    __usageEnvironment "$usage" _deployRevertApplication "$deployHome" "$applicationId" "$applicationPath" "$targetPackage" || return $?
   else
     if [ -z "$applicationId" ]; then
       __failArgument "$usage" "No argument applicationId passed"
     fi
-    deployApplication "$deployHome" "$applicationId" "$targetPackage" "$applicationPath"
+    __usageEnvironment "$usage" deployApplication --home "$deployHome" --id "$applicationId" --target "$targetPackage" --application "$applicationPath" || return $?
   fi
   reportTiming "$start" "Remote deployment finished in"
 }
@@ -234,7 +234,6 @@ _deployRevertApplication() {
       *)
         if [ -z "$deployHome" ]; then
           deployHome=$(usageArgumentDirectory "$usage" deployHome "$1") || return $?
-
         elif [ -z "$applicationId" ]; then
           applicationId="$1"
         elif [ -z "$applicationPath" ]; then
