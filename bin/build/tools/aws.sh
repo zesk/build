@@ -276,14 +276,14 @@ awsSecurityGroupIPModify() {
         mode="$argument"
         ;;
       --region)
-        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        shift || _awsSecurityGroupIPModify "$errorArgument" "$argument shift failed" || return $?
         region="$1"
         ;;
       *)
         __failArgument "Unknown argument: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "$errorArgument" "$arg shift failed" || return $?
+    shift || __failArgument "$usage" "$errorArgument" "$argument shift failed" || return $?
   done
   [ -n "$mode" ] || __failArgument "$usage" "--add, --remove, or --register is required" || return $?
 
@@ -295,7 +295,7 @@ awsSecurityGroupIPModify() {
 
   if [ "$mode" != "--remove" ]; then
     for argument in ip port; do
-      [ -n "${!arg}" ] || __failArgument "$usage" "--$argument is required for $mode (${savedArgs[*]})" || return $?
+      [ -n "${!argument}" ] || __failArgument "$usage" "--$argument is required for $mode (${savedArgs[*]})" || return $?
     done
   fi
 
@@ -413,15 +413,6 @@ awsIPAccess() {
         "$usage" 0
         return $?
         ;;
-      *)
-        __failArgument "Unknown argument: $argument" || return $?
-        ;;
-    esac
-    shift || :
-  done
-
-  while [ $# -gt 0 ]; do
-    case $1 in
       --services)
         shift || __failArgument "$usage" "Missing $argument argument" || return $?
         IFS=', ' read -r -a services <<<"$1" || :
@@ -430,10 +421,6 @@ awsIPAccess() {
         [ -z "$awsProfile" ] || __failArgument "$usage" "$argument already specified: $awsProfile"
         shift || __failArgument "$usage" "Missing $argument argument" || return $?
         awsProfile="$1"
-        ;;
-      --help)
-        "$usage" 0
-        return $?
         ;;
       --revoke)
         optionRevoke=1
