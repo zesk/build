@@ -114,6 +114,12 @@ deployRemoteFinish() {
       --debug)
         debuggingFlag=true
         ;;
+      --deploy)
+        # shellcheck disable=SC2015
+        ! $cleanupFlag && ! $revertFlag || __failArgument "$argument is incompatible with --cleanup and --revert" || return $?
+        cleanupFlag=false
+        revertFlag=false
+        ;;
       --cleanup)
         cleanupFlag=true
         ;;
