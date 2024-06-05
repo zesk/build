@@ -89,6 +89,7 @@ _deployBuildEnvironment() {
 # Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` in `.env`
 # Argument: --application applicationPath - Required. String. Path on the remote system where the application is live
 # Argument: --target targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
+# Argument: --deploy - Optional. Flag to deploy.
 # Argument: --revert - Revert changes just made
 # Argument: --cleanup - Cleanup after success
 # Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
@@ -113,6 +114,12 @@ deployRemoteFinish() {
     case $1 in
       --debug)
         debuggingFlag=true
+        ;;
+      --deploy)
+        # shellcheck disable=SC2015
+        ! $cleanupFlag && ! $revertFlag || __failArgument "$argument is incompatible with --cleanup and --revert" || return $?
+        cleanupFlag=false
+        revertFlag=false
         ;;
       --cleanup)
         cleanupFlag=true

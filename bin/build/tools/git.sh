@@ -441,7 +441,7 @@ gitCommit() {
 __gitCommitReleaseNotesUpdate() {
   local comment="$1" notes="$2"
 
-  if ! grep -q "$comment" "$notes"; then
+  if ! grep -q "$(quoteSedPattern "$comment")" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
     __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
