@@ -207,6 +207,7 @@ awsEnvironment() {
 # Usage: {fn} --remove --group group [ --region region ] --description description
 # Argument: --remove - Optional. Flag. Remove instead of add - only `group`, and `description` required.
 # Argument: --add - Optional. Flag. Add to security group (default).
+# Argument: --register - Optional. Flag. Add it if not already added.
 # Argument: --group group - Required. String. Security Group ID
 # Argument: --region region - Optional. String. AWS region, defaults to `AWS_REGION`. Must be supplied.
 # Argument: --port port - Required for `--add` only. Integer. service port
@@ -215,121 +216,153 @@ awsEnvironment() {
 #
 #
 awsSecurityGroupIPModify() {
-  local arg group port description start region addingFlag ip tempErrorFile
+  local argument group port description start region ip foundIP mode verb tempErrorFile
   local savedArgs
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   savedArgs=("$@")
 
-  if ! buildEnvironmentLoad AWS_REGION; then
-    return 1
-  fi
+  __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
 
-  start=$(beginTiming)
-  addingFlag=true
+  start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
+
   group=
   port=
   description=
   region="${AWS_REGION-}"
   ip=
+
+  mode=--add
+  verb="Adding (default)"
+
   while [ $# -gt 0 ]; do
-    arg="${1-}"
-    if [ -z "$arg" ]; then
-      _awsSecurityGroupIPModify "$errorArgument" "Blank argument" || return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --group)
-        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         group="$1"
         ;;
       --port)
-        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         port="$1"
         ;;
       --description)
-        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         description="$1"
         ;;
       --ip)
-        shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         ip="$1"
         ;;
       --add)
-        addingFlag=true
+        verb="Adding"
+        mode="$argument"
         ;;
       --remove)
-        addingFlag=false
+        verb="Removing"
+        mode="$argument"
+        ;;
+      --register)
+        verb="Registering"
+        mode="$argument"
         ;;
       --region)
         shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
         region="$1"
         ;;
       *)
-        _awsSecurityGroupIPModify "$errorArgument" "Unknown argument $arg" || return $?
+        __failArgument "Unknown argument: $argument" || return $?
         ;;
-
     esac
-    shift || _awsSecurityGroupIPModify "$errorArgument" "$arg shift failed" || return $?
+    shift || __failArgument "$usage" "$errorArgument" "$arg shift failed" || return $?
   done
-  for arg in group description region; do
-    if [ -z "${!arg}" ]; then
-      _awsSecurityGroupIPModify "$errorArgument" "--$arg is required (${savedArgs[*]})" || return $?
+  [ -n "$mode" ] || __failArgument "$usage" "--add, --remove, or --register is required" || return $?
+
+  for argument in group description region; do
+    if [ -z "${!argument}" ]; then
+      __failArgument "$usage" "--$argument is required (${savedArgs[*]})" || return $?
     fi
   done
 
-  if ! tempErrorFile=$(mktemp); then
-    _awsSecurityGroupIPModify "$errorArgument" "mktemp failed" || return $?
-  fi
-  if $addingFlag; then
-    for arg in ip port; do
-      if [ -z "${!arg}" ]; then
-        _awsSecurityGroupIPModify "$errorArgument" "--$arg is required for --add (${savedArgs[*]})" || return $?
-      fi
+  if [ "$mode" != "--remove" ]; then
+    for argument in ip port; do
+      [ -n "${!arg}" ] || __failArgument "$usage" "--$argument is required for $mode (${savedArgs[*]})" || return $?
     done
-    printf "%s %s %s %s %s %s %s" "$(consoleInfo "Adding new IP:")" "$(consoleGreen "$ip")" \
-      "$(consoleLabel "to group-id:")" "$(consoleValue "$group")" \
-      "$(consoleLabel "port:")" "$(consoleValue "$port")" \
-      "$(consoleInfo "... ")" || :
+  fi
 
+  tempErrorFile=$(mktemp) || __failEnvironment mktemp || return $?
+  #
+  # 3 modes: Add, Remove, Register
+  #
+
+  #
+  # Remove + Register
+  #
+  # Fetch our current IP registered with this description
+  #
+  if [ "$mode" != "--add" ]; then
+    aws ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
+    foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
+    rm -f "$tempErrorFile" || :
+
+    if [ -z "$foundIP" ]; then
+      # Remove: If no IP found in security group, if we are Removing (NOT adding), we are done
+      if [ "$mode" = '--remove' ]; then
+        return 0
+      fi
+      # Register: No IP found, add it
+      mode="--add"
+    elif [ "$mode" = "--register" ] && [ "$foundIP" = "$ip" ]; then
+      __awwSGOutput "$(consoleSuccess "IP already registered:")" "$foundIP" "$group" "$port"
+      return 0
+    else
+      __awwSGOutput "$(consoleInfo "Removing old IP:")" "$foundIP" "$group" "$port"
+      if ! aws --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" >/dev/null; then
+        __failEnvironment "$usage" "revoke-security-group-ingress FAILED" || return $?
+      fi
+    fi
+  fi
+  if [ "$mode" = "--add" ]; then
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
-
+    __awwSGOutput "$(consoleInfo "$verb new IP:")" "$ip" "$group" "$port"
     if ! aws --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
-        printf "%s %s\n" "$(consoleYellow "duplicate")" "$(reportTiming "$start" "found in")"
         rm -f "$tempErrorFile" || :
+        printf "%s %s\n" "$(consoleYellow "duplicate")" "$(reportTiming "$start" "found in")"
         return 0
       else
-        printf "%s %s\n" "$(consoleError "Failed")" "$(reportTiming "$start" "Operation took")"
         wrapLines "$(consoleError "ERROR : : : : ") $(consoleCode)" "$(consoleBlue ": : : : ERROR")$(consoleReset)" <"$tempErrorFile" 1>&2
         rm -f "$tempErrorFile" || :
-        return "$errorEnvironment"
+        __failEnvironment "$usage" "Failed to authorize-security-group-ingress" || return $?
       fi
     fi
-    reportTiming "$start" "in"
-  else
-    if ! aws ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile"; then
-      _awsSecurityGroupIPModify "$errorArgument" "aws ec2 describe-security-groups failed" || return $?
-    fi
-    if ! ip=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || [ -z "$ip" ]; then
-      return 0
-    fi
-    printf "%s %s %s %s %s %s " "$(consoleInfo "Removing old IP:")" "$(consoleRed "$ip")" "$(consoleLabel "from group-id:")" "$(consoleValue "$group")" "$(consoleLabel "port:")" "$(consoleValue "$port")"
-    if ! aws --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$ip" >/dev/null; then
-      consoleError "revoke-security-group-ingress FAILED" || :
-      return $errorEnvironment
-    fi
-    reportTiming "$start" Completed in
   fi
+  reportTiming "$start" "Completed in"
 }
 _awsSecurityGroupIPModify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Helper for awsSecurityGroupIPModify
+__awwSGOutput() {
+  local title="$1" ip="$2" group="$3" port="$4"
+  printf "%s %s %s %s %s %s\n" "$title" "$(consoleRed "$foundIP")" "$(consoleLabel "in group-id:")" "$(consoleValue "$group")" "$(consoleLabel "port:")" "$(consoleValue "$port")"
+}
+
 #
-#
+# Usage:
 #
 awsSecurityGroupIPRegister() {
-  awsSecurityGroupIPModify --remove "$@" || :
-  awsSecurityGroupIPModify --add "$@" || return $?
+  awsSecurityGroupIPModify --register "$@" || :
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
@@ -355,10 +388,15 @@ awsSecurityGroupIPRegister() {
 # Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 #
 awsIPAccess() {
-  local services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
+  local argument services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
   local sgArgs
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
+  # IDENTICAL this_usage 4
+  local this usage
+
+  this="${FUNCNAME[0]}"
+  usage="_$this"
 
   services=()
   optionRevoke=
@@ -366,79 +404,82 @@ awsIPAccess() {
   currentIP=
   developerId=
   securityGroups=()
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        __failArgument "Unknown argument: $argument" || return $?
+        ;;
+    esac
+    shift || :
+  done
+
   while [ $# -gt 0 ]; do
     case $1 in
       --services)
-        shift
-        IFS=', ' read -r -a services <<<"$1"
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        IFS=', ' read -r -a services <<<"$1" || :
         ;;
       --profile)
-        if [ -n "$awsProfile" ]; then
-          _awsIPAccess $errorArgument "--profile already specified: $awsProfile"
-        fi
-        shift || _awsIPAccess $errorArgument "shift failed" || return $?
-        awsProfile=$1
+        [ -z "$awsProfile" ] || __failArgument "$usage" "$argument already specified: $awsProfile"
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        awsProfile="$1"
         ;;
       --help)
-        _awsIPAccess 0
+        "$usage" 0
         return $?
         ;;
       --revoke)
         optionRevoke=1
         ;;
       --group)
-        shift || _awsIPAccess $errorArgument "shift failed" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         securityGroups+=("$1")
         ;;
       --ip)
-        shift || _awsIPAccess $errorArgument "shift failed" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         currentIP="$1"
         ;;
       --id)
-        shift || _awsIPAccess $errorArgument "shift failed" || return $?
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         developerId="$1"
         ;;
       *)
         break
         ;;
     esac
-    shift || _awsIPAccess $errorArgument "shift failed" || return $?
+    shift || __failArgument "$usage" "shift failed" || return $?
   done
 
   buildDebugStart || :
-  if [ -z "$developerId" ]; then
-    _awsIPAccess $errorArgument "Empty --id or DEVELOPER_ID environment" || return $?
-  fi
+  [ -n "$developerId" ] || __failArgument "$usage" "Empty --id or DEVELOPER_ID environment" || return $?
 
-  if [ "${#services[@]}" -eq 0 ]; then
-    _awsIPAccess $errorArgument "Supply one or more services" || return $?
-  fi
+  [ "${#services[@]}" -gt 0 ] || __failArgument "$usage" "Supply one or more services" || return $?
   awsProfile=${awsProfile:=default}
 
-  if [ ${#securityGroups[@]} -eq 0 ]; then
-    _awsIPAccess $errorArgument "One or more --group is required" || return $?
-  fi
+  [ ${#securityGroups[@]} -gt 0 ] || __failArgument "$usage" "One or more --group is required" || return $?
   if [ -z "$currentIP" ]; then
     if ! currentIP=$(ipLookup) || [ -z "$currentIP" ]; then
-      _awsIPAccess $errorEnvironment "Unable to determine IP address" || return $?
+      __failEnvironment "$usage" "Unable to determine IP address" || return $?
     fi
   fi
   currentIP="$currentIP/32"
 
   # shellcheck disable=SC2119
-  if ! awsInstall; then
-    _awsIPAccess $errorEnvironment "awsInstall failed" || return $?
-  fi
+  __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
     consoleInfo "Need AWS Environment: $awsProfile" || :
     if awsEnvironment "$awsProfile" >/dev/null; then
-      if ! eval "$(awsEnvironment "$awsProfile")"; then
-        _awsIPAccess $errorEnvironment "eval $(awsEnvironment "$awsProfile") failed" || return $?
-
-      fi
+      __usageEnvironment "$usage" eval "$(awsEnvironment "$awsProfile")" || return $?
     else
-      _awsIPAccess $errorEnvironment "No AWS credentials available: $awsProfile" || return $?
+      __failEnvironment "$usage" "No AWS credentials available: $awsProfile" || return $?
     fi
   fi
 
@@ -464,18 +505,12 @@ awsIPAccess() {
   done
   for securityGroupId in "${securityGroups[@]}"; do
     for s in "${services[@]}"; do
-      if ! port=$(serviceToPort "$s"); then
-        _awsIPAccess "$errorEnvironment" "serviceToPort $s failed 2nd round?"
-      fi
+      port=$(serviceToPort "$s") || __failEnvironment "$usage" "serviceToPort $s failed 2nd round?" || return $?
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$s" --ip "$currentIP")
       if test $optionRevoke; then
-        if ! awsSecurityGroupIPModify --remove "${sgArgs[@]}"; then
-          _awsIPAccess "$errorEnvironment" "Unable to awsSecurityGroupIPModify $securityGroupId $port $developerId-$s" || return $?
-        fi
+        __usageEnvironment "$usage" awsSecurityGroupIPModify --remove "${sgArgs[@]}" || return $?
       else
-        if ! awsSecurityGroupIPRegister "${sgArgs[@]}"; then
-          _awsIPAccess "$errorEnvironment" "Unable to awsSecurityGroupIPRegister $securityGroupId $port $developerId-$s" || return $?
-        fi
+        __usageEnvironment "$usage" awsSecurityGroupIPRegister "${sgArgs[@]}" || return $?
       fi
     done
   done
@@ -491,7 +526,7 @@ _awsIPAccess() {
 # Argument: region - The AWS Region to validate
 # Exit Code: 0 - Region is a valid AWS region
 # Exit Code: 1 - Region is NOT a valid AWS region
-#
+# Checked: 2023-12-31
 awsValidRegion() {
   case "${1-}" in
     eu-north-1) return 0 ;;
