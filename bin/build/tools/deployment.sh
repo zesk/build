@@ -138,7 +138,7 @@ deployRemoteFinish() {
         shift || :
         applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
         ;;
-      --package)
+      --target)
         shift || :
         targetPackage="${1-}"
         ;;
