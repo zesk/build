@@ -598,8 +598,8 @@ __assertFileContainsThis() {
   local f="$2" args
   shift
 
-  args=("$@")
   shift || _assertFailure "$this" "Missing argument" || return $?
+  args=("$@")
   [ -f "$f" ] || _assertFailure "$this" "$f is not a file: $*"
   while [ $# -gt 0 ]; do
     if ! grep -q "$1" "$f"; then
