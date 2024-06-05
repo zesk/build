@@ -47,27 +47,24 @@ deployBuildEnvironment() {
   deployArgs=(--id "$APPLICATION_ID" --home "${DEPLOY_REMOTE_PATH%/}" --application "${APPLICATION_REMOTE_PATH%/}" "$DEPLOY_USER_HOSTS")
   if ! deployToRemote --deploy "${deployArgs[@]}"; then
     consoleError "Deployment failed, reverting ..." || :
-    deployToRemote --revert "${deployArgs[@]}" || :
-    __usageEnvironment "$usage" deployToRemote --deploy "${deployArgs[@]}" failed
-    return $?
+    if ! deployToRemote --revert "${deployArgs[@]}"; then
+      consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
+    fi
+    __failEnvironment "$usage" deployToRemote --deploy "${deployArgs[@]}" failed || return $?
   fi
   if hasHook deploy-confirm && ! runHook deploy-confirm; then
     consoleWarning "Deployment confirmation failed, reverting" || :
     if ! deployToRemote --revert "${deployArgs[@]}"; then
       consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
-      return 99
     fi
-    __usageEnvironment "$usage" runHook deploy-confirm failed
-    return $?
+    __failEnvironment "$usage" runHook deploy-confirm failed || return $?
   fi
   if ! deployToRemote --cleanup "${deployArgs[@]}"; then
     consoleError "Deployment cleanup failed, reverting"
     if ! deployToRemote --revert "${deployArgs[@]}"; then
       consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
-      return 99
     fi
-    __usageEnvironment "$usage" deployToRemote --cleanup "${deployArgs[@]}" failed
-    return $?
+    __failEnvironment "$usage" deployToRemote --cleanup "${deployArgs[@]}" failed || return $?
   fi
   bigText Success | wrapLines "$(consoleSuccess)" "$(consoleReset)"
 }
