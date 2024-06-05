@@ -255,7 +255,7 @@ deployApplication() {
         shift || __failArgument "$usage" "Shift $argument failed" || return $?
         applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
         ;;
-      --package)
+      --target)
         shift || __failArgument "$usage" "Shift $argument failed" || return $?
         targetPackage="${1-}"
         ;;
