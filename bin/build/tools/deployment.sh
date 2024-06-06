@@ -38,6 +38,7 @@ deployBuildEnvironment() {
   else
     # shellcheck source=/dev/null
     if ! set -a || ! source .build.env || ! set +a; then
+      set +a || :
       __failEnvironment "$usage" "Unable to load .build.env" || return $?
     fi
   fi
@@ -92,7 +93,7 @@ _deployBuildEnvironment() {
 # Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
-  local targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome
+  local targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome firstFlags
   # IDENTICAL this_usage 4
   local this usage
 
@@ -108,14 +109,17 @@ deployRemoteFinish() {
   applicationPath=
   debuggingFlag=false
   deployHome=
+  firstFlags=
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
       --debug)
         debuggingFlag=true
         ;;
       --deploy)
         # shellcheck disable=SC2015
-        ! $cleanupFlag && ! $revertFlag || __failArgument "$argument is incompatible with --cleanup and --revert" || return $?
+        ! $cleanupFlag && ! $revertFlag || __failArgument "$usage" "$argument is incompatible with --cleanup and --revert" || return $?
         cleanupFlag=false
         revertFlag=false
         ;;
@@ -125,21 +129,24 @@ deployRemoteFinish() {
       --revert)
         revertFlag=true
         ;;
+      --first)
+        firstFlags+=("$argument")
+        ;;
       --home)
-        shift || :
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
         ;;
       --id)
-        shift || :
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         applicationId="$1"
         [ -n "$applicationId" ] || __failArgument "$usage" "Requires non-blank $argument" || return $?
         ;;
       --application)
-        shift || :
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
         ;;
       --target)
-        shift || :
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
         targetPackage="${1-}"
         ;;
       *)
@@ -191,7 +198,7 @@ deployRemoteFinish() {
     if [ -z "$applicationId" ]; then
       __failArgument "$usage" "No argument applicationId passed" || return $?
     fi
-    __usageEnvironment "$usage" deployApplication --home "$deployHome" --id "$applicationId" --target "$targetPackage" --application "$applicationPath" || return $?
+    __usageEnvironment "$usage" deployApplication "${firstFlags[@]+${firstFlags[@]}}" --home "$deployHome" --id "$applicationId" --target "$targetPackage" --application "$applicationPath" || return $?
   fi
   reportTiming "$start" "Remote deployment finished in"
 }
@@ -345,7 +352,7 @@ deployToRemote() {
 
   local deployFlag revertFlag debuggingFlag cleanupFlag
 
-  local userHosts applicationId deployHome applicationPath buildTarget remoteArgs
+  local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
   local verb temporaryCommandsFile
 
   local nameWidth=50
@@ -376,6 +383,7 @@ deployToRemote() {
   applicationPath=
   buildTarget=
   remoteArgs=()
+  firstFlags=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
@@ -389,6 +397,9 @@ deployToRemote() {
         shift || :
         [ -z "$deployHome" ] || __failArgument "$usage" "$argument supplied twice" || return $?
         deployHome="$1"
+        ;;
+      --first)
+        firstFlags+=("$argument")
         ;;
       --application)
         shift || :
@@ -459,19 +470,13 @@ deployToRemote() {
     __failArgument "$usage" "--deploy and --cleanup are mutually exclusive" || return $?
   fi
   # Values are supplied (required)
-  if [ -z "$applicationId" ]; then
-    __failArgument "$usage" "Missing applicationId" || return $?
-  fi
-  if [ -z "$deployHome" ]; then
-    __failArgument "$usage" "Missing deployHome" || return $?
-  fi
-  if [ -z "$applicationPath" ]; then
-    __failArgument "$usage" "Missing applicationPath" || return $?
-  fi
+  [ -n "$applicationId" ] || __failArgument "$usage" "Missing applicationId" || return $?
+
+  [ -n "$deployHome" ] || __failArgument "$usage" "Missing deployHome" || return $?
+
+  [ -n "$applicationPath" ] || __failArgument "$usage" "Missing applicationPath" || return $?
   if [ -z "$buildTarget" ]; then
-    if ! buildTarget=$(deployPackageName "$deployHome"); then
-      __failEnvironment "$usage" "Missing applicationPath" || return $?
-    fi
+    buildTarget=$(deployPackageName "$deployHome") || __failEnvironment "$usage" "Missing applicationPath" || return $?
   fi
   #
   # Current IP
@@ -552,17 +557,20 @@ deployToRemote() {
       reportTiming "$start" "Deployment setup completed on $(consoleGreen "$userHost") in " || :
     done
     commandSuffix=''
-    if ! __deployCommandsFile "$deployHome/$applicationId/app" \
-      "printf '%s' \"Sweeping stage for $applicationId\" && rm -rf \"$deployHome/$applicationId/app.$$\"$commandSuffix" \
-      "printf '%s\n' \"Setting stage for $applicationId\" && mkdir \"$deployHome/$applicationId/app.$$\"$commandSuffix" \
-      "printf '%s\n' \"Opening package for $applicationId\" && tar -C \"$deployHome/$applicationId/app.$$\" -zxf \"$deployHome/$applicationId/$buildTarget\" --no-xattrs$commandSuffix" \
-      "printf '%s\n' \"Hiding old $applicationId package\" && [ ! -d \"$deployHome/$applicationId/app\" ] || mv -f \"$deployHome/$applicationId/app\" \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
-      "printf '%s\n' \"Moving new $applicationId package\" && mv -f \"$deployHome/$applicationId/app.$$\" \"$deployHome/$applicationId/app\"$commandSuffix" \
-      "printf '%s\n' \"Cleaning old $applicationId package\" && rm -rf \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
-      "--deploy" \
-      "--home" "$deployHome" \
-      "--id" "$applicationId" \
-      "--application" "$applicationPath" >"$temporaryCommandsFile"; then
+    if
+      ! __deployCommandsFile "$deployHome/$applicationId/app" \
+        "printf '%s' \"Sweeping stage for $applicationId\" && rm -rf \"$deployHome/$applicationId/app.$$\"$commandSuffix" \
+        "printf '%s\n' \"Setting stage for $applicationId\" && mkdir \"$deployHome/$applicationId/app.$$\"$commandSuffix" \
+        "printf '%s\n' \"Opening package for $applicationId\" && tar -C \"$deployHome/$applicationId/app.$$\" -zxf \"$deployHome/$applicationId/$buildTarget\" --no-xattrs$commandSuffix" \
+        "printf '%s\n' \"Hiding old $applicationId package\" && [ ! -d \"$deployHome/$applicationId/app\" ] || mv -f \"$deployHome/$applicationId/app\" \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
+        "printf '%s\n' \"Moving new $applicationId package\" && mv -f \"$deployHome/$applicationId/app.$$\" \"$deployHome/$applicationId/app\"$commandSuffix" \
+        "printf '%s\n' \"Cleaning old $applicationId package\" && rm -rf \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
+        "--deploy" \
+        "${firstFlags[@]+${firstFlags[@]}}" \
+        "--home" "$deployHome" \
+        "--id" "$applicationId" \
+        "--application" "$applicationPath" >"$temporaryCommandsFile"
+    then
       __failEnvironment "$usage" "Generating commands file for $buildTarget expansion" || return $?
     fi
     # wrapLines "COMMANDS: $(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"
