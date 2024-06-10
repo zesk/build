@@ -70,7 +70,7 @@ deployBuildEnvironment() {
   bigText Success | wrapLines "$(consoleSuccess)" "$(consoleReset)"
 }
 _deployBuildEnvironment() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCMAME[0]#_}" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
