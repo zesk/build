@@ -548,3 +548,127 @@ _gitCurrentBranch() {
 # GIT_INDEX_FILE=/Users/kent/marketacumen/build/.git/index.lock
 # GIT_PREFIX=
 # GIT_REFLOG_ACTION=pull
+
+# Usage: {fn} [ --application applicationHome ] [ --copy ] hook
+# Argument: hook - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
+# Argument: --application - Optional. Directory. Path to application home.
+# Install the most recent version of this hook and RUN IT in place if it has changed.
+# Argument: --copy - Optional. Flag. Do not execute the hook if it has changed.
+# You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
+# When running within your hook, pass additional arguments so they can be preserved:
+#
+#     gitInstallHook --application "$myHoem" pre-commit "$@" || return $?
+#
+# Exit code: 0 - the file was not updated
+# Exit code: 1 - Environment error
+# Exit code: 2 - Argument error
+# Exit code: 3 - `--copy` - the file was changed
+# Environment: BUILD-HOME - The default application home directory used for `.git` and build hooks.
+gitInstallHook() {
+  local argument fromTo home execute
+  local usage="_${FUNCNAME[0]}"
+  local types=(pre-commit post-commit)
+
+  buildEnvironmentLoad BUILD_HOME || :
+  home="${BUILD_HOME:-}"
+  execute=true
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --copy)
+        execute=false
+        ;;
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --application)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
+        ;;
+      *)
+        if inArray "$argument" "${types[@]}"; then
+          hasHook --application "$home" "git-$argument" || __failArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
+          fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
+          diff -q "${fromTo[@]}" >/dev/null && return 0
+          printf "Git %s hook was updated" "${fromTo[@]}" || :
+          __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
+          ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
+          return 3
+        else
+          __failArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+        fi
+        ;;
+    esac
+  done
+}
+
+#
+# Run pre-commit checks on shell-files
+#
+gitPreCommitShellFiles() {
+  local usage="_${FUNCNAME[0]}"
+  local argument single singles singleFile checkAssertions
+  local directory
+
+  singles=()
+  checkAssertions=()
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --singles)
+        shift || __failArgument "$usage" "shift $argument" || return $?
+        singleFile=$(usageArgumentFile "$usage" singlesFile "$1") || return $?
+        while read -r single; do
+          single="${single#"${single%%[![:space:]]*}"}"
+          single="${single%"${single##*[![:space:]]}"}"
+          if [ "${single###}" = "${single}" ]; then
+            singles+=(--single "$single")
+          fi
+        done <"$singleFile"
+        ;;
+      --check)
+        shift || __failArgument "$usage" "shift $argument" || return $?
+        [ -d "$1" ] || __failArgument "$usage" "$argument $1 should be a directory" || return $?
+        checkAssertions+=("$1")
+        ;;
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift || :
+  done
+
+  statusMessage consoleSuccess Making shell files executable ...
+  __usageEnvironment "$usage" makeShellFilesExecutable || return $?
+
+  statusMessage consoleSuccess "Running shellcheck ..." || :
+  __usageEnvironment "$usage" validateShellScripts --exec contextOpen "$@" || return $?
+
+  export BUILD_COMPANY
+  year="$(date +%Y)"
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
+  statusMessage consoleWarning "Checking $year and $BUILD_COMPANY ..." || :
+  __usageEnvironment "$usage" validateFileContents --exec contextOpen "$@" -- "Copyright &copy; $year" "$BUILD_COMPANY" || return $?
+
+  # Unusual quoting here is to avoid having this match as an identical
+  __usageEnvironment "$usage" identicalCheck "${singles[@]+"${singles[@]}"}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh || return $?
+
+  for directory in "${checkAssertions[@]+${checkAssertions[@]}}"; do
+    statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}")" || :
+    if ! findUncaughtAssertions "$directory" --list; then
+      findUncaughtAssertions "$directory" --exec contextOpen &
+      __failEnvironment "$usage" findUncaughtAssertions || return $?
+    fi
+  done
+}
+
+_gitPreCommitShellFiles() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

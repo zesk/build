@@ -29,22 +29,20 @@ usageDocument() {
   this="${FUNCNAME[0]}"
   usage="_$this"
 
-  functionDefinitionFile="${1-}"
-  if [ ! -f "$functionDefinitionFile" ]; then
-    __failArgument "$usage" "${FUNCNAME[0]}: File \"$1\" not found" || return $?
-  fi
-  shift || __failArgument "$usage" "shift failed"
-  functionName="${1-}"
-  if [ -z "$functionName" ]; then
-    __failArgument "$usage" "functionName required" || return $?
-  fi
-  shift || __failArgument "$usage" "shift failed"
-  exitCode="${1-NONE}"
-  shift || :
+  [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
+
+  functionDefinitionFile="$1"
+  functionName="$2"
+  exitCode="${3-NONE}"
+  shift 3 || :
+
+  [ -f "$functionDefinitionFile" ] || __failArgument "$usage" "functionDefinitionFile $functionDefinitionFile not found" || return $?
+  [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
   if [ "$exitCode" = "NONE" ]; then
     consoleError "NO EXIT CODE" 1>&2
     exitCode=1
   fi
+  __usageArgument "$usage" isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
   variablesFile=$(mktemp)
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
