@@ -134,6 +134,10 @@ phpBuild() {
         shift || __failArgument "$usage" "$arg argument missing" || return $?
         break
         ;;
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --clean)
         optClean=1
         ;;
@@ -156,7 +160,7 @@ phpBuild() {
     set -x
   fi
   [ -n "$targetName" ] || __failArgument "$usage" "--name argument blank" || return $?
-  [ $# -gt 0 ] || __failEnvironment "$usage" "Need to supply a list of files for application $targetName" || return $?
+  [ $# -gt 0 ] || __failArgument "$usage" "Need to supply a list of files for application $(consoleCode "$targetName")" || return $?
   missingFile=()
   for tarFile in "$@"; do
     if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
@@ -268,8 +272,7 @@ phpBuild() {
   reportTiming "$initTime" "PHP built $(consoleCode "$targetName") in"
 }
 _phpBuild() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[@]#_}" "$@"
-  return $?
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?
 }
 _phpBuildBanner() {
   local label="$1"

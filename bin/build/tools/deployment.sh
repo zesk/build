@@ -16,58 +16,173 @@ deployedHostArtifact="./.deployed-hosts"
 
 # Deploy to a host
 #
-# Loads .build.env
+# Argument: --debug - Optional. Flag. Enable debugging.
+# Argument: --first - Optional. Flag. When it is the first deployment, use this flag.
+# Argument: --home deployPath - Required. Directory. Path where the deployments database is on remote system. Uses
+# Argument: --id applicationId - Required. String. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_ID` environment.
+# Argument: --application applicationPath - Required. String. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_PATH` environment.
+# Argument: --target targetPackage - Optional. Filename. Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.
+# Loads `./.build.env` if it exists.
+# File: `./.build.env`
+# Environment: DEPLOY_REMOTE_PATH - path on remote host for deployment data
+# Environment: APPLICATION_REMOTE_PATH - path on remote host for application
+# Environment: DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
+# Environment: APPLICATION_ID - Version to be deployed
+# Environment: BUILD_TARGET - The application package name
+# Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.
 #
-# Environment: - DEPLOY_REMOTE_PATH - path on remote host for deployment data
-# Environment: - APPLICATION_REMOTE_PATH - path on remote host for application
-# Environment: - DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
-# Environment: - APPLICATION_ID - Version to be deployed
-#
-# Not possible to deploy to different paths on different hosts
 # Test: testDeployBuildEnvironment - INCOMPLETE
 deployBuildEnvironment() {
-  local deployArgs
+  local argument deployArgs deployHome applicationId applicationPath
+  local buildEnv="./.build.env"
+  local envFile envFiles envFilesLoaded
   # IDENTICAL this_usage 4
   local this usage
 
   this="${FUNCNAME[0]}"
   usage="_$this"
 
-  if [ ! -f .build.env ]; then
+  if [ ! -f "$buildEnv" ]; then
+    envFiles=()
     consoleWarning "No .build.env found - environment must be already configured" 1>&2
   else
-    # shellcheck source=/dev/null
-    if ! set -a || ! source .build.env || ! set +a; then
-      set +a || :
-      __failEnvironment "$usage" "Unable to load .build.env" || return $?
-    fi
+    envFiles=("$buildEnv")
   fi
+  envFilesLoaded=()
 
-  usageRequireEnvironment "$usage" APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS || return $?
+  deployHome=
+  applicationPath=
+  applicationId=
+  userHosts=
+  targetPackage=
+  deployArgs=()
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --env)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        envFiles+=("$1")
+        ;;
+      --debug)
+        debuggingFlag=true
+        ;;
+      --first)
+        deployArgs+=("$argument")
+        ;;
+      --home)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        deployHome="$1"
+        ;;
+      --host)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        userHosts+=("$1")
+        ;;
+      --id)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        applicationId="$1"
+        ;;
+      --application)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
+        ;;
+      --target)
+        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        targetPackage="$1"
+        ;;
+      *)
+        userHosts+=("$argument")
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift failed" || return $?
+  done
 
-  deployArgs=(--id "$APPLICATION_ID" --home "${DEPLOY_REMOTE_PATH%/}" --application "${APPLICATION_REMOTE_PATH%/}" "$DEPLOY_USER_HOSTS")
-  if ! deployToRemote --deploy "${deployArgs[@]}"; then
-    consoleError "Deployment failed, reverting ..." || :
-    if ! deployToRemote --revert "${deployArgs[@]}"; then
-      consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
-    fi
-    __failEnvironment "$usage" deployToRemote --deploy "${deployArgs[@]}" failed || return $?
+  for envFile in "${envFiles[@]}"; do
+    envFilesLoaded+=("$(usageArgumentLoadEnvironmentFile "$usage" "envFile" "$envFile")") 2>&1
+  done
+
+  buildEnvironmentLoad APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET || :
+
+  ##
+  ## APPLICATION_ID --id
+  ##
+
+  applicationId=${applicationId:-$APPLICATION_ID}
+  # shellcheck disable=SC2016
+  [ -n "$applicationId" ] || __failArgument "$usage" 'Requires non-blank `--id` or `APPLICATION_ID`' || return $?
+
+  ##
+  ## $DEPLOY_REMOTE_PATH --home
+  ##
+
+  deployHome="${deployHome:-$DEPLOY_REMOTE_PATH}"
+  # shellcheck disable=SC2016
+  [ -n "$deployHome" ] || __failArgument "$usage" 'Requires non-blank `--home` or `DEPLOY_REMOTE_PATH`' || return $?
+
+  ##
+  ## $APPLICATION_REMOTE_PATH --application
+  ##
+  applicationPath="${applicationPath:-$APPLICATION_REMOTE_PATH}"
+  # shellcheck disable=SC2016
+  [ -n "$applicationPath" ] || __failArgument "$usage" 'Requires non-blank `--application` or `APPLICATION_REMOTE_PATH`' || return $?
+
+  ##
+  ## $DEPLOY_USER_HOSTS --home or just non-flagged arguments
+  ##
+  if [ ${#userHosts[@]} -eq 0 ]; then
+    read -r -a userHosts < <(printf "%s" "$DEPLOY_USER_HOSTS")
+  fi
+  # shellcheck disable=SC2016
+  [ ${#userHosts[@]} -gt 0 ] || __failArgument "$usage" 'No user hosts supplied on command line, `--host` or in `DEPLOY_USER_HOSTS`' || return $?
+  # shellcheck disable=SC2016
+  [ -z "${userHosts[*]}" ] || __failArgument "$usage" 'Requires non-blank `--host` or `DEPLOY_USER_HOSTS`' || return $?
+
+  ##
+  ## $BUILD_TARGET --target
+  ##
+  targetPackage="${targetPackage:-$BUILD_TARGET}"
+  # shellcheck disable=SC2016
+  [ -n "$targetPackage" ] || __failArgument "$usage" 'Requires non-blank `--target` or `BUILD_TARGET`' || return $?
+
+  deployArgs=(--id "$APPLICATION_ID" --home "${DEPLOY_REMOTE_PATH%/}" --application "${APPLICATION_REMOTE_PATH%/}" "${userHosts[@]}")
+
+  # shellcheck disable=SC2059
+  statusMessage consoleInfo "Deploying:$(printf " \"$(consoleCode "%s")\"" "${deployArgs[@]}")" || :
+  ___deployBuildEnvironment "${deployArgs[@]}" || return $?
+  bigText Success | wrapLines "$(consoleSuccess)" "$(consoleReset)"
+}
+
+#
+# Meat of deployment which automatically rolls out to following function to clean up
+#
+___deployBuildEnvironment() {
+  local fail="${FUNCNAME[0]#_}"
+  # shellcheck disable=SC2059
+  statusMessage consoleInfo "Deploying:$(printf " \"$(consoleCode "%s")\"" "$@")" || :
+  if ! deployToRemote --deploy "$@"; then
+    statusMessage consoleError "Deployment failed, reverting ..." || :
+    "$fail" "$@" || return $?
   fi
   if hasHook deploy-confirm && ! runHook deploy-confirm; then
-    consoleWarning "Deployment confirmation failed, reverting" || :
-    if ! deployToRemote --revert "${deployArgs[@]}"; then
-      consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
-    fi
-    __failEnvironment "$usage" runHook deploy-confirm failed || return $?
+    statusMessage consoleWarning "Deployment confirmation failed, reverting" || :
+    "$fail" "$@" || return $?
   fi
-  if ! deployToRemote --cleanup "${deployArgs[@]}"; then
-    consoleError "Deployment cleanup failed, reverting"
-    if ! deployToRemote --revert "${deployArgs[@]}"; then
-      consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
-    fi
-    __failEnvironment "$usage" deployToRemote --cleanup "${deployArgs[@]}" failed || return $?
+  if ! deployToRemote --cleanup "$@"; then
+    statusMessage consoleError "Deployment cleanup failed, reverting"
+    "$fail" "$@" || return $?
   fi
-  bigText Success | wrapLines "$(consoleSuccess)" "$(consoleReset)"
+}
+
+#
+# Clean up --revert and then exit
+#
+__deployBuildEnvironment() {
+  local fail="${FUNCNAME[0]#_}"
+  if ! deployToRemote --revert "$@"; then
+    consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
+  fi
+  __failEnvironment "$fail" deployToRemote --deploy "$@" failed || return $?
 }
 _deployBuildEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -83,24 +198,22 @@ _deployBuildEnvironment() {
 # Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 #
 # Usage: {fn} [ --revert | --cleanup ] [ --debug ] deployPath applicationId applicationPath
+# Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
+# Argument: --deploy - Optional. Flag, default setting - handles the remote deploy.
+# Argument: --revert - Optional. Flag, Revert changes just made.
+# Argument: --cleanup - Optional. Flag, Cleanup after success.
 # Argument: --home deployPath - Required. Directory. Path where the deployments database is on remote system.
 # Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` in `.env`
 # Argument: --application applicationPath - Required. String. Path on the remote system where the application is live
 # Argument: --target targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
-# Argument: --deploy - Optional. Flag to deploy.
-# Argument: --revert - Revert changes just made
-# Argument: --cleanup - Cleanup after success
-# Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
-  local targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome firstFlags
+  local argument targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome firstFlags
   # IDENTICAL this_usage 4
   local this usage
 
   this="${FUNCNAME[0]}"
   usage="_$this"
-
-  __usageEnvironment "$usage" dotEnvConfigure || return $?
 
   targetPackage=
   revertFlag=false
@@ -114,6 +227,10 @@ deployRemoteFinish() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --debug)
         debuggingFlag=true
         ;;
@@ -155,6 +272,8 @@ deployRemoteFinish() {
     esac
     shift || __failArgument "$usage" "shift failed" || return $?
   done
+
+  __usageEnvironment "$usage" dotEnvConfigure || return $?
 
   # Check arguments are non-blank and actually supplied
   for name in deployHome applicationId applicationPath; do
@@ -354,7 +473,7 @@ deployToRemote() {
 
   local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
   local verb temporaryCommandsFile
-
+  local commonArguments
   local nameWidth=50
   local argument
   # IDENTICAL this_usage 4
@@ -495,6 +614,7 @@ deployToRemote() {
     __environment sshAddKnownHost "$host" || return $?
   done
 
+  commonArguments=("${firstFlags[@]+${firstFlags[@]}}" "--target" "$buildTarget" "--home" "$deployHome" "--id" "$applicationId" "--application" "$applicationPath")
   if test $revertFlag; then
     verb=Revert
     deployArg=--revert
@@ -565,11 +685,7 @@ deployToRemote() {
         "printf '%s\n' \"Hiding old $applicationId package\" && [ ! -d \"$deployHome/$applicationId/app\" ] || mv -f \"$deployHome/$applicationId/app\" \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
         "printf '%s\n' \"Moving new $applicationId package\" && mv -f \"$deployHome/$applicationId/app.$$\" \"$deployHome/$applicationId/app\"$commandSuffix" \
         "printf '%s\n' \"Cleaning old $applicationId package\" && rm -rf \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
-        "--deploy" \
-        "${firstFlags[@]+${firstFlags[@]}}" \
-        "--home" "$deployHome" \
-        "--id" "$applicationId" \
-        "--application" "$applicationPath" >"$temporaryCommandsFile"
+        "--deploy" "${commonArguments[@]}" >"$temporaryCommandsFile"
     then
       __failEnvironment "$usage" "Generating commands file for $buildTarget expansion" || return $?
     fi
@@ -595,12 +711,19 @@ deployToRemote() {
     return 0
   fi
 
+  #
+  #     ▜                                       ▐
+  #  ▞▀▖▐ ▞▀▖▝▀▖▛▀▖▌ ▌▛▀▖ ▞▀▖▙▀▖ ▙▀▖▞▀▖▌ ▌▞▀▖▙▀▖▜▀
+  #  ▌ ▖▐ ▛▀ ▞▀▌▌ ▌▌ ▌▙▄▘ ▌ ▌▌   ▌  ▛▀ ▐▐ ▛▀ ▌  ▐ ▖
+  #  ▝▀  ▘▝▀▘▝▀▘▘ ▘▝▀▘▌   ▝▀ ▘   ▘  ▝▀▘ ▘ ▝▀▘▘   ▀
+  #
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
     if grep -q "$host" "$deployedHostArtifact"; then
       printf "%s %s (%s) " "$(consoleSuccess "$verb")" "$(consoleCode "$userHost")" "$(consoleBoldRed "$applicationPath")"
-      if ! __deployRemoteAction "$userHost" "$deployHome/$applicationId/app" "$deployArgs" "$@"; then
+      # Runs --revert or --cleanup as configured above
+      if ! __deployRemoteAction "$userHost" "$deployHome/$applicationId/app" "$deployArgs" "${commonArguments[@]}"; then
         printf "%s %s %s\n" "$(consoleError "$verb failed on")" "$(consoleCode "$userHost")" "$(consoleError "- continuing")"
         exitCode=1
       fi
@@ -643,7 +766,8 @@ __deployCommandsFile() {
   done
   # shellcheck disable=SC2016
   printf "cd \"%s\" || exit \$?\n" "$appHome"
-  printf "%s/bin/build/tools.sh deployRemoteFinish %s || exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")"
+  # return $? is here for findUncaughtAssertions line
+  printf "%s/bin/build/tools.sh __environment deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
 }
 
 #

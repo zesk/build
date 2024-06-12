@@ -23,7 +23,7 @@ errorEnvironment=1
 #
 
 #
-# Usage: usageTemplate binName options delimiter description exitCode message
+# Usage: usageTemplate binName options delimiter description exitCode message ...
 #
 # Output usage messages to console
 #
@@ -31,30 +31,25 @@ errorEnvironment=1
 # See: usageDocument
 #
 usageTemplate() {
+  local this="${FUNCNAME[0]}"
   local usageString binName options delimiter description exitCode
 
+  [ $# -ge 5 ] || _argument "$(printf -- "%s %s %s" "$(consoleError "$this")" "$(consoleCode "$(printf -- " \"%s\"" "$@")")" "$(consoleError "missing arguments - passed $# need 5")")" || return $?
   binName="$(trimSpace "$1")"
-  shift || return "$errorArgument"
-  options="$1"
-  shift || return "$errorArgument"
-  delimiter="$1"
-  shift || return "$errorArgument"
-  description="$1"
-  shift || return "$errorArgument"
-  exitCode="${1-0}"
+  options="$2"
+  delimiter="$3"
+  description="$4"
+  exitCode="${5-0}"
   if ! isInteger "$exitCode"; then
-    consoleError "$exitCode is not integer"
-    debuggingStack
-    return 1
+    __argument "$(printf "%s: exit code is not integer \"%s\"\n%s" "$this" "$exitCode" "$(debuggingStack)")" || return $?
   fi
   if [ "$exitCode" -eq 0 ]; then
     usageString="$(consoleBoldGreen Usage)"
   else
-    usageString="$(consoleBoldGreen Usage)"
+    usageString="$(consoleBoldRed Usage)"
   fi
-  shift || :
-
   exec 1>&2
+  shift 5 || _argument "$this: shift 5" || return $?
   if [ ${#@} -gt 0 ]; then
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(consoleSuccess "$@")"
@@ -106,7 +101,7 @@ usageArguments() {
       argument="${lineTokens[0]}"
       unset "lineTokens[0]"
       lineTokens=("${lineTokens[@]+${lineTokens[@]}}")
-      argDescription=$(lowercase "${lineTokens[*]}")
+      argDescription=$(lowercase "${lineTokens[*]+}")
       if [ "${argDescription%*require*}" != "$argDescription" ]; then
         printf " %s%s" "$requiredPrefix" "$argument"
       else
