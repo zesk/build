@@ -60,11 +60,9 @@ aptInstall() {
   local installedLog quietLog
   local actualPackages packages
   local apt start
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   actualPackages=()
   packages=(apt-utils figlet toilet toilet-fonts jq pcregrep "$@")

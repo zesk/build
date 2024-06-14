@@ -87,10 +87,10 @@ tests+=(testRunCount)
 testRunCount() {
   assertEquals "$(runCount 10 echo -n .)" ".........." || return $?
   assertEquals "$(runCount 20 echo -n .)" "...................." || return $?
-  assertExitCode 2 runCount -4923 echo busted || return $?
-  assertExitCode 2 runCount 33.3 echo busted || return $?
-  assertExitCode 2 runCount 4.0 echo busted || return $?
-  assertExitCode 2 runCount thirty echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount -4923 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount 33.3 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount 4.0 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount thirty echo busted || return $?
 }
 
 tests+=(testEnvironmentVariables)
@@ -149,13 +149,13 @@ testServiceToPortStandard() {
   assertEquals "$(serviceToStandardPort mariadb)" 3306 mariadb || return $?
   assertEquals "$(serviceToStandardPort mysql)" 3306 mysql || return $?
   assertEquals "$(serviceToStandardPort postgres)" 5432 postgres || return $?
-  assertNotExitCode 0 serviceToStandardPort || return $?
-  assertNotExitCode 0 serviceToStandardPort rtmp || return $?
-  assertNotExitCode 0 serviceToStandardPort echo || return $?
-  assertNotExitCode 0 serviceToStandardPort "" || return $?
-  assertNotExitCode 0 serviceToStandardPort "22" || return $?
-  assertNotExitCode 0 serviceToStandardPort ".https" || return $?
-  assertNotExitCode 0 serviceToStandardPort " " || return $?
+  assertNotExitCode --stderr-match 'arguments' 0 serviceToStandardPort || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort rtmp || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort echo || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort "" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort "22" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort ".https" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort " " || return $?
 }
 
 tests+=(testServiceToPort)
@@ -173,8 +173,8 @@ testServiceToPort() {
 
   assertNotExitCode --stderr-ok 0 serviceToPort || return $?
 
-  assertNotExitCode 0 serviceToPort "" || return $?
-  assertNotExitCode 0 serviceToPort "22" || return $?
-  assertNotExitCode 0 serviceToPort ".https" || return $?
-  assertNotExitCode 0 serviceToPort " " || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort "" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort "22" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort ".https" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort " " || return $?
 }

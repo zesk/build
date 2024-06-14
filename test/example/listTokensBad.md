@@ -7,10 +7,9 @@
 
 {confirmYesNo}
 
-## Copy files 
+## Copy files
 
-{copyFileWouldChange}
-{copyFile}
+{copyFileWouldChange} {copyFile}
 
 ## Examples
 
@@ -21,7 +20,6 @@ Example:
         __environment copyFile "${args[@]}" || return $?
         __environment service ssh restart || return $?
     fi
-
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

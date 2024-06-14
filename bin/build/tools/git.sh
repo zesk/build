@@ -268,11 +268,9 @@ gitRemoteHosts() {
 gitTagVersion() {
   local versionSuffix start currentVersion previousVersion releaseNotes
   local argument tagPrefix index tryVersion maximumTagsPerVersion
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
 
@@ -363,6 +361,44 @@ _gitTagVersion() {
 }
 
 #
+# Usage: {fn} startingDirectory
+# Finds .git directory above or in current one.
+gitFindHome() {
+  local usage="_${FUNCNAME[0]}"
+  local argument directory gitDirectory
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        directory="$(usageArgumentDirectory "$usage" "directory" "$argument")" || return $?
+        directory=$(realPath "$directory") || __failEnvironment "$usage" "realPath $directory" || return $?
+        lastDirectory=
+        while [ "$directory" != "$lastDirectory" ]; do
+          gitDirectory="$directory/.git"
+          if [ -d "$gitDirectory" ]; then
+            printf "%s\n" "$directory"
+            return 0
+          fi
+          lastDirectory="$directory"
+          directory="$(dirname "$directory")"
+        done
+        __failEnvironment "$usage" "No .git found above \"$argument\"" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" shift || return $?
+  done
+}
+_gitFindHome() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
 # Usage: {fn} [ --last ] [ -- ] [ comment ... ]
 #
 # Commits all files added to git and also update release notes with comment
@@ -375,7 +411,7 @@ _gitTagVersion() {
 #
 # Example: ... are all equivalent.
 gitCommit() {
-  local updateReleaseNotes appendLast argument start current next notes comment
+  local updateReleaseNotes appendLast argument start notes comment
   local this usage
 
   this="${FUNCNAME[0]}"
@@ -407,36 +443,25 @@ gitCommit() {
     appendLast=true
     comment=
   fi
-  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
-  current="$start"
-  while [ "$current" != "/" ]; do
-    if [ ! -d "$current/.git" ]; then
-      cd .. && next="$(pwd)" || __failArgument "$usage" "Failed to traverse up from $current" || return $?
-      if [ "$current" = "$next" ]; then
-        break
-      fi
-      current="$next"
-    else
-      gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
-      if $updateReleaseNotes && [ -n "$comment" ]; then
-        statusMessage consoleInfo "Updating release notes ..."
-        notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
-        __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
-      fi
-      if $appendLast || [ -z "$comment" ]; then
-        statusMessage consoleInfo "Using last commit message ..."
-        __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
-      else
-        statusMessage consoleInfo "Using commit comment \"$comment\" ..."
-        __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
-      fi
-      __usageEnvironment "$usage" cd "$start" || return $?
-      return 0
-    fi
-  done
 
-  cd "$start" || :
-  __failEnvironment "$usage" "Unable to find git repository" || return $?
+  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
+  home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  __usageEnvironment "$usage" cd "$home" || return $?
+  gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
+  if $updateReleaseNotes && [ -n "$comment" ]; then
+    statusMessage consoleInfo "Updating release notes ..."
+    notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
+    __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
+  fi
+  if $appendLast || [ -z "$comment" ]; then
+    statusMessage consoleInfo "Using last commit message ..."
+    __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
+  else
+    statusMessage consoleInfo "Using commit comment \"$comment\" ..."
+    __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
+  fi
+  __usageEnvironment "$usage" cd "$start" || return $?
+  return 0
 }
 __gitCommitReleaseNotesUpdate() {
   local comment="$1" notes="$2"
@@ -467,11 +492,9 @@ _gitCommit() {
 #
 gitMainly() {
   local branch returnCode updateOther
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
@@ -509,11 +532,9 @@ _gitMainly() {
 # Get the current branch name
 #
 gitCurrentBranch() {
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   # git rev-parse --abbrev-ref HEAD
   __usageEnvironment "$usage" git symbolic-ref --short HEAD || return $?

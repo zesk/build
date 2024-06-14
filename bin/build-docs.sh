@@ -18,11 +18,9 @@ fi
 #
 buildDocumentation_UpdateUnlinked() {
   local argument cacheDirectory envFile unlinkedFunctions template total
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   cacheDirectory=
   envFile=
@@ -72,11 +70,8 @@ _buildDocumentation_UpdateUnlinked() {
 #
 buildDocumentation_MergeWithDocsBranch() {
   local branch
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local this="${FUNCNAME[0]}"
+  local usage="_$this"
 
   branch=$(gitCurrentBranch) || __failEnvironment "$usage" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
@@ -96,11 +91,9 @@ _buildDocumentation_MergeWithDocsBranch() {
 #
 buildDocumentation_Recommit() {
   local branch
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   branch=$(gitCurrentBranch) || __failEnvironment "$usage" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
@@ -167,11 +160,9 @@ buildDocumentationBuild() {
   local cacheDirectory theDirectory start docArgs indexArgs=()
   local functionLinkPattern fileLinkPattern documentTemplate templateDirectory
   local start envFile exitCode
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   export BUILD_COLORS_MODE
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :

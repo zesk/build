@@ -26,11 +26,8 @@
 #
 rotateLog() {
   local argument logFile count index dryRun
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local this="${FUNCNAME[0]}"
+  local usage="_$this"
 
   logFile=
   count=
@@ -102,11 +99,9 @@ _rotateLog() {
 # For all log files in logPath with extension `.log`, rotate them safely
 rotateLogs() {
   local argument logPath count index dryRunArgs
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   logPath=
   count=

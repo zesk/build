@@ -6,8 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh prefixLines
-#
 # Docs: contextOpen ./docs/_templates/tools/assert.md
 # Test: contextOpen ./test/tools/assert-tests.sh
 
@@ -23,12 +21,12 @@ _symbolFail() {
 _assertFailure() {
   local function="${1-None}"
   shift || :
-  _environment "$(printf -- "%s: %s %s\n" "$(consoleInfo "$function")" "$(_symbolFail)" "$(consoleError "$@")")" || return $?
+  _environment "$(printf -- "%s: %s %s\n" "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")")" || return $?
 }
 _assertSuccess() {
   local function="${1-None}"
   shift || :
-  printf -- "%s: %s %s\n" "$(consoleInfo "$function")" "$(_symbolSuccess)" "$(consoleSuccess "$@")"
+  printf -- "%s: %s %s\n" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
 }
 
 #
@@ -206,7 +204,7 @@ _assertExitCodeHelper() {
     rm -rf "$outputFile" "$errorFile" || :
     _environment "${usageFunction#_} Failed" || return $?
   fi
-  printf "%s %s: %s -> %s\n" "$(_symbolSuccess)" "$(consoleSuccess "${usageFunction#_}")" "$(consoleCode "$bin $*")" "$(consoleSuccess "$actual")"
+  _assertSuccess "${usageFunction#_}" "$(consoleCode "$bin $*")" "$(consoleSuccess "$actual")" || return $?
   rm -rf "$outputFile" "$errorFile" || :
   return 0
 }

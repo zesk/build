@@ -84,11 +84,9 @@ beginTiming() {
 # Example:    reportTiming "$init" "Deploy completed in"
 reportTiming() {
   local start prefix delta
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   start=${1-}
   __usageArgument "$usage" isInteger "$start" || return $?
@@ -163,11 +161,9 @@ buildFailed() {
 #
 versionSort() {
   local r=
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
     if [ "$1" = "-r" ]; then
@@ -317,11 +313,9 @@ showEnvironment() {
 #
 makeEnvironment() {
   local missing e requireEnvironment
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   IFS=$'\n' read -d '' -r -a requireEnvironment < <(applicationEnvironment) || :
 
@@ -387,11 +381,9 @@ isUpToDate() {
   local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp
   local label deltaDays maxDays daysAgo expireTimestamp expireDate keyTimestamp
   local name argument timeText
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   name=Key
   keyDate=

@@ -36,12 +36,10 @@ testSection() {
 
 testHeading() {
   whichApt toilet toilet 2>/dev/null 1>&2 || _environment "Unable to install toilet" || return $?
-  printf "%s" "$(consoleCode)"
-  consoleOrange "$(echoBar '*')"
+  consoleCode "$(consoleOrange "$(echoBar '*')")"
   printf "%s" "$(consoleCode)$(clearLine)"
-  bigText "$@" | wrapLines "  $(consoleCode)" "$(consoleReset)"
-  consoleOrange "$(echoBar)"
-  consoleReset
+  bigText "$@" | wrapLines --fill " " "$(consoleCode)    " "$(consoleReset)"
+  consoleCode "$(consoleOrange "$(echoBar '=')")"
 }
 
 debugTermDisplay() {
@@ -68,12 +66,8 @@ cleanTestName() {
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 loadTestFiles() {
-  local testCount tests showTests testName quietLog=$1 testDirectory resultCode=0 resultReason
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local testCount tests showTests testName quietLog=$1 __testDirectory resultCode=0 resultReason
+  local __test __tests
 
   export tests
   resultReason="Success"
@@ -90,58 +84,67 @@ loadTestFiles() {
       resultCode="$errorTest"
     else
       testCount=${#tests[@]}
+      statusMessage consoleInfo "Loading $1 ... "
       # shellcheck source=/dev/null
-      if . "./test/tools/$1"; then
-        :
+      if source "./test/tools/$1" 1>&2 > >(_environmentOutput source "./test/tools/$1"); then
+        statusMessage consoleInfo "Loaded successfully ...":
       else
         resultReason="Include $1 failed"
         resultCode="$?"
       fi
       clearLine
       if [ "${#tests[@]}" -le "$testCount" ]; then
-        consoleError "No tests defined in ./test/tools/$1"
+        statusMessage consoleError "No tests defined in ./test/tools/$1"
         resultReason="No tests defined in ./test/tools/$1 ${#tests[@]} <= $testCount"
         resultCode="$errorTest"
       fi
     fi
     shift
   done
+
   showTests=()
-  for test in "${tests[@]}"; do
-    if [ "${test#\#}" = "$test" ]; then
-      showTests+=("$test")
+  for testName in "${tests[@]}"; do
+    if [ "${testName:0:1}" != '#' ]; then
+      showTests+=("$testName")
     fi
   done
+
   testCount="${#showTests[@]}"
   statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${showTests[*]}\" ..."
   printf "\n"
-  testDirectory=$(pwd)
-  while [ ${#tests[@]} -gt 0 ]; do
-    test="${tests[0]}"
+
+  # Renamed to avoid clobbering by tests
+  __testDirectory=$(pwd)
+  __tests=("${tests[@]}")
+
+  while [ ${#__tests[@]} -gt 0 ]; do
+    __test="${__tests[0]}"
+    unset '__tests[0]'
+    __tests=("${__tests[@]+${__tests[@]}}")
     # Section
-    if [ "${test#\#}" != "$test" ]; then
-      testHeading "${test#\#}"
-    else
-      # Test
-      testSection "${test#\#}"
-      printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$test")"
-      set -eou pipefail
-      if ! "$test" "$quietLog"; then
-        resultCode=$errorTest
-      fi
-      set +x
-      set -eou pipefail
-      __usageEnvironment "$usage" cd "$testDirectory" || return $?
-      if [ "$resultCode" -ne 0 ]; then
-        printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleRed "FAILED")" 1>&2
-        buildFailed "$quietLog" || :
-        resultReason="test failed"
-        return "$resultCode"
-      fi
-      printf "%s %s ...\n" "$(consoleCode "$test")" "$(consoleGreen "passed")"
+    if [ "${__test#\#}" != "$__test" ]; then
+      testHeading "${__test#\#}" || :
+      continue
     fi
-    unset 'tests[0]'
-    tests=("${tests[@]+${tests[@]}}")
+    # Test
+    testSection "$__test" || :
+    printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$__test")"
+    set -eou pipefail
+    if ! "$__test" "$quietLog"; then
+      resultCode=$errorTest
+    fi
+    set -eou pipefail
+    # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
+    # documentation-tests.sh change this apparently
+    # Instead of preventing this usage, just work around it
+    __usageEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
+    if [ "$resultCode" -ne 0 ]; then
+      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleRed "FAILED")" 1>&2
+      buildFailed "$quietLog" || :
+      resultReason="test $__test failed"
+      break
+    fi
+    printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
   done
   if [ "$resultCode" -eq 0 ] && resultReason=$(didAnyTestsFail); then
     # Should probably reset test status but ...

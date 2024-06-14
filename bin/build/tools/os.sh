@@ -19,39 +19,25 @@ errorArgument=2
 # Copy directory over another sort-of-atomically
 #
 directoryClobber() {
+  local usage="_${FUNCNAME[0]}"
   local source target targetPath targetName sourceStage targetBackup
 
-  if ! source=$(usageArgumentDirectory "_${FUNCNAME[0]}" source "$1"); then
-    return $?
-  fi
+  source=$(usageArgumentDirectory "$usage" source "$1") || return $?
   shift || :
   target="${1-}"
-  if ! targetPath="$(dirname "$target")" || [ ! -d "$targetPath" ]; then
-    _directoryClobber "$errorArgument" "$targetPath parent directory does not exist" || return $?
-  fi
-  if ! targetName="$(basename "$target")"; then
-    _directoryClobber "$errorArgument" "basename $target failed" || return $?
-  fi
+  targetPath="$(dirname "$target")" || __failArgument "$usage" "dirname $target" || return $?
+  [ -d "$targetPath" ] || __failEnvironment "$usage" "$targetPath is not a directory" || return $?
+  targetName="$(basename "$target")" || __failEnvironment basename "$target" || return $?
   sourceStage="$targetPath/.NEW.$$.$targetName"
   targetBackup="$targetPath/.OLD.$$.$targetName"
-  if ! mv -f "$source" "$sourceStage"; then
-    _directoryClobber "$errorEnvironment" "mv -f $source $sourceStage failed" || return $?
-  fi
-  if ! mv -f "$target" "$targetBackup"; then
-    _directoryClobber "$errorEnvironment" "mv -f $target" "$targetBackup failed" || return $?
-  fi
+  __usageEnvironment "$usage" mv -f "$source" "$sourceStage" || return $?
+  __usageEnvironment "$usage" mv -f "$target" "$targetBackup" || return $?
   if ! mv -f "$sourceStage" "$target"; then
-    if ! mv -f "$targetBackup" "$target"; then
-      consoleError "Unable to revert $targetBackup -> $target" || :
-      return "$errorEnvironment"
-    fi
-    if ! mv -f "$sourceStage" "$source"; then
-      consoleError "Unable to revert $sourceStage -> $source" || :
-      return "$errorEnvironment"
-    fi
-    _directoryClobber "$errorEnvironment" "Clobber failed" || return $?
+    mv -f "$targetBackup" "$target" || __failEnvironment "$usage" "Unable to revert $targetBackup -> $target" || return $?
+    mv -f "$sourceStage" "$source" || __failEnvironment "$usage" "Unable to revert $sourceStage -> $source" || return $?
+    __failEnvironment "$usage" "Clobber failed" || return $?
   fi
-  rm -rf "$targetBackup" || _directoryClobber "$errorEnvironment" "Unable to delete $targetBackup" || return $?
+  __usageEnvironment "$usage" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -68,12 +54,12 @@ _directoryClobber() {
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 #
 buildCacheDirectory() {
+  local usage="_${FUNCNAME[0]}"
+
   local suffix
-  # shellcheck source=/dev/null
-  if ! buildEnvironmentLoad BUILD_CACHE; then
-    printf "%s\n" "BUILD_CACHE failed" 1>&2
-    return 1
-  fi
+  export BUILD_CACHE
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_CACHE || return $?
+
   suffix="$(printf "%s/" "$@")"
   suffix="${suffix%/}"
   suffix="$(printf "%s/%s" "${BUILD_CACHE%/}" "${suffix%/}")"
@@ -84,46 +70,36 @@ _buildCacheDirectory() {
 }
 
 #
-# Load on or more environment settings from bin/build/env
+# Load one or more environment settings from bin/build/env or bin/env.
 #
 # Usage: {fn} [ envName ... ]
 # Argument: envName - The environment name to load
 #
+# If BOTH files exist, both are sourced, so application environments should anticipate values
+# created by default.
+#
 buildEnvironmentLoad() {
+  local usage="_${FUNCNAME[0]}"
   local env file found
 
-  if ! export BUILD_HOME "${@+$@}"; then
-    _buildEnvironmentLoad "$errorEnvironment" "Exporting BUILD_HOME $* failed" || return $?
-  fi
+  export BUILD_HOME "${@+$@}" || __failEnvironment "$usage" export BUILD_HOME "${@+$@}" return $?
   if [ -z "${BUILD_HOME-}" ]; then
-    # shellcheck source=/dev/null
-    if ! source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh"; then
-      _buildEnvironmentLoad "$errorEnvironment" "Loading BUILD_HOME $* failed" || return $?
-    fi
-    if [ -z "${BUILD_HOME-}" ]; then
-      _buildEnvironmentLoad "$errorEnvironment" "BUILD_HOME STILL blank" || return $?
-    fi
+    __usageEnvironment "$usage" source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || return $?
+    [ -n "${BUILD_HOME-}" ] || __failEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
   fi
   for env in "$@"; do
     found=false
-    for file in "${BUILD_HOME-}/bin/build/env/$env.sh" "${BUILD_HOME-}/bin/env/$env.sh"; do
-      if [ -f "$file" ]; then
-        if ! $found && ! export "${env?}"; then
-          _buildEnvironmentLoad "$errorArgument" "export $env failed" || return $?
-        fi
+    for file in "$BUILD_HOME/bin/build/env/$env.sh" "$BUILD_HOME/bin/env/$env.sh"; do
+      if [ -x "$file" ]; then
+        export "${env?}" || __failArgument "$usage" "export $env failed" || return $?
         found=true
-        set -a
+        set -a || :
         # shellcheck source=/dev/null
-        if ! source "$file"; then
-          set +a
-          _buildEnvironmentLoad "$errorEnvironment" "Loading $file failed" || return $?
-        fi
-        set +a
+        source "$file" || __failEnvironment "$usage" source "$file" return $?
+        set +a || :
       fi
     done
-    if ! $found; then
-      _buildEnvironmentLoad "$errorEnvironment" "Missing $file" || return $?
-    fi
+    $found || __failEnvironment "$usage" "Missing $file" || return $?
   done
 }
 _buildEnvironmentLoad() {
@@ -143,26 +119,28 @@ _buildEnvironmentLoad() {
 # Argument: --no-create - Optional. Do not require creation of the directory where the log file will appear.
 #
 buildQuietLog() {
-  local logFile flagMake=1
+  local argument logFile flagMake argument
+  local usage="_${FUNCNAME[0]}"
+
+  flagMake=true
   while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
     case $1 in
       --no-create)
-        flagMake=
+        flagMake=false
         ;;
       *)
-        if [ -z "$1" ]; then
-          consoleError "buildQuietLog requires a name parameter" 1>&2
-          return 1
-        fi
-        logFile="$(buildCacheDirectory "$1.log")"
-        if test "$flagMake" && ! requireFileDirectory "$logFile"; then
-          return $?
-        fi
-        printf %s "$logFile"
+        logFile="$(buildCacheDirectory "$1.log")" || __failEnvironment "$usage" buildCacheDirectory "$1.log" || return $?
+        ! "$flagMake" || __usageEnvironment "$usage" requireFileDirectory "$logFile" || return $?
+        printf "%s\n" "$logFile"
         ;;
     esac
-    shift
+    shift || :
   done
+}
+_buildQuietLog() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -175,33 +153,39 @@ buildQuietLog() {
 # Example:     {fn} "$logFile"
 #
 requireFileDirectory() {
-  local rs name
+  local name
+  local argument usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
-    name="$(dirname "$1")"
-    if [ ! -d "$name" ] && ! mkdir -p "$name"; then
-      rs=$?
-      consoleError "Unable to create directory \"$name\"" 1>&2
-      return "$rs"
-    fi
-    shift
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    name="$(dirname "$1")" || __failEnvironment "$usage" "dirname $argument" || return $?
+    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(consoleCode "$name")\"" || return $?
+    shift || __failArgument "$usage" shift || return $?
   done
+}
+_requireFileDirectory() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Does the file's directory exist?
 #
+# Usage: {fn} directory
+# Argument: directory - Test if file directory exists (file does not have to exist)
 fileDirectoryExists() {
   local path
-  [ $# -eq 0 ] && return $errorArgument
+  local argument usage="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || _argument "No arguments" || return $?
   while [ $# -gt 0 ]; do
-    if ! path=$(dirname "$1"); then
-      return "$errorEnvironment"
-    fi
-    if [ ! -d "$path" ]; then
-      return "$errorEnvironment"
-    fi
-    shift || return "$errorEnvironment"
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    path=$(dirname "$argument") || __failEnvironment "$usage" "dirname $argument" || return $?
+    [ -d "$path" ] || return 1
+    shift || __failArgument "$usage" shift || return $?
   done
+}
+_fileDirectoryExists() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -215,15 +199,17 @@ fileDirectoryExists() {
 #
 requireDirectory() {
   local name
+  local usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     name="$1"
-    if [ ! -d "$name" ] && ! mkdir -p "$name"; then
-      consoleError "Unable to create directory \"$name\"" 1>&2
-      return "$errorEnvironment"
-    fi
+    [ -n "$name" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(consoleCode "$name")\"" || return $?
     printf "%s\n" "$name"
-    shift
+    shift || __failArgument "$usage" shift || return $?
   done
+}
+_requireDirectory() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -237,18 +223,38 @@ requireDirectory() {
 # Summary: Run a binary count times
 #
 runCount() {
-  local n
-  n="$1"
-  if ! isUnsignedInteger "$n"; then
-    return "$errorArgument"
-  fi
-  shift
-  while [ "$n" -gt 0 ]; do
-    if ! "$@"; then
-      return $?
-    fi
-    n=$((n - 1))
+  local usage="_${FUNCNAME[0]}"
+  local argument index total
+
+  total=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$total" ]; then
+          isUnsignedInteger "$argument" || __failArgument "$usage" "$argument must be a positive integer" || return $?
+          total="$argument"
+        else
+          index=0
+          while [ "$index" -lt "$total" ]; do
+            index=$((index + 1))
+            "$@" || __failEnvironment "$usage" "iteration #$index" "$@" return $?
+          done
+          return 0
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" shift || return $?
   done
+
+}
+_runCount() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -294,22 +300,43 @@ renameFiles() {
 # Argument: files - A list of files to include in the tar file
 #
 createTarFile() {
-  local target="${1-}"
+  local usage="_${FUNCNAME[0]}"
+  local argument
+  local target
 
-  # -h means follow symlinks
-  shift || return "$errorArgument"
-  if tar --version | grep -q GNU; then
-    # GNU
-    # > tar --version
-    # tar (GNU tar) 1.34
-    # ...
-    tar -czf "$target" --owner=0 --group=0 --no-xattrs -h "$@"
-  else
-    # BSD
-    # > tar --version
-    # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
-    tar -czf "$target" --uid 0 --gid 0 --no-acls --no-fflags --no-xattrs -h "$@"
-  fi
+  [ $# -gt 0 ] || __failArgument "$usage" "Need target and files" || return $?
+  target=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        target="$argument"
+        shift || __failArgument "No files supplied" || return $?
+        # -h means follow symlinks
+        if tar --version | grep -q GNU; then
+          # GNU
+          # > tar --version
+          # tar (GNU tar) 1.34
+          # ...
+          tar -czf "$target" --owner=0 --group=0 --no-xattrs -h "$@"
+        else
+          # BSD
+          # > tar --version
+          # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
+          tar -czf "$target" --uid 0 --gid 0 --no-acls --no-fflags --no-xattrs -h "$@"
+        fi
+        return 0
+        ;;
+    esac
+  done
+}
+_createTarFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -363,13 +390,18 @@ makeShellFilesExecutable() {
 # Example:     modificationTime ~/.bash_profile
 #
 modificationTime() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   while [ $# -gt 0 ]; do
-    if [ ! -f "$1" ]; then
-      return "$errorArgument"
-    fi
-    printf "%d\n" "$(date -r "$1" +%s)"
-    shift
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -f "$argument" ] || __failArgument "$usage" "$argument is not a file" || return $?
+    printf "%d\n" "$(date -r "$argument" +%s)"
+    shift || __failArgument "$usage" "shift" || return $?
   done
+}
+_modificationTime() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fetch the modification time in seconds from now of a file as a timestamp
@@ -380,16 +412,21 @@ modificationTime() {
 # Example:     modificationTime ~/.bash_profile
 #
 modificationSeconds() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local now
 
   now="$(date +%s)"
   while [ $# -gt 0 ]; do
-    if [ ! -f "$1" ]; then
-      return "$errorArgument"
-    fi
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -f "$argument" ] || __failArgument "$usage" "$argument is not a file" || return $?
     printf "%d\n" "$((now - "$(modificationTime "$1")"))"
-    shift
+    shift || __failArgument "$usage" "shift" || return $?
   done
+}
+_modificationSeconds() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+
 }
 
 #
@@ -406,19 +443,20 @@ modificationSeconds() {
 # Output: 1705442647 bin/build/build.json
 #
 listFileModificationTimes() {
+  local usage="_${FUNCNAME[0]}"
   local directory
 
   directory="$1"
-  if [ ! -d "$directory" ]; then
-    printf "%s: %s" "$(consoleError "Not a directory")" "$(consoleCode "$directory")" 1>&2
-    return $errorArgument
-  fi
-  shift
+  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(consoleCode "$directory")" || return $?
+  shift || :
   if [ "$(uname -s)" = "Darwin" ]; then
     find "$directory" -type f "$@" -exec stat -f '%m %N' {} \;
   else
     find "$directory" -type f "$@" -exec stat --format='%Y %n' {} \;
   fi
+}
+_listFileModificationTimes() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List the most recently modified file in a directory
@@ -426,27 +464,29 @@ listFileModificationTimes() {
 # Argument: directory - Required. Directory. Must exists - directory to list.
 # Argument: findArgs - Optional additional arguments to modify the find query
 mostRecentlyModifiedFile() {
+  local usage="_${FUNCNAME[0]}"
   directory="$1"
-  if [ ! -d "$directory" ]; then
-    printf "%s: %s" "$(consoleError "Not a directory")" "$(consoleCode "$directory")" 1>&2
-    return $errorArgument
-  fi
-  shift
+  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(consoleCode "$directory")" || return $?
+  shift || :
   listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
+_mostRecentlyModifiedFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# List the most recently modified file in a directory
+# List the most recently modified timestamp in a directory
 # Usage: {fn} directory [ findArgs ... ]
 # Argument: directory - Required. Directory. Must exists - directory to list.
 # Argument: findArgs - Optional additional arguments to modify the find query
 mostRecentlyModifiedTimestamp() {
+  local usage="_${FUNCNAME[0]}"
   directory="$1"
-  if [ ! -d "$directory" ]; then
-    printf "%s: %s" "$(consoleError "Not a directory")" "$(consoleCode "$directory")" 1>&2
-    return $errorArgument
-  fi
-  shift
+  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(consoleCode "$directory")" || return $?
+  shift || :
   listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
+}
+_mostRecentlyModifiedTimestamp() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -490,26 +530,41 @@ isOldestFile() {
 }
 
 #
+# oldestFile and newestFile refactor
+#
+__gamutFile() {
+  local usage="$1" comparison="$2"
+
+  shift 2 || _argument "${FUNCNAME[0]} used incorrectly" || return $?
+
+  local argument
+  local tempTime gamutTime theFile=
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -f "$argument" ] || __failArgument "$usage" "Not a file $(consoleCode "$argument")" || return $?
+    tempTime=$(modificationTime "$argument") || __failEnvironment modificationTime "$argument" || return $?
+    if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
+      theFile="$1"
+      gamutTime="$tempTime"
+    fi
+    shift || :
+  done
+  printf "%s" "$theFile"
+}
+
+#
 # Return the oldest file in the list.
 #
 # Usage: {fn} file0 [ file1 ... ]
 # Argument: file0 - One or more files to examine
 #
 oldestFile() {
-  local tempTime oldestTime theFile=
-
-  while [ $# -gt 0 ]; do
-    if [ ! -f "$1" ]; then
-      return "$errorArgument"
-    fi
-    tempTime=$(modificationTime "$1")
-    if [ -z "$theFile" ] || [ "$tempTime" -lt "$oldestTime" ]; then
-      theFile="$1"
-      oldestTime="$tempTime"
-    fi
-    shift
-  done
-  printf "%s" "$theFile"
+  __gamutFile "_${FUNCNAME[0]}" -lt "$@"
+}
+_oldestFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -519,20 +574,10 @@ oldestFile() {
 # Argument: file0 - One or more files to examine
 #
 newestFile() {
-  local tempTime newestTime theFile=
-
-  while [ $# -gt 0 ]; do
-    if [ ! -f "$1" ]; then
-      return "$errorArgument"
-    fi
-    tempTime=$(modificationTime "$1")
-    if [ -z "$theFile" ] || [ "$tempTime" -gt "$newestTime" ]; then
-      theFile="$1"
-      newestTime="$tempTime"
-    fi
-    shift
-  done
-  printf "%s\n" "$theFile"
+  __gamutFile "_${FUNCNAME[0]}" -gt "$@"
+}
+_newestFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -542,12 +587,14 @@ newestFile() {
 # Exit Code: 2 - Can not get modification time
 #
 modifiedSeconds() {
-  local ts
+  local usage="_${FUNCNAME[0]}"
+  local timestamp
 
-  if ! ts=$(modificationTime "$1"); then
-    return $errorArgument
-  fi
-  printf %d "$(($(date +%s) - ts))"
+  timestamp=$(modificationTime "$1") || __failArgument "$usage" modificationTime "$1" || return $?
+  printf %d "$(($(date +%s) - timestamp))"
+}
+_modifiedSeconds() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -557,12 +604,14 @@ modifiedSeconds() {
 # Exit Code: 2 - Can not get modification time
 #
 modifiedDays() {
-  local ts
+  local usage="_${FUNCNAME[0]}"
+  local timestamp
 
-  if ! ts=$(modifiedSeconds "$1"); then
-    return $errorArgument
-  fi
-  printf %d "$((ts / 86400))"
+  timestamp=$(modifiedSeconds "$1") || __failArgument "$usage" modifiedSeconds "$1" || return $?
+  printf %d "$((timestamp / 86400))"
+}
+_modifiedDays() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -574,38 +623,37 @@ modifiedDays() {
 # Argument: path - the path to be added to the `pathValue`
 #
 pathAppend() {
-  local pathValue="$1" s="$2" exitCode=0 firstFlag=
+  local usage="_${FUNCNAME[0]}"
+  local argument pathValue="$1" separator="$2"
 
-  shift
-  shift
+  shift 2 || :
+  firstFlag=false
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$1" in
       --first)
-        firstFlag=1
+        firstFlag=true
         ;;
       --last)
-        firstFlag=
+        firstFlag=false
         ;;
       *)
-        if [ "$(stringOffset "$1$s" "$s$s$pathValue$s")" -lt 0 ]; then
-          if [ ! -d "$1" ]; then
-            exitCode=2
-          elif [ -z "$pathValue" ]; then
-            pathValue="$1"
-          elif test "$firstFlag"; then
-            pathValue="$1$s$pathValue"
+        if [ "$(stringOffset "$argument$separator" "$separator$separator$pathValue$separator")" -lt 0 ]; then
+          [ -d "$argument" ] || __failEnvironment "$usage" "not a directory $(consoleCode "$argument")" || return $?
+          if [ -z "$pathValue" ]; then
+            pathValue="$argument"
+          elif "$firstFlag"; then
+            pathValue="$argument$separator${pathValue#"$separator"}"
           else
-            pathValue="$pathValue$s$1"
+            pathValue="${pathValue%"$separator"}$separator$argument"
           fi
-        else
-          exitCode=1
         fi
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "shift $argument" || return $?
   done
-  printf %s "$pathValue"
-  return "$exitCode"
+  printf "%s\n" "$pathValue"
 }
 
 #
@@ -616,13 +664,11 @@ pathAppend() {
 #
 manPathConfigure() {
   local tempPath
-  # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../env/MANPATH.sh"
-  if tempPath="$(pathAppend "$MANPATH" ':' "$@")"; then
-    MANPATH="$tempPath"
-    return 0
-  fi
-  return $?
+  export MANPATH
+
+  __environment buildEnvironmentLoad MANPATH || return $?
+  tempPath="$(pathAppend "$MANPATH" ':' "$@")" || _environment pathAppend "$MANPATH" ':' "$@" || return $?
+  MANPATH="$tempPath"
 }
 
 #
@@ -632,13 +678,11 @@ manPathConfigure() {
 # Argument: path - the path to be added to the `PATH` environment
 pathConfigure() {
   local tempPath
-  # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../env/PATH.sh"
-  if tempPath="$(pathAppend "$PATH" ':' "$@")"; then
-    PATH="$tempPath"
-    return 0
-  fi
-  return $?
+  export PATH
+
+  __environment buildEnvironmentLoad PATH || return $?
+  tempPath="$(pathAppend "$PATH" ':' "$@")" || _environment pathAppend "$PATH" ':' "$@" || return $?
+  PATH="$tempPath"
 }
 
 #
@@ -752,22 +796,16 @@ _fileGroup() {
 # Exit Code: 0 - Success
 # Exit Code: 2 - Argument error
 processMemoryUsage() {
+  local usage="_${FUNCNAME[0]}"
   local pid
   while [ $# -gt 0 ]; do
     pid="$1"
-    if ! isInteger "$pid"; then
-      _processMemoryUsage "$errorArgument" "Not an integer"
-      return $?
-    fi
+    __usageArgument "$usage" isInteger "$pid" || return $?
     # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
-    if ! value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)"; then
-      _processMemoryUsage "$errorEnvironment" "Failed to get process status for $pid" || return $?
-    fi
-    if ! isInteger "$value"; then
-      _processMemoryUsage "$errorEnvironment" "Bad memory value for $pid: $value" || return $?
-    fi
+    value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __failEnvironment "$usage" "Failed to get process status for $pid" || return $?
+    isInteger "$value" || __failEnvironment "$usage" "Bad memory value for $pid: $value" || return $?
     printf %d $((value * 1))
-    shift
+    shift || __failArgument "$usage" "shift" || return $?
   done
 }
 _processMemoryUsage() {
@@ -784,19 +822,15 @@ _processMemoryUsage() {
 # Exit Code: 0 - Success
 # Exit Code: 2 - Argument error
 processVirtualMemoryAllocation() {
+  local usage="_${FUNCNAME[0]}"
   local pid value
   while [ $# -gt 0 ]; do
     pid="$1"
-    if ! isInteger "$pid"; then
-      _processVirtualMemoryAllocation "$errorArgument" "Not an integer"
-      return $?
-    fi
+    __usageArgument "$usage" isInteger "$pid" || return $?
     value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
-    if ! isInteger "$value"; then
-      _processVirtualMemoryAllocation "$errorEnvironment" "ps returned non-integer: \"$(consoleCode "$value")\"" || return $?
-    fi
+    isInteger "$value" || __failEnvironment "$usage" "ps returned non-integer: \"$(consoleCode "$value")\"" || return $?
     printf %d $((value * 1))
-    shift
+    shift || __failArgument "$usage" "shift" || return $?
   done
 }
 _processVirtualMemoryAllocation() {
@@ -812,22 +846,19 @@ _processVirtualMemoryAllocation() {
 #
 fileSize() {
   local size opts
+  local usage="_${FUNCNAME[0]}"
 
-  # shellcheck source=/dev/null
-  if ! . "$(dirname "${BASH_SOURCE[0]}")/../env/OSTYPE.sh"; then
-    _fileSize "$errorEnvironment" "No OSTYPE environment file" || return $?
-  fi
+  export OSTYPE
+  __usageEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
 
   case "$(lowercase "${OSTYPE}")" in
     *darwin*) opts=("-f" "%z") ;;
     *) opts=('-c%s') ;;
   esac
   while [ $# -gt 0 ]; do
-    if ! size="$(stat "${opts[@]}" "$1")"; then
-      _fileSize "$errorEnvironment" "Unable to stat ${opts[*]} $1"
-    fi
-    printf "%s\n" "$size" || :
-    shift || :
+    size="$(stat "${opts[@]}" "$1")" || __failEnvironment "$usage" "Unable to stat" "${opts[@]}" "$1" || return $?
+    printf "%s\n" "$size"
+    shift || __failArgument "$usage" shift || return $?
   done
 }
 _fileSize() {
@@ -872,7 +903,7 @@ betterType() {
 }
 
 #
-# Usage: {fn} {from} {to}
+# Usage: {fn} from to
 #
 # Uses mv and clobbers always
 #
@@ -904,22 +935,25 @@ renameLink() {
 # See: serviceToPort
 #
 serviceToStandardPort() {
-  local port
-  if [ $# -eq 0 ]; then
-    return $errorArgument
-  fi
+  local usage="_${FUNCNAME[0]}"
+  local port service
+  [ $# -gt 0 ] || __failArgument "$usage" "No arguments" || return $?
   while [ $# -gt 0 ]; do
-    case "$(trimSpace "${1-}")" in
+    service="$(trimSpace "${1-}")"
+    case "$service" in
       ssh) port=22 ;;
       http) port=80 ;;
       https) port=443 ;;
       mariadb | mysql) port=3306 ;;
       postgres) port=5432 ;;
-      *) return $errorEnvironment ;;
+      *) __failEnvironment "$usage" "$service unknown" || return $? ;;
     esac
     printf "%d\n" "$port"
-    shift || return "$errorArgument"
+    shift || __failArgument "$usage" shift "$argument" "$@" || return $?
   done
+}
+_serviceToStandardPort() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the port number associated with a service
@@ -938,19 +972,13 @@ serviceToPort() {
   if [ ! -f "$servicesFile" ]; then
     serviceToStandardPort "$@"
   else
-    if [ $# -eq 0 ]; then
-      _serviceToPort "$errorArgument" "Require at least one service" || return $?
-    fi
+    [ $# -gt 0 ] || __failArgument "$usage" "Require at least one service" || return $?
     while [ $# -gt 0 ]; do
       service="$(trimSpace "${1-}")"
       if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
-        if ! isInteger "$port"; then
-          _serviceToPort "$errorEnvironment" "Port found in $servicesFile is not an integer: $port" || return $?
-        fi
+        isInteger "$port" || __failEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
       else
-        if ! port="$(serviceToStandardPort "$service")"; then
-          return $errorEnvironment
-        fi
+        port="$(serviceToStandardPort "$service")" || __failEnvironment "$usage" serviceToStandardPort "$service" || return $?
       fi
       printf "%d\n" "$port"
       shift || _serviceToPort "$errorArgument" "shift failed" || return $?

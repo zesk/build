@@ -6,36 +6,118 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh prefixLines
-#
+
+# Dump a pipe with a title and stats
+# Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
+# Argument: name - Optional. String. The file name or title of this output.
+dumpPipe() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
+  local names file nLines nBytes decoration symbol
+  local file width
+
+  local showLines
+
+  export BUILD_DEBUG_LINES
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
+  showLines="${BUILD_DEBUG_LINES:-10}"
+
+  file=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
+
+  cat >"$file"
+
+  names=()
+  symbol="🐞"
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --symbol)
+        shift || __failArgument "$usage" "shift $argument" || return $?
+        symbol="$1"
+        ;;
+      *)
+        names+=("$argument")
+        break
+        ;;
+    esac
+    shift || __failArgument "$usage" shift || return $?
+  done
+
+  name=
+  [ ${#names[@]} -eq 0 ] || name=$(consoleInfo "${names[*]}: ") || :
+  nLines=$(($(wc -l <"$file" | cut -f 1 -d' ') + 0))
+  nBytes=$(($(wc -c <"$file") + 0))
+  [ ${#symbol} -eq 0 ] || symbol="$symbol "
+  # shellcheck disable=SC2015
+  printf "%s%s %s, %s %s %s\n" \
+    "$name" \
+    "$nLines" "$(plural "$nLines" line lines)" \
+    "$nBytes" "$(plural "$nBytes" byte bytes)" \
+    "$([ "$showLines" -lt "$nLines" ] && consoleWarning "(showing $showLines $(plural "$showLines" line lines))" || consoleFile "(shown)")"
+  decoration="$(consoleCode "$(echoBar)")"
+  width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
+  printf "%s\n%s\n%s\n" "$decoration" "$(head -n "$showLines" "$file" | wrapLines --width "$((width - 1))" --fill " " "$symbol$(consoleCode)" "$(consoleReset)")" "$decoration"
+  rm -rf "$file" || :
+}
+_dumpPipe() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # dumpFile fileName0 [ fileName1 ... ]
 #
 dumpFile() {
-  local nLines showLines=10 nBytes
+  local usage="_${FUNCNAME[0]}"
+  local argument
+  local nLines showLines nBytes tempFile file files symbolArgs
 
+  files=()
+  isInteger "$showLines" || _environment "SHOW_LINES is not-integer: $showLines" || showLines=10
+
+  symbolArgs=()
   while [ $# -gt 0 ]; do
-    if [ -f "$1" ]; then
-      nLines=$(($(wc -l <"$1" | cut -f 1 -d' ') + 0))
-      nBytes=$(($(wc -c <"$1") + 0))
-      consoleInfo -n "$1"
-      consoleSuccess -n ": $nLines $(plural "$nLines" line lines), $nBytes $(plural "$nBytes" byte bytes)"
-      if [ $showLines -lt $nLines ]; then
-        consoleWarning "(Showing $showLines)"
-      else
-        echo
-      fi
-      {
-        echoBar " "
-        head -$showLines "$1"
-        echoBar " "
-      } | wrapLines "$(consoleCode)    " "$(consoleReset)"
-    else
-      consoleError "dumpFile: $1 is not a file"
-    fi
-    shift
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --symbol)
+        shift || __failArgument "$usage" "shift $argument" || return $?
+        symbolArgs=(--symbol "$1")
+        ;;
+      *)
+        [ -f "$argument" ] || __failArgument "$argument is not a file" || return $?
+        files+=("$argument")
+        __failArgument "Unknown argument: $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" shift || return $?
   done
+
+  if [ ${#files[@]} -eq 0 ]; then
+    __usageEnvironment "$usage" dumpPipe "${symbolArgs[@]+${symbolArgs[@]}}" "(stdin)" || return $?
+  else
+    for tempFile in "${files[@]}"; do
+      # shellcheck disable=SC2094
+      __usageEnvironment "$usage" dumpPipe "${symbolArgs[@]+${symbolArgs[@]}}" "$tempFile" <"$tempFile" || return $?
+    done
+  fi
+}
+__dumpFile() {
+  local exitCode="$1" tempFile="$2"
+  shift 2 || _argument "${FUNCNAME[0]} shift 2" || :
+  __environment rm -rf "$tempFile" || :
+  _dumpFile "$exitCode" "$@"
+}
+_dumpFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -72,6 +154,7 @@ validateShellScripts() {
   failedFiles=()
   checkedFiles=()
   binary=
+  interactive=false
   while [ $# -gt 0 ]; do
     arg="$1"
     [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
@@ -115,19 +198,20 @@ validateShellScripts() {
         failedFiles+=("$arg")
       else
         ! $verbose || consoleSuccess "validateShellScript $arg passed"
-        checkedFiles+=("$arg")pat
+        checkedFiles+=("$arg")
       fi
     done
   fi
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
-    clearLine
-    consoleError "# The following scripts failed:" 1>&2
-    for arg in "${failedReasons[@]}"; do
-      echo "    $(consoleMagenta -n "$arg")" 1>&2
-    done
-    consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)" 1>&2
-    if ! "$interactive" [ -n "$binary" ]; then
+    {
+      consoleError "$(clearLine)# The following scripts failed:"
+      for arg in "${failedReasons[@]}"; do
+        echo "    $(consoleMagenta -n "$arg")"
+      done
+      consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)"
+    } 1>&2
+    if ! "$interactive" && [ -n "$binary" ]; then
       if [ ${#failedFiles[@]} -gt 0 ]; then
         "$binary" "${failedFiles[@]}"
       fi
@@ -135,7 +219,7 @@ validateShellScripts() {
     if $interactive; then
       validateShellScriptsInteractive "$sleepDelay" "${failedFiles[@]}"
     fi
-    __failEnvironment "$usage" "$this failed" || return $?
+    __failEnvironment "$usage" "${failedReasons[*]}" || return $?
   fi
   statusMessage consoleSuccess "All scripts passed validation"
 }
@@ -440,12 +524,9 @@ validateFileExtensionContents() {
 #
 findUncaughtAssertions() {
   local argument listFlag binary directory problemFiles lastProblemFile problemLine problemLines
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
-
+  usage="_${FUNCNAME[0]}"
 
   # --list
   listFlag=false

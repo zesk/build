@@ -36,11 +36,9 @@ deployBuildEnvironment() {
   local argument deployArgs deployHome applicationId applicationPath
   local buildEnv="./.build.env"
   local envFile envFiles envFilesLoaded
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   if [ ! -f "$buildEnv" ]; then
     envFiles=()
@@ -209,11 +207,9 @@ _deployBuildEnvironment() {
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
   local argument targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome firstFlags
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   targetPackage=
   revertFlag=false
@@ -336,11 +332,9 @@ _deployRemoteFinish() {
 # See: BUILD_TARGET.sh
 _deployRevertApplication() {
   local firstDeployment name deployHome versionName previousChecksum targetPackage
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
   # --first
   firstDeployment=
 
@@ -476,11 +470,9 @@ deployToRemote() {
   local commonArguments
   local nameWidth=50
   local argument
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 

@@ -59,11 +59,9 @@ _textExit() {
 #
 buildTestSuite() {
   local quietLog allTests runTests shortTest
-  # IDENTICAL this_usage 4
-  local this usage
+    local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
@@ -145,7 +143,7 @@ buildTestSuite() {
   testTracing=cleanup
   messyTestCleanup
 
-  bigText Passed | wrapLines "$(consoleSuccess)" "$(consoleReset)"
+  bigText Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
   consoleReset
 }
 _buildTestSuite() {

@@ -218,11 +218,9 @@ awsEnvironment() {
 awsSecurityGroupIPModify() {
   local argument group port description start region ip foundIP mode verb tempErrorFile
   local savedArgs
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   savedArgs=("$@")
 
@@ -392,11 +390,9 @@ awsIPAccess() {
   local sgArgs
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   services=()
   optionRevoke=

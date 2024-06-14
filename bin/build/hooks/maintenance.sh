@@ -37,11 +37,9 @@ setMaintenanceValue() {
 #
 hookMaintenance() {
   local argument enable message variable messageVariable messageColor messageValue maintenanceValue
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   export BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE
 

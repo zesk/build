@@ -6,8 +6,6 @@
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh hook.sh documentation.sh prefixLines
-#
 # Docs: o ./docs/_templates/tools/version.md
 # Test: o ./test/tools/version-tests.sh
 
@@ -40,13 +38,13 @@ releaseNotes() {
   version=
   while [ $# -gt 0 ]; do
     case $1 in
-    *)
-      if [ -n "$version" ]; then
-        consoleError "Version $version already specified: $1"
-      else
-        version="${1-}"
-      fi
-      ;;
+      *)
+        if [ -n "$version" ]; then
+          consoleError "Version $version already specified: $1"
+        else
+          version="${1-}"
+        fi
+        ;;
     esac
     shift
   done
@@ -124,21 +122,21 @@ newRelease() {
   newVersion=
   while [ $# -gt 0 ]; do
     case $1 in
-    --non-interactive)
-      nonInteractive=1
-      consoleWarning "Non-interactive mode set"
-      ;;
-    --help)
-      _newReleaseUsage 0
-      return 0
-      ;;
-    *)
-      if [ -n "$newVersion" ]; then
-        _newReleaseUsage $errorArgument "Unknown argument $1"
-        return $?
-      fi
-      newVersion=$1
-      ;;
+      --non-interactive)
+        nonInteractive=1
+        consoleWarning "Non-interactive mode set"
+        ;;
+      --help)
+        _newReleaseUsage 0
+        return 0
+        ;;
+      *)
+        if [ -n "$newVersion" ]; then
+          _newReleaseUsage $errorArgument "Unknown argument $1"
+          return $?
+        fi
+        newVersion=$1
+        ;;
     esac
     shift
   done

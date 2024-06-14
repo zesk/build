@@ -31,26 +31,26 @@ testAssertEquality() {
   assertExitCode 0 assertContains "a" "abracadabra" || return $?
   assertNotExitCode --stderr-ok 0 assertContains "z" "abracadabra" || return $?
 
-  assertNotExitCode --stderr-ok  0 assertNotContains "a" "abracadabra" || return $?
+  assertNotExitCode --stderr-ok 0 assertNotContains "a" "abracadabra" || return $?
   assertExitCode 0 assertNotContains "z" "abracadabra" || return $?
 }
 
 tests+=(testAssertComparisons)
 testAssertComparisons() {
   # Simple numbers
-  assertExitCode 0 assertGreaterThan 10 9 || return $?       # a > b
-  assertNotExitCode --stderr-ok  0 assertGreaterThan 9 10 || return $?    # a > b
+  assertExitCode 0 assertGreaterThan 10 9 || return $?                   # a > b
+  assertNotExitCode --stderr-ok 0 assertGreaterThan 9 10 || return $?    # a > b
   assertNotExitCode --stderr-ok 0 assertGreaterThan 100 100 || return $? # a > b
 
-  assertExitCode 0 assertGreaterThanOrEqual 10 9 || return $?    # a > b
+  assertExitCode 0 assertGreaterThanOrEqual 10 9 || return $?                # a > b
   assertNotExitCode --stderr-ok 0 assertGreaterThanOrEqual 9 10 || return $? # a > b
-  assertExitCode 0 assertGreaterThanOrEqual 100 100 || return $? # a > b
+  assertExitCode 0 assertGreaterThanOrEqual 100 100 || return $?             # a > b
 
   assertNotExitCode --stderr-ok 0 assertLessThan 10 9 || return $?    # a < b
-  assertExitCode 0 assertLessThan 9 10 || return $?       # a < b
+  assertExitCode 0 assertLessThan 9 10 || return $?                   # a < b
   assertNotExitCode --stderr-ok 0 assertLessThan 100 100 || return $? # a < b
 
   assertNotExitCode --stderr-ok 0 assertLessThanOrEqual 10 9 || return $? # a <= b
-  assertExitCode 0 assertLessThanOrEqual 9 10 || return $?    # a <= b
-  assertExitCode 0 assertLessThanOrEqual 100 100 || return $? # a <= b
+  assertExitCode 0 assertLessThanOrEqual 9 10 || return $?                # a <= b
+  assertExitCode 0 assertLessThanOrEqual 100 100 || return $?             # a <= b
 }

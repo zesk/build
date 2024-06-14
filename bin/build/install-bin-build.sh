@@ -50,7 +50,6 @@ installBinBuild() {
     set -x # Debugging
   fi
 
-
   this="$(basename "${BASH_SOURCE[0]}")"
 
   usage="_${FUNCNAME[0]}"

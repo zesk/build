@@ -93,8 +93,13 @@ bin/test.sh
 EOF
 }
 
+# Builtins count so source is a function! (. is excluded)
 callableFunctions() {
   cat <<EOF
+source
+alias
+declare
+echo
 contextOpen
 callableExecutables
 validateMissingItems
@@ -103,7 +108,7 @@ isCallable
 EOF
 }
 
-# NOTHING Callable or Executable or Functino
+# NOTHING Callable or Executable or Function
 sampleNotExecutable() {
   cat <<EOF
 notAFile
@@ -121,6 +126,7 @@ EOF
 tests+=(testNotExecutable)
 testNotExecutable() {
   sampleNotExecutable | validateMissingItems || return $?
+  sampleNotExecutable | validateNotExecutable || return $?
 }
 
 tests+=(testExecutableCallable)
@@ -128,9 +134,8 @@ testExecutableCallable() {
   callableExecutables | validateExecutable || return $?
   callableExecutables | validateCallable || return $?
   callableExecutables | validateNotFunction || return $?
-  callableFunctions | validateNotExecutable || return $?
+  callableFunctions | grep -v echo | validateNotExecutable || return $?
   callableFunctions | validateCallable || return $?
-  callableFunctions | validateNotExecutable || return $?
 }
 
 signedIntegerSamples() {

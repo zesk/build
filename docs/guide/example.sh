@@ -28,11 +28,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/tools.sh" || exit 99
 #
 myCoolScript() {
   local argument fileArg directoryArg
-  # IDENTICAL this_usage 4
-  local this usage
+    local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   fileArg=
   directoryArg=

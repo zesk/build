@@ -310,11 +310,9 @@ _daemontoolsTerminate() {
 daemontoolsRestart() {
   local killLoop foundOne maxLoops
 
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   export DAEMONTOOLS_HOME
 

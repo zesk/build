@@ -71,11 +71,9 @@ githubRelease() {
   export GITHUB_ACCESS_TOKEN_EXPIRE
   export GITHUB_REPOSITORY_OWNER
   export GITHUB_REPOSITORY_NAME
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   extras=()
   accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}"

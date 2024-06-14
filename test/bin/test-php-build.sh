@@ -120,7 +120,6 @@ testPHPBuild() {
 
   cd ./compare-alternate || return $?
 
-
   consoleInfo "Extracting alternate.tar.gz ... "
   tar xf ../alternate.tar.gz || return $?
   rm -rf ./vendor || return $?

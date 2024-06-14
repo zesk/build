@@ -23,11 +23,9 @@ set -eou pipefail
 #
 sshSetup() {
   local arg sshHomePath flagForce servers keyType keyBits
-  # IDENTICAL this_usage 4
-  local this usage
+    local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
   [ -d "${HOME-}" ] || __failEnvironment "$usage" "HOME is not defined and is required" || return $?

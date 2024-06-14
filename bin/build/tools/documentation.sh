@@ -8,7 +8,7 @@
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh prefixLines usage.sh
+# Depends: colors.sh text.sh wrapLines usage.sh
 #
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
@@ -23,11 +23,7 @@
 #
 usageDocument() {
   local functionDefinitionFile functionName exitCode variablesFile
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local usage="_${FUNCNAME[0]}"
 
   [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
@@ -91,7 +87,7 @@ _usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateCompile() {
-  local this usage argument
+  local usage argument
   local start documentTemplate mappedDocumentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
 
   local targetDirectory settingsFile
@@ -102,8 +98,7 @@ documentationTemplateCompile() {
   local envChecksum envChecksumCache
   local compiledTemplateCache
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   cacheDirectory=
   documentTemplate=
@@ -282,13 +277,12 @@ _documentationTemplateCompileUsage() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateDirectoryCompile() {
-  local this usage argument
+  local usage argument
   local start templateDirectory functionTemplate targetDirectory cacheDirectory passArgs
   local base targetFile
   local documentTokensFile
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
   cacheDirectory=
   templateDirectory=
   functionTemplate=
@@ -492,7 +486,6 @@ __dumpAliasedValue() {
 # Usage: {fn} definitionFile function
 # Argument: `definitionFile` - File in which function is defined
 # Argument: `function` - Function defined in `file`
-# Depends: colors.sh text.sh prefixLines
 #
 bashDocumentation_Extract() {
   local maxLines=1000 definitionFile=$1 fn=$2 definitionFile

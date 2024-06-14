@@ -33,8 +33,6 @@ testDotEnvConfigure() {
   consoleSuccess dotEnvConfigure works AOK
 }
 
-
-
 tests+=(testMakeEnvironment)
 testMakeEnvironment() {
   local v

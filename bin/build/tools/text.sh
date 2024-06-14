@@ -150,11 +150,9 @@ singleBlankLines() {
 #
 trimSpace() {
   local var
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
@@ -473,11 +471,9 @@ cachedShaPipe() {
 #
 mapValue() {
   local name value searchToken mapFile="${1-}"
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   shift
   [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
@@ -503,11 +499,9 @@ mapValue() {
 #
 mapValueTrim() {
   local name value replace searchToken mapFile="${1-}"
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   shift
   [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
@@ -643,11 +637,9 @@ characterClasses() {
 #
 isCharacterClass() {
   local class="${1-}" character
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   case "$class" in
     alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
@@ -680,11 +672,9 @@ _isCharacterClass() {
 #
 isCharacterClasses() {
   local character class
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   character="${1-}"
   [ "${#character}" -eq 1 ] || __failArgument "$usage" "Non-single character: \"$character\"" || return $?
@@ -734,11 +724,9 @@ _characterFromInteger() {
 #
 stringValidate() {
   local text character
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   text="${1-}"
   shift || __failArgument "$usage" "Missing text" || return $?
@@ -871,11 +859,9 @@ characterClassReport() {
 #
 cannon() {
   local search searchQuoted replace replaceQuoted cannonLog count
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   search=
   replace=
