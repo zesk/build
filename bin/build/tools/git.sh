@@ -620,6 +620,7 @@ gitInstallHook() {
             ! $verbose || consoleNameValue 5 "Same:" "${fromTo[@]}" || :
             return 0
           fi
+          ! $verbose || consoleNameValue 5 "CHANGED:" "${fromTo[@]}" || :
           printf "Git %s hook was updated" "${fromTo[@]}" || :
           __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
