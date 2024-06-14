@@ -30,7 +30,7 @@ hookGitPreCommit() {
 
   __usageEnvironment "$usage" extensionLists --clean "$changedLists" <(git diff --name-only --cached --diff-filter=ACMR) || return $?
 
-  total=$(wc -l <"$changedLists/@")
+  total=$(($(wc -l <"$changedLists/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
 
   printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$this")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
 
