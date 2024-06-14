@@ -26,6 +26,7 @@ hookGitPostCommit() {
 
   set -x
 
+  consoleError "$usage type $(type -t "$usage")"
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
 

@@ -685,7 +685,7 @@ gitPreCommitShellFiles() {
   __usageEnvironment "$usage" identicalCheck "${singles[@]+"${singles[@]}"}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh || return $?
 
   for directory in "${checkAssertions[@]+${checkAssertions[@]}}"; do
-    statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}")" || :
+    statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}") - " || :
     if ! findUncaughtAssertions "$directory" --list; then
       findUncaughtAssertions "$directory" --exec contextOpen &
       __failEnvironment "$usage" findUncaughtAssertions || return $?
