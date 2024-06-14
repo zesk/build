@@ -24,13 +24,13 @@ _fail() {
 hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}"
 
-  set -x
-
-  consoleError "$usage type $(type -t "$usage")"
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
 
+  consoleError "$usage type $(type -t "$usage")"
+  set -x
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
+  set +x
 
   __usageEnvironment "$usage" gitMainly || return $?
 }
