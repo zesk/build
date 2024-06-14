@@ -34,14 +34,14 @@ hookApplicationChecksum() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
         return 0
         ;;
       *)
-        __failArgument "$usage" "Unknown argument: $argument" || return $?
+        __failArgument "$usage" "unknown argument: $argument" || return $?
         ;;
     esac
     shift || :

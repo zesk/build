@@ -36,7 +36,7 @@ myCoolScript() {
   directoryArg=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -48,7 +48,7 @@ myCoolScript() {
         elif [ -z "$directoryArg" ]; then
           directoryArg="$(usageArgumentDirectory "$usage" directoryArg "$argument")" || return $?
         else
-          __failArgument "Unknown argument: $argument" || return $?
+          __failArgument "unknown argument: $argument" || return $?
         fi
         ;;
     esac

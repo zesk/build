@@ -222,7 +222,7 @@ deployApplication() {
   requiredArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -256,7 +256,7 @@ deployApplication() {
         targetPackage="${1-}"
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $argument" || return $?
+        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $argument failed" || return $?
@@ -479,7 +479,7 @@ deployLink() {
   currentApplicationHome=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         $usage 0
@@ -502,7 +502,7 @@ deployLink() {
             consoleWarning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
           fi
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac
@@ -536,7 +536,7 @@ deployMigrateDirectoryToLink() {
   applicationPath=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -548,7 +548,7 @@ deployMigrateDirectoryToLink() {
         elif [ -z "$applicationPath" ]; then
           applicationPath="$(usageArgumentDirectory "$usage" "applicationPath" "$1")" || return $?
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         shift || __failArgument "$usage" "shift after $argument failed" || return $?
         ;;

@@ -80,7 +80,7 @@ labeledBigText() {
   tweenNonLabel=""
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _labeledBigText "$errorArgument" "Blank argument" || return $?
+      _labeledBigText "$errorArgument" "blank argument" || return $?
     fi
     case "$1" in
       --help)
@@ -185,7 +185,7 @@ repeat() {
     esac
     shift || __failArgument "$usage" "shift argument $argument" || return $?
   done
-  __failArgument "$usage" "Missing repeat string" || return $?
+  __failArgument "$usage" "missing repeat string" || return $?
 }
 _repeat() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -236,7 +236,7 @@ _echoBar() {
 #
 wrapLines() {
   local usage="_${FUNCNAME[0]}"
-  local argument fill prefix suffix width actualWidth actualIxes cleanLine
+  local argument fill prefix suffix width actualWidth actualIxes cleanLine pad line
 
   prefix=$'\1'
   suffix=$'\1'
@@ -250,13 +250,13 @@ wrapLines() {
         return $?
         ;;
       --fill)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         [ 1 -eq "${#1}" ] || __failArgument "$usage" "Fill character must be single character" || return $?
         fill="$1"
         width="${width:-needed}"
         ;;
       --width)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __failArgument "$usage" "$argument requires positive integer" || return $?
         width="$1"
         ;;
@@ -364,7 +364,7 @@ boxedHeading() {
   while [ $# -gt 0 ]; do
     arg="$1"
     if [ -z "$arg" ]; then
-      _boxedHeading "$errorArgument" "Blank argument" || return $?
+      _boxedHeading "$errorArgument" "blank argument" || return $?
     fi
     case "$arg" in
       --help)

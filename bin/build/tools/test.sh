@@ -30,15 +30,19 @@ dumpPipe() {
   symbol="🐞"
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
         return $?
         ;;
       --symbol)
-        shift || __failArgument "$usage" "shift $argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         symbol="$1"
+        ;;
+      --lines)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        showLines=$(usageArgumentUnsignedInteger "$usage" "showLines" "$1") || return $?
         ;;
       *)
         names+=("$argument")
@@ -47,6 +51,8 @@ dumpPipe() {
     esac
     shift || __failArgument "$usage" shift || return $?
   done
+
+  isInteger "$showLines" || _environment "SHOW_LINES is not-integer: $showLines" || showLines=10
 
   name=
   [ ${#names[@]} -eq 0 ] || name=$(consoleInfo "${names[*]}: ") || :
@@ -58,7 +64,7 @@ dumpPipe() {
     "$name" \
     "$nLines" "$(plural "$nLines" line lines)" \
     "$nBytes" "$(plural "$nBytes" byte bytes)" \
-    "$([ "$showLines" -lt "$nLines" ] && consoleWarning "(showing $showLines $(plural "$showLines" line lines))" || consoleFile "(shown)")"
+    "$([ "$showLines" -lt "$nLines" ] && consoleWarning "(showing $showLines $(plural "$showLines" line lines))" || consoleSuccess "(shown)")"
   decoration="$(consoleCode "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
   printf "%s\n%s\n%s\n" "$decoration" "$(head -n "$showLines" "$file" | wrapLines --width "$((width - 1))" --fill " " "$symbol$(consoleCode)" "$(consoleReset)")" "$decoration"
@@ -74,15 +80,13 @@ _dumpPipe() {
 dumpFile() {
   local usage="_${FUNCNAME[0]}"
   local argument
-  local nLines showLines nBytes tempFile file files symbolArgs
+  local nLines nBytes tempFile file files dumpArgs showLines
 
   files=()
-  isInteger "$showLines" || _environment "SHOW_LINES is not-integer: $showLines" || showLines=10
-
-  symbolArgs=()
+  dumpArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -90,23 +94,27 @@ dumpFile() {
         ;;
       --symbol)
         shift || __failArgument "$usage" "shift $argument" || return $?
-        symbolArgs=(--symbol "$1")
+        dumpArgs+=("$argument" "$1")
+        ;;
+      --lines)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        dumpArgs+=("--lines" "$1")
         ;;
       *)
-        [ -f "$argument" ] || __failArgument "$argument is not a file" || return $?
+        [ -f "$argument" ] || __failArgument "$usage" "$argument is not a file" || return $?
         files+=("$argument")
-        __failArgument "Unknown argument: $argument" || return $?
+        __failArgument "$usage" "unknown argument: $argument" || return $?
         ;;
     esac
     shift || __failArgument "$usage" shift || return $?
   done
 
   if [ ${#files[@]} -eq 0 ]; then
-    __usageEnvironment "$usage" dumpPipe "${symbolArgs[@]+${symbolArgs[@]}}" "(stdin)" || return $?
+    __usageEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "(stdin)" || return $?
   else
     for tempFile in "${files[@]}"; do
       # shellcheck disable=SC2094
-      __usageEnvironment "$usage" dumpPipe "${symbolArgs[@]+${symbolArgs[@]}}" "$tempFile" <"$tempFile" || return $?
+      __usageEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "$tempFile" <"$tempFile" || return $?
     done
   fi
 }
@@ -354,14 +362,14 @@ validateFileContents() {
   fileArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --)
-        shift || __failArgument "$usage" "shift $argument failed" || return $?
+        shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
         break
         ;;
       --exec)
-        shift || __failArgument "$usage" "shift $argument failed" || return $?
+        shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
         binary="$1"
         isCallable "$binary" || __failArgument "$usage" "--exec $binary Not callable" || return $?
         ;;
@@ -370,7 +378,7 @@ validateFileContents() {
         fileArgs+=("$1")
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
   textMatches=()
@@ -379,14 +387,14 @@ validateFileContents() {
     [ -n "$argument" ] || __failArgument "$usage" "Zero size text match passed" || return $?
     case "$argument" in
       --)
-        shift || __failArgument "$usage" "shift $argument failed" || return $?
+        shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
         break
         ;;
       *)
         textMatches+=("$1")
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
   [ "${#fileArgs[@]}" -gt 0 ] || __failArgument "$usage" "No extension arguments" || return $?
@@ -539,7 +547,7 @@ findUncaughtAssertions() {
   directory=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --exec)
         shift || __failArgument "$usage" "$argument missing argument" || return $?
@@ -554,7 +562,7 @@ findUncaughtAssertions() {
         directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
   if [ -z "$directory" ]; then

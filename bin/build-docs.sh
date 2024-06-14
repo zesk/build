@@ -26,7 +26,7 @@ buildDocumentation_UpdateUnlinked() {
   envFile=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       *)
         if [ -z "$cacheDirectory" ]; then
@@ -34,13 +34,13 @@ buildDocumentation_UpdateUnlinked() {
         elif [ -z "$envFile" ]; then
           envFile=$(usageArgumentFile "$usage" "envFile" "$argument") || return $?
         else
-          __failArgument "$usage" "Unknown argument \"$argument\"" || return $?
+          __failArgument "$usage" "unknown argument $(consoleCode "$argument")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
-  [ -n "$envFile" ] || __failArgument "$usage" "Missing argument" || return $?
+  [ -n "$envFile" ] || __failArgument "$usage" "missing envFile" || return $?
 
   unlinkedFunctions=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
   template="./docs/_templates/tools/todo.md"
@@ -181,7 +181,7 @@ buildDocumentationBuild() {
   # Default option settings
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --git)
         buildDocumentation_MergeWithDocsBranch
@@ -215,7 +215,7 @@ buildDocumentationBuild() {
         return 0
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $argument" || return $?
+        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift

@@ -584,7 +584,7 @@ mapEnvironment() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || _argument "Blank argument" || return $?
+    [ -n "$argument" ] || _argument "blank argument" || return $?
     case "$argument" in
       --prefix)
         shift || _argument "$this: missing $argument argument" || return $?
@@ -729,8 +729,8 @@ stringValidate() {
   usage="_${FUNCNAME[0]}"
 
   text="${1-}"
-  shift || __failArgument "$usage" "Missing text" || return $?
-  [ $# -gt 0 ] || __failArgument "$usage" "Missing class" || return $?
+  shift || __failArgument "$usage" "missing text" || return $?
+  [ $# -gt 0 ] || __failArgument "$usage" "missing class" || return $?
   for character in $(printf "%s" "$text" | grep -o .); do
     if ! isCharacterClasses "$character" "$@"; then
       return 1
@@ -867,7 +867,7 @@ cannon() {
   replace=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       *)
         if [ -z "$search" ]; then
@@ -875,7 +875,7 @@ cannon() {
         elif [ -z "$replace" ]; then
           replace="$argument"
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac

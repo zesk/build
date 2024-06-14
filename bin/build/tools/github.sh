@@ -82,22 +82,22 @@ githubRelease() {
   repoName="${GITHUB_REPOSITORY_NAME-}"
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --token)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         accessToken="$1"
         ;;
       --owner)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         repoOwner="$1"
         ;;
       --name)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         repoName="$1"
         ;;
       --expire)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         accessTokenExpire="$1"
         ;;
       *)

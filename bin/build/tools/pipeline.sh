@@ -90,7 +90,7 @@ reportTiming() {
 
   start=${1-}
   __usageArgument "$usage" isInteger "$start" || return $?
-  shift || __failArgument "$usage" "Missing argument" || return $?
+  shift || __failArgument "$usage" "missing argument" || return $?
   prefix=
   if [ $# -gt 0 ]; then
     prefix="$(consoleGreen "$@") "
@@ -326,7 +326,7 @@ makeEnvironment() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --)
         shift || :
@@ -389,7 +389,7 @@ isUpToDate() {
   keyDate=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --name)
         shift || :
@@ -401,7 +401,7 @@ isUpToDate() {
         elif [ -n "$upToDateDays" ]; then
           upToDateDays="$argument"
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac
@@ -410,7 +410,7 @@ isUpToDate() {
 
   [ -z "$name" ] || name="$name "
   todayTimestamp=$(dateToTimestamp "$(todayDate)") || __failEnvironment "$usage" "Unable to generate todayDate" || return $?
-  [ -n "$keyDate" ] || __failArgument "$usage" "Missing keyDate" || return $?
+  [ -n "$keyDate" ] || __failArgument "$usage" "missing keyDate" || return $?
 
   keyTimestamp=$(dateToTimestamp "$keyDate") || __failArgument "$usage" "Invalid date $keyDate" || return $?
   isInteger "$upToDateDays" || __failArgument "$usage" "upToDateDays is not an integer ($upToDateDays)" || return $?

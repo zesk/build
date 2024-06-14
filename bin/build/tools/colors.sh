@@ -113,7 +113,7 @@ allColorTest() {
 }
 
 colorComboTest() {
-  local fg bg text extra
+  local fg bg text extra padding
   extra=
   if [ "$1" = "--bold" ]; then
     shift || :

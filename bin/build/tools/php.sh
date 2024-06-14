@@ -107,7 +107,7 @@ phpBuild() {
   composerArgs=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case $1 in
       --debug)
         debuggingFlag=1
@@ -317,7 +317,7 @@ phpComposer() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --docker)
         consoleWarning "Requiring docker composer"

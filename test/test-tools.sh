@@ -68,6 +68,7 @@ cleanTestName() {
 loadTestFiles() {
   local testCount tests showTests testName quietLog=$1 __testDirectory resultCode=0 resultReason
   local __test __tests
+  local __before __after changedGlobals
 
   export tests
   resultReason="Success"
@@ -116,6 +117,9 @@ loadTestFiles() {
   # Renamed to avoid clobbering by tests
   __testDirectory=$(pwd)
   __tests=("${tests[@]}")
+  __after=$(mktemp) || _environment mktemp || return $?
+  __before="$__after.before"
+  __after="$__after.after"
 
   while [ ${#__tests[@]} -gt 0 ]; do
     __test="${__tests[0]}"
@@ -129,15 +133,32 @@ loadTestFiles() {
     # Test
     testSection "$__test" || :
     printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$__test")"
+
+    # Set up state
     set -eou pipefail
+
+    resultCode=0
+
+    declare -p >"$__before"
     if ! "$__test" "$quietLog"; then
       resultCode=$errorTest
     fi
+    cd "$__testDirectory"
+
     set -eou pipefail
     # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
     # documentation-tests.sh change this apparently
     # Instead of preventing this usage, just work around it
     __usageEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
+
+    declare -p >"$__after"
+
+    changedGlobals="$(diff "$__before" "$__after" | grep 'declare ' | grep -v -e 'declare \(-r\|-- _=\|-ir\|-r\|-x OLDPWD=\|-- resultCode=\)')" || :
+    if [ -n "$changedGlobals" ]; then
+      printf "%s\n" "$changedGlobals" | dumpPipe "$__test Changed:"
+      resultCode=$errorTest
+    fi
+
     if [ "$resultCode" -ne 0 ]; then
       printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleRed "FAILED")" 1>&2
       buildFailed "$quietLog" || :

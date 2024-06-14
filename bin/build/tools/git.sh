@@ -281,15 +281,15 @@ gitTagVersion() {
   versionSuffix=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --suffix)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         versionSuffix="${1-}"
         [ -n "$versionSuffix" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         ;;
       *)
-        __failArgument "$usage" $errorArgument "Unknown argument: $argument" || return $?
+        __failArgument "$usage" $errorArgument "unknown argument: $argument" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift $argument" || return $?
@@ -369,7 +369,7 @@ gitFindHome() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -422,7 +422,7 @@ gitCommit() {
   comment=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --)
         updateReleaseNotes=false
@@ -596,7 +596,7 @@ gitInstallHook() {
   verbose=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --copy)
         execute=false
@@ -609,7 +609,7 @@ gitInstallHook() {
         return $?
         ;;
       --application)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         ;;
       *)
@@ -659,7 +659,7 @@ gitPreCommitShellFiles() {
   interactiveFlags=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --singles)
         shift || __failArgument "$usage" "shift $argument" || return $?

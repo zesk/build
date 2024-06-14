@@ -105,6 +105,8 @@ testEnvironmentVariables() {
   assertFileContains "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
   wrapLines "environmentVariables: $(consoleCode)" "$(consoleReset)" <"$e"
   rm "$e"
+
+  unset BUILD_TEST_UNIQUE
 }
 
 _assertBetterType() {
@@ -173,8 +175,27 @@ testServiceToPort() {
 
   assertNotExitCode --stderr-ok 0 serviceToPort || return $?
 
-  assertNotExitCode --stderr-match unknown 0 serviceToPort "" || return $?
+  assertNotExitCode --stderr-match blank 0 serviceToPort "" || return $?
   assertNotExitCode --stderr-match unknown 0 serviceToPort "22" || return $?
   assertNotExitCode --stderr-match unknown 0 serviceToPort ".https" || return $?
   assertNotExitCode --stderr-match unknown 0 serviceToPort " " || return $?
+}
+
+tests+=(testExtensionLists)
+testExtensionLists() {
+  local target
+
+  export BUILD_HOME
+  assertExitCode 0 buildEnvironmentLoad BUILD_HOME || return $?
+
+  target=$(mktemp -d) || _environment "mktemp -d" || return $?
+
+  assertDirectoryEmpty "$target" || return $?
+  find "$BUILD_HOME" -type f ! -path '*/.*/*' | extensionLists --clean "$target"
+
+  assertDirectoryNotEmpty "$target" || return $?
+  assertFileContains "$target/@" "${BASH_SOURCE[0]}" || return $?
+  assertFileContains "$target/sh" "${BASH_SOURCE[0]}" || return $?
+
+  rm -rf "$target" || return $?
 }

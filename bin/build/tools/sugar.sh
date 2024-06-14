@@ -83,7 +83,7 @@ _environmentOutput() {
   verbose=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -93,7 +93,7 @@ _environmentOutput() {
         verbose=true
         ;;
       --name)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         name="$1"
         ;;

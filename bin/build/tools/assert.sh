@@ -124,7 +124,7 @@ _assertExitCodeHelper() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgment "$usageFunction" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgment "$usageFunction" "blank argument" || return $?
     case "$argument" in
       --stderr-ok)
         errorsOk=1
@@ -367,6 +367,52 @@ assertDirectoryDoesNotExist() {
   fi
 }
 
+#
+# Usage: {fn} directory [ message ... ]
+#
+# Argument: directory - Directory that should exist and be empty
+# Argument: message - An error message if this fails
+# Exit code: 0 - If the assertion succeeds
+# Exit code: 1 - If the assertion fails
+# Local cache: None
+# Environment: - This fails if `directory` is anything but a `directory`
+# Example:     assertDirectoryExists "$HOME" "HOME not found"
+# Summary: Test that a directory exists
+#
+assertDirectoryEmpty() {
+  local d=$1 noun=directory
+  local this="${FUNCNAME[0]}"
+
+  shift || _assertFailure "$this" "Missing directory argument"
+  assertDirectoryExists "$d" "<- $this" "$@" || return $?
+
+  directoryIsEmpty "$d" && _assertSuccess "$this" "$(consoleCode "$d") is an empty directory" && return 0 ||
+    _assertFailure "$this" "$(printf "%s was expected to be an empty %s: %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not empty}")")" || return $?
+}
+
+#
+# Usage: {fn} directory [ message ... ]
+#
+# Argument: directory - Directory that should exist and not be empty
+# Argument: message - An error message if this fails
+# Exit code: 0 - If the assertion succeeds
+# Exit code: 1 - If the assertion fails
+# Local cache: None
+# Examples: {fn} "$INSTALL_PATH" "INSTALL_PATH should contain files"
+# Summary: Test that a directory does not exist
+# Reviewed: 2023-11-12
+#
+assertDirectoryNotEmpty() {
+  local d=$1 noun=directory
+  local this="${FUNCNAME[0]}"
+
+  shift || _assertFailure "$this" "Missing directory argument" || return $?
+  assertDirectoryExists "$d" "<- $this" "$@" || return $?
+
+  ! directoryIsEmpty "$d" && _assertSuccess "$this" "$(consoleCode "$d") is not an empty directory" && return 0 ||
+    _assertFailure "$this" "$(printf "%s was expected to be not empty %s: %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun is empty}")")" || return $?
+}
+
 ################################################################################################################################
 #
 # ▛▀▘▗▜
@@ -388,7 +434,7 @@ assertDirectoryDoesNotExist() {
 # Summary: Test that a file exists
 #
 assertFileExists() {
-  local d=$1 noun=file
+  local d=$1 noun=file message
   local this="${FUNCNAME[0]}"
 
   shift

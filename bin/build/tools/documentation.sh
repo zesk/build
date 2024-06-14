@@ -108,10 +108,10 @@ documentationTemplateCompile() {
   envFiles=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --env)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         envFiles+=("$envFile")
         ;;
@@ -290,14 +290,14 @@ documentationTemplateDirectoryCompile() {
   passArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --force)
         passArgs+=("$argument")
         ;;
       --env)
         passArgs+=("$argument")
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         passArgs+=("$1")
         ;;
       *)
@@ -310,7 +310,7 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac

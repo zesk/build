@@ -429,7 +429,7 @@ documentationIndex_LinkDocumentationPaths() {
   documentationPath=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || _argument "Blank argument" || return $?
+    [ -n "$argument" ] || _argument "blank argument" || return $?
     case "$argument" in
       --force) ;;
       *)

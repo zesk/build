@@ -55,7 +55,7 @@ processWait() {
   signals=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --require)
         requireFlag=true
@@ -64,7 +64,7 @@ processWait() {
         verboseFlag=true
         ;;
       --signals)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         IFS=',' read -r -a signals < <(uppercase "$1")
         for signal in "${signals[@]}"; do
           case "$signal" in
@@ -76,7 +76,7 @@ processWait() {
         done
         ;;
       --timeout)
-        shift || __failArgument "$usage" "Missing $argument" || return $?
+        shift || __failArgument "$usage" "missing $argument" || return $?
         timeout=$(usageArgumentInteger "$usage" "timeout" "$1") || return $?
         signalTimeout=$timeout
         ;;

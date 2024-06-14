@@ -7,12 +7,6 @@
 # Docs: o ./docs/_templates/tools/os.md
 # Test: o ./test/tools/os-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Usage: {fn} source target
 #
@@ -125,7 +119,7 @@ buildQuietLog() {
   flagMake=true
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case $1 in
       --no-create)
         flagMake=false
@@ -157,7 +151,7 @@ requireFileDirectory() {
   local argument usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     name="$(dirname "$1")" || __failEnvironment "$usage" "dirname $argument" || return $?
     [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(consoleCode "$name")\"" || return $?
     shift || __failArgument "$usage" shift || return $?
@@ -178,7 +172,7 @@ fileDirectoryExists() {
   [ $# -gt 0 ] || _argument "No arguments" || return $?
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     path=$(dirname "$argument") || __failEnvironment "$usage" "dirname $argument" || return $?
     [ -d "$path" ] || return 1
     shift || __failArgument "$usage" shift || return $?
@@ -202,7 +196,7 @@ requireDirectory() {
   local usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     name="$1"
-    [ -n "$name" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$name" ] || __failArgument "$usage" "blank argument" || return $?
     [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(consoleCode "$name")\"" || return $?
     printf "%s\n" "$name"
     shift || __failArgument "$usage" shift || return $?
@@ -229,7 +223,7 @@ runCount() {
   total=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -308,7 +302,7 @@ createTarFile() {
   target=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -382,6 +376,32 @@ makeShellFilesExecutable() {
   find . -name '*.sh' -type f ! -path '*/.*' "$@" -print0 | xargs -0 chmod -v +x
 }
 
+# Usage: {fn} directory
+# Does a directory exist and is it empty?
+# Exit code: 2 - Directory does not exist
+# Exit code: 1 - Directory is not empty
+# Exit code: 0 - Directory is empty
+directoryIsEmpty() {
+  local argument
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        [ -d "$argument" ] || __failArgument "$usage" "Not a directory $(consoleCode "$argument")" || return $?
+        find "$argument" -mindepth 1 -maxdepth 1 | read -r && return 1 || return 0
+        ;;
+    esac
+  done
+}
+_directoryIsEmpty() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Fetch the modification time of a file as a timestamp
 #
 # Usage: modificationTime filename0 [ filename1 ... ]
@@ -394,7 +414,7 @@ modificationTime() {
   local argument
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     [ -f "$argument" ] || __failArgument "$usage" "$argument is not a file" || return $?
     printf "%d\n" "$(date -r "$argument" +%s)"
     shift || __failArgument "$usage" "shift" || return $?
@@ -418,7 +438,7 @@ modificationSeconds() {
 
   now="$(date +%s)"
   while [ $# -gt 0 ]; do
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     [ -f "$argument" ] || __failArgument "$usage" "$argument is not a file" || return $?
     printf "%d\n" "$((now - "$(modificationTime "$1")"))"
     shift || __failArgument "$usage" "shift" || return $?
@@ -542,7 +562,7 @@ __gamutFile() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     [ -f "$argument" ] || __failArgument "$usage" "Not a file $(consoleCode "$argument")" || return $?
     tempTime=$(modificationTime "$argument") || __failEnvironment modificationTime "$argument" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
@@ -630,7 +650,7 @@ pathAppend() {
   firstFlag=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$1" in
       --first)
         firstFlag=true
@@ -751,7 +771,7 @@ _fileListColumn() {
   while [ $# -gt 0 ]; do
     # shellcheck disable=SC2012
     if ! result="$(ls -ld "$1" | awk '{ print $'"$column"' }')"; then
-      "$usageFunction" "$errorEnvironment" "Running ls -ld \"$1\"" || return $?
+      __failEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
     fi
     printf "%s\n" "$result"
     shift
@@ -960,41 +980,60 @@ _serviceToStandardPort() {
 #
 # Usage: {fn} service [ ... ]
 # Argument: service - A unix service typically found in `/etc/services`
+# Argument: --services servicesFile - Optional. File. File like '/etc/services`.
 # Output: Port number of associated service (integer) one per line
 # Exit Code: 1 - service not found
 # Exit Code: 2 - bad argument or invalid port
 # Exit Code: 0 - service found and output is an integer
 #
 serviceToPort() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local port servicesFile service
 
   servicesFile=/etc/services
-  if [ ! -f "$servicesFile" ]; then
-    serviceToStandardPort "$@"
-  else
-    [ $# -gt 0 ] || __failArgument "$usage" "Require at least one service" || return $?
-    while [ $# -gt 0 ]; do
-      service="$(trimSpace "${1-}")"
-      if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
-        isInteger "$port" || __failEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
-      else
-        port="$(serviceToStandardPort "$service")" || __failEnvironment "$usage" serviceToStandardPort "$service" || return $?
-      fi
-      printf "%d\n" "$port"
-      shift || _serviceToPort "$errorArgument" "shift failed" || return $?
-    done
-  fi
+  [ $# -gt 0 ] || __failArgument "$usage" "Require at least one service" || return $?
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --services)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        servicesFile=$(usageArgumentFile "$usage" "servicesFile" "$1") || return $?
+        ;;
+      *)
+        if [ ! -f "$servicesFile" ]; then
+          __usageEnvironment "$usage" serviceToStandardPort "$@" || return $?
+        else
+          service="$(trimSpace "${1-}")"
+          if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
+            isInteger "$port" || __failEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
+          else
+            port="$(serviceToStandardPort "$service")" || __failEnvironment "$usage" serviceToStandardPort "$service" || return $?
+          fi
+          printf "%d\n" "$port"
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift argument $argument" || return $?
+  done
 }
 _serviceToPort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __extensionListsLog() {
-  local directory="$1" name="$2"
-  local extension
+  local directory="$1" original="$2"
+  local name extension
+  name="$(basename "$original")" || _argument "basename $name" || return $?
   extension="${name##*.}"
-  [ "$extension" != "$name" ] || extension="!"
-  printf "%s\n" "$name" | tee -a "$directory/@" >>"$directory/$extension" || _environment "writing $directory/$extension" || return $?
+  # Tests, in order:
+  # - Not `.just-extension`
+  # - Not `no-period`
+  # - Not `".."` or `"."` or `""`
+  # If any of the above - use `!` bucket
+  [ "${name%%.*}" != "" ] && [ "$extension" != "$name" ] && [ "$extension" != "." ] && [ "$extension" != ".." ] && [ -n "$extension" ] || extension="!"
+  printf "%s\n" "$original" | tee -a "$directory/@" >>"$directory/$extension" || _environment "writing $directory/$extension" || return $?
 }
 #
 # Usage: {fn} directory file0 ...
@@ -1021,7 +1060,7 @@ extensionLists() {
   cleanFlag=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0

@@ -58,7 +58,7 @@ aptUpdateOnce() {
 # shellcheck disable=SC2120
 aptInstall() {
   local installedLog quietLog
-  local actualPackages packages
+  local actualPackages package packages
   local apt start
   local usage
 
@@ -79,10 +79,10 @@ aptInstall() {
   __environment requireFileDirectory "$installedLog" || return $?
   __environment touch "$installedLog" || return $?
 
-  for p in "${packages[@]}"; do
-    if ! grep -q -e "^$p$" "$installedLog"; then
-      actualPackages+=("$p")
-      __environment printf "%s\n" "$p" >>"$installedLog" || return $?
+  for package in "${packages[@]}"; do
+    if ! grep -q -e "^$package$" "$installedLog"; then
+      actualPackages+=("$package")
+      __environment printf "%s\n" "$package" >>"$installedLog" || return $?
     fi
   done
 

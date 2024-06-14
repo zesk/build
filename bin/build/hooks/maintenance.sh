@@ -53,7 +53,7 @@ hookMaintenance() {
   enable=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$(lowercase "$argument")" in
       on | 1 | true | enable)
         enable=true
@@ -69,7 +69,7 @@ hookMaintenance() {
         message="$1"
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $argument" || return $?
+        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift

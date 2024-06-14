@@ -56,10 +56,10 @@ deployBuildEnvironment() {
   deployArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --env)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         envFiles+=("$1")
         ;;
       --debug)
@@ -69,24 +69,24 @@ deployBuildEnvironment() {
         deployArgs+=("$argument")
         ;;
       --home)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         deployHome="$1"
         ;;
       --host)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         userHosts+=("$1")
         ;;
       --id)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         applicationId="$1"
         ;;
       --application)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
         ;;
       --target)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         targetPackage="$1"
         ;;
       *)
@@ -221,7 +221,7 @@ deployRemoteFinish() {
   firstFlags=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -246,27 +246,27 @@ deployRemoteFinish() {
         firstFlags+=("$argument")
         ;;
       --home)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
         ;;
       --id)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         applicationId="$1"
         [ -n "$applicationId" ] || __failArgument "$usage" "Requires non-blank $argument" || return $?
         ;;
       --application)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
         ;;
       --target)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         targetPackage="${1-}"
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $1" || return $?
+        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
 
   __usageEnvironment "$usage" dotEnvConfigure || return $?
@@ -336,7 +336,7 @@ _deployRevertApplication() {
 
   usage="_${FUNCNAME[0]}"
   # --first
-  firstDeployment=
+  firstDeployment=false
 
   # Arguments in order
   deployHome=
@@ -344,12 +344,11 @@ _deployRevertApplication() {
   applicationPath=
   targetPackage=
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      __failArgument "$usage" "Blank argument" || return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --first)
-        firstDeployment=1
+        firstDeployment=true
         ;;
       *)
         if [ -z "$deployHome" ]; then
@@ -361,7 +360,7 @@ _deployRevertApplication() {
         elif [ -z "$targetPackage" ]; then
           targetPackage="$1"
         else
-          __failArgument "$usage" "Unknown argument $1" || return $?
+        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac
@@ -497,7 +496,7 @@ deployToRemote() {
   firstFlags=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --target)
         shift || :
@@ -581,11 +580,11 @@ deployToRemote() {
     __failArgument "$usage" "--deploy and --cleanup are mutually exclusive" || return $?
   fi
   # Values are supplied (required)
-  [ -n "$applicationId" ] || __failArgument "$usage" "Missing applicationId" || return $?
+  [ -n "$applicationId" ] || __failArgument "$usage" "missing applicationId" || return $?
 
-  [ -n "$deployHome" ] || __failArgument "$usage" "Missing deployHome" || return $?
+  [ -n "$deployHome" ] || __failArgument "$usage" "missing deployHome" || return $?
 
-  [ -n "$applicationPath" ] || __failArgument "$usage" "Missing applicationPath" || return $?
+  [ -n "$applicationPath" ] || __failArgument "$usage" "missing applicationPath" || return $?
   if [ -z "$buildTarget" ]; then
     buildTarget=$(deployPackageName "$deployHome") || __failEnvironment "$usage" "Missing applicationPath" || return $?
   fi

@@ -34,7 +34,7 @@ testAlignLeft() {
 
 tests+=(testRepeat2)
 testRepeat2() {
-  local expected
+  local expected n
 
   expected="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   for n in $(seq 1 ${#expected}); do

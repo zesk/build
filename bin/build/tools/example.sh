@@ -35,7 +35,7 @@ exampleFunction() {
   path=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --easy)
         easyFlag=true
@@ -45,23 +45,23 @@ exampleFunction() {
         return $?
         ;;
       --name)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         name="$1"
         ;;
       --path)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         path=$(usageArgumentDirectory "$usage" "path" "$1") || return $?
         ;;
       --target)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         target=$(usageArgumentFileDirectory "$usage" "target" "$1") || return $?
         ;;
       *)
-        __failArgument "Unknown argument: $argument" || return $?
+        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $argument" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
 
   # Load MANPATH environment
@@ -77,7 +77,7 @@ exampleFunction() {
   #
   # Add ` || _environment "$(debuggingStack)"` to any chain to debug details
   #
-  which library-which-should-be-there || __failEnvironment "$usage" "Missing thing" || _environment "$(debuggingStack)" || return $?
+  which library-which-should-be-there || __failEnvironment "$usage" "missing thing" || _environment "$(debuggingStack)" || return $?
 }
 _exampleFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
