@@ -630,6 +630,7 @@ gitInstallHook() {
         fi
         ;;
     esac
+    shift || :
   done
 }
 _gitInstallHook() {
