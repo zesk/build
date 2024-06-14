@@ -586,7 +586,7 @@ _gitCurrentBranch() {
 # Exit code: 3 - `--copy` - the file was changed
 # Environment: BUILD-HOME - The default application home directory used for `.git` and build hooks.
 gitInstallHook() {
-  local argument fromTo home execute verbose
+  local argument fromTo relFromTo item home execute verbose
   local usage="_${FUNCNAME[0]}"
   local types=(pre-commit post-commit)
 
@@ -616,12 +616,16 @@ gitInstallHook() {
         if inArray "$argument" "${types[@]}"; then
           hasHook --application "$home" "git-$argument" || __failArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
           fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
+          relFromTo=()
+          for item in "${fromTo[@]}"; do
+            relFromTo+=("${item#"$home"}")
+          done
           if diff -q "${fromTo[@]}" >/dev/null; then
-            ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${fromTo[@]}")" || :
+            ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${relFromTo[@]}")" || :
             return 0
           fi
-          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${fromTo[@]}")" || :
-          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${fromTo[0]#"$home/"}")" "$(consoleInfo "${fromTo[1]#"$home/"}")" || :
+          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${relFromTo[@]}")" || :
+          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleInfo "${relFromTo[1]}")" || :
           __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
           return 3
