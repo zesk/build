@@ -163,7 +163,7 @@ repeat() {
         ;;
       *)
         if [ -z "$count" ]; then
-          count="$(usageArgumentUnsignedInteger "$usage" "count" "$1")" || _argument "$(debugBacktrace)" || return $?
+          count="$(usageArgumentUnsignedInteger "$usage" "count" "$1")" || return $?
         else
           powers=("$*")
           curPow=${#powers[@]}
