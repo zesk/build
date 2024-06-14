@@ -129,6 +129,8 @@ _dumpFile() {
 # Usage: validateShellScripts [ --exec binary ] [ file0 ... ]
 # Example:     if validateShellScripts; then git commit -m "saving things" -a; fi
 # Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in file names.
+# Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
+# Argument: --delay - Optional. Integer. Delay between checks in interactive mode.
 # Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
