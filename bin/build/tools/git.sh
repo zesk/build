@@ -625,7 +625,7 @@ gitInstallHook() {
             return 0
           fi
           ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${relFromTo[@]}")" || :
-          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleInfo "${relFromTo[1]}")" || :
+          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleCode "${relFromTo[1]}")" || :
           __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
           return 3
