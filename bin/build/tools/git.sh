@@ -473,7 +473,7 @@ __gitCommitReleaseNotesUpdate() {
     __usageEnvironment "$usage" git add "$notes" || return $?
   else
     __usageEnvironment "$usage" clearLine || return $?
-    __usageEnvironment "$usage" printf -- "%s to %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
+    __usageEnvironment "$usage" printf -- "%s %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
   fi
   __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes"
 }

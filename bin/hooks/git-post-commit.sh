@@ -36,3 +36,4 @@ _hookGitPostCommit() {
 }
 
 hookGitPostCommit "$@"
+g
