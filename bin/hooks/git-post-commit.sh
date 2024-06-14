@@ -24,13 +24,16 @@ _fail() {
 hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}"
 
+  set -x
+
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
+
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
 
   __usageEnvironment "$usage" gitMainly || return $?
 }
-_hookGitPostCommitFailed() {
+_hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

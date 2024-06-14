@@ -624,6 +624,9 @@ gitInstallHook() {
     esac
   done
 }
+_gitInstallHook() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Run pre-commit checks on shell-files
@@ -689,7 +692,6 @@ gitPreCommitShellFiles() {
     fi
   done
 }
-
 _gitPreCommitShellFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
