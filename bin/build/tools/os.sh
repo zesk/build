@@ -988,3 +988,73 @@ serviceToPort() {
 _serviceToPort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+__extensionListsLog() {
+  local directory="$1" name="$2"
+  local extension
+  extension="${name##*.}"
+  [ "$extension" != "$name" ] || extension="!"
+  printf "%s\n" "$name" | tee -a "$directory/@" >>"$directory/$extension" || _environment "writing $directory/$extension" || return $?
+}
+#
+# Usage: {fn} directory file0 ...
+# Argument: --help - Optional. Flag. This help.
+# Argument: --clean - Optional. Flag. Clean directory of all files first.
+# Argument: directory - Required. Directory. Directory to create extension lists.
+# Argument: directory - Required. Directory. Directory to create extension lists.
+# Argument: file0 - Optional. List of files to add to the extension list.
+# Input: Takes a list of files, one per line
+# Generates a directory containing files with `extension` as the file names.
+# All files passed to this are added to the `@` file, the `!` file is used for files without extensions.
+# Extension parsing is done by removing the final dot from the filename:
+# - `foo.sh` -> `"sh"`
+# - `foo.tar.gz` -> `"gz"`
+# - `foo.` -> `"!"``
+# - `foo-bar` -> `"!"``
+#
+extensionLists() {
+  local usage="_${FUNCNAME[0]}"
+  local argument directory name names extension cleanFlag
+
+  names=()
+  directory=
+  cleanFlag=false
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --clean)
+        cleanFlag=true
+        ;;
+      *)
+        if [ -z "$directory" ]; then
+          directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
+        else
+          names+=("$1")
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift argument $argument" || return $?
+  done
+  [ -n "$directory" ] || __failArgument "$usage" "No directory supplied" || return $?
+
+  ! $cleanFlag || statusMessage consoleInfo "Cleaning ..." || :
+  ! $cleanFlag || __usageEnvironment "$usage" find "$directory" -type f -delete || return $? && clearLine
+
+  if [ ${#names[@]} -gt 0 ]; then
+    for name in "${names[@]}"; do
+      __usageEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
+    done
+  else
+    while read -r name; do
+      __usageEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
+    done
+  fi
+}
+_extensionLists() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

@@ -19,36 +19,33 @@ _fail() {
 #
 # fn: {base}
 hookGitPreCommit() {
-  local this changedGitFiles changedShellFiles
+  local this file changed total
   local this="${FUNCNAME[0]}" usage="_${FUNCNAME[0]}"
 
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
   __usageEnvironment "$usage" gitInstallHook --verbose pre-commit || return $?
 
-  changedGitFiles=()
-  changedShellFiles=()
-  while IFS= read -r changedGitFile; do
-    [ -n "$changedGitFile" ] || continue
-    changedGitFiles+=("$changedGitFile")
-    if [ "$changedGitFile" != "${changedGitFile%.sh}" ]; then
-      changedShellFiles+=("$changedGitFile")
-    fi
-  done < <(git diff --name-only --cached --diff-filter=ACMR)
+  changedLists=$(mktemp -d) || __failEnvironment "$usage" mktemp -d || return $?
 
-  clearLine
-  printf "%s: %s\n" "$(consoleSuccess "$this")" "$(consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed")"
+  __usageEnvironment "$usage" extensionLists --clean "$changedLists" <(git diff --name-only --cached --diff-filter=ACMR) || return $?
+
+  total=$(wc -l <"$changedLists/@")
+
+  printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$this")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
 
   statusMessage consoleSuccess Updating help files ...
   __usageEnvironment "$usage" ./bin/update-md.sh || return $?
 
-  if [ ${#changedGitFiles[@]} -gt 0 ]; then
-    printf -- "- %s\n" "${changedGitFiles[@]}"
+  if [ -f "$changedLists/sh" ]; then
+    prefixLines "- $(consoleCode)" "$(consoleReset)" <"$changedLists/sh"
   else
     return 0
   fi
-  if [ "${#changedShellFiles[@]}" -gt 0 ]; then
-    __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changedShellFiles[@]}" || return $?
+  if [ -f "$changedLists/sh" ]; then
+    changed=()
+    while read -r file; do changed+=("$file"); done <"$changedLists/sh"
+    __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
   fi
 
   # Too slow
