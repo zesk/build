@@ -617,10 +617,10 @@ gitInstallHook() {
           hasHook --application "$home" "git-$argument" || __failArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
           fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
           if diff -q "${fromTo[@]}" >/dev/null; then
-            ! $verbose || consoleNameValue 5 "Same:" "${fromTo[@]}" || :
+          ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${fromTo[@]}")" || :
             return 0
           fi
-          ! $verbose || consoleNameValue 5 "CHANGED:" "${fromTo[@]}" || :
+          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${fromTo[@]}")" || :
           printf "Git %s hook was updated" "${fromTo[@]}" || :
           __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?

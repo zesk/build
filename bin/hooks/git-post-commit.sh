@@ -27,7 +27,6 @@ hookGitPostCommit() {
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
 
-  consoleError "$usage type $(type -t "$usage")"
   __usageEnvironment "$usage" gitInstallHook --verbose post-commit || return $?
 
   __usageEnvironment "$usage" gitMainly || return $?
