@@ -46,6 +46,8 @@ testBuildDebugEnabled() {
   assertNotExitCode 0 isBashDebug || return $?
 
   BUILD_DEBUG=$saveDebug
+
+  unset BUILD_DEBUG
 }
 
 tests+=(testBuildDebugEnabled)

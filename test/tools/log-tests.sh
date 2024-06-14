@@ -12,7 +12,7 @@ tests+=(testLogFileRotate1)
 tests+=(testLogFileRotate)
 testLogFileRotate() {
   local tempDir section
-  local count=5
+  local count=5 n
 
   if ! tempDir=$(mktemp -d); then
     return $?
@@ -127,7 +127,7 @@ testLogFileRotate() {
 }
 
 testLogFileRotate1() {
-  local tempDir count=1 i
+  local tempDir count=1 i n
 
   if ! tempDir=$(mktemp -d); then
     return $?

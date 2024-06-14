@@ -23,11 +23,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh" || _fail $? "source tools
 #
 buildDeploy() {
   local start appId notes
-  # IDENTICAL this_usage 4
-  local this usage
+    local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
 

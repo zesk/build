@@ -52,14 +52,14 @@ daemontoolsInstallService() {
   logPath=
   while [ $# -gt 0 ]; do
     arg=$1
-    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case "$arg" in
       --home)
         shift || :
         serviceHome="${1-}"
         ;;
       --log)
-        shift || __failArgument "$usage" "Missing log path" || return $?
+        shift || __failArgument "$usage" "missing log path" || return $?
         logPath=${1-}
         [ -d "$logPath" ] || __failEnvironment "$usage" "$this: $arg $logPath must be a directory" || return $?
         ;;
@@ -152,7 +152,7 @@ daemontoolsRemoveService() {
   logPath=
   while [ $# -gt 0 ]; do
     arg=$1
-    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case "$arg" in
       --home)
         shift || :
@@ -261,17 +261,17 @@ daemontoolsTerminate() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --timeout)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         timeout=$(usageArgumentInteger "$usage" "seconds" "$1") || return $?
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $argument" || return $?
+        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
   clearLine
   statusMessage consoleWarning "Shutting down services ..."
@@ -310,11 +310,9 @@ _daemontoolsTerminate() {
 daemontoolsRestart() {
   local killLoop foundOne maxLoops
 
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   export DAEMONTOOLS_HOME
 

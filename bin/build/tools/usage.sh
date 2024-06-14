@@ -99,9 +99,13 @@ usageArguments() {
     fi
     if [ ${#lineTokens[@]} -gt 0 ]; then
       argument="${lineTokens[0]}"
+      # printf "lineTokens-0: %s\n" "${lineTokens[@]}"
       unset "lineTokens[0]"
+      # printf "lineTokens-1: %s\n" "${lineTokens[@]}"
       lineTokens=("${lineTokens[@]+${lineTokens[@]}}")
-      argDescription=$(lowercase "${lineTokens[*]+}")
+      # printf "lineTokens-2: %s\n" "${lineTokens[@]}"
+      argDescription=$(lowercase "${lineTokens[*]-}")
+      # printf "argDescription: %s\n" "$argDescription"
       if [ "${argDescription%*require*}" != "$argDescription" ]; then
         printf " %s%s" "$requiredPrefix" "$argument"
       else

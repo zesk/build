@@ -86,15 +86,14 @@ class Application {
 		self::writeEnvironment(self::PREFIX_SERVICE);
 	}
 
-	public static function unameSet(): array {
+	public static function unameSet(): array
+	{
 		return [
-			'os' => php_uname('s'),
-			'name' => php_uname('n'),
-			'version' => php_uname('r'),
-			'all' => php_uname('v'),
+			'os' => php_uname('s'), 'name' => php_uname('n'), 'version' => php_uname('r'), 'all' => php_uname('v'),
 			'arch' => php_uname('m'),
 		];
 	}
+
 	/**
 	 * @param string $prefix
 	 * @return void

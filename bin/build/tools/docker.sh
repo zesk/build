@@ -268,7 +268,7 @@ dockerLocalContainer() {
   while [ $# -gt 0 ]; do
     arg="$1"
     if [ -z "$arg" ]; then
-      "$fail" "$errorArgument" "Blank argument"
+      "$fail" "$errorArgument" "blank argument"
       return $?
     fi
     case "$arg" in

@@ -68,11 +68,9 @@ _deployApplicationVersion() {
 # `deployHome` for compatibility.
 #
 deployPackageName() {
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   export BUILD_TARGET
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_TARGET || return $?
@@ -204,11 +202,9 @@ deployApplication() {
   local deployHome applicationPath deployedApplicationPath targetPackageFullPath
   local newApplicationId applicationId currentApplicationId exitCode
   local unwindArgs requiredArgs
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   exitCode=0
   # Arguments
@@ -226,7 +222,7 @@ deployApplication() {
   requiredArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -260,7 +256,7 @@ deployApplication() {
         targetPackage="${1-}"
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $argument" || return $?
+        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $argument failed" || return $?
@@ -412,7 +408,7 @@ deployApplication() {
   return "$exitCode"
 }
 _unwindDeploy() {
-  local applicationPath="$1" deployedApplicationPath="${2-}" this="${FUNCNAME[0]}"
+  local applicationPath="$1" deployedApplicationPath="${2-}"
   local usage="_deployApplication"
 
   shift || :
@@ -443,11 +439,9 @@ _deployApplication() {
 #
 deployMove() {
   local applicationPath newApplicationSource
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   applicationPath=$(usageArgumentDirectory "$usage" applicationPath "${1-}") || return $?
   shift || __failArgument "$usage" "missing argument" || return $?
@@ -477,17 +471,15 @@ _deployMove() {
 #
 deployLink() {
   local applicationLinkPath currentApplicationHome newApplicationLinkPath
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   applicationLinkPath=
   currentApplicationHome=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         $usage 0
@@ -510,7 +502,7 @@ deployLink() {
             consoleWarning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
           fi
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac
@@ -535,18 +527,16 @@ _deployLink() {
 #
 deployMigrateDirectoryToLink() {
   local start deployHome applicationPath tempAppLink appVersion
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   start=$(beginTiming) || :
   deployHome=
   applicationPath=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -558,7 +548,7 @@ deployMigrateDirectoryToLink() {
         elif [ -z "$applicationPath" ]; then
           applicationPath="$(usageArgumentDirectory "$usage" "applicationPath" "$1")" || return $?
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         shift || __failArgument "$usage" "shift after $argument failed" || return $?
         ;;

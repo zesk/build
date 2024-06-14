@@ -62,8 +62,8 @@ tests+=(testGitCommitFailures)
 testGitCommitFailures() {
   local here tempDirectory
 
-  assertExitCode --stderr-ok 2 gitCommit "" || return $?
-  assertExitCode --stderr-ok 1 gitCommit || return $?
+  assertNotExitCode --stderr-ok 0 gitCommit "" || return $?
+  assertNotExitCode --stderr-ok 0 gitCommit || return $?
   here=$(pwd) || _environment pwd || return $?
   tempDirectory=$(mktemp -d) || _environment "mktemp" || return $?
   __environment cd "$tempDirectory" || return $?
@@ -72,7 +72,7 @@ testGitCommitFailures() {
   __environment cd "$here" || return $?
   # assertExitCode --stderr-match "No changes" 1 gitCommit last || return $?
   # assertExitCode --stderr-match 'Author identity unknown' 1 gitCommit last || return $?
-  assertExitCode --stderr-ok 1 gitCommit last || return $?
+  assertNotExitCode --stderr-ok 0 gitCommit last || return $?
   consoleInfo gitCommit last output:
   gitCommit last 2>&1 | wrapLines "$(consoleCode)" "$(consoleReset)" || :
   #

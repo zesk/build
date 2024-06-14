@@ -137,7 +137,7 @@ copyFile() {
   copyFunction=_copyFileRegular
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || _argument "Blank argument" || return $?
+    [ -n "$arg" ] || _argument "blank argument" || return $?
     case "$arg" in
       --map)
         mapFlag=true
@@ -205,7 +205,7 @@ copyFileWouldChange() {
   copyFunction=_copyFileRegular
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || _argument "Blank argument" || return $?
+    [ -n "$arg" ] || _argument "blank argument" || return $?
     case "$arg" in
       --map)
         mapFlag=true

@@ -90,11 +90,9 @@ _deploymentGenerateValue() {
 phpBuild() {
   local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment composerArgs
   local targetName
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   usageRequireBinary "$usage" tar
 
@@ -109,7 +107,7 @@ phpBuild() {
   composerArgs=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case $1 in
       --debug)
         debuggingFlag=1
@@ -307,11 +305,9 @@ _phpEchoBar() {
 # shellcheck disable=SC2120
 phpComposer() {
   local argument start forceDocker installArgs quietLog dockerImage cacheDir composerBin composerDirectory savedWorking
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
   composerDirectory=.
@@ -321,7 +317,7 @@ phpComposer() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --docker)
         consoleWarning "Requiring docker composer"
@@ -395,11 +391,8 @@ _phpComposer() {
 # Hook: test-cleanup - Reverse of test-setup hook actions"
 phpTest() {
   local init start quietLog success
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local this="${FUNCNAME[0]}"
+  local usage="_$this"
 
   #                   _
   #   _ __ ___   __ _(_)_ __

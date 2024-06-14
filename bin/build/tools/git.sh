@@ -268,11 +268,9 @@ gitRemoteHosts() {
 gitTagVersion() {
   local versionSuffix start currentVersion previousVersion releaseNotes
   local argument tagPrefix index tryVersion maximumTagsPerVersion
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
 
@@ -283,15 +281,15 @@ gitTagVersion() {
   versionSuffix=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --suffix)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         versionSuffix="${1-}"
         [ -n "$versionSuffix" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         ;;
       *)
-        __failArgument "$usage" $errorArgument "Unknown argument: $argument" || return $?
+        __failArgument "$usage" $errorArgument "unknown argument: $argument" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift $argument" || return $?
@@ -363,6 +361,44 @@ _gitTagVersion() {
 }
 
 #
+# Usage: {fn} startingDirectory
+# Finds .git directory above or in current one.
+gitFindHome() {
+  local usage="_${FUNCNAME[0]}"
+  local argument directory gitDirectory
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        directory="$(usageArgumentDirectory "$usage" "directory" "$argument")" || return $?
+        directory=$(realPath "$directory") || __failEnvironment "$usage" "realPath $directory" || return $?
+        lastDirectory=
+        while [ "$directory" != "$lastDirectory" ]; do
+          gitDirectory="$directory/.git"
+          if [ -d "$gitDirectory" ]; then
+            printf "%s\n" "$directory"
+            return 0
+          fi
+          lastDirectory="$directory"
+          directory="$(dirname "$directory")"
+        done
+        __failEnvironment "$usage" "No .git found above \"$argument\"" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" shift || return $?
+  done
+}
+_gitFindHome() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
 # Usage: {fn} [ --last ] [ -- ] [ comment ... ]
 #
 # Commits all files added to git and also update release notes with comment
@@ -375,7 +411,7 @@ _gitTagVersion() {
 #
 # Example: ... are all equivalent.
 gitCommit() {
-  local updateReleaseNotes appendLast argument start current next notes comment
+  local updateReleaseNotes appendLast argument start notes comment
   local this usage
 
   this="${FUNCNAME[0]}"
@@ -386,7 +422,7 @@ gitCommit() {
   comment=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --)
         updateReleaseNotes=false
@@ -407,36 +443,25 @@ gitCommit() {
     appendLast=true
     comment=
   fi
-  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
-  current="$start"
-  while [ "$current" != "/" ]; do
-    if [ ! -d "$current/.git" ]; then
-      cd .. && next="$(pwd)" || __failArgument "$usage" "Failed to traverse up from $current" || return $?
-      if [ "$current" = "$next" ]; then
-        break
-      fi
-      current="$next"
-    else
-      gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
-      if $updateReleaseNotes && [ -n "$comment" ]; then
-        statusMessage consoleInfo "Updating release notes ..."
-        notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
-        __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
-      fi
-      if $appendLast || [ -z "$comment" ]; then
-        statusMessage consoleInfo "Using last commit message ..."
-        __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
-      else
-        statusMessage consoleInfo "Using commit comment \"$comment\" ..."
-        __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
-      fi
-      __usageEnvironment "$usage" cd "$start" || return $?
-      return 0
-    fi
-  done
 
-  cd "$start" || :
-  __failEnvironment "$usage" "Unable to find git repository" || return $?
+  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
+  home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  __usageEnvironment "$usage" cd "$home" || return $?
+  gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
+  if $updateReleaseNotes && [ -n "$comment" ]; then
+    statusMessage consoleInfo "Updating release notes ..."
+    notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
+    __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
+  fi
+  if $appendLast || [ -z "$comment" ]; then
+    statusMessage consoleInfo "Using last commit message ..."
+    __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
+  else
+    statusMessage consoleInfo "Using commit comment \"$comment\" ..."
+    __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
+  fi
+  __usageEnvironment "$usage" cd "$start" || return $?
+  return 0
 }
 __gitCommitReleaseNotesUpdate() {
   local comment="$1" notes="$2"
@@ -448,7 +473,7 @@ __gitCommitReleaseNotesUpdate() {
     __usageEnvironment "$usage" git add "$notes" || return $?
   else
     __usageEnvironment "$usage" clearLine || return $?
-    __usageEnvironment "$usage" printf -- "%s to %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
+    __usageEnvironment "$usage" printf -- "%s %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
   fi
   __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes"
 }
@@ -467,11 +492,9 @@ _gitCommit() {
 #
 gitMainly() {
   local branch returnCode updateOther
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
@@ -509,11 +532,9 @@ _gitMainly() {
 # Get the current branch name
 #
 gitCurrentBranch() {
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   # git rev-parse --abbrev-ref HEAD
   __usageEnvironment "$usage" git symbolic-ref --short HEAD || return $?
@@ -565,34 +586,46 @@ _gitCurrentBranch() {
 # Exit code: 3 - `--copy` - the file was changed
 # Environment: BUILD-HOME - The default application home directory used for `.git` and build hooks.
 gitInstallHook() {
-  local argument fromTo home execute
+  local argument fromTo relFromTo item home execute verbose
   local usage="_${FUNCNAME[0]}"
   local types=(pre-commit post-commit)
 
   buildEnvironmentLoad BUILD_HOME || :
   home="${BUILD_HOME:-}"
   execute=true
+  verbose=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --copy)
         execute=false
+        ;;
+      --verbose)
+        verbose=true
         ;;
       --help)
         "$usage" 0
         return $?
         ;;
       --application)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         ;;
       *)
         if inArray "$argument" "${types[@]}"; then
           hasHook --application "$home" "git-$argument" || __failArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
           fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
-          diff -q "${fromTo[@]}" >/dev/null && return 0
-          printf "Git %s hook was updated" "${fromTo[@]}" || :
+          relFromTo=()
+          for item in "${fromTo[@]}"; do
+            relFromTo+=(".${item#"$home"}")
+          done
+          if diff -q "${fromTo[@]}" >/dev/null; then
+            ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${relFromTo[@]}")" || :
+            return 0
+          fi
+          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${relFromTo[@]}")" || :
+          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleCode "${relFromTo[1]}")" || :
           __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
           return 3
@@ -601,22 +634,32 @@ gitInstallHook() {
         fi
         ;;
     esac
+    shift || :
   done
+}
+_gitInstallHook() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Run pre-commit checks on shell-files
-#
+# Usage: {fn} [ --help ] [ --interactive ] [ --check checkDirectory ] ...
+# Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
+# Argument: --help - Flag. Optional. I need somebody.
+# Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
+# Argument: --check checkDirectory - Optional. Directory. Check shell scripts in this directory for common errors.
+# Argument: ... - Additional arguments are passed to `validateShellScripts` `validateFileContents`
 gitPreCommitShellFiles() {
   local usage="_${FUNCNAME[0]}"
-  local argument single singles singleFile checkAssertions
+  local argument single singles singleFile directory checkAssertions interactiveFlags
   local directory
 
   singles=()
   checkAssertions=()
+  interactiveFlags=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --singles)
         shift || __failArgument "$usage" "shift $argument" || return $?
@@ -629,10 +672,12 @@ gitPreCommitShellFiles() {
           fi
         done <"$singleFile"
         ;;
+      --interactive)
+        interactiveFlags=("$argument")
+        ;;
       --check)
         shift || __failArgument "$usage" "shift $argument" || return $?
-        [ -d "$1" ] || __failArgument "$usage" "$argument $1 should be a directory" || return $?
-        checkAssertions+=("$1")
+        checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
         ;;
       --help)
         "$usage" 0
@@ -658,17 +703,16 @@ gitPreCommitShellFiles() {
   __usageEnvironment "$usage" validateFileContents --exec contextOpen "$@" -- "Copyright &copy; $year" "$BUILD_COMPANY" || return $?
 
   # Unusual quoting here is to avoid having this match as an identical
-  __usageEnvironment "$usage" identicalCheck "${singles[@]+"${singles[@]}"}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh || return $?
+  __usageEnvironment "$usage" identicalCheck "${interactiveFlags[@]+${interactiveFlags[@]}}" "${singles[@]+"${singles[@]}"}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh || return $?
 
   for directory in "${checkAssertions[@]+${checkAssertions[@]}}"; do
-    statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}")" || :
+    statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}") - " || :
     if ! findUncaughtAssertions "$directory" --list; then
       findUncaughtAssertions "$directory" --exec contextOpen &
       __failEnvironment "$usage" findUncaughtAssertions || return $?
     fi
   done
 }
-
 _gitPreCommitShellFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

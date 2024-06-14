@@ -218,11 +218,9 @@ awsEnvironment() {
 awsSecurityGroupIPModify() {
   local argument group port description start region ip foundIP mode verb tempErrorFile
   local savedArgs
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   savedArgs=("$@")
 
@@ -241,26 +239,26 @@ awsSecurityGroupIPModify() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
         return $?
         ;;
       --group)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         group="$1"
         ;;
       --port)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         port="$1"
         ;;
       --description)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         description="$1"
         ;;
       --ip)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         ip="$1"
         ;;
       --add)
@@ -280,7 +278,7 @@ awsSecurityGroupIPModify() {
         region="$1"
         ;;
       *)
-        __failArgument "Unknown argument: $argument" || return $?
+        __failArgument "unknown argument: $argument" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "$errorArgument" "$argument shift failed" || return $?
@@ -392,11 +390,9 @@ awsIPAccess() {
   local sgArgs
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   services=()
   optionRevoke=
@@ -407,34 +403,34 @@ awsIPAccess() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
         return $?
         ;;
       --services)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         IFS=', ' read -r -a services <<<"$1" || :
         ;;
       --profile)
         [ -z "$awsProfile" ] || __failArgument "$usage" "$argument already specified: $awsProfile"
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         awsProfile="$1"
         ;;
       --revoke)
         optionRevoke=1
         ;;
       --group)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         securityGroups+=("$1")
         ;;
       --ip)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         currentIP="$1"
         ;;
       --id)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         developerId="$1"
         ;;
       *)

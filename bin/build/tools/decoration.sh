@@ -80,7 +80,7 @@ labeledBigText() {
   tweenNonLabel=""
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _labeledBigText "$errorArgument" "Blank argument" || return $?
+      _labeledBigText "$errorArgument" "blank argument" || return $?
     fi
     case "$1" in
       --help)
@@ -148,24 +148,47 @@ _labeledBigText() {
 # Example:     echo $(repeat 80 -)
 # Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
 repeat() {
-  local count=$((${1:-2} + 0))
-  local powers=() curPow IFS
+  local usage="_${FUNCNAME[0]}"
+  local argument
+  local count
+  local powers
 
-  shift || :
-  powers=("$*")
-  curPow=${#powers[@]}
-  while [ $((2 ** curPow)) -le $count ]; do
-    powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
-    curPow=$((curPow + 1))
+  count=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$count" ]; then
+          count="$(usageArgumentUnsignedInteger "$usage" "count" "$1")" || return $?
+        else
+          powers=("$*")
+          curPow=${#powers[@]}
+          while [ $((2 ** curPow)) -le "$count" ]; do
+            powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
+            curPow=$((curPow + 1))
+          done
+          curPow=0
+          while [ "$count" -gt 0 ] && [ $curPow -lt ${#powers[@]} ]; do
+            if [ $((count & (2 ** curPow))) -ne 0 ]; then
+              printf "%s" "${powers[$curPow]}"
+              count=$((count - (2 ** curPow)))
+            fi
+            curPow=$((curPow + 1))
+          done
+          return 0
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift argument $argument" || return $?
   done
-  curPow=0
-  while [ $count -gt 0 ] && [ $curPow -lt ${#powers[@]} ]; do
-    if [ $((count & (2 ** curPow))) -ne 0 ]; then
-      printf "%s" "${powers[$curPow]}"
-      count=$((count - (2 ** curPow)))
-    fi
-    curPow=$((curPow + 1))
-  done
+  __failArgument "$usage" "missing repeat string" || return $?
+}
+_repeat() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -178,30 +201,25 @@ repeat() {
 # Example:     consoleSuccess $(echoBar "- Success ")
 # Example:     consoleMagenta $(echoBar +-)
 echoBar() {
-  local c="${1:-=}"
-  local n=$(($(consoleColumns) / ${#c}))
-  local delta=$((${2:-0} + 0))
+  local usage="_${FUNCNAME[0]}"
+  local barText width count delta
 
-  n=$((n + delta))
-  printf "%s\n" "$(repeat "$n" "$c")"
+  width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
+  barText="${1:-=}"
+  if [ -z "$barText" ]; then
+    barText="="
+  fi
+  shift || :
+  delta=$((${1:-0} + 0))
+  isInteger "$delta" || __failArgument "$usage" "delta is not integer $(consoleCode "$delta")" || return $?
+  count=$((width / "${#barText}"))
+  count=$((count + delta))
+  [ $count -gt 0 ] || __failArgument "$usage" "count $count (delta $delta) less than zero?" || return $?
+  printf "%s\n" "$(repeat "$count" "$barText")"
 }
+_echoBar() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 
-#
-# Prefix output lines with a string, useful to format output or add color codes to
-# consoles which do not honor colors line-by-line. Intended to be used as a pipe.
-#
-# Summary: Prefix output lines with a string
-# Usage: prefixLines [ text .. ] < fileToPrefixLines
-# Exit Code: 0
-# Argument: `text` - Prefix each line with this text
-# Example:     cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
-# Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
-#
-prefixLines() {
-  local prefix="$*"
-  while IFS= read -r line; do
-    printf "%s%s\n" "$prefix" "$line"
-  done
 }
 
 #
@@ -209,7 +227,7 @@ prefixLines() {
 # consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #
 # Summary: Prefix output lines with a string
-# Usage: wrapLines [ prefix [ suffix ... ] ] < fileToWrapLines
+# Usage: wrapLines [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
 # Exit Code: 0
 # Argument: `prefix` - Prefix each line with this text
 # Argument: `suffix` - Prefix each line with this text
@@ -217,12 +235,73 @@ prefixLines() {
 # Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
 #
 wrapLines() {
-  local prefix="${1-}" suffix
-  shift || :
-  suffix="${*-}"
-  while IFS= read -r line; do
-    printf "%s%s%s\n" "$prefix" "$line" "$suffix"
+  local usage="_${FUNCNAME[0]}"
+  local argument fill prefix suffix width actualWidth actualIxes cleanLine pad line
+
+  prefix=$'\1'
+  suffix=$'\1'
+  fill=
+  width=
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --fill)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        [ 1 -eq "${#1}" ] || __failArgument "$usage" "Fill character must be single character" || return $?
+        fill="$1"
+        width="${width:-needed}"
+        ;;
+      --width)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __failArgument "$usage" "$argument requires positive integer" || return $?
+        width="$1"
+        ;;
+      *)
+        if [ "$prefix" = $'\1' ]; then
+          prefix="$1"
+        elif [ "$suffix" = $'\1' ]; then
+          suffix="$1"
+        else
+          suffix="$suffix $1"
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" shift || return $?
   done
+  if ! isUnsignedInteger "$width"; then
+    width=$(consoleColumns) || __failEnvironment "$usage" "consoleColumns" || return $?
+  fi
+  if [ -n "$width" ]; then
+    actualIxes="$(printf "%s" "$prefix$suffix" | stripAnsi)"
+    actualWidth=$((width - ${#actualIxes}))
+    if [ "$actualWidth" -lt 0 ]; then
+      __failArgument "$usage" "$width is too small to support prefix and suffix characters"
+    fi
+    if [ "$actualWidth" -eq 0 ]; then
+      # If we are doing nothing then do not do nothing
+      fill=
+    fi
+  fi
+  pad=
+  while IFS= read -r line; do
+    if [ -n "$fill" ]; then
+      cleanLine="$(printf "%s" "$line" | stripAnsi)"
+      padWidth=$((actualWidth - ${#cleanLine}))
+      if [ $padWidth -gt 0 ]; then
+        pad=$(repeat "$padWidth" "$fill")
+      else
+        pad=
+      fi
+    fi
+    printf "%s%s%s%s\n" "$prefix" "$line" "$pad" "$suffix"
+  done
+}
+_wrapLines() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -285,7 +364,7 @@ boxedHeading() {
   while [ $# -gt 0 ]; do
     arg="$1"
     if [ -z "$arg" ]; then
-      _boxedHeading "$errorArgument" "Blank argument" || return $?
+      _boxedHeading "$errorArgument" "blank argument" || return $?
     fi
     case "$arg" in
       --help)
@@ -310,7 +389,7 @@ boxedHeading() {
     shift
   done
   # Default is -2
-  shrink=$((-(shrink+2)))
+  shrink=$((-(shrink + 2)))
   bar="+$(echoBar '' $shrink)+"
   emptyBar="|$(echoBar ' ' $shrink)|"
 

@@ -71,11 +71,9 @@ githubRelease() {
   export GITHUB_ACCESS_TOKEN_EXPIRE
   export GITHUB_REPOSITORY_OWNER
   export GITHUB_REPOSITORY_NAME
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   extras=()
   accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}"
@@ -84,22 +82,22 @@ githubRelease() {
   repoName="${GITHUB_REPOSITORY_NAME-}"
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --token)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         accessToken="$1"
         ;;
       --owner)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         repoOwner="$1"
         ;;
       --name)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         repoName="$1"
         ;;
       --expire)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         accessTokenExpire="$1"
         ;;
       *)

@@ -55,35 +55,35 @@ processWait() {
   signals=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-    --require)
-      requireFlag=true
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --signals)
-      shift || __failArgument "$usage" "Missing $argument argument" || return $?
-      IFS=',' read -r -a signals < <(uppercase "$1")
-      for signal in "${signals[@]}"; do
-        case "$signal" in
-        STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
-        *)
-          __failArgument "$usage" "Invalid signal $signal" || return $?
-          ;;
-        esac
-      done
-      ;;
-    --timeout)
-      shift || __failArgument "$usage" "Missing $argument" || return $?
-      timeout=$(usageArgumentInteger "$usage" "timeout" "$1") || return $?
-      signalTimeout=$timeout
-      ;;
-    *)
-      processId=$(usageArgumentInteger "$usage" "processId" "$1") || return $?
-      processIds+=("$processId")
-      ;;
+      --require)
+        requireFlag=true
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      --signals)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        IFS=',' read -r -a signals < <(uppercase "$1")
+        for signal in "${signals[@]}"; do
+          case "$signal" in
+            STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
+            *)
+              __failArgument "$usage" "Invalid signal $signal" || return $?
+              ;;
+          esac
+        done
+        ;;
+      --timeout)
+        shift || __failArgument "$usage" "missing $argument" || return $?
+        timeout=$(usageArgumentInteger "$usage" "timeout" "$1") || return $?
+        signalTimeout=$timeout
+        ;;
+      *)
+        processId=$(usageArgumentInteger "$usage" "processId" "$1") || return $?
+        processIds+=("$processId")
+        ;;
     esac
     shift || __failArgument "$usage" "shift failed after $argument"
   done

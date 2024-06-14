@@ -103,19 +103,15 @@ isUnsignedInteger() {
 #
 # Test if all arguments are bash functions
 # Usage: {fn} string0 [ string1 ... ]
-# Argument: string - Required. String to test if it is a bash function.
+# Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - All arguments are bash functions
 # Exit code: 1 - One or or more arguments are not a bash function
 isFunction() {
-  if [ $# -eq 0 ]; then
-    return 1
-  fi
+  [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
-    if [ "$(type -t "$1")" != "function" ]; then
-      return 1
-    fi
-    shift
+    case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
+    shift || :
   done
 }
 
@@ -129,9 +125,8 @@ isFunction() {
 # Workaround: On Mac OS X the Docker environment thinks non-executable files are executable, notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how permissions are translated, I assume. Workaround falls.
 isExecutable() {
   local lsMask
-  if [ $# -eq 0 ]; then
-    return 1
-  fi
+
+  [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
     if [ -f "$1" ]; then
       # FAILS on plain files in docker on Mac OS X
@@ -144,10 +139,10 @@ isExecutable() {
           return 2
         fi
       fi
-    else
+    elif [ -z "$(which "$1")" ]; then
       return 1
     fi
-    shift
+    shift || :
   done
   return 0
 }
@@ -159,13 +154,11 @@ isExecutable() {
 # Exit code: 0 - All arguments are callable as a command
 # Exit code: 1 - One or or more arguments are callable as a command
 isCallable() {
-  if [ $# -eq 0 ]; then
-    return 1
-  fi
+  [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
     if ! isFunction "$1" && ! isExecutable "$1"; then
       return 1
     fi
-    shift
+    shift || :
   done
 }

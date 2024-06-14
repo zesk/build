@@ -59,11 +59,9 @@ _textExit() {
 #
 buildTestSuite() {
   local quietLog allTests runTests shortTest
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage argument
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
@@ -101,7 +99,7 @@ buildTestSuite() {
         _textExit 0
         ;;
       --one)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
         runTests+=("$1")
         ;;
@@ -118,10 +116,10 @@ buildTestSuite() {
         messyOption=1
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $1" || _textExit $? || return $?
+        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
 
   if [ ${#runTests[@]} -eq 0 ]; then
@@ -145,7 +143,7 @@ buildTestSuite() {
   testTracing=cleanup
   messyTestCleanup
 
-  bigText Passed | wrapLines "$(consoleSuccess)" "$(consoleReset)"
+  bigText Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
   consoleReset
 }
 _buildTestSuite() {

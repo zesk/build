@@ -34,11 +34,9 @@
 sshAddKnownHost() {
   local remoteHost output sshKnown verbose exitCode verboseArgs
 
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   sshKnown=.ssh/known_hosts
   exitCode=0
@@ -80,4 +78,7 @@ sshAddKnownHost() {
   buildDebugStop ssh || :
   rm "$output" 2>/dev/null || :
   return $exitCode
+}
+_sshAddKnownHost() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

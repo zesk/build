@@ -23,11 +23,9 @@ set -eou pipefail
 #
 sshSetup() {
   local arg sshHomePath flagForce servers keyType keyBits
-  # IDENTICAL this_usage 4
-  local this usage
+    local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
   [ -d "${HOME-}" ] || __failEnvironment "$usage" "HOME is not defined and is required" || return $?
@@ -40,10 +38,10 @@ sshSetup() {
 
   while [ $# != 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case "$arg" in
       --type)
-        shift || __failArgument "$usage" "Missing $arg" || return $?
+        shift || __failArgument "$usage" "missing $arg" || return $?
         case "$1" in
           ed25519 | rsa | dsa)
             keyType=$1
@@ -54,7 +52,7 @@ sshSetup() {
         esac
         ;;
       --bits)
-        shift || __failArgument "$usage" "Missing $arg" || return $?
+        shift || __failArgument "$usage" "missing $arg" || return $?
         minBits=512
         [ "$(("$1" + 0))" -ge "$minBits" ] || __failArgument "$usage" "Key bits is too small $minBits: $1 -> $(("$1" + 0))" || return $?
         ;;

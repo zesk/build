@@ -14,11 +14,9 @@ testSSHAddKnownHosts() {
   local output
   local sampleDomainA sampleDomainB
 
-  # shellcheck source=/dev/null
-  if ! source "./bin/build/env/HOME.sh"; then
-    consoleError HOME.sh failed
-    return 1
-  fi
+  export HOME
+
+  __environment buildEnvironmentLoad HOME || return $?
 
   originalHome="$HOME"
   tempHome="$(mktemp -d)" || return $?
@@ -49,6 +47,8 @@ testSSHAddKnownHosts() {
   assertZeroFileSize "$output" || return $?
 
   HOME="$originalHome"
+
+  unset BUILD_DEBUG
 
   return 0
 }
