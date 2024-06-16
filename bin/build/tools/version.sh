@@ -207,7 +207,7 @@ newRelease() {
   fi
   releaseNotes="$(releaseNotes "$newVersion")"
   if [ ! -f "$releaseNotes" ]; then
-    trimSpacePipe >"$releaseNotes" <<-EOF
+    trimSpace >"$releaseNotes" <<-EOF
         # Release $newVersion
 
         - Upgrade from $currentVersion

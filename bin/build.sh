@@ -6,23 +6,23 @@
 #
 # documentTemplate: ./docs/_templates/__binary.md
 
-# IDENTICAL zesk-build-bin-header 11
+# IDENTICAL __loader1 11
 set -eou pipefail
-
-_fail() {
-  local exit="$1"
-  shift || :
-  printf -- "ERROR: %s\n" "$*" 1>&2
-  return "$exit"
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
 }
-
-# shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh" || _fail $? "source tools.sh" || return $?
 
 #
 # Build Zesk Build
 #
-buildBuild() {
+__buildBuild() {
   if ! ./bin/update-md.sh --skip-commit; then
     _fail "Can not update the Markdown files" || return $?
   fi
@@ -38,5 +38,8 @@ buildBuild() {
   fi
   consoleSuccess Built successfully.
 }
+___buildBuild() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-buildBuild "$@"
+__loader __buildBuild "$@"

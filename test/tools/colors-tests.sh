@@ -17,6 +17,7 @@ tests+=(testSimpleMarkdownToConsole)
 
 testSimpleMarkdownToConsole() {
   local saveBC actual expected testString
+  local this=${FUNCNAME[0]}
 
   saveBC=${BUILD_COLORS-}
 
@@ -27,7 +28,7 @@ testSimpleMarkdownToConsole() {
 
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
 
-  assertEquals "$actual" "$expected" || return $?
+  assertEquals "$expected" "$actual" "$this:$LINENO" || return $?
 
   BUILD_COLORS=
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"

@@ -124,31 +124,31 @@ _assertExitCodeHelper() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgment "$usageFunction" "blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usageFunction" "blank argument" || return $?
     case "$argument" in
       --stderr-ok)
         errorsOk=1
         ;;
       --stderr-match)
         shift || :
-        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
         stderrContains+=("$1")
         errorsOk=1
         ;;
       --stderr-no-match)
         shift || :
-        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
         stderrNotContains+=("$1")
         errorsOk=1
         ;;
       --stdout-match)
         shift || :
-        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
         outputContains+=("$1")
         ;;
       --stdout-no-match)
         shift || :
-        [ -n "$1" ] || __failArgment "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
         outputNotContains+=("$1")
         ;;
       --not)
@@ -158,7 +158,7 @@ _assertExitCodeHelper() {
       *)
         if [ -z "$expected" ]; then
           expected="$argument"
-          isInteger "$expected" || __failArgment "$usageFunction" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
+          isInteger "$expected" || __failArgument "$usageFunction" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
         elif [ -z "$bin" ]; then
           bin="$argument"
           shift || :
@@ -522,7 +522,7 @@ assertOutputEquals() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-  local nLines expected="" commands=() tempFile exitCode=0 pipeStdErr=""
+  local nLines expected="" commands=() tempFile exitCode=0 pipeStdErr="" actual
   local this="${FUNCNAME[0]}"
 
   while [ $# -gt 0 ]; do
@@ -589,7 +589,7 @@ assertOutputContains() {
 # Reviewed: 2023-11-12
 #
 assertOutputDoesNotContain() {
-  local expected="" commands=() tempFile exitCode=0 pipeStdErr=""
+  local expected="" commands=() tempFile exitCode=0 pipeStdErr="" actual
   local this="${FUNCNAME[0]}"
 
   while [ $# -gt 0 ]; do

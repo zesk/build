@@ -51,7 +51,7 @@ buildDocumentation_UpdateUnlinked() {
     source "$envFile" || __failEnvironment "$usage" "source $envFile" || return $?
     title="Missing functions" content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
   ) || return $?
-  total=$(wc -l <"$unlinkedFunctions" | trimSpacePipe)
+  total=$(wc -l <"$unlinkedFunctions" | trimSpace)
   if [ -f "$template" ] && diff -q "$template" "$template.$$"; then
     statusMessage consoleInfo "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
     __usageEnvironment "$usage" rm -f "$template.$$" || return $?

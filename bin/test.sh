@@ -11,15 +11,18 @@
 # . bin/test-reset.sh; bin/test.sh
 
 set -eou pipefail
-
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
-top=$(pwd)
-
-# shellcheck source=/dev/null
-. ./bin/build/ops.sh
-
-# shellcheck source=/dev/null
-__environment source ./test/test-tools.sh || return $?
+# Load zesk build and run command
+__testLoader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/ops.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
+  # shellcheck source=/dev/null
+  source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
+}
 
 messyTestCleanup() {
   local fn exitCode=$?
@@ -35,6 +38,7 @@ messyTestCleanup() {
     consoleError "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
   fi
   if test "$messyOption"; then
+    consoleInfo "Messy ... no cleanup"
     return 0
   fi
   cd "$top"
@@ -57,7 +61,7 @@ _textExit() {
 # Argument: --clean - Optional. Delete test artifact files before starting.
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 #
-buildTestSuite() {
+__buildTestSuite() {
   local quietLog allTests runTests shortTest
   local usage argument
 
@@ -79,7 +83,7 @@ buildTestSuite() {
   messyOption=
   allTests=(sugar colors console debug git decoration url ssh log version type process os hook pipeline identical)
   # Strange quoting for a s s e r t is to hide it from findUncaughtAssertions
-  allTests+=(text float markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
+  allTests+=(text float utilities markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
   allTests+=(sysvinit daemontools)
   while read -r shortTest; do
     if ! inArray "$shortTest" "${allTests[@]}"; then
@@ -116,7 +120,7 @@ buildTestSuite() {
         messyOption=1
         ;;
       *)
-        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
@@ -146,8 +150,8 @@ buildTestSuite() {
   bigText Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
   consoleReset
 }
-_buildTestSuite() {
+___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-buildTestSuite "$@"
+__testLoader __buildTestSuite "$@"

@@ -23,9 +23,29 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # fn: {base}
 # Exit code: 0 - This SHOULD exit successfully always
 # Example: - Move directories to make deployment final
-hookDeployShutdown() {
-  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted. Runs at the end of an application life."
-  : "$@"
+
+set -eou pipefail
+
+# Usage: {fn} {title} [ items ... ]
+_fail() {
+  exec 1>&2 && printf 'FAIL: %s\n' "$@"
+  return 42 # The meaning of life
 }
 
-hookDeployShutdown "$@"
+#
+# Runs at the end of the application life (before taking down application and replacing with another)
+#
+# fn: {base}
+__hookDeployShutdown() {
+  local usage="_${FUNCNAME[0]#_}"
+
+  # shellcheck source=/dev/null
+  source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
+
+  consoleSuccess "${BASH_SOURCE[0]} is a no-op." || __failEnvironment "$usage" "consoleSuccess" || return $?
+  : "$@"
+}
+_hookDeployShutdown() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+__hookDeployShutdown "$@"

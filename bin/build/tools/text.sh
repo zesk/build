@@ -48,13 +48,32 @@ parseBoolean() {
 #
 quoteSedPattern() {
   # IDENTICAL quoteSedPattern 6
-  value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
   value="${value//&/\\&}"
   value="${value//$'\n'/\\n}"
-  printf %s "$value"
+  printf "%s\n" "$value"
+}
+
+#
+# Summary: Quote grep -e patterns for shell use
+#
+# Usage: {fn} text
+# Argument: text - Text to quote
+# Output: string quoted and appropriate to insert in a grep search or replacement phrase
+# Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
+#
+quoteGrepPattern() {
+  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value="${value//[/\\[}"
+  value="${value//]/\\]}"
+  value="${value//)/\\)}"
+  value="${value//(/\\(}"
+  value="${value//|/\\|}"
+  value="${value//$'\n'/\\n}"
+  printf "%s\n" "$value"
 }
 
 #
@@ -65,7 +84,10 @@ quoteSedPattern() {
 # Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeDoubleQuotes() {
-  printf %s "${1//\"/\\\"}"
+  while [ $# -gt 0 ]; do
+    printf "%s\n" "${1//\"/\\\"}"
+    shift
+  done
 }
 
 #
@@ -91,7 +113,7 @@ escapeBash() {
 # Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeSingleQuotes() {
-  printf %s "$1" | sed "s/'/\\\'/g"
+  printf "%s\n" "$@" | sed "s/'/\\\'/g"
 }
 
 #
@@ -179,7 +201,7 @@ _trimSpace() {
 # See: trimSpace
 #
 trimSpacePipe() {
-  trimSpace "$@"
+  _deprecated trimSpace "$@"
 }
 
 #
@@ -556,7 +578,7 @@ _mapEnvironmentGenerateSedFile() {
       *[%{}]*) ;;
       LD_*) ;;
       *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")"
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || _environment "${FUNCNAME[0]}" || return $?
         ;;
     esac
   done
@@ -896,4 +918,37 @@ cannon() {
 }
 _cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Remove fields from left to right from a text file as a pipe
+# Usage: {fn} fieldCount < input > output
+# Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.
+# Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
+removeFields() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
+
+  local fieldCount=1
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      *)
+        isUnsignedInteger "$argument" || __failArgument "$usage" "fieldCount should be integer: $(consoleCode "$argument")" || return $?
+        [ "$argument" -gt 0 ] || __failArgument "$usage" "fieldCount can not be 0" || return $?
+        fieldCount="$argument"
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+  done
+  awk '{for(i=0;i<'"$fieldCount"';i++){sub($1 FS,"")}}1'
+}
+
+# Usage: {fn} separator text0 arg1 ...
+# Argument: separator - Required. String. Single character to join elements.
+# Argument: text0 - Optional. String. One or more strings to join
+joinArguments() {
+  local IFS="$1"
+  shift || :
+  printf "%s" "$*"
 }

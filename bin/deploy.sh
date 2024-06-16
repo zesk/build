@@ -5,27 +5,27 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL zesk-build-bin-header 11
+# IDENTICAL __loader1 11
 set -eou pipefail
-
-_fail() {
-  local exit="$1"
-  shift || :
-  printf -- "ERROR: %s\n" "$*" 1>&2
-  return "$exit"
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
 }
-
-# shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh" || _fail $? "source tools.sh" || return $?
 
 #
 # Deploy Zesk Build
 #
-buildDeploy() {
+__buildDeploy() {
   local start appId notes
-    local usage
+  local usage
 
-  usage="_${FUNCNAME[0]}"
+  usage="${FUNCNAME[0]#_}"
 
   start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
 
@@ -53,7 +53,7 @@ buildDeploy() {
   reportTiming "$start" "Release completed in" || :
 }
 _buildDeploy() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
 }
 
-buildDeploy "$@"
+__loader __buildDeploy "$@"

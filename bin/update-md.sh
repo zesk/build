@@ -5,20 +5,20 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
+# IDENTICAL __loader1 11
 set -eou pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/.."
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
-
-_usageUpdateMarkdown() {
-  usageDocument "bin/$(dirname "${BASH_SOURCE[0]}")" updateMarkdown "$@"
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
 }
 
-addNoteTo() {
+__addNoteTo() {
   statusMessage consoleInfo "Adding note to $1"
   cp "$1" bin/build
   printf "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
@@ -29,7 +29,10 @@ addNoteTo() {
 # Usage: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
 #
-updateMarkdown() {
+__updateMarkdown() {
+  local usage="${FUNCNAME[0]#_}"
+  local flagSkipCommit buildMarker
+
   flagSkipCommit=
   while [ $# -gt 0 ]; do
     case $1 in
@@ -38,13 +41,13 @@ updateMarkdown() {
         statusMessage consoleWarning "Skipping commit ..."
         ;;
       *)
-        _usageUpdateMarkdown $errorArgument "Bad argument $1"
+        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift
   done
-  addNoteTo README.md
-  addNoteTo LICENSE.md
+  __addNoteTo README.md
+  __addNoteTo LICENSE.md
 
   buildMarker=bin/build/build.json
 
@@ -65,14 +68,18 @@ updateMarkdown() {
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
         statusMessage consoleInfo "Committing build.json"
-        git commit -m "Updating build.json" "$buildMarker" || :
-        git push origin
+        __usageEnvironment "$usage" git commit -m "Updating build.json" "$buildMarker" || return $?
+        __usageEnvironment "$usage" git push origin || return $?
       fi
     else
-      statusMessage consoleWarning "Skipping update during commit hook"
+      statusMessage consoleWarning "Skipping update during commit hook" || :
     fi
   fi
-  clearLine
+  clearLine || :
+}
+_updateMarkdown() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+
 }
 
-updateMarkdown "$@"
+__loader __updateMarkdown "$@"

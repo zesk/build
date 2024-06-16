@@ -8,12 +8,19 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+
+# IDENTICAL __loader 11
 set -eou pipefail
-
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
+}
 
 #
 # fn: {base}
@@ -21,10 +28,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Run on remote systems after deployment has succeeded on all systems.
 #
 # This step must always succeed on the remote system; the deployment step prior to this
-# should do wahtever is required to ensure that.
+# should do whatever is required to ensure that.
 #
-hookDeployCleanup() {
-  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+__hookDeployCleanup() {
+  ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  : "$@"
 }
 
-hookDeployCleanup "$@"
+__loader __hookDeployCleanup "$@"

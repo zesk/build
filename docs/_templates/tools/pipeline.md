@@ -29,7 +29,7 @@
 ## Application Environment
 
 {makeEnvironment}
-{showEnviornment}
+{showEnvironment}
 {applicationEnvironmentVariables}
 {applicationEnvironment}
 

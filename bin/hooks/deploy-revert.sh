@@ -8,12 +8,19 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+
+# IDENTICAL __loader 11
 set -eou pipefail
-
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
+}
 
 # After a deployment was successful on a host, this undos that deployment and goes back to the previous version.
 #
@@ -21,8 +28,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 # Summary: Deployment "undo" script
 #
 # Exit code: 0 - This SHOULD exit successfully always
-hookDeployRevert() {
-  consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+__hookDeployRevert() {
+  ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
-hookDeployRevert
+__hookDeployRevert "$@"

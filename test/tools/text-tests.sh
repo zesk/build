@@ -26,7 +26,7 @@ testTrimHeadTail() {
 
 tests+=(testSingleBlankLines)
 testSingleBlankLines() {
-  local topSpace bottomSpace
+  local topSpace bottomSpace middleSpace
 
   topSpace=$(printf "\n\n\n\n\n\n\nip")
   bottomSpace=$(printf "ip\n\n\n\n\n\n\n")
@@ -78,6 +78,8 @@ EOF
 
 tests+=(testMapValue)
 testMapValue() {
+  local tempEnv
+
   tempEnv=$(mktemp)
 
   assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
@@ -242,6 +244,8 @@ testStringValidate() {
 
 tests=(testListTokens "${tests[@]}")
 testListTokens() {
+  local COLUMNS LINES
+
   echo | assertExitCode 0 listTokens || return $?
   assertEquals "" "$(echo | listTokens)" || return $?
   assertEquals "$(printf "%s\n" a b c)" "$(echo '{a}{b}{c}' | listTokens)" || return $?

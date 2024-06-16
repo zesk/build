@@ -85,6 +85,7 @@ deprecatedCleanup() {
 
   # v0.10.0
   cannon 'prefix''Lines' wrapLines "${ignoreStuff[@]}"
+  cannon 'trimSpace''Pipe' 'trimSpace' "${ignoreStuff[@]}"
 
   return $exitCode
 }
