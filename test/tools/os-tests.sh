@@ -13,12 +13,21 @@ errorEnvironment=1
 
 declare -a tests
 
+tests+=(testIsAbsolutePath)
+testIsAbsolutePath() {
+  local path exitCode
+
+  __testIsAbsolutePathData | while IFS=, read -r path exitCode; do
+    assertExitCode "$exitCode" isAbsolutePath "$path" || return $?
+  done
+}
+
 tests+=(testNewestAndOldest)
 testNewestAndOldest() {
   local waitSeconds=1 place aTime bTime cTime
 
-  place=$(mktemp -d)
-  cd "$place" || return "$errorEnvironment"
+  place=$(mktemp -d) || _environment mktemp || return $?
+  __environment cd "$place" || return $?
 
   date >"a"
   consoleWarning "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
@@ -28,18 +37,9 @@ testNewestAndOldest() {
   sleep "$waitSeconds"
   date >"c"
 
-  if ! aTime=$(modificationTime "a"); then
-    consoleError modificationTime a failed
-    return 1
-  fi
-  if ! bTime=$(modificationTime "b"); then
-    consoleError modificationTime b failed
-    return 1
-  fi
-  if ! cTime=$(modificationTime "c"); then
-    consoleError modificationTime c failed
-    return 1
-  fi
+  aTime=$(modificationTime "a") || _environment modificationTime a failed || return $?
+  bTime=$(modificationTime "b") || _environment modificationTime b failed || return $?
+  cTime=$(modificationTime "c") || _environment modificationTime c failed || return $?
 
   if ! assertOutputEquals "a" oldestFile "a" "b" "c" ||
     ! assertOutputEquals "a" oldestFile "c" "b" "a" ||
@@ -198,4 +198,17 @@ testExtensionLists() {
   assertFileContains "$target/sh" "${BASH_SOURCE[0]}" || return $?
 
   rm -rf "$target" || return $?
+}
+
+__testIsAbsolutePathData() {
+  cat <<EOF
+/,0
+,1
+/this,0
+/QWERTY/,0
+a/a/a/a,1
+.,1
+..,1
+pickle,1
+EOF
 }

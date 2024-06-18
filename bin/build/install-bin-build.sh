@@ -18,7 +18,7 @@
 #
 # or wherever you put it in your project to install it
 #
-set -eou pipefail || exit 99 # problems
+set -eou pipefail
 
 # Modify this line locally, it will be preserved on update
 # Points to the project root

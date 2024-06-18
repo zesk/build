@@ -423,21 +423,28 @@ listTokens() {
 # Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
 #
 shaPipe() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
-      [ -f "$1" ] || _argument "$1 is not a file" || return $?
+      argument="$1"
+      [ -f "$1" ] || __usageArgument "$usage" "$1 is not a file" || return $?
+      [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
-        printf "%s: %s\n" "$(date +"%FT%T")" "$1" >shaPipe.log
+        printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log
       fi
-      shasum <"$1" | cut -f 1 -d ' '
-      shift || _argument "shift failed" || return $?
+      shasum <"$argument" | cut -f 1 -d ' '
+      shift || __failArgument "$usage" "shift failed" || return $?
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then
       printf "%s: stdin\n" "$(date +"%FT%T")" >shaPipe.log
     fi
-    shasum | cut -f 1 -d ' '
+    shasum | cut -f 1 -d ' ' || __failEnvironment "$usage" "shasum" || return $?
   fi
+}
+_shaPipe() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -446,43 +453,52 @@ shaPipe() {
 #
 # Speeds up shaPipe using modification dates of the files instead.
 #
-# The cacheDirectory
+# The `cacheDirectory`
 #
 # Usage: cachedShaPipe cacheDirectory [ filename ]
-# Argument: cacheDirectory - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
-# Depends: shasum
+# Argument: cacheDirectory - Optional. Directory. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+# Depends: shasum shaPipe
 # Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
 # Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 cachedShaPipe() {
-  local cacheDirectory="${1%%/}"
+  local usage="_${FUNCNAME[0]}"
+  local argument
+
+  local cacheDirectory="${1-}"
+
+  shift || __failArgument "$usage" "Missing cacheDirectory" || return $?
 
   # Special case to skip caching
-  shift
   if [ -z "$cacheDirectory" ]; then
     shaPipe "$@"
     return $?
   fi
+  cacheDirectory="${cacheDirectory%/}"
 
-  [ -d "$cacheDirectory" ] || _argument "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
+  [ -d "$cacheDirectory" ] || __failArgument "$usage" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
-      [ -f "$1" ] || _argument "$1 is not a file" || return $?
-      cacheFile="$cacheDirectory/${1##/}"
+      argument="$1"
+      [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+      [ -f "$argument" ] || __failArgument "$usage" "not a file $(consoleLabel "$argument")" || return $?
+      cacheFile="$cacheDirectory/${argument#/}"
       __environment requireFileDirectory "$cacheFile" || return $?
       if [ -f "$cacheFile" ] && isNewestFile "$cacheFile" "$1"; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        shaPipe "$1" | tee "$cacheFile"
+        shaPipe "$argument" | tee "$cacheFile" || __failEnvironment "$usage" shaPipe "$1" || return $?
       fi
-      shift || _argument "shift failed" || return $?
+      shift || :
     done
   else
     shaPipe
   fi
-
+}
+_cachedShaPipe() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Maps a string using an environment file

@@ -39,7 +39,8 @@ __loader() {
 #
 exampleFunction() {
   local usage="_${FUNCNAME[0]}"
-  local argument name easyFlag width
+  local argument
+  local name easyFlag width
 
   width=50
   name=

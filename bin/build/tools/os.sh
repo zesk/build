@@ -1097,3 +1097,19 @@ extensionLists() {
 _extensionLists() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Is a path an absolute path?
+# Usage: {fn} path ...
+# Exit Code: 0 - if all paths passed in are absolute paths (begin with `/`).
+# Exit Code: 1 - one ore more paths are not absolute paths
+isAbsolutePath() {
+  local usage="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __failArgument "$usage" "Need at least one argument" || return $?
+  while [ $# -gt 0 ]; do
+    [ "$1" != "${1#/}" ] || return 1
+    shift || :
+  done
+}
+_isAbsolutePath() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

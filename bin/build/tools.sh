@@ -37,7 +37,7 @@ loadTools() {
   # Strange quoting for Assert is to hide it from findUncaughtAssertions
 
   # Core stuff
-  toolsFiles+=(_sugar sugar debug type process os text date float url _colors colors sed "ass""ert" hook utilities)
+  toolsFiles+=(_sugar sugar debug type process os text date float url _colors colors sed "ass""ert" hook utilities self)
   toolsFiles+=(pipeline deploy deployment apt log decoration usage console security test version vendor)
 
   # More complex tools
