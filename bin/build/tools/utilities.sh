@@ -41,7 +41,7 @@ incrementor() {
   local name value
   local counterFile
 
-  name=default
+  name=
   value=
   persistence="$(requireDirectory "$(buildCacheDirectory "$this/$$")")" || __failEnvironment "$usage" "create cache" || return $?
   while [ $# -gt 0 ]; do
@@ -60,9 +60,8 @@ incrementor() {
     fi
     shift || __failArgument "shift $argument failed" || return $?
   done
-  if [ -n "$name" ]; then
-    __incrementor "$persistence/$name" "$value"
-  fi
+  [ -n "$name" ] || name=default
+  __incrementor "$persistence/$name" "$value"
 }
 _incrementor() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
