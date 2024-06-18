@@ -60,7 +60,8 @@ dumpPipe() {
   nBytes=$(($(wc -c <"$file") + 0))
   [ ${#symbol} -eq 0 ] || symbol="$symbol "
   # shellcheck disable=SC2015
-  printf "%s%s %s, %s %s %s\n" \
+  printf "%s%s%s %s, %s %s %s\n" \
+    "$(clearLine)" \
     "$name" \
     "$nLines" "$(plural "$nLines" line lines)" \
     "$nBytes" "$(plural "$nBytes" byte bytes)" \

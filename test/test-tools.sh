@@ -168,7 +168,7 @@ loadTestFiles() {
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$changedGlobals"); then
       consoleWarning "$__test set $(consoleValue "COLUMNS, LINES")"
       unset COLUMNS LINES
-      changedGlobals=$(printf "%s\n" "$changedGlobals" | grep -v -e 'COLUMNS\|LINES') || __failEnvironment "Removing COLUNNS and LINES from $changedGlobals" || return $?
+      changedGlobals="$(printf "%s\n" "$changedGlobals" | grep -v -e 'COLUMNS\|LINES' || :)" || __failEnvironment "$usage" "Removing COLUMNS and LINES from $changedGlobals" || return $?
     fi
     if [ -n "$changedGlobals" ]; then
       printf "%s\n" "$changedGlobals" | dumpPipe "$__test leaked local or export ($__before -> $__after)"

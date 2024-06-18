@@ -92,56 +92,30 @@ _testUsageArgumentHelperFail() {
 
 tests=(testUsageArgumentFunctions "${tests[@]}")
 testUsageArgumentFunctions() {
-  local d intTests unsignedIntTests counter
-
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-
-  consoleColumns
-
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined consoleColumns $counter" || return $?
+  local d intTests unsignedIntTests
 
   d=$(mktemp -d) || return $?
 
-  index=1
   export TEST_USAGE="$d/artifact"
 
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
-
   _testUsageArgumentHelperSuccess usageArgumentFileDirectory "$d" "$(pwd)" "/" "$d/inside" "NOT-a-dir-but-works-as-it-resolves-to-dot" "../../../../../ha-ends-at-root" || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   _testUsageArgumentHelperSuccess usageArgumentDirectory "$d" "$(pwd)" "/" || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   _testUsageArgumentHelperFail usageArgumentDirectory "$d/foo" "NOT-a-dir" "../../../../../ha" || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   _testUsageArgumentHelperFail usageArgumentFileDirectory "$d/foo/bar" || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   unsignedIntTests=(99 1 0 4123123412412 492 8192)
   intTests=(-42 -99 -5912381239102398123 -0 -1)
 
   _testUsageArgumentHelperSuccess usageArgumentInteger "${intTests[@]}" "${unsignedIntTests[@]}" || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   _testUsageArgumentHelperFail usageArgumentInteger -1e1 1.0 1d2 jq || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   _testUsageArgumentHelperSuccess usageArgumentUnsignedInteger "${unsignedIntTests[@]}" || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   _testUsageArgumentHelperFail usageArgumentUnsignedInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what || return $?[ -n "${COLUMNS-}" ] || _environment "COLUMNS defined" || return $?
-  counter=$(incrementor) && [ -z "${COLUMNS-}" ] || _environment "COLUMNS defined $counter" || return $?
-  index=$((index + 1))
 
   unset TEST_USAGE
 }
