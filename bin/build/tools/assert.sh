@@ -21,12 +21,12 @@ _symbolFail() {
 _assertFailure() {
   local function="${1-None}"
   shift || :
-  _environment "$(printf -- "%s: %s %s\n" "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")")" || return $?
+  _environment "$(printf -- "%s%s: %s %s" "$(clearLine)" "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")")" || return $?
 }
 _assertSuccess() {
   local function="${1-None}"
   shift || :
-  printf -- "%s: %s %s\n" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
+  printf -- "%s%s: %s %s" "$(clearLine)" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
 }
 
 #
@@ -82,7 +82,7 @@ assertNotEquals() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: {fn} usageFunction expectedExitCode command [ arguments ... ]
+# Usage: {fn} usage expectedExitCode command [ arguments ... ]
 #
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
@@ -96,7 +96,7 @@ assertNotEquals() {
 #
 _assertExitCodeHelper() {
   local argument
-  local usageFunction
+  local usage
   local isExitCode errorsOk
   local expected bin
   local outputFile errorFile
@@ -114,7 +114,7 @@ _assertExitCodeHelper() {
   bin=
   failureText="expected"
 
-  usageFunction="$1"
+  usage="$1"
   shift || :
 
   outputContains=()
@@ -124,31 +124,31 @@ _assertExitCodeHelper() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usageFunction" "blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --stderr-ok)
         errorsOk=1
         ;;
       --stderr-match)
         shift || :
-        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrContains+=("$1")
         errorsOk=1
         ;;
       --stderr-no-match)
         shift || :
-        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrNotContains+=("$1")
         errorsOk=1
         ;;
       --stdout-match)
         shift || :
-        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         outputContains+=("$1")
         ;;
       --stdout-no-match)
         shift || :
-        [ -n "$1" ] || __failArgument "$usageFunction" "Blank $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         outputNotContains+=("$1")
         ;;
       --not)
@@ -158,7 +158,7 @@ _assertExitCodeHelper() {
       *)
         if [ -z "$expected" ]; then
           expected="$argument"
-          isInteger "$expected" || __failArgument "$usageFunction" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
+          isInteger "$expected" || __failArgument "$usage" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
         elif [ -z "$bin" ]; then
           bin="$argument"
           shift || :
@@ -168,8 +168,8 @@ _assertExitCodeHelper() {
     esac
     shift || :
   done
-  outputFile=$(mktemp) && errorFile=$(mktemp) || __failEnvironment "$usageFunction" "INTERNAL unable to mktemp" || return $?
-  saved=$(saveErrorExit) || __failEnvironment "$usageFunction" saveErrorExit failed || return $?
+  outputFile=$(mktemp) && errorFile=$(mktemp) || __failEnvironment "$usage" "INTERNAL unable to mktemp" || return $?
+  saved=$(saveErrorExit) || __failEnvironment "$usage" saveErrorExit failed || return $?
   set -e
   actual="$(
     "$bin" "$@" >"$outputFile" 2>"$errorFile"
@@ -178,33 +178,31 @@ _assertExitCodeHelper() {
   restoreErrorExit "$saved" || :
 
   if ! test "$errorsOk" && [ -s "$errorFile" ]; then
-    __failEnvironment "$usageFunction" "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usageFunction#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
+    __failEnvironment "$usage" "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usage#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
   fi
   if test $errorsOk && [ ! -s "$errorFile" ]; then
-    consoleWarning "--stderr-ok used but is NOT necessary: $(consoleCode "${usageFunction#_} $bin $*")"
+    printf "%s%s%s\n" "$(clearLine)" "$(consoleWarning "--stderr-ok used but is NOT necessary:")" "$(consoleCode "${usage#_} $bin $*")"
   fi
   if [ ${#stderrContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$usageFunction" "$errorFile" "${stderrContains[@]}" || return $?
+    __assertFileContainsThis "$usage" "$errorFile" "${stderrContains[@]}" || return $?
   fi
   if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$usageFunction" "$errorFile" "${stderrNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$usage" "$errorFile" "${stderrNotContains[@]}" || return $?
   fi
   if [ ${#outputContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$usageFunction" "$outputFile" "${outputContains[@]}" || return $?
+    __assertFileContainsThis "$usage" "$outputFile" "${outputContains[@]}" || return $?
   fi
   if [ ${#outputNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$usageFunction" "$outputFile" "${outputNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$usage" "$outputFile" "${outputNotContains[@]}" || return $?
   fi
   if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     # Failure
-    printf "%s %s %s: %s -> %s, %s\n%s\n" \
-      "$(_symbolFail)" "${usageFunction#_}" "$(consoleCode "$bin $*")" \
-      "$(consoleError "$actual")" "$failureText" "$(consoleSuccess "$expected")" \
-      "$(wrapLines "$(consoleCode)" "$(consoleReset)" <"$outputFile")" 1>&2
+    _assertFailure "${usage#_}" "$(consoleCode "$bin $*")" \
+      "$(consoleError "$actual")=$failureText" "$(consoleSuccess "$expected")=$(dumpPipe <"$outputFile")"
     rm -rf "$outputFile" "$errorFile" || :
-    _environment "${usageFunction#_} Failed" || return $?
+    _environment "${usage#_} Failed" || return $?
   fi
-  _assertSuccess "${usageFunction#_}" "$(consoleCode "$bin $*")" "$(consoleSuccess "$actual")" || return $?
+  _assertSuccess "${usage#_}" "$(consoleCode "$bin $*")" "$(consoleSuccess "$actual")" || return $?
   rm -rf "$outputFile" "$errorFile" || :
   return 0
 }
@@ -653,7 +651,7 @@ __assertFileContainsThis() {
     shift
   done
   # shellcheck disable=SC2059
-  _assertSuccess "$this" "$(consoleInfo "$f") contains strings: $(printf -- "\n- \"$(consoleCode "%s")\"" "${args[@]+${args[@]}}")" || return $?
+  _assertSuccess "$this" "$(consoleInfo "$f") contains strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
 }
 
 # Usage: assertFileContains fileName string0 [ ... ]
@@ -701,7 +699,7 @@ __assertFileDoesNotContainThis() {
   done
   _assertSuccess "$this" "$f does not contain strings: $(consoleCode "$(printf "%s" "${args[@]+${args[@]}}")")" || return $?
   # shellcheck disable=SC2059
-  _assertSuccess "$this" "$(consoleInfo "$f") does not contain strings: $(printf -- "\n- \"$(consoleCode "%s")\"" "${args[@]+${args[@]}}")" || return $?
+  _assertSuccess "$this" "$(consoleInfo "$f") does not contain strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
 }
 
 #

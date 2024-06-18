@@ -7,12 +7,6 @@
 # Docs: contextOpen ./docs/_templates/tools/docker.md
 # Test: contextOpen ./test/tools/docker-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 ###############################################################################
 #
 #....▗▖..........▗▖.............
@@ -43,6 +37,8 @@ dumpDockerTestFile() {
 #
 # Exit Code: 0 - Yes
 # Exit Code: 1 - No
+#
+# TODO: This changed 2023 ...
 #
 insideDocker() {
   if [ ! -f /proc/1/cmdline ]; then
@@ -84,20 +80,19 @@ checkDockerEnvFile() {
 # Argument: filename - Required. File. One or more files to convert.
 #
 anyEnvToDockerEnv() {
+  local usage="_${FUNCNAME[0]}"
   local f temp
   for f in "$@"; do
-    if ! temp=$(mktemp); then
-      "_${FUNCNAME[0]}" "$errorEnvironment" "mktemp failed" || return $?
-    fi
+    temp=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
     if ! checkDockerEnvFile "$f" 2>/dev/null; then
       if ! dockerEnvFromBashEnv "$f" >"$temp"; then
         rm -rf "$temp" || :
-        "_${FUNCNAME[0]}" "$errorEnvironment" "dockerEnvToBash $f" || return $?
+        __failEnvironment "$usage" "dockerEnvFromBashEnv $f" || return $?
       fi
     else
       if ! cp "$f" "$temp"; then
         rm -rf "$temp" || :
-        "_${FUNCNAME[0]}" "$errorEnvironment" "cp $f $temp" || return $?
+        __failEnvironment "$usage" "cp $f $temp" || return $?
       fi
     fi
     printf "%s\n" "$temp"
@@ -115,20 +110,19 @@ _anyEnvToDockerEnv() {
 # Argument: filename - Required. File. One or more files to convert.
 #
 anyEnvToBashEnv() {
+  local usage="_${FUNCNAME[0]}"
   local f temp
   for f in "$@"; do
-    if ! temp=$(mktemp); then
-      "_${FUNCNAME[0]}" "$errorEnvironment" "mktemp failed" || return $?
-    fi
+    temp=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
     if checkDockerEnvFile "$f" 2>/dev/null; then
       if ! dockerEnvToBash "$f" >"$temp"; then
         rm -rf "$temp" || :
-        "_${FUNCNAME[0]}" "$errorEnvironment" "dockerEnvToBash $f" || return $?
+        __failEnvironment "$usage" "dockerEnvToBash $f" || return $?
       fi
     else
       if ! cp "$f" "$temp"; then
         rm -rf "$temp" || :
-        "_${FUNCNAME[0]}" "$errorEnvironment" "cp $f $temp" || return $?
+        __failEnvironment "$usage" "cp $f $temp" || return $?
       fi
     fi
     printf "%s\n" "$temp"
@@ -152,17 +146,14 @@ _anyEnvToBashEnv() {
 # Exit Code: 0 - if file is valid
 #
 dockerEnvToBash() {
+  local usage="_${FUNCNAME[0]}"
   local file index envLine result=0
   if [ $# -eq 0 ]; then
     _dockerEnvToBashPipe
   else
     for file in "$@"; do
-      if [ ! -f "$file" ]; then
-        "_${FUNCNAME[0]}" "$errorArgument" "Not a file $file" || return $?
-      fi
-      if ! _dockerEnvToBashPipe <"$file"; then
-        "_${FUNCNAME[0]}" "$errorArgument" "Invalid file: $file" || return $?
-      fi
+      [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
+      _dockerEnvToBashPipe <"$file" || __failArgument "$usage" "Invalid file: $file" || return $?
     done
   fi
 }
@@ -174,7 +165,7 @@ _dockerEnvToBash() {
 # Utility for dockerEnvToBash to handle both pipes and files
 #
 _dockerEnvToBashPipe() {
-  local file index envLine result
+  local file index envLine result name value
   result=0
   index=0
   while IFS="" read -r envLine; do
@@ -184,9 +175,7 @@ _dockerEnvToBashPipe() {
       if [ -z "$(printf "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
         printf "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
       else
-        consoleError "Invalid name at line $index: $name" 1>&2
-        # shellcheck disable=SC2030
-        result=$errorArgument
+        _argument "Invalid name at line $index: $name" || result=$?
       fi
     else
       case "$envLine" in
@@ -195,8 +184,7 @@ _dockerEnvToBashPipe() {
           printf "%s\n" "$envLine"
           ;;
         *)
-          consoleError "Invalid line $index: $envLine" 1>&2
-          result=$errorArgument
+          _argument "Invalid line $index: $envLine" || result=$?
           ;;
       esac
     fi
@@ -212,16 +200,13 @@ _dockerEnvToBashPipe() {
 # Exit Code: 0 - if file is valid
 #
 dockerEnvFromBashEnv() {
+  local usage="_${FUNCNAME[0]}"
   local file envLine
   for file in "$@"; do
-    if [ ! -f "$file" ]; then
-      "_${FUNCNAME[0]}" $errorArgument "Not a file $file" || return $?
-    fi
-    if ! (
+    [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
+    (
       env -i bash -c "set -a && source $file 2>/dev/null && env" | grep -E -v '^(PWD|_|SHLVL)='
-    ); then
-      "_${FUNCNAME[0]}" $errorArgument "$file is not a valid bash file" || return $?
-    fi
+    ) || __failArgument "$usage" "$file is not a valid bash file" || return $?
   done
 }
 _dockerEnvFromBashEnv() {
@@ -247,15 +232,15 @@ _dockerEnvFromBashEnv() {
 # Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
 #
 dockerLocalContainer() {
+  local usage="_${FUNCNAME[0]}"
   local fail arg platform imageName imageApplicationPath
   local envFiles extraArgs
   local tempEnvs tempEnv exitCode
   local failedWhy
 
-  fail="_${FUNCNAME[0]}"
-  if ! buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH; then
-    _deployToRemote "$errorEnvironment" "HOME BUILD_DEBUG environment failed" || return $?
-  fi
+  export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
+
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
 
   platform=${BUILD_DOCKER_PLATFORM}
   imageApplicationPath=${BUILD_DOCKER_PATH}
@@ -266,44 +251,37 @@ dockerLocalContainer() {
   extraArgs=()
   tempEnvs=()
   while [ $# -gt 0 ]; do
-    arg="$1"
-    if [ -z "$arg" ]; then
-      "$fail" "$errorArgument" "blank argument"
-      return $?
-    fi
-    case "$arg" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --help)
-        "$fail" 0
-        return 0
+        "$usage" 0
+        return $?
         ;;
       --image)
-        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         imageName="$1"
         ;;
       --path)
-        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         imageApplicationPath="$1"
         ;;
       --env)
-        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
-        if ! envFile=$(usageArgumentFile "$fail" "envFile" "$1"); then
-          return $errorArgument
-        fi
-        if ! tempEnv=$(anyEnvToDockerEnv "$envFile"); then
-          "$fail" "$errorArgument" "$arg $envFile unable to convert" || return $?
-        fi
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
+        tempEnv=$(anyEnvToDockerEnv "$envFile") || __failArgument "$usage" "$argument $envFile unable to convert" || return $?
         tempEnvs+=("$tempEnv")
         envFiles+=("--env-file" "$tempEnv")
         ;;
       --platform)
-        shift || "$fail" "$errorArgument" "Missing $arg" || return $?
+        shift || "$usage" "$errorArgument" "Missing $arg" || return $?
         platform="$1"
         ;;
       *)
         extraArgs+=("$1")
         ;;
     esac
-    shift
+    shift || :
   done
   failedWhy=
   if [ -z "$imageName" ]; then
@@ -315,12 +293,9 @@ dockerLocalContainer() {
   fi
   if [ -n "$failedWhy" ]; then
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
-    "$fail" "$errorArgument" "$failedWhy"
-    return $?
+    __failEnvironment "$usage" "$failedWhy" || return $?
   fi
-  if ! docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}"; then
-    exitCode=$?
-  fi
+  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }

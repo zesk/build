@@ -15,13 +15,13 @@ set -eou pipefail
 __testLoader() {
   # shellcheck source=/dev/null
   if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/ops.sh"; then
+    # shellcheck source=/dev/null
+    source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
     "$@" || return $?
   else
     exec 1>&2 && printf 'FAIL: %s\n' "$@"
     return 42 # The meaning of life
   fi
-  # shellcheck source=/dev/null
-  source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
 }
 
 messyTestCleanup() {
@@ -41,7 +41,6 @@ messyTestCleanup() {
     consoleInfo "Messy ... no cleanup"
     return 0
   fi
-  cd "$top"
   testCleanup
 }
 
@@ -140,7 +139,6 @@ __buildTestSuite() {
     requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
   done
 
-  cd "$top" || return $?
   cleanExit=1
 
   printf "%s\n" "$testTracing" >>"$quietLog"
