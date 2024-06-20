@@ -20,11 +20,13 @@ _symbolFail() {
 }
 _assertFailure() {
   local function="${1-None}"
+  incrementor assert-failure > /dev/null
   shift || :
   _environment "$(printf -- "%s%s: %s %s" "$(clearLine)" "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")")" || return $?
 }
 _assertSuccess() {
   local function="${1-None}"
+  incrementor assert-success > /dev/null
   shift || :
   printf -- "%s%s: %s %s" "$(clearLine)" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
 }

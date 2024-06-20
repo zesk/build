@@ -115,7 +115,7 @@ testUsageArgumentFunctions() {
 
   _testUsageArgumentHelperSuccess usageArgumentUnsignedInteger "${unsignedIntTests[@]}" || return $?
 
-  _testUsageArgumentHelperFail usageArgumentUnsignedInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what || return $?[ -n "${COLUMNS-}" ] || _environment "COLUMNS defined" || return $?
+  _testUsageArgumentHelperFail usageArgumentUnsignedInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what || return $?
 
   unset TEST_USAGE
 }

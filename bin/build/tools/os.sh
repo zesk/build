@@ -72,7 +72,7 @@ _buildCacheDirectory() {
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by default.
 #
-buildEnvironmentLoad() {
+ buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
   local env file found
 
@@ -1022,6 +1022,10 @@ _serviceToPort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Usage: {fn} directory original
+# Appends (or creates) `original` to the file named `extension` in `directory`
+# Appends `original` to file `directory/@` as well.
+# `extension` is computed from `original` and an empty extension is written to '!'
 __extensionListsLog() {
   local directory="$1" original="$2"
   local name extension
@@ -1035,6 +1039,7 @@ __extensionListsLog() {
   [ "${name%%.*}" != "" ] && [ "$extension" != "$name" ] && [ "$extension" != "." ] && [ "$extension" != ".." ] && [ -n "$extension" ] || extension="!"
   printf "%s\n" "$original" | tee -a "$directory/@" >>"$directory/$extension" || _environment "writing $directory/$extension" || return $?
 }
+
 #
 # Usage: {fn} directory file0 ...
 # Argument: --help - Optional. Flag. This help.

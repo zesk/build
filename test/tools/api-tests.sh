@@ -30,6 +30,7 @@ testTools() {
 
 tests+=(testHooks)
 testHooks() {
+  local h
   for h in deploy-cleanup deploy-confirm make-env version-created version-live; do
     assertExitCode 0 hasHook $h || return $?
   done
@@ -92,3 +93,11 @@ testMapPrefixSuffix() {
   itemIndex=$((itemIndex + 1))
   consoleSuccess testMapPrefixSuffix OK
 }
+
+
+shellcheck "./test/tools/usage-tests.sh"
+shellcheck "./test/tools/os-tests.sh"
+shellcheck "./test/test-tools.sh"
+shellcheck "./bin/update-md.sh"
+shellcheck "./bin/build/tools/self.sh"
+shellcheck "./bin/build/tools/docker.sh"

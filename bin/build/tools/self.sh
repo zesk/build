@@ -13,7 +13,7 @@
 # Usage: {fn} [ path [ applicationHome ] ]
 installInstallBuild() {
   local usage="_${FUNCNAME[0]}"
-  local argument
+  local argument exitCode
   local path applicationHome temp relTop replace
   local installBinName target url
 
@@ -57,29 +57,35 @@ installInstallBuild() {
     temp=$(realPath "$applicationHome") || __failEnvironment "Unable to get realpath for applicationHome $applicationHome" || return $?
     applicationHome="$temp"
   fi
-  if [ "${path#$applicationHome}" = "$path" ]; then
+  relTop="${path#"$applicationHome"}"
+  if [ "$relTop" = "$path" ]; then
     __failArgument "Path ($path) is not within applicationHome ($applicationHome)" || return $?
   fi
-  relTop="${path#$applicationHome}"
   if [ -z "$relTop" ]; then
     relTop=.
   else
     relTop=$(printf "%s\n" "$relTop" | sed -e 's/[^/]//g' -e 's/\//..\//g')
     relTop="${relTop%/}"
   fi
-  temp="$path/$installBinName.downloaded.$$"
-  if curl -o "$temp" "$url"; then
+  target="$path/$installBinName"
+  temp="$target.downloaded.$$"
+  if curl -s -o "$temp" "$url"; then
     replace=$(quoteSedPattern "relTop=$relTop")
-    target="$path/$installBin"
     if ! sed -e "s/^relTop=.*/$replace/" <"$temp" >"$target"; then
       rm -rf "$temp"
       __failEnvironment "$usage" "Unable to write $target" || return $?
     fi
+    exitCode=0
+    __usageEnvironment "$usage" chmod +x "$target" || exitCode=$?
     rm -rf "$temp" || :
-    printf "%s %s\n" "$(consoleSuccess "Installed")" "$(consoleCode "$target")"
+    [ "$exitCode" -ne 0 ] && return "$exitCode"
+    printf "%s %s (%s=\"%s\")\n" "$(consoleSuccess "Installed")" "$(consoleCode "$target")" "$(consoleLabel relTop)" "$(consoleValue "$relTop")"
     return 0
   else
     rm -rf "$temp" || :
     __failEnvironment "$usage" "Unable to download $(consoleCode "$url")" || return $?
   fi
+}
+_installInstallBuild() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

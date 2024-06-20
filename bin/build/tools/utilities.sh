@@ -18,7 +18,7 @@
 # New values are set to 0 by default so will output `1` upon first usage.
 # If no variable name is supplied it uses the default variable name `default`.
 #
-# Variable names can contain alphanumeric characters or underscore.
+# Variable names can contain alphanumeric characters, underscore, or dash.
 #
 # Example: Sets `default` incrementor to 1 and outputs `1`
 # Example:
@@ -38,8 +38,8 @@
 incrementor() {
   local this="${FUNCNAME[0]}"
   local usage="_$this"
-  local name value
-  local counterFile
+  local argument
+  local name value persistence counterFile
 
   name=
   value=
@@ -49,14 +49,19 @@ incrementor() {
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     if isInteger "$argument"; then
       value="$argument"
-    elif stringValidate "$argument" alpha digit _; then
-      if [ -n "$name" ]; then
-        __incrementor "$persistence/$name" "$value"
-      fi
-      name="$argument"
-      [ -n "$name" ] || name=default
     else
-      __failArgument "$usage" "Invalid argument or variable name: $argument" || return $?
+      case "$argument" in
+        *[^-_a-zA-Z0-9]*)
+          __failArgument "$usage" "Invalid argument or variable name: $argument" || return $?
+          ;;
+        *)
+          if [ -n "$name" ]; then
+            __incrementor "$persistence/$name" "$value"
+          fi
+          name="$argument"
+          [ -n "$name" ] || name=default
+          ;;
+      esac
     fi
     shift || __failArgument "shift $argument failed" || return $?
   done

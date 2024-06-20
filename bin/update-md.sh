@@ -32,10 +32,14 @@ __addNoteTo() {
 __updateMarkdown() {
   local usage="${FUNCNAME[0]#_}"
   local flagSkipCommit buildMarker
+  local argument
 
   flagSkipCommit=
   while [ $# -gt 0 ]; do
-    case $1 in
+    argument="$1"
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --skip-commit)
         flagSkipCommit=1
         statusMessage consoleWarning "Skipping commit ..."
@@ -44,7 +48,7 @@ __updateMarkdown() {
         __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
   __addNoteTo README.md
   __addNoteTo LICENSE.md

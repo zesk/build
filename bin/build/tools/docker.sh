@@ -233,7 +233,7 @@ _dockerEnvFromBashEnv() {
 #
 dockerLocalContainer() {
   local usage="_${FUNCNAME[0]}"
-  local fail arg platform imageName imageApplicationPath
+  local platform imageName imageApplicationPath
   local envFiles extraArgs
   local tempEnvs tempEnv exitCode
   local failedWhy
@@ -274,7 +274,7 @@ dockerLocalContainer() {
         envFiles+=("--env-file" "$tempEnv")
         ;;
       --platform)
-        shift || "$usage" "$errorArgument" "Missing $arg" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         platform="$1"
         ;;
       *)

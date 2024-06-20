@@ -51,12 +51,12 @@ exampleFunction() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --easy)
-        easyFlag=true
-        ;;
       --help)
         "$usage" 0
         return $?
+        ;;
+      --easy)
+        easyFlag=true
         ;;
       --name)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?

@@ -8,9 +8,6 @@
 #
 set -eou pipefail
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 declare -a tests
 
 tests+=(testIsAbsolutePath)
