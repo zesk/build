@@ -174,8 +174,6 @@ testScriptInstallations() {
   __doesScriptInstall prettier prettierInstall || return $?
   __doesScriptInstall terraform terraformInstall || return $?
 
-  __testIgnoreEnvironment
-
   export BITBUCKET_CLONE_DIR
   BITBUCKET_CLONE_DIR="$oldDir"
   [ "$oldDir" = "NONE" ] && unset BITBUCKET_CLONE_DIR
