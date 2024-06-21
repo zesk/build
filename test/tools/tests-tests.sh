@@ -16,9 +16,9 @@ testWrapperShellScripts() {
 
   quietLog=$1
   shift
+  export BUILD_COMPANY
 
-  # shellcheck source=/dev/null
-  source ./bin/build/env/BUILD_COMPANY.sh || return 1
+  buildEnvironmentLoad BUILD_COMPANY || return $?
   if ! thisYear=$(date +%Y); then
     return 1
   fi
@@ -26,7 +26,8 @@ testWrapperShellScripts() {
     return 1
   fi
   if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}" >>"$quietLog"; then
+    unset BUILD_COMPANY
     return 1
   fi
-  printf "\n"
+  unset BUILD_COMPANY
 }

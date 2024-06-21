@@ -342,19 +342,18 @@ phpComposer() {
   installArgs=("--ignore-platform-reqs")
 
   quietLog="$(buildQuietLog phpComposer)"
-  consoleBoldRed -n "Composer ... "
   bigText "Install vendor" >>"$quietLog"
 
   if $forceDocker; then
-    consoleWarning -n "pulling ... "
+    consoleWarning -n "Pulling composer ... "
     __usageEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
     composerBin+=("-v" "$composerDirectory:/app")
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
   else
-    consoleWarning -n "installing ... "
     __usageEnvironmentQuiet "$usage" "$quietLog" aptInstall composer composer || return $?
+    consoleBoldRed -n "Installed composer ... " || :
     composerBin=(composer)
   fi
   consoleInfo -n "validating ... "
@@ -367,11 +366,11 @@ phpComposer() {
     buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
   fi
 
-  consoleInfo -n "installing ... " || :
+  consoleInfo -n "package install ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   if ! "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1; then
     cd "$savedWorking" || :
-    buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
+    buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" install failed || return $?
   fi
   cd "$savedWorking" || :
   reportTiming "$start" "completed in" || :

@@ -20,15 +20,15 @@ _symbolFail() {
 }
 _assertFailure() {
   local function="${1-None}"
-  incrementor assert-failure > /dev/null
+  incrementor assert-failure >/dev/null
   shift || :
-  _environment "$(printf -- "%s%s: %s %s" "$(clearLine)" "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")")" || return $?
+  _environment "$(printf -- "%s%s: %s %s " "$(clearLine)" "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")")" || return $?
 }
 _assertSuccess() {
   local function="${1-None}"
-  incrementor assert-success > /dev/null
+  incrementor assert-success >/dev/null
   shift || :
-  printf -- "%s%s: %s %s" "$(clearLine)" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
+  printf -- "%s%s: %s %s " "$(clearLine)" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
 }
 
 #
@@ -97,9 +97,9 @@ assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 _assertExitCodeHelper() {
-  local argument
+  local argument savedArguments
   local usage
-  local isExitCode errorsOk
+  local isExitCode errorsOk debugAssertRun
   local expected bin
   local outputFile errorFile
   local saved actual failureText
@@ -119,71 +119,89 @@ _assertExitCodeHelper() {
   usage="$1"
   shift || :
 
+  savedArguments=("$@")
   outputContains=()
   outputNotContains=()
   stderrContains=()
   stderrNotContains=()
+  debugAssertRun=false
 
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --stderr-ok)
-        errorsOk=1
-        ;;
-      --stderr-match)
+    --debug)
+      debugAssertRun=true
+      ;;
+    --stderr-ok)
+      errorsOk=1
+      ;;
+    --stderr-match)
+      shift || :
+      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+      stderrContains+=("$1")
+      errorsOk=1
+      ;;
+    --stderr-no-match)
+      shift || :
+      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+      stderrNotContains+=("$1")
+      errorsOk=1
+      ;;
+    --stdout-match)
+      shift || :
+      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+      outputContains+=("$1")
+      ;;
+    --stdout-no-match)
+      shift || :
+      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+      outputNotContains+=("$1")
+      ;;
+    --not)
+      isExitCode=
+      failureText="expected NOT"
+      ;;
+    *)
+      if [ -z "$expected" ]; then
+        expected="$argument"
+        isInteger "$expected" || __failArgument "$usage" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
+      elif [ -z "$bin" ]; then
+        bin="$argument"
         shift || :
-        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        stderrContains+=("$1")
-        errorsOk=1
-        ;;
-      --stderr-no-match)
-        shift || :
-        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        stderrNotContains+=("$1")
-        errorsOk=1
-        ;;
-      --stdout-match)
-        shift || :
-        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        outputContains+=("$1")
-        ;;
-      --stdout-no-match)
-        shift || :
-        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        outputNotContains+=("$1")
-        ;;
-      --not)
-        isExitCode=
-        failureText="expected NOT"
-        ;;
-      *)
-        if [ -z "$expected" ]; then
-          expected="$argument"
-          isInteger "$expected" || __failArgument "$usage" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
-        elif [ -z "$bin" ]; then
-          bin="$argument"
-          shift || :
-          break
-        fi
-        ;;
+        break
+      fi
+      ;;
     esac
     shift || :
   done
-  outputFile=$(mktemp) && errorFile=$(mktemp) || __failEnvironment "$usage" "INTERNAL unable to mktemp" || return $?
+  outputFile=$(mktemp) || __failEnvironment "$usage" "INTERNAL unable to mktemp" || return $?
+  errorFile="$outputFile.err"
+  outputFile="$outputFile.out"
+
   saved=$(saveErrorExit) || __failEnvironment "$usage" saveErrorExit failed || return $?
   set -e
+
+  if $debugAssertRun; then
+    clearLine || :
+    printf "Hit return: " || :
+    read -r actual || :
+    set -x
+  fi
   actual="$(
     "$bin" "$@" >"$outputFile" 2>"$errorFile"
     printf %d "$?"
   )"
+  if $debugAssertRun; then
+    set +x
+  fi
   restoreErrorExit "$saved" || :
 
   if ! test "$errorsOk" && [ -s "$errorFile" ]; then
     __failEnvironment "$usage" "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usage#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
   fi
   if test $errorsOk && [ ! -s "$errorFile" ]; then
-    printf "%s%s%s\n" "$(clearLine)" "$(consoleWarning "--stderr-ok used but is NOT necessary:")" "$(consoleCode "${usage#_} $bin $*")"
+    printf "%s%s %s – %s\n" "$(clearLine)" "$(consoleError "${usage#_}")" "$(consoleCode "$bin ${savedArguments[*]}")" "$(consoleWarning "--stderr-ok used but is NOT necessary:")"
   fi
   if [ ${#stderrContains[@]} -gt 0 ]; then
     __assertFileContainsThis "$usage" "$errorFile" "${stderrContains[@]}" || return $?
@@ -527,21 +545,21 @@ assertOutputContains() {
 
   while [ $# -gt 0 ]; do
     case $1 in
-      --exit)
-        shift
-        assertExitCode 0 isNumber "$1" || return $?
-        exitCode="$1"
-        ;;
-      --stderr)
-        pipeStdErr=1
-        ;;
-      *)
-        if [ -z "$expected" ]; then
-          expected="$1"
-        else
-          commands+=("$1")
-        fi
-        ;;
+    --exit)
+      shift
+      assertExitCode 0 isNumber "$1" || return $?
+      exitCode="$1"
+      ;;
+    --stderr)
+      pipeStdErr=1
+      ;;
+    *)
+      if [ -z "$expected" ]; then
+        expected="$1"
+      else
+        commands+=("$1")
+      fi
+      ;;
     esac
     shift
   done
@@ -594,21 +612,21 @@ assertOutputDoesNotContain() {
 
   while [ $# -gt 0 ]; do
     case $1 in
-      --exit)
-        shift
-        assertExitCode 0 isNumber "$1" || return $?
-        exitCode="$1"
-        ;;
-      --stderr)
-        pipeStdErr=1
-        ;;
-      *)
-        if [ -z "$expected" ]; then
-          expected="$1"
-        else
-          commands+=("$1")
-        fi
-        ;;
+    --exit)
+      shift
+      assertExitCode 0 isNumber "$1" || return $?
+      exitCode="$1"
+      ;;
+    --stderr)
+      pipeStdErr=1
+      ;;
+    *)
+      if [ -z "$expected" ]; then
+        expected="$1"
+      else
+        commands+=("$1")
+      fi
+      ;;
     esac
     shift
   done

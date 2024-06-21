@@ -41,8 +41,7 @@ testDockerEnvToBash() {
 
   consoleInfo "PWD is $(pwd)"
   if dockerEnvToBash ./test/example/test.env >"$out" 2>"$err"; then
-    consoleError "dockerEnvToBash SHOULD fail"
-    return $errorEnvironment
+    _environment "dockerEnvToBash SHOULD fail" || return $?
   fi
 
   # Different than testDockerEnvToBashPipe

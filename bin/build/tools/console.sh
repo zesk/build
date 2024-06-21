@@ -7,9 +7,6 @@
 # Docs: o ./docs/_templates/tools/console.md
 # Test: o ./test/tools/console-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 #
 # Get the RGB color of the terminal (usually for background colors)
 #

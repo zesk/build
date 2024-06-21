@@ -61,18 +61,22 @@ _textExit() {
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 #
 __buildTestSuite() {
-  local quietLog allTests runTests shortTest
-  local usage argument
+  local quietLog allTests runTests shortTest startTest
+  local usage __argument
+  local continueFile continueFlag
 
   usage="_${FUNCNAME[0]}"
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
   export BUILD_COLORS_MODE
+  export BUILD_HOME
   export cleanExit=
   export testTracing
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+
+  __environment buildEnvironmentLoad BUILD_HOME || return $?
 
   printf "%s %s\n" "$(consoleInfo "Color mode is")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
@@ -92,17 +96,22 @@ __buildTestSuite() {
   done < <(shortTestCodes)
   runTests=()
 
+  continueFile="$BUILD_HOME/.last-run-test"
+  continueFlag=false
   testTracing=options
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
-    argument="$1"
-    case "$argument" in
+    __argument="$1"
+    case "$__argument" in
       --show)
         printf "%s\n" "${allTests[@]}"
         _textExit 0
         ;;
+      --continue)
+        continueFlag=true
+        ;;
       --one)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$__argument") argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
         runTests+=("$1")
         ;;
@@ -119,11 +128,13 @@ __buildTestSuite() {
         messyOption=1
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(consoleValue "$__argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$__argument")" || return $?
   done
+
+  $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?
 
   if [ ${#runTests[@]} -eq 0 ]; then
     runTests=("${allTests[@]}")
@@ -131,11 +142,26 @@ __buildTestSuite() {
   # tests-tests.sh has side-effects - installs shellcheck
   # aws-tests.sh testAWSIPAccess has side-effects, installs AWS
   # bin-tests has side effects - installs OS software
-
+  startTest=
+  if $continueFlag; then
+    startTest="$([ ! -f "$continueFile" ] || cat "$continueFile")"
+  fi
   for shortTest in "${runTests[@]}"; do
     testTracing="test: $shortTest"
     __environment requireFileDirectory "$quietLog" || return $?
     printf "%s\n" "$testTracing" >>"$quietLog" || _environment "Failed to write $quietLog" || return $?
+    if [ -n "$startTest" ]; then
+      if [ "$shortTest" = "$startTest" ]; then
+        startTest=
+        printf "%s %s\n" "$(consoleWarning "Starting at test")" "$(consoleCode "$startTest")"
+      else
+        printf "%s %s ...\n" "$(consoleWarning "Skipping")" "$(consoleCode "$shortTest")"
+        continue
+      fi
+    fi
+    if $continueFlag; then
+      printf "%s\n" "$shortTest" >"$continueFile"
+    fi
     requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
   done
 
@@ -145,7 +171,10 @@ __buildTestSuite() {
   testTracing=cleanup
   messyTestCleanup
 
-  bigText Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
+  printf "%s\n" "$(bigText --bigger Passed)" | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
+  if [ -n "$continueFile" ]; then
+    printf "%s\n" "PASSED" >"$continueFile"
+  fi
   consoleReset
 }
 ___buildTestSuite() {

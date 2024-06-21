@@ -154,7 +154,7 @@ _waitForValueTimeout() {
       printf "%s %s %s %s\n" "$(consoleCode "Waiting for")" "$(consoleCode "$1")" "$(consoleInfo ", received")" "$(consoleRed "$value")"
       sleep 1
       delta=$(($(beginTiming) - start))
-      if [ "$delta" -gt 5 ]; then
+      if [ "$delta" -gt 2 ]; then
         printf "%s %s %s %s\n" "$(consoleError "Waiting for")" "$(consoleCode "$1")" "$(consoleError " failed, found: ")" "$(consoleRed "$value")"
         return "$errorTimeout"
       fi
@@ -187,7 +187,7 @@ _waitForValue() {
 }
 
 testDeployApplication() {
-  local d quietLog migrateVersion startingValue
+  local d quietLog migrateVersion startingValue firstArgs home lastOne t
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
   if ! whichApt curl curl; then
@@ -404,13 +404,24 @@ testDeployApplication() {
   kill -TERM "$PHP_SERVER_PID" || :
   PHP_SERVER_PID=
   _waitForDeath "$PHP_SERVER_PID"
+
+  unset PHP_SERVER_ROOT
+  unset PHP_SERVER_PID
+  consoleError "reset PHP_SERVER_ROOT PHP_SERVER_PID"
+
+  export PHP_SERVER_ROOT
+  export PHP_SERVER_PID
+  PHP_SERVER_ROOT=
+  PHP_SERVER_PID=
+  unset BUILD_DEBUG
 }
 
 tests=(testDeployPackageName "${tests[@]}")
 testDeployPackageName() {
   local saveTarget
 
-  saveTarget=${BUILD_TARGET-}
+  saveTarget=${BUILD_TARGET+NONE}
+  consoleError "saveTarget=\"$saveTarget\""
 
   assertExitCode 0 deployPackageName || return $?
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
@@ -430,12 +441,19 @@ testDeployPackageName() {
 
   unset BUILD_TARGET
 
+  export BUILD_TARGET
+
   # shellcheck source=/dev/null
-  source bin/build/env/BUILD_TARGET.sh || return $?
+  __environment buildEnvironmentLoad BUILD_TARGET || return $?
 
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 
   BUILD_TARGET="$saveTarget"
+
+  if [ "$saveTarget" = "" ]; then
+    consoleError "unset BUILD_TARGET"
+    unset BUILD_TARGET
+  fi
 }
 
 _exportWorksRight() {

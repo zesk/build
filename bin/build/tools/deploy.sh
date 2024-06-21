@@ -198,11 +198,11 @@ _deployNextVersion() {
 #
 deployApplication() {
   local firstFlag revertFlag
-  local name
-  local deployHome applicationPath deployedApplicationPath targetPackageFullPath
+  local argument name
+  local deployHome applicationPath deployedApplicationPath targetPackage targetPackageFullPath
   local newApplicationId applicationId currentApplicationId exitCode
   local unwindArgs requiredArgs
-  local usage
+  local usage message
 
   usage="_${FUNCNAME[0]}"
 
@@ -213,6 +213,7 @@ deployApplication() {
   firstFlag=false
   # --revert
   revertFlag=false
+  message=
 
   # Arguments in order
   deployHome=
@@ -470,7 +471,7 @@ _deployMove() {
 # Exit code: 2 - Argument error
 #
 deployLink() {
-  local applicationLinkPath currentApplicationHome newApplicationLinkPath
+  local applicationLinkPath currentApplicationHome newApplicationLinkPath argument
   local usage
 
   usage="_${FUNCNAME[0]}"
@@ -483,7 +484,7 @@ deployLink() {
     case "$argument" in
       --help)
         $usage 0
-        return 0
+        return $?
         ;;
       *)
         if [ -z "$applicationLinkPath" ]; then
@@ -526,7 +527,7 @@ _deployLink() {
 # Automatically convert application deployments using non-links to links.
 #
 deployMigrateDirectoryToLink() {
-  local start deployHome applicationPath tempAppLink appVersion
+  local start deployHome applicationPath tempAppLink appVersion argument
   local usage
 
   usage="_${FUNCNAME[0]}"

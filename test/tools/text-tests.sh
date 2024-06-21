@@ -9,8 +9,6 @@
 
 declare -a tests
 
-errorEnvironment=1
-
 tests+=(testTrimHeadTail)
 testTrimHeadTail() {
   local topSpace bottomSpace
@@ -102,13 +100,11 @@ _uptoDateTest() {
   shift
   if [ "$pass" = "1" ]; then
     if ! isUpToDate "$@"; then
-      consoleError "isUpToDate $* should be up to date" 1>&2
-      return "$errorEnvironment"
+      _environment "isUpToDate $* should be up to date" || return $?
     fi
   else
     if isUpToDate "$@"; then
-      consoleError "isUpToDate $* should NOT be up to date" 1>&2
-      return "$errorEnvironment"
+      _environment  "isUpToDate $* should NOT be up to date" || return $?
     fi
   fi
 }
