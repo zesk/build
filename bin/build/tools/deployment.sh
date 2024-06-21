@@ -134,7 +134,7 @@ deployBuildEnvironment() {
   # shellcheck disable=SC2016
   [ ${#userHosts[@]} -gt 0 ] || __failArgument "$usage" 'No user hosts supplied on command line, `--host` or in `DEPLOY_USER_HOSTS`' || return $?
   # shellcheck disable=SC2016
-  [ -z "${userHosts[*]}" ] || __failArgument "$usage" 'Requires non-blank `--host` or `DEPLOY_USER_HOSTS`' || return $?
+  [ -n "${userHosts[*]}" ] || __failArgument "$usage" 'Requires non-blank `--host` or `DEPLOY_USER_HOSTS`' || return $?
 
   ##
   ## $BUILD_TARGET --target
