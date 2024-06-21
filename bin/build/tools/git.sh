@@ -414,11 +414,8 @@ _gitFindHome() {
 #
 # Example: ... are all equivalent.
 gitCommit() {
+  local usage="_${FUNCNAME[0]}"
   local updateReleaseNotes appendLast argument start notes comment
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
 
   appendLast=false
   updateReleaseNotes=true
@@ -471,6 +468,7 @@ gitCommit() {
   return 0
 }
 __gitCommitReleaseNotesUpdate() {
+  local usage="_gitCommit"
   local comment="$1" notes="$2"
 
   if ! grep -q -e "$(quoteGrepPattern "$comment")" "$notes"; then
@@ -482,7 +480,7 @@ __gitCommitReleaseNotesUpdate() {
     __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
   fi
-  __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes"
+  __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes" || return $?
 }
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

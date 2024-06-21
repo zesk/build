@@ -25,6 +25,8 @@ __loader() {
 # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will
 # overwrite any existing `post-commit` hook.
 #
+# Merges `main` and `staging` and pushes to `origin`
+#
 # fn: {base}
 __hookGitPostCommit() {
   local usage="${FUNCNAME[0]#_}"
@@ -32,6 +34,7 @@ __hookGitPostCommit() {
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
 
   __usageEnvironment "$usage" gitMainly || return $?
+  __usageEnvironment "$usage" git push origin || return $?
 }
 _hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
