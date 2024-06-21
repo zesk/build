@@ -37,7 +37,8 @@ __hookGitPostCommit() {
   __usageEnvironment "$usage" git push origin || return $?
 }
 _hookGitPostCommit() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # IDENTICAL reverseUsageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
 }
 
 __loader __hookGitPostCommit "$@"

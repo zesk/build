@@ -144,8 +144,9 @@ _testComposerTempDirectory() {
 #
 tests+=(testScriptInstallations)
 testScriptInstallations() {
-  local d
+  local d oldDir
 
+  oldDir="${BITBUCKET_CLONE_DIR-NONE}"
   if ! which docker-compose >/dev/null; then
     __doesScriptInstall docker-compose dockerComposeInstall || return $?
   fi
@@ -173,7 +174,11 @@ testScriptInstallations() {
   __doesScriptInstall prettier prettierInstall || return $?
   __doesScriptInstall terraform terraformInstall || return $?
 
-  unset BITBUCKET_CLONE_DIR || :
+  __testIgnoreEnvironment
+
+  export BITBUCKET_CLONE_DIR
+  BITBUCKET_CLONE_DIR="$oldDir"
+  [ "$oldDir" = "NONE" ] && unset BITBUCKET_CLONE_DIR
 }
 
 # tests=(testAdditionalBins "${tests[@]}")
