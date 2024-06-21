@@ -98,3 +98,28 @@ _exampleFunction() {
 }
 
 __loader exampleFunction "$@"
+
+
+
+#
+# The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will
+# overwrite any existing `post-commit` hook.
+#
+# Merges `main` and `staging` and pushes to `origin`
+#
+# fn: {base}
+__hookGitPostCommit() {
+  # Example of a reverse usage
+  local usage="${FUNCNAME[0]#_}"
+
+  __usageEnvironment "$usage" gitInstallHook post-commit || return $?
+
+  __usageEnvironment "$usage" gitMainly || return $?
+  __usageEnvironment "$usage" git push origin || return $?
+}
+_hookGitPostCommit() {
+  # IDENTICAL reverseUsageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
+}
+
+# __loader __hookGitPostCommit "$@"

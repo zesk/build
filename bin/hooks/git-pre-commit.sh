@@ -19,13 +19,16 @@ __loader() {
 }
 
 #
-# The `git-pre-commit` hook will be installed as a `git` pre-commit hook in your project and will
+# The `git-pre-commit` hook self-installs as a `git` pre-commit hook in your project and will
 # overwrite any existing `pre-commit` hook.
 #
+# It will:
+# 1. Updates the help file templates
+# 2. Checks all shell files for errors
 # fn: {base}
 __hookGitPreCommit() {
   local this file changed total
-  local this="${FUNCNAME[0]}" usage="${FUNCNAME[0]#_}"
+  local usage="${FUNCNAME[0]#_}"
 
   # shellcheck source=/dev/null
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
@@ -41,25 +44,28 @@ __hookGitPreCommit() {
   statusMessage consoleSuccess Updating help files ...
   __usageEnvironment "$usage" ./bin/update-md.sh || return $?
 
-  if [ -f "$changedLists/sh" ]; then
-    prefixLines "- $(consoleCode)" "$(consoleReset)" <"$changedLists/sh"
-  else
+  if [ ! -f "$changedLists/sh" ]; then
+    rm -rf "$changedLists" || :
     return 0
   fi
   if [ -f "$changedLists/sh" ]; then
+    prefixLines "- $(consoleCode)" "$(consoleReset)" <"$changedLists/sh"
     changed=()
     while read -r file; do changed+=("$file"); done <"$changedLists/sh"
+    rm -rf "$changedLists" || :
     __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
   fi
+  rm -rf "$changedLists" || :
 
   # Too slow
   #  if ! ./bin/build-docs.sh; then
   #    _hookGitPreCommitFailed build-docs.sh
   #  fi
-  clearLine
+  clearLine || :
 }
 _hookGitPreCommit() {
-  _fail "$(printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")")" || return $?
+  # IDENTICAL reverseUsageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
 }
 
 __loader __hookGitPreCommit "$@"
