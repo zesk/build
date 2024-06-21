@@ -420,7 +420,7 @@ tests=(testDeployPackageName "${tests[@]}")
 testDeployPackageName() {
   local saveTarget
 
-  saveTarget=${BUILD_TARGET+NONE}
+  saveTarget=${BUILD_TARGET-NONE}
   consoleError "saveTarget=\"$saveTarget\""
 
   assertExitCode 0 deployPackageName || return $?
@@ -448,9 +448,9 @@ testDeployPackageName() {
 
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 
+  export BUILD_TARGET
   BUILD_TARGET="$saveTarget"
-
-  if [ "$saveTarget" = "" ]; then
+  if [ "$saveTarget" = "NONE" ]; then
     consoleError "unset BUILD_TARGET"
     unset BUILD_TARGET
   fi
