@@ -16,6 +16,19 @@
 # - use `a || b || c || return $?` format when possible
 # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
 
+# IDENTICAL __loader 11
+set -eou pipefail
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
+}
+
 #
 # Usage: {fn}
 # Argument: --help - Optional. Flag. This help.
@@ -26,7 +39,8 @@
 #
 exampleFunction() {
   local usage="_${FUNCNAME[0]}"
-  local argument name easyFlag width
+  local argument
+  local name easyFlag width
 
   width=50
   name=
@@ -37,12 +51,12 @@ exampleFunction() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --easy)
-        easyFlag=true
-        ;;
       --help)
         "$usage" 0
         return $?
+        ;;
+      --easy)
+        easyFlag=true
         ;;
       --name)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
@@ -58,7 +72,7 @@ exampleFunction() {
         target=$(usageArgumentFileDirectory "$usage" "target" "$1") || return $?
         ;;
       *)
-        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
@@ -82,3 +96,5 @@ exampleFunction() {
 _exampleFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+__loader exampleFunction "$@"

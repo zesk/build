@@ -1,15 +1,9 @@
-# Vendor Functions
+# Utilites Functions
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
-{contextOpen}
-{isPHPStorm}
-{isPyCharm}
-{isVisualStudioCode}
-{brewInstall}
-{isBitBucketPipeline}
-{showContext}
+{incrementor}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

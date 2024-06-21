@@ -58,13 +58,13 @@ __environment() {
 # DO NOT EDIT THIS ONE
 quoteSedPattern() {
   # IDENTICAL quoteSedPattern 6
-  value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
   value="${value//&/\\&}"
   value="${value//$'\n'/\\n}"
-  printf %s "$value"
+  printf "%s\n" "$value"
 }
 
 #
@@ -89,7 +89,7 @@ _mapEnvironmentGenerateSedFile() {
       *[%{}]*) ;;
       LD_*) ;;
       *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")"
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || _environment "${FUNCNAME[0]}" || return $?
         ;;
     esac
   done

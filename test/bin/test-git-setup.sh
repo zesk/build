@@ -8,34 +8,38 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+# IDENTICAL __loader 11
 set -eou pipefail
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
+}
 
 #
 # fn: {base}
 # Usage: {fn} buildHome
 #
 setupGitTest() {
-  buildHome=$1
-  shift || :
+  local usage="_${FUNCNAME[0]}"
+  local testDir testBinBuild title section logFile buildHome
 
-  # shellcheck source=/dev/null
-  . "$buildHome/bin/build/tools.sh"
-
-  local testDir testBinBuild title section logFile
-  local errorEnvironment=1
-
+  export BUILD_HOME
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
+  buildHome=$BUILD_HOME
   section=0
   testDir=$(mktemp -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-  if ! cd "$testDir"; then
-    _setupGit "$errorEnvironment" "cd $testDir failed"
-  fi
+  __usageEnvironment "$usage" cd "$testDir" || return $?
 
-  if ! mkdir -p bin/pipeline; then
-    _setupGit "$errorEnvironment" "cd $testDir failed"
-  fi
-  cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild"
-  echo '# this make the file different' >>"$testBinBuild"
+  __usageEnvironment "$usage" mkdir -p bin/pipeline || return $?
+  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __usageEnvironment "$usage" echo '# this make the file different' >>"$testBinBuild" || return $?
 
   # --------------------------------------------------------------------------------
   #
@@ -50,9 +54,8 @@ setupGitTest() {
 
   assertFileContains "$testBinBuild" "make the file different" || return $?
 
-  if ! bin/pipeline/install-bin-build.sh --mock "$buildHome/bin/build" >"$logFile" 2>&1; then
-    buildFailed "$logFile" || :
-    _setupGit "$errorEnvironment" "install-bin-build.sh failed"
+  if ! __usageEnvironment "$usage" bin/pipeline/install-bin-build.sh --mock "$buildHome/bin/build" >"$logFile" 2>&1; then
+    buildFailed "$logFile" || return $?
   fi
   sleep 1 || :
 
@@ -80,9 +83,8 @@ setupGitTest() {
   touch .gitignore || return $?
   mv bin/pipeline/install-bin-build.sh bin/pipeline/we-like-head-rubs.sh || return $?
 
-  if ! bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
-    buildFailed "$logFile"
-    _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
+  if ! __usageEnvironment "$usage" bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
+    buildFailed "$logFile" || return $?
   fi
   sleep 1 || :
 
@@ -94,11 +96,9 @@ setupGitTest() {
     ! assertFileDoesNotContain "$logFile" "was updated" ||
     ! assertFileContains "$logFile" "does not ignore" ||
     ! assertFileContains "$logFile" ".gitignore"; then
-    buildFailed "$logFile" || :
-    _setupGit "$errorEnvironment" "install-bin-build.sh failed"
-    return $?
+    buildFailed "$logFile" || return $?
   fi
-  rm -rf bin/build
+  rm -rf bin/build || :
 
   consoleSuccess Success, wanrnings were shown
 
@@ -107,16 +107,15 @@ setupGitTest() {
   title="Has gitignore (good), needs update, different name"
   #
   section=$((section + 1))
-  labeledBigText "$title" "Section #$section"
+  labeledBigText "$title" "Section #$section" || :
   logFile=$section.log
 
   assertDirectoryDoesNotExist bin/build || return $?
 
   echo "/bin/build/" >>.gitignore
 
-  if ! bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
-    buildFailed "$logFile"
-    _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
+  if ! __usageEnvironment "$usage" bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
+    buildFailed "$logFile" || return $?
   fi
   sleep 1 || :
 
@@ -127,8 +126,7 @@ setupGitTest() {
     ! assertFileDoesNotContain "$logFile" "was updated" ||
     ! assertFileDoesNotContain "$logFile" "does not ignore" ||
     ! assertFileDoesNotContain "$logFile" ".gitignore"; then
-    buildFailed "$logFile"
-    _setupGit "$errorEnvironment" "install-bin-build.sh failed" || return $?
+    buildFailed "$logFile" || return $?
   fi
 
   rm -rf bin/build || :
@@ -139,4 +137,4 @@ _setupGitTest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-setupGitTest "$@"
+__loader setupGitTest "$@"

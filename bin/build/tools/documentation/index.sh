@@ -223,7 +223,7 @@ documentationIndex_Generate() {
       printf "%s\n%s\n" "$shellFile" "$lineNumber" >"$functionIndex/$functionName"
     done || :
     touch "$fileCacheMarker/.marker"
-    count="$(find "$fileCacheMarker" -type f | wc -l | trimSpacePipe)"
+    count="$(find "$fileCacheMarker" -type f | wc -l | trimSpace)"
     count=$((count - 1))
     statusMessage consoleSuccess "Generated $count functions for $shellFile "
   done; then

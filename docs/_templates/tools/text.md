@@ -9,6 +9,7 @@
 
 ## Filters
 
+{sedReplacePattern}
 {quoteSedPattern}
 {quoteBashString}
 
@@ -38,17 +39,30 @@
 
 {stringOffset}
 {maximumFieldLength}
+{maximumLineLength}
 
 ## Language-related
 
 {plural}
+{parseBoolean}
 
 ## Transformation
 
 {lowercase}
+{uppercase}
 {shaPipe}
 {cachedShaPipe}
 {cannon}
+
+# Characters
+
+{characterClassReport}
+{characterClasses}
+{characterFromInteger}
+{characterToInteger}
+{isCharacterClasses}
+{stringValidate}
+
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

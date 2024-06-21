@@ -400,7 +400,10 @@ _gitFindHome() {
 
 #
 # Usage: {fn} [ --last ] [ -- ] [ comment ... ]
-#
+# Argument: --last - Optional. Flag. Append last comment
+# Argument: -- - Optional. Flag. Skip updating release notes with comment.
+# Argument: --help - Optional. Flag. I need somebody.
+# Argument: comment - Optional. Text. A text comment for release notes and describing in general terms, what was done for a commit message.
 # Commits all files added to git and also update release notes with comment
 #
 # Comment wisely. Does not duplicate comments. Check your release notes.
@@ -424,6 +427,10 @@ gitCommit() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --)
         updateReleaseNotes=false
         ;;
@@ -466,7 +473,7 @@ gitCommit() {
 __gitCommitReleaseNotesUpdate() {
   local comment="$1" notes="$2"
 
-  if ! grep -q "$(quoteSedPattern "$comment")" "$notes"; then
+  if ! grep -q -e "$(quoteGrepPattern "$comment")" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
     __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?

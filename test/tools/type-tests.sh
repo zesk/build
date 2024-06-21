@@ -22,7 +22,7 @@ testBinaryTypes() {
   assertNotExitCode 0 isExecutable ./bin/MISSING || return $?
 }
 _testLineLabel() {
-  printf "%s %s\n" "$(consoleInfo "$1")" "$(consoleCode "$2")"
+  printf "%s %s " "$(consoleInfo "$1")" "$(consoleCode "$2")"
 }
 validateMissingItems() {
   while IF='' read -r testLine; do

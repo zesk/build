@@ -6,7 +6,7 @@
 #
 set -eou pipefail
 
-declere -a tests
+declare -a tests
 
 tests+=(testPHPSomething)
 testPHPSomething() {

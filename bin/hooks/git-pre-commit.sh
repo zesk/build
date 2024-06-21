@@ -5,12 +5,17 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# IDENTICAL __loader 11
 set -eou pipefail
-
-# Usage: {fn} {title} [ items ... ]
-_fail() {
-  exec 1>&2 && printf 'FAIL: %s\n' "$@"
-  return 42 # The meaning of life
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
 }
 
 #
@@ -18,12 +23,11 @@ _fail() {
 # overwrite any existing `pre-commit` hook.
 #
 # fn: {base}
-hookGitPreCommit() {
+__hookGitPreCommit() {
   local this file changed total
-  local this="${FUNCNAME[0]}" usage="_${FUNCNAME[0]}"
+  local this="${FUNCNAME[0]}" usage="${FUNCNAME[0]#_}"
 
   # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
   changedLists=$(mktemp -d) || __failEnvironment "$usage" mktemp -d || return $?
@@ -58,4 +62,4 @@ _hookGitPreCommit() {
   _fail "$(printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")")" || return $?
 }
 
-hookGitPreCommit "$@"
+__loader __hookGitPreCommit "$@"

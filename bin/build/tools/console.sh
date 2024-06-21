@@ -7,12 +7,6 @@
 # Docs: o ./docs/_templates/tools/console.md
 # Test: o ./test/tools/console-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Get the RGB color of the terminal (usually for background colors)
 #
@@ -21,14 +15,24 @@ errorArgument=2
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 #
 consoleGetColor() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local xtermCode sttyOld color colors success result noTTY
+  local timingTweak
 
   success=false
 
+  timingTweak=0.1
   noTTY=false
   xtermCode="11"
   while [ $# -gt 0 ]; do
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --background)
         xtermCode="11"
         ;;
@@ -36,24 +40,22 @@ consoleGetColor() {
         xtermCode="10"
         ;;
       *)
-        _consoleGetColor "$errorArgument" "Unknown argument $1" || return $?
+        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift || _consoleGetColor "$errorArgument" "Shift failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
   colors=()
   if ! sttyOld=$(stty -g 2>/dev/null); then
     noTTY=true
     printf "\e]%d;?\e\\" "${xtermCode}" || :
-    sleep 0.0001 || :
+    sleep "$timingTweak" || :
     read -t 2 -r result
     exitCode=$?
   else
-    if ! stty raw -echo min 0 time 0; then
-      _consoleGetColor "$errorEnvironment" "stty raw failed" || return $?
-    fi
+    __usageEnvironment "$usage" stty raw -echo min 0 time 0 || return $?
     printf "\e]%d;?\e\\" "${xtermCode}" >/dev/tty || :
-    sleep 0.0001 || :
+    sleep "$timingTweak" || :
     read -t 2 -r result </dev/tty
     exitCode=$?
   fi
@@ -65,7 +67,7 @@ consoleGetColor() {
     IFS='/' read -r -a colors < <(printf "%s\\n" "$result" | sed 's/[^a-f0-9/]//g')
   fi
   if ! "$noTTY" && ! stty "$sttyOld"; then
-    _consoleGetColor "$errorEnvironment" "stty reset to \"$sttyOld\" failed" || return $?
+    __failEnvironment "$usage" "stty reset to \"$sttyOld\" failed" || return $?
   fi
   if $success; then
     for color in "${colors[@]+${colors[@]}}"; do
@@ -89,21 +91,19 @@ _consoleGetColor() {
 # Usage: {fn}
 # shellcheck disable=SC2120
 colorBrightness() {
+  local usage="_${FUNCNAME[0]}"
   local r g b
-  if [ $# -gt 0 ]; then
-    if [ $# -ne 3 ]; then
-      _colorBrightness $errorArgument "Requires 3 arguments" || return $?
-    fi
-    r=$1 g=$2 b=$3
-  else
+
+  if [ $# -eq 0 ]; then
     # 0.299 R + 0.587 G + 0.114 B
     read -r r g b || :
-  fi
-  if isUnsignedInteger "$r" "$g" "$b"; then
-    printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+  elif [ $# -eq 3 ]; then
+    r=$1 g=$2 b=$3
   else
-    _colorBrightness $errorArgument "Not integers: \"$r\" \"$g\" \"$b\"" || return $?
+    __failArgument "$usage" "Requires 3 arguments" || return $?
   fi
+  __usageArgument "$usage" isUnsignedInteger "$r" "$g" "$b" || return $?
+  printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
 }
 _colorBrightness() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

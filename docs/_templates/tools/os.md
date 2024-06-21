@@ -3,6 +3,9 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+{buildEnvironmentLoad}
+{isAbsolutePath}
+
 {serviceToPort}
 {serviceToStandardPort}
 
@@ -12,6 +15,9 @@
 {requireFileDirectory}
 {requireDirectory}
 {directoryClobber}
+
+{fileDirectoryExists}
+{fileGroup}
 
 {runCount}
 

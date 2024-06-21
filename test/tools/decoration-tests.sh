@@ -34,10 +34,13 @@ testAlignLeft() {
 
 tests+=(testRepeat2)
 testRepeat2() {
-  local expected n
+  local string
+  local n
+  string="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-  expected="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  for n in $(seq 1 ${#expected}); do
-    assertEquals "${expected:0:$n}" "$(repeat "$n" x)" "Failed to match repeat $n" || return $?
+  n=0
+  while [ "$n" -lt ${#string} ]; do
+    assertEquals "${string:0:$n}" "$(repeat "$n" x)" "Failed to match repeat $n" || return $?
+    n=$((n + 1))
   done
 }

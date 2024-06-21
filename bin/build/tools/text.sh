@@ -48,13 +48,32 @@ parseBoolean() {
 #
 quoteSedPattern() {
   # IDENTICAL quoteSedPattern 6
-  value=$(printf %s "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
   value="${value//&/\\&}"
   value="${value//$'\n'/\\n}"
-  printf %s "$value"
+  printf "%s\n" "$value"
+}
+
+#
+# Summary: Quote grep -e patterns for shell use
+#
+# Usage: {fn} text
+# Argument: text - Text to quote
+# Output: string quoted and appropriate to insert in a grep search or replacement phrase
+# Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
+#
+quoteGrepPattern() {
+  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value="${value//[/\\[}"
+  value="${value//]/\\]}"
+  value="${value//)/\\)}"
+  value="${value//(/\\(}"
+  value="${value//|/\\|}"
+  value="${value//$'\n'/\\n}"
+  printf "%s\n" "$value"
 }
 
 #
@@ -65,7 +84,10 @@ quoteSedPattern() {
 # Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeDoubleQuotes() {
-  printf %s "${1//\"/\\\"}"
+  while [ $# -gt 0 ]; do
+    printf "%s\n" "${1//\"/\\\"}"
+    shift
+  done
 }
 
 #
@@ -91,7 +113,7 @@ escapeBash() {
 # Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
 #
 escapeSingleQuotes() {
-  printf %s "$1" | sed "s/'/\\\'/g"
+  printf "%s\n" "$@" | sed "s/'/\\\'/g"
 }
 
 #
@@ -179,7 +201,7 @@ _trimSpace() {
 # See: trimSpace
 #
 trimSpacePipe() {
-  trimSpace "$@"
+  _deprecated trimSpace "$@"
 }
 
 #
@@ -401,21 +423,28 @@ listTokens() {
 # Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
 #
 shaPipe() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
-      [ -f "$1" ] || _argument "$1 is not a file" || return $?
+      argument="$1"
+      [ -f "$1" ] || __usageArgument "$usage" "$1 is not a file" || return $?
+      [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
-        printf "%s: %s\n" "$(date +"%FT%T")" "$1" >shaPipe.log
+        printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log
       fi
-      shasum <"$1" | cut -f 1 -d ' '
-      shift || _argument "shift failed" || return $?
+      shasum <"$argument" | cut -f 1 -d ' '
+      shift || __failArgument "$usage" "shift failed" || return $?
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then
       printf "%s: stdin\n" "$(date +"%FT%T")" >shaPipe.log
     fi
-    shasum | cut -f 1 -d ' '
+    shasum | cut -f 1 -d ' ' || __failEnvironment "$usage" "shasum" || return $?
   fi
+}
+_shaPipe() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -424,43 +453,52 @@ shaPipe() {
 #
 # Speeds up shaPipe using modification dates of the files instead.
 #
-# The cacheDirectory
+# The `cacheDirectory`
 #
 # Usage: cachedShaPipe cacheDirectory [ filename ]
-# Argument: cacheDirectory - The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
-# Depends: shasum
+# Argument: cacheDirectory - Optional. Directory. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+# Depends: shasum shaPipe
 # Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
 # Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 cachedShaPipe() {
-  local cacheDirectory="${1%%/}"
+  local usage="_${FUNCNAME[0]}"
+  local argument
+
+  local cacheDirectory="${1-}"
+
+  shift || __failArgument "$usage" "Missing cacheDirectory" || return $?
 
   # Special case to skip caching
-  shift
   if [ -z "$cacheDirectory" ]; then
     shaPipe "$@"
     return $?
   fi
+  cacheDirectory="${cacheDirectory%/}"
 
-  [ -d "$cacheDirectory" ] || _argument "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
+  [ -d "$cacheDirectory" ] || __failArgument "$usage" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
-      [ -f "$1" ] || _argument "$1 is not a file" || return $?
-      cacheFile="$cacheDirectory/${1##/}"
+      argument="$1"
+      [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+      [ -f "$argument" ] || __failArgument "$usage" "not a file $(consoleLabel "$argument")" || return $?
+      cacheFile="$cacheDirectory/${argument#/}"
       __environment requireFileDirectory "$cacheFile" || return $?
       if [ -f "$cacheFile" ] && isNewestFile "$cacheFile" "$1"; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        shaPipe "$1" | tee "$cacheFile"
+        shaPipe "$argument" | tee "$cacheFile" || __failEnvironment "$usage" shaPipe "$1" || return $?
       fi
-      shift || _argument "shift failed" || return $?
+      shift || :
     done
   else
     shaPipe
   fi
-
+}
+_cachedShaPipe() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Maps a string using an environment file
@@ -556,7 +594,7 @@ _mapEnvironmentGenerateSedFile() {
       *[%{}]*) ;;
       LD_*) ;;
       *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")"
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || _environment "${FUNCNAME[0]}" || return $?
         ;;
     esac
   done
@@ -896,4 +934,37 @@ cannon() {
 }
 _cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Remove fields from left to right from a text file as a pipe
+# Usage: {fn} fieldCount < input > output
+# Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.
+# Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
+removeFields() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
+
+  local fieldCount=1
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      *)
+        isUnsignedInteger "$argument" || __failArgument "$usage" "fieldCount should be integer: $(consoleCode "$argument")" || return $?
+        [ "$argument" -gt 0 ] || __failArgument "$usage" "fieldCount can not be 0" || return $?
+        fieldCount="$argument"
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+  done
+  awk '{for(i=0;i<'"$fieldCount"';i++){sub($1 FS,"")}}1'
+}
+
+# Usage: {fn} separator text0 arg1 ...
+# Argument: separator - Required. String. Single character to join elements.
+# Argument: text0 - Optional. String. One or more strings to join
+joinArguments() {
+  local IFS="$1"
+  shift || :
+  printf "%s" "$*"
 }

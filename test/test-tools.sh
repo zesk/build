@@ -66,7 +66,7 @@ cleanTestName() {
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 loadTestFiles() {
-  local testCount tests showTests testName quietLog=$1 __testDirectory resultCode=0 resultReason
+  local testCount tests showTests testName quietLog=$1 __testDirectory resultCode=0 resultReason ignoreValues ignorePattern
   local __test __tests
   local __before __after changedGlobals
 
@@ -111,7 +111,7 @@ loadTestFiles() {
   done
 
   testCount="${#showTests[@]}"
-  statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${showTests[*]}\" ..."
+  statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${showTests[*]-}\" ..."
   printf "\n"
 
   # Renamed to avoid clobbering by tests
@@ -153,9 +153,25 @@ loadTestFiles() {
 
     declare -p >"$__after"
 
-    changedGlobals="$(diff "$__before" "$__after" | grep 'declare ' | grep -v -e 'declare \(-r\|-- _=\|-ir\|-r\|-x OLDPWD=\|-- resultCode=\)')" || :
+    ignoreValues=(OLDPWD _ resultCode LINENO)
+    ignorePattern="$(quoteGrepPattern "^($(joinArguments '|' "${ignoreValues[@]}"))=")"
+    # printf "%s: \"%s\"\n" "$(consoleInfo "PATTERN")" "$(consoleMagenta "$ignorePattern")"
+
+    # Diff before -> after
+    # Only 'declare' lines
+    # Remove unset variables (no `=`)
+    # Remove lines with `-r` flags (READONLY)
+    # Remove '< declare --` from each line (3 fields)
+    # Remove `declare` and `flags` columns
+    # Remove ignoredValues
+    changedGlobals="$(diff "$__before" "$__after" | grep 'declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 3 | grep -v -e "$ignorePattern")" || :
+    if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$changedGlobals"); then
+      consoleWarning "$__test set $(consoleValue "COLUMNS, LINES")"
+      unset COLUMNS LINES
+      changedGlobals="$(printf "%s\n" "$changedGlobals" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $changedGlobals" || return $?
+    fi
     if [ -n "$changedGlobals" ]; then
-      printf "%s\n" "$changedGlobals" | dumpPipe "$__test Changed:"
+      printf "%s\n" "$changedGlobals" | dumpPipe "$__test leaked local or export ($__before -> $__after)"
       resultCode=$errorTest
     fi
 
@@ -181,8 +197,12 @@ _loadTestFiles() {
 }
 
 testFailed() {
-  local errorCode="$errorTest"
+  local errorCode="$errorTest" name
+  export IFS
   printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo -n "$*")"
+  for name in IFS HOME LINES COLUMNS OSTYPE PPID PID; do
+    printf "%s=%s\n" "$(consoleLabel "$name")" "$(consoleValue "${!name-}")"
+  done
   export globalTestFailure="$*"
   return "$errorCode"
 }

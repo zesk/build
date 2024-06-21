@@ -489,7 +489,7 @@ __dumpAliasedValue() {
 #
 bashDocumentation_Extract() {
   local maxLines=1000 definitionFile=$1 fn=$2 definitionFile
-  local line name value desc tempDoc foundNames
+  local line name value desc tempDoc foundNames docMap lastName values
   local base
 
   if [ ! -f "$definitionFile" ]; then

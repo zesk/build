@@ -91,6 +91,8 @@ testMapBin() {
     exit "$errorEnvironment"
   fi
   consoleSuccess testMapBin OK
+
+  unset FOO BAR
 }
 
 #
@@ -113,6 +115,8 @@ __doesScriptInstall() {
 
 tests+=(testMapPortability)
 testMapPortability() {
+  local tempDir
+
   tempDir="./random.$$/"
   mkdir -p "$tempDir" || :
   cp ./bin/build/map.sh "./random.$$/"
@@ -120,6 +124,7 @@ testMapPortability() {
   export WILD=m
   assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
   rm -rf "$tempDir"
+  unset DUDE WILD
 }
 
 _testComposerTempDirectory() {
@@ -139,6 +144,8 @@ _testComposerTempDirectory() {
 #
 tests+=(testScriptInstallations)
 testScriptInstallations() {
+  local d
+
   if ! which docker-compose >/dev/null; then
     __doesScriptInstall docker-compose dockerComposeInstall || return $?
   fi
@@ -165,16 +172,19 @@ testScriptInstallations() {
   fi
   __doesScriptInstall prettier prettierInstall || return $?
   __doesScriptInstall terraform terraformInstall || return $?
+
+  unset BITBUCKET_CLONE_DIR || :
 }
 
 # tests=(testAdditionalBins "${tests[@]}")
 tests+=(testAdditionalBins)
 testAdditionalBins() {
+  local binTest
+
   for binTest in ./test/bin/*.sh; do
     testHeading "$(cleanTestName "$(basename "$binTest")")"
     if ! "$binTest" "$(pwd)"; then
-      testFailed "$binTest" "$(pwd)"
-      return $errorEnvironment
+      _environment "$(testFailed "$binTest" "$(pwd)")" || return $?
     fi
   done
 }

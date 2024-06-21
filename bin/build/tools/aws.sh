@@ -6,12 +6,6 @@
 # bin: test echo date
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 ###############################################################################
 #
 # ....▄▄    ▄▄      ▄▄   ▄▄▄▄
@@ -36,19 +30,18 @@ errorArgument=2
 #
 # shellcheck disable=SC2120
 awsInstall() {
+  local usage="_${FUNCNAME[0]}"
   local zipFile=awscliv2.zip
   local url buildDir quietLog
 
-  if ! aptInstall unzip curl "$@"; then
-    return "$errorEnvironment"
-  fi
+  __usageEnvironment "$usage" aptInstall unzip curl "$@" || return $?
 
   if which aws >/dev/null; then
     return 0
   fi
 
-  consoleInfo -n "Installing aws-cli ... "
-  start=$(beginTiming)
+  consoleInfo -n "Installing aws-cli ... " || :
+  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
   case "${HOSTTYPE-}" in
     arm64 | aarch64)
       url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
@@ -60,23 +53,23 @@ awsInstall() {
 
   buildDir="$(buildCacheDirectory awsCache.$$)"
   quietLog="$(buildQuietLog awsInstall)"
-  if ! buildDir=$(requireDirectory "$buildDir"); then
-    return "$errorEnvironment"
+  buildDir=$(requireDirectory "$buildDir") || __failEnvironment "$usage" requireDirectory "$buildDir" || return $?
+  if ! __usageEnvironment "$usage" curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
+    buildFailed "$quietLog" || return $?
   fi
-  if ! curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
-    buildFailed "$quietLog"
+  if ! __usageEnvironment "$usage" unzip -d "$buildDir" "$buildDir/$zipFile" >>"$quietLog"; then
+    buildFailed "$quietLog" || return $?
   fi
-  if ! unzip -d "$buildDir" "$buildDir/$zipFile" >>"$quietLog"; then
-    buildFailed "$quietLog"
-  fi
-  if ! "$buildDir/aws/install" >>"$quietLog"; then
-    buildFailed "$quietLog"
+  if ! __usageEnvironment "$usage" "$buildDir/aws/install" >>"$quietLog"; then
+    buildFailed "$quietLog" || return $?
   fi
   # This failed once, not sure why, .build will be deleted
   rm -rf "$buildDir" 2>/dev/null || :
-  consoleValue -n "$(aws --version) "
-  reportTiming "$start" OK
-
+  consoleValue -n "$(aws --version) " || __failEnvironment "$usage" "aws --version" || return $?
+  __usageEnvironment "$usage" reportTiming "$start" OK || return $?
+}
+_awsInstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -99,20 +92,21 @@ awsInstall() {
 # Exit Code: 1 - If `$HOME` is not a directory or credentials file does not exist
 # Exit Code: 0 - If credentials file is found and output to stdout
 #
+# shellcheck disable=SC2120
 awsCredentialsFile() {
   local credentials=$HOME/.aws/credentials verbose=${1-}
 
   if [ ! -d "$HOME" ]; then
     if test "$verbose"; then
-      consoleWarning "No $HOME directory found" 1>&2
+      consoleWarning "No HOME ($HOME) directory found" 1>&2
     fi
-    return "$errorEnvironment"
+    return 1
   fi
   if [ ! -f "$credentials" ]; then
     if test "$verbose"; then
       consoleWarning "No $credentials file found" 1>&2
     fi
-    return "$errorEnvironment"
+    return 1
   fi
   printf %s "$credentials"
 }
@@ -142,9 +136,8 @@ awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 awsIsKeyUpToDate() {
-  if ! buildEnvironmentLoad AWS_ACCESS_KEY_DATE; then
-    return $errorEnvironment
-  fi
+  export AWS_ACCESS_KEY_DATE
+  __environment buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 
@@ -164,9 +157,7 @@ awsIsKeyUpToDate() {
 awsHasEnvironment() {
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
-  if ! buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; then
-    return $errorEnvironment
-  fi
+  __environment buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
 }
 
@@ -191,16 +182,14 @@ awsHasEnvironment() {
 awsEnvironment() {
   local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
 
-  if awsCredentialsFile 1 >/dev/null; then
-    credentials=$(awsCredentialsFile)
-    eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
-    if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
-      echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
-      echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
-      return 0
-    fi
+  __environment awsCredentialsFile 1 >/dev/null || return $?
+  credentials="$(awsCredentialsFile)" || _environment awsCredentialsFile || return $?
+  eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
+  if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
+    echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
+    echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
+    return 0
   fi
-  return "$errorEnvironment"
 }
 
 # Usage: {fn} --add --group group [ --region region ] --port port --description description --ip ip
@@ -217,7 +206,7 @@ awsEnvironment() {
 #
 awsSecurityGroupIPModify() {
   local argument group port description start region ip foundIP mode verb tempErrorFile
-  local savedArgs
+  local savedArgs json
   local usage
 
   usage="_${FUNCNAME[0]}"
@@ -246,19 +235,19 @@ awsSecurityGroupIPModify() {
         return $?
         ;;
       --group)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         group="$1"
         ;;
       --port)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         port="$1"
         ;;
       --description)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         description="$1"
         ;;
       --ip)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         ip="$1"
         ;;
       --add)
@@ -274,14 +263,14 @@ awsSecurityGroupIPModify() {
         mode="$argument"
         ;;
       --region)
-        shift || _awsSecurityGroupIPModify "$errorArgument" "$argument shift failed" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         region="$1"
         ;;
       *)
         __failArgument "unknown argument: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "$errorArgument" "$argument shift failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
   [ -n "$mode" ] || __failArgument "$usage" "--add, --remove, or --register is required" || return $?
 
@@ -386,8 +375,8 @@ awsSecurityGroupIPRegister() {
 # Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 #
 awsIPAccess() {
-  local argument services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
-  local sgArgs
+  local argument service services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
+  local sgArgs port
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
   local usage
@@ -481,15 +470,15 @@ awsIPAccess() {
   consoleNameValue 40 Region "$AWS_REGION" || :
   consoleNameValue 40 AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
 
-  for s in "${services[@]}"; do
-    if ! serviceToPort "$s" >/dev/null; then
-      _awsIPAccess "$errorArgument" "Invalid service $s provided"
+  for service in "${services[@]}"; do
+    if ! serviceToPort "$service" >/dev/null; then
+      __failArgument "$usage" "Invalid service $(consoleCode "$service")" || return $?
     fi
   done
   for securityGroupId in "${securityGroups[@]}"; do
-    for s in "${services[@]}"; do
-      port=$(serviceToPort "$s") || __failEnvironment "$usage" "serviceToPort $s failed 2nd round?" || return $?
-      sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$s" --ip "$currentIP")
+    for service in "${services[@]}"; do
+      port=$(serviceToPort "$service") || __failEnvironment "$usage" "serviceToPort $service failed 2nd round?" || return $?
+      sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
       if test $optionRevoke; then
         __usageEnvironment "$usage" awsSecurityGroupIPModify --remove "${sgArgs[@]}" || return $?
       else

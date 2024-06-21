@@ -3,7 +3,19 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"
+
+# IDENTICAL __loader 11
+set -eou pipefail
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
+}
 
 # Lay an egg
 layAnEgg() {
@@ -17,7 +29,8 @@ _layAnEgg() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-layAnEgg "$@"
+__loader layAnEgg "$@" || :
+
 
 # fn: makeCryptoThing
 # Lay an egg.
@@ -32,7 +45,7 @@ layAnEgg "$@"
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
 # Example: {fn} newEgg
-# Output: Eggs laid: 2000
+# Output: Eggs laid: 2000git
 layAnEgg2() {
   _layAnEgg2 0 "All is great"
 }
@@ -40,4 +53,4 @@ _layAnEgg2() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-layAnEgg2
+__loader layAnEgg2

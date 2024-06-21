@@ -52,10 +52,10 @@ testGitVersionList() {
   #  echo Version List:
   #  gitVersionList
   #  echo "Count: \"$(gitVersionList | wc -l)\""
-  #  echo "CountT: \"$(gitVersionList | wc -l | trimSpacePipe)\""
+  #  echo "CountT: \"$(gitVersionList | wc -l | trimSpace)\""
   #  echo "Count0: \"$(($(gitVersionList | wc -l) + 0))\""
   #  echo "Count1: \"$(($(gitVersionList | wc -l) + 0))\""
-  assertGreaterThan $(($(gitVersionList | wc -l | trimSpacePipe) + 0)) 0 || return $?
+  assertGreaterThan $(($(gitVersionList | wc -l | trimSpace) + 0)) 0 || return $?
 }
 
 tests+=(testGitCommitFailures)

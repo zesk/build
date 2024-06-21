@@ -9,8 +9,6 @@
 
 declare -a tests
 
-errorEnvironment=1
-
 tests+=(testTrimHeadTail)
 testTrimHeadTail() {
   local topSpace bottomSpace
@@ -26,7 +24,7 @@ testTrimHeadTail() {
 
 tests+=(testSingleBlankLines)
 testSingleBlankLines() {
-  local topSpace bottomSpace
+  local topSpace bottomSpace middleSpace
 
   topSpace=$(printf "\n\n\n\n\n\n\nip")
   bottomSpace=$(printf "ip\n\n\n\n\n\n\n")
@@ -78,6 +76,8 @@ EOF
 
 tests+=(testMapValue)
 testMapValue() {
+  local tempEnv
+
   tempEnv=$(mktemp)
 
   assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
@@ -100,13 +100,11 @@ _uptoDateTest() {
   shift
   if [ "$pass" = "1" ]; then
     if ! isUpToDate "$@"; then
-      consoleError "isUpToDate $* should be up to date" 1>&2
-      return "$errorEnvironment"
+      _environment "isUpToDate $* should be up to date" || return $?
     fi
   else
     if isUpToDate "$@"; then
-      consoleError "isUpToDate $* should NOT be up to date" 1>&2
-      return "$errorEnvironment"
+      _environment  "isUpToDate $* should NOT be up to date" || return $?
     fi
   fi
 }
@@ -242,6 +240,8 @@ testStringValidate() {
 
 tests=(testListTokens "${tests[@]}")
 testListTokens() {
+  local COLUMNS LINES
+
   echo | assertExitCode 0 listTokens || return $?
   assertEquals "" "$(echo | listTokens)" || return $?
   assertEquals "$(printf "%s\n" a b c)" "$(echo '{a}{b}{c}' | listTokens)" || return $?

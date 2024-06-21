@@ -8,11 +8,11 @@ set -eou pipefail
 
 declare -a tests
 
-tests+=(testLogFileRotate1)
 tests+=(testLogFileRotate)
 testLogFileRotate() {
-  local tempDir section
+  local tempDir
   local count=5 n
+  local name="${FUNCNAME[0]}"
 
   if ! tempDir=$(mktemp -d); then
     return $?
@@ -20,21 +20,20 @@ testLogFileRotate() {
 
   n=1
 
-  section=1
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "SECTION $section"
-  section=$((section + 1))
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
 
   assertFileDoesNotExist "$tempDir/test.log" || return $?
-  rotateLog "$tempDir/test.log" "$count"
 
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
 
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
   # Not a file
   mkdir "$tempDir/test.log" || :
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
-  rmdir "$tempDir/test.log" || :
+  rm -rf "$tempDir/test.log/" || :
 
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
   # File now exists
   touch "$tempDir/test.log"
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" NOTINT || return $?
@@ -45,8 +44,7 @@ testLogFileRotate() {
   rm "$tempDir/test.log" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "SECTION $section"
-  section=$((section + 1))
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
 
   printf "%s" "$(repeat "$n" "x")" >"$tempDir/test.log" || return $?
   assertFileDoesNotExist "$tempDir/test.log.1" || return $?
@@ -57,8 +55,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "SECTION $section"
-  section=$((section + 1))
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -70,8 +67,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "SECTION $section"
-  section=$((section + 1))
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -83,8 +79,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "SECTION $section"
-  section=$((section + 1))
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -96,8 +91,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "SECTION $section"
-  section=$((section + 1))
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -109,8 +103,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "SECTION $section"
-  section=$((section + 1))
+  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -124,8 +117,11 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   rm -rf "$tempDir" || return $?
+
+  clearLine && bigText "$name OK"
 }
 
+tests+=(testLogFileRotate1)
 testLogFileRotate1() {
   local tempDir count=1 i n
 

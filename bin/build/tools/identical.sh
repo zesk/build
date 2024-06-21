@@ -45,6 +45,7 @@ identicalCheck() {
   local this argument usage me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
+  local identicalLine binary matchFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
   local excludes
 
@@ -228,13 +229,13 @@ identicalCheck() {
   done
   # DEBUG # echo "tempDirectory: $tempDirectory STOPPING"
   # return 99 # DEBUG
-  rm -rf "$tempDirectory"
+  rm -rf "$tempDirectory" || :
   if [ "$(wc -l <"$resultsFile")" -ne 0 ]; then
     exitCode=$errorFailures
   fi
-  cat "$resultsFile" 1>&2
-  rm "$resultsFile"
-  clearLine
+  cat "$resultsFile" 1>&2 || :
+  rm -rf "$resultsFile" || :
+  clearLine || :
   return "$exitCode"
 }
 _identicalCheck() {

@@ -21,7 +21,7 @@ _hookTestFailed() {
 tests+=(testHookSystem)
 testHookSystem() {
   local testDir here randomApp randomDefault path
-  local hook exitCode
+  local hook exitCode f
 
   if ! testDir=$(mktemp -d); then
     return 1

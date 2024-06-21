@@ -8,12 +8,17 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# IDENTICAL __loader 11
 set -eou pipefail
-
-# Usage: {fn} {title} [ items ... ]
-_fail() {
-  exec 1>&2 && printf 'FAIL: %s\n' "$@"
-  return 42 # The meaning of life
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
 }
 
 #
@@ -21,11 +26,8 @@ _fail() {
 # overwrite any existing `post-commit` hook.
 #
 # fn: {base}
-hookGitPostCommit() {
-  local usage="_${FUNCNAME[0]}"
-
-  # shellcheck source=/dev/null
-  source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
+__hookGitPostCommit() {
+  local usage="${FUNCNAME[0]#_}"
 
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
 
@@ -35,4 +37,4 @@ _hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-hookGitPostCommit "$@"
+__loader __hookGitPostCommit "$@"

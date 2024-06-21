@@ -6,22 +6,18 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+
+# IDENTICAL __loader 11
 set -eou pipefail
-
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
-
-#
-# Generate an environment file with environment variables (must be `export`ed)
-#
-# If your project has specific environment variables, you can add them in your `make-env` hook.
-#
-# Usage: runHook make-env [ requiredEnvironment0 ... ] [ -- optionalEnvironment0 ... ]
-# See: makeEnvironment
-#
-# fn: runHook make-env
-hookMakeEnvironment() {
-  makeEnvironment "$@"
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
 }
+
+__loader makeEnvironment "$@"

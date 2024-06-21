@@ -6,8 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-errorEnvironment=1
-errorArgument=2
 
 _testAWSIPAccessUsage() {
   consoleError "$@"
@@ -17,33 +15,28 @@ _testAWSIPAccessUsage() {
 declare -a tests
 tests+=(testAWSIPAccess)
 testAWSIPAccess() {
-  local quietLog=$1 id key
+  local quietLog=$1 id key start
 
   usageRequireEnvironment _testAWSIPAccessUsage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME
 
   if [ -z "$quietLog" ]; then
-    consoleError "testAWSIPAccess missing log"
-    return $errorArgument
+    _argument "testAWSIPAccess missing log" || return $?
   fi
   if [ ! -d "$HOME" ]; then
-    consoleError "No HOME defined or exists: $HOME"
-    return $errorEnvironment
+    _environment "No HOME defined or exists: $HOME" || return $?
   fi
   if [ -d "$HOME/.aws" ]; then
-    consoleError "No .aws directory should exist already"
-    return $errorEnvironment
+    _environment "No .aws directory should exist already" || return $?
   fi
 
   # Work using environment variables
   testSection "CLI IP and env credentials"
   start=$(beginTiming)
   if ! awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+    buildFailed "$quietLog" || return $?
   fi
   if ! awsIPAccess --revoke --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+    buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
 
@@ -57,9 +50,8 @@ testAWSIPAccess() {
 
   testSection "CLI IP and no credentials - fails"
   start=$(beginTiming)
-  if awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" 2>/dev/null >>"$quietLog"; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+  if awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+    buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
 
@@ -74,12 +66,10 @@ testAWSIPAccess() {
   start=$(beginTiming)
   # Work using environment variables
   if ! awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+    buildFailed "$quietLog" || return $?
   fi
   if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+    buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
 
@@ -87,12 +77,10 @@ testAWSIPAccess() {
   start=$(beginTiming)
   # Work using environment variables
   if ! awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+    buildFailed "$quietLog" || return $?
   fi
   if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+    buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
 
@@ -102,6 +90,8 @@ testAWSIPAccess() {
   # restore all set for other tests
   export AWS_ACCESS_KEY_ID=$id
   export AWS_SECRET_ACCESS_KEY=$key
+
+  unset BUILD_DEBUG
 }
 
 _isAWSKeyUpToDateTest() {
@@ -110,14 +100,12 @@ _isAWSKeyUpToDateTest() {
   shift || :
   if [ "$pass" = "1" ]; then
     if ! awsIsKeyUpToDate "$@"; then
-      consoleError "awsIsKeyUpToDate $* should be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" 1>&2
-      return "$errorEnvironment"
+      _environment "awsIsKeyUpToDate $* should be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" || return $?
     fi
     printf "%s\n" "$(consoleSuccess "Success: ")$(consoleCode "awsIsKeyUpToDate $*")"
   else
     if awsIsKeyUpToDate "$@"; then
-      consoleError "awsIsKeyUpToDate $* should NOT be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" 1>&2
-      return "$errorEnvironment"
+      _environment "awsIsKeyUpToDate $* should NOT be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" || return $?
     fi
     printf "%s\n" "$(consoleSuccess "Correctly failed: ")$(consoleCode "awsIsKeyUpToDate $*")"
   fi
@@ -126,6 +114,9 @@ _isAWSKeyUpToDateTest() {
 tests=(testAWSExpiration "${tests[@]}")
 testAWSExpiration() {
   local thisYear thisMonth expirationDays start
+  local oldDate
+
+  oldDate="${AWS_ACCESS_KEY_DATE-}"
 
   start=$(beginTiming)
   testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
@@ -188,4 +179,6 @@ testAWSExpiration() {
   _isAWSKeyUpToDateTest 1 $expirationDays || return $?
 
   reportTiming "$start" Done
+
+  AWS_ACCESS_KEY_DATE="$oldDate"
 }

@@ -15,7 +15,7 @@ usageTests() {
 --name value is required
 --value name
 EOF
-cat <<EOF | bin/build/tools.sh usageArguments
+  cat <<EOF | bin/build/tools.sh usageArguments
 --name value is required
 --value name
 EOF
@@ -92,7 +92,7 @@ _testUsageArgumentHelperFail() {
 
 tests=(testUsageArgumentFunctions "${tests[@]}")
 testUsageArgumentFunctions() {
-  local d intTests
+  local d intTests unsignedIntTests
 
   d=$(mktemp -d) || return $?
 
@@ -101,17 +101,23 @@ testUsageArgumentFunctions() {
   _testUsageArgumentHelperSuccess usageArgumentFileDirectory "$d" "$(pwd)" "/" "$d/inside" "NOT-a-dir-but-works-as-it-resolves-to-dot" "../../../../../ha-ends-at-root" || return $?
 
   _testUsageArgumentHelperSuccess usageArgumentDirectory "$d" "$(pwd)" "/" || return $?
+
   _testUsageArgumentHelperFail usageArgumentDirectory "$d/foo" "NOT-a-dir" "../../../../../ha" || return $?
 
   _testUsageArgumentHelperFail usageArgumentFileDirectory "$d/foo/bar" || return $?
+
   unsignedIntTests=(99 1 0 4123123412412 492 8192)
   intTests=(-42 -99 -5912381239102398123 -0 -1)
 
   _testUsageArgumentHelperSuccess usageArgumentInteger "${intTests[@]}" "${unsignedIntTests[@]}" || return $?
+
   _testUsageArgumentHelperFail usageArgumentInteger -1e1 1.0 1d2 jq || return $?
 
   _testUsageArgumentHelperSuccess usageArgumentUnsignedInteger "${unsignedIntTests[@]}" || return $?
+
   _testUsageArgumentHelperFail usageArgumentUnsignedInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what || return $?
+
+  unset TEST_USAGE
 }
 
 _usageWasCalled() {

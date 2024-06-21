@@ -34,7 +34,7 @@ errorArgument=2
 #
 bigText() {
   local font=smblock
-  if ! whichApt toilet toilet; then
+  if ! whichApt toilet toilet >/dev/null; then
     consoleGreen "BIG TEXT: $*"
     return 0
   fi
@@ -212,7 +212,7 @@ echoBar() {
   shift || :
   delta=$((${1:-0} + 0))
   isInteger "$delta" || __failArgument "$usage" "delta is not integer $(consoleCode "$delta")" || return $?
-  count=$((width / "${#barText}"))
+  count=$((width / ${#barText}))
   count=$((count + delta))
   [ $count -gt 0 ] || __failArgument "$usage" "count $count (delta $delta) less than zero?" || return $?
   printf "%s\n" "$(repeat "$count" "$barText")"

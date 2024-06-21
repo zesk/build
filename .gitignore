@@ -13,3 +13,4 @@
 /test/example/simple-php/cache/
 /.test*
 /scratch.txt
+/.last-run-test
