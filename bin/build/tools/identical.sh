@@ -42,9 +42,10 @@ errorFailures=100
 # This is best used as a pre-commit check, for example. Wink.
 #
 identicalCheck() {
-  local this arg usage me
+  local this argument usage me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count line0 line1 tokenFile countFile searchFile
+  local identicalLine binary matchFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
   local excludes
 
@@ -60,15 +61,15 @@ identicalCheck() {
   prefixes=()
   excludes=()
   while [ $# -gt 0 ]; do
-    arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
-    case "$arg" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --help)
         "$usage" 0
         return 0
         ;;
       --cd)
-        shift || __failArgument "$usage" "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         rootDir=$1
         if [ ! -d "$rootDir" ]; then
           "$usage" "$errorArgument" "--cd \"$1\" is not a directory"
@@ -76,29 +77,29 @@ identicalCheck() {
         fi
         ;;
       --extension)
-        shift || __failArgument "$usage" "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         findArgs+=("-name" "*.$1")
         ;;
       --exec)
-        shift || __failArgument "$usage" "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         binary="$1"
-        isCallable "$binary" || __failArgument "$usage" "$arg \"$binary\" is not callable" || return $?
+        isCallable "$binary" || __failArgument "$usage" "$(consoleLabel "$argument") \"$(consoleValue "$binary")\" is not callable" || return $?
         ;;
       --single)
-        shift || __failArgument "$usage" "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         singles+=("$1")
         ;;
       --prefix)
-        shift || __failArgument "$usage" "Missing $arg argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         prefixes+=("$1")
         ;;
       --exclude)
-        shift || __failArgument "$usage" "Missing $arg argument" || return $?
-        [ -n "$1" ] || __failArgument "$usage" "Empty $arg argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Empty $(consoleCode "$argument") argument" || return $?
         excludes+=(! -path "$1")
         ;;
     esac
-    shift || __failArgument "$usage" "shift failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
   if [ ${#findArgs[@]} -eq 0 ]; then
@@ -228,13 +229,13 @@ identicalCheck() {
   done
   # DEBUG # echo "tempDirectory: $tempDirectory STOPPING"
   # return 99 # DEBUG
-  rm -rf "$tempDirectory"
+  rm -rf "$tempDirectory" || :
   if [ "$(wc -l <"$resultsFile")" -ne 0 ]; then
     exitCode=$errorFailures
   fi
-  cat "$resultsFile" 1>&2
-  rm "$resultsFile"
-  clearLine
+  cat "$resultsFile" 1>&2 || :
+  rm -rf "$resultsFile" || :
+  clearLine || :
   return "$exitCode"
 }
 _identicalCheck() {

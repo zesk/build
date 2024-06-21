@@ -32,11 +32,11 @@ function justKeys(array $array, array $keys): array
 function addEnvironmentKeys(callable|array $method, bool $showDetails = false): array
 {
 	$baseKeys = [
-		'error', 'lastRun', 'firstRun', 'HOST', 'nextDelay', 'lastLog', 'uname',
-		'APPLICATION_BUILD_DATE', 'APPLICATION_TAG', 'APPLICATION_VERSION', 'FOO', 'TEST', 'DEVELOPMENT'
+		'error', 'lastRun', 'firstRun', 'HOST', 'nextDelay', 'lastLog', 'uname', 'APPLICATION_BUILD_DATE',
+		'APPLICATION_TAG', 'APPLICATION_VERSION', 'FOO', 'TEST', 'DEVELOPMENT',
 	];
 	if ($showDetails) {
-		$baseKeys = array_merge($baseKeys, ['HOME','TERM']);
+		$baseKeys = array_merge($baseKeys, ['HOME', 'TERM']);
 	}
 	try {
 		$environment = is_array($method) ? $method : $method();

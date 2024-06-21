@@ -26,18 +26,15 @@
 #
 rotateLog() {
   local argument logFile count index dryRun
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local this="${FUNCNAME[0]}"
+  local usage="_$this"
 
   logFile=
   count=
   dryRun=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$1" in
       --dry-run) dryRun=1 ;;
       *)
@@ -46,7 +43,7 @@ rotateLog() {
         elif [ -z "$count" ]; then
           count="$argument"
         else
-          __failArgument "$usage" "$this: Unknown argument $argument"
+          __failArgument "$usage" "$this: Unknown argument $(consoleValue "$argument")"
         fi
         ;;
     esac
@@ -55,8 +52,8 @@ rotateLog() {
 
   logFile="$(usageArgumentFile _rotateLog logFile "$logFile")" || return $?
 
-  isInteger "$count" || __failArgument "$usage" "$this count $count must be a positive integer" || return $?
-  [ "$count" -gt 0 ] || __failArgument "$usage" "$this count $count must be a positive integer greater than zero" || return $?
+  isInteger "$count" || __failArgument "$usage" "$this count $(consoleValue "$count") must be a positive integer" || return $?
+  [ "$count" -gt 0 ] || __failArgument "$usage" "$this count $(consoleValue "$count") must be a positive integer greater than zero" || return $?
 
   index="$count"
   if [ "$count" -gt 1 ]; then
@@ -102,18 +99,16 @@ _rotateLog() {
 # For all log files in logPath with extension `.log`, rotate them safely
 rotateLogs() {
   local argument logPath count index dryRunArgs
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   logPath=
   count=
   dryRunArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --dry-run) dryRunArgs=(--dry-run) ;;
       *)
@@ -126,7 +121,7 @@ rotateLogs() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
   logPath=$(usageArgumentDirectory _rotateLogs logPath "$logPath") || return $?
 

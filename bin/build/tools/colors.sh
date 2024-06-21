@@ -113,7 +113,7 @@ allColorTest() {
 }
 
 colorComboTest() {
-  local fg bg text extra
+  local fg bg text extra padding
   extra=
   if [ "$1" = "--bold" ]; then
     shift || :
@@ -446,7 +446,9 @@ statusMessage() {
 # Usage: consoleColumns
 # Environment: Uses the `tput cols` tool to find the value if `TERM` is non-blank.
 # Example:     repeat $(consoleColumns)
-#
+# Environment: COLUMNS - May be defined after calling this
+# Environment: LINES - May be defined after calling this
+# Side Effect: MAY define two environment variables
 consoleColumns() {
   if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
     printf %d 80

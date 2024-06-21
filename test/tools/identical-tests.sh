@@ -16,7 +16,6 @@ testIdenticalCheck() {
   # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
   #
 
-  # IDENTICAL loadSingles 9
   local single singles
   singles=()
   while read -r single; do

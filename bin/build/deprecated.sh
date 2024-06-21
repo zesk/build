@@ -82,6 +82,11 @@ deprecatedCleanup() {
 
   # Relesae v0.8.4
   cannon 'copyFile''ChangedQuiet' 'copyFile' "${ignoreStuff[@]}"
+
+  # v0.10.0
+  cannon 'prefix''Lines' wrapLines "${ignoreStuff[@]}"
+  cannon 'trimSpace''Pipe' 'trimSpace' "${ignoreStuff[@]}"
+
   return $exitCode
 }
 

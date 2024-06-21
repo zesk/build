@@ -23,7 +23,7 @@ sysvInitScript() {
   fi
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _sysvInitScript "$errorArgument" "Blank argument" || return $?
+      _sysvInitScript "$errorArgument" "blank argument" || return $?
     fi
     case "$1" in
       --remove)

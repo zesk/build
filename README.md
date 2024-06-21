@@ -6,7 +6,8 @@ Pipeline, build, and operations tools which are useful across a variety of proje
 - Build and deployment tools for pipelines and software platforms and languages
 - Operational scripts for managing live production systems (system setup, services, cron, permissions separations)
 
-This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries, as of 2024 there are no dependencies on Bash 4. 
+This code toolkit depends largely on `bash` and a conscientious decision has been made to not 
+depend on any other language libraries, as of 2024 there are no dependencies on Bash 4. 
 
 This toolkit makes the following assumptions:
 

@@ -14,7 +14,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh" || exit 1
 
 envFile=.env.local
 
-setMaintenanceValue() {
+__hookMaintenanceSetValue() {
   local variable=$1 value=$2
   if [ ! -f "$envFile" ]; then
     touch "$envFile"
@@ -27,21 +27,19 @@ setMaintenanceValue() {
 
 #
 # fn: {base} [ --message message ] maintenanceSetting
-# Argument: message - Required. String. Maintenance setting: `on | 1 | true | off 0 | false`
-# Argument: maintenanceSetting - Required. String. Maintenance setting: `on | 1 | true | off 0 | false`
+# Argument: message - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
+# Argument: maintenanceSetting - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
 # Toggle maintenance on or off. The default version of this modifies
 # the environment files for the application by modifying the `.env.local` file
 # and dynamically adding or removing any line which matches the MAINTENANCE variable.
 #
 # Environment: BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 #
-hookMaintenance() {
+__hookMaintenance() {
   local argument enable message variable messageVariable messageColor messageValue maintenanceValue
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="${FUNCNAME[0]#_}"
 
   export BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE
 
@@ -55,7 +53,7 @@ hookMaintenance() {
   enable=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$(lowercase "$argument")" in
       on | 1 | true | enable)
         enable=true
@@ -71,7 +69,7 @@ hookMaintenance() {
         message="$1"
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $argument" || return $?
+        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift
@@ -87,11 +85,11 @@ hookMaintenance() {
     maintenanceValue=
     messageSuffix=$(consoleBoldMagenta "Now LIVE")
   fi
-  setMaintenanceValue "$variable" "$maintenanceValue" || __failEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
-  setMaintenanceValue "$messageVariable" "$message" || consoleWarning "Maintenance message not set, continuing with errors"
+  __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __failEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
+  __hookMaintenanceSetValue "$messageVariable" "$message" || consoleWarning "Maintenance message not set, continuing with errors"
   printf "%s %s - %s\n" "$("$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }
 _hookMaintenance() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-hookMaintenance "$@"
+__hookMaintenance "$@"

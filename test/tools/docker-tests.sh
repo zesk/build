@@ -14,6 +14,8 @@ declare -a tests
 tests+=(testCheckDockerEnvFile)
 
 testCheckDockerEnvFile() {
+  local out
+
   local testFile=./test/example/bad.env || return $?
   assertExitCode --stderr-ok 1 checkDockerEnvFile $testFile || return $?
   assertOutputContains --stderr --exit 1 TEST_AWS_SECURITY_GROUP checkDockerEnvFile $testFile || return $?
@@ -23,9 +25,8 @@ testCheckDockerEnvFile() {
 
   assertExitCode 0 dockerEnvToBash $testFile || return $?
 
-  if ! out=$(mktemp); then
-    return "$errorEnvironment"
-  fi
+  out=$(mktemp) || _environment "mktemp" || return $?
+
   dockerEnvToBash $testFile >"$out" || return $?
   assertFileContains "$out" '\\"quotes\\"' TEST_AWS_SECURITY_GROUP "DOLLAR=" "QUOTE=" "GOOD=" 'HELLO="W' || return $?
   rm "$out"
@@ -35,15 +36,12 @@ tests+=(testDockerEnvToBash)
 testDockerEnvToBash() {
   local out err
 
-  if ! out=$(mktemp); then
-    return "$errorEnvironment"
-  fi
+  out=$(mktemp) || _environment "mktemp" || return $?
   err="$out.err"
 
   consoleInfo "PWD is $(pwd)"
   if dockerEnvToBash ./test/example/test.env >"$out" 2>"$err"; then
-    consoleError "dockerEnvToBash SHOULD fail"
-    return $errorEnvironment
+    _environment "dockerEnvToBash SHOULD fail" || return $?
   fi
 
   # Different than testDockerEnvToBashPipe
@@ -63,9 +61,7 @@ tests+=(testDockerEnvToBashPipe)
 testDockerEnvToBashPipe() {
   local out err
 
-  if ! out=$(mktemp); then
-    return "$errorEnvironment"
-  fi
+  out=$(mktemp) || _environment "mktemp" || return $?
   err="$out.err"
 
   consoleInfo "PWD is $(pwd)"
@@ -95,12 +91,9 @@ testDockerEnvFromBash() {
 
   assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv ./test/example/bash.env || return $?
 
-  if ! out=$(mktemp); then
-    return "$errorEnvironment"
-  fi
-  if ! err=$(mktemp); then
-    return "$errorEnvironment"
-  fi
+  out=$(mktemp) || _environment "mktemp" || return $?
+  err=$(mktemp) || _environment "mktemp" || return $?
+
   dockerEnvFromBashEnv ./test/example/docker.env >"$out" 2>"$err" || return 1
 
   assertEquals 0 "$(fileSize "$err")" || return $?

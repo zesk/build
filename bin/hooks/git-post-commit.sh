@@ -2,62 +2,43 @@
 #
 # Part of build system integration with git
 #
+# This file name MUST be prefixed with `git-` and suffixed with `.sh` and the remainder should
+# be the `git` `.git/hook/` name.
+#
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# IDENTICAL __loader 11
 set -eou pipefail
-
-# Output a titled list
-# Usage: {fn} title [ items ... ]
-_list() {
-  local title
-  title="${1-"$emptyArgument"}" && shift && printf "%s\n%s\n" "$title" "$(printf -- "- %s\n" "$@")"
-}
-
-# Critical exit `errorCritical` - exit immediately
-# Usage: {fn} {title} [ items ... ]
-_fail() {
-  local errorCritical=99
-  local title="${1-"$emptyArgument"}"
-  export BUILD_DEBUG
-  # shellcheck disable=SC2016
-  exec 1>&2 && shift && _list "$title" "$(printf '%s ' "$@")"
-  if "${BUILD_DEBUG-false}"; then
-    _list "Stack" "${FUNCNAME[@]}" || :
-    _list "Sources" "${BASH_SOURCE[@]}" || :
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
   fi
-  return "$errorCritical"
 }
 
 #
 # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will
 # overwrite any existing `post-commit` hook.
 #
+# Merges `main` and `staging` and pushes to `origin`
+#
 # fn: {base}
-hookGitPostCommit() {
-  local fromTo
+__hookGitPostCommit() {
+  local usage="${FUNCNAME[0]#_}"
 
-  if ! cd "$(dirname "${BASH_SOURCE[0]}")/../.."; then
-    _fail "$(printf "%s\n" "cd failed")" "$@" || return $?
-  fi
+  __usageEnvironment "$usage" gitInstallHook post-commit || return $?
 
-  fromTo=(bin/hooks/git-post-commit.sh .git/hooks/post-commit)
-  if ! diff -q "${fromTo[@]}" >/dev/null; then
-    printf "Git %s hook was updated" "$(basename "${fromTo[0]}")" && cp "${fromTo[@]}" && exec "${fromTo[1]}" "$@"
-    _fail "$(printf "%s\n" "${fromTo[*]} failed")" "$@" || return $?
-  fi
-
-  # shellcheck source=/dev/null
-  if ! source ./bin/build/tools.sh; then
-    _fail "$(printf "%s\n" "${fromTo[*]} failed")" || return $?
-  fi
-
-  buildEnvironmentLoad BUILD_HOME || _hookGitPostCommitFailed "BUILD_HOME failed" || return $?
-
-  gitMainly || _hookGitPostCommitFailed gitMainly || return $?
+  __usageEnvironment "$usage" gitMainly || return $?
+  __usageEnvironment "$usage" git push origin || return $?
 }
-_hookGitPostCommitFailed() {
-  _fail "$(printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")")" || return $?
+_hookGitPostCommit() {
+  # IDENTICAL reverseUsageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
 }
 
-hookGitPostCommit "$@"
+__loader __hookGitPostCommit "$@"

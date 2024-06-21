@@ -90,11 +90,9 @@ _deploymentGenerateValue() {
 phpBuild() {
   local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment composerArgs
   local targetName
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   usageRequireBinary "$usage" tar
 
@@ -109,7 +107,7 @@ phpBuild() {
   composerArgs=()
   while [ $# -gt 0 ]; do
     arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case $1 in
       --debug)
         debuggingFlag=1
@@ -134,6 +132,10 @@ phpBuild() {
         shift || __failArgument "$usage" "$arg argument missing" || return $?
         break
         ;;
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --clean)
         optClean=1
         ;;
@@ -156,7 +158,7 @@ phpBuild() {
     set -x
   fi
   [ -n "$targetName" ] || __failArgument "$usage" "--name argument blank" || return $?
-  [ $# -gt 0 ] || __failEnvironment "$usage" "Need to supply a list of files for application $targetName" || return $?
+  [ $# -gt 0 ] || __failArgument "$usage" "Need to supply a list of files for application $(consoleCode "$targetName")" || return $?
   missingFile=()
   for tarFile in "$@"; do
     if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
@@ -268,8 +270,7 @@ phpBuild() {
   reportTiming "$initTime" "PHP built $(consoleCode "$targetName") in"
 }
 _phpBuild() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[@]#_}" "$@"
-  return $?
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?
 }
 _phpBuildBanner() {
   local label="$1"
@@ -304,11 +305,9 @@ _phpEchoBar() {
 # shellcheck disable=SC2120
 phpComposer() {
   local argument start forceDocker installArgs quietLog dockerImage cacheDir composerBin composerDirectory savedWorking
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest}
   composerDirectory=.
@@ -318,7 +317,7 @@ phpComposer() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --docker)
         consoleWarning "Requiring docker composer"
@@ -343,19 +342,18 @@ phpComposer() {
   installArgs=("--ignore-platform-reqs")
 
   quietLog="$(buildQuietLog phpComposer)"
-  consoleBoldRed -n "Composer ... "
   bigText "Install vendor" >>"$quietLog"
 
   if $forceDocker; then
-    consoleWarning -n "pulling ... "
+    consoleWarning -n "Pulling composer ... "
     __usageEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
     composerBin+=("-v" "$composerDirectory:/app")
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
   else
-    consoleWarning -n "installing ... "
     __usageEnvironmentQuiet "$usage" "$quietLog" aptInstall composer composer || return $?
+    consoleBoldRed -n "Installed composer ... " || :
     composerBin=(composer)
   fi
   consoleInfo -n "validating ... "
@@ -368,11 +366,11 @@ phpComposer() {
     buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
   fi
 
-  consoleInfo -n "installing ... " || :
+  consoleInfo -n "package install ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   if ! "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1; then
     cd "$savedWorking" || :
-    buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
+    buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" install failed || return $?
   fi
   cd "$savedWorking" || :
   reportTiming "$start" "completed in" || :
@@ -392,11 +390,8 @@ _phpComposer() {
 # Hook: test-cleanup - Reverse of test-setup hook actions"
 phpTest() {
   local init start quietLog success
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local this="${FUNCNAME[0]}"
+  local usage="_$this"
 
   #                   _
   #   _ __ ___   __ _(_)_ __

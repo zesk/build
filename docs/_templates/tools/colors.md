@@ -88,5 +88,9 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 
 {consoleColumns}
 
+{colorComboTest}
+
+{consoleBrightness}
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

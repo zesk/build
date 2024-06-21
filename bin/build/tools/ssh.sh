@@ -10,9 +10,6 @@
 # Docs: contextOpen ./docs/_templates/tools/ssh.md
 # Test: contextOpen ./test/bin/ssh-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 #
 #
 # Adds the host to the `~/.known_hosts` if it is not found in it already
@@ -22,7 +19,7 @@ errorEnvironment=1
 # 1. `~/.ssh` mode is set to `0700` (read/write/execute user)
 # 1. `~/.ssh/known_hosts` is created if it does not exist
 # 1. `~/.ssh/known_hosts` mode is set to `0600` (read/write user)
-# 1. ~./.ssh/known_hosts` is possibly modified (appended)
+# 1. `~./.ssh/known_hosts` is possibly modified (appended)
 #
 # If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail
 #
@@ -35,33 +32,25 @@ errorEnvironment=1
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
 sshAddKnownHost() {
-  local remoteHost output sshKnown verbose exitCode
+  local remoteHost output sshKnown verbose exitCode verboseArgs
+
+  local usage
+
+  usage="_${FUNCNAME[0]}"
 
   sshKnown=.ssh/known_hosts
   exitCode=0
   verbose=false
+  verboseArgs=()
 
-  if ! buildEnvironmentLoad HOME; then
-    return 1
-  fi
+  __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
+  [ -d "$HOME" ] || __failEnvironment "$usage" "HOME directory does not exist: $HOME" || return $?
 
-  if [ ! -d "$HOME" ]; then
-    consoleError "HOME directory does not exist: $HOME" 1>&2
-    return "$errorEnvironment"
-  fi
   sshKnown="$HOME/$sshKnown"
-  if ! requireFileDirectory "$sshKnown"; then
-    consoleError "Failed to create .ssh directory" 1>&2
-    return "$errorEnvironment"
-  fi
-  if [ ! -f "$sshKnown" ] && ! touch "$sshKnown"; then
-    consoleError "Unable to create $sshKnown" 1>&2
-    return "$errorEnvironment"
-  fi
-  if ! chmod 700 "$HOME/.ssh" || ! chmod 600 "$sshKnown"; then
-    consoleError "Failed to set mode on .ssh correctly" 1>&2
-    return "$errorEnvironment"
-  fi
+  __usageEnvironment "$usage" requireFileDirectory "$sshKnown" || return $?
+  [ -f "$sshKnown" ] || touch "$sshKnown" || __failEnvironment "$usage" "Unable to create $sshKnown" || return $?
+
+  chmod 700 "$HOME/.ssh" && chmod 600 "$sshKnown" || __failEnvironment "$usage" "Failed to set mode on .ssh correctly" || return $?
 
   output=$(mktemp)
   buildDebugStart ssh || :
@@ -69,17 +58,22 @@ sshAddKnownHost() {
     case "$1" in
       --verbose)
         verbose=true
+        verboseArgs=("-v")
+        ;;
+      --help)
+        "$usage" 0
+        return 0
         ;;
       *)
         remoteHost="$1"
         if grep -q "$remoteHost" "$sshKnown"; then
           ! $verbose || consoleInfo "Host $remoteHost already known"
-        elif ssh-keyscan "$remoteHost" >"$output" 2>&1; then
+        elif ssh-keyscan "${verboseArgs[@]+"${verboseArgs[@]+}"}" "$remoteHost" >"$output" 2>&1; then
           cat "$output" >>"$sshKnown"
           ! $verbose || consoleSuccess "Added $remoteHost to $sshKnown"
         else
-          printf "%s: %s\n%s\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(wrapLines "$(consoleCode)" "$(consoleReset)" <"$output")" 1>&2
-          exitCode=$errorEnvironment
+          exitCode=$?
+          printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(wrapLines ">> $(consoleCode)" "$(consoleReset) <<" <"$output")" 1>&2
         fi
         ;;
     esac
@@ -88,4 +82,7 @@ sshAddKnownHost() {
   buildDebugStop ssh || :
   rm "$output" 2>/dev/null || :
   return $exitCode
+}
+_sshAddKnownHost() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

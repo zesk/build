@@ -9,6 +9,7 @@
 {isVisualStudioCode}
 {brewInstall}
 {isBitBucketPipeline}
+{showContext}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

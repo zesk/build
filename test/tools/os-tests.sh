@@ -8,17 +8,23 @@
 #
 set -eou pipefail
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 declare -a tests
+
+tests+=(testIsAbsolutePath)
+testIsAbsolutePath() {
+  local path exitCode
+
+  __testIsAbsolutePathData | while IFS=, read -r path exitCode; do
+    assertExitCode "$exitCode" isAbsolutePath "$path" || return $?
+  done
+}
 
 tests+=(testNewestAndOldest)
 testNewestAndOldest() {
   local waitSeconds=1 place aTime bTime cTime
 
-  place=$(mktemp -d)
-  cd "$place" || return "$errorEnvironment"
+  place=$(mktemp -d) || _environment mktemp || return $?
+  __environment cd "$place" || return $?
 
   date >"a"
   consoleWarning "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
@@ -28,18 +34,9 @@ testNewestAndOldest() {
   sleep "$waitSeconds"
   date >"c"
 
-  if ! aTime=$(modificationTime "a"); then
-    consoleError modificationTime a failed
-    return 1
-  fi
-  if ! bTime=$(modificationTime "b"); then
-    consoleError modificationTime b failed
-    return 1
-  fi
-  if ! cTime=$(modificationTime "c"); then
-    consoleError modificationTime c failed
-    return 1
-  fi
+  aTime=$(modificationTime "a") || _environment modificationTime a failed || return $?
+  bTime=$(modificationTime "b") || _environment modificationTime b failed || return $?
+  cTime=$(modificationTime "c") || _environment modificationTime c failed || return $?
 
   if ! assertOutputEquals "a" oldestFile "a" "b" "c" ||
     ! assertOutputEquals "a" oldestFile "c" "b" "a" ||
@@ -87,10 +84,10 @@ tests+=(testRunCount)
 testRunCount() {
   assertEquals "$(runCount 10 echo -n .)" ".........." || return $?
   assertEquals "$(runCount 20 echo -n .)" "...................." || return $?
-  assertExitCode 2 runCount -4923 echo busted || return $?
-  assertExitCode 2 runCount 33.3 echo busted || return $?
-  assertExitCode 2 runCount 4.0 echo busted || return $?
-  assertExitCode 2 runCount thirty echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount -4923 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount 33.3 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount 4.0 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount thirty echo busted || return $?
 }
 
 tests+=(testEnvironmentVariables)
@@ -105,6 +102,8 @@ testEnvironmentVariables() {
   assertFileContains "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
   wrapLines "environmentVariables: $(consoleCode)" "$(consoleReset)" <"$e"
   rm "$e"
+
+  unset BUILD_TEST_UNIQUE
 }
 
 _assertBetterType() {
@@ -149,13 +148,13 @@ testServiceToPortStandard() {
   assertEquals "$(serviceToStandardPort mariadb)" 3306 mariadb || return $?
   assertEquals "$(serviceToStandardPort mysql)" 3306 mysql || return $?
   assertEquals "$(serviceToStandardPort postgres)" 5432 postgres || return $?
-  assertNotExitCode 0 serviceToStandardPort || return $?
-  assertNotExitCode 0 serviceToStandardPort rtmp || return $?
-  assertNotExitCode 0 serviceToStandardPort echo || return $?
-  assertNotExitCode 0 serviceToStandardPort "" || return $?
-  assertNotExitCode 0 serviceToStandardPort "22" || return $?
-  assertNotExitCode 0 serviceToStandardPort ".https" || return $?
-  assertNotExitCode 0 serviceToStandardPort " " || return $?
+  assertNotExitCode --stderr-match 'arguments' 0 serviceToStandardPort || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort rtmp || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort echo || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort "" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort "22" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort ".https" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort " " || return $?
 }
 
 tests+=(testServiceToPort)
@@ -173,8 +172,40 @@ testServiceToPort() {
 
   assertNotExitCode --stderr-ok 0 serviceToPort || return $?
 
-  assertNotExitCode 0 serviceToPort "" || return $?
-  assertNotExitCode 0 serviceToPort "22" || return $?
-  assertNotExitCode 0 serviceToPort ".https" || return $?
-  assertNotExitCode 0 serviceToPort " " || return $?
+  assertNotExitCode --stderr-match blank 0 serviceToPort "" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort "22" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort ".https" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort " " || return $?
+}
+
+tests+=(testExtensionLists)
+testExtensionLists() {
+  local target
+
+  export BUILD_HOME
+  assertExitCode 0 buildEnvironmentLoad BUILD_HOME || return $?
+
+  target=$(mktemp -d) || _environment "mktemp -d" || return $?
+
+  assertDirectoryEmpty "$target" || return $?
+  find "$BUILD_HOME" -type f ! -path '*/.*/*' | extensionLists --clean "$target"
+
+  assertDirectoryNotEmpty "$target" || return $?
+  assertFileContains "$target/@" "${BASH_SOURCE[0]}" || return $?
+  assertFileContains "$target/sh" "${BASH_SOURCE[0]}" || return $?
+
+  rm -rf "$target" || return $?
+}
+
+__testIsAbsolutePathData() {
+  cat <<EOF
+/,0
+,1
+/this,0
+/QWERTY/,0
+a/a/a/a,1
+.,1
+..,1
+pickle,1
+EOF
 }

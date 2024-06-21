@@ -11,7 +11,7 @@ declare -a tests
 
 tests+=(testUrlParse)
 testUrlParse() {
-  local parsed u url user name password host port path
+  local parsed u url user name password host port path error scheme
 
   testSection testUrlParse
 
@@ -32,6 +32,8 @@ testUrlParse() {
   assertEquals "$host" identity || return $?
   assertEquals "$port" 4232 || return $?
   assertEquals "$password" hard-to-type || return $?
+  assertEquals "$error" "" || return $?
+  assertEquals "$scheme" "foo" || return $?
 
   u=mysql://user:hard-to-type@identity/dbname
 
@@ -43,12 +45,15 @@ testUrlParse() {
   assertEquals "$host" identity || return $?
   assertEquals "$port" "" || return $?
   assertEquals "$password" hard-to-type || return $?
+  assertEquals "$error" "" || return $?
+  assertEquals "$scheme" "mysql" || return $?
   consoleSuccess testUrlParse OK || return $?
+
 }
 
 tests+=(testGitUrlParse)
 testGitUrlParse() {
-  local u url user name password host port path
+  local parsed u url user name password host port path error scheme
 
   u="https://github.com/zesk/build.git"
 
@@ -61,4 +66,6 @@ testGitUrlParse() {
   assertEquals "$host" github.com "host" || return $?
   assertEquals "$port" "" "port" || return $?
   assertEquals "$password" "" "password" || return $?
+  assertEquals "$error" "" || return $?
+  assertEquals "$scheme" "https" || return $?
 }

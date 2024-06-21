@@ -6,8 +6,6 @@
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh prefixLines
-#
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
@@ -225,7 +223,7 @@ documentationIndex_Generate() {
       printf "%s\n%s\n" "$shellFile" "$lineNumber" >"$functionIndex/$functionName"
     done || :
     touch "$fileCacheMarker/.marker"
-    count="$(find "$fileCacheMarker" -type f | wc -l | trimSpacePipe)"
+    count="$(find "$fileCacheMarker" -type f | wc -l | trimSpace)"
     count=$((count - 1))
     statusMessage consoleSuccess "Generated $count functions for $shellFile "
   done; then
@@ -431,7 +429,7 @@ documentationIndex_LinkDocumentationPaths() {
   documentationPath=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || _argument "Blank argument" || return $?
+    [ -n "$argument" ] || _argument "blank argument" || return $?
     case "$argument" in
       --force) ;;
       *)

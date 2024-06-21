@@ -5,136 +5,67 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# IDENTICAL __loader 11
 set -eou pipefail
-
-# Output a titled list
-# Usage: {fn} title [ items ... ]
-_list() {
-  local title
-  title="${1-"$emptyArgument"}" && shift && printf "%s\n%s\n" "$title" "$(printf -- "- %s\n" "$@")"
-}
-
-# Critical exit `errorCritical` - exit immediately
-# Usage: {fn} {title} [ items ... ]
-_fail() {
-  local errorCritical=99
-  local title="${1-"$emptyArgument"}"
-  export BUILD_DEBUG
-  # shellcheck disable=SC2016
-  exec 1>&2 && shift && _list "$title" "$(printf '%s ' "$@")"
-  if "${BUILD_DEBUG-false}"; then
-    _list "Stack" "${FUNCNAME[@]}" || :
-    _list "Sources" "${BASH_SOURCE[@]}" || :
+# Load zesk build and run command
+__loader() {
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
   fi
-  return "$errorCritical"
 }
 
 #
-# The `git-pre-commit` hook will be installed as a `git` pre-commit hook in your project and will
+# The `git-pre-commit` hook self-installs as a `git` pre-commit hook in your project and will
 # overwrite any existing `pre-commit` hook.
 #
+# It will:
+# 1. Updates the help file templates
+# 2. Checks all shell files for errors
 # fn: {base}
-hookGitPreCommit() {
-  local this changedGitFiles changedShellFiles
-  local fromTo
-
-  if ! cd "$(dirname "${BASH_SOURCE[0]}")/../.."; then
-    _fail "$(printf "%s\n" "cd failed")" "$@" || return $?
-  fi
-
-  fromTo=(bin/hooks/git-pre-commit.sh .git/hooks/pre-commit)
-  if ! diff -q "${fromTo[@]}" >/dev/null; then
-    printf "Git %s hook was updated" "$(basename "${fromTo[0]}")" && cp "${fromTo[@]}" && exec "${fromTo[1]}" "$@"
-    _fail "$(printf "%s\n" "${fromTo[*]} failed")" "$@" || return $?
-  fi
+__hookGitPreCommit() {
+  local this file changed total
+  local usage="${FUNCNAME[0]#_}"
 
   # shellcheck source=/dev/null
-  if ! source ./bin/build/tools.sh; then
-    _fail "$(printf "%s\n" "${fromTo[*]} failed")" || return $?
-  fi
+  __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
-  this="${FUNCNAME[0]}"
+  changedLists=$(mktemp -d) || __failEnvironment "$usage" mktemp -d || return $?
 
-  # IDENTICAL loadSingles 9
-  local single singles
-  singles=()
-  while read -r single; do
-    single="${single#"${single%%[![:space:]]*}"}"
-    single="${single%"${single##*[![:space:]]}"}"
-    if [ "${single###}" = "${single}" ]; then
-      singles+=(--single "$single")
-    fi
-  done <./etc/identical-check-singles.txt
+  __usageEnvironment "$usage" extensionLists --clean "$changedLists" <(git diff --name-only --cached --diff-filter=ACMR) || return $?
 
-  changedGitFiles=()
-  changedShellFiles=()
-  while IFS= read -r changedGitFile; do
-    [ -n "$changedGitFile" ] || continue
-    changedGitFiles+=("$changedGitFile")
-    if [ "$changedGitFile" != "${changedGitFile%.sh}" ]; then
-      changedShellFiles+=("$changedGitFile")
-    fi
-  done < <(git diff --name-only --cached --diff-filter=ACMR)
+  total=$(($(wc -l <"$changedLists/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
 
-  clearLine
-  printf "%s: %s\n" "$(consoleSuccess "$this")" "$(consoleInfo "${#changedGitFiles[@]} $(plural ${#changedGitFiles[@]} file files) changed")"
+  printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$this")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
 
-  if [ ${#changedGitFiles[@]} -gt 0 ]; then
-    printf -- "- %s\n" "${changedGitFiles[@]}"
-  else
+  statusMessage consoleSuccess Updating help files ...
+  __usageEnvironment "$usage" ./bin/update-md.sh || return $?
+
+  if [ ! -f "$changedLists/sh" ]; then
+    rm -rf "$changedLists" || :
     return 0
   fi
+  if [ -f "$changedLists/sh" ]; then
+    prefixLines "- $(consoleCode)" "$(consoleReset)" <"$changedLists/sh"
+    changed=()
+    while read -r file; do changed+=("$file"); done <"$changedLists/sh"
+    rm -rf "$changedLists" || :
+    __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
+  fi
+  rm -rf "$changedLists" || :
 
-  export BUILD_COMPANY
-
-  if [ -z "${BUILD_COMPANY-}" ]; then
-    if ! buildEnvironmentLoad BUILD_COMPANY; then
-      _hookGitPreCommitFailed "buildEnvironmentLoad BUILD_COMPANY failed" || return $?
-    fi
-    if [ -z "${BUILD_COMPANY-}" ]; then
-      _hookGitPreCommitFailed "buildEnvironmentLoad BUILD_COMPANY is undefined" || return $?
-    fi
-  fi
-  statusMessage consoleSuccess Making shell files executable ...
-  if ! makeShellFilesExecutable >/dev/null; then
-    _hookGitPreCommitFailed chmod-sh.sh || return $?
-  fi
-  statusMessage consoleSuccess Updating help files ...
-  if ! ./bin/update-md.sh >/dev/null; then
-    _hookGitPreCommitFailed update-md.sh || return $?
-  fi
-  if [ "${#changedShellFiles[@]}" -gt 0 ]; then
-    statusMessage consoleSuccess Running shellcheck ...
-    if ! validateShellScripts --interactive --exec contextOpen "${changedShellFiles[@]}"; then
-      _hookGitPreCommitFailed validateShellScripts || return $?
-    fi
-    year=$(date +%Y)
-    # shellcheck source=/dev/null
-    if ! validateFileContents --exec contextOpen "${changedShellFiles[@]}" -- "Copyright &copy; $year" "$BUILD_COMPANY"; then
-      _hookGitPreCommitFailed "Enforcing copyright and company in shell files" || return $?
-    fi
-    # Unusual quoting here is to avoid having this match as an identical
-    if ! identicalCheck "${singles[@]+"${singles[@]}"}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh; then
-      _hookGitPreCommitFailed identical-check.sh || return $?
-    fi
-
-    if ! findUncaughtAssertions test/tools --list; then
-      findUncaughtAssertions test/tools --exec contextOpen &
-      _hookGitPreCommitFailed findUncaughtAssertions || return $?
-    fi
-    if ! findUncaughtAssertions bin/build --list; then
-      findUncaughtAssertions bin/build --exec contextOpen &
-      _hookGitPreCommitFailed findUncaughtAssertions || return $?
-    fi
-  fi
   # Too slow
   #  if ! ./bin/build-docs.sh; then
   #    _hookGitPreCommitFailed build-docs.sh
   #  fi
-  clearLine
+  clearLine || :
 }
-_hookGitPreCommitFailed() {
-  _fail "$(printf "%s: %s\n" "$(consoleError "Pre Commit Check Failed")" "$(consoleValue "$*")")" || return $?
+_hookGitPreCommit() {
+  # IDENTICAL reverseUsageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
 }
 
-hookGitPreCommit "$@"
+__loader __hookGitPreCommit "$@"

@@ -15,6 +15,10 @@ usageTests() {
 --name value is required
 --value name
 EOF
+  cat <<EOF | bin/build/tools.sh usageArguments
+--name value is required
+--value name
+EOF
 
   assertEquals " --name [ --value ]" "$(cat "$results")" || return $?
 
@@ -64,9 +68,8 @@ _testUsageArgumentHelperSuccess() {
   shift || :
 
   while [ $# -gt 0 ]; do
-    printf "%s -> " "$(consoleSuccess "$usageFunction fail $1")"
     printf "%s" "" >"$TEST_USAGE"
-    assertExitCode 0 "$usageFunction" _usageWasCalled "testName" "$1" || return $?
+    assertExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || return $?
     assertEquals "" "$(cat "$TEST_USAGE")" || return $?
     shift || :
   done
@@ -75,40 +78,46 @@ _testUsageArgumentHelperSuccess() {
 _testUsageArgumentHelperFail() {
   local usageFunction
 
+  export TEST_USAGE
   usageFunction="$1"
   shift || :
 
   while [ $# -gt 0 ]; do
-    printf "%s -> " "$(consoleWarning "$usageFunction fail $1")"
     printf "%s" "" >"$TEST_USAGE"
-    assertNotExitCode 0 "$usageFunction" _usageWasCalled "testName" "$1" || return $?
-    assertEquals "yes" "$(cat "$TEST_USAGE")" || return $?
+    assertNotExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || _environment "$usageFunction $(consoleWarning "fail $1")" || return $?
+    assertEquals "yes" "$(cat "$TEST_USAGE")" || _environment "$usageFunction did not write $(consoleCode "$TEST_USAGE")" || return $?
     shift || :
   done
 }
 
 tests=(testUsageArgumentFunctions "${tests[@]}")
 testUsageArgumentFunctions() {
-  local d intTests
+  local d intTests unsignedIntTests
 
   d=$(mktemp -d) || return $?
 
   export TEST_USAGE="$d/artifact"
 
+  _testUsageArgumentHelperSuccess usageArgumentFileDirectory "$d" "$(pwd)" "/" "$d/inside" "NOT-a-dir-but-works-as-it-resolves-to-dot" "../../../../../ha-ends-at-root" || return $?
+
   _testUsageArgumentHelperSuccess usageArgumentDirectory "$d" "$(pwd)" "/" || return $?
+
   _testUsageArgumentHelperFail usageArgumentDirectory "$d/foo" "NOT-a-dir" "../../../../../ha" || return $?
 
-  _testUsageArgumentHelperSuccess usageArgumentFileDirectory "$d" "$(pwd)" "/" "$d/inside" "NOT-a-dir-but-works-as-it-resolves-to-dot" "../../../../../ha-ends-at-root" || return $?
   _testUsageArgumentHelperFail usageArgumentFileDirectory "$d/foo/bar" || return $?
 
   unsignedIntTests=(99 1 0 4123123412412 492 8192)
   intTests=(-42 -99 -5912381239102398123 -0 -1)
 
   _testUsageArgumentHelperSuccess usageArgumentInteger "${intTests[@]}" "${unsignedIntTests[@]}" || return $?
+
   _testUsageArgumentHelperFail usageArgumentInteger -1e1 1.0 1d2 jq || return $?
 
   _testUsageArgumentHelperSuccess usageArgumentUnsignedInteger "${unsignedIntTests[@]}" || return $?
+
   _testUsageArgumentHelperFail usageArgumentUnsignedInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what || return $?
+
+  unset TEST_USAGE
 }
 
 _usageWasCalled() {

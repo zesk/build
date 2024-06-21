@@ -18,17 +18,15 @@ fi
 #
 buildDocumentation_UpdateUnlinked() {
   local argument cacheDirectory envFile unlinkedFunctions template total
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   cacheDirectory=
   envFile=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       *)
         if [ -z "$cacheDirectory" ]; then
@@ -36,13 +34,13 @@ buildDocumentation_UpdateUnlinked() {
         elif [ -z "$envFile" ]; then
           envFile=$(usageArgumentFile "$usage" "envFile" "$argument") || return $?
         else
-          __failArgument "$usage" "Unknown argument \"$argument\"" || return $?
+          __failArgument "$usage" "unknown argument $(consoleCode "$argument")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument failed" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
-  [ -n "$envFile" ] || __failArgument "$usage" "Missing argument" || return $?
+  [ -n "$envFile" ] || __failArgument "$usage" "missing envFile" || return $?
 
   unlinkedFunctions=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
   template="./docs/_templates/tools/todo.md"
@@ -53,7 +51,7 @@ buildDocumentation_UpdateUnlinked() {
     source "$envFile" || __failEnvironment "$usage" "source $envFile" || return $?
     title="Missing functions" content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
   ) || return $?
-  total=$(wc -l <"$unlinkedFunctions" | trimSpacePipe)
+  total=$(wc -l <"$unlinkedFunctions" | trimSpace)
   if [ -f "$template" ] && diff -q "$template" "$template.$$"; then
     statusMessage consoleInfo "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
     __usageEnvironment "$usage" rm -f "$template.$$" || return $?
@@ -72,11 +70,8 @@ _buildDocumentation_UpdateUnlinked() {
 #
 buildDocumentation_MergeWithDocsBranch() {
   local branch
-  # IDENTICAL this_usage 4
-  local this usage
-
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local this="${FUNCNAME[0]}"
+  local usage="_$this"
 
   branch=$(gitCurrentBranch) || __failEnvironment "$usage" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
@@ -96,11 +91,9 @@ _buildDocumentation_MergeWithDocsBranch() {
 #
 buildDocumentation_Recommit() {
   local branch
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   branch=$(gitCurrentBranch) || __failEnvironment "$usage" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
@@ -167,11 +160,9 @@ buildDocumentationBuild() {
   local cacheDirectory theDirectory start docArgs indexArgs=()
   local functionLinkPattern fileLinkPattern documentTemplate templateDirectory
   local start envFile exitCode
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   export BUILD_COLORS_MODE
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
@@ -190,7 +181,7 @@ buildDocumentationBuild() {
   # Default option settings
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --git)
         buildDocumentation_MergeWithDocsBranch
@@ -224,7 +215,7 @@ buildDocumentationBuild() {
         return 0
         ;;
       *)
-        __failArgument "$usage" "Unknown argument $argument" || return $?
+        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         ;;
     esac
     shift

@@ -12,9 +12,6 @@
 # Docs: o docs/_templates/tools/prettier.md
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 #
 # Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
 # Summary: Install prettier in the build environment
@@ -29,23 +26,20 @@ errorEnvironment=1
 # Argument: npmVersion - Optional. String. npm version to install.
 #
 prettierInstall() {
+  local usage="_${FUNCNAME[0]}"
   local start quietLog
 
   if which prettier 2>/dev/null 1>&2; then
     return 0
   fi
 
-  start=$(beginTiming)
-  if ! npmInstall "$@"; then
-    return "$errorEnvironment"
-  fi
-  consoleInfo -n "Installing prettier ..."
-  if ! quietLog=$(buildQuietLog prettierInstall); then
-    return "$errorEnvironment"
-  fi
-  if ! npm install -g prettier >>"$quietLog" 2>&1; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
-  fi
+  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  __usageEnvironment "$usage" npmInstall "$@" || return $?
+  consoleInfo -n "Installing prettier ... " || :
+  quietLog=$(buildQuietLog "$usage") || __failEnvironment "$usage" buildQuietLog "$usage" || return $?
+  __usageEnvironment "$usage" npm install -g prettier >>"$quietLog" 2>&1 || buildFailed "$quietLog" || return $?
   reportTiming "$start" OK
+}
+_prettierInstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -27,11 +27,9 @@ fi
 #
 hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
   __usageEnvironment "$usage" cd "${BUILD_RELEASE_NOTES}" || return $?

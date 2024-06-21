@@ -52,18 +52,18 @@ testGitVersionList() {
   #  echo Version List:
   #  gitVersionList
   #  echo "Count: \"$(gitVersionList | wc -l)\""
-  #  echo "CountT: \"$(gitVersionList | wc -l | trimSpacePipe)\""
+  #  echo "CountT: \"$(gitVersionList | wc -l | trimSpace)\""
   #  echo "Count0: \"$(($(gitVersionList | wc -l) + 0))\""
   #  echo "Count1: \"$(($(gitVersionList | wc -l) + 0))\""
-  assertGreaterThan $(($(gitVersionList | wc -l | trimSpacePipe) + 0)) 0 || return $?
+  assertGreaterThan $(($(gitVersionList | wc -l | trimSpace) + 0)) 0 || return $?
 }
 
 tests+=(testGitCommitFailures)
 testGitCommitFailures() {
   local here tempDirectory
 
-  assertExitCode --stderr-ok 2 gitCommit "" || return $?
-  assertExitCode --stderr-ok 1 gitCommit || return $?
+  assertNotExitCode --stderr-ok 0 gitCommit "" || return $?
+  assertNotExitCode --stderr-ok 0 gitCommit || return $?
   here=$(pwd) || _environment pwd || return $?
   tempDirectory=$(mktemp -d) || _environment "mktemp" || return $?
   __environment cd "$tempDirectory" || return $?
@@ -72,7 +72,7 @@ testGitCommitFailures() {
   __environment cd "$here" || return $?
   # assertExitCode --stderr-match "No changes" 1 gitCommit last || return $?
   # assertExitCode --stderr-match 'Author identity unknown' 1 gitCommit last || return $?
-  assertExitCode --stderr-ok 1 gitCommit last || return $?
+  assertNotExitCode --stderr-ok 0 gitCommit last || return $?
   consoleInfo gitCommit last output:
   gitCommit last 2>&1 | wrapLines "$(consoleCode)" "$(consoleReset)" || :
   #

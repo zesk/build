@@ -39,3 +39,12 @@ pipelines:
             - bin/build.sh
             - bin/test.sh
             - bin/deploy.sh
+    deploy:
+      - step:
+          deployment: deploy
+          name: Just Deploy
+          services:
+            - docker
+          script:
+            - bin/build.sh
+            - bin/deploy.sh

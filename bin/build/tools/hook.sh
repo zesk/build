@@ -27,7 +27,7 @@ _runHookWrapper() {
   whichArgs=()
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      "$usageFunction" "$errorArgument" "Blank argument" || return $?
+      "$usageFunction" "$errorArgument" "blank argument" || return $?
     fi
     case "$1" in
       --require)
@@ -132,7 +132,7 @@ hasHook() {
   applicationHome="."
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _hasHook "$errorArgument" "Blank argument" || return $?
+      _hasHook "$errorArgument" "blank argument" || return $?
     fi
     case "$1" in
       --application)
@@ -177,14 +177,12 @@ whichHook() {
   applicationHome="."
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
-      _whichHook "$errorArgument" "Blank argument" || return $?
+      _whichHook "$errorArgument" "blank argument" || return $?
     fi
     case "$1" in
       --application)
         shift || :
-        if ! applicationHome=$(usageArgumentDirectory "_whichHook" applicationHome "$1"); then
-          return $errorArgument
-        fi
+        applicationHome=$(usageArgumentDirectory "_whichHook" applicationHome "$1") || return $?
         ;;
       *)
         for p in "$applicationHome/bin/hooks" "$applicationHome/bin/build/hooks"; do
@@ -193,10 +191,8 @@ whichHook() {
             if [ -x "$binary" ]; then
               printf "%s\n" "$binary"
               return 0
-            elif [ -f "$binary" ]; then
-              consoleWarning "$binary exists but is not executable and will be ignored" 1>&2
-              return "$errorEnvironment"
             fi
+            [ ! -f "$binary" ] || _environment "$binary exists but is not executable and will be ignored" || return $?
           done
         done
         return "$errorArgument"

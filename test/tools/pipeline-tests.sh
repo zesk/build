@@ -7,33 +7,26 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 declare -a tests
 
 tests+=(testDotEnvConfigure)
 testDotEnvConfigure() {
   local tempDir="$$.dotEnvConfig"
   mkdir "$tempDir"
-  cd "$tempDir" || return "$errorEnvironment"
+  __environment cd "$tempDir" || return $?
   consoleInfo "$(pwd)"
   touch .env
   if ! dotEnvConfigure; then
-    consoleError "dotEnvConfigure failed with just .env"
-    return "$errorEnvironment"
+    _environment "dotEnvConfigure failed with just .env" || return $?
   fi
   touch .env.local
   if ! dotEnvConfigure; then
-    consoleError "dotEnvConfigure failed with both .env"
-    return "$errorEnvironment"
+    _environment "dotEnvConfigure failed with both .env" || return $?
   fi
   cd .. || return $?
   rm -rf "$tempDir" || return $?
   consoleSuccess dotEnvConfigure works AOK
 }
-
-
 
 tests+=(testMakeEnvironment)
 testMakeEnvironment() {
@@ -53,14 +46,11 @@ testMakeEnvironment() {
     makeEnvironment TESTING_ENV DSN >.env || return $?
 
     if [ ! -f .env ]; then
-      consoleError "make-env.sh did not generate a .env file"
-      return "$errorEnvironment"
+      _environment "make-env.sh did not generate a .env file" || return $?
     fi
     for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DSN; do
       if ! grep -q "$v" .env; then
-        consoleError "makeEnvironment > .env file does not contain $v"
-        wrapLines "$(consoleCode)    " "$(consoleReset)" <.env
-        return "$errorEnvironment"
+        _environment "$(printf -- "%s %s\n%s" "makeEnvironment > .env file does not contain" "$(consoleCode "$v")" "$(wrapLines "$(consoleCode)    " "$(consoleReset)" <.env)")" || return $?
       fi
     done
     consoleGreen make-env.sh works AOK

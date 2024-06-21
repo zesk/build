@@ -6,6 +6,7 @@
 
 # IDENTICAL _sugar 100
 emptyArgument="§"
+failureSymbol="❌"
 
 # Output a titled list
 # Usage: {fn} title [ items ... ]
@@ -22,7 +23,7 @@ _exit() {
   export BUILD_DEBUG
   # shellcheck disable=SC2016
   exec 1>&2 && shift && _list "$title" "$(printf '%s ' "$@")"
-  if "${BUILD_DEBUG-false}"; then
+  if [ "true" = "${BUILD_DEBUG-false}" ]; then
     _list "Stack" "${FUNCNAME[@]}" || :
     _list "Sources" "${BASH_SOURCE[@]}" || :
   fi
@@ -39,7 +40,7 @@ _exit() {
 # Argument: message ... - String. Optional. Message to output.
 _return() {
   local code
-  code="${1-1}" && shift && printf "%s failed (%d)\n" "${*-"$emptyArgument"}" "$code" 1>&2 && return "$code"
+  code="${1-1}" && shift && printf "%s $failureSymbol (%d)\n" "${*-"$emptyArgument"}" "$code" 1>&2 && return "$code"
 }
 
 # Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.

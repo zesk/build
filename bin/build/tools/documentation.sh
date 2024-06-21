@@ -8,7 +8,7 @@
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh prefixLines usage.sh
+# Depends: colors.sh text.sh wrapLines usage.sh
 #
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
@@ -23,28 +23,22 @@
 #
 usageDocument() {
   local functionDefinitionFile functionName exitCode variablesFile
-  # IDENTICAL this_usage 4
-  local this usage
+  local usage="_${FUNCNAME[0]}"
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
-  functionDefinitionFile="${1-}"
-  if [ ! -f "$functionDefinitionFile" ]; then
-    __failArgument "$usage" "${FUNCNAME[0]}: File \"$1\" not found" || return $?
-  fi
-  shift || __failArgument "$usage" "shift failed"
-  functionName="${1-}"
-  if [ -z "$functionName" ]; then
-    __failArgument "$usage" "functionName required" || return $?
-  fi
-  shift || __failArgument "$usage" "shift failed"
-  exitCode="${1-NONE}"
-  shift || :
+  functionDefinitionFile="$1"
+  functionName="$2"
+  exitCode="${3-NONE}"
+  shift 3 || :
+
+  [ -f "$functionDefinitionFile" ] || __failArgument "$usage" "functionDefinitionFile $functionDefinitionFile not found" || return $?
+  [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
   if [ "$exitCode" = "NONE" ]; then
     consoleError "NO EXIT CODE" 1>&2
     exitCode=1
   fi
+  __usageArgument "$usage" isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
   variablesFile=$(mktemp)
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
@@ -93,7 +87,7 @@ _usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateCompile() {
-  local this usage argument
+  local usage argument
   local start documentTemplate mappedDocumentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
 
   local targetDirectory settingsFile
@@ -104,8 +98,7 @@ documentationTemplateCompile() {
   local envChecksum envChecksumCache
   local compiledTemplateCache
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
 
   cacheDirectory=
   documentTemplate=
@@ -115,10 +108,10 @@ documentationTemplateCompile() {
   envFiles=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --env)
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         envFiles+=("$envFile")
         ;;
@@ -284,13 +277,12 @@ _documentationTemplateCompileUsage() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateDirectoryCompile() {
-  local this usage argument
+  local usage argument
   local start templateDirectory functionTemplate targetDirectory cacheDirectory passArgs
   local base targetFile
   local documentTokensFile
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  usage="_${FUNCNAME[0]}"
   cacheDirectory=
   templateDirectory=
   functionTemplate=
@@ -298,14 +290,14 @@ documentationTemplateDirectoryCompile() {
   passArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Blank argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --force)
         passArgs+=("$argument")
         ;;
       --env)
         passArgs+=("$argument")
-        shift || __failArgument "$usage" "Missing $argument argument" || return $?
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
         passArgs+=("$1")
         ;;
       *)
@@ -318,7 +310,7 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-          __failArgument "$usage" "Unknown argument $argument" || return $?
+          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac
@@ -494,11 +486,10 @@ __dumpAliasedValue() {
 # Usage: {fn} definitionFile function
 # Argument: `definitionFile` - File in which function is defined
 # Argument: `function` - Function defined in `file`
-# Depends: colors.sh text.sh prefixLines
 #
 bashDocumentation_Extract() {
   local maxLines=1000 definitionFile=$1 fn=$2 definitionFile
-  local line name value desc tempDoc foundNames
+  local line name value desc tempDoc foundNames docMap lastName values
   local base
 
   if [ ! -f "$definitionFile" ]; then
