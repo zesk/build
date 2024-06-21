@@ -176,7 +176,7 @@ testScriptInstallations() {
 
   export BITBUCKET_CLONE_DIR
   BITBUCKET_CLONE_DIR="$oldDir"
-  [ "$oldDir" = "NONE" ] && unset BITBUCKET_CLONE_DIR
+  [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
 }
 
 # tests=(testAdditionalBins "${tests[@]}")
