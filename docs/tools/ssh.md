@@ -13,7 +13,7 @@ Side effects:
 1. `~/.ssh` mode is set to `0700` (read/write/execute user)
 1. `~/.ssh/known_hosts` is created if it does not exist
 1. `~/.ssh/known_hosts` mode is set to `0600` (read/write user)
-1. ~./.ssh/known_hosts` is possibly modified (appended)
+1. `~./.ssh/known_hosts` is possibly modified (appended)
 
 If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail
 

@@ -85,5 +85,18 @@ Are we within the Microsoft Visual Studio Code terminal?
 - `0` - is BitBucket pipeline
 - `1` - Not a BitBucket pipeline
 
+### `showContext` - Open a file in a shell using the program we
+
+Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+EDITOR - Used as a default editor (first)
+VISUAL - Used as another default editor (last)
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

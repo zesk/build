@@ -40,27 +40,29 @@ deployBuildEnvironment() {
 
   usage="_${FUNCNAME[0]}"
 
-  if [ ! -f "$buildEnv" ]; then
-    envFiles=()
-    consoleWarning "No .build.env found - environment must be already configured" 1>&2
-  else
+  envFiles=()
+  envFilesLoaded=()
+  if [ -f "$buildEnv" ]; then
     envFiles=("$buildEnv")
   fi
-  envFilesLoaded=()
 
   deployHome=
   applicationPath=
   applicationId=
-  userHosts=
+  userHosts=()
   targetPackage=
   deployArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --env)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        envFiles+=("$1")
+        shift
+        envFiles+=("$(usageArgumentFile "$usage" "envFile" "${1-}")") || return $?
         ;;
       --debug)
         debuggingFlag=true
@@ -69,34 +71,40 @@ deployBuildEnvironment() {
         deployArgs+=("$argument")
         ;;
       --home)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        deployHome="$1"
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "blank $argument argument" || return $?
+        deployHome="${1-}"
         ;;
       --host)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "blank $argument argument" || return $?
         userHosts+=("$1")
         ;;
       --id)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        applicationId="$1"
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "blank $argument argument" || return $?
+        applicationId="${1-}"
         ;;
       --application)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
+        shift
+        applicationPath="${1-}"
         ;;
       --target)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        targetPackage="$1"
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "blank $argument argument" || return $?
+        targetPackage="${1-}"
         ;;
       *)
         userHosts+=("$argument")
         ;;
     esac
-    shift || __failArgument "$usage" "shift failed" || return $?
+    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
   done
+  if [ ! -f "$buildEnv" ]; then
+    consoleWarning "No .build.env found - environment must be already configured" 1>&2
+  fi
 
-  for envFile in "${envFiles[@]}"; do
+  for envFile in "${envFiles[@]+${envFiles[@]}}"; do
     envFilesLoaded+=("$(usageArgumentLoadEnvironmentFile "$usage" "envFile" "$envFile")") 2>&1
   done
 
@@ -148,7 +156,7 @@ deployBuildEnvironment() {
   # shellcheck disable=SC2059
   statusMessage consoleInfo "Deploying:$(printf " \"$(consoleCode "%s")\"" "${deployArgs[@]}")" || :
   ___deployBuildEnvironment "${deployArgs[@]}" || return $?
-  bigText Success | wrapLines "$(consoleSuccess)" "$(consoleReset)"
+  printf "\n%s\n" "$(bigText --bigger Success)" | wrapLines "$(consoleSuccess)    " "$(consoleReset)"
 }
 
 #
@@ -207,9 +215,7 @@ _deployBuildEnvironment() {
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
   local argument targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome firstFlags
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
 
   targetPackage=
   revertFlag=false
@@ -360,7 +366,7 @@ _deployRevertApplication() {
         elif [ -z "$targetPackage" ]; then
           targetPackage="$1"
         else
-        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
+          __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac

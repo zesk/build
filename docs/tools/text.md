@@ -28,6 +28,10 @@ Returns true if all `characters` are of `className`
 ## Filters
 
 
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `quoteSedPattern` - Quote sed strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
@@ -191,402 +195,49 @@ Replaces the first and only the first occurrence of a pattern in a line with a r
 - `0` - Always succeeds
 
 
-### `stripAnsi` - Strip ANSI console escape sequences from a file
 
-Strip ANSI console escape sequences from a file
+ExitCode _bashDocumentation_Template listTokens  ./docs/_templates/__function.md: 1
 
-#### Usage
-
-    stripAnsi < input > output
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Local cache
-
-None.
-
-#### Environment
-
-None.
-
-#### Depends
-
-    sed
-    
-
-#### Credits
-
-Thanks to [commandlinefu tripleee](https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc).
-
-
-### `listTokens` - listTokens
-
-listTokens
-
-#### Usage
-
-    listTokens prefix suffix < input > output
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Local cache
-
-None.
-
-#### Environment
-
-None.
-
-#### Depends
-
-    sed quoteSedPattern
-    
-
-
-### `mapValue` - Maps a string using an environment file
-
-Maps a string using an environment file
-
-#### Usage
-
-    mapValue mapFile [ value ... ]
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `mapValueTrim` - Maps a string using an environment file
-
-Maps a string using an environment file
-
-#### Usage
-
-    mapValue mapFile [ value ... ]
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
+ExitCode _bashDocumentation_Template mapValue  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template mapValueTrim  ./docs/_templates/__function.md: 1
 
 ### Space trimming
 
-
-### `trimWords` - Remove words from the end of a phrase
-
-Remove words from the end of a phrase
-
-#### Usage
-
-    trimWords [ wordCount [ word0 ... ] ]
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `trimSpace` - Trim whitespace of a bash argument
-
-Trim spaces and only spaces from arguments or a pipe
-
-#### Usage
-
-    trimSpace text
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    trimSpace "$token"
-
-#### Sample Output
-
-    text
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Credits
-
-Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
-
-### `trimSpacePipe` - Trim whitespace in a pipeline
-
-trimSpace handles both cases now.
-
-#### Usage
-
-    trimSpace < file > output
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Depends
-
-    awk
-    
-
-#### See Also
-
-{SEE:trimSpace}
-
-### `trimHead` - Removes any blank lines from the beginning of a stream
-
-Removes any blank lines from the beginning of a stream
-
-#### Usage
-
-    trimHead
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `trimTail` - Removes any blank lines from the end of a stream
-
-Removes any blank lines from the end of a stream
-
-#### Usage
-
-    trimTail
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `singleBlankLines` - Ensures blank lines are singular
-
-Ensures blank lines are singular
-
-#### Usage
-
-    singleBlankLines
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
+ExitCode _bashDocumentation_Template trimWords  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template trimSpace  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template trimSpacePipe  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template trimHead  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template trimTail  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template singleBlankLines  ./docs/_templates/__function.md: 1
 
 ## Finding or Calculating
 
-
-### `stringOffset` - Outputs the integer offset of `needle` if found as substring
-
-Outputs the integer offset of `needle` if found as substring in `haystack`
-If `haystack` is not found, -1 is output
-
-#### Usage
-
-    stringOffset needle haystack
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
-
-Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
-
-Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
-
-#### Usage
-
-    maximumFieldLength [ fieldIndex [ separatorChar ] ] < fieldBasedFile
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
-
-#### Exit codes
-
-- `0` - Always succeeds
+ExitCode _bashDocumentation_Template stringOffset  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template maximumFieldLength  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template maximumLineLength  ./docs/_templates/__function.md: 1
 
 ## Language-related
 
-
-### `plural` - Outputs the `singular` value to standard out when the value
-
-Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
-
-
-Example:
-
-#### Usage
-
-    plural number singular plural
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    count=$(($(wc -l < $foxSightings) + 0))
-    printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
-    n=$(($(date +%s)) - start))
-    printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
-
-#### Exit codes
-
-- `1` - If count is non-numeric
-- `0` - If count is numeric
+ExitCode _bashDocumentation_Template plural  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template parseBoolean  ./docs/_templates/__function.md: 1
 
 ## Transformation
 
+ExitCode _bashDocumentation_Template lowercase  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template uppercase  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template shaPipe  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template cachedShaPipe  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template cannon  ./docs/_templates/__function.md: 1
 
-### `lowercase` - Convert text to lowercase
+# Characters
 
-Convert text to lowercase
+ExitCode _bashDocumentation_Template characterClassReport  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template characterClasses  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template characterFromInteger  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template characterToInteger  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template isCharacterClasses  ./docs/_templates/__function.md: 1
+ExitCode _bashDocumentation_Template stringValidate  ./docs/_templates/__function.md: 1
 
-#### Usage
-
-    lowercase [ text ... ]
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `shaPipe` - SHA1 checksum of standard input
-
-Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
-
-You can use this as a pipe or pass in arguments which are files to be hashed.
-
-#### Usage
-
-    shaPipe [ filename ... ]
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    shaPipe < "$fileName"
-    shaPipe "$fileName0" "$fileName1"
-
-#### Sample Output
-
-    cf7861b50054e8c680a9552917b43ec2b9edae2b
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Environment
-
-DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
-
-#### Depends
-
-    shasum
-    
-
-### `cachedShaPipe` - SHA1 checksum of standard input
-
-Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
-
-You can use this as a pipe or pass in arguments which are files to be hashed.
-
-Speeds up shaPipe using modification dates of the files instead.
-
-The cacheDirectory
-
-#### Usage
-
-    cachedShaPipe cacheDirectory [ filename ]
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    cachedShaPipe "$cacheDirectory" < "$fileName"
-    cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
-
-#### Sample Output
-
-    cf7861b50054e8c680a9552917b43ec2b9edae2b
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Depends
-
-    shasum
-    
-
-### `cannon.sh` - Replace text `fromText` with `toText` in files, using `findArgs` to
-
-Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
-
-This can break your files so use with caution.
-
-#### Arguments
-
-
-
-#### Examples
-
-    cannon master main ! -path '*/old-version/*')
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Arguments are identical
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

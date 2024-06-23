@@ -51,29 +51,7 @@ Output a bar as wide as the console using the `=` symbol.
 #### Environment
 
 Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
-
-### `prefixLines` - Prefix output lines with a string
-
-Prefix output lines with a string, useful to format output or add color codes to
-consoles which do not honor colors line-by-line. Intended to be used as a pipe.
-
-#### Usage
-
-    prefixLines [ text .. ] < fileToPrefixLines
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
-    cat "$errors" | wrapLines "    ERROR: [" "]"
-
-#### Exit codes
-
-- 0
+Unable to find "prefixLines" (using index "/Users/kent/.build")
 
 ### `wrapLines` - Prefix output lines with a string
 
@@ -82,7 +60,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Usage
 
-    wrapLines [ prefix [ suffix ... ] ] < fileToWrapLines
+    wrapLines [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
     
 
 #### Arguments
@@ -97,6 +75,10 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #### Exit codes
 
 - 0
+
+#### Errors
+
+Unable to find "prefixLines" (using index "/Users/kent/.build")
 
 ### `alignRight` - align text right
 
@@ -122,6 +104,10 @@ Format text and align it right using spaces.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "prefixLines" (using index "/Users/kent/.build")
+
 ### `alignLeft` - align text left
 
 Format text and align it left using spaces.
@@ -145,6 +131,10 @@ Format text and align it left using spaces.
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "prefixLines" (using index "/Users/kent/.build")
 
 ### `boxedHeading` - Text heading decoration
 
@@ -176,6 +166,10 @@ Heading for section output
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "prefixLines" (using index "/Users/kent/.build")
+
 ### `bigText` - smblock (regular)
 
 smblock (regular)
@@ -205,6 +199,10 @@ smmono12 (--bigger)
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "prefixLines" (using index "/Users/kent/.build")
+
 ### `labeledBigText` - Outputs a label before a bigText for output.
 
 Outputs a label before a bigText for output.
@@ -223,6 +221,10 @@ This function will strip any ANSI from the label to calculate correct string siz
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "prefixLines" (using index "/Users/kent/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

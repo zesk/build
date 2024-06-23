@@ -8,10 +8,12 @@
 
 Deploy to a host
 
-Loads .build.env
+Loads `./.build.env` if it exists.
+Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.
+
+#### Arguments
 
 
-Not possible to deploy to different paths on different hosts
 
 #### Exit codes
 
@@ -19,10 +21,11 @@ Not possible to deploy to different paths on different hosts
 
 #### Environment
 
-- DEPLOY_REMOTE_PATH - path on remote host for deployment data
-- APPLICATION_REMOTE_PATH - path on remote host for application
-- DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
-- APPLICATION_ID - Version to be deployed
+DEPLOY_REMOTE_PATH - path on remote host for deployment data
+APPLICATION_REMOTE_PATH - path on remote host for application
+DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
+APPLICATION_ID - Version to be deployed
+BUILD_TARGET - The application package name
 
 ### `deployRemoteFinish` - This is **run on the remote system** after deployment; environment
 

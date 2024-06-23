@@ -77,7 +77,7 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 ### `validateFileExtensionContents` - Check files for the existence of a string
 
-Search for file extensions and ensure that text is found in each file.
+Search for item extensions and ensure that text is found in each item.
 
 This can be run on any directory tree to test files in any application.
 
@@ -108,7 +108,7 @@ This operates in the current working directory
 
 ### `validateFileContents` - Check files for the existence of a string or strings
 
-Search for file extensions and ensure that text is found in each file.
+Search for item extensions and ensure that text is found in each item.
 
 This can be run on any directory tree to test files in any application.
 

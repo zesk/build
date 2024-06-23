@@ -97,7 +97,7 @@ Should look into an actual file template, probably
 
 #### Usage
 
-    usageTemplate binName options delimiter description exitCode message
+    usageTemplate binName options delimiter description exitCode message ...
     
 
 #### Exit codes

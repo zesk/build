@@ -4,6 +4,19 @@
 [⬅ Return to top](../index.md)
 
 
+### `debuggingStack` - Dump the function and include stacks and the current environment
+
+Dump the function and include stacks and the current environment
+
+#### Usage
+
+    debuggingStack
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `buildDebugEnabled` - Is build debugging enabled?
 
 Is build debugging enabled?

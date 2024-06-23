@@ -31,52 +31,58 @@ _assertSuccess() {
   printf -- "%s%s: %s %s " "$(clearLine)" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
 }
 
+# Usage: {fn} success thisName fileName string0 [ ... ]
 #
-# Assert two strings are equal.
+# Argument: thisName - Reported function for success or failure
+# Argument: fileName - File to search
+# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
+# Exit code: 1 - If the assertions fails
+# Exit code: 0 - If the assertion succeeds
+# Environment: If the file does not exist, this will fail.
+# Example:     assertFileDoesNotContain "$logFile" error Error ERROR
+# Example:     assertFileDoesNotContain "$logFile" warning Warning WARNING
 #
-# If this fails it will output an error and exit.
-#
-# Usage: assertEquals expected actual [ message ]
-# Argument: expected - Expected string
-# Argument: actual - Actual string
-# Argument: message - Message to output if the assertion fails
-# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
-# Reviewed: 2023-11-12
-#
-assertEquals() {
-  local expected=$1 actual=$2 this="${FUNCNAME[0]}"
-  shift || _assertFailure "$this" "missing expected arg" || return $?
-  shift || _assertFailure "$this" "missing actual arg" || return $?
-  if [ "$expected" = "$actual" ]; then
-    _assertSuccess "$this" "\"$expected\" == \"$actual\" (correct)" || return $?
-  else
-    _assertFailure "$this" "expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}" || return $?
-  fi
+__assertFileContainsHelper() {
+  local success="$1"
+  local displayName="$2"
+  local this="$3"
+  local file="$4"
+  local found args expected verb
+
+  shift 4 || _assertFailure "$this" "Missing argument" || return $?
+  [ -f "$file" ] || _assertFailure "$this" "$displayName is not a file: $*"
+
+  case "$success" in
+    true) verb="contains" ;;
+    false) verb="does not contain" ;;
+    *) _assertFailure "Invalid success ($success) passed" || return $? ;;
+  esac
+  args=("$@")
+  while [ $# -gt 0 ]; do
+    expected="$1"
+    [ -n "$expected" ] || _assertFailure "$this" "Blank match passed: $args[*]" || return $?
+    if grep -q "$(quoteGrepPattern "$expected")" "$file"; then
+      found=true
+    else
+      found=false
+    fi
+    if [ "$found" = "$success" ]; then
+      # shellcheck disable=SC2059
+      _assertSuccess "$this" "$displayName $verb strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
+    else
+      message="$(printf -- "%s %s %s\n%s" "$displayName" "$verb string:" "$(consoleCode "$expected")" "$(dumpPipe "$displayName" <"$file")")"
+      _assertFailure "$this" "$message" || return $?
+    fi
+    shift
+  done
 }
 
-# Assert two strings are not equal.
-#
-# If this fails it will output an error and exit.
-# Summary: Assert two strings are not equal
-# Usage: assertNotEquals expected actual [ message ]
-# Argument: expected - Required. Expected string.
-# Argument: actual - Required. Actual string.
-# Argument: message - Message to output if the assertion fails. Optional.
-# Example:     assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
-# Example:     Single quote break-s
-# Reviewed: 2023-11-12
-#
-assertNotEquals() {
-  local expected=$1 actual=$2
-  local this="${FUNCNAME[0]}"
+__assertFileContainsThis() {
+  __assertFileContainsHelper true "$@"
+}
 
-  shift
-  shift
-  if [ "$expected" != "$actual" ]; then
-    _assertSuccess "$this" "\"$expected\" != \"$actual\" (correct)" || return $?
-  else
-    _assertFailure "$this" "expected \"$expected\" equals \"$actual\" but should not: ${*-equals}" || return $?
-  fi
+__assertFileDoesNotContainThis() {
+  __assertFileContainsHelper false "$@"
 }
 
 #
@@ -130,48 +136,48 @@ _assertExitCodeHelper() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-    --debug)
-      debugAssertRun=true
-      ;;
-    --stderr-ok)
-      errorsOk=1
-      ;;
-    --stderr-match)
-      shift || :
-      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-      stderrContains+=("$1")
-      errorsOk=1
-      ;;
-    --stderr-no-match)
-      shift || :
-      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-      stderrNotContains+=("$1")
-      errorsOk=1
-      ;;
-    --stdout-match)
-      shift || :
-      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-      outputContains+=("$1")
-      ;;
-    --stdout-no-match)
-      shift || :
-      [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-      outputNotContains+=("$1")
-      ;;
-    --not)
-      isExitCode=
-      failureText="expected NOT"
-      ;;
-    *)
-      if [ -z "$expected" ]; then
-        expected="$argument"
-        isInteger "$expected" || __failArgument "$usage" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
-      elif [ -z "$bin" ]; then
-        bin="$argument"
+      --debug)
+        debugAssertRun=true
+        ;;
+      --stderr-ok)
+        errorsOk=1
+        ;;
+      --stderr-match)
         shift || :
-        break
-      fi
-      ;;
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        stderrContains+=("$1")
+        errorsOk=1
+        ;;
+      --stderr-no-match)
+        shift || :
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        stderrNotContains+=("$1")
+        errorsOk=1
+        ;;
+      --stdout-match)
+        shift || :
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        outputContains+=("$1")
+        ;;
+      --stdout-no-match)
+        shift || :
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        outputNotContains+=("$1")
+        ;;
+      --not)
+        isExitCode=
+        failureText="expected NOT"
+        ;;
+      *)
+        if [ -z "$expected" ]; then
+          expected="$argument"
+          isInteger "$expected" || __failArgument "$usage" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
+        elif [ -z "$bin" ]; then
+          bin="$argument"
+          shift || :
+          break
+        fi
+        ;;
     esac
     shift || :
   done
@@ -204,27 +210,75 @@ _assertExitCodeHelper() {
     printf "%s%s %s – %s\n" "$(clearLine)" "$(consoleError "${usage#_}")" "$(consoleCode "$bin ${savedArguments[*]}")" "$(consoleWarning "--stderr-ok used but is NOT necessary:")"
   fi
   if [ ${#stderrContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$usage" "$errorFile" "${stderrContains[@]}" || return $?
+    __assertFileContainsThis "$bin $* $(consoleBoldRed stderr)" "$usage" "$errorFile" "${stderrContains[@]}" || return $?
   fi
   if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$usage" "$errorFile" "${stderrNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$bin $* $(consoleBoldRed stderr)" "$usage" "$errorFile" "${stderrNotContains[@]}" || return $?
   fi
   if [ ${#outputContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$usage" "$outputFile" "${outputContains[@]}" || return $?
+    __assertFileContainsThis "$bin $* $(consoleBoldBlue stdout)" "$usage" "$outputFile" "${outputContains[@]}" || return $?
   fi
   if [ ${#outputNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$usage" "$outputFile" "${outputNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$bin $* $(consoleBoldBlue stdout)" "$usage" "$outputFile" "${outputNotContains[@]}" || return $?
   fi
   if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     # Failure
-    _assertFailure "${usage#_}" "$(consoleCode "$bin $*")" \
+    _assertFailure "${usage#_}" "$(consoleCode "${savedArguments[*]}")" \
       "$(consoleError "$actual")=$failureText" "$(consoleSuccess "$expected")=$(dumpPipe <"$outputFile")"
     rm -rf "$outputFile" "$errorFile" || :
     _environment "${usage#_} Failed" || return $?
   fi
-  _assertSuccess "${usage#_}" "$(consoleCode "$bin $*")" "$(consoleSuccess "$actual")" || return $?
+  _assertSuccess "${usage#_}" "$(consoleCode "${savedArguments[*]}")" "$(consoleSuccess "$actual")" || return $?
   rm -rf "$outputFile" "$errorFile" || :
   return 0
+}
+
+#
+# Assert two strings are equal.
+#
+# If this fails it will output an error and exit.
+#
+# Usage: assertEquals expected actual [ message ]
+# Argument: expected - Expected string
+# Argument: actual - Actual string
+# Argument: message - Message to output if the assertion fails
+# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+# Reviewed: 2023-11-12
+#
+assertEquals() {
+  local expected=$1 actual=$2 this="${FUNCNAME[0]}"
+  shift || _assertFailure "$this" "missing expected arg" || return $?
+  shift || _assertFailure "$this" "missing actual arg" || return $?
+  if [ "$expected" = "$actual" ]; then
+    _assertSuccess "$this" "\"$expected\" == \"$actual\" (correct)" || return $?
+  else
+    _assertFailure "$this" "expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}" || return $?
+  fi
+}
+
+# Assert two strings are not equal.
+#
+# If this fails it will output an error and exit.
+# Summary: Assert two strings are not equal
+# Usage: assertNotEquals expected actual [ message ]
+# Argument: expected - Required. Expected string.
+# Argument: actual - Required. Actual string.
+# Argument: message - Message to output if the assertion fails. Optional.
+# Example:     assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
+# Example:     Single quote break-s
+# Reviewed: 2023-11-12
+#
+assertNotEquals() {
+  local expected=$1 actual=$2
+  local this="${FUNCNAME[0]}"
+
+  shift
+  shift
+  if [ "$expected" != "$actual" ]; then
+    _assertSuccess "$this" "\"$expected\" != \"$actual\" (correct)" || return $?
+  else
+    _assertFailure "$this" "expected \"$expected\" equals \"$actual\" but should not: ${*-equals}" || return $?
+  fi
 }
 
 #
@@ -545,21 +599,21 @@ assertOutputContains() {
 
   while [ $# -gt 0 ]; do
     case $1 in
-    --exit)
-      shift
-      assertExitCode 0 isNumber "$1" || return $?
-      exitCode="$1"
-      ;;
-    --stderr)
-      pipeStdErr=1
-      ;;
-    *)
-      if [ -z "$expected" ]; then
-        expected="$1"
-      else
-        commands+=("$1")
-      fi
-      ;;
+      --exit)
+        shift
+        assertExitCode 0 isNumber "$1" || return $?
+        exitCode="$1"
+        ;;
+      --stderr)
+        pipeStdErr=1
+        ;;
+      *)
+        if [ -z "$expected" ]; then
+          expected=$(quoteGrepPattern "$1")
+        else
+          commands+=("$1")
+        fi
+        ;;
     esac
     shift
   done
@@ -577,7 +631,7 @@ assertOutputContains() {
     )
   fi
   assertEquals "$exitCode" "$actual" "$(printf -- "%s %s %s (%s)" "$(consoleInfo "$this")" "$(consoleError "Exit code should be")" "$(consoleGreen "$exitCode")" "$(consoleError "$actual")")" || return $?
-  if grep -q "$expected" "$tempFile"; then
+  if grep -q -e "$expected" "$tempFile"; then
     _assertSuccess "$this" "\"$expected\" found in \"${commands[*]}\" output" || return $?
   else
     consoleInfo "$(echoBar)" 1>&2
@@ -612,21 +666,21 @@ assertOutputDoesNotContain() {
 
   while [ $# -gt 0 ]; do
     case $1 in
-    --exit)
-      shift
-      assertExitCode 0 isNumber "$1" || return $?
-      exitCode="$1"
-      ;;
-    --stderr)
-      pipeStdErr=1
-      ;;
-    *)
-      if [ -z "$expected" ]; then
-        expected="$1"
-      else
-        commands+=("$1")
-      fi
-      ;;
+      --exit)
+        shift
+        assertExitCode 0 isNumber "$1" || return $?
+        exitCode="$1"
+        ;;
+      --stderr)
+        pipeStdErr=1
+        ;;
+      *)
+        if [ -z "$expected" ]; then
+          expected="$1"
+        else
+          commands+=("$1")
+        fi
+        ;;
     esac
     shift
   done
@@ -643,35 +697,13 @@ assertOutputDoesNotContain() {
     )
   fi
   assertEquals "$exitCode" "$actual" "Exit code should be $exitCode" || return $?
-  if ! grep -q "$expected" "$tempFile"; then
+  if ! grep -q "$(quoteGrepPattern "$expected")" "$tempFile"; then
     _assertSuccess "$this" "$expected NOT found in ${commands[*]} output (correct)" || return $?
   else
     wrapLines "$(consoleCode)" "$(consoleReset)" <"$tempFile" 1>&2
     consoleError "$(echoBar)" 1>&2
     _assertFailure "$this" "$expected found in $* output (incorrect)" || return $?
   fi
-}
-
-# Usage: {fn} thisName fileName string0 [ ... ]
-# Argument: thisName - Reported function for success or failure
-# See: assertFileContains
-__assertFileContainsThis() {
-  local this="$1"
-  local f="$2" args
-  shift
-
-  shift || _assertFailure "$this" "Missing argument" || return $?
-  args=("$@")
-  [ -f "$f" ] || _assertFailure "$this" "$f is not a file: $*"
-  while [ $# -gt 0 ]; do
-    if ! grep -q "$1" "$f"; then
-      dumpFile "$f"
-      _assertFailure "$this" "$(consoleInfo "$f") does not contain string: $(consoleCode "$1")" || return $?
-    fi
-    shift
-  done
-  # shellcheck disable=SC2059
-  _assertSuccess "$this" "$(consoleInfo "$f") contains strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
 }
 
 # Usage: assertFileContains fileName string0 [ ... ]
@@ -688,38 +720,7 @@ __assertFileContainsThis() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  __assertFileContainsThis "${FUNCNAME[0]}" "$@" || return $?
-}
-
-# Usage: __assertFileDoesNotContainThis thisName fileName string0 [ ... ]
-#
-# Argument: thisName - Reported function for success or failure
-# Argument: fileName - File to search
-# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
-# Environment: If the file does not exist, this will fail.
-# Example:     assertFileDoesNotContain "$logFile" error Error ERROR
-# Example:     assertFileDoesNotContain "$logFile" warning Warning WARNING
-#
-__assertFileDoesNotContainThis() {
-  local this="$1"
-  local f="$2" args
-
-  shift || :
-  args=("$@")
-  shift || _assertFailure "$this" "Missing argument" || return $?
-  [ -f "$f" ] || _assertFailure "$this" "$f is not a file: $*"
-  while [ $# -gt 0 ]; do
-    if grep -q "$1" "$f"; then
-      dumpFile "$f"
-      _assertFailure "$this" "$(consoleInfo "$f") does not contain string: $(consoleCode "$1")" || return $?
-    fi
-    shift
-  done
-  _assertSuccess "$this" "$f does not contain strings: $(consoleCode "$(printf "%s" "${args[@]+${args[@]}}")")" || return $?
-  # shellcheck disable=SC2059
-  _assertSuccess "$this" "$(consoleInfo "$f") does not contain strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
+  __assertFileContainsThis "$1" "${FUNCNAME[0]}" "$@" || return $?
 }
 
 #
@@ -734,7 +735,7 @@ __assertFileDoesNotContainThis() {
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
-  __assertFileDoesNotContainThis "${FUNCNAME[0]}" "$@" || return $?
+  __assertFileDoesNotContainThis "$1" "${FUNCNAME[0]}" "$@" || return $?
 }
 
 #
