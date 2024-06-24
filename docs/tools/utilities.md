@@ -12,12 +12,18 @@ If no variable name is supplied it uses the default variable name `default`.
 
 Variable names can contain alphanumeric characters, underscore, or dash.
 
-Example:
-Example:
-Example:
-Example:
-Example:
-Example:
+Sets `default` incrementor to 1 and outputs `1`
+
+    incrementor 1
+
+Increments the `kitty` counter and outputs `1` on first call and `n + 1` for each subsequent call.
+
+    incrementor kitty
+
+Sets `kitty` incrementor to 2 and outputs `2`
+
+    incrementor 2 kitty
+
 
 #### Usage
 
@@ -27,15 +33,6 @@ Example:
 #### Arguments
 
 
-
-#### Examples
-
-Sets `default` incrementor to 1 and outputs `1`
-    incrementor 1
-Increments the `kitty` counter and outputs `1` on first call and `n + 1` for each subsequent call.
-    incrementor kitty
-Sets `kitty` incrementor to 2 and outputs `2`
-    incrementor 2 kitty
 
 #### Exit codes
 

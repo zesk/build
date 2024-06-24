@@ -344,3 +344,165 @@ daemontoolsRestart() {
 _daemontoolsRestart() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Runs a daemon which monitors files and operates on services.
+#
+# To request a specific action write the file with the action as the first line.
+#
+# Allows control across user boundaries. (e.g. user can control root services)
+#
+# Specify actions more than once on the command line to specify more than one set of permissions.
+#
+# Usage: {fn} [ --interval seconds ] [ --stat statFile ] [ --action actions ] service0 file0 [ service1 file1 ]
+# Argument: --home serviceHome - Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.
+# Argument: --interval intervalSeconds - Optional. Number of seconds to check for presence of the file. Defaults to 10.
+# Argument: --stat statFile - Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.
+# Argument: --chirp chirpSeconds - Optional. Output a message saying we're alive every `chirpSeconds` seconds.
+# Argument: --action actions - Optional. String. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.
+# Argument: service0 - Required. Directory. Service to control (e.g. `/etc/service/application/`)
+# Argument: file1 - Required. File. Absolute path to a file. Presence of  `file` triggers `action`
+# Environment: DAEMONTOOLS_HOME - The default home directory for `daemontools`
+#
+daemontoolsManager() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
+  local intervalSeconds chirpSeconds statFile serviceHome
+  local directory svcBin svcBinFlags statBin secondsNoun
+  local lastChirp now
+  local fileAction index
+  local currentActions action
+  local services files actions
+
+  services=()
+  files=()
+  actions=()
+
+  __usageEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+
+  currentActions=("restart")
+  intervalSeconds=10
+  chirpSeconds=0
+  statFile=
+  serviceHome="$DAEMONTOOLS_HOME"
+  svcBin=$(which svc) || __failEnvironment "$usage" "Requires daemontools - svc not found in PATH: $PATH" || return $?
+  statBin=$(which svstat) || __failEnvironment "$usage" "Requires daemontools - svstat not found in PATH: $PATH" || return $?
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --chirp)
+        shift
+        chirpSeconds=$(usageArgumentUnsignedInteger "$usage" chirpSeconds "${1-}") || return $?
+        [ "$chirpSeconds" -gt 0 ] || __failArgument "$usage" "$argument \"$chirpSeconds\" must not be zero"
+        ;;
+      --interval)
+        shift
+        intervalSeconds=$(usageArgumentUnsignedInteger "$usage" intervalSeconds "${1-}") || return $?
+        [ "$intervalSeconds" -gt 0 ] || __failArgument "$usage" "$argument \"$intervalSeconds\" must not be zero"
+        ;;
+      --stat)
+        shift
+        [ -z "$statFile" ] || __failArgument "$usage" "$argument must be specified once ($statFile and ${1-})" || return $?
+        statFile=$(usageArgumentFileDirectory "$usage" "statFile" "${1-}") || return $?
+        ;;
+      --home)
+        shift
+        serviceHome=$(usageArgumentDirectory "$usage" "serviceHome" "${1-}") || return $?
+        ;;
+      --action)
+        shift
+        IFS="," read -r -a currentActions <<<"$1"
+        [ ${#currentActions[@]} -gt 0 ] || __failArgument "$usage" "$argument No actions specified"
+        for action in "${currentActions[@]}"; do
+          case "$action" in start | restart | stop) ;; *) __failArgument "$usage" "Invalid action $action" || return $? ;; esac
+        done
+        ;;
+      *)
+        if [ -z "$service" ]; then
+          service="$1"
+          [ -d "$service" ] || __failEnvironment "$usage" "service must be a service directory that exists: $service" || return $?
+        else
+          file="$1"
+          [ -d "$(dirname "$file")" ] || __failEnvironment "$usage" "file must be in a directory that exists: $file" || return $?
+          services+=("$service")
+          files+=("$file")
+          actions+=("${currentActions[*]}")
+          service=
+          file=
+        fi
+        ;;
+    esac
+    shift
+  done
+  [ "${#services[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one service and file pair" || return $?
+  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  lastChirp=$start
+  secondsNoun=seconds
+  if [ "$intervalSeconds" -eq 1 ]; then
+    secondsNoun=second
+  fi
+  printf "%s: pid %d: (every %d %s)\n" "$(basename "${BASH_SOURCE[0]}")" "$$" "$intervalSeconds" "$secondsNoun"
+  index=0
+  while [ $index -lt ${#files[@]} ]; do
+    printf "    service: %s file: %s actions: %s\n" "${services[$index]}" "${files[$index]}" "${actions[$index]}"
+    index=$((index + 1))
+  done
+  while true; do
+    if [ -n "$statFile" ]; then
+      statFile=$(usageArgumentFileDirectory "$usage" "statFile" "$statFile") || return $?
+      __usageEnvironment "$usage" "$statBin" "$serviceHome/*" "$serviceHome/*/log" >"$statFile" || return $?
+    fi
+    index=0
+    while [ $index -lt ${#files[@]} ]; do
+      service="${services[$index]}"
+      file="${files[$index]}"
+      action=${actions[$index]}
+      index=$((index + 1))
+      directory="$(dirname "$file")"
+      [ -d "$directory" ] || __failEnvironment "$usage" "Parent directory deleted, exiting: $directory" || return $?
+      if [ ! -f "$file" ]; then
+        continue
+      fi
+      fileAction="$(head -1 "$file")"
+      case "$fileAction" in start | stop | restart) ;; *) fileAction="restart" ;; esac
+      IFS=" " read -r -a currentActions <<<"$action"
+      svcBinFlags=
+      for action in "${currentActions[@]}"; do
+        if [ "$action" = "$fileAction" ]; then
+          printf "start=%s\n""action=%s\n""daemon=%d\n""service=%s\n" "$(date +%s)" "$fileAction" "$$" "$service" >"$file.svc"
+          printf "Service %s: %s\n" "$fileAction" "$(basename "$service")"
+          case $fileAction in
+            start) svcBinFlags="-u" ;;
+            stop) svcBinFlags="-d" ;;
+            *) svcBinFlags="-t" ;;
+          esac
+          break
+        fi
+      done
+      if [ -z "$svcBinFlags" ]; then
+        printf "Service %s: %s requested but not permitted: %s\n" "$(basename "$service")" "$fileAction" "${actions[*]}" 1>&2
+      else
+        if "$svcBin" "$svcBinFlags" "$service" 2>&1 | grep -q warning; then
+          __failEnvironment "$usage" "Unable to control service $service ($svcBinFlags)" || return $?
+        fi
+      fi
+      rm -f "$file" "$file.svc" 2>/dev/null
+    done
+    # Does this work?
+    if ! sleep "$intervalSeconds"; then
+      printf "%s%s%s\n" "$(clearLine)" "$(consoleReset)" "$(consoleWarning "Interrupt")"
+      break
+    fi
+    if [ "$chirpSeconds" -gt 0 ]; then
+      now=$(date +%s)
+      if [ "$((now - lastChirp))" -gt "$chirpSeconds" ]; then
+        printf "pid %d: %s has been alive for %d seconds\n" "$$" "${BASH_SOURCE[0]}" "$((now - start))"
+        lastChirp=$now
+      fi
+    fi
+  done
+}
+_daemontoolsManager() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
