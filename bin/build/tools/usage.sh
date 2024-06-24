@@ -48,7 +48,6 @@ usageTemplate() {
   else
     usageString="$(consoleBoldRed Usage)"
   fi
-  exec 1>&2
   shift 5 || _argument "$this: shift 5" || return $?
   if [ ${#@} -gt 0 ]; then
     if [ "$exitCode" -eq 0 ]; then

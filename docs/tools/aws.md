@@ -49,6 +49,8 @@ output the credentials file path.
 
 If not found, returns with exit code 1.
 
+
+
 #### Usage
 
      awsCredentialsFile [ verboseFlag ]
@@ -195,6 +197,10 @@ AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `awsSecurityGroupIPRegister` - Usage:
+
+Usage:
 
 #### Exit codes
 

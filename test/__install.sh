@@ -1,9 +1,8 @@
 #!/bin/bash
 #
-# Dead simple PHP build
+# Copy of __install
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
-#
 
 # IDENTICAL __install 21
 set -eou pipefail
@@ -18,19 +17,14 @@ __install() {
   local here
 
   here=$(dirname "$source") || _return 99 dirname "$source" || return $?
-  if [ ! -d "$here/build" ]; then
-    [ -x "$here/$install" ] || _return 98 "$here/$install not executable" || return $?
+  if [ ! -d "$here/bin/build" ]; then
+    [ -x "$here/$install" ] || _return 98 "$install not executable" || return $?
     "$here/$install" || _return 97 "$install not executable" || return $?
-    [ -d "$here/build" ] || _return 96 "$install did not create $here/build" || return $?
+    [ -d "$here/bin/build" ] || _return 96 "$install did not create bin/build" || return $?
   fi
   # shellcheck source=/dev/null
   source "$here/../bin/build/tools.sh" || _return 42 tools.sh "$@" || return $?
   "$@" || return $?
 }
 
-buildSampleApplication() {
-  clearLine || return $?
-  __environment phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs || return $?
-}
-
-__install buildSampleApplication "$@"
+__install consoleOrange "$@"

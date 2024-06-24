@@ -27,10 +27,10 @@ testNewestAndOldest() {
   __environment cd "$place" || return $?
 
   date >"a"
-  consoleWarning "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
+  consoleInfo "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
   sleep "$waitSeconds"
   date >"b"
-  consoleWarning "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
+  consoleInfo "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
   sleep "$waitSeconds"
   date >"c"
 
@@ -191,8 +191,8 @@ testExtensionLists() {
   find "$BUILD_HOME" -type f ! -path '*/.*/*' | extensionLists --clean "$target"
 
   assertDirectoryNotEmpty "$target" || return $?
-  assertFileContains "$target/@" "${BASH_SOURCE[0]}" || return $?
-  assertFileContains "$target/sh" "${BASH_SOURCE[0]}" || return $?
+  assertFileContains "$target/@" "${BASH_SOURCE[0]#.}" || return $?
+  assertFileContains "$target/sh" "${BASH_SOURCE[0]#.}" || return $?
 
   rm -rf "$target" || return $?
 }

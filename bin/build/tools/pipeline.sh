@@ -16,10 +16,11 @@
 #------------------------------------------------------------------------------
 
 #
-# Usage: dotEnvConfigure
+# Usage: dotEnvConfigure where
+# Argument: where - Optional. Directory. Where to load the `.env` files.
 #
-# Loads "./.env" which is the current project configuration file
-# Also loads "./.env.local" if it exists
+# Loads `.env` which is the current project configuration file
+# Also loads `.env.local` if it exists
 # Generally speaking - these are NAME=value files and should be parsable by
 # bash and other languages.
 # See: toDockerEnv
@@ -29,31 +30,36 @@
 #
 # If `.env.local` exists, it is also loaded in a similar manner.
 #
-# The previous version of this function was `dotEnvConfig` and is now deprecated, and outputs a warning.
-# Environment: Loads `./.env` and `./.env.local`, use with caution.
+# Environment: Loads `.env` and `.env.local`, use with caution on trusted content only
 # Exit code: 1 - if `.env` does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 dotEnvConfigure() {
-  local dotEnv suffix
+  local usage="_${FUNCNAME[0]}"
+  local where dotEnv
 
-  dotEnv="./.env"
-  suffix="(pwd: $(pwd))" || :
-  [ -f "$dotEnv" ] || _environment "Missing ./.env $suffix" || return $?
+  where=
+  [ $# -eq 0 ] || where=$(usageArgumentDirectory "$usage" "where" "${1-}") || return $?
+  [ -n "$where" ] || where=$(pwd) || __failEnvironment "$usage" "pwd FAIL?" || return $?
+  dotEnv="$where/.env"
+  [ -f "$dotEnv" ] || _environment "Missing $dotEnv" || return $?
   set -a
   # shellcheck source=/dev/null
   if ! source "$dotEnv"; then
     set +a || :
-    _environment "Loading $dotEnv failed $suffix" || return $?
+    __usageEnvironment "$usage" "Loading $dotEnv failed" || return $?
   fi
-  dotEnv="./.env.local"
+  dotEnv="$where/.env"
   if [ -f "$dotEnv" ]; then
     # shellcheck source=/dev/null
     if ! source "$dotEnv"; then
       set +a || :
-      _environment "Loading $dotEnv failed $suffix" || return $?
+      __usageEnvironment "$usage" "Loading $dotEnv failed" || return $?
     fi
   fi
   set +a || :
+}
+_dotEnvConfigure() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -67,7 +73,9 @@ dotEnvConfigure() {
 # Example:     reportTiming "$init" "Completed in"
 #
 beginTiming() {
-  printf %d "$(($(date +%s) + 0))"
+  local start
+  start=$(date +%s 2>/dev/null) || _environment date || return $?
+  printf %d "$((start + 0))"
 }
 
 # Outputs the timing in magenta optionally prefixed by a message in green
@@ -84,13 +92,11 @@ beginTiming() {
 # Example:    reportTiming "$init" "Deploy completed in"
 reportTiming() {
   local start prefix delta
-  local usage
+  local usage="_${FUNCNAME[0]}"
 
-  usage="_${FUNCNAME[0]}"
-
-  start=${1-}
+  start="${1-}"
   __usageArgument "$usage" isInteger "$start" || return $?
-  shift || __failArgument "$usage" "missing argument" || return $?
+  shift
   prefix=
   if [ $# -gt 0 ]; then
     prefix="$(consoleGreen "$@") "
@@ -100,17 +106,6 @@ reportTiming() {
 }
 _reportTiming() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Utility for buildFailed
-#
-___dumpLines() {
-  local nLines=$1 quietLog=$2
-  consoleError "$(echoBar)"
-  echo "$(consoleInfo "$(consoleBold "$quietLog")")$(consoleBlack ": Last $nLines lines ...")"
-  consoleError "$(echoBar)"
-  tail -n "$nLines" "$quietLog" | wrapLines "$(consoleYellow)" "$(consoleReset)"
 }
 
 # Summary: Output debugging information when the build fails
@@ -132,17 +127,17 @@ ___dumpLines() {
 # Exit Code: 1 - Always fails
 # Output: stdout
 buildFailed() {
-  local quietLog=$1 bigLines=50 recentLines=3 failBar
-  shift || :
+  local quietLog="${1-}" showLines=50 failBar
 
+  shift
   clearLine || :
   failBar="$(consoleReset)$(consoleMagenta "$(repeat 80 "❌")")"
-  [ "$#" -eq 0 ] || printf "%s %s\n" "$(consoleLabel "Build failed:")" "$(consoleError "$@")" || :
-  printf "\n%s\n""%s\n\n""%s\n%s\n%s\n" \
-    "$(___dumpLines $bigLines "$quietLog")" \
+  # shellcheck disable=SC2094
+  printf -- "\n%s\n%s\n%s\n\n" \
+    "$(printf -- "\n%s\n\n" "$(bigText "Failed" | wrapLines "" "    ")" | wrapLines --fill "*" "$(consoleError)" "$(consoleReset)")" \
     "$failBar" \
-    "$(labeledBigText --top "$(consoleInfo "Hey! ") " --tween "$(consoleError)" Build Failed)" "$failBar" "$(___dumpLines $recentLines "$quietLog")" || :
-  _environment "$@" || return $?
+    "$(dumpPipe "$(basename "$quietLog")" "$@" --lines "$showLines" <"$quietLog")"
+  _environment "Build failed:" "$@" || return $?
 }
 
 # Summary: Sort versions in the format v0.0.0
@@ -161,9 +156,7 @@ buildFailed() {
 #
 versionSort() {
   local r=
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
     if [ "$1" = "-r" ]; then

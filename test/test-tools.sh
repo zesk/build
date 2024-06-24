@@ -153,6 +153,12 @@ loadTestFiles() {
 
     declare -p >"$__after"
 
+    if [ "$resultCode" -ne 0 ]; then
+      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleRed "FAILED")" 1>&2
+      buildFailed "$quietLog" || :
+      resultReason="test $__test failed"
+      break
+    fi
     ignoreValues=(OLDPWD _ resultCode LINENO)
     ignorePattern="$(quoteGrepPattern "^($(joinArguments '|' "${ignoreValues[@]}"))=")"
     # printf "%s: \"%s\"\n" "$(consoleInfo "PATTERN")" "$(consoleMagenta "$ignorePattern")"
@@ -173,15 +179,11 @@ loadTestFiles() {
     if [ -n "$changedGlobals" ]; then
       printf "%s\n" "$changedGlobals" | dumpPipe "$__test leaked local or export ($__before -> $__after)"
       resultCode=$errorTest
+      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleWarning "passed with leaks")"
+    else
+      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
     fi
 
-    if [ "$resultCode" -ne 0 ]; then
-      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleRed "FAILED")" 1>&2
-      buildFailed "$quietLog" || :
-      resultReason="test $__test failed"
-      break
-    fi
-    printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
   done
   if [ "$resultCode" -eq 0 ] && resultReason=$(didAnyTestsFail); then
     # Should probably reset test status but ...

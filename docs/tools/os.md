@@ -3,6 +3,26 @@
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
 
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
+### `isAbsolutePath` - Is a path an absolute path?
+
+Is a path an absolute path?
+
+#### Usage
+
+    isAbsolutePath path ...
+    
+
+#### Exit codes
+
+- `0` - if all paths passed in are absolute paths (begin with `/`).
+- `1` - one ore more paths are not absolute paths
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 ### `serviceToPort` - Get the port number associated with a service
 
@@ -27,6 +47,10 @@ Get the port number associated with a service
 - `1` - service not found
 - `2` - bad argument or invalid port
 - `0` - service found and output is an integer
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 ### `serviceToStandardPort` - Hard-coded services for:
 
@@ -64,6 +88,10 @@ Backup when `/etc/services` does not exist.
 
 {SEE:serviceToPort}
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 ### `buildCacheDirectory` - Path to cache directory for build system.
 
@@ -90,6 +118,10 @@ Appends any passed in arguments as path segments.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 #### Usage
 
     buildQuietLog name
@@ -102,6 +134,10 @@ Appends any passed in arguments as path segments.
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `requireFileDirectory` - Given a list of files, ensure their parent directories exist
@@ -123,6 +159,10 @@ Creates the directories for all files passed in.
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 ### `requireDirectory` - Given a list of files, ensure their parent directories exist
 
@@ -147,6 +187,10 @@ Creates the directories for all files passed in.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `directoryClobber` - Copy directory over another sort-of-atomically
 
 Copy directory over another sort-of-atomically
@@ -159,6 +203,54 @@ Copy directory over another sort-of-atomically
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
+
+### `fileDirectoryExists` - Does the file's directory exist?
+
+Does the file's directory exist?
+
+#### Usage
+
+    fileDirectoryExists directory
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
+### `fileGroup` - Outputs the file group for each file passed on the
+
+Outputs the file group for each file passed on the command line
+
+#### Usage
+
+    fileGroup file ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Unable to access file
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `runCount` - Run a binary count times
@@ -179,6 +271,10 @@ $\Run a binary count times
 - `0` - success
 - `2` - `count` is not an unsigned number
 - `Any` - If `binary` fails, the exit code is returned
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `renameFiles` - Rename a list of files usually to back them up temporarily
@@ -210,6 +306,10 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 ### `createTarFile` - Platform agnostic tar cfz which ignores owner and attributes
 
@@ -229,6 +329,10 @@ Platform agnostic tar cfz which ignores owner and attributes
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `environmentVariables` - Fetch a list of environment variable names
@@ -260,6 +364,10 @@ Returns the list of defined environment variables exported in the current bash c
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 ### `reverseFileLines` - Reverse output lines
 
@@ -272,6 +380,10 @@ Reverses a pipe's input lines to output using an awk trick. Do not recommend on 
 #### Credits
 
 Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt).
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `chmod-sh.sh` - Makes all `*.sh` files executable
@@ -299,6 +411,10 @@ Works from the current directory
 
 {SEE:makeShellFilesExecutable}
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 ### `modificationTime` - Fetch the modification time of a file as a timestamp
 
@@ -318,6 +434,10 @@ Fetch the modification time of a file as a timestamp
 - `2` - If file does not exist
 - `0` - If file exists and modification times are output, one per line
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `modificationSeconds` - Fetch the modification time in seconds from now of a
 
 Fetch the modification time in seconds from now of a file as a timestamp
@@ -335,6 +455,10 @@ Fetch the modification time in seconds from now of a file as a timestamp
 
 - `2` - If file does not exist
 - `0` - If file exists and modification times are output, one per line
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `isNewestFile` - Check to see if the first file is the newest
@@ -358,6 +482,10 @@ Otherwise return `1``
 - `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `isOldestFile` - Check to see if the first file is the newest
 
 Check to see if the first file is the newest one
@@ -379,6 +507,10 @@ Otherwise return `1``
 - `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 ### `oldestFile` - Return the oldest file in the list.
 
@@ -397,6 +529,10 @@ Return the oldest file in the list.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `newestFile` - Return the newest file in the list
 
 Return the newest file in the list
@@ -414,6 +550,10 @@ Return the newest file in the list
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 ### `modifiedDays` - Prints days (integer) since modified
 
@@ -423,6 +563,10 @@ Prints days (integer) since modified
 
 - `0` - Success
 - `2` - Can not get modification time
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 ### `modifiedSeconds` - Prints seconds since modified
 
@@ -437,6 +581,10 @@ Prints seconds since modified
 
 - `0` - Success
 - `2` - Can not get modification time
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `listFileModificationTimes` - Lists files in a directory recursively along with their modification
@@ -469,6 +617,10 @@ listFileModificationTimes $myDir ! -path '*/.*'
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `mostRecentlyModifiedFile` - List the most recently modified file in a directory
 
 List the most recently modified file in a directory
@@ -486,9 +638,13 @@ List the most recently modified file in a directory
 
 - `0` - Always succeeds
 
-### `mostRecentlyModifiedTimestamp` - List the most recently modified file in a directory
+#### Errors
 
-List the most recently modified file in a directory
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
+### `mostRecentlyModifiedTimestamp` - List the most recently modified timestamp in a directory
+
+List the most recently modified timestamp in a directory
 
 #### Usage
 
@@ -503,6 +659,10 @@ List the most recently modified file in a directory
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 #### Usage
 
@@ -516,6 +676,10 @@ List the most recently modified file in a directory
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 ### `pathCleanDuplicates` - Cleans the path and removes non-directory entries and duplicates
 
@@ -532,6 +696,10 @@ Maintains ordering.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 #### Usage
 
@@ -546,6 +714,10 @@ Maintains ordering.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 #### Usage
 
     pathAppend pathValue separator [ --first | --last | path ]
@@ -559,18 +731,35 @@ Maintains ordering.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 ### `renameLink` - Uses mv and clobbers always
 
 Uses mv and clobbers always
 
+#### Usage
+
+    renameLink from to
+    
+
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `JSON` - Format something neatly as JSON
@@ -585,6 +774,10 @@ Format something neatly as JSON
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `fileOwner` - Outputs the file owner for each file passed on the
@@ -605,6 +798,10 @@ Outputs the file owner for each file passed on the command line
 - `0` - Success
 - `1` - Unable to access file
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `fileSize` - Outputs value of virtual memory allocated for a process, value
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
@@ -623,6 +820,10 @@ Outputs value of virtual memory allocated for a process, value is in kilobytes
 - `0` - Success
 - `1` - Environment error
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `betterType` - Better type handling of shell objects
 
 Better type handling of shell objects
@@ -639,6 +840,10 @@ Outputs one of `type` output or enhancements:
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 
 ### `processMemoryUsage` - Outputs value of resident memory used by a process, value
@@ -668,6 +873,10 @@ Outputs value of resident memory used by a process, value is in kilobytes
 - `0` - Success
 - `2` - Argument error
 
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
+
 ### `processVirtualMemoryAllocation` - Outputs value of virtual memory allocated for a process, value
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
@@ -694,6 +903,10 @@ Outputs value of virtual memory allocated for a process, value is in kilobytes
 
 - `0` - Success
 - `2` - Argument error
+
+#### Errors
+
+Unable to find "buildEnvironmentLoad" (using index "/Users/kent/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

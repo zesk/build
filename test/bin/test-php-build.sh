@@ -52,41 +52,30 @@ testPHPBuild() {
   testPath="$(randomString)"
   testPath="${testPath:0:8}"
   testPath="$here/.testPHPBuild.$testPath"
-  if ! mkdir -p "$testPath"; then
-    consoleError "Unable to create $testPath, exiting"
-    return $errorEnvironment
-  fi
+  __environment mkdir -p "$testPath" || return $?
   appName="sublimeApplication"
 
-  if ! cp -r ./test/example/simple-php "$testPath/$appName"; then
-    consoleError "Failed copy app"
-    return $errorEnvironment
-  fi
+  __environment cp -r ./test/example/simple-php "$testPath/$appName" || return $?
   echo "PWD: $(pwd)"
 
   buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
   assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
-  mkdir -p "$testPath/$appName/bin/pipeline" || return $errorEnvironment
-  cp ./bin/build/install-bin-build.sh "$testPath/$appName/bin/pipeline/install-bin-build.sh" || return $errorEnvironment
+  __environment mkdir -p "$testPath/$appName/bin" || return $?
+  __environment installInstallBuild "$testPath/$appName/bin" "$testPath/$appName" || return $?
 
-  if ! here=$(pwd); then
-    return $errorEnvironment
-  fi
+  here=$(pwd) || _environment pwd || return $?
 
-  set +x
   consoleInfo "Test build directory is: $testPath" || :
 
-  if ! cd "$testPath/$appName"; then
-    return $errorEnvironment
-  fi
+  __environment cd "$testPath/$appName" || return $?
   assertFileDoesNotExist "./app.tar.gz" || return $?
   assertDirectoryDoesNotExist bin/build || return $?
 
-  assertFileExists ./bin/pipeline/install-bin-build.sh || return $?
+  assertFileExists ./bin/install-bin-build.sh || return $?
 
-  ./bin/pipeline/install-bin-build.sh --mock "$here/bin/build" || return $?
+  ./bin/install-bin-build.sh --mock "$here/bin/build" || return $?
   assertDirectoryExists bin/build || return $?
 
   consoleWarning "Building PHP app" || :

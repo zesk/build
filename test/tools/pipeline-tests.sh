@@ -11,20 +11,23 @@ declare -a tests
 
 tests+=(testDotEnvConfigure)
 testDotEnvConfigure() {
-  local tempDir="$$.dotEnvConfig"
-  mkdir "$tempDir"
+  local tempDir
+
+  tempDir="$(buildCacheDirectory)/$$.dotEnvConfig" || _environment buildCacheDirectory || return $?
+
+  __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
   consoleInfo "$(pwd)"
-  touch .env
+  __environment touch .env || return $?
   if ! dotEnvConfigure; then
     _environment "dotEnvConfigure failed with just .env" || return $?
   fi
-  touch .env.local
+  __environment touch .env.local || return $?
   if ! dotEnvConfigure; then
     _environment "dotEnvConfigure failed with both .env" || return $?
   fi
-  cd .. || return $?
-  rm -rf "$tempDir" || return $?
+  __environment cd .. || return $?
+  __environment rm -rf "$tempDir" || return $?
   consoleSuccess dotEnvConfigure works AOK
 }
 

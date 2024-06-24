@@ -34,9 +34,11 @@ testProcessWait() {
   disown
   background=$!
 
-  assertNotExitCode --stderr-match Expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?
+  export BUILD_DEBUG_LINES=9999
+  assertNotExitCode --dump --stderr-match Expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?
   assertExitCode 0 kill -0 "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
   assertNotExitCode --stderr-match "must be alive" 0 processWait --require --timeout "$timingFactor" "$background" || return $?
+  unset BUILD_DEBUG_LINES
 }

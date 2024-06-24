@@ -288,7 +288,23 @@ Output the number of columns in the terminal. Default is 80 if not able to be de
 
 #### Environment
 
-Uses the `tput cols` tool to find the value if `TERM` is non-blank.
+COLUMNS - May be defined after calling this
+LINES - May be defined after calling this
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+#### Usage
+
+    consoleBrightness [ --background | --foreground ]
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

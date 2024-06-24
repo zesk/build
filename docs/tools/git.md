@@ -167,6 +167,10 @@ Comment wisely. Does not duplicate comments. Check your release notes.
     gitCommit [ --last ] [ -- ] [ comment ... ]
     
 
+#### Arguments
+
+
+
 #### Examples
 
     c last

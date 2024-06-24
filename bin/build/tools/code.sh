@@ -22,7 +22,7 @@ errorArgument=2
 # Argument: --application applicationPath - Required. Directory. Application path to show off directory validation.
 #
 simpleBashFunction() {
-  local debuggingFlag cleanupFlag revertFlag homePath target id applicationPath
+  local debuggingFlag cleanupFlag revertFlag homePath target id applicationPath name
 
   # --debug
   debuggingFlag=

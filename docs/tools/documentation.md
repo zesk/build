@@ -319,11 +319,6 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
 - `0` - Always succeeds
 
-#### Depends
-
-    colors.sh text.sh prefixLines
-    
-
 ### `bashDocumentation_FindFunctionDefinitions` - Find where a function is defined in a directory of shell scripts
 
 Finds one ore more function definition and outputs the file or files in which a
