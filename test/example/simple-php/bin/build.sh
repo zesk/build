@@ -28,9 +28,9 @@ __install() {
   "$@" || return $?
 }
 
-buildSampleApplication() {
+__buildSampleApplication() {
   clearLine || return $?
   __environment phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs || return $?
 }
 
-__install buildSampleApplication "$@"
+__install __buildSampleApplication "$@"
