@@ -62,8 +62,8 @@ testPHPBuild() {
 
   assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
-  __environment mkdir -p "$testPath/$appName/bin/pipeline" || return $?
-  __environment cp ./bin/build/install-bin-build.sh "$testPath/$appName/bin/pipeline/install-bin-build.sh" || return $?
+  __environment mkdir -p "$testPath/$appName/bin" || return $?
+  __environment installInstallBuild "$testPath/$appName/bin" "$testPath/$appName" || return $?
 
   here=$(pwd) || _environment pwd || return $?
 
@@ -73,9 +73,9 @@ testPHPBuild() {
   assertFileDoesNotExist "./app.tar.gz" || return $?
   assertDirectoryDoesNotExist bin/build || return $?
 
-  assertFileExists ./bin/pipeline/install-bin-build.sh || return $?
+  assertFileExists ./bin/install-bin-build.sh || return $?
 
-  ./bin/pipeline/install-bin-build.sh --mock "$here/bin/build" || return $?
+  ./bin/install-bin-build.sh --mock "$here/bin/build" || return $?
   assertDirectoryExists bin/build || return $?
 
   consoleWarning "Building PHP app" || :

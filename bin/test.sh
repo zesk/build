@@ -153,9 +153,10 @@ __buildTestSuite() {
     if [ -n "$startTest" ]; then
       if [ "$shortTest" = "$startTest" ]; then
         startTest=
-        printf "%s %s\n" "$(consoleWarning "Starting at test")" "$(consoleCode "$startTest")"
+        clearLine
+        consoleWarning "Continuing at test $(consoleCode "$shortTest") ..."
       else
-        printf "%s %s ...\n" "$(consoleWarning "Skipping")" "$(consoleCode "$shortTest")"
+        statusMessage consoleWarning "Skipping $(consoleCode "$shortTest") ..."
         continue
       fi
     fi

@@ -11,7 +11,9 @@ declare -a tests
 
 tests+=(testDotEnvConfigure)
 testDotEnvConfigure() {
-  local tempDir="$(buildCacheDirectory)/$$.dotEnvConfig"
+  local tempDir
+
+  tempDir="$(buildCacheDirectory)/$$.dotEnvConfig" || _environment buildCacheDirectory || return $?
 
   __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
