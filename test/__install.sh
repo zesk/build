@@ -17,10 +17,10 @@ __install() {
   local here
 
   here=$(dirname "$source") || _return 99 dirname "$source" || return $?
-  if [ ! -d "$here/bin/build" ]; then
-    [ -x "$here/$install" ] || _return 98 "$install not executable" || return $?
+  if [ ! -d "$here/build" ]; then
+    [ -x "$here/$install" ] || _return 98 "$here/$install not executable" || return $?
     "$here/$install" || _return 97 "$install not executable" || return $?
-    [ -d "$here/bin/build" ] || _return 96 "$install did not create bin/build" || return $?
+    [ -d "$here/build" ] || _return 96 "$install did not create $here/build" || return $?
   fi
   # shellcheck source=/dev/null
   source "$here/../bin/build/tools.sh" || _return 42 tools.sh "$@" || return $?

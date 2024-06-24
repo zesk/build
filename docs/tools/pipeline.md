@@ -8,8 +8,8 @@
 
 ### `dotEnvConfigure` - Load `.env` and optional `.env.local` into bash context
 
-Loads "./.env" which is the current project configuration file
-Also loads "./.env.local" if it exists
+Loads `.env` which is the current project configuration file
+Also loads `.env.local` if it exists
 Generally speaking - these are NAME=value files and should be parsable by
 bash and other languages.
 
@@ -17,12 +17,14 @@ Requires the file `.env` to exist and is loaded via bash `source` and all variab
 
 If `.env.local` exists, it is also loaded in a similar manner.
 
-The previous version of this function was `dotEnvConfig` and is now deprecated, and outputs a warning.
-
 #### Usage
 
-    dotEnvConfigure
+    dotEnvConfigure where
     
+
+#### Arguments
+
+
 
 #### Exit codes
 
@@ -31,7 +33,7 @@ The previous version of this function was `dotEnvConfig` and is now deprecated, 
 
 #### Environment
 
-Loads `./.env` and `./.env.local`, use with caution.
+Loads `.env` and `.env.local`, use with caution on trusted content only
 
 #### See Also
 
