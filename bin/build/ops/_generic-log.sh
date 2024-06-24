@@ -13,7 +13,11 @@ _return() {
 __return() {
   "$@" || _return $? "$@" || return $?
 }
-# IDENTICAL _user 8
+
+# IDENTICAL _user 11
+# Usage: {fn} user
+# Summary: Quick user database look up
+# Look user up, set environment HOME and APPLICATION_USER and output user if valid
 _user() {
   local userDatabase=/etc/passwd
   export APPLICATION_USER HOME
@@ -21,6 +25,19 @@ _user() {
   HOME=$(grep "^$APPLICATION_USER:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $APPLICATION_USER in $userDatabase" || return $?
   [ -d "$HOME" ] || _return $? "User $APPLICATION_USER HOME=$HOME is not a directory" || return $?
   printf "%s\n" "$APPLICATION_USER"
+}
+
+# Usage: {fn} user logPath
+# Make `user` owner of all files in `logPath`
+_ownFiles() {
+  local user="$1" logPath="$2"
+  if [ -n "$(find "$logPath" -type f -print -quit)" ]; then
+    if ! find "$logPath" -type f -or -type d -print0 | xargs -0 chown "$user:"; then
+      printf "%s: %s (%s)\n" "No files found in" "$logPath" "$user"
+    else
+      printf "%s: %s -> %s\n" "Owner of files in" "$logPath" "$user"
+    fi
+  fi
 }
 
 # Usage: {fn} user logPath
@@ -44,17 +61,6 @@ _logger() {
   __return cd "$logPath" || return $?
 
   exec setuidgid "$user" multilog t "$logPath"
-}
-
-_ownFiles() {
-  local user="$1" logPath="$2"
-  if [ -n "$(find "$logPath" -type f -print -quit)" ]; then
-    if ! find "$logPath" -type f -print0 | xargs -0 chown "$user:"; then
-      printf "%s: %s (%s)\n" "No files found in" "$logPath" "$user"
-    else
-      printf "%s: %s -> %s\n" "Owner of files in" "$logPath" "$user"
-    fi
-  fi
 }
 
 _logger "{APPLICATION_USER}" "{LOG_PATH}"
