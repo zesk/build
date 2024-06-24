@@ -47,21 +47,27 @@ __assertFileContainsHelper() {
   local displayName="$2"
   local this="$3"
   local file="$4"
-  local found args expected verb
+  local found args expected verb notVerb message
 
   shift 4 || _assertFailure "$this" "Missing argument" || return $?
   [ -f "$file" ] || _assertFailure "$this" "$displayName is not a file: $*"
 
   case "$success" in
-    true) verb="contains" ;;
-    false) verb="does not contain" ;;
+    true)
+      verb="contains"
+      notVerb="does not contain"
+      ;;
+    false)
+      verb="does not contain"
+      notVerb="contains"
+      ;;
     *) _assertFailure "Invalid success ($success) passed" || return $? ;;
   esac
   args=("$@")
   while [ $# -gt 0 ]; do
     expected="$1"
-    [ -n "$expected" ] || _assertFailure "$this" "Blank match passed: $args[*]" || return $?
-    if grep -q "$(quoteGrepPattern "$expected")" "$file"; then
+    [ -n "$expected" ] || _assertFailure "$this" "Blank match passed: ${args[*]}" || return $?
+    if grep -q -e "$(quoteGrepPattern "$expected")" "$file"; then
       found=true
     else
       found=false
@@ -70,7 +76,7 @@ __assertFileContainsHelper() {
       # shellcheck disable=SC2059
       _assertSuccess "$this" "$displayName $verb strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
     else
-      message="$(printf -- "%s %s %s\n%s" "$displayName" "$verb string:" "$(consoleCode "$expected")" "$(dumpPipe "$displayName" <"$file")")"
+      message="$(printf -- "%s %s %s\n%s" "$displayName" "$notVerb string:" "$(consoleCode "$expected")" "$(dumpPipe "$displayName" <"$file")")"
       _assertFailure "$this" "$message" || return $?
     fi
     shift
@@ -105,10 +111,11 @@ __assertFileDoesNotContainThis() {
 _assertExitCodeHelper() {
   local argument savedArguments
   local usage
-  local isExitCode errorsOk debugAssertRun
+  local isExitCode errorsOk debugAssertRun dumpFlag
   local expected bin
   local outputFile errorFile
-  local saved actual failureText
+  local stderrTitle stdoutTitle
+  local saved actual failureText message textCommand
   local outputContains outputNotContains stderrContains stderrNotContains
 
   # --not
@@ -131,7 +138,7 @@ _assertExitCodeHelper() {
   stderrContains=()
   stderrNotContains=()
   debugAssertRun=false
-
+  dumpFlag=false
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -163,6 +170,9 @@ _assertExitCodeHelper() {
         shift || :
         [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         outputNotContains+=("$1")
+        ;;
+      --dump)
+        dumpFlag=true
         ;;
       --not)
         isExitCode=
@@ -209,26 +219,40 @@ _assertExitCodeHelper() {
   if test $errorsOk && [ ! -s "$errorFile" ]; then
     printf "%s%s %s – %s\n" "$(clearLine)" "$(consoleError "${usage#_}")" "$(consoleCode "$bin ${savedArguments[*]}")" "$(consoleWarning "--stderr-ok used but is NOT necessary:")"
   fi
+  textCommand="$bin $*"
+  stderrTitle="$textCommand $(consoleBoldRed stderr)"
+  stdoutTitle="$textCommand $(consoleLabel stdout)"
   if [ ${#stderrContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$bin $* $(consoleBoldRed stderr)" "$usage" "$errorFile" "${stderrContains[@]}" || return $?
+    __assertFileContainsThis "$stderrTitle" "$usage" "$errorFile" "${stderrContains[@]}" || return $?
   fi
   if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$bin $* $(consoleBoldRed stderr)" "$usage" "$errorFile" "${stderrNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$stderrTitle" "$usage" "$errorFile" "${stderrNotContains[@]}" || return $?
   fi
   if [ ${#outputContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$bin $* $(consoleBoldBlue stdout)" "$usage" "$outputFile" "${outputContains[@]}" || return $?
+    __assertFileContainsThis "$stdoutTitle" "$usage" "$outputFile" "${outputContains[@]}" || return $?
   fi
   if [ ${#outputNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$bin $* $(consoleBoldBlue stdout)" "$usage" "$outputFile" "${outputNotContains[@]}" || return $?
+    __assertFileDoesNotContainThis "$stdoutTitle" "$usage" "$outputFile" "${outputNotContains[@]}" || return $?
   fi
   if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     # Failure
-    _assertFailure "${usage#_}" "$(consoleCode "${savedArguments[*]}")" \
-      "$(consoleError "$actual")=$failureText" "$(consoleSuccess "$expected")=$(dumpPipe <"$outputFile")"
+    message=$(
+      printf "%s %s ➜ %s%s\n%s\n%s\n" \
+        "$textCommand" \
+        "$(printf -- "\"%s%s%s\"" "$(consoleCode)" "${savedArguments[*]}" "$(consoleReset)")" \
+        "$(consoleError "$actual") actual, $failureText $(consoleSuccess "$expected")" \
+        "$(consoleReset)" \
+        "$(dumpPipe "$stdoutTitle" <"$outputFile")" \
+        "$(dumpPipe "$stderrTitle" <"$errorFile")"
+    )
     rm -rf "$outputFile" "$errorFile" || :
-    _environment "${usage#_} Failed" || return $?
+    _assertFailure "${usage#_}" "$message" || return $?
   fi
-  _assertSuccess "${usage#_}" "$(consoleCode "${savedArguments[*]}")" "$(consoleSuccess "$actual")" || return $?
+  _assertSuccess "${usage#_}" "$(consoleSuccess "$actual")" "$(consoleCode "${savedArguments[*]}")" || :
+  if $dumpFlag; then
+    dumpPipe "$stdoutTitle" <"$outputFile" || :
+    dumpPipe "$stderrTitle" <"$errorFile" || :
+  fi
   rm -rf "$outputFile" "$errorFile" || :
   return 0
 }

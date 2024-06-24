@@ -7,46 +7,38 @@
 # Docs: o ./docs/_templates/tools/hook.md
 # Test: o ./test/tools/hook-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Actual implementation of `runHook` and `runOptionalHook`
 # See: runHook
 #
 _runHookWrapper() {
   local usageFunction binary hook whichArgs applicationHome requireHook
+  local argument
 
   usageFunction="$1"
   shift || :
 
-  requireHook=
+  requireHook=false
   whichArgs=()
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      "$usageFunction" "$errorArgument" "blank argument" || return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --require)
-        requireHook=1
+        requireHook=true
         ;;
       --application)
         shift || :
-        if ! applicationHome=$(usageArgumentDirectory "$usageFunction" applicationHome "$1"); then
-          return $errorArgument
-        fi
+        applicationHome=$(usageArgumentDirectory "$usageFunction" applicationHome "${1-}") || return $?
         whichArgs=(--application "$applicationHome")
         ;;
       *)
-        binary="$1"
+        binary="$argument"
         shift || :
         if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
-          if test "$requireHook"; then
+          if $requireHook; then
             # runHook
-            "$usageFunction" "$errorArgument" "Hook not found $(consoleCode "$binary")" || return $?
+            __failArgument "$usageFunction" "Hook not found $(consoleCode "$binary")" || return $?
           else
             if buildDebugEnabled; then
               printf "%s %s %s %s\n" "$(consoleWarning "No hook")" "$(consoleCode "$binary")" "$(consoleWarning "in this project:")" "$(consoleCode "$applicationHome")"
@@ -62,9 +54,9 @@ _runHookWrapper() {
         return $?
         ;;
     esac
-    shift || "$usageFunction" "$errorArgument" "No more arguments" || return $?
+    shift || __failArgument "$usageFunction" "No more arguments" || return $?
   done
-  "$usageFunction" "$errorArgument" "hookName required" || return $?
+  __failArgument "$usageFunction" "hookName required" || return $?
 }
 
 # Run a hook in the project located at `./bin/hooks/`
@@ -126,25 +118,22 @@ _runOptionalHook() {
 # Exit Code: 0 - If all hooks exist
 # Test: testHookSystem
 hasHook() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local binary
   local applicationHome
 
   applicationHome="."
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _hasHook "$errorArgument" "blank argument" || return $?
-    fi
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$1" in
       --application)
         shift || :
-        if ! applicationHome=$(usageArgumentDirectory _hasHook applicationHome "$1"); then
-          return $errorArgument
-        fi
+        applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
         ;;
       *)
-        if ! binary="$(whichHook --application "$applicationHome" "$1")"; then
-          return "$errorEnvironment"
-        fi
+        binary="$(whichHook --application "$applicationHome" "$argument")" || return 1
         ;;
     esac
     shift || :
@@ -172,17 +161,18 @@ _hasHook() {
 #
 # Test: testHookSystem
 whichHook() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local applicationHome binary p e
 
   applicationHome="."
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _whichHook "$errorArgument" "blank argument" || return $?
-    fi
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --application)
         shift || :
-        applicationHome=$(usageArgumentDirectory "_whichHook" applicationHome "$1") || return $?
+        applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
         ;;
       *)
         for p in "$applicationHome/bin/hooks" "$applicationHome/bin/build/hooks"; do
@@ -195,12 +185,12 @@ whichHook() {
             [ ! -f "$binary" ] || _environment "$binary exists but is not executable and will be ignored" || return $?
           done
         done
-        return "$errorArgument"
+        return 1
         ;;
     esac
     shift || :
   done
-  return "$errorArgument"
+  __failArgument "$usage" "no arguments" || return $?
 }
 _whichHook() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

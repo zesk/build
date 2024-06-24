@@ -5,10 +5,10 @@
 # Depends: assert.sh usage.sh
 #
 declare -a tests
-tests+=(incrementorTests)
+tests+=(testIncrementor)
 
-incrementorTests() {
-  local i
+testIncrementor() {
+  local i nl
 
   i=$(incrementor 1) && assertEquals "$i" 1 || return $?
   i=$(incrementor) && assertEquals "$i" 2 || return $?
@@ -24,4 +24,12 @@ incrementorTests() {
   i=$(incrementor) && assertEquals "$i" -1 || return $?
   i=$(incrementor) && assertEquals "$i" 0 || return $?
   i=$(incrementor) && assertEquals "$i" 1 || return $?
+
+  nl=$'\n'
+  assertEquals "$(incrementor 1 a b)" "1${nl}1" || return $?
+  assertEquals "$(incrementor a b 1 c)" "2${nl}2${nl}1" || return $?
+  assertEquals "$(incrementor a b 1 c)" "3${nl}3${nl}1" || return $?
+  assertEquals "$(incrementor a b 1 c)" "4${nl}4${nl}1" || return $?
+  assertEquals "$(incrementor a 1 c)" "5${nl}1" || return $?
+  assertEquals "$(incrementor a b 1 c)" "6${nl}5${nl}1" || return $?
 }

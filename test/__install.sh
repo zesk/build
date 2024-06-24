@@ -1,9 +1,8 @@
 #!/bin/bash
 #
-# Dead simple PHP build
+# Copy of __install
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
-#
 
 # IDENTICAL __install 22
 set -eou pipefail
@@ -28,7 +27,4 @@ __install() {
   fi
 }
 
-__install clearLine || :
-if ! phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs; then
-  _fail "Build failed"
-fi
+__install consoleOrange "$@"

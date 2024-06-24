@@ -13,8 +13,8 @@
 dumpPipe() {
   local usage="_${FUNCNAME[0]}"
   local argument
-  local names item nLines nBytes decoration symbol
-  local item width
+  local name names item nLines nBytes decoration symbol
+  local item width suffix
 
   local showLines
 
@@ -56,19 +56,30 @@ dumpPipe() {
 
   name=
   [ ${#names[@]} -eq 0 ] || name=$(consoleInfo "${names[*]}: ") || :
-  nLines=$(($(wc -l <"$item" | cut -f 1 -d' ') + 0))
+  nLines=$(($(wc -l <"$item") + 0))
   nBytes=$(($(wc -c <"$item") + 0))
   [ ${#symbol} -eq 0 ] || symbol="$symbol "
+  if [ $nBytes -eq 0 ]; then
+    suffix=$(consoleOrange "(empty)")
+  elif [ "$showLines" -lt "$nLines" ]; then
+    suffix="$(consoleWarning "(showing $showLines $(plural "$showLines" line lines))")"
+  else
+    suffix="$(consoleSuccess "(shown)")"
+  fi
   # shellcheck disable=SC2015
   printf "%s%s%s %s, %s %s %s\n" \
     "$(clearLine)" \
     "$name" \
     "$nLines" "$(plural "$nLines" line lines)" \
     "$nBytes" "$(plural "$nBytes" byte bytes)" \
-    "$([ "$showLines" -lt "$nLines" ] && consoleWarning "(showing $showLines $(plural "$showLines" line lines))" || consoleSuccess "(shown)")"
+    "$suffix"
+  if [ $nBytes -eq 0 ]; then
+    rm -rf "$item" || :
+    return 0
+  fi
   decoration="$(consoleCode "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
-  printf "%s\n%s\n%s\n" "$decoration" "$(head -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol$(consoleCode)" "$(consoleReset)")" "$decoration"
+  printf "%s\n%s\n%s\n" "$decoration" "$(head -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(consoleReset)")" "$decoration"
   rm -rf "$item" || :
 }
 _dumpPipe() {

@@ -72,7 +72,7 @@ _buildCacheDirectory() {
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by default.
 #
- buildEnvironmentLoad() {
+buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
   local env file found
 
@@ -928,7 +928,7 @@ betterType() {
 # Uses mv and clobbers always
 #
 renameLink() {
-  if mv --version >/dev/null; then
+  if mv --version >/dev/null 2>&1; then
     # gnu version supports -T
     mv -fT "$@"
   else

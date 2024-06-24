@@ -35,10 +35,8 @@ deployedHostArtifact="./.deployed-hosts"
 deployBuildEnvironment() {
   local argument deployArgs deployHome applicationId applicationPath
   local buildEnv="./.build.env"
-  local envFile envFiles envFilesLoaded
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local envFile envFiles envFilesLoaded dryRun
+  local usage="_${FUNCNAME[0]}"
 
   envFiles=()
   envFilesLoaded=()
@@ -50,6 +48,7 @@ deployBuildEnvironment() {
   applicationPath=
   applicationId=
   userHosts=()
+  dryRun=false
   targetPackage=
   deployArgs=()
   while [ $# -gt 0 ]; do
@@ -83,7 +82,7 @@ deployBuildEnvironment() {
       --id)
         shift
         [ -n "${1-}" ] || __failArgument "$usage" "blank $argument argument" || return $?
-        applicationId="${1-}"
+        applicationId="$1"
         ;;
       --application)
         shift
@@ -94,12 +93,16 @@ deployBuildEnvironment() {
         [ -n "${1-}" ] || __failArgument "$usage" "blank $argument argument" || return $?
         targetPackage="${1-}"
         ;;
+      --dry-run)
+        dryRun=true
+        ;;
       *)
         userHosts+=("$argument")
         ;;
     esac
     shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
   done
+
   if [ ! -f "$buildEnv" ]; then
     consoleWarning "No .build.env found - environment must be already configured" 1>&2
   fi
@@ -151,12 +154,16 @@ deployBuildEnvironment() {
   # shellcheck disable=SC2016
   [ -n "$targetPackage" ] || __failArgument "$usage" 'Requires non-blank `--target` or `BUILD_TARGET`' || return $?
 
-  deployArgs=(--id "$APPLICATION_ID" --home "${DEPLOY_REMOTE_PATH%/}" --application "${APPLICATION_REMOTE_PATH%/}" "${userHosts[@]}")
+  deployArgs=(--id "$applicationId" --home "${deployHome%/}" --application "${applicationPath%/}" "${userHosts[@]}")
 
   # shellcheck disable=SC2059
   statusMessage consoleInfo "Deploying:$(printf " \"$(consoleCode "%s")\"" "${deployArgs[@]}")" || :
-  ___deployBuildEnvironment "${deployArgs[@]}" || return $?
-  printf "\n%s\n" "$(bigText --bigger Success)" | wrapLines "$(consoleSuccess)    " "$(consoleReset)"
+  if $dryRun; then
+    printf "\n%s %s\b" ___deployBuildEnvironment "$(printf "\"%s\" " "${deployArgs[@]}")"
+  else
+    ___deployBuildEnvironment "${deployArgs[@]}" || return $?
+    printf "\n%s\n" "$(bigText --bigger Success)" | wrapLines --fill " " "$(consoleSuccess)    " "$(consoleReset)"
+  fi
 }
 
 #
@@ -214,7 +221,8 @@ _deployBuildEnvironment() {
 # Argument: --target targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
-  local argument targetPackage revertFlag cleanupFlag applicationId applicationPath debuggingFlag start width deployHome firstFlags
+  local argument targetPackage revertFlag cleanupFlag name
+  local applicationId applicationPath debuggingFlag start width deployHome firstFlags
   local usage="_${FUNCNAME[0]}"
 
   targetPackage=
@@ -224,7 +232,7 @@ deployRemoteFinish() {
   applicationPath=
   debuggingFlag=false
   deployHome=
-  firstFlags=
+  firstFlags=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -252,30 +260,29 @@ deployRemoteFinish() {
         firstFlags+=("$argument")
         ;;
       --home)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
         deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
         ;;
       --id)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "blank $argument $argument" || return $?
         applicationId="$1"
-        [ -n "$applicationId" ] || __failArgument "$usage" "Requires non-blank $argument" || return $?
         ;;
       --application)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
+        shift
+        applicationPath=$(usageArgumentFileDirectory "$usage" applicationPath "${1-}") || return $?
         ;;
       --target)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "blank $argument $argument" || return $?
         targetPackage="${1-}"
         ;;
       *)
         __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
   done
-
-  __usageEnvironment "$usage" dotEnvConfigure || return $?
 
   # Check arguments are non-blank and actually supplied
   for name in deployHome applicationId applicationPath; do
@@ -332,8 +339,8 @@ _deployRemoteFinish() {
 # Usage: {fn} [ --first ] deployHome applicationId applicationPath [ targetPackage ]
 # Argument: --first - Optional. Flag. Undo the first deployment.
 # Argument: deployHome - Required. Directory. The deployment repository database home.
-# Argument: applicationId - Required. The version to deploy (string)
-# Argument: applicationPath - Required. Directory. The application deployed path.
+# Argument: applicationId - Required. The version to revert FROM (string)
+# Argument: applicationPath - Required. Directory. The FROM application deployed path.
 # Argument: targetPackage - Optional. Filename. Package name, defaults to `BUILD_TARGET`
 # See: BUILD_TARGET.sh
 _deployRevertApplication() {
@@ -379,19 +386,21 @@ _deployRevertApplication() {
       __failArgument "$usage" "$name is required" || return $?
     fi
   done
+
   if ! previousChecksum=$(deployPreviousVersion "$deployHome" "$applicationId") || [ -z "$previousChecksum" ]; then
     if ! test "$firstDeployment"; then
       __failEnvironment "$usage" "Unable to get previous checksum for $versionName" || return $?
     fi
   else
     printf "%s %s -> %s\n" "$(consoleInfo "Reverting installation")" "$(consoleOrange "$applicationId")" "$(consoleGreen "$previousChecksum")"
-    if ! deployApplication --revert --home "$deployHome" --id "$previousChecksum" --application "$applicationPath" --target "$targetPackage"; then
+    if ! deployApplication --revert --home "$deployHome" --id "$applicationId" --application "$applicationPath" --target "$targetPackage"; then
       __failEnvironment "$usage" "Undo deployment to $previousChecksum failed $applicationPath - system is unstable" || return $?
     fi
   fi
   if ! runOptionalHook deploy-revert "$deployHome" "$applicationId"; then
     printf "%s %s\n" "$(consoleCode "deploy-revert")" "$(consoleError "hook failed, continuing anyway")"
   fi
+  consoleSuccess "Application successfully reverted to version $(consoleCode "$applicationId")" || :
   return 0
 }
 __deployRevertApplication() {
@@ -415,6 +424,10 @@ _deploySuccessful() {
 # Argument: --target target - Optional. String. Build target file base name, defaults to `app.tar.gz`
 # Argument: --deploy - Default. Flag. deploy an application to a remote host
 # Argument: --revert - Optional. Flag. Reverses a deployment
+# Argument: --commands - Optional. Flag. Display commands sent to server but do not execute them. For debugging or testing. Implies --skip-ssh-host
+# Argument: --skip-ssh-host - Optional. Flag. Do not add ssh hosts to known hosts file.
+# Argument: --add-ssh-host - Optional. Flag. Add hosts to known hosts file in SSH if not already added.
+
 # Argument: --cleanup - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
 # Argument: --help - Optional. Flag. Show help
 # Argument: --debug - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
@@ -466,11 +479,12 @@ _deploySuccessful() {
 deployToRemote() {
   local initTime start deployArgs exitCode
   local makeDirectory
-  local commandSuffix
+  local commandSuffix color
 
   local deployFlag revertFlag debuggingFlag cleanupFlag
 
   local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
+  local showCommands
   local verb temporaryCommandsFile
   local commonArguments
   local nameWidth=50
@@ -500,6 +514,8 @@ deployToRemote() {
   buildTarget=
   remoteArgs=()
   firstFlags=()
+  showCommands=false
+  addSSHHosts=true
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -508,6 +524,12 @@ deployToRemote() {
         shift || :
         [ -z "$buildTarget" ] || __failArgument "$usage" "$argument supplied twice" || return $?
         buildTarget="$1"
+        ;;
+      --skip-ssh-host)
+        addSSHHosts=false
+        ;;
+      --add-ssh-host)
+        addSSHHosts=true
         ;;
       --home)
         shift || :
@@ -528,8 +550,8 @@ deployToRemote() {
         applicationId="$1"
         ;;
       --help)
-        _deployToRemote 0
-        return 0
+        "$usage" 0
+        return $?
         ;;
       --deploy)
         if test "$deployFlag"; then
@@ -554,6 +576,11 @@ deployToRemote() {
         ;;
       --debug)
         debuggingFlag=1
+        ;;
+      --commands)
+        showCommands=true
+        # Technically, you can enable after this `--commands --add-ssh-hosts` on CLI
+        addSSHHosts=false
         ;;
       *)
         # Breaks a single argument "A B C" into three arguments "A" "B" "C" by space
@@ -591,9 +618,14 @@ deployToRemote() {
   [ -n "$deployHome" ] || __failArgument "$usage" "missing deployHome" || return $?
 
   [ -n "$applicationPath" ] || __failArgument "$usage" "missing applicationPath" || return $?
+
   if [ -z "$buildTarget" ]; then
-    buildTarget=$(deployPackageName "$deployHome") || __failEnvironment "$usage" "Missing applicationPath" || return $?
+    buildTarget=$(deployPackageName "$deployHome") || __failEnvironment "$usage" deployPackageName "$deployHome" || return $?
   fi
+  if [ 0 -eq ${#userHosts[@]} ]; then
+    __failArgument "$usage" "No user hosts provided" || return $?
+  fi
+
   #
   # Current IP
   #
@@ -601,78 +633,33 @@ deployToRemote() {
     __failEnvironment "$usage" "Unable to determine IP address: $currentIP" || return $?
   fi
 
-  if [ 0 -eq ${#userHosts[@]} ]; then
-    __failEnvironment "$usage" "No user hosts provided?" || return $?
+  if $addSSHHosts; then
+    # sshAddKnownHost
+    for userHost in "${userHosts[@]}"; do
+      host="${userHost##*@}"
+      __environment sshAddKnownHost "$host" || return $?
+    done
   fi
 
-  # sshAddKnownHost
-  for userHost in "${userHosts[@]}"; do
-    host="${userHost##*@}"
-    __environment sshAddKnownHost "$host" || return $?
-  done
-
+  temporaryCommandsFile=$(mktemp) || __failEnvironment "$usage" "mktemp failed" || return $?
   commonArguments=("${firstFlags[@]+${firstFlags[@]}}" "--target" "$buildTarget" "--home" "$deployHome" "--id" "$applicationId" "--application" "$applicationPath")
   if test $revertFlag; then
     verb=Revert
+    color="$(consoleOrange)"
     deployArg=--revert
-    if [ ! -f "$deployedHostArtifact" ]; then
-      _deploySuccessful
-      return 0
-    fi
-    bigText "$verb" | wrapLines "$(consoleOrange)" "$(consoleReset)"
   elif test $cleanupFlag; then
     # Clean up deployed target
     applicationPath="$deployHome/$applicationId/app"
     verb="Clean up"
-    deployArgs=--cleanup
-    if [ ! -f "$deployedHostArtifact" ]; then
-      consoleError "$deployedHostArtifact file NOT found ... no remotes changed"
-      exit 99
-    fi
-    bigText "$verb" | wrapLines "$(consoleBoldBlue)" "$(consoleReset)"
+    color="$(consoleBoldBlue)"
+    deployArg=--cleanup
   else
-
     #
     #  ▛▀▖▛▀▘▛▀▖▌  ▞▀▖▌ ▌
     #  ▌ ▌▙▄ ▙▄▘▌  ▌ ▌▝▞
     #  ▌ ▌▌  ▌  ▌  ▌ ▌ ▌
     #  ▀▀ ▀▀▘▘  ▀▀▘▝▀  ▘
     #
-    verb="Deploy"
-    bigText "$verb" | wrapLines "$(consoleGreen)" "$(consoleReset)"
-
-    {
-      consoleNameValue $nameWidth "Current IP:" "$currentIP"
-      consoleNameValue $nameWidth "deployHome:" "$deployHome"
-      consoleNameValue $nameWidth "applicationPath:" "$applicationPath"
-      consoleNameValue $nameWidth "applicationId:" "$applicationId"
-      for userHost in "${userHosts[@]}"; do
-        consoleNameValue $nameWidth "Host:" "${userHost}"
-      done
-    } || :
-
-    # reset artifact file
-    if ! temporaryCommandsFile=$(mktemp); then
-      __failEnvironment "$usage" "mktemp failed" || return $?
-    fi
-    printf "" >"$deployedHostArtifact"
-    #
-    # Create directories and upload the app.tar.gz
-    #
-    for userHost in "${userHosts[@]}"; do
-      start=$(beginTiming) || :
-      printf "%s: %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Setting up")"
-      if ! for makeDirectory in "$applicationPath" "$deployHome" "$deployHome/$applicationId"; do
-        printf 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
-      done | ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e; then
-        __failEnvironment "$usage" "No permission to create directories" || return $?
-      fi
-      printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$deployHome/$applicationId/$buildTarget")"
-      if ! printf '@put %s %s' "$buildTarget" "$deployHome/$applicationId/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
-        __failEnvironment "$usage" "$userHost failed" || return $?
-      fi
-      reportTiming "$start" "Deployment setup completed on $(consoleGreen "$userHost") in " || :
-    done
     commandSuffix=''
     if
       ! __deployCommandsFile "$deployHome/$applicationId/app" \
@@ -686,6 +673,30 @@ deployToRemote() {
     then
       __failEnvironment "$usage" "Generating commands file for $buildTarget expansion" || return $?
     fi
+    if $showCommands; then
+      cat "$temporaryCommandsFile"
+      rm "$temporaryCommandsFile" || :
+      return 0
+    fi
+
+    verb="Deploy"
+    bigText "$verb" | wrapLines "$(consoleGreen)" "$(consoleReset)"
+
+    {
+      consoleNameValue $nameWidth "Current IP:" "$currentIP"
+      consoleNameValue $nameWidth "Deploy Home:" "$deployHome"
+      consoleNameValue $nameWidth "Application Path:" "$applicationPath"
+      consoleNameValue $nameWidth "Application ID:" "$applicationId"
+      consoleNameValue $nameWidth "Package:" "$buildTarget"
+      for userHost in "${userHosts[@]}"; do
+        consoleNameValue $nameWidth "Host:" "${userHost}"
+      done
+    } || :
+
+    # reset artifact file
+    printf "" >"$deployedHostArtifact"
+    __usageEnvironment "$usage" __deployUploadPackage "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
+
     # wrapLines "COMMANDS: $(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"
     for userHost in "${userHosts[@]}"; do
       start=$(beginTiming) || :
@@ -696,7 +707,7 @@ deployToRemote() {
         consoleInfo "DEBUG: Commands file is:"
         wrapLines "$(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"
       fi
-      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | wrapLines "$(consoleBoldBlue)" "$(consoleReset)"; then
+      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | wrapLines "$(consoleOrange "$userHost"): $(consoleBoldBlue)" "$(consoleReset)"; then
         __failEnvironment "$usage" "Unable to deploy to $host" || return $?
       fi
       consoleInfo "::: END $host output"
@@ -708,6 +719,22 @@ deployToRemote() {
     return 0
   fi
 
+  __usageEnvironment "$usage" __deployCommandsFile "$deployHome/$applicationId/app" "$deployArg" "${commonArguments[@]}" >"$temporaryCommandsFile" || return $?
+  if $showCommands; then
+    __usageEnvironment "$usage" cat "$temporaryCommandsFile" || return $?
+    rm -rf "$temporaryCommandsFile" || :
+    return 0
+  fi
+  bigText "$verb" | wrapLines "$color" "$(consoleReset)"
+  if [ ! -f "$deployedHostArtifact" ]; then
+    if test $revertFlag; then
+      _deploySuccessful
+      return 0
+    else
+      consoleError "$deployedHostArtifact file NOT found ... no remotes changed"
+      exit 99
+    fi
+  fi
   #
   #     ▜                                       ▐
   #  ▞▀▖▐ ▞▀▖▝▀▖▛▀▖▌ ▌▛▀▖ ▞▀▖▙▀▖ ▙▀▖▞▀▖▌ ▌▞▀▖▙▀▖▜▀
@@ -719,8 +746,7 @@ deployToRemote() {
     host="${userHost##*@}"
     if grep -q "$host" "$deployedHostArtifact"; then
       printf "%s %s (%s) " "$(consoleSuccess "$verb")" "$(consoleCode "$userHost")" "$(consoleBoldRed "$applicationPath")"
-      # Runs --revert or --cleanup as configured above
-      if ! __deployRemoteAction "$userHost" "$deployHome/$applicationId/app" "$deployArgs" "${commonArguments[@]}"; then
+      if ! ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"; then
         printf "%s %s %s\n" "$(consoleError "$verb failed on")" "$(consoleCode "$userHost")" "$(consoleError "- continuing")"
         exitCode=1
       fi
@@ -767,25 +793,6 @@ __deployCommandsFile() {
   printf "%s/bin/build/tools.sh __environment deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
 }
 
-#
-# Usage: {fn} userHost remoteContext deployArg [ ... ]
-#
-#
-__deployRemoteAction() {
-  local userHost remoteContext deployArg
-
-  userHost="${1-}"
-  shift || :
-  remoteContext="${1-}"
-  shift || :
-  deployArg="${1-}"
-  shift || :
-
-  if ! __deployCommandsFile "$remoteContext" "$deployArg" "$@" | ssh -T "$userHost" bash --noprofile -s -e; then
-    _environment "Failed to __deployCommandsFile $remoteContext $deployArg $* - $userHost" || return $?
-  fi
-}
-
 __deploySSHOptions() {
   if buildDebugEnabled; then
     if [ "$BUILD_DEBUG" -ge 3 ]; then
@@ -798,4 +805,28 @@ __deploySSHOptions() {
     # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
     printf %s "-q"
   fi
+}
+
+# Usage: {fn} applicationPath remotePath buildTarget [ userHost ... ]
+# Create base directories and upload package
+__deployUploadPackage() {
+  local start makeDirectory userHost
+  local applicationPath=$1 remotePath=$2 buildTarget=$3
+
+  shift 3 || :
+  #
+  # Create directories and upload the app.tar.gz
+  #
+  for userHost in "$@"; do
+    start=$(beginTiming) || :
+    printf "%s: %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Setting up")"
+    __usageEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(for makeDirectory in "$applicationPath" "$remotePath"; do
+      printf 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
+    done) || return $?
+    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remotePath/$buildTarget")"
+    if ! printf '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
+      __failEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost failed " || return $?
+    fi
+    reportTiming "$start" "Deployment setup completed on $(consoleGreen "$userHost") in " || :
+  done
 }
