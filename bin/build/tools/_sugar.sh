@@ -10,7 +10,7 @@
 # Usage: {fn} title [ items ... ]
 _list() {
   local title
-  title="${1-§}" && shift && printf "%s\n%s\n" "$title" "$(printf -- "- %s\n" "$@")"
+  title="${1-"§"}" && shift && printf "%s\n%s\n" "$title" "$(printf -- "- %s\n" "$@")"
 }
 
 # Critical exit - exit immediately
@@ -38,7 +38,7 @@ _exit() {
 # Argument: message ... - String. Optional. Message to output.
 _return() {
   local code
-  code="${1-1}" && shift && printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2 && return "$code"
+  code="${1-1}" && shift && printf "%s ❌ (%d)\n" "${*-"§"}" "$code" 1>&2 && return "$code"
 }
 
 # Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.

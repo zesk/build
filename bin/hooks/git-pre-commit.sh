@@ -54,6 +54,7 @@ __hookGitPreCommit() {
     while read -r file; do changed+=("$file"); done <"$changedLists/sh"
     rm -rf "$changedLists" || :
     __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
+    __usageEnvironment "$usage" identicalCheckShell --repair bin/build/identical --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
   fi
   rm -rf "$changedLists" || :
 

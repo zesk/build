@@ -6,12 +6,12 @@
 #
 # documentTemplate: ./docs/_templates/__binary.md
 
-# IDENTICAL __loader1 11
-set -eou pipefail
+# IDENTICAL __tools 11
 # Load zesk build and run command
-__loader() {
+__tools() {
+  set -eou pipefail
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/tools.sh"; then
+  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
     "$@" || return $?
   else
     exec 1>&2 && printf 'FAIL: %s\n' "$@"
@@ -42,4 +42,4 @@ ___buildBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__loader __buildBuild "$@"
+__tools __buildBuild "$@"
