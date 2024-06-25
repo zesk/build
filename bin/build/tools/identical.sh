@@ -174,13 +174,9 @@ identicalCheck() {
               if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
                 badFiles+=("$tokenFileName")
                 badFiles+=("$searchFile")
-                clearLine
-                consoleSuccess "Unable to repair $(consoleValue "$token") in $(consoleCode "$searchFile")"
-                printf "\n\n\n"
+                consoleSuccess "$(clearLine)Unable to repair $(consoleValue "$token") in $(consoleCode "$searchFile")" 1>&2
               else
-                clearLine
-                consoleSuccess "Repaired $(consoleValue "$token") in $(consoleCode "$searchFile")"
-                printf "\n\n\n"
+                consoleSuccess "$(clearLine)Repaired $(consoleValue "$token") in $(consoleCode "$searchFile")" 1>&2
               fi
             else
               badFiles+=("$tokenFileName")
