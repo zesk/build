@@ -1,0 +1,57 @@
+1
+2
+3
+4
+# SAME-SAME testToken 3
+- TestToken
+- TestToken
+  Indented
+9
+10
+11
+12
+# SAME-SAME testToken 4
+- IGNORED and will not be detected in source for repair
+15
+16
+17
+# SAME-SAME testToken 2
+- TestToken
+- TestToken
+21
+22
+# SAME-SAME testToken 10
+- Left thumb
+- Left index
+- Left pointer
+- Left pinky
+- Left ring
+- Right thumb
+- Right index
+- Right pointer
+- Right pinky
+- Right ring
+#
+#
+# SAME-SAME test10 10
+- Left thumb
+- Left index
+- Left pointer
+- Left pinky
+- Left ring
+- Right thumb
+- Right index
+- Right pointer
+- Right pinky
+- Right ring
+#
+#
+40
+# SAME-SAME testToken 1
+- Left thumb
+# SHOULD APPEAR
+# SAME-SAME testToken 1
+- Left thumb
+# SHOULD APPEAR
+# SHOULD APPEAR
+# SHOULD APPEAR
