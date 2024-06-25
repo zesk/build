@@ -3,11 +3,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-errorFailures=100
-
 # Usage: {fn} --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
 # Argument: --extension extension - Required. String. One or more extensions to search for in the current directory.
 # Argument: --prefix prefix - Required. String. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
@@ -79,10 +74,7 @@ identicalCheck() {
       --cd)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         rootDir=$1
-        if [ ! -d "$rootDir" ]; then
-          "$usage" "$errorArgument" "--cd \"$1\" is not a directory"
-          return $?
-        fi
+        [ -d "$rootDir" ] || __failArgument "$usage" "--cd \"$1\" is not a directory" || return $?
         ;;
       --repair)
         shift
