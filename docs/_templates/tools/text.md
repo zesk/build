@@ -12,12 +12,14 @@
 {sedReplacePattern}
 {quoteSedPattern}
 {quoteBashString}
+{quoteGrepPattern}
 
 {escapeQuotes}
 {escapeSingleQuotes}
 {escapeDoubleQuotes}
 {escapeBash}
 {replaceFirstPattern}
+{removeFields}
 
 {stripAnsi}
 
@@ -53,6 +55,7 @@
 {shaPipe}
 {cachedShaPipe}
 {cannon}
+{joinArguments}
 
 # Characters
 

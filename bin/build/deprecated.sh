@@ -5,12 +5,28 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-loadTools() {
+# IDENTICAL __tools 16
+# Load tools.sh and run command
+__tools() {
+  local relative="$1"
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  if ! source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
-    printf "%s\n" "Failed to load tools.sh" 1>&2
-    return 1
-  fi
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
+}
+
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
 }
 
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on
@@ -22,7 +38,7 @@ loadTools() {
 # Exit Code: 1 - If fails or validation fails
 # fn: deprecated.sh
 #
-deprecatedCleanup() {
+__deprecatedCleanup() {
   local deprecatedToken deprecatedTokens exitCode ignoreStuff deprecatedIgnoreStuff
 
   exitCode=0
@@ -90,4 +106,4 @@ deprecatedCleanup() {
   return $exitCode
 }
 
-loadTools && deprecatedCleanup
+__tools __deprecatedCleanup

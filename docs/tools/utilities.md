@@ -47,5 +47,28 @@ Sets `kitty` incrementor to 2 and outputs `2`
 
 {SEE:buildCacheDirectory}
 
+### `extensionLists` - Generates a directory containing files with `extension` as the file
+
+Generates a directory containing files with `extension` as the file names.
+All files passed to this are added to the `@` file, the `!` file is used for files without extensions.
+Extension parsing is done by removing the final dot from the filename:
+- `foo.sh` -> `"sh"`
+- `foo.tar.gz` -> `"gz"`
+- `foo.` -> `"!"``
+- `foo-bar` -> `"!"``
+
+#### Usage
+
+    extensionLists directory file0 ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

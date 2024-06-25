@@ -256,7 +256,7 @@ __identicalCheckGenerateSearchFiles() {
       break
     fi
     [ -n "$1" ] || _argument "Blank repairSource?" || return $?
-    repairSources+=("$1")
+    repairSources+=("${1%/}/")
     shift
   done
   searchFileList=$(mktemp) || _environment "mktemp" || return $?

@@ -21,6 +21,9 @@
 
 {gitCommit}
 {gitMainly}
+{gitPreCommitShellFiles}
+{gitFindHome}
+{gitInstallHook}
 
 ## git History
 

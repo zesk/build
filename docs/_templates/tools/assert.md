@@ -33,6 +33,8 @@
 
 {assertDirectoryExists}
 {assertDirectoryDoesNotExist}
+{assertDirectoryEmpty}
+{assertDirectoryNotEmpty}
 
 ## File
 

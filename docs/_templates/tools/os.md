@@ -14,7 +14,9 @@
 
 {requireFileDirectory}
 {requireDirectory}
+
 {directoryClobber}
+{directoryIsEmpty}
 
 {fileDirectoryExists}
 {fileGroup}

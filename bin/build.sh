@@ -6,20 +6,22 @@
 #
 # documentTemplate: ./docs/_templates/__binary.md
 
-# IDENTICAL __tools 13
-# Load zesk build and run command
+# IDENTICAL __tools 16
+# Load tools.sh and run command
 __tools() {
   local relative="$1"
-  set -eou pipefail
-  shift
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/tools.sh"; then
-    "$@" || return $?
-  else
-    exec 1>&2 && printf 'FAIL: %s\n' "$@"
-    return 42 # The meaning of life
-  fi
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
 }
+
+# IDENTICAL _return 1
+
 
 #
 # Build Zesk Build

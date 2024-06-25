@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Copy of __tools
+# identical-repair.sh
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
+#
 
 # IDENTICAL __tools 16
 # Load tools.sh and run command
@@ -27,3 +28,14 @@ _return() {
   printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
   return "$code"
 }
+
+__buildIdenticalRepair() {
+  export BUILD_HOME
+  __environment buildEnvironmentLoad BUILD_HOME || return $?
+  __environment cd "$BUILD_HOME" || return $?
+  __environment identicalCheckShell --exec consoleError --repair "$BUILD_HOME/bin/build/identical" --singles "$BUILD_HOME/etc/identical-check-singles.txt" "$@" || return $?
+}
+
+__tools ../.. __buildIdenticalRepair "$@"
+
+# EOF

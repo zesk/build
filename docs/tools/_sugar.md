@@ -32,30 +32,26 @@ Quick guide:
 # Sugar Functions References
 
 
-### `_exit` - Critical exit `errorCritical` - exit immediately
+### `_exit` - Critical exit - exit immediately
 
-Critical exit `errorCritical` - exit immediately
+Critical exit - exit immediately
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `99` - Failure
 
-### `_return` - Return code always. Outputs `message ...` to `stderr`.
+### `_return` - IDENTICAL _return 8
 
-Return code always. Outputs `message ...` to `stderr`.
+IDENTICAL _return 8
 
 #### Usage
 
-    _return code command || return $?
+    _return _return [ exitCode [ message ... ] ]
     
-
-#### Arguments
-
-
 
 #### Exit codes
 
-- `0` - Always succeeds
+- exitCode or 1 if nothing passed
 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
