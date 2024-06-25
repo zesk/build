@@ -656,8 +656,7 @@ _gitInstallHook() {
 # Argument: ... - Additional arguments are passed to `validateShellScripts` `validateFileContents`
 gitPreCommitShellFiles() {
   local usage="_${FUNCNAME[0]}"
-  local argument  singleFile directory checkAssertions
-  local directory
+  local argument directory checkAssertions
 
   checkAssertions=()
   while [ $# -gt 0 ]; do
