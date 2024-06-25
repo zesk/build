@@ -4,6 +4,42 @@
 [⬅ Return to top](../index.md)
 
 
+### `buildEnvironmentLoad` - Load one or more environment settings from bin/build/env or bin/env.
+
+Load one or more environment settings from bin/build/env or bin/env.
+
+
+If BOTH files exist, both are sourced, so application environments should anticipate values
+created by default.
+
+#### Usage
+
+    buildEnvironmentLoad [ envName ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `isAbsolutePath` - Is a path an absolute path?
+
+Is a path an absolute path?
+
+#### Usage
+
+    isAbsolutePath path ...
+    
+
+#### Exit codes
+
+- `0` - if all paths passed in are absolute paths (begin with `/`).
+- `1` - one ore more paths are not absolute paths
+
+
 ### `serviceToPort` - Get the port number associated with a service
 
 Get the port number associated with a service
@@ -147,6 +183,7 @@ Creates the directories for all files passed in.
 
 - `0` - Always succeeds
 
+
 ### `directoryClobber` - Copy directory over another sort-of-atomically
 
 Copy directory over another sort-of-atomically
@@ -159,6 +196,57 @@ Copy directory over another sort-of-atomically
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `directoryIsEmpty` - Does a directory exist and is it empty?
+
+Does a directory exist and is it empty?
+
+#### Usage
+
+    directoryIsEmpty directory
+    
+
+#### Exit codes
+
+- `2` - Directory does not exist
+- `1` - Directory is not empty
+- `0` - Directory is empty
+
+
+### `fileDirectoryExists` - Does the file's directory exist?
+
+Does the file's directory exist?
+
+#### Usage
+
+    fileDirectoryExists directory
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `fileGroup` - Outputs the file group for each file passed on the
+
+Outputs the file group for each file passed on the command line
+
+#### Usage
+
+    fileGroup file ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Unable to access file
 
 
 ### `runCount` - Run a binary count times
@@ -231,29 +319,16 @@ Platform agnostic tar cfz which ignores owner and attributes
 - `0` - Always succeeds
 
 
-### `environmentVariables` - Fetch a list of environment variable names
+### `environmentVariables` - Output a list of environment variables and ignore function definitions
 
 Output a list of environment variables and ignore function definitions
 
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
-Returns the list of defined environment variables exported in the current bash context.
-
 #### Usage
 
     environmentVariables
-    
-
-#### Examples
-
-    for f in $(environmentVariables); do
-    echo "$f"
-    done
-
-#### Sample Output
-
-    Environment variable names, one per line.
     
 
 #### Exit codes
@@ -486,9 +561,9 @@ List the most recently modified file in a directory
 
 - `0` - Always succeeds
 
-### `mostRecentlyModifiedTimestamp` - List the most recently modified file in a directory
+### `mostRecentlyModifiedTimestamp` - List the most recently modified timestamp in a directory
 
-List the most recently modified file in a directory
+List the most recently modified timestamp in a directory
 
 #### Usage
 
@@ -567,6 +642,11 @@ Maintains ordering.
 ### `renameLink` - Uses mv and clobbers always
 
 Uses mv and clobbers always
+
+#### Usage
+
+    renameLink from to
+    
 
 #### Exit codes
 

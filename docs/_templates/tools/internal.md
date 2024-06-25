@@ -5,6 +5,7 @@
 
 {buildBuild}
 {buildDeploy}
+{buildDocumentationTemplating}
 {buildDocumentationBuild}
 {buildDocumentation_MergeWithDocsBranch}
 {buildDocumentation_Recommit}

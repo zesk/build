@@ -13,12 +13,6 @@
 # Docs: o ./docs/_templates/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Usage: {fn} applicationHome
 # Argument: applicationHome - Required. Directory. Application home to get the version from.
@@ -89,24 +83,14 @@ _deployPackageName() {
 # Does a deploy version exist? versionName is the version identifier for deployments
 #
 deployHasVersion() {
+  local usage="_${FUNCNAME[0]}"
   local deployHome versionName targetPackage
 
-  if ! deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}"); then
-    return "$errorArgument"
-  fi
-  shift || :
-  versionName="${1-}"
-  if [ -z "$versionName" ]; then
-    _deployHasVersion "$errorArgument" "Version name is blank" || return $?
-  fi
-  shift || :
-
-  targetPackage="${1-$(deployPackageName)}"
-  shift || :
-
-  if [ ! -d "$deployHome/$versionName" ]; then
-    _deployHasVersion "$errorEnvironment" "No deployment version found: $deployHome/$versionName" || return $?
-  fi
+  deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
+  versionName="${2-}"
+  [ -n "$versionName" ] || __failArgument "$usage" "blank versionName" || return $?
+  targetPackage="${3-$(deployPackageName)}"
+  [ -d "$deployHome/$versionName" ] || __failEnvironment "$usage" "No deployment version found: $deployHome/$versionName" || return $?
   [ -f "$deployHome/$versionName/$targetPackage" ]
 }
 _deployHasVersion() {
@@ -120,26 +104,13 @@ _deployHasVersion() {
 #
 _applicationIdLink() {
   local usageFunction fileSuffix deployHome versionName targetPackage
-  usageFunction="$1"
-  shift || return "$errorArgument"
-  fileSuffix="$1"
-  if [ -z "$fileSuffix" ]; then
-    "$usageFunction" "$errorArgument" "Internal fileSuffix is blank" || return $?
-  fi
-  shift || return "$errorArgument"
-  if ! deployHome="$(usageArgumentDirectory "$usageFunction" deployHome "${1-}")"; then
-    return $errorArgument
-  fi
-  shift || :
-  versionName="${1-}"
-  if [ -z "$versionName" ]; then
-    "$usageFunction" "$errorArgument" "Version name is required to be non-blank" || return $?
-  fi
-  if [ -f "$deployHome/$versionName.$fileSuffix" ]; then
-    cat "$deployHome/$versionName.$fileSuffix"
-  else
-    return "$errorEnvironment"
-  fi
+  usageFunction="${1-}"
+  fileSuffix="${2-}"
+  [ -n "$fileSuffix" ] || __failArgument "$usageFunction" "Internal fileSuffix is blank" || return $?
+  deployHome="$(usageArgumentDirectory "$usageFunction" deployHome "${3-}")" || return $?
+  versionName="${4-}"
+  [ -n "$versionName" ] || __failArgument "$usageFunction" "Version name is required to be non-blank" || return $?
+  [ -f "$deployHome/$versionName.$fileSuffix" ] && cat "$deployHome/$versionName.$fileSuffix"
 }
 
 #
@@ -150,7 +121,7 @@ _applicationIdLink() {
 # Exit Code: 2 - Argument error
 #
 deployPreviousVersion() {
-  _applicationIdLink "$usage" previous "$@"
+  _applicationIdLink "_${FUNCNAME[0]}" previous "$@"
 }
 _deployPreviousVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -162,7 +133,7 @@ _deployPreviousVersion() {
 # Get the next version of the supplied version
 #
 deployNextVersion() {
-  _applicationIdLink "$usage" next "$@"
+  _applicationIdLink "_${FUNCNAME[0]}" next "$@"
 }
 _deployNextVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -197,14 +168,13 @@ _deployNextVersion() {
 # See: deployToRemote
 #
 deployApplication() {
+  local usage="_${FUNCNAME[0]}"
   local firstFlag revertFlag
   local argument name
   local deployHome applicationPath deployedApplicationPath targetPackage targetPackageFullPath
-  local newApplicationId applicationId currentApplicationId exitCode
+  local newApplicationId applicationId currentApplicationId exitCode verboseFlag
   local unwindArgs requiredArgs
-  local usage message
-
-  usage="_${FUNCNAME[0]}"
+  local message
 
   exitCode=0
   # Arguments
@@ -219,6 +189,7 @@ deployApplication() {
   deployHome=
   applicationId=
   applicationPath=
+  verboseFlag=false
   targetPackage=
   requiredArgs=()
   while [ $# -gt 0 ]; do
@@ -229,8 +200,12 @@ deployApplication() {
         "$usage" 0
         return $?
         ;;
+      --verbose)
+        verboseFlag=true
+        ;;
       --message)
-        shift || "$usage" "$errorArgument" "Missing --message argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "blank $argument argument" || return $?
         message="$1"
         ;;
       --first)
@@ -240,21 +215,22 @@ deployApplication() {
         revertFlag=true
         ;;
       --home)
-        shift || __failArgument "$usage" "Shift $argument failed" || return $?
+        shift
         deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
         ;;
       --id)
-        shift || __failArgument "$usage" "Shift $argument failed" || return $?
-        [ -n "$1" ] || __failArgument "$usage" "Blank --id" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "blank $argument argument" || return $?
         applicationId="$1"
         ;;
       --application)
-        shift || __failArgument "$usage" "Shift $argument failed" || return $?
-        applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
+        shift
+        applicationPath=$(usageArgumentFileDirectory "$usage" applicationPath "${1-}") || return $?
         ;;
       --target)
-        shift || __failArgument "$usage" "Shift $argument failed" || return $?
-        targetPackage="${1-}"
+        shift
+        [ -n "${1-}" ] || __failArgument "blank $argument argument" || return $?
+        targetPackage="$1"
         ;;
       *)
         __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
@@ -273,11 +249,14 @@ deployApplication() {
     [ -n "${!name}" ] || __failArgument "$usage" "$name is required" || return $?
   done
 
-  if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
-    if ! $firstFlag; then
-      "$usage" "$errorEnvironment" "Can not fetch version from $applicationPath, need --first" || return $?
+  currentApplicationId=
+  if [ -d "$applicationPath" ]; then
+    if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
+      if ! $firstFlag; then
+        __failEnvironment "$usage" "Can not fetch version from $applicationPath, need --first" || return $?
+      fi
+      currentApplicationId=
     fi
-    currentApplicationId=
   fi
 
   if $revertFlag; then
@@ -330,27 +309,33 @@ deployApplication() {
     _unwindDeploy "${unwindArgs[@]}" "Deployed version $newApplicationId != Requested $applicationId, tar file is likely incorrect" || return $?
   fi
 
-  #
-  # Old Application
-  #
-  if hasHook --application "$applicationPath" maintenance; then
-    printf "%s %s\n" "$(consoleWarning "Turning maintenance")" "$(consoleGreen "$(consoleCode " ON ")")"
-    if [ -z "$message" ]; then
-      message="Upgrading to $newApplicationId"
+  if ! $firstFlag; then
+    if [ ! -d "$applicationPath" ]; then
+      consoleWarning "Application path $applicationPath does not exist but not --first" 1>&2
+    else
+      #
+      # Old Application
+      #
+      if hasHook --application "$applicationPath" maintenance; then
+        printf "%s %s\n" "$(consoleWarning "Turning maintenance")" "$(consoleGreen "$(consoleCode " ON ")")"
+        if [ -z "$message" ]; then
+          message="Upgrading to $newApplicationId"
+        fi
+        if ! runHook --application "$applicationPath" maintenance --message "$message" on; then
+          _unwindDeploy "${unwindArgs[@]}" "Turning maintenance on in $applicationPath failed" || return $?
+        fi
+      else
+        printf "%s\n" "$(consoleInfo "No maintenance hook")"
+      fi
+      if hasHook --application "$applicationPath" deploy-shutdown; then
+        printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-shutdown ")")"
+        if ! runHook --application "$applicationPath" deploy-shutdown; then
+          _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-shutdown failed" || return $?
+        fi
+      else
+        printf "%s\n" "$(consoleInfo "No deploy-shutdown hook")"
+      fi
     fi
-    if ! runHook --application "$applicationPath" maintenance --message "$message" on; then
-      _unwindDeploy "${unwindArgs[@]}" "Turning maintenance on in $applicationPath failed" || return $?
-    fi
-  else
-    printf "%s\n" "$(consoleInfo "No maintenance hook")"
-  fi
-  if hasHook --application "$applicationPath" deploy-shutdown; then
-    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-shutdown ")")"
-    if ! runHook --application "$applicationPath" deploy-shutdown; then
-      _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-shutdown failed" || return $?
-    fi
-  else
-    printf "%s\n" "$(consoleInfo "No deploy-shutdown hook")"
   fi
 
   #
@@ -372,14 +357,14 @@ deployApplication() {
   # Link
   #
   # deployedApplicationPath is the new version of the application source code root
-  consoleInfo -n "Setting to version $applicationId ... "
+  printf "%s %s\n" "$(consoleInfo "Setting to version")" "$(consoleCode "$applicationId")"
   if hasHook --application "$deployedApplicationPath" deploy-start; then
     printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-start ")")"
     if ! runHook --application "$deployedApplicationPath" deploy-start; then
       _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-start failed" || return $?
     fi
   else
-    printf "%s\n" "$(consoleInfo "No deploy-start hook")"
+    ! $verboseFlag || printf "%s%s\n" "$(clearLine)" "$(consoleInfo "No deploy-start hook")"
   fi
 
   if hasHook --application "$deployedApplicationPath" deploy-activate; then
@@ -396,10 +381,10 @@ deployApplication() {
   # STOP _unwindDeploy
 
   if ! runOptionalHook --application "$applicationPath" deploy-finish; then
-    "$usage" "$errorEnvironment" "Deploy finish failed" || exitCode=$?
+    __failEnvironment "$usage" "Deploy finish failed" || exitCode=$?
   fi
   if ! runOptionalHook --application "$applicationPath" maintenance off; then
-    "$usage" "$errorEnvironment" "maintenance off failed" || exitCode=$?
+    __failEnvironment "$usage" "maintenance off failed" || exitCode=$?
   fi
   if [ $exitCode -eq 0 ]; then
     consoleSuccess "Completed"
@@ -495,6 +480,8 @@ deployLink() {
               # Not a link or directory
               __failArgument "$usage" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
             fi
+          else
+            usageArgumentFileDirectory "$usage" applicationLinkPath "$applicationLinkPath" >/dev/null || return $?
           fi
         elif [ -z "$currentApplicationHome" ]; then
           # No checking - allows pre-linking
@@ -574,11 +561,11 @@ deployMigrateDirectoryToLink() {
   fi
   # Now move our folder and the link to where the folder was in one fell swoop
   # or mv -hf
-  mv -f "$applicationPath" "$deployHome/$appVersion/app" || __failEnvironment "$usage" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
+  __environment mv -f "$applicationPath" "$deployHome/$appVersion/app" || __failEnvironment "$usage" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
 
-  if ! mv -f "$tempAppLink" "$applicationPath"; then
+  if ! __environment mv -f "$tempAppLink" "$applicationPath"; then
     # Like really? Like really? Something is likely F U B A R
-    if ! mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
+    if ! __environment mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
       consoleError "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
     else
       consoleSuccess "Successfully recovered application to $applicationPath - stable"

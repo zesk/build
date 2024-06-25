@@ -25,6 +25,9 @@ usageDocument() {
   local functionDefinitionFile functionName exitCode variablesFile
   local usage="_${FUNCNAME[0]}"
 
+  if isBashDebug; then
+    set +x
+  fi
   [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   functionDefinitionFile="$1"
@@ -53,6 +56,7 @@ usageDocument() {
 
     # shellcheck source=/dev/null
     source "$variablesFile"
+    [ $exitCode -eq 0 ] || exec 1>&2
     usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$@"
   )
   return "$exitCode"

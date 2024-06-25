@@ -8,8 +8,8 @@
 
 ### `dotEnvConfigure` - Load `.env` and optional `.env.local` into bash context
 
-Loads "./.env" which is the current project configuration file
-Also loads "./.env.local" if it exists
+Loads `.env` which is the current project configuration file
+Also loads `.env.local` if it exists
 Generally speaking - these are NAME=value files and should be parsable by
 bash and other languages.
 
@@ -17,12 +17,14 @@ Requires the file `.env` to exist and is loaded via bash `source` and all variab
 
 If `.env.local` exists, it is also loaded in a similar manner.
 
-The previous version of this function was `dotEnvConfig` and is now deprecated, and outputs a warning.
-
 #### Usage
 
-    dotEnvConfigure
+    dotEnvConfigure where
     
+
+#### Arguments
+
+
 
 #### Exit codes
 
@@ -31,7 +33,7 @@ The previous version of this function was `dotEnvConfig` and is now deprecated, 
 
 #### Environment
 
-Loads `./.env` and `./.env.local`, use with caution.
+Loads `.env` and `.env.local`, use with caution on trusted content only
 
 #### See Also
 
@@ -327,15 +329,14 @@ APPLICATION_VERSION - reserved and set to `runHook version-current` if not set a
 APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 APPLICATION_TAG - reserved and set to `runHook application-id`
 APPLICATION_ID - reserved and set to `runHook application-tag`
-Unable to find "showEnviornment" (using index "/root/.build")
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-#### Errors
+#### Exit codes
 
-Unable to find "showEnviornment" (using index "/root/.build")
+- `0` - Always succeeds
 
 ### `applicationEnvironment` - Loads application environment variables, set them to their default values
 
@@ -352,10 +353,6 @@ APPLICATION_BUILD_DATE
 APPLICATION_VERSION
 APPLICATION_ID
 APPLICATION_TAG
-
-#### Errors
-
-Unable to find "showEnviornment" (using index "/root/.build")
 
 ## Deployment tools
 
@@ -398,10 +395,6 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
 {SEE:deployToRemote}
 
-#### Errors
-
-Unable to find "showEnviornment" (using index "/root/.build")
-
 ### `deployNextVersion` - Get the next version of the supplied version
 
 Get the next version of the supplied version
@@ -414,10 +407,6 @@ Get the next version of the supplied version
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "showEnviornment" (using index "/root/.build")
 
 ### `deployPreviousVersion` - Get the previous version of the supplied version
 
@@ -432,10 +421,6 @@ Get the previous version of the supplied version
 
 - `1` - No version exists
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "showEnviornment" (using index "/root/.build")
 
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
@@ -453,10 +438,6 @@ Does a deploy version exist? versionName is the version identifier for deploymen
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "showEnviornment" (using index "/root/.build")
 
 ### `deployApplicationVersion` - Extracts version from an application either from `.deploy` files or
 
@@ -477,10 +458,6 @@ Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "showEnviornment" (using index "/root/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

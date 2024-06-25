@@ -1,11 +1,15 @@
 # Version Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {releaseNotes}
 {newRelease}
 {nextMinorVersion}
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})

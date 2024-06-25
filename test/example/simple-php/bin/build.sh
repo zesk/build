@@ -5,21 +5,38 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# zesk-build-bin-header-install 10
-_fail() {
-  printf "%s\n" "$*" 1>&2
-  exit 1
+# IDENTICAL __install 18
+# Install, load zesk build and run command
+__install() {
+  local relative="$1" installPath="$2"
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift 2 && set -eou pipefail
+  local install="$here/$installPath/install-bin-build.sh"
+  local tools="$here/$relative/bin/build/tools.sh"
+  if [ ! -d "$here/build" ]; then
+    [ -x "$install" ] || _return 99 "$install not executable" || return $?
+    "$install" || _return 98 "$install failed" || return $?
+  fi
+  [ -x "$tools" ] || _return 97 "$install failed to create $tools" "$@" || return $?
+  # shellcheck source=/dev/null
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
 }
 
-set -eou pipefail || _fail "set -eou pipefail fail?"
-cd "$(dirname "${BASH_SOURCE[0]}")/.." || _fail "cd $(dirname "${BASH_SOURCE[0]}")/.. failed"
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
+}
 
-[ -d ./bin/build ] || ./bin/pipeline/install-bin-build.sh || _fail "install-bin-build.sh failed"
+__buildSampleApplication() {
+  clearLine || return $?
+  __environment phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs || return $?
+}
 
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh || _fail "tools.sh failed"
-# zesk-build-bin-header-install
-
-if ! phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs; then
-  _fail "Build failed"
-fi
+__install .. bin __buildSampleApplication "$@"

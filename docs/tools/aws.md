@@ -49,6 +49,8 @@ output the credentials file path.
 
 If not found, returns with exit code 1.
 
+
+
 #### Usage
 
      awsCredentialsFile [ verboseFlag ]
@@ -196,6 +198,10 @@ AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 
 - `0` - Always succeeds
 
+### `awsSecurityGroupIPRegister` - Usage:
+
+Usage:
+
 #### Exit codes
 
 - `0` - Always succeeds
@@ -214,5 +220,10 @@ AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 - `0` - Region is a valid AWS region
 - `1` - Region is NOT a valid AWS region
 
-[⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
+
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=AWS Functions)

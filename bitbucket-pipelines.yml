@@ -13,6 +13,7 @@ pipelines:
   branches:
     docs:
       - step:
+          size: 2x
           deployment: docs
           name: Build documentation
           services:
@@ -22,6 +23,7 @@ pipelines:
             - bin/build-docs.sh --commit
     staging:
       - step:
+          size: 2x
           deployment: staging
           name: Build and Test
           services:
@@ -31,6 +33,7 @@ pipelines:
             - bin/test.sh
     main:
       - step:
+          size: 2x
           deployment: production
           name: Build, Test, and Deploy
           services:
@@ -41,6 +44,7 @@ pipelines:
             - bin/deploy.sh
     deploy:
       - step:
+          size: 2x
           deployment: deploy
           name: Just Deploy
           services:

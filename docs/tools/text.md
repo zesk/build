@@ -28,6 +28,10 @@ Returns true if all `characters` are of `className`
 ## Filters
 
 
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `quoteSedPattern` - Quote sed strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
@@ -84,6 +88,32 @@ Quote bash strings for inclusion as single-quoted for eval
 
     sed
     
+
+### `quoteGrepPattern` - Quote grep -e patterns for shell use
+
+$\Quote grep -e patterns for shell use
+
+#### Usage
+
+    quoteGrepPattern text
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
+
+#### Sample Output
+
+    string quoted and appropriate to insert in a grep search or replacement phrase
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 
 ### `escapeQuotes` - Quote strings for inclusion in shell quoted strings
@@ -185,6 +215,23 @@ Replaces the first and only the first occurrence of a pattern in a line with a r
 
     replaceFirstPattern pattern replacement
     
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `removeFields` - Remove fields from left to right from a text file
+
+Remove fields from left to right from a text file as a pipe
+
+#### Usage
+
+    removeFields fieldCount < input > output
+    
+
+#### Arguments
+
+
 
 #### Exit codes
 
@@ -446,6 +493,19 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 - `0` - Always succeeds
 
+### `maximumLineLength` - Outputs the maximum line length passed into stdin
+
+Outputs the maximum line length passed into stdin
+
+#### Usage
+
+    maximumLineLength
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ## Language-related
 
 
@@ -477,6 +537,25 @@ Example:
 - `1` - If count is non-numeric
 - `0` - If count is numeric
 
+### `parseBoolean` - Parses text and determines if it's true-ish
+
+Parses text and determines if it's true-ish
+
+#### Usage
+
+    parseBoolean text
+    
+
+#### Exit codes
+
+- `0` - true
+- `1` - false
+- `2` - Neither
+
+#### See Also
+
+{SEE:lowercase}
+
 ## Transformation
 
 
@@ -487,6 +566,19 @@ Convert text to lowercase
 #### Usage
 
     lowercase [ text ... ]
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `uppercase` - Convert text to uppercase
+
+Convert text to uppercase
+
+#### Usage
+
+    uppercase [ text ... ]
     
 
 #### Exit codes
@@ -539,7 +631,7 @@ You can use this as a pipe or pass in arguments which are files to be hashed.
 
 Speeds up shaPipe using modification dates of the files instead.
 
-The cacheDirectory
+The `cacheDirectory`
 
 #### Usage
 
@@ -566,7 +658,7 @@ The cacheDirectory
 
 #### Depends
 
-    shasum
+    shasum shaPipe
     
 
 ### `cannon.sh` - Replace text `fromText` with `toText` in files, using `findArgs` to
@@ -588,5 +680,93 @@ This can break your files so use with caution.
 - `0` - Success
 - `1` - Arguments are identical
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+#### Usage
+
+    joinArguments separator text0 arg1 ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+# Characters
+
+
+### `characterClassReport` - Write a report of the character classes
+
+Write a report of the character classes
+
+#### Usage
+
+    characterClassReport
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `characterFromInteger` - Given a list of integers, output the character codes associated
+
+Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `characterToInteger` - Convert one or more characters from their ascii representation to
+
+Convert one or more characters from their ascii representation to an integer value.
+Requires a single character to be passed
+
+#### Usage
+
+    characterToInteger [ character ... ]
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `isCharacterClasses` - Does this character match one or more character classes?
+
+Does this character match one or more character classes?
+
+#### Usage
+
+    isCharacterClasses character [ class0 class1 ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Usage
+
+    stringValidate text class0 [ ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Text Functions)

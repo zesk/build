@@ -4,22 +4,20 @@
 # Test: o ./test/tools/sugar-tests.sh
 # -- CUT HERE --
 
-# IDENTICAL _sugar 100
-emptyArgument="§"
-failureSymbol="❌"
+# IDENTICAL _sugar 99
 
 # Output a titled list
 # Usage: {fn} title [ items ... ]
 _list() {
   local title
-  title="${1-"$emptyArgument"}" && shift && printf "%s\n%s\n" "$title" "$(printf -- "- %s\n" "$@")"
+  title="${1-"§"}" && shift && printf "%s\n%s\n" "$title" "$(printf -- "- %s\n" "$@")"
 }
 
-# Critical exit `errorCritical` - exit immediately
+# Critical exit - exit immediately
 # Usage: {fn} {title} [ items ... ]
+# Exit code: 99 - Failure
 _exit() {
-  local errorCritical=99
-  local title="${1-"$emptyArgument"}"
+  local title="${1-"§"}"
   export BUILD_DEBUG
   # shellcheck disable=SC2016
   exec 1>&2 && shift && _list "$title" "$(printf '%s ' "$@")"
@@ -27,7 +25,7 @@ _exit() {
     _list "Stack" "${FUNCNAME[@]}" || :
     _list "Sources" "${BASH_SOURCE[@]}" || :
   fi
-  exit "$errorCritical"
+  exit 99
 }
 
 #
@@ -40,7 +38,7 @@ _exit() {
 # Argument: message ... - String. Optional. Message to output.
 _return() {
   local code
-  code="${1-1}" && shift && printf "%s $failureSymbol (%d)\n" "${*-"$emptyArgument"}" "$code" 1>&2 && return "$code"
+  code="${1-1}" && shift && printf "%s ❌ (%d)\n" "${*-"§"}" "$code" 1>&2 && return "$code"
 }
 
 # Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
@@ -67,8 +65,7 @@ _argument() {
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 __execute() {
-  "$@" && return 0
-  _return $? "${*-"$emptyArgument"}" && return $?
+  "$@" || _return $? "${*-"§"}" || return $?
 }
 
 # Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
@@ -84,7 +81,7 @@ __try() {
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: Any
 __echo() {
-  printf "Running: %s\n" "${*-"$emptyArgument"}" && __execute "$@" || return $?
+  printf "Running: %s\n" "${*-"§"}" && __execute "$@" || return $?
 }
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.

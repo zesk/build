@@ -20,18 +20,18 @@
 #
 # Variable names can contain alphanumeric characters, underscore, or dash.
 #
-# Example: Sets `default` incrementor to 1 and outputs `1`
-# Example:
-# Example:     {fn} 1
-# Example:
-# Example: Increments the `kitty` counter and outputs `1` on first call and `n + 1` for each subsequent call.
-# Example:
-# Example:     {fn} kitty
-# Example:
-# Example: Sets `kitty` incrementor to 2 and outputs `2`
-# Example:
-# Example:     {fn} 2 kitty
-# Example:
+# Sets `default` incrementor to 1 and outputs `1`
+#
+#     {fn} 1
+#
+# Increments the `kitty` counter and outputs `1` on first call and `n + 1` for each subsequent call.
+#
+#     {fn} kitty
+#
+# Sets `kitty` incrementor to 2 and outputs `2`
+#
+#     {fn} 2 kitty
+#
 # Depends: buildCacheDirectory
 # See: buildCacheDirectory
 # shellcheck disable=SC2120
@@ -48,9 +48,17 @@ incrementor() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     if isInteger "$argument"; then
+      if [ -n "$name" ]; then
+        __incrementor "$persistence/$name" "$value"
+        name=
+      fi
       value="$argument"
     else
       case "$argument" in
+        --help)
+          "$usage" 0
+          return $?
+          ;;
         *[^-_a-zA-Z0-9]*)
           __failArgument "$usage" "Invalid argument or variable name: $argument" || return $?
           ;;
@@ -86,5 +94,5 @@ __incrementor() {
     fi
     value=$((value + 1))
   fi
-  printf "%d\n" "$value" | tee "$counterFile"
+  printf -- "%d\n" "$value" | tee "$counterFile"
 }

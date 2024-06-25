@@ -14,16 +14,30 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
+# IDENTICAL __tools 11
+# Load tools.sh and run command
+__tools() {
+  local relative="$1"
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
+  # shellcheck source=/dev/null
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
+}
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-# shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || exit 99
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
+}
 
 # Sample output (delete first 2 characters on each line to remove comments)
 #
@@ -43,10 +57,8 @@ find_count() {
   shift
   found=$(grep -c "$*" "$results" || :)
   if [ "$found" -ne "$n" ]; then
-    consoleError "Match $* should occur $n times, found $found"
-    consoleError "$(echoBar)"
-    wrapLines "$(consoleCode)" "$(consoleReset)" <"$results"
-    exit "$errorEnvironment"
+    dumpPipe RESULTS <"$results"
+    _environment "Match $* should occur $n times, found $found" || return $?
   fi
   return 0
 }
@@ -61,12 +73,17 @@ printBasics() {
 # Test script for crontab-application-sync.sh"
 #
 testCrontabApplicationSync() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local verboseFlag keepFlag showFlag testEnv tempDir results
+
   verboseFlag=
   keepFlag=
   showFlag=
   while [ $# -gt 0 ]; do
-    case "$1" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       -v | --verbose)
         verboseFlag=1
         consoleInfo "Verbosity on" 1>&2
@@ -79,14 +96,11 @@ testCrontabApplicationSync() {
         showFlag=1
         ;;
       *)
-        if [ -d "$1" ]; then
-          consoleInfo "Home is $1"
-        else
-          _testCrontabApplicationSync "$errorArgument" "No arguments" || return $?
-        fi
+        [ -d "$argument" ] || __failArgument "$usage" "No arguments" || return $?
+        consoleInfo "Home is $argument"
         ;;
     esac
-    shift || _testCrontabApplicationSync "$errorArgument" "shift failed" || return $?
+    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
   done
 
   testEnv=$(mktemp)
@@ -137,9 +151,7 @@ testCrontabApplicationSync() {
   cp "$tempDir"/app1/user.crontab "$tempDir"/app3/user.crontab
 
   results=$(mktemp)
-  if ! ./bin/build/ops/crontab-application-sync.sh --user user --show "$tempDir" --env "$testEnv" >>"$results"; then
-    _testCrontabApplicationSync $errorEnvironment "crontab-application-sync.sh" || return $?
-  fi
+  __usageEnvironment "$usage" ./bin/build/ops/crontab-application-sync.sh --user user --show "$tempDir" --env "$testEnv" >>"$results" || return $?
 
   if test $showFlag; then
     cat "$results"
@@ -171,7 +183,7 @@ testCrontabApplicationSync() {
       fi
       printBasics "$tempDir" "$testEnv"
     fi
-    return "$errorEnvironment"
+    __failEnvironment "$usage" "Failed" || return $?
   else
     rm -rf "$tempDir"
     rm "$testEnv"
@@ -186,4 +198,4 @@ _testCrontabApplicationSync() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-testCrontabApplicationSync "$@"
+__tools ../.. testCrontabApplicationSync "$@"

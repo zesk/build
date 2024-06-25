@@ -656,30 +656,13 @@ _gitInstallHook() {
 # Argument: ... - Additional arguments are passed to `validateShellScripts` `validateFileContents`
 gitPreCommitShellFiles() {
   local usage="_${FUNCNAME[0]}"
-  local argument single singles singleFile directory checkAssertions interactiveFlags
-  local directory
+  local argument directory checkAssertions
 
-  singles=()
   checkAssertions=()
-  interactiveFlags=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --singles)
-        shift || __failArgument "$usage" "shift $argument" || return $?
-        singleFile=$(usageArgumentFile "$usage" singlesFile "$1") || return $?
-        while read -r single; do
-          single="${single#"${single%%[![:space:]]*}"}"
-          single="${single%"${single##*[![:space:]]}"}"
-          if [ "${single###}" = "${single}" ]; then
-            singles+=(--single "$single")
-          fi
-        done <"$singleFile"
-        ;;
-      --interactive)
-        interactiveFlags=("$argument")
-        ;;
       --check)
         shift || __failArgument "$usage" "shift $argument" || return $?
         checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
@@ -706,9 +689,6 @@ gitPreCommitShellFiles() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
   statusMessage consoleWarning "Checking $year and $BUILD_COMPANY ..." || :
   __usageEnvironment "$usage" validateFileContents --exec contextOpen "$@" -- "Copyright &copy; $year" "$BUILD_COMPANY" || return $?
-
-  # Unusual quoting here is to avoid having this match as an identical
-  __usageEnvironment "$usage" identicalCheck "${interactiveFlags[@]+${interactiveFlags[@]}}" "${singles[@]+"${singles[@]}"}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh || return $?
 
   for directory in "${checkAssertions[@]+${checkAssertions[@]}}"; do
     statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}") - " || :

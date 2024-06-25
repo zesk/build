@@ -4,6 +4,7 @@ The `tools.sh` shell is the only include you need in your scripts:
 
     # shellcheck source=/dev/null
     . ./bin/build/tools.sh
+    (see `bin/build/identical/__tools.sh` for a safe loader)
 
 Once included, all functions here are available for use and may affect your build or operating system environment.
 
@@ -24,6 +25,7 @@ Once included, all functions here are available for use and may affect your buil
 - [Documentation Functions](./documentation.md)
 - [Git Functions](./git.md)
 - [GitHub Functions](./github.md)
+- [Identical Functions](./identical.md)
 - [Installation Functions](./install.md)
 - [Interactive Functions](./interactive.md)
 - [Log Functions](./log.md)
@@ -33,6 +35,7 @@ Once included, all functions here are available for use and may affect your buil
 - [Pipeline Functions](./pipeline.md)
 - [Prettier Functions](./prettier.md)
 - [Process Functions](./process.md)
+- [Self Functions](./self.md)
 - [System V Init Functions](./sysvinit.md)
 - [Test Support Functions](./tests.md)
 - [Text Functions](./text.md)

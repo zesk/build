@@ -1,7 +1,8 @@
 # Vendor Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `contextOpen` - Open a file in a shell using the program we
@@ -85,5 +86,21 @@ Are we within the Microsoft Visual Studio Code terminal?
 - `0` - is BitBucket pipeline
 - `1` - Not a BitBucket pipeline
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+### `showContext` - Open a file in a shell using the program we
+
+Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+EDITOR - Used as a default editor (first)
+VISUAL - Used as another default editor (last)
+
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Vendor Functions)

@@ -59,23 +59,25 @@ exampleFunction() {
         easyFlag=true
         ;;
       --name)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        # shift here never fails as [ #$ -gt 0 ]
+        shift
+        # shift after here MAY fail
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         name="$1"
         ;;
       --path)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
         path=$(usageArgumentDirectory "$usage" "path" "$1") || return $?
         ;;
       --target)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
         target=$(usageArgumentFileDirectory "$usage" "target" "$1") || return $?
         ;;
       *)
         __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
   done
 
   # Load MANPATH environment
@@ -98,8 +100,6 @@ _exampleFunction() {
 }
 
 __loader exampleFunction "$@"
-
-
 
 #
 # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will

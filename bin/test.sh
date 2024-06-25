@@ -10,13 +10,14 @@
 # bin/local-container.sh
 # . bin/test-reset.sh; bin/test.sh
 
-set -eou pipefail
+# IDENTICAL __ops 13
 # Load zesk build and run command
-__testLoader() {
+__ops() {
+  local relative="$1"
+  set -eou pipefail
+  shift
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/ops.sh"; then
-    # shellcheck source=/dev/null
-    source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
+  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/ops.sh"; then
     "$@" || return $?
   else
     exec 1>&2 && printf 'FAIL: %s\n' "$@"
@@ -24,7 +25,7 @@ __testLoader() {
   fi
 }
 
-messyTestCleanup() {
+__messyTestCleanup() {
   local fn exitCode=$?
 
   export cleanExit
@@ -67,6 +68,9 @@ __buildTestSuite() {
 
   usage="_${FUNCNAME[0]}"
 
+  # shellcheck source=/dev/null
+  source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
+
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
   export BUILD_COLORS_MODE
@@ -81,7 +85,7 @@ __buildTestSuite() {
   printf "%s %s\n" "$(consoleInfo "Color mode is")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
-  trap messyTestCleanup EXIT QUIT TERM
+  trap __messyTestCleanup EXIT QUIT TERM
 
   messyOption=
   allTests=(sugar colors console debug git decoration url ssh log version type process os hook pipeline identical)
@@ -153,9 +157,10 @@ __buildTestSuite() {
     if [ -n "$startTest" ]; then
       if [ "$shortTest" = "$startTest" ]; then
         startTest=
-        printf "%s %s\n" "$(consoleWarning "Starting at test")" "$(consoleCode "$startTest")"
+        clearLine
+        consoleWarning "Continuing at test $(consoleCode "$shortTest") ..."
       else
-        printf "%s %s ...\n" "$(consoleWarning "Skipping")" "$(consoleCode "$shortTest")"
+        statusMessage consoleWarning "Skipping $(consoleCode "$shortTest") ..."
         continue
       fi
     fi
@@ -169,7 +174,7 @@ __buildTestSuite() {
 
   printf "%s\n" "$testTracing" >>"$quietLog"
   testTracing=cleanup
-  messyTestCleanup
+  __messyTestCleanup
 
   printf "%s\n" "$(bigText --bigger Passed)" | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
   if [ -n "$continueFile" ]; then
@@ -181,4 +186,4 @@ ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__testLoader __buildTestSuite "$@"
+__ops .. __buildTestSuite "$@"

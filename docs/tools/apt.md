@@ -92,5 +92,8 @@ Result is `uptodate` or `restart` written to stdout
 - `0` - Success
 - `1` - Failed due to issues with environment
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=apt Package Manager Functions)

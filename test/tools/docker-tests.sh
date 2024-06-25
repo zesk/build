@@ -28,7 +28,7 @@ testCheckDockerEnvFile() {
   out=$(mktemp) || _environment "mktemp" || return $?
 
   dockerEnvToBash $testFile >"$out" || return $?
-  assertFileContains "$out" '\\"quotes\\"' TEST_AWS_SECURITY_GROUP "DOLLAR=" "QUOTE=" "GOOD=" 'HELLO="W' || return $?
+  assertFileContains "$out" '\"quotes\"' TEST_AWS_SECURITY_GROUP "DOLLAR=" "QUOTE=" "GOOD=" 'HELLO="W' || return $?
   rm "$out"
 }
 

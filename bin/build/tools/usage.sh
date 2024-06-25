@@ -48,7 +48,6 @@ usageTemplate() {
   else
     usageString="$(consoleBoldRed Usage)"
   fi
-  exec 1>&2
   shift 5 || _argument "$this: shift 5" || return $?
   if [ ${#@} -gt 0 ]; then
     if [ "$exitCode" -eq 0 ]; then
@@ -272,7 +271,7 @@ usageArgumentUnsignedInteger() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
@@ -292,7 +291,7 @@ usageArgumentFile() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "file" "${args[@]}" test -f
@@ -311,9 +310,30 @@ usageArgumentDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
+  __usageArgumentHelper "directory" "${args[@]}" test -d
+}
+
+# Validates a value is not blank and is a directory and does `realPath` on it.
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentRealDirectory() {
+  local this="${FUNCNAME[0]}"
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __failArgument "$1" "$this Need at least 3 arguments" || return $?
+  fi
+
+  args[2]=$(realPath "${args[2]}") || __failArgument "$1" "realPath" "${args[2]}" || return $?
   __usageArgumentHelper "directory" "${args[@]}" test -d
 }
 
@@ -330,7 +350,7 @@ usageArgumentFileDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    "$1" "$errorArgument" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "file" "${args[@]}" fileDirectoryExists
