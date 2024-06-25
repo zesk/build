@@ -48,7 +48,8 @@ identicalCheck() {
   local totalLines lineNumber token count parsed tokenFile countFile searchFile
   local identicalLine binary matchFile repairSource repairSources isBadFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
-  local excludes searchFileList
+  local excludes searchFileList debug extensionText
+  local failureCode=100
 
   this="${FUNCNAME[0]}"
   usage="_$this"
@@ -62,6 +63,8 @@ identicalCheck() {
   prefixes=()
   excludes=()
   repairSources=()
+  debug=false
+  extensionText=
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -69,6 +72,9 @@ identicalCheck() {
       --help)
         "$usage" 0
         return 0
+        ;;
+      --debug)
+        debug=true
         ;;
       --cd)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
@@ -86,6 +92,7 @@ identicalCheck() {
       --extension)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         findArgs+=("-name" "*.$1")
+        extensionText="$extensionText .$1"
         ;;
       --exec)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
@@ -109,14 +116,18 @@ identicalCheck() {
     shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
-  [ ${#findArgs[@]} -gt 0 ] || __failArgument "$usage" "--extension not specified" $errorArgument "Need to specify at least one extension" || return $?
+  [ ${#findArgs[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one --extension" || return $?
 
-  [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "--extension not specified" $errorArgument "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
+  [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
   rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
   searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
+  if [ ! -s "$searchFileList" ]; then
+    __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || return $?
+  fi
+  ! $debug || dumpPipe "searchFileList" <"$searchFileList"
   while IFS= read -r searchFile; do
     if [ "$(basename "$searchFile")" = "$me" ]; then
       # We are exceptional ;)
@@ -144,6 +155,10 @@ identicalCheck() {
             printf "    %s has %s specified\n" "$(consoleCode "$tokenFileName")" "$(consoleSuccess "$tokenLineCount")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$searchFile")" "$(consoleError "$count")" 1>&2
             isBadFile=true
+          elif ! isUnsignedInteger "$count"; then
+            tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n 1 >"$countFile"
+            badFiles+=("$searchFile")
+            printf "%s\n" "$(consoleCode "$file:$lineNumber") - not integers: $(consoleValue "$identicalLine")"
           else
             compareFile="${countFile}.compare"
             # Extract our section of the file. Matching is done, use line numbers and math to extract exact section
@@ -217,7 +232,7 @@ identicalCheck() {
         if [ -n "$binary" ]; then
           "$binary" "$tokenFile"
         fi
-        exitCode=$errorFailures
+        exitCode=$failureCode
       fi
     fi
   done < <(find "$tempDirectory" -type f -name '*.match')
@@ -226,11 +241,9 @@ identicalCheck() {
       printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token NOT found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
     fi
   done
-  # DEBUG # echo "tempDirectory: $tempDirectory STOPPING"
-  # return 99 # DEBUG
   rm -rf "$tempDirectory" || :
   if [ "$(wc -l <"$resultsFile")" -ne 0 ]; then
-    exitCode=$errorFailures
+    exitCode=$failureCode
   fi
   cat "$resultsFile" 1>&2 || :
   rm -rf "$resultsFile" || :
@@ -260,17 +273,19 @@ __identicalCheckGenerateSearchFiles() {
     rm -rf "$searchFileList" || :
     _environment "No files found" || return $?
   fi
-  __environment touch "$orderedList" || return $?
   if [ ${#repairSources[@]} -gt 0 ]; then
+    __environment touch "$orderedList" || return $?
     ignorePatterns=()
     for repairSource in "${repairSources[@]}"; do
       grep -e "$(quoteGrepPattern "$repairSource")" <"$searchFileList" >>"$orderedList"
       ignorePatterns+=(-e "$(quoteGrepPattern "$repairSource")")
     done
     grep -v "${ignorePatterns[@]}" <"$searchFileList" >>"$orderedList"
+    rm -rf "$searchFileList"
+    printf "%s\n" "$orderedList"
+  else
+    printf "%s\n" "$searchFileList"
   fi
-  rm -rf "$searchFileList"
-  printf "%s\n" "$orderedList"
 }
 
 # Usage: {fn}
@@ -353,7 +368,9 @@ identicalRepair() {
   [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || __failArgument "$usage" "\"$prefix $token\" not found in destination $(consoleCode "$destination")" || return $?
   parsed=$(__identicalLineParse "$source" "$prefix" "$identicalLine") || __failArgument "$source" return $?
   read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
-
+  if ! isUnsignedInteger "$count"; then
+    __failEnvironment "$usage" "$(consoleCode "$source") not an integer: \"$(consoleValue "$identicalLine")\"" || return $?
+  fi
   sourceText=$(mktemp) || __failEnvironment mktemp || return $?
   # count + 1 includes identical line
   head -n $((lineNumber + count)) <"$source" | tail -n "$((count + 1))" >"$sourceText" || __failEnvironment "$usage" "Unable to save source text" || return $?
@@ -390,6 +407,8 @@ _identicalRepair() {
 }
 
 # Usage: {fn} file prefix identicalLine
+# May return non-integer count and should be tested by calling function
+#
 __identicalLineParse() {
   local file="${1-}"
   local prefix="${2-}"
@@ -406,15 +425,14 @@ __identicalLineParse() {
   line0=${count% [0-9]*}
   line1=${count#[0-9]* }
   if ! isInteger "$line0" || ! isInteger "$line1"; then
-    _environment "$file:$lineNumber - not integers: $line0 $line1" || return $?
-  fi
-  if [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
+    :
+  elif [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
     if [ "$line0" -ge "$line1" ]; then
-      _environment "$destination:$lineNumber - line numbers out of order: $line0 $line1" || return $?
+      _environment "$(consoleCode "$file:$lineNumber") - line numbers out of order: $(consoelValue "$line0 $line1")" || return $?
     fi
     count=$((line1 - line0))
   fi
-  printf "%d %s %d\n" "$lineNumber" "$token" "$count"
+  printf "%d %s %s\n" "$lineNumber" "$token" "$count"
 }
 
 #
