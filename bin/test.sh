@@ -10,13 +10,14 @@
 # bin/local-container.sh
 # . bin/test-reset.sh; bin/test.sh
 
-set -eou pipefail
+# IDENTICAL __ops 13
 # Load zesk build and run command
-__testLoader() {
+__ops() {
+  local relative="$1"
+  set -eou pipefail
+  shift
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/ops.sh"; then
-    # shellcheck source=/dev/null
-    source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
+  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/ops.sh"; then
     "$@" || return $?
   else
     exec 1>&2 && printf 'FAIL: %s\n' "$@"
@@ -66,6 +67,9 @@ __buildTestSuite() {
   local continueFile continueFlag
 
   usage="_${FUNCNAME[0]}"
+
+  # shellcheck source=/dev/null
+  source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
@@ -182,4 +186,4 @@ ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__testLoader __buildTestSuite "$@"
+__ops .. __buildTestSuite "$@"

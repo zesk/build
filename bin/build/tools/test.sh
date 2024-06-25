@@ -20,7 +20,7 @@ dumpPipe() {
 
   export BUILD_DEBUG_LINES
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
-  showLines="${BUILD_DEBUG_LINES:-10}"
+  showLines="${BUILD_DEBUG_LINES:-100}"
 
   item=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
 

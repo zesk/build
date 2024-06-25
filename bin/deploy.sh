@@ -5,12 +5,14 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __loader1 11
-set -eou pipefail
+# IDENTICAL __tools 13
 # Load zesk build and run command
-__loader() {
+__tools() {
+  local relative="$1"
+  set -eou pipefail
+  shift
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/../bin/build/tools.sh"; then
+  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/tools.sh"; then
     "$@" || return $?
   else
     exec 1>&2 && printf 'FAIL: %s\n' "$@"
@@ -56,4 +58,4 @@ _buildDeploy() {
   usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
 }
 
-__loader __buildDeploy "$@"
+__tools .. __buildDeploy "$@"

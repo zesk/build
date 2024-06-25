@@ -25,6 +25,9 @@ usageDocument() {
   local functionDefinitionFile functionName exitCode variablesFile
   local usage="_${FUNCNAME[0]}"
 
+  if isBashDebug; then
+    set +x
+  fi
   [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   functionDefinitionFile="$1"

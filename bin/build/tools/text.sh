@@ -613,8 +613,14 @@ _mapEnvironmentGenerateSedFile() {
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 mapEnvironment() {
   # IDENTICAL mapEnvironment 94 137
-  local this argument
+  local this argument quietDebug
   local prefix suffix sedFile ee e rs
+
+  quietDebug=false
+  if isBashDebug; then
+    quietDebug=true
+    set +x
+  fi
 
   this="${FUNCNAME[0]}"
   prefix='{'
@@ -655,6 +661,7 @@ mapEnvironment() {
     rs=$?
   fi
   rm -f "$sedFile" || :
+  ! $quietDebug || set -x
   return $rs
 }
 
