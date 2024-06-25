@@ -4,18 +4,20 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 
-# IDENTICAL __install 21
-set -eou pipefail
-# Install, load zesk build and run command
+# IDENTICAL _return 4
 _return() {
   local code
-  code="${1-0}" && exec 1>&2 && shift && printf "%s -> %d\n" "$(printf "%s " "$@")" "$code" && return "$code"
+  code="${1-1}" && shift && printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2 && return "$code"
 }
+
+# IDENTICAL __install 19
+# Install, load zesk build and run command
 __install() {
   local source="${BASH_SOURCE[0]}"
   local install="bin/install-bin-build.sh"
   local here
 
+  set -eou pipefail
   here=$(dirname "$source") || _return 99 dirname "$source" || return $?
   if [ ! -d "$here/build" ]; then
     [ -x "$here/$install" ] || _return 98 "$here/$install not executable" || return $?
