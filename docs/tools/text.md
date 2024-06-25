@@ -680,6 +680,19 @@ This can break your files so use with caution.
 - `0` - Success
 - `1` - Arguments are identical
 
+#### Usage
+
+    joinArguments separator text0 arg1 ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 # Characters
 
 
@@ -752,6 +765,8 @@ Does this character match one or more character classes?
 
 - `0` - Always succeeds
 
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Text Functions)

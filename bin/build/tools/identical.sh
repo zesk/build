@@ -109,17 +109,17 @@ identicalCheck() {
   done
 
   [ ${#findArgs[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one --extension" || return $?
-
   [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
   rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
   searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
+
   if [ ! -s "$searchFileList" ]; then
     __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || return $?
   fi
-  ! $debug || dumpPipe "searchFileList" <"$searchFileList"
+  ! $debug || dumpPipe "searchFileList" <"$searchFileList" || return $?
   while IFS= read -r searchFile; do
     if [ "$(basename "$searchFile")" = "$me" ]; then
       # We are exceptional ;)
@@ -272,7 +272,7 @@ __identicalCheckGenerateSearchFiles() {
       grep -e "$(quoteGrepPattern "$repairSource")" <"$searchFileList" >>"$orderedList"
       ignorePatterns+=(-e "$(quoteGrepPattern "$repairSource")")
     done
-    grep -v "${ignorePatterns[@]}" <"$searchFileList" >>"$orderedList"
+    grep -v "${ignorePatterns[@]}" <"$searchFileList" >>"$orderedList" || :
     rm -rf "$searchFileList"
     printf "%s\n" "$orderedList"
   else
@@ -414,8 +414,9 @@ __identicalLineParse() {
   identicalLine="$(trimSpace "${identicalLine##*"$prefix"}")"
   token=${identicalLine%% *}
   count=${identicalLine#* }
-  line0=${count% [0-9]*}
+  line0=${count%% *}
   line1=${count#[0-9]* }
+  line1=${line1%% *}
   if isInteger "$line0"; then
     # Allow non-numeric token after numeric (markup)
     if ! isInteger "$line1"; then

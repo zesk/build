@@ -94,8 +94,8 @@ daemontoolsInstallService() {
   binaryPath=$(realPath "$serviceFile") || __failEnvironment "$usage" "realPath $serviceFile" || return $?
   args=(--map "$source" "$target/run")
   if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath copyFileWouldChange "${args[@]}"; then
-    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath __environment copyFile "${args[@]}" || return $?
-    __environment chmod 700 "$target/run" || return $?
+    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
+    __usageEnvironment "$usage" chmod 700 "$target/run" || return $?
   fi
   if [ -n "$logPath" ]; then
     logSource="$here/_generic-log.sh"
@@ -103,15 +103,15 @@ daemontoolsInstallService() {
     [ -d "$logTarget" ] || (mkdir "$logTarget" && echo "Created $logTarget")
     args=(--map "$logSource" "$logTarget/run")
     if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileWouldChange "${args[@]}"; then
-      LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile __environment copyFile "${args[@]}" || return $?
-      __environment chmod 700 "$logTarget/run" || return $?
+      LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
+      __usageEnvironment "$usage" chmod 700 "$logTarget/run" || return $?
     fi
   fi
   _daemontoolsSuperviseWait "$target" || return $?
-  __environment svc -t "$target" || return $?
+  __usageEnvironment "$usage" svc -t "$target" || return $?
   if [ -n "$logPath" ]; then
     _daemontoolsSuperviseWait "$logTarget" || return $?
-    __environment svc -t "$logTarget" || return $?
+    __usageEnvironment "$usage" svc -t "$logTarget" || return $?
   fi
 }
 _daemontoolsInstallService() {

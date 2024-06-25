@@ -27,6 +27,19 @@ _return() {
   return "$code"
 }
 
+# Map template files using our identical functionality
+buildDocumentationTemplating() {
+  local failCount
+
+  failCount=0
+  while ! __environment identicalCheck --repair ./docs/_templates/_parts --extension md --prefix '<!-- TEMPLATE' --cd docs/_templates; do
+    failCount=$((failCount + 1))
+    if [ $failCount -gt 4 ]; then
+      _environment "identicalCheck --repair failed" || return $?
+    fi
+  done
+}
+
 #
 # Usage: {fn} cacheDirectory envFile
 # Argument: cacheDirectory - Required. Directory. Cache directory.
@@ -62,10 +75,7 @@ buildDocumentation_UpdateUnlinked() {
   template="./docs/_templates/tools/todo.md"
   documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "./docs/tools/todo.md" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __failEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || return $?
   (
-    set -a
-    # shellcheck source=/dev/null
-    source "$envFile" || __failEnvironment "$usage" "source $envFile" || return $?
-    title="Missing functions" content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
+    content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment content <"./docs/_templates/__main1.md" >"$template.$$"
   ) || return $?
   total=$(wc -l <"$unlinkedFunctions" | trimSpace)
   if [ -f "$template" ] && diff -q "$template" "$template.$$"; then
@@ -152,11 +162,6 @@ tools __function.md
 hooks __hook.md
 bin __binary.md
 EOF
-}
-
-# Map template files using our identical functionality
-buildDocumentationTemplating() {
-  identicalCheck --repair ./docs/_parts --extension md --prefix '<!-- TEMPLATE' --cd docs/
 }
 
 # fn: {base}

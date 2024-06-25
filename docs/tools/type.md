@@ -1,7 +1,8 @@
 # Type Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `inArray` - Check if an element exists in an array
@@ -172,5 +173,8 @@ If no arguments are passed, returns exit code 1.
 - `0` - All arguments are callable as a command
 - `1` - One or or more arguments are callable as a command
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Type Functions)

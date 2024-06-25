@@ -1,12 +1,8 @@
-# Version Functions
+Changing templates in this file likely has effects on most pages.
 
 <!-- TEMPLATE header 2 -->
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
-
-{releaseNotes}
-{newRelease}
-{nextMinorVersion}
 
 <!-- TEMPLATE footer 4 -->
 <hr />

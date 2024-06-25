@@ -1,7 +1,8 @@
 # Version Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `releaseNotes` - Output path to current release notes
@@ -70,5 +71,8 @@ Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 
 - `0` - Always succeeds
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Version Functions)
