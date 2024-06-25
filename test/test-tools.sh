@@ -140,8 +140,12 @@ loadTestFiles() {
     resultCode=0
 
     declare -p >"$__before"
+    printf "%s\n" "Running test $__test" >>"$quietLog"
     if ! "$__test" "$quietLog"; then
+      printf "%s\n" "FAILED $__test" >>"$quietLog"
       resultCode=$errorTest
+    else
+      printf "%s\n" "SUCCESS $__test" >>"$quietLog"
     fi
     cd "$__testDirectory"
 
@@ -183,7 +187,6 @@ loadTestFiles() {
     else
       printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
     fi
-
   done
   if [ "$resultCode" -eq 0 ] && resultReason=$(didAnyTestsFail); then
     # Should probably reset test status but ...
