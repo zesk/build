@@ -17,6 +17,11 @@ __tools() {
   # shellcheck source=/dev/null
   source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
+}
+
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
 _return() {
   local code="${1-1}"
   shift
