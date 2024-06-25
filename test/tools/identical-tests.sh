@@ -10,6 +10,13 @@ set -eou pipefail
 
 declare -a tests
 
+tests+=(testIdenticalLineParsing)
+testIdenticalLineParsing() {
+  assertEquals "$(__identicalLineParse foo '<!-- IDENTICAL' '3:<!-- IDENTICAL header 4 5 -->')" "3 header 1" || return $?
+  assertEquals "$(__identicalLineParse foo '<!-- IDENTICAL' '3:<!-- IDENTICAL header 4 FOO -->')" "3 header 4" || return $?
+  assertEquals "$(__identicalLineParse foo '<!-- IDENTICAL' '31:<!-- IDENTICAL header 2 -->')" "31 header 2" || return $?
+}
+
 tests+=(testIdenticalChecks)
 testIdenticalChecks() {
   local identicalCheckArgs

@@ -14,23 +14,23 @@ _return() {
   return "$code"
 }
 
-# IDENTICAL __install 17
+# IDENTICAL __install 18
 # Install, load zesk build and run command
 __install() {
+  local relative="$1" installPath="$2"
   local source="${BASH_SOURCE[0]}"
-  local install="bin/install-bin-build.sh"
-  local here
-
-  set -eou pipefail
-  here=$(dirname "$source") || _return 99 dirname "$source" || return $?
+  local here="${source%/*}"
+  shift 2 && set -eou pipefail
+  local install="$here/$installPath/install-bin-build.sh"
+  local tools="$here/$relative/bin/build/tools.sh"
   if [ ! -d "$here/build" ]; then
-    [ -x "$here/$install" ] || _return 98 "$here/$install not executable" || return $?
-    "$here/$install" || _return 97 "$install not executable" || return $?
-    [ -d "$here/build" ] || _return 96 "$install did not create $here/build" || return $?
+    [ -x "$install" ] || _return 99 "$install not executable" || return $?
+    "$install" || _return 98 "$install failed" || return $?
   fi
+  [ -x "$tools" ] || _return 97 "$install failed to create $tools" "$@" || return $?
   # shellcheck source=/dev/null
-  source "$here/../bin/build/tools.sh" || _return 42 tools.sh "$@" || return $?
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
 }
 
-__install consoleOrange "$@"
+__install ../../.. bin/build consoleOrange "$@"

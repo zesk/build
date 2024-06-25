@@ -46,6 +46,7 @@ daemontoolsTests() {
 
   assertDirectoryExists "$logPath/lemon" || return $?
   assertFileExists "$logPath/lemon/current" || return $?
+  ls -la "$logPath/lemon"
   assertFileContains "$logPath/lemon/current" "lemon.sh" || return $?
 
   assertOutputContains " up " svstat /etc/service/lemon/ || return $?

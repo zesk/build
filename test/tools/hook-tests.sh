@@ -97,7 +97,7 @@ testHookSystem() {
 
   # No hook
   consoleInfo "hasHook test3"
-  assertNotExitCode --stderr-ok 0 hasHook test3 || _hookTestFailed "$testDir" || return $?
+  assertNotExitCode 0 hasHook test3 || _hookTestFailed "$testDir" || return $?
 
   # Exit codes
   consoleInfo "runHook test0"

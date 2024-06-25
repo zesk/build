@@ -89,6 +89,32 @@ Quote bash strings for inclusion as single-quoted for eval
     sed
     
 
+### `quoteGrepPattern` - Quote grep -e patterns for shell use
+
+$\Quote grep -e patterns for shell use
+
+#### Usage
+
+    quoteGrepPattern text
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
+
+#### Sample Output
+
+    string quoted and appropriate to insert in a grep search or replacement phrase
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 
 ### `escapeQuotes` - Quote strings for inclusion in shell quoted strings
 
@@ -189,6 +215,23 @@ Replaces the first and only the first occurrence of a pattern in a line with a r
 
     replaceFirstPattern pattern replacement
     
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `removeFields` - Remove fields from left to right from a text file
+
+Remove fields from left to right from a text file as a pipe
+
+#### Usage
+
+    removeFields fieldCount < input > output
+    
+
+#### Arguments
+
+
 
 #### Exit codes
 
@@ -637,6 +680,19 @@ This can break your files so use with caution.
 - `0` - Success
 - `1` - Arguments are identical
 
+#### Usage
+
+    joinArguments separator text0 arg1 ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 # Characters
 
 
@@ -709,6 +765,8 @@ Does this character match one or more character classes?
 
 - `0` - Always succeeds
 
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Text Functions)

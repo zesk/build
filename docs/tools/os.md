@@ -183,6 +183,7 @@ Creates the directories for all files passed in.
 
 - `0` - Always succeeds
 
+
 ### `directoryClobber` - Copy directory over another sort-of-atomically
 
 Copy directory over another sort-of-atomically
@@ -195,6 +196,21 @@ Copy directory over another sort-of-atomically
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `directoryIsEmpty` - Does a directory exist and is it empty?
+
+Does a directory exist and is it empty?
+
+#### Usage
+
+    directoryIsEmpty directory
+    
+
+#### Exit codes
+
+- `2` - Directory does not exist
+- `1` - Directory is not empty
+- `0` - Directory is empty
 
 
 ### `fileDirectoryExists` - Does the file's directory exist?
@@ -303,29 +319,16 @@ Platform agnostic tar cfz which ignores owner and attributes
 - `0` - Always succeeds
 
 
-### `environmentVariables` - Fetch a list of environment variable names
+### `environmentVariables` - Output a list of environment variables and ignore function definitions
 
 Output a list of environment variables and ignore function definitions
 
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
-Returns the list of defined environment variables exported in the current bash context.
-
 #### Usage
 
     environmentVariables
-    
-
-#### Examples
-
-    for f in $(environmentVariables); do
-    echo "$f"
-    done
-
-#### Sample Output
-
-    Environment variable names, one per line.
     
 
 #### Exit codes

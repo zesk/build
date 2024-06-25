@@ -32,26 +32,18 @@ Quick guide:
 # Sugar Functions References
 
 
-### `_exit` - Critical exit `errorCritical` - exit immediately
+### `_exit` - Critical exit - exit immediately
 
-Critical exit `errorCritical` - exit immediately
+Critical exit - exit immediately
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `99` - Failure
 
-### `_return` - Return code always. Outputs `message ...` to `stderr`.
+### `_return` - IDENTICAL __tools 11
 
-Return code always. Outputs `message ...` to `stderr`.
-
-#### Usage
-
-    _return code command || return $?
-    
-
-#### Arguments
-
-
+IDENTICAL __tools 11
+Load tools.sh and run command
 
 #### Exit codes
 
@@ -194,8 +186,8 @@ Output a titled list
 
 - `0` - Always succeeds
 
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
 
 Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Sugar Core)

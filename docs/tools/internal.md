@@ -6,6 +6,18 @@
 Unable to find "buildBuild" (using index "/Users/kent/.build")
 Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
+### `buildDocumentationTemplating` - Map template files using our identical functionality
+
+Map template files using our identical functionality
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Errors
+
+Unable to find "buildDeploy" (using index "/Users/kent/.build")
+
 ### `build-docs.sh` - Build documentation for build system.
 
 Build documentation for build system.

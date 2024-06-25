@@ -5,19 +5,23 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 13
-# Load zesk build and run command
+# IDENTICAL __tools 11
+# Load tools.sh and run command
 __tools() {
   local relative="$1"
-  set -eou pipefail
-  shift
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/tools.sh"; then
-    "$@" || return $?
-  else
-    exec 1>&2 && printf 'FAIL: %s\n' "$@"
-    return 42 # The meaning of life
-  fi
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
+_return() {
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
 }
 
 #

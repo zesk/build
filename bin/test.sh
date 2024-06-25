@@ -25,7 +25,7 @@ __ops() {
   fi
 }
 
-messyTestCleanup() {
+__messyTestCleanup() {
   local fn exitCode=$?
 
   export cleanExit
@@ -85,7 +85,7 @@ __buildTestSuite() {
   printf "%s %s\n" "$(consoleInfo "Color mode is")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
-  trap messyTestCleanup EXIT QUIT TERM
+  trap __messyTestCleanup EXIT QUIT TERM
 
   messyOption=
   allTests=(sugar colors console debug git decoration url ssh log version type process os hook pipeline identical)
@@ -174,7 +174,7 @@ __buildTestSuite() {
 
   printf "%s\n" "$testTracing" >>"$quietLog"
   testTracing=cleanup
-  messyTestCleanup
+  __messyTestCleanup
 
   printf "%s\n" "$(bigText --bigger Passed)" | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
   if [ -n "$continueFile" ]; then

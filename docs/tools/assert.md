@@ -421,6 +421,62 @@ None
 
 File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 
+### `assertDirectoryEmpty` - Test that a directory exists
+
+$\Test that a directory exists
+
+#### Usage
+
+    assertDirectoryEmpty directory [ message ... ]
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    assertDirectoryExists "$HOME" "HOME not found"
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Environment
+
+- This fails if `directory` is anything but a `directory`
+
+### `assertDirectoryNotEmpty` - Test that a directory does not exist
+
+$\Test that a directory does not exist
+
+#### Usage
+
+    assertDirectoryNotEmpty directory [ message ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - If the assertion succeeds
+- `1` - If the assertion fails
+
+#### Local cache
+
+None
+
+#### Review Status
+
+File `bin/build/tools/assert.sh`, function `assertDirectoryNotEmpty` was reviewed 2023-11-12.
+
 ## File
 
 
@@ -667,5 +723,10 @@ Outputs 40 random hexadecimal characters, lowercase.
     shasum, /dev/random
     
 
-[⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
+
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Assert Functions)

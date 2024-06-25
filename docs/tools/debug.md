@@ -151,5 +151,25 @@ Useful if you need to temporarily enable or disable it.
 
 {SEE:restoreErrorExit}
 
+### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
+
+dumpFile fileName0 [ fileName1 ... ]
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `dumpPipe` - Dump a pipe with a title and stats
+
+Dump a pipe with a title and stats
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

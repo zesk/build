@@ -1,7 +1,8 @@
 # Utilites Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `incrementor` - Set or increment a process-wide incrementor. If no numeric value
@@ -47,5 +48,31 @@ Sets `kitty` incrementor to 2 and outputs `2`
 
 {SEE:buildCacheDirectory}
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+### `extensionLists` - Generates a directory containing files with `extension` as the file
+
+Generates a directory containing files with `extension` as the file names.
+All files passed to this are added to the `@` file, the `!` file is used for files without extensions.
+Extension parsing is done by removing the final dot from the filename:
+- `foo.sh` -> `"sh"`
+- `foo.tar.gz` -> `"gz"`
+- `foo.` -> `"!"``
+- `foo-bar` -> `"!"``
+
+#### Usage
+
+    extensionLists directory file0 ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+<!-- TEMPLATE footer 4 -->
+<hr />
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Utilites Functions)

@@ -16,7 +16,6 @@
 # - use `a || b || c || return $?` format when possible
 # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
 
-
 # IDENTICAL __loader 11
 set -eou pipefail
 # Load zesk build and run command
@@ -101,8 +100,6 @@ _exampleFunction() {
 }
 
 __loader exampleFunction "$@"
-
-
 
 #
 # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will

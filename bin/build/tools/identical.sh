@@ -109,17 +109,17 @@ identicalCheck() {
   done
 
   [ ${#findArgs[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one --extension" || return $?
-
   [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
   rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
   searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
+
   if [ ! -s "$searchFileList" ]; then
     __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || return $?
   fi
-  ! $debug || dumpPipe "searchFileList" <"$searchFileList"
+  ! $debug || dumpPipe "searchFileList" <"$searchFileList" || return $?
   while IFS= read -r searchFile; do
     if [ "$(basename "$searchFile")" = "$me" ]; then
       # We are exceptional ;)
@@ -256,7 +256,7 @@ __identicalCheckGenerateSearchFiles() {
       break
     fi
     [ -n "$1" ] || _argument "Blank repairSource?" || return $?
-    repairSources+=("$1")
+    repairSources+=("${1%/}/")
     shift
   done
   searchFileList=$(mktemp) || _environment "mktemp" || return $?
@@ -272,7 +272,7 @@ __identicalCheckGenerateSearchFiles() {
       grep -e "$(quoteGrepPattern "$repairSource")" <"$searchFileList" >>"$orderedList"
       ignorePatterns+=(-e "$(quoteGrepPattern "$repairSource")")
     done
-    grep -v "${ignorePatterns[@]}" <"$searchFileList" >>"$orderedList"
+    grep -v "${ignorePatterns[@]}" <"$searchFileList" >>"$orderedList" || :
     rm -rf "$searchFileList"
     printf "%s\n" "$orderedList"
   else
@@ -414,15 +414,19 @@ __identicalLineParse() {
   identicalLine="$(trimSpace "${identicalLine##*"$prefix"}")"
   token=${identicalLine%% *}
   count=${identicalLine#* }
-  line0=${count% [0-9]*}
+  line0=${count%% *}
   line1=${count#[0-9]* }
-  if ! isInteger "$line0" || ! isInteger "$line1"; then
-    :
-  elif [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
-    if [ "$line0" -ge "$line1" ]; then
-      _environment "$(consoleCode "$file:$lineNumber") - line numbers out of order: $(consoelValue "$line0 $line1")" || return $?
+  line1=${line1%% *}
+  if isInteger "$line0"; then
+    # Allow non-numeric token after numeric (markup)
+    if ! isInteger "$line1"; then
+      count="$line0"
+    elif [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
+      if [ "$line0" -ge "$line1" ]; then
+        _environment "$(consoleCode "$file:$lineNumber") - line numbers out of order: $(consoelValue "$line0 $line1")" || return $?
+      fi
+      count=$((line1 - line0))
     fi
-    count=$((line1 - line0))
   fi
   printf "%d %s %s\n" "$lineNumber" "$token" "$count"
 }

@@ -3,19 +3,41 @@
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 13
-# Load zesk build and run command
+# IDENTICAL __tools 11
+# Load tools.sh and run command
 __tools() {
   local relative="$1"
-  set -eou pipefail
-  shift
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/tools.sh"; then
-    "$@" || return $?
-  else
-    exec 1>&2 && printf 'FAIL: %s\n' "$@"
-    return 42 # The meaning of life
-  fi
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
+}
+
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
+}
+
+# Map template files using our identical functionality
+buildDocumentationTemplating() {
+  local failCount
+
+  failCount=0
+  while ! __environment identicalCheck --repair ./docs/_templates/_parts --extension md --prefix '<!-- TEMPLATE' --cd docs/_templates; do
+    failCount=$((failCount + 1))
+    if [ $failCount -gt 4 ]; then
+      _environment "identicalCheck --repair failed" || return $?
+    fi
+  done
 }
 
 #
@@ -53,10 +75,7 @@ buildDocumentation_UpdateUnlinked() {
   template="./docs/_templates/tools/todo.md"
   documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "./docs/tools/todo.md" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __failEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || return $?
   (
-    set -a
-    # shellcheck source=/dev/null
-    source "$envFile" || __failEnvironment "$usage" "source $envFile" || return $?
-    title="Missing functions" content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment <"./docs/_templates/__main1.md" >"$template.$$"
+    content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment content <"./docs/_templates/__main1.md" >"$template.$$"
   ) || return $?
   total=$(wc -l <"$unlinkedFunctions" | trimSpace)
   if [ -f "$template" ] && diff -q "$template" "$template.$$"; then
@@ -229,6 +248,7 @@ buildDocumentationBuild() {
   done
   cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
+  __usageEnvironment "$usage" buildDocumentationTemplating || return $?
   #
   # Generate or update indexes
   #

@@ -35,4 +35,4 @@ _user() {
   printf "%s\n" "$APPLICATION_USER"
 }
 
-exec setuidgid "$(_user "{APPLICATION_USER}")" "$@" || _return $? "Unable to load $*" || return $?
+exec setuidgid "$(_user "{APPLICATION_USER}")" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?

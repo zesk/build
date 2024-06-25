@@ -200,6 +200,64 @@ Current repository should be clean and have no modified files.
 - `1` - Already in main, staging, or HEAD, or git merge failed
 - `0` - git merge succeeded
 
+### `gitPreCommitShellFiles` - Run pre-commit checks on shell-files
+
+Run pre-commit checks on shell-files
+
+#### Usage
+
+    gitPreCommitShellFiles [ --help ] [ --interactive ] [ --check checkDirectory ] ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `gitFindHome` - Finds .git directory above or in current one.
+
+Finds .git directory above or in current one.
+
+#### Usage
+
+    gitFindHome startingDirectory
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `gitInstallHook` - Install the most recent version of this hook and RUN
+
+Install the most recent version of this hook and RUN IT in place if it has changed.
+You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
+When running within your hook, pass additional arguments so they can be preserved:
+
+    gitInstallHook --application "$myHoem" pre-commit "$@" || return $?
+
+#### Usage
+
+    gitInstallHook [ --application applicationHome ] [ --copy ] hook
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - the file was not updated
+- `1` - Environment error
+- `2` - Argument error
+- `3 - --copy` - the file was changed
+
+#### Environment
+
+BUILD-HOME - The default application home directory used for `.git` and build hooks.
+
 ## git History
 
 

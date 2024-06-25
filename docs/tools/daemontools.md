@@ -95,6 +95,33 @@ Dangerous. Stops any running services and restarts them.
 
 - `0` - Always succeeds
 
+### `daemontoolsManager` - Runs a daemon which monitors files and operates on services.
+
+Runs a daemon which monitors files and operates on services.
+
+To request a specific action write the file with the action as the first line.
+
+Allows control across user boundaries. (e.g. user can control root services)
+
+Specify actions more than once on the command line to specify more than one set of permissions.
+
+#### Usage
+
+    daemontoolsManager [ --interval seconds ] [ --stat statFile ] [ --action actions ] service0 file0 [ service1 file1 ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+DAEMONTOOLS_HOME - The default home directory for `daemontools`
+
 # Non-production starting/stopping
 
 
