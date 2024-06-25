@@ -2,19 +2,19 @@
 2
 3
 4
-# IDENTICAL testToken 3
-- TestToken
-- TestToken
-  Indented
+# SAME-SAME testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
 9
 10
 11
 12
-# IDENTICAL testToken 3
+# SAME-SAME testToken 3
 - IGNORED and will not be detected in source for repair
 15
 16
-# IDENTICAL test10 10
+# SAME-SAME test10 10
 - Left thumb
 - Left index
 - Left pointer

@@ -2,35 +2,44 @@
 2
 3
 4
-# IDENTICAL testToken 3
-- TestToken
-- TestToken
-  Indented
+# SAME-SAME testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
 9
 10
 11
 12
-# IDENTICAL testToken 3
-- TestToken
-- TestToken
-  Indented
-15
-16
-17
-# IDENTICAL testToken 3
-- TestToken
-- TestToken
-  Indented
+# SAME-SAME testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
+# SAME-SAME testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
 21
 22
-# IDENTICAL testToken 3
-- TestToken
-- TestToken
-  Indented
+# SAME-SAME testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
 #
 #
-# IDENTICAL test10 1
+# SAME-SAME test10 1
 Nope
 #
 #
 40
+# SAME-SAME testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
+# SHOULD APPEAR
+# SAME-SAME testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
+# SHOULD APPEAR
+# SHOULD APPEAR
+# SHOULD APPEAR

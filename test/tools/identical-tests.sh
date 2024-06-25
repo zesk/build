@@ -17,9 +17,10 @@ testIdenticalRepair() {
   source="test/example/identical-source.txt"
   target="test/example/identical-target.txt"
   for token in testToken test10; do
-    output=$(mktemp)
-    __environment identicalRepair --stdout --prefix '# ''IDENTICAL' "$token" "$source" "$target" >"$output" || return $?
+    output="$(dirname $target)/ACTUAL-$token-$(basename $target)"
+    __environment identicalRepair --stdout --prefix '# ''SAME-SAME' "$token" "$source" "$target" >"$output" || return $?
     assertExitCode --dump 0 diff "$output" "$(dirname $target)/$token-$(basename $target)" || return $?
+    rm -rf "$output"
   done
 }
 

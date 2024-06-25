@@ -375,15 +375,14 @@ identicalRepair() {
       if [ $currentLineNumber -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination"
       else
-        echo "lineNumber=$lineNumber currentLineNumber=$currentLineNumber, head $((lineNumber - 1)) tail $((lineNumber - currentLineNumber))"
         head -n $((lineNumber - 1)) <"$destination" | tail -n $((lineNumber - currentLineNumber))
       fi
     fi
-    currentLineNumber=$((lineNumber + count))
+    currentLineNumber=$((lineNumber + count + 1))
     cat "$sourceText"
   done < <(grep -n -e "$grepPattern" <"$destination")
   if [ $currentLineNumber -lt "$totalLines" ]; then
-    tail -n $((totalLines - currentLineNumber)) <"$destination"
+    tail -n $((totalLines - currentLineNumber + 1)) <"$destination"
   fi
   if ! $stdout; then
     __usageEnvironment "$usage" cp -f "$targetFile" "$destination" || return $?
