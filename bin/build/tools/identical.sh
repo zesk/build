@@ -416,13 +416,16 @@ __identicalLineParse() {
   count=${identicalLine#* }
   line0=${count% [0-9]*}
   line1=${count#[0-9]* }
-  if ! isInteger "$line0" || ! isInteger "$line1"; then
-    :
-  elif [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
-    if [ "$line0" -ge "$line1" ]; then
-      _environment "$(consoleCode "$file:$lineNumber") - line numbers out of order: $(consoelValue "$line0 $line1")" || return $?
+  if isInteger "$line0"; then
+    # Allow non-numeric token after numeric (markup)
+    if ! isInteger "$line1"; then
+      count="$line0"
+    elif [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
+      if [ "$line0" -ge "$line1" ]; then
+        _environment "$(consoleCode "$file:$lineNumber") - line numbers out of order: $(consoelValue "$line0 $line1")" || return $?
+      fi
+      count=$((line1 - line0))
     fi
-    count=$((line1 - line0))
   fi
   printf "%d %s %s\n" "$lineNumber" "$token" "$count"
 }

@@ -137,14 +137,6 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 - `0` - Always succeeds
 
-#### Usage
-
-    findUncaughtAssertions [ --exec binary ] [ directory ]
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

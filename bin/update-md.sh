@@ -5,9 +5,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-
-
-# IDENTICAL __tools 16
+# IDENTICAL __tools 11
 # Load tools.sh and run command
 __tools() {
   local relative="$1"
@@ -29,6 +27,13 @@ _return() {
   shift
   printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
   return "$code"
+}
+
+__addNoteTo() {
+  statusMessage consoleInfo "Adding note to $1"
+  cp "$1" bin/build
+  printf "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
+  git add "bin/build/$1"
 }
 
 #

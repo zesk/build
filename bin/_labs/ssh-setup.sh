@@ -23,7 +23,7 @@ set -eou pipefail
 #
 sshSetup() {
   local arg sshHomePath flagForce servers keyType keyBits
-    local usage
+  local usage
 
   usage="_${FUNCNAME[0]}"
 

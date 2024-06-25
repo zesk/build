@@ -6,7 +6,7 @@
 #
 # documentTemplate: ./docs/_templates/__binary.md
 
-# IDENTICAL __tools 16
+# IDENTICAL __tools 11
 # Load tools.sh and run command
 __tools() {
   local relative="$1"
@@ -20,8 +20,15 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 1
-
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
+}
 
 #
 # Build Zesk Build

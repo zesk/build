@@ -3,7 +3,7 @@
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 16
+# IDENTICAL __tools 11
 # Load tools.sh and run command
 __tools() {
   local relative="$1"
@@ -154,6 +154,11 @@ bin __binary.md
 EOF
 }
 
+# Map template files using our identical functionality
+buildDocumentationTemplating() {
+  identicalCheck --repair ./docs/_parts --extension md --prefix '<!-- TEMPLATE' --cd docs/
+}
+
 # fn: {base}
 # Build documentation for build system.
 #
@@ -238,6 +243,7 @@ buildDocumentationBuild() {
   done
   cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
+  __usageEnvironment "$usage" buildDocumentationTemplating || return $?
   #
   # Generate or update indexes
   #
