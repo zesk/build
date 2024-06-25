@@ -48,7 +48,7 @@ identicalCheck() {
   local totalLines lineNumber token count parsed tokenFile countFile searchFile
   local identicalLine binary matchFile repairSource repairSources isBadFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
-  local excludes
+  local excludes searchFileList
 
   this="${FUNCNAME[0]}"
   usage="_$this"
