@@ -1,0 +1,40 @@
+1
+2
+3
+4
+# IDENTICAL testToken 3
+- TestToken
+- TestToken
+  Indented
+9
+10
+11
+12
+# IDENTICAL testToken 1
+- IGNORED and will not be detected in source for repair
+15
+16
+17
+# IDENTICAL testToken 2
+- TestToken
+- TestToken
+21
+22
+# IDENTICAL testToken 10
+- Left thumb
+- Left index
+- Left pointer
+- Left pinky
+- Left ring
+- Right thumb
+- Right index
+- Right pointer
+- Right pinky
+- Right ring
+#
+#
+# IDENTICAL test10 1
+Nope
+#
+#
+40

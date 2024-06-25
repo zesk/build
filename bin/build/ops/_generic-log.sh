@@ -5,11 +5,16 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-set -eou pipefail
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
 _return() {
-  local code
-  code="${1-0}" && exec 1>&2 && shift && printf "%s -> %d\n" "$(printf "%s " "$@")" "$code" && return "$code"
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
 }
+
 __return() {
   "$@" || _return $? "$@" || return $?
 }
@@ -23,7 +28,7 @@ _user() {
   export APPLICATION_USER HOME
   APPLICATION_USER="$1"
   HOME=$(grep "^$APPLICATION_USER:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $APPLICATION_USER in $userDatabase" || return $?
-  [ -d "$HOME" ] || _return $? "User $APPLICATION_USER HOME=$HOME is not a directory" || return $?
+  [ -d "$HOME" ] || _return 1 "User $APPLICATION_USER HOME=$HOME is not a directory" || return $?
   printf "%s\n" "$APPLICATION_USER"
 }
 
@@ -64,5 +69,3 @@ _logger() {
 }
 
 _logger "{APPLICATION_USER}" "{LOG_PATH}"
-
-_setApplicationUserOwner

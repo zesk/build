@@ -246,7 +246,7 @@ _installBinBuild() {
   return "$exitCode"
 }
 
-# IDENTICAL _colors 86
+# IDENTICAL _colors 87
 
 # This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
 # If `TERM` is set then uses the `tput colors` call to determine the console support for colors.

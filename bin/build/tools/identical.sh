@@ -46,7 +46,7 @@ identicalCheck() {
   local this argument usage me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
   local totalLines lineNumber token count parsed tokenFile countFile searchFile
-  local identicalLine binary matchFile repairSource repairSources
+  local identicalLine binary matchFile repairSource repairSources isBadFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
   local excludes
 
@@ -61,7 +61,7 @@ identicalCheck() {
   badFiles=()
   prefixes=()
   excludes=()
-  repairSources=
+  repairSources=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -115,6 +115,8 @@ identicalCheck() {
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
+  rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
+  searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
   while IFS= read -r searchFile; do
     if [ "$(basename "$searchFile")" = "$me" ]; then
       # We are exceptional ;)
@@ -133,6 +135,7 @@ identicalCheck() {
         read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
         tokenFile="$tempDirectory/$prefixIndex/$token"
         countFile="$tempDirectory/$prefixIndex/$count@$token.match"
+        isBadFile=false
         if [ -f "$tokenFile" ]; then
           tokenLineCount=$(head -1 "$tokenFile")
           tokenFileName=$(tail -1 "$tokenFile")
@@ -140,51 +143,61 @@ identicalCheck() {
             printf "%s%s: %s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError -n "Token counts do not match:")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$tokenFileName")" "$(consoleSuccess "$tokenLineCount")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$searchFile")" "$(consoleError "$count")" 1>&2
-            if [ ${#repairSources[@]} -gt 0 ]; then
-              if ! __identicalCheckRepair "$prefix" "$token" "$searchFile" "$tokenFileName" "${repairSources[@]}"; then
-                badFiles+=("$tokenFileName")
-                badFiles+=("$searchFile")
-              fi
-            else
-              badFiles+=("$tokenFileName")
-              badFiles+=("$searchFile")
-            fi
+            isBadFile=true
           else
             compareFile="${countFile}.compare"
             # Extract our section of the file. Matching is done, use line numbers and math to extract exact section
             # 10 lines in file, line 1 means: tail -n 10
             # 10 lines in file, line 9 means: tail -n 2
             # 10 lines in file, line 10 means: tail -n 1
-            __environment tail -n $((totalLines - lineNumber + 1)) "$searchFile" | __environment head -n "$count" >"$compareFile" || return $?
+            __environment tail -n $((totalLines - lineNumber)) "$searchFile" | __environment head -n "$count" >"$compareFile" || return $?
             if [ "$(grep -c "$prefix" "$compareFile")" -gt 0 ]; then
+              dumpPipe compareFile <"$compareFile"
               badFiles+=("$searchFile")
               {
-                clearLine || :
-                printf "%s: %s\n< %s\n%s" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
+                printf "%s%s: %s\n< %s\n%s" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
                 grep "$prefix" "$compareFile" | wrapLines "$(consoleCode)    " "$(consoleReset)" || :
                 consoleReset || :
               } 1>&2
             fi
             if ! diff -b -q "$countFile" "${countFile}.compare" >/dev/null; then
-              badFiles+=("$tokenFileName")
-              badFiles+=("$searchFile")
-              clearLine 1>&2
-              printf "%s: %s\n< %s\n> %s%s\n" "$(consoleInfo "$token")" "$(consoleError -n "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
+              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError -n "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
               diff "$countFile" "${countFile}.compare" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" 1>&2
-              break
+              isBadFile=true
             else
               statusMessage consoleSuccess "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))"
             fi
           fi
+          if $isBadFile; then
+            if [ ${#repairSources[@]} -gt 0 ]; then
+              statusMessage consoleWarning "Repairing $token in $(consoleCode "$searchFile")"
+              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
+                badFiles+=("$tokenFileName")
+                badFiles+=("$searchFile")
+                clearLine
+                consoleSuccess "Unable to repair $(consoleValue "$token") in $(consoleCode "$searchFile")"
+                printf "\n\n\n"
+              else
+                clearLine
+                consoleSuccess "Repaired $(consoleValue "$token") in $(consoleCode "$searchFile")"
+                printf "\n\n\n"
+              fi
+            else
+              badFiles+=("$tokenFileName")
+              badFiles+=("$searchFile")
+            fi
+            break
+          fi
         else
           printf "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
-          tail -n $((totalLines - lineNumber + 1)) <"$searchFile" | head -n "$count" >"$countFile"
+          tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n "$count" >"$countFile"
+          # dumpPipe countFile "$token" <"$countFile" 1>&2
           statusMessage consoleInfo "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(consoleCode "$token")" "$(consoleValue "$searchFile")")"
         fi
       done < <(grep -n "$prefix" <"$searchFile") || :
       prefixIndex=$((prefixIndex + 1))
     done
-  done < <(find "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}" | sort) 2>"$resultsFile"
+  done <"$searchFileList" 2>"$resultsFile"
 
   if [ -n "$binary" ] && [ ${#badFiles[@]} -gt 0 ]; then
     "$binary" "${badFiles[@]}"
@@ -232,6 +245,38 @@ _identicalCheck() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Usage: {fn} repairSource ... -- findArgs ...
+__identicalCheckGenerateSearchFiles() {
+  local searchFileList orderedList ignorePatterns repairSources
+
+  repairSources=()
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--" ]; then
+      break
+    fi
+    [ -n "$1" ] || _argument "Blank repairSource?" || return $?
+    repairSources+=("$1")
+    shift
+  done
+  searchFileList=$(mktemp) || _environment "mktemp" || return $?
+  orderedList="$searchFileList.ordered"
+  if ! find "$@" >"$searchFileList"; then
+    rm -rf "$searchFileList" || :
+    _environment "No files found" || return $?
+  fi
+  __environment touch "$orderedList" || return $?
+  if [ ${#repairSources[@]} -gt 0 ]; then
+    ignorePatterns=()
+    for repairSource in "${repairSources[@]}"; do
+      grep -e "$(quoteGrepPattern "$repairSource")" <"$searchFileList" >>"$orderedList"
+      ignorePatterns+=(-e "$(quoteGrepPattern "$repairSource")")
+    done
+    grep -v "${ignorePatterns[@]}" <"$searchFileList" >>"$orderedList"
+  fi
+  rm -rf "$searchFileList"
+  printf "%s\n" "$orderedList"
+}
+
 # Usage: {fn}
 __identicalCheckRepair() {
   local prefix="$1" token="$2" fileA="$3" fileB="$4"
@@ -243,11 +288,11 @@ __identicalCheckRepair() {
   while [ $# -gt 0 ]; do
     checkPath="$1"
     if [ "${fileA#"$checkPath"}" != "$fileA" ]; then
-      __environment identicalRepair --prefix "$prefix" "$token" "$fileA" "$fileB" || return $?
-      return 0
+      identicalRepair --prefix "$prefix" "$token" "$fileA" "$fileB"
+      return $?
     elif [ "${fileB#"$checkPath"}" != "$fileB" ]; then
-      __environment identicalRepair --prefix "$prefix" "$token" "$fileB" "$fileA"
-      return 0
+      identicalRepair --prefix "$prefix" "$token" "$fileB" "$fileA"
+      return $?
     fi
     shift
   done
@@ -314,7 +359,8 @@ identicalRepair() {
   read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
 
   sourceText=$(mktemp) || __failEnvironment mktemp || return $?
-  head -n $((lineNumber + count)) <"$source" | tail -n "$count" >"$sourceText" || __failEnvironment "$usage" "Unable to save source text" || return $?
+  # count + 1 includes identical line
+  head -n $((lineNumber + count)) <"$source" | tail -n "$((count + 1))" >"$sourceText" || __failEnvironment "$usage" "Unable to save source text" || return $?
 
   if ! $stdout; then
     targetFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
@@ -325,10 +371,11 @@ identicalRepair() {
   while read -r identicalLine; do
     parsed=$(__identicalLineParse "$source" "$prefix" "$identicalLine") || __failArgument "$usage" __identicalLineParse "$source" "$prefix" "$identicalLine" return $?
     read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
-    if [ $lineNumber -gt 0 ]; then
+    if [ "$lineNumber" -gt 1 ]; then
       if [ $currentLineNumber -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination"
       else
+        echo "lineNumber=$lineNumber currentLineNumber=$currentLineNumber, head $((lineNumber - 1)) tail $((lineNumber - currentLineNumber))"
         head -n $((lineNumber - 1)) <"$destination" | tail -n $((lineNumber - currentLineNumber))
       fi
     fi
@@ -336,7 +383,7 @@ identicalRepair() {
     cat "$sourceText"
   done < <(grep -n -e "$grepPattern" <"$destination")
   if [ $currentLineNumber -lt "$totalLines" ]; then
-    tail -n $((totalLines - currentLineNumber + 1)) <"$destination"
+    tail -n $((totalLines - currentLineNumber)) <"$destination"
   fi
   if ! $stdout; then
     __usageEnvironment "$usage" cp -f "$targetFile" "$destination" || return $?
@@ -357,7 +404,6 @@ __identicalLineParse() {
   if ! isUnsignedInteger "$lineNumber"; then
     _environment "__identicalLineParse: \"$identicalLine\" no line number" || return $?
   fi
-  lineNumber=$((lineNumber + 1))
   identicalLine=${identicalLine#*:}
   identicalLine="$(trimSpace "${identicalLine##*"$prefix"}")"
   token=${identicalLine%% *}
@@ -412,7 +458,7 @@ identicalCheckShell() {
       --interactive)
         checkArguments+=("$argument")
         ;;
-      --repair | --single)
+      --repair | --single | --exec)
         shift
         checkArguments+=("$argument" "${1-}")
         ;;
@@ -426,7 +472,7 @@ identicalCheckShell() {
     esac
     shift || :
   done
-  __usageEnvironment "$usage" identicalCheck "${checkArguments[@]+${checkArguments[@]}}" --exec contextOpen --prefix '# ''IDENTICAL' --extension sh "$@" || return $?
+  __usageEnvironment "$usage" identicalCheck "${checkArguments[@]+${checkArguments[@]}}" --prefix '# ''IDENTICAL' --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

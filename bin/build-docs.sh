@@ -3,13 +3,20 @@
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-set -eou pipefail
-
-# shellcheck source=/dev/null
-if ! source "$(dirname "${BASH_SOURCE[0]}")/build/tools.sh"; then
-  printf "%s: %d\n" "tools.sh failed" $? 1>&2
-  exit 1
-fi
+# IDENTICAL __tools 13
+# Load zesk build and run command
+__tools() {
+  local relative="$1"
+  set -eou pipefail
+  shift
+  # shellcheck source=/dev/null
+  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/tools.sh"; then
+    "$@" || return $?
+  else
+    exec 1>&2 && printf 'FAIL: %s\n' "$@"
+    return 42 # The meaning of life
+  fi
+}
 
 #
 # Usage: {fn} cacheDirectory envFile
@@ -271,4 +278,4 @@ _buildDocumentationBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-buildDocumentationBuild "$@"
+__tools .. buildDocumentationBuild "$@"

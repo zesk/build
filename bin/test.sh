@@ -186,4 +186,4 @@ ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__ops __buildTestSuite "$@"
+__ops .. __buildTestSuite "$@"
