@@ -24,8 +24,13 @@ __ops() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 1
-# 1
+# IDENTICAL _return 6
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+}
 
 __messyTestCleanup() {
   local fn exitCode=$?

@@ -42,8 +42,10 @@ __hookPreCommit() {
     __usageEnvironment "$usage" cp -f "$(newestFile "${fileCopies[@]}")" "$(oldestFile "${fileCopies[@]}")"
   fi
 
-  if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
-    __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
+  if gitPreCommitHasExtension sh; then
+    if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
+      __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
+    fi
   fi
 }
 ___hookPreCommit() {

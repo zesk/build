@@ -716,7 +716,7 @@ gitPreCommitSetup() {
   local directory total
 
   directory=$(__gitPreCommitCache true) || return $?
-  __usageEnvironment "$usage" extensionLists --clean "$directory" <(git diff --name-only --cached --diff-filter=ACMR) || return $?
+  __usageEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __usageEnvironment "$usage" extensionLists --clean "$directory" || return $?
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   [ $total -ne 0 ]
 }
@@ -762,7 +762,7 @@ gitPreCommitListExtension() {
   directory=$(__gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || _environment "No files with extension $1" || return $?
-    __environment cat "$directory/$1" || return $?
+    cat "$directory/$1" || return $?
     shift
   done
 }

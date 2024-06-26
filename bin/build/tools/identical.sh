@@ -443,11 +443,12 @@ __identicalLineParse() {
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
   local usage="_${FUNCNAME[0]}"
-  local argument single singleFile
+  local argument single singleFile aa
 
   export BUILD_HOME
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
 
+  aa=()
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -460,7 +461,7 @@ identicalCheckShell() {
           single="${single#"${single%%[![:space:]]*}"}"
           single="${single%"${single##*[![:space:]]}"}"
           if [ "${single###}" = "${single}" ]; then
-            checkArguments+=(--single "$single")
+            aa+=(--single "$single")
           fi
         done <"$singleFile"
         ;;
@@ -481,7 +482,7 @@ identicalCheckShell() {
     esac
     shift || :
   done
-  __usageEnvironment "$usage" identicalCheck "${checkArguments[@]+${checkArguments[@]}}" --prefix '# ''IDENTICAL' --extension sh "$@" || return $?
+  __usageEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" --prefix '# ''IDENTICAL' --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
