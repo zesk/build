@@ -762,7 +762,7 @@ gitPreCommitListExtension() {
   directory=$(__gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || _environment "No files with extension $1" || return $?
-    __environment cat "$directory/$1" || return $?
+    cat "$directory/$1" || return $?
     shift
   done
 }

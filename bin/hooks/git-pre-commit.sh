@@ -45,12 +45,12 @@ __hookGitPreCommit() {
 
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
-  gitPreCommitListExtension @ | prefixLines prefixLines "- $(consoleValue)" "$(consoleReset)"
+  gitPreCommitListExtension @ | wrapLines "- $(consoleValue)" "$(consoleReset)"
   gitPreCommitHeader sh md json
 
   if gitPreCommitHasExtension sh; then
 
-    gitPreCommitListExtension sh | prefixLines "- $(consoleCode)" "$(consoleReset)"
+    gitPreCommitListExtension sh | wrapLines "- $(consoleCode)" "$(consoleReset)"
     changed=()
     while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
 
