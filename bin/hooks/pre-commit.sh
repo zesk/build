@@ -38,7 +38,9 @@ __hookPreCommit() {
   statusMessage consoleSuccess Updating _sugar.sh
   fileCopies=(bin/build/identical/_sugar.sh bin/build/tools/_sugar.sh)
   # Can not be trusted to not edit the wrong one
-  __usageEnvironment "$usage" cp "$(newestFile "${fileCopies[@]}")" "$(oldestFile "${fileCopies[@]}")"
+  if ! diff -q "${fileCopies[@]}"; then
+    __usageEnvironment "$usage" cp -f "$(newestFile "${fileCopies[@]}")" "$(oldestFile "${fileCopies[@]}")"
+  fi
 }
 ___hookPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

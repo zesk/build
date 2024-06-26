@@ -727,15 +727,21 @@ _gitPreCommitSetup() {
 # Output a display for pre-commit files changed
 gitPreCommitHeader() {
   local usage="_${FUNCNAME[0]}" width=3
-  local directory total
+  local directory total color
 
   directory=$(__gitPreCommitCache true) || return $?
 
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$(alignRight "$width" "all")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
+    total=0
+    color=consoleWarning
+    if [ -f "$directory/$1" ]; then
+      total=$(($(wc -l <"$directory/$1") + 0))
+      color=consoleSuccess
+    fi
     # shellcheck disable=SC2015
-    printf "%s: %s\n" "$([ -f "$directory/$1" ] && consoleSuccess "$(alignRight "$width" "$1")" || consoleWarning "$1")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+    printf "%s: %s\n" "$("$color" "$(alignRight "$width" "$1")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
     shift
   done
 }
