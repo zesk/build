@@ -48,4 +48,4 @@ ___hookPreCommitShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__tools ../.. __hookPreCommitShell "$@"
+__tools ../../.. __hookPreCommitShell "$@"
