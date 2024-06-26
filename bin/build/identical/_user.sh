@@ -17,6 +17,6 @@ _user() {
   printf "%s\n" "$APPLICATION_USER"
 }
 
-# requires _return
+# requires IDENTICAL _return
 
 # setuidgid $(_user) binary ...

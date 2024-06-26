@@ -23,6 +23,6 @@ __install() {
   "$@" || return $?
 }
 
-# requires _return
+# requires IDENTICAL _return
 
 # __install ../../.. bin/build consoleOrange "$@"
