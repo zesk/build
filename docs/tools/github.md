@@ -43,10 +43,10 @@ Think of them of the "source" (user) and "target" (ssh key) access. Both must ex
 
 #### Environment
 
-GITHUB_ACCESS_TOKEN - Access to GitHub to publish releases
-GITHUB_ACCESS_TOKEN_EXPIRE - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
-GITHUB_REPOSITORY_OWNER - Owner of the repository (`https://github.com/owner`)
-GITHUB_REPOSITORY_NAME - Name of the repository (`https://github.com/owner/name`)
+- `GITHUB_ACCESS_TOKEN` - Access to GitHub to publish releases
+- `GITHUB_ACCESS_TOKEN_EXPIRE` - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
+- `GITHUB_REPOSITORY_OWNER` - Owner of the repository (`https://github.com/owner`)
+- `GITHUB_REPOSITORY_NAME` - Name of the repository (`https://github.com/owner/name`)
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

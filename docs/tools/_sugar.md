@@ -40,9 +40,9 @@ Critical exit - exit immediately
 
 - `99` - Failure
 
-### `_return` - IDENTICAL _return 8
+### `_return` - IDENTICAL _return 6
 
-IDENTICAL _return 8
+IDENTICAL _return 6
 
 #### Usage
 

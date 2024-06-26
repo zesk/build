@@ -356,5 +356,49 @@ Get the current branch name
 
 - `0` - Always succeeds
 
+## git pre-commit hook
+
+
+### `gitPreCommitSetup` - Set up a pre-commit hook
+
+Set up a pre-commit hook
+
+#### Exit codes
+
+- `0` - Always succeeds 
+
+### `gitPreCommitHeader` - Output a display for pre-commit files changed
+
+Output a display for pre-commit files changed
+
+#### Exit codes
+
+- `0` - Always succeeds 
+
+### `gitPreCommitHasExtension` - Does this commit have the following file extensions?
+
+Does this commit have the following file extensions?
+
+#### Exit codes
+
+- `0` - Always succeeds 
+
+### `gitPreCommitListExtension` - List the file(s) of an extension
+
+List the file(s) of an extension
+
+#### Exit codes
+
+- `0` - Always succeeds 
+
+### `gitPreCommitCleanup` - Clean up after our pre-commit (deletes cache directory)
+
+Clean up after our pre-commit (deletes cache directory)
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
