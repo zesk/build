@@ -50,6 +50,7 @@ __hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
+  __usageEnvironment "$usage" runOptionalHook post-commit || return $?
   __usageEnvironment "$usage" gitMainly || return $?
   __usageEnvironment "$usage" git push origin || return $?
 }
@@ -57,4 +58,4 @@ ___hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__tools ../.. __hookGitPostCommit "$@"
+__tools "$(__where)" __hookGitPostCommit "$@"
