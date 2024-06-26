@@ -32,6 +32,9 @@ __hookPreCommit() {
   # gitPreCommitSetup is already called
   local fileCopies
 
+  gitPreCommitListExtension @ | wrapLines "- $(consoleValue)" "$(consoleReset)"
+  gitPreCommitHeader sh md json
+
   statusMessage consoleSuccess Updating help files ...
   __usageEnvironment "$usage" ./bin/update-md.sh || return $?
 

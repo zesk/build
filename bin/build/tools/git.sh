@@ -704,8 +704,9 @@ _gitPreCommitShellFiles() {
 }
 
 __gitPreCommitCache() {
-  local directory create="${1-}"
-  directory=$(buildCacheDirectory "pre-commit.$$") || _environment buildCacheDirectory "pre-commit.$$" || return $?
+  local directory create="${1-}" name
+  name="pre-commit.$(whoami)" || _environment whoami || return $?
+  directory=$(buildCacheDirectory "$name") || _environment buildCacheDirectory "$name" || return $?
   [ "$create" != "true" ] || [ -d "$directory" ] || __environment mkdir -p "$directory" || return $?
   printf "%s\n" "$directory"
 }

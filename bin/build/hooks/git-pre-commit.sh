@@ -27,6 +27,15 @@ _return() {
   shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
+# IDENTICAL __where 7
+# Locates bin/build depending on whether this is running as a git hook or not
+__where() {
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  [ "${here%%.git*}" != "$here" ] || printf "%s" "../"
+  printf "%s" "../.."
+}
+
 #
 # The `git-pre-commit` hook self-installs as a `git` pre-commit hook in your project and will
 # overwrite any existing `pre-commit` hook.
@@ -36,36 +45,30 @@ _return() {
 # 2. Checks all shell files for errors
 # fn: {base}
 __hookGitPreCommit() {
-  local file changed
   local usage="_${FUNCNAME[0]}"
+  local extension extensions
 
+  export BUILD_PRECOMMIT_EXTENSIONS
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_PRECOMMIT_EXTENSIONS || return $?
+
+  read -r -a extensions < <(printf "%s" "$BUILD_PRECOMMIT_EXTENSIONS")
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
   gitPreCommitSetup || :
-
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
-  gitPreCommitListExtension @ | wrapLines "- $(consoleValue)" "$(consoleReset)"
-  gitPreCommitHeader sh md json
-
-  if gitPreCommitHasExtension sh; then
-    gitPreCommitListExtension sh | wrapLines "- $(consoleCode)" "$(consoleReset)"
-    changed=()
-    while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
-
-    __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build "${changed[@]}" || return $?
-  fi
+  for extension in "${extensions[@]+${extensions[@]}}"; do
+    statusMessage consoleInfo "Processing $(consoleCode "$extension")"
+    if gitPreCommitHasExtension "$extension"; then
+      __usageEnvironment "$usage" runOptionalHook "pre-commit-$extension" || return $?
+    fi
+  done
 
   gitPreCommitCleanup || :
-
-  # Too slow
-  #  if ! ./bin/build-docs.sh; then
-  #    _hookGitPreCommitFailed build-docs.sh
-  #  fi
   clearLine || :
 }
 ___hookGitPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__tools ../.. __hookGitPreCommit "$@"
+__tools "$(__where)" __hookGitPreCommit "$@"
