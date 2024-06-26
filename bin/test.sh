@@ -24,6 +24,8 @@ __ops() {
   "$@" || return $?
 }
 
+# IDENTICAL _return 1
+# 1
 
 __messyTestCleanup() {
   local fn exitCode=$?
