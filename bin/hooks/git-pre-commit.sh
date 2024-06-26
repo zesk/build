@@ -6,7 +6,7 @@
 #
 
 # IDENTICAL __tools 12
-# Load tools.sh and run command
+# Load zesk build and run command
 __tools() {
   local relative="$1"
   local source="${BASH_SOURCE[0]}"
@@ -19,14 +19,12 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 8
+# IDENTICAL _return 6
 # Usage: {fn} _return [ exitCode [ message ... ] ]
 # Exit Code: exitCode or 1 if nothing passed
 _return() {
-  local code="${1-1}"
-  shift
-  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
-  return "$code"
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 #
@@ -43,23 +41,23 @@ __hookGitPreCommit() {
 
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
+  gitPreCommitSetup || :
+
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
-  if ! gitPreCommitSetup; then
-    gitPreCommitHeader
-    return 0
-  fi
-  gitPreCommitHeader sh md
+  gitPreCommitHeader sh md json
 
   if gitPreCommitHasExtension sh; then
+
     gitPreCommitListExtension sh | prefixLines "- $(consoleCode)" "$(consoleReset)"
     changed=()
     while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
-    gitPreCommitCleanup
+
     __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
     __usageEnvironment "$usage" identicalCheckShell --repair bin/build/identical --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
   fi
-  gitPreCommitCleanup
+
+  gitPreCommitCleanup || :
 
   # Too slow
   #  if ! ./bin/build-docs.sh; then

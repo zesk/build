@@ -715,7 +715,7 @@ gitPreCommitSetup() {
   local usage="_${FUNCNAME[0]}"
   local directory total
 
-  directory=$(__gitPreCommitCache) || return $?
+  directory=$(__gitPreCommitCache true) || return $?
   __usageEnvironment "$usage" extensionLists --clean "$directory" <(git diff --name-only --cached --diff-filter=ACMR) || return $?
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   [ $total -ne 0 ]
@@ -726,41 +726,50 @@ _gitPreCommitSetup() {
 
 # Output a display for pre-commit files changed
 gitPreCommitHeader() {
-  local usage="_${FUNCNAME[0]}" width=3
-  local directory total
+  local usage="_${FUNCNAME[0]}" width=5
+  local directory total color
 
-  directory=$(__gitPreCommitCache) || return $?
+  directory=$(__gitPreCommitCache true) || return $?
 
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$(alignRight "$width" "all")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
+    total=0
+    color=consoleWarning
+    if [ -f "$directory/$1" ]; then
+      total=$(($(wc -l <"$directory/$1") + 0))
+      color=consoleSuccess
+    fi
     # shellcheck disable=SC2015
-    printf "%s: %s\n" "$([ -f "$directory/$1" ] && consoleSuccess "$(alignRight "$width" "$1")" || consoleWarning "$1")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+    printf "%s: %s\n" "$("$color" "$(alignRight "$width" "$1")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+    shift
   done
 }
 
 # Does this commit have the following file extensions?
 gitPreCommitHasExtension() {
   local directory
-  directory=$(__gitPreCommitCache) || return $?
+  directory=$(__gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || return 1
+    shift
   done
 }
 
 # List the file(s) of an extension
 gitPreCommitListExtension() {
   local directory
-  directory=$(__gitPreCommitCache) || return $?
+  directory=$(__gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || _environment "No files with extension $1" || return $?
     __environment cat "$directory/$1" || return $?
+    shift
   done
 }
 
 # Clean up after our pre-commit (deletes cache directory)
 gitPreCommitCleanup() {
   local directory
-  directory=$(__gitPreCommitCache true) || return $?
+  directory=$(__gitPreCommitCache) || return $?
   [ ! -d "$directory" ] || __environment rm -rf "$directory" || return $?
 }

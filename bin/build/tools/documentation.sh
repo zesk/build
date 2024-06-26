@@ -56,7 +56,7 @@ usageDocument() {
 
     # shellcheck source=/dev/null
     source "$variablesFile"
-    [ $exitCode -eq 0 ] || exec 1>&2
+    [ "$exitCode" -eq 0 ] || exec 1>&2
     usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$@"
   )
   return "$exitCode"
