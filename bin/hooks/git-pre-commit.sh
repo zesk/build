@@ -45,6 +45,7 @@ __hookGitPreCommit() {
 
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
+  gitPreCommitListExtension @ | prefixLines prefixLines "- $(consoleValue)" "$(consoleReset)"
   gitPreCommitHeader sh md json
 
   if gitPreCommitHasExtension sh; then
