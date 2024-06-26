@@ -8,17 +8,18 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __loader 11
-set -eou pipefail
-# Load zesk build and run command
-__loader() {
+# IDENTICAL __tools 12
+# Load tools.sh and run command
+__tools() {
+  local relative="$1"
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
-    "$@" || return $?
-  else
-    exec 1>&2 && printf 'FAIL: %s\n' "$@"
-    return 42 # The meaning of life
-  fi
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
 }
 
 #
@@ -29,16 +30,14 @@ __loader() {
 #
 # fn: {base}
 __hookGitPostCommit() {
-  local usage="${FUNCNAME[0]#_}"
+  local usage="_${FUNCNAME[0]}"
 
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
-
   __usageEnvironment "$usage" gitMainly || return $?
   __usageEnvironment "$usage" git push origin || return $?
 }
-_hookGitPostCommit() {
-  # IDENTICAL reverseUsageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
+___hookGitPostCommit() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__loader __hookGitPostCommit "$@"
+__tools ../.. __hookGitPostCommit "$@"

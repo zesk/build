@@ -5,7 +5,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 11
+# IDENTICAL __tools 12
 # Load tools.sh and run command
 __tools() {
   local relative="$1"
@@ -17,6 +17,7 @@ __tools() {
   # shellcheck source=/dev/null
   source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
+}
 }
 
 # IDENTICAL _return 8

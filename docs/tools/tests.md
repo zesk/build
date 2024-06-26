@@ -146,8 +146,9 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 - `0` - Always succeeds
 
-<!-- TEMPLATE footer 4 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
+
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 
 Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Tests Functions)

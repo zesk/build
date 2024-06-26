@@ -5,7 +5,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 11
+# IDENTICAL __tools 12
 # Load tools.sh and run command
 __tools() {
   local relative="$1"
@@ -17,7 +17,6 @@ __tools() {
   # shellcheck source=/dev/null
   source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
-
 }
 
 # IDENTICAL _return 8
@@ -31,10 +30,14 @@ _return() {
 }
 
 __buildIdenticalRepair() {
+  local defaultSingles="etc/identical-check-singles.txt"
+  local aa
   export BUILD_HOME
   __environment buildEnvironmentLoad BUILD_HOME || return $?
   __environment cd "$BUILD_HOME" || return $?
-  __environment identicalCheckShell --exec consoleError --repair "$BUILD_HOME/bin/build/identical" --singles "$BUILD_HOME/etc/identical-check-singles.txt" "$@" || return $?
+  aa=()
+  [ ! -f "$BUILD_HOME/$defaultSingles" ] || aa+=(--singles "$BUILD_HOME/$defaultSingles")
+  __environment identicalCheckShell --exec consoleError --repair "$BUILD_HOME/bin/build/identical" "${aa[@]+"${aa[@]}"}" "$@" || return $?
 }
 
 __tools ../.. __buildIdenticalRepair "$@"

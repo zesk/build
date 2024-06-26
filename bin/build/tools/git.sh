@@ -521,7 +521,8 @@ gitMainly() {
         fi
       done
       if [ "$returnCode" -ne 0 ]; then
-        return "$returnCode"
+        git checkout -f "$branch" || :
+        returngit "$returnCode"
       fi
       git checkout "$branch" || _environment "Unable to switch bach to $branch" || returnCode="$?"
       git merge -m "Merging staging and main with $branch" origin/staging origin/main || _environment "merge staging and main failed" || return $?
@@ -700,4 +701,66 @@ gitPreCommitShellFiles() {
 }
 _gitPreCommitShellFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__gitPreCommitCache() {
+  local directory create="${1-}"
+  directory=$(buildCacheDirectory "pre-commit.$$") || _environment buildCacheDirectory "pre-commit.$$" || return $?
+  [ "$create" != "true" ] || [ -d "$directory" ] || __environment mkdir -p "$directory" || return $?
+  printf "%s\n" "$directory"
+}
+
+# Set up a pre-commit hook
+gitPreCommitSetup() {
+  local usage="_${FUNCNAME[0]}"
+  local directory total
+
+  directory=$(__gitPreCommitCache) || return $?
+  __usageEnvironment "$usage" extensionLists --clean "$directory" <(git diff --name-only --cached --diff-filter=ACMR) || return $?
+  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  [ $total -ne 0 ]
+}
+_gitPreCommitSetup() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Output a display for pre-commit files changed
+gitPreCommitHeader() {
+  local usage="_${FUNCNAME[0]}" width=3
+  local directory total
+
+  directory=$(__gitPreCommitCache) || return $?
+
+  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$(alignRight "$width" "all")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+  while [ $# -gt 0 ]; do
+    # shellcheck disable=SC2015
+    printf "%s: %s\n" "$([ -f "$directory/$1" ] && consoleSuccess "$(alignRight "$width" "$1")" || consoleWarning "$1")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+  done
+}
+
+# Does this commit have the following file extensions?
+gitPreCommitHasExtension() {
+  local directory
+  directory=$(__gitPreCommitCache) || return $?
+  while [ $# -gt 0 ]; do
+    [ -f "$directory/$1" ] || return 1
+  done
+}
+
+# List the file(s) of an extension
+gitPreCommitListExtension() {
+  local directory
+  directory=$(__gitPreCommitCache) || return $?
+  while [ $# -gt 0 ]; do
+    [ -f "$directory/$1" ] || _environment "No files with extension $1" || return $?
+    __environment cat "$directory/$1" || return $?
+  done
+}
+
+# Clean up after our pre-commit (deletes cache directory)
+gitPreCommitCleanup() {
+  local directory
+  directory=$(__gitPreCommitCache true) || return $?
+  [ ! -d "$directory" ] || __environment rm -rf "$directory" || return $?
 }
