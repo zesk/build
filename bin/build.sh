@@ -7,7 +7,7 @@
 # documentTemplate: ./docs/_templates/__binary.md
 
 # IDENTICAL __tools 12
-# Load tools.sh and run command
+# Load zesk build and run command
 __tools() {
   local relative="$1"
   local source="${BASH_SOURCE[0]}"

@@ -6,7 +6,7 @@
 #
 
 # IDENTICAL __tools 12
-# Load tools.sh and run command
+# Load zesk build and run command
 __tools() {
   local relative="$1"
   local source="${BASH_SOURCE[0]}"
@@ -40,6 +40,10 @@ __hookPreCommit() {
   # Can not be trusted to not edit the wrong one
   if ! diff -q "${fileCopies[@]}"; then
     __usageEnvironment "$usage" cp -f "$(newestFile "${fileCopies[@]}")" "$(oldestFile "${fileCopies[@]}")"
+  fi
+
+  if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
+    __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
   fi
 }
 ___hookPreCommit() {
