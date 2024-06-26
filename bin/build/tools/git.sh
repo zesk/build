@@ -726,7 +726,7 @@ _gitPreCommitSetup() {
 
 # Output a display for pre-commit files changed
 gitPreCommitHeader() {
-  local usage="_${FUNCNAME[0]}" width=3
+  local usage="_${FUNCNAME[0]}" width=5
   local directory total color
 
   directory=$(__gitPreCommitCache true) || return $?
