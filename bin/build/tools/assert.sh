@@ -84,11 +84,11 @@ __assertFileContainsHelper() {
 }
 
 __assertFileContainsThis() {
-  __assertFileContainsHelper true "$@"
+  __assertFileContainsHelper true "$@" || return $?
 }
 
 __assertFileDoesNotContainThis() {
-  __assertFileContainsHelper false "$@"
+  __assertFileContainsHelper false "$@" || return $?
 }
 
 #

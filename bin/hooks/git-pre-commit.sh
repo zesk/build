@@ -49,13 +49,11 @@ __hookGitPreCommit() {
   gitPreCommitHeader sh md json
 
   if gitPreCommitHasExtension sh; then
-
     gitPreCommitListExtension sh | wrapLines "- $(consoleCode)" "$(consoleReset)"
     changed=()
     while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
 
-    __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
-    __usageEnvironment "$usage" identicalCheckShell --repair bin/build/identical --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
+    __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build "${changed[@]}" || return $?
   fi
 
   gitPreCommitCleanup || :
