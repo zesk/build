@@ -35,16 +35,17 @@ _return() {
 # 1. Updates the help file templates
 # 2. Checks all shell files for errors
 # fn: {base}
-__hookGitPreCommitShell() {
+__hookPreCommitShell() {
   local file changed
   local usage="_${FUNCNAME[0]}"
 
-  gitPreCommitListExtension sh | wrapLines "- $(consoleCode)" "$(consoleReset)"
+  __usageEnvironment "$usage" gitPreCommitListExtension sh | wrapLines "- $(consoleCode)" "$(consoleReset)"
   changed=()
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
+  __usageEnvironment "$usage" gitPreCommitShellFiles --check test/ --check bin/ "${changed[@]}" || return $?
 }
-___hookGitPreCommitShell() {
+___hookPreCommitShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__tools ../../.. __hookGitPreCommitShell "$@"
+__tools ../.. __hookPreCommitShell "$@"

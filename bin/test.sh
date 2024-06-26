@@ -70,7 +70,8 @@ _textExit() {
 #
 __buildTestSuite() {
   local quietLog allTests runTests shortTest startTest
-  local usage __argument
+  # Avoid conflict with __argument
+  local usage __ARGUMENT
   local continueFile continueFlag
 
   usage="_${FUNCNAME[0]}"
@@ -112,8 +113,8 @@ __buildTestSuite() {
   testTracing=options
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
-    __argument="$1"
-    case "$__argument" in
+    __ARGUMENT="$1"
+    case "$__ARGUMENT" in
       --show)
         printf "%s\n" "${allTests[@]}"
         _textExit 0
@@ -122,7 +123,7 @@ __buildTestSuite() {
         continueFlag=true
         ;;
       --one)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$__argument") argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$__ARGUMENT") argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
         runTests+=("$1")
         ;;
@@ -139,10 +140,10 @@ __buildTestSuite() {
         messyOption=1
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$__argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(consoleValue "$__ARGUMENT")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$__argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$__ARGUMENT")" || return $?
   done
 
   $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?

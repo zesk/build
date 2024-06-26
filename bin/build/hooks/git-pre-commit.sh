@@ -37,7 +37,7 @@ _return() {
 # fn: {base}
 __hookGitPreCommit() {
   local usage="_${FUNCNAME[0]}"
-  local file changed extension extensions
+  local extension extensions
 
   export BUILD_PRECOMMIT_EXTENSIONS
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_PRECOMMIT_EXTENSIONS || return $?
@@ -46,10 +46,10 @@ __hookGitPreCommit() {
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
   gitPreCommitSetup || :
-
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
   for extension in "${extensions[@]+${extensions[@]}}"; do
+    statusMessage consoleInfo "Processing $(consoleCode "$extension")"
     if gitPreCommitHasExtension "$extension"; then
       __usageEnvironment "$usage" runOptionalHook "pre-commit-$extension" || return $?
     fi
@@ -62,6 +62,8 @@ ___hookGitPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# IDENTICAL __where 7
+# Locates bin/build depending on whether this is running as a git hook or not
 __where() {
   local source="${BASH_SOURCE[0]}"
   local here="${source%/*}"

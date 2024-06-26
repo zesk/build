@@ -30,7 +30,7 @@ buildDocumentationTemplating() {
   local failCount
 
   failCount=0
-  while ! __environment identicalCheck --repair ./docs/_templates/_parts --extension md --prefix '<!-- TEMPLATE' --cd docs/_templates; do
+  while ! identicalCheck --repair ./docs/_templates/_parts --extension md --prefix '<!-- TEMPLATE' --cd docs/_templates; do
     failCount=$((failCount + 1))
     if [ $failCount -gt 4 ]; then
       _environment "identicalCheck --repair failed" || return $?
