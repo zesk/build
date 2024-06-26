@@ -36,33 +36,37 @@ _return() {
 # 2. Checks all shell files for errors
 # fn: {base}
 __hookGitPreCommit() {
-  local file changed
   local usage="_${FUNCNAME[0]}"
+  local file changed extension extensions
 
+  export BUILD_PRECOMMIT_EXTENSIONS
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_PRECOMMIT_EXTENSIONS || return $?
+
+  read -r -a extensions < <(printf "%s" "$BUILD_PRECOMMIT_EXTENSIONS")
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
   gitPreCommitSetup || :
 
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
-  if gitPreCommitHasExtension sh; then
-    gitPreCommitListExtension sh | wrapLines "- $(consoleCode)" "$(consoleReset)"
-    changed=()
-    while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
-
-    __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build "${changed[@]}" || return $?
-  fi
+  for extension in "${extensions[@]+${extensions[@]}}"; do
+    if gitPreCommitHasExtension "$extension"; then
+      __usageEnvironment "$usage" runOptionalHook "pre-commit-$extension" || return $?
+    fi
+  done
 
   gitPreCommitCleanup || :
-
-  # Too slow
-  #  if ! ./bin/build-docs.sh; then
-  #    _hookGitPreCommitFailed build-docs.sh
-  #  fi
   clearLine || :
 }
 ___hookGitPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__tools ../.. __hookGitPreCommit "$@"
+__where() {
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  [ "${here%%.git*}" != "$here" ] || printf "%s" "../"
+  printf "%s" "../.."
+}
+
+__tools "$(__where)" __hookGitPreCommit "$@"
