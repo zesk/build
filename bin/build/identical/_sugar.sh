@@ -37,8 +37,8 @@ _exit() {
 # Argument: code - Integer. Required. Return code.
 # Argument: message ... - String. Optional. Message to output.
 _return() {
-  local code
-  code="${1-1}" && shift && printf "%s ❌ (%d)\n" "${*-"§"}" "$code" 1>&2 && return "$code"
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 # Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.

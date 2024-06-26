@@ -18,16 +18,13 @@ __tools() {
   source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
 }
-}
 
-# IDENTICAL _return 8
+# IDENTICAL _return 6
 # Usage: {fn} _return [ exitCode [ message ... ] ]
 # Exit Code: exitCode or 1 if nothing passed
 _return() {
-  local code="${1-1}"
-  shift
-  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
-  return "$code"
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on

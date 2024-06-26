@@ -4,16 +4,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 
-# IDENTICAL _return 8
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
-_return() {
-  local code="${1-1}"
-  shift
-  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
-  return "$code"
-}
-
 # IDENTICAL __install 18
 # Install, load zesk build and run command
 __install() {
@@ -33,4 +23,6 @@ __install() {
   "$@" || return $?
 }
 
-__install ../../.. bin/build consoleOrange "$@"
+# requires _return
+
+# __install ../../.. bin/build consoleOrange "$@"
