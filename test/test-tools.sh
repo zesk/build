@@ -67,17 +67,16 @@ cleanTestName() {
 #
 loadTestFiles() {
   local testCount tests showTests testName quietLog=$1 __testDirectory resultCode=0 resultReason ignoreValues ignorePattern
-  local __test __tests
+  local __test __tests tests
   local __before __after changedGlobals
 
-  export tests
   resultReason="Success"
   shift
   statusMessage consoleWarning "Loading tests ..."
-  tests=()
+  __tests=()
   while [ "$#" -gt 0 ]; do
     testName="$(cleanTestName "$1")"
-    tests+=("#$testName") # Section
+    tests=("#$testName") # Section
     statusMessage consoleError "Loading test section \"$testName\""
     if ! isExecutable "./test/tools/$1"; then
       printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./test/tools/$1")" "$(consoleInfo "$(pwd)")"
@@ -98,13 +97,15 @@ loadTestFiles() {
         statusMessage consoleError "No tests defined in ./test/tools/$1"
         resultReason="No tests defined in ./test/tools/$1 ${#tests[@]} <= $testCount"
         resultCode="$errorTest"
+      else
+        __tests+=("${tests[@]}")
       fi
     fi
     shift
   done
 
   showTests=()
-  for testName in "${tests[@]}"; do
+  for testName in "${__tests[@]}"; do
     if [ "${testName:0:1}" != '#' ]; then
       showTests+=("$testName")
     fi
@@ -116,7 +117,6 @@ loadTestFiles() {
 
   # Renamed to avoid clobbering by tests
   __testDirectory=$(pwd)
-  __tests=("${tests[@]}")
   __after=$(mktemp) || _environment mktemp || return $?
   __before="$__after.before"
   __after="$__after.after"
@@ -140,7 +140,7 @@ loadTestFiles() {
     resultCode=0
 
     declare -p >"$__before"
-    printf "%s\n" "Running test $__test" >>"$quietLog"
+    printf "%s\n" "Running $__test" >>"$quietLog"
     if ! "$__test" "$quietLog"; then
       printf "%s\n" "FAILED $__test" >>"$quietLog"
       resultCode=$errorTest

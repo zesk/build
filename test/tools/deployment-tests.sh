@@ -33,7 +33,6 @@ testDeployRemoteFinish() {
   local tempDirectory id oldId matches
 
   export BUILD_HOME
-  export BUILD_DEBUG_LINES=100
 
   __environment buildEnvironmentLoad BUILD_HOME || return $?
 
@@ -229,6 +228,3 @@ testDeployBuildEnvironment() {
 
   rm -rf "$d" || :
 }
-
-# TODO
-tests=(testDeployRemoteFinish)
