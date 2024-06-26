@@ -209,7 +209,6 @@ validateShellScripts() {
   done
 
   sleepDelay=$(usageArgumentUnsignedInteger "$usage" "sleepDelay" "$sleepDelay") || return $?
-
   if [ $# -eq 0 ] && [ ${#checkedFiles[@]} -eq 0 ]; then
     ! $verbose || consoleInfo "Reading item list from stdin ..."
     while read -r arg; do

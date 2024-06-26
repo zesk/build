@@ -6,8 +6,9 @@
 
 {content}
 
-<!-- TEMPLATE footer 4 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
+
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 
 Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})

@@ -11,8 +11,6 @@
 # documentTemplate: ./docs/_templates/__function.md
 #
 
-errorEnvironment=1
-
 loadTools() {
   local toolsFiles
   local toolFile here
@@ -20,13 +18,13 @@ loadTools() {
 
   if ! here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd); then
     printf "%s\n" "dirname failed" 1>&2
-    return "$errorEnvironment"
+    return 96
   fi
 
   # shellcheck source=/dev/null
   if ! source "$here/env/BUILD_HOME.sh"; then
     printf "%s\n" "Loading BUILD_HOME.sh failed" 1>&2
-    return "$errorEnvironment"
+    return 95
   fi
 
   #

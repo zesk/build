@@ -5,17 +5,28 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __loader 11
-set -eou pipefail
-# Load zesk build and run command
-__loader() {
+# IDENTICAL __tools 12
+# Load tools.sh and run command
+__tools() {
+  local relative="$1"
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
-    "$@" || return $?
-  else
-    exec 1>&2 && printf 'FAIL: %s\n' "$@"
-    return 42 # The meaning of life
-  fi
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
+}
+
+# IDENTICAL _return 8
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}"
+  shift
+  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
+  return "$code"
 }
 
 #
@@ -27,36 +38,28 @@ __loader() {
 # 2. Checks all shell files for errors
 # fn: {base}
 __hookGitPreCommit() {
-  local this file changed total
-  local usage="${FUNCNAME[0]#_}"
+  local file changed
+  local usage="_${FUNCNAME[0]}"
 
-  # shellcheck source=/dev/null
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
-  changedLists=$(mktemp -d) || __failEnvironment "$usage" mktemp -d || return $?
+  __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
-  __usageEnvironment "$usage" extensionLists --clean "$changedLists" <(git diff --name-only --cached --diff-filter=ACMR) || return $?
-
-  total=$(($(wc -l <"$changedLists/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
-
-  printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$this")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
-
-  statusMessage consoleSuccess Updating help files ...
-  __usageEnvironment "$usage" ./bin/update-md.sh || return $?
-
-  if [ ! -f "$changedLists/sh" ]; then
-    rm -rf "$changedLists" || :
+  if ! gitPreCommitSetup; then
+    gitPreCommitHeader
     return 0
   fi
-  if [ -f "$changedLists/sh" ]; then
-    prefixLines "- $(consoleCode)" "$(consoleReset)" <"$changedLists/sh"
+  gitPreCommitHeader sh md
+
+  if gitPreCommitHasExtension sh; then
+    gitPreCommitListExtension sh | prefixLines "- $(consoleCode)" "$(consoleReset)"
     changed=()
-    while read -r file; do changed+=("$file"); done <"$changedLists/sh"
-    rm -rf "$changedLists" || :
+    while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
+    gitPreCommitCleanup
     __usageEnvironment "$usage" gitPreCommitShellFiles --check test/tools --check bin/build --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
     __usageEnvironment "$usage" identicalCheckShell --repair bin/build/identical --singles ./etc/identical-check-singles.txt "${changed[@]}" || return $?
   fi
-  rm -rf "$changedLists" || :
+  gitPreCommitCleanup
 
   # Too slow
   #  if ! ./bin/build-docs.sh; then
@@ -64,9 +67,8 @@ __hookGitPreCommit() {
   #  fi
   clearLine || :
 }
-_hookGitPreCommit() {
-  # IDENTICAL reverseUsageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
+___hookGitPreCommit() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__loader __hookGitPreCommit "$@"
+__tools ../.. __hookGitPreCommit "$@"

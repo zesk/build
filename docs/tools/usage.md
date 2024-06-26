@@ -221,8 +221,9 @@ Validates a value is not blank and is a directory. Upon success, outputs the dir
 - `2` - Argument error
 - `0` - Success
 
-<!-- TEMPLATE footer 4 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
+
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 
 Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Usage Functions)

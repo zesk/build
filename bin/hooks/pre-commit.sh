@@ -1,10 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Build Build
+# Part of build system integration with git
 #
-# Copyright: Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
-# documentTemplate: ./docs/_templates/__binary.md
 
 # IDENTICAL __tools 12
 # Load tools.sh and run command
@@ -30,27 +29,21 @@ _return() {
   return "$code"
 }
 
-#
-# Build Zesk Build
-#
-__buildBuild() {
-  if ! ./bin/update-md.sh --skip-commit; then
-    _fail "Can not update the Markdown files" || return $?
-  fi
+__hookPreCommit() {
+  local usage="_${FUNCNAME[0]}"
+  # gitPreCommitSetup is already called
+  local fileCopies
 
-  # This takes a long time, keep as pre-commit
-  # ./bin/build-docs.sh
+  statusMessage consoleSuccess Updating help files ...
+  __usageEnvironment "$usage" ./bin/update-md.sh || return $?
 
-  if gitRepositoryChanged; then
-    printf "%s\n" "CHANGES:" || :
-    gitShowChanges | wrapLines "$(consoleCode)    " "$(consoleReset)"
-    git commit -m "Build version $(runHook version-current)" -a || :
-    git push origin || :
-  fi
-  consoleSuccess Built successfully.
+  statusMessage consoleSuccess Updating _sugar.sh
+  fileCopies=(bin/build/identical/_sugar.sh bin/build/tools/_sugar.sh)
+  # Can not be trusted to not edit the wrong one
+  __usageEnvironment "$usage" cp "$(newestFile "${fileCopies[@]}")" "$(oldestFile "${fileCopies[@]}")"
 }
-___buildBuild() {
+___hookPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__tools .. __buildBuild "$@"
+__tools ../.. __hookPreCommit "$@"
