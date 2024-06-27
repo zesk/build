@@ -52,7 +52,11 @@ __hookGitPostCommit() {
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
   __usageEnvironment "$usage" runOptionalHook post-commit || return $?
   __usageEnvironment "$usage" gitMainly || return $?
-  __usageEnvironment "$usage" git push origin || return $?
+  if ! __usageEnvironment "$usage" git push origin | tee "./git-push.log" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(consoleCode)" "$(consoleReset)"; then
+    dumpPipe "git push" < "./git-push.log" || :
+    rm -rf "./git-push.log" || :
+    return 1
+  fi
 }
 ___hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
