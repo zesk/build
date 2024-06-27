@@ -48,11 +48,18 @@ __where() {
 # fn: {base}
 __hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}"
-
+  local logFile="./git-push.log"
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
   __usageEnvironment "$usage" runOptionalHook post-commit || return $?
   __usageEnvironment "$usage" gitMainly || return $?
-  __usageEnvironment "$usage" git push origin || return $?
+  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$logFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(consoleCode)" "$(consoleReset)"; then
+    if ! grep -q 'up-to-date' "$logFile"; then
+      dumpPipe "git push" <"$logFile" || :
+      rm -rf "$logFile" || :
+      return 1
+    fi
+  fi
+  rm -rf "$logFile" || :
 }
 ___hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
