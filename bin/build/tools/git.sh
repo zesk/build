@@ -496,11 +496,32 @@ _gitCommit() {
 # Current repository should be clean and have no modified files.
 #
 gitMainly() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local branch returnCode updateOther
-  local usage
+  local verboseFlag
+  local errorLog
 
-  usage="_${FUNCNAME[0]}"
+  verboseFlag=false
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      *)
+        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+  done
 
+  errorLog=$(mktemp)
   branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
     main | staging)
@@ -512,20 +533,31 @@ gitMainly() {
     *)
       returnCode=0
       for updateOther in staging main; do
-        if ! git checkout "$updateOther" 2>/dev/null; then
-          printf "%s %s\n" "$(consoleError "Unable to update branch")" "$(consoleCode "$updateOther")" 1>&2
-          git status -s || _environment "git status failed?" || returnCode="$?"
+        ! $verboseFlag || consoleInfo git checkout "$updateOther"
+        if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
+          printf "%s %s\n" "$(consoleError "Unable to checkout branch")" "$(consoleCode "$updateOther")" 1>&2
+          returnCode=1
+          __environment git status -s || :
           break
         else
-          git pull || _environment "Unable to update $updateOther" || returnCode=$?
+          ! $verboseFlag || consoleInfo git pull "# ($updateOther)"
+          if ! __environment git pull >"$errorLog" 2>&1; then
+            returnCode=1
+            break
+          fi
         fi
       done
       if [ "$returnCode" -ne 0 ]; then
-        git checkout -f "$branch" || :
-        returngit "$returnCode"
+        __environment git checkout -f "$branch" || :
+        return "$returnCode"
       fi
-      git checkout "$branch" || _environment "Unable to switch bach to $branch" || returnCode="$?"
-      git merge -m "Merging staging and main with $branch" origin/staging origin/main || _environment "merge staging and main failed" || return $?
+      ! $verboseFlag || consoleInfo git checkout "$branch"
+      if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
+        printf "%s %s\n" "$(consoleError "Unable to switch BACK to branch")" "$(consoleCode "$updateOther")" 1>&2
+        return 1
+      fi
+      ! $verboseFlag || consoleInfo git merge -m
+      __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
       printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
       ;;
   esac
