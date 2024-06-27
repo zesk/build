@@ -554,11 +554,17 @@ gitMainly() {
       ! $verboseFlag || consoleInfo git checkout "$branch"
       if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
         printf "%s %s\n" "$(consoleError "Unable to switch BACK to branch")" "$(consoleCode "$updateOther")" 1>&2
+        rm -rf "$errorLog"
         return 1
       fi
       ! $verboseFlag || consoleInfo git merge -m
       __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
-      printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
+      if grep -q 'Already' "$errorLog"; then
+        printf "%s %s\n" "$(consoleInfo "Already up to date")" "$(consoleCode "$branch")"
+      else
+        printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
+      fi
+      rm -rf "$errorLog"
       ;;
   esac
 }
