@@ -52,7 +52,7 @@ testDeployRemoteFinish() {
 
   __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id-stage"
   matches=(--stderr-match 'tar file is likely incorrect')
-  assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode --dump "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
   __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id"
   __environment mkdir -p "$tempDirectory/app" || return $?
