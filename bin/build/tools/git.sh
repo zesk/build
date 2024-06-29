@@ -600,6 +600,9 @@ _gitCurrentBranch() {
 # GIT_EXEC_PATH=/usr/lib/git-core
 # GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
 # GIT_PREFIX=
+__gitHookTypes() {
+  printf "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
+}
 
 #
 # HomeBrew
@@ -613,6 +616,66 @@ _gitCurrentBranch() {
 # GIT_INDEX_FILE=/Users/kent/marketacumen/build/.git/index.lock
 # GIT_PREFIX=
 # GIT_REFLOG_ACTION=pull
+
+gitInstallHooks() {
+  local hook
+  local argument
+  local usage="_${FUNCNAME[0]}"
+  local types
+
+  buildEnvironmentLoad BUILD_HOME || :
+  home="${BUILD_HOME:-}"
+  verbose=false
+  read -r -a types < <(__gitHookTypes)
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --copy)
+        execute=false
+        ;;
+      --verbose)
+        verbose=true
+        ;;
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --application)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
+        ;;
+      *)
+        if inArray "$argument" "${types[@]}"; then
+          hasHook --application "$home" "git-$argument" || __failArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
+          fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
+          relFromTo=()
+          for item in "${fromTo[@]}"; do
+            relFromTo+=(".${item#"$home"}")
+          done
+          if diff -q "${fromTo[@]}" >/dev/null; then
+            ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${relFromTo[@]}")" || :
+            return 0
+          fi
+          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${relFromTo[@]}")" || :
+          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleCode "${relFromTo[1]}")" || :
+          __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
+          ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
+          return 3
+        else
+          __failArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+        fi
+        ;;
+    esac
+    shift || :
+  done
+  for hook in pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit; do
+    if hasHook --application "$home" "git-$hook"; then
+      __usageEnvironment "$usage" runHook --application "$home" "git-$hook" --copy || return $?
+      ! $verbose || consoleSuccess "Installed $(consoleValue "git-$hook")" || :
+    fi
+  done
+}
 
 # Usage: {fn} [ --application applicationHome ] [ --copy ] hook
 # Argument: hook - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
@@ -632,8 +695,9 @@ _gitCurrentBranch() {
 gitInstallHook() {
   local argument fromTo relFromTo item home execute verbose
   local usage="_${FUNCNAME[0]}"
-  local types=(pre-commit post-commit)
+  local types
 
+  read -r -a types < <(__gitHookTypes)
   buildEnvironmentLoad BUILD_HOME || :
   home="${BUILD_HOME:-}"
   execute=true
