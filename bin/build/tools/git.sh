@@ -600,7 +600,7 @@ _gitCurrentBranch() {
 # GIT_EXEC_PATH=/usr/lib/git-core
 # GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
 # GIT_PREFIX=
-__gitHookTypes() {
+gitHookTypes() {
   printf "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
 }
 
@@ -626,7 +626,7 @@ gitInstallHooks() {
   buildEnvironmentLoad BUILD_HOME || :
   home="${BUILD_HOME:-}"
   verbose=false
-  read -r -a types < <(__gitHookTypes)
+  read -r -a types < <(gitHookTypes)
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -671,7 +671,7 @@ gitInstallHooks() {
   done
   for hook in pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit; do
     if hasHook --application "$home" "git-$hook"; then
-      __usageEnvironment "$usage" runHook --application "$home" "git-$hook" --copy || return $?
+      __usageEnvironment "$usage" gitInstallHook --application "$home" "$hook" --copy || return $?
       ! $verbose || consoleSuccess "Installed $(consoleValue "git-$hook")" || :
     fi
   done
@@ -685,7 +685,7 @@ gitInstallHooks() {
 # You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
 # When running within your hook, pass additional arguments so they can be preserved:
 #
-#     gitInstallHook --application "$myHoem" pre-commit "$@" || return $?
+#     gitInstallHook --application "$myHome" pre-commit "$@" || return $?
 #
 # Exit code: 0 - the file was not updated
 # Exit code: 1 - Environment error
@@ -697,7 +697,7 @@ gitInstallHook() {
   local usage="_${FUNCNAME[0]}"
   local types
 
-  read -r -a types < <(__gitHookTypes)
+  read -r -a types < <(gitHookTypes)
   buildEnvironmentLoad BUILD_HOME || :
   home="${BUILD_HOME:-}"
   execute=true
