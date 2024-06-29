@@ -38,7 +38,7 @@ __where() {
 
 #
 # The `git-pre-commit` hook self-installs as a `git` pre-commit hook in your project and will
-# overwrite any existing `pre-commit` hook.
+# overwrite any existing `pre-commit` hook.`
 #
 # It will:
 # 1. Updates the help file templates
@@ -58,10 +58,11 @@ __hookGitPreCommit() {
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
   for extension in "${extensions[@]+${extensions[@]}}"; do
-    statusMessage consoleInfo "Processing $(consoleCode "$extension")"
+    statusMessage consoleInfo "Processing $(consoleCode "$extension") ..."
     if gitPreCommitHasExtension "$extension"; then
       __usageEnvironment "$usage" runOptionalHook "pre-commit-$extension" || return $?
     fi
+    clearLine
   done
 
   gitPreCommitCleanup || :

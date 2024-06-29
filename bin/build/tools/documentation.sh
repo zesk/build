@@ -22,32 +22,42 @@
 # Simplifies documentation and has it in one place for shell and online.
 #
 usageDocument() {
-  local functionDefinitionFile functionName exitCode variablesFile
+  local tryFile functionDefinitionFile functionName exitCode variablesFile
   local usage="_${FUNCNAME[0]}"
+  export BUILD_HOME
+  export PWD
+
+  __environment buildEnvironmentLoad BUILD_HOME || return $?
 
   if isBashDebug; then
     set +x
   fi
-  [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
+  [ $# -ge 2 ] || _argument "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   functionDefinitionFile="$1"
   functionName="$2"
   exitCode="${3-NONE}"
   shift 3 || :
 
-  [ -f "$functionDefinitionFile" ] || __failArgument "$usage" "functionDefinitionFile $functionDefinitionFile not found" || return $?
-  [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
+  if [ ! -f "$functionDefinitionFile" ]; then
+    tryFile="${BUILD_HOME-.}/$functionDefinitionFile"
+    if [ ! -f "$tryFile" ]; then
+      _argument "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (BUILD_HOME: ${BUILD_HOME-.}) not found" || return $?
+    fi
+    functionDefinitionFile="$tryFile"
+  fi
+  [ -n "$functionName" ] || _argument "functionName is blank" || return $?
   if [ "$exitCode" = "NONE" ]; then
     consoleError "NO EXIT CODE" 1>&2
     exitCode=1
   fi
-  __usageArgument "$usage" isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
+  __argument isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
   variablesFile=$(mktemp)
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
       _environment "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
     fi
-    __failArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
+    _argument "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
   fi
   (
     set -a

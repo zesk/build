@@ -39,7 +39,8 @@ __hookPreCommitShell() {
   local file changed
   local usage="_${FUNCNAME[0]}"
 
-  __usageEnvironment "$usage" gitPreCommitListExtension sh | wrapLines "- $(consoleCode)" "$(consoleReset)"
+  printf "\n"
+  __usageEnvironment "$usage" gitPreCommitListExtension sh | wrapLines "- $(consoleBoldMagenta)" "$(consoleReset)"
   changed=()
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
   __usageEnvironment "$usage" gitPreCommitShellFiles --check test/ --check bin/ "${changed[@]}" || return $?

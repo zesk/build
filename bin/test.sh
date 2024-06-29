@@ -38,15 +38,14 @@ __messyTestCleanup() {
   export cleanExit
   cleanExit="${cleanExit-}"
   if ! test "$cleanExit"; then
-    consoleInfo -n "Stack:"
+    printf -- "%s\n" "Stack:"
     for fn in "${FUNCNAME[@]}"; do
-      printf " %s" "$(consoleWarning "$fn")"
+      printf -- "#%d %s\n" "$(incrementor "${FUNCNAME[0]}")" "$fn"
     done
-    printf "\n"
-    consoleError "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
+    printf "\n%s" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
   fi
   if test "$messyOption"; then
-    consoleInfo "Messy ... no cleanup"
+    printf "%s\n" "Messy ... no cleanup"
     return 0
   fi
   testCleanup
@@ -85,6 +84,9 @@ __buildTestSuite() {
   export BUILD_HOME
   export cleanExit=
   export testTracing
+  export FUNCNEST
+
+  FUNCNEST=200
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode)
 
