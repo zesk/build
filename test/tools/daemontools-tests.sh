@@ -36,6 +36,9 @@ daemontoolsTests() {
   assertDirectoryExists "/etc/service/lemon/log/supervise" || return $?
 
   waitFor=5
+  if isBitBucketPipeline; then
+    waitFor=15
+  fi
   start=$(date +%s)
   while [ ! -d "$logPath/lemon" ]; do
     assertExitCode 0 sleep 1 || return $?
