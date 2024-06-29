@@ -28,7 +28,7 @@ __toolsMain() {
 
   # Core stuff
   toolsFiles+=(_sugar sugar debug type process os text date float url _colors colors sed "ass""ert" hook utilities self)
-  toolsFiles+=(pipeline deploy deployment apt log )
+  toolsFiles+=(pipeline deploy deploy/application deployment apt log )
   toolsFiles+=(decoration usage console security "test" version vendor)
 
   # More complex tools

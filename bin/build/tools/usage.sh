@@ -30,6 +30,8 @@ errorEnvironment=1
 # Should look into an actual file template, probably
 # See: usageDocument
 #
+# Do not call usage functions here to avoid recursion
+#
 usageTemplate() {
   local this="${FUNCNAME[0]}"
   local usageString binName options delimiter description exitCode
@@ -40,9 +42,7 @@ usageTemplate() {
   delimiter="$3"
   description="$4"
   exitCode="${5-0}"
-  if ! isInteger "$exitCode"; then
-    __argument "$(printf "%s: exit code is not integer \"%s\"\n%s" "$this" "$exitCode" "$(debuggingStack)")" || return $?
-  fi
+  isInteger "$exitCode" || _argument "$(printf "%s: exit code is not integer \"%s\"\n%s" "$this" "$exitCode" "$(debuggingStack)")" || return $?
   if [ "$exitCode" -eq 0 ]; then
     usageString="$(consoleBoldGreen Usage)"
   else
