@@ -23,6 +23,10 @@ testSugar() {
   for code in $(seq 0 127); do
     assertExitCode --stderr-ok "$code" _return "$code" || return $?
   done
+  # __return
+  for code in $(seq 0 127); do
+    assertExitCode --stderr-ok "$code" __return _return "$code" || return $?
+  done
   # _environment
   # _argument
   assertExitCode --stderr-ok 1 _environment || return $?
