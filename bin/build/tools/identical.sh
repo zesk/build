@@ -114,6 +114,7 @@ identicalCheck() {
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
   rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
+  ! $debug || printf "COMMAND: %s\n" __identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}"
   searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
 
   if [ ! -s "$searchFileList" ]; then
@@ -143,10 +144,13 @@ identicalCheck() {
           tokenLineCount=$(head -1 "$tokenFile")
           tokenFileName=$(tail -1 "$tokenFile")
           if [ ! -f "$countFile" ]; then
+            tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n 1 >"$countFile"
             printf "%s%s: %s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError -n "Token counts do not match:")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$tokenFileName")" "$(consoleSuccess "$tokenLineCount")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$searchFile")" "$(consoleError "$count")" 1>&2
             isBadFile=true
+            touch "$countFile.compare" || :
+            touch "$tempDirectory/$prefixIndex/$tokenLineCount@$token.match.compare" || :
           elif ! isUnsignedInteger "$count"; then
             tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n 1 >"$countFile"
             badFiles+=("$searchFile")
@@ -176,7 +180,9 @@ identicalCheck() {
             fi
           fi
           if $isBadFile; then
+            consoleSuccess isBadFile
             if [ ${#repairSources[@]} -gt 0 ]; then
+              consoleSuccess has sources
               statusMessage consoleWarning "Repairing $token in $(consoleCode "$searchFile") from \"$(consoleValue "$tokenFileName")\""
               if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
                 badFiles+=("$tokenFileName")
@@ -186,6 +192,7 @@ identicalCheck() {
                 consoleSuccess "$(clearLine)Repaired $(consoleValue "$token") in $(consoleCode "$searchFile")" 1>&2
               fi
             else
+              consoleSuccess no sources
               badFiles+=("$tokenFileName")
               badFiles+=("$searchFile")
             fi
@@ -466,11 +473,11 @@ identicalCheckShell() {
         done <"$singleFile"
         ;;
       --interactive)
-        checkArguments+=("$argument")
+        aa+=("$argument")
         ;;
       --repair | --single | --exec)
         shift
-        checkArguments+=("$argument" "${1-}")
+        aa+=("$argument" "${1-}")
         ;;
       --help)
         "$usage" 0

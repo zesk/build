@@ -9,6 +9,9 @@
 # Docs: contextOpen ./docs/_templates/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
+# IDENTICAL __return 1
+#
+
 # Run `command`, handle failure with `usage` with `code` and `command` as error
 # Usage: {fn} code usage command ...
 # Argument: code - Required. Integer. Exit code to return

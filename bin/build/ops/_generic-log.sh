@@ -13,6 +13,15 @@ _return() {
   shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
+# IDENTICAL __return 7
+# Usage: {fn} __return binary [ ... ]
+# Argument: binary - Required. Executable.
+# Argument: ... - Any arguments are passed to binary
+# Run binary and output failed command upon error
+__return() {
+  "$@" || _return "$?" "$@" || return $?
+}
+
 # IDENTICAL _user 11
 # Usage: {fn} user
 # Summary: Quick user database look up

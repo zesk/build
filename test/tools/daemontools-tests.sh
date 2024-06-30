@@ -36,11 +36,10 @@ daemontoolsTests() {
   assertDirectoryExists "/etc/service/lemon/log/supervise" || return $?
 
   waitFor=5
-  if isBitBucketPipeline; then
-    waitFor=15
-  fi
   start=$(date +%s)
   while [ ! -d "$logPath/lemon" ]; do
+    find "$logPath" -type f | dumpPipe "$(date +%T) logPath: $(consoleCode "$logPath")"
+    find "/etc/service/" -type f | dumpPipe "/etc/service"
     assertExitCode 0 sleep 1 || return $?
     if [ $(($(date +%s) - start)) -gt "$waitFor" ]; then
       _environment "Log path lemon not created after $waitFor seconds" || return $?
