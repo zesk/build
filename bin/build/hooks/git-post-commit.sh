@@ -40,15 +40,18 @@ __where() {
 }
 
 __gitPushHelper() {
-  local usage="$1" logFile="$2"
-  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$logFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(consoleCode)" "$(consoleReset)"; then
-    if ! grep -q 'up-to-date' "$logFile"; then
-      dumpPipe "git push" <"$logFile" || :
-      rm -rf "$logFile" || :
+  local usage="$1"
+  local tempFile
+
+  tempFile=$(mktemp) || __failEnvironment "$usage" "__gitPushHelper mktemp" || return $?
+  if ! __usageEnvironment "$usage" "$tempFile" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(consoleCode)" "$(consoleReset)"; then
+    if ! grep -q 'up-to-date' "$tempFile"; then
+      dumpPipe "git push" <"$tempFile" || :
+      __environment rm -rf "$tempFile" || :
       return 1
     fi
   fi
-
+  __environment rm -rf "$tempFile" || :
 }
 
 #
@@ -60,13 +63,11 @@ __gitPushHelper() {
 # fn: {base}
 __hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}"
-  local logFile="./git-push.log"
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
   __usageEnvironment "$usage" runOptionalHook post-commit || return $?
-  __gitPushHelper "$usage" "$logFile" || return $?
+  __gitPushHelper "$usage" || return $?
   __usageEnvironment "$usage" gitMainly || return $?
-  __gitPushHelper "$usage" "$logFile" || return $?
-  rm -rf "$logFile" || :
+  __gitPushHelper "$usage" || return $?
 }
 ___hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
