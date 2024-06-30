@@ -39,6 +39,18 @@ __where() {
   printf "%s" "../.."
 }
 
+__gitPushHelper() {
+  local usage="$1" logFile="$2"
+  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$logFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(consoleCode)" "$(consoleReset)"; then
+    if ! grep -q 'up-to-date' "$logFile"; then
+      dumpPipe "git push" <"$logFile" || :
+      rm -rf "$logFile" || :
+      return 1
+    fi
+  fi
+
+}
+
 #
 # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will
 # overwrite any existing `post-commit` hook.
@@ -51,14 +63,9 @@ __hookGitPostCommit() {
   local logFile="./git-push.log"
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
   __usageEnvironment "$usage" runOptionalHook post-commit || return $?
+  __gitPushHelper "$usage" "$logFile" || return $?
   __usageEnvironment "$usage" gitMainly || return $?
-  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$logFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(consoleCode)" "$(consoleReset)"; then
-    if ! grep -q 'up-to-date' "$logFile"; then
-      dumpPipe "git push" <"$logFile" || :
-      rm -rf "$logFile" || :
-      return 1
-    fi
-  fi
+  __gitPushHelper "$usage" "$logFile" || return $?
   rm -rf "$logFile" || :
 }
 ___hookGitPostCommit() {
