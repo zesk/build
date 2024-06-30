@@ -9,6 +9,15 @@
 # Docs: contextOpen ./docs/_templates/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
+# IDENTICAL __return 7
+# Usage: {fn} __return binary [ ... ]
+# Argument: binary - Required. Executable.
+# Argument: ... - Any arguments are passed to binary
+# Run binary and output failed command upon error
+__return() {
+  "$@" || _return "$?" "$@" || return $?
+}
+
 # Run `command`, handle failure with `usage` with `code` and `command` as error
 # Usage: {fn} code usage command ...
 # Argument: code - Required. Integer. Exit code to return

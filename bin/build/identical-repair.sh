@@ -35,7 +35,7 @@ __buildIdenticalRepair() {
   __environment cd "$BUILD_HOME" || return $?
   aa=()
   [ ! -f "$BUILD_HOME/$defaultSingles" ] || aa+=(--singles "$BUILD_HOME/$defaultSingles")
-  __environment identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec consoleError --repair "$BUILD_HOME/bin/build/identical" "$@" || return $?
+  __environment identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen --repair "$BUILD_HOME/bin/build/identical" "$@" || return $?
 }
 
 __tools ../.. __buildIdenticalRepair "$@"
