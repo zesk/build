@@ -38,5 +38,14 @@
 {gitRemoteHosts}
 {gitCurrentBranch}
 
+## git pre-commit hook
+
+{gitPreCommitSetup} 
+{gitPreCommitHeader} 
+{gitPreCommitHasExtension} 
+{gitPreCommitListExtension} 
+{gitPreCommitCleanup}
+
+
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

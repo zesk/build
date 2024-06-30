@@ -5,18 +5,21 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 8
+# IDENTICAL _return 6
 # Usage: {fn} _return [ exitCode [ message ... ] ]
 # Exit Code: exitCode or 1 if nothing passed
 _return() {
-  local code="${1-1}"
-  shift
-  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
-  return "$code"
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
+# IDENTICAL __return 7
+# Usage: {fn} __return binary [ ... ]
+# Argument: binary - Required. Executable.
+# Argument: ... - Any arguments are passed to binary
+# Run binary and output failed command upon error
 __return() {
-  "$@" || _return $? "$@" || return $?
+  "$@" || _return "$?" "$@" || return $?
 }
 
 # IDENTICAL _user 11
@@ -56,7 +59,7 @@ _logger() {
 
   user=$(_user "${1-}") || _return $? _user "{APPLICATION_USER}" || return $?
   logPath="${2-}"
-  [ -d "$logPath" ] || _return $? "$logPath is not a directory" || return $?
+  [ -d "$logPath" ] || _return 4 "$logPath is not a directory" || return $?
 
   __return _ownFiles "$user" "$logPath" || return $?
   logPath="$logPath/$name"

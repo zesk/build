@@ -36,8 +36,9 @@ SIte is stored in a directory called `host` for the URL requested
 
 - `0` - Always succeeds
 
-<!-- TEMPLATE footer 4 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
+
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 
 Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Web Functions)

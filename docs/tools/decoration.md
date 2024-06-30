@@ -51,7 +51,7 @@ Output a bar as wide as the console using the `=` symbol.
 #### Environment
 
 Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
-Unable to find "prefixLines" (using index "/Users/kent/.build")
+Unable to find "prefixLines" (using index "/root/.build")
 
 ### `wrapLines` - Prefix output lines with a string
 
@@ -78,7 +78,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Errors
 
-Unable to find "prefixLines" (using index "/Users/kent/.build")
+Unable to find "prefixLines" (using index "/root/.build")
 
 ### `alignRight` - align text right
 
@@ -106,7 +106,7 @@ Format text and align it right using spaces.
 
 #### Errors
 
-Unable to find "prefixLines" (using index "/Users/kent/.build")
+Unable to find "prefixLines" (using index "/root/.build")
 
 ### `alignLeft` - align text left
 
@@ -134,7 +134,7 @@ Format text and align it left using spaces.
 
 #### Errors
 
-Unable to find "prefixLines" (using index "/Users/kent/.build")
+Unable to find "prefixLines" (using index "/root/.build")
 
 ### `boxedHeading` - Text heading decoration
 
@@ -168,7 +168,7 @@ Heading for section output
 
 #### Errors
 
-Unable to find "prefixLines" (using index "/Users/kent/.build")
+Unable to find "prefixLines" (using index "/root/.build")
 
 ### `bigText` - smblock (regular)
 
@@ -201,7 +201,7 @@ smmono12 (--bigger)
 
 #### Errors
 
-Unable to find "prefixLines" (using index "/Users/kent/.build")
+Unable to find "prefixLines" (using index "/root/.build")
 
 ### `labeledBigText` - Outputs a label before a bigText for output.
 
@@ -224,7 +224,7 @@ This function will strip any ANSI from the label to calculate correct string siz
 
 #### Errors
 
-Unable to find "prefixLines" (using index "/Users/kent/.build")
+Unable to find "prefixLines" (using index "/root/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

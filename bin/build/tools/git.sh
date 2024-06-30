@@ -496,11 +496,32 @@ _gitCommit() {
 # Current repository should be clean and have no modified files.
 #
 gitMainly() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
   local branch returnCode updateOther
-  local usage
+  local verboseFlag
+  local errorLog
 
-  usage="_${FUNCNAME[0]}"
+  verboseFlag=false
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      *)
+        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+  done
 
+  errorLog=$(mktemp)
   branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
     main | staging)
@@ -512,20 +533,38 @@ gitMainly() {
     *)
       returnCode=0
       for updateOther in staging main; do
-        if ! git checkout "$updateOther" 2>/dev/null; then
-          printf "%s %s\n" "$(consoleError "Unable to update branch")" "$(consoleCode "$updateOther")" 1>&2
-          git status -s || _environment "git status failed?" || returnCode="$?"
+        ! $verboseFlag || consoleInfo git checkout "$updateOther"
+        if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
+          printf "%s %s\n" "$(consoleError "Unable to checkout branch")" "$(consoleCode "$updateOther")" 1>&2
+          returnCode=1
+          __environment git status -s || :
           break
         else
-          git pull || _environment "Unable to update $updateOther" || returnCode=$?
+          ! $verboseFlag || consoleInfo git pull "# ($updateOther)"
+          if ! __environment git pull >"$errorLog" 2>&1; then
+            returnCode=1
+            break
+          fi
         fi
       done
       if [ "$returnCode" -ne 0 ]; then
+        __environment git checkout -f "$branch" || :
         return "$returnCode"
       fi
-      git checkout "$branch" || _environment "Unable to switch bach to $branch" || returnCode="$?"
-      git merge -m "Merging staging and main with $branch" origin/staging origin/main || _environment "merge staging and main failed" || return $?
-      printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
+      ! $verboseFlag || consoleInfo git checkout "$branch"
+      if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
+        printf "%s %s\n" "$(consoleError "Unable to switch BACK to branch")" "$(consoleCode "$updateOther")" 1>&2
+        rm -rf "$errorLog"
+        return 1
+      fi
+      ! $verboseFlag || consoleInfo git merge -m
+      __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
+      if grep -q 'Already' "$errorLog"; then
+        printf "%s %s\n" "$(consoleInfo "Already up to date")" "$(consoleCode "$branch")"
+      else
+        printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
+      fi
+      rm -rf "$errorLog"
       ;;
   esac
 }
@@ -561,6 +600,9 @@ _gitCurrentBranch() {
 # GIT_EXEC_PATH=/usr/lib/git-core
 # GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
 # GIT_PREFIX=
+gitHookTypes() {
+  printf "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
+}
 
 #
 # HomeBrew
@@ -575,6 +617,66 @@ _gitCurrentBranch() {
 # GIT_PREFIX=
 # GIT_REFLOG_ACTION=pull
 
+gitInstallHooks() {
+  local hook
+  local argument
+  local usage="_${FUNCNAME[0]}"
+  local types
+
+  buildEnvironmentLoad BUILD_HOME || :
+  home="${BUILD_HOME:-}"
+  verbose=false
+  read -r -a types < <(gitHookTypes)
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --copy)
+        execute=false
+        ;;
+      --verbose)
+        verbose=true
+        ;;
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --application)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
+        ;;
+      *)
+        if inArray "$argument" "${types[@]}"; then
+          hasHook --application "$home" "git-$argument" || __failArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
+          fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
+          relFromTo=()
+          for item in "${fromTo[@]}"; do
+            relFromTo+=(".${item#"$home"}")
+          done
+          if diff -q "${fromTo[@]}" >/dev/null; then
+            ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${relFromTo[@]}")" || :
+            return 0
+          fi
+          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${relFromTo[@]}")" || :
+          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleCode "${relFromTo[1]}")" || :
+          __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
+          ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
+          return 3
+        else
+          __failArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+        fi
+        ;;
+    esac
+    shift || :
+  done
+  for hook in pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit; do
+    if hasHook --application "$home" "git-$hook"; then
+      __usageEnvironment "$usage" gitInstallHook --application "$home" "$hook" --copy || return $?
+      ! $verbose || consoleSuccess "Installed $(consoleValue "git-$hook")" || :
+    fi
+  done
+}
+
 # Usage: {fn} [ --application applicationHome ] [ --copy ] hook
 # Argument: hook - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
 # Argument: --application - Optional. Directory. Path to application home.
@@ -583,7 +685,7 @@ _gitCurrentBranch() {
 # You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
 # When running within your hook, pass additional arguments so they can be preserved:
 #
-#     gitInstallHook --application "$myHoem" pre-commit "$@" || return $?
+#     gitInstallHook --application "$myHome" pre-commit "$@" || return $?
 #
 # Exit code: 0 - the file was not updated
 # Exit code: 1 - Environment error
@@ -593,8 +695,9 @@ _gitCurrentBranch() {
 gitInstallHook() {
   local argument fromTo relFromTo item home execute verbose
   local usage="_${FUNCNAME[0]}"
-  local types=(pre-commit post-commit)
+  local types
 
+  read -r -a types < <(gitHookTypes)
   buildEnvironmentLoad BUILD_HOME || :
   home="${BUILD_HOME:-}"
   execute=true
@@ -700,4 +803,76 @@ gitPreCommitShellFiles() {
 }
 _gitPreCommitShellFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__gitPreCommitCache() {
+  local directory create="${1-}" name
+  name="pre-commit.$(whoami)" || _environment whoami || return $?
+  directory=$(buildCacheDirectory "$name") || _environment buildCacheDirectory "$name" || return $?
+  [ "$create" != "true" ] || [ -d "$directory" ] || __environment mkdir -p "$directory" || return $?
+  printf "%s\n" "$directory"
+}
+
+# Set up a pre-commit hook
+gitPreCommitSetup() {
+  local usage="_${FUNCNAME[0]}"
+  local directory total
+
+  directory=$(__gitPreCommitCache true) || return $?
+  __usageEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __usageEnvironment "$usage" extensionLists --clean "$directory" || return $?
+  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  [ $total -ne 0 ]
+}
+_gitPreCommitSetup() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Output a display for pre-commit files changed
+gitPreCommitHeader() {
+  local usage="_${FUNCNAME[0]}" width=5
+  local directory total color
+
+  directory=$(__gitPreCommitCache true) || return $?
+
+  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$(alignRight "$width" "all")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+  while [ $# -gt 0 ]; do
+    total=0
+    color=consoleWarning
+    if [ -f "$directory/$1" ]; then
+      total=$(($(wc -l <"$directory/$1") + 0))
+      color=consoleSuccess
+    fi
+    # shellcheck disable=SC2015
+    printf "%s: %s\n" "$("$color" "$(alignRight "$width" "$1")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+    shift
+  done
+}
+
+# Does this commit have the following file extensions?
+gitPreCommitHasExtension() {
+  local directory
+  directory=$(__gitPreCommitCache true) || return $?
+  while [ $# -gt 0 ]; do
+    [ -f "$directory/$1" ] || return 1
+    shift
+  done
+}
+
+# List the file(s) of an extension
+gitPreCommitListExtension() {
+  local directory
+  directory=$(__gitPreCommitCache true) || return $?
+  while [ $# -gt 0 ]; do
+    [ -f "$directory/$1" ] || _environment "No files with extension $1" || return $?
+    cat "$directory/$1" || return $?
+    shift
+  done
+}
+
+# Clean up after our pre-commit (deletes cache directory)
+gitPreCommitCleanup() {
+  local directory
+  directory=$(__gitPreCommitCache) || return $?
+  [ ! -d "$directory" ] || __environment rm -rf "$directory" || return $?
 }

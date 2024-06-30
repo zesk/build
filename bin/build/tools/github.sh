@@ -47,10 +47,10 @@ _githubLatestRelease() {
 # Argument: descriptionFilePath - Required. File which exists. Path to file containing release notes (typically markdown)
 # Argument: releaseName - Required. String. Name of the release (e.g. `v1.0.0`)
 # Argument: commitish - Required. String. The GIT short SHA tag for the release
-# Environment: GITHUB_ACCESS_TOKEN - Access to GitHub to publish releases
-# Environment: GITHUB_ACCESS_TOKEN_EXPIRE - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
-# Environment: GITHUB_REPOSITORY_OWNER - Owner of the repository (`https://github.com/owner`)
-# Environment: GITHUB_REPOSITORY_NAME - Name of the repository (`https://github.com/owner/name`)
+# Environment: - `GITHUB_ACCESS_TOKEN` - Access to GitHub to publish releases
+# Environment: - `GITHUB_ACCESS_TOKEN_EXPIRE` - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
+# Environment: - `GITHUB_REPOSITORY_OWNER` - Owner of the repository (`https://github.com/owner`)
+# Environment: - `GITHUB_REPOSITORY_NAME` - Name of the repository (`https://github.com/owner/name`)
 #
 # Use GitHub API to generate a release
 #
@@ -62,8 +62,8 @@ _githubLatestRelease() {
 #  - Found here: https://github.com/settings/tokens
 #
 # Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
-# TODO: GITHUB_ACCESS_TOKEN_EXPIRE is ignored
 githubRelease() {
+  local usage="_${FUNCNAME[0]}"
   local start argument descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName
   local host
 
@@ -71,9 +71,7 @@ githubRelease() {
   export GITHUB_ACCESS_TOKEN_EXPIRE
   export GITHUB_REPOSITORY_OWNER
   export GITHUB_REPOSITORY_NAME
-  local usage
 
-  usage="_${FUNCNAME[0]}"
 
   extras=()
   accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}"
@@ -85,26 +83,30 @@ githubRelease() {
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --token)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         accessToken="$1"
         ;;
       --owner)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         repoOwner="$1"
         ;;
       --name)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         repoName="$1"
         ;;
       --expire)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         accessTokenExpire="$1"
         ;;
       *)
         extras+=("$1")
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
   done
 
   [ ${#extras[@]} -eq 3 ] || __failArgument "$usage" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?

@@ -40,14 +40,18 @@ Critical exit - exit immediately
 
 - `99` - Failure
 
-### `_return` - IDENTICAL __tools 11
+### `_return` - IDENTICAL _return 6
 
-IDENTICAL __tools 11
-Load tools.sh and run command
+IDENTICAL _return 6
+
+#### Usage
+
+    _return _return [ exitCode [ message ... ] ]
+    
 
 #### Exit codes
 
-- `0` - Always succeeds
+- exitCode or 1 if nothing passed
 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
@@ -186,8 +190,9 @@ Output a titled list
 
 - `0` - Always succeeds
 
-<!-- TEMPLATE footer 4 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
+
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 
 Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Sugar Core)

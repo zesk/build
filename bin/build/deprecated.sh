@@ -5,8 +5,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 11
-# Load tools.sh and run command
+# IDENTICAL __tools 12
+# Load zesk build and run command
 __tools() {
   local relative="$1"
   local source="${BASH_SOURCE[0]}"
@@ -19,14 +19,12 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 8
+# IDENTICAL _return 6
 # Usage: {fn} _return [ exitCode [ message ... ] ]
 # Exit Code: exitCode or 1 if nothing passed
 _return() {
-  local code="${1-1}"
-  shift
-  printf "%s ❌ (%d)\n" "${*-§}" "$code" 1>&2
-  return "$code"
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on

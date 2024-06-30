@@ -11,18 +11,25 @@
 # . bin/test-reset.sh; bin/test.sh
 
 # IDENTICAL __ops 13
-# Load zesk build and run command
+# Load zesk ops and run command
 __ops() {
   local relative="$1"
-  set -eou pipefail
-  shift
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/ops.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  if source "$(dirname "${BASH_SOURCE[0]}")/$relative/bin/build/ops.sh"; then
-    "$@" || return $?
-  else
-    exec 1>&2 && printf 'FAIL: %s\n' "$@"
-    return 42 # The meaning of life
-  fi
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
+}
+
+# IDENTICAL _return 6
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 __messyTestCleanup() {
@@ -31,15 +38,14 @@ __messyTestCleanup() {
   export cleanExit
   cleanExit="${cleanExit-}"
   if ! test "$cleanExit"; then
-    consoleInfo -n "Stack:"
+    printf -- "%s\n" "Stack:"
     for fn in "${FUNCNAME[@]}"; do
-      printf " %s" "$(consoleWarning "$fn")"
+      printf -- "#%d %s\n" "$(incrementor "${FUNCNAME[0]}")" "$fn"
     done
-    printf "\n"
-    consoleError "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
+    printf "\n%s" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
   fi
   if test "$messyOption"; then
-    consoleInfo "Messy ... no cleanup"
+    printf "%s\n" "Messy ... no cleanup"
     return 0
   fi
   testCleanup
@@ -63,7 +69,8 @@ _textExit() {
 #
 __buildTestSuite() {
   local quietLog allTests runTests shortTest startTest
-  local usage __argument
+  # Avoid conflict with __argument
+  local usage __ARGUMENT
   local continueFile continueFlag
 
   usage="_${FUNCNAME[0]}"
@@ -77,6 +84,9 @@ __buildTestSuite() {
   export BUILD_HOME
   export cleanExit=
   export testTracing
+  export FUNCNEST
+
+  FUNCNEST=200
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode)
 
@@ -105,8 +115,8 @@ __buildTestSuite() {
   testTracing=options
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
-    __argument="$1"
-    case "$__argument" in
+    __ARGUMENT="$1"
+    case "$__ARGUMENT" in
       --show)
         printf "%s\n" "${allTests[@]}"
         _textExit 0
@@ -115,7 +125,7 @@ __buildTestSuite() {
         continueFlag=true
         ;;
       --one)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$__argument") argument" || return $?
+        shift || __failArgument "$usage" "missing $(consoleLabel "$__ARGUMENT") argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
         runTests+=("$1")
         ;;
@@ -132,10 +142,10 @@ __buildTestSuite() {
         messyOption=1
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$__argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(consoleValue "$__ARGUMENT")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$__argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(consoleLabel "$__ARGUMENT")" || return $?
   done
 
   $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?

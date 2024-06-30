@@ -30,10 +30,9 @@ __prepareSampleApplicationDeployment() {
 
 tests+=(testDeployRemoteFinish)
 testDeployRemoteFinish() {
-  local tempDirectory id oldId matches
+  local tempDirectory id oldId matches finishArgs
 
   export BUILD_HOME
-  export BUILD_DEBUG_LINES=100
 
   __environment buildEnvironmentLoad BUILD_HOME || return $?
 
@@ -51,9 +50,22 @@ testDeployRemoteFinish() {
   matches=(--stderr-match 'Missing target file')
   assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
+  # $id-stage vs $id produces 'tar file' error
+  clearLine
   __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id-stage"
   matches=(--stderr-match 'tar file is likely incorrect')
-  assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  finishArgs=(
+    --first "--deploy"
+    "--target" "app.tar.gz"
+    "--home" "$tempDirectory/deploy"
+    "--id" "$id"
+    "--application" "$tempDirectory/app"
+  )
+  #  consoleInfo deployRemoteFinish "${finishArgs[@]}"
+  #  consoleMagenta "$(echoBar)"
+  #  deployRemoteFinish "${finishArgs[@]}"
+  #  consoleError "Exit code: $?"
+  assertExitCode --dump "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "${finishArgs[@]}" || return $?
 
   __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id"
   __environment mkdir -p "$tempDirectory/app" || return $?
@@ -184,10 +196,16 @@ testDeployToRemote() {
 
 }
 
-tests+=(testDeployBuildEnvironment)
+tests=(testDeployBuildEnvironment "${tests[@]}")
 testDeployBuildEnvironment() {
   local d args matches
   local sampleHome sampleId sampleApplication
+
+  # Important to clear these
+  # For tests which depend on export environments make sure to reset THOSE glboals at start of test
+  # Should likely clear test environment somehow
+  export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+  unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
 
   d=$(mktemp -d)
   __environment pushd "$d" >/dev/null || return $?
@@ -219,6 +237,8 @@ testDeployBuildEnvironment() {
   assertExitCode "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
   APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode "${matches[@]}" 2 deployBuildEnvironment || return $?
 
+  # this is the point we WOULD succeed but instead just run the dry run which outputs the script which can be used to
+  # generate the other tests
   args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication" --host "www-data@remote0" --host "www-data@remote1")
   matches=(--stderr-match ".build.env")
   assertExitCode "${matches[@]}" 0 deployBuildEnvironment --dry-run "${args[@]}" || return $?
@@ -228,7 +248,5 @@ testDeployBuildEnvironment() {
     assertExitCode --dump "${matches[@]}" 0 deployBuildEnvironment --dry-run || return $?
 
   rm -rf "$d" || :
+  unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
 }
-
-# TODO
-tests=(testDeployRemoteFinish)

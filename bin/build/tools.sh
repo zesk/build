@@ -11,34 +11,25 @@
 # documentTemplate: ./docs/_templates/__function.md
 #
 
-errorEnvironment=1
-
-loadTools() {
+__toolsMain() {
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
   local toolsFiles
-  local toolFile here
+  local toolFile
   export BUILD_HOME
-
-  if ! here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd); then
-    printf "%s\n" "dirname failed" 1>&2
-    return "$errorEnvironment"
-  fi
-
-  # shellcheck source=/dev/null
-  if ! source "$here/env/BUILD_HOME.sh"; then
-    printf "%s\n" "Loading BUILD_HOME.sh failed" 1>&2
-    return "$errorEnvironment"
-  fi
 
   #
   # Ordering matters!
   #
-  toolsFiles=()
+  toolsFiles=("../env/BUILD_HOME")
 
   # Strange quoting for Assert is to hide it from findUncaughtAssertions
+  # test quote is required to not mess up syntax coloring :|
 
   # Core stuff
   toolsFiles+=(_sugar sugar debug type process os text date float url _colors colors sed "ass""ert" hook utilities self)
-  toolsFiles+=(pipeline deploy deployment apt log decoration usage console security test version vendor)
+  toolsFiles+=(pipeline deploy deploy/application deployment apt log )
+  toolsFiles+=(decoration usage console security "test" version vendor)
 
   # More complex tools
   toolsFiles+=(security markdown documentation "documentation/index" "documentation/see" interactive identical)
@@ -53,7 +44,7 @@ loadTools() {
     # shellcheck source=/dev/null
     if ! source "$here/tools/$toolFile.sh"; then
       printf "%s\n" "Loading $toolFile.sh failed" 1>&2
-      return "$errorEnvironment"
+      return 96
     fi
   done
   # shellcheck source=/dev/null
@@ -65,4 +56,4 @@ loadTools() {
   fi
 }
 
-loadTools "$@"
+__toolsMain "$@"

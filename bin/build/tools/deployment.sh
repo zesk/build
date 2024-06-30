@@ -140,7 +140,8 @@ deployBuildEnvironment() {
   ## $DEPLOY_USER_HOSTS --home or just non-flagged arguments
   ##
   if [ ${#userHosts[@]} -eq 0 ]; then
-    read -r -a userHosts < <(printf "%s" "$DEPLOY_USER_HOSTS")
+    consoleInfo "Loading DEPLOY_USER_HOSTS: $DEPLOY_USER_HOSTS"
+    read -r -a userHosts < <(printf "%s" "$DEPLOY_USER_HOSTS") || :
   fi
   # shellcheck disable=SC2016
   [ ${#userHosts[@]} -gt 0 ] || __failArgument "$usage" 'No user hosts supplied on command line, `--host` or in `DEPLOY_USER_HOSTS`' || return $?
@@ -221,7 +222,7 @@ _deployBuildEnvironment() {
 # Argument: --target targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
-  local argument targetPackage revertFlag cleanupFlag name
+  local argument targetPackage revertFlag cleanupFlag name deployArguments
   local applicationId applicationPath debuggingFlag start width deployHome firstFlags
   local usage="_${FUNCNAME[0]}"
 
@@ -315,7 +316,7 @@ deployRemoteFinish() {
   if $cleanupFlag; then
     __usageEnvironment "$usage" cd "$applicationPath" || return $?
     consoleInfo "Cleaning up ... "
-    if hasHook deploy-cleanup; then
+    if hasHook --application "$applicationPath" deploy-cleanup; then
       __usageEnvironment "$usage" runHook deploy-cleanup || return $?
     else
       printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
@@ -326,7 +327,21 @@ deployRemoteFinish() {
     if [ -z "$applicationId" ]; then
       __failArgument "$usage" "No argument applicationId passed" || return $?
     fi
-    __usageEnvironment "$usage" deployApplication "${firstFlags[@]+${firstFlags[@]}}" --home "$deployHome" --id "$applicationId" --target "$targetPackage" --application "$applicationPath" || return $?
+    deployArguments=(
+      "${firstFlags[@]+${firstFlags[@]}}"
+      --home "$deployHome"
+      --id "$applicationId"
+      --target "$targetPackage"
+      --application "$applicationPath"
+    )
+    ! $debuggingFlag || printf "%s %s\n" "deployApplication" "$(printf " \"%s\"" "${deployArguments[@]}")"
+    #
+    # deployApplication call "the chewy center"
+    #
+    #  ┏━ ┏━┛┏━┃┃  ┏━┃┃ ┃┏━┃┏━┃┏━┃┃  ┛┏━┛┏━┃━┏┛┛┏━┃┏━
+    #  ┃ ┃┏━┛┏━┛┃  ┃ ┃━┏┛┏━┃┏━┛┏━┛┃  ┃┃  ┏━┃ ┃ ┃┃ ┃┃ ┃
+    #  ━━ ━━┛┛  ━━┛━━┛ ┛ ┛ ┛┛  ┛  ━━┛┛━━┛┛ ┛ ┛ ┛━━┛┛ ┛
+    __usageEnvironment "$usage" deployApplication "${deployArguments[@]}" || return $?
   fi
   reportTiming "$start" "Remote deployment finished in"
 }

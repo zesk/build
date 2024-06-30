@@ -32,27 +32,9 @@ Returns true if all `characters` are of `className`
 
 - `0` - Always succeeds
 
-### `quoteSedPattern` - Quote sed strings for shell use
+### `quoteSedPattern` - DO NOT EDIT THIS ONE
 
-Quote a string to be used in a sed pattern on the command line.
-
-#### Usage
-
-    quoteSedPattern text
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-
-#### Sample Output
-
-    string quoted and appropriate to insert in a sed search or replacement phrase
-    
+DO NOT EDIT THIS ONE
 
 #### Exit codes
 
@@ -765,8 +747,9 @@ Does this character match one or more character classes?
 
 - `0` - Always succeeds
 
-<!-- TEMPLATE footer 4 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
+
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 
 Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Text Functions)
