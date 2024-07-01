@@ -389,3 +389,39 @@ usageArgumentLoadEnvironmentFile() {
   printf "%s %s\n" "$(consoleBoldBlack "$count")" "$(consoleBoldBlue "$(plural "$count" variable variables)")" 1>&2
   printf "%s\n" "$envFile"
 }
+
+#
+# Require an argument to be non-blank
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+# Exit Code: 2 - If `value` is blank
+# Exit code: 0 - If `value` is non-blank
+usageArgumentRequired() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  [ -n "${1-}" ] || __failArgument "$usage" "blank" "$argument" || return $?
+}
+
+# Throw an unknown argument error
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageUnknownArgument() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+}
+
+# Throw an missing argument error
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageMissingArgument() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+}

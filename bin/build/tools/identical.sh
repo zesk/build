@@ -321,7 +321,7 @@ identicalRepair() {
   local argument arguments
   local source destination token stdout prefix
   local identicalLine grepPattern parsed
-  local currentLineNumber
+  local currentLineNumber count lineNumber targetFile sourceText totalLines
 
   arguments=("$@")
   source=
