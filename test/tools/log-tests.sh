@@ -118,7 +118,8 @@ testLogFileRotate() {
 
   rm -rf "$tempDir" || return $?
 
-  clearLine && bigText "$name OK"
+  printf "\n"
+  bigText "$name OK"
 }
 
 tests+=(testLogFileRotate1)

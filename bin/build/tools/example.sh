@@ -58,7 +58,7 @@ exampleFunction() {
   path=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    usageArgumentRequired "$usage" "${usage#_}" "$argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -70,8 +70,7 @@ exampleFunction() {
       --name)
         # shift here never fails as [ #$ -gt 0 ]
         shift
-        # shift after here MAY fail
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
         name="$1"
         ;;
       --path)
@@ -83,10 +82,10 @@ exampleFunction() {
         target=$(usageArgumentFileDirectory "$usage" "target" "$1") || return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+        usageUnknownArgument "$usage" "$argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+    shift || usageMissingArgument "$usage" "$argument" || return $?
   done
 
   # Load MANPATH environment

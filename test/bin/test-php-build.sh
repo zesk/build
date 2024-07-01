@@ -82,6 +82,7 @@ testPHPBuild() {
 
   assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
+  printf "\n"
   # No environment
   bin/build.sh || return $?
   assertFileExists "./app.tar.gz" "pwd: $(pwd)" || return $?
@@ -90,10 +91,12 @@ testPHPBuild() {
   export APP_THING=secret
 
   # Add an environment
+  printf "\n"
   bin/build.sh APP_THING || return $?
   assertFileExists "./app.tar.gz" "pwd: $(pwd)" || return $?
 
   BUILD_TARGET=alternate.tar.gz
+  printf "\n"
   bin/build.sh || return $?
   assertFileExists "$BUILD_TARGET" "pwd: $(pwd)" || return $?
 

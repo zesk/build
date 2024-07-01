@@ -56,7 +56,7 @@ testIdenticalChecks() {
 
 tests+=(testIdenticalRepair)
 testIdenticalRepair() {
-  local output source token
+  local output source token target
 
   source="test/example/identical-source.txt"
   target="test/example/identical-target.txt"
