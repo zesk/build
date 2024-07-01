@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
+#
 # Copyright &copy; 2024 Market Acumen, Inc.
+#
 # Docs: o ./docs/_templates/tools/_sugar.md
 # Test: o ./test/tools/sugar-tests.sh
-# -- CUT HERE --
+#
+# -- CUT BELOW HERE --
 
-
-# IDENTICAL _sugar 99
+# IDENTICAL _sugar 98
 
 # Output a titled list
 # Usage: {fn} title [ items ... ]
