@@ -419,24 +419,18 @@ _clearLine() {
 #
 # Summary: Output a status message with no newline
 # Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
-# Usage: statusMessage consoleAction message [ ... ]
-# Argument: consoleAction - Required. String. Is one of **Semantic color commands** above or **Color commands** above
-# Argument: message ... - Message to output
+# Usage: statusMessage command ...
+# Argument: command - Required. Commands which output a message.
 # Environment: Intended to be run on an interactive console. Should support $(tput cols).
-# Example:     statusMessage Loading...
+# Example:     statusMessage consoleInfo "Loading ..."
 # Example:     bin/load.sh >>"$loadLogFile"
 # Example:     clearLine
 #
-# shellcheck disable=SC2120
 statusMessage() {
-  local consoleAction=$1
-
-  shift
   if hasConsoleAnimation; then
-    clearLine
-    "$consoleAction" -n "$@"
+    printf "%s%s" "$(clearLine)" "$("$@")"
   else
-    "$consoleAction" "$@"
+    printf "%s\n" "$("$@")"
   fi
 }
 
