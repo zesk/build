@@ -7,30 +7,29 @@
 
 # Utility function
 __crontabGenerate() {
-  local crontabTemplate rootEnv rootPath user appName mapper
+  local crontabTemplate rootEnv rootPath user appName mapper env
 
   rootEnv=$1
-  rootPath=$2
+  rootPath="${2%/}"
   user=$3
   mapper=$4
   find "$rootPath" -name "$user.crontab" | sort | grep -v stage | while IFS= read -r crontabTemplate; do
-    appName="${crontabTemplate##"$rootPath"/}"
+    appName="$(dirname "$crontabTemplate")"
+    appName="${appName%/}"
+    appName="${appName#"$rootPath"}"
+    appName="${appName#/}"
     appName="${appName%%/*}"
+    appName="${appName:-default}"
     (
-      envs=("$rootEnv" "$rootPath/$appName/.env" "$rootPath/$appName/.env.local")
       set -a
-      for env in "${envs[@]}"; do
+      for env in "$rootEnv" "$rootPath/$appName/.env" "$rootPath/$appName/.env.local"; do
         if [ -f "$env" ]; then
           # shellcheck disable=SC1090
-          . "$env"
+          source "$env" || :
         fi
       done
-      export APPLICATION_PATH="$rootPath/$appName"
-      export APPLICATION_NAME
-      APPLICATION_NAME="$(basename "$APPLICATION_PATH")"
-      "$mapper" <"$crontabTemplate"
-      : "$APPLICATION_NAME" - used
       set +a
+      APPLICATION_NAME="$appName" APPLICATION_PATH="$rootPath/$appName" "$mapper" <"$crontabTemplate"
     )
   done || return 0
 }
@@ -71,6 +70,7 @@ crontabApplicationSync() {
   local argument nArguments
   local rootEnv appPath user flagShow flagDiff environmentMapper newCrontab
 
+  __usageEnvironment "$usage" whichApt crontab cron || return $?
   rootEnv=
   appPath=
   user=$(whoami) || __failEnvironment "$usage" whoami || return $?
@@ -100,7 +100,6 @@ crontabApplicationSync() {
         environmentMapper="$1"
         ;;
       --user)
-        [ -z "$user" ] || __failArgument "$usage" "$argument already" || return $?
         shift
         usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
         user="$1"
@@ -119,16 +118,13 @@ crontabApplicationSync() {
   done
 
   if [ -z "$environmentMapper" ]; then
-    environmentMapper="${BASH_SOURCE[0]#/*}/../map.sh"
-    if [ ! -x "$environmentMapper" ]; then
-      environmentMapper="$(which map.sh)" || __failEnvironment "$usage" "Need to specify --mapper, none found nearby" || return $?
-    fi
+    environmentMapper=mapEnvironment
   fi
   [ -n "$appPath" ] || __failArgument "$usage" "Need to specify application path" || return $?
   [ -n "$user" ] || __failArgument "$usage" "Need to specify user" || return $?
 
   if $flagShow; then
-    __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" | dumpPipe "crontab $appPath $user"
+    __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper"
     return 0
   fi
   newCrontab=$(mktemp)
