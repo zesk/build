@@ -145,7 +145,7 @@ crontabApplicationSync() {
   #
   # Update crontab
   #
-  if crontab -u "$user" -l | diff -q "$newCrontab" -; then
+  if crontab -u "$user" -l | diff -q "$newCrontab" - >/dev/null; then
     rm -f "$newCrontab" || :
     return 0
   fi

@@ -166,7 +166,7 @@ copyFile() {
           verb=""
         fi
         if [ -f "$destination" ]; then
-          if ! diff -q "$actualSource" "$destination"; then
+          if ! diff -q "$actualSource" "$destination" >/dev/null; then
             prefix="$(consoleSubtle "$(basename "$source")"): "
             _copyFilePrompt "$source" "$destination" "Changes" || :
             diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(consoleCode)" "$(consoleReset)" || :
@@ -231,7 +231,7 @@ copyFileWouldChange() {
         else
           actualSource="$source"
         fi
-        if ! diff -q "$actualSource" "$destination"; then
+        if ! diff -q "$actualSource" "$destination" >/dev/null; then
           return 0
         fi
         if $mapFlag; then

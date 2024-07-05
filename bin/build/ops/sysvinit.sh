@@ -56,7 +56,7 @@ sysvInitScript() {
             _sysvInitScript "$errorArgument" "Not executable: $1" || return $?
           fi
           if [ -f "$target" ]; then
-            if diff -q "$1" "$target"; then
+            if diff -q "$1" "$target" >/dev/null; then
               statusMessage consoleSuccess "reinstalling script: $(consoleCode "$baseName")"
             else
               _sysvInitScript "$errorEnvironment" "File already exists $(consoleCode "$target")" || return $?
