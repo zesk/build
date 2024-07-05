@@ -101,7 +101,7 @@ __buildTestSuite() {
   allTests=(sugar colors console debug git decoration url ssh log version type process os hook pipeline identical)
   # Strange quoting for a s s e r t is to hide it from findUncaughtAssertions
   allTests+=(text float utilities self markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
-  allTests+=(sysvinit daemontools)
+  allTests+=(sysvinit crontab daemontools)
   while read -r shortTest; do
     if ! inArray "$shortTest" "${allTests[@]}"; then
       consoleError "MISSING $shortTest in allTests"

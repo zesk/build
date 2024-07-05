@@ -119,26 +119,30 @@ restoreErrorExit() {
   fi
 }
 
-_debuggingStackCodeList() {
-  local tick item
+__debuggingStackCodeList() {
+  local tick item index
   tick='`'
+  index=0
   for item in "$@"; do
-    printf '%s %s%s%s\n' - "$tick" "$item" "$tick"
+    printf -- '%d. %s%s%s\n' "$(($# - index))" "$tick" "$item" "$tick"
+    index=$((index + 1))
   done
 }
 
 #
-# Usage: {fn}
+# Usage: {fn} [ -s ]
 #
 # Dump the function and include stacks and the current environment
 #
 debuggingStack() {
   local prefix
   printf "STACK:\n"
-  _debuggingStackCodeList "${FUNCNAME[@]}" || :
+  __debuggingStackCodeList "${FUNCNAME[@]}" || :00
   printf "SOURCE:\n"
-  _debuggingStackCodeList "${BASH_SOURCE[@]}" || :
-  printf "EXPORTS:\n"
-  prefix="declare -x "
-  declare -px | cut -c "$((${#prefix} + 1))-"
+  __debuggingStackCodeList "${BASH_SOURCE[@]}" || :
+  if [ "${1-}" != "-s" ]; then
+    printf "EXPORTS:\n"
+    prefix="declare -x "
+    declare -px | cut -c "$((${#prefix} + 1))-"
+  fi
 }

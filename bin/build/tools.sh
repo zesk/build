@@ -35,7 +35,7 @@ __toolsMain() {
   toolsFiles+=(security markdown documentation "documentation/index" "documentation/see" interactive identical)
 
   # Technology Integration
-  toolsFiles+=(aws web docker ssh npm prettier php install terraform)
+  toolsFiles+=(aws web docker ssh npm prettier php install crontab terraform)
 
   # Code
   toolsFiles+=(bitbucket git github)

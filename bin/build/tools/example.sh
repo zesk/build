@@ -48,7 +48,7 @@ _return() {
 #
 exampleFunction() {
   local usage="_${FUNCNAME[0]}"
-  local argument
+  local argument nArguments
   local name easyFlag width
 
   width=50
@@ -56,9 +56,10 @@ exampleFunction() {
   easyFlag=false
   target=
   path=
+  nArguments=$#
   while [ $# -gt 0 ]; do
     argument="$1"
-    usageArgumentRequired "$usage" "${usage#_}" "$argument" || return $?
+    usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
     case "$argument" in
       --help)
         "$usage" 0

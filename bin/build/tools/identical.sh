@@ -166,7 +166,8 @@ identicalCheck() {
               dumpPipe compareFile <"$compareFile"
               badFiles+=("$searchFile")
               {
-                printf "%s%s: %s\n< %s\n%s" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
+                clearLine
+                printf "%s: %s\n< %s\n%s" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
                 grep "$prefix" "$compareFile" | wrapLines "$(consoleCode)    " "$(consoleReset)" || :
                 consoleReset || :
               } 1>&2
@@ -176,13 +177,11 @@ identicalCheck() {
               diff "$countFile" "${countFile}.compare" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" 1>&2
               isBadFile=true
             else
-              statusMessage consoleSuccess "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))"
+              statusMessage consoleSuccess "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))" 1>&2
             fi
           fi
           if $isBadFile; then
-            consoleSuccess isBadFile
             if [ ${#repairSources[@]} -gt 0 ]; then
-              consoleSuccess has sources
               statusMessage consoleWarning "Repairing $token in $(consoleCode "$searchFile") from \"$(consoleValue "$tokenFileName")\""
               if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
                 badFiles+=("$tokenFileName")
@@ -192,7 +191,6 @@ identicalCheck() {
                 consoleSuccess "$(clearLine)Repaired $(consoleValue "$token") in $(consoleCode "$searchFile")" 1>&2
               fi
             else
-              consoleSuccess no sources
               badFiles+=("$tokenFileName")
               badFiles+=("$searchFile")
             fi
