@@ -166,7 +166,8 @@ identicalCheck() {
               dumpPipe compareFile <"$compareFile"
               badFiles+=("$searchFile")
               {
-                printf "%s%s: %s\n< %s\n%s" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
+                clearLine
+                printf "%s: %s\n< %s\n%s" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
                 grep "$prefix" "$compareFile" | wrapLines "$(consoleCode)    " "$(consoleReset)" || :
                 consoleReset || :
               } 1>&2
