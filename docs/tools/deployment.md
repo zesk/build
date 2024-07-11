@@ -105,7 +105,7 @@ The `userAtHost` can be passed as follows:
 #### Exit codes
 
 - `0` - Always succeeds
-Unable to find "__deployRemoteAction" (using index "/root/.build")
+Unable to find "__deployRemoteAction" (using index "/Users/kent/.build")
 
 ### `__deployCommandsFile` - Generate our commands file
 
@@ -124,7 +124,7 @@ Argument commands must cd such that current directory is a project directory
 
 #### Errors
 
-Unable to find "__deployRemoteAction" (using index "/root/.build")
+Unable to find "__deployRemoteAction" (using index "/Users/kent/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

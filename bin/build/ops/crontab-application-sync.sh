@@ -7,7 +7,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+
+
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -29,4 +32,4 @@ _return() {
   shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
-__tools ../../.. crontabApplicationSync "$@"
+__tools ../../.. crontabApplicationUpdate "$@"

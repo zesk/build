@@ -68,11 +68,7 @@ buildDebugStop() {
 # Usage: {fn}
 #
 isBashDebug() {
-  case $- in
-    *x*)
-      return 0
-      ;;
-  esac
+  case $- in *x*) return 0 ;; esac
   return 1
 }
 
@@ -80,43 +76,19 @@ isBashDebug() {
 # Returns whether the shell has the error exit flag set
 #
 # Useful if you need to temporarily enable or disable it.
+# Note that `set -e` is not inherited by shells so
+#
+#     set -e
+#     printf "$(isErrorExit; printf %d %?)"
+#
+# Outputs `1` always
 #
 # Usage: {fn}
 #
 isErrorExit() {
-  case $- in
-    *e*)
-      return 0
-      ;;
-  esac
+  # consoleBoldRed "isErrorExit $- ::" 1>&2
+  case "$-" in *e*) return 0 ;; esac
   return 1
-}
-
-#
-# Usage: {fn}
-# Example:     save=$(saveErrorExit)
-# Example:     set +x
-# Example:     ... some nasty stuff
-# Example:     restoreErrorExit "$save"
-# See: restoreErrorExit
-saveErrorExit() {
-  if isErrorExit; then
-    printf %d 1
-  fi
-}
-
-# Usage: {fn}
-# Example:     save=$(saveErrorExit)
-# Example:     set +x
-# Example:     ... some nasty stuff
-# Example:     restoreErrorExit "$save"
-# See: saveErrorExit
-restoreErrorExit() {
-  if [ "$1" = "1" ]; then
-    set -e
-  else
-    set +e
-  fi
 }
 
 __debuggingStackCodeList() {
@@ -145,4 +117,39 @@ debuggingStack() {
     prefix="declare -x "
     declare -px | cut -c "$((${#prefix} + 1))-"
   fi
+}
+
+#
+# Usage: plumber command ...
+# Run command and detect any global or local leaks
+#
+plumber() {
+  local __before __after __changed __ignore __pattern __command
+  local __result=0
+  local __ignore=(OLDPWD _ resultCode LINENO PWD)
+
+  __after=$(mktemp) || _environment mktemp || return $?
+  __before="$__after.before"
+  __after="$__after.after"
+
+  declare -p >"$__before"
+  if "$@"; then
+    declare -p >"$__after"
+    __pattern="$(quoteGrepPattern "^($(joinArguments '|' "${__ignore[@]}"))=")"
+    __changed="$(diff "$__before" "$__after" | grep 'declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 3 | grep -v -e "$__pattern")" || :
+    __command=$(consoleCode "$(_command "$@")")
+    if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
+      consoleWarning "$__command set $(consoleValue "COLUMNS, LINES")" 1>&2
+      unset COLUMNS LINES
+      __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $__changed" || return $?
+    fi
+    if [ -n "$__changed" ]; then
+      printf "%s\n" "$__changed" | dumpPipe "$__command leaked local or export ($__before -> $__after)" 1>&2
+      __result=$(_code leak)
+    fi
+  else
+    __result=$?
+  fi
+  rm -rf "$__before" "$__after" || :
+  return "$__result"
 }

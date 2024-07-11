@@ -13,16 +13,28 @@
 #
 # If this fails it will output the installation log.
 #
-# Usage: phpInstall [ package ... ]
+# Usage: {fn} [ package ... ]
 # Argument: package - Additional packages to install
 # Summary: Install `php`
-# When this tool succeeds the `python` binary is available in the local operating system.
+# When this tool succeeds the `php` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
-# Binary: php.sh
-#
 phpInstall() {
-  whichApt php php-cli "$@"
+  whichApt php php-common php-cli "$@"
+}
+
+# Uninstall `php`
+#
+# If this fails it will output the installation log.
+#
+# Usage: {fn} [ package ... ]
+# Argument: package - Additional packages to install
+# Summary: Uninstall `php`
+# When this tool succeeds the `php` binary is no longer available in the local operating system.
+# Exit Code: 1 - If uninstallation fails
+# Exit Code: 0 - If uninstallation succeeds
+phpUninstall() {
+  whichAptUninstall php php-common php-cli "$@"
 }
 
 #
@@ -222,8 +234,7 @@ phpBuild() {
     __usageEnvironment "$usage" makeEnvironment "${envVars[@]+${envVars[@]}}" >.env || return $?
   fi
   if ! grep -q APPLICATION .env; then
-    buildFailed ".env"
-    __failEnvironment "$usage" ".env file seems to be invalid:" || return $?
+    buildFailed ".env" || __failEnvironment "$usage" ".env file seems to be invalid:" || return $?
   fi
   set -a
   # shellcheck source=/dev/null

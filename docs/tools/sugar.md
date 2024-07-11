@@ -35,60 +35,36 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 
 - `0` - Always succeeds
 
-### `__usageEnvironment` - Run `command`, upon failure run `usage` with an environment error
-
-Run `command`, upon failure run `usage` with an environment error
-
 #### Usage
 
-    __usageEnvironment usage command ...
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `__usageArgument` - Run `command`, upon failure run `usage` with an argument error
-
-Run `command`, upon failure run `usage` with an argument error
-
-#### Usage
-
-    __usageArgument usage command ...
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `__failEnvironment` - Run `usage` with an environment error
-
-Run `usage` with an environment error
-
-#### Usage
-
-    __failEnvironment usage ...
+    __usageEnvironment usage command
     
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-### `__failArgument` - Run `usage` with an argument error
+#### Usage
 
-Run `usage` with an argument error
+    __usageArgument usage command
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 #### Usage
 
-    __failArgument usage ...
+    __failEnvironment usage message
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Usage
+
+    __failArgument usage message
     
 
 #### Exit codes

@@ -1,0 +1,5 @@
+# singleIDENTICAL single1 1
+hello
+
+# singleIDENTICAL single2 1
+world

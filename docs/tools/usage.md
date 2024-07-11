@@ -96,6 +96,8 @@ Output usage messages to console
 
 Should look into an actual file template, probably
 
+Do not call usage functions here to avoid recursion
+
 #### Usage
 
     usageTemplate binName options delimiter description exitCode message ...

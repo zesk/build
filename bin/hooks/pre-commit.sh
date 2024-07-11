@@ -5,7 +5,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -39,10 +40,15 @@ __hookPreCommit() {
   __usageEnvironment "$usage" ./bin/update-md.sh || return $?
 
   statusMessage consoleSuccess Updating _sugar.sh
-  fileCopies=(bin/build/identical/_sugar.sh bin/build/tools/_sugar.sh)
+  nonOriginal=bin/build/tools/_sugar.sh
+
+  fileCopies=(bin/build/identical/_sugar.sh "$nonOriginal")
   # Can not be trusted to not edit the wrong one
   if ! diff -q "${fileCopies[@]}"; then
-    __usageEnvironment "$usage" cp -f "$(newestFile "${fileCopies[@]}")" "$(oldestFile "${fileCopies[@]}")"
+    if [ "$(newestFile "${fileCopies[@]}")" = "${fileCopies[1]}" ]; then
+      sed 's/IDENTICAL [0-9]/IDENTICAL EOF/g' <"${fileCopies[1]}" >"${fileCopies[0]}"
+      consoleWarning "Someone edited non-original file ${fileCopies[1]}"
+    fi
   fi
 
   if gitPreCommitHasExtension sh; then
@@ -50,6 +56,8 @@ __hookPreCommit() {
       __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
     fi
   fi
+
+  touch "${fileCopies[0]}" # make newer
 }
 ___hookPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

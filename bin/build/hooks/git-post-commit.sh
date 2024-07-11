@@ -8,7 +8,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -22,14 +23,6 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
-_return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
-}
-
 # IDENTICAL __where 7
 # Locates bin/build depending on whether this is running as a git hook or not
 __where() {
@@ -37,6 +30,14 @@ __where() {
   local here="${source%/*}"
   [ "${here%%.git*}" != "$here" ] || printf "%s" "../"
   printf "%s" "../.."
+}
+
+# IDENTICAL _return 6
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 __gitPushHelper() {

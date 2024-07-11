@@ -23,15 +23,12 @@
 #
 usageDocument() {
   local tryFile functionDefinitionFile functionName exitCode variablesFile
-  local usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}" bashDebug=false
   export BUILD_HOME
   export PWD
 
   __environment buildEnvironmentLoad BUILD_HOME || return $?
 
-  if isBashDebug; then
-    set +x
-  fi
   [ $# -ge 2 ] || _argument "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   functionDefinitionFile="$1"
@@ -67,7 +64,14 @@ usageDocument() {
     # shellcheck source=/dev/null
     source "$variablesFile"
     [ "$exitCode" -eq 0 ] || exec 1>&2
+    if isBashDebug; then
+      bashDebug=true
+      set +x
+    fi
     usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$@"
+    if $bashDebug; then
+      set -x
+    fi
   )
   return "$exitCode"
 }

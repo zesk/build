@@ -11,8 +11,12 @@ once an hour as well (when testing)
 
 #### Usage
 
-    aptUpdateOnce
+    aptUpdateOnce [ --force ]
     
+
+#### Arguments
+
+
 
 #### Exit codes
 
@@ -80,7 +84,7 @@ and assumes packages will be available.
 
 OS upgrade and potential restart
 Progress is written to stderr
-Result is `uptodate` or `restart` written to stdout
+Result is `ok` or `restart` written to stdout
 
 #### Usage
 

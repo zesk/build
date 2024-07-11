@@ -27,19 +27,40 @@
 #
 prettierInstall() {
   local usage="_${FUNCNAME[0]}"
-  local start quietLog
+  local quietLog
 
-  if which prettier 2>/dev/null 1>&2; then
+  if whichExists prettier; then
     return 0
   fi
 
-  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  statusMessage consoleInfo "Installing npm (to get prettier) ... " || :
   __usageEnvironment "$usage" npmInstall "$@" || return $?
-  consoleInfo -n "Installing prettier ... " || :
-  quietLog=$(buildQuietLog "$usage") || __failEnvironment "$usage" buildQuietLog "$usage" || return $?
-  __usageEnvironment "$usage" npm install -g prettier >>"$quietLog" 2>&1 || buildFailed "$quietLog" || return $?
-  reportTiming "$start" OK
+  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
+  statusMessage consoleInfo "Installing prettier ... " || :
+  __usageEnvironmentQuiet "$usage" "$quietLog" npm install -g prettier || return $?
+  rm -f "$quietLog" || :
+  clearLine || :
 }
 _prettierInstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+prettierUninstall() {
+  local usage="_${FUNCNAME[0]}"
+  local quietLog
+
+  if ! whichExists npm; then
+    return 0
+  fi
+  if ! whichExists prettier; then
+    return 0
+  fi
+  statusMessage consoleInfo "Removing prettier ... " || :
+  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" npm uninstall -g prettier || return $?
+  rm -rf "$quietLog" || :
+  clearLine || :
+}
+_prettierUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

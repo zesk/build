@@ -5,7 +5,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+
+
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -19,7 +22,14 @@ __tools() {
   "$@" || return $?
 }
 
-#
+# IDENTICAL _return 6
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+}
+
 # Runs after tests have been run to clean up any artifacts or other test files which
 # may have been generated.
 #

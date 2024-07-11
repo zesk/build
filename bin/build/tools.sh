@@ -23,16 +23,19 @@ __toolsMain() {
   #
   toolsFiles=("../env/BUILD_HOME")
 
-  # Strange quoting for Assert is to hide it from findUncaughtAssertions
   # test quote is required to not mess up syntax coloring :|
 
   # Core stuff
-  toolsFiles+=(_sugar sugar debug type process os text date float url _colors colors sed "ass""ert" hook utilities self)
-  toolsFiles+=(pipeline deploy deploy/application deployment apt log )
+  toolsFiles+=(_sugar sugar debug type process os text date float url _colors colors sed hook utilities self)
+  # Strange quoting for Assert is to hide it from findUncaughtAssertions
+  toolsFiles+=("ass""ert" "_ass""ert")
+  toolsFiles+=(pipeline deploy deploy/application deployment apt log)
   toolsFiles+=(decoration usage console security "test" version vendor)
 
   # More complex tools
-  toolsFiles+=(security markdown documentation "documentation/index" "documentation/see" interactive identical)
+  toolsFiles+=(security markdown interactive)
+  toolsFiles+=(documentation "documentation/index" "documentation/see")
+  toolsFiles+=(identical "identical/check" "identical/repair")
 
   # Technology Integration
   toolsFiles+=(aws web docker ssh npm prettier php install crontab terraform)

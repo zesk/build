@@ -401,7 +401,9 @@ consoleNameValue() {
 #
 clearLine() {
   if hasConsoleAnimation; then
-    echo -en "\r$(repeat "$(consoleColumns)" " ")\r"
+    printf "\r%s\r" "$(repeat "$(consoleColumns)" " ")"
+  else
+    printf "\n"
   fi
 }
 

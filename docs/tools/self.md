@@ -11,7 +11,7 @@ Installs `install-bin-build.sh` the first time in a new project, and modifies it
 
 #### Usage
 
-    installInstallBuild [ path [ applicationHome ] ]
+    installInstallBuild [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]
     
 
 #### Arguments

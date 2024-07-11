@@ -5,7 +5,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -30,14 +31,16 @@ _return() {
 __buildIdenticalRepair() {
   local defaultSingles="etc/identical-check-singles.txt"
   local aa
+
   export BUILD_HOME
   __environment buildEnvironmentLoad BUILD_HOME || return $?
   __environment cd "$BUILD_HOME" || return $?
   aa=()
   [ ! -f "$BUILD_HOME/$defaultSingles" ] || aa+=(--singles "$BUILD_HOME/$defaultSingles")
-  __environment identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen --repair "$BUILD_HOME/bin/build/identical" "$@" || return $?
+  while read -r repairPath; do
+    aa+=(--repair "$repairPath")
+  done < <(find "$BUILD_HOME" -type d -name identical ! -path '*/.*')
+  __environment identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }
 
 __tools ../.. __buildIdenticalRepair "$@"
-
-# EOF

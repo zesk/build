@@ -236,7 +236,7 @@ Install the most recent version of this hook and RUN IT in place if it has chang
 You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
 When running within your hook, pass additional arguments so they can be preserved:
 
-    gitInstallHook --application "$myHoem" pre-commit "$@" || return $?
+    gitInstallHook --application "$myHome" pre-commit "$@" || return $?
 
 #### Usage
 

@@ -18,13 +18,6 @@
 #
 # or wherever you put it in your project to install it
 #
-set -eou pipefail
-
-# Modify this line locally, it will be preserved on update
-# Points to the project root
-relTop=../..
-
-# -- DO NOT EDIT ANYTHING BELOW THIS LINE IT WILL BE OVERWRITTEN --
 
 # Usage: install-bin-build.sh [ --mock mockBuildRoot ] [ --url url ]
 # fn: install-bin-build.sh
@@ -32,218 +25,191 @@ relTop=../..
 # will overwrite this binary with the latest version after installation.
 # Determines the most recent version using GitHub API unless --url or --mock is specified.
 #
-# Argument: --mock mockBuildRoot - Optional. Directory. Diretory of an existing bin/build installation to mock behavior for testing
+# Argument: --mock mockBuildRoot - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
 # Argument: --url url - Optional. URL of a tar.gz. file. Download source code from here.
+# Argument: --force - Optional. Flag. Force installation even if file is up to date.
+# Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
 installBinBuild() {
-  local this arg start ignoreFile tarArgs showDiffFlag diffLines binName replace
-  local forceFlag mockFlag mockPath
-  local myBinary myPath osName url
+  local usage="_${FUNCNAME[0]}"
+  local relative="${1-}"
   local errorEnvironment=1
   local errorArgument=2
+  local argument start ignoreFile tarArgs
+  local forceFlag installFlag mockPath message installArgs
+  local myBinary myPath osName url
 
-  local toolsBin=./bin/build/tools.sh
-
+  shift
   if test "${BUILD_DEBUG-}"; then
     consoleOrange "BUILD_DEBUG on"
     set -x # Debugging
   fi
 
-  this="$(basename "${BASH_SOURCE[0]}")"
-
-  usage="_${FUNCNAME[0]}"
+  installArgs=()
   url=
-  showDiffFlag=false
-  mockFlag=false
   mockPath=
   forceFlag=false
   while [ $# -gt 0 ]; do
-    arg="$1"
-    if [ -z "$arg" ]; then
-      "$usage" "$errorArgument" "blank argument" || return $?
-    fi
-    case "$arg" in
+    argument="$1"
+    [ -n "$argument" ] || "$usage" "$errorArgument" "blank argument" || return $?
+    case "$argument" in
       --debug)
         consoleOrange "Debug on"
         set -x # Debugging
         ;;
       --diff)
-        showDiffFlag=true
+        installArgs+=("$argument")
         ;;
       --force)
         forceFlag=true
         ;;
       --mock)
-        if [ -n "$mockPath" ]; then
-          "$usage" "$errorArgument" "--mock argument twice" || return $?
-        fi
-        mockFlag=true
-        shift || "$usage" "$errorArgument" "$arg missing value" || return $?
-        mockPath="${1%%/}/"
-        if [ ! -f "$mockPath/tools.sh" ]; then
-          "$usage" "$errorArgument" "--mock argument must be path to bin/build containing tools.sh" || return $?
-        fi
+        [ -z "$mockPath" ] || __failArgument "$usage" "$argument already" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        mockPath="$1"
+        mockPath="${mockPath%/}"
+        [ -x "$mockPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$mockPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
       --url)
-        if [ -n "$url" ]; then
-          "$usage" "$errorArgument" "--url argument twice" || return $?
-        fi
-        shift || "$usage" "$errorArgument" "$arg missing value" || return $?
+        [ -z "$url" ] || __failArgument "$usage" "$argument already" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
         url="$1"
-        if [ -z "$url" ]; then
-          "$usage" "$errorArgument" "blank url" || return $?
-        fi
         ;;
     esac
-    shift || "$usage" "$errorArgument" "shift after $arg failed" || return $?
+    shift || "$usage" "$errorArgument" "shift after $argument failed" || return $?
   done
 
   if [ -z "$url" ]; then
-    if ! latestVersion=$(mktemp); then
-      "$usage" "$errorEnvironment" "Unable to create temporary file:" || return $?
-    fi
-    if ! curl -s "https://api.github.com/repos/zesk/build/releases/latest" >"$latestVersion"; then
-      "$usage" "$errorEnvironment" "Unable to fetch latest JSON:"
-      cat "$latestVersion" 1>&2
-      rm "$latestVersion" || :
-      return "$errorEnvironment"
-    fi
-    if ! url=$(jq -r .tarball_url <"$latestVersion"); then
-      "$usage" "$errorEnvironment" "Unable to fetch .tarball_url JSON:"
-      cat "$latestVersion" 1>&2
-      rm "$latestVersion" || :
-      return "$errorEnvironment"
-    fi
-  elif $mockFlag; then
-    "$usage" "$errorArgument" "--mock and --url are mutually exclusive" || return $?
+    url=$(_installBinBuildFetch "$usage") || return $?
+  elif [ -z "$mockPath" ]; then
+    __failArgument "$usage" "--url is required" || return $?
+  else
+    __failArgument "$usage" "--mock and --url are mutually exclusive" || return $?
   fi
 
-  if [ "${url#https://}" == "$url" ]; then
-    "$usage" "$errorArgument" "URL must begin with https://" || return $?
-  fi
-
-  #
-  # Arguments are all validated by here (mostly - url syntax may be bonkers)
-  #
-
+  # Move to starting point
   myBinary="${BASH_SOURCE[0]}"
-  if ! myPath="$(dirname "$myBinary")"; then
-    "$usage" "$errorEnvironment" "Can not get dirname of $myBinary" || return $?
-  fi
-  if ! cd "$myPath/$relTop"; then
-    "$usage" "$errorEnvironment" "Can not cd $myPath/$relTop" || return $?
-  fi
-  if [ ! -d bin/build ]; then
+  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
+  __usageEnvironment "$usage" cd "$myPath/$relative" || return $?
+
+  installFlag=false
+  if [ ! -d "./bin/build" ]; then
     if $forceFlag; then
       printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBlue "directory does not exist")"
     fi
-    forceFlag=true
+    installFlag=true
   elif $forceFlag; then
     printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBoldBlue "directory exists")"
+    installFlag=true
   fi
-  if $forceFlag; then
-    if ! start=$(($(date +%s) + 0)); then
-      "$usage" "$errorEnvironment" "date failed" || return $?
-    fi
 
-    if $mockFlag; then
-      if ! cp -r "$mockPath" ./bin/build/; then
-        "$usage" "$errorEnvironment" "Unable to copy to bin/build" || return $?
-      fi
-    else
-      if ! curl -L -s "$url" -o build.tar.gz; then
-        "$usage" "$errorEnvironment" "Unable to download $url"
-        cat "$latestVersion" 1<&2
-        rm "$latestVersion" || :
-        return "$errorEnvironment"
-      fi
-      if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
-        tarArgs=(--wildcards '*/bin/build/*')
-      else
-        tarArgs=(--include='*/bin/build/*')
-      fi
-      if ! tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}"; then
-        "$usage" "$errorEnvironment" "Failed to download from $url:"
-        return "$errorEnvironment"
-      fi
-      rm "build.tar.gz" || :
-    fi
-    if [ ! -d "./bin/build" ]; then
-      "$usage" "$errorEnvironment" "Unable to download and install zesk/build" || return $?
-    fi
-    # shellcheck source=/dev/null
-    if ! . "$toolsBin"; then
-      "$usage" "$errorEnvironment" "Unable to source $toolsBin" || return $?
-    fi
-    reportTiming "$start" "Installed zesk/build in" || :
+  if $installFlag; then
+    start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
+    _installBinBuildDirectory "$usage" "$mockPath" "$url" || return $?
+    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    _installBinBuildCheck "$usage" >"$messageFile" || return $?
+    message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds"
+    rm -f "$messageFile" || :
   else
-    if [ ! -f "$toolsBin" ]; then
-      exec
-      echo "Incorrect build version or broken install (can't find tools.sh):"
-      echo
-      echo "  rm -rf bin/build"
-      echo "  ${BASH_SOURCE[0]}"
-      return "$errorEnvironment"
-    fi
-    # shellcheck source=/dev/null
-    if ! . "$toolsBin"; then
-      "$usage" "$errorEnvironment" "Unable to source $toolsBin" || return $?
-    fi
+    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    _installBinBuildCheck "$usage" >"$messageFile" || return $?
+    message="$(cat "$messageFile") already installed"
+    rm -f "$messageFile" || :
   fi
-
-  ignoreFile=.gitignore
-  if [ -f "$ignoreFile" ] && ! grep -q "/bin/build/" "$ignoreFile"; then
-    printf "%s %s %s %s:\n\n    %s\n" "$(consoleCode "$ignoreFile")" \
-      "does not ignore" \
-      "$(consoleCode "./bin/build")" \
-      "$(consoleWarning "recommend adding it")" \
-      "$(consoleCode "echo /bin/build/ >> $ignoreFile")"
+  _installBinBuildGitCheck
+  if [ "$(type -t "installInstallBuild")" = "function" ]; then
+    __usageEnvironment "$usage" installInstallBuild --local "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$(pwd)" || return $?
+  else
+    export BUILD_HOME
+    consoleError installInstallBuild is not published
+    __usageEnvironment "$usage" cp "$BUILD_HOME/bin/build/install-bin-build.sh" "${BASH_SOURCE[0]}" || return $?
   fi
-
-  diffLines=NONE
-  binName="./bin/build/install-bin-build.sh"
-  if [ -x "$binName" ]; then
-    if ! diffLines=$(diff "$binName" "$myBinary" | grep -v 'relTop=' | grep -c '[<>]' || :); then
-      "$usage" "$errorEnvironment" "failed diffing $binName $myBinary" || return $?
-    fi
-    if [ "$diffLines" -eq 0 ]; then
-      _binBuildMessage "$(consoleSuccess "is up to date")"
-      return 0
-    fi
-    consoleMagenta "--- Changes: $diffLines ---"
-    diff "$binName" "$myBinary" | grep -v 'relTop=' || :
-    consoleMagenta "--- End of changes ---"
-  fi
-  if [ "$diffLines" = "NONE" ]; then
-    "$usage" "$errorEnvironment" "$(consoleValue -n "$binName") $(consoleSuccess -n not found in downloaded build.)"
-  fi
-
-  replace=$(quoteSedPattern "relTop=$relTop")
-
-  myBinary="${BASH_SOURCE[0]}.$$"
-  sed -e "s/^relTop=.*/$replace/" <"$binName" >"$myBinary" || :
-  chmod +x "$myBinary"
-  if $showDiffFlag; then
-    consoleWarning "DIFFERENCES: $diffLines"
-    diff "$binName" "$myBinary" | grep -v 'relTop=' | wrapLines "$(consoleReset)$(consoleInfo CHANGES)$(consoleCode)" "$(consoleReset)" || :
-    consoleMagenta "DIFFERENCES: $diffLines"
-  fi
-  _binBuildMessage "$(consoleWarning "was updated")"
-  (nohup mv "$myBinary" "${BASH_SOURCE[0]}" 2>/dev/null 1>&2)
-}
-_binBuildMessage() {
-  printf "%s (%s)\n" "$(consoleValue "$this") $*" "$(consoleCode "$(_binBuildVersion)")"
-}
-
-_binBuildVersion() {
-  jq -r .version <"./bin/build/build.json"
+  printf "%s\n" "$message"
 }
 _installBinBuild() {
   local exitCode="$1"
   shift || :
   printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
   return "$exitCode"
+}
+
+# Fetch from GitHub
+_installBinBuildFetch() {
+  local usage="$1" latestVersion
+
+  if ! latestVersion=$(mktemp); then
+    "$usage" "$errorEnvironment" "Unable to create temporary file:" || return $?
+  fi
+  if ! curl -s "https://api.github.com/repos/zesk/build/releases/latest" >"$latestVersion"; then
+    message="$(printf "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$latestVersion")")"
+    rm -f "$latestVersion" || :
+    __failEnvironment "$usage" "$message" || return $?
+  fi
+  if ! url=$(jq -r .tarball_url <"$latestVersion"); then
+    message="$(printf "%s\n%s\n" "Unable to fetch .tarball_url JSON:" "$(cat "$latestVersion")")"
+    rm -f "$latestVersion" || :
+    __failEnvironment "$usage" "$message" || return $?
+  fi
+  [ "${url#https://}" != "$url" ] || __failArgument "$usage" "URL must begin with https://" || return $?
+  printf "%s\n" "$url"
+}
+
+# Install the build directory
+_installBinBuildDirectory() {
+  local usage="$1" mockPath="$2" url="$3"
+  local start tarArgs
+  local target=build.tar.gz
+  local path="./bin/build"
+
+  if [ -n "$mockPath" ]; then
+    __usageEnvironment "$usage" rm -rf "$path" || return $?
+    __usageEnvironment "$usage" cp -r "$mockPath" "$path" || return $?
+  else
+    __usageEnvironment "$usage" curl -L -s "$url" -o "$target" || return $?
+    [ -f "build.tar.gz" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
+    if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
+      tarArgs=(--wildcards '*/bin/build/*')
+    else
+      tarArgs=(--include='*/bin/build/*')
+    fi
+    __usageEnvironment "$usage" tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}" || return $?
+    rm -f "build.tar.gz" || :
+  fi
+  [ -d "$path" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($path not a directory, still)" || return $?
+}
+
+# Check the build directory after installation
+_installBinBuildCheck() {
+  local usage="$1"
+  local path="./bin/build"
+  local toolsBin="$path/tools.sh"
+  if [ ! -f "$toolsBin" ]; then
+    exec
+    echo "Incorrect build version or broken install (can't find tools.sh):"
+    echo
+    echo "  rm -rf bin/build"
+    echo "  ${BASH_SOURCE[0]}"
+    return "$errorEnvironment"
+  fi
+  # shellcheck source=/dev/null
+  source "$toolsBin" || __failEnvironment "$usage" source "$toolsBin" || return $?
+  read -r version id < <(jq -r '(.version + " " + .id)' <"$path/build.json") || :
+  printf "%s %s (%s)\n" "$(consoleBoldBlue "zesk/build")" "$(consoleCode "$version")" "$(consoleValue "$id")"
+}
+
+# Check .gitignore is correct
+_installBinBuildGitCheck() {
+  local ignoreFile=.gitignore
+  if [ -f "$ignoreFile" ] && ! grep -q -e "^/bin/build/" "$ignoreFile"; then
+    printf "%s %s %s %s:\n\n    %s\n" "$(consoleCode "$ignoreFile")" \
+      "does not ignore" \
+      "$(consoleCode "./bin/build")" \
+      "$(consoleError "recommend adding it")" \
+      "$(consoleCode "echo /bin/build/ >> $ignoreFile")"
+  fi
 }
 
 # IDENTICAL _colors 87
@@ -335,4 +301,64 @@ consoleBoldBlue() {
   __consoleOutput "" '\033[1;94m' '\033[0m' "$@"
 }
 
-installBinBuild "$@"
+# Error codes
+_code() {
+  case "${1-}" in environment) printf 1 ;; argument) printf 2 ;; *) printf 126 ;; esac
+}
+
+# Usage: {fn} usage message
+__failArgument() {
+  local usage="${1-}"
+  shift && "$usage" "$(_code argument)" "$@" || return $?
+}
+
+# Usage: {fn} usage message
+__failEnvironment() {
+  local usage="${1-}"
+  shift && "$usage" "$(_code environment)" "$@" || return $?
+}
+
+# Usage: {fn} usage command
+__usageArgument() {
+  local usage="${1-}"
+  shift && "$@" || __failArgument "$usage" "$@" || return $?
+}
+
+# Usage: {fn} usage command
+__usageEnvironment() {
+  local usage="${1-}"
+  shift && "$@" || __failEnvironment "$usage" "$@" || return $?
+}
+
+# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+# Usage: {fn} message ..`.
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 2
+_argument() {
+  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+}
+
+_environment() {
+  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+}
+
+# IDENTICAL _return 6
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+}
+
+# Final line will be rewritten on update
+#
+# Points to the project root relative to this file's location
+#
+# So:
+#
+# - "bin/install-bin-build.sh" -> ".."
+# - "bin/pipeline/install-bin-build.sh" -> "../.."
+# - "bin/app/vendorApp/install-bin-build.sh" -> "../../.."
+#
+# -- DO NOT EDIT ANYTHING ABOVE THIS LINE IT WILL BE OVERWRITTEN --
+installBinBuild ../.. "$@"

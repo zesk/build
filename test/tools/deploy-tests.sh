@@ -217,8 +217,7 @@ testDeployApplication() {
 
   if ! _simplePHPServer; then
     consoleError _simplePHPServer failed
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
+    buildFailed "$quietLog" || return $?
   fi
   consoleNameValue 20 "PHP Process" "$PHP_SERVER_PID"
 
@@ -407,7 +406,7 @@ testDeployApplication() {
 
   unset PHP_SERVER_ROOT
   unset PHP_SERVER_PID
-  consoleError "reset PHP_SERVER_ROOT PHP_SERVER_PID"
+  # consoleError "reset PHP_SERVER_ROOT PHP_SERVER_PID"
 
   export PHP_SERVER_ROOT
   export PHP_SERVER_PID
@@ -421,7 +420,6 @@ testDeployPackageName() {
   local saveTarget
 
   saveTarget=${BUILD_TARGET-NONE}
-  consoleError "saveTarget=\"$saveTarget\""
 
   assertExitCode 0 deployPackageName || return $?
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?

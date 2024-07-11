@@ -10,7 +10,7 @@ Dump the function and include stacks and the current environment
 
 #### Usage
 
-    debuggingStack
+    debuggingStack [ -s ]
     
 
 #### Exit codes
@@ -101,6 +101,12 @@ Useful if you need to temporarily enable or disable it.
 Returns whether the shell has the error exit flag set
 
 Useful if you need to temporarily enable or disable it.
+Note that `set -e` is not inherited by shells so
+
+    set -e
+    printf "$(isErrorExit; printf %d %?)"
+
+Outputs `1` always
 
 #### Usage
 
@@ -110,46 +116,8 @@ Useful if you need to temporarily enable or disable it.
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Usage
-
-    restoreErrorExit
-    
-
-#### Examples
-
-    save=$(saveErrorExit)
-    set +x
-    ... some nasty stuff
-    restoreErrorExit "$save"
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### See Also
-
-{SEE:saveErrorExit}
-
-#### Usage
-
-    saveErrorExit
-    
-
-#### Examples
-
-    save=$(saveErrorExit)
-    set +x
-    ... some nasty stuff
-    restoreErrorExit "$save"
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### See Also
-
-{SEE:restoreErrorExit}
+Unable to find "restoreErrorExit" (using index "/Users/kent/.build")
+Unable to find "saveErrorExit" (using index "/Users/kent/.build")
 
 ### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
 
@@ -158,6 +126,10 @@ dumpFile fileName0 [ fileName1 ... ]
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "saveErrorExit" (using index "/Users/kent/.build")
 
 ### `dumpPipe` - Dump a pipe with a title and stats
 
@@ -170,6 +142,10 @@ Dump a pipe with a title and stats
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "saveErrorExit" (using index "/Users/kent/.build")
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

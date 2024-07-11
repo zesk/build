@@ -34,7 +34,7 @@ __crontabGenerate() {
   done || return 0
 }
 
-# Summary: Application-specific crontab synchronization
+# Summary: Application-specific crontab management
 #
 # Keep crontab synced with files and environment files in an application folder structure.
 #
@@ -65,7 +65,7 @@ __crontabGenerate() {
 # Example:     crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/applications
 # Example:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 # See: whoami
-crontabApplicationSync() {
+crontabApplicationUpdate() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments
   local rootEnv appPath user flagShow flagDiff environmentMapper newCrontab
@@ -81,7 +81,7 @@ crontabApplicationSync() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argument="$1"
-    usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
+    usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "$argument" >/dev/null || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -95,14 +95,11 @@ crontabApplicationSync() {
       --mapper)
         [ -z "$environmentMapper" ] || __failArgument "$usage" "$argument already" || return $?
         shift
-        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
-        isExecutable "$1" || __failEnvironment "$1 is not executable" || return $?
-        environmentMapper="$1"
+        environmentMapper=$(usageArgumentRequired "$usage" "$argument" "${1-}") || return $?
         ;;
       --user)
         shift
-        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
-        user="$1"
+        user="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
         ;;
       --show)
         flagShow=true
@@ -120,6 +117,8 @@ crontabApplicationSync() {
   if [ -z "$environmentMapper" ]; then
     environmentMapper=mapEnvironment
   fi
+  isCallable "$environmentMapper" || __failEnvironment "$environmentMapper is not callable" || return $?
+
   [ -n "$appPath" ] || __failArgument "$usage" "Need to specify application path" || return $?
   [ -n "$user" ] || __failArgument "$usage" "Need to specify user" || return $?
 
@@ -152,6 +151,6 @@ crontabApplicationSync() {
   [ $returnCode -eq 0 ] && return 0
   _environment "crontab -u \"$user\"" || return $returnCode
 }
-_crontabApplicationSync() {
+_crontabApplicationUpdate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -183,9 +183,7 @@ _fileDirectoryExists() {
 }
 
 #
-# Given a list of files, ensure their parent directories exist
-#
-# Creates the directories for all files passed in.
+# Given a list of directories, ensure they exist and create them if they do not.
 #
 # Usage: {fn} dir1 [ dir2 ... ]
 # Argument: dir1 - One or more directories to create
@@ -426,7 +424,7 @@ _modificationTime() {
 
 # Fetch the modification time in seconds from now of a file as a timestamp
 #
-# Usage: modificationTime filename0 [ filename1 ... ]
+# Usage: {fn} filename0 [ filename1 ... ]
 # Exit Code: 2 - If file does not exist
 # Exit Code: 0 - If file exists and modification times are output, one per line
 # Example:     modificationTime ~/.bash_profile
@@ -438,15 +436,13 @@ modificationSeconds() {
 
   now="$(date +%s)"
   while [ $# -gt 0 ]; do
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    [ -f "$argument" ] || __failArgument "$usage" "$argument is not a file" || return $?
-    printf "%d\n" "$((now - "$(modificationTime "$1")"))"
-    shift || __failArgument "$usage" "shift" || return $?
+    argument="$(usageArgumentFile "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    __usageEnvironment "$usage" printf "%d\n" "$((now - "$(modificationTime "$argument")"))" || return $?
+    shift
   done
 }
 _modificationSeconds() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-
 }
 
 #
@@ -736,11 +732,29 @@ pathCleanDuplicates() {
   # PATH="$tempPath"
 }
 
+# Usage: {fn} binary
+# Exit code: 0 - If all binary
+whichExists() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments
+  export PATH
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    which "$argument" >/dev/null || return $?
+    shift
+  done
+}
+_whichExists() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 realPath() {
   #
   # realpath is not present always
   #
-  if ! which realpath >/dev/null; then
+  if ! whichExists realpath; then
     readlink -f -n "$@"
   else
     realpath "$@"

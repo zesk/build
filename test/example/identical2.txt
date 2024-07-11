@@ -12,10 +12,10 @@ All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 All work and no play makes Jack a dull boy.
 
-# OVERLAP_IDENTICAL 8
+# OVERLAP_IDENTICAL section1 8
 A
 B
-# OVERLAP_IDENTICAL 2
+# OVERLAP_IDENTICAL section2 2
 D
 E
 F

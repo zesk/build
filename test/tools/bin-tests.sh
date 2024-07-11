@@ -6,70 +6,59 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-errorEnvironment=1
 
 declare -a tests
 
-tests+=(testVersionLive)
-testVersionLive() {
-  assertExitCode 0 runHook version-live || return $?
-}
-
-tests+=(testNewRelease)
-testNewRelease() {
-  assertExitCode 0 newRelease --non-interactive || return $?
-}
-
+tests+=(testAdditionalBins)
+tests+=(testMapPortability)
 tests+=(testBuildSetup)
-testBuildSetup() {
-  local topDir targetDir marker testBinary testOutput
+tests+=(testInstallTerraform)
+tests+=(testScriptInstallations)
+tests+=(testVersionLive)
+tests+=(testNewRelease)
+# tests+=(testAdditionalBins)
 
-  testSection install-bin-build.sh
+testVersionLive() {
+  assertExitCode --line "$LINENO" 0 runHook version-live || return $?
+}
+
+testNewRelease() {
+  assertExitCode --line "$LINENO" 0 newRelease --non-interactive || return $?
+}
+
+testBuildSetup() {
+  local topDir targetDir marker testBinary
+
+  testSection installInstallBuild
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"
-  mkdir -p "$targetDir"
+  __environment mkdir -p "$targetDir" || return $?
   testBinary="$targetDir/install-bin-build.sh"
-  cp bin/build/install-bin-build.sh "$testBinary"
-  sed -i -e 's/^relTop=.*/relTop=..\/..\/../g' "$testBinary"
-  chmod +x "$testBinary"
+  assertExitCode --dump --line "$LINENO" 0 installInstallBuild "$targetDir" "$topDir" || return $?
+  assertFileExists --line "$LINENO" "$testBinary" || return $?
   marker=$(randomString)
   echo " # changed $marker" >>"$testBinary"
 
   if ! grep -q "$marker" "$testBinary"; then
     consoleError "binary $testBinary does not contain marker?"
-    return "$errorEnvironment"
+    return 1
   fi
 
-  testOutput=$(mktemp)
-  if ! $testBinary >"$testOutput"; then
-    consoleError "Binary $testBinary failed"
-    return "$errorEnvironment"
-  fi
+  assertExitCode --stdout-match "was updated" 0 "$testBinary" || return $?
 
-  if ! grep -q "was updated" "$testOutput"; then
-    consoleError "Missing was updated from $testBinary"
-    buildFailed "$testOutput"
-  fi
-
-  if [ ! -d "test.$$/bin/build" ]; then
-    consoleError "binary $testBinary failed to do the job"
-    return "$errorEnvironment"
+  if [ ! -d "$topDir/bin/build" ]; then
+    find "$topDir" -type f
+    find "$topDir" -type d
+    consoleError "binary $testBinary failed to do the job ($topDir/bin/build)"
+    return 1
   fi
   if grep -q "$marker" "$testBinary"; then
     consoleError "binary $testBinary did not update itself as it should have ($marker found)"
     tail -n 20 "$testBinary" | wrapLines "$(consoleCode)" "$(consoleReset)"
-    return "$errorEnvironment"
+    return 1
   fi
 
-  if ! $testBinary >"$testOutput"; then
-    consoleError "Binary $testBinary failed 2nd round - ok as live script is dead"
-    return "$errorEnvironment"
-  fi
-
-  if ! grep -q "up to date" "$testOutput"; then
-    consoleError "Missing up to date from $testBinary"
-    buildFailed "$testOutput"
-  fi
+  assertExitCode --stdout-match "up to date" 0 "$testBinary" || return 0
 
   consoleSuccess "install-bin-build.sh update was tested successfully"
   rm -rf "$topDir"
@@ -77,43 +66,17 @@ testBuildSetup() {
 
 tests+=(testMapBin)
 testMapBin() {
-  local result expected
+  local expected actual
 
   testSection testMap
-  export FOO=test
-  export BAR=goob
 
-  result="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | bin/build/map.sh)"
+  actual="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | FOO=test BAR=goob bin/build/map.sh)"
 
   expected="testgoob{foo}{bar}goob"
-  if [ "$result" != "$expected" ]; then
-    consoleError "map.sh failed: $result != $expected"
-    exit "$errorEnvironment"
-  fi
-  consoleSuccess testMapBin OK
 
-  unset FOO BAR
+  assertEquals --line "$LINENO" "$expected" "$actual" || return $?
 }
 
-#
-# testShellScripts moved into tools/
-#
-
-__doesScriptInstall() {
-  local binary=$1 script=$2
-  testSection "$binary"
-  if which "$binary" >/dev/null; then
-    consoleError "binary $binary is already installed?"
-    return "$errorEnvironment"
-  fi
-  $script
-  if ! which "$binary" >/dev/null; then
-    consoleError "binary $binary was not installed by $script"
-    return "$errorEnvironment"
-  fi
-}
-
-tests+=(testMapPortability)
 testMapPortability() {
   local tempDir
 
@@ -122,7 +85,7 @@ testMapPortability() {
   cp ./bin/build/map.sh "./random.$$/"
   export DUDE=ax
   export WILD=m
-  assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
+  assertEquals --line "$LINENO" "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
   rm -rf "$tempDir"
   unset DUDE WILD
 }
@@ -142,52 +105,87 @@ _testComposerTempDirectory() {
 #
 # Side-effect: installs scripts
 #
-tests+=(testScriptInstallations)
 testScriptInstallations() {
   local d oldDir
 
   oldDir="${BITBUCKET_CLONE_DIR-NONE}"
-  if ! which docker-compose >/dev/null; then
+
+  if ! whichExists docker-compose; then
+    # Part of core install in some systems, so no uninstall
     __doesScriptInstall docker-compose dockerComposeInstall || return $?
   fi
-
-  if ! which php >/dev/null; then
-    __doesScriptInstall php phpInstall || return $?
-  fi
-  __doesScriptInstall python pythonInstall || return $?
-  __doesScriptInstall mariadb mariadbInstall || return $?
+  __doesScriptInstallUninstall php phpInstall phpUninstall || return $?
+  __doesScriptInstallUninstall python pythonInstall pythonUninstall || return $?
+  __doesScriptInstallUninstall mariadb mariadbInstall mariadbUninstall || return $?
   # requires docker
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
 
-  d=$(_testComposerTempDirectory) || _environment "_testComposerTempDirectory" | return $?
-  cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/"
+  d=$(__environment _testComposerTempDirectory) || return $?
+  __environment cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/" || return $?
   __environment phpComposer "$d" || return $?
   [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
 
-  if ! which git >/dev/null; then
-    __doesScriptInstall git gitInstall || return $?
-  fi
-  if ! which npm >/dev/null; then
-    # npm 18 installed in this image
+  __doesScriptInstallUninstall git gitInstall gitUninstall || return $?
+
+  # npm 18 installed in this image
+  if ! whichExists npm; then
+    # Part of core install in some systems, so no uninstall
     __doesScriptInstall npm npmInstall || return $?
   fi
-  __doesScriptInstall prettier prettierInstall || return $?
-  __doesScriptInstall terraform terraformInstall || return $?
+  __doesScriptInstallUninstall prettier prettierInstall prettierUninstall || return $?
 
   export BITBUCKET_CLONE_DIR
   BITBUCKET_CLONE_DIR="$oldDir"
   [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
 }
 
-# tests=(testAdditionalBins "${tests[@]}")
-tests+=(testAdditionalBins)
+#
+# Side-effect: installs scripts
+#
+testInstallTerraform() {
+  __doesScriptInstallUninstall terraform terraformInstall terraformUninstall || return $?
+}
+
 testAdditionalBins() {
   local binTest
+  local aa
 
   for binTest in ./test/bin/*.sh; do
-    testHeading "$(cleanTestName "$(basename "$binTest")")"
-    if ! "$binTest" "$(pwd)"; then
-      _environment "$(testFailed "$binTest" "$(pwd)")" || return $?
+    testSection "$(basename "$binTest")"
+    aa=()
+    if grep -q 'stderr-ok' "$binTest" >/dev/null; then
+      aa=(--stderr-ok)
     fi
+    assertExitCode "${aa[@]+"${aa[@]}"}" --line "$LINENO" 0 "$binTest" "$(pwd)" || return $?
   done
+}
+
+__doesScriptInstall() {
+  local binary="${1-}"
+
+  testSection "INSTALL $binary"
+  shift
+  ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "is already installed" || return $?
+  __environment "$@" || return $?
+  whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "was not installed by" "$@" || return $?
+}
+
+__doesScriptInstallUninstall() {
+  local binary=$1 script=$2 undoScript="$3"
+  local uninstalledAlready
+
+  uninstalledAlready=false
+  if whichExists "$binary"; then
+    testSection "UNINSTALL $binary (already)" || :
+    __environment "$undoScript" || return $?
+    uninstalledAlready=true
+  else
+    consoleInfo "binary $binary is not installed - installing"
+  fi
+  __doesScriptInstall "$binary" "$script" || return $?
+  if ! $uninstalledAlready; then
+    testSection "UNINSTALL $binary (just installed)" || :
+    __environment "$undoScript" || return $?
+    ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "exists after uninstalling" || return $?
+  fi
 }

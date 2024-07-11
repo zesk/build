@@ -33,4 +33,5 @@ _user() {
   printf "%s\n" "$APPLICATION_USER"
 }
 
+
 exec setuidgid "$(_user "{APPLICATION_USER}")" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?

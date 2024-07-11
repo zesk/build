@@ -32,9 +32,27 @@ Returns true if all `characters` are of `className`
 
 - `0` - Always succeeds
 
-### `quoteSedPattern` - DO NOT EDIT THIS ONE
+### `quoteSedPattern` - Quote sed strings for shell use
 
-DO NOT EDIT THIS ONE
+Quote a string to be used in a sed pattern on the command line.
+
+#### Usage
+
+    quoteSedPattern text
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+
+#### Sample Output
+
+    string quoted and appropriate to insert in a sed search or replacement phrase
+    
 
 #### Exit codes
 
@@ -373,28 +391,6 @@ Trim spaces and only spaces from arguments or a pipe
 #### Credits
 
 Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
-
-### `trimSpacePipe` - Trim whitespace in a pipeline
-
-trimSpace handles both cases now.
-
-#### Usage
-
-    trimSpace < file > output
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Depends
-
-    awk
-    
-
-#### See Also
-
-{SEE:trimSpace}
 
 ### `trimHead` - Removes any blank lines from the beginning of a stream
 

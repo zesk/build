@@ -1,10 +1,10 @@
-# Operations Tools
+# crontab Tools
 
 [⬅ Return to documentation root](crontab)
 [⬅ Return to top](../index.md)
 
 
-### `crontab-application-sync.sh` - Application-specific crontab synchronization
+### `crontab-application-sync.sh` - Application-specific crontab management
 
 Keep crontab synced with files and environment files in an application folder structure.
 

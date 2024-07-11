@@ -29,7 +29,7 @@ __usage() {
   isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
   isCallable "$command" || _argument "${FUNCNAME[0]} \"$command\" is not callable" || return $?
   shift 3 || :
-  "$command" "$@" || "$usage" "$code" "$command$(printf ' "%s"' "$@") failed" || return $?
+  "$command" "$@" || "$usage" "$code" "$(_command "$command" "$@")" || return $?
 }
 
 # Run `command`, upon failure run `usage` with an environment error
@@ -37,7 +37,7 @@ __usage() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageEnvironment() {
-  __usage 1 "$@"
+  __usage "$(_code environment)" "$@"
 }
 
 # Run `command`, upon failure run `usage` with an argument error
@@ -45,7 +45,7 @@ __usageEnvironment() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageArgument() {
-  __usage 2 "$@"
+  __usage "$(_code argument)" "$@"
 }
 
 # Run `usage` with an environment error
@@ -53,8 +53,7 @@ __usageArgument() {
 __failEnvironment() {
   local usage="${1-}"
   isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift || _argument "${FUNCNAME[0]} shift" || return $?
-  "$usage" 1 "$@"
+  shift && "$usage" "$(_code environment)" "$@" || return $?
 }
 
 # Run `usage` with an argument error
@@ -62,8 +61,7 @@ __failEnvironment() {
 __failArgument() {
   local usage="${1-}"
   isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift || _argument "${FUNCNAME[0]} shift" || return $?
-  "$usage" 2 "$@"
+  shift && "$usage" "$(_code argument)" "$@" || return $?
 }
 
 # Run `usage` with an environment error
@@ -71,8 +69,7 @@ __failArgument() {
 __usageEnvironmentQuiet() {
   local usage="${1-}" quietLog="${2-}"
   isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift 2 || _argument "${FUNCNAME[0]} shift 2" || return $?
-  "$@" >>"$quietLog" 2>&1 || __failEnvironment "$usage" "$@" || return $?
+  shift 2 && "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __failEnvironment "$usage" "$@" || return $?
 }
 
 #
@@ -140,4 +137,19 @@ __environmentOutput() {
 _deprecated() {
   printf "DEPRECATED: %s" "$@" 1>&2
   printf -- "$(date "+%F %T"),%s\n" "$@" >>"$(dirname "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")/.deprecated"
+}
+
+# Usage: {fn} exitCode item ...
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+_clean() {
+  local exitCode="${1-}"
+  shift
+  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $*" || return $?
+  while [ $# -gt 0 ]; do
+    [ ! -f "$1" ] || __environment rm "$1" || return $?
+    [ ! -d "$1" ] || __environment rm -rf "$1" || return $?
+    shift
+  done
+  return "$exitCode"
 }

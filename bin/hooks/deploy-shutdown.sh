@@ -11,25 +11,27 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
+# IDENTICAL __tools 13
+# Usage: __tools command ...
+# Load zesk build and run command
+__tools() {
+  local relative="$1"
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+  shift && set -eou pipefail
+  local tools="$here/$relative/bin/build/tools.sh"
+  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
+  # shellcheck source=/dev/null
+  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  "$@" || return $?
+}
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
-# shellcheck source=/dev/null
-. ./bin/build/tools.sh
-
-# Deployment "start" script
-#
-# fn: {base}
-# Exit code: 0 - This SHOULD exit successfully always
-# Example: - Move directories to make deployment final
-
-set -eou pipefail
-
-# Usage: {fn} {title} [ items ... ]
-_fail() {
-  exec 1>&2 && printf 'FAIL: %s\n' "$@"
-  return 42 # The meaning of life
+# IDENTICAL _return 6
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 #
@@ -45,7 +47,7 @@ __hookDeployShutdown() {
   consoleSuccess "${BASH_SOURCE[0]} is a no-op." || __failEnvironment "$usage" "consoleSuccess" || return $?
   : "$@"
 }
-_hookDeployShutdown() {
+___hookDeployShutdown() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-__hookDeployShutdown "$@"
+__tools ../.. __hookDeployShutdown "$@"
