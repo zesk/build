@@ -41,23 +41,23 @@ EOF
   printf "VALUE=%s\n=====\n" "$value"
 
   printf "ARGS: %s\n=====\n" "$(printf %s "$value" | usageArguments "^")"
-  assertContains "test" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 
   value="$(printf "%s\n%s\n" "--test^Optional thing." "variable^Another optional thing. newline at end")"
   printf "ARGS: %s\n=====\n" "$(printf %s "$value" | usageArguments "^")"
-  assertContains "test" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 
   value="$(printf "%s\n%s" "--test^Optional thing." "variable^Another optional thing.")"
   printf "ARGS: %s\n=====\n" "$(printf %s "$value" | usageArguments "^")"
-  assertContains "test" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 }
 

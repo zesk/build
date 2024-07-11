@@ -3,7 +3,7 @@
 [⬅ Return to documentation root](crontab)
 [⬅ Return to top](../index.md)
 
-{crontabApplicationSync}
+{crontabApplicationUpdate}
 
 [⬅ Return to documentation root](crontab)
 [⬅ Return to top](../index.md)

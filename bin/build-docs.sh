@@ -3,7 +3,8 @@
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -191,9 +192,7 @@ buildDocumentationBuild() {
   export BUILD_COLORS_MODE
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
-  if ! which pcregrep >/dev/null; then
-    __usageEnvironment "$usage" aptInstall pcregrep || return $?
-  fi
+  __usageEnvironment "$usage" whichApt pcregrep pcregrep || return $?
 
   exitCode=0
   start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?

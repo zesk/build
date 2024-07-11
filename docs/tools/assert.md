@@ -14,7 +14,7 @@ If this fails it will output an error and exit.
 
 #### Usage
 
-    assertEquals expected actual [ message ]
+    assertEquals [ --line lineNumber ] expected actual [ message ]
     
 
 #### Arguments
@@ -137,7 +137,7 @@ Assert `leftValue >= rightValue`
 
 #### Usage
 
-    assertNotEquals expected actual [ message ]
+    assertGreaterThanOrEqual expected actual [ message ]
     
 
 #### Arguments
@@ -486,7 +486,7 @@ $\Test that a file exists
 
 #### Usage
 
-    assertDirectoryExists directory [ message ... ]
+    assertFileExists item [ message ... ]
     
 
 #### Arguments
@@ -508,7 +508,7 @@ None
 
 #### Environment
 
-- This fails if `directory` is anything but a `directory`
+- This fails if `file` is anything but a `file`
 
 ### `assertFileDoesNotExist` - Test that a file does not exist
 
@@ -516,7 +516,7 @@ $\Test that a file does not exist
 
 #### Usage
 
-    assertFileDoesNotExist file [ message ... ]
+    assertFileDoesNotExist item [ message ... ]
     
 
 #### Arguments
@@ -534,7 +534,7 @@ None
 
 #### Environment
 
-- This fails if `file` is anything at all, even a non-directory (such as a link)
+- This fails if `file` is anything at all, even a non-file (such as a link)
 
 #### Review Status
 

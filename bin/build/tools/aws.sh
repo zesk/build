@@ -36,7 +36,7 @@ awsInstall() {
 
   __usageEnvironment "$usage" aptInstall unzip curl "$@" || return $?
 
-  if which aws >/dev/null; then
+  if whichExists aws; then
     return 0
   fi
 

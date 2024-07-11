@@ -1,0 +1,42 @@
+1
+2
+3
+4
+# IDENTICAL testToken 3
+- TestToken 1
+- TestToken 2
+  Indented X
+9
+10
+11
+12
+# IDENTICAL testToken 3
+- IGNORED and will not be detected in source for repair
+15
+16
+# IDENTICAL test10 10
+- Left thumb
+- Left index
+- Left pointer
+- Left pinky
+- Left ring
+- Right thumb
+- Right index
+- Right pointer
+- Right pinky
+- Right ring
+28
+29
+30
+
+# IDENTICAL eoftarget EOF
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here

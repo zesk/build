@@ -86,7 +86,6 @@ rotateLog() {
     cp "$logFile" "$logFile.$index" || __failEnvironment "$usage" "$this Failed to copy $logFile $logFile.$index" || return $?
     printf "" >"$logFile" || __failEnvironment "$usage" "$this Failed to truncate $logFile" || return $?
   fi
-  set +x
 }
 _rotateLog() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?

@@ -108,10 +108,9 @@ This is intended for messages on a line which are then overwritten using clearLi
 
 Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
 
-
 #### Usage
 
-    statusMessage consoleAction message [ ... ]
+    statusMessage command ...
     
 
 #### Arguments
@@ -120,7 +119,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Examples
 
-    statusMessage Loading...
+    statusMessage consoleInfo "Loading ..."
     bin/load.sh >>"$loadLogFile"
     clearLine
 
@@ -242,10 +241,9 @@ This is intended for messages on a line which are then overwritten using clearLi
 
 Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
 
-
 #### Usage
 
-    statusMessage consoleAction message [ ... ]
+    statusMessage command ...
     
 
 #### Arguments
@@ -254,7 +252,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Examples
 
-    statusMessage Loading...
+    statusMessage consoleInfo "Loading ..."
     bin/load.sh >>"$loadLogFile"
     clearLine
 

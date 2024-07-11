@@ -8,11 +8,8 @@
 # bin: npm
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 #
-# Usage: npmInstall npmVersion
+# Usage: {fn} npmVersion
 # Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
 # Summary: Install NPM in the build environment
 # Install NPM in the build environment
@@ -24,26 +21,48 @@ errorEnvironment=1
 # Binary: npm.sh
 #
 npmInstall() {
-  local start npm_version quietLog
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments
+  local npm_version quietLog
 
-  if which npm 2>/dev/null 1>&2; then
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --version)
+        shift
+        npm_version=$(usageArgumentRequired "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        usageArgumentUnknown "$usage" "$argument" || return $?
+        ;;
+    esac
+    shift || usageArgumentMissing "$usage" "$argument" || return $?
+  done
+
+  if whichExists npm; then
     return 0
   fi
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
-  start=$(beginTiming)
   npm_version="${1-${BUILD_NPM_VERSION:-latest}}"
-  quietLog=$(buildQuietLog npmInstall)
+  quietLog=$(buildQuietLog npmInstall) || __failEnvironment "buildQuietLog $usage"
+  __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" aptInstall npm || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" npm i -g "npm@$npm_version" --force 2>&1
+}
+_npmInstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-  if ! aptInstall npm; then
-    return "$errorEnvironment"
-  fi
-
-  if ! requireFileDirectory "$quietLog"; then
-    return "$errorEnvironment"
-  fi
-  if ! npm i -g "npm@$npm_version" --force >>"$quietLog" 2>&1; then
-    buildFailed "$quietLog"
-    return "$errorEnvironment"
-  fi
-  reportTiming "$start" OK
+#
+# Usage: {fn}
+# Core as part of some systems - so this succeeds and it still exists
+#
+npmUninstall() {
+  whichAptUninstall npm npm "$@"
 }

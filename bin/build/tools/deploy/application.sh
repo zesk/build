@@ -128,7 +128,8 @@ deployApplication() {
   if [ -d "$applicationPath" ]; then
     if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
       if ! $firstFlag; then
-        __failEnvironment "$usage" "Can not fetch version from $applicationPath, need --first" || return $?
+        set -x
+        __failEnvironment "$usage" "Can not fetch version from $applicationPath,  need --first" || return $?
       fi
       currentApplicationId=
     fi

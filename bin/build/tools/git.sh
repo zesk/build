@@ -37,7 +37,17 @@ errorArgument=2
 # Summary: Install git if needed
 #
 gitInstall() {
-  whichApt git git "%@"
+  whichApt git git "$@"
+}
+
+#
+# Uninstalls the `git` binary
+# Usage: {fn} [ package ... ]
+# Argument: package - Additional packages to uninstall
+# Summary: Uninstall git
+#
+gitUninstall() {
+  whichAptUninstall git git "$@"
 }
 
 #

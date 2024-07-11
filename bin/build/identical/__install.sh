@@ -3,8 +3,11 @@
 # Copy of __install
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
+#
+# Requires: IDENTICAL _return
+# Example: __install ../../.. bin/build consoleOrange "$@"
 
-# IDENTICAL __install 18
+# IDENTICAL __install EOF
 # Install, load zesk build and run command
 __install() {
   local relative="$1" installPath="$2"
@@ -22,7 +25,3 @@ __install() {
   source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
 }
-
-# requires IDENTICAL _return
-
-# __install ../../.. bin/build consoleOrange "$@"

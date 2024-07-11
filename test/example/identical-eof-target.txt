@@ -1,0 +1,103 @@
+1
+2
+3
+4
+# IDENTICAL eoftarget 11
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here
+
+9
+10
+11
+12
+# IDENTICAL eoftarget 11
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here
+
+# IDENTICAL eoftarget 11
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here
+
+21
+22
+# IDENTICAL eoftarget 11
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here
+
+#
+#
+# IDENTICAL eoftarget 11
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here
+
+#
+#
+40
+# IDENTICAL eoftarget 11
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here
+
+# SHOULD APPEAR
+# IDENTICAL eoftarget 11
+Hello world
+This is bunch of lines
+and
+we
+want
+
+some blanks
+
+
+here
+
+# SHOULD APPEAR
+# SHOULD APPEAR
+# SHOULD APPEAR

@@ -149,7 +149,7 @@ Install `php`
 
 If this fails it will output the installation log.
 
-When this tool succeeds the `python` binary is available in the local operating system.
+When this tool succeeds the `php` binary is available in the local operating system.
 
 #### Usage
 
@@ -226,7 +226,7 @@ Install terraform binary
 
 #### Exit codes
 
-- `1` - Error with environment
+- `1` - Problems
 - `0` - Installed successfully
 
 [⬅ Return to index](index.md)

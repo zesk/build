@@ -9,15 +9,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
-_return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
-}
-
-# IDENTICAL __tools 12
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -29,6 +22,14 @@ __tools() {
   # shellcheck source=/dev/null
   source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
+}
+
+# IDENTICAL _return 6
+# Usage: {fn} _return [ exitCode [ message ... ] ]
+# Exit Code: exitCode or 1 if nothing passed
+_return() {
+  local code="${1-1}" # make this a two-liner ;)
+  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
 #

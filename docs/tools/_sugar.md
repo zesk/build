@@ -31,14 +31,7 @@ Quick guide:
 
 # Sugar Functions References
 
-
-### `_exit` - Critical exit - exit immediately
-
-Critical exit - exit immediately
-
-#### Exit codes
-
-- `99` - Failure
+Unable to find "_exit" (using index "/Users/kent/.build")
 
 ### `_return` - IDENTICAL _return 6
 
@@ -52,6 +45,10 @@ IDENTICAL _return 6
 #### Exit codes
 
 - exitCode or 1 if nothing passed
+
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
@@ -70,6 +67,10 @@ Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
 - 1
 
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
+
 ### `_argument` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 
 Return `$errorArgument` always. Outputs `message ...` to `stderr`.
@@ -86,6 +87,10 @@ Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 #### Exit codes
 
 - 2
+
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
 
 ### `__execute` - Run `command ...` (with any arguments) and then `_return` if
 
@@ -104,6 +109,10 @@ Run `command ...` (with any arguments) and then `_return` if it fails.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
+
 ### `__try` - Run `command ...` (with any arguments) and then `_exit` if
 
 Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
@@ -121,6 +130,10 @@ Run `command ...` (with any arguments) and then `_exit` if it fails. Critical co
 
 - None
 
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
+
 ### `__echo` - Output the `command ...` to stdout prior to running, then
 
 Output the `command ...` to stdout prior to running, then `__execute` it
@@ -137,6 +150,10 @@ Output the `command ...` to stdout prior to running, then `__execute` it
 #### Exit codes
 
 - Any
+
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
 
 ### `__environment` - Run `command ...` (with any arguments) and then `_environment` if
 
@@ -156,6 +173,10 @@ Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `0` - Success
 - `1` - Failed
 
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
+
 ### `__argument` - Run `command ...` (with any arguments) and then `_argument` if
 
 Run `command ...` (with any arguments) and then `_argument` if it fails.
@@ -174,6 +195,10 @@ Run `command ...` (with any arguments) and then `_argument` if it fails.
 - `0` - Success
 - `2` - Failed
 
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
+
 ## Decorations
 
 
@@ -189,6 +214,10 @@ Output a titled list
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "_exit" (using index "/Users/kent/.build")
 
 <!-- TEMPLATE footer 5 -->
 <hr />

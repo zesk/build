@@ -247,3 +247,9 @@ testListTokens() {
   assertEquals "$(printf "%s\n" a b c)" "$(echo '{a}{b}{c}' | listTokens)" || return $?
   assertEquals "$(printf "%s\n" confirmYesNo copyFileWouldChange copyFile 'args[@]' 'args[@]')" "$(listTokens <"./test/example/listTokensBad.md")" || return $?
 }
+
+tests+=(testCharacterFromInteger)
+testCharacterFromInteger() {
+  assertEquals l "$(characterFromInteger "$(_code leak)")" || return $?
+  assertEquals a "$(characterFromInteger "$(_code assert)")" || return $?
+}

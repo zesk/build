@@ -10,7 +10,7 @@ Install `php`
 
 If this fails it will output the installation log.
 
-When this tool succeeds the `python` binary is available in the local operating system.
+When this tool succeeds the `php` binary is available in the local operating system.
 
 #### Usage
 
