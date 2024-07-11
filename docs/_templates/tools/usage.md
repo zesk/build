@@ -4,12 +4,19 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+## Usage formatting
+
 {usageDocument}
 {usageArguments}
 {usageGenerator}
+{usageTemplate}
+
+## Environment
+
 {usageRequireBinary}
 {usageRequireEnvironment}
-{usageTemplate}
+
+## Argument handling
 
 {usageArgumentFileDirectory}
 {usageArgumentFile}
@@ -17,6 +24,10 @@
 {usageArgumentLoadEnvironmentFile}
 {usageArgumentUnsignedInteger}
 {usageArgumentDirectory}
+{usageArgumentBoolean}
+{usageArgumentMissing}
+{usageArgumentRequired}
+{usageArgumentUnknown}
 
 <!-- TEMPLATE footer 5 -->
 <hr />

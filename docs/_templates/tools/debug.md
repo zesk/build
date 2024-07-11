@@ -9,10 +9,9 @@
 {buildDebugStop}
 {isBashDebug}
 {isErrorExit}
-{restoreErrorExit}
-{saveErrorExit}
 {dumpFile}
 {dumpPipe}
+{plumber}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
