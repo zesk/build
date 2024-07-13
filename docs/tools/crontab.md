@@ -51,4 +51,4 @@ Any files not found are skipped. Note that environment values are not carried be
 [⬅ Return to documentation root](crontab)
 [⬅ Return to top](../index.md)
 
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Operations Tools)
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=crontab Tools)

@@ -277,6 +277,25 @@ usageArgumentUnsignedInteger() {
   __usageArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
 }
 
+# Validates a value is an unsigned integer and greater than zero (NOT zero)
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentPositiveInteger() {
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
+    return $?
+  fi
+  __usageArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger && __usageArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
+}
+
 # Validates a value is not blank and is a file.
 # Upon success, outputs the file name
 # Usage: {fn} usageFunction variableName variableValue [ noun ]

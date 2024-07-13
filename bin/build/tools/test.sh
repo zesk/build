@@ -170,7 +170,6 @@ validateShellScripts() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
 
   clearLine || :
-  sleepDelay="$BUILD_INTERACTIVE_REFRESH"
   statusMessage consoleInfo "Checking all shell scripts ..." || :
   failedReasons=()
   failedFiles=()
@@ -208,7 +207,6 @@ validateShellScripts() {
     shift || __failArgument "$usage" "shift after $arg failed" || return $?
   done
 
-  sleepDelay=$(usageArgumentUnsignedInteger "$usage" "sleepDelay" "$sleepDelay") || return $?
   if [ $# -eq 0 ] && [ ${#checkedFiles[@]} -eq 0 ]; then
     ! $verbose || consoleInfo "Reading item list from stdin ..."
     while read -r arg; do

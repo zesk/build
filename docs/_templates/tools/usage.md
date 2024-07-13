@@ -23,7 +23,9 @@
 {usageArgumentInteger}
 {usageArgumentLoadEnvironmentFile}
 {usageArgumentUnsignedInteger}
+{usageArgumentPositiveInteger}
 {usageArgumentDirectory}
+{usageArgumentRealDirectory}
 {usageArgumentBoolean}
 {usageArgumentMissing}
 {usageArgumentRequired}

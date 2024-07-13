@@ -116,8 +116,6 @@ Outputs `1` always
 #### Exit codes
 
 - `0` - Always succeeds
-Unable to find "restoreErrorExit" (using index "/Users/kent/.build")
-Unable to find "saveErrorExit" (using index "/Users/kent/.build")
 
 ### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
 
@@ -126,10 +124,6 @@ dumpFile fileName0 [ fileName1 ... ]
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "saveErrorExit" (using index "/Users/kent/.build")
 
 ### `dumpPipe` - Dump a pipe with a title and stats
 
@@ -143,9 +137,18 @@ Dump a pipe with a title and stats
 
 - `0` - Always succeeds
 
-#### Errors
+### `plumber` - Run command and detect any global or local leaks
 
-Unable to find "saveErrorExit" (using index "/Users/kent/.build")
+Run command and detect any global or local leaks
+
+#### Usage
+
+    plumber command ...
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

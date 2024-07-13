@@ -57,6 +57,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
     apt-get
     
 
+
 ### `dockerComposeInstall` - Install `docker-compose`
 
 Install `docker-compose`
@@ -78,6 +79,29 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 
 - `1` - If installation fails
 - `0` - If installation succeeds
+
+### `dockerComposeUninstall` - Install `docker-compose`
+
+Install `docker-compose`
+
+If this fails it will output the installation log.
+
+When this tool succeeds the `docker-compose` binary is available in the local operating system.
+
+#### Usage
+
+    dockerComposeUninstall [ package ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `1` - If installation fails
+- `0` - If installation succeeds
+
 
 ### `gitInstall` - Install git if needed
 
@@ -228,6 +252,96 @@ Install terraform binary
 
 - `1` - Problems
 - `0` - Installed successfully
+
+
+### `gitUninstall` - Uninstall git
+
+Uninstalls the `git` binary
+
+#### Usage
+
+    gitUninstall [ package ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `mariadbUninstall` - Uninstall mariadb
+
+Uninstall mariadb
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `npmUninstall` - Core as part of some systems - so this succeeds
+
+Core as part of some systems - so this succeeds and it still exists
+
+#### Usage
+
+    npmUninstall
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `phpUninstall` - Uninstall `php`
+
+Uninstall `php`
+
+If this fails it will output the installation log.
+
+When this tool succeeds the `php` binary is no longer available in the local operating system.
+
+#### Usage
+
+    phpUninstall [ package ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `1` - If uninstallation fails
+- `0` - If uninstallation succeeds
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `pythonUninstall` - Uninstall python
+
+Uninstall python
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `terraformUninstall` - Remove terraform binary
+
+Remove terraform binary
+
+#### Usage
+
+    terraformUninstall [ package ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
