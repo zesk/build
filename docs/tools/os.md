@@ -40,6 +40,16 @@ Is a path an absolute path?
 - `1` - one ore more paths are not absolute paths
 
 
+#### Usage
+
+    whichExists binary
+    
+
+#### Exit codes
+
+- `0` - If all binary
+
+
 ### `serviceToPort` - Get the port number associated with a service
 
 Get the port number associated with a service

@@ -10,7 +10,7 @@ errorEnvironment=1
 width=50
 savedValue=$(mktemp)
 
-loadTools() {
+_loadTools() {
   # shellcheck source=/dev/null
   if ! . "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
     return $errorEnvironment
@@ -31,7 +31,7 @@ _fail() {
   printf "\n%s\n" "$(consoleError "$@")" 1>&2
   exit "$errorEnvironment"
 }
-loadTools || _fail "loadTools"
+_loadTools || _fail "_loadTools"
 
 scopeTestDeclare() {
   declare -x TESTING

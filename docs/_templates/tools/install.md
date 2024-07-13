@@ -7,7 +7,10 @@ Install software as `root` or superuser.
 
 {aptInstall}
 {awsInstall}
+
 {dockerComposeInstall}
+{dockerComposeUninstall}
+
 {gitInstall}
 {mariadbInstall}
 {npmInstall}
@@ -15,6 +18,14 @@ Install software as `root` or superuser.
 {prettierInstall}
 {pythonInstall}
 {terraformInstall}
+
+{gitUninstall}
+{mariadbUninstall}
+{npmUninstall}
+{phpUninstall}
+{prettierUninstall}
+{pythonUninstall}
+{terraformUninstall}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

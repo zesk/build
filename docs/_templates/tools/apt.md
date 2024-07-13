@@ -5,8 +5,15 @@
 
 {aptUpdateOnce}
 {whichApt}
+{whichAptUninstall}
 {aptInstall}
 {aptUpToDate}
+{aptKeyAdd}
+{aptKeyRemoveHashicorp}
+{aptKeyRemove}
+{aptListInstalled}
+{aptNeedRestartFlag}
+{aptUninstall}
 
 <!-- TEMPLATE footer 5 -->
 <hr />

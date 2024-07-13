@@ -55,6 +55,35 @@ Confirms that `binary` is installed after installation succeeds.
 
 Technically this will install the binary and any related files as a package.
 
+### `whichAptUninstall` - Install tools using `apt-get` if they are not found
+
+Installs an apt package if a binary does not exist in the which path.
+The assumption here is that `aptInstallPackage` will install the desired `binary`.
+
+Confirms that `binary` is installed after installation succeeds.
+
+#### Usage
+
+    whichAptUninstall binary aptInstallPackage ...
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    whichApt shellcheck shellcheck
+    whichApt mariadb mariadb-client
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+Technically this will install the binary and any related files as a package.
+
 ### `aptInstall` - Install packages using `apt-get`
 
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
@@ -95,6 +124,109 @@ Result is `ok` or `restart` written to stdout
 
 - `0` - Success
 - `1` - Failed due to issues with environment
+
+### `aptKeyAdd` - Add keys to enable apt to download terraform directly from
+
+Add keys to enable apt to download terraform directly from hashicorp.com
+
+#### Usage
+
+    aptKeyAdd --name keyName [ --title title ] remoteUrl
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `1` - if environment is awry
+- `0` - Apt key is installed AOK
+
+### `aptKeyRemoveHashicorp` - Add keys to enable apt to download terraform directly from
+
+Add keys to enable apt to download terraform directly from hashicorp.com
+
+#### Usage
+
+    aptKeyAddHashicorp
+    
+
+#### Exit codes
+
+- `1` - if environment is awry
+- `0` - All good to install terraform
+
+### `aptKeyRemove` - Remove apt keys
+
+Remove apt keys
+
+#### Usage
+
+    aptKeyRemove keyName [ ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `1` - if environment is awry
+- `0` - Apt key is installed AOK
+
+### `aptListInstalled` - List installed packages
+
+List installed packages
+
+#### Usage
+
+    aptListInstalled
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `aptNeedRestartFlag` - INTERNAL - has `aptUpToDate` set the `restart` flag at some
+
+INTERNAL - has `aptUpToDate` set the `restart` flag at some point?
+
+#### Usage
+
+    aptNeedRestartFlag [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `aptUninstall` - Removes packages using `apt-get`
+
+Removes packages using `apt-get`. If `apt-get` is not available, this succeeds
+and assumes packages will be available. (For now)
+
+#### Usage
+
+    aptUninstall [ package ... ]
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    aptInstall shellcheck
+
+#### Exit codes
+
+- `0` - If `apt-get` is not installed, returns 0.
+- `1` - If `apt-get` fails to remove the packages
 
 <!-- TEMPLATE footer 5 -->
 <hr />

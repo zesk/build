@@ -4,6 +4,8 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+## Usage formatting
+
 
 ### `usageDocument` - Generates console usage output for a script using documentation tools
 
@@ -54,6 +56,30 @@ use with maximumFieldLength 1 to generate widths
 
 - `0` - Always succeeds
 
+### `usageTemplate` - Output usage messages to console
+
+Output usage messages to console
+
+Should look into an actual file template, probably
+
+Do not call usage functions here to avoid recursion
+
+#### Usage
+
+    usageTemplate binName options delimiter description exitCode message ...
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+{SEE:usageDocument}
+
+## Environment
+
+
 ### `usageRequireBinary` - Check that one or more binaries are installed
 
 Requires the binaries to be found via `which`
@@ -90,26 +116,7 @@ Requires environment variables to be set and non-blank
 
 - `0` - Always succeeds
 
-### `usageTemplate` - Output usage messages to console
-
-Output usage messages to console
-
-Should look into an actual file template, probably
-
-Do not call usage functions here to avoid recursion
-
-#### Usage
-
-    usageTemplate binName options delimiter description exitCode message ...
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### See Also
-
-{SEE:usageDocument}
+## Argument handling
 
 
 ### `usageArgumentFileDirectory` - Validates a value is not blank and is a file
@@ -222,6 +229,76 @@ Validates a value is not blank and is a directory. Upon success, outputs the dir
 
 - `2` - Argument error
 - `0` - Success
+
+### `usageArgumentBoolean` - Require an argument to be a boolean value
+
+Require an argument to be a boolean value
+
+#### Usage
+
+    usageArgumentBoolean usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is blank
+- `0` - If `value` is non-blank
+
+### `usageArgumentMissing` - Throw an missing argument error
+
+Throw an missing argument error
+
+#### Usage
+
+    usageArgumentMissing usage argument
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Always
+
+### `usageArgumentRequired` - Require an argument to be non-blank
+
+Require an argument to be non-blank
+
+#### Usage
+
+    usageArgumentRequired usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is blank
+- `0` - If `value` is non-blank
+
+### `usageArgumentUnknown` - Throw an unknown argument error
+
+Throw an unknown argument error
+
+#### Usage
+
+    usageArgumentUnknown usage argument
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Always
 
 <!-- TEMPLATE footer 5 -->
 <hr />

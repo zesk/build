@@ -6,6 +6,8 @@
 {buildEnvironmentLoad}
 {isAbsolutePath}
 
+{whichExists}
+
 {serviceToPort}
 {serviceToStandardPort}
 

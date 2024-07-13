@@ -230,6 +230,20 @@ Finds .git directory above or in current one.
 
 - `0` - Always succeeds
 
+### `gitHookTypes` - GIT_AUTHOR_DATE=@1702851863 +0000
+
+GIT_AUTHOR_DATE=@1702851863 +0000
+GIT_AUTHOR_EMAIL=kent@example.com
+GIT_AUTHOR_NAME=root
+GIT_EDITOR=:
+GIT_EXEC_PATH=/usr/lib/git-core
+GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
+GIT_PREFIX=
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ### `gitInstallHook` - Install the most recent version of this hook and RUN
 
 Install the most recent version of this hook and RUN IT in place if it has changed.
@@ -257,6 +271,10 @@ When running within your hook, pass additional arguments so they can be preserve
 #### Environment
 
 BUILD-HOME - The default application home directory used for `.git` and build hooks.
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ## git History
 
