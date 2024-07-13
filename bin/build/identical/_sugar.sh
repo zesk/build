@@ -7,7 +7,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar EOF
+# IDENTICAL _sugar 192412321
 
 __format() {
   local sep="$1" prefix="$2" suffix="$3" title="${4-"§"}"

@@ -7,7 +7,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 1924123
+# IDENTICAL _sugar 192412321
 
 __format() {
   local sep="$1" prefix="$2" suffix="$3" title="${4-"§"}"
@@ -37,7 +37,7 @@ _command() {
 # - `leak` - function leaked globals
 # - `test` - test failed
 # - `internal` - internal errors
-# Unknown error code is 254
+# Unknown error code is 254.
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 _code() {
   local code
