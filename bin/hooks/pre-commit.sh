@@ -46,7 +46,7 @@ __hookPreCommit() {
   # Can not be trusted to not edit the wrong one
   if ! diff -q "${fileCopies[@]}"; then
     if [ "$(newestFile "${fileCopies[@]}")" = "${fileCopies[1]}" ]; then
-      sed 's/IDENTICAL [0-9]/IDENTICAL EOF/g' <"${fileCopies[1]}" >"${fileCopies[0]}"
+      sed 's/IDENTICAL [0-9]+/IDENTICAL EOF/g' <"${fileCopies[1]}" >"${fileCopies[0]}"
       consoleWarning "Someone edited non-original file ${fileCopies[1]}"
     fi
   fi
