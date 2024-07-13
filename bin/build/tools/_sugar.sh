@@ -7,7 +7,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 9999
+# IDENTICAL _sugar 192412321
 
 __format() {
   local sep="$1" prefix="$2" suffix="$3" title="${4-"§"}"
@@ -29,6 +29,15 @@ _command() {
 # Usage: {fn} name ...
 # Argument: name - Optional. String. Exit code value to output
 # Print one or more an exit codes by name. Master list of exit code values.
+# Valid codes:
+# - `environment` - generic issue with environment
+# - `argument` - issue with arguments
+# - `assert` - assertion failed
+# - `identical` - identical check failed
+# - `leak` - function leaked globals
+# - `test` - test failed
+# - `internal` - internal errors
+# Unknown error code is 254.
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 _code() {
   local code
@@ -41,7 +50,6 @@ _code() {
       identical) code=105 ;; # identical check failed
       leak) code=108 ;;      # function leaked globals
       test) code=116 ;;      # test failed
-      # z) code=122 ;;
       internal) code=253 ;; # internal errors
       *) code=254 ;;        # unknown error code
         # End of code range (255)
@@ -51,15 +59,21 @@ _code() {
   done
 }
 
-# Returns 0 if is an unsigned integer
-# Usage: _integer value
+# Unsigned integer test
+# Returns 0 if `value` is an unsigned integer
+# Usage: {fn} value
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# Is this a boolean?
+# Boolean test
+# Returns 0 if `value` is an unsigned integer
+# Usage: {fn} value
+# Is this a boolean? (`true` or `false`)
+# Exit Code: 0 - if value is a boolean
+# Exit Code: 1 - if value is not a boolean
 _boolean() {
   case "${1-}" in true | false) ;; *) return 1 ;; esac
 }
