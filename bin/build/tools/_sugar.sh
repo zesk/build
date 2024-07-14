@@ -7,7 +7,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 161
+# IDENTICAL _sugar 162
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
