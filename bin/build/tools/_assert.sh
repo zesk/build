@@ -110,13 +110,13 @@ _assertConditionHelper() {
         shift || :
         [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrContains+=("$1")
-        errorsOk=1
+        errorsOk=true
         ;;
       --stderr-no-match)
         shift || :
         [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrNotContains+=("$1")
-        errorsOk=1
+        errorsOk=true
         ;;
       --stdout-match)
         shift || :
@@ -155,11 +155,11 @@ _assertConditionHelper() {
     "$linePrefix" "$(consoleCode "$this")" \
     "$(printf " \"$(consoleCode %s)\"" "${savedArguments[@]}")" \
     "$result")"
-  if ! test "$errorsOk" && [ -s "$errorFile" ]; then
+  if ! "$errorsOk" && [ -s "$errorFile" ]; then
     message="$(printf -- "%s - %s\n%s\n" "$message" "$(consoleError "produced stderr")" "$(dumpPipe stderr <"$errorFile")")"
     _assertFailure "$this" "$message" || return $?
   fi
-  if test $errorsOk && [ ! -s "$errorFile" ]; then
+  if $errorsOk && [ ! -s "$errorFile" ]; then
     clearLine
     printf "%s – %s\n" "$message" "$(consoleWarning "--stderr-ok used but is NOT necessary")"
   fi
