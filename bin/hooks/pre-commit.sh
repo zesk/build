@@ -31,7 +31,7 @@ _return() {
 __hookPreCommit() {
   local usage="_${FUNCNAME[0]}"
   # gitPreCommitSetup is already called
-  local fileCopies nonOriginalEOFfed nonOriginal original
+  local fileCopies nonOriginalWithEOF nonOriginal original
 
   gitPreCommitListExtension @ | wrapLines "- $(consoleValue)" "$(consoleReset)"
   gitPreCommitHeader sh md json
@@ -44,17 +44,16 @@ __hookPreCommit() {
   nonOriginal=bin/build/tools/_sugar.sh
 
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
-    nonOriginalEOFfed=$(__usageEnvironment "$usage" mktemp) || return $?
-    __usageEnvironment "$usage" sed 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' <"${fileCopies[1]}" >"$nonOriginalEOFfed" || return $?
-
-    fileCopies=("$nonOriginalEOFfed" "$original")
+    nonOriginalWithEOF=$(__usageEnvironment "$usage" mktemp) || return $?
+    __usageEnvironment "$usage" sed 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
+    fileCopies=("$nonOriginalWithEOF" "$original")
     # Can not be trusted to not edit the right one
     if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
-      __usageEnvironment "$usage" cp "${fileCopies[@]}" || _clean "$nonOriginalEOFfed" || return $?
+      __usageEnvironment "$usage" cp "${fileCopies[@]}" || _clean "$nonOriginalWithEOF" || return $?
       consoleWarning "Someone edited non-original file $nonOriginal"
       touch "${fileCopies[0]}" # make newer
     fi
-    rm -f "$nonOriginalEOFfed" || :
+    rm -f "$nonOriginalWithEOF" || :
   fi
   if gitPreCommitHasExtension sh; then
     if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
