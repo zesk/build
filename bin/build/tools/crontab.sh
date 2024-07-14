@@ -140,16 +140,18 @@ crontabApplicationUpdate() {
   #
   # Update crontab
   #
-  if crontab -u "$user" -l | diff -q "$newCrontab" - >/dev/null; then
+  # 2>/dev/null HIDES stderr "no crontab for user" message
+  if crontab -u "$user" -l 2>/dev/null | diff -q "$newCrontab" - >/dev/null; then
     rm -f "$newCrontab" || :
     return 0
   fi
-  printf "Updating crontab on %s ...\n" "$(date)"
+  statusMessage printf "%s %s ...\n" "$(consoleInfo "Updating crontab on ")" "$(consoleValue "$(date)")"
   crontab -u "$user" - <"$newCrontab" 2>/dev/null
   returnCode=$?
   rm -f "$newCrontab" || :
-  [ $returnCode -eq 0 ] && return 0
-  _environment "crontab -u \"$user\"" || return $returnCode
+  [ $returnCode -eq 0 ] || _environment "crontab -u \"$user\"" || return $returnCode
+  clearLine
+  return 0
 }
 _crontabApplicationUpdate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

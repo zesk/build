@@ -26,27 +26,28 @@ _testLineLabel() {
 }
 validateMissingItems() {
   while IF='' read -r testLine; do
-    _testLineLabel validateMissingItems "$testLine"
     if ! assertNotExitCode 0 isCallable "$testLine"; then
+      _testLineLabel validateMissingItems "$testLine"
       return 1
     fi
     if ! assertNotExitCode 0 isExecutable "$testLine"; then
+      _testLineLabel validateMissingItems "$testLine"
       return 1
     fi
   done
 }
 validateFunction() {
   while IF="" read -r testLine; do
-    _testLineLabel isFunction "$testLine"
     if ! assertExitCode 0 isFunction "$testLine"; then
+      _testLineLabel isFunction "$testLine"
       return 1
     fi
   done
 }
 validateNotFunction() {
   while IF="" read -r testLine; do
-    _testLineLabel "NOT isFunction" "$testLine"
     if ! assertNotExitCode 0 isFunction "$testLine"; then
+      _testLineLabel "NOT isFunction" "$testLine"
       return 1
     fi
   done
@@ -61,24 +62,24 @@ validateExecutable() {
 }
 validateNotExecutable() {
   while IF="" read -r testLine; do
-    _testLineLabel "NOT isExecutable" "$testLine"
     if ! assertNotExitCode 0 isExecutable "$testLine"; then
+      _testLineLabel "NOT isExecutable" "$testLine"
       return 1
     fi
   done
 }
 validateCallable() {
   while IF="" read -r testLine; do
-    _testLineLabel "isCallable" "$testLine"
     if ! assertExitCode 0 isCallable "$testLine"; then
+      _testLineLabel "isCallable" "$testLine"
       return 1
     fi
   done
 }
 validateNotCallable() {
   while IF="" read -r testLine; do
-    _testLineLabel "NOT isCallable" "$testLine"
     if ! assertNotExitCode 0 isCallable "$testLine"; then
+      _testLineLabel "NOT isCallable" "$testLine"
       return 1
     fi
   done
@@ -221,56 +222,56 @@ EOF
 
 validateSignedInteger() {
   while IF="" read -r testLine; do
-    _testLineLabel "isInteger" "$testLine"
     if ! assertExitCode 0 isInteger "$testLine"; then
+      _testLineLabel "isInteger" "$testLine"
       return 1
     fi
   done
 }
 validateNotSignedInteger() {
   while IF="" read -r testLine; do
-    _testLineLabel "NOT isInteger" "$testLine"
     if ! assertNotExitCode 0 isInteger "$testLine"; then
+      _testLineLabel "NOT isInteger" "$testLine"
       return 1
     fi
   done
 }
 validateUnsignedInteger() {
   while IF="" read -r testLine; do
-    _testLineLabel "isUnsignedInteger" "$testLine"
     if ! assertExitCode 0 isUnsignedInteger "$testLine"; then
+      _testLineLabel "isUnsignedInteger" "$testLine"
       return 1
     fi
   done
 }
 validateNotUnsignedInteger() {
   while IF="" read -r testLine; do
-    _testLineLabel "NOT isUnsignedInteger" "$testLine"
     if ! assertNotExitCode 0 isUnsignedInteger "$testLine"; then
+      _testLineLabel "NOT isUnsignedInteger" "$testLine"
       return 1
     fi
   done
 }
 validateUnsignedNumber() {
   while IF="" read -r testLine; do
-    _testLineLabel "isUnsignedNumber" "$testLine"
     if ! assertExitCode 0 isUnsignedNumber "$testLine"; then
+      _testLineLabel "isUnsignedNumber" "$testLine"
       return 1
     fi
   done
 }
 validateNotUnsignedNumber() {
   while IF="" read -r testLine; do
-    _testLineLabel "NOT isUnsignedNumber" "$testLine"
     if ! assertNotExitCode 0 isUnsignedNumber "$testLine"; then
+      _testLineLabel "NOT isUnsignedNumber" "$testLine"
       return 1
     fi
   done
 }
 validateSignedNumber() {
   while IF="" read -r testLine; do
-    _testLineLabel "isNumber" "$testLine"
     if ! assertExitCode 0 isNumber "$testLine"; then
+      _testLineLabel "isNumber" "$testLine"
       return 1
     fi
   done
