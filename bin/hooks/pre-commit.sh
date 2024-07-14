@@ -45,6 +45,7 @@ __hookPreCommit() {
   fileCopies=(bin/build/identical/_sugar.sh "$nonOriginal")
   # Can not be trusted to not edit the wrong one
   if ! diff -q "${fileCopies[@]}"; then
+    diff "${fileCopies[@]}"
     if [ "$(newestFile "${fileCopies[@]}")" = "${fileCopies[1]}" ]; then
       sed 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' <"${fileCopies[1]}" >"${fileCopies[0]}"
       consoleWarning "Someone edited non-original file ${fileCopies[1]}"
