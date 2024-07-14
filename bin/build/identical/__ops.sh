@@ -2,9 +2,12 @@
 #
 # Copy of __ops
 #
+#
+# requires IDENTICAL _return
 # Copyright &copy; 2024 Market Acumen, Inc.
+#
 
-# IDENTICAL __ops 13
+# IDENTICAL __ops EOF
 # Load zesk ops and run command
 __ops() {
   local relative="$1"
@@ -17,5 +20,3 @@ __ops() {
   source "$tools" || _return 42 source "$tools" "$@" || return $?
   "$@" || return $?
 }
-
-# requires IDENTICAL _return

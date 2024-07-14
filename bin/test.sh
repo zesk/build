@@ -10,7 +10,7 @@
 # bin/local-container.sh
 # . bin/test-reset.sh; bin/test.sh
 
-# IDENTICAL __ops 13
+# IDENTICAL __ops 12
 # Load zesk ops and run command
 __ops() {
   local relative="$1"
@@ -42,7 +42,7 @@ __messyTestCleanup() {
     for fn in "${FUNCNAME[@]}"; do
       printf -- "#%d %s\n" "$(incrementor "${FUNCNAME[0]}")" "$fn"
     done
-    printf "\n%s" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
+    printf "\n%s\n" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
   fi
   if test "$messyOption"; then
     printf "%s\n" "Messy ... no cleanup"
@@ -63,8 +63,11 @@ _textExit() {
 #
 # Argument: --one test - Optional. Add one test suite to run.
 # Argument: --show - Optional. Flag. List all test suites.
+# Argument: -l - Optional. Flag. List all test suites.
 # Argument: --help - Optional. This help.
 # Argument: --clean - Optional. Delete test artifact files before starting.
+# Argument: --continue - Optional. Flag. Continue from last successful test.
+# Argument: -c - Optional. Flag. Continue from last successful test.
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 #
 __buildTestSuite() {
@@ -92,7 +95,7 @@ __buildTestSuite() {
 
   __environment buildEnvironmentLoad BUILD_HOME || return $?
 
-  printf "%s %s\n" "$(consoleInfo "Color mode is")" "$(consoleCode "$BUILD_COLORS_MODE")"
+  printf "%s started on %s (color %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
   trap __messyTestCleanup EXIT QUIT TERM
@@ -100,8 +103,8 @@ __buildTestSuite() {
   messyOption=
   allTests=(sugar colors console debug git decoration url ssh log version type process os hook pipeline identical)
   # Strange quoting for a s s e r t is to hide it from findUncaughtAssertions
-  allTests+=(text float utilities self markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
-  allTests+=(sysvinit daemontools)
+  allTests+=(text bash float utilities self markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
+  allTests+=(sysvinit crontab daemontools)
   while read -r shortTest; do
     if ! inArray "$shortTest" "${allTests[@]}"; then
       consoleError "MISSING $shortTest in allTests"
@@ -117,19 +120,19 @@ __buildTestSuite() {
   while [ $# -gt 0 ]; do
     __ARGUMENT="$1"
     case "$__ARGUMENT" in
-      --show)
+      -l | --show)
         printf "%s\n" "${allTests[@]}"
         _textExit 0
         ;;
-      --continue)
+      -c | --continue)
         continueFlag=true
         ;;
-      --one)
+      -1 | --one)
         shift || __failArgument "$usage" "missing $(consoleLabel "$__ARGUMENT") argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
         runTests+=("$1")
         ;;
-      --help)
+      -h | --help)
         "$usage" 0
         _textExit 0
         ;;
@@ -179,13 +182,13 @@ __buildTestSuite() {
     fi
     requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
   done
-
+  statusMessage consoleInfo "All tests completed."
   cleanExit=1
 
   printf "%s\n" "$testTracing" >>"$quietLog"
   testTracing=cleanup
   __messyTestCleanup
-
+  printf "\n"
   printf "%s\n" "$(bigText --bigger Passed)" | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
   if [ -n "$continueFile" ]; then
     printf "%s\n" "PASSED" >"$continueFile"

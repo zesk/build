@@ -7,7 +7,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 6
+# IDENTICAL _return EOF
 # Usage: {fn} _return [ exitCode [ message ... ] ]
 # Exit Code: exitCode or 1 if nothing passed
 _return() {

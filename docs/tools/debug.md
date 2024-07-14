@@ -10,7 +10,7 @@ Dump the function and include stacks and the current environment
 
 #### Usage
 
-    debuggingStack
+    debuggingStack [ -s ]
     
 
 #### Exit codes
@@ -101,6 +101,12 @@ Useful if you need to temporarily enable or disable it.
 Returns whether the shell has the error exit flag set
 
 Useful if you need to temporarily enable or disable it.
+Note that `set -e` is not inherited by shells so
+
+    set -e
+    printf "$(isErrorExit; printf %d %?)"
+
+Outputs `1` always
 
 #### Usage
 
@@ -110,46 +116,6 @@ Useful if you need to temporarily enable or disable it.
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Usage
-
-    restoreErrorExit
-    
-
-#### Examples
-
-    save=$(saveErrorExit)
-    set +x
-    ... some nasty stuff
-    restoreErrorExit "$save"
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### See Also
-
-{SEE:saveErrorExit}
-
-#### Usage
-
-    saveErrorExit
-    
-
-#### Examples
-
-    save=$(saveErrorExit)
-    set +x
-    ... some nasty stuff
-    restoreErrorExit "$save"
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### See Also
-
-{SEE:restoreErrorExit}
 
 ### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
 
@@ -166,6 +132,19 @@ Dump a pipe with a title and stats
 #### Arguments
 
 
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `plumber` - Run command and detect any global or local leaks
+
+Run command and detect any global or local leaks
+
+#### Usage
+
+    plumber command ...
+    
 
 #### Exit codes
 

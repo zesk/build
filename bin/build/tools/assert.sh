@@ -10,259 +10,12 @@
 # Test: contextOpen ./test/tools/assert-tests.sh
 
 #
-# Decorations
-#
-_symbolSuccess() {
-  printf %s "✅ "
-}
-_symbolFail() {
-  printf %s "❌ "
-}
-_assertFailure() {
-  local function="${1-None}"
-  incrementor assert-failure >/dev/null
-  shift || :
-  _environment "$(printf -- "%s%s: %s %s " "$(clearLine)" "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")")" || return $?
-}
-_assertSuccess() {
-  local function="${1-None}"
-  incrementor assert-success >/dev/null
-  shift || :
-  printf -- "%s%s: %s %s " "$(clearLine)" "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
-}
-
-# Usage: {fn} success thisName fileName string0 [ ... ]
-#
-# Argument: thisName - Reported function for success or failure
-# Argument: fileName - File to search
-# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
-# Environment: If the file does not exist, this will fail.
-# Example:     assertFileDoesNotContain "$logFile" error Error ERROR
-# Example:     assertFileDoesNotContain "$logFile" warning Warning WARNING
-#
-__assertFileContainsHelper() {
-  local success="$1"
-  local displayName="$2"
-  local this="$3"
-  local file="$4"
-  local found args expected verb notVerb message
-
-  shift 4 || _assertFailure "$this" "Missing argument" || return $?
-  [ -f "$file" ] || _assertFailure "$this" "$displayName is not a file: $*"
-
-  case "$success" in
-    true)
-      verb="contains"
-      notVerb="does not contain"
-      ;;
-    false)
-      verb="does not contain"
-      notVerb="contains"
-      ;;
-    *) _assertFailure "Invalid success ($success) passed" || return $? ;;
-  esac
-  args=("$@")
-  while [ $# -gt 0 ]; do
-    expected="$1"
-    [ -n "$expected" ] || _assertFailure "$this" "Blank match passed: ${args[*]}" || return $?
-    if grep -q -e "$(quoteGrepPattern "$expected")" "$file"; then
-      found=true
-    else
-      found=false
-    fi
-    if [ "$found" = "$success" ]; then
-      # shellcheck disable=SC2059
-      _assertSuccess "$this" "$displayName $verb strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
-    else
-      message="$(printf -- "%s %s %s\n%s" "$displayName" "$notVerb string:" "$(consoleCode "$expected")" "$(dumpPipe "$displayName" <"$file")")"
-      _assertFailure "$this" "$message" || return $?
-    fi
-    shift
-  done
-}
-
-__assertFileContainsThis() {
-  __assertFileContainsHelper true "$@" || return $?
-}
-
-__assertFileDoesNotContainThis() {
-  __assertFileContainsHelper false "$@" || return $?
-}
-
-#
-# Assert a process runs and exits with the correct exit code.
-#
-# If this fails it will output an error and exit.
-#
-# Usage: {fn} usage expectedExitCode command [ arguments ... ]
-#
-# Argument: expectedExitCode - A numeric exit code expected from the command
-# Argument: command - The command to run
-# Argument: arguments - Any arguments to pass to the command to run
-# Local cache: None.
-# Environment: None.
-# Examples: assertExitCode 0 hasHook version-current
-# Reviewed: 2023-11-12
-# Exit code: 0 - If the process exits with the provided exit code
-# Exit code: 1 - If the process exits with a different exit code
-#
-_assertExitCodeHelper() {
-  local argument savedArguments
-  local usage
-  local isExitCode errorsOk debugAssertRun dumpFlag
-  local expected bin
-  local outputFile errorFile
-  local stderrTitle stdoutTitle
-  local saved actual failureText message textCommand
-  local outputContains outputNotContains stderrContains stderrNotContains
-
-  # --not
-  isExitCode=1
-  # --stderr-ok
-  errorsOk=
-
-  # expected
-  expected=
-  # binary ...
-  bin=
-  failureText="expected"
-
-  usage="$1"
-  shift || :
-
-  savedArguments=("$@")
-  outputContains=()
-  outputNotContains=()
-  stderrContains=()
-  stderrNotContains=()
-  debugAssertRun=false
-  dumpFlag=false
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$argument" in
-      --debug)
-        debugAssertRun=true
-        ;;
-      --stderr-ok)
-        errorsOk=1
-        ;;
-      --stderr-match)
-        shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        stderrContains+=("$1")
-        errorsOk=1
-        ;;
-      --stderr-no-match)
-        shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        stderrNotContains+=("$1")
-        errorsOk=1
-        ;;
-      --stdout-match)
-        shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        outputContains+=("$1")
-        ;;
-      --stdout-no-match)
-        shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
-        outputNotContains+=("$1")
-        ;;
-      --dump)
-        dumpFlag=true
-        ;;
-      --not)
-        isExitCode=
-        failureText="expected NOT"
-        ;;
-      *)
-        if [ -z "$expected" ]; then
-          expected="$argument"
-          isInteger "$expected" || __failArgument "$usage" "Expected \"$(consoleCode "$expected")$(consoleError "\" should be an integer")" || return $?
-        elif [ -z "$bin" ]; then
-          bin="$argument"
-          shift || :
-          break
-        fi
-        ;;
-    esac
-    shift || :
-  done
-  outputFile=$(mktemp) || __failEnvironment "$usage" "INTERNAL unable to mktemp" || return $?
-  errorFile="$outputFile.err"
-  outputFile="$outputFile.out"
-
-  saved=$(saveErrorExit) || __failEnvironment "$usage" saveErrorExit failed || return $?
-  set -e
-
-  if $debugAssertRun; then
-    clearLine || :
-    printf "Hit return: " || :
-    read -r actual || :
-    set -x
-  fi
-  actual="$(
-    "$bin" "$@" >"$outputFile" 2>"$errorFile"
-    printf %d "$?"
-  )"
-  if $debugAssertRun; then
-    set +x
-  fi
-  restoreErrorExit "$saved" || :
-
-  if ! test "$errorsOk" && [ -s "$errorFile" ]; then
-    __failEnvironment "$usage" "$(printf "%s %s -> %s %s\n%s\n" "$(consoleCode "${usage#_} $bin")" "$(consoleInfo "$(printf "\"%s\" " "$@")")" "$(consoleError "$actual")" "$(consoleError "Produced stderr")" "$(wrapLines "$(consoleError ERROR:) $(consoleCode)" "$(consoleReset)" <"$errorFile")")" || return $?
-  fi
-  if test $errorsOk && [ ! -s "$errorFile" ]; then
-    printf "%s%s %s – %s\n" "$(clearLine)" "$(consoleError "${usage#_}")" "$(consoleCode "$bin ${savedArguments[*]}")" "$(consoleWarning "--stderr-ok used but is NOT necessary:")"
-  fi
-  textCommand="$bin $*"
-  stderrTitle="$textCommand $(consoleBoldRed stderr)"
-  stdoutTitle="$textCommand $(consoleLabel stdout)"
-  if [ ${#stderrContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$stderrTitle" "$usage" "$errorFile" "${stderrContains[@]}" || return $?
-  fi
-  if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$stderrTitle" "$usage" "$errorFile" "${stderrNotContains[@]}" || return $?
-  fi
-  if [ ${#outputContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$stdoutTitle" "$usage" "$outputFile" "${outputContains[@]}" || return $?
-  fi
-  if [ ${#outputNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$stdoutTitle" "$usage" "$outputFile" "${outputNotContains[@]}" || return $?
-  fi
-  if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
-    # Failure
-    message=$(
-      printf "%s %s ➜ %s%s\n%s\n%s\n" \
-        "$textCommand" \
-        "$(printf -- "\"%s%s%s\"" "$(consoleCode)" "${savedArguments[*]}" "$(consoleReset)")" \
-        "$(consoleError "$actual") actual, $failureText $(consoleSuccess "$expected")" \
-        "$(consoleReset)" \
-        "$(dumpPipe "$stdoutTitle" <"$outputFile")" \
-        "$(dumpPipe "$stderrTitle" <"$errorFile")"
-    )
-    rm -rf "$outputFile" "$errorFile" || :
-    _assertFailure "${usage#_}" "$message" || return $?
-  fi
-  _assertSuccess "${usage#_}" "$(consoleSuccess "$actual")" "$(consoleCode "${savedArguments[*]}")" || :
-  if $dumpFlag; then
-    dumpPipe "$stdoutTitle" <"$outputFile" || :
-    dumpPipe "$stderrTitle" <"$errorFile" || :
-  fi
-  rm -rf "$outputFile" "$errorFile" || :
-  return 0
-}
-
-#
 # Assert two strings are equal.
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertEquals expected actual [ message ]
+# Usage: assertEquals [ --line lineNumber ] expected actual [ message ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: expected - Expected string
 # Argument: actual - Actual string
 # Argument: message - Message to output if the assertion fails
@@ -270,14 +23,10 @@ _assertExitCodeHelper() {
 # Reviewed: 2023-11-12
 #
 assertEquals() {
-  local expected=$1 actual=$2 this="${FUNCNAME[0]}"
-  shift || _assertFailure "$this" "missing expected arg" || return $?
-  shift || _assertFailure "$this" "missing actual arg" || return $?
-  if [ "$expected" = "$actual" ]; then
-    _assertSuccess "$this" "\"$expected\" == \"$actual\" (correct)" || return $?
-  else
-    _assertFailure "$this" "expected \"$expected\" should equal actual \"$actual\" but does not: ${*-not equal}" || return $?
-  fi
+  _assertEqualsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+}
+_assertEquals() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert two strings are not equal.
@@ -285,6 +34,7 @@ assertEquals() {
 # If this fails it will output an error and exit.
 # Summary: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: expected - Required. Expected string.
 # Argument: actual - Required. Actual string.
 # Argument: message - Message to output if the assertion fails. Optional.
@@ -293,16 +43,10 @@ assertEquals() {
 # Reviewed: 2023-11-12
 #
 assertNotEquals() {
-  local expected=$1 actual=$2
-  local this="${FUNCNAME[0]}"
-
-  shift
-  shift
-  if [ "$expected" != "$actual" ]; then
-    _assertSuccess "$this" "\"$expected\" != \"$actual\" (correct)" || return $?
-  else
-    _assertFailure "$this" "expected \"$expected\" equals \"$actual\" but should not: ${*-equals}" || return $?
-  fi
+  _assertEqualsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertNotEquals() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -315,6 +59,13 @@ assertNotEquals() {
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --skip-exit-save - Optional. Flag. Skip saveErrorExit to test errorExit functions.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --stderr-match - Optional. String. One or more strings which must match the outout in stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match the outout in stderr.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+#
 # Local cache: None.
 # Environment: None.
 # Examples: assertExitCode 0 hasHook version-current
@@ -338,7 +89,13 @@ _assertExitCode() {
 # Argument: expectedExitCode - A numeric exit code not expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
-# Examples: assertNotExitCode 0 hasHook make-cash-quickly
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --skip-exit-save - Optional. Flag. Skip saveErrorExit to test errorExit functions.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --stderr-match - Optional. String. One or more strings which must match the outout in stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match the outout in stderr.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Examples:     {fn} 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with a different exit code
 # Exit code: 1 - If the process exits with the provided exit code
@@ -355,6 +112,7 @@ _assertNotExitCode() {
 #
 # Usage: {fn} needle haystack
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: needle - Thing we are looking for
 # Argument: haystack - Thing we are looking in
 # Exit Code: 0 - The assertion succeeded
@@ -362,20 +120,10 @@ _assertNotExitCode() {
 # Exit Code: 2 - Bad arguments
 #
 assertContains() {
-  local expected=$1 actual=$2 shortActual
-  local this="${FUNCNAME[0]}"
-
-  shift || _argument "missing expected argument" || return $?
-  shift || _argument "missing actual argument" || return $?
-  shortActual="$(printf %s "$actual" | head -n 5)"
-  if [ "$shortActual" != "$actual" ]; then
-    shortActual="${shortActual} ..."
-  fi
-  if ! printf %s "$actual" | grep -q "$expected"; then
-    _assertFailure "$this" "\"$expected\" \"$shortActual\" but should: ${*-contain}" || return $?
-  else
-    _assertSuccess "$this" "\"$expected\" == \"$shortActual\" (correct)" || return $?
-  fi
+  _assertContainsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+}
+_assertContains() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -383,6 +131,7 @@ assertContains() {
 #
 # Usage: {fn} needle haystack
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: needle - Thing we are looking for
 # Argument: haystack - Thing we are looking in
 # Exit Code: 0 - The assertion succeeded
@@ -390,20 +139,10 @@ assertContains() {
 # Exit Code: 2 - Bad arguments
 # See: assertContains
 assertNotContains() {
-  local expected=$1 actual=$2 shortActual
-  local this="${FUNCNAME[0]}"
-
-  shift || _argument "missing expected argument" || return $?
-  shift || _argument "missing actual argument" || return $?
-  shortActual="$(printf %s "$actual" | head -n 5)"
-  if [ "$shortActual" != "$actual" ]; then
-    shortActual="${shortActual} ..."
-  fi
-  if printf %s "$actual" | grep -q "$expected"; then
-    _assertFailure "$this" "\"$expected\" \"$shortActual\" but should NOT: ${*-contain}" || return $?
-  else
-    _assertSuccess "$this" "\"$expected\" == \"$shortActual\" (correct)" || return $?
-  fi
+  _assertContainsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertNotContains() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -417,6 +156,7 @@ assertNotContains() {
 #
 # Usage: assertDirectoryExists directory [ message ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: directory - Directory that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -427,20 +167,16 @@ assertNotContains() {
 # Summary: Test that a directory exists
 #
 assertDirectoryExists() {
-  local d=$1 noun=directory
-  local this="${FUNCNAME[0]}"
-
-  shift || _assertFailure "$this" "Missing directory argument"
-  if [ ! -d "$d" ]; then
-    _assertFailure "$this" "$(printf "%s was expected to be a %s but is NOT %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")")" || return $?
-  else
-    _assertSuccess "$this" "$(consoleCode "$d") is a directory" || return $?
-  fi
+  _assertDirectoryExistsHelper "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertDirectoryExists() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: assertDirectoryDoesNotExist directory [ message ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: directory - Directory that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -452,20 +188,16 @@ assertDirectoryExists() {
 # Reviewed: 2023-11-12
 #
 assertDirectoryDoesNotExist() {
-  local d=$1 noun=directory
-  local this="${FUNCNAME[0]}"
-
-  shift || _assertFailure "$this" "Missing directory argument" || return $?
-  if [ -d "$d" ]; then
-    _assertFailure "$this" "$(printf "%s was expected NOT to be a %s but is %s (%s)\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not found}")" "$(consoleWarning "$(type "$d")")")" || return $?
-  else
-    _assertSuccess "$this" "$d is NOT a directory" || return $?
-  fi
+  _assertDirectoryExistsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertDirectoryDoesNotExist() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: {fn} directory [ message ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: directory - Directory that should exist and be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -476,19 +208,17 @@ assertDirectoryDoesNotExist() {
 # Summary: Test that a directory exists
 #
 assertDirectoryEmpty() {
-  local d=$1 noun=directory
-  local this="${FUNCNAME[0]}"
-
-  shift || _assertFailure "$this" "Missing directory argument"
-  assertDirectoryExists "$d" "<- $this" "$@" || return $?
-
-  directoryIsEmpty "$d" && _assertSuccess "$this" "$(consoleCode "$d") is an empty directory" && return 0 ||
-    _assertFailure "$this" "$(printf "%s was expected to be an empty %s: %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun not empty}")")" || return $?
+  _assertDirectoryExistsHelper "${FUNCNAME[0]}" "$@" || return $?
+  _assertDirectoryEmptyHelper "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertDirectoryEmpty() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: {fn} directory [ message ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: directory - Directory that should exist and not be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -499,14 +229,11 @@ assertDirectoryEmpty() {
 # Reviewed: 2023-11-12
 #
 assertDirectoryNotEmpty() {
-  local d=$1 noun=directory
-  local this="${FUNCNAME[0]}"
-
-  shift || _assertFailure "$this" "Missing directory argument" || return $?
-  assertDirectoryExists "$d" "<- $this" "$@" || return $?
-
-  ! directoryIsEmpty "$d" && _assertSuccess "$this" "$(consoleCode "$d") is not an empty directory" && return 0 ||
-    _assertFailure "$this" "$(printf "%s was expected to be not empty %s: %s\n" "$(consoleError "$d")" "$noun" "$(consoleError "${message-$noun is empty}")")" || return $?
+  _assertDirectoryExistsHelper "${FUNCNAME[0]}" "$@" || return $?
+  _assertDirectoryEmptyHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertDirectoryNotEmpty() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -518,55 +245,44 @@ assertDirectoryNotEmpty() {
 #
 
 #
-# Usage: assertDirectoryExists directory [ message ... ]
+# Usage: {fn} item [ message ... ]
 #
-# Argument: directory - Directory that should exist
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: item - File that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
 # Exit code: 1 - If the assertion fails
 # Local cache: None
-# Environment: - This fails if `directory` is anything but a `directory`
+# Environment: - This fails if `file` is anything but a `file`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
 # Summary: Test that a file exists
 #
 assertFileExists() {
-  local d=$1 noun=file message
-  local this="${FUNCNAME[0]}"
-
-  shift
-  message="$*"
-  if [ ! -f "$d" ]; then
-    _assertFailure "$this" "$(printf "%s should exist but does NOT %s\n" "$(consoleError "$d")" "$(consoleError "${message-$noun not found}")")" || return $?
-    return 1
-  else
-    _assertSuccess "$this" "$d is a file" || return $?
-  fi
+  _assertFileExistsHelper "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertFileExists() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Usage: assertFileDoesNotExist file [ message ... ]
+# Usage: {fn} item [ message ... ]
 #
-# Argument: file - Directory that should NOT exist
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: file - File that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
 # Exit code: 1 - If the assertion fails
 # Local cache: None
-# Environment: - This fails if `file` is anything at all, even a non-directory (such as a link)
+# Environment: - This fails if `file` is anything at all, even a non-file (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
 # Summary: Test that a file does not exist
 # Reviewed: 2023-11-12
 #
 assertFileDoesNotExist() {
-  local d=$1 noun=file
-  local this="${FUNCNAME[0]}"
-
-  shift
-  if [ -f "$d" ]; then
-    _assertFailure "$this" "$(printf "%s should not exist but does %s (%s)\n" "$(consoleError "$d")" "$(consoleError "${message-$noun WAS found}")" "$(consoleWarning "$(betterType "$d")")")" || return $?
-    return 1
-  else
-    _assertSuccess "$this" "$d file does not exist" || return $?
-  fi
+  _assertFileExistsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertFileDoesNotExist() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -582,6 +298,7 @@ assertFileDoesNotExist() {
 # If this fails it will output an error and exit.
 #
 # Usage: assertOutputEquals expected binary [ parameters ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: expected - Expected string
 # Argument: binary - Binary to run and evaluate output
 # Argument: parameters - Any additional parameters to binary
@@ -589,16 +306,10 @@ assertFileDoesNotExist() {
 # Reviewed: 2023-11-12
 #
 assertOutputEquals() {
-  local expected=$1 actual
-  local this="${FUNCNAME[0]}"
-
-  shift
-  actual=$("$@" || printf "exited with code %d" "$?")
-  if [ "$expected" != "$actual" ]; then
-    _assertFailure "$this" "\"$expected\" \"$actual\" (output of \"$*\")" || return $?
-  else
-    _assertSuccess "$this" "\"$expected\" \"$actual\" (CORRECT: $1)" || return $?
-  fi
+  _assertOutputEqualsHelper "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertOutputEquals() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -607,6 +318,7 @@ assertOutputEquals() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: {fn} expected command [ arguments ... ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: expected - A string to expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -618,53 +330,10 @@ assertOutputEquals() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-  local nLines expected="" commands=() tempFile exitCode=0 pipeStdErr="" actual
-  local this="${FUNCNAME[0]}"
-
-  while [ $# -gt 0 ]; do
-    case $1 in
-      --exit)
-        shift
-        assertExitCode 0 isNumber "$1" || return $?
-        exitCode="$1"
-        ;;
-      --stderr)
-        pipeStdErr=1
-        ;;
-      *)
-        if [ -z "$expected" ]; then
-          expected=$(quoteGrepPattern "$1")
-        else
-          commands+=("$1")
-        fi
-        ;;
-    esac
-    shift
-  done
-  tempFile=$(mktemp)
-  printf "%s%s%s: \"%s%s%s\"\n" "$(consoleInfo)" "Running" "$(consoleReset)" "$(consoleCode)" "${commands[*]}" "$(consoleReset)"
-  if test $pipeStdErr; then
-    actual=$(
-      "${commands[@]}" >"$tempFile" 2>&1
-      echo $?
-    )
-  else
-    actual=$(
-      "${commands[@]}" >"$tempFile"
-      echo $?
-    )
-  fi
-  assertEquals "$exitCode" "$actual" "$(printf -- "%s %s %s (%s)" "$(consoleInfo "$this")" "$(consoleError "Exit code should be")" "$(consoleGreen "$exitCode")" "$(consoleError "$actual")")" || return $?
-  if grep -q -e "$expected" "$tempFile"; then
-    _assertSuccess "$this" "\"$expected\" found in \"${commands[*]}\" output" || return $?
-  else
-    consoleInfo "$(echoBar)" 1>&2
-    wrapLines "$(consoleCode)" "$(consoleReset)" <"$tempFile" 1>&2
-    consoleError "$(echoBar)" 1>&2
-    nLines=$(($(wc -l <"$tempFile") + 0))
-    consoleSuccess "$(printf "%d %s\n" "$nLines" "$(plural "$nLines" line lines)")" 1>&2
-    _assertFailure "$this" "$(printf "%s%s\n" "$(consoleError "\"$expected\" not found in \"${commands[*]}\" output")" "$(consoleCode)")" || return $?
-  fi
+  _assertOutputContainsHelper true "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertOutputContains() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -673,6 +342,7 @@ assertOutputContains() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: assertOutputDoesNotContain expected command [ arguments ... ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: expected - A string to NOT expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -685,53 +355,15 @@ assertOutputContains() {
 # Reviewed: 2023-11-12
 #
 assertOutputDoesNotContain() {
-  local expected="" commands=() tempFile exitCode=0 pipeStdErr="" actual
-  local this="${FUNCNAME[0]}"
-
-  while [ $# -gt 0 ]; do
-    case $1 in
-      --exit)
-        shift
-        assertExitCode 0 isNumber "$1" || return $?
-        exitCode="$1"
-        ;;
-      --stderr)
-        pipeStdErr=1
-        ;;
-      *)
-        if [ -z "$expected" ]; then
-          expected="$1"
-        else
-          commands+=("$1")
-        fi
-        ;;
-    esac
-    shift
-  done
-  tempFile=$(mktemp)
-  if test $pipeStdErr; then
-    actual=$(
-      "${commands[@]}" >"$tempFile" 2>&1
-      echo $?
-    )
-  else
-    actual=$(
-      "${commands[@]}" >"$tempFile"
-      echo $?
-    )
-  fi
-  assertEquals "$exitCode" "$actual" "Exit code should be $exitCode" || return $?
-  if ! grep -q "$(quoteGrepPattern "$expected")" "$tempFile"; then
-    _assertSuccess "$this" "$expected NOT found in ${commands[*]} output (correct)" || return $?
-  else
-    wrapLines "$(consoleCode)" "$(consoleReset)" <"$tempFile" 1>&2
-    consoleError "$(echoBar)" 1>&2
-    _assertFailure "$this" "$expected found in $* output (incorrect)" || return $?
-  fi
+  _assertOutputContainsHelper false "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertOutputDoesNotContain() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: assertFileContains fileName string0 [ ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must be found on at least one line in the file
 #
@@ -744,12 +376,16 @@ assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  __assertFileContainsThis "$1" "${FUNCNAME[0]}" "$@" || return $?
+  __assertFileContainsThis "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertFileContains() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: assertFileDoesNotContain fileName string0 [ ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
 # Exit code: 1 - If the assertions fails
@@ -759,12 +395,16 @@ assertFileContains() {
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
-  __assertFileDoesNotContainThis "$1" "${FUNCNAME[0]}" "$@" || return $?
+  __assertFileDoesNotContainThis "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertFileDoesNotContain() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: {fn} expectedSize [ fileName ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
 # Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
@@ -774,23 +414,16 @@ assertFileDoesNotContain() {
 # Example:     {fn} 0 .env
 #
 assertFileSize() {
-  local expectedSize="${1-}" actualSize
-  local this="${FUNCNAME[0]}"
-
-  assertExitCode 0 isInteger "$expectedSize" || return $?
-  shift || :
-  while [ $# -gt 0 ]; do
-    if ! actualSize="$(fileSize "$1")"; then
-      _assertFailure "$this" "fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?" || return $?
-    fi
-    assertEquals "$expectedSize" "$actualSize" "${FUNCNAME[0]}: File $1 actual size $actualSize is not expected $expectedSize" || return $?
-    shift
-  done
+  _assertFileSizeHelper "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: {fn} expectedSize [ fileName ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
 # Argument: - `fileName ...` - One ore more file which should NOT be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
@@ -800,23 +433,16 @@ assertFileSize() {
 # Example:     {fn} 0 .env
 #
 assertNotFileSize() {
-  local expectedSize="${1-}" actualSize
-  local this="${FUNCNAME[0]}"
-
-  assertExitCode 0 isInteger "$expectedSize" || return $?
-  shift || :
-  while [ $# -gt 0 ]; do
-    if ! actualSize="$(fileSize "$1")"; then
-      _assertFailure "$this" "fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?" || return $?
-    fi
-    assertNotEquals "$expectedSize" "$actualSize" "${FUNCNAME[0]}: File $1 actual size $actualSize incorrectly matches expected $expectedSize" || return $?
-    shift
-  done
+  _assertFileSizeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertNotFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: {fn} [ fileName ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: - `fileName ...` - One ore more file which should be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
@@ -827,10 +453,14 @@ assertNotFileSize() {
 assertZeroFileSize() {
   assertFileSize 0 "$@" || return $?
 }
+_assertZeroFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: {fn} [ fileName ... ]
 #
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: - `fileName ...` - One ore more file which should NOT be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
@@ -840,6 +470,9 @@ assertZeroFileSize() {
 #
 assertNotZeroFileSize() {
   assertNotFileSize 0 "$@" || return $?
+}
+_assertNotZeroFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -853,7 +486,8 @@ assertNotZeroFileSize() {
 #
 # Assert `leftValue > rightValue`
 #
-# Usage: assertGreaterThan expected actual [ message ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
@@ -861,14 +495,16 @@ assertNotZeroFileSize() {
 # Reviewed: 2023-11-14
 #
 assertGreaterThan() {
-  local this="${FUNCNAME[0]}"
-
-  __assertNumeric "$this" -gt "$@" || return $?
+  _assertNumericHelper "${FUNCNAME[0]}" "$@" -gt || return $?
+}
+_assertGreaterThan() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert `leftValue >= rightValue`
 #
-# Usage: assertNotEquals expected actual [ message ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
@@ -876,15 +512,17 @@ assertGreaterThan() {
 # Reviewed: 2023-11-12
 # Summary: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
-  local this="${FUNCNAME[0]}"
-
-  __assertNumeric "$this" -ge "$@" || return $?
+  _assertNumericHelper "${FUNCNAME[0]}" "$@" -ge || return $?
+}
+_assertGreaterThanOrEqual() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Assert `leftValue < rightValue`
 #
-# Usage: assertLessThan expected actual [ message ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
@@ -893,14 +531,17 @@ assertGreaterThanOrEqual() {
 # Exit code: 0 - expected less than to actual
 # Exit code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
-  local this="${FUNCNAME[0]}"
-
-  __assertNumeric "$this" -lt "$@" || return $?
+  _assertNumericHelper "${FUNCNAME[0]}" "$@" -lt || return $?
 }
+_assertLessThan() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 
 # Assert `leftValue <= rightValue`
 #
-# Usage: assertLessThanOrEqual leftValue rightValue [ message ]
+# Usage: {fn} leftValue rightValue [ message ]
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
@@ -910,33 +551,8 @@ assertLessThan() {
 # Exit code: 1 - expected greater than actual, or invalid numbers
 #
 assertLessThanOrEqual() {
-  local this="${FUNCNAME[0]}"
-
-  __assertNumeric "$this" -le "$@" || return $?
+  _assertNumericHelper "${FUNCNAME[0]}" "$@" -le || return $?
 }
-
-# Helper function
-# Usage: {fn} function comparison leftValue rightValue
-__assertNumeric() {
-  local func cmp leftValue rightValue
-  func="$1"
-  shift || return $?
-  cmp="$1"
-  shift || return $?
-  leftValue="$1"
-  shift || return $?
-  rightValue="$1"
-  shift || return $?
-
-  if ! isNumber "$leftValue"; then
-    _assertFailure "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (not number $leftValue): $*" || return $?
-  fi
-  if ! isNumber "$rightValue"; then
-    _assertFailure "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (not number $rightValue): $*" || return $?
-  fi
-  if test "$leftValue" "$cmp" "$rightValue"; then
-    _assertSuccess "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (correct)" || return $?
-  else
-    _assertFailure "$func" "[ \"$leftValue\" $cmp \"$rightValue\" ] (FAILED): $*" || return $?
-  fi
+_assertLessThanOrEqual() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

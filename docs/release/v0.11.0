@@ -1,0 +1,37 @@
+# Release v0.10.4
+
+- `debuggingStack -s` added for quieter output
+- Moved `crontabApplicationSync` into its own file (now also depends on all of `bin/build`)
+- `statusMessage` supports any arguments now
+- `diff -q` actually outputs stdout so supressed it when needed, in `copyFile` and `copyFileWouldChange`
+- `crontab` and related tests
+- `saveErrorExit` and `restoreErrorExit` were a lie - tests confirm not inherited by subshells so not ever useful
+- `identicalCheck` and `identicalRepair` now support the feature to use the count `EOF` instead of a number - for dedicated identical files this saves generating the counts and screwing it up.
+- `crontabApplicationSync` -> `crontabApplicationUpdate`
+- Added `whichExiats`
+- Consistent use of `whichExiats`
+- Cleaned up assertion output and display, added helpers
+- Identical code break into smaller files
+- `install-bin-build.sh` changed its semantics to modifying the last line of the file. It also now uses `installInstallBuild` post-install to update its own binary.
+- `installInstallBuild` now supports `--local` and modifies the installation file based on the version
+- `usageArgumentRequired` now outputs the value if it succeeds
+- Changing code to use more `foo=$(__usageEnvironment "$usage" getSomeValue) || return $?` and less `foo=$(__usageEnvironment "$usage" getSomeValue) || __failEnvironment "$usage" getSomeValue || return $?`
+- Added `_clean` to `sugar.sh` allow for file deletion upon exit easily
+- Added `_code` to `sugar.sh` for singular error codes
+- `crontabApplicationUpdate` incorrectly checked mapper for execution (+x) and not for `isCallable` (binary or function)
+- `argumentIndex` added to `example.sh`
+- `usageMissingArgument` -> `usageArgumentMissing`
+- `usageUnknownArgument` -> `usageArgumentUnknown`
+- Refactored `_assert.sh` to have a single core assertion function - in progress
+- Most `assertFoo` functions now support `--line "$LINENO"`
+- Added `BUILD_NPM_VERSION.sh` environment file
+- `usageDocument` now disables debugging solely for the template output to enable better error handling
+- Added `gitUninstall`, `pythonUninstall`, `dockerComposeUninstall`, `npmUninstall`, `phpUninstall`, `prettierUninstall`, `terraformUninstall`
+- Refactored `identical`
+- Added sugar function `_clean` used to delete files or directories upon exit with an error code
+- Added `aptKeyRemove`, `aptKeyAdd` to `apt.sh`
+- Added `aptKeyRemoveHashicorp`
+- Removed `trimSpacePipe`
+- Updated documentation
+- Fixed `gitInstallHooks` to have correct usage
+- Added and updated sugar tests

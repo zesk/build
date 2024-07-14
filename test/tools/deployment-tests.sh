@@ -45,10 +45,10 @@ testDeployRemoteFinish() {
   __environment mkdir -p "$tempDirectory/deploy" || return $?
 
   matches=(--stderr-match "need --first")
-  assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
   matches=(--stderr-match 'Missing target file')
-  assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
   # $id-stage vs $id produces 'tar file' error
   clearLine
@@ -70,7 +70,7 @@ testDeployRemoteFinish() {
   __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id"
   __environment mkdir -p "$tempDirectory/app" || return $?
   matches=(--stderr-match "should be a link")
-  assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
   __environment __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id" || return $?
   __environment rm -rf "$tempDirectory/app" || return $?
@@ -80,11 +80,11 @@ testDeployRemoteFinish() {
   #
   find "$tempDirectory" -type f -or -type d -or -type l | dumpPipe "Before DEPLOY"
   matches=(--stdout-match "Remote deployment finished")
-  assertEquals "" "$(readlink "$tempDirectory/app" 2>/dev/null)" || return $?
-  assertNotExitCode 0 test -f "$tempDirectory/app" || return $?
+  assertEquals --line "$LINENO" "" "$(readlink "$tempDirectory/app" 2>/dev/null)" || return $?
+  assertNotExitCode --line "$LINENO" 0 test -f "$tempDirectory/app" || return $?
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
-  assertExitCode 0 test -L "$tempDirectory/app" || return $?
-  assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$tempDirectory/app" || return $?
+  assertEquals --line "$LINENO" "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
 
   #
   # --cleanup
@@ -92,8 +92,8 @@ testDeployRemoteFinish() {
   # works without --first?
   matches=(--stdout-match "Cleaning up")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--cleanup" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
-  assertExitCode 0 test -L "$tempDirectory/app" || return $?
-  assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$tempDirectory/app" || return $?
+  assertEquals --line "$LINENO" "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
 
   #
   # --deploy deadbeef
@@ -104,16 +104,16 @@ testDeployRemoteFinish() {
 
   matches=(--stdout-match "Remote deployment finished")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
-  assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
-  assertExitCode 0 test -L "$tempDirectory/app" || return $?
+  assertEquals --line "$LINENO" "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$tempDirectory/app" || return $?
 
   #
   # --cleanup
   #
   matches=(--stdout-match "Cleaning up")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--cleanup" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
-  assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
-  assertExitCode 0 test -L "$tempDirectory/app" || return $?
+  assertEquals --line "$LINENO" "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$tempDirectory/app" || return $?
 
   find "$tempDirectory" -type d -or -type l -or -name '*.env' | dumpPipe "$id Deployed"
 
@@ -122,7 +122,7 @@ testDeployRemoteFinish() {
   #
   matches=(--stdout-match "reverted")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--revert" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
-  assertEquals "$tempDirectory/deploy/$oldId/app" "$(readlink "$tempDirectory/app")" || return $?
+  assertEquals --line "$LINENO" "$tempDirectory/deploy/$oldId/app" "$(readlink "$tempDirectory/app")" || return $?
   printf "%s %s\n" "$(consoleBoldMagenta "APP points to")" "$(consoleCode)"
 
   find "$tempDirectory" -type d -or -type l -or -name '*.env' | dumpPipe "$id Reverted to $oldId"
@@ -132,10 +132,11 @@ testDeployRemoteFinish() {
   #
   matches=(--stdout-match "Remote deployment finished")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
-  assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
-  assertExitCode 0 test -L "$tempDirectory/app" || return $?
+  assertEquals --line "$LINENO" "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$tempDirectory/app" || return $?
 
   unset BUILD_DEBUG_LINES
+  return 0
 }
 
 tests+=(testDeployToRemote)
@@ -150,7 +151,7 @@ testDeployToRemote() {
   args=(--commands --id "$sampleId" --home "$sampleHome" --application "$sampleApplication" www-data@remote0)
   {
     matches=(--stdout-match "$sampleId" --stdout-match Sweeping --stdout-match deployRemoteFinish --stdout-match printf --stdout-no-match "Deploy Home")
-    assertExitCode "${matches[@]}" 0 deployToRemote "${args[@]}" || return $?
+    assertExitCode --line "$LINENO" "${matches[@]}" 0 deployToRemote "${args[@]}" || return $?
 
     matches=(--stdout-match "deployRemoteFinish" --stdout-match "--revert" --stdout-match "tools.sh")
     assertExitCode --dump "${matches[@]}" 0 deployToRemote --revert "${args[@]}" || return $?
@@ -162,37 +163,37 @@ testDeployToRemote() {
   matches=(--stderr-match twice)
   for onlyOne in --application --id --home --target; do
     args=("$onlyOne" "$sampleApplication" "$onlyOne" "$sampleApplication")
-    assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+    assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
   done
   for onlyOne in --deploy --revert --cleanup; do
     args=("$onlyOne" "$onlyOne")
-    assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+    assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
   done
 
   matches=(--stderr-match "mutually exclusive")
 
   args=("--revert" "--deploy")
-  assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
   args=("--revert" "--deploy")
-  assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
   args=("--revert" "--deploy")
-  assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
 
   args=(--id "$sampleId" --application "$sampleApplication")
   matches=(--stderr-match "missing deployHome")
-  assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
 
   args=(--home "$sampleHome" --application "$sampleApplication")
   matches=(--stderr-match "missing applicationId")
-  assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
 
   args=(--id "$sampleId" --home "$sampleHome")
   matches=(--stderr-match "missing applicationPath")
-  assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
 
   args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication")
   matches=(--stderr-match "No user hosts")
-  assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
 
 }
 
@@ -224,29 +225,30 @@ testDeployBuildEnvironment() {
 
   args=(--id "$sampleId")
   matches=(--stderr-match home --stderr-match non-blank --stderr-match "DEPLOY_REMOTE_PATH")
-  assertExitCode "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-  APPLICATION_ID="$sampleId" assertExitCode "${matches[@]}" 2 deployBuildEnvironment || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
+  APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
   args=(--id "$sampleId" --home "$sampleHome")
   matches=(--stderr-match home --stderr-match non-blank --stderr-match "APPLICATION_REMOTE_PATH")
-  assertExitCode "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-  DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode "${matches[@]}" 2 deployBuildEnvironment || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
+  DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
   args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication")
   matches=(--stderr-match "user hosts" --stderr-match "DEPLOY_USER_HOSTS")
-  assertExitCode "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-  APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode "${matches[@]}" 2 deployBuildEnvironment || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
+  APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
   # this is the point we WOULD succeed but instead just run the dry run which outputs the script which can be used to
   # generate the other tests
   args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication" --host "www-data@remote0" --host "www-data@remote1")
   matches=(--stderr-match ".build.env")
-  assertExitCode "${matches[@]}" 0 deployBuildEnvironment --dry-run "${args[@]}" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 deployBuildEnvironment --dry-run "${args[@]}" || return $?
   deployBuildEnvironment --dry-run "${args[@]}"
 
   DEPLOY_USER_HOSTS="www-data@remote0 www-data@remote1" APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" \
     assertExitCode --dump "${matches[@]}" 0 deployBuildEnvironment --dry-run || return $?
 
   rm -rf "$d" || :
+  export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
   unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
 }

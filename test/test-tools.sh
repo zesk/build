@@ -10,8 +10,6 @@
 export testTracing
 export globalTestFailure=
 
-errorTest=3
-
 shortTestCodes() {
   local fileName
   find test/ -type f -name '*-tests.sh' | while IFS= read -r fileName; do
@@ -31,6 +29,7 @@ didAnyTestsFail() {
   return 1
 }
 testSection() {
+  clearLine
   boxedHeading --size 0 "$@"
 }
 
@@ -66,10 +65,15 @@ cleanTestName() {
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 loadTestFiles() {
-  local testCount tests showTests testName quietLog=$1 __testDirectory resultCode=0 resultReason ignoreValues ignorePattern
+  local testCount tests showTests testName quietLog=$1 __testDirectory resultCode stickyCode resultReason
   local __test __tests tests
-  local __before __after changedGlobals
+  local __beforeFunctions errorTest
 
+  errorTest=$(_code test)
+  stickyCode=0
+
+  __beforeFunctions=$(mktemp) || _environment mktemp || return $?
+  __testFunctions=$(mktemp) || _environment mktemp || return $?
   resultReason="Success"
   shift
   statusMessage consoleWarning "Loading tests ..."
@@ -81,28 +85,35 @@ loadTestFiles() {
     if ! isExecutable "./test/tools/$1"; then
       printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./test/tools/$1")" "$(consoleInfo "$(pwd)")"
       resultReason="Not executable"
-      resultCode="$errorTest"
+      stickyCode="$errorTest"
     else
       testCount=${#tests[@]}
       statusMessage consoleInfo "Loading $1 ... "
+
+      declare -pF | removeFields 2 | grep -e '^test' >"$__beforeFunctions"
       # shellcheck source=/dev/null
       if source "./test/tools/$1" 1>&2 > >(_environmentOutput source "./test/tools/$1"); then
         statusMessage consoleInfo "Loaded successfully ...":
       else
         resultReason="Include $1 failed"
-        resultCode="$?"
+        stickyCode="$errorTest"
       fi
-      clearLine
+      declare -pF | removeFields 2 | grep -e '^test' | diff "$__beforeFunctions" - | grep -e '^[<>]' | cut -c 3- >"$__testFunctions"
       if [ "${#tests[@]}" -le "$testCount" ]; then
         statusMessage consoleError "No tests defined in ./test/tools/$1"
         resultReason="No tests defined in ./test/tools/$1 ${#tests[@]} <= $testCount"
-        resultCode="$errorTest"
+        stickyCode="$errorTest"
       else
         __tests+=("${tests[@]}")
       fi
+      while read -r __test; do
+        inArray "$__test" "${tests[@]}" || consoleError "Test defined but not run: $(consoleCode "$__test")"
+      done <"$__testFunctions"
+      clearLine
     fi
     shift
   done
+  rm -rf "$__beforeFunctions" "$__testFunctions" || :
 
   showTests=()
   for testName in "${__tests[@]}"; do
@@ -117,10 +128,8 @@ loadTestFiles() {
 
   # Renamed to avoid clobbering by tests
   __testDirectory=$(pwd)
-  __after=$(mktemp) || _environment mktemp || return $?
-  __before="$__after.before"
-  __after="$__after.after"
 
+  # Set up state
   while [ ${#__tests[@]} -gt 0 ]; do
     __test="${__tests[0]}"
     unset '__tests[0]'
@@ -134,75 +143,51 @@ loadTestFiles() {
     testSection "$__test" || :
     printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$__test")"
 
-    # Set up state
-    set -eou pipefail
-
-    resultCode=0
-
-    declare -p >"$__before"
     printf "%s\n" "Running $__test" >>"$quietLog"
-    if ! "$__test" "$quietLog"; then
-      printf "%s\n" "FAILED $__test" >>"$quietLog"
-      resultCode=$errorTest
-    else
+    resultCode=0
+    if plumber "$__test" "$quietLog"; then
       printf "%s\n" "SUCCESS $__test" >>"$quietLog"
+    else
+      resultCode=$?
+      printf "%s\n" "FAILED $__test" >>"$quietLog"
+      stickyCode=$errorTest
     fi
-    cd "$__testDirectory"
 
-    set -eou pipefail
     # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
     # documentation-tests.sh change this apparently
     # Instead of preventing this usage, just work around it
     __usageEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
 
-    declare -p >"$__after"
-
-    if [ "$resultCode" -ne 0 ]; then
-      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleRed "FAILED")" 1>&2
+    if [ "$resultCode" = "$(_code leak)" ]; then
+      resultCode=0
+      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleWarning "passed with leaks")"
+    elif [ "$resultCode" -eq 0 ]; then
+      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
+    else
+      printf "[%d] %s %s\n" "$resultCode" "$(consoleCode "$__test")" "$(consoleError "FAILED")" 1>&2
       buildFailed "$quietLog" || :
       resultReason="test $__test failed"
+      stickyCode=$errorTest
       break
     fi
-    ignoreValues=(OLDPWD _ resultCode LINENO)
-    ignorePattern="$(quoteGrepPattern "^($(joinArguments '|' "${ignoreValues[@]}"))=")"
-    # printf "%s: \"%s\"\n" "$(consoleInfo "PATTERN")" "$(consoleMagenta "$ignorePattern")"
-
-    # Diff before -> after
-    # Only 'declare' lines
-    # Remove unset variables (no `=`)
-    # Remove lines with `-r` flags (READONLY)
-    # Remove '< declare --` from each line (3 fields)
-    # Remove `declare` and `flags` columns
-    # Remove ignoredValues
-    changedGlobals="$(diff "$__before" "$__after" | grep 'declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 3 | grep -v -e "$ignorePattern")" || :
-    if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$changedGlobals"); then
-      consoleWarning "$__test set $(consoleValue "COLUMNS, LINES")"
-      unset COLUMNS LINES
-      changedGlobals="$(printf "%s\n" "$changedGlobals" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $changedGlobals" || return $?
-    fi
-    if [ -n "$changedGlobals" ]; then
-      printf "%s\n" "$changedGlobals" | dumpPipe "$__test leaked local or export ($__before -> $__after)"
-      resultCode=$errorTest
-      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleWarning "passed with leaks")"
-    else
-      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
-    fi
   done
-  if [ "$resultCode" -eq 0 ] && resultReason=$(didAnyTestsFail); then
+  if [ "$stickyCode" -eq 0 ] && resultReason=$(didAnyTestsFail); then
     # Should probably reset test status but ...
-    resultCode=$errorTest
+    stickyCode=$errorTest
   fi
-  if [ "$resultCode" -ne 0 ]; then
-    printf "resultReason: %s\n" "$(consoleMagenta "$resultReason")"
+  if [ "$stickyCode" -ne 0 ]; then
+    printf "%s %s\n" "$(consoleLabel "Reason:")" "$(consoleMagenta "$resultReason")"
   fi
-  return $resultCode
+  return "$stickyCode"
 }
 _loadTestFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 testFailed() {
-  local errorCode="$errorTest" name
+  local errorCode name
+
+  errorCode="$(_code test)"
   export IFS
   printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo -n "$*")"
   for name in IFS HOME LINES COLUMNS OSTYPE PPID PID; do
@@ -223,5 +208,5 @@ requireTestFiles() {
 }
 
 testCleanup() {
-  rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" 2>/dev/null || :
+  __environment rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" || :
 }

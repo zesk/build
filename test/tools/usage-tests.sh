@@ -41,23 +41,23 @@ EOF
   printf "VALUE=%s\n=====\n" "$value"
 
   printf "ARGS: %s\n=====\n" "$(printf %s "$value" | usageArguments "^")"
-  assertContains "test" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 
   value="$(printf "%s\n%s\n" "--test^Optional thing." "variable^Another optional thing. newline at end")"
   printf "ARGS: %s\n=====\n" "$(printf %s "$value" | usageArguments "^")"
-  assertContains "test" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 
   value="$(printf "%s\n%s" "--test^Optional thing." "variable^Another optional thing.")"
   printf "ARGS: %s\n=====\n" "$(printf %s "$value" | usageArguments "^")"
-  assertContains "test" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" "test # $testIndex" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | usageArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 }
 
@@ -92,7 +92,7 @@ _testUsageArgumentHelperFail() {
 
 tests=(testUsageArgumentFunctions "${tests[@]}")
 testUsageArgumentFunctions() {
-  local d intTests unsignedIntTests
+  local d intTests unsignedIntTests positiveIntTests
 
   d=$(mktemp -d) || return $?
 
@@ -108,6 +108,7 @@ testUsageArgumentFunctions() {
 
   unsignedIntTests=(99 1 0 4123123412412 492 8192)
   intTests=(-42 -99 -5912381239102398123 -0 -1)
+  positiveIntTests=(99 1 4123123412412 492 8192)
 
   _testUsageArgumentHelperSuccess usageArgumentInteger "${intTests[@]}" "${unsignedIntTests[@]}" || return $?
 
@@ -116,6 +117,10 @@ testUsageArgumentFunctions() {
   _testUsageArgumentHelperSuccess usageArgumentUnsignedInteger "${unsignedIntTests[@]}" || return $?
 
   _testUsageArgumentHelperFail usageArgumentUnsignedInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what || return $?
+
+  _testUsageArgumentHelperSuccess usageArgumentPositiveInteger "${positiveIntTests[@]}" || return $?
+
+  _testUsageArgumentHelperFail usageArgumentPositiveInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what 0 || return $?
 
   unset TEST_USAGE
 }

@@ -40,6 +40,16 @@ Is a path an absolute path?
 - `1` - one ore more paths are not absolute paths
 
 
+#### Usage
+
+    whichExists binary
+    
+
+#### Exit codes
+
+- `0` - If all binary
+
+
 ### `serviceToPort` - Get the port number associated with a service
 
 Get the port number associated with a service
@@ -160,11 +170,9 @@ Creates the directories for all files passed in.
 
 - `0` - Always succeeds
 
-### `requireDirectory` - Given a list of files, ensure their parent directories exist
+### `requireDirectory` - Given a list of directories, ensure they exist and create
 
-Given a list of files, ensure their parent directories exist
-
-Creates the directories for all files passed in.
+Given a list of directories, ensure they exist and create them if they do not.
 
 #### Usage
 
@@ -399,7 +407,7 @@ Fetch the modification time in seconds from now of a file as a timestamp
 
 #### Usage
 
-    modificationTime filename0 [ filename1 ... ]
+    modificationSeconds filename0 [ filename1 ... ]
     
 
 #### Examples

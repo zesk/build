@@ -19,22 +19,51 @@ Alternately, these can be used within an `if` or other compound statement but th
 
 Quick guide:
 
-- `_exit message ...` - Exits with exit code 99 always. Outputs `message ...` to `stderr`. If `BUILD_DEBUG` environment is set to `true` will output debugging information. Should be used for script initialization which is critical, otherwise avoid it and use `_return`.
+- `_integer value` - Returns 0 if value passed is an integer, otherwise returns 1.
+- `_boolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
+- `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
+
+Error codes:
+
+- `_code name ...` - Exit codes. Outputs integers based on error names, one per line.
+
+Return errors:
+
 - `_return code message ...` - Return code always. Outputs `message ...` to `stderr`.
 - `_environment message ...` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 - `_argument message ...` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+
+Run-related:
+
 - `__execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
-- `__try command ...` - Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
+- `__try command ...` - Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
 - `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it
 - `__environment command ...` - Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `__argument command ...` - Run `command ...` (with any arguments) and then `_argument` if it fails.
 
 # Sugar Functions References
 
-{_exit}
+## Core tests
+
+{_integer}
+{_boolean}
+
+## Error codes
+
+{_code}
+
+## Ternary selector
+
+{_choose}
+
+## Fail with an error code
+
 {_return}
 {_environment}
 {_argument}
+
+## Run-related
+
 {__execute}
 {__try}
 {__echo}

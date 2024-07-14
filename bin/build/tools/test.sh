@@ -170,7 +170,6 @@ validateShellScripts() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
 
   clearLine || :
-  sleepDelay="$BUILD_INTERACTIVE_REFRESH"
   statusMessage consoleInfo "Checking all shell scripts ..." || :
   failedReasons=()
   failedFiles=()
@@ -195,20 +194,19 @@ validateShellScripts() {
         ;;
       *)
         statusMessage consoleInfo "👀 Checking \"$arg\" ..." || :
-        if ! failedReason=$(validateShellScript "$arg"); then
+        checkedFiles+=("$arg")
+        if ! failedReason=$(validateShellScript "$arg" 2>&1); then
           ! $verbose || consoleSuccess "validateShellScript $arg failed: $failedReason"
           failedFiles+=("$arg")
           failedReasons+=("$failedReason")
         else
           ! $verbose || consoleSuccess "validateShellScript $arg passed"
-          checkedFiles+=("$arg")
         fi
         ;;
     esac
     shift || __failArgument "$usage" "shift after $arg failed" || return $?
   done
 
-  sleepDelay=$(usageArgumentUnsignedInteger "$usage" "sleepDelay" "$sleepDelay") || return $?
   if [ $# -eq 0 ] && [ ${#checkedFiles[@]} -eq 0 ]; then
     ! $verbose || consoleInfo "Reading item list from stdin ..."
     while read -r arg; do
@@ -226,11 +224,9 @@ validateShellScripts() {
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
     {
-      consoleError "$(clearLine)# The following scripts failed:"
-      for arg in "${failedReasons[@]}"; do
-        echo "    $(consoleMagenta -n "$arg")"
-      done
-      consoleError "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)"
+      clearLine
+      _list "$(consoleWarning "Files failed:")" "${failedReasons[@]}"
+      consoleInfo "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)"
     } 1>&2
     if ! "$interactive" && [ -n "$binary" ]; then
       if [ ${#failedFiles[@]} -gt 0 ]; then
@@ -306,7 +302,7 @@ validateShellScriptsInteractive() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScript() {
-  local this usage argument
+  local this usage argument found
 
   this=${FUNCNAME[0]}
   usage="_$this"
@@ -329,8 +325,8 @@ validateShellScript() {
         __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
         __usageEnvironment "$usage" shellcheck "$argument" 1>&3 || return $?
-        if pcregrep -l -M '\n\}\n#' "$argument"; then
-          __failEnvironment "$usage" "pcregrep found }\\n#" || return $?
+        if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
+          __failEnvironment "$usage" "$argument: pcregrep found }\\n#: $(consoleCode "$found")" || return $?
         fi
         ;;
     esac

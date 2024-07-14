@@ -193,18 +193,6 @@ _trimSpace() {
 }
 
 #
-# Deprecated: 2024-02
-# trimSpace handles both cases now.
-# Usage: trimSpace < file > output
-# Summary: Trim whitespace in a pipeline
-# Depends: awk
-# See: trimSpace
-#
-trimSpacePipe() {
-  _deprecated trimSpace "$@"
-}
-
-#
 # Quote bash strings for inclusion as single-quoted for eval
 # Usage: quoteBashString text
 # Argument: text - Text to quote
@@ -741,6 +729,7 @@ _isCharacterClasses() {
 #
 # Source: https://mywiki.wooledge.org/BashFAQ/071
 characterFromInteger() {
+  local usage="_${FUNCNAME[0]}"
   local arg
   while [ $# -gt 0 ]; do
     arg="$1"
@@ -761,10 +750,8 @@ _characterFromInteger() {
 # Argument: class0 - One ore more character classes that the characters in string should match
 #
 stringValidate() {
+  local usage="_${FUNCNAME[0]}"
   local text character
-  local usage
-
-  usage="_${FUNCNAME[0]}"
 
   text="${1-}"
   shift || __failArgument "$usage" "missing text" || return $?
@@ -913,10 +900,11 @@ cannon() {
         elif [ -z "$replace" ]; then
           replace="$argument"
         else
-          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+          break
         fi
         ;;
     esac
+    shift
   done
   searchQuoted=$(quoteSedPattern "$search")
   replaceQuoted=$(quoteSedPattern "$replace")
@@ -928,7 +916,7 @@ cannon() {
     return 0
   fi
   xargs -0 grep -l "$search" <"$cannonLog" | tee "$cannonLog.found" | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
-  count="$(wc -l <"$cannonLog.found" | trimSpace)"
+  count="$(($(wc -l <"$cannonLog.found") + 0))"
   consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
   rm -f "$cannonLog" "$cannonLog.found" || :
 }

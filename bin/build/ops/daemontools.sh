@@ -393,13 +393,11 @@ daemontoolsManager() {
     case "$argument" in
       --chirp)
         shift
-        chirpSeconds=$(usageArgumentUnsignedInteger "$usage" chirpSeconds "${1-}") || return $?
-        [ "$chirpSeconds" -gt 0 ] || __failArgument "$usage" "$argument \"$chirpSeconds\" must not be zero"
+        chirpSeconds=$(usageArgumentPositiveInteger "$usage" chirpSeconds "${1-}") || return $?
         ;;
       --interval)
         shift
-        intervalSeconds=$(usageArgumentUnsignedInteger "$usage" intervalSeconds "${1-}") || return $?
-        [ "$intervalSeconds" -gt 0 ] || __failArgument "$usage" "$argument \"$intervalSeconds\" must not be zero"
+        intervalSeconds=$(usageArgumentPositiveInteger "$usage" intervalSeconds "${1-}") || return $?
         ;;
       --stat)
         shift

@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 
-# IDENTICAL _clearLine 5
+# IDENTICAL _clearLine EOF
 # Simple blank line generator for scripts
 _clearLine() {
   local width

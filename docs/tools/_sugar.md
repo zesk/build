@@ -19,7 +19,10 @@ Alternately, these can be used within an `if` or other compound statement but th
 
 Quick guide:
 
-- `_exit message ...` - Exits with exit code 99 always. Outputs `message ...` to `stderr`. If `BUILD_DEBUG` environment is set to `true` will output debugging information. Should be used for script initialization which is critical, otherwise avoid it and use `_return`.
+- `_code name ...` - Exit codes. Outputs integers based on error names, one per line.
+- `_integer value` - Returns 0 if value passed is an integer, otherwise returns 1.
+- `_boolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
+- `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
 - `_return code message ...` - Return code always. Outputs `message ...` to `stderr`.
 - `_environment message ...` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 - `_argument message ...` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
@@ -31,27 +34,108 @@ Quick guide:
 
 # Sugar Functions References
 
+## Core tests
 
-### `_exit` - Critical exit - exit immediately
 
-Critical exit - exit immediately
+### `_integer` - Unsigned integer test
 
-#### Exit codes
-
-- `99` - Failure
-
-### `_return` - IDENTICAL _return 6
-
-IDENTICAL _return 6
+Unsigned integer test
+Returns 0 if `value` is an unsigned integer
 
 #### Usage
 
-    _return _return [ exitCode [ message ... ] ]
+    _integer value
     
 
 #### Exit codes
 
-- exitCode or 1 if nothing passed
+- `0` - if value is an unsigned integer
+- `1` - if value is not an unsigned integer
+
+### `_boolean` - Boolean test
+
+Boolean test
+Returns 0 if `value` is an unsigned integer
+Is this a boolean? (`true` or `false`)
+
+#### Usage
+
+    _boolean value
+    
+
+#### Exit codes
+
+- `0` - if value is a boolean
+- `1` - if value is not a boolean
+
+## Error codes
+
+
+### `_code` - Print one or more an exit codes by name. Master
+
+Print one or more an exit codes by name. Master list of exit code values.
+Valid codes:
+- `environment` - generic issue with environment
+- `argument` - issue with arguments
+- `assert` - assertion failed
+- `identical` - identical check failed
+- `leak` - function leaked globals
+- `test` - test failed
+- `internal` - internal errors
+Unknown error code is 254
+
+#### Usage
+
+    _code name ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+{SEE:https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux}
+
+## Ternary selector
+
+
+### `_choose` - Boolean selector
+
+Boolean selector
+
+#### Usage
+
+    _choose testValue trueChoice falseChoice
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+## Fail with an error code
+
+
+### `_return` - Return code always. Outputs `message ...` to `stderr`.
+
+Return code always. Outputs `message ...` to `stderr`.
+
+#### Usage
+
+    _return code command || return $?
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
@@ -86,6 +170,9 @@ Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 #### Exit codes
 
 - 2
+
+## Run-related
+
 
 ### `__execute` - Run `command ...` (with any arguments) and then `_return` if
 

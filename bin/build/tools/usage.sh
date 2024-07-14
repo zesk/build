@@ -277,6 +277,25 @@ usageArgumentUnsignedInteger() {
   __usageArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
 }
 
+# Validates a value is an unsigned integer and greater than zero (NOT zero)
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentPositiveInteger() {
+  local args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
+    return $?
+  fi
+  __usageArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger && __usageArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
+}
+
 # Validates a value is not blank and is a file.
 # Upon success, outputs the file name
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
@@ -402,6 +421,21 @@ usageArgumentRequired() {
   local usage="$1" argument="$2"
   shift 2 || :
   [ -n "${1-}" ] || __failArgument "$usage" "blank" "$argument" || return $?
+  printf "%s\n" "$1"
+}
+
+# Require an argument to be a boolean value
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+# Exit Code: 2 - If `value` is blank
+# Exit code: 0 - If `value` is non-blank
+usageArgumentBoolean() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  _boolean "${1-}" || __failArgument "$usage" "blank" "$argument" || return $?
+  printf "%s\n" "$1"
 }
 
 # Throw an unknown argument error
@@ -409,7 +443,7 @@ usageArgumentRequired() {
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
-usageUnknownArgument() {
+usageArgumentUnknown() {
   local usage="$1" argument="$2"
   shift 2 || :
   __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
@@ -420,7 +454,7 @@ usageUnknownArgument() {
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
-usageMissingArgument() {
+usageArgumentMissing() {
   local usage="$1" argument="$2"
   shift 2 || :
   __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?

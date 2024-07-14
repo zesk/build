@@ -15,7 +15,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -114,9 +115,9 @@ testCrontabApplicationSync() {
     echo "APPLICATION_PATH=hello"
   } >>"$testEnv"
 
-  mkdir -p "$tempDir"/app1
-  mkdir -p "$tempDir"/app2
-  mkdir -p "$tempDir"/app3
+  __environment mkdir -p "$tempDir"/app1 || return $?
+  __environment mkdir -p "$tempDir"/app2 || return $?
+  __environment mkdir -p "$tempDir/app3/and/it/is/really/deep" || return $?
 
   {
     echo "FOO=lover"
@@ -146,7 +147,7 @@ testCrontabApplicationSync() {
     echo
   } >>"$tempDir"/app1/user.crontab
   cp "$tempDir"/app1/user.crontab "$tempDir"/app2/user.crontab
-  cp "$tempDir"/app1/user.crontab "$tempDir"/app3/user.crontab
+  cp "$tempDir"/app1/user.crontab "$tempDir/app3/and/it/is/really/deep/user.crontab"
 
   results=$(mktemp)
   __usageEnvironment "$usage" ./bin/build/ops/crontab-application-sync.sh --user user --show "$tempDir" --env "$testEnv" >>"$results" || return $?
@@ -158,6 +159,7 @@ testCrontabApplicationSync() {
     echo "Results file has $(($(wc -l <"$results") + 0)) lines"
   fi
 
+  dumpPipe "Cron results" <"$results"
   # set -x
   find_count 1 "$results" "lover" || return $?
   find_count 1 "$results" "fighter" || return $?

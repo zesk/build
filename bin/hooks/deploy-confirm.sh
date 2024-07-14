@@ -17,7 +17,10 @@ _return() {
   shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
-# IDENTICAL __tools 12
+
+
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"

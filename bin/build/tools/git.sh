@@ -37,7 +37,17 @@ errorArgument=2
 # Summary: Install git if needed
 #
 gitInstall() {
-  whichApt git git "%@"
+  whichApt git git "$@"
+}
+
+#
+# Uninstalls the `git` binary
+# Usage: {fn} [ package ... ]
+# Argument: package - Additional packages to uninstall
+# Summary: Uninstall git
+#
+gitUninstall() {
+  whichAptUninstall git git "$@"
 }
 
 #
@@ -621,11 +631,12 @@ gitInstallHooks() {
   local hook
   local argument
   local usage="_${FUNCNAME[0]}"
-  local types
+  local types didOne
 
   buildEnvironmentLoad BUILD_HOME || :
   home="${BUILD_HOME:-}"
   verbose=false
+  didOne=false
   read -r -a types < <(gitHookTypes)
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -647,21 +658,9 @@ gitInstallHooks() {
         ;;
       *)
         if inArray "$argument" "${types[@]}"; then
-          hasHook --application "$home" "git-$argument" || __failArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
-          fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
-          relFromTo=()
-          for item in "${fromTo[@]}"; do
-            relFromTo+=(".${item#"$home"}")
-          done
-          if diff -q "${fromTo[@]}" >/dev/null; then
-            ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${relFromTo[@]}")" || :
-            return 0
-          fi
-          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${relFromTo[@]}")" || :
-          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleCode "${relFromTo[1]}")" || :
-          __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
-          ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
-          return 3
+          __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
+          ! $verbose || consoleSuccess "Installed $(consoleValue "$hook")" || :
+          didOne=true
         else
           __failArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
         fi
@@ -669,12 +668,17 @@ gitInstallHooks() {
     esac
     shift || :
   done
-  for hook in pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit; do
-    if hasHook --application "$home" "git-$hook"; then
-      __usageEnvironment "$usage" gitInstallHook --application "$home" "$hook" --copy || return $?
-      ! $verbose || consoleSuccess "Installed $(consoleValue "git-$hook")" || :
-    fi
-  done
+  if ! $didOne; then
+    for hook in pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit; do
+      if hasHook --application "$home" "git-$hook"; then
+        __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
+        ! $verbose || consoleSuccess "Installed $(consoleValue "$hook")" || :
+      fi
+    done
+  fi
+}
+_gitInstallHooks() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} [ --application applicationHome ] [ --copy ] hook

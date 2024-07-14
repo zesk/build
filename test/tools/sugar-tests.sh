@@ -8,6 +8,11 @@
 #
 declare -a tests
 
+tests+=(testFormat)
+tests+=(testMoreSugar)
+tests+=(testExitCode)
+tests+=(testSugar)
+
 _wasRun() {
   local exitCode
 
@@ -27,64 +32,111 @@ _wasRun() {
   return "$exitCode"
 }
 
-tests+=(testSugar)
+testFormat() {
+  assertOutputEquals "§" _format || return $?
+  assertOutputEquals "§a" _format a || return $?
+  assertOutputEquals "§ab" _format a b || return $?
+  assertOutputEquals "§abc" _format a b c || return $?
+  assertOutputEquals "dabc" _format a b c d || return $?
+  assertOutputEquals "iabc" _format a b c i || return $?
+  assertOutputEquals "dabic" _format a b c d i || return $?
+  assertOutputEquals "dabicbocbacbucbyc" _format a b c d i o a u y || return $?
+  assertOutputEquals "d%sbicbocbacbucbyc" _format %s b c d i o a u y || return $?
+  assertOutputEquals "d%s%dic%doc%dac%duc%dyc" _format %s %d c d i o a u y || return $?
+  assertOutputEquals "d%s%di%f%do%f%da%f%du%f%dy%f" _format %s %d %f d i o a u y || return $?
+}
+
+testExitCode() {
+  local code char digit
+
+  assertEquals --line "$LINENO" 1 "$(_code environment)" || return $?
+  assertEquals --line "$LINENO" 2 "$(_code argument)" || return $?
+  assertEquals --line "$LINENO" "" "$(_code)" || return $?
+  assertEquals --line "$LINENO" "97" "$(_code assert)" || return $?
+  assertEquals --line "$LINENO" "$(printf "%d\n" 97 97)" "$(_code assert assert)" || return $?
+  assertEquals --line "$LINENO" "105" "$(_code identical)" || return $?
+  assertEquals --line "$LINENO" "108" "$(_code leak)" || return $?
+  assertEquals --line "$LINENO" "116" "$(_code test)" || return $?
+  assertEquals --line "$LINENO" "253" "$(_code internal)" || return $?
+  assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj)" || return $?
+  assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj1)" || return $?
+
+  assertOutputContains --exit "$(_code internal)" --stderr non-integer _return notInt "message for return"
+
+  for code in assert identical leak "test"; do
+    char="${code:0:1}"
+    digit=$(_code "$code")
+    assertEquals --line "$LINENO" "$digit" "$(characterToInteger "$char")" characterToInteger "$char" || return $?
+    assertEquals --line "$LINENO" "$char" "$(characterFromInteger "$digit")" characterFromInteger "$digit" || return $?
+  done
+}
+
 testSugar() {
-  local code
+  local code expected actual
 
   # __return running stuff
   export SUGAR_FILE
   SUGAR_FILE=$(mktemp) || _environment mktemp || return $?
-  assertFileExists "$SUGAR_FILE" || return $?
+  assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=98
-  assertExitCode --dump --stderr-match "$code" "$code" __return _wasRun || return $?
-  assertFileExists "$SUGAR_FILE" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=99
-  assertExitCode --dump --stderr-match "$code" "$code" __return _wasRun || return $?
-  assertFileExists "$SUGAR_FILE" || return $?
-  assertEquals $(($(wc -l <"$SUGAR_FILE") + 0)) 2 || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
+  assertEquals --line "$LINENO" $(($(wc -l <"$SUGAR_FILE") + 0)) 2 || return $?
   __environment rm -rf "$SUGAR_FILE" || return $?
-  assertFileDoesNotExist "$SUGAR_FILE" || return $?
+  assertFileDoesNotExist --line "$LINENO" "$SUGAR_FILE" || return $?
   code=0
-  assertExitCode 0 __return _wasRun || return $?
-  assertFileExists "$SUGAR_FILE" || return $?
+  assertExitCode --line "$LINENO" 0 __return _wasRun || return $?
+  assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=99
-  assertExitCode --dump --stderr-match "$code" "$code" __return _wasRun || return $?
-  assertFileExists "$SUGAR_FILE" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=99
-  assertExitCode --dump --stderr-match "$code" "$code" __return _wasRun || return $?
-  assertEquals $(($(wc -l <"$SUGAR_FILE") + 0)) 3 || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertEquals --line "$LINENO" $(($(wc -l <"$SUGAR_FILE") + 0)) 3 || return $?
   rm -rf "$SUGAR_FILE"
   unset SUGAR_FILE
 
-  # set -x
-
-  assertEquals "$(printf "Hello\n- a\n- b\n- c\n- d e\n")" "$(_list "Hello" "a" "b" "c" "d e")" || return $?
+  expected="$(printf "Hello\n- a\n- b\n- c\n- d e\n")"
+  actual="$(_list "Hello" "a" "b" "c" "d e")"
+  assertEquals --line "$LINENO" "${#expected}" "${#actual}" "Actual: \"$(consoleCode "$actual")\" Expected: \"$(consoleCode "$expected")\"" || return $?
+  assertEquals --line "$LINENO" "$expected" "$actual" || return $?
 
   # _exit
-  assertEquals "99" "$( (_exit) || echo $?)" || return $?
+  assertEquals --line "$LINENO" "99" "$( (__try _return 99) || echo $?)" || return $?
 
   # _return
   for code in $(seq 0 127); do
-    assertExitCode --stderr-ok "$code" _return "$code" || return $?
+    assertExitCode --line "$LINENO" --stderr-ok "$code" _return "$code" || return $?
   done
   # __return
   for code in $(seq 0 127); do
-    assertExitCode --stderr-ok "$code" __return _return "$code" || return $?
+    assertExitCode --line "$LINENO" --stderr-ok "$code" __return _return "$code" || return $?
   done
 
   # _environment
   # _argument
-  assertExitCode --stderr-ok 1 _environment || return $?
-  assertExitCode --stderr-ok 2 _argument || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 1 _environment || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 2 _argument || return $?
 
-  assertExitCode --stderr-ok 1 _environment 1 2 3 || return $?
-  assertExitCode --stderr-ok 2 _argument a b c || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 1 _environment 1 2 3 || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 2 _argument a b c || return $?
 
   # __execute
-  assertExitCode --stderr-match foo 1 __execute _environment "foo" || return $?
-  assertExitCode --stderr-match foo 2 __execute _argument "foo" || return $?
+  assertExitCode --line "$LINENO" --stderr-match foo 1 __execute _environment "foo" || return $?
+  assertExitCode --line "$LINENO" --stderr-match foo 2 __execute _argument "foo" || return $?
   # __echo
-  assertExitCode --stdout-match "Running: printf %s Hello" --stdout-match "Hello" 0 __echo printf "%s" "Hello" || return $?
+  assertExitCode --line "$LINENO" --stdout-match " printf \"%s\" \"Hello\"" --stdout-match "Hello" 0 __echo printf "%s" "Hello" || return $?
+}
 
-  # set +x
+testMoreSugar() {
+  local mockUsage=__testMoreSugarUsage
+
+  assertExitCode --line "$LINENO" --stderr-match whoops "$(_code environment)" __usageEnvironment "$mockUsage" _argument "whoops" || return $?
+  assertExitCode --line "$LINENO" --stderr-match a-daisy "$(_code argument)" __usageArgument "$mockUsage" _environment "a-daisy" || return $?
+}
+__testMoreSugarUsage() {
+  return "$1"
 }

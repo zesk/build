@@ -128,37 +128,50 @@ _copyFileShowNew() {
 # Exit Code: 0 - Success
 # Exit Code: 1 - Failed
 copyFile() {
-  local arg source destination this
-  local mapFlag copyFunction actualSource verb prefix
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments
+  local source destination this
+  local mapFlag copyFunction actualSource verb prefix owner mode
   local exitCode
 
   this=${FUNCNAME[0]}
   mapFlag=false
   copyFunction=_copyFileRegular
+  owner=
+  mode=
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    arg="$1"
-    [ -n "$arg" ] || _argument "blank argument" || return $?
-    case "$arg" in
+    argument="$1"
+    usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
+    case "$argument" in
       --map)
         mapFlag=true
         ;;
       --escalate)
         copyFunction=_copyFileEscalated
         ;;
+      --owner)
+        shift
+        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
+        owner="$1"
+        ;;
+      --mode)
+        shift
+        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
+        mode="$1"
+        ;;
       *)
         source="$1"
-        if [ ! -f "$source" ]; then
-          _environment "$this: source \"$source\" does not exist" || return $?
-        fi
-        shift || _argument "$this: Missing destination" || return $?
-        destination=$(usageArgumentFileDirectory _argument "destination" "$1") || return $?
-        shift || _argument "$this: shift failed" || return $?
-        [ $# -eq 0 ] || _argument "$this: Unknown argument $1" || return $?
+        [ -f "$source" ] || __usageEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
+        shift
+        destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
+        shift
+        [ $# -eq 0 ] || __usageArgument "$usage" "unknown argument $1" || return $?
         if $mapFlag; then
           actualSource=$(mktemp)
           if ! mapEnvironment <"$source" >"$actualSource"; then
             rm "$actualSource" || :
-            _environment "$this: Failed to mapEnvironment $source" || return $?
+            __usageEnvironment "$usage" "Failed to mapEnvironment $source" || return $?
           fi
           verb=" (mapped)"
         else
@@ -166,7 +179,7 @@ copyFile() {
           verb=""
         fi
         if [ -f "$destination" ]; then
-          if ! diff -q "$actualSource" "$destination"; then
+          if ! diff -q "$actualSource" "$destination" >/dev/null; then
             prefix="$(consoleSubtle "$(basename "$source")"): "
             _copyFilePrompt "$source" "$destination" "Changes" || :
             diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(consoleCode)" "$(consoleReset)" || :
@@ -180,6 +193,12 @@ copyFile() {
         fi
         "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
         exitCode=$?
+        if [ $exitCode -eq 0 ] && [ -n "$owner" ]; then
+          __usageEnvironment chown "$owner" "$destination" || exitCode=$?
+        fi
+        if [ $exitCode -eq 0 ] && [ -n "$mode" ]; then
+          __usageEnvironment chmod "$mode" "$destination" || exitCode=$?
+        fi
         if $mapFlag; then
           rm "$actualSource" || :
         fi
@@ -189,6 +208,9 @@ copyFile() {
     shift || _argument "$this: shift failed" || return $?
   done
   _argument "$this: Missing source" || return $?
+}
+_copyFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} [ --map ] source destination
@@ -231,7 +253,7 @@ copyFileWouldChange() {
         else
           actualSource="$source"
         fi
-        if ! diff -q "$actualSource" "$destination"; then
+        if ! diff -q "$actualSource" "$destination" >/dev/null; then
           return 0
         fi
         if $mapFlag; then

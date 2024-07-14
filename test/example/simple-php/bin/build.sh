@@ -5,7 +5,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __install 18
+# IDENTICAL __install 17
 # Install, load zesk build and run command
 __install() {
   local relative="$1" installPath="$2"

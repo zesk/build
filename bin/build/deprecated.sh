@@ -5,7 +5,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 12
+# IDENTICAL __tools 13
+# Usage: __tools command ...
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -27,6 +28,14 @@ _return() {
   shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
 }
 
+# Usage: {fn} search replace [ additionalCannonArgs ]
+__deprecatedCannon() {
+  local this="${BASH_SOURCE[0]##*/}"
+  local ignoreStuff=(! -path "*/$this" ! -path '*/docs/release/*.md')
+  statusMessage printf "%s %s\n" "$(consoleWarning "$1")" "$(consoleSuccess "$2")"
+  cannon "$@" "${ignoreStuff[@]}" || :
+}
+
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on
 # a clean build checkout and examine changes manually each time.
 #
@@ -37,71 +46,70 @@ _return() {
 # fn: deprecated.sh
 #
 __deprecatedCleanup() {
+  local this="${BASH_SOURCE[0]##*/}"
   local deprecatedToken deprecatedTokens exitCode ignoreStuff deprecatedIgnoreStuff
 
   exitCode=0
   deprecatedTokens=()
-  ignoreStuff=(! -path '*/deprecated.sh' ! -path '*/docs/release/*.md')
 
   deprecatedIgnoreStuff=(! -path '*/tools/usage.sh')
-  statusMessage consoleWarning "release-check-version.sh "
-  cannon release-check-version.sh git-tag-version.sh "${ignoreStuff[@]}" || :
+  __deprecatedCannon release-check-version.sh git-tag-version.sh
 
   # v0.3.12
-  statusMessage consoleWarning "buildFailed "
-  cannon 'failed "' 'buildFailed "' -name '*.sh' "${ignoreStuff[@]}" || :
+  __deprecatedCannon 'failed "' 'buildFailed "' -name '*.sh' || :
 
   # v0.6.0
-  statusMessage consoleWarning "markdownListify "
-  cannon markdownListify markdown_FormatList "${ignoreStuff[@]}"
+  __deprecatedCannon markdownListify markdown_FormatList
 
   # v0.6.1
-  statusMessage consoleWarning "usageWhich "
-  cannon 'usageWhich ' 'usageRequireBinary usage ' "${ignoreStuff[@]}"
+  __deprecatedCannon 'usageWhich ' 'usageRequireBinary usage '
 
   # v0.7.0
-  statusMessage consoleWarning "APPLICATION_CHECKSUM "
-  cannon 'APPLICATION_CHECKSUM' 'APPLICATION_ID' "${ignoreStuff[@]}"
-  cannon 'application-checksum' 'application-id' "${ignoreStuff[@]}"
-  deprecatedTokens+=(dockerPHPExtensions usageWrapper usageWhich usageEnvironment)
+  __deprecatedCannon 'APPLICATION_CHECKSUM' 'APPLICATION_ID'
+  __deprecatedCannon 'application-checksum' 'application-id'
+  deprecatedTokens+=(dockerPHPExtensions usageWrapper usageWhich "[^_]usageEnvironment")
 
   # v0.7.9
-  statusMessage consoleWarning "awsHasEnvironment "
-  cannon 'needAWS''Environment' 'awsHasEnvironment' "${ignoreStuff[@]}"
-  statusMessage consoleWarning "awsIsKeyUpToDate "
-  cannon 'isAWSKey''UpToDate ' 'awsIsKeyUpToDate' "${ignoreStuff[@]}"
+  __deprecatedCannon 'needAWS''Environment' 'awsHasEnvironment'
+  __deprecatedCannon 'isAWSKey''UpToDate ' 'awsIsKeyUpToDate'
 
   # v0.7.10
   deprecatedToken+=('bin/build/pipeline')
+
+  # Release v0.7.13
+  __deprecatedCannon 'env''map.sh' 'map.sh'
+  __deprecatedCannon 'mapCopyFileChanged' 'copyFileChanged --map'
+  __deprecatedCannon 'escalateMapCopyFileChanged' 'copyFileChanged --map --escalate'
+  __deprecatedCannon 'escalateCopyFileChanged' 'copyFileChanged --escalate'
+  __deprecatedCannon 'yesNo ' 'parseBoolean '
+
+  # Relesae v0.8.4
+  __deprecatedCannon 'copyFile''ChangedQuiet' 'copyFile'
+
+  # v0.10.0
+  __deprecatedCannon 'prefix''Lines' wrapLines
+  __deprecatedCannon 'trimSpace''Pipe' 'trimSpace'
+
+  # v0.10.4
+  __deprecatedCannon 'crontabApplication''Sync' crontabApplicationUpdate
+  __deprecatedCannon 'usageMissing''Argument' usageArgumentMissing
+  __deprecatedCannon 'usageUnknown''Argument' usageArgumentUnknown
 
   clearLine
   # Do all deprecations
   for deprecatedToken in "${deprecatedTokens[@]}"; do
     statusMessage consoleWarning "$deprecatedToken "
-    if find . -type f ! -path '*/.*' "${ignoreStuff[@]}" "${deprecatedIgnoreStuff[@]}" -print0 | xargs -0 grep -l "$deprecatedToken"; then
+    if find . -type f ! -path '*/.*' "${deprecatedIgnoreStuff[@]}" ! -path "*/$this" ! -path './docs/release/*' -print0 | xargs -0 grep -l -e "$deprecatedToken"; then
       clearLine || :
       consoleError "DEPRECATED token \"$deprecatedToken\" found" || :
       exitCode=1
     fi
   done
   clearLine || :
+  [ "$exitCode" -ne 0 ] || consoleSuccess "All deprecated tokens were not found"
   consoleSuccess "Completed deprecated script for Build $(consoleCode "$(jq -r .version "$(dirname "${BASH_SOURCE[0]}")/build.json")")"
 
-  # Release v0.7.13
-  cannon 'env''map.sh' 'map.sh' "${ignoreStuff[@]}"
-  cannon 'mapCopyFileChanged' 'copyFileChanged --map' "${ignoreStuff[@]}"
-  cannon 'escalateMapCopyFileChanged' 'copyFileChanged --map --escalate' "${ignoreStuff[@]}"
-  cannon 'escalateCopyFileChanged' 'copyFileChanged --escalate' "${ignoreStuff[@]}"
-  cannon 'yesNo ' 'parseBoolean ' "${ignoreStuff[@]}"
-
-  # Relesae v0.8.4
-  cannon 'copyFile''ChangedQuiet' 'copyFile' "${ignoreStuff[@]}"
-
-  # v0.10.0
-  cannon 'prefix''Lines' wrapLines "${ignoreStuff[@]}"
-  cannon 'trimSpace''Pipe' 'trimSpace' "${ignoreStuff[@]}"
-
-  return $exitCode
+  return "$exitCode"
 }
 
-__tools __deprecatedCleanup
+__tools ../.. __deprecatedCleanup "$@"

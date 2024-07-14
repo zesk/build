@@ -1,10 +1,10 @@
-# Operations Tools
+# crontab Tools
 
 [⬅ Return to documentation root](crontab)
 [⬅ Return to top](../index.md)
 
 
-### `crontab-application-sync.sh` - Application-specific crontab synchronization
+### `crontab-application-sync.sh` - Application-specific crontab management
 
 Keep crontab synced with files and environment files in an application folder structure.
 
@@ -51,4 +51,4 @@ Any files not found are skipped. Note that environment values are not carried be
 [⬅ Return to documentation root](crontab)
 [⬅ Return to top](../index.md)
 
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Operations Tools)
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=crontab Tools)

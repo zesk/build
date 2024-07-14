@@ -60,7 +60,7 @@ testPHPBuild() {
 
   buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
-  assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
+  assertEquals --line "$LINENO" "${BUILD_TARGET}" "app.tar.gz" || return $?
 
   __environment mkdir -p "$testPath/$appName/bin" || return $?
   __environment installInstallBuild "$testPath/$appName/bin" "$testPath/$appName" || return $?
@@ -70,22 +70,22 @@ testPHPBuild() {
   consoleInfo "Test build directory is: $testPath" || :
 
   __environment cd "$testPath/$appName" || return $?
-  assertFileDoesNotExist "./app.tar.gz" || return $?
-  assertDirectoryDoesNotExist bin/build || return $?
+  assertFileDoesNotExist --line "$LINENO" "./app.tar.gz" || return $?
+  assertDirectoryDoesNotExist --line "$LINENO" bin/build || return $?
 
-  assertFileExists ./bin/install-bin-build.sh || return $?
+  assertFileExists --line "$LINENO" ./bin/install-bin-build.sh || return $?
 
   ./bin/install-bin-build.sh --mock "$here/bin/build" || return $?
-  assertDirectoryExists bin/build || return $?
+  assertDirectoryExists --line "$LINENO" bin/build || return $?
 
   consoleWarning "Building PHP app" || :
 
-  assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
+  assertEquals --line "$LINENO" "${BUILD_TARGET}" "app.tar.gz" || return $?
 
   printf "\n"
   # No environment
   bin/build.sh || return $?
-  assertFileExists "./app.tar.gz" "pwd: $(pwd)" || return $?
+  assertFileExists --line "$LINENO" "./app.tar.gz" || return $?
   rm ./app.tar.gz || return $?
 
   export APP_THING=secret
@@ -93,12 +93,12 @@ testPHPBuild() {
   # Add an environment
   printf "\n"
   bin/build.sh APP_THING || return $?
-  assertFileExists "./app.tar.gz" "pwd: $(pwd)" || return $?
+  assertFileExists --line "$LINENO" "./app.tar.gz" || return $?
 
   BUILD_TARGET=alternate.tar.gz
   printf "\n"
   bin/build.sh || return $?
-  assertFileExists "$BUILD_TARGET" "pwd: $(pwd)" || return $?
+  assertFileExists --line "$LINENO" "$BUILD_TARGET" || return $?
 
   mkdir ./compare-app || return $?
   mkdir ./compare-alternate || return $?
@@ -127,9 +127,9 @@ testPHPBuild() {
   consoleInfo "Extracting app.tar.gz manifest ... "
   tar tf app.tar.gz >"$manifest.complete" || return $?
   grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
-  assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
-  assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
-  assertFileContains "$manifest.complete" vendor/zesk vendor/composer || return $?
+  assertFileContains --line "$LINENO" "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
+  assertFileDoesNotContain --line "$LINENO" "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
+  assertFileContains --line "$LINENO" "$manifest.complete" vendor/zesk vendor/composer || return $?
 
   if ! test "$keepFlag"; then
     consoleWarning Deleting app.tar.gz "$BUILD_TARGET" || :

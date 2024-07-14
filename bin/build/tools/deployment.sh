@@ -33,10 +33,10 @@ deployedHostArtifact="./.deployed-hosts"
 #
 # Test: testDeployBuildEnvironment - INCOMPLETE
 deployBuildEnvironment() {
+  local usage="_${FUNCNAME[0]}"
   local argument deployArgs deployHome applicationId applicationPath
   local buildEnv="./.build.env"
-  local envFile envFiles envFilesLoaded dryRun
-  local usage="_${FUNCNAME[0]}"
+  local envFile envFiles envFilesLoaded dryRun targetPackage userHosts
 
   envFiles=()
   envFilesLoaded=()
@@ -334,13 +334,15 @@ deployRemoteFinish() {
       --target "$targetPackage"
       --application "$applicationPath"
     )
-    ! $debuggingFlag || printf "%s %s\n" "deployApplication" "$(printf " \"%s\"" "${deployArguments[@]}")"
+    ! $debuggingFlag || printf "%s %s\n" "RUN: deployApplication" "$(printf " \"%s\"" "${deployArguments[@]}")"
+
     #
     # deployApplication call "the chewy center"
     #
     #  ┏━ ┏━┛┏━┃┃  ┏━┃┃ ┃┏━┃┏━┃┏━┃┃  ┛┏━┛┏━┃━┏┛┛┏━┃┏━
     #  ┃ ┃┏━┛┏━┛┃  ┃ ┃━┏┛┏━┃┏━┛┏━┛┃  ┃┃  ┏━┃ ┃ ┃┃ ┃┃ ┃
     #  ━━ ━━┛┛  ━━┛━━┛ ┛ ┛ ┛┛  ┛  ━━┛┛━━┛┛ ┛ ┛ ┛━━┛┛ ┛
+    #
     __usageEnvironment "$usage" deployApplication "${deployArguments[@]}" || return $?
   fi
   reportTiming "$start" "Remote deployment finished in"
@@ -747,7 +749,7 @@ deployToRemote() {
       return 0
     else
       consoleError "$deployedHostArtifact file NOT found ... no remotes changed"
-      exit 99
+      return 99
     fi
   fi
   #
@@ -840,7 +842,7 @@ __deployUploadPackage() {
     done) || return $?
     printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remotePath/$buildTarget")"
     if ! printf '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
-      __failEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost failed " || return $?
+      __failEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
     fi
     reportTiming "$start" "Deployment setup completed on $(consoleGreen "$userHost") in " || :
   done

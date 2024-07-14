@@ -32,7 +32,6 @@
 
 {trimWords}
 {trimSpace}
-{trimSpacePipe}
 {trimHead}
 {trimTail}
 {singleBlankLines}
