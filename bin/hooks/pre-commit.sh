@@ -31,7 +31,7 @@ _return() {
 __hookPreCommit() {
   local usage="_${FUNCNAME[0]}"
   # gitPreCommitSetup is already called
-  local fileCopies
+  local fileCopies nonOriginalWithEOF nonOriginal original
 
   gitPreCommitListExtension @ | wrapLines "- $(consoleValue)" "$(consoleReset)"
   gitPreCommitHeader sh md json
@@ -40,24 +40,27 @@ __hookPreCommit() {
   __usageEnvironment "$usage" ./bin/update-md.sh || return $?
 
   statusMessage consoleSuccess Updating _sugar.sh
+  original="bin/build/identical/_sugar.sh"
   nonOriginal=bin/build/tools/_sugar.sh
 
-  fileCopies=(bin/build/identical/_sugar.sh "$nonOriginal")
-  # Can not be trusted to not edit the wrong one
-  if ! diff -q "${fileCopies[@]}"; then
-    if [ "$(newestFile "${fileCopies[@]}")" = "${fileCopies[1]}" ]; then
-      sed 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' <"${fileCopies[1]}" >"${fileCopies[0]}"
-      consoleWarning "Someone edited non-original file ${fileCopies[1]}"
+  if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
+    nonOriginalWithEOF=$(__usageEnvironment "$usage" mktemp) || return $?
+    __usageEnvironment "$usage" sed 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
+    fileCopies=("$nonOriginalWithEOF" "$original")
+    # Can not be trusted to not edit the right one
+    if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
+      __usageEnvironment "$usage" cp "${fileCopies[@]}" || _clean "$nonOriginalWithEOF" || return $?
+      consoleWarning "Someone edited non-original file $nonOriginal"
+      touch "${fileCopies[0]}" # make newer
     fi
+    rm -f "$nonOriginalWithEOF" || :
   fi
-
   if gitPreCommitHasExtension sh; then
     if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
       __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
     fi
   fi
 
-  touch "${fileCopies[0]}" # make newer
 }
 ___hookPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
