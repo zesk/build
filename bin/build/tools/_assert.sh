@@ -218,7 +218,6 @@ ___assertIsEqual() {
   [ "${1-}" = "${2-}" ]
 }
 ___assertIsEqualFormat() {
-  consoleError "${FUNCNAME[0]}"
   local testPassed="${1-}" left="${2-}" right="${3-}"
   shift && shift && shift
   printf -- "%s %s %s %s\n" "$(consoleCode "$left")" "$(_choose "$testPassed" "=" "!=")" "$(__resultText "$testPassed" "$right")" "$*"
