@@ -8,6 +8,7 @@
 #
 declare -a tests
 
+tests+=(testFormat)
 tests+=(testMoreSugar)
 tests+=(testExitCode)
 tests+=(testSugar)
@@ -29,6 +30,20 @@ _wasRun() {
   fi
   date >>"$SUGAR_FILE"
   return "$exitCode"
+}
+
+testFormat() {
+  assertOutputEquals "§" _format || return $?
+  assertOutputEquals "§a" _format a || return $?
+  assertOutputEquals "§ab" _format a b || return $?
+  assertOutputEquals "§abc" _format a b c || return $?
+  assertOutputEquals "dabc" _format a b c d || return $?
+  assertOutputEquals "iabc" _format a b c i || return $?
+  assertOutputEquals "dabic" _format a b c d i || return $?
+  assertOutputEquals "dabicbocbacbucbyc" _format a b c d i o a u y || return $?
+  assertOutputEquals "d%sbicbocbacbucbyc" _format %s b c d i o a u y || return $?
+  assertOutputEquals "d%s%dic%doc%dac%duc%dyc" _format %s %d c d i o a u y || return $?
+  assertOutputEquals "d%s%di%f%do%f%da%f%du%f%dy%f" _format %s %d %f d i o a u y || return $?
 }
 
 testExitCode() {
@@ -57,7 +72,7 @@ testExitCode() {
 }
 
 testSugar() {
-  local code
+  local code expected actual
 
   # __return running stuff
   export SUGAR_FILE
@@ -84,7 +99,10 @@ testSugar() {
   rm -rf "$SUGAR_FILE"
   unset SUGAR_FILE
 
-  assertEquals --line "$LINENO" "$(printf "Hello\n- a\n- b\n- c\n- d e\n")" "$(_list "Hello" "a" "b" "c" "d e")" || return $?
+  expected="$(printf "Hello\n- a\n- b\n- c\n- d e\n")"
+  actual="$(_list "Hello" "a" "b" "c" "d e")"
+  assertEquals --line "$LINENO" "${#expected}" "${#actual}" "Actual: \"$(consoleCode "$actual")\" Expected: \"$(consoleCode "$expected")\"" || return $?
+  assertEquals --line "$LINENO" "$expected" "$actual" || return $?
 
   # _exit
   assertEquals --line "$LINENO" "99" "$( (__try _return 99) || echo $?)" || return $?

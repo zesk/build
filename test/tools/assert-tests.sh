@@ -8,7 +8,14 @@
 #
 declare -a tests
 
+tests+=(testOutputEquals)
 tests+=(testAssertEquality)
+tests+=(testAssertComparisons)
+
+testOutputEquals() {
+  assertExitCode --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "a" || return $?
+  assertNotExitCode --stderr-ok --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "b" || return $?
+}
 
 testAssertEquality() {
   local errorCode
@@ -35,7 +42,6 @@ testAssertEquality() {
   assertExitCode --line "$LINENO" 0 assertNotContains "z" "abracadabra" || return $?
 }
 
-tests+=(testAssertComparisons)
 testAssertComparisons() {
   # Simple numbers
   assertExitCode --line "$LINENO" 0 assertGreaterThan 10 9 || return $?                   # a > b
