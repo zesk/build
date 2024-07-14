@@ -104,19 +104,19 @@ _assertConditionHelper() {
         formatter="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
         ;;
       --stderr-ok)
-        errorsOk=1
+        errorsOk=true
         ;;
       --stderr-match)
         shift || :
         [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrContains+=("$1")
-        errorsOk=1
+        errorsOk=true
         ;;
       --stderr-no-match)
         shift || :
         [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrNotContains+=("$1")
-        errorsOk=1
+        errorsOk=true
         ;;
       --stdout-match)
         shift || :
@@ -155,11 +155,11 @@ _assertConditionHelper() {
     "$linePrefix" "$(consoleCode "$this")" \
     "$(printf " \"$(consoleCode %s)\"" "${savedArguments[@]}")" \
     "$result")"
-  if ! test "$errorsOk" && [ -s "$errorFile" ]; then
+  if ! "$errorsOk" && [ -s "$errorFile" ]; then
     message="$(printf -- "%s - %s\n%s\n" "$message" "$(consoleError "produced stderr")" "$(dumpPipe stderr <"$errorFile")")"
     _assertFailure "$this" "$message" || return $?
   fi
-  if test $errorsOk && [ ! -s "$errorFile" ]; then
+  if $errorsOk && [ ! -s "$errorFile" ]; then
     clearLine
     printf "%s – %s\n" "$message" "$(consoleWarning "--stderr-ok used but is NOT necessary")"
   fi
@@ -534,9 +534,9 @@ _assertExitCodeHelper() {
   local outputContains outputNotContains stderrContains stderrNotContains
 
   # --not
-  isExitCode=1
+  isExitCode=true
   # --stderr-ok
-  errorsOk=
+  errorsOk=false
 
   # expected
   expected=
@@ -573,7 +573,7 @@ _assertExitCodeHelper() {
         fi
         ;;
       --stderr-ok)
-        errorsOk=1
+        errorsOk=true
         ;;
       --skip-exit-save)
         saveExit=false
@@ -582,13 +582,13 @@ _assertExitCodeHelper() {
         shift || :
         [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrContains+=("$1")
-        errorsOk=1
+        errorsOk=true
         ;;
       --stderr-no-match)
         shift || :
         [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         stderrNotContains+=("$1")
-        errorsOk=1
+        errorsOk=true
         ;;
       --stdout-match)
         shift || :
@@ -604,7 +604,7 @@ _assertExitCodeHelper() {
         dumpFlag=true
         ;;
       --not)
-        isExitCode=
+        isExitCode=false
         failureText="NOT expected"
         ;;
       *)
@@ -650,7 +650,7 @@ _assertExitCodeHelper() {
     "$saved" && set -e
   fi
 
-  if ! test "$errorsOk" && [ -s "$errorFile" ]; then
+  if ! "$errorsOk" && [ -s "$errorFile" ]; then
     actual=$(__resultText false "$actual")
     message="$(printf -- "%s%s %s -> %s %s\n%s\n" \
       "$linePrefix" \
@@ -661,7 +661,7 @@ _assertExitCodeHelper() {
     _assertFailure "$this" "$message" || return $?
     __failEnvironment "$usage" "$message" || return $?
   fi
-  if test $errorsOk && [ ! -s "$errorFile" ]; then
+  if $errorsOk && [ ! -s "$errorFile" ]; then
     printf "%s%s %s – %s\n" "$(clearLine)" "$(consoleError "${usage#_}")" "$(consoleCode "$bin ${savedArguments[*]}")" "$(consoleWarning "--stderr-ok used but is NOT necessary:")"
   fi
   stderrTitle="$textCommand $(consoleBoldRed stderr)"
@@ -679,7 +679,7 @@ _assertExitCodeHelper() {
     __assertFileDoesNotContainThis "$this" --display "$linePrefix$stdoutTitle" "$outputFile" "${outputNotContains[@]}" || return $?
   fi
 
-  if { test "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! test "$isExitCode" && [ "$expected" = "$actual" ]; }; then
+  if { "$isExitCode" && [ "$expected" != "$actual" ]; } || { ! "$isExitCode" && [ "$expected" = "$actual" ]; }; then
     testPassed=false
   else
     testPassed=true
@@ -727,7 +727,7 @@ _assertExitCodeHelper() {
 # Reviewed: 2023-11-12
 #
 _assertOutputContainsHelper() {
-  local expected="" commands=() tempFile exitCode=0 pipeStdErr="" actual message
+  local expected="" commands=() tempFile exitCode=0 pipeStdErr=false actual message
   local command linePrefix lineNumber
   local trueTest="$1" this="$2" testPassed
 
@@ -749,7 +749,7 @@ _assertOutputContainsHelper() {
         fi
         ;;
       --stderr)
-        pipeStdErr=1
+        pipeStdErr=true
         ;;
       *)
         if [ -z "$expected" ]; then
@@ -766,7 +766,7 @@ _assertOutputContainsHelper() {
 
   tempFile=$(mktemp)
   printf -- "%s: %s\n" "$(consoleInfo Running)" "$command"
-  if test $pipeStdErr; then
+  if $pipeStdErr; then
     actual=$(
       "${commands[@]}" >"$tempFile" 2>&1
       printf "%d" $?
