@@ -57,15 +57,24 @@ _assertSuccess() {
 _assertConditionHelper() {
   local this="$1"
   local usage="_$this"
-  local argument
+  local argument savedArguments
   local success testPassed file linePrefix displayName tester formatter result
+  local outputContains outputNotContains stderrContains stderrNotContains
+  local errorsOk outputFile errorFile stderrTitle stdoutTitle dumpFlag
 
   shift
   file=
   linePrefix=
+  savedArguments=("$@")
+  outputContains=()
+  outputNotContains=()
+  stderrContains=()
+  stderrNotContains=()
   displayName=
   tester=
+  errorsOk=false
   success=true
+  dumpFlag=false
   formatter="__resultFormatter"
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -94,6 +103,34 @@ _assertConditionHelper() {
         shift
         formatter="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
         ;;
+      --stderr-ok)
+        errorsOk=1
+        ;;
+      --stderr-match)
+        shift || :
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        stderrContains+=("$1")
+        errorsOk=1
+        ;;
+      --stderr-no-match)
+        shift || :
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        stderrNotContains+=("$1")
+        errorsOk=1
+        ;;
+      --stdout-match)
+        shift || :
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        outputContains+=("$1")
+        ;;
+      --stdout-no-match)
+        shift || :
+        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        outputNotContains+=("$1")
+        ;;
+      --dump)
+        dumpFlag=true
+        ;;
       *)
         break
         ;;
@@ -101,15 +138,51 @@ _assertConditionHelper() {
     shift || usageArgumentMissing "$usage" "$argument" || return $?
   done
   [ -n "$tester" ] || __failArgument "$usage" "--test required ($*)" || return $?
-  if "$tester" "$@"; then
+
+  outputFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  errorFile="$outputFile.err"
+  outputFile="$outputFile.out"
+
+  if "$tester" "$@" >"$outputFile" 2>"$errorFile"; then
     testPassed=$success
   else
     testPassed=false
     $success || testPassed=true
   fi
-  result="$("$formatter" "$testPassed" "$@")"
+  result="$("$formatter" "$testPassed" "$@" <"$outputFile")"
+  # shellcheck disable=SC2059
+  message="$(printf -- "%s%s%s -> %s" \
+    "$linePrefix" "$(consoleCode "$this")" \
+    "$(printf " \"$(consoleCode %s)\"" "${savedArguments[@]}")" \
+    "$result")"
+  if ! test "$errorsOk" && [ -s "$errorFile" ]; then
+    message="$(printf -- "%s - %s\n%s\n" "$message" "$(consoleError "produced stderr")" "$(dumpPipe stderr <"$errorFile")")"
+    _assertFailure "$this" "$message" || return $?
+  fi
+  if test $errorsOk && [ ! -s "$errorFile" ]; then
+    clearLine
+    printf "%s – %s\n" "$message" "$(consoleWarning "--stderr-ok used but is NOT necessary")"
+  fi
+  stderrTitle="$message $(consoleBoldRed stderr)"
+  stdoutTitle="$message $(consoleLabel stdout)"
+  if [ ${#stderrContains[@]} -gt 0 ]; then
+    __assertFileContainsThis "$this" --display "$linePrefix$stderrTitle" "$errorFile" "${stderrContains[@]}" || return $?
+  fi
+  if [ ${#stderrNotContains[@]} -gt 0 ]; then
+    __assertFileDoesNotContainThis "$this" --display "$linePrefix$stderrTitle" "$errorFile" "${stderrNotContains[@]}" || return $?
+  fi
+  if [ ${#outputContains[@]} -gt 0 ]; then
+    __assertFileContainsThis "$this" --display "$linePrefix$stdoutTitle" "$outputFile" "${outputContains[@]}" || return $?
+  fi
+  if [ ${#outputNotContains[@]} -gt 0 ]; then
+    __assertFileDoesNotContainThis "$this" --display "$linePrefix$stdoutTitle" "$outputFile" "${outputNotContains[@]}" || return $?
+  fi
   if $testPassed; then
     _assertSuccess "$this" "$linePrefix$displayName ✅ $result" || return $?
+    if $dumpFlag; then
+      dumpPipe "$stdoutTitle" <"$outputFile" || :
+      dumpPipe "$stderrTitle" <"$errorFile" || :
+    fi
   else
     _assertFailure "$this" "$linePrefix$displayName ❌ $result" || return $?
   fi
@@ -145,10 +218,9 @@ ___assertIsEqual() {
   [ "${1-}" = "${2-}" ]
 }
 ___assertIsEqualFormat() {
+  consoleError "${FUNCNAME[0]}"
   local testPassed="${1-}" left="${2-}" right="${3-}"
-  shift || :
-  shift || :
-  shift || :
+  shift && shift && shift
   printf -- "%s %s %s %s\n" "$(consoleCode "$left")" "$(_choose "$testPassed" "=" "!=")" "$(__resultText "$testPassed" "$right")" "$*"
 }
 
@@ -317,8 +389,9 @@ _assertOutputEqualsHelper() {
   _assertConditionHelper "$this" --test ___assertOutputEquals --formatter ___assertOutputEqualsFormat "$@" || return $?
 }
 ___assertOutputEquals() {
-  local expected="${1-}" binary="${2-}" output stderr
-  shift 2
+  local expected="${1-}" binary="${2-}" output stderr exitCode=0
+
+  shift 2 || :
   stderr=$(__environment mktemp) || return $?
   isCallable "$binary" || _environment "$binary is not callable: $*" || return $?
   output=$("$binary" "$@" 2>"$stderr") || _environment "Exit code: $?" "$binary" "$@" || return $?
@@ -326,14 +399,17 @@ ___assertOutputEquals() {
     dumpPipe "$(consoleError Produced stderr): $binary" "$@" <"$stderr" 1>&2
     _clean 1 "$stderr" || return $?
   fi
-  [ "$output" = "$expected" ]
+  [ "$output" = "$expected" ] || exitCode=1
   printf "%s\n" "$output"
-  _clean 0 "$stderr" || return $?
+  _clean "$exitCode" "$stderr" || return $?
 }
 ___assertOutputEqualsFormat() {
-  local testPassed="${1-}"
-  shift
-  printf -- "%s %s" "$(__resultText "$testPassed" "File Size: $1")" "$(_choose "$testPassed" "$*")"
+  local testPassed="${1-}" verb expected="$2" binary="$3"
+  shift 3 || :
+
+  message="$(consoleCode "$binary")$(printf " \"%s\"" "$@")"
+  verb=$(_choose "$testPassed" "matches" "does not match")
+  printf -- "%s %s %s %s" "$message" "$(consoleCode "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultText "$testPassed" "$expected")"
 }
 
 # Usage: {fn} success thisName fileName string0 [ ... ]
@@ -529,7 +605,7 @@ _assertExitCodeHelper() {
         ;;
       --not)
         isExitCode=
-        failureText="expected NOT"
+        failureText="NOT expected"
         ;;
       *)
         if [ -z "$expected" ]; then

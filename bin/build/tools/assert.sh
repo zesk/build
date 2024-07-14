@@ -260,6 +260,9 @@ _assertDirectoryNotEmpty() {
 assertFileExists() {
   _assertFileExistsHelper "${FUNCNAME[0]}" "$@" || return $?
 }
+_assertFileExists() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: {fn} item [ message ... ]
@@ -277,6 +280,9 @@ assertFileExists() {
 #
 assertFileDoesNotExist() {
   _assertFileExistsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertFileDoesNotExist() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -302,6 +308,9 @@ assertFileDoesNotExist() {
 assertOutputEquals() {
   _assertOutputEqualsHelper "${FUNCNAME[0]}" "$@" || return $?
 }
+_assertOutputEquals() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Run a command and expect the output to contain the occurrence of a string.
@@ -322,6 +331,9 @@ assertOutputEquals() {
 #
 assertOutputContains() {
   _assertOutputContainsHelper true "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertOutputContains() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -345,6 +357,9 @@ assertOutputContains() {
 assertOutputDoesNotContain() {
   _assertOutputContainsHelper false "${FUNCNAME[0]}" "$@" || return $?
 }
+_assertOutputDoesNotContain() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Usage: assertFileContains fileName string0 [ ... ]
 #
@@ -363,6 +378,9 @@ assertOutputDoesNotContain() {
 assertFileContains() {
   __assertFileContainsThis "${FUNCNAME[0]}" "$@" || return $?
 }
+_assertFileContains() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: assertFileDoesNotContain fileName string0 [ ... ]
@@ -378,6 +396,9 @@ assertFileContains() {
 #
 assertFileDoesNotContain() {
   __assertFileDoesNotContainThis "${FUNCNAME[0]}" "$@" || return $?
+}
+_assertFileDoesNotContain() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -395,6 +416,9 @@ assertFileDoesNotContain() {
 assertFileSize() {
   _assertFileSizeHelper "${FUNCNAME[0]}" "$@" || return $?
 }
+_assertFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: {fn} expectedSize [ fileName ... ]
@@ -411,6 +435,9 @@ assertFileSize() {
 assertNotFileSize() {
   _assertFileSizeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
+_assertNotFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: {fn} [ fileName ... ]
@@ -426,6 +453,9 @@ assertNotFileSize() {
 assertZeroFileSize() {
   assertFileSize 0 "$@" || return $?
 }
+_assertZeroFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: {fn} [ fileName ... ]
@@ -440,6 +470,9 @@ assertZeroFileSize() {
 #
 assertNotZeroFileSize() {
   assertNotFileSize 0 "$@" || return $?
+}
+_assertNotZeroFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -464,6 +497,9 @@ assertNotZeroFileSize() {
 assertGreaterThan() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -gt || return $?
 }
+_assertGreaterThan() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Assert `leftValue >= rightValue`
 #
@@ -477,6 +513,9 @@ assertGreaterThan() {
 # Summary: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -ge || return $?
+}
+_assertGreaterThanOrEqual() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -494,6 +533,10 @@ assertGreaterThanOrEqual() {
 assertLessThan() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -lt || return $?
 }
+_assertLessThan() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 
 # Assert `leftValue <= rightValue`
 #
@@ -509,4 +552,7 @@ assertLessThan() {
 #
 assertLessThanOrEqual() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -le || return $?
+}
+_assertLessThanOrEqual() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

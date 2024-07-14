@@ -7,23 +7,32 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 192412321
+# IDENTICAL _sugar EOF
 
-__format() {
-  local sep="$1" prefix="$2" suffix="$3" title="${4-"§"}"
-  shift 4 && printf "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
+# Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
+# Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
+# Argument: separator - Optional. String.
+# Argument: prefix - Optional. String.
+# Argument: suffix - Optional. String.
+# Argument: title - Optional. String.
+# Argument: item - Optional. String. One or more items to list.
+_format() {
+  local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}"
+  sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
+  shift && shift && shift && shift
+  printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
 }
 
 # Output a titled list
 # Usage: {fn} title [ items ... ]
 _list() {
-  __format "\n" "- " "\n" "$@"
+  _format "\n" "- " "\n" "$@"
 }
 
 # Output a command
 # Usage: {fn} command [ argument ... ]
 _command() {
-  __format "" " \"" "\"" "$@"
+  _format "" " \"" "\"" "$@"
 }
 
 # Usage: {fn} name ...
@@ -50,8 +59,8 @@ _code() {
       identical) code=105 ;; # identical check failed
       leak) code=108 ;;      # function leaked globals
       test) code=116 ;;      # test failed
-      internal) code=253 ;; # internal errors
-      *) code=254 ;;        # unknown error code
+      internal) code=253 ;;  # internal errors
+      *) code=254 ;;         # unknown error code
         # End of code range (255)
     esac
     shift || :
