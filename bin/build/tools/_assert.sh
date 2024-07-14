@@ -58,7 +58,7 @@ _assertConditionHelper() {
   local this="$1"
   local usage="_$this"
   local argument savedArguments
-  local success testPassed file linePrefix displayName tester formatter result
+  local success testPassed file linePrefix displayName tester formatter message result
   local outputContains outputNotContains stderrContains stderrNotContains
   local errorsOk outputFile errorFile stderrTitle stdoutTitle dumpFlag
 
