@@ -9,9 +9,9 @@
 
 declare -a tests
 
+tests+=(testInstallInstallBuild)
 tests+=(testAdditionalBins)
 tests+=(testMapPortability)
-tests+=(testBuildSetup)
 tests+=(testInstallTerraform)
 tests+=(testScriptInstallations)
 tests+=(testVersionLive)
@@ -26,15 +26,15 @@ testNewRelease() {
   assertExitCode --line "$LINENO" 0 newRelease --non-interactive || return $?
 }
 
-testBuildSetup() {
+testInstallInstallBuild() {
   local topDir targetDir marker testBinary
 
-  testSection installInstallBuild
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"
   __environment mkdir -p "$targetDir" || return $?
+  assertDirectoryExists --line "$LINENO" "$targetDir" || return $?
   testBinary="$targetDir/install-bin-build.sh"
-  assertExitCode --dump --line "$LINENO" 0 installInstallBuild "$targetDir" "$topDir" || return $?
+  assertExitCode --dump --line "$LINENO" 0 installInstallBuild --local "$targetDir" "$topDir" || return $?
   assertFileExists --line "$LINENO" "$testBinary" || return $?
   marker=$(randomString)
   echo " # changed $marker" >>"$testBinary"
@@ -44,7 +44,7 @@ testBuildSetup() {
     return 1
   fi
 
-  assertExitCode --stdout-match "was updated" 0 "$testBinary" || return $?
+  assertExitCode --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$(pwd)/bin/build" || return $?
 
   if [ ! -d "$topDir/bin/build" ]; then
     find "$topDir" -type f
@@ -58,7 +58,7 @@ testBuildSetup() {
     return 1
   fi
 
-  assertExitCode --stdout-match "up to date" 0 "$testBinary" || return 0
+  assertExitCode --stdout-match "already installed" 0 "$testBinary" || return $?
 
   consoleSuccess "install-bin-build.sh update was tested successfully"
   rm -rf "$topDir"
