@@ -60,7 +60,6 @@ _assertNotEquals() {
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --skip-exit-save - Optional. Flag. Skip saveErrorExit to test errorExit functions.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --stderr-match - Optional. String. One or more strings which must match the outout in stderr.
 # Argument: --stdout-match - Optional. String. One or more strings which must match the outout in stderr.
@@ -90,7 +89,6 @@ _assertExitCode() {
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --skip-exit-save - Optional. Flag. Skip saveErrorExit to test errorExit functions.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --stderr-match - Optional. String. One or more strings which must match the outout in stderr.
 # Argument: --stdout-match - Optional. String. One or more strings which must match the outout in stderr.
@@ -536,7 +534,6 @@ assertLessThan() {
 _assertLessThan() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # Assert `leftValue <= rightValue`
 #

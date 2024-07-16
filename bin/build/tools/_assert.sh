@@ -58,7 +58,7 @@ _assertConditionHelper() {
   local this="$1"
   local usage="_$this"
   local argument savedArguments
-  local success testPassed file linePrefix displayName tester formatter message result
+  local success leak testPassed file linePrefix displayName tester formatter message result
   local outputContains outputNotContains stderrContains stderrNotContains
   local errorsOk outputFile errorFile stderrTitle stdoutTitle dumpFlag
 
@@ -76,12 +76,13 @@ _assertConditionHelper() {
   success=true
   dumpFlag=false
   formatter="__resultFormatter"
+  leak=$(_code leak)
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
       --display)
         shift
-        displayName="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --success)
         shift
@@ -97,11 +98,11 @@ _assertConditionHelper() {
         ;;
       --test)
         shift
-        tester="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        tester="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --formatter)
         shift
-        formatter="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        formatter="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --stderr-ok)
         errorsOk=true
@@ -143,12 +144,15 @@ _assertConditionHelper() {
   errorFile="$outputFile.err"
   outputFile="$outputFile.out"
 
-  if "$tester" "$@" >"$outputFile" 2>"$errorFile"; then
+  exitCode=0
+  if plumber "$tester" "$@" >"$outputFile" 2>"$errorFile"; then
     testPassed=$success
   else
+    exitCode=$?
     testPassed=false
     $success || testPassed=true
   fi
+  [ "$exitCode" -ne "$leak" ] || testPassed=false
   result="$("$formatter" "$testPassed" "$@" <"$outputFile")"
   # shellcheck disable=SC2059
   message="$(printf -- "%s%s%s -> %s" \
@@ -393,13 +397,17 @@ ___assertOutputEquals() {
   shift 2 || :
   stderr=$(__environment mktemp) || return $?
   isCallable "$binary" || _environment "$binary is not callable: $*" || return $?
-  output=$("$binary" "$@" 2>"$stderr") || _environment "Exit code: $?" "$binary" "$@" || return $?
-  if [ -s "$stderr" ]; then
-    dumpPipe "$(consoleError Produced stderr): $binary" "$@" <"$stderr" 1>&2
-    _clean 1 "$stderr" || return $?
+  if output=$(plumber "$binary" "$@" 2>"$stderr"); then
+    if [ -s "$stderr" ]; then
+      dumpPipe "$(consoleError Produced stderr): $binary" "$@" <"$stderr" 1>&2
+      _clean 1 "$stderr" || return $?
+    fi
+    [ "$output" = "$expected" ] || exitCode=1
+    printf "%s\n" "$output"
+  else
+    exitCode=$?
+    [ "$exitCode" -eq "$(_code leak)" ] && ! _environment "Leak:" "$binary" "$!" || _environment "Exit code: $?" "$binary" "$@" || exitCode=$?
   fi
-  [ "$output" = "$expected" ] || exitCode=1
-  printf "%s\n" "$output"
   _clean "$exitCode" "$stderr" || return $?
 }
 ___assertOutputEqualsFormat() {
@@ -438,7 +446,7 @@ __assertFileContainsHelper() {
     case "$argument" in
       --display)
         shift
-        displayName="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --help)
         "$usage" 0
@@ -513,7 +521,6 @@ __assertFileDoesNotContainThis() {
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
-# Argument: --skip-exit-save - Optional. Flag. Skip saveErrorExit to test errorExit functions.
 # Argument: --debug - Optional. Flag. Debugging
 # Local cache: None.
 # Environment: None.
@@ -525,11 +532,11 @@ __assertFileDoesNotContainThis() {
 _assertExitCodeHelper() {
   local argument savedArguments
   local usage this
-  local isExitCode errorsOk debugAssertRun dumpFlag saveExit exitCode
+  local isExitCode errorsOk debugAssertRun dumpFlag exitCode
   local actual expected bin linePrefix lineNumber
   local outputFile errorFile testPassed
   local stderrTitle stdoutTitle
-  local saved failureText message textCommand
+  local failureText message textCommand
   local outputContains outputNotContains stderrContains stderrNotContains
 
   # --not
@@ -556,7 +563,6 @@ _assertExitCodeHelper() {
   stderrNotContains=()
   debugAssertRun=false
   dumpFlag=false
-  saveExit=true
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -573,9 +579,6 @@ _assertExitCodeHelper() {
         ;;
       --stderr-ok)
         errorsOk=true
-        ;;
-      --skip-exit-save)
-        saveExit=false
         ;;
       --stderr-match)
         shift || :
@@ -623,32 +626,20 @@ _assertExitCodeHelper() {
   errorFile="$outputFile.err"
   outputFile="$outputFile.out"
 
-  if $saveExit; then
-    saved=false
-    isErrorExit && saved=true
-    set -e
-  fi
-
   if $debugAssertRun; then
     clearLine || :
-    consoleBoldMagenta -n "(Hit enter) $-:" "$bin" "$@"
+    consoleBoldMagenta "(Hit enter) $-:" "$bin" "$@"
     read -r actual || :
     set -x
   fi
   textCommand="$bin$(printf -- " \"%s\"" "$@")"
-  set -E
   actual="$(
-    "$bin" "$@" >"$outputFile" 2>"$errorFile"
+    plumber "$bin" "$@" >"$outputFile" 2>"$errorFile"
     printf %d "$?"
   )"
-  set +E
   if $debugAssertRun; then
     set +x
   fi
-  if $saveExit; then
-    "$saved" && set -e
-  fi
-
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
     actual=$(__resultText false "$actual")
     message="$(printf -- "%s%s %s -> %s %s\n%s\n" \

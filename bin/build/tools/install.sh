@@ -60,7 +60,7 @@ _pipInstall() {
   local quietLog start name
 
   shift
-  name="$(usageArgumentRequired "$usage" "name" "${1-}")"
+  name="$(usageArgumentString "$usage" "name" "${1-}")"
   shift
   if whichExists "$name"; then
     return 0
@@ -83,7 +83,7 @@ _pipUninstall() {
   local quietLog start
 
   shift
-  name="$(usageArgumentRequired "$usage" "name" "${1-}")"
+  name="$(usageArgumentString "$usage" "name" "${1-}")"
   shift
   if ! whichExists "$name"; then
     return 0

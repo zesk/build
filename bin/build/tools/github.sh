@@ -72,7 +72,6 @@ githubRelease() {
   export GITHUB_REPOSITORY_OWNER
   export GITHUB_REPOSITORY_NAME
 
-
   extras=()
   accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}"
   accessToken="${GITHUB_ACCESS_TOKEN-}"

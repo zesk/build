@@ -8,6 +8,10 @@
 #
 declare -a tests
 
+tests+=(testExitCodeCase)
+tests+=(testArgEnvStuff)
+tests+=(testChoose)
+tests+=(testBoolean)
 tests+=(testFormat)
 tests+=(testMoreSugar)
 tests+=(testExitCode)
@@ -30,6 +34,31 @@ _wasRun() {
   fi
   date >>"$SUGAR_FILE"
   return "$exitCode"
+}
+
+testBoolean() {
+  assertExitCode 0 _boolean true || return $?
+  assertExitCode 0 _boolean false || return $?
+  assertNotExitCode 0 _boolean True || return $?
+  assertNotExitCode 0 _boolean False || return $?
+  assertNotExitCode 0 _boolean 0 || return $?
+  assertNotExitCode 0 _boolean 1 || return $?
+  assertNotExitCode 0 _boolean yes || return $?
+  assertNotExitCode 0 _boolean no || return $?
+}
+
+testChoose() {
+  assertExitCode --line "$LINENO" 0 _choose true || return $?
+  assertExitCode --line "$LINENO" 0 _choose false || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match 'non-boolean' 0 _choose True || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match 'non-boolean' 0 _choose False || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match 'non-boolean' 0 _choose 0 || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match 'non-boolean' 0 _choose 1 || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match 'non-boolean' 0 _choose TRUE || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match 'non-boolean' 0 _choose FALSE || return $?
+  assertOutputEquals --line "$LINENO" yes _choose true yes no || return $?
+  assertOutputEquals --line "$LINENO" no _choose false yes no || return $?
+  assertOutputEquals --line "$LINENO" B _choose false A B || return $?
 }
 
 testFormat() {
@@ -69,6 +98,22 @@ testExitCode() {
     assertEquals --line "$LINENO" "$digit" "$(characterToInteger "$char")" characterToInteger "$char" || return $?
     assertEquals --line "$LINENO" "$char" "$(characterFromInteger "$digit")" characterFromInteger "$digit" || return $?
   done
+}
+
+testExitCodeCase() {
+  local code char digit
+
+  assertEquals --line "$LINENO" 1 "$(_code EnViRoNmEnT)" || return $?
+  assertEquals --line "$LINENO" 2 "$(_code argumenT)" || return $?
+  assertEquals --line "$LINENO" "" "$(_code)" || return $?
+  assertEquals --line "$LINENO" "97" "$(_code ASSeRt)" || return $?
+  assertEquals --line "$LINENO" "$(printf "%d\n" 97 97)" "$(_code AssErT aSSert)" || return $?
+  assertEquals --line "$LINENO" "105" "$(_code idenTIcal)" || return $?
+  assertEquals --line "$LINENO" "108" "$(_code lEAk)" || return $?
+  assertEquals --line "$LINENO" "116" "$(_code tESt)" || return $?
+  assertEquals --line "$LINENO" "253" "$(_code inTErnal)" || return $?
+  assertEquals --line "$LINENO" "254" "$(_code adsFa01324kjadksfj)" || return $?
+  assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj1)" || return $?
 }
 
 testSugar() {
@@ -132,11 +177,25 @@ testSugar() {
 }
 
 testMoreSugar() {
-  local mockUsage=__testMoreSugarUsage
+  local usageMock=__testMoreSugarUsage
 
-  assertExitCode --line "$LINENO" --stderr-match whoops "$(_code environment)" __usageEnvironment "$mockUsage" _argument "whoops" || return $?
-  assertExitCode --line "$LINENO" --stderr-match a-daisy "$(_code argument)" __usageArgument "$mockUsage" _environment "a-daisy" || return $?
+  assertExitCode --line "$LINENO" --stderr-match whoops "$(_code environment)" __usageEnvironment "$usageMock" _argument "whoops" || return $?
+  assertExitCode --line "$LINENO" --stderr-match a-daisy "$(_code argument)" __usageArgument "$usageMock" _environment "a-daisy" || return $?
 }
 __testMoreSugarUsage() {
   return "$1"
+}
+
+testArgEnvStuff() {
+  local k
+
+  k=$(_code environment)
+  assertExitCode --stderr-match foo "$k" _environment "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __failEnvironment _return "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __usageEnvironment _return _return 99 foo || return $?
+
+  k=$(_code argument)
+  assertExitCode --stderr-match foo "$k" _argument "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __failArgument _return "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __usageArgument _return _return 99 foo || return $?
 }

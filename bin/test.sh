@@ -10,27 +10,26 @@
 # bin/local-container.sh
 # . bin/test-reset.sh; bin/test.sh
 
-# IDENTICAL __ops 12
-# Load zesk ops and run command
-__ops() {
-  local relative="$1"
-  local source="${BASH_SOURCE[0]}"
+# IDENTICAL __tools 18
+# Usage: {fn} [ relative [ command ... ] ]
+# Load build tools and run command
+# Argument: relative - Required. Directory. Path to application root.
+# Argument: command ... - Optional. Callable. A command to run and optional arguments.
+__tools() {
+  local relative="${1:-".."}"
+  local source="${BASH_SOURCE[0]}" internalError=253
   local here="${source%/*}"
-  shift && set -eou pipefail
-  local tools="$here/$relative/bin/build/ops.sh"
-  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
+  local tools="$here/$relative/bin/build"
+  [ -d "$tools" ] || _return $internalError "$tools is not a directory" || return $?
+  tools="$tools/tools.sh"
+  [ -x "$tools" ] || _return $internalError "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  source "$tools" || _return $internalError source "$tools" "$@" || return $?
+  shift
+  [ $# -eq 0 ] && return 0
   "$@" || return $?
 }
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
-_return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
-}
 
 __messyTestCleanup() {
   local fn exitCode=$?
@@ -137,9 +136,8 @@ __buildTestSuite() {
         _textExit 0
         ;;
       --clean)
-        consoleWarning -n "Cleaning ... "
+        statusMessage consoleWarning "Cleaning ... "
         testCleanup
-        consoleSuccess "done"
         ;;
       --messy)
         messyOption=1
@@ -199,4 +197,4 @@ ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__ops .. __buildTestSuite "$@"
+__tools .. __buildTestSuite "$@"

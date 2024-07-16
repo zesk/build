@@ -8,8 +8,6 @@
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh wrapLines usage.sh
-#
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
@@ -22,8 +20,10 @@
 # Simplifies documentation and has it in one place for shell and online.
 #
 usageDocument() {
+  local usage="_${FUNCNAME[0]}"
+  local bashDebug=false
   local tryFile functionDefinitionFile functionName exitCode variablesFile
-  local usage="_${FUNCNAME[0]}" bashDebug=false
+
   export BUILD_HOME
   export PWD
 
@@ -392,6 +392,9 @@ bashDocumentFunction() {
   rm "$envFile" || :
   return $exitCode
 }
+_bashDocumentFunction() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # See: bashDocumentFunction
 # Document a function and generate a function template (markdown). To custom format any
@@ -588,19 +591,7 @@ bashDocumentation_Extract() {
   if ! inArray "fn" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "fn" "$fn"
   fi
-  echo "# DocMap: $docMap"
-  #
-  # Defaults no longer needed
-  #
-  # if ! inArray "local_cache" "${foundNames[@]+${foundNames[@]}}"; then
-  #     __dumpNameValue "local_cache" 'None'
-  # fi
-  # if ! inArray "reviewed" "${foundNames[@]+${foundNames[@]}}"; then
-  #     __dumpNameValue "reviewed" 'Never'
-  # fi
-  # if ! inArray "environment" "${foundNames[@]+${foundNames[@]}}"; then
-  #     __dumpNameValue "environment" 'No environment dependencies or modifications.'
-  # fi
+  printf "# DocMap: %s\n" "$docMap"
 }
 
 #

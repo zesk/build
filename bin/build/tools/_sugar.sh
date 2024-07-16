@@ -7,7 +7,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 161
+# IDENTICAL _sugar 127
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
@@ -46,35 +46,14 @@ _command() {
 # - `leak` - function leaked globals
 # - `test` - test failed
 # - `internal` - internal errors
-# Unknown error code is 254
+# Unknown error code is 254, end of range is 255 which is not used
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 _code() {
-  local code
-  while [ $# -gt 0 ]; do
-    code="$1"
-    case "$code" in
-      environment) code=1 ;; # generic error
-      argument) code=2 ;;    # arguments improper
-      assert) code=97 ;;     # assertion failed
-      identical) code=105 ;; # identical check failed
-      leak) code=108 ;;      # function leaked globals
-      test) code=116 ;;      # test failed
-      internal) code=253 ;;  # internal errors
-      *) code=254 ;;         # unknown error code
-        # End of code range (255)
-    esac
-    shift || :
-    printf "%d\n" "$code"
+  local k && while [ $# -gt 0 ]; do
+    case "$(printf "%s" "$1" | tr '[:upper:]' '[:lower:]')" in
+      environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; test) k=116 ;; internal) k=253 ;; *) k=254 ;;
+    esac && shift && printf "%d\n" "$k"
   done
-}
-
-# Unsigned integer test
-# Returns 0 if `value` is an unsigned integer
-# Usage: {fn} value
-# Exit Code: 0 - if value is an unsigned integer
-# Exit Code: 1 - if value is not an unsigned integer
-_integer() {
-  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
 # Boolean test
@@ -93,21 +72,7 @@ _choose() {
   local testValue
   testValue="${1-}" && shift
   _boolean "$testValue" || _argument "_choose non-boolean: \"$testValue\"" || return $?
-  if "$testValue"; then
-    printf "%s\n" "${1-}"
-  else
-    printf "%s\n" "${2-}"
-  fi
-}
-
-# Return code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} code command || return $?
-# Argument: code - Integer. Required. Return code.
-# Argument: message ... - String. Optional. Message to output.
-_return() {
-  local code="${1-1}" # make this a two-liner ;)
-  ! _integer "$code" && printf "[%s] 💣 _return passed non-integer\n" "$code" 1>&2 && code=$(_code internal)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+  "$testValue" && printf "%s\n" "${1-}" || printf "%s\n" "${2-}"
 }
 
 # Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.

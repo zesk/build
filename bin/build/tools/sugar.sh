@@ -9,12 +9,13 @@
 # Docs: contextOpen ./docs/_templates/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
-# IDENTICAL __return 7
+# IDENTICAL __return 8
 # Usage: {fn} __return binary [ ... ]
 # Argument: binary - Required. Executable.
 # Argument: ... - Any arguments are passed to binary
 # Run binary and output failed command upon error
 __return() {
+  [ $# -gt 0 ] || _argument "${FUNCNAME[0]} no arguments $(debuggingStack -s)" || return $?
   "$@" || _return "$?" "$@" || return $?
 }
 
@@ -37,7 +38,7 @@ __usage() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageEnvironment() {
-  __usage "$(_code environment)" "$@"
+  __usage "$(_code "${FUNCNAME[0]#__usage}")" "$@"
 }
 
 # Run `command`, upon failure run `usage` with an argument error
@@ -45,7 +46,7 @@ __usageEnvironment() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageArgument() {
-  __usage "$(_code argument)" "$@"
+  __usage "$(_code "${FUNCNAME[0]#__usage}")" "$@"
 }
 
 # Run `usage` with an environment error

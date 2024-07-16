@@ -5,20 +5,29 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
+# IDENTICAL _return 14
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
 _return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+  local r="${1-:1}" && shift && : || _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
-# IDENTICAL __return 7
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+
+# IDENTICAL __return 8
 # Usage: {fn} __return binary [ ... ]
 # Argument: binary - Required. Executable.
 # Argument: ... - Any arguments are passed to binary
 # Run binary and output failed command upon error
 __return() {
+  [ $# -gt 0 ] || _argument "${FUNCNAME[0]} no arguments $(debuggingStack -s)" || return $?
   "$@" || _return "$?" "$@" || return $?
 }
 

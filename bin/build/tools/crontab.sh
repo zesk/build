@@ -81,7 +81,7 @@ crontabApplicationUpdate() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argument="$1"
-    usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "$argument" >/dev/null || return $?
+    usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "$argument" >/dev/null || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -95,11 +95,11 @@ crontabApplicationUpdate() {
       --mapper)
         [ -z "$environmentMapper" ] || __failArgument "$usage" "$argument already" || return $?
         shift
-        environmentMapper=$(usageArgumentRequired "$usage" "$argument" "${1-}") || return $?
+        environmentMapper=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --user)
         shift
-        user="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        user="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --show)
         flagShow=true
@@ -117,7 +117,7 @@ crontabApplicationUpdate() {
   if [ -z "$environmentMapper" ]; then
     environmentMapper=mapEnvironment
   fi
-  isCallable "$environmentMapper" || __failEnvironment "$environmentMapper is not callable" || return $?
+  isCallable "$environmentMapper" || __failEnvironment "$usage" "$environmentMapper is not callable" || return $?
 
   [ -n "$appPath" ] || __failArgument "$usage" "Need to specify application path" || return $?
   [ -n "$user" ] || __failArgument "$usage" "Need to specify user" || return $?

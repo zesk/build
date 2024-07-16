@@ -124,7 +124,7 @@ _warmupServer() {
   local start delta value
 
   start=$(beginTiming)
-  consoleInfo -n "Warming server ..."
+  statusMessage consoleInfo "Warming server ... "
   while ! value="$(_simplePHPRequest)" || [ -z "$value" ]; do
     sleep 1
     delta=$(($(beginTiming) - start))
@@ -132,7 +132,7 @@ _warmupServer() {
       consoleError "_warmupServer failed"
       return "$errorEnvironment"
     fi
-    consoleGreen -n .
+    printf "%s" "$(consoleGreen .)"
   done
   clearLine
   printf "%s %s\n" "$(consoleInfo "Server warmed up with value:")" "$(consoleCode "$value")"
@@ -144,12 +144,12 @@ _waitForValueTimeout() {
   local start delta value
 
   start=$(beginTiming)
-  consoleInfo -n "Waiting for value $1"
+  statusMessage consoleInfo "Waiting for value $1 ... "
   while true; do
     if ! value="$(_simplePHPRequest)"; then
-      consoleError "Request failed"
-      return $errorEnvironment
+      _environment "request failed" || return $?
     fi
+    clearLine
     if [ -z "$value" ] || [ "$value" != "$1" ]; then
       printf "%s %s %s %s\n" "$(consoleCode "Waiting for")" "$(consoleCode "$1")" "$(consoleInfo ", received")" "$(consoleRed "$value")"
       sleep 1
@@ -158,7 +158,7 @@ _waitForValueTimeout() {
         printf "%s %s %s %s\n" "$(consoleError "Waiting for")" "$(consoleCode "$1")" "$(consoleError " failed, found: ")" "$(consoleRed "$value")"
         return "$errorTimeout"
       fi
-      consoleGreen -n .
+      printf "%s" "$(consoleGreen .)"
     else
       break
     fi

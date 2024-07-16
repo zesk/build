@@ -213,12 +213,12 @@ usageRequireEnvironment() {
   done
 }
 
-# Arguments: defaultNoun - Default noun if user noun is empty
-# Arguments: usageFunction - Error handler
-# Arguments: variableName - Name to test
-# Arguments: variableValue - Value to test
-# Arguments: noun - Noun passed by user
-# Arguments: test commands ... - Test commands to run on value
+# Arguments: defaultNoun - Required. String. Default noun if user noun is empty
+# Arguments: usageFunction - Required. Function. Error handler
+# Arguments: variableName - Required. String. Name to test
+# Arguments: variableValue - Required. EmptyString. Value to test
+# Arguments: noun - Required. EmptyString. Noun passed by user
+# Arguments: testCommand ... - Required. Callable. Test command to run on value.
 # Utility function to handle all usage
 #
 __usageArgumentHelper() {
@@ -267,11 +267,11 @@ usageArgumentInteger() {
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentUnsignedInteger() {
-  local args
+  local usage="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
@@ -286,11 +286,11 @@ usageArgumentUnsignedInteger() {
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentPositiveInteger() {
-  local args
+  local usage="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger && __usageArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
@@ -306,11 +306,11 @@ usageArgumentPositiveInteger() {
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentFile() {
-  local args
+  local usage="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "file" "${args[@]}" test -f
@@ -325,11 +325,11 @@ usageArgumentFile() {
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentDirectory() {
-  local args
+  local usage="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "directory" "${args[@]}" test -d
@@ -345,14 +345,14 @@ usageArgumentDirectory() {
 # Exit Code: 0 - Success
 usageArgumentRealDirectory() {
   local this="${FUNCNAME[0]}"
-  local args
+  local usage="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$1" "$this Need at least 3 arguments" || return $?
+    __failArgument "$usage" "$this Need at least 3 arguments" || return $?
   fi
 
-  args[2]=$(realPath "${args[2]}") || __failArgument "$1" "realPath" "${args[2]}" || return $?
+  args[2]=$(realPath "${args[2]}") || __failArgument "$usage" "realPath" "${args[2]}" || return $?
   __usageArgumentHelper "directory" "${args[@]}" test -d
 }
 
@@ -369,7 +369,7 @@ usageArgumentFileDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$1" "${FUNCNAME[0]} Need at least 3 arguments"
+    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
   __usageArgumentHelper "file" "${args[@]}" fileDirectoryExists
@@ -392,9 +392,7 @@ usageArgumentLoadEnvironmentFile() {
   if ! envFile=$(usageArgumentFile "$@"); then
     return "$errorArgument"
   fi
-  if ! bashEnv=$(anyEnvToBashEnv "$envFile"); then
-    $usageFunction "$errorEnvironment" "Unable to convert $envFile to bash-compatible" || return $?
-  fi
+  bashEnv=$(__usageEnvironment "$usageFunction" anyEnvToBashEnv "$envFile") || return $?
   count=$(($(wc -l <"$bashEnv") + 0))
   set -a
   # shellcheck source=/dev/null
@@ -417,11 +415,24 @@ usageArgumentLoadEnvironmentFile() {
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is blank
 # Exit code: 0 - If `value` is non-blank
-usageArgumentRequired() {
+usageArgumentString() {
   local usage="$1" argument="$2"
   shift 2 || :
   [ -n "${1-}" ] || __failArgument "$usage" "blank" "$argument" || return $?
   printf "%s\n" "$1"
+}
+
+#
+# Do not require argument to be non-blank
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value to output.
+# Exit code: 0 - Always
+usageArgumentEmptyString() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  printf "%s\n" "${1-}"
 }
 
 # Require an argument to be a boolean value
@@ -429,12 +440,54 @@ usageArgumentRequired() {
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is blank
-# Exit code: 0 - If `value` is non-blank
+# Exit Code: 2 - If `value` is not a boolean
+# Exit code: 0 - If `value` is a boolean
 usageArgumentBoolean() {
   local usage="$1" argument="$2"
   shift 2 || :
   _boolean "${1-}" || __failArgument "$usage" "blank" "$argument" || return $?
+  printf "%s\n" "$1"
+}
+
+# Require an argument to be a callable
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be callable otherwise an argument error is thrown.
+# Exit Code: 2 - If `value` is not `isCallable`
+# Exit code: 0 - If `value` is `isCallable`
+usageArgumentCallable() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __usageArgument isCallable "${1-}" || return $?
+  printf "%s\n" "$1"
+}
+
+# Require an argument to be a executable
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be executable otherwise an argument error is thrown.
+# Exit Code: 2 - If `value` is not `isExecutable`
+# Exit code: 0 - If `value` is `isExecutable`
+usageArgumentExecutable() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __usageArgument isExecutable "${1-}" || return $?
+  printf "%s\n" "$1"
+}
+
+# Require an argument to be a function
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
+# Exit Code: 2 - If `value` is not `isFunction`
+# Exit code: 0 - If `value` is `isFunction`
+usageArgumentFunction() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __usageArgument isFunction "${1-}" || return $?
   printf "%s\n" "$1"
 }
 

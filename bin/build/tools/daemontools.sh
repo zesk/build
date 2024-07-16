@@ -30,7 +30,7 @@ daemontoolsInstall() {
 #
 # Usage: {fn} [ --log-path path ] serviceFile [ serviceName ]
 #
-# Installs a `daemontools` service with an optional logging daemon process. Uses `_generic-service.sh` and `_generic-log.sh` files as templates.
+# Installs a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.
 #
 # Argument: --home serviceHome - Optional. Path. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
 # Argument: serviceFile - Required. Binary. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
@@ -38,79 +38,71 @@ daemontoolsInstall() {
 # Argument: --log logPath - Optional. Path. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
 #
 daemontoolsInstallService() {
-  local this usage arg serviceHome serviceName source target logPath logSource logTarget appUser serviceFile binaryPath
+  local this usage serviceHome serviceName source target logPath logTarget appUser serviceFile binaryPath
   local start elapsed
+  local argument nArguments argumentIndex
 
   here="$(dirname "${BASH_SOURCE[0]}")"
   this="${FUNCNAME[0]}"
   usage="_$this"
-  __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
   serviceHome="${DAEMONTOOLS_HOME}"
   serviceName=
   serviceFile=
 
   logPath=
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    arg=$1
-    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$arg" in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --home)
-        shift || :
+        shift
         serviceHome="${1-}"
         ;;
       --log)
-        shift || __failArgument "$usage" "missing log path" || return $?
-        logPath=${1-}
-        [ -d "$logPath" ] || __failEnvironment "$usage" "$this: $arg $logPath must be a directory" || return $?
+        shift
+        logPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         if [ -z "$serviceFile" ]; then
-          serviceFile="$1"
-          [ -x "$serviceFile" ] || __failEnvironment "$usage" "$serviceFile must be executable" || return $?
+          serviceFile=$(usageArgumentExecutable "$usage" "serviceFile" "$1") || return $?
         elif [ -z "$serviceName" ]; then
-          serviceName="$1"
+          serviceName=$(usageArgumentString "$usage" "serviceName" "$1") || return $?
         else
           __failArgument "$usage" "Extra argument $1" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "Failed after $arg" || return $?
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
   [ -d "$serviceHome" ] || __failEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
-
   [ -n "$serviceFile" ] || __failArgument "$usage" "$serviceFile is required" || return $?
   if [ -z "$serviceName" ]; then
     serviceName="$(basename "$serviceFile")"
     serviceName="${serviceName%%.*}"
   fi
-  appUser=$(fileOwner "$serviceFile") || __failEnvironment "$usage" "fileOwner $serviceFile failed" || return $?
+  appUser=$(__usageEnvironment "$usage" fileOwner "$serviceFile") || return $?
   [ -n "$appUser" ] || __failEnvironment "$usage" "fileOwner $serviceFile returned blank" || return $?
 
-  source="$here/_generic-service.sh"
-  target="$DAEMONTOOLS_HOME/$serviceName"
-  [ -d "$target" ] || (mkdir "$target" && echo "Created $target")
-
   binaryPath=$(realPath "$serviceFile") || __failEnvironment "$usage" "realPath $serviceFile" || return $?
-  args=(--map "$source" "$target/run")
-  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath copyFileWouldChange "${args[@]}"; then
-    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
-    __usageEnvironment "$usage" chmod 700 "$target/run" || return $?
+
+  LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$serviceHome/$serviceName" || return $?
+  if [ ! -d "$logPath" ]; then
+    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$serviceHome/$serviceName/log" || return $?
+  else
+    [ -z "$logPath" ] || __failEnvironment "$usage" "--log $logPath is not a directory"
+    __failEnvironment "$usage" "No --log, no logger installed" || return $?
   fi
-  if [ -n "$logPath" ]; then
-    logSource="$here/_generic-log.sh"
-    logTarget="$DAEMONTOOLS_HOME/$serviceName/log"
-    [ -d "$logTarget" ] || (mkdir "$logTarget" && echo "Created $logTarget")
-    args=(--map "$logSource" "$logTarget/run")
-    if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile copyFileWouldChange "${args[@]}"; then
-      LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$serviceFile __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
-      __usageEnvironment "$usage" chmod 700 "$logTarget/run" || return $?
-    fi
-  fi
-  _daemontoolsSuperviseWait "$target" || return $?
+  _daemontoolsSuperviseWait "$usage" "$target" || return $?
   __usageEnvironment "$usage" svc -t "$target" || return $?
   if [ -n "$logPath" ]; then
-    _daemontoolsSuperviseWait "$logTarget" || return $?
+    _daemontoolsSuperviseWait "$usage" "$logTarget" || return $?
     __usageEnvironment "$usage" svc -t "$logTarget" || return $?
   fi
 }
@@ -118,9 +110,24 @@ _daemontoolsInstallService() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Copy run file to a service target
+_daemontoolsInstallServiceRun() {
+  local usage="$1" source="$2" target="$3"
+
+  __usageEnvironment "$usage" requireDirectory "$target" || return $?
+
+  args=(--map "$source" "$target/run")
+  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath copyFileWouldChange "${args[@]}"; then
+    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
+    __usageEnvironment "$usage" chmod 700 "$target/run" || return $?
+  fi
+}
+
 _daemontoolsSuperviseWait() {
+  local usage="$1"
   local start elapsed
 
+  shift
   clearLine
   start=$(date +%s)
   while [ ! -d "$1/supervise" ]; do
@@ -170,13 +177,12 @@ daemontoolsRemoveService() {
   done
 
   [ -d "$serviceHome" ] || __failEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
-
   [ -d "$serviceHome/$serviceName" ] || __failEnvironment "$usage" "$serviceHome/$serviceName does not exist" || return $?
 
-  __environment pushd "$serviceHome/$serviceName" >/dev/null || return $?
-  __environment svc -dx . log || return $?
-  __environment rm -rf "$serviceHome/$serviceName" || return $?
-  __environment popd >/dev/null || return $?
+  __usageEnvironment "$usage" pushd "$serviceHome/$serviceName" >/dev/null || return $?
+  __usageEnvironment "$usage" svc -dx . log || return $?
+  __usageEnvironment "$usage" rm -rf "$serviceHome/$serviceName" || return $?
+  __usageEnvironment "$usage" popd >/dev/null || return $?
 }
 _daemontoolsRemoveService() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -185,12 +191,11 @@ _daemontoolsRemoveService() {
 # Usage: {fn}
 # Is daemontools running?
 daemontoolsIsRunning() {
-  local this usage
+  local this="${FUNCNAME[0]}"
+  local usage="_$this"
   local processIds processId
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
-  [ "$(id -u)" -eq 0 ] || __failEnvironment "$usage" "$this: Must be root" || return $?
+  [ "$(id -u 2>/dev/null)" -eq 0 ] || __failEnvironment "$usage" "$this: Must be root" || return $?
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   [ 0 -eq "${#processIds[@]}" ] && return 1

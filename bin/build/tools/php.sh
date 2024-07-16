@@ -356,7 +356,7 @@ phpComposer() {
   bigText "Install vendor" >>"$quietLog"
 
   if $forceDocker; then
-    consoleWarning -n "Pulling composer ... "
+    statusMessage consoleInfo "Pulling composer ... "
     __usageEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
     composerBin+=("-v" "$composerDirectory:/app")
@@ -364,10 +364,10 @@ phpComposer() {
     composerBin+=("$dockerImage")
   else
     __usageEnvironmentQuiet "$usage" "$quietLog" aptInstall composer composer || return $?
-    consoleBoldRed -n "Installed composer ... " || :
+    statusMessage consoleSuccess "Installed composer ... " || :
     composerBin=(composer)
   fi
-  consoleInfo -n "validating ... "
+  statusMessage consoleInfo "Validating ... "
 
   savedWorking="$(pwd)"
   cd "$composerDirectory" || return $?
@@ -377,14 +377,14 @@ phpComposer() {
     buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
   fi
 
-  consoleInfo -n "package install ... " || :
+  statusMessage consoleInfo "Application packages ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   if ! "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1; then
     cd "$savedWorking" || :
     buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" install failed || return $?
   fi
   cd "$savedWorking" || :
-  reportTiming "$start" "completed in" || :
+  statusMessage reportTiming "$start" "phpComposer completed in" || :
 }
 _phpComposer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

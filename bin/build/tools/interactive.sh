@@ -142,7 +142,7 @@ copyFile() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argument="$1"
-    usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
+    usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
     case "$argument" in
       --map)
         mapFlag=true
@@ -152,12 +152,12 @@ copyFile() {
         ;;
       --owner)
         shift
-        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
+        usageArgumentString "$usage" "$argument" "${1-}" || return $?
         owner="$1"
         ;;
       --mode)
         shift
-        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
+        usageArgumentString "$usage" "$argument" "${1-}" || return $?
         mode="$1"
         ;;
       *)

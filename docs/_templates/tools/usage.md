@@ -27,8 +27,11 @@
 {usageArgumentDirectory}
 {usageArgumentRealDirectory}
 {usageArgumentBoolean}
+{usageArgumentCallable}
+{usageArgumentFunction}
+{usageArgumentExecutable}
 {usageArgumentMissing}
-{usageArgumentRequired}
+{usageArgumentString}
 {usageArgumentUnknown}
 
 <!-- TEMPLATE footer 5 -->

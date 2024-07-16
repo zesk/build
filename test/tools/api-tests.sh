@@ -6,7 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-errorEnvironment=1
 
 declare -a tests
 
@@ -57,20 +56,17 @@ testDates() {
   assertEquals "$(timestampToDate 1697666075 %F)" "2023-10-18" || return $?
   assertEquals "$(todayDate)" "$(date +%F)" || return $?
   if ! t="$(todayDate)"; then
-    consoleError todayDate failed
-    return $errorEnvironment
+    _environment todayDate failed || return $?
   fi
   if ! y="$(yesterdayDate)"; then
-    consoleError yesterdayDate failed
-    return $errorEnvironment
+    _environment yesterdayDate failed || return $?
   fi
   assertEquals "${#t}" "${#y}" || return $?
 
   if [[ "$y" < "$t" ]]; then
     consoleSuccess testDates OK
   else
-    consoleError "$y \< $t" failed
-    return $errorEnvironment
+    _environment "$y \< $t" failed || return $?
   fi
 }
 
