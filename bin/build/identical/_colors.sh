@@ -17,9 +17,14 @@ hasColors() {
   export BUILD_COLORS TERM
   # Values allowed for this global are true and false
   # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
-  BUILD_COLORS="${BUILD_COLORS-z}"
-  if [ "z" = "$BUILD_COLORS" ]; then
-    case "${TERM-}" in "" | "dump" | "unknown") BUILD_COLORS=true ;; *) termColors="$(tput colors 2>/dev/null)" && [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true ;; esac
+  BUILD_COLORS="${BUILD_COLORS-}"
+  if [ -z "$BUILD_COLORS" ]; then
+    BUILD_COLORS=false
+    case "${TERM-}" in "" | "dump" | "unknown") BUILD_COLORS=true ;; *)
+      termColors="$(tput colors 2>/dev/null)"
+      [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
+      ;;
+    esac
   elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
     BUILD_COLORS=false
   fi
