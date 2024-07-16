@@ -1,11 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
-# Run during bin/build/pipeline/deploy-remote-finish.sh
-#
-# Run ON THE REMOTE SYSTEM, not in the pipeline so assume little.
-#
-# End of deployment to system, update local settings or register server before
-# maintenance is turned off.
+# ┏━╸┏━┓┏━┓┏┓╻╺┳╸┏━┓┏┓    ┏━┓┏━┓┏━┓╻  ╻┏━╸┏━┓╺┳╸╻┏━┓┏┓╻   ┏━┓╻ ╻┏┓╻┏━╸ ┏━┓╻ ╻
+# ┃  ┣┳┛┃ ┃┃┗┫ ┃ ┣━┫┣┻┓╺━╸┣━┫┣━┛┣━┛┃  ┃┃  ┣━┫ ┃ ┃┃ ┃┃┗┫╺━╸┗━┓┗┳┛┃┗┫┃   ┗━┓┣━┫
+# ┗━╸╹┗╸┗━┛╹ ╹ ╹ ╹ ╹┗━┛   ╹ ╹╹  ╹  ┗━╸╹┗━╸╹ ╹ ╹ ╹┗━┛╹ ╹   ┗━┛ ╹ ╹ ╹┗━╸╹┗━┛╹ ╹
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -46,16 +43,4 @@ _return() {
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 
-#
-# fn: {base}
-# Summary: Deployment "finish" script
-#
-# Exit code: 0 - This SHOULD exit successfully always
-#
-# Example: - Move directories to make deployment final
-__hookDeployFinish() {
-  ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted." || :
-  : "$@"
-}
-
-__tools ../.. __hookDeployFinish "$@"
+__tools ../../.. crontabApplicationUpdate "$@"

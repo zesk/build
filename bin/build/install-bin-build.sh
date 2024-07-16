@@ -212,50 +212,37 @@ _installBinBuildGitCheck() {
   fi
 }
 
-# IDENTICAL _colors 87
+# IDENTICAL _colors 74
 
-# This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-# If `TERM` is set then uses the `tput colors` call to determine the console support for colors.
+# Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # Usage: hasColors
 # Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - No colors
-# Local Cache: this value is cached in BUILD_COLORS if it is not set.
-# Environment: BUILD_COLORS - Override value for this
+# Exit Code; 1 - Colors are likely not supported by console
+# Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 hasColors() {
   local termColors
-  export BUILD_COLORS TERM DISPLAY
-  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
+  export BUILD_COLORS TERM
+  # Values allowed for this global are true and false
+  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
   BUILD_COLORS="${BUILD_COLORS-z}"
   if [ "z" = "$BUILD_COLORS" ]; then
-    if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
-      if [ -n "${DISPLAY-}" ]; then
-        BUILD_COLORS=1
-      fi
-    else
-      termColors="$(tput colors 2>/dev/null)"
-      if [ "${termColors-:2}" -ge 8 ]; then
-        BUILD_COLORS=1
-      fi
-    fi
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
-    # Values allowed for this global are 1 and blank only
-    BUILD_COLORS=
+    case "${TERM-}" in "" | "dump" | "unknown") BUILD_COLORS=true ;; *) termColors="$(tput colors 2>/dev/null)" && [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true ;; esac
+  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
+    BUILD_COLORS=false
   fi
-  test "$BUILD_COLORS"
+  [ "${BUILD_COLORS-}" = "true" ]
 }
 
+#
+# Utility to output wrapped text
 __consoleOutput() {
-  local prefix="${1}" start="${2-}" end="${3}" newline="\n"
-  shift 3 || :
-  if [ "${1-}" = "-n" ]; then
-    shift || :
-    newline=
-  fi
+  local prefix="${1}" start="${2-}" end="${3-}"
+  shift && shift && shift
   if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$newline" "$*"; fi
-  elif [ $# -eq 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s$newline" "$prefix" "$*"; else printf "%s$newline" "$*"; fi
+    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end\n" "$*"; fi
+  elif [ $# -gt 0 ]; then
+    if [ -n "$prefix" ]; then printf "%s: %s\n" "$prefix" "$*"; else printf "%s\n" "$*"; fi
   fi
 }
 
@@ -264,7 +251,7 @@ __consoleOutput() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
+  __consoleOutput '' '\033[1;30;44m' '\033[0m' "$@"
 }
 
 #
@@ -342,13 +329,21 @@ _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
+# IDENTICAL _return 14
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
 _return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+  local r="${1-:1}" && shift && : || _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
+
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 
 # Final line will be rewritten on update
 #

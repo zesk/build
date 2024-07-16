@@ -8,16 +8,21 @@
 #
 
 # IDENTICAL __tools EOF
-# Usage: __tools command ...
-# Load zesk build and run command
+# Usage: {fn} [ relative [ command ... ] ]
+# Load build tools and run command
+# Argument: relative - Required. Directory. Path to application root.
+# Argument: command ... - Optional. Callable. A command to run and optional arguments.
 __tools() {
-  local relative="$1"
-  local source="${BASH_SOURCE[0]}"
+  local relative="${1:-".."}"
+  local source="${BASH_SOURCE[0]}" internalError=253
   local here="${source%/*}"
-  shift && set -eou pipefail
-  local tools="$here/$relative/bin/build/tools.sh"
-  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
+  local tools="$here/$relative/bin/build"
+  [ -d "$tools" ] || _return $internalError "$tools is not a directory" || return $?
+  tools="$tools/tools.sh"
+  [ -x "$tools" ] || _return $internalError "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  source "$tools" || _return $internalError source "$tools" "$@" || return $?
+  shift
+  [ $# -eq 0 ] && return 0
   "$@" || return $?
 }

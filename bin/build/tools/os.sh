@@ -741,7 +741,7 @@ whichExists() {
 
   nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     which "$argument" >/dev/null || return $?
     shift
   done

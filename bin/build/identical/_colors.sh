@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL _colors 74
+# IDENTICAL _colors EOF
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #

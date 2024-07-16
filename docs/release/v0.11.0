@@ -14,7 +14,7 @@
 - Identical code break into smaller files
 - `install-bin-build.sh` changed its semantics to modifying the last line of the file. It also now uses `installInstallBuild` post-install to update its own binary.
 - `installInstallBuild` now supports `--local` and modifies the installation file based on the version
-- `usageArgumentRequired` now outputs the value if it succeeds
+- `usageArgumentString` now outputs the value if it succeeds
 - Changing code to use more `foo=$(__usageEnvironment "$usage" getSomeValue) || return $?` and less `foo=$(__usageEnvironment "$usage" getSomeValue) || __failEnvironment "$usage" getSomeValue || return $?`
 - Added `_clean` to `sugar.sh` allow for file deletion upon exit easily
 - Added `_code` to `sugar.sh` for singular error codes

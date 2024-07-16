@@ -6,8 +6,7 @@ Pipeline, build, and operations tools which are useful across a variety of proje
 - Build and deployment tools for pipelines and software platforms and languages
 - Operational scripts for managing live production systems (system setup, services, cron, permissions separations)
 
-This code toolkit depends largely on `bash` and a conscientious decision has been made to not 
-depend on any other language libraries, as of 2024 there are no dependencies on Bash 4. 
+This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries, as of 2024 there are no dependencies on Bash 4.
 
 This toolkit makes the following assumptions:
 
@@ -29,8 +28,7 @@ To install it in the operating system:
 
 ## Main entry points
 
-- `bin/build/tools.sh` - The only include required for all build tools functions (does **NOT** include operations), also can be used as `tools.sh identicalCheck ...`
-- `bin/build/ops.sh` - The only include required for all operations tools functions (includes all of `tools.sh` as well), also can be used to run operations commands. (e.g. `ops.sh daemontoolsInstallService ...`)
+- `bin/build/tools.sh` - The only include required for all build tools functions, also can be used as `tools.sh identicalCheck ...`
 
 ## Project structure
 
@@ -60,10 +58,9 @@ Binaries are:
 - `version-last.sh` - `gitVersionLast`
 - `version-list.sh` - `gitVersionList`
 
-Two special binaries can be used to load and run commands:
+A single binary can be used to load and run commands:
 
 - `tools.sh` - `Zesk Tools - loads or runs tools`
-- `ops.sh` - `Zesk Operations Tools - loads or runs tools`
 
 ## Artifacts: Build Directory and `.deploy`
 
@@ -71,7 +68,7 @@ A `./.build` directory is created at a configured location set by the environmen
 
 You can preserve the build directory post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
 
-A `./.deploy` directory is created for build steps and contains metadata about the deployment. This is always created in the project root and the expectation is that it will be included in any deployments as metadata. 
+A `./.deploy` directory is created for build steps and contains metadata about the deployment. This is always created in the project root and the expectation is that it will be included in any deployments as metadata.
 
 ## Operations
 
@@ -81,13 +78,13 @@ Operations support is currently sparse by goal is to support **setup and configu
 - Web server
 - Application server
 - `crontab`
-- `daemontools` 
+- `daemontools`
 
-System patches and updates are also planned to be a part of the operations functionality.
+System patches and updates are also planned to be a part of the operations' functionality.
 
 ## Run tests in docker
 
-Scripts are written so you can load a `.env` and then run commands directly in a test container:
+Scripts are written by loading an `.env` file and then run commands directly in a test container:
 
     bin/build/bitbucket-container.sh --env .env.MYTESTENV bin/test.sh
 

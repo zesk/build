@@ -12,13 +12,21 @@
 # See: daemontools
 #
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
+# IDENTICAL _return 14
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
 _return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+  local r="${1-:1}" && shift && : || _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
+
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 
 # IDENTICAL _user 11
 # Usage: {fn} user
@@ -32,6 +40,5 @@ _user() {
   [ -d "$HOME" ] || _return 1 "User $APPLICATION_USER HOME=$HOME is not a directory" || return $?
   printf "%s\n" "$APPLICATION_USER"
 }
-
 
 exec setuidgid "$(_user "{APPLICATION_USER}")" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?

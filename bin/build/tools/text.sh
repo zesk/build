@@ -200,7 +200,7 @@ _trimSpace() {
 # Depends: sed
 # Example:     name="$(quoteBashString "$name")"
 quoteBashString() {
-  printf '%s' "$1" | sed 's/\([$`<>'\'']\)/\\\1/g'
+  printf "%s\n" "$@" | sed 's/\([$`<>'\'']\)/\\\1/g'
 }
 
 #
@@ -852,7 +852,7 @@ characterClassReport() {
         matched=$((matched + 1))
         if $classOuter; then
           if ! isCharacterClass print "$character"; then
-            consoleSubtle -n "$(printf "x%x " "$inner")"
+            printf "%s " "$(consoleSubtle "$(printf "x%x" "$inner")")"
           else
             printf "%s " "$(consoleBlue "$(characterFromInteger "$inner")")"
           fi

@@ -189,7 +189,7 @@ testFailed() {
 
   errorCode="$(_code test)"
   export IFS
-  printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo -n "$*")"
+  printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo "$*")"
   for name in IFS HOME LINES COLUMNS OSTYPE PPID PID; do
     printf "%s=%s\n" "$(consoleLabel "$name")" "$(consoleValue "${!name-}")"
   done
@@ -203,7 +203,7 @@ testFailed() {
 requireTestFiles() {
   testTracing="$2"
   if ! loadTestFiles "$@"; then
-    testFailed "$(consoleInfo -n "$*")"
+    testFailed "$(consoleInfo "$*")"
   fi
 }
 

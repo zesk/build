@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Amazon Web Services
 #
-# Depends: colors.sh text.sh
-# bin: test echo date
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 ###############################################################################
@@ -31,17 +30,16 @@
 # shellcheck disable=SC2120
 awsInstall() {
   local usage="_${FUNCNAME[0]}"
-  local zipFile=awscliv2.zip
-  local url buildDir quietLog
+  local start url
 
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
   __usageEnvironment "$usage" aptInstall unzip curl "$@" || return $?
 
   if whichExists aws; then
     return 0
   fi
 
-  consoleInfo -n "Installing aws-cli ... " || :
-  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  statusMessage consoleInfo "Installing aws-cli ... " || :
   case "${HOSTTYPE-}" in
     arm64 | aarch64)
       url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
@@ -50,23 +48,26 @@ awsInstall() {
       url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
       ;;
   esac
-
-  buildDir="$(buildCacheDirectory awsCache.$$)"
-  quietLog="$(buildQuietLog awsInstall)"
-  buildDir=$(requireDirectory "$buildDir") || __failEnvironment "$usage" requireDirectory "$buildDir" || return $?
-  if ! __usageEnvironment "$usage" curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  if ! __usageEnvironment "$usage" unzip -d "$buildDir" "$buildDir/$zipFile" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  if ! __usageEnvironment "$usage" "$buildDir/aws/install" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  # This failed once, not sure why, .build will be deleted
-  rm -rf "$buildDir" 2>/dev/null || :
-  consoleValue -n "$(aws --version) " || __failEnvironment "$usage" "aws --version" || return $?
-  __usageEnvironment "$usage" reportTiming "$start" OK || return $?
+  {
+    local buildDir quietLog clean
+    clean=()
+    {
+      buildDir="$(__usageEnvironment "$usage" buildCacheDirectory awsCache.$$)" &&
+        quietLog="$(__usageEnvironment "$usage" buildQuietLog awsInstall)" &&
+        buildDir=$(__usageEnvironment "$usage" requireDirectory "$buildDir")
+    } || return $?
+    clean+=("$buildDir" "$quietLog")
+    {
+      local zipFile=awscliv2.zip
+      local version
+      __usageEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" &&
+        __usageEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" &&
+        __usageEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" &&
+        version="$(__usageEnvironment "$usage" aws --version)" &&
+        printf "%s %s\n" "$version" "$(__usageEnvironment "$usage" reportTiming "$start" OK)"
+    }
+    _clean $? "${clean[@]}" || return $?
+  }
 }
 _awsInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -94,21 +95,53 @@ _awsInstall() {
 #
 # shellcheck disable=SC2120
 awsCredentialsFile() {
-  local credentials=$HOME/.aws/credentials verbose=${1-}
+  local usage="_${FUNCNAME[0]}"
+  local credentials=.aws/credentials
+  local verbose
+  local argument nArguments argumentIndex home
 
-  if [ ! -d "$HOME" ]; then
-    if test "$verbose"; then
-      consoleWarning "No HOME ($HOME) directory found" 1>&2
-    fi
-    return 1
+  export HOME
+
+  verbose=false
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --home)
+        shift
+        home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
+        ;;
+      --verbose)
+        verbose=true
+        ;;
+      *)
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+  if [ -z "$home" ]; then
+    __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
+    home="$HOME"
   fi
-  if [ ! -f "$credentials" ]; then
-    if test "$verbose"; then
-      consoleWarning "No $credentials file found" 1>&2
+  if [ ! -d "$home" ]; then
+    # Argument is validated above MUST be environment
+    ! "$verbose" || _environment "HOME environment \"$(consoleValue "$HOME")\" directory found" || return $?
+  else
+    credentials="$HOME/$credentials"
+    if [ -f "$credentials" ]; then
+      printf "%s\n" "$credentials"
+      return 0
     fi
-    return 1
+    ! $verbose || _environment "No credentuials file ($(consoleValue "$credentials")) found" || return $?
   fi
-  printf %s "$credentials"
+  # Failed - no file
+  return 1
 }
 
 #

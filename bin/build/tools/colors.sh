@@ -66,22 +66,21 @@ hasConsoleAnimation() {
   [ -z "${CI-}" ]
 }
 
+# Usage: {fn} prefix suffix [ text ]
+# Argument: prefix - Required. String.
+# Argument: suffix - Required. String.
+# Argument: text ... - Optional. String.
 __consoleEscape() {
-  local start=$1 end=$2 nl="\n"
-  shift
-  shift
-  if [ "${1-}" = "-n" ]; then
-    nl=
-    shift
-  fi
+  local start="$1" end="$2"
+  shift && shift
   if hasColors; then
     if [ -z "$*" ]; then
       printf "%s$start" ""
     else
-      printf "$start%s$end$nl" "$*"
+      printf "$start%s$end\n" "$*"
     fi
   else
-    printf "%s$nl" "$*"
+    printf "%s\n" "$*"
   fi
 }
 
@@ -317,7 +316,7 @@ consoleInfo() {
 _consoleInfo() {
   local label="$1"
   shift || :
-  __consoleOutputMode "$label" '\033[38;5;20m' '\033[38;5;159m' '\033[0m' "$@"
+  __consoleOutputMode "$label" '\033[38;5;20m' '\033[1;34m' '\033[0m' "$@"
 }
 
 #
@@ -333,7 +332,7 @@ consoleWarning() {
 #
 # shellcheck disable=SC2120
 consoleSuccess() {
-  __consoleOutput "SUCCESS" '\033[1;42;97m' '\033[0m' "$@"
+  __consoleOutput "SUCCESS" '\033[1;42;30m' '\033[0m' "$@"
 }
 
 #
@@ -341,7 +340,7 @@ consoleSuccess() {
 #
 # shellcheck disable=SC2120
 consoleDecoration() {
-  __consoleOutputMode '' '\033[30;94m' '\033[45;94m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[30;94m' '\033[1;45;30m' '\033[0m' "$@"
 }
 
 #

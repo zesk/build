@@ -8,11 +8,8 @@
 #  ▌ ▌▛▀ ▙▄▘▐ ▌ ▌▚▄▌
 #  ▝▀▘▝▀▘▌   ▘▝▀ ▗▄▘
 #
-# Depends: colors.sh text.sh pipeline.sh
-#
 # Docs: o ./docs/_templates/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
-
 
 # Deploy an application from a deployment repository
 #

@@ -265,13 +265,13 @@ Throw an missing argument error
 
 - `2` - Always
 
-### `usageArgumentRequired` - Require an argument to be non-blank
+### `usageArgumentString` - Require an argument to be non-blank
 
 Require an argument to be non-blank
 
 #### Usage
 
-    usageArgumentRequired usage argument [ value ]
+    usageArgumentString usage argument [ value ]
     
 
 #### Arguments

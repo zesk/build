@@ -4,22 +4,21 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh pipeline.sh
-#
 # Docs: o ./docs/_templates/tools/apt.md
 # Test: o ./test/tools/apt-tests.sh
 
 # sources constant with checking
+# Usage: {fn} usageFunction
 _aptSourcesPath() {
-  local sourcesPath=/etc/apt/sources.list.d
-  [ -d "$sourcesPath" ] || __failEnvironment "$1" "No $sourcesPath exists - not an apt system" || return $?
+  local usage="$1" sourcesPath=/etc/apt/sources.list.d
+  [ -d "$sourcesPath" ] || __failEnvironment "$usage" "No $sourcesPath exists - not an apt system" || return $?
   printf "%s\n" "$sourcesPath"
 }
 
 # key rings directory constant with creation
 _aptKeyRings() {
-  local ring=/etc/apt/keyrings
-  [ -d "$ring" ] || __failEnvironment "$1" mkdir -p "$ring" || return $?
+  local usage="$1" ring=/etc/apt/keyrings
+  [ -d "$ring" ] || __failEnvironment "$usage" mkdir -p "$ring" || return $?
   printf "%s\n" "$ring"
 }
 
@@ -50,7 +49,7 @@ aptUpdateOnce() {
   nArguments=$#
   forceFlag=false
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -125,7 +124,7 @@ aptInstall() {
   forceFlag=false
   read -r -a standardPackages < <(_aptStandardPackages)
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -166,7 +165,7 @@ aptInstall() {
     fi
     return 0
   fi
-  consoleInfo -n "Installing ${packages[*]+"${packages[*]}"} ... "
+  statusMessage consoleInfo "Installing ${packages[*]+"${packages[*]}"} ... "
   DEBIAN_FRONTEND=noninteractive __usageEnvironmentQuiet "$usage" "$quietLog" "$apt" install -y "${actualPackages[@]}" || return $?
   reportTiming "$start" OK
 }
@@ -379,7 +378,7 @@ aptKeyAdd() {
   skipUpdate=false
   nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -387,18 +386,18 @@ aptKeyAdd() {
         ;;
       --name)
         shift
-        name="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --skip)
         skipUpdate=true
         ;;
       --title)
         shift
-        title="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --url)
         shift
-        remoteUrl="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        remoteUrl="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         __failArgument "$usage" "unknown argument #$((nArguments - $# + 1)): $argument" || return $?
@@ -407,8 +406,8 @@ aptKeyAdd() {
     shift || usageArgumentMissing "$usage" "$argument" || return $?
   done
 
-  name="$(usageArgumentRequired "$usage" "--name" "$name")" || return $?
-  remoteUrl="$(usageArgumentRequired "$usage" "--name" "$remoteUrl")" || return $?
+  name="$(usageArgumentString "$usage" "--name" "$name")" || return $?
+  remoteUrl="$(usageArgumentString "$usage" "--name" "$remoteUrl")" || return $?
   host=$(urlParseItem host "$remoteUrl") || __failArgument "$usage" "Unable to get host from $remoteUrl" || return $?
 
   _usageAptPermissions "$usage" "$sourcesPath" || return $?
@@ -457,7 +456,7 @@ aptKeyRemove() {
   skipUpdate=false
   nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     case "$argument" in
       --help)
         "$usage" 0
