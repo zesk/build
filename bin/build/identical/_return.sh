@@ -14,7 +14,8 @@
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
 _return() {
-  local r="${1-:1}" && shift && : || _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
