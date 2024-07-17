@@ -732,32 +732,29 @@ pathCleanDuplicates() {
   # PATH="$tempPath"
 }
 
-# Usage: {fn} binary
-# Exit code: 0 - If all binary
+# IDENTICAL whichExists 12
+# Usage: {fn} binary ...
+# Argument: binary - Required. String. Binary to find in the system `PATH`.
+# Exit code: 0 - If all values are found
 whichExists() {
-  local usage="_${FUNCNAME[0]}"
-  local argument nArguments
-  export PATH
-
+  [ $# -gt 0 ] || _argument "no arguments" || return $?
   nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
-    which "$argument" >/dev/null || return $?
+    [ -n "${1-}" ] || _argument "blank argument #$((nArguments - $# + 1))" || return $?
+    which "$1" >/dev/null || return 1
     shift
   done
 }
-_whichExists() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
+# IDENTICAL _realPath 10
+# Usage: realPath argument
+# Argument: file ... - Required. File. One or more files to `realpath`.
 realPath() {
-  #
   # realpath is not present always
-  #
-  if ! whichExists realpath; then
-    readlink -f -n "$@"
-  else
+  if whichExists realpath; then
     realpath "$@"
+  else
+    readlink -f -n "$@"
   fi
 }
 

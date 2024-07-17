@@ -52,11 +52,12 @@ _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 #
 setupGitTest() {
   local usage="_${FUNCNAME[0]}"
-  local testDir testBinBuild section logFile buildHome
+  local testDir testBinBuild section buildHome matches
 
   export BUILD_HOME
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
-  buildHome=$BUILD_HOME
+  buildHome="${BUILD_HOME-}"
+  assertDirectoryExists "$BUILD_HOME" || return $?
   section=0
   testDir=$(mktemp -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
@@ -72,23 +73,26 @@ setupGitTest() {
   #
   section=$((section + 1))
   bigText "Section #$section"
-  logFile=$section.log
+
+  #  ▞▀▖      ▐  ▗           ▗▌
+  #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖ ▌
+  #  ▖ ▌▛▀ ▌ ▖▐ ▖▐ ▌ ▌▌ ▌ ▟▟▖ ▌
+  #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝ ▝▀
 
   assertDirectoryDoesNotExist --line "$LINENO" "$testDir/bin/build" || return $?
   export BUILD_DIFF=1
 
   assertFileContains --line "$LINENO" "$testBinBuild" "make the file different" || return $?
 
-  if ! __usageEnvironment "$usage" "$testDir/bin/pipeline/install-bin-build.sh" --mock "$buildHome/bin/build" >"$logFile" 2>&1; then
-    buildFailed "$logFile" || return $?
-  fi
-  sleep 1 || :
+  matches=(
+    --stdout-match "install-bin-build.sh"
+    --stdout-no-match "rubs.sh"
+    --stdout-no-match "already installed"
+    --stdout-no-match "does not ignore"
+    --stdout-match "Installed"
+  )
 
-  assertDirectoryExists --line "$LINENO" bin/build || return $?
-  assertFileContains --line "$LINENO" "$logFile" install-bin-build.sh || return $?
-  assertFileContains --line "$LINENO" "$logFile" "Installed" || return $?
-  # CHECK THESE?
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "already installed" "does not ignore" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$buildHome/bin/build" || return $?
   assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
 
   rm -rf bin/build || return $?
@@ -100,7 +104,11 @@ setupGitTest() {
   boxedHeading "Has gitignore (missing), missing, different name"
   section=$((section + 1))
   bigText "Section #$section"
-  logFile=$section.log
+
+  #  ▞▀▖      ▐  ▗           ▞▀▖
+  #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖ ▗▘
+  #  ▖ ▌▛▀ ▌ ▖▐ ▖▐ ▌ ▌▌ ▌ ▟▟▖▗▘
+  #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝ ▀▀▘
 
   assertDirectoryDoesNotExist --line "$LINENO" bin/build || return $?
 
@@ -108,76 +116,58 @@ setupGitTest() {
   mv bin/pipeline/install-bin-build.sh bin/pipeline/we-like-head-rubs.sh || return $?
 
   # Test
-  if ! __usageEnvironment "$usage" bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
-    buildFailed "$logFile" || return $?
-  fi
+  matches=(
+    --stdout-match "we-like-head-rubs.sh"
+    --stdout-no-match "install-bin-build.sh"
 
-  # .gitignore errors
-  assertFileContains --line "$LINENO" "$logFile" "does not ignore" || return $?
-  assertFileContains --line "$LINENO" "$logFile" ".gitignore" || return $?
+    --stdout-match "Installed"
+    --stdout-no-match "already installed"
 
-  # install
-  assertDirectoryExists --line "$LINENO" bin/build || return $?
-  assertFileContains --line "$LINENO" "$logFile" we-like-head-rubs.sh || return $?
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "install-bin-build.sh" || return $?
-
-  # install mode
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "already installed" || return $?
-  assertFileContains --line "$LINENO" "$logFile" "Installed" || return $?
+    --stdout-match "does not ignore"
+    --stdout-match ".gitignore"
+  )
+  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
 
   boxedHeading "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
   bigText "Section #$section"
-  logFile=$section.log
 
   # Change
   : Already installed
 
-  # Test
-  if ! __usageEnvironment "$usage" bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
-    buildFailed "$logFile" || return $?
-  fi
+  matches=(
+    --stdout-no-match "we-like-head-rubs.sh"
+    --stdout-no-match "install-bin-build.sh"
 
-  # .gitignore errors
-  assertFileContains --line "$LINENO" "$logFile" "does not ignore" || return $?
-  assertFileContains --line "$LINENO" "$logFile" ".gitignore" || return $?
+    --stdout-no-match "Installed"
+    --stdout-match "already installed"
 
-  # install
+    --stdout-match "does not ignore"
+    --stdout-match ".gitignore"
+  )
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
   assertDirectoryExists --line "$LINENO" bin/build || return $?
-  assertFileContains --line "$LINENO" "$logFile" we-like-head-rubs.sh || return $?
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "install-bin-build.sh" || return $?
-
-  # install mode reversed
-  assertFileContains --line "$LINENO" "$logFile" "already installed" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "Installed" || return $?
 
   boxedHeading "Has gitignore (correct), bin/build exists, different name"
   section=$((section + 1))
   bigText "Section #$section"
-  logFile=$section.log
 
   # Change
   echo "/bin/build/" >>.gitignore
 
-  # Test
-  if ! __usageEnvironment "$usage" bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" >$logFile 2>&1; then
-    buildFailed "$logFile" || return $?
-  fi
-
-  # Check
-
   # .gitignore errors reversed
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "does not ignore" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$logFile" ".gitignore" || return $?
+  matches=(
+    --stdout-no-match "we-like-head-rubs.sh"
+    --stdout-no-match "install-bin-build.sh"
 
-  # install
-  assertDirectoryExists --line "$LINENO" bin/build || return $?
-  assertFileContains --line "$LINENO" "$logFile" we-like-head-rubs.sh || return $?
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "install-bin-build.sh" || return $?
+    --stdout-no-match "Installed"
+    --stdout-match "already installed"
 
-  # install mode reversed
-  assertFileContains --line "$LINENO" "$logFile" "already installed" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$logFile" "Installed" || return $?
+    --stdout-no-match "does not ignore"
+    --stdout-no-match ".gitignore"
+  )
+  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
+  # Check
 
   rm -rf "$testDir" || :
 

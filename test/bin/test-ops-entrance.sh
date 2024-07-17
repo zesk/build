@@ -9,21 +9,23 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-doesOpsWork() {
-  consoleSuccess "ops.sh works"
-  return 0
-}
-
-
+# IDENTICAL __ops 18
+# Usage: __tools command ...
+# Load zesk build and run command
+# DEPRECATED 2024-07-15
+# Use __tools instead
 __ops() {
-  local relative="$1"
-  local source="${BASH_SOURCE[0]}"
+  local relative="${1:-".."}"
+  local source="${BASH_SOURCE[0]}" internalError=253
   local here="${source%/*}"
-  shift && set -eou pipefail
-  local tools="$here/$relative/bin/build/ops.sh"
-  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
+  local tools="$here/$relative/bin/build"
+  [ -d "$tools" ] || _return $internalError "$tools is not a directory" || return $?
+  tools="$tools/tools.sh"
+  [ -x "$tools" ] || _return $internalError "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  source "$tools" || _return $internalError source "$tools" "$@" || return $?
+  shift
+  [ $# -eq 0 ] && return 0
   "$@" || return $?
 }
 
@@ -44,4 +46,10 @@ _return() {
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 
-__ops ../.. doesOpsWork "$@"
+doesOpsWork() {
+  __ops ../..
+  consoleSuccess "ops.sh works" "$@"
+  return 0
+}
+
+doesOpsWork "$@"

@@ -77,6 +77,7 @@ _assertConditionHelper() {
   dumpFlag=false
   formatter="__resultFormatter"
   leak=$(_code leak)
+  leaks=()
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
@@ -471,7 +472,7 @@ __assertFileContainsHelper() {
   done
 
   displayName="${displayName:-"$file"}"
-  [ -f "$file" ] || _assertFailure "$this" "$displayName is not a file: $*"
+  [ -f "$file" ] || _assertFailure "$this" "$displayName is not a file \"$file\": $*" || return $?
 
   case "$success" in
     true)

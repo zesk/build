@@ -100,22 +100,21 @@ _deploymentGenerateValue() {
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
 # See: BUILD_TARGET.sh
 phpBuild() {
-  local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment composerArgs
+  local usage="_${FUNCNAME[0]}"
+  local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix environmentExtras missingFile initTime deployment composerArgs
   local targetName
-  local usage
+  local environment environments=(BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG)
 
-  usage="_${FUNCNAME[0]}"
+  usageRequireBinary "$usage" tar || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad "${environments[@]}" || return $?
 
-  usageRequireBinary "$usage" tar
-
-  __usageArgument "$usage" buildEnvironmentLoad BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG || return $?
   targetName="$(deployPackageName)"
   tagDeploymentFlag=1
   debuggingFlag=
   deployment=${DEPLOYMENT:-}
   optClean=
   versionSuffix=
-  envVars=()
+  environmentExtras=()
   composerArgs=()
   while [ $# -gt 0 ]; do
     arg="$1"
@@ -156,7 +155,7 @@ phpBuild() {
         versionSuffix=$1
         ;;
       *)
-        envVars+=("$1")
+        environmentExtras+=("$1")
         ;;
     esac
     shift
@@ -229,20 +228,20 @@ phpBuild() {
   DEPLOYMENT="$deployment"
   if hasHook make-env; then
     # this script usually runs ./bin/build/pipeline/make-env.sh
-    __usageEnvironment "$usage" runHook make-env "${envVars[@]+${envVars[@]}}" >.env || return $?
+    __usageEnvironment "$usage" runHook make-env "${environmentExtras[@]+${environmentExtras[@]}}" >.env || return $?
   else
-    __usageEnvironment "$usage" makeEnvironment "${envVars[@]+${envVars[@]}}" >.env || return $?
+    __usageEnvironment "$usage" makeEnvironment "${environmentExtras[@]+${environmentExtras[@]}}" >.env || return $?
   fi
   if ! grep -q APPLICATION .env; then
     buildFailed ".env" || __failEnvironment "$usage" ".env file seems to be invalid:" || return $?
   fi
-  set -a
-  # shellcheck source=/dev/null
-  source .env || __failEnvironment "$usage" "source .env failed" || return $?
-  set +a
-
+  environments=("${environments[@]}" "${environmentExtras[@]+${environmentExtras[@]}}")
+  for environment in "${environments[@]}"; do
+    # Safely load .env file
+    declare -x "$environment=$(environmentValueRead ".env" "$environment" "")"
+  done
   _phpEchoBar || :
-  showEnvironment "${envVars[@]+${envVars[@]}}" || :
+  showEnvironment "${environments[@]}" || :
 
   [ ! -d ./.deploy ] || rm -rf ./.deploy || __failEnvironment "$usage" "Can not delete .deploy" || return $?
 

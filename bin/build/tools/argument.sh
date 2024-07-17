@@ -66,7 +66,7 @@ _arguments() {
         argumentName="$(_usageArgumentName "$spec" "$argumentIndex" "$argument")"
         checkFunction="usageArgument${argument}"
         value="$("$checkFunction" "$usage" "$argumentName" "${1-}")" || _clean "$?" || return $?
-        __usageEnvironment "$usage" _stateValueWrite "$argumentName" "$value" >>"$stateFile" || _clean "$?" || return $?
+        __usageEnvironment "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || _clean "$?" || return $?
         ;;
 
     esac
@@ -76,25 +76,6 @@ _arguments() {
 }
 __arguments() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-_stateValueWrite() {
-  local name="$1" value="$2"
-  value="$(declare -p value)"
-  value="${value#declare*value=}"
-  printf "%s=%s\n" "$name" "$value"
-}
-_stateValueRead() {
-  local stateFile="$1" name="$2" default="${3-}" line
-  line="$(grep -e "^$name=" "$stateFile" | tail -n 1)"
-  if [ -z "$line" ]; then
-    printf "%s\n" "$default"
-  else
-    declare "$name=$default"
-    # Wondering if this can run shell code
-    declare "$line"
-    printf "%s\n" "${name-}"
-  fi
 }
 
 # Validate spec directory
@@ -218,12 +199,12 @@ _usageArgumentsSpecificationParseLine() {
     argumentType=Required
   fi
   {
-    _stateValueWrite argumentName "$argumentName"
-    _stateValueWrite argumentType "$argumentType"
-    _stateValueWrite argumentId "$argumentIndex"
-    _stateValueWrite argumentRequired "$required"
-    _stateValueWrite argumentFinder "$argumentFinder"
-    _stateValueWrite description "$description"
+    environmentValueWrite argumentName "$argumentName"
+    environmentValueWrite argumentType "$argumentType"
+    environmentValueWrite argumentId "$argumentIndex"
+    environmentValueWrite argumentRequired "$required"
+    environmentValueWrite argumentFinder "$argumentFinder"
+    environmentValueWrite description "$description"
   } >"$argumentDirectory/$argumentFinder" || _argument "Unable to write $argumentDirectory/$argumentFinder" || return $?
   __environment printf "%s\n" "$argumentName" >>"$argumentDirectory/required" || return $?
 }
@@ -276,14 +257,14 @@ _usageArgumentName() {
 
   __usageArgumentSpecificationMagic "$usage" "$specification" || return $?
   if [ -f "$specification/$argumentValue" ]; then
-    _stateValueRead "$specification/$argumentValue" argumentName not-named
+    environmentValueRead "$specification/$argumentValue" argumentName not-named
     return 0
   fi
-  argumentNamed="$(_stateValueRead "$stateFile" argumentNamed "")"
+  argumentNamed="$(environmentValueRead "$stateFile" argumentNamed "")"
   if [ -z "$argumentNamed" ]; then
     _environment "No current argument" || return $?
   fi
-  _stateValueRead "$specification/$argumentNamed" argumentName not-named
+  environmentValueRead "$specification/$argumentNamed" argumentName not-named
   return 0
 }
 __usageArgumentName() {
@@ -300,10 +281,10 @@ _usageArgumentType() {
 
   __usageArgumentSpecificationMagic "$usage" "$specification" || return $?
   if [ -f "$specification/$argumentValue" ]; then
-    _stateValueRead "$specification/$argumentValue" argumentType undefined
+    environmentValueRead "$specification/$argumentValue" argumentType undefined
     return 0
   fi
-  argumentNamed="$(_stateValueRead "$stateFile" argumentNamed "")"
+  argumentNamed="$(environmentValueRead "$stateFile" argumentNamed "")"
   if [ -z "$argumentNamed" ]; then
     argumentNamed=0
   else
@@ -313,8 +294,8 @@ _usageArgumentType() {
     printf -- "%s" "-"
     return 0
   fi
-  prinff "!%s" "$(_stateValueRead "$specification/$argumentNamed" argumentType undefined)"
-  _stateValueWrite "$stateFile" argumentNamed "$argumentNamed"
+  prinff "!%s" "$(environmentValueRead "$specification/$argumentNamed" argumentType undefined)"
+  environmentValueWrite "$stateFile" argumentNamed "$argumentNamed"
   return 0
 }
 __usageArgumentType() {

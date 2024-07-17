@@ -100,8 +100,7 @@ awsCredentialsFile() {
   local verbose
   local argument nArguments argumentIndex home
 
-  export HOME
-
+  home=
   verbose=false
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -126,22 +125,25 @@ awsCredentialsFile() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   if [ -z "$home" ]; then
+    export HOME
     __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
     home="$HOME"
   fi
   if [ ! -d "$home" ]; then
     # Argument is validated above MUST be environment
-    ! "$verbose" || _environment "HOME environment \"$(consoleValue "$HOME")\" directory found" || return $?
+    ! "$verbose" || _environment "HOME environment \"$(consoleValue "$home")\" directory not found" || return $?
   else
     credentials="$HOME/$credentials"
     if [ -f "$credentials" ]; then
       printf "%s\n" "$credentials"
       return 0
     fi
-    ! $verbose || _environment "No credentuials file ($(consoleValue "$credentials")) found" || return $?
+    ! $verbose || __failEnvironment "$usage" "No credentials file ($(consoleValue "$credentials")) found" || return $?
   fi
-  # Failed - no file
   return 1
+}
+_awsCredentialsFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -213,16 +215,16 @@ awsHasEnvironment() {
 # Example:     fi
 #
 awsEnvironment() {
-  local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
+  local usage="_${FUNCNAME[0]}"
+  local credentials groupName=${1:-default} name value
 
-  __environment awsCredentialsFile 1 >/dev/null || return $?
-  credentials="$(awsCredentialsFile)" || _environment awsCredentialsFile || return $?
-  eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
-  if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
-    echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
-    echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
-    return 0
-  fi
+  credentials="$(__usageEnvironment "$usage" awsCredentialsFile)" || return $?
+  while read -r name value; do
+    environmentValueWrite "$(uppercase "$name")" "$value"
+  done < <(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 " " $4 }' OFS='')
+}
+_awsEnvironment() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} --add --group group [ --region region ] --port port --description description --ip ip
@@ -408,13 +410,11 @@ awsSecurityGroupIPRegister() {
 # Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 #
 awsIPAccess() {
+  local usage="_${FUNCNAME[0]}"
   local argument service services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
   local sgArgs port
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
-  local usage
-
-  usage="_${FUNCNAME[0]}"
 
   services=()
   optionRevoke=
@@ -481,15 +481,15 @@ awsIPAccess() {
 
   if ! awsHasEnvironment; then
     consoleInfo "Need AWS Environment: $awsProfile" || :
-    if awsEnvironment "$awsProfile" >/dev/null; then
+    if awsEnvironment "$awsProfile"; then
       __usageEnvironment "$usage" eval "$(awsEnvironment "$awsProfile")" || return $?
     else
       __failEnvironment "$usage" "No AWS credentials available: $awsProfile" || return $?
     fi
   fi
 
-  usageRequireEnvironment _awsIPAccess AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
-  usageRequireBinary _awsIPAccess aws || return $?
+  usageRequireEnvironment "$usage" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
+  usageRequireBinary "$usage" aws || return $?
 
   clearLine || :
   if test $optionRevoke; then
@@ -519,10 +519,8 @@ awsIPAccess() {
       fi
     done
   done
-  buildDebugStop || :
 }
 _awsIPAccess() {
-  buildDebugStop || :
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

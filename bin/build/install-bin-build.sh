@@ -68,8 +68,7 @@ installBinBuild() {
         [ -z "$mockPath" ] || __failArgument "$usage" "$argument already" || return $?
         shift
         [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
-        mockPath="$1"
-        mockPath="${mockPath%/}"
+        mockPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
         [ -x "$mockPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$mockPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
       --url)
@@ -91,12 +90,11 @@ installBinBuild() {
   fi
 
   # Move to starting point
-  myBinary="${BASH_SOURCE[0]}"
+  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-  __usageEnvironment "$usage" cd "$myPath/$relative" || return $?
 
   installFlag=false
-  if [ ! -d "./bin/build" ]; then
+  if [ ! -d "$myPath/$relative/bin/build" ]; then
     if $forceFlag; then
       printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBlue "directory does not exist")"
     fi
@@ -105,13 +103,13 @@ installBinBuild() {
     printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBoldBlue "directory exists")"
     installFlag=true
   fi
-
   if $installFlag; then
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
     _installBinBuildDirectory "$usage" "$mockPath" "$url" || return $?
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
     _installBinBuildCheck "$usage" >"$messageFile" || return $?
-    message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds"
+    binName=" ($(consoleBoldRed "$(basename "$myBinary")"))"
+    message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
     rm -f "$messageFile" || :
   else
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
@@ -120,15 +118,31 @@ installBinBuild() {
     rm -f "$messageFile" || :
   fi
   _installBinBuildGitCheck
-  if [ "$(type -t "installInstallBuild")" = "function" ]; then
-    __usageEnvironment "$usage" installInstallBuild --local "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$(pwd)" || return $?
+  if [ -n "$mockPath" ]; then
+    # shellcheck disable=SC2064
+    __usageEnvironment "$usage" _mockBinBuild "$mockPath" "$myBinary" "$relative" || return $?
   else
-    export BUILD_HOME
-    consoleError installInstallBuild is not published
-    __usageEnvironment "$usage" cp "$BUILD_HOME/bin/build/install-bin-build.sh" "${BASH_SOURCE[0]}" || return $?
+    if [ "$(type -t "installInstallBuild")" = "function" ]; then
+      __usageEnvironment "$usage" installInstallBuild "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$(pwd)" || return $?
+    else
+      export BUILD_HOME
+      __usageEnvironment "$usage" _mockBinBuild "$BUILD_HOME/bin/build" "$myBinary" "$relative" || return $?
+    fi
   fi
   printf "%s\n" "$message"
 }
+_mockBinBuild() {
+  local mockPath="$1" myBinary="$2" relTop="$1"
+  local source="$mockPath/install-bin-build.sh"
+  local modified="$source.$$"
+  {
+    grep -v -e '^installBinBuild ' <"$source"
+    printf "%s %s %s\n" "installBinBuild" "$relTop" '$@'
+  } >"$modified"
+  # shellcheck disable=SC2064
+  trap "cp -f \"$modified\" \"$myBinary\" && rm \"$modified\"" TERM EXIT QUIT
+}
+
 _installBinBuild() {
   local exitCode="$1"
   shift || :
@@ -210,6 +224,32 @@ _installBinBuildGitCheck() {
       "$(consoleError "recommend adding it")" \
       "$(consoleCode "echo /bin/build/ >> $ignoreFile")"
   fi
+}
+
+# IDENTICAL _realPath 10
+# Usage: realPath argument
+# Argument: file ... - Required. File. One or more files to `realpath`.
+realPath() {
+  # realpath is not present always
+  if whichExists realpath; then
+    realpath "$@"
+  else
+    readlink -f -n "$@"
+  fi
+}
+
+# IDENTICAL whichExists 12
+# Usage: {fn} binary ...
+# Argument: binary - Required. String. Binary to find in the system `PATH`.
+# Exit code: 0 - If all values are found
+whichExists() {
+  [ $# -gt 0 ] || _argument "no arguments" || return $?
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    [ -n "${1-}" ] || _argument "blank argument #$((nArguments - $# + 1))" || return $?
+    which "$1" >/dev/null || return 1
+    shift
+  done
 }
 
 # IDENTICAL _colors 79

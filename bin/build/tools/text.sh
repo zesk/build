@@ -228,6 +228,57 @@ inArray() {
 }
 
 #
+# Check if one string is a substring of another set of strings (case-sensitive)
+#
+# Usage: {fn} needle [ haystack ... ]
+# Argument: needle - Required. String. Thing to search for, not blank.
+# Argument: haystack ... - Optional. EmptyString. One or more array elements to match
+# Exit Code: 0 - If element is a substring of any haystack
+# Exit Code: 1 - If element is NOT found as a substring of any haystack
+# Tested: No
+#
+isSubstring() {
+  local element=${1-} arrayElement
+  shift || return 1
+  for arrayElement; do
+    if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+_isSubstring() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Check if one string is a substring of another set of strings (case-insensitive)
+#
+# Usage: {fn} needle [ haystack ... ]
+# Argument: needle - Required. String. Thing to search for, not blank.
+# Argument: haystack ... - Optional. EmptyString. One or more array elements to match
+# Exit Code: 0 - If element is a substring of any haystack
+# Exit Code: 1 - If element is NOT found as a substring of any haystack
+# Tested: No
+#
+isSubstringInsensitive() {
+  local element arrayElement
+
+  element="$(lowercase "${1-}")"
+  [ -n "$element" ] || __failArgument "$usage" "needle is blank" || return $?
+  shift || return 1
+  for arrayElement; do
+    if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+_isSubstringInsensitive() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
 # Remove words from the end of a phrase
 #
 # Usage: trimWords [ wordCount [ word0 ... ] ]
@@ -492,58 +543,83 @@ _cachedShaPipe() {
 # Maps a string using an environment file
 #
 # Usage: mapValue mapFile [ value ... ]
-# Argument: mapFile - a file containing bash environment definitions
-# Argument: value - One or more values to map using said environment file
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. This help.
+# Argument: mapFile - Required. File. a file containing bash environment definitions
+# Argument: value - Optional. String. One or more values to map using said environment file
+# Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
+# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 mapValue() {
-  local name value searchToken mapFile="${1-}"
-  local usage
+  local usage="_${FUNCNAME[0]}"
+  local mapFile searchToken environmentValue searchFilters replaceFilters filter
 
-  usage="_${FUNCNAME[0]}"
-
-  shift
-  [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
+  mapFile=
+  nArguments=$#
+  replaceFilters=()
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --search-filter)
+        searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "$1")") || return $?
+        return $?
+        ;;
+      --replace-filter)
+        replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "$1")") || return $?
+        return $?
+        ;;
+      *)
+        if [ -z "$mapFile" ]; then
+          mapFile=$(usageArgumentFile "$usage" "mapFile" "${1-}") || return $?
+          break
+        else
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+  [ -n "$mapFile" ] || __failArgument "$usage" "mapFile required" || return $?
   (
-    set -a
-    # shellcheck source=/dev/null
-    source "$mapFile"
-    set +a
+    local value environment
     value="$*"
-    while read -r name; do
-      searchToken='{'"$name"'}'
-      value="${value/${searchToken}/${!name-}}"
-    done < <(environmentVariables)
-    printf "%s" "$value"
+    while read -r environment; do
+      environmentValue=$(__usageEnvironment "$usage" environmentValueRead "$mapFile" "$environment") || return $?
+      searchToken='{'"$environment"'}'
+      if [ ${#searchFilters[@]} -gt 0 ]; then
+        for filter in "${searchFilters[@]}"; do
+          searchToken=$(__usageEnvironment "$usage" "$filter" "$searchToken") || return $?
+        done
+      fi
+      if [ ${#replaceFilters[@]} -gt 0 ]; then
+        for filter in "${replaceFilters[@]}"; do
+          environmentValue=$(__usageEnvironment "$usage" "$filter" "$environmentValue") || return $?
+        done
+      fi
+      value="${value/${searchToken}/${environmentValue}}"
+    done < <(environmentNames "$mapFile")
+    printf "%s\n" "$value"
   )
+}
+_mapValue() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Maps a string using an environment file
 #
-# Usage: mapValue mapFile [ value ... ]
-# Argument: mapFile - a file containing bash environment definitions
-# Argument: value - One or more values to map using said environment file
+# Usage: {fn} mapFile [ value ... ]
+# Argument: mapFile - Required. File. a file containing bash environment definitions
+# Argument: value - Optional. String. One or more values to map using said environment file.
 #
 mapValueTrim() {
-  local name value replace searchToken mapFile="${1-}"
-  local usage
-
-  usage="_${FUNCNAME[0]}"
-
-  shift
-  [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
-  (
-    set -a
-    # shellcheck source=/dev/null
-    source "$mapFile"
-    set +a
-    value="$*"
-    while read -r name; do
-      searchToken='{'"$name"'}'
-      replace="$(trimSpace "${!name-}")"
-      value="${value/${searchToken}/${replace}}"
-    done < <(environmentVariables)
-    printf "%s" "$value"
-  )
+  mapValue --replace-filter trimSpace "$@"
+}
+_mapValueTrim() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -955,4 +1031,38 @@ joinArguments() {
   local IFS="$1"
   shift || :
   printf "%s" "$*"
+}
+
+#
+# Write a value to a state file as NAME="value"
+#
+environmentValueWrite() {
+  local name="${1-}" value="${2-}"
+  value="$(declare -p value)"
+  value="${value#declare*value=}"
+  printf "%s=%s\n" "$name" "$value"
+}
+
+#
+# Read a value safely from a environment file
+#
+environmentValueRead() {
+  local stateFile="${1-}" name="${2-}" default="${3-}" line
+  [ -f "$stateFile" ] || __failArgument "$usage" "stateFile \"$stateFile\" is not a file" || return $?
+  [ -n "$name" ] || __failArgument "$usage" "stateFile \"$stateFile\" name is blank (default=$default)" || return $?
+  line="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1)"
+  if [ -z "$line" ]; then
+    printf "%s\n" "$default"
+  else
+    declare "$name=$default"
+    # Wondering if this can run shell code - do not believe so
+    declare "$line"
+    printf "%s\n" "${name-}"
+  fi
+}
+
+# Usage: {fn} < "$stateFile"
+# List names of environment values set in a bash state file
+environmentNames() {
+  grep -e "^[A-Za-z][A-Z0-9_a-z]*=" | cut -f 1 -d =
 }

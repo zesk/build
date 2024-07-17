@@ -28,6 +28,9 @@ testNewRelease() {
 
 testInstallInstallBuild() {
   local topDir targetDir marker testBinary
+  export BUILD_HOME
+
+  __environment buildEnvironmentLoad BUILD_HOME || return $?
 
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"
@@ -38,13 +41,17 @@ testInstallInstallBuild() {
   assertFileExists --line "$LINENO" "$testBinary" || return $?
   marker=$(randomString)
   echo " # changed $marker" >>"$testBinary"
-
   if ! grep -q "$marker" "$testBinary"; then
     consoleError "binary $testBinary does not contain marker?"
     return 1
   fi
+  assertFileContains "$testBinary" '../../..' || return $?
 
-  assertExitCode --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$(pwd)/bin/build" || return $?
+  __environment cp "$testBinary" "$testBinary.backup" || return $?
+
+  assertDirectoryDoesNotExist "$topDir/bin/build" || return $?
+
+  assertExitCode --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
 
   if [ ! -d "$topDir/bin/build" ]; then
     find "$topDir" -type f
@@ -57,6 +64,8 @@ testInstallInstallBuild() {
     tail -n 20 "$testBinary" | wrapLines "$(consoleCode)" "$(consoleReset)"
     return 1
   fi
+  # Do not use updated binary as behavior is unpredictable (this is the last version)
+  __environment mv -f "$testBinary.backup" "$testBinary" || return $?
 
   assertExitCode --stdout-match "already installed" 0 "$testBinary" || return $?
 

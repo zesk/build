@@ -17,7 +17,7 @@ tests+=(testAWSIPAccess)
 testAWSIPAccess() {
   local quietLog=$1 id key start
 
-  usageRequireEnvironment _testAWSIPAccessUsage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME
+  usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -z "$quietLog" ]; then
     _argument "testAWSIPAccess missing log" || return $?
@@ -65,10 +65,10 @@ testAWSIPAccess() {
   testSection "CLI IP and file system credentials"
   start=$(beginTiming)
   # Work using environment variables
-  if ! awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
-  if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
@@ -76,10 +76,10 @@ testAWSIPAccess() {
   testSection "Generated IP and file system credentials"
   start=$(beginTiming)
   # Work using environment variables
-  if ! awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
-  if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"

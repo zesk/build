@@ -146,7 +146,7 @@ _deprecated() {
 _clean() {
   local exitCode="${1-}"
   shift
-  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $*" || return $?
+  _integer "$exitCode" || _argument "${FUNCNAME[0]} $*" || return $?
   while [ $# -gt 0 ]; do
     [ ! -f "$1" ] || __environment rm "$1" || return $?
     [ ! -d "$1" ] || __environment rm -rf "$1" || return $?

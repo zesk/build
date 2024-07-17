@@ -35,28 +35,21 @@
 # Exit code: 0 - if files are loaded successfully
 dotEnvConfigure() {
   local usage="_${FUNCNAME[0]}"
-  local where dotEnv
+  local where dotEnv files value
 
   where=
   [ $# -eq 0 ] || where=$(usageArgumentDirectory "$usage" "where" "${1-}") || return $?
-  [ -n "$where" ] || where=$(pwd) || __failEnvironment "$usage" "pwd FAIL?" || return $?
+  [ -n "$where" ] || where=$(__usageEnvironment "$usage" pwd) || return $?
   dotEnv="$where/.env"
-  [ -f "$dotEnv" ] || _environment "Missing $dotEnv" || return $?
-  set -a
-  # shellcheck source=/dev/null
-  if ! source "$dotEnv"; then
-    set +a || :
-    __usageEnvironment "$usage" "Loading $dotEnv failed" || return $?
-  fi
-  dotEnv="$where/.env"
-  if [ -f "$dotEnv" ]; then
-    # shellcheck source=/dev/null
-    if ! source "$dotEnv"; then
-      set +a || :
-      __usageEnvironment "$usage" "Loading $dotEnv failed" || return $?
-    fi
-  fi
-  set +a || :
+  [ -f "$dotEnv" ] || __usageEnvironment "$usage" "Missing $dotEnv" || return $?
+  files=("$dotEnv")
+  [ ! -f "$dotEnv.local" ] || files+=("$dotEnv.local")
+  for dotEnv in "${files[@]}"; do
+    while read -r environment; do
+      value=$(__usageEnvironment "$usage" environmentValueRead "$dotEnv" "$environment") || return $?
+      declare -x "$environment=$value"
+    done < <(environmentNames "$dotEnv")
+  done
 }
 _dotEnvConfigure() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -126,11 +126,15 @@ __identicalCheckRepair() {
   local prefix="$1" token="$2" fileA="$3" fileB="$4"
   local checkPath
 
+  statusMessage consoleInfo "realPath $fileA"
   fileA=$(realPath "$fileA") || _argument "realPath fileA $fileA" || return $?
+  statusMessage consoleInfo "realPath $fileB"
   fileB=$(realPath "$fileB") || _argument "realPath fileB $fileB" || return $?
+  statusMessage consoleInfo "Shifting ..."
   shift && shift && shift && shift
   while [ $# -gt 0 ]; do
     checkPath="$1"
+    statusMessage consoleInfo "Checking path $checkPath ..."
     if [ "${fileA#"$checkPath"}" != "$fileA" ]; then
       statusMessage consoleInfo Repairing "$fileB" with "$fileA"
       __environment identicalRepair --prefix "$prefix" "$token" "$fileA" "$fileB" || return $?

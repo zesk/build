@@ -11,9 +11,9 @@ set -eou pipefail
 
 declare -a tests
 
-tests+=(testInstallInstallBuild)
+tests+=(testInstallInstallBuildSelf)
 
-testInstallInstallBuild() {
+testInstallInstallBuildSelf() {
   local tempD
   export BUILD_COMPANY
 

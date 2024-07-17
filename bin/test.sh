@@ -30,7 +30,6 @@ __tools() {
   "$@" || return $?
 }
 
-
 __messyTestCleanup() {
   local fn exitCode=$?
 
@@ -70,17 +69,12 @@ _textExit() {
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 #
 __buildTestSuite() {
-  local quietLog allTests runTests shortTest startTest
+  local usage="_${FUNCNAME[0]}"
+
+  local quietLog allTests runTests shortTest startTest matchTests
   # Avoid conflict with __argument
-  local usage __ARGUMENT
+  local __ARGUMENT start
   local continueFile continueFlag
-
-  usage="_${FUNCNAME[0]}"
-
-  # shellcheck source=/dev/null
-  source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
-
-  quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
   export BUILD_COLORS_MODE
   export BUILD_HOME
@@ -90,9 +84,15 @@ __buildTestSuite() {
 
   FUNCNEST=200
 
-  BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+  # shellcheck source=/dev/null
 
-  __environment buildEnvironmentLoad BUILD_HOME || return $?
+  source ./test/test-tools.sh || __failEnvironment "$usage" "test-tools.sh" || return $?
+
+  quietLog="$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}")" || return $?
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)
+
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
 
   printf "%s started on %s (color %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
@@ -115,6 +115,7 @@ __buildTestSuite() {
   continueFile="$BUILD_HOME/.last-run-test"
   continueFlag=false
   testTracing=options
+  matchTests=()
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
     __ARGUMENT="$1"
@@ -136,14 +137,18 @@ __buildTestSuite() {
         _textExit 0
         ;;
       --clean)
-        statusMessage consoleWarning "Cleaning ... "
-        testCleanup
+        statusMessage consoleWarning "Cleaning tests and exiting ... "
+        cleanExit=true
+        testCleanup || return $?
+        statusMessage reportTiming "$start" "Cleaned in"
+        printf "\n"
+        return 0
         ;;
       --messy)
         messyOption=1
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$__ARGUMENT")" || return $?
+        matchTests+=("$1")
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$__ARGUMENT")" || return $?
@@ -162,6 +167,15 @@ __buildTestSuite() {
     startTest="$([ ! -f "$continueFile" ] || cat "$continueFile")"
   fi
   for shortTest in "${runTests[@]}"; do
+    if [ "${#matchTests[@]}" -gt 0 ]; then
+      matches=false
+      for matchTest in "${matchTests[@]}"; do
+        if [ "${shortTest#"*$matchTest"}" != "$shortTest" ]; then
+          matches=true
+        fi
+      done
+      $matches || continue
+    fi
     testTracing="test: $shortTest"
     __environment requireFileDirectory "$quietLog" || return $?
     printf "%s\n" "$testTracing" >>"$quietLog" || _environment "Failed to write $quietLog" || return $?
