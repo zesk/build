@@ -19,7 +19,8 @@ identicalRepair() {
   local identicalLine grepPattern parsed
   local currentLineNumber count lineNumber targetFile sourceText totalLines isEOF
 
-  arguments=("$@")
+  # shellcheck disable=SC2059
+  arguments="$(printf "\"$(consoleCode %s)\" " "$@")"
   source=
   destination=
   token=
@@ -34,10 +35,9 @@ identicalRepair() {
         return $?
         ;;
       --prefix)
-        [ -z "$prefix" ] || __failArgument "$usage" "single --prefix only: " "${arguments[@]}" || return $?
+        [ -z "$prefix" ] || __failArgument "$usage" "single --prefix only: " "$arguments" || return $?
         shift
-        [ -n "${1-}" ] || __failArgument "$usage" "blank $argument argument" || return $?
-        prefix="$1"
+        prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --stdout)
         stdout=true
@@ -71,14 +71,14 @@ identicalRepair() {
   if ! isUnsignedInteger "$count"; then
     __failEnvironment "$usage" "$(consoleCode "$source") not an integer: \"$(consoleValue "$identicalLine")\"" || return $?
   fi
-  sourceText=$(mktemp) || __failEnvironment mktemp || return $?
+  sourceText=$(__usageEnvironment "$usage" mktemp) || return $?
 
   # Include header but map EOF to count on the first line
   __usageEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || return $?
   __usageEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || return $?
 
   if ! $stdout; then
-    targetFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
+    targetFile=$(__usageEnvironment "$usage" mktemp) || return $?
     exec 3>"$targetFile"
   else
     exec 3>&1
@@ -93,7 +93,7 @@ identicalRepair() {
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
-    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __failEnvironment "\"$identicalLine\" invalid count: $count" || return $?
+    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
     if [ "$lineNumber" -gt 1 ]; then
       if [ "$currentLineNumber" -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination" >&3
@@ -118,6 +118,7 @@ identicalRepair() {
   fi
 }
 _identicalRepair() {
+  debuggingStack -s
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -191,7 +191,7 @@ identicalCheck() {
           if $isBadFile; then
             if [ ${#repairSources[@]} -gt 0 ]; then
               statusMessage consoleWarning "Repairing $token in $(consoleCode "$searchFile") from \"$(consoleValue "$tokenFileName")\""
-              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
+              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
                 badFiles+=("$tokenFileName")
                 badFiles+=("$searchFile")
                 consoleError "$(clearLine)Unable to repair $(consoleValue "$token") in $(consoleCode "$searchFile")" 1>&2
