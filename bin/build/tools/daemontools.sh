@@ -113,13 +113,11 @@ _daemontoolsInstallService() {
 # Copy run file to a service target
 _daemontoolsInstallServiceRun() {
   local usage="$1" source="$2" target="$3"
-
   __usageEnvironment "$usage" requireDirectory "$target" || return $?
-
   args=(--map "$source" "$target/run")
-  if LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath copyFileWouldChange "${args[@]}"; then
-    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
-    __usageEnvironment "$usage" chmod 700 "$target/run" || return $?
+  if copyFileWouldChange "${args[@]}"; then
+    __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
+    __usageEnvironment "$usage" chmod 700 "$target" "$target/run" || return $?
   fi
 }
 
