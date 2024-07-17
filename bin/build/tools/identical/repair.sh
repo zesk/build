@@ -137,11 +137,11 @@ __identicalCheckRepair() {
     statusMessage consoleInfo "Checking path $checkPath ..."
     if [ "${fileA#"$checkPath"}" != "$fileA" ]; then
       statusMessage consoleInfo Repairing "$fileB" with "$fileA"
-      __environment identicalRepair --prefix "$prefix" "$token" "$fileA" "$fileB" || return $?
+      identicalRepair --prefix "$prefix" "$token" "$fileA" "$fileB" || return $?
       return $?
     elif [ "${fileB#"$checkPath"}" != "$fileB" ]; then
       statusMessage consoleInfo Repairing "$fileA" with "$fileB"
-      __environment identicalRepair --prefix "$prefix" "$token" "$fileB" "$fileA" || return $?
+      identicalRepair --prefix "$prefix" "$token" "$fileB" "$fileA" || return $?
       return $?
     fi
     shift
