@@ -121,6 +121,7 @@ _daemontoolsInstallServiceRun() {
   fi
 }
 
+# Wait for supervise directory to appear
 _daemontoolsSuperviseWait() {
   local usage="$1"
   local start elapsed

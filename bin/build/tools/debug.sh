@@ -124,9 +124,34 @@ debuggingStack() {
 # Run command and detect any global or local leaks
 #
 plumber() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
   local __before __after __changed __ignore __pattern __command
   local __result=0
   local __ignore=(OLDPWD _ resultCode LINENO PWD)
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --leak)
+        shift
+        __ignore+=("$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  [ $# -gt 0 ] || return 0
+  isCallable "${1-}" || __failArgument "$usage" "$1 is not callable" "$@" || return $?
 
   __after=$(mktemp) || _environment mktemp || return $?
   __before="$__after.before"
@@ -152,4 +177,7 @@ plumber() {
   fi
   rm -rf "$__before" "$__after" || :
   return "$__result"
+}
+_plumber() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

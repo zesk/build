@@ -39,7 +39,7 @@ processWait() {
   local start elapsed lastSignal sinceLastSignal now
   local timeout signalTimeout
   local signals signal sendSignals
-  local processIds aliveIds
+  local processId processIds aliveIds
   local requireFlag verboseFlag signals signal
   local STATUS_THRESHOLD=10
   local processTemp

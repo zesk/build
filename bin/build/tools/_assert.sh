@@ -59,7 +59,7 @@ _assertConditionHelper() {
   local usage="_$this"
   local argument savedArguments
   local exitCode success leak testPassed file linePrefix displayName tester formatter message result
-  local outputContains outputNotContains stderrContains stderrNotContains
+  local leaks outputContains outputNotContains stderrContains stderrNotContains
   local errorsOk outputFile errorFile stderrTitle stdoutTitle dumpFlag
 
   shift
@@ -132,6 +132,9 @@ _assertConditionHelper() {
       --dump)
         dumpFlag=true
         ;;
+      --leak)
+        leaks+=(--leak "$(usageArgumentString "$usage" "globalName" "$argument")") || return $?
+        ;;
       *)
         break
         ;;
@@ -145,7 +148,7 @@ _assertConditionHelper() {
   outputFile="$outputFile.out"
 
   exitCode=0
-  if plumber "$tester" "$@" >"$outputFile" 2>"$errorFile"; then
+  if plumber "${leaks[@]+"${leaks[@]}"}" "$tester" "$@" >"$outputFile" 2>"$errorFile"; then
     testPassed=$success
   else
     exitCode=$?
@@ -537,7 +540,7 @@ _assertExitCodeHelper() {
   local outputFile errorFile testPassed
   local stderrTitle stdoutTitle
   local failureText message textCommand
-  local outputContains outputNotContains stderrContains stderrNotContains
+  local leaks outputContains outputNotContains stderrContains stderrNotContains
 
   # --not
   isExitCode=true
@@ -556,13 +559,16 @@ _assertExitCodeHelper() {
 
   linePrefix=
   lineNumber=
-  savedArguments=("$@")
+
+  # shellcheck disable=SC2059
+  savedArguments="$(printf -- "\"$(consoleCode "%s")\" " "" "$@")"
   outputContains=()
   outputNotContains=()
   stderrContains=()
   stderrNotContains=()
   debugAssertRun=false
   dumpFlag=false
+  leaks=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -605,6 +611,10 @@ _assertExitCodeHelper() {
       --dump)
         dumpFlag=true
         ;;
+      --leak)
+        shift
+        leaks+=(--leak "$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
+        ;;
       --not)
         isExitCode=false
         failureText="NOT expected"
@@ -634,7 +644,7 @@ _assertExitCodeHelper() {
   fi
   textCommand="$bin$(printf -- " \"%s\"" "$@")"
   actual="$(
-    plumber "$bin" "$@" >"$outputFile" 2>"$errorFile"
+    plumber "${leaks[@]+"${leaks[@]}"}" "$bin" "$@" >"$outputFile" 2>"$errorFile"
     printf %d "$?"
   )"
   if $debugAssertRun; then
@@ -642,17 +652,15 @@ _assertExitCodeHelper() {
   fi
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
     actual=$(__resultText false "$actual")
-    message="$(printf -- "%s%s %s -> %s %s\n%s\n" \
-      "$linePrefix" \
-      "$(consoleCode "$this")" \
-      "$textCommand" \
-      "$(consoleSuccess "$actual")" \
+    message="$(printf -- "%s%s %s %s -> %s %s\n%s\n" \
+      "$linePrefix" "$(consoleCode "$this")" "$(consoleValue " $expected ")" \
+      "$textCommand" "$(consoleSuccess "$actual")" \
       "$(consoleError "produced stderr")" "$(dumpPipe stderr <"$errorFile")")"
     _assertFailure "$this" "$message" || return $?
     __failEnvironment "$usage" "$message" || return $?
   fi
   if $errorsOk && [ ! -s "$errorFile" ]; then
-    printf "%s%s %s – %s\n" "$(clearLine)" "$(consoleError "${usage#_}")" "$(consoleCode "$bin ${savedArguments[*]}")" "$(consoleWarning "--stderr-ok used but is NOT necessary:")"
+    printf "%s%s %s – %s\n" "$(clearLine)" "$linePrefix$(consoleError "${usage#_}")" "$savedArguments" "$(consoleWarning "--stderr-ok used but is NOT necessary:")"
   fi
   stderrTitle="$textCommand $(consoleBoldRed stderr)"
   stdoutTitle="$textCommand $(consoleLabel stdout)"
@@ -676,7 +684,7 @@ _assertExitCodeHelper() {
   fi
   actual=$(__resultText "$testPassed" "$actual")
   if $testPassed; then
-    _assertSuccess "$this" "$actual" "$(consoleCode "${savedArguments[*]}")" || :
+    _assertSuccess "$this" "$linePrefix$actual" "$savedArguments" || :
     exitCode=$?
     if $dumpFlag; then
       dumpPipe "$stdoutTitle" <"$outputFile" || :
@@ -684,11 +692,12 @@ _assertExitCodeHelper() {
     fi
   else
     # Failure
+    # shellcheck disable=SC2059
     message=$(
       printf "%s%s %s ➜ %s%s\n%s\n%s\n" \
         "$linePrefix" \
         "$textCommand" \
-        "$(printf -- "\"%s%s%s\"" "$(consoleCode)" "${savedArguments[*]}" "$(consoleReset)")" \
+        "$(printf -- "\"$(consoleCode "%s")\"" "" "$savedArguments")" \
         "$(consoleSuccess "$expected") $failureText, $actual actual" \
         "$(consoleReset)" \
         "$(dumpPipe "$stdoutTitle" <"$outputFile")" \
@@ -720,10 +729,12 @@ _assertOutputContainsHelper() {
   local expected="" commands=() tempFile exitCode=0 pipeStdErr=false actual message
   local command linePrefix lineNumber
   local trueTest="$1" this="$2" testPassed
+  local leaks
 
   shift 2
   linePrefix=
   lineNumber=
+  leaks=()
   while [ $# -gt 0 ]; do
     case $1 in
       --exit)
@@ -738,6 +749,10 @@ _assertOutputContainsHelper() {
           linePrefix="$(consoleMagenta "Line $1: ")"
         fi
         ;;
+      --leak)
+        shift
+        leaks+=(--leak "$(usageArgumentString "$usage" "globalName" "${1-}")")
+        ;;
       --stderr)
         pipeStdErr=true
         ;;
@@ -751,19 +766,22 @@ _assertOutputContainsHelper() {
     esac
     shift
   done
-  command="$(printf -- " \"%s\"" "${commands[@]}")"
-  command="$(consoleCode "${command# }")"
+  # shellcheck disable=SC2059
+  command="$(printf -- " \"$(consoleCode %s)\"" "${commands[@]}")"
+  command="${command# }"
+
+  isCallable "${commands[0]}" || __failArgument "$usage" "Command $command is not callable" || return $?
 
   tempFile=$(mktemp)
   printf -- "%s: %s\n" "$(consoleInfo Running)" "$command"
   if $pipeStdErr; then
     actual=$(
-      "${commands[@]}" >"$tempFile" 2>&1
+      plumber "${leaks[@]+"${leaks[@]}"}" "${commands[@]}" >"$tempFile" 2>&1
       printf "%d" $?
     )
   else
     actual=$(
-      "${commands[@]}" >"$tempFile"
+      plumber "${leaks[@]+"${leaks[@]}"}" "${commands[@]}" >"$tempFile"
       printf "%d" $?
     )
   fi

@@ -39,7 +39,7 @@ testBuildDebugEnabled() {
   saveDebug="${BUILD_DEBUG-}"
 
   unset BUILD_DEBUG || :
-  assertNotExitCode 0 buildDebugEnabled || return $?
+  assertNotExitCode --leak BUILD_DEBUG 0 buildDebugEnabled || return $?
 
   BUILD_DEBUG=
 
@@ -50,7 +50,7 @@ testBuildDebugEnabled() {
 
   _testBuildDebugEnabledStart "$quietLog"
 
-  assertExitCode --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" || return $?
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" || return $?
   buildDebugStart
   assertExitCode --stderr-ok 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" || return $?
   buildDebugStop || _testBuildDebugEnabledExit $? "$quietLog" || return $?
