@@ -19,6 +19,7 @@ identicalRepair() {
   local identicalLine grepPattern parsed
   local currentLineNumber count lineNumber targetFile sourceText totalLines isEOF
 
+  export REPAIR_LINE
   # shellcheck disable=SC2059
   arguments="$(printf "\"$(consoleCode %s)\" " "$@")"
   source=
@@ -26,17 +27,22 @@ identicalRepair() {
   token=
   prefix=
   stdout=false
+  REPAIR_LINE="$LINENO"
   while [ $# -gt 0 ]; do
     argument="$1"
+    REPAIR_LINE="$LINENO"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --help)
+        REPAIR_LINE="$LINENO"
         "$usage" 0
         return $?
         ;;
       --prefix)
+        REPAIR_LINE="$LINENO"
         [ -z "$prefix" ] || __failArgument "$usage" "single --prefix only: " "$arguments" || return $?
         shift
+        REPAIR_LINE="$LINENO"
         prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --stdout)
@@ -46,38 +52,53 @@ identicalRepair() {
         if [ -z "$token" ]; then
           token="$argument"
         elif [ -z "$source" ]; then
+          REPAIR_LINE="$LINENO"
           source=$(usageArgumentFile "$usage" "source" "$argument") || return $?
         elif [ -z "$destination" ]; then
+          REPAIR_LINE="$LINENO"
           destination=$(usageArgumentFile "$usage" "destination" "$argument") || return $?
         else
+          REPAIR_LINE="$LINENO"
           __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
         fi
         ;;
     esac
+    REPAIR_LINE="$LINENO"
     shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
   done
 
+  REPAIR_LINE="$LINENO"
   [ -n "$prefix" ] || __failArgument "$usage" "missing --prefix" || return $?
+  REPAIR_LINE="$LINENO"
   [ -n "$destination" ] || __failArgument "$usage" "missing arguments" || return $?
   grepPattern="$(quoteGrepPattern "$prefix $token")"
+  REPAIR_LINE="$LINENO"
   identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || __failArgument "$usage" "\"$prefix $token\" not found in source $(consoleCode "$source")" || return $?
+  REPAIR_LINE="$LINENO"
   [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || __failArgument "$usage" "\"$prefix $token\" not found in destination $(consoleCode "$destination")" || return $?
   # totalLines is *source* lines
   totalLines="$(($(wc -l <"$source") + 0))"
+  REPAIR_LINE="$LINENO"
   parsed=$(__identicalLineParse "$source" "$prefix" "$identicalLine") || __failArgument "$usage" "$source" return $?
   read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
+  REPAIR_LINE="$LINENO"
   count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
 
   if ! isUnsignedInteger "$count"; then
+    REPAIR_LINE="$LINENO"
     __failEnvironment "$usage" "$(consoleCode "$source") not an integer: \"$(consoleValue "$identicalLine")\"" || return $?
   fi
+  REPAIR_LINE="$LINENO"
   sourceText=$(__usageEnvironment "$usage" mktemp) || return $?
 
   # Include header but map EOF to count on the first line
+  REPAIR_LINE="$LINENO"
   __usageEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || return $?
+  REPAIR_LINE="$LINENO"
   __usageEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || return $?
 
   if ! $stdout; then
+    REPAIR_LINE="$LINENO"
     targetFile=$(__usageEnvironment "$usage" mktemp) || return $?
     exec 3>"$targetFile"
   else
@@ -88,11 +109,13 @@ identicalRepair() {
   totalLines=$(wc -l <"$destination")
   while read -r identicalLine; do
     isEOF=false
+    REPAIR_LINE="$LINENO"
     parsed=$(__usageArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || return $?
     read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
+    REPAIR_LINE="$LINENO"
     count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
     if [ "$lineNumber" -gt 1 ]; then
       if [ "$currentLineNumber" -eq 0 ]; then
@@ -113,11 +136,15 @@ identicalRepair() {
     tail -n $((totalLines - currentLineNumber + 1)) <"$destination" >&3
   fi
   if ! $stdout; then
+    REPAIR_LINE="$LINENO"
     __usageEnvironment "$usage" cp -f "$targetFile" "$destination" || return $?
     rm -f "$targetFile" || :
   fi
+  REPAIR_LINE="$LINENO"
 }
 _identicalRepair() {
+  export REPAIR_LINE
+  printf "REPAIR_LINE %s\n" "$REPAIR_LINE"
   debuggingStack -s
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
