@@ -212,7 +212,7 @@ _installBinBuildGitCheck() {
   fi
 }
 
-# IDENTICAL _colors 74
+# IDENTICAL _colors 79
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -225,9 +225,14 @@ hasColors() {
   export BUILD_COLORS TERM
   # Values allowed for this global are true and false
   # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
-  BUILD_COLORS="${BUILD_COLORS-z}"
-  if [ "z" = "$BUILD_COLORS" ]; then
-    case "${TERM-}" in "" | "dump" | "unknown") BUILD_COLORS=true ;; *) termColors="$(tput colors 2>/dev/null)" && [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true ;; esac
+  BUILD_COLORS="${BUILD_COLORS-}"
+  if [ -z "$BUILD_COLORS" ]; then
+    BUILD_COLORS=false
+    case "${TERM-}" in "" | "dump" | "unknown") BUILD_COLORS=true ;; *)
+      termColors="$(tput colors 2>/dev/null)"
+      [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
+      ;;
+    esac
   elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
     BUILD_COLORS=false
   fi
@@ -329,13 +334,14 @@ _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
-# IDENTICAL _return 14
+# IDENTICAL _return 15
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
 _return() {
-  local r="${1-:1}" && shift && : || _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
