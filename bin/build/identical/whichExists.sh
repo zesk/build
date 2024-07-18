@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Original of realPath
+# Original of whichExists
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #

@@ -46,11 +46,19 @@ _assertSuccess() {
   statusMessage printf -- "%s: %s %s " "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
 }
 
-# Usage: {fn} success thisName verb notVerb [ --display displayName ] [ --help ]
 # Core condition assertion handler
-# Argument: thisName - Reported function for success or failure
-# Argument: fileName - File to search
-# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
+# DOC TEMPLATE: assert-common 11
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
 #

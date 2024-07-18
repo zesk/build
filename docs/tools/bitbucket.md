@@ -44,24 +44,9 @@ On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `sup
 
 - `0` - Always succeeds
 
-### `bitbucket.sh` - Run the default build container for build testing on BitBucket
-
-Run the default build container for build testing on BitBucket
-
-#### Usage
-
-    bitbucket.sh [ envFile ... ] [ extraArgs ... ]
-    
-
-#### Arguments
-
-
-
 #### Exit codes
 
-- `1` - If already inside docker, or the environment file passed is not valid
-- `0` - Success
-- `Any` - `docker run` error code is returned if non-zero
+- `0` - Always succeeds
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

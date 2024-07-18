@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copy of _return
+# Original of _return
 #
 # Syntactic sugar to allow a command to output a message to stderr and exit
 # One line is nice as this is used nearly everywhere as a common escape from initialization problems.

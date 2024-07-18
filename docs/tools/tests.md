@@ -71,6 +71,19 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
 
+### `validateShellScriptsInteractive` - Run checks interactively until errors are all fixed.
+
+Run checks interactively until errors are all fixed.
+
+#### Usage
+
+    [ fileToCheck ... ]
+    
+
+#### Arguments
+
+
+
 #### Exit codes
 
 - `0` - Always succeeds

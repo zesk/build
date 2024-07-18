@@ -63,7 +63,7 @@ Delete git tag locally and at origin
 
 #### Exit codes
 
-- `2` - Any stage fails will result in this exit code. Partial deletion may occur.
+- `argument` - Any stage fails will result in this exit code. Partial deletion may occur.
 
 ### `gitTagAgain` - Remove a tag everywhere and tag again on the current
 
@@ -360,7 +360,6 @@ GIT_INDEX_FILE - Must be set to pass
 ### `gitRemoteHosts` - List remote hosts for the current git repository
 
 List remote hosts for the current git repository
-Not really test
 
 #### Exit codes
 

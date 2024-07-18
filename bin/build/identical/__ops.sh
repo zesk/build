@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copy of __ops
+# Original of __ops
 #
 # requires IDENTICAL _return
 #

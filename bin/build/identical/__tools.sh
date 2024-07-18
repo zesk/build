@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copy of __tools
+# Original of __tools
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #

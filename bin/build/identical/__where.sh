@@ -1,8 +1,6 @@
 #!/bin/bash
 #
-# Copy of __where
-#
-#
+# Original of __where
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #

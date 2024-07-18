@@ -153,12 +153,11 @@ right-aligned to the `characterWidth` given and colored using `consoleLabel`; th
 - `0` - Always succeeds
 
 
-### `hasColors` - This tests whether `TERM` is set, and if not, uses
+### `hasColors` - Sets the environment variable `BUILD_COLORS` if not set, uses `TERM`
 
-This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-If `TERM` is set then uses the `tput colors` call to determine the console support for colors.
+Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 
-Exit Code; 1 - No colors
+Exit Code; 1 - Colors are likely not supported by console
 
 #### Usage
 
@@ -169,13 +168,9 @@ Exit Code; 1 - No colors
 
 - `0` - Console or output supports colors
 
-#### Local cache
-
-this value is cached in BUILD_COLORS if it is not set.
-
 #### Environment
 
-BUILD_COLORS - Override value for this
+BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 
 
 ### `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation

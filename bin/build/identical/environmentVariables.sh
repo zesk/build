@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copy of environmentVariables
+# Original of environmentVariables
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #

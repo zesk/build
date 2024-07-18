@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# ORIGINAL FILE
+#
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Docs: o ./docs/_templates/tools/_sugar.md

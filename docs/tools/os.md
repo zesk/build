@@ -40,14 +40,22 @@ Is a path an absolute path?
 - `1` - one ore more paths are not absolute paths
 
 
+### `whichExists` - IDENTICAL whichExists EOF
+
+IDENTICAL whichExists EOF
+
 #### Usage
 
-    whichExists binary
+    whichExists binary ...
     
+
+#### Arguments
+
+
 
 #### Exit codes
 
-- `0` - If all binary
+- `0` - If all values are found
 
 
 ### `serviceToPort` - Get the port number associated with a service
@@ -357,13 +365,13 @@ Reverses a pipe's input lines to output using an awk trick. Do not recommend on 
 Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt).
 
 
-### `chmod-sh.sh` - Makes all `*.sh` files executable
+### `/var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.6nBWdi6ZXd chmod-sh.sh` - Makes all `*.sh` files executable
 
 Makes all `*.sh` files executable
 
 #### Usage
 
-    chmod-sh.sh [ findArguments ... ]
+    /var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.6nBWdi6ZXd chmod-sh.sh [ findArguments ... ]
     
 
 #### Arguments
@@ -641,6 +649,19 @@ Maintains ordering.
 #### Exit codes
 
 - `0` - Always succeeds
+
+
+### `realPath` - IDENTICAL _realPath EOF
+
+IDENTICAL _realPath EOF
+
+#### Usage
+
+    realPath argument
+    
+
+#### Arguments
+
 
 
 #### Exit codes

@@ -212,6 +212,24 @@ Validates a value is an unsigned integer
 - `2` - Argument error
 - `0` - Success
 
+### `usageArgumentPositiveInteger` - Validates a value is an unsigned integer and greater than
+
+Validates a value is an unsigned integer and greater than zero (NOT zero)
+
+#### Usage
+
+    usageArgumentPositiveInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
 ### `usageArgumentDirectory` - Validates a value is not blank and is a directory.
 
 Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
@@ -219,6 +237,24 @@ Validates a value is not blank and is a directory. Upon success, outputs the dir
 #### Usage
 
     usageArgumentDirectory usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentRealDirectory` - Validates a value is not blank and is a directory
+
+Validates a value is not blank and is a directory and does `realPath` on it.
+
+#### Usage
+
+    usageArgumentRealDirectory usageFunction variableName variableValue [ noun ]
     
 
 #### Arguments
@@ -245,8 +281,62 @@ Require an argument to be a boolean value
 
 #### Exit codes
 
-- `2` - If `value` is blank
-- `0` - If `value` is non-blank
+- `2` - If `value` is not a boolean
+- `0` - If `value` is a boolean
+
+### `usageArgumentCallable` - Require an argument to be a callable
+
+Require an argument to be a callable
+
+#### Usage
+
+    usageArgumentCallable usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is not `isCallable`
+- `0` - If `value` is `isCallable`
+
+### `usageArgumentFunction` - Require an argument to be a function
+
+Require an argument to be a function
+
+#### Usage
+
+    usageArgumentFunction usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is not `isFunction`
+- `0` - If `value` is `isFunction`
+
+### `usageArgumentExecutable` - Require an argument to be a executable
+
+Require an argument to be a executable
+
+#### Usage
+
+    usageArgumentExecutable usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is not `isExecutable`
+- `0` - If `value` is `isExecutable`
 
 ### `usageArgumentMissing` - Throw an missing argument error
 
