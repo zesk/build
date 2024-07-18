@@ -12,8 +12,6 @@ Assert two strings are equal.
 
 If this fails it will output an error and exit.
 
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertEquals expected actual [ message ]
@@ -67,9 +65,6 @@ File `bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-1
 
 Assert one string contains another (case-sensitive)
 
-
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertContains needle haystack
@@ -88,9 +83,6 @@ DOC TEMPLATE assert-common 11
 ### `assertNotContains` - Assert one string does not contains another (case-sensitive)
 
 Assert one string does not contains another (case-sensitive)
-
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -118,8 +110,6 @@ DOC TEMPLATE assert-common 11
 
 Assert `leftValue > rightValue`
 
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertGreaterThan expected actual [ message ]
@@ -144,8 +134,6 @@ File `bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023
 ### `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
 
 Assert `leftValue >= rightValue`
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -173,8 +161,6 @@ File `bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was review
 
 Assert `leftValue < rightValue`
 
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertLessThan expected actual [ message ]
@@ -200,8 +186,6 @@ File `bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11
 ### `assertLessThanOrEqual` - Assert `leftValue <= rightValue`
 
 Assert `leftValue <= rightValue`
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -234,9 +218,6 @@ Assert a process runs and exits with the correct exit code.
 
 If this fails it will output an error and exit.
 
-
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertExitCode expectedExitCode command [ arguments ... ]
@@ -260,8 +241,6 @@ File `bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-11
 Assert a process runs and exits with an exit code which does not match the passed in exit code.
 
 If this fails it will output an error and exit.
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -290,8 +269,6 @@ Assert output of a binary equals a string
 
 If this fails it will output an error and exit.
 
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertOutputEquals expected binary [ parameters ]
@@ -318,8 +295,6 @@ File `bin/build/tools/assert.sh`, function `assertOutputEquals` was reviewed 202
 Run a command and expect the output to contain the occurrence of a string.
 
 If this fails it will output the command result to stdout.
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -348,8 +323,6 @@ File `bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2
 Run a command and expect the output to not contain the occurrence of a string.
 
 If this fails it will output the command result to stdout.
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -382,7 +355,7 @@ File `bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was revi
 
 ### `assertDirectoryExists` - Test that a directory exists
 
-DOC TEMPLATE assert-common 11
+$\Test that a directory exists
 
 #### Usage
 
@@ -412,7 +385,7 @@ None
 
 ### `assertDirectoryDoesNotExist` - Test that a directory does not exist
 
-DOC TEMPLATE assert-common 11
+$\Test that a directory does not exist
 
 #### Usage
 
@@ -442,7 +415,7 @@ File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was rev
 
 ### `assertDirectoryEmpty` - Test that a directory exists
 
-DOC TEMPLATE assert-common 11
+$\Test that a directory exists
 
 #### Usage
 
@@ -472,7 +445,7 @@ None
 
 ### `assertDirectoryNotEmpty` - Test that a directory does not exist
 
-DOC TEMPLATE assert-common 11
+$\Test that a directory does not exist
 
 #### Usage
 
@@ -501,7 +474,7 @@ File `bin/build/tools/assert.sh`, function `assertDirectoryNotEmpty` was reviewe
 
 ### `assertFileExists` - Test that a file exists
 
-DOC TEMPLATE assert-common 11
+$\Test that a file exists
 
 #### Usage
 
@@ -531,7 +504,7 @@ None
 
 ### `assertFileDoesNotExist` - Test that a file does not exist
 
-DOC TEMPLATE assert-common 11
+$\Test that a file does not exist
 
 #### Usage
 
@@ -559,10 +532,6 @@ None
 
 File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed 2023-11-12.
 
-
-### `assertFileContains` - DOC TEMPLATE assert-common 11
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -595,10 +564,6 @@ If the file does not exist, this will fail.
 
 File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
 
-### `assertFileDoesNotContain` - DOC TEMPLATE assert-common 11
-
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertFileDoesNotContain fileName string0 [ ... ]
@@ -625,10 +590,6 @@ If the file does not exist, this will fail.
 ## FileSize
 
 
-### `assertFileSize` - DOC TEMPLATE assert-common 11
-
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertFileSize expectedSize [ fileName ... ]
@@ -651,10 +612,6 @@ DOC TEMPLATE assert-common 11
 #### Environment
 
 If the file does not exist, this will fail.
-
-### `assertNotFileSize` - DOC TEMPLATE assert-common 11
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 
@@ -680,10 +637,6 @@ DOC TEMPLATE assert-common 11
 If the file does not exist, this will fail.
 
 
-### `assertZeroFileSize` - DOC TEMPLATE assert-common 11
-
-DOC TEMPLATE assert-common 11
-
 #### Usage
 
     assertZeroFileSize [ fileName ... ]
@@ -706,10 +659,6 @@ DOC TEMPLATE assert-common 11
 #### Environment
 
 If the file does not exist, this will fail.
-
-### `assertNotZeroFileSize` - DOC TEMPLATE assert-common 11
-
-DOC TEMPLATE assert-common 11
 
 #### Usage
 

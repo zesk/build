@@ -26,7 +26,7 @@ When this tool succeeds the `php` binary is available in the local operating sys
 - `1` - If installation fails
 - `0` - If installation succeeds
 
-### `/var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.YlYM3IvjrO composer.sh` - Run Composer commands on code
+### `/var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.l3wXhKabnm composer.sh` - Run Composer commands on code
 
 Runs composer validate and install on a directory.
 

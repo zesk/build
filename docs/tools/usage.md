@@ -338,13 +338,13 @@ Require an argument to be a executable
 - `2` - If `value` is not `isExecutable`
 - `0` - If `value` is `isExecutable`
 
-### `usageArgumentMissing` - Throw an missing argument error
+### `usageArgumentEmptyString` - Do not require argument to be non-blank
 
-Throw an missing argument error
+Do not require argument to be non-blank
 
 #### Usage
 
-    usageArgumentMissing usage argument
+    usageArgumentEmptyString usage argument [ value ]
     
 
 #### Arguments
@@ -353,7 +353,7 @@ Throw an missing argument error
 
 #### Exit codes
 
-- `2` - Always
+- `0` - Always
 
 ### `usageArgumentString` - Require an argument to be non-blank
 
@@ -372,6 +372,26 @@ Require an argument to be non-blank
 
 - `2` - If `value` is blank
 - `0` - If `value` is non-blank
+
+# Errors
+
+
+### `usageArgumentMissing` - Throw an missing argument error
+
+Throw an missing argument error
+
+#### Usage
+
+    usageArgumentMissing usage argument
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Always
 
 ### `usageArgumentUnknown` - Throw an unknown argument error
 
