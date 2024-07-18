@@ -551,11 +551,8 @@ _cachedShaPipe() {
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 mapValue() {
   local usage="_${FUNCNAME[0]}"
-  local mapFile searchToken environmentValue searchFilters replaceFilters filter
+  local nArguments=$# argument mapFile="" searchFilters=() replaceFilters=() filter searchToken environmentValue
 
-  mapFile=
-  nArguments=$#
-  replaceFilters=()
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?

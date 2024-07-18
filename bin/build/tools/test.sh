@@ -268,10 +268,10 @@ _validateShellScriptsHelper() {
 # Run checks interactively until errors are all fixed.
 validateShellScriptsInteractive() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
+  local argument nArguments=$# argumentIndex
   local sleepDelay countdown binary
 
-  nArguments=$#
+  binary=
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
@@ -300,6 +300,9 @@ validateShellScriptsInteractive() {
     "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
 
   while [ "$#" -gt 0 ]; do
+    if [ -n "$binary" ]; then
+      "$binary" "$1" || :
+    fi
     if _validateShellScriptInteractiveCheck "$usage" "$@"; then
       shift
     else
