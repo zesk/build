@@ -165,7 +165,7 @@ _assertConditionHelper() {
     $success || testPassed=true
   fi
   [ "$exitCode" -ne "$leak" ] || testPassed=false
-  result="$("$formatter" "$testPassed" "$@" <"$outputFile")"
+  result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
   # shellcheck disable=SC2059
   message="$(printf -- "%s%s%s -> %s" \
     "$linePrefix" "$(consoleCode "$this")" \
@@ -207,9 +207,9 @@ _assertConditionHelper() {
 # Generic formatter
 # Usage: {fn} testPassed arguments
 __resultFormatter() {
-  local testPassed
+  local testPassed="${1-}" success="${2-}"
 
-  testPassed="$1" && shift
+  shift 2
   if "$testPassed"; then
     # shellcheck disable=SC2059
     printf "PASS: %s\n" "$(printf -- " \"$(__resultText "$testPassed" "%s")\"" "$@")"
@@ -234,9 +234,9 @@ ___assertIsEqual() {
   [ "${1-}" = "${2-}" ]
 }
 ___assertIsEqualFormat() {
-  local testPassed="${1-}" left="${2-}" right="${3-}"
+  local testPassed="${1-}" success="${2-}" left="${3-}"
   shift && shift && shift
-  printf -- "%s %s %s %s\n" "$(consoleCode "$left")" "$(_choose "$testPassed" "=" "!=")" "$(__resultText "$testPassed" "$right")" "$*"
+  printf -- "%s %s %s\n" "$(consoleCode "$left")" "$(_choose "$success" "=" "!=")" "$(__resultText "$testPassed" "$*")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -258,10 +258,12 @@ ___assertNumericTest() {
   test "$leftValue" "$cmp" "$rightValue"
 }
 ___assertNumericFormat() {
+  local testPassed="${1-}" success="${2-}"
+  shift 2
   local leftValue="$1" rightValue="$2" cmp
   cmp="${!#}"
   shift 2
-  printf "[%s %s] %s %s\n" "$(consoleCode "$leftValue")" "$(__resultText "$testPassed" "$cmp $rightValue")" "$(_choose "$testPassed" "(true)" "(false)")" "$*"
+  printf "[%s %s] %s %s\n" "$(consoleCode "$leftValue")" "$(__resultText "$testPassed" "$cmp $rightValue")" "$(_choose "$success" "(true)" "(false)")" "$*"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -288,11 +290,12 @@ ___assertContains() {
   done
 }
 ___assertContainsFormat() {
-  local testPassed="${1-}"
+  local testPassed="${1-}" success="${2-}"
   local needle haystack
 
-  shift && needle="$(consoleCode "${1-}")"
-  shift && haystack=$(__resultText "$testPassed" "$*")
+  shift 2
+  needle="$(consoleCode "${1-}")" && shift
+  haystack=$(__resultText "$testPassed" "$*")
   printf -- "%s %s %s\n" "$needle" "$(_choose "$testPassed" "contains" "does not contain")" "$haystack"
 }
 
@@ -313,9 +316,9 @@ ___assertDirectoryExists() {
   done
 }
 ___assertDirectoryExistsFormat() {
-  local testPassed="${1-}"
-  shift
-  printf -- "%s %s" "$(__resultText "$testPassed" "$*")" "$(_choose "$testPassed" "is a directory" "is not a directory")"
+  local testPassed="${1-}" success="${2-}"
+  shift 2
+  printf -- "%s %s" "$(__resultText "$testPassed" "$*")" "$(_choose "$success" "is a directory" "is not a directory")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -335,8 +338,8 @@ ___assertDirectoryEmpty() {
   done
 }
 ___assertDirectoryEmptyFormat() {
-  local testPassed="${1-}"
-  shift
+  local testPassed="${1-}" success="${2-}"
+  shift 2
   printf -- "%s %s" "$(__resultText "$testPassed" "$*")" "$(_choose "$testPassed" "is an empty directory" "is not an empty directory")"
 }
 
@@ -357,8 +360,8 @@ ___assertFileExists() {
   done
 }
 ___assertFileExistsFormat() {
-  local testPassed="${1-}"
-  shift
+  local testPassed="${1-}" success="${2-}"
+  shift 2
   printf -- "%s %s wd: \"%s" "$(__resultText "$testPassed" "$*")" "$(_choose "$testPassed" "is a file" "is not a file")" "$(consoleValue "$(pwd)")"
 }
 
@@ -388,9 +391,9 @@ ___assertFileSize() {
 
 }
 ___assertFileSizeFormat() {
-  local testPassed="${1-}"
-  shift
-  printf -- "%s %s" "$(__resultText "$testPassed" "File Size: $1")" "$(_choose "$testPassed" "$*")"
+  local testPassed="${1-}" success="${2-}"
+  shift 2
+  printf -- "%s %s %s\n" "$(__resultText "$testPassed" "File Size: $1")" "$(_choose "$success" "matches" "does not match")" "$*"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -423,11 +426,11 @@ ___assertOutputEquals() {
   _clean "$exitCode" "$stderr" || return $?
 }
 ___assertOutputEqualsFormat() {
-  local testPassed="${1-}" verb expected="$2" binary="$3"
-  shift 3 || :
+  local testPassed="${1-}" success="${2-}" verb expected="$3" binary="$4"
+  shift 4 || :
 
   message="$(consoleCode "$binary")$(printf " \"%s\"" "$@")"
-  verb=$(_choose "$testPassed" "matches" "does not match")
+  verb=$(_choose "$success" "matches" "does not match")
   printf -- "%s %s %s %s" "$message" "$(consoleCode "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultText "$testPassed" "$expected")"
 }
 

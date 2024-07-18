@@ -544,7 +544,7 @@ _cachedShaPipe() {
 #
 # Usage: mapValue mapFile [ value ... ]
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. This help.
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: mapFile - Required. File. a file containing bash environment definitions
 # Argument: value - Optional. String. One or more values to map using said environment file
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
