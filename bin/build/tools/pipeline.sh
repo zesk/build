@@ -35,7 +35,7 @@
 # Exit code: 0 - if files are loaded successfully
 dotEnvConfigure() {
   local usage="_${FUNCNAME[0]}"
-  local where dotEnv files value name
+  local where dotEnv files value
 
   where=
   [ $# -eq 0 ] || where=$(usageArgumentDirectory "$usage" "where" "${1-}") || return $?
@@ -45,10 +45,10 @@ dotEnvConfigure() {
   files=("$dotEnv")
   [ ! -f "$dotEnv.local" ] || files+=("$dotEnv.local")
   for dotEnv in "${files[@]}"; do
-    while read -r name; do
-      value=$(__usageEnvironment "$usage" environmentValueRead "$dotEnv" "$name") || return $?
-      declare -x "$name=$value"
-    done < <(environmentNames <"$dotEnv")
+    while read -r environment; do
+      value=$(__usageEnvironment "$usage" environmentValueRead "$dotEnv" "$environment") || return $?
+      declare -x "$environment=$value"
+    done < <(environmentNames "$dotEnv")
   done
 }
 _dotEnvConfigure() {
