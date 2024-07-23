@@ -16,6 +16,7 @@
 #
 # Usage: assertEquals expected actual [ message ]
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -26,7 +27,6 @@
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: expected - Expected string
 # Argument: actual - Actual string
 # Argument: message - Message to output if the assertion fails
@@ -46,6 +46,7 @@ _assertEquals() {
 # Summary: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -56,7 +57,6 @@ _assertEquals() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: expected - Required. Expected string.
 # Argument: actual - Required. Actual string.
 # Argument: message - Message to output if the assertion fails. Optional.
@@ -82,6 +82,7 @@ _assertNotEquals() {
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -92,7 +93,6 @@ _assertNotEquals() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Examples:     assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with the provided exit code
@@ -115,6 +115,7 @@ _assertExitCode() {
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -125,7 +126,6 @@ _assertExitCode() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Examples:     {fn} 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with a different exit code
@@ -144,6 +144,7 @@ _assertNotExitCode() {
 # Usage: {fn} needle haystack
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -154,7 +155,6 @@ _assertNotExitCode() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: needle - Thing we are looking for
 # Argument: haystack - Thing we are looking in
 # Exit Code: 0 - The assertion succeeded
@@ -174,6 +174,7 @@ _assertContains() {
 # Usage: {fn} needle haystack
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -184,7 +185,6 @@ _assertContains() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: needle - Thing we are looking for
 # Argument: haystack - Thing we are looking in
 # Exit Code: 0 - The assertion succeeded
@@ -210,6 +210,7 @@ _assertNotContains() {
 # Usage: assertDirectoryExists directory [ message ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -220,7 +221,6 @@ _assertNotContains() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: directory - Directory that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -241,6 +241,7 @@ _assertDirectoryExists() {
 # Usage: assertDirectoryDoesNotExist directory [ message ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -251,7 +252,6 @@ _assertDirectoryExists() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: directory - Directory that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -273,6 +273,7 @@ _assertDirectoryDoesNotExist() {
 # Usage: {fn} directory [ message ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -283,7 +284,6 @@ _assertDirectoryDoesNotExist() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: directory - Directory that should exist and be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -305,6 +305,7 @@ _assertDirectoryEmpty() {
 # Usage: {fn} directory [ message ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -315,7 +316,6 @@ _assertDirectoryEmpty() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: directory - Directory that should exist and not be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -345,6 +345,7 @@ _assertDirectoryNotEmpty() {
 # Usage: {fn} item [ message ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -355,7 +356,6 @@ _assertDirectoryNotEmpty() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: item - File that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -376,6 +376,7 @@ _assertFileExists() {
 # Usage: {fn} item [ message ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -386,7 +387,6 @@ _assertFileExists() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: file - File that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -418,6 +418,7 @@ _assertFileDoesNotExist() {
 #
 # Usage: assertOutputEquals expected binary [ parameters ]
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -428,7 +429,6 @@ _assertFileDoesNotExist() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: expected - Expected string
 # Argument: binary - Binary to run and evaluate output
 # Argument: parameters - Any additional parameters to binary
@@ -449,6 +449,7 @@ _assertOutputEquals() {
 #
 # Usage: {fn} expected command [ arguments ... ]
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -459,7 +460,6 @@ _assertOutputEquals() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: expected - A string to expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -484,6 +484,7 @@ _assertOutputContains() {
 #
 # Usage: assertOutputDoesNotContain expected command [ arguments ... ]
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -494,7 +495,6 @@ _assertOutputContains() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: expected - A string to NOT expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -516,6 +516,7 @@ _assertOutputDoesNotContain() {
 # Usage: assertFileContains fileName string0 [ ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -526,7 +527,6 @@ _assertOutputDoesNotContain() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must be found on at least one line in the file
 #
@@ -549,6 +549,7 @@ _assertFileContains() {
 # Usage: assertFileDoesNotContain fileName string0 [ ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -559,7 +560,6 @@ _assertFileContains() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
 # Exit code: 1 - If the assertions fails
@@ -579,6 +579,7 @@ _assertFileDoesNotContain() {
 # Usage: {fn} expectedSize [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -589,7 +590,6 @@ _assertFileDoesNotContain() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
 # Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
@@ -609,6 +609,7 @@ _assertFileSize() {
 # Usage: {fn} expectedSize [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -619,7 +620,6 @@ _assertFileSize() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
 # Argument: fileName ... - Required. File. One ore more file which should NOT be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
@@ -639,6 +639,7 @@ _assertNotFileSize() {
 # Usage: {fn} [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -649,7 +650,6 @@ _assertNotFileSize() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: - fileName ... - Required. File. One ore more file which should be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
@@ -668,6 +668,7 @@ _assertZeroFileSize() {
 # Usage: {fn} [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -678,7 +679,6 @@ _assertZeroFileSize() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: - fileName ... - Required. File. One ore more file which should NOT be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
@@ -705,6 +705,7 @@ _assertNotZeroFileSize() {
 # Assert `leftValue > rightValue`
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -715,7 +716,6 @@ _assertNotZeroFileSize() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -733,6 +733,7 @@ _assertGreaterThan() {
 # Assert `leftValue >= rightValue`
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -743,7 +744,6 @@ _assertGreaterThan() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -762,6 +762,7 @@ _assertGreaterThanOrEqual() {
 # Assert `leftValue < rightValue`
 #
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -772,7 +773,6 @@ _assertGreaterThanOrEqual() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -792,6 +792,7 @@ _assertLessThan() {
 #
 # Usage: {fn} leftValue rightValue [ message ]
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.
@@ -802,7 +803,6 @@ _assertLessThan() {
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails

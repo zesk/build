@@ -71,7 +71,7 @@ _textExit() {
 __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
 
-  local quietLog allTests runTests shortTest startTest matchTests
+  local quietLog allTests missingTests runTests shortTest startTest matchTests
   # Avoid conflict with __argument
   local __ARGUMENT start
   local continueFile continueFlag
@@ -100,18 +100,22 @@ __buildTestSuite() {
   trap __messyTestCleanup EXIT QUIT TERM
 
   messyOption=
-  allTests=(sugar colors console debug git decoration url ssh log version type process os hook pipeline identical)
+  allTests=()
+  allTests+=(sugar colors console debug git decoration url ssh log version type process hook pipeline identical)
+  allTests+=(os directory file environment)
   # Strange quoting for a s s e r t is to hide it from findUncaughtAssertions
   allTests+=(text bash float utilities self markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
   allTests+=(sysvinit crontab daemontools)
+  missingTests=()
   while read -r shortTest; do
     if ! inArray "$shortTest" "${allTests[@]}"; then
-      consoleError "MISSING $shortTest in allTests"
+      missingTests+=("$shortTest")
       allTests+=("$shortTest")
     fi
   done < <(shortTestCodes)
-  runTests=()
+  [ 0 -eq "${#missingTests[@]}" ] || consoleError "MISSING in allTests:" "$(consoleValue "${missingTests[*]}")"
 
+  runTests=()
   continueFile="$BUILD_HOME/.last-run-test"
   continueFlag=false
   testTracing=options
@@ -154,7 +158,7 @@ __buildTestSuite() {
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$__ARGUMENT")" || return $?
   done
 
-  $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?
+  $continueFlag || [ ! -f "$continueFile" ] || __failEnvironment "$usage" rm "$continueFile" || return $?
 
   if [ ${#runTests[@]} -eq 0 ]; then
     runTests=("${allTests[@]}")

@@ -125,7 +125,7 @@ __writeTo() {
 
 testHousekeeper() {
   local leakCode matches testFiles
-  local testDir
+  local testDir testFile
 
   export BUILD_HOME
   leakCode=$(_code LeAk)
@@ -134,12 +134,14 @@ testHousekeeper() {
 
   testDir=$(__environment mktemp -d) || return $?
 
+  statusMessage consoleInfo Copying "${BUILD_HOME-"(blank)"}" to test location
   __environment cp -r "$BUILD_HOME" "$testDir" || return $?
   __environment cd "$testDir" || return $?
 
   assertEquals 108 "$leakCode" || return $?
 
-  assertNotExitCode --stderr-match "must be directory" --line "$LINENO" 0 housekeeper NOT-A-DIR || return $?
+  statusMessage consoleInfo Housekeeper tests
+  assertNotExitCode --stderr-match "is not directory" --line "$LINENO" 0 housekeeper NOT-A-DIR || return $?
   assertNotExitCode --stderr-match "not callable" --line "$LINENO" 0 housekeeper "$testDir" "NotABinary" || return $?
 
   # Simple case - nothing
@@ -180,5 +182,8 @@ testHousekeeper() {
     --stderr-match "cruft"
     --stderr-match "temporary-files"
   )
+  testFiles=(dust dirt cruft temporary-files)
   assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" rm -f "${testFiles[@]}" || return $?
+
+  __environment rm -rf "$testDir" || return $?
 }

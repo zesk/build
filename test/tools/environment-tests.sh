@@ -12,6 +12,7 @@ declare -a tests
 tests+=(testDotEnvConfigure)
 tests+=(testDotEnvConfigure)
 tests+=(testEnvironmentFileMake)
+tests+=(testEnvironmentFileLoad)
 tests+=(testEnvironmentVariables)
 
 testDotEnvConfigure() {
@@ -24,26 +25,26 @@ testDotEnvConfigure() {
   __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
   consoleInfo "$(pwd)"
-  assertNotExitCode 0 dotEnvConfigure || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 dotEnvConfigure || return $?
 
   __environment touch .env || return $?
-  __environment environmentWriteValue TESTENVWORKS "$magic" >>.env || return $?
+  __environment environmentValueWrite TESTENVWORKS "$magic" >>.env || return $?
 
-  assertEquals "" "${TESTENVWORKS-}" || return $?
-  assertEquals "" "${TESTENVLOCALWORKS-}" || return $?
+  assertEquals --line "$LINENO" "" "${TESTENVWORKS-}" || return $?
+  assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
-  assertExitCode 0 dotEnvConfigure || return $?
+  assertExitCode --line "$LINENO" 0 dotEnvConfigure || return $?
 
-  assertEquals "$magic" "${TESTENVWORKS-}" || return $?
-  assertEquals "" "${TESTENVLOCALWORKS-}" || return $?
+  assertEquals --line "$LINENO" "$magic" "${TESTENVWORKS-}" || return $?
+  assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
-  environmentWriteValue TESTENVWORKS "NEW-$magic" >>.env || return $?
+  __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>.env || return $?
   __environment touch .env.local || return $?
 
-  assertExitCode 0 dotEnvConfigure || return $?
+  assertExitCode --line "$LINENO" 0 dotEnvConfigure || return $?
 
-  assertEquals "NEW-$magic" "${TESTENVWORKS-}" || return $?
-  assertEquals "$magic" "${TESTENVLOCALWORKS-}" || return $?
+  assertEquals --line "$LINENO" "NEW-$magic" "${TESTENVWORKS-}" || return $?
+  assertEquals --line "$LINENO" "$magic" "${TESTENVLOCALWORKS-}" || return $?
 
   __environment cd .. || return $?
   __environment rm -rf "$tempDir" || return $?
@@ -64,7 +65,7 @@ testEnvironmentFileLoad() {
   touch .env
   assertExitCode 0 environmentFileLoad .env || return $?
   assertEquals "${TESTVAR-}" "" || return $?
-  environmentWriteValue
+  environmentValueWrite
 
   __environment touch .env.local || return $?
   if ! dotEnvConfigure; then

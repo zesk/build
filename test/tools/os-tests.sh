@@ -139,16 +139,3 @@ testExtensionLists() {
 
   rm -rf "$target" || return $?
 }
-
-__testIsAbsolutePathData() {
-  cat <<EOF
-/,0
-,1
-/this,0
-/QWERTY/,0
-a/a/a/a,1
-.,1
-..,1
-pickle,1
-EOF
-}

@@ -12,6 +12,19 @@ tests+=(testIsAbsolutePath)
 tests+=(testRequireFileDirectory)
 tests+=(testFileDirectoryExists)
 
+__testIsAbsolutePathData() {
+  cat <<EOF
+/,0
+,1
+/this,0
+/QWERTY/,0
+a/a/a/a,1
+.,1
+..,1
+pickle,1
+EOF
+}
+
 testIsAbsolutePath() {
   local path exitCode
 
@@ -21,13 +34,20 @@ testIsAbsolutePath() {
 }
 
 testRequireFileDirectory() {
-  assertDirectoryNotExists temp || return $?
-  assertExitCode 0 requireFileDirectory temp || return $?
-  assertDirectoryExists temp || return $?
-  assertExitCode 0 rm -rf temp || return $?
+  local testDir="temp.$$"
+
+  assertDirectoryDoesNotExist --line "$LINENO" "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 requireFileDirectory "$testDir" || return $?
+  assertDirectoryDoesNotExist --line "$LINENO" "$testDir" || return $?
+
+  assertDirectoryDoesNotExist --line "$LINENO" "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 requireFileDirectory "$testDir/place" || return $?
+  assertDirectoryExists --line "$LINENO" "$testDir" || return $?
+
+  assertExitCode --line "$LINENO" 0 rm -rf "$testDir" || return $?
 }
 
 testFileDirectoryExists() {
-  assertExitCode 0 fileDirectoryExists "${BASH_SOURCE[0]}}" || return $?
-  assertNotExitCode 0 fileDirectoryExists "${BASH_SOURCE[0]}}/not-a-dir" || return $?
+  assertExitCode --line "$LINENO" 0 fileDirectoryExists "${BASH_SOURCE[0]}}" || return $?
+  assertNotExitCode --line "$LINENO" 0 fileDirectoryExists "${BASH_SOURCE[0]}}/not-a-dir" || return $?
 }

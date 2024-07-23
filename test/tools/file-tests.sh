@@ -13,11 +13,14 @@ tests+=(testBetterType)
 
 testBasicFileStuff() {
   local testDir
+  local testFile
 
   testDir=$(__environment mktemp -d) || return $?
 
-  assertExitCode 0 modificationTime "$testDir" || return $?
-  assertExitCode 0 modificationSeconds "$testDir" || return $?
+  testFile="$testDir/$(randomString).$$"
+  __environment touch "$testFile" || return $?
+  assertExitCode 0 modificationTime "$testFile" || return $?
+  assertExitCode 0 modificationSeconds "$testFile" || return $?
 }
 
 _assertBetterType() {

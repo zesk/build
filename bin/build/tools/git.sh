@@ -122,7 +122,7 @@ gitTagAgain() {
 #
 gitVersionList() {
   local usage="_${FUNCNAME[0]}"
-  [ -d "./.git" ] || __usageEnvironment "$usage" "No .git directory at $(pwd), stopping" || return $?
+  [ -d "./.git" ] || __failEnvironment "$usage" "No .git directory at $(pwd), stopping" || return $?
   __usageEnvironment "$usage" git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
 }
 _gitVersionList() {
@@ -151,7 +151,7 @@ veeGitTag() {
   local usage="_${FUNCNAME[0]}"
   local tagName="$1"
 
-  [ "$tagName" = "${tagName#v}" ] || __usageArgument "$usage" "already veed: $(consoleValue "$tagName")" || return $?
+  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already veed: $(consoleValue "$tagName")" || return $?
   __usageEnvironment "$usage" git tag "v$tagName" "$tagName" || return $?
   __usageEnvironment "$usage" git tag -d "$tagName" || return $?
   __usageEnvironment "$usage" git push origin "v$tagName" ":$tagName" || return $?

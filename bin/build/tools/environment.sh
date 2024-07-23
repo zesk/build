@@ -113,7 +113,7 @@ dotEnvConfigure() {
   [ $# -eq 0 ] || where=$(usageArgumentDirectory "$usage" "where" "${1-}") || return $?
   [ -n "$where" ] || where=$(__usageEnvironment "$usage" pwd) || return $?
   dotEnv="$where/.env"
-  [ ! -f "$dotEnv" ] || __usageEnvironment "$usage" "Missing $dotEnv" || return $?
+  [ ! -f "$dotEnv" ] || __failEnvironment "$usage" "Missing $dotEnv" || return $?
   files=("$dotEnv")
   [ ! -f "$dotEnv.local" ] || files+=("$dotEnv.local")
   __usageEnvironment "$usage" environmentFileLoad "${files[@]}" || return $?
@@ -290,7 +290,7 @@ environmentFileApplicationVerify() {
       missing+=("$e")
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || __usageEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
+  [ ${#missing[@]} -eq 0 ] || __failEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
 }
 environmentFileVerify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

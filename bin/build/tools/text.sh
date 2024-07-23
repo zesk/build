@@ -467,7 +467,7 @@ shaPipe() {
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
-      [ -f "$1" ] || __usageArgument "$usage" "$1 is not a file" || return $?
+      [ -f "$1" ] || __failArgument "$usage" "$1 is not a file" || return $?
       [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
         printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log

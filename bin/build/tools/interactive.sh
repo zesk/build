@@ -169,7 +169,7 @@ copyFile() {
         ;;
       *)
         source="$1"
-        [ -f "$source" ] || __usageEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
+        [ -f "$source" ] || __failEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
         shift
         destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
         shift

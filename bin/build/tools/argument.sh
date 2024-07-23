@@ -37,8 +37,8 @@ _arguments() {
   local argument nArguments argumentIndex
   local stateFile checkFunction value clean
 
-  shift || __usageArgument "$usageArguments" "Missing this" || return $?
-  shift || __usageArgument "$usageArguments" "Missing source" || return $?
+  shift || __failArgument "$usageArguments" "Missing this" || return $?
+  shift || __failArgument "$usageArguments" "Missing source" || return $?
   stateFile=$(__usageEnvironment "$usageArguments" mktemp) || return $?
   spec=$(__usageEnvironment "$usageArguments" _usageArgumentsSpecification "$this" "$source") || return $?
   # Rest is calling function argument usage
@@ -104,8 +104,8 @@ _usageArgumentsSpecification() {
   cacheFile="$cacheDirectory/documentation"
   argumentDirectory=$(__usageEnvironment "$usage" requireDirectory "$cacheDirectory/parsed") || return $?
   __usageEnvironment "$usage" touch "$cacheDirectory/.magic" || return $?
-  [ -f "$functionDefinitionFile" ] || __usageArgument "$usage" "$functionDefinitionFile does not exist" || return $?
-  [ -n "$functionName" ] || __usageArgument "$usage" "functionName is blank" || return $?
+  [ -f "$functionDefinitionFile" ] || __failArgument "$usage" "$functionDefinitionFile does not exist" || return $?
+  [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(newestFile "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
     __usageEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile"
   fi

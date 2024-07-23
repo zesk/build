@@ -237,7 +237,7 @@ __usageArgumentHelper() {
   [ -n "$variableValue" ] || __failArgument "$usageFunction" "$variableName $noun is required" || return $?
 
   # Remaining parameters are the test
-  "$@" "$variableValue" || __failArgument "$usageFunction" "$variableName must be $noun (\"$(consoleCode "$variableValue")$(consoleError '")')" || return $?
+  "$@" "$variableValue" || __failArgument "$usageFunction" "$variableName is not $noun (\"$(consoleCode "$variableValue")$(consoleError '")')" || return $?
 
   printf "%s\n" "$variableValue"
 }
