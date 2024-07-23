@@ -306,13 +306,13 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 ## Application Environment
 
 
-### `makeEnvironment` - Create environment file `.env` for build.
+### `environmentFileApplicationMake` - Create environment file `.env` for build.
 
 Create environment file `.env` for build.
 
 #### Usage
 
-    makeEnvironment [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
+    environmentFileApplicationMake [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
     
 
 #### Arguments
@@ -338,7 +338,7 @@ APPLICATION_ID - reserved and set to `runHook application-tag`
 
 - `0` - Always succeeds
 
-### `applicationEnvironment` - Loads application environment variables, set them to their default values
+### `environmentApplicationLoad` - Loads application environment variables, set them to their default values
 
 Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
 

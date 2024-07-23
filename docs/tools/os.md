@@ -718,7 +718,7 @@ Works from the current directory
 
 #### Usage
 
-    pathAppend pathValue separator [ --first | --last | path ]
+    listAppend pathValue separator [ --first | --last | path ]
     
 
 #### Arguments

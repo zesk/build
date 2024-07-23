@@ -1,4 +1,4 @@
-# Assert Functions
+# Assert Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
@@ -51,8 +51,6 @@
 
 {assertZeroFileSize}
 {assertNotZeroFileSize}
-
-
 
 ## Random
 

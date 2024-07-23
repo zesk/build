@@ -139,6 +139,17 @@ __deprecatedCleanup() {
   fi
   __deprecatedCannon 'usageArgumentRequired' usageArgumentString
 
+  # v0.11.2
+  # crontab-application-sync.sh
+  deprecatedTokens+=(crontab-application-sync.sh)
+  __deprecatedCannon "show""Environment" environmentFileShow
+  __deprecatedCannon "make""Environment" environmentFileApplicationMake
+  __deprecatedCannon "dot""EnvConfigure"
+  __deprecatedCannon "application""EnvironmentVariables" environmentApplicationVariables
+  __deprecatedCannon "application""Environment" environmentApplicationLoad
+  __deprecatedCannon "path""Append" listAppend
+  deprecatedTokens+=("dotEnv""Configure")
+
   clearLine
   # Do all deprecations
   for deprecatedToken in "${deprecatedTokens[@]}"; do

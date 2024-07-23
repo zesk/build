@@ -44,4 +44,4 @@ _return() {
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 
-__tools ../.. makeEnvironment "$@"
+__tools ../.. environmentFileApplicationMake "$@"

@@ -9,6 +9,7 @@
 # Argument: --help - Optional. Flag. Display this help.
 
 # DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
 # Argument: --display - Optional. String. Display name for the condition.

@@ -230,7 +230,7 @@ phpBuild() {
     # this script usually runs ./bin/build/pipeline/make-env.sh
     __usageEnvironment "$usage" runHook make-env "${environmentExtras[@]+${environmentExtras[@]}}" >.env || return $?
   else
-    __usageEnvironment "$usage" makeEnvironment "${environmentExtras[@]+${environmentExtras[@]}}" >.env || return $?
+    __usageEnvironment "$usage" environmentFileApplicationMake "${environmentExtras[@]+${environmentExtras[@]}}" >.env || return $?
   fi
   if ! grep -q APPLICATION .env; then
     buildFailed ".env" || __failEnvironment "$usage" ".env file seems to be invalid:" || return $?
@@ -241,7 +241,7 @@ phpBuild() {
     declare -x "$environment=$(environmentValueRead ".env" "$environment" "")"
   done
   _phpEchoBar || :
-  showEnvironment "${environments[@]}" || :
+  environmentFileShow "${environments[@]}" || :
 
   [ ! -d ./.deploy ] || rm -rf ./.deploy || __failEnvironment "$usage" "Can not delete .deploy" || return $?
 

@@ -28,10 +28,10 @@
 
 ## Application Environment
 
-{makeEnvironment}
-{showEnvironment}
+{environmentFileApplicationMake}
+{environmentFileShow}
 {applicationEnvironmentVariables}
-{applicationEnvironment}
+{environmentApplicationLoad}
 
 ## Deployment tools
 

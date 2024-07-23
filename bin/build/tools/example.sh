@@ -53,11 +53,12 @@ _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 
 #
 # Usage: {fn}
-# Argument: --help - Optional. Flag. This help.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --easy - Optional. Flag. Easy mode.
 # Argument: binary - Required. String. The binary to look for.
 # Argument: remoteUrl - Required. URL. Remote URL.
-# Argument: --target target - Optional. File. File to create. Directory must exist.
+# Argument: --target target - Optional. File. File to create. File must exist.
 # Argument: --path path - Optional. Directory. Directory of path of thing.
 # Argument: --title title - Optional. String. Title of the thing.
 # Argument: --name name - Optional. String. Name of the thing.

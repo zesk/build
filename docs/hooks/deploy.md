@@ -59,7 +59,7 @@ If your project has specific environment variables, you can add them in your `ma
 
 #### See Also
 
-- [function makeEnvironment
+- [function environmentFileApplicationMake
 ](./docs/tools/pipeline.md
 ) - [Create environment file `.env` for build.
 ](https://github.com/zesk/build/blob/main/bin/build/tools/pipeline.sh#L321

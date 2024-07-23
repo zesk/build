@@ -244,7 +244,10 @@ identicalCheck() {
   done < <(find "$tempDirectory" -type f -name '*.match' || :)
   for token in "${singles[@]+"${singles[@]}"}"; do
     if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
-      printf "%s: %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")"
+      while read -r tokenFile; do
+        tokenFile="$(tail -n 1 "$tokenFile")"
+        printf "%s: %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")"
+      done < <(find "$tempDirectory" -name "$token" -type f)
     fi
   done
   rm -rf "$tempDirectory" || :

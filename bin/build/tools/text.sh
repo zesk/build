@@ -575,6 +575,7 @@ mapValue() {
       *)
         if [ -z "$mapFile" ]; then
           mapFile=$(usageArgumentFile "$usage" "mapFile" "${1-}") || return $?
+          shift
           break
         else
           __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
@@ -601,7 +602,7 @@ mapValue() {
         done
       fi
       value="${value/${searchToken}/${environmentValue}}"
-    done < <(environmentNames "$mapFile")
+    done < <(environmentNames <"$mapFile")
     printf "%s\n" "$value"
   )
 }
@@ -1034,35 +1035,103 @@ joinArguments() {
 }
 
 #
-# Write a value to a state file as NAME="value"
+# Usage: {fn} listValue separator [ --first | --last | item ]
+# Argument: listValue - Required. Path value to modify.
+# Argument: separator - Required. Separator string for item values (typically `:`)
+# Argument: --first - Optional. Place any items after this flag first in the list
+# Argument: --last - Optional. Place any items after this flag last in the list. Default.
+# Argument: item - the path to be added to the `listValue`
 #
-environmentValueWrite() {
-  local name="${1-}" value="${2-}"
-  value="$(declare -p value)"
-  value="${value#declare*value=}"
-  printf "%s=%s\n" "$name" "$value"
+listAppend() {
+  local usage="_${FUNCNAME[0]}"
+  local argument listValue="${1-}" separator="${2-}"
+
+  shift 2 || __failArgument "$usage" "Missing arguments" || return $?
+  firstFlag=false
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$1" in
+      --first)
+        firstFlag=true
+        ;;
+      --last)
+        firstFlag=false
+        ;;
+      *)
+        if [ "$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")" -lt 0 ]; then
+          [ -d "$argument" ] || __failEnvironment "$usage" "not a directory $(consoleCode "$argument")" || return $?
+          if [ -z "$listValue" ]; then
+            listValue="$argument"
+          elif "$firstFlag"; then
+            listValue="$argument$separator${listValue#"$separator"}"
+          else
+            listValue="${listValue%"$separator"}$separator$argument"
+          fi
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift $argument" || return $?
+  done
+  printf "%s\n" "$listValue"
+}
+_listAppend() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Read a value safely from a environment file
+# Removes duplicates from a list and maintains ordering.
 #
-environmentValueRead() {
-  local stateFile="${1-}" name="${2-}" default="${3-}" line
-  [ -f "$stateFile" ] || __failArgument "$usage" "stateFile \"$stateFile\" is not a file" || return $?
-  [ -n "$name" ] || __failArgument "$usage" "stateFile \"$stateFile\" name is blank (default=$default)" || return $?
-  line="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1)"
-  if [ -z "$line" ]; then
-    printf "%s\n" "$default"
-  else
-    declare "$name=$default"
-    # Wondering if this can run shell code - do not believe so
-    declare "$line"
-    printf "%s\n" "${name-}"
-  fi
-}
+# Usage: {fn} separator listText
+# Argument: --help - Optional. Flag. This help.
+# Argument: --removed - Optional. Flag. Show removed items instead of the new list.
+#
+listCleanDuplicates() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local item items removed=() separator="" removedFlag=false
 
-# Usage: {fn} < "$stateFile"
-# List names of environment values set in a bash state file
-environmentNames() {
-  grep -e "^[A-Za-z][A-Z0-9_a-z]*=" | cut -f 1 -d =
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --removed)
+        removedFlag=true
+        ;;
+      *)
+        if [ -z "$separator" ]; then
+          separator="$argument"
+        else
+          break
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  shift
+  newItems=()
+  while [ $# -gt 0 ]; do
+    IFS="$separator" read -r -a items < <(printf "%s\n" "$1")
+    for item in "${items[@]}"; do
+      if ! tempPath=$(listAppend "$tempPath" "$separator" "$item"); then
+        removed+=("$item")
+      else
+        newItems+=("$item")
+      fi
+    done
+    if $removedFlag; then
+      IFS="$separator" printf "%s\n" "${removed[*]}"
+    else
+      IFS="$separator" printf "%s\n" "${newItems[*]}"
+    fi
+  done
+}
+_listCleanDuplicates() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

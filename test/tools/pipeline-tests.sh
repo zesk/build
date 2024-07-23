@@ -9,54 +9,89 @@
 
 declare -a tests
 
-tests+=(testDotEnvConfigure)
-testDotEnvConfigure() {
-  local tempDir
+_uptoDateTest() {
+  local pass=$1
 
-  tempDir="$(buildCacheDirectory)/$$.dotEnvConfig" || _environment buildCacheDirectory || return $?
-
-  __environment mkdir -p "$tempDir" || return $?
-  __environment cd "$tempDir" || return $?
-  consoleInfo "$(pwd)"
-  __environment touch .env || return $?
-  if ! dotEnvConfigure; then
-    _environment "dotEnvConfigure failed with just .env" || return $?
+  shift
+  if [ "$pass" = "1" ]; then
+    if ! isUpToDate "$@"; then
+      _environment "isUpToDate $* should be up to date" || return $?
+    fi
+  else
+    if isUpToDate "$@"; then
+      _environment  "isUpToDate $* should NOT be up to date" || return $?
+    fi
   fi
-  __environment touch .env.local || return $?
-  if ! dotEnvConfigure; then
-    _environment "dotEnvConfigure failed with both .env" || return $?
-  fi
-  __environment cd .. || return $?
-  __environment rm -rf "$tempDir" || return $?
-  consoleSuccess dotEnvConfigure works AOK
 }
 
-tests+=(testMakeEnvironment)
-testMakeEnvironment() {
-  local v
-  (
-    set -eou pipefail
 
-    export TESTING_ENV=chameleon
-    export DSN=mysql://not@host/thing
+tests+=(testIsUpToDate)
+testIsUpToDate() {
+  local thisYear thisMonth expirationDays start testDate
 
-    export DEPLOY_USER_HOSTS=none
-    export BUILD_TARGET=app2.tar.gz
-    export DEPLOYMENT=test-make-env
-    export APPLICATION_ID=aabbccdd
+  start=$(beginTiming)
+  testSection "isUpToDate testing"
+  thisYear=$(($(date +%Y) + 0))
+  thisMonth="$(date +%m)"
+  _uptoDateTest 0 || return $?
+  _uptoDateTest 0 "" || return $?
+  _uptoDateTest 0 99999 || return $?
 
-    [ ! -f .env ] || rm .env
-    makeEnvironment TESTING_ENV DSN >.env || return $?
+  testDate=2020-01-01
 
-    if [ ! -f .env ]; then
-      _environment "make-env.sh did not generate a .env file" || return $?
-    fi
-    for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DSN; do
-      if ! grep -q "$v" .env; then
-        _environment "$(printf -- "%s %s\n%s" "makeEnvironment > .env file does not contain" "$(consoleCode "$v")" "$(wrapLines "$(consoleCode)    " "$(consoleReset)" <.env)")" || return $?
-      fi
-    done
-    consoleGreen make-env.sh works AOK
-    rm .env
-  )
+  consoleInfo "2020: $testDate"
+
+  _uptoDateTest 0 $testDate 10 || return $?
+  testDate="$thisYear-01-01"
+
+  testSection "ThisYear-01-01: $testDate"
+
+  expirationDays=367
+  _uptoDateTest 0 "$testDate" "$expirationDays" || return $?
+  expirationDays=366
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+  expirationDays=365
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+
+  testSection "ThisYear-ThisMonth-01: $testDate"
+
+  testDate="$thisYear-$thisMonth-01"
+  expirationDays=60
+
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+
+  testDate=$(todayDate)
+
+  testSection "todayDate: $testDate"
+
+  expirationDays=0
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+  expirationDays=1
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+  expirationDays=2
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+
+  testDate=$(yesterdayDate)
+
+  testSection "yesterdayDate: $testDate"
+
+  expirationDays=0
+  _uptoDateTest 0 "$testDate" "$expirationDays" || return $?
+  expirationDays=1
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+  expirationDays=2
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+
+  testDate=$(tomorrowDate)
+
+  testSection "tomorrowDate: $testDate"
+
+  expirationDays=0
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+  expirationDays=1
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+  expirationDays=2
+  _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
+
+  reportTiming "$start" Done
 }

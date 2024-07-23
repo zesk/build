@@ -58,6 +58,7 @@
 {cachedShaPipe}
 {cannon}
 {joinArguments}
+{listAppend}
 
 # Characters
 

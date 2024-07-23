@@ -1,4 +1,4 @@
-# AWS Functions
+# AWS Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
@@ -10,6 +10,8 @@
      ██████   ███▀▀███       ▀██
     ▄██  ██▄  ███  ███  █▄▄▄▄▄█▀
     ▀▀    ▀▀  ▀▀▀  ▀▀▀   ▀▀▀▀▀
+
+AWS stands for Amazon Web Services and tools related to interacting with the `aws` binary.
 
 {awsInstall}
 {awsCredentialsFile}

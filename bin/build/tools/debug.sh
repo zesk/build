@@ -181,3 +181,66 @@ plumber() {
 _plumber() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Run a command and ensure files are not modified
+# Usage: {fn} [ --help ] [ --ignore grepPattern ] directory callable
+housekeeper() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local rootDirectory
+  local __before __after __changed __ignore __pattern __command
+  local __result=0
+  local __ignore=()
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --ignore)
+        shift
+        __pattern="$(usageArgumentString "$usage" "globalName" "${1-}")" || return $?
+        __ignore+=(-e "$__pattern")
+        ;;
+      *)
+        rootDirectory=$(usageArgumentDirectory "$usage" "rootDirectory" "$1") || return $?
+        shift
+        break
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  [ $# -gt 0 ] || return 0
+  isCallable "${1-}" || __failArgument "$usage" "$1 is not callable" "$@" || return $?
+
+  __after=$(mktemp) || _environment mktemp || return $?
+  __before="$__after.before"
+  __after="$__after.after"
+
+  find "$rootDirectory" -type f -print0 | xargs -0 shasum >"$__before"
+  if "$@"; then
+    find "$rootDirectory" -type f -print0 | xargs -0 shasum >"$__after"
+    if [ "${#__ignore[@]}" -gt 0 ]; then
+      __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' | grep -v "${__ignore[@]+${__ignore[@]}}")"
+    else
+      __changed="$(diff "$__before" "$__after" | grep -e '^[<>]')"
+    fi
+    __command=$(consoleCode "$(_command "$@")")
+    if [ -n "$__changed" ]; then
+      printf "%s\n" "$__changed" | dumpPipe "$__command modified files" 1>&2
+      __result=$(_code leak)
+    fi
+  else
+    __result=$?
+  fi
+  rm -rf "$__before" "$__after" || :
+  return "$__result"
+}
+_housekeeper() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

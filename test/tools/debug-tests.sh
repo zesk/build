@@ -10,6 +10,11 @@ set -eou pipefail
 
 declare -a tests
 
+tests+=(testHousekeeper)
+tests+=(testPlumber)
+tests+=(testErrorExit)
+tests+=(testBuildDebugEnabled)
+
 _testBuildDebugEnabledStart() {
   consoleInfo "Suppressing stderr"
   exec 4>&2
@@ -28,7 +33,6 @@ _testBuildDebugEnabledExit() {
   return "$code"
 }
 
-tests+=(testBuildDebugEnabled)
 testBuildDebugEnabled() {
   local saveDebug quietLog
 
@@ -72,7 +76,6 @@ testBuildDebugEnabled() {
   _testBuildDebugEnabledExit 0 "$quietLog"
 }
 
-tests+=(testErrorExit)
 testErrorExit() {
   local actual
 
@@ -99,7 +102,6 @@ __leakyPipe() {
   : "$wonderful"
 }
 
-tests+=(testPlumber)
 testPlumber() {
   local leakCode
 
@@ -112,4 +114,71 @@ testPlumber() {
   assertExitCode --line "$LINENO" 0 plumber statusMessage __leakyPipe Cool || return $?
   # Run directly within plumber so catches leaks
   assertExitCode --line "$LINENO" --stderr-match IS_THIS_GLOBAL --stderr-match wonderful "$leakCode" plumber __leakyPipe Cool || return $?
+}
+
+__writeTo() {
+  while [ $# -gt 0 ]; do
+    printf "%s\n" "$(randomString)" >"$1"
+    shift
+  done
+}
+
+testHousekeeper() {
+  local leakCode matches testFiles
+  local testDir
+
+  export BUILD_HOME
+  leakCode=$(_code LeAk)
+
+  buildEnvironmentLoad BUILD_HOME || return $?
+
+  testDir=$(__environment mktemp -d) || return $?
+
+  __environment cp -r "$BUILD_HOME" "$testDir" || return $?
+  __environment cd "$testDir" || return $?
+
+  assertEquals 108 "$leakCode" || return $?
+
+  assertNotExitCode --stderr-match "must be directory" --line "$LINENO" 0 housekeeper NOT-A-DIR || return $?
+  assertNotExitCode --stderr-match "not callable" --line "$LINENO" 0 housekeeper "$testDir" "NotABinary" || return $?
+
+  # Simple case - nothing
+  assertExitCode --line "$LINENO" 0 housekeeper "$testDir" __writeTo || return $?
+
+  # Write 5 files
+  testFiles=(dust dirt cobwebs cruft temporary-files)
+  matches=()
+  for testFile in "${testFiles[@]}"; do
+    matches+=(--stderr-match "$testFile")
+  done
+  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" __writeTo "${testFiles[@]}" || return $?
+
+  # Change dust
+  matches=(
+    --stderr-match "dust"
+    --stderr-no-match "dirt"
+    --stderr-no-match "cobwebs"
+    --stderr-no-match "cruft"
+    --stderr-no-match "temporary-files"
+  )
+  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" __writeTo dust || return $?
+
+  matches=(
+    --stderr-no-match "dust"
+    --stderr-no-match "dirt"
+    --stderr-match "cobwebs"
+    --stderr-no-match "cruft"
+    --stderr-no-match "temporary-files"
+  )
+  # Remove cobwebs
+  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" rm cobwebs || return $?
+  # Remove multiple
+  matches=(
+    --stderr-match "dust"
+    --stderr-match "dirt"
+    --stderr-no-match "cobwebs"
+    --stderr-match "cruft"
+    --stderr-match "temporary-files"
+  )
+  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" rm -f "${testFiles[@]}" || return $?
 }
