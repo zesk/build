@@ -113,7 +113,7 @@ testPlumber() {
   # Run as a subshell so no leaks
   assertExitCode --line "$LINENO" 0 plumber statusMessage __leakyPipe Cool || return $?
   # Run directly within plumber so catches leaks
-  assertExitCode --line "$LINENO" --stderr-match IS_THIS_GLOBAL --stderr-match wonderful "$leakCode" plumber __leakyPipe Cool || return $?
+  assertExitCode --dump --line "$LINENO" --leak IS_THIS_GLOBAL --leak wonderful "0" plumber __leakyPipe Cool || return $?
 }
 
 __writeTo() {

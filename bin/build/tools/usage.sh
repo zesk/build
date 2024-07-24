@@ -491,6 +491,20 @@ usageArgumentFunction() {
   printf "%s\n" "$1"
 }
 
+# Require an argument to be a URL
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
+# Exit code: 0 - If `value` is `urlValid`
+# Exit Code: 2 - If `value` is not `urlValid`
+usageArgumentURL() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __usageArgument urlValid "${1-}" || return $?
+  printf "%s\n" "$1"
+}
+
 # Throw an unknown argument error
 # Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.

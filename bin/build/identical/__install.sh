@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Identical template
+#
 # Original of __install
 #
 # Copyright &copy; 2024 Market Acumen, Inc.

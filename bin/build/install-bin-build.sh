@@ -251,7 +251,7 @@ whichExists() {
   done
 }
 
-# IDENTICAL _colors 79
+# IDENTICAL _colors 82
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -272,6 +272,9 @@ hasColors() {
       [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
+  elif [ "$BUILD_COLORS" = "1" ]; then
+    # Backwards
+    BUILD_COLORS=true
   elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
     BUILD_COLORS=false
   fi
@@ -373,7 +376,7 @@ _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
-# IDENTICAL _return 15
+# IDENTICAL _return 16
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -389,6 +392,7 @@ _return() {
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+# END of IDENTICAL _return
 
 # Final line will be rewritten on update
 #

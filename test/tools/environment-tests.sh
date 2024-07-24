@@ -16,7 +16,7 @@ tests+=(testEnvironmentFileLoad)
 tests+=(testEnvironmentVariables)
 
 testDotEnvConfigure() {
-  local tempDir
+  local tempDir tempEnv magic
   export TESTENVWORKS TESTENVLOCALWORKS
 
   magic=$(randomString)
@@ -25,23 +25,27 @@ testDotEnvConfigure() {
   __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
   consoleInfo "$(pwd)"
-  assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 dotEnvConfigure || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "Missing" 0 dotEnvConfigure || return $?
 
-  __environment touch .env || return $?
-  __environment environmentValueWrite TESTENVWORKS "$magic" >>.env || return $?
+  tempEnv="$tempDir/.env"
+  __environment touch "$tempEnv" || return $?
+  __environment environmentValueWrite TESTENVWORKS "$magic" >>"$tempEnv" || return $?
 
   assertEquals --line "$LINENO" "" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
-  assertExitCode --line "$LINENO" 0 dotEnvConfigure || return $?
+  dotEnvConfigure "$tempDir" || return $?
+  assertExitCode --line "$LINENO" 0 dotEnvConfigure "$tempDir" || return $?
 
   assertEquals --line "$LINENO" "$magic" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
-  __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>.env || return $?
+  __environment environmentValueWrite TESTENVLOCALWORKS "$magic" >>"$tempEnv" || return $?
+  __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
   __environment touch .env.local || return $?
 
-  assertExitCode --line "$LINENO" 0 dotEnvConfigure || return $?
+  dotEnvConfigure "$tempDir" || return $?
+  assertExitCode --line "$LINENO" 0 dotEnvConfigure "$tempDir" || return $?
 
   assertEquals --line "$LINENO" "NEW-$magic" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "$magic" "${TESTENVLOCALWORKS-}" || return $?
@@ -61,11 +65,11 @@ testEnvironmentFileLoad() {
 
   __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
-  assertNotExitCode 0 environmentFileLoad .env || return $?
+  assertNotExitCode --stderr-match "is not file" --line "$LINENO" 0 environmentFileLoad .env || return $?
+
   touch .env
-  assertExitCode 0 environmentFileLoad .env || return $?
-  assertEquals "${TESTVAR-}" "" || return $?
-  environmentValueWrite
+  assertExitCode --line "$LINENO" 0 environmentFileLoad .env || return $?
+  assertEquals --line "$LINENO" "${TESTVAR-}" "" || return $?
 
   __environment touch .env.local || return $?
   if ! dotEnvConfigure; then

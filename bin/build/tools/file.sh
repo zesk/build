@@ -80,7 +80,7 @@ modificationSeconds() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argument="$(usageArgumentFile "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
-    __usageEnvironment "$usage" printf "%d\n" "$((now - "$(modificationTime "$argument")"))" || return $?
+    __usageEnvironment "$usage" printf "%d\n" "$((now - $(modificationTime "$argument")))" || return $?
     shift
   done
 }

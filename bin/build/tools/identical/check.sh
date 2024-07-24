@@ -246,7 +246,7 @@ identicalCheck() {
     if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
       while read -r tokenFile; do
         tokenFile="$(tail -n 1 "$tokenFile")"
-        printf "%s: %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")"
+        printf "%s: %s %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
       done < <(find "$tempDirectory" -name "$token" -type f)
     fi
   done

@@ -555,6 +555,7 @@ mapValue() {
 
   mapFile=
   nArguments=$#
+  searchFilters=()
   replaceFilters=()
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))

@@ -120,7 +120,6 @@ _requireDirectory() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Usage: {fn} directory
 # Does a directory exist and is it empty?
 # Exit code: 2 - Directory does not exist

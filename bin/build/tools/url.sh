@@ -134,3 +134,14 @@ urlParseItem() {
     shift
   done
 }
+
+#
+# Checks a URL is valid
+# Usage: {fn} url ...
+# Argument: url ... - String. URL. Required. A Uniform Resource Locator
+urlValid() {
+  while [ $# -gt 0 ]; do
+    urlParse "$1" >/dev/null || return 1
+    shift
+  done
+}

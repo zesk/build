@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Identical template
+#
 # Arguments used throughout Zesk Build
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
@@ -21,3 +23,30 @@
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
+
+__documentTemplateFunction() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      # IDENTICAL argumentUnknown 3
+      *)
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+}
+___documentTemplateFunction() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

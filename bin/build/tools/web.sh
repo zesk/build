@@ -1,57 +1,112 @@
 #!/usr/bin/env bash
 #
+# Web protocol tools
+#
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh pipeline.sh
-#
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-#
-#
-#
+# Compare a remote file size with a local file size
+# Usage: {fn} url file
+# Argument: url - Required. URL. URL to check.
+# Argument: file - Required. File. File to compare.
 urlMatchesLocalFileSize() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+
   local url file remoteSize localSize
 
-  url=$1
-  file=$2
-  if [ -f "$file" ]; then
-    return $errorEnvironment
-  fi
-  localSize=$(du -b "$file")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$url" ]; then
+          url=$(usageArgumentString "$usage" "url" "$1") || return $?
+        elif [ -z "$file" ]; then
+          file="$(usageArgumentFile "$usage" "file" "$1")" || return $?
+        else
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  localSize=$(__usageEnvironment "$usage" fileSize "$file") || return $?
   localSize=$((localSize + 0))
-  remoteSize=$(urlContentLength "$url")
+  remoteSize=$(__usageEnvironment "$usage" urlContentLength "$url")
   [ "$localSize" -eq "$remoteSize" ]
 }
+_urlMatchesLocalFileSize() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
+# Get the size of a remote URL
+# Depends: curl
+#
 urlContentLength() {
+  local usage="_${FUNCNAME[0]}"
   local url remoteSize
+  local tempFile
 
   while [ $# -gt 0 ]; do
-    url=$1
-    if ! remoteSize=$(curl -s -I "$url" | grep -i Content-Length | awk '{ print $2 }'); then
-      consoleError "Fetching \"$url\" failed"
-      return "$errorEnvironment"
-    fi
+    url=$(usageArgumentURL "$usage" "url" "$1")
+    tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    __usageEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
+    remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __failEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
     printf "%d\n" $((remoteSize + 0))
     shift
   done
 }
-
-hostIPList() {
-  if [ "$OS_TYPE" = Linux ]; then
-    ifconfig | grep 'inet addr:' | cut -f 2 -d : | cut -f 1 -d ' '
-  elif [ "$OS_TYPE" = FreeBSD ]; then
-    ifconfig | grep 'inet ' | cut -f 2 -d ' '
-  else
-    consoleError "hostIPList Unsupported OS_TYPE \"$OS_TYPE\"" 1>&2
-    return "$errorEnvironment"
-  fi
+_urlContentLength() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+hostIPList() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+
+  export OSTYPE
+
+  __usageEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --install)
+        __usageEnvironment "$usage" whichApt ifconfig net-tools || return $?
+        ;;
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+  case "$(lowercase "$OSTYPE")" in
+    linux) ifconfig | grep 'inet addr:' | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
+    linux-gnu | darwin* | freebsd*) ifconfig | grep 'inet ' | trimSpace | cut -f 2 -d ' ' ;;
+    *) __failEnvironment "$usage" "hostIPList Unsupported OSTYPE \"$OSTYPE\"" || return $? ;;
+  esac
+}
+_hostIPList() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Fetch Time to First Byte and other stats
 hostTTFB() {
-  curl -L -s -o /dev/null -w "Connect: %{time_connect}\nTTFB: %{time_starttransfer}\nTotal: %{time_total} \n" "$@"
+  curl -L -s -o /dev/null -w "connect=%{time_connect}\n""ttfb: %{time_starttransfer}\n""total: %{time_total} \n" "$@"
 }
 
 _watchFile() {
@@ -60,36 +115,34 @@ _watchFile() {
 
 #
 # Usage: {fn} siteURL
+# Untested: true
 # Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
 # SIte is stored in a directory called `host` for the URL requested
 #
 websiteScrape() {
-  local logFile pid progressFile progressPid
+  local usage="_${FUNCNAME[0]}"
+  local logFile pid progressFile progressPid aa
 
-  if ! logFile=$(buildQuietLog "${FUNCNAME[0]}.$$.log") || ! progressFile=$(buildQuietLog "${FUNCNAME[0]}.$$.progress.log"); then
-    _websiteScrape "$errorEnvironment" "buildQuietLog failed" || return $?
-  fi
+  logFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$") || return $?
+  progressFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
 
-  if ! whichApt wget wget; then
-    _websiteScrape "$errorEnvironment" "No wget installed" || return $?
-  fi
+  __usageEnvironment "$usage" whichApt wget wget || return $?
 
-  if
-    ! wget -e robots=off \
-      -R zip,exe \
-      --no-check-certificate \
-      --user-agent="Mozilla/4.0 (compatible; MSIE 10.0; Windows NT 5.1)" \
-      -r --level=5 -t 10 --random-wait --force-directories --html-extension \
-      --no-parent --convert-links --backup-converted --page-requisites "$@" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
-  then
-    _websiteScrape "$errorEnvironment" "wget failed" || return $?
-  fi
-  pid=$!
-  if ! _watchFile "$progressFile" 2>/dev/null & then
-    kill -9 "$pid" || :
-    _websiteScrape "$errorEnvironment" "_watchFile failed" || return $?
-  fi
-  progressPid=$!
+  aa=()
+  aa+=(-e robots=off)
+  aa+=(-R "zip,exe")
+  aa+=(--no-check-certificate)
+  aa+=(--user-agent="Mozilla/4.0 (compatible; MSIE 10.0; Windows NT 5.1)")
+  aa+=(-r --level=5 -t 10 --random-wait --force-directories --html-extension)
+  aa+=(--no-parent --convert-links --backup-converted --page-requisites)
+  pid=$(
+    __usageEnvironment "$usage" wget "${aa[@]}" "$@" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
+    printf "%d" $!
+  ) || _clean $? "$logFile" || return $?
+  progressPid=$(
+    __usageEnvironment "$usage" _watchFile "$progressFile" &
+    printf %d $!
+  ) || _clean $? "$logFile" || _kill "$?" "$pid" return $?
   while kill -0 "$pid" 2>/dev/null; do
     kill -0 "$progressPid" || :
     sleep 1

@@ -9,6 +9,8 @@ tests+=(testIncrementor)
 
 testIncrementor() {
   local i nl
+  assertExitCode 0 incrementor 0 || return $?
+  assertExitCode 0 incrementor DUDE 0 || return $?
 
   i=$(incrementor 1) && assertEquals --line "$LINENO" "$i" 1 || return $?
   i=$(incrementor) && assertEquals --line "$LINENO" "$i" 2 || return $?

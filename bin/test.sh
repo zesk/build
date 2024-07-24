@@ -71,7 +71,7 @@ _textExit() {
 __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
 
-  local quietLog allTests missingTests runTests shortTest startTest matchTests
+  local quietLog allTests missingTests checkTests item startTest matchTests foundTests tests filteredTests
   # Avoid conflict with __argument
   local __ARGUMENT start
   local continueFile continueFlag
@@ -107,15 +107,15 @@ __buildTestSuite() {
   allTests+=(text bash float utilities self markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
   allTests+=(sysvinit crontab daemontools)
   missingTests=()
-  while read -r shortTest; do
-    if ! inArray "$shortTest" "${allTests[@]}"; then
-      missingTests+=("$shortTest")
-      allTests+=("$shortTest")
+  while read -r item; do
+    if ! inArray "$item" "${allTests[@]}"; then
+      missingTests+=("$item")
+      allTests+=("$item")
     fi
-  done < <(shortTestCodes)
+  done < <(__testCodes)
   [ 0 -eq "${#missingTests[@]}" ] || consoleError "MISSING in allTests:" "$(consoleValue "${missingTests[*]}")"
 
-  runTests=()
+  checkTests=()
   continueFile="$BUILD_HOME/.last-run-test"
   continueFlag=false
   testTracing=options
@@ -134,7 +134,7 @@ __buildTestSuite() {
       -1 | --one)
         shift || __failArgument "$usage" "missing $(consoleLabel "$__ARGUMENT") argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
-        runTests+=("$1")
+        checkTests+=("$1")
         ;;
       -h | --help)
         "$usage" 0
@@ -152,16 +152,16 @@ __buildTestSuite() {
         messyOption=1
         ;;
       *)
-        matchTests+=("$1")
+        matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$__ARGUMENT")" || return $?
   done
 
-  $continueFlag || [ ! -f "$continueFile" ] || __failEnvironment "$usage" rm "$continueFile" || return $?
+  $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?
 
-  if [ ${#runTests[@]} -eq 0 ]; then
-    runTests=("${allTests[@]}")
+  if [ ${#checkTests[@]} -eq 0 ]; then
+    checkTests=("${allTests[@]}")
   fi
   # tests-tests.sh has side-effects - installs shellcheck
   # aws-tests.sh testAWSIPAccess has side-effects, installs AWS
@@ -170,46 +170,68 @@ __buildTestSuite() {
   if $continueFlag; then
     startTest="$([ ! -f "$continueFile" ] || cat "$continueFile")"
   fi
-  for shortTest in "${runTests[@]}"; do
-    if [ "${#matchTests[@]}" -gt 0 ]; then
-      matches=false
-      for matchTest in "${matchTests[@]}"; do
-        if [ "${shortTest#"*$matchTest"}" != "$shortTest" ]; then
-          matches=true
-        fi
-      done
-      $matches || continue
+  __environment requireFileDirectory "$quietLog" || return $?
+  testFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
+  tests=()
+  for item in "${checkTests[@]}"; do
+    __testLoad "$item-tests.sh" >"$testFunctions"
+    foundTests=()
+    while read -r foundTest; do
+      [ -z "$foundTest" ] || foundTests+=("$foundTest")
+    done <"$testFunctions"
+    testCount="${#foundTests[@]}"
+    if [ "$testCount" -gt 0 ]; then
+      statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
+      tests+=("#$item" "${foundTests[@]+"${foundTests[@]}"}")
+    else
+      consoleError "No tests found in $item-tests.sh" 1>&2
+      __testLoad "$item-tests.sh"
     fi
-    testTracing="test: $shortTest"
-    __environment requireFileDirectory "$quietLog" || return $?
-    printf "%s\n" "$testTracing" >>"$quietLog" || _environment "Failed to write $quietLog" || return $?
-    if [ -n "$startTest" ]; then
-      if [ "$shortTest" = "$startTest" ]; then
-        startTest=
-        clearLine
-        consoleWarning "Continuing at test $(consoleCode "$shortTest") ..."
-      else
-        statusMessage consoleWarning "Skipping $(consoleCode "$shortTest") ..."
-        continue
+  done
+  rm -f "$testFunctions" || :
+  [ "${#tests[@]}" -gt 0 ] || __failEnvironment "$usage" "No tests found" || return $?
+  filteredTests=()
+  for item in "${tests[@]}"; do
+    if [ "$item" = "${item#\#}" ]; then
+      if [ -n "$startTest" ]; then
+        if [ "$item" = "$startTest" ]; then
+          startTest=
+          clearLine
+          consoleWarning "Continuing at test $(consoleCode "$item") ..."
+        else
+          statusMessage consoleWarning "Skipping $(consoleCode "$item") ..."
+          continue
+        fi
+      fi
+      if [ "${#matchTests[@]}" -gt 0 ]; then
+        if ! __testMatches "$item" "${matchTests[@]}"; then
+          continue
+        fi
+        statusMessage consoleSuccess "Matched $(consoleValue "$item")"
       fi
     fi
-    if $continueFlag; then
-      printf "%s\n" "$shortTest" >"$continueFile"
-    fi
-    requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
+    filteredTests+=("$item")
   done
-  statusMessage consoleInfo "All tests completed."
-  cleanExit=1
-
-  printf "%s\n" "$testTracing" >>"$quietLog"
-  testTracing=cleanup
-  __messyTestCleanup
-  printf "\n"
-  printf "%s\n" "$(bigText --bigger Passed)" | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
-  if [ -n "$continueFile" ]; then
-    printf "%s\n" "PASSED" >"$continueFile"
+  if [ ${#filteredTests[@]} -gt 0 ]; then
+    sectionName=
+    for item in "${filteredTests[@]}"; do
+      if [ "$item" != "${item#\#}" ]; then
+        sectionName="${item#\#}"
+        continue
+      fi
+      if $continueFlag; then
+        printf "%s\n" "$item" >"$continueFile"
+      fi
+      if [ -n "$sectionName" ]; then
+        clearLine
+        testHeading "$sectionName"
+        sectionName=
+      fi
+      __testRun "$quietLog" "$item" || testFailed "$item" || return $?
+    done
+  else
+    __failEnvironment "$usage" "No tests match: $(consoleValue "${matchTests[*]}")"
   fi
-  consoleReset
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

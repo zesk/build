@@ -10,7 +10,7 @@
 export testTracing
 export globalTestFailure=
 
-shortTestCodes() {
+__testCodes() {
   local fileName
   find test/ -type f -name '*-tests.sh' | while IFS= read -r fileName; do
     fileName=$(basename "$fileName")
@@ -29,6 +29,7 @@ didAnyTestsFail() {
   return 1
 }
 testSection() {
+  [ -n "$*" ] || _argument "Blank argument $(debuggingStack)"
   clearLine
   boxedHeading --size 0 "$@"
 }
@@ -64,87 +65,71 @@ cleanTestName() {
 # Usage: {fn} filename [ ... ]
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
-loadTestFiles() {
-  local testCount tests showTests testName quietLog=$1 __testDirectory resultCode stickyCode resultReason
+__testLoad() {
+  local usage="_${FUNCNAME[0]}"
+  local tests __testDirectory resultCode stickyCode resultReason
   local __test __tests tests
-  local __beforeFunctions errorTest
 
-  errorTest=$(_code test)
-  stickyCode=0
-
-  __beforeFunctions=$(mktemp) || _environment mktemp || return $?
-  __testFunctions=$(mktemp) || _environment mktemp || return $?
-  resultReason="Success"
-  shift
-  statusMessage consoleWarning "Loading tests ..."
+  __beforeFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
+  __testFunctions="$__beforeFunctions.after"
   __tests=()
   while [ "$#" -gt 0 ]; do
-    testName="$(cleanTestName "$1")"
-    tests=("#$testName") # Section
-    statusMessage consoleError "Loading test section \"$testName\""
-    if ! isExecutable "./test/tools/$1"; then
-      printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./test/tools/$1")" "$(consoleInfo "$(pwd)")"
-      resultReason="Not executable"
-      stickyCode="$errorTest"
-    else
-      testCount=${#tests[@]}
-      statusMessage consoleInfo "Loading $1 ... "
+    __usageEnvironment "$usage" isExecutable "./test/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
-      declare -pF | removeFields 2 | grep -e '^test' >"$__beforeFunctions"
-      # shellcheck source=/dev/null
-      if source "./test/tools/$1" 1>&2 > >(_environmentOutput source "./test/tools/$1"); then
-        statusMessage consoleInfo "Loaded successfully ...":
-      else
-        resultReason="Include $1 failed"
-        stickyCode="$errorTest"
-      fi
-      declare -pF | removeFields 2 | grep -e '^test' | diff "$__beforeFunctions" - | grep -e '^[<>]' | cut -c 3- >"$__testFunctions"
-      if [ "${#tests[@]}" -le "$testCount" ]; then
-        statusMessage consoleError "No tests defined in ./test/tools/$1"
-        resultReason="No tests defined in ./test/tools/$1 ${#tests[@]} <= $testCount"
-        stickyCode="$errorTest"
-      else
-        __tests+=("${tests[@]}")
-      fi
-      while read -r __test; do
-        inArray "$__test" "${tests[@]}" || consoleError "Test defined but not run: $(consoleCode "$__test")"
-      done <"$__testFunctions"
-      clearLine
-    fi
+    declare -pF | removeFields 2 | grep -e '^test' >"$__beforeFunctions"
+    tests=()
+    # shellcheck source=/dev/null
+    source "./test/tools/$1" 1>&2 || __failEnvironment source "./test/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+
+    declare -pF | removeFields 2 | grep -e '^test' | diff "$__beforeFunctions" - | grep -e '^[<>]' | cut -c 3- >"$__testFunctions" || :
+    [ "${#tests[@]}" -gt 0 ] || break
+    __tests+=("${tests[@]}")
+    while read -r __test; do
+      inArray "$__test" "${tests[@]}" || consoleError "$(clearLine)Test defined but not run: $(consoleCode "$__test")" 1>&2
+      __tests+=("$__test")
+    done <"$__testFunctions"
     shift
   done
   rm -rf "$__beforeFunctions" "$__testFunctions" || :
+  printf "%s\n" "${__tests[@]}"
+}
+___testLoad() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-  showTests=()
-  for testName in "${__tests[@]}"; do
-    if [ "${testName:0:1}" != '#' ]; then
-      showTests+=("$testName")
-    fi
-  done
+#
+# Load one or more test files and run the tests defined within
+#
+# Usage: {fn} filename [ ... ]
+# Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
+#
+__testRun() {
+  local usage="_${FUNCNAME[0]}"
+  local quietLog="$1"
+  local tests testName __testDirectory resultCode stickyCode resultReason
+  local __test __tests tests
+  local __beforeFunctions errorTest
 
-  testCount="${#showTests[@]}"
-  statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${showTests[*]-}\" ..."
-  printf "\n"
+  export testTracing
+  export resultReason
+
+  errorTest=$(_code test)
+  stickyCode=0
+  shift || :
 
   # Renamed to avoid clobbering by tests
   __testDirectory=$(pwd)
 
-  # Set up state
-  while [ ${#__tests[@]} -gt 0 ]; do
-    __test="${__tests[0]}"
-    unset '__tests[0]'
-    __tests=("${__tests[@]+${__tests[@]}}")
-    # Section
-    if [ "${__test#\#}" != "$__test" ]; then
-      testHeading "${__test#\#}" || :
-      continue
-    fi
+  while [ $# -gt 0 ]; do
+    __test="$1"
+    shift
     # Test
     testSection "$__test" || :
     printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$__test")"
 
     printf "%s\n" "Running $__test" >>"$quietLog"
     resultCode=0
+    testTracing="$__test"
     if plumber "$__test" "$quietLog"; then
       printf "%s\n" "SUCCESS $__test" >>"$quietLog"
     else
@@ -180,9 +165,150 @@ loadTestFiles() {
   fi
   return "$stickyCode"
 }
-_loadTestFiles() {
+___testRun() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+__testMatches() {
+  local testName match
+
+  testName=$(lowercase "$1")
+  shift
+  while [ "$#" -gt 0 ]; do
+    match=$(lowercase "$1")
+    if [ "${testName#*"$match"}" != "$testName" ]; then
+      return 0
+    fi
+    shift
+  done
+  return 1
+}
+
+##
+## Load one or more test files and run the tests defined within
+##
+## Usage: {fn} filename [ ... ]
+## Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
+##
+#loadTestFiles() {
+#  local testCount tests showTests testName quietLog="$1" __testDirectory resultCode stickyCode resultReason
+#  local __test __tests tests
+#  local __beforeFunctions errorTest
+#
+#  errorTest=$(_code test)
+#  stickyCode=0
+#
+#  __beforeFunctions=$(mktemp) || _environment mktemp || return $?
+#  __testFunctions=$(mktemp) || _environment mktemp || return $?
+#  resultReason="Success"
+#  shift
+#  statusMessage consoleWarning "Loading tests ..."
+#  __tests=()
+#  while [ "$#" -gt 0 ]; do
+#    testName="$(cleanTestName "$1")"
+#    tests=("#$testName") # Section
+#    statusMessage consoleError "Loading test section \"$testName\""
+#    if ! isExecutable "./test/tools/$1"; then
+#      printf "\n%s %s (working directory: %s)\n\n" "$(consoleError "Unable to load")" "$(consoleCode "./test/tools/$1")" "$(consoleInfo "$(pwd)")"
+#      resultReason="Not executable"
+#      stickyCode="$errorTest"
+#    else
+#      testCount=${#tests[@]}
+#      statusMessage consoleInfo "Loading $1 ... "
+#
+#      declare -pF | removeFields 2 | grep -e '^test' >"$__beforeFunctions"
+#      # shellcheck source=/dev/null
+#      if source "./test/tools/$1" 1>&2 > >(_environmentOutput source "./test/tools/$1"); then
+#        statusMessage consoleInfo "Loaded successfully ...":
+#      else
+#        resultReason="Include $1 failed"
+#        stickyCode="$errorTest"
+#      fi
+#      declare -pF | removeFields 2 | grep -e '^test' | diff "$__beforeFunctions" - | grep -e '^[<>]' | cut -c 3- >"$__testFunctions"
+#      if [ "${#tests[@]}" -le "$testCount" ]; then
+#        statusMessage consoleError "No tests defined in ./test/tools/$1"
+#        resultReason="No tests defined in ./test/tools/$1 ${#tests[@]} <= $testCount"
+#        stickyCode="$errorTest"
+#      else
+#        __tests+=("${tests[@]}")
+#      fi
+#      while read -r __test; do
+#        inArray "$__test" "${tests[@]}" || consoleError "Test defined but not run: $(consoleCode "$__test")"
+#      done <"$__testFunctions"
+#      clearLine
+#    fi
+#    shift
+#  done
+#  rm -rf "$__beforeFunctions" "$__testFunctions" || :
+#
+#  showTests=()
+#  for testName in "${__tests[@]}"; do
+#    if [ "${testName:0:1}" != '#' ]; then
+#      showTests+=("$testName")
+#    fi
+#  done
+#
+#  testCount="${#showTests[@]}"
+#  statusMessage consoleSuccess "Loaded $testCount $(plural "$testCount" test tests) \"${showTests[*]-}\" ..."
+#  printf "\n"
+#
+#  # Renamed to avoid clobbering by tests
+#  __testDirectory=$(pwd)
+#
+#  # Set up state
+#  while [ ${#__tests[@]} -gt 0 ]; do
+#    __test="${__tests[0]}"
+#    unset '__tests[0]'
+#    __tests=("${__tests[@]+${__tests[@]}}")
+#    # Section
+#    if [ "${__test#\#}" != "$__test" ]; then
+#      testHeading "${__test#\#}" || :
+#      continue
+#    fi
+#    # Test
+#    testSection "$__test" || :
+#    printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$__test")"
+#
+#    printf "%s\n" "Running $__test" >>"$quietLog"
+#    resultCode=0
+#    if plumber "$__test" "$quietLog"; then
+#      printf "%s\n" "SUCCESS $__test" >>"$quietLog"
+#    else
+#      resultCode=$?
+#      printf "%s\n" "FAILED $__test" >>"$quietLog"
+#      stickyCode=$errorTest
+#    fi
+#
+#    # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
+#    # documentation-tests.sh change this apparently
+#    # Instead of preventing this usage, just work around it
+#    __usageEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
+#
+#    if [ "$resultCode" = "$(_code leak)" ]; then
+#      resultCode=0
+#      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleWarning "passed with leaks")"
+#    elif [ "$resultCode" -eq 0 ]; then
+#      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
+#    else
+#      printf "[%d] %s %s\n" "$resultCode" "$(consoleCode "$__test")" "$(consoleError "FAILED")" 1>&2
+#      buildFailed "$quietLog" || :
+#      resultReason="test $__test failed"
+#      stickyCode=$errorTest
+#      break
+#    fi
+#  done
+#  if [ "$stickyCode" -eq 0 ] && resultReason=$(didAnyTestsFail); then
+#    # Should probably reset test status but ...
+#    stickyCode=$errorTest
+#  fi
+#  if [ "$stickyCode" -ne 0 ]; then
+#    printf "%s %s\n" "$(consoleLabel "Reason:")" "$(consoleMagenta "$resultReason")"
+#  fi
+#  return "$stickyCode"
+#}
+#_loadTestFiles() {
+#  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+#}
 
 testFailed() {
   local errorCode name
@@ -201,7 +327,6 @@ testFailed() {
 # Usage: {fn}
 #
 requireTestFiles() {
-  testTracing="$2"
   if ! loadTestFiles "$@"; then
     testFailed "$(consoleInfo "$*")"
   fi

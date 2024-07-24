@@ -47,7 +47,7 @@ _environmentValueWrite() {
 #
 # Read one or more values values safely from a environment file
 # Usage: {fn} stateFile
-# Argument: stateFile - Optional. File. File to access, must exist.
+# Argument: stateFile - Required. File. File to access, must exist.
 # Argument: name - Required. String. Name to read.
 # Argument: default - Optional. String. Value to return if value not found.
 environmentValueRead() {
@@ -55,7 +55,7 @@ environmentValueRead() {
   local stateFile="${1-}" name="${2-}" default="${3-}" line
   [ -f "$stateFile" ] || __failArgument "$usage" "stateFile \"$stateFile\" is not a file" || return $?
   [ -n "$name" ] || __failArgument "$usage" "stateFile \"$stateFile\" name is blank (default=$default)" || return $?
-  [ $# -gt 3 ] || __failArgument "$usage" "Extra arguments: $#" || return $?
+  [ $# -le 3 ] || __failArgument "$usage" "Extra arguments: $#" || return $?
 
   line="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1)"
   if [ -z "$line" ]; then
@@ -67,7 +67,7 @@ environmentValueRead() {
     declare "$name=$default"
     # Wondering if this can run shell code - do not believe so
     declare "$line"
-    printf "%s\n" "${name-}"
+    printf "%s\n" "${!name-}"
   fi
 }
 _environmentValueRead() {
@@ -107,16 +107,16 @@ environmentLines() {
 # DEPRECATED: 2024-07-20
 # See: environmentFileLoad
 dotEnvConfigure() {
-  local usage="_${FUNCNAME[0]}" files where
+  local usage="_${FUNCNAME[0]}" files where dotEnv
 
   where=
   [ $# -eq 0 ] || where=$(usageArgumentDirectory "$usage" "where" "${1-}") || return $?
   [ -n "$where" ] || where=$(__usageEnvironment "$usage" pwd) || return $?
   dotEnv="$where/.env"
-  [ ! -f "$dotEnv" ] || __failEnvironment "$usage" "Missing $dotEnv" || return $?
+  [ -f "$dotEnv" ] || __failEnvironment "$usage" "Missing $dotEnv" || return $?
   files=("$dotEnv")
   [ ! -f "$dotEnv.local" ] || files+=("$dotEnv.local")
-  __usageEnvironment "$usage" environmentFileLoad "${files[@]}" || return $?
+  environmentFileLoad "${files[@]}" || __failEnvironment "$usage" environmentFileLoad "${files[@]}" return $?
 }
 _dotEnvConfigure() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -129,12 +129,16 @@ _dotEnvConfigure() {
 # Exit code: 2 - if file does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 environmentFileLoad() {
-  local usage="_${FUNCNAME[0]}" environmentFile environmentLine
+  local usage="_${FUNCNAME[0]}" environmentFile environmentLine name value
   while [ $# -gt 0 ]; do
     environmentFile=$(usageArgumentFile "$usage" "environmentFile" "$1") || return $?
     while read -r environmentLine; do
+      name="${environmentLine%%=*}"
+      value="${environmentLine#*=}"
+      value="${value#\"}"
+      value="${value%\"}"
       # SECURITY CHECK
-      declare -x "$environmentLine"
+      export "$name"="$value"
     done < <(environmentLines <"$environmentFile")
     shift
   done
@@ -164,7 +168,7 @@ environmentApplicationLoad() {
   local hook here env
   local variables=()
 
-  IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
+  IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
   export "${variables[@]}"
 
   here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]}" || return $?
@@ -194,7 +198,7 @@ environmentFileShow() {
   local missing name requireEnvironment buildEnvironment tempEnv
   local variables=()
 
-  IFS=$'\n' read -d '' -r -a variables < <(applicationEnvironmentVariables) || :
+  IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
   export "${variables[@]}"
 
   IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationLoad) ||
@@ -255,11 +259,12 @@ environmentFileShow() {
 environmentFileApplicationMake() {
   local usage="_${FUNCNAME[0]}"
   local variables=()
+  local variableNames
 
+  variableNames=$(__usageEnvironment "$usage" mktemp) || return $?
+  environmentApplicationLoad >"$variableNames" || __failEnvironment "$usage" "environmentApplicationLoad" || return $?
   environmentFileApplicationVerify "$@" || __failArgument "$usage" "Verify failed" || return $?
-  IFS=$'\n' read -d '' -r -a variables < <(
-    environmentApplicationLoad
-  ) || :
+  IFS=$'\n' read -d '' -r -a variables <"$variableNames"
   for name in "${variables[@]}" "$@"; do
     environmentValueWrite "$name" "${!name-}"
   done
@@ -273,7 +278,7 @@ _environmentFileApplicationMake() {
 # Argument: requiredEnvironment ... - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
 # Argument: -- - Optional. Divider. Divides the requiredEnvironment values from the optionalEnvironment
 # Argument: optionalEnvironment ... - Optional. One or more environment variables which are included if blank or not
-# Also verifies that `applicationEnvironmentVariables` and `environmentApplicationLoad` are defined.
+# Also verifies that `environmentApplicationVariables` and `environmentApplicationLoad` are defined.
 environmentFileApplicationVerify() {
   local usage="_${FUNCNAME[0]}"
   local missing name requireEnvironment
@@ -286,12 +291,12 @@ environmentFileApplicationVerify() {
   done
   missing=()
   for name in "${requireEnvironment[@]}"; do
-    if [ -z "${!e:-}" ]; then
-      missing+=("$e")
+    if [ -z "${!name:-}" ]; then
+      missing+=("$name")
     fi
   done
   [ ${#missing[@]} -eq 0 ] || __failEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
 }
-environmentFileVerify() {
+_environmentFileApplicationVerify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

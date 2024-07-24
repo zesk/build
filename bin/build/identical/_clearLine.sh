@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Identical template
+#
 # Original of _clearLine
 #
 # Copyright &copy; 2024 Market Acumen, Inc.

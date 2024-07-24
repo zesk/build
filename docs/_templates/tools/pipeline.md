@@ -30,7 +30,7 @@
 
 {environmentFileApplicationMake}
 {environmentFileShow}
-{applicationEnvironmentVariables}
+{environmentApplicationVariables}
 {environmentApplicationLoad}
 
 ## Deployment tools

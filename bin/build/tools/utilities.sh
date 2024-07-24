@@ -13,6 +13,7 @@
 # Usage: {fn} [ count | variable ] ...
 # Argument: count - Optional. Integer. Sets the value for any following named variables to this value.
 # Argument: variable - Optional. String. Variable to change or increment.
+# Argument: --reset - Optional. Flag. Reset all counters to zero.
 #
 # Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.
 # New values are set to 0 by default so will output `1` upon first usage.
@@ -55,6 +56,10 @@ incrementor() {
       value="$argument"
     else
       case "$argument" in
+        --reset)
+          rm -rf "$persistence" || :
+          return 0
+          ;;
         --help)
           "$usage" 0
           return $?

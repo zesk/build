@@ -60,36 +60,10 @@ testGitVersionList() {
 
 tests+=(testGitCommitFailures)
 testGitCommitFailures() {
-  local here tempDirectory
+  local tempDirectory
 
-  assertNotExitCode --stderr-ok 0 gitCommit "" || return $?
-  assertNotExitCode --stderr-ok 0 gitCommit || return $?
-  here=$(pwd) || _environment pwd || return $?
-  tempDirectory=$(mktemp -d) || _environment "mktemp" || return $?
-  __environment mkdir -p "$tempDirectory/a/deep/one" || return $?
-  __environment cd "$tempDirectory/a/deep/one" || return $?
-  __environment rm -rf "$tempDirectory" || return $?
-  # FAILS 2024-06-26 not sure why TODO assertExitCode --stderr-match "pwd" 1 gitCommit last || return $?
-  __environment cd "$here" || return $?
-  # assertExitCode --stderr-match "No changes" 1 gitCommit last || return $?
-  # assertExitCode --stderr-match 'Author identity unknown' 1 gitCommit last || return $?
-  assertNotExitCode --stderr-ok 0 gitCommit last || return $?
-  consoleInfo gitCommit last output:
-  gitCommit last 2>&1 | wrapLines "$(consoleCode)" "$(consoleReset)" || :
-  #
-  consoleSuccess "Need output from pipeline"
-
-  #
-  # Output of last command in local container:
-  #
-  #    Author identity unknown
-  #
-  #    *** Please tell me who you are.
-  #
-  #    Run
-  #
-  #      git config --global user.email "you@example.com"
-  #      git config --global user.name "Your Name"
-  #
-  #    to set your account's default identity.
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 gitCommit "" || return $?
+  tempDirectory="$(mktemp -d)/a/deep/one" || _environment "mktemp" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "$tempDirectory" 0 gitCommit --home "$tempDirectory" last || return $?
+  rm -rf "$tempDirectory" || :
 }

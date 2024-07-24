@@ -105,7 +105,6 @@ _buildQuietLog() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 #
 # Usage: {fn} count binary [ args ... ]
 # Argument: count - The number of times to run the binary
@@ -355,7 +354,6 @@ _processVirtualMemoryAllocation() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Hard-coded services for:
 #
 # - `ssh` -> 22
@@ -416,6 +414,8 @@ serviceToPort() {
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argument="$(trimSpace "$argument")"
+    [ -n "$argument" ] || __failArgument "$usage" "argument is whitespace" || return $?
     case "$argument" in
       --services)
         shift || __failArgument "$usage" "missing $argument argument" || return $?

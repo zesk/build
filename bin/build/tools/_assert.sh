@@ -552,7 +552,7 @@ _assertExitCodeHelper() {
   local outputFile errorFile testPassed
   local stderrTitle stdoutTitle
   local failureText message textCommand
-  local leaks outputContains outputNotContains stderrContains stderrNotContains
+  local doPlumber runner leaks outputContains outputNotContains stderrContains stderrNotContains
 
   # --not
   isExitCode=true
@@ -580,6 +580,7 @@ _assertExitCodeHelper() {
   stderrNotContains=()
   debugAssertRun=false
   dumpFlag=false
+  doPlumber=true
   leaks=()
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -623,6 +624,10 @@ _assertExitCodeHelper() {
       --dump)
         dumpFlag=true
         ;;
+      --skip-plumber)
+        doPlumber=false
+        leaks=()
+        ;;
       --leak)
         shift
         leaks+=(--leak "$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
@@ -655,8 +660,13 @@ _assertExitCodeHelper() {
     set -x
   fi
   textCommand="$bin$(printf -- " \"%s\"" "$@")"
+  if $doPlumber; then
+    runner=(plumber "${leaks[@]+"${leaks[@]}"}" "$bin")
+  else
+    runner=("$bin")
+  fi
   actual="$(
-    plumber "${leaks[@]+"${leaks[@]}"}" "$bin" "$@" >"$outputFile" 2>"$errorFile"
+    "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile"
     printf %d "$?"
   )"
   if $debugAssertRun; then

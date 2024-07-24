@@ -10,6 +10,11 @@
 declare -a tests
 
 tests+=(testTrimHeadTail)
+tests+=(testSingleBlankLines)
+tests+=(testText)
+tests+=(testEscapeSingleQuotes)
+tests+=(testEscapeDoubleQuotes)
+
 testTrimHeadTail() {
   local topSpace bottomSpace
 
@@ -22,7 +27,6 @@ testTrimHeadTail() {
   assertEquals "$(printf "%s" "$bottomSpace" | trimTail)" "ip" || return $?
 }
 
-tests+=(testSingleBlankLines)
 testSingleBlankLines() {
   local topSpace bottomSpace middleSpace
 
@@ -35,12 +39,10 @@ testSingleBlankLines() {
   assertEquals "$(printf "\nip\n")" "$(printf "%s\n" "$middleSpace" | singleBlankLines)" || return $?
 }
 
-tests+=(testText)
 testText() {
   assertOutputContains Hello boxedHeading Hello || return $?
 }
 
-tests+=(testEscapeSingleQuotes)
 testEscapeSingleQuotes() {
   assertEquals "Ralph \"Dude\" Brown" "$(escapeSingleQuotes "Ralph \"Dude\" Brown")" || return $?
   # shellcheck disable=SC1003
@@ -78,15 +80,15 @@ tests+=(testMapValue)
 testMapValue() {
   local tempEnv
 
-  tempEnv=$(mktemp)
+  tempEnv=$(__environment mktemp) || return $?
 
-  assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
+  assertEquals --line "$LINENO" "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
   printf "%s=%s\n" "foo" "bar" >>"$tempEnv"
 
-  assertEquals "bar" "$(mapValue "$tempEnv" "{foo}")" || return $?
+  assertEquals --line "$LINENO" "bar" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
-  rm "$tempEnv"
+  __environment rm "$tempEnv" || return $?
 }
 
 tests+=(testLowercase)

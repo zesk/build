@@ -5,7 +5,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 15
+# IDENTICAL _return 16
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -21,6 +21,7 @@ _return() {
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+# END of IDENTICAL _return
 
 # IDENTICAL __return 8
 # Usage: {fn} __return binary [ ... ]

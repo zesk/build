@@ -119,7 +119,7 @@ testServiceToPort() {
   assertNotExitCode --line "$LINENO" --stderr-match blank 0 serviceToPort "" || return $?
   assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort "22" || return $?
   assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort ".https" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort " " || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "whitespace" 0 serviceToPort " " || return $?
 }
 
 testExtensionLists() {
