@@ -38,7 +38,7 @@ installBinBuild() {
   local errorArgument=2
   local argument start ignoreFile tarArgs
   local forceFlag installFlag mockPath message installArgs
-  local myBinary myPath osName url
+  local myBinary myPath osName url applicationHome installPath
 
   shift
   if test "${BUILD_DEBUG-}"; then
@@ -92,9 +92,10 @@ installBinBuild() {
   # Move to starting point
   myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-
+  applicationHome="$myPath/$relative"
+  installPath="$myPath/$relative/bin/build"
   installFlag=false
-  if [ ! -d "$myPath/$relative/bin/build" ]; then
+  if [ ! -d "$installPath" ]; then
     if $forceFlag; then
       printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBlue "directory does not exist")"
     fi
@@ -105,7 +106,8 @@ installBinBuild() {
   fi
   if $installFlag; then
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
-    _installBinBuildDirectory "$usage" "$mockPath" "$url" || return $?
+    _installBinBuildDirectory "$usage" "$applicationHome" "$url" "$mockPath" || return $?
+    [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($path not a directory, still)" || return $?
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
     _installBinBuildCheck "$usage" >"$messageFile" || return $?
     binName=" ($(consoleBoldRed "$(basename "$myBinary")"))"
@@ -113,11 +115,11 @@ installBinBuild() {
     rm -f "$messageFile" || :
   else
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
-    _installBinBuildCheck "$usage" >"$messageFile" || return $?
+    _installBinBuildCheck "$usage" "$installPath" >"$messageFile" || return $?
     message="$(cat "$messageFile") already installed"
     rm -f "$messageFile" || :
   fi
-  _installBinBuildGitCheck
+  _installBinBuildGitCheck "$applicationHome" || :
   if [ -n "$mockPath" ]; then
     # shellcheck disable=SC2064
     __usageEnvironment "$usage" _mockBinBuild "$mockPath" "$myBinary" "$relative" || return $?
@@ -173,33 +175,37 @@ _installBinBuildFetch() {
 
 # Install the build directory
 _installBinBuildDirectory() {
-  local usage="$1" mockPath="$2" url="$3"
+  local usage="$1" installPath="$2" url="$3" mockPath="$4"
   local start tarArgs
-  local target=build.tar.gz
-  local path="./bin/build"
+  local target="$installPath/build.tar.gz"
 
-  if [ -n "$mockPath" ]; then
-    __usageEnvironment "$usage" rm -rf "$path" || return $?
-    __usageEnvironment "$usage" cp -r "$mockPath" "$path" || return $?
-  else
-    __usageEnvironment "$usage" curl -L -s "$url" -o "$target" || return $?
-    [ -f "build.tar.gz" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
-    if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
-      tarArgs=(--wildcards '*/bin/build/*')
-    else
-      tarArgs=(--include='*/bin/build/*')
-    fi
-    __usageEnvironment "$usage" tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}" || return $?
-    rm -f "build.tar.gz" || :
+  if [ -z "$mockPath" ]; then
+    _installBinBuildDirectoryDownload "$usage" "$installPath"
+    return $?
   fi
-  [ -d "$path" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($path not a directory, still)" || return $?
+  __usageEnvironment "$usage" curl -L -s "$url" -o "$target" || return $?
+  [ -f "build.tar.gz" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
+  if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
+    tarArgs=(--wildcards '*/bin/build/*')
+  else
+    tarArgs=(--include='*/bin/build/*')
+  fi
+  __usageEnvironment "$usage" tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}" || return $?
+  rm -f "build.tar.gz" || :
+}
+
+# Install the build directory
+_installBinBuildDirectoryMock() {
+  local usage="$1" path="$2" mockPath="$3"
+  __usageEnvironment "$usage" rm -rf "$path" || return $?
+  __usageEnvironment "$usage" cp -r "$mockPath" "$path" || return $?
 }
 
 # Check the build directory after installation
 _installBinBuildCheck() {
   local usage="$1"
-  local path="./bin/build"
-  local toolsBin="$path/tools.sh"
+  local installPath="$2"
+  local toolsBin="$installPath/tools.sh"
   if [ ! -f "$toolsBin" ]; then
     exec
     echo "Incorrect build version or broken install (can't find tools.sh):"
@@ -210,13 +216,14 @@ _installBinBuildCheck() {
   fi
   # shellcheck source=/dev/null
   source "$toolsBin" || __failEnvironment "$usage" source "$toolsBin" || return $?
-  read -r version id < <(jq -r '(.version + " " + .id)' <"$path/build.json") || :
+  read -r version id < <(jq -r '(.version + " " + .id)' <"$installPath/build.json") || :
   printf "%s %s (%s)\n" "$(consoleBoldBlue "zesk/build")" "$(consoleCode "$version")" "$(consoleValue "$id")"
 }
 
 # Check .gitignore is correct
 _installBinBuildGitCheck() {
-  local ignoreFile=.gitignore
+  local applicationHome="$1"
+  local ignoreFile="$1/.gitignore"
   if [ -f "$ignoreFile" ] && ! grep -q -e "^/bin/build/" "$ignoreFile"; then
     printf "%s %s %s %s:\n\n    %s\n" "$(consoleCode "$ignoreFile")" \
       "does not ignore" \
