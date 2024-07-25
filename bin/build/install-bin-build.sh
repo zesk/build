@@ -93,7 +93,7 @@ installBinBuild() {
   myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
   applicationHome="$myPath/$relative"
-  installPath="$myPath/$relative/bin/build"
+  installPath="$applicationHome/bin/build"
   installFlag=false
   if [ ! -d "$installPath" ]; then
     if $forceFlag; then
@@ -107,15 +107,17 @@ installBinBuild() {
   if $installFlag; then
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
     _installBinBuildDirectory "$usage" "$applicationHome" "$url" "$mockPath" || return $?
-    [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($path not a directory, still)" || return $?
+    [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($installPath not a directory, still)" || return $?
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
-    _installBinBuildCheck "$usage" >"$messageFile" || return $?
+    echo "MESSAGE FILE:"
+    _installBinBuildCheck "$usage" "$installPath"
+    _installBinBuildCheck "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     binName=" ($(consoleBoldRed "$(basename "$myBinary")"))"
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
     rm -f "$messageFile" || :
   else
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
-    _installBinBuildCheck "$usage" "$installPath" >"$messageFile" || return $?
+    _installBinBuildCheck "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     message="$(cat "$messageFile") already installed"
     rm -f "$messageFile" || :
   fi
@@ -133,18 +135,6 @@ installBinBuild() {
   fi
   printf "%s\n" "$message"
 }
-_mockBinBuild() {
-  local mockPath="$1" myBinary="$2" relTop="$1"
-  local source="$mockPath/install-bin-build.sh"
-  local modified="$source.$$"
-  {
-    grep -v -e '^installBinBuild ' <"$source"
-    printf "%s %s %s\n" "installBinBuild" "$relTop" '$@'
-  } >"$modified"
-  # shellcheck disable=SC2064
-  trap "cp -f \"$modified\" \"$myBinary\" && rm \"$modified\"" TERM EXIT QUIT
-}
-
 _installBinBuild() {
   local exitCode="$1"
   shift || :
@@ -175,30 +165,33 @@ _installBinBuildFetch() {
 
 # Install the build directory
 _installBinBuildDirectory() {
-  local usage="$1" installPath="$2" url="$3" mockPath="$4"
+  local usage="$1" applicationHome="$2" url="$3" mockPath="$4"
   local start tarArgs
-  local target="$installPath/build.tar.gz"
+  local target="$applicationHome/build.tar.gz"
 
   if [ -z "$mockPath" ]; then
-    _installBinBuildDirectoryDownload "$usage" "$installPath"
+    _installBinBuildDirectoryMock "$usage" "$applicationHome" "$mockPath"
     return $?
   fi
   __usageEnvironment "$usage" curl -L -s "$url" -o "$target" || return $?
-  [ -f "build.tar.gz" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
+  [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
   if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
     tarArgs=(--wildcards '*/bin/build/*')
   else
     tarArgs=(--include='*/bin/build/*')
   fi
-  __usageEnvironment "$usage" tar xf build.tar.gz --strip-components=1 "${tarArgs[@]}" || return $?
-  rm -f "build.tar.gz" || :
+  __usageEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
+  __usageEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
+  __usageEnvironment "$usage" popd >/dev/null || return $?
+  rm -f "$target" || :
 }
 
-# Install the build directory
+# Install the build directory from a copy
 _installBinBuildDirectoryMock() {
-  local usage="$1" path="$2" mockPath="$3"
-  __usageEnvironment "$usage" rm -rf "$path" || return $?
-  __usageEnvironment "$usage" cp -r "$mockPath" "$path" || return $?
+  local usage="$1" applicationHome="$2" mockPath="$3" installPath
+  installPath="$applicationHome/bin/build"
+  __usageEnvironment "$usage" rm -rf "$installPath" || return $?
+  __usageEnvironment "$usage" cp -r "$mockPath" "$installPath" || return $?
 }
 
 # Check the build directory after installation
@@ -206,18 +199,17 @@ _installBinBuildCheck() {
   local usage="$1"
   local installPath="$2"
   local toolsBin="$installPath/tools.sh"
+  exec 2>&1
   if [ ! -f "$toolsBin" ]; then
-    exec
-    echo "Incorrect build version or broken install (can't find tools.sh):"
-    echo
-    echo "  rm -rf bin/build"
-    echo "  ${BASH_SOURCE[0]}"
-    return "$errorEnvironment"
+    __failEnvironment "$usage" "$(printf "%s\n\n  %s\n  %s\n" "Incorrect build version or broken install (can't find tools.sh):" "rm -rf bin/build" "${BASH_SOURCE[0]}")" || return $?
   fi
   # shellcheck source=/dev/null
-  source "$toolsBin" || __failEnvironment "$usage" source "$toolsBin" || return $?
+  source "$toolsBin" || __failEnvironment "$usage" source "$toolsBin" failed || return $?
+  # shellcheck source=/dev/null
+  source "${BASH_SOURCE[0]}" || __failEnvironment "$usage" source "self" failed || return $?
   read -r version id < <(jq -r '(.version + " " + .id)' <"$installPath/build.json") || :
   printf "%s %s (%s)\n" "$(consoleBoldBlue "zesk/build")" "$(consoleCode "$version")" "$(consoleValue "$id")"
+  # printf "%s %s (%s)\n" "zesk/build" "$(consoleCode "$version")" "$(consoleValue "$id")"
 }
 
 # Check .gitignore is correct
@@ -231,6 +223,18 @@ _installBinBuildGitCheck() {
       "$(consoleError "recommend adding it")" \
       "$(consoleCode "echo /bin/build/ >> $ignoreFile")"
   fi
+}
+
+_mockBinBuild() {
+  local mockPath="$1" myBinary="$2" relTop="$1"
+  local source="$mockPath/install-bin-build.sh"
+  local modified="$source.$$"
+  {
+    grep -v -e '^installBinBuild ' <"$source"
+    printf "%s %s %s\n" "installBinBuild" "$relTop" '$@'
+  } >"$modified"
+  # shellcheck disable=SC2064
+  trap "cp -f \"$modified\" \"$myBinary\" && rm \"$modified\"" TERM EXIT QUIT
 }
 
 # IDENTICAL _realPath 10

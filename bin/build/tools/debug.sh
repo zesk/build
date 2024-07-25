@@ -86,7 +86,6 @@ isBashDebug() {
 # Usage: {fn}
 #
 isErrorExit() {
-  # consoleBoldRed "isErrorExit $- ::" 1>&2
   case "$-" in *e*) return 0 ;; esac
   return 1
 }

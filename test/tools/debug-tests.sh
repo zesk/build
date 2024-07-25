@@ -82,7 +82,7 @@ testErrorExit() {
   set +e
   assertNotExitCode --line "$LINENO" 0 isErrorExit || return $?
   set -e
-  assertNotExitCode --line "$LINENO" 0 isErrorExit || return $?
+  assertExitCode --line "$LINENO" 0 isErrorExit || return $?
   actual="$(
     isErrorExit
     printf %d $?
@@ -106,14 +106,19 @@ testPlumber() {
   local leakCode
 
   leakCode=$(_code leak)
-  assertEquals 108 "$leakCode" || return $?
+  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
+  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
+  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
+  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
   assertExitCode --line "$LINENO" 0 plumber || return $?
   assertExitCode --line "$LINENO" 0 plumber plumber echo true || return $?
   assertExitCode --line "$LINENO" 0 plumber plumber consoleWarning Hello || return $?
   # Run as a subshell so no leaks
   assertExitCode --line "$LINENO" 0 plumber statusMessage __leakyPipe Cool || return $?
   # Run directly within plumber so catches leaks
-  assertExitCode --dump --line "$LINENO" --leak IS_THIS_GLOBAL --leak wonderful "0" plumber __leakyPipe Cool || return $?
+  assertExitCode --skip-plumber --line "$LINENO" "0" plumber --leak IS_THIS_GLOBAL --leak wonderful __leakyPipe Cool || return $?
+
+  unset IS_THIS_GLOBAL wonderful
 }
 
 __writeTo() {

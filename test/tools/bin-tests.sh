@@ -45,17 +45,16 @@ testInstallInstallBuild() {
     consoleError "binary $testBinary does not contain marker?"
     return 1
   fi
-  assertFileContains --line "$LINENO"  "$testBinary" '../../..' || return $?
+  assertFileContains --line "$LINENO" "$testBinary" '../../..' || return $?
 
-  pause
   __environment cp "$testBinary" "$testBinary.backup" || return $?
 
   assertDirectoryDoesNotExist --line "$LINENO" "$topDir/bin/build" || return $?
 
-  pause "THIS IS WHAT BLOWS UP"
-  assertExitCode --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
-
+  pause "$testBinary" --mock "$BUILD_HOME/bin/build"
   pause
+
+  assertExitCode --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
 
   if [ ! -d "$topDir/bin/build" ]; then
     find "$topDir" -type f
@@ -71,7 +70,7 @@ testInstallInstallBuild() {
   # Do not use updated binary as behavior is unpredictable (this is the last version)
   __environment mv -f "$testBinary.backup" "$testBinary" || return $?
 
-  assertExitCode --line "$LINENO"  --stdout-match "already installed" 0 "$testBinary" || return $?
+  assertExitCode --line "$LINENO" --stdout-match "already installed" 0 "$testBinary" || return $?
 
   consoleSuccess "install-bin-build.sh update was tested successfully"
   rm -rf "$topDir"

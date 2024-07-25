@@ -132,4 +132,6 @@ testHookSystem() {
   assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test1 || return $?
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomDefault" runHook test2 || return $?
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test2 || return $?
+
+  unset BUILD_DEBUG
 }

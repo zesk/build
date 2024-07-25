@@ -99,7 +99,7 @@ _assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-  _assertExitCodeHelper "_${FUNCNAME[0]}" "$@" || return $?
+  _assertExitCodeHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertExitCode() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -132,7 +132,7 @@ _assertExitCode() {
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-  _assertExitCodeHelper "_${FUNCNAME[0]}" --not "$@" || return $?
+  _assertExitCodeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotExitCode() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

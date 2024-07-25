@@ -43,7 +43,7 @@ errorArgument=2
 # Example:     echo $name
 #
 urlParse() {
-  local u="${1-}"
+  local v u="${1-}"
 
   # parts
   local url path name scheme user password host port error

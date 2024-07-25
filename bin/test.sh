@@ -229,9 +229,14 @@ __buildTestSuite() {
       fi
       __testRun "$quietLog" "$item" || testFailed "$item" || return $?
     done
+    bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
+    if $continueFlag; then
+      printf "%s\n" "PASSED" >"$continueFile"
+    fi
   else
     __failEnvironment "$usage" "No tests match: $(consoleValue "${matchTests[*]}")"
   fi
+  _textExit 0
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

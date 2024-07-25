@@ -120,6 +120,7 @@ __testRun() {
   # Renamed to avoid clobbering by tests
   __testDirectory=$(pwd)
 
+  resultReason=AOK
   while [ $# -gt 0 ]; do
     __test="$1"
     shift

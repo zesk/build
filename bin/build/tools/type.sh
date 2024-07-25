@@ -110,6 +110,9 @@ isUnsignedInteger() {
 isFunction() {
   [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
+    if [ "$1" != "${1#-}" ]; then
+      return 1
+    fi
     case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
     shift || :
   done
