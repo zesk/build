@@ -471,7 +471,7 @@ _assertOutputEquals() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-  _assertOutputContainsHelper true "${FUNCNAME[0]}" "$@" || return $?
+  _assertOutputContainsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertOutputContains() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -507,7 +507,7 @@ _assertOutputContains() {
 # Reviewed: 2023-11-12
 #
 assertOutputDoesNotContain() {
-  _assertOutputContainsHelper false "${FUNCNAME[0]}" "$@" || return $?
+  _assertOutputContainsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertOutputDoesNotContain() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

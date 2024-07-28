@@ -8,16 +8,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# set -x
-#
-# Change this line when placing in your project to point to your application root (where `bin/build` will be based)
-#
-#     e.g.
-#     relTop=..
-#     relTop=../../..
-#
-# or wherever you put it in your project to install it
-#
 
 # Usage: install-bin-build.sh [ --mock mockBuildRoot ] [ --url url ]
 # fn: install-bin-build.sh
@@ -33,6 +23,7 @@
 # Exit Code: 1 - Environment error
 installBinBuild() {
   local usage="_${FUNCNAME[0]}"
+  local ibbPath="bin/build" ibbName="install-bin-build.sh"
   local relative="${1-}"
   local errorEnvironment=1
   local errorArgument=2
@@ -93,7 +84,7 @@ installBinBuild() {
   myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
   applicationHome="$myPath/$relative"
-  installPath="$applicationHome/bin/build"
+  installPath="$applicationHome/$ibbPath"
   installFlag=false
   if [ ! -d "$installPath" ]; then
     if $forceFlag; then
@@ -109,10 +100,8 @@ installBinBuild() {
     _installBinBuildDirectory "$usage" "$applicationHome" "$url" "$mockPath" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($installPath not a directory, still)" || return $?
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
-    echo "MESSAGE FILE:"
-    _installBinBuildCheck "$usage" "$installPath"
     _installBinBuildCheck "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
-    binName=" ($(consoleBoldRed "$(basename "$myBinary")"))"
+    binName=" ($(consoleBoldBlue "$(basename "$myBinary")"))"
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
     rm -f "$messageFile" || :
   else
@@ -122,19 +111,16 @@ installBinBuild() {
     rm -f "$messageFile" || :
   fi
   _installBinBuildGitCheck "$applicationHome" || :
-  if [ -n "$mockPath" ]; then
-    # shellcheck disable=SC2064
-    __usageEnvironment "$usage" _mockBinBuild "$mockPath" "$myBinary" "$relative" || return $?
+  if "$installPath/tools.sh" isFunction installInstallBuild; then
+    __usageEnvironment "$usage" "$installPath/tools.sh" installInstallBuild "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$(pwd)" || return $?
   else
-    if [ "$(type -t "installInstallBuild")" = "function" ]; then
-      __usageEnvironment "$usage" installInstallBuild "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$(pwd)" || return $?
-    else
-      export BUILD_HOME
-      __usageEnvironment "$usage" _mockBinBuild "$BUILD_HOME/bin/build" "$myBinary" "$relative" || return $?
-    fi
+    (__usageEnvironment "$usage" _installBinBuildLocal "$installPath/$ibbName" "$myBinary" "$relative") || return $?
   fi
   printf "%s\n" "$message"
 }
+
+# Error handler for installBinBuild
+# Usage: {fn} exitCode [ message ... ]
 _installBinBuild() {
   local exitCode="$1"
   shift || :
@@ -142,7 +128,7 @@ _installBinBuild() {
   return "$exitCode"
 }
 
-# Fetch from GitHub
+# Fetch most recent URL from GitHub
 _installBinBuildFetch() {
   local usage="$1" latestVersion
 
@@ -188,10 +174,14 @@ _installBinBuildDirectory() {
 
 # Install the build directory from a copy
 _installBinBuildDirectoryMock() {
-  local usage="$1" applicationHome="$2" mockPath="$3" installPath
+  local usage="$1" applicationHome="$2" mockPath="$3" installPath backupPath
   installPath="$applicationHome/bin/build"
-  __usageEnvironment "$usage" rm -rf "$installPath" || return $?
-  __usageEnvironment "$usage" cp -r "$mockPath" "$installPath" || return $?
+  # Clean target regardless
+  backupPath="$installPath.aboutToDelete.$$"
+  __usageEnvironment "$usage" rm -rf "$backupPath" || return $?
+  __usageEnvironment "$usage" mv -f "$installPath" "$backupPath" || return $?
+  __usageEnvironment "$usage" cp -r "$mockPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$backupPath" "$installPath" || return $?
+  __usageEnvironment "$usage" rm -rf "$backupPath" || :
 }
 
 # Check the build directory after installation
@@ -204,12 +194,10 @@ _installBinBuildCheck() {
     __failEnvironment "$usage" "$(printf "%s\n\n  %s\n  %s\n" "Incorrect build version or broken install (can't find tools.sh):" "rm -rf bin/build" "${BASH_SOURCE[0]}")" || return $?
   fi
   # shellcheck source=/dev/null
-  source "$toolsBin" || __failEnvironment "$usage" source "$toolsBin" failed || return $?
-  # shellcheck source=/dev/null
-  source "${BASH_SOURCE[0]}" || __failEnvironment "$usage" source "self" failed || return $?
+  # source "$toolsBin" || __failEnvironment "$usage" "$toolsBin failed" || return $?
   read -r version id < <(jq -r '(.version + " " + .id)' <"$installPath/build.json") || :
-  printf "%s %s (%s)\n" "$(consoleBoldBlue "zesk/build")" "$(consoleCode "$version")" "$(consoleValue "$id")"
-  # printf "%s %s (%s)\n" "zesk/build" "$(consoleCode "$version")" "$(consoleValue "$id")"
+  # printf "%s %s (%s)\n" "zesk/build" "$version" "$id"
+  printf "%s %s (%s)\n" "$(consoleBoldBlue "zesk/build")" "$(consoleCode "$version")" "$(consoleOrange "$id")"
 }
 
 # Check .gitignore is correct
@@ -225,16 +213,23 @@ _installBinBuildGitCheck() {
   fi
 }
 
-_mockBinBuild() {
-  local mockPath="$1" myBinary="$2" relTop="$1"
-  local source="$mockPath/install-bin-build.sh"
-  local modified="$source.$$"
+_installBinBuildFinalize() {
+  if [ -f "$1" ]; then
+    # printf "MOVE: %s -> %s\n" "$@"
+    # once and only once
+    cp -f "$@" || :
+    rm -f "$1" || :
+  fi
+}
+
+# Usage: {fn} installBinBuildSource targetBinary relativePath
+_installBinBuildLocal() {
+  local source="$1" myBinary="$2" relTop="$3"
   {
     grep -v -e '^installBinBuild ' <"$source"
     printf "%s %s %s\n" "installBinBuild" "$relTop" '$@'
-  } >"$modified"
-  # shellcheck disable=SC2064
-  trap "cp -f \"$modified\" \"$myBinary\" && rm \"$modified\"" TERM EXIT QUIT
+  } >"$myBinary.$$"
+  (_installBinBuildFinalize "$myBinary.$$" "$myBinary" 2>/dev/null 1>&2) || :
 }
 
 # IDENTICAL _realPath 10

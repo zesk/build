@@ -244,7 +244,7 @@ testDeployApplication() {
   firstArgs=(--first)
 
   # ________________________________________________________________________________________________________________________________
-  testSection deployApplication fails on top of a directory
+  __testSection deployApplication fails on top of a directory
   t=1a
   assertNotExitCode --stderr-match "should be a link" 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --home "$d/DEPLOY" --id "$t" || return $?
   _waitForValue "$startingValue" || return $?
@@ -254,7 +254,7 @@ testDeployApplication() {
   #
 
   # ________________________________________________________________________________________________________________________________
-  testSection deployMigrateDirectoryToLink fails on with no version in the application
+  __testSection deployMigrateDirectoryToLink fails on with no version in the application
 
   assertNotExitCode --stderr-match "deployment version" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
   _waitForValue "$startingValue" || return $?
@@ -264,7 +264,7 @@ testDeployApplication() {
   printf "%s" "$migrateVersion" >"$d/live-app/.deploy/APPLICATION_ID" || return $?
 
   # ________________________________________________________________________________________________________________________________
-  testSection deployMigrateDirectoryToLink fails on with no version in the DEPLOYMENT directory
+  __testSection deployMigrateDirectoryToLink fails on with no version in the DEPLOYMENT directory
 
   assertNotExitCode --stderr-match "not found in" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
   _waitForValue "$startingValue" || return $?
@@ -275,7 +275,7 @@ testDeployApplication() {
   touch "$d/DEPLOY/$migrateVersion/$(deployPackageName)"
 
   # ________________________________________________________________________________________________________________________________
-  testSection deployMigrateDirectoryToLink succeeds - now deployApplication should work - does not check old TAR
+  __testSection deployMigrateDirectoryToLink succeeds - now deployApplication should work - does not check old TAR
 
   if ! deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app"; then
     _deployShowFiles "$d" || return $?
@@ -292,7 +292,7 @@ testDeployApplication() {
     assertExitCode 0 deployHasVersion "$d/DEPLOY" $t || return $?
 
     # ________________________________________________________________________________________________________________________________
-    testSection deployApplication "$t"
+    __testSection deployApplication "$t"
     if ! deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --id "$t" --home "$d/DEPLOY"; then
       consoleError "Deployment of $t failed"
       _deployShowFiles "$d" || return $?
@@ -347,7 +347,7 @@ testDeployApplication() {
 
     assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
     # ________________________________________________________________________________________________________________________________
-    testSection "deployApplication --revert $t"
+    __testSection "deployApplication --revert $t"
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     deployApplication --revert --home "$d/DEPLOY" --id "$t" --application "$d/live-app" || return $?
     _testAssertDeploymentLinkages "$d" || return $?
@@ -362,12 +362,12 @@ testDeployApplication() {
   assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
 
   # ________________________________________________________________________________________________________________________________
-  testSection No previous version
+  __testSection No previous version
   assertNotExitCode --stderr-ok 0 deployApplication --revert --home "$d/DEPLOY" --id "1a" --application "$d/live-app" || return $?
 
   # ________________________________________________________________________________________________________________________________
   t=4dshellcheck bin/build/hooks/maintenance.sh
-  testSection Jump versions to end $t
+  __testSection Jump versions to end $t
   deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" || return $?
 
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
@@ -378,17 +378,17 @@ testDeployApplication() {
   _testAssertDeploymentLinkages "$d" || return $?
 
   # ________________________________________________________________________________________________________________________________
-  testSection deployApplication fail bad version
+  __testSection deployApplication fail bad version
   assertNotExitCode 0 --stderr-ok deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
   # ________________________________________________________________________________________________________________________________
   t=1a
-  testSection deployApplication fail incorrect target $t
+  __testSection deployApplication fail incorrect target $t
   assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" --target ap.tar.gz || return $?
 
-  testSection deployApplication fail missing or blank arguments $t
+  __testSection deployApplication fail missing or blank arguments $t
   assertNotExitCode --stderr-ok 0 deployApplication --home "" --id "$t" --application "$d/live-app" || return $?
   assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "" --application "$d/live-app" || return $?
   assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "" || return $?

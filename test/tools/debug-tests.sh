@@ -16,20 +16,26 @@ tests+=(testErrorExit)
 tests+=(testBuildDebugEnabled)
 
 _testBuildDebugEnabledStart() {
+  local quietLog="$1"
   consoleInfo "Suppressing stderr"
   exec 4>&2
   exec 2>"$quietLog"
+
+  #  exec 5>&1
+  #  exec 1>"$quietLog"
 }
+
 _testBuildDebugEnabledExit() {
-  local code="$1" log="${2-}"
-  exec 2>&4
+  local code="$1" log="${2-}" line="$3"
+  #  exec 1>&5
   if [ -n "$log" ]; then
     if [ "$code" != "0" ]; then
       dumpPipe testBuildDebugEnabled <"$log"
     fi
     rm -rf "$log" || :
   fi
-  consoleInfo "Restored stderr"
+  exec 2>&4
+  consoleInfo "Restored stderr at line $line"
   return "$code"
 }
 
@@ -42,38 +48,48 @@ testBuildDebugEnabled() {
 
   saveDebug="${BUILD_DEBUG-}"
 
-  unset BUILD_DEBUG || :
-  assertNotExitCode --leak BUILD_DEBUG 0 buildDebugEnabled || return $?
+  assertExitCode --skip-plumber --line "$LINENO" 1 buildDebugEnabled || return $?
+  assertNotExitCode --line "$LINENO" 0 buildDebugEnabled || return $?
+  # assertNotExitCode --dump --stderr-ok --debug --skip-plumber --line "$LINENO" --leak BUILD_DEBUG 0 buildDebugEnabled || return $?
 
   BUILD_DEBUG=
 
-  assertNotExitCode 0 buildDebugEnabled || return $?
+  assertNotExitCode --line "$LINENO" 0 buildDebugEnabled || return $?
 
-  testSection BUILD_DEBUG is ON
+  __testSection BUILD_DEBUG is ON
   BUILD_DEBUG=1
 
   _testBuildDebugEnabledStart "$quietLog"
 
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" || return $?
-  buildDebugStart
-  assertExitCode --stderr-ok 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" || return $?
-  buildDebugStop || _testBuildDebugEnabledExit $? "$quietLog" || return $?
-  assertNotExitCode --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" || return $?
+  assertExitCode --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode --stderr-ok 0 buildDebugStart || return $?
+  assertExitCode --stderr-ok --line "$LINENO" --stderr-ok 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode --stderr-ok --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode --stderr-ok 0 buildDebugStop || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertNotExitCode --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
 
-  testSection BUILD_DEBUG is OFF
+  __testSection BUILD_DEBUG is OFF
   BUILD_DEBUG=
 
   assertNotExitCode --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" || return $?
-  buildDebugStart || _testBuildDebugEnabledExit $? "$quietLog" || return $?
-  set -e
-  assertNotExitCode --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" || return $?
-  buildDebugStop || return $?
-  assertNotExitCode --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" || return $?
+  assertNotExitCode 0 buildDebugStart || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  set -x
+  assertExitCode --stderr-ok --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  # Does not change it (off)
+  assertNotExitCode --stderr-ok 0 buildDebugStop || return $?
+  assertExitCode --stderr-ok --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+
+  # Does change it (on)
+  BUILD_DEBUG=1
+  assertExitCode --stderr-ok 0 buildDebugStop || return $?
+  assertNotExitCode --stderr-ok --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  # Disable anyway
+  set +x
 
   BUILD_DEBUG=$saveDebug
 
   unset BUILD_DEBUG
-  _testBuildDebugEnabledExit 0 "$quietLog"
+  _testBuildDebugEnabledExit 0 "$quietLog" "$LINENO"
 }
 
 testErrorExit() {
@@ -83,6 +99,7 @@ testErrorExit() {
   assertNotExitCode --line "$LINENO" 0 isErrorExit || return $?
   set -e
   assertExitCode --line "$LINENO" 0 isErrorExit || return $?
+  set -e
   actual="$(
     isErrorExit
     printf %d $?
@@ -146,7 +163,7 @@ testHousekeeper() {
   assertEquals 108 "$leakCode" || return $?
 
   statusMessage consoleInfo Housekeeper tests
-  assertNotExitCode --stderr-match "is not directory" --line "$LINENO" 0 housekeeper NOT-A-DIR || return $?
+  assertNotExitCode --stderr-match "is not directory" --line "$LINENO" 0 housekeeper --path NOT-A-DIR || return $?
   assertNotExitCode --stderr-match "not callable" --line "$LINENO" 0 housekeeper "$testDir" "NotABinary" || return $?
 
   # Simple case - nothing

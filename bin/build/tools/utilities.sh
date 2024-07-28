@@ -101,3 +101,58 @@ __incrementor() {
   fi
   printf -- "%d\n" "$value" | tee "$counterFile"
 }
+
+# Single reader, multiple writers
+# Usage: {fn} [ --mode mode ] namedPipe [ --writer line | readerExecutable ... ]
+pipeRunner() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local binary
+
+  namedPipe=
+  mode="0700"
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --mode)
+        shift
+        mode=$(usageArgumentString "$usage" "mode" "${1-}") || return $?
+        ;;
+      --writer)
+        [ -z "$namedPipe" ] || __failArgument "$usage" "No namedPipe supplied" || return $?
+        [ -p "$namedPipe" ] || __failEnvironment "$usage" "$namedPipe not a named pipe" || return $?
+        __usageEnvironment "$usage" printf "%s\n" "$*" >"$namedPipe" || return $?
+        ;;
+      *)
+        if [ -n "$namedPipe" ]; then
+          binary="$(usageArgumentCallable "$usage" "readerExecutable" "$argument")" || return $?
+          break
+        else
+          namedPipe=$(usageArgumentFileDirectory "$usage" "namedPipe" "$argument") || return $?
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+  [ -n "$namedPipe" ] || __failArgument "$usage" "No namedPipe supplied" || return $?
+  [ ! -p "$namedPipe" ] || __failEnvironment "$usage" "$namedPipe already exists ($binary)" || return $?
+  __usageEnvironment "$usage" mkfifo -m "$mode" "$namedPipe" || return $?
+  # shellcheck disable=SC2064
+  trap "rm -f \"$(quoteBashString "$namedPipe")\" 2>/dev/null 1>&2" EXIT INT HUP || :
+  while read -r line; do
+    if [ -n "$line" ]; then
+      __execute "$@" "$line" || break
+    fi
+  done <"$namedPipe"
+  rm -f "$namedPipe" || :
+}
+_pipeRunner() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

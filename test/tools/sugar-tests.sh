@@ -90,7 +90,7 @@ testExitCode() {
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj1)" || return $?
 
-  assertOutputContains --exit "$(_code argument)" --stderr non-integer _return notInt "message for return"
+  assertExitCdoe --stderr-match non-integer --stderr-match "message for return" "$(_code argument)" _return notInt "message for return"
 
   for code in assert identical leak "test"; do
     char="${code:0:1}"

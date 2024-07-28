@@ -146,11 +146,25 @@ _deprecated() {
 _clean() {
   local exitCode="${1-}"
   shift
-  _integer "$exitCode" || _argument "${FUNCNAME[0]} $*" || return $?
+  # IDENTICAL _integerExitCode 1
+  _integer "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
   while [ $# -gt 0 ]; do
     [ ! -f "$1" ] || __environment rm "$1" || return $?
     [ ! -d "$1" ] || __environment rm -rf "$1" || return $?
     shift
   done
+  return "$exitCode"
+}
+
+# Usage: {fn} exitCode undoFunction ...
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: undoFunction - Required. Command to run to undo something. Returns `exitCode`
+_undo() {
+  local exitCode="${1-}"
+  shift
+  # IDENTICAL _integerExitCode 1
+  _integer "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  isCallable "$1" || _argument "_undo $1 is not callable: $*" || return "$exitCode"
+  __execute "$@" || :
   return "$exitCode"
 }

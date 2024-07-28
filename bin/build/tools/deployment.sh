@@ -292,12 +292,9 @@ deployRemoteFinish() {
 
   [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __failArgument "$usage" "deployPackageName $deployHome failed" || return $?
 
-  if test "${BUILD_DEBUG-}"; then
+  if buildDebugStart deployment; then
     debuggingFlag=true
-  fi
-  if $debuggingFlag; then
     consoleWarning "Debugging is enabled"
-    set -x
   fi
 
   if $revertFlag && $cleanupFlag; then
@@ -590,7 +587,7 @@ deployToRemote() {
         remoteArgs+=("$1")
         ;;
       --debug)
-        debuggingFlag=1
+        debuggingFlag=true
         ;;
       --commands)
         showCommands=true
@@ -609,12 +606,9 @@ deployToRemote() {
   done
 
   # Debugging
-  if test "${BUILD_DEBUG-}"; then
-    debuggingFlag=1
-  fi
-  if test $debuggingFlag; then
+  if buildDebugStart deployment; then
+    debuggingFlag=true
     consoleWarning "Debugging is enabled"
-    set -x
   fi
 
   # Flag semantics
@@ -770,6 +764,7 @@ deployToRemote() {
     fi
     reportTiming "$start"
   done
+  buildDebugStop deployment || :
   reportTiming "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
   return "$exitCode"
 }

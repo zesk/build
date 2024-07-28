@@ -13,7 +13,7 @@ tests+=(testUrlParse)
 testUrlParse() {
   local parsed u url user name password host port path error scheme
 
-  testSection testUrlParse
+  __testSection testUrlParse
 
   u=foo://user:hard-to-type@identity:4232/dbname
 

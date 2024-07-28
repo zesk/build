@@ -60,7 +60,7 @@ environmentValueRead() {
   line="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1)"
   if [ -z "$line" ]; then
     if [ -z "$default" ]; then
-      retturn 1
+      return 1
     fi
     printf "%s\n" "$default"
   else
@@ -177,7 +177,6 @@ environmentApplicationLoad() {
     # shellcheck source=/dev/null
     source "$here/../env/$env.sh" || _environment "source $env.sh" || return $?
   done
-
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
     APPLICATION_VERSION="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
@@ -185,7 +184,6 @@ environmentApplicationLoad() {
   if [ -z "${APPLICATION_ID-}" ]; then
     hook=application-id
     APPLICATION_ID="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
-
   fi
   if [ -z "${APPLICATION_TAG-}" ]; then
     hook=application-tag
@@ -195,14 +193,13 @@ environmentApplicationLoad() {
 }
 
 environmentFileShow() {
-  local missing name requireEnvironment buildEnvironment tempEnv
+  local missing name buildEnvironment
+  local width=40
   local variables=()
 
-  IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
+  IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationLoad) || :
   export "${variables[@]}"
 
-  IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationLoad) ||
-    rm "$tempEnv" || :
   # Will be exported to the environment file, only if defined
   while [ $# -gt 0 ]; do
     case $1 in
@@ -211,7 +208,7 @@ environmentFileShow() {
         break
         ;;
       *)
-        requireEnvironment+=("$1")
+        variables+=("$1")
         ;;
     esac
     shift
@@ -220,24 +217,24 @@ environmentFileShow() {
 
   printf "%s %s %s %s%s\n" "$(consoleInfo "Application")" "$(consoleMagenta "$APPLICATION_VERSION")" "$(consoleInfo "on")" "$(consoleBoldRed "$APPLICATION_BUILD_DATE")" "$(consoleInfo "...")"
   if buildDebugEnabled; then
-    consoleNameValue 40 Checksum "$APPLICATION_ID"
-    consoleNameValue 40 Tag "$APPLICATION_TAG"
-    consoleNameValue 40 Timestamp "$BUILD_TIMESTAMP"
+    consoleNameValue "$width" Checksum "$APPLICATION_ID"
+    consoleNameValue "$width" Tag "$APPLICATION_TAG"
+    consoleNameValue "$width" Timestamp "$BUILD_TIMESTAMP"
   fi
   missing=()
-  for name in "${requireEnvironment[@]}"; do
-    if [ -z "${!e:-}" ]; then
-      printf "%s %s\n" "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleError "** No value **")" 1>&2
-      missing+=("$e")
+  for name in "${variables[@]}"; do
+    if [ -z "${!name:-}" ]; then
+      consoleNameValue "$width" "$name" "** No value **" 1>&2
+      missing+=("$name")
     else
-      echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
+      consoleNameValue "$width" "$name" "${!name}"
     fi
   done
-  for e in "${buildEnvironment[@]+"${buildEnvironment[@]}"}"; do
-    if [ -z "${!e:-}" ]; then
-      printf "%s %s\n" "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleSuccess "** Blank **")" 1>&2
+  for name in "${buildEnvironment[@]+"${buildEnvironment[@]}"}"; do
+    if [ -z "${!name:-}" ]; then
+      consoleNameValue "$width" "$name" "** Blank **"
     else
-      echo "$(consoleLabel "$(alignRight 30 "$e")"):" "$(consoleValue "${!e}")"
+      consoleNameValue "$width" "$name" "${!name}"
     fi
   done
   [ ${#missing[@]} -eq 0 ] || _environment "Missing environment" "${missing[@]}" || return $?
@@ -266,6 +263,7 @@ environmentFileApplicationMake() {
   environmentFileApplicationVerify "$@" || __failArgument "$usage" "Verify failed" || return $?
   IFS=$'\n' read -d '' -r -a variables <"$variableNames"
   for name in "${variables[@]}" "$@"; do
+    [ "$name" != "--" ] || continue
     environmentValueWrite "$name" "${!name-}"
   done
 }
@@ -286,7 +284,7 @@ environmentFileApplicationVerify() {
 
   IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationLoad) || :
   while [ $# -gt 0 ]; do
-    case "$1" in --) shift break ;; *) requireEnvironment+=("$1") ;; esac
+    case "$1" in --) shift && break ;; *) requireEnvironment+=("$1") ;; esac
     shift
   done
   missing=()

@@ -51,9 +51,6 @@ testInstallInstallBuild() {
 
   assertDirectoryDoesNotExist --line "$LINENO" "$topDir/bin/build" || return $?
 
-  pause "$testBinary" --mock "$BUILD_HOME/bin/build"
-  pause
-
   assertExitCode --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
 
   if [ ! -d "$topDir/bin/build" ]; then
@@ -80,7 +77,7 @@ tests+=(testMapBin)
 testMapBin() {
   local expected actual
 
-  testSection testMap
+  __testSection testMap
 
   actual="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | FOO=test BAR=goob bin/build/map.sh)"
 
@@ -163,7 +160,7 @@ testAdditionalBins() {
   local aa
 
   for binTest in ./test/bin/*.sh; do
-    testSection "$(basename "$binTest")"
+    __testSection "$(basename "$binTest")"
     aa=()
     if grep -q 'stderr-ok' "$binTest" >/dev/null; then
       aa=(--stderr-ok)
@@ -175,7 +172,7 @@ testAdditionalBins() {
 __doesScriptInstall() {
   local binary="${1-}"
 
-  testSection "INSTALL $binary"
+  __testSection "INSTALL $binary"
   shift
   ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "is already installed" || return $?
   __environment "$@" || return $?
@@ -188,7 +185,7 @@ __doesScriptInstallUninstall() {
 
   uninstalledAlready=false
   if whichExists "$binary"; then
-    testSection "UNINSTALL $binary (already)" || :
+    __testSection "UNINSTALL $binary (already)" || :
     __environment "$undoScript" || return $?
     uninstalledAlready=true
   else
@@ -196,7 +193,7 @@ __doesScriptInstallUninstall() {
   fi
   __doesScriptInstall "$binary" "$script" || return $?
   if ! $uninstalledAlready; then
-    testSection "UNINSTALL $binary (just installed)" || :
+    __testSection "UNINSTALL $binary (just installed)" || :
     __environment "$undoScript" || return $?
     ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "exists after uninstalling" || return $?
   fi

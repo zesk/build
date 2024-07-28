@@ -30,12 +30,13 @@ __tools() {
   "$@" || return $?
 }
 
-__messyTestCleanup() {
+__testCleanupMess() {
   local fn exitCode=$?
 
   export cleanExit
+
   cleanExit="${cleanExit-}"
-  if ! test "$cleanExit"; then
+  if [ "$cleanExit" != "true" ]; then
     printf -- "%s\n" "Stack:"
     for fn in "${FUNCNAME[@]}"; do
       printf -- "#%d %s\n" "$(incrementor "${FUNCNAME[0]}")" "$fn"
@@ -46,11 +47,14 @@ __messyTestCleanup() {
     printf "%s\n" "Messy ... no cleanup"
     return 0
   fi
-  testCleanup
+  __testCleanup
 }
 
 _textExit() {
-  export cleanExit=1
+  export cleanExit
+  if [ "${1-}" = 0 ]; then
+    cleanExit=true
+  fi
   exit "$@"
 }
 
@@ -71,7 +75,7 @@ _textExit() {
 __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
 
-  local quietLog allTests missingTests checkTests item startTest matchTests foundTests tests filteredTests
+  local quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start
   local continueFile continueFlag
@@ -82,6 +86,7 @@ __buildTestSuite() {
   export testTracing
   export FUNCNEST
 
+  cleanExit=false
   FUNCNEST=200
 
   # shellcheck source=/dev/null
@@ -97,29 +102,20 @@ __buildTestSuite() {
   printf "%s started on %s (color %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
-  trap __messyTestCleanup EXIT QUIT TERM
+  trap __testCleanupMess EXIT QUIT TERM
 
   messyOption=
   allTests=()
-  allTests+=(sugar colors console debug git decoration url ssh log version type process hook pipeline identical)
-  allTests+=(os directory file environment)
-  # Strange quoting for a s s e r t is to hide it from findUncaughtAssertions
-  allTests+=(text bash float utilities self markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
-  allTests+=(sysvinit crontab daemontools)
-  missingTests=()
   while read -r item; do
-    if ! inArray "$item" "${allTests[@]}"; then
-      missingTests+=("$item")
-      allTests+=("$item")
-    fi
-  done < <(__testCodes)
-  [ 0 -eq "${#missingTests[@]}" ] || consoleError "MISSING in allTests:" "$(consoleValue "${missingTests[*]}")"
+    allTests+=("$item")
+  done < <(__testCodes | sort -u)
 
   checkTests=()
   continueFile="$BUILD_HOME/.last-run-test"
   continueFlag=false
   testTracing=options
   matchTests=()
+  failExecutors=()
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
     __ARGUMENT="$1"
@@ -140,10 +136,14 @@ __buildTestSuite() {
         "$usage" 0
         _textExit 0
         ;;
+      --fail)
+        shift
+        failExecutors+=("$(usageArgumentCallable "$usage" "failExecutor" "${1-}")") || return $?
+        ;;
       --clean)
         statusMessage consoleWarning "Cleaning tests and exiting ... "
         cleanExit=true
-        testCleanup || return $?
+        __testCleanup || return $?
         statusMessage reportTiming "$start" "Cleaned in"
         printf "\n"
         return 0
@@ -174,8 +174,7 @@ __buildTestSuite() {
   testFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
   tests=()
   for item in "${checkTests[@]}"; do
-    __testLoad "$item-tests.sh" >"$testFunctions"
-    foundTests=()
+    __testLoad "$item-tests.sh" | sort -u >"$testFunctions"
     while read -r foundTest; do
       [ -z "$foundTest" ] || foundTests+=("$foundTest")
     done <"$testFunctions"
@@ -213,7 +212,9 @@ __buildTestSuite() {
     filteredTests+=("$item")
   done
   if [ ${#filteredTests[@]} -gt 0 ]; then
+    consoleInfo "FILTERED TESTS" "${filteredTests[@]}"
     sectionName=
+    sectionNameHeading=
     for item in "${filteredTests[@]}"; do
       if [ "$item" != "${item#\#}" ]; then
         sectionName="${item#\#}"
@@ -222,12 +223,12 @@ __buildTestSuite() {
       if $continueFlag; then
         printf "%s\n" "$item" >"$continueFile"
       fi
-      if [ -n "$sectionName" ]; then
+      if [ "$sectionName" != "$sectionNameHeading" ]; then
         clearLine
-        testHeading "$sectionName"
-        sectionName=
+        __testHeading "$sectionName"
+        sectionNameHeading="$sectionName"
       fi
-      __testRun "$quietLog" "$item" || testFailed "$item" || return $?
+      __testRun "$quietLog" "$item" || __buildTestSuiteExecutor "$item" "$sectionName" "${failExecutors[@]}" || __testFailed "$item" || return $?
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
     if $continueFlag; then
@@ -240,6 +241,37 @@ __buildTestSuite() {
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__buildTestGetLine() {
+  local line
+
+  line=$(grep -n "$1() {" | cut -d : -f 1)
+  if _integer "$line"; then
+    printf "%d\n" "$line"
+  fi
+  return 1
+}
+
+__buildTestSuiteExecutor() {
+  local item="${1-}" section="${2-}" line
+  local file="./test/tools/$section-tests.sh"
+  local executorArgs
+
+  shift 2 || _argument "Missing item or section" || return $?
+
+  line=$(__buildTestGetLine "$item" <"$file") || :
+  [ -z "$line" ] || line=":$line"
+
+  statusMessage consoleError "Test $item failed in $file" || :
+  while [ $# -gt 0 ]; do
+    read -r -a executorArgs < <(printf "%s\n" "$1")
+    statusMessage consoleInfo "Running" "${executorArgs[@]}" "$file$line"
+    "${executorArgs[@]}" "$file$line"
+    shift
+  done
+  clearLine
+  return 1
 }
 
 __tools .. __buildTestSuite "$@"

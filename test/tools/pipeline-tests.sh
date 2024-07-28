@@ -30,7 +30,7 @@ testIsUpToDate() {
   local thisYear thisMonth expirationDays start testDate
 
   start=$(beginTiming)
-  testSection "isUpToDate testing"
+  __testSection "isUpToDate testing"
   thisYear=$(($(date +%Y) + 0))
   thisMonth="$(date +%m)"
   _uptoDateTest 0 || return $?
@@ -44,7 +44,7 @@ testIsUpToDate() {
   _uptoDateTest 0 $testDate 10 || return $?
   testDate="$thisYear-01-01"
 
-  testSection "ThisYear-01-01: $testDate"
+  __testSection "ThisYear-01-01: $testDate"
 
   expirationDays=367
   _uptoDateTest 0 "$testDate" "$expirationDays" || return $?
@@ -53,7 +53,7 @@ testIsUpToDate() {
   expirationDays=365
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
 
-  testSection "ThisYear-ThisMonth-01: $testDate"
+  __testSection "ThisYear-ThisMonth-01: $testDate"
 
   testDate="$thisYear-$thisMonth-01"
   expirationDays=60
@@ -62,7 +62,7 @@ testIsUpToDate() {
 
   testDate=$(todayDate)
 
-  testSection "todayDate: $testDate"
+  __testSection "todayDate: $testDate"
 
   expirationDays=0
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
@@ -73,7 +73,7 @@ testIsUpToDate() {
 
   testDate=$(yesterdayDate)
 
-  testSection "yesterdayDate: $testDate"
+  __testSection "yesterdayDate: $testDate"
 
   expirationDays=0
   _uptoDateTest 0 "$testDate" "$expirationDays" || return $?
@@ -84,7 +84,7 @@ testIsUpToDate() {
 
   testDate=$(tomorrowDate)
 
-  testSection "tomorrowDate: $testDate"
+  __testSection "tomorrowDate: $testDate"
 
   expirationDays=0
   _uptoDateTest 1 "$testDate" "$expirationDays" || return $?
