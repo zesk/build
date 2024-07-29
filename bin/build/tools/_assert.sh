@@ -107,6 +107,7 @@ _assertConditionHelper() {
         success="$(usageArgumentBoolean "$usage" "$argument" "${1-}")" || return $?
         pairs+=("should" "$(_choose "$success" "succeed" "$(consoleWarning "fail")")")
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
