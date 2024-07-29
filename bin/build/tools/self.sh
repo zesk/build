@@ -74,7 +74,7 @@ installInstallBuild() {
   # Compute relTop
   relTop="${path#"$applicationHome"}"
   if [ "$relTop" = "$path" ]; then
-    __failArgument "Path ($path) is not within applicationHome ($applicationHome)" || return $?
+    __failArgument "$usage" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
   if [ -z "$relTop" ]; then
     relTop=.

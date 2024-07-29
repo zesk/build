@@ -15,8 +15,8 @@
 # will overwrite this binary with the latest version after installation.
 # Determines the most recent version using GitHub API unless --url or --mock is specified.
 #
-# Argument: --mock mockBuildRoot - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
-# Argument: --url url - Optional. URL of a tar.gz. file. Download source code from here.
+# Argument: --local localPath - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
+# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Environment: Needs internet access and creates a directory `./bin/build`
@@ -28,7 +28,7 @@ installBinBuild() {
   local errorEnvironment=1
   local errorArgument=2
   local argument start ignoreFile tarArgs
-  local forceFlag installFlag mockPath message installArgs
+  local forceFlag installFlag localPath message installArgs
   local myBinary myPath osName url applicationHome installPath
 
   shift
@@ -39,7 +39,7 @@ installBinBuild() {
 
   installArgs=()
   url=
-  mockPath=
+  localPath=
   forceFlag=false
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -55,12 +55,12 @@ installBinBuild() {
       --force)
         forceFlag=true
         ;;
-      --mock)
-        [ -z "$mockPath" ] || __failArgument "$usage" "$argument already" || return $?
+      --mock | --local)
+        [ -z "$localPath" ] || __failArgument "$usage" "$argument already" || return $?
         shift
         [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
-        mockPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
-        [ -x "$mockPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$mockPath")\") must be path to bin/build containing tools.sh" || return $?
+        localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
+        [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$localPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
       --url)
         [ -z "$url" ] || __failArgument "$usage" "$argument already" || return $?
@@ -74,7 +74,7 @@ installBinBuild() {
 
   if [ -z "$url" ]; then
     url=$(_installBinBuildFetch "$usage") || return $?
-  elif [ -z "$mockPath" ]; then
+  elif [ -z "$localPath" ]; then
     __failArgument "$usage" "--url is required" || return $?
   else
     __failArgument "$usage" "--mock and --url are mutually exclusive" || return $?
@@ -83,7 +83,7 @@ installBinBuild() {
   # Move to starting point
   myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-  applicationHome="$myPath/$relative"
+  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
   installPath="$applicationHome/$ibbPath"
   installFlag=false
   if [ ! -d "$installPath" ]; then
@@ -97,7 +97,7 @@ installBinBuild() {
   fi
   if $installFlag; then
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
-    _installBinBuildDirectory "$usage" "$applicationHome" "$url" "$mockPath" || return $?
+    _installBinBuildDirectory "$usage" "$applicationHome" "$url" "$localPath" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($installPath not a directory, still)" || return $?
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
     _installBinBuildCheck "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
@@ -112,11 +112,14 @@ installBinBuild() {
   fi
   _installBinBuildGitCheck "$applicationHome" || :
   if "$installPath/tools.sh" isFunction installInstallBuild; then
-    __usageEnvironment "$usage" "$installPath/tools.sh" installInstallBuild "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$(pwd)" || return $?
+    message="$message (install)"
+    printf "%s\n" "$message"
+    __usageEnvironment "$usage" "$installPath/tools.sh" installInstallBuild "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$applicationHome" || return $?
   else
-    (__usageEnvironment "$usage" _installBinBuildLocal "$installPath/$ibbName" "$myBinary" "$relative") || return $?
+    message="$message (local)"
+    printf "%s\n" "$message"
+    exec _installBinBuildLocal "$installPath/$ibbName" "$myBinary" "$relative" 2>/dev/null
   fi
-  printf "%s\n" "$message"
 }
 
 # Error handler for installBinBuild
@@ -151,12 +154,12 @@ _installBinBuildFetch() {
 
 # Install the build directory
 _installBinBuildDirectory() {
-  local usage="$1" applicationHome="$2" url="$3" mockPath="$4"
+  local usage="$1" applicationHome="$2" url="$3" localPath="$4"
   local start tarArgs
   local target="$applicationHome/build.tar.gz"
 
-  if [ -z "$mockPath" ]; then
-    _installBinBuildDirectoryMock "$usage" "$applicationHome" "$mockPath"
+  if [ -z "$localPath" ]; then
+    _installBinBuildDirectoryLocal "$usage" "$applicationHome" "$localPath"
     return $?
   fi
   __usageEnvironment "$usage" curl -L -s "$url" -o "$target" || return $?
@@ -173,14 +176,14 @@ _installBinBuildDirectory() {
 }
 
 # Install the build directory from a copy
-_installBinBuildDirectoryMock() {
-  local usage="$1" applicationHome="$2" mockPath="$3" installPath backupPath
+_installBinBuildDirectoryLocal() {
+  local usage="$1" applicationHome="$2" localPath="$3" installPath backupPath
   installPath="$applicationHome/bin/build"
   # Clean target regardless
   backupPath="$installPath.aboutToDelete.$$"
   __usageEnvironment "$usage" rm -rf "$backupPath" || return $?
   __usageEnvironment "$usage" mv -f "$installPath" "$backupPath" || return $?
-  __usageEnvironment "$usage" cp -r "$mockPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$backupPath" "$installPath" || return $?
+  __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$backupPath" "$installPath" || return $?
   __usageEnvironment "$usage" rm -rf "$backupPath" || :
 }
 

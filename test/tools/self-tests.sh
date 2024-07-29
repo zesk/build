@@ -31,7 +31,6 @@ testInstallInstallBuildSelf() {
   unset BUILD_COMPANY
 }
 
-
 #
 # fn: {base}
 # Usage: {fn} buildHome
@@ -67,7 +66,6 @@ testInstallBinBuild() {
   #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝ ▝▀
 
   assertDirectoryDoesNotExist --line "$LINENO" "$testDir/bin/build" || return $?
-  export BUILD_DIFF=1
 
   assertFileContains --line "$LINENO" "$testBinBuild" "make the file different" || return $?
 
@@ -79,7 +77,7 @@ testInstallBinBuild() {
     --stdout-match "Installed"
   )
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$buildHome/bin/build" || return $?
+  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$buildHome/bin/build" || return $?
   assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
   assertFileContains --line "$LINENO" "$testBinBuild" "installBinBuild ../.. " || return $?
 
@@ -90,6 +88,7 @@ testInstallBinBuild() {
   # --------------------------------------------------------------------------------
   #
   clearLine
+  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (missing), missing, different name"
   section=$((section + 1))
   bigText "Section #$section"
@@ -102,8 +101,8 @@ testInstallBinBuild() {
   assertDirectoryDoesNotExist --line "$LINENO" bin/build || return $?
 
   touch .gitignore || return $?
-  assertExitCode 0 mv bin/pipeline/install-bin-build.sh bin/pipeline/we-like-head-rubs.sh || return $?
-
+  testBinBuild=bin/pipeline/we-like-head-rubs.sh
+  assertExitCode 0 mv bin/pipeline/install-bin-build.sh "$testBinBuild" || return $?
   # Test
   matches=(
     --stdout-match "we-like-head-rubs.sh"
@@ -117,8 +116,11 @@ testInstallBinBuild() {
   )
   clearLine
 
+  # pause "$(pwd)/bin/pipeline/we-like-head-rubs.sh --mock $buildHome/bin/build"
+  # assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
 
+  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   clearLine
   boxedHeading "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
@@ -140,6 +142,7 @@ testInstallBinBuild() {
   assertExitCode --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
   assertDirectoryExists --line "$LINENO" bin/build || return $?
 
+  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (correct), bin/build exists, different name"
   section=$((section + 1))
   bigText "Section #$section"

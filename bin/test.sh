@@ -74,8 +74,8 @@ _textExit() {
 #
 __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
-
-  local quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
+  local here="${BASH_SOURCE[0]%/*}"
+  local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start
   local continueFile continueFlag
@@ -91,7 +91,7 @@ __buildTestSuite() {
 
   # shellcheck source=/dev/null
 
-  source ./test/test-tools.sh || __failEnvironment "$usage" "test-tools.sh" || return $?
+  source "$here/../test/test-tools.sh" || __failEnvironment "$usage" "test-tools.sh" || return $?
 
   quietLog="$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}")" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
@@ -174,17 +174,26 @@ __buildTestSuite() {
   testFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
   tests=()
   for item in "${checkTests[@]}"; do
-    __testLoad "$item-tests.sh" | sort -u >"$testFunctions"
+    testFile="$item-tests.sh"
+    if ! __testLoad "$testFile" >"$testFunctions"; then
+      __failEnvironment "$usage" "Can not load $testFile" || return $?
+    fi
+    foundTests=()
     while read -r foundTest; do
-      [ -z "$foundTest" ] || foundTests+=("$foundTest")
-    done <"$testFunctions"
+      if [ -n "$foundTest" ]; then
+        if isCallable "$foundTest"; then
+          foundTests+=("$foundTest")
+        else
+          consoleError "Invalid test $foundTest is not callable"
+        fi
+      fi
+    done < <(sort -u "$testFunctions")
     testCount="${#foundTests[@]}"
     if [ "$testCount" -gt 0 ]; then
       statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
       tests+=("#$item" "${foundTests[@]+"${foundTests[@]}"}")
     else
-      consoleError "No tests found in $item-tests.sh" 1>&2
-      __testLoad "$item-tests.sh"
+      consoleError "No tests found in $testFile" 1>&2
     fi
   done
   rm -f "$testFunctions" || :
@@ -212,7 +221,6 @@ __buildTestSuite() {
     filteredTests+=("$item")
   done
   if [ ${#filteredTests[@]} -gt 0 ]; then
-    consoleInfo "FILTERED TESTS" "${filteredTests[@]}"
     sectionName=
     sectionNameHeading=
     for item in "${filteredTests[@]}"; do
@@ -254,8 +262,9 @@ __buildTestGetLine() {
 }
 
 __buildTestSuiteExecutor() {
+  local here="${BASH_SOURCE[0]%/*}"
   local item="${1-}" section="${2-}" line
-  local file="./test/tools/$section-tests.sh"
+  local file="$here/../test/tools/$section-tests.sh"
   local executorArgs
 
   shift 2 || _argument "Missing item or section" || return $?

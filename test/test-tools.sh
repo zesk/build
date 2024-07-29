@@ -11,8 +11,9 @@ export testTracing
 export globalTestFailure=
 
 __testCodes() {
+  local here="${BASH_SOURCE[0]%/*}"
   local fileName
-  find test/ -type f -name '*-tests.sh' | while IFS= read -r fileName; do
+  find "$here/tools/" -type f -name '*-tests.sh' | while IFS= read -r fileName; do
     fileName=$(basename "$fileName")
     printf "%s\n" "${fileName%-tests.sh}"
   done
@@ -57,6 +58,7 @@ debugTermDisplay() {
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 __testLoad() {
+  local here="${BASH_SOURCE[0]%/*}"
   local usage="_${FUNCNAME[0]}"
   local tests __testDirectory resultCode stickyCode resultReason
   local __test __tests tests
@@ -65,12 +67,14 @@ __testLoad() {
   __testFunctions="$__beforeFunctions.after"
   __tests=()
   while [ "$#" -gt 0 ]; do
-    __usageEnvironment "$usage" isExecutable "./test/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    __usageEnvironment "$usage" isExecutable "$here/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
     declare -pF | removeFields 2 | grep -e '^test' >"$__beforeFunctions"
     tests=()
+    set -a
     # shellcheck source=/dev/null
-    source "./test/tools/$1" 1>&2 || __failEnvironment source "./test/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    source "$here/tools/$1" 1>&2 || __failEnvironment source "./test/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    set +a
 
     declare -pF | removeFields 2 | grep -e '^test' | diff "$__beforeFunctions" - | grep -e '^[<>]' | cut -c 3- >"$__testFunctions" || :
     [ "${#tests[@]}" -gt 0 ] || break
