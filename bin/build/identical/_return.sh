@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-# Copy of _return
+# Identical template
+#
+# Original of _return
 #
 # Syntactic sugar to allow a command to output a message to stderr and exit
 # One line is nice as this is used nearly everywhere as a common escape from initialization problems.
@@ -24,3 +26,4 @@ _return() {
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+# END of IDENTICAL _return

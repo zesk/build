@@ -38,6 +38,9 @@
 
 ## Finding or Calculating
 
+{inArray}
+{isSubstring}
+{isSubstringInsensitive}
 {stringOffset}
 {maximumFieldLength}
 {maximumLineLength}
@@ -55,6 +58,7 @@
 {cachedShaPipe}
 {cannon}
 {joinArguments}
+{listAppend}
 
 # Characters
 

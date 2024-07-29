@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copy of _user
+# Original of _user
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #

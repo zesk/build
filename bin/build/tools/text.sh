@@ -228,6 +228,57 @@ inArray() {
 }
 
 #
+# Check if one string is a substring of another set of strings (case-sensitive)
+#
+# Usage: {fn} needle [ haystack ... ]
+# Argument: needle - Required. String. Thing to search for, not blank.
+# Argument: haystack ... - Optional. EmptyString. One or more array elements to match
+# Exit Code: 0 - If element is a substring of any haystack
+# Exit Code: 1 - If element is NOT found as a substring of any haystack
+# Tested: No
+#
+isSubstring() {
+  local element=${1-} arrayElement
+  shift || return 1
+  for arrayElement; do
+    if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+_isSubstring() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Check if one string is a substring of another set of strings (case-insensitive)
+#
+# Usage: {fn} needle [ haystack ... ]
+# Argument: needle - Required. String. Thing to search for, not blank.
+# Argument: haystack ... - Optional. EmptyString. One or more array elements to match
+# Exit Code: 0 - If element is a substring of any haystack
+# Exit Code: 1 - If element is NOT found as a substring of any haystack
+# Tested: No
+#
+isSubstringInsensitive() {
+  local element arrayElement
+
+  element="$(lowercase "${1-}")"
+  [ -n "$element" ] || __failArgument "$usage" "needle is blank" || return $?
+  shift || return 1
+  for arrayElement; do
+    if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+_isSubstringInsensitive() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
 # Remove words from the end of a phrase
 #
 # Usage: trimWords [ wordCount [ word0 ... ] ]
@@ -416,7 +467,7 @@ shaPipe() {
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
-      [ -f "$1" ] || __usageArgument "$usage" "$1 is not a file" || return $?
+      [ -f "$1" ] || __failArgument "$usage" "$1 is not a file" || return $?
       [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
         printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log
@@ -492,58 +543,85 @@ _cachedShaPipe() {
 # Maps a string using an environment file
 #
 # Usage: mapValue mapFile [ value ... ]
-# Argument: mapFile - a file containing bash environment definitions
-# Argument: value - One or more values to map using said environment file
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: mapFile - Required. File. a file containing bash environment definitions
+# Argument: value - Optional. String. One or more values to map using said environment file
+# Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
+# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 mapValue() {
-  local name value searchToken mapFile="${1-}"
-  local usage
+  local usage="_${FUNCNAME[0]}"
+  local mapFile searchToken environmentValue searchFilters replaceFilters filter
 
-  usage="_${FUNCNAME[0]}"
-
-  shift
-  [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
+  mapFile=
+  nArguments=$#
+  searchFilters=()
+  replaceFilters=()
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --search-filter)
+        searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "$1")") || return $?
+        return $?
+        ;;
+      --replace-filter)
+        replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "$1")") || return $?
+        return $?
+        ;;
+      *)
+        if [ -z "$mapFile" ]; then
+          mapFile=$(usageArgumentFile "$usage" "mapFile" "${1-}") || return $?
+          shift
+          break
+        else
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+  [ -n "$mapFile" ] || __failArgument "$usage" "mapFile required" || return $?
   (
-    set -a
-    # shellcheck source=/dev/null
-    source "$mapFile"
-    set +a
+    local value environment
     value="$*"
-    while read -r name; do
-      searchToken='{'"$name"'}'
-      value="${value/${searchToken}/${!name-}}"
-    done < <(environmentVariables)
-    printf "%s" "$value"
+    while read -r environment; do
+      environmentValue=$(__usageEnvironment "$usage" environmentValueRead "$mapFile" "$environment") || return $?
+      searchToken='{'"$environment"'}'
+      if [ ${#searchFilters[@]} -gt 0 ]; then
+        for filter in "${searchFilters[@]}"; do
+          searchToken=$(__usageEnvironment "$usage" "$filter" "$searchToken") || return $?
+        done
+      fi
+      if [ ${#replaceFilters[@]} -gt 0 ]; then
+        for filter in "${replaceFilters[@]}"; do
+          environmentValue=$(__usageEnvironment "$usage" "$filter" "$environmentValue") || return $?
+        done
+      fi
+      value="${value/${searchToken}/${environmentValue}}"
+    done < <(environmentNames <"$mapFile")
+    printf "%s\n" "$value"
   )
+}
+_mapValue() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Maps a string using an environment file
 #
-# Usage: mapValue mapFile [ value ... ]
-# Argument: mapFile - a file containing bash environment definitions
-# Argument: value - One or more values to map using said environment file
+# Usage: {fn} mapFile [ value ... ]
+# Argument: mapFile - Required. File. a file containing bash environment definitions
+# Argument: value - Optional. String. One or more values to map using said environment file.
 #
 mapValueTrim() {
-  local name value replace searchToken mapFile="${1-}"
-  local usage
-
-  usage="_${FUNCNAME[0]}"
-
-  shift
-  [ -f "$mapFile" ] || _argument "$this - \"$mapFile\" is not a file" || return $?
-  (
-    set -a
-    # shellcheck source=/dev/null
-    source "$mapFile"
-    set +a
-    value="$*"
-    while read -r name; do
-      searchToken='{'"$name"'}'
-      replace="$(trimSpace "${!name-}")"
-      value="${value/${searchToken}/${replace}}"
-    done < <(environmentVariables)
-    printf "%s" "$value"
-  )
+  mapValue --replace-filter trimSpace "$@"
+}
+_mapValueTrim() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -955,4 +1033,106 @@ joinArguments() {
   local IFS="$1"
   shift || :
   printf "%s" "$*"
+}
+
+#
+# Usage: {fn} listValue separator [ --first | --last | item ]
+# Argument: listValue - Required. Path value to modify.
+# Argument: separator - Required. Separator string for item values (typically `:`)
+# Argument: --first - Optional. Place any items after this flag first in the list
+# Argument: --last - Optional. Place any items after this flag last in the list. Default.
+# Argument: item - the path to be added to the `listValue`
+#
+listAppend() {
+  local usage="_${FUNCNAME[0]}"
+  local argument listValue="${1-}" separator="${2-}"
+
+  shift 2 || __failArgument "$usage" "Missing arguments" || return $?
+  firstFlag=false
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$1" in
+      --first)
+        firstFlag=true
+        ;;
+      --last)
+        firstFlag=false
+        ;;
+      *)
+        if [ "$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")" -lt 0 ]; then
+          [ -d "$argument" ] || __failEnvironment "$usage" "not a directory $(consoleCode "$argument")" || return $?
+          if [ -z "$listValue" ]; then
+            listValue="$argument"
+          elif "$firstFlag"; then
+            listValue="$argument$separator${listValue#"$separator"}"
+          else
+            listValue="${listValue%"$separator"}$separator$argument"
+          fi
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift $argument" || return $?
+  done
+  printf "%s\n" "$listValue"
+}
+_listAppend() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Removes duplicates from a list and maintains ordering.
+#
+# Usage: {fn} separator listText
+# Argument: --help - Optional. Flag. This help.
+# Argument: --removed - Optional. Flag. Show removed items instead of the new list.
+#
+listCleanDuplicates() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local item items removed=() separator="" removedFlag=false
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --removed)
+        removedFlag=true
+        ;;
+      *)
+        if [ -z "$separator" ]; then
+          separator="$argument"
+        else
+          break
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  shift
+  newItems=()
+  while [ $# -gt 0 ]; do
+    IFS="$separator" read -r -a items < <(printf "%s\n" "$1")
+    for item in "${items[@]}"; do
+      if ! tempPath=$(listAppend "$tempPath" "$separator" "$item"); then
+        removed+=("$item")
+      else
+        newItems+=("$item")
+      fi
+    done
+    if $removedFlag; then
+      IFS="$separator" printf "%s\n" "${removed[*]}"
+    else
+      IFS="$separator" printf "%s\n" "${newItems[*]}"
+    fi
+  done
+}
+_listCleanDuplicates() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

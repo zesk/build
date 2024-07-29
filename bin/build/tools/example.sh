@@ -34,7 +34,7 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 15
+# IDENTICAL _return 16
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -50,17 +50,21 @@ _return() {
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+# END of IDENTICAL _return
 
 #
 # Usage: {fn}
-# Argument: --help - Optional. Flag. This help.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --easy - Optional. Flag. Easy mode.
 # Argument: binary - Required. String. The binary to look for.
 # Argument: remoteUrl - Required. URL. Remote URL.
-# Argument: --target target - Optional. File. File to create. Directory must exist.
+# Argument: --target target - Optional. File. File to create. File must exist.
 # Argument: --path path - Optional. Directory. Directory of path of thing.
 # Argument: --title title - Optional. String. Title of the thing.
 # Argument: --name name - Optional. String. Name of the thing.
+# Argument: --url url - Optional. URL. URL to download.
+# Argument: --callable callable - Optional. Callable. Function to call when url is downloaded.
 # This is a sample function with example code and patterns used in Zesk Build.
 #
 exampleFunction() {
@@ -78,6 +82,7 @@ exampleFunction() {
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -98,6 +103,7 @@ exampleFunction() {
         shift
         target="$(usageArgumentFileDirectory "$usage" "target" "${1-}")" || return $?
         ;;
+      # IDENTICAL argumentUnknown 3
       *)
         __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
         ;;
@@ -121,6 +127,7 @@ exampleFunction() {
   which library-which-should-be-there || __failEnvironment "$usage" "missing thing" || _environment "$(debuggingStack)" || return $?
 }
 _exampleFunction() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -142,6 +149,7 @@ __hookGitPostCommit() {
   __usageEnvironment "$usage" git push origin || return $?
 }
 ___hookGitPostCommit() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

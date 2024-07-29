@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL _colors 79
+# IDENTICAL _colors 82
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -25,6 +25,9 @@ hasColors() {
       [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
+  elif [ "$BUILD_COLORS" = "1" ]; then
+    # Backwards
+    BUILD_COLORS=true
   elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
     BUILD_COLORS=false
   fi

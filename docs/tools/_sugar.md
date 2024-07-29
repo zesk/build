@@ -19,15 +19,24 @@ Alternately, these can be used within an `if` or other compound statement but th
 
 Quick guide:
 
-- `_code name ...` - Exit codes. Outputs integers based on error names, one per line.
 - `_integer value` - Returns 0 if value passed is an integer, otherwise returns 1.
 - `_boolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
 - `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
+
+Error codes:
+
+- `_code name ...` - Exit codes. Outputs integers based on error names, one per line.
+
+Return errors:
+
 - `_return code message ...` - Return code always. Outputs `message ...` to `stderr`.
 - `_environment message ...` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 - `_argument message ...` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+
+Run-related:
+
 - `__execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
-- `__try command ...` - Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
+- `__try command ...` - Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
 - `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it
 - `__environment command ...` - Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `__argument command ...` - Run `command ...` (with any arguments) and then `_argument` if it fails.
@@ -36,21 +45,7 @@ Quick guide:
 
 ## Core tests
 
-
-### `_integer` - Unsigned integer test
-
-Unsigned integer test
-Returns 0 if `value` is an unsigned integer
-
-#### Usage
-
-    _integer value
-    
-
-#### Exit codes
-
-- `0` - if value is an unsigned integer
-- `1` - if value is not an unsigned integer
+Unable to find "_integer" (using index "/Users/kent/.build")
 
 ### `_boolean` - Boolean test
 
@@ -68,6 +63,10 @@ Is this a boolean? (`true` or `false`)
 - `0` - if value is a boolean
 - `1` - if value is not a boolean
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ## Error codes
 
 
@@ -82,7 +81,7 @@ Valid codes:
 - `leak` - function leaked globals
 - `test` - test failed
 - `internal` - internal errors
-Unknown error code is 254
+Unknown error code is 254, end of range is 255 which is not used
 
 #### Usage
 
@@ -101,6 +100,10 @@ Unknown error code is 254
 
 {SEE:https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux}
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ## Ternary selector
 
 
@@ -117,16 +120,20 @@ Boolean selector
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ## Fail with an error code
 
 
-### `_return` - Return code always. Outputs `message ...` to `stderr`.
+### `_return` - IDENTICAL _return 15
 
-Return code always. Outputs `message ...` to `stderr`.
+IDENTICAL _return 15
 
 #### Usage
 
-    _return code command || return $?
+    _return [ exitCode [ message ... ] ]
     
 
 #### Arguments
@@ -135,7 +142,11 @@ Return code always. Outputs `message ...` to `stderr`.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- exitCode
+
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
@@ -154,6 +165,10 @@ Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
 - 1
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ### `_argument` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 
 Return `$errorArgument` always. Outputs `message ...` to `stderr`.
@@ -170,6 +185,10 @@ Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 #### Exit codes
 
 - 2
+
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
 
 ## Run-related
 
@@ -191,6 +210,10 @@ Run `command ...` (with any arguments) and then `_return` if it fails.
 
 - `0` - Always succeeds
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ### `__try` - Run `command ...` (with any arguments) and then `_exit` if
 
 Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
@@ -208,6 +231,10 @@ Run `command ...` (with any arguments) and then `_exit` if it fails. Critical co
 
 - None
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ### `__echo` - Output the `command ...` to stdout prior to running, then
 
 Output the `command ...` to stdout prior to running, then `__execute` it
@@ -224,6 +251,10 @@ Output the `command ...` to stdout prior to running, then `__execute` it
 #### Exit codes
 
 - Any
+
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
 
 ### `__environment` - Run `command ...` (with any arguments) and then `_environment` if
 
@@ -243,6 +274,10 @@ Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `0` - Success
 - `1` - Failed
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ### `__argument` - Run `command ...` (with any arguments) and then `_argument` if
 
 Run `command ...` (with any arguments) and then `_argument` if it fails.
@@ -261,6 +296,10 @@ Run `command ...` (with any arguments) and then `_argument` if it fails.
 - `0` - Success
 - `2` - Failed
 
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
+
 ## Decorations
 
 
@@ -276,6 +315,10 @@ Output a titled list
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Errors
+
+Unable to find "_integer" (using index "/Users/kent/.build")
 
 <!-- TEMPLATE footer 5 -->
 <hr />

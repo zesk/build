@@ -35,7 +35,7 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 15
+# IDENTICAL _return 16
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -51,6 +51,7 @@ _return() {
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+# END of IDENTICAL _return
 
 # Sample output (delete first 2 characters on each line to remove comments)
 #
@@ -164,7 +165,7 @@ testCrontabApplicationSync() {
   cp "$tempDir"/app1/user.crontab "$tempDir/app3/and/it/is/really/deep/user.crontab"
 
   results=$(mktemp)
-  __usageEnvironment "$usage" ./bin/build/ops/crontab-application-sync.sh --user user --show "$tempDir" --env "$testEnv" >>"$results" || return $?
+  __usageEnvironment "$usage" crontabApplicationUpdate --user user --show "$tempDir" --env "$testEnv" >>"$results" || return $?
 
   if test $showFlag; then
     cat "$results"

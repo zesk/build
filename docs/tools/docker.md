@@ -40,30 +40,15 @@ Ensure an environment file is compatible with non-quoted docker environment file
 - `1` - if errors occur
 - `0` - if file is valid
 
-### `docker.sh` - Run a build container using given docker image.
+### `/var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.aLXGfKjDM7 docker.sh` - Run a build container using given docker image.
 
 Run a build container using given docker image.
 
 Runs ARM64 by default.
 
-#### Usage
-
-    docker.sh imageName imageApplicationPath [ envFile ... ] [ extraArgs ... ]
-    
-
-#### Arguments
-
-
-
 #### Exit codes
 
-- `1` - If already inside docker, or the environment file passed is not valid
-- `0` - Success
-- `Any` - `docker run` error code is returned if non-zero
-
-#### Environment
-
-BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
+- `0` - Always succeeds
 
 ### `dockerEnvFromBashEnv` - Ensure an environment file is compatible with non-quoted docker environment
 

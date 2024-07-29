@@ -94,81 +94,73 @@ _deploymentGenerateValue() {
 # Argument: --composer arg - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
 # Argument: --deployment deployment - Set DEPLOYMENT via command line (wins)
 # Argument: --suffix versionSuffix - Set tag suffix via command line (wins, default inferred from deployment)
-# Argument: --debug - Enable debugging. Defaults to BUILD_DEBUG.
 # Argument: ENV_VAR1 - Optional. Environment variables to build into the deployed .env file
 # Argument: -- - Required. Separates environment variables to file list
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
 # See: BUILD_TARGET.sh
 phpBuild() {
-  local arg e tagDeploymentFlag debuggingFlag optClean versionSuffix envVars missingFile initTime deployment composerArgs
+  local usage="_${FUNCNAME[0]}"
+  local arg e tagDeploymentFlag optClean versionSuffix missingFile initTime deployment composerArgs
   local targetName
-  local usage
+  local environment
+  local environments=(BUILD_TIMESTAMP DEPLOYMENT APPLICATION_ID APPLICATION_TAG)
+  local optionals=(BUILD_DEBUG)
 
-  usage="_${FUNCNAME[0]}"
+  export DEPLOYMENT
 
-  usageRequireBinary "$usage" tar
+  usageRequireBinary "$usage" tar || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
 
-  __usageArgument "$usage" buildEnvironmentLoad BUILD_TIMESTAMP BUILD_DEBUG DEPLOYMENT APPLICATION_ID APPLICATION_TAG || return $?
+  consoleInfo "$usage" "$@"
   targetName="$(deployPackageName)"
   tagDeploymentFlag=1
-  debuggingFlag=
   deployment=${DEPLOYMENT:-}
   optClean=
   versionSuffix=
-  envVars=()
   composerArgs=()
   while [ $# -gt 0 ]; do
     arg="$1"
     [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case $1 in
-      --debug)
-        debuggingFlag=1
+      --help)
+        "$usage" 0
+        return $?
         ;;
       --deployment)
-        shift || __failArgument "$usage" "$arg argument missing" || return $?
-        deployment=$1
+        shift
+        deployment=$(usageArgumentString "$usage" "deployment" "${1-}") || return $?
+        DEPLOYMENT="$deployment"
+        consoleWarning "DEPLOYMENT set to $deployment"
         ;;
       --no-tag | --skip-tag)
         tagDeploymentFlag=
         ;;
       --composer)
-        shift || __failArgument "$usage" "$arg argument missing" || return $?
-        [ -n "$1" ] || __failArgument "$usage" "$arg argument blank" || return $?
-        composerArgs+=("$1")
+        shift
+        composerArgs+=("$(usageArgumentString "$usage" "deployment" "${1-}")") || return $?
         ;;
       --name)
-        shift || __failArgument "$usage" "$arg argument missing" || return $?
-        targetName=$1
+        shift
+        targetName=$(usageArgumentString "$usage" "name" "${1-}") || return $?
         ;;
       --)
-        shift || __failArgument "$usage" "$arg argument missing" || return $?
+        shift
         break
-        ;;
-      --help)
-        "$usage" 0
-        return $?
         ;;
       --clean)
         optClean=1
         ;;
       --suffix)
-        shift || __failArgument "$usage" "$arg argument missing" || return $?
-        versionSuffix=$1
+        shift
+        versionSuffix=$(usageArgumentString "$usage" "versionSuffix" "${1-}") || return $?
         ;;
       *)
-        envVars+=("$1")
+        environments+=("$1")
         ;;
     esac
     shift
   done
 
-  if test "${BUILD_DEBUG-}"; then
-    debuggingFlag=1
-  fi
-  if test $debuggingFlag; then
-    consoleWarning "Debugging is enabled"
-    set -x
-  fi
   [ -n "$targetName" ] || __failArgument "$usage" "--name argument blank" || return $?
   [ $# -gt 0 ] || __failArgument "$usage" "Need to supply a list of files for application $(consoleCode "$targetName")" || return $?
   missingFile=()
@@ -220,29 +212,32 @@ phpBuild() {
     __usageEnvironment "$usage" gitTagVersion --suffix "$versionSuffix" || return $?
   else
     clearLine || :
-    consoleInfo "No tagging of this deployment" || :
+    consoleInfo "No tagging of deployment $deployment" || :
   fi
+
   #==========================================================================================
   #
   # Generate .env
   #
-  DEPLOYMENT="$deployment"
   if hasHook make-env; then
     # this script usually runs ./bin/build/pipeline/make-env.sh
-    __usageEnvironment "$usage" runHook make-env "${envVars[@]+${envVars[@]}}" >.env || return $?
+    __usageEnvironment "$usage" runHook make-env "${environments[@]}" -- "${optionals[@]}" >.env || return $?
   else
-    __usageEnvironment "$usage" makeEnvironment "${envVars[@]+${envVars[@]}}" >.env || return $?
+    __usageEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >.env || return $?
   fi
+  dumpPipe '.env' <.env
   if ! grep -q APPLICATION .env; then
     buildFailed ".env" || __failEnvironment "$usage" ".env file seems to be invalid:" || return $?
   fi
-  set -a
-  # shellcheck source=/dev/null
-  source .env || __failEnvironment "$usage" "source .env failed" || return $?
-  set +a
-
+  for environment in "${environments[@]}" "${optionals[@]}"; do
+    # Safely load .env file
+    declare -x "$environment=$(environmentValueRead ".env" "$environment" "")"
+  done
   _phpEchoBar || :
-  showEnvironment "${envVars[@]+${envVars[@]}}" || :
+  consoleGreen "${BASH_SOURCE[0]}:$LINENO"
+  echo "DEPLOYMENT=$DEPLOYMENT"
+  environmentFileShow "${environments[@]}" -- "${optionals[@]}" || :
+  consoleGreen "${BASH_SOURCE[0]}:$LINENO"
 
   [ ! -d ./.deploy ] || rm -rf ./.deploy || __failEnvironment "$usage" "Can not delete .deploy" || return $?
 

@@ -30,8 +30,12 @@
 {usageArgumentCallable}
 {usageArgumentFunction}
 {usageArgumentExecutable}
-{usageArgumentMissing}
+{usageArgumentEmptyString}
 {usageArgumentString}
+
+# Errors
+
+{usageArgumentMissing}
 {usageArgumentUnknown}
 
 <!-- TEMPLATE footer 5 -->

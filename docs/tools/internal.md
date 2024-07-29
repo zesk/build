@@ -18,23 +18,9 @@ Map template files using our identical functionality
 
 Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
-### `build-docs.sh` - Build documentation for build system.
-
-Build documentation for build system.
-
-Given that bash is not an ideal template language, caching is mandatory.
-
-Uses a cache at `buildCacheDirectory`
-
-#### Arguments
-
-
-
 #### Exit codes
 
-- `0` - Success
-- `1` - Issue with environment
-- `2` - Argument error
+- `0` - Always succeeds
 
 #### Errors
 

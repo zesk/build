@@ -23,6 +23,13 @@
 ####################################################################################################
 ####################################################################################################
 
+# Pause for user input
+pause() {
+  local prompt="${1-"PAUSE > "}"
+  printf "%s" "$prompt"
+  read -r prompt
+}
+
 #
 # Read user input and return 0 if the user says yes
 # Exit Code: 0 - Yes
@@ -162,7 +169,7 @@ copyFile() {
         ;;
       *)
         source="$1"
-        [ -f "$source" ] || __usageEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
+        [ -f "$source" ] || __failEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
         shift
         destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
         shift

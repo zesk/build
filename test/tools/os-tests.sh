@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 #
-# tests-tests.sh
-#
-# Tests tests
+# os-tests.sh
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -11,22 +9,11 @@ set -eou pipefail
 declare -a tests
 
 tests+=(testExtensionLists)
-tests+=(testIsAbsolutePath)
 tests+=(testNewestAndOldest)
 tests+=(testMemoryRelated)
 tests+=(testRunCount)
-tests+=(testEnvironmentVariables)
-tests+=(testBetterType)
 tests+=(testServiceToPortStandard)
 tests+=(testServiceToPort)
-
-testIsAbsolutePath() {
-  local path exitCode
-
-  __testIsAbsolutePathData | while IFS=, read -r path exitCode; do
-    assertExitCode --line "$LINENO" "$exitCode" isAbsolutePath "$path" || return $?
-  done
-}
 
 testNewestAndOldest() {
   local waitSeconds=1 place aTime bTime cTime
@@ -96,51 +83,6 @@ testRunCount() {
   assertExitCode --line "$LINENO" --stderr-match 'positive integer' 2 runCount thirty echo busted || return $?
 }
 
-testEnvironmentVariables() {
-  local e
-  e=$(mktemp)
-  export BUILD_TEST_UNIQUE=1
-  if ! environmentVariables >"$e"; then
-    consoleError environmentVariables failed
-    return 1
-  fi
-  assertFileContains --line "$LINENO" "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
-  wrapLines "environmentVariables: $(consoleCode)" "$(consoleReset)" <"$e"
-  rm "$e"
-
-  unset BUILD_TEST_UNIQUE
-}
-
-_assertBetterType() {
-  assertEquals --line "$1" "$2" "$(betterType "$3")" "$2 != betterType $3 $(consoleRed "=> $(betterType "$3")")" || return $?
-}
-
-testBetterType() {
-  _assertBetterType "$LINENO" "builtin" return || return $?
-  _assertBetterType "$LINENO" "builtin" . || return $?
-  _assertBetterType "$LINENO" "function" testBetterType || return $?
-  _assertBetterType "$LINENO" "file" "${BASH_SOURCE[0]}" || return $?
-  _assertBetterType "$LINENO" "directory" ../. || return $?
-  _assertBetterType "$LINENO" "unknown" fairElections || return $?
-
-  local d
-  d=$(mktemp -d) || return $?
-  requireDirectory "$d/food" >/dev/null || return $?
-  ln -s "$d/food" "$d/food-link" || return $?
-
-  touch "$d/goof" || return $?
-  ln -s "$d/no-goof" "$d/no-goof-link" || return $?
-  ln -s "$d/goof" "$d/goof-link" || return $?
-
-  _assertBetterType "$LINENO" "directory" "$d/food" || return $?
-  _assertBetterType "$LINENO" "link-directory" "$d/food-link" || return $?
-  _assertBetterType "$LINENO" "file" "$d/goof" || return $?
-  _assertBetterType "$LINENO" "link-unknown" "$d/no-goof-link" || return $?
-  _assertBetterType "$LINENO" "link-file" "$d/goof-link" || return $?
-
-  rm -rf "$d" || return $?
-}
-
 testServiceToPortStandard() {
   assertEquals --line "$LINENO" "$(serviceToStandardPort ssh)" 22 ssh || return $?
   assertEquals --line "$LINENO" "$(serviceToStandardPort "ssh ")" 22 ssh || return $?
@@ -177,7 +119,7 @@ testServiceToPort() {
   assertNotExitCode --line "$LINENO" --stderr-match blank 0 serviceToPort "" || return $?
   assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort "22" || return $?
   assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort ".https" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort " " || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "whitespace" 0 serviceToPort " " || return $?
 }
 
 testExtensionLists() {
@@ -196,17 +138,4 @@ testExtensionLists() {
   assertFileContains --line "$LINENO" "$target/sh" "${BASH_SOURCE[0]#.}" || return $?
 
   rm -rf "$target" || return $?
-}
-
-__testIsAbsolutePathData() {
-  cat <<EOF
-/,0
-,1
-/this,0
-/QWERTY/,0
-a/a/a/a,1
-.,1
-..,1
-pickle,1
-EOF
 }

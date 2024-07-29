@@ -1,6 +1,6 @@
 # daemontools Tools
 
-Tools to with with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).
+Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).
 
 [⬅ Return to index](crontab)
 [⬅ Return to top](../index.md)

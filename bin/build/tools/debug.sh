@@ -20,13 +20,14 @@ buildDebugEnabled() {
   local debugString
   export BUILD_DEBUG
   # NOTE: This allows runtime changing of this value
-  __environment buildEnvironmentLoad BUILD_DEBUG || return $?
+  # __environment buildEnvironmentLoad BUILD_DEBUG || return $?
   debugString="${BUILD_DEBUG-}"
-  if test "$debugString"; then
-    [ $# -eq 0 ] && return 0
+  if [ -n "$debugString" ] && [ "$debugString" != "false" ]; then
+    [ $# -gt 0 ] || return 0
     debugString=",$debugString,"
     while [ $# -gt 0 ]; do
-      [ "${debugString/,$1,/}" != "${debugString}" ] && return 0
+      [ "${debugString/,$1,/}" = "${debugString}" ] || return 0
+      shift
     done
   fi
   return 1
@@ -46,7 +47,9 @@ buildDebugEnabled() {
 buildDebugStart() {
   if buildDebugEnabled "$@"; then
     set -x # Outputs each command for debugging
+    return 0
   fi
+  return 1
 }
 
 #
@@ -57,7 +60,9 @@ buildDebugStart() {
 buildDebugStop() {
   if buildDebugEnabled "$@"; then
     set +x # Debugging off
+    return 0
   fi
+  return 1
 }
 
 #
@@ -86,7 +91,6 @@ isBashDebug() {
 # Usage: {fn}
 #
 isErrorExit() {
-  # consoleBoldRed "isErrorExit $- ::" 1>&2
   case "$-" in *e*) return 0 ;; esac
   return 1
 }
@@ -124,9 +128,34 @@ debuggingStack() {
 # Run command and detect any global or local leaks
 #
 plumber() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
   local __before __after __changed __ignore __pattern __command
   local __result=0
   local __ignore=(OLDPWD _ resultCode LINENO PWD)
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --leak)
+        shift
+        __ignore+=("$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  [ $# -gt 0 ] || return 0
+  isCallable "${1-}" || __failArgument "$usage" "$1 is not callable" "$@" || return $?
 
   __after=$(mktemp) || _environment mktemp || return $?
   __before="$__after.before"
@@ -152,4 +181,91 @@ plumber() {
   fi
   rm -rf "$__before" "$__after" || :
   return "$__result"
+}
+_plumber() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# List files in paths with a checksum, sorted
+_housekeeperAccountant() {
+  local path
+  for path in "$@"; do
+    find "$path" -type f -print0 | xargs -0 shasum
+  done | sort
+}
+
+# Run a command and ensure files are not modified
+# Usage: {fn} [ --help ] [ --ignore grepPattern ] [ --path path ] [ path ... ] callable
+# Argument: --path path - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
+housekeeper() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local watchPaths path
+  local __before __after __changed __ignore __pattern __command
+  local __result=0
+  local __ignore=()
+
+  watchPaths=()
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --ignore)
+        shift
+        __pattern="$(usageArgumentString "$usage" "grepPattern" "${1-}")" || return $?
+        __ignore+=(-e "$__pattern")
+        ;;
+      --path)
+        shift
+        path="$(usageArgumentDirectory "$usage" "path" "${1-}")" || return $?
+        watchPaths+=("$path")
+        ;;
+      *)
+        if [ -d "$1" ]; then
+          watchPaths+=("$1")
+        else
+          break
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  if [ "${#watchPaths[@]}" -eq 0 ]; then
+    path=$(__usageEnvironment "$usage" pwd) || return $?
+    watchPaths+=("$path")
+  fi
+  [ $# -gt 0 ] || return 0
+  isCallable "${1-}" || __failArgument "$usage" "$1 is not callable" "$@" || return $?
+
+  __after=$(mktemp) || _environment mktemp || return $?
+  __before="$__after.before"
+  __after="$__after.after"
+
+  _housekeeperAccountant "${watchPaths[@]}" >"$__before"
+  if "$@"; then
+    _housekeeperAccountant "${watchPaths[@]}" >"$__after"
+    if [ "${#__ignore[@]}" -gt 0 ]; then
+      __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' | grep -v "${__ignore[@]+${__ignore[@]}}" || :)"
+    else
+      __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' || :)"
+    fi
+    __command=$(consoleCode "$(_command "$@")")
+    if [ -n "$__changed" ]; then
+      printf "%s\n" "$__changed" | dumpPipe "$__command modified files" 1>&2
+      __result=$(_code leak)
+    fi
+  else
+    __result=$?
+  fi
+  rm -rf "$__before" "$__after" || :
+  return "$__result"
+}
+_housekeeper() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

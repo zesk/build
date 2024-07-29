@@ -191,7 +191,7 @@ identicalCheck() {
           if $isBadFile; then
             if [ ${#repairSources[@]} -gt 0 ]; then
               statusMessage consoleWarning "Repairing $token in $(consoleCode "$searchFile") from \"$(consoleValue "$tokenFileName")\""
-              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
+              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
                 badFiles+=("$tokenFileName")
                 badFiles+=("$searchFile")
                 consoleError "$(clearLine)Unable to repair $(consoleValue "$token") in $(consoleCode "$searchFile")" 1>&2
@@ -244,7 +244,10 @@ identicalCheck() {
   done < <(find "$tempDirectory" -type f -name '*.match' || :)
   for token in "${singles[@]+"${singles[@]}"}"; do
     if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
-      printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token NOT found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
+      while read -r tokenFile; do
+        tokenFile="$(tail -n 1 "$tokenFile")"
+        printf "%s: %s %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
+      done < <(find "$tempDirectory" -name "$token" -type f)
     fi
   done
   rm -rf "$tempDirectory" || :
@@ -338,7 +341,7 @@ identicalCheckShell() {
       --interactive)
         aa+=("$argument")
         ;;
-      --repair | --single | --exec)
+      --repair | --single | --exec | --prefix | --exclude | --extension)
         shift
         aa+=("$argument" "${1-}")
         ;;

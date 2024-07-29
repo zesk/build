@@ -25,7 +25,7 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 15
+# IDENTICAL _return 16
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -41,6 +41,7 @@ _return() {
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
 _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+# END of IDENTICAL _return
 
 __deprecatedIgnore() {
   local this="${BASH_SOURCE[0]##*/}"
@@ -56,6 +57,7 @@ __deprecatedFind() {
     if find . -type f -name '*.sh' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
       return 0
     fi
+    shift
   done
   return 1
 }
@@ -64,7 +66,7 @@ __deprecatedFind() {
 __deprecatedCannon() {
   local ignoreStuff
   read -d '' -r -a ignoreStuff < <(__deprecatedIgnore)
-  statusMessage printf "%s %s\n" "$(consoleWarning "$1")" "$(consoleSuccess "$2")"
+  statusMessage printf "%s %s \n" "$(consoleWarning "$1")" "$(consoleSuccess "$2")"
   cannon "$@" "${ignoreStuff[@]}" || :
 }
 
@@ -138,6 +140,19 @@ __deprecatedCleanup() {
     __deprecatedCannon 'usageArgumentREMOVETHISRequired' usageArgumentRequired
   fi
   __deprecatedCannon 'usageArgumentRequired' usageArgumentString
+
+  # v0.11.2
+  # crontab-application-sync.sh
+  deprecatedTokens+=(crontab-application-sync.sh)
+  __deprecatedCannon "show""Environment" environmentFileShow
+  __deprecatedCannon "make""Environment" environmentFileApplicationMake
+  __deprecatedCannon "dot""EnvConfigure"
+  __deprecatedCannon "application""EnvironmentVariables" environmentApplicationVariables
+  __deprecatedCannon "application""Environment" environmentApplicationLoad
+
+  __deprecatedCannon "path""Append" listAppend
+
+  deprecatedTokens+=("dotEnv""Configure")
 
   clearLine
   # Do all deprecations

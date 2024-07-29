@@ -28,7 +28,7 @@ testIdenticalRepair() {
     expectedTarget="$testPath/$token-$(basename "$target")"
     assertFileExists "$expectedTarget" || return $?
     __environment cp "$target" "$output" || return $?
-    assertExitCode 0 identicalRepair --prefix '# ''IDENTICAL' "$token" "$source" "$output" || return $?
+    assertExitCode 0 identicalRepair --prefix '# ''IDENTICAL' --token "$token" "$source" "$output" || return $?
     assertExitCode --dump 0 diff "$output" "$expectedTarget" || return $?
     assertFileDoesNotContain "$output" EOF || return $?
     rm "$output" || :
@@ -41,7 +41,7 @@ testIdenticalRepair() {
     expectedTarget="$testPath/$token-$(basename "$target")"
     assertFileExists "$expectedTarget" || return $?
     __environment cp "$target" "$output" || return $?
-    assertExitCode 0 identicalRepair --prefix '# ''SAME-SAME' "$token" "$source" "$output" || return $?
+    assertExitCode 0 identicalRepair --prefix '# ''SAME-SAME' --token "$token" "$source" "$output" || return $?
     assertExitCode --dump 0 diff "$output" "$(dirname $target)/$token-$(basename $target)" || return $?
     rm "$output" || :
   done
@@ -69,20 +69,20 @@ testIdenticalChecks() {
   assertExitCode --dump --line "$LINENO" --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
 
   clearLine && consoleInfo "overlap failure"
-  assertOutputContains --line "$LINENO" --stderr --exit "$identicalError" 'overlap' identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match 'overlap' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
 
   clearLine && consoleInfo "bad number failure"
-  assertOutputContains --line "$LINENO" --stderr --exit "$identicalError" 'invalid count: NAN' identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match 'invalid count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
 
   clearLine && consoleInfo "single instance failure"
-  assertOutputContains --line "$LINENO" --stderr --exit "$identicalError" 'Single instance of token found:' identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
-  assertOutputContains --line "$LINENO" --stderr --exit "$identicalError" 'Single instance of token found:' identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match 'Single instance of token found:' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match 'Single instance of token found:' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
 
   clearLine && consoleInfo "$(pwd) passing 3 files"
   assertExitCode --line "$LINENO" --dump 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?
 
   clearLine && consoleInfo "slash slash"
-  assertOutputContains --line "$LINENO" --stderr --exit "$identicalError" 'Token code changed' identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical ' || return $?
+  assertExitCode --line "$LINENO" --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical ' || return $?
 
   clearLine && consoleInfo "slash slash prefix mismatch is OK"
   assertExitCode --line "$LINENO" 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// IDENTICAL' || return $?
@@ -104,11 +104,11 @@ testIdenticalCheckSingles() {
   identicalCheckArgs=(--cd "test/example" --extension 'txt')
 
   singles=()
-  assertExitCode --stderr-match single1 --stderr-match single2 "$identicalError" --line "$LINENO" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match single1 --stderr-match single2 "$identicalError" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
 
   singles=(--single single1)
-  assertExitCode --stderr-no-match single1 --stderr-match single2 "$identicalError" --line "$LINENO" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-no-match single1 --stderr-match single2 "$identicalError" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
 
   singles=(--single single1 --single single2)
-  assertExitCode "0" --line "$LINENO" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" "0" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
 }

@@ -17,7 +17,7 @@ tests+=(testAWSIPAccess)
 testAWSIPAccess() {
   local quietLog=$1 id key start
 
-  usageRequireEnvironment _testAWSIPAccessUsage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME
+  usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -z "$quietLog" ]; then
     _argument "testAWSIPAccess missing log" || return $?
@@ -30,7 +30,7 @@ testAWSIPAccess() {
   fi
 
   # Work using environment variables
-  testSection "CLI IP and env credentials"
+  __testSection "CLI IP and env credentials"
   start=$(beginTiming)
   if ! awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
@@ -48,7 +48,7 @@ testAWSIPAccess() {
   unset AWS_ACCESS_KEY_ID
   unset AWS_SECRET_ACCESS_KEY
 
-  testSection "CLI IP and no credentials - fails"
+  __testSection "CLI IP and no credentials - fails"
   start=$(beginTiming)
   if awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
@@ -62,24 +62,24 @@ testAWSIPAccess() {
     echo "aws_secret_access_key = $key"
   } >"$HOME/.aws/credentials"
 
-  testSection "CLI IP and file system credentials"
+  __testSection "CLI IP and file system credentials"
   start=$(beginTiming)
   # Work using environment variables
-  if ! awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
-  if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
 
-  testSection "Generated IP and file system credentials"
+  __testSection "Generated IP and file system credentials"
   start=$(beginTiming)
   # Work using environment variables
-  if ! awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
-  if ! awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! __echo awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
@@ -95,19 +95,14 @@ testAWSIPAccess() {
 }
 
 _isAWSKeyUpToDateTest() {
-  local pass=$1
+  local line=$1 pass=$2
 
-  shift || :
-  if [ "$pass" = "1" ]; then
-    if ! awsIsKeyUpToDate "$@"; then
-      _environment "awsIsKeyUpToDate $* should be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" || return $?
-    fi
-    printf "%s\n" "$(consoleSuccess "Success: ")$(consoleCode "awsIsKeyUpToDate $*")"
+  shift 2 || :
+
+  if [ "$pass" = "true" ]; then
+    assertExitCode --line "$line" 0 awsIsKeyUpToDate "$@" || return $?
   else
-    if awsIsKeyUpToDate "$@"; then
-      _environment "awsIsKeyUpToDate $* should NOT be up to date (AWS_ACCESS_KEY_DATE=${AWS_ACCESS_KEY_DATE-null})" || return $?
-    fi
-    printf "%s\n" "$(consoleSuccess "Correctly failed: ")$(consoleCode "awsIsKeyUpToDate $*")"
+    assertNotExitCode --line "$line" --stderr-ok 0 awsIsKeyUpToDate "$@" || return $?
   fi
 }
 
@@ -119,64 +114,64 @@ testAWSExpiration() {
   oldDate="${AWS_ACCESS_KEY_DATE-}"
 
   start=$(beginTiming)
-  testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
+  __testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
   thisYear=$(($(date +%Y) + 0))
   thisMonth="$(date +%m)"
 
-  testSection null AWS_ACCESS_KEY_DATE
+  __testSection null AWS_ACCESS_KEY_DATE
   unset AWS_ACCESS_KEY_DATE
-  _isAWSKeyUpToDateTest 0 || return $?
+  _isAWSKeyUpToDateTest "$LINENO" false || return $?
 
-  testSection blank AWS_ACCESS_KEY_DATE
+  __testSection blank AWS_ACCESS_KEY_DATE
   export AWS_ACCESS_KEY_DATE=
-  _isAWSKeyUpToDateTest 0 || return $?
+  _isAWSKeyUpToDateTest "$LINENO" false || return $?
 
-  testSection bad AWS_ACCESS_KEY_DATE
+  __testSection bad AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=99999
-  _isAWSKeyUpToDateTest 0 || return $?
+  _isAWSKeyUpToDateTest "$LINENO" false || return $?
 
-  testSection OLD AWS_ACCESS_KEY_DATE
+  __testSection OLD AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=2020-01-01
-  _isAWSKeyUpToDateTest 0 || return $?
+  _isAWSKeyUpToDateTest "$LINENO" false || return $?
 
-  testSection THIS-01-01 366
+  __testSection THIS-01-01 366
   AWS_ACCESS_KEY_DATE="$thisYear-01-01"
   expirationDays=366
-  _isAWSKeyUpToDateTest 1 "$expirationDays" || return $?
+  _isAWSKeyUpToDateTest "$LINENO" true "$expirationDays" || return $?
 
-  testSection LAST-01-01 365
+  __testSection LAST-01-01 365
   AWS_ACCESS_KEY_DATE="$((thisYear - 1))-01-01"
   expirationDays=365
-  _isAWSKeyUpToDateTest 0 "$expirationDays" || return $?
+  _isAWSKeyUpToDateTest "$LINENO" false "$expirationDays" || return $?
 
-  testSection THIS-THIS-01 365
+  __testSection THIS-THIS-01 365
   AWS_ACCESS_KEY_DATE="$thisYear-$thisMonth-01"
-  _isAWSKeyUpToDateTest 1 "$expirationDays" || return $?
+  _isAWSKeyUpToDateTest "$LINENO" true "$expirationDays" || return $?
 
-  testSection yesterdayDate 0
+  __testSection yesterdayDate 0
   AWS_ACCESS_KEY_DATE=$(yesterdayDate)
   expirationDays=0
-  _isAWSKeyUpToDateTest 0 $expirationDays || return $?
+  _isAWSKeyUpToDateTest "$LINENO" false $expirationDays || return $?
 
-  testSection yesterdayDate 1
+  __testSection yesterdayDate 1
   expirationDays=1
-  _isAWSKeyUpToDateTest 1 $expirationDays || return $?
+  _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
-  testSection yesterdayDate 2
+  __testSection yesterdayDate 2
   expirationDays=2
-  _isAWSKeyUpToDateTest 1 $expirationDays || return $?
+  _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
   AWS_ACCESS_KEY_DATE=$(todayDate)
 
   expirationDays=0
-  testSection todayDate $expirationDays
-  _isAWSKeyUpToDateTest 1 $expirationDays || return $?
+  __testSection todayDate $expirationDays
+  _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
   expirationDays=1
-  testSection todayDate $expirationDays
-  _isAWSKeyUpToDateTest 1 $expirationDays || return $?
+  __testSection todayDate $expirationDays
+  _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
   expirationDays=2
-  testSection todayDate $expirationDays
-  _isAWSKeyUpToDateTest 1 $expirationDays || return $?
+  __testSection todayDate $expirationDays
+  _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
   reportTiming "$start" Done
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Identical template
+#
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 # NO DEPENDENCIES
@@ -25,6 +27,9 @@ hasColors() {
       [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
+  elif [ "$BUILD_COLORS" = "1" ]; then
+    # Backwards
+    BUILD_COLORS=true
   elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
     BUILD_COLORS=false
   fi

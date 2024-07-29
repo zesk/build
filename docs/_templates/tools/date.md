@@ -1,4 +1,4 @@
-# Date Functions
+# Date Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

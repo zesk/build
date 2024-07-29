@@ -1,4 +1,4 @@
-# Debug Functions
+# Debug Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
@@ -12,6 +12,7 @@
 {dumpFile}
 {dumpPipe}
 {plumber}
+{housekeeper}
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

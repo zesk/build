@@ -14,7 +14,7 @@ If this fails it will output an error and exit.
 
 #### Usage
 
-    assertEquals [ --line lineNumber ] expected actual [ message ]
+    assertEquals expected actual [ message ]
     
 
 #### Arguments
@@ -231,14 +231,6 @@ If this fails it will output an error and exit.
 
 - `0` - If the process exits with the provided exit code
 - `1` - If the process exits with a different exit code
-
-#### Local cache
-
-None.
-
-#### Environment
-
-None.
 
 #### Review Status
 

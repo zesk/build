@@ -327,7 +327,7 @@ Maps a string using an environment file
 
 #### Usage
 
-    mapValue mapFile [ value ... ]
+    mapValueTrim mapFile [ value ... ]
     
 
 #### Arguments
@@ -433,6 +433,60 @@ Ensures blank lines are singular
 
 ## Finding or Calculating
 
+
+### `inArray` - Check if an element exists in an array
+
+Check if an element exists in an array
+
+#### Usage
+
+    inArray element [ arrayElement0 arrayElement1 ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - If element is found in array
+- `1` - If element is NOT found in array
+
+### `isSubstring` - Check if one string is a substring of another set
+
+Check if one string is a substring of another set of strings (case-sensitive)
+
+#### Usage
+
+    isSubstring needle [ haystack ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - If element is a substring of any haystack
+- `1` - If element is NOT found as a substring of any haystack
+
+### `isSubstringInsensitive` - Check if one string is a substring of another set
+
+Check if one string is a substring of another set of strings (case-insensitive)
+
+#### Usage
+
+    isSubstringInsensitive needle [ haystack ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - If element is a substring of any haystack
+- `1` - If element is NOT found as a substring of any haystack
 
 ### `stringOffset` - Outputs the integer offset of `needle` if found as substring
 
@@ -639,24 +693,9 @@ The `cacheDirectory`
     shasum shaPipe
     
 
-### `cannon.sh` - Replace text `fromText` with `toText` in files, using `findArgs` to
-
-Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
-
-This can break your files so use with caution.
-
-#### Arguments
-
-
-
-#### Examples
-
-    cannon master main ! -path '*/old-version/*')
-
 #### Exit codes
 
-- `0` - Success
-- `1` - Arguments are identical
+- `0` - Always succeeds
 
 #### Usage
 

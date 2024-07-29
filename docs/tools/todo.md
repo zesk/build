@@ -24,27 +24,13 @@ This is a sample function with example code and patterns used in Zesk Build.
 
 - `0` - Always succeeds
 
+### `pause` - Pause for user input
+
+Pause for user input
+
 #### Exit codes
 
 - `0` - Always succeeds
-
-### `usageArgumentRealDirectory` - Validates a value is not blank and is a directory
-
-Validates a value is not blank and is a directory and does `realPath` on it.
-
-#### Usage
-
-    usageArgumentRealDirectory usageFunction variableName variableValue [ noun ]
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `2` - Argument error
-- `0` - Success
 
 <!-- TEMPLATE footer 5 -->
 <hr />

@@ -9,13 +9,14 @@
 
 # Dump a pipe with a title and stats
 # Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
+# Argument: --tail - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
 # Argument: name - Optional. String. The item name or title of this output.
 dumpPipe() {
   local usage="_${FUNCNAME[0]}"
   local argument
   local name names item nLines nBytes decoration symbol
   local item width suffix
-
+  local endBinary
   local showLines
 
   export BUILD_DEBUG_LINES
@@ -26,6 +27,7 @@ dumpPipe() {
 
   cat >"$item"
 
+  endBinary="head"
   names=()
   symbol="🐞"
   while [ $# -gt 0 ]; do
@@ -35,6 +37,9 @@ dumpPipe() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --tail)
+        endBinary="tail"
         ;;
       --symbol)
         shift || __failArgument "$usage" "missing $argument argument" || return $?
@@ -79,7 +84,7 @@ dumpPipe() {
   fi
   decoration="$(consoleCode "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
-  printf "%s\n%s\n%s\n" "$decoration" "$(head -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(consoleReset)")" "$decoration"
+  printf "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(consoleReset)")" "$decoration"
   rm -rf "$item" || :
 }
 _dumpPipe() {

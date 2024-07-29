@@ -66,34 +66,34 @@ testHookSystem() {
 
   consoleInfo "hasHook test0"
   # Allowed hooks have .sh or no .sh but must be +x
-  assertExitCode 0 hasHook test0 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook test0 || _hookTestFailed "$testDir" || return $?
 
   consoleInfo "hasHook test1"
-  assertExitCode 0 hasHook test1 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook test1 || _hookTestFailed "$testDir" || return $?
 
   consoleInfo "hasHook test2"
-  assertExitCode 0 hasHook test2 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook test2 || _hookTestFailed "$testDir" || return $?
 
   consoleInfo "hasHook nonZero"
-  assertExitCode 0 hasHook nonZero || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook nonZero || _hookTestFailed "$testDir" || return $?
 
   consoleInfo "hasHook noExtension"
-  assertExitCode 0 hasHook noExtension || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook noExtension || _hookTestFailed "$testDir" || return $?
 
   consoleInfo "hasHook nonZeroNoExt"
-  assertExitCode 0 hasHook nonZeroNoExt || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook nonZeroNoExt || _hookTestFailed "$testDir" || return $?
 
   consoleInfo "hasHook result"
-  assertExitCode 0 hasHook result || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook result || _hookTestFailed "$testDir" || return $?
 
   consoleInfo "hasHook reflect"
-  assertExitCode 0 hasHook reflect || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" 0 hasHook reflect || _hookTestFailed "$testDir" || return $?
 
   # If not -x, then ignored
   consoleInfo "hasHook nonX"
-  assertExitCode --stderr-ok 1 hasHook nonX || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 1 hasHook nonX || _hookTestFailed "$testDir" || return $?
   consoleInfo "hasHook nonXNoExt"
-  assertExitCode --stderr-ok 1 hasHook nonXNoExt || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 1 hasHook nonXNoExt || _hookTestFailed "$testDir" || return $?
 
   # No hook
   consoleInfo "hasHook test3"
@@ -101,35 +101,37 @@ testHookSystem() {
 
   # Exit codes
   consoleInfo "runHook test0"
-  assertExitCode 0 runHook test0 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook test0 || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook test1"
-  assertExitCode 0 runHook test1 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook test1 || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook noExtension"
-  assertExitCode 0 runHook noExtension || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook noExtension || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook nonZero"
   assertExitCode 99 runHook nonZero || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook nonZeroNoExt"
   assertExitCode 99 runHook nonZeroNoExt || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook nonX"
-  assertExitCode --stderr-ok 2 runHook nonX || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 2 runHook nonX || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook nonXNoExt"
-  assertExitCode --stderr-ok 2 runHook nonXNoExt || _hookTestFailed "$testDir" || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 2 runHook nonXNoExt || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook test2"
-  assertExitCode 0 runHook test2 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook test2 || _hookTestFailed "$testDir" || return $?
   consoleInfo "runHook test3"
-  assertExitCode --stderr-ok 2 runHook test3 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" --stderr-ok 2 runHook test3 || _hookTestFailed "$testDir" || return $?
 
   for hook in result reflect; do
-    for exitCode in $(seq 0 7 255); do
+    for exitCode in $(seq 0 7 245); do
       consoleInfo "runHook $hook $exitCode"
-      assertExitCode "$exitCode" runHook $hook "$exitCode" || _hookTestFailed "$testDir" || return $?
+      assertExitCode --leak BUILD_DEBUG --line "$LINENO" "$exitCode" runHook $hook "$exitCode" || _hookTestFailed "$testDir" || return $?
     done
   done
 
-  assertOutputContains "$randomApp" runHook test0 || return $?
-  assertOutputDoesNotContain "build/hooks" runHook test0 || return $?
-  assertOutputContains "$randomApp" runHook test1 || return $?
-  assertOutputDoesNotContain "build/hooks" runHook test1 || return $?
-  assertOutputContains "$randomDefault" runHook test2 || return $?
-  assertOutputContains "build/hooks" runHook test2 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" runHook test0 || return $?
+  assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test0 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" runHook test1 || return $?
+  assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test1 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomDefault" runHook test2 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test2 || return $?
+
+  unset BUILD_DEBUG
 }

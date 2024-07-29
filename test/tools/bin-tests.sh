@@ -28,6 +28,9 @@ testNewRelease() {
 
 testInstallInstallBuild() {
   local topDir targetDir marker testBinary
+  export BUILD_HOME
+
+  __environment buildEnvironmentLoad BUILD_HOME || return $?
 
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"
@@ -38,13 +41,17 @@ testInstallInstallBuild() {
   assertFileExists --line "$LINENO" "$testBinary" || return $?
   marker=$(randomString)
   echo " # changed $marker" >>"$testBinary"
-
   if ! grep -q "$marker" "$testBinary"; then
     consoleError "binary $testBinary does not contain marker?"
     return 1
   fi
+  assertFileContains --line "$LINENO" "$testBinary" '../../..' || return $?
 
-  assertExitCode --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$(pwd)/bin/build" || return $?
+  __environment cp "$testBinary" "$testBinary.backup" || return $?
+
+  assertDirectoryDoesNotExist --line "$LINENO" "$topDir/bin/build" || return $?
+
+  assertExitCode --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
 
   if [ ! -d "$topDir/bin/build" ]; then
     find "$topDir" -type f
@@ -54,11 +61,13 @@ testInstallInstallBuild() {
   fi
   if grep -q "$marker" "$testBinary"; then
     consoleError "binary $testBinary did not update itself as it should have ($marker found)"
-    tail -n 20 "$testBinary" | wrapLines "$(consoleCode)" "$(consoleReset)"
+    tail -n 20 "$testBinary" | dumpPipe "$testBinary last 20"
     return 1
   fi
+  # Do not use updated binary as behavior is unpredictable (this is the last version)
+  __environment mv -f "$testBinary.backup" "$testBinary" || return $?
 
-  assertExitCode --stdout-match "already installed" 0 "$testBinary" || return $?
+  assertExitCode --line "$LINENO" --stdout-match "already installed" 0 "$testBinary" || return $?
 
   consoleSuccess "install-bin-build.sh update was tested successfully"
   rm -rf "$topDir"
@@ -68,7 +77,7 @@ tests+=(testMapBin)
 testMapBin() {
   local expected actual
 
-  testSection testMap
+  __testSection testMap
 
   actual="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | FOO=test BAR=goob bin/build/map.sh)"
 
@@ -151,7 +160,7 @@ testAdditionalBins() {
   local aa
 
   for binTest in ./test/bin/*.sh; do
-    testSection "$(basename "$binTest")"
+    __testSection "$(basename "$binTest")"
     aa=()
     if grep -q 'stderr-ok' "$binTest" >/dev/null; then
       aa=(--stderr-ok)
@@ -163,7 +172,7 @@ testAdditionalBins() {
 __doesScriptInstall() {
   local binary="${1-}"
 
-  testSection "INSTALL $binary"
+  __testSection "INSTALL $binary"
   shift
   ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "is already installed" || return $?
   __environment "$@" || return $?
@@ -176,7 +185,7 @@ __doesScriptInstallUninstall() {
 
   uninstalledAlready=false
   if whichExists "$binary"; then
-    testSection "UNINSTALL $binary (already)" || :
+    __testSection "UNINSTALL $binary (already)" || :
     __environment "$undoScript" || return $?
     uninstalledAlready=true
   else
@@ -184,7 +193,7 @@ __doesScriptInstallUninstall() {
   fi
   __doesScriptInstall "$binary" "$script" || return $?
   if ! $uninstalledAlready; then
-    testSection "UNINSTALL $binary (just installed)" || :
+    __testSection "UNINSTALL $binary (just installed)" || :
     __environment "$undoScript" || return $?
     ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "exists after uninstalling" || return $?
   fi

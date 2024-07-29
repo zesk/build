@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-# Copy of __return
+# Identical template
+#
+# Original of __return
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #

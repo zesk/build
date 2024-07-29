@@ -28,7 +28,7 @@ Install daemontools and dependencies
 Install a daemontools service which runs a binary as the file owner.
 
 
-Installs a `daemontools` service with an optional logging daemon process. Uses `_generic-service.sh` and `_generic-log.sh` files as templates.
+Installs a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.
 
 #### Usage
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-# Copy of __ops
+# Identical template
+#
+# Original of __ops
 #
 # requires IDENTICAL _return
 #

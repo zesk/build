@@ -1,13 +1,13 @@
 # Release v0.10.4
 
 - `debuggingStack -s` added for quieter output
-- Moved `crontabApplicationSync` into its own file (now also depends on all of `bin/build`)
+- Moved `crontabApplicationUpdate` into its own file (now also depends on all of `bin/build`)
 - `statusMessage` supports any arguments now
 - `diff -q` actually outputs stdout so supressed it when needed, in `copyFile` and `copyFileWouldChange`
 - `crontab` and related tests
 - `saveErrorExit` and `restoreErrorExit` were a lie - tests confirm not inherited by subshells so not ever useful
 - `identicalCheck` and `identicalRepair` now support the feature to use the count `EOF` instead of a number - for dedicated identical files this saves generating the counts and screwing it up.
-- `crontabApplicationSync` -> `crontabApplicationUpdate`
+- `crontabApplicationUpdate` -> `crontabApplicationUpdate`
 - Added `whichExiats`
 - Consistent use of `whichExiats`
 - Cleaned up assertion output and display, added helpers
@@ -20,8 +20,8 @@
 - Added `_code` to `sugar.sh` for singular error codes
 - `crontabApplicationUpdate` incorrectly checked mapper for execution (+x) and not for `isCallable` (binary or function)
 - `argumentIndex` added to `example.sh`
-- `usageMissingArgument` -> `usageArgumentMissing`
-- `usageUnknownArgument` -> `usageArgumentUnknown`
+- `usageArgumentMissing` -> `usageArgumentMissing`
+- `usageArgumentUnknown` -> `usageArgumentUnknown`
 - Refactored `_assert.sh` to have a single core assertion function - in progress
 - Most `assertFoo` functions now support `--line "$LINENO"`
 - Added `BUILD_NPM_VERSION.sh` environment file
@@ -31,7 +31,7 @@
 - Added sugar function `_clean` used to delete files or directories upon exit with an error code
 - Added `aptKeyRemove`, `aptKeyAdd` to `apt.sh`
 - Added `aptKeyRemoveHashicorp`
-- Removed `trimSpacePipe`
+- Removed `trimSpace`
 - Updated documentation
 - Fixed `gitInstallHooks` to have correct usage
 - Added and updated sugar tests

@@ -122,7 +122,7 @@ gitTagAgain() {
 #
 gitVersionList() {
   local usage="_${FUNCNAME[0]}"
-  [ -d "./.git" ] || __usageEnvironment "$usage" "No .git directory at $(pwd), stopping" || return $?
+  [ -d "./.git" ] || __failEnvironment "$usage" "No .git directory at $(pwd), stopping" || return $?
   __usageEnvironment "$usage" git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
 }
 _gitVersionList() {
@@ -151,7 +151,7 @@ veeGitTag() {
   local usage="_${FUNCNAME[0]}"
   local tagName="$1"
 
-  [ "$tagName" = "${tagName#v}" ] || __usageArgument "$usage" "already veed: $(consoleValue "$tagName")" || return $?
+  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already veed: $(consoleValue "$tagName")" || return $?
   __usageEnvironment "$usage" git tag "v$tagName" "$tagName" || return $?
   __usageEnvironment "$usage" git tag -d "$tagName" || return $?
   __usageEnvironment "$usage" git push origin "v$tagName" ":$tagName" || return $?
@@ -415,11 +415,12 @@ _gitFindHome() {
 # Example: ... are all equivalent.
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
-  local updateReleaseNotes appendLast argument start notes comment
+  local updateReleaseNotes appendLast argument start notes comment home
 
   appendLast=false
   updateReleaseNotes=true
   comment=
+  home=
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -427,6 +428,10 @@ gitCommit() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --home)
+        shift
+        home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
         ;;
       --)
         updateReleaseNotes=false
@@ -439,7 +444,7 @@ gitCommit() {
         break
         ;;
     esac
-    shift || :
+    shift
   done
 
   appendLast=
@@ -448,8 +453,11 @@ gitCommit() {
     comment=
   fi
 
+  set -x
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
-  home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  if [ -z "$home" ]; then
+    home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  fi
   __usageEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then

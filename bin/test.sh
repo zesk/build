@@ -30,13 +30,13 @@ __tools() {
   "$@" || return $?
 }
 
-
-__messyTestCleanup() {
+__testCleanupMess() {
   local fn exitCode=$?
 
   export cleanExit
+
   cleanExit="${cleanExit-}"
-  if ! test "$cleanExit"; then
+  if [ "$cleanExit" != "true" ]; then
     printf -- "%s\n" "Stack:"
     for fn in "${FUNCNAME[@]}"; do
       printf -- "#%d %s\n" "$(incrementor "${FUNCNAME[0]}")" "$fn"
@@ -47,11 +47,14 @@ __messyTestCleanup() {
     printf "%s\n" "Messy ... no cleanup"
     return 0
   fi
-  testCleanup
+  __testCleanup
 }
 
 _textExit() {
-  export cleanExit=1
+  export cleanExit
+  if [ "${1-}" = 0 ]; then
+    cleanExit=true
+  fi
   exit "$@"
 }
 
@@ -70,17 +73,12 @@ _textExit() {
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 #
 __buildTestSuite() {
-  local quietLog allTests runTests shortTest startTest
+  local usage="_${FUNCNAME[0]}"
+  local here="${BASH_SOURCE[0]%/*}"
+  local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
   # Avoid conflict with __argument
-  local usage __ARGUMENT
+  local __ARGUMENT start
   local continueFile continueFlag
-
-  usage="_${FUNCNAME[0]}"
-
-  # shellcheck source=/dev/null
-  source ./test/test-tools.sh || _environment "test-tools.sh" || return $?
-
-  quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
 
   export BUILD_COLORS_MODE
   export BUILD_HOME
@@ -88,33 +86,36 @@ __buildTestSuite() {
   export testTracing
   export FUNCNEST
 
+  cleanExit=false
   FUNCNEST=200
 
-  BUILD_COLORS_MODE=$(consoleConfigureColorMode)
+  # shellcheck source=/dev/null
 
-  __environment buildEnvironmentLoad BUILD_HOME || return $?
+  source "$here/../test/test-tools.sh" || __failEnvironment "$usage" "test-tools.sh" || return $?
+
+  quietLog="$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}")" || return $?
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)
+
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
 
   printf "%s started on %s (color %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
-  trap __messyTestCleanup EXIT QUIT TERM
+  trap __testCleanupMess EXIT QUIT TERM
 
   messyOption=
-  allTests=(sugar colors console debug git decoration url ssh log version type process os hook pipeline identical)
-  # Strange quoting for a s s e r t is to hide it from findUncaughtAssertions
-  allTests+=(text bash float utilities self markdown documentation "ass""ert" usage docker api tests aws php bin deploy deployment)
-  allTests+=(sysvinit crontab daemontools)
-  while read -r shortTest; do
-    if ! inArray "$shortTest" "${allTests[@]}"; then
-      consoleError "MISSING $shortTest in allTests"
-      allTests+=("$shortTest")
-    fi
-  done < <(shortTestCodes)
-  runTests=()
+  allTests=()
+  while read -r item; do
+    allTests+=("$item")
+  done < <(__testCodes | sort -u)
 
+  checkTests=()
   continueFile="$BUILD_HOME/.last-run-test"
   continueFlag=false
   testTracing=options
+  matchTests=()
+  failExecutors=()
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
     __ARGUMENT="$1"
@@ -129,21 +130,29 @@ __buildTestSuite() {
       -1 | --one)
         shift || __failArgument "$usage" "missing $(consoleLabel "$__ARGUMENT") argument" || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
-        runTests+=("$1")
+        checkTests+=("$1")
         ;;
       -h | --help)
         "$usage" 0
         _textExit 0
         ;;
+      --fail)
+        shift
+        failExecutors+=("$(usageArgumentCallable "$usage" "failExecutor" "${1-}")") || return $?
+        ;;
       --clean)
-        statusMessage consoleWarning "Cleaning ... "
-        testCleanup
+        statusMessage consoleWarning "Cleaning tests and exiting ... "
+        cleanExit=true
+        __testCleanup || return $?
+        statusMessage reportTiming "$start" "Cleaned in"
+        printf "\n"
+        return 0
         ;;
       --messy)
         messyOption=1
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$__ARGUMENT")" || return $?
+        matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$__ARGUMENT")" || return $?
@@ -151,8 +160,8 @@ __buildTestSuite() {
 
   $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?
 
-  if [ ${#runTests[@]} -eq 0 ]; then
-    runTests=("${allTests[@]}")
+  if [ ${#checkTests[@]} -eq 0 ]; then
+    checkTests=("${allTests[@]}")
   fi
   # tests-tests.sh has side-effects - installs shellcheck
   # aws-tests.sh testAWSIPAccess has side-effects, installs AWS
@@ -161,40 +170,117 @@ __buildTestSuite() {
   if $continueFlag; then
     startTest="$([ ! -f "$continueFile" ] || cat "$continueFile")"
   fi
-  for shortTest in "${runTests[@]}"; do
-    testTracing="test: $shortTest"
-    __environment requireFileDirectory "$quietLog" || return $?
-    printf "%s\n" "$testTracing" >>"$quietLog" || _environment "Failed to write $quietLog" || return $?
-    if [ -n "$startTest" ]; then
-      if [ "$shortTest" = "$startTest" ]; then
-        startTest=
-        clearLine
-        consoleWarning "Continuing at test $(consoleCode "$shortTest") ..."
-      else
-        statusMessage consoleWarning "Skipping $(consoleCode "$shortTest") ..."
-        continue
+  __environment requireFileDirectory "$quietLog" || return $?
+  testFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
+  tests=()
+  for item in "${checkTests[@]}"; do
+    testFile="$item-tests.sh"
+    if ! __testLoad "$testFile" >"$testFunctions"; then
+      __failEnvironment "$usage" "Can not load $testFile" || return $?
+    fi
+    foundTests=()
+    while read -r foundTest; do
+      if [ -n "$foundTest" ]; then
+        if isCallable "$foundTest"; then
+          foundTests+=("$foundTest")
+        else
+          consoleError "Invalid test $foundTest is not callable"
+        fi
+      fi
+    done < <(sort -u "$testFunctions")
+    testCount="${#foundTests[@]}"
+    if [ "$testCount" -gt 0 ]; then
+      statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
+      tests+=("#$item" "${foundTests[@]+"${foundTests[@]}"}")
+    else
+      consoleError "No tests found in $testFile" 1>&2
+    fi
+  done
+  rm -f "$testFunctions" || :
+  [ "${#tests[@]}" -gt 0 ] || __failEnvironment "$usage" "No tests found" || return $?
+  filteredTests=()
+  for item in "${tests[@]}"; do
+    if [ "$item" = "${item#\#}" ]; then
+      if [ -n "$startTest" ]; then
+        if [ "$item" = "$startTest" ]; then
+          startTest=
+          clearLine
+          consoleWarning "Continuing at test $(consoleCode "$item") ..."
+        else
+          statusMessage consoleWarning "Skipping $(consoleCode "$item") ..."
+          continue
+        fi
+      fi
+      if [ "${#matchTests[@]}" -gt 0 ]; then
+        if ! __testMatches "$item" "${matchTests[@]}"; then
+          continue
+        fi
+        statusMessage consoleSuccess "Matched $(consoleValue "$item")"
       fi
     fi
-    if $continueFlag; then
-      printf "%s\n" "$shortTest" >"$continueFile"
-    fi
-    requireTestFiles "$quietLog" "$shortTest-tests.sh" || return $?
+    filteredTests+=("$item")
   done
-  statusMessage consoleInfo "All tests completed."
-  cleanExit=1
-
-  printf "%s\n" "$testTracing" >>"$quietLog"
-  testTracing=cleanup
-  __messyTestCleanup
-  printf "\n"
-  printf "%s\n" "$(bigText --bigger Passed)" | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
-  if [ -n "$continueFile" ]; then
-    printf "%s\n" "PASSED" >"$continueFile"
+  if [ ${#filteredTests[@]} -gt 0 ]; then
+    sectionName=
+    sectionNameHeading=
+    for item in "${filteredTests[@]}"; do
+      if [ "$item" != "${item#\#}" ]; then
+        sectionName="${item#\#}"
+        continue
+      fi
+      if $continueFlag; then
+        printf "%s\n" "$item" >"$continueFile"
+      fi
+      if [ "$sectionName" != "$sectionNameHeading" ]; then
+        clearLine
+        __testHeading "$sectionName"
+        sectionNameHeading="$sectionName"
+      fi
+      __testRun "$quietLog" "$item" || __buildTestSuiteExecutor "$item" "$sectionName" "${failExecutors[@]}" || __testFailed "$item" || return $?
+    done
+    bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
+    if $continueFlag; then
+      printf "%s\n" "PASSED" >"$continueFile"
+    fi
+  else
+    __failEnvironment "$usage" "No tests match: $(consoleValue "${matchTests[*]}")"
   fi
-  consoleReset
+  _textExit 0
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__buildTestGetLine() {
+  local line
+
+  line=$(grep -n "$1() {" | cut -d : -f 1)
+  if _integer "$line"; then
+    printf "%d\n" "$line"
+  fi
+  return 1
+}
+
+__buildTestSuiteExecutor() {
+  local here="${BASH_SOURCE[0]%/*}"
+  local item="${1-}" section="${2-}" line
+  local file="$here/../test/tools/$section-tests.sh"
+  local executorArgs
+
+  shift 2 || _argument "Missing item or section" || return $?
+
+  line=$(__buildTestGetLine "$item" <"$file") || :
+  [ -z "$line" ] || line=":$line"
+
+  statusMessage consoleError "Test $item failed in $file" || :
+  while [ $# -gt 0 ]; do
+    read -r -a executorArgs < <(printf "%s\n" "$1")
+    statusMessage consoleInfo "Running" "${executorArgs[@]}" "$file$line"
+    "${executorArgs[@]}" "$file$line"
+    shift
+  done
+  clearLine
+  return 1
 }
 
 __tools .. __buildTestSuite "$@"

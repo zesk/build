@@ -1,4 +1,4 @@
-# apt Package Manager Functions
+# apt Package Manager Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
