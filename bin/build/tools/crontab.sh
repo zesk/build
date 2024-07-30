@@ -68,7 +68,7 @@ __crontabGenerate() {
 crontabApplicationUpdate() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments
-  local rootEnv appPath user flagShow flagDiff environmentMapper newCrontab
+  local rootEnv appPath user flagShow flagDiff environmentMapper newCrontab returnCode
 
   __usageEnvironment "$usage" whichApt crontab cron || return $?
   rootEnv=
