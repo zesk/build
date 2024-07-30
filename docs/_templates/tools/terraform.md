@@ -1,14 +1,10 @@
 # Terraform
 
-For systems with an `/etc/init.d` start up script system.
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {aptKeyAddHashicorp}
 {aptKeyRemoveHashicorp}
 {terraformInstall}
 {terraformUninstall}
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

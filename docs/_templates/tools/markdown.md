@@ -1,10 +1,8 @@
 # Markdown Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {markdown_removeUnfinishedSections}
 {markdown_FormatList}
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

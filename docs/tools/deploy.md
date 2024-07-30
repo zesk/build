@@ -1,7 +1,8 @@
 # Deploy Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## Deploy Information
 
@@ -41,6 +42,10 @@ If this is called on a non-deployment system, use the application root instead o
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Environment
+
+BUILD_TARGET
 
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
@@ -208,6 +213,3 @@ Note that these MAY be the same or different directories depending on how the ap
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

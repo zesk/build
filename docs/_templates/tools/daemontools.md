@@ -2,8 +2,9 @@
 
 Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).
 
-[⬅ Return to index](crontab)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {daemontoolsHome}
 {daemontoolsInstall}
@@ -18,8 +19,3 @@ Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.h
 
 {daemontoolsExecute}
 {daemontoolsTerminate}
-
-[⬅ Return to index](crontab)
-[⬅ Return to top](../index.md)
-
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK})

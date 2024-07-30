@@ -23,7 +23,7 @@ __tools() {
   "$@" || return $?
 }
 
-# IDENTICAL _return 16
+# IDENTICAL _return 19
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -38,7 +38,10 @@ _return() {
 # Usage: {fn} value
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
-_integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
 # END of IDENTICAL _return
 
 # Map template files using our identical functionality
@@ -92,7 +95,7 @@ buildDocumentation_UpdateUnlinked() {
     content="$(cat "./docs/_templates/__todo.md")"$'\n'$'\n'"$(sort <"$unlinkedFunctions")" mapEnvironment content <"./docs/_templates/__main1.md" >"$template.$$"
   ) || return $?
   total=$(wc -l <"$unlinkedFunctions" | trimSpace)
-  if [ -f "$template" ] && diff -q "$template" "$template.$$"; then
+  if [ -f "$template" ] && diff -q "$template" "$template.$$" >/dev/null; then
     statusMessage consoleInfo "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
     __usageEnvironment "$usage" rm -f "$template.$$" || return $?
   else

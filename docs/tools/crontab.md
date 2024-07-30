@@ -1,10 +1,11 @@
 # crontab Tools
 
-[⬅ Return to documentation root](crontab)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
-### `/var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.eSFZmNnoJb crontab-application-sync.sh` - Application-specific crontab management
+### `crontab-application-sync.sh` - Application-specific crontab management
 
 Keep crontab synced with files and environment files in an application folder structure.
 
@@ -28,14 +29,22 @@ Any files not found are skipped. Note that environment values are not carried be
 
 #### Usage
 
-    /var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.eSFZmNnoJb crontab-application-sync.sh [ --env environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
+    crontab-application-sync.sh [ --env environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
     
+
+#### Arguments
+
+
+
+#### Examples
+
+    crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/applications
+    crontab-application-sync.sh /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 
 #### Exit codes
 
 - `0` - Always succeeds
 
-[⬅ Return to documentation root](crontab)
-[⬅ Return to top](../index.md)
+#### See Also
 
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=crontab Tools)
+{SEE:whoami}

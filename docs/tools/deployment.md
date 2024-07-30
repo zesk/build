@@ -1,7 +1,8 @@
 # Deployment Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `deployBuildEnvironment` - Deploy to a host
@@ -99,6 +100,10 @@ The `userAtHost` can be passed as follows:
 
 `deployHome` is considered a state directory so removing entries in this should be managed separately.
 
+#### Environment
+
+BUILD_DEBUG
+
 ## Internal functions
 
 
@@ -125,6 +130,3 @@ Argument commands must cd such that current directory is a project directory
 #### Errors
 
 Unable to find "__deployRemoteAction" (using index "/Users/kent/.build")
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

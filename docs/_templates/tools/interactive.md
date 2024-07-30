@@ -1,7 +1,8 @@
 # Interactive Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## User prompts
 
@@ -21,7 +22,3 @@ Example:
         __environment copyFile "${args[@]}" || return $?
         __environment service ssh restart || return $?
     fi
-
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

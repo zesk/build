@@ -1,7 +1,8 @@
 # Git Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## git Installation
 
@@ -47,7 +48,3 @@
 {gitPreCommitHasExtension} 
 {gitPreCommitListExtension} 
 {gitPreCommitCleanup}
-
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

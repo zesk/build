@@ -1,7 +1,8 @@
 # Docker Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `dumpDockerTestFile` - Debugging, dumps the proc1file which is used to figure out
@@ -40,15 +41,25 @@ Ensure an environment file is compatible with non-quoted docker environment file
 - `1` - if errors occur
 - `0` - if file is valid
 
-### `/var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.aLXGfKjDM7 docker.sh` - Run a build container using given docker image.
+### `docker.sh` - Run a build container using given docker image.
 
 Run a build container using given docker image.
 
 Runs ARM64 by default.
 
+#### Arguments
+
+
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `1` - If already inside docker, or the environment file passed is not valid
+- `0` - Success
+- `Any` - `docker run` error code is returned if non-zero
+
+#### Environment
+
+BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
 
 ### `dockerEnvFromBashEnv` - Ensure an environment file is compatible with non-quoted docker environment
 
@@ -128,6 +139,3 @@ Returns a temporary file which should be deleted.
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

@@ -1,7 +1,8 @@
 # AWS Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
        ▄▄    ▄▄      ▄▄   ▄▄▄▄
       ████   ██      ██ ▄█▀▀▀▀█
@@ -22,12 +23,3 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 {awsSecurityGroupIPModify}
 {awsSecurityGroupIPRegister}
 {awsValidRegion}
-
-[⬅ Return to top](../index.md)
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})

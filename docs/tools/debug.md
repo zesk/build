@@ -1,7 +1,8 @@
-# Debug Functions
+# Debug Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `debuggingStack` - Dump the function and include stacks and the current environment
@@ -150,5 +151,19 @@ Run command and detect any global or local leaks
 
 - `0` - Always succeeds
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+### `housekeeper` - Run a command and ensure files are not modified
+
+Run a command and ensure files are not modified
+
+#### Usage
+
+    housekeeper [ --help ] [ --ignore grepPattern ] [ --path path ] [ path ... ] callable
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds

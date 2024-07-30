@@ -2,8 +2,9 @@
 
 Typically used to output text to the console using pretty colors and ANSI art.
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {repeat}
 {echoBar}
@@ -13,6 +14,3 @@ Typically used to output text to the console using pretty colors and ANSI art.
 {boxedHeading}
 {bigText}
 {labeledBigText}
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

@@ -1,7 +1,8 @@
 # Pipeline Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## Application Configuration
 
@@ -37,7 +38,7 @@ Loads `.env` and `.env.local`, use with caution on trusted content only
 
 #### See Also
 
-{SEE:toDockerEnv}
+{SEE:environmentFileLoad}
 
 ## Hooks
 
@@ -312,7 +313,7 @@ Create environment file `.env` for build.
 
 #### Usage
 
-    environmentFileApplicationMake [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
+    environmentFileApplicationMake [ requiredEnvironment ... ] [ -- optionalEnvironment ...] "
     
 
 #### Arguments
@@ -458,6 +459,3 @@ Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

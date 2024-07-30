@@ -1,7 +1,8 @@
-# Console Color Functions
+# Console Color Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `consoleBlackBackground` - shellcheck disable=SC2120
@@ -260,6 +261,3 @@ warning things are not normal
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

@@ -1,9 +1,10 @@
 # daemontools Tools
 
-Tools to with with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).
+Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).
 
-[⬅ Return to index](crontab)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `daemontoolsHome` - Print the daemontools service home path
@@ -156,8 +157,3 @@ Terminate daemontools as gracefully as possible
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](crontab)
-[⬅ Return to top](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=)

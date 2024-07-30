@@ -693,13 +693,58 @@ The `cacheDirectory`
     shasum shaPipe
     
 
+### `cannon.sh` - Replace text `fromText` with `toText` in files, using `findArgs` to
+
+Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
+
+This can break your files so use with caution.
+
+#### Arguments
+
+
+
+#### Examples
+
+    cannon master main ! -path '*/old-version/*')
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Arguments are identical
+
+#### Usage
+
+    joinArguments separator text0 arg1 ...
+    
+
+#### Arguments
+
+
+
 #### Exit codes
 
 - `0` - Always succeeds
 
 #### Usage
 
-    joinArguments separator text0 arg1 ...
+    listAppend listValue separator [ --first | --last | item ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `listCleanDuplicates` - Removes duplicates from a list and maintains ordering.
+
+Removes duplicates from a list and maintains ordering.
+
+#### Usage
+
+    listCleanDuplicates separator listText
     
 
 #### Arguments
@@ -781,10 +826,3 @@ Does this character match one or more character classes?
 #### Exit codes
 
 - `0` - Always succeeds
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Text Functions)

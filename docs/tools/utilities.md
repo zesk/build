@@ -71,9 +71,15 @@ Extension parsing is done by removing the final dot from the filename:
 
 - `0` - Always succeeds
 
-<!-- TEMPLATE footer 5 -->
-<hr />
+### `pipeRunner` - Single reader, multiple writers
 
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
+Single reader, multiple writers
 
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Utilites Functions)
+#### Usage
+
+    pipeRunner [ --mode mode ] namedPipe [ --writer line | readerExecutable ... ]
+    
+
+#### Exit codes
+
+- `0` - Always succeeds

@@ -1,7 +1,8 @@
 # Tests Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `validateShellScripts` - Check files for the existence of a string
@@ -158,10 +159,3 @@ By default, any directory which begins with a dot `.` will be ignored.
 #### Exit codes
 
 - `0` - Always succeeds
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Tests Functions)
