@@ -80,6 +80,7 @@ __buildTestSuite() {
   local __ARGUMENT start
   local continueFile continueFlag
 
+  export BUILD_COLORS
   export BUILD_COLORS_MODE
   export BUILD_HOME
   export cleanExit=
@@ -99,7 +100,7 @@ __buildTestSuite() {
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
 
-  printf "%s started on %s (color %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "$(consoleCode "$BUILD_COLORS_MODE")"
+  printf "%s started on %s (color %s %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "${BUILD_COLORS-None}" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
   trap __testCleanupMess EXIT QUIT TERM

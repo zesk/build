@@ -116,6 +116,7 @@ nextMinorVersion() {
 #
 newRelease() {
   local newVersion readLoop currentVersion liveVersion nextVersion releaseNotes nonInteractive
+  local versionOrdering
   local width=40
 
   nonInteractive=
