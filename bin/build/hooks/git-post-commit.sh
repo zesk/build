@@ -85,7 +85,7 @@ __hookGitPostCommit() {
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
   __usageEnvironment "$usage" runOptionalHook post-commit || return $?
   __gitPushHelper "$usage" || return $?
-  __usageEnvironment "$usage" gitMainly || return $?
+  # __usageEnvironment "$usage" gitMainly || return $?
   __gitPushHelper "$usage" || return $?
 }
 ___hookGitPostCommit() {
