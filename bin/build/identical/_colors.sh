@@ -53,7 +53,7 @@ __consoleOutput() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleOutput '' '\033[1;30;44m' '\033[0m' "$@"
+  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
 }
 
 #

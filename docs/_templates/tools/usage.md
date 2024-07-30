@@ -27,6 +27,7 @@
 {usageArgumentDirectory}
 {usageArgumentRealDirectory}
 {usageArgumentBoolean}
+{usageArgumentURL}
 {usageArgumentCallable}
 {usageArgumentFunction}
 {usageArgumentExecutable}

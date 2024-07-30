@@ -20,7 +20,7 @@ hasColors() {
   BUILD_COLORS="${BUILD_COLORS-}"
   if [ -z "$BUILD_COLORS" ]; then
     BUILD_COLORS=false
-    case "${TERM-}" in "" | "dump" | "unknown") BUILD_COLORS=true ;; *)
+    case "${TERM-}" in "" | "dumb" | "unknown") BUILD_COLORS=true ;; *)
       termColors="$(tput colors 2>/dev/null)"
       [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
       ;;
@@ -51,7 +51,7 @@ __consoleOutput() {
 #
 # shellcheck disable=SC2120
 consoleCode() {
-  __consoleOutput '' '\033[1;30;44m' '\033[0m' "$@"
+  __consoleOutput '' '\033[1;97;44m' '\033[0m' "$@"
 }
 
 #

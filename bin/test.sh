@@ -80,27 +80,25 @@ __buildTestSuite() {
   local __ARGUMENT start
   local continueFile continueFlag
 
-  export BUILD_COLORS
-  export BUILD_COLORS_MODE
-  export BUILD_HOME
+  export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
+
   export cleanExit=
   export testTracing
-  export FUNCNEST
 
   cleanExit=false
   FUNCNEST=200
 
+  hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
   # shellcheck source=/dev/null
-
   source "$here/../test/test-tools.sh" || __failEnvironment "$usage" "test-tools.sh" || return $?
 
   quietLog="$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}")" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)
 
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME BUILD_COLORS || return $?
 
-  printf "%s started on %s (color %s %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "${BUILD_COLORS-None}" "$(consoleCode "$BUILD_COLORS_MODE")"
+  printf "%s started on %s (color %s %s)\n" "$(consoleBoldRed "${BASH_SOURCE[0]}")" "$(consoleValue "$(date +"%F %T")")" "${BUILD_COLORS-no colors}" "$(consoleCode "$BUILD_COLORS_MODE")"
 
   testTracing=initialization
   trap __testCleanupMess EXIT QUIT TERM

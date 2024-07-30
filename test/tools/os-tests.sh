@@ -123,7 +123,9 @@ testServiceToPort() {
 }
 
 testExtensionLists() {
-  local target
+  local target me
+
+  me=$(__environment realPath "${BASH_SOURCE[0]}") || return $?
 
   export BUILD_HOME
   assertExitCode --line "$LINENO" 0 buildEnvironmentLoad BUILD_HOME || return $?
@@ -134,8 +136,8 @@ testExtensionLists() {
   find "$BUILD_HOME" -type f ! -path '*/.*/*' | extensionLists --clean "$target"
 
   assertDirectoryNotEmpty --line "$LINENO" "$target" || return $?
-  assertFileContains --line "$LINENO" "$target/@" "${BASH_SOURCE[0]#.}" || return $?
-  assertFileContains --line "$LINENO" "$target/sh" "${BASH_SOURCE[0]#.}" || return $?
+  assertFileContains --line "$LINENO" "$target/@" "$me" || return $?
+  assertFileContains --line "$LINENO" "$target/sh" "$me" || return $?
 
   rm -rf "$target" || return $?
 }

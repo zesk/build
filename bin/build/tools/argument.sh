@@ -241,6 +241,12 @@ _usageArgumentTypeValid() {
     Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
       return 0
       ;;
+    Executable | Callable | Function)
+      return 0
+      ;;
+    URL)
+      return 0
+      ;;
     *)
       return 1
       ;;

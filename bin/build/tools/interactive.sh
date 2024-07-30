@@ -231,7 +231,6 @@ copyFileWouldChange() {
   local mapFlag
 
   mapFlag=false
-  copyFunction=_copyFileRegular
   while [ $# -gt 0 ]; do
     arg="$1"
     [ -n "$arg" ] || _argument "blank argument" || return $?

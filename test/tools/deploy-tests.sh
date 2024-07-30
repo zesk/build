@@ -379,7 +379,7 @@ testDeployApplication() {
 
   # ________________________________________________________________________________________________________________________________
   __testSection deployApplication fail bad version
-  assertNotExitCode 0 --stderr-ok deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
@@ -421,8 +421,8 @@ testDeployPackageName() {
 
   saveTarget=${BUILD_TARGET-NONE}
 
-  assertExitCode 0 deployPackageName || return $?
-  assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
+  assertExitCode --line "$LINENO" --leak BUILD_TARGET 0 deployPackageName || return $?
+  assertEquals --line "$LINENO" "app.tar.gz" "$(deployPackageName)" || return $?
 
   # shellcheck source=/dev/null
   source bin/build/env/BUILD_TARGET.sh || return $?
@@ -431,11 +431,11 @@ testDeployPackageName() {
 
   BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz"
 
-  assertExitCode 0 deployPackageName || return $?
+  assertExitCode --line "$LINENO" 0 deployPackageName || return $?
 
-  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" || return $?
-  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName)" || return $?
-  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(_exportWorksRight)" || return $?
+  assertEquals --line "$LINENO" "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" || return $?
+  assertEquals --line "$LINENO" "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName)" || return $?
+  assertEquals --line "$LINENO" "bummer-of-a-birthmark-hal.tar.gz" "$(_exportWorksRight)" || return $?
 
   unset BUILD_TARGET
 
@@ -444,7 +444,7 @@ testDeployPackageName() {
   # shellcheck source=/dev/null
   __environment buildEnvironmentLoad BUILD_TARGET || return $?
 
-  assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
+  assertEquals --line "$LINENO" "app.tar.gz" "$(deployPackageName)" || return $?
 
   export BUILD_TARGET
   BUILD_TARGET="$saveTarget"

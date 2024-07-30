@@ -1,10 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Build Build
+# Part of build system integration with git
 #
-# Copyright: Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
-# documentTemplate: ./docs/_templates/__binary.md
 
 # IDENTICAL __tools 18
 # Usage: {fn} [ relative [ command ... ] ]
@@ -45,38 +44,49 @@ _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 # END of IDENTICAL _return
 
 #
-# Build Zesk Build
+# The `git-pre-commit` hook self-installs as a `git` pre-commit hook in your project and will
+# overwrite any existing `pre-commit` hook.
 #
-__buildBuild() {
+# It will:
+# 1. Updates the help file templates
+# 2. Checks all shell files for errors
+# fn: {base}
+__hookPreCommitPHP() {
+  local file changed
   local usage="_${FUNCNAME[0]}"
-  local width=25
-  export BUILD_COLORS
 
-  printf "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
-  printf "tput colors %s" "$(tput colors 2>&1 || :)"
-  if hasColors; then
-    consoleSuccess "Has colors"
-  else
-    consoleError "No colors ${BUILD_COLORS-¢}"
-  fi
-  consoleNameValue "$width" "TERM" "${TERM-¢}"
-  consoleNameValue "$width" "DISPLAY" "${DISPLAY-}"
-  consoleNameValue "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
+  export BUILD_HOME
 
-  if ! ./bin/update-md.sh --skip-commit; then
-    __usageEnvironment "$usage" "Can not update the Markdown files" || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
+
+  printf "\n"
+  __usageEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(consoleBoldBlue)" "$(consoleReset)"
+
+  if [ ! -d "$BUILD_HOME/vendor" ]; then
+    consoleInfo "PHP commit - no vendor directory - no fixer"
+    return $?
   fi
 
-  if gitRepositoryChanged; then
-    printf "%s\n" "CHANGES:" || :
-    gitShowChanges | wrapLines "$(consoleCode)    " "$(consoleReset)"
-    git commit -m "Build version $(runHook version-current)" -a || :
-    git push origin || :
+  changed=()
+  while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension php)
+  if [ ! -x "$BUILD_HOME/vendor/bin/php-cs-fixer" ]; then
+    clearLine
+    _environment "No php-cs-fixer found" || return $?
   fi
-  consoleSuccess Built successfully.
+  statusMessage consoleSuccess "Fixing PHP"
+  fixResults=$(mktemp)
+  "$BUILD_HOME/vendor/bin/php-cs-fixer" fix --allow-risky=yes "${changed[@]}" ou>"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
+  if grep -q 'not fixed' "$fixResults"; then
+    clearLine
+    grep -A 100 'not fixed' "$fixResults" | prefixLines "$(consoleError)"
+    rm -f "$fixResults"
+    _environment "PHP files failed" || return $?
+  fi
+  rm -f "$fixResults" || :
+
 }
-___buildBuild() {
+___hookPreCommitPHP() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__tools .. __buildBuild "$@"
+__tools ../../.. __hookPreCommitPHP "$@"
