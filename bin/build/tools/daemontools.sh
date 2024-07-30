@@ -39,12 +39,13 @@ daemontoolsInstall() {
 #
 daemontoolsInstallService() {
   local this usage serviceHome serviceName source target logPath logTarget appUser serviceFile binaryPath
-  local start elapsed
+  local start elapsed here
   local argument nArguments argumentIndex
 
   here="$(dirname "${BASH_SOURCE[0]}")"
   this="${FUNCNAME[0]}"
   usage="_$this"
+
   __usageEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
   serviceHome="${DAEMONTOOLS_HOME}"
   serviceName=
@@ -92,16 +93,17 @@ daemontoolsInstallService() {
 
   binaryPath=$(realPath "$serviceFile") || __failEnvironment "$usage" "realPath $serviceFile" || return $?
 
-  LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$serviceHome/$serviceName" || return $?
-  if [ ! -d "$logPath" ]; then
-    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$serviceHome/$serviceName/log" || return $?
-  else
-    [ -z "$logPath" ] || __failEnvironment "$usage" "--log $logPath is not a directory"
-    __failEnvironment "$usage" "No --log, no logger installed" || return $?
+  target="$serviceHome/$serviceName"
+  logTarget="$serviceHome/$serviceName/log"
+
+  LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" || return $?
+  if [ -d "$logPath" ]; then
+    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" || return $?
   fi
+
   _daemontoolsSuperviseWait "$usage" "$target" || return $?
   __usageEnvironment "$usage" svc -t "$target" || return $?
-  if [ -n "$logPath" ]; then
+  if [ -d "$logPath" ]; then
     _daemontoolsSuperviseWait "$usage" "$logTarget" || return $?
     __usageEnvironment "$usage" svc -t "$logTarget" || return $?
   fi
@@ -112,7 +114,7 @@ _daemontoolsInstallService() {
 
 # Copy run file to a service target
 _daemontoolsInstallServiceRun() {
-  local usage="$1" source="$2" target="$3"
+  local usage="$1" source="$2" target="$3" args
   __usageEnvironment "$usage" requireDirectory "$target" || return $?
   args=(--map "$source" "$target/run")
   if copyFileWouldChange "${args[@]}"; then
@@ -155,7 +157,6 @@ daemontoolsRemoveService() {
   serviceHome="${DAEMONTOOLS_HOME}"
   serviceName=
 
-  logPath=
   while [ $# -gt 0 ]; do
     arg=$1
     [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
@@ -194,11 +195,11 @@ daemontoolsIsRunning() {
   local usage="_$this"
   local processIds processId
 
-  [ "$(id -u 2>/dev/null)" -eq 0 ] || __failEnvironment "$usage" "$this: Must be root" || return $?
+  [ "$(id -u 2>/dev/null)" = "0" ] || __failEnvironment "$usage" "Must be root" || return $?
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
-  [ 0 -eq "${#processIds[@]}" ] && return 1
-  kill -0 "${processIds[@]}" && return 0
+  [ 0 -ne "${#processIds[@]}" ] || return 1
+  ! kill -0 "${processIds[@]}" || return 0
   return 1
 }
 _daemontoolsIsRunning() {

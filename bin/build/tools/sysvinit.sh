@@ -7,83 +7,95 @@
 # Docs: o ./docs/_templates/ops/sysvinit.md
 # Test: o ./test/ops/sysvinit-tests.sh
 
-errorEnvironment=1
-
-errorArgument=2
-
 # Install a script to run upon initialization.
 # Usage: {fn} script
 # Argument: binary - Required. String. Binary to install at startup.
-sysvInitScript() {
-  local initHome=/etc/init.d baseName exitCode removeFlag
+sysvInitScriptInstall() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local initHome baseName target
 
-  removeFlag=
-  if [ ! -d "$initHome" ]; then
-    _sysvInitScript "$errorEnvironment" "sysvInit directory does not exist $(consoleCode "$initHome")" || return $?
-  fi
+  initHome=$(__sysvInitScriptInitHome "$usage") || return $?
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _sysvInitScript "$errorArgument" "blank argument" || return $?
-    fi
-    case "$1" in
-      --remove)
-        removeFlag=1
-        ;;
-      --add)
-        removeFlag=
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
         ;;
       *)
-        if ! baseName=$(basename "$1") || [ -z "$baseName" ]; then
-          _sysvInitScript "$errorArgument" "No basename: $1" || return $?
-        fi
+        baseName=$(__usageArgument "$usage" basename "$argument") || return $?
         target="$initHome/$baseName"
-        if test "$removeFlag"; then
-          if [ -f "$target" ]; then
-            if ! update-rc.d -f "$baseName" remove; then
-              exitCode=$?
-              _sysvInitScript "$errorEnvironment" "update-rc.d $baseName remove failed" || return "$exitCode"
-            fi
-            if ! rm "$target"; then
-              _sysvInitScript "$errorEnvironment" "Can not remove $target" || return "$?"
-            fi
-            printf "%s %s\n" "$(consoleSuccess "sysvInit removed")" "$(consoleCode "$baseName")"
+        [ -x "$argument" ] || __failArgument "$usage" "Not executable: $argument" || return $?
+        if [ -f "$target" ]; then
+          if diff -q "$1" "$target" >/dev/null; then
+            statusMessage consoleSuccess "reinstalling script: $(consoleCode "$baseName")"
           else
-            printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleWarning "not installed")"
-            return 0
+            __failEnvironment "$usage" "$(consoleCode "$target") already exists - remove first" || return $?
           fi
         else
-          if [ ! -x "$1" ]; then
-            _sysvInitScript "$errorArgument" "Not executable: $1" || return $?
-          fi
-          if [ -f "$target" ]; then
-            if diff -q "$1" "$target" >/dev/null; then
-              statusMessage consoleSuccess "reinstalling script: $(consoleCode "$baseName")"
-            else
-              _sysvInitScript "$errorEnvironment" "File already exists $(consoleCode "$target")" || return $?
-            fi
-          else
-            statusMessage consoleSuccess "installing script: $(consoleCode "$baseName")"
-          fi
-          if ! cp "$1" "$target"; then
-            _sysvInitScript "$errorEnvironment" "cp $1 $target failed - permissions error" || return $?
-          fi
-          statusMessage consoleWarning "Updating mode of $(consoleCode "$baseName") ..."
-          if ! chmod +x "$target"; then
-            _sysvInitScript "$errorEnvironment" "chmod +x $target failed - permissions error" || return $?
-          fi
-          statusMessage consoleWarning "rc.d defaults $(consoleCode "$baseName") ..."
-          if ! update-rc.d "$baseName" defaults; then
-            exitCode=$?
-            _sysvInitScript "$errorEnvironment" "update-rc.d $baseName defaults failed" || return "$exitCode"
-          fi
-          clearLine
-          printf "%s %s\n" "$(consoleSuccess "sysvInit installed successfully")" "$(consoleCode "$baseName")"
+          statusMessage consoleSuccess "installing script: $(consoleCode "$baseName")"
+        fi
+        __usageEnvironment "$usage" cp -f "$argument" "$target" || return $?
+        statusMessage consoleWarning "Updating mode of $(consoleCode "$baseName") ..."
+        __usageEnvironment "$usage" chmod +x "$target" || return $?
+        statusMessage consoleWarning "rc.d defaults $(consoleCode "$baseName") ..."
+        __usageEnvironment "$usage" update-rc.d "$baseName" defaults || return $?
+        clearLine
+        printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleSuccess "installed successfully")"
+        ;;
+    esac
+    shift
+  done
+}
+_sysvInitScriptInstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Remove an initialization script
+# Usage: {fn} script ...
+# Argument: binary - Required. String. Basename of installed
+sysvInitScriptUninstall() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local initHome baseName target
+
+  initHome=$(__sysvInitScriptInitHome "$usage") || return $?
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        baseName=$(__usageArgument "$usage" basename "$argument") || return $?
+        target="$initHome/$baseName"
+        if [ -f "$target" ]; then
+          update-rc.d -f "$baseName" remove || __failEnvironment "$usage" "update-rc.d $baseName remove failed" || return $?
+          __usageEnvironment "$usage" rm -f "$target" || return $?
+          printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleSuccess "removed successfully")"
+        else
+          printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleWarning "not installed")"
         fi
         ;;
     esac
     shift
   done
 }
-_sysvInitScript() {
+_sysvInitScriptUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Fetch the home directory and make sure it exists
+__sysvInitScriptInitHome() {
+  local usage="$1" initHome=/etc/init.d
+  [ -d "$initHome" ] || __failEnvironment "$usage" "sysvInit directory does not exist $(consoleCode "$initHome")" || return $?
+  printf "%s\n" "$initHome"
 }

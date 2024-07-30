@@ -15,25 +15,31 @@ tests+=(daemontoolsTests)
 daemontoolsTests() {
   local logPath start waitFor logWaitFor
 
-  assertExitCode --stderr-match 2024-03-21 --stderr-match "not production" 0 daemontoolsInstall || return $?
+  assertExitCode --line "$LINENO" --stderr-match 2024-03-21 --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then
     consoleInfo "Running daemontools manually"
-    assertExitCode 0 daemontoolsExecute || return $?
+    assertExitCode --line "$LINENO" 0 daemontoolsExecute || return $?
   fi
 
-  assertExitCode 0 daemontoolsIsRunning || return $?
+  if [ -d "/etc/service/lemon" ]; then
+    consoleError "Lemon service installed - removing"
+    assertExitCode --line "$LINENO" --leak DAEMONTOOLS_HOME 0 daemontoolsRemoveService lemon || return $?
+  fi
 
-  logPath=$(mktemp -d)
+  assertExitCode --line "$LINENO" 0 daemontoolsIsRunning || return $?
+
+  logPath=$(__environment buildCacheDirectory "${FUNCNAME[0]}") || return $?
   consoleInfo "logPath is $logPath"
+  __environment requireDirectory "$logPath" >/dev/null || return $?
 
-  assertExitCode 0 daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" || return $?
+  assertExitCode --leak DAEMONTOOLS_HOME --line "$LINENO" 0 daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" || return $?
 
-  assertFileExists "/etc/service/lemon/run" || return $?
-  assertFileExists "/etc/service/lemon/log/run" || return $?
+  assertFileExists --line "$LINENO" "/etc/service/lemon/run" || return $?
+  assertFileExists --line "$LINENO" "/etc/service/lemon/log/run" || return $?
 
-  assertDirectoryExists "/etc/service/lemon/supervise" || return $?
-  assertDirectoryExists "/etc/service/lemon/log/supervise" || return $?
+  assertDirectoryExists --line "$LINENO" "/etc/service/lemon/supervise" || return $?
+  assertDirectoryExists --line "$LINENO" "/etc/service/lemon/log/supervise" || return $?
 
   waitFor=5
   start=$(date +%s)
@@ -49,23 +55,26 @@ daemontoolsTests() {
   assertDirectoryExists "$logPath/lemon" || return $?
   assertFileExists "$logPath/lemon/current" || return $?
   ls -la "$logPath/lemon"
-  assertFileContains "$logPath/lemon/current" "lemon.sh" || return $?
+  sleep 4
+  assertFileContains --line "$LINENO" "$logPath/lemon/current" "lemon.sh" || return $?
 
-  assertOutputContains " up " svstat /etc/service/lemon/ || return $?
-  assertOutputContains " seconds" svstat /etc/service/lemon/ || return $?
+  assertOutputContains --line "$LINENO" " up " svstat /etc/service/lemon/ || return $?
+  assertOutputContains --line "$LINENO" " seconds" svstat /etc/service/lemon/ || return $?
 
   if false; then
     logWaitFor=4
     statusMessage consoleInfo "Watching log file grow for $logWaitFor seconds"
     savedSize=$(fileSize "$logPath/lemon/current") || _environment "fileSize $logPath/lemon/current failed" || return $?
     sleep $logWaitFor
-    assertGreaterThan "$(fileSize "$logPath/lemon/current")" "$savedSize" || return $?
+    assertGreaterThan --line "$LINENO" "$(fileSize "$logPath/lemon/current")" "$savedSize" || return $?
 
-    assertExitCode 0 daemontoolsRemoveService lemon || return $?
+    assertExitCode --line "$LINENO" 0 daemontoolsRemoveService lemon || return $?
 
     statusMessage consoleInfo "Watching log file NOT grow for $logWaitFor seconds"
     savedSize=$(fileSize "$logPath/lemon/current") || _environment "fileSize $logPath/lemon/current failed" || return $?
     sleep $logWaitFor
-    assertEquals "$savedSize" "$(fileSize "$logPath/lemon/current")" || return $?
+    assertEquals --line "$LINENO" "$savedSize" "$(fileSize "$logPath/lemon/current")" || return $?
   fi
+
+  unset DAEMONTOOLS_HOME
 }

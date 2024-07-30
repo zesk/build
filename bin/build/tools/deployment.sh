@@ -488,22 +488,16 @@ _deploySuccessful() {
 # TODO: add ability to prune past n versions safely on all hosts.
 #
 # Test: testDeployToRemote - INCOMPLETE
+# Environment: BUILD_DEBUG
 deployToRemote() {
-  local initTime start deployArgs exitCode
-  local makeDirectory
-  local commandSuffix color
-
-  local deployFlag revertFlag debuggingFlag cleanupFlag
-
-  local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
-  local showCommands
-  local verb temporaryCommandsFile
-  local commonArguments
+  local usage="_${FUNCNAME[0]}"
   local nameWidth=50
-  local argument
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local initTime start deployArgs exitCode
+  local makeDirectory commandSuffix color
+  local deployFlag revertFlag debuggingFlag cleanupFlag
+  local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
+  local showCommands addSSHHosts verb temporaryCommandsFile commonArguments
+  local argument currentIP deployArg
 
   __usageEnvironment "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
@@ -596,10 +590,7 @@ deployToRemote() {
         ;;
       *)
         # Breaks a single argument "A B C" into three arguments "A" "B" "C" by space
-        IFS=' ' read -ra tokens <<<"$1"
-        for token in "${tokens[@]}"; do
-          userHosts+=("$token")
-        done
+        IFS=' ' read -r -a userHosts <<<"$1"
         ;;
     esac
     shift || :

@@ -61,7 +61,8 @@ _deployApplicationVersion() {
 #
 # If this is called on a non-deployment system, use the application root instead of
 # `deployHome` for compatibility.
-#
+# Leak: BUILD_TARGET
+# Environment: BUILD_TARGET
 deployPackageName() {
   local usage="_${FUNCNAME[0]}"
 

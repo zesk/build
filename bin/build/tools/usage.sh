@@ -445,7 +445,21 @@ usageArgumentEmptyString() {
 usageArgumentBoolean() {
   local usage="$1" argument="$2"
   shift 2 || :
-  _boolean "${1-}" || __failArgument "$usage" "blank" "$argument" || return $?
+  _boolean "${1-}" || __failArgument "$usage" "not boolean: \"$argument\"" || return $?
+  printf "%s\n" "$1"
+}
+
+# Require an argument to be a URL
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be a URL otherwise an argument error is thrown.
+# Exit code: 0 - If `value` is `urlValid`
+# Exit Code: 2 - If `value` is not `urlValid`
+usageArgumentURL() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __usageArgument urlValid "${1-}" || return $?
   printf "%s\n" "$1"
 }
 
@@ -459,7 +473,7 @@ usageArgumentBoolean() {
 usageArgumentCallable() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __usageArgument isCallable "${1-}" || return $?
+  isCallable "${1-}" || __failArgument "$usage" "$argument is not callable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -473,7 +487,7 @@ usageArgumentCallable() {
 usageArgumentExecutable() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __usageArgument isExecutable "${1-}" || return $?
+  isExecutable "${1-}" || __failArgument "$usage" "$argument is not executable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -487,21 +501,7 @@ usageArgumentExecutable() {
 usageArgumentFunction() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __usageArgument isFunction "${1-}" || return $?
-  printf "%s\n" "$1"
-}
-
-# Require an argument to be a URL
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
-# Argument: argument - Required. String. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
-# Exit code: 0 - If `value` is `urlValid`
-# Exit Code: 2 - If `value` is not `urlValid`
-usageArgumentURL() {
-  local usage="$1" argument="$2"
-  shift 2 || :
-  __usageArgument urlValid "${1-}" || return $?
+  isFunction "${1-}" || __failArgument "$usage" "$argument is not a function" || return $?
   printf "%s\n" "$1"
 }
 
