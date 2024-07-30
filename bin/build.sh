@@ -50,13 +50,16 @@ _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 __buildBuild() {
   local usage="_${FUNCNAME[0]}"
   local width=25
+  export BUILD_COLORS
 
+  printf "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
+  printf "tput colors %s" "$(tput colors 2>&1 || :)"
   if hasColors; then
     consoleSuccess "Has colors"
   else
-    consoleError "No colors"
+    consoleError "No colors ${BUILD_COLORS-¢}"
   fi
-  consoleNameValue "$width" "TERM" "${TERM-}"
+  consoleNameValue "$width" "TERM" "${TERM-¢}"
   consoleNameValue "$width" "DISPLAY" "${DISPLAY-}"
   consoleNameValue "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
 
