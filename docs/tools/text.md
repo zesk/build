@@ -738,6 +738,23 @@ This can break your files so use with caution.
 
 - `0` - Always succeeds
 
+### `listCleanDuplicates` - Removes duplicates from a list and maintains ordering.
+
+Removes duplicates from a list and maintains ordering.
+
+#### Usage
+
+    listCleanDuplicates separator listText
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 # Characters
 
 
@@ -809,10 +826,3 @@ Does this character match one or more character classes?
 #### Exit codes
 
 - `0` - Always succeeds
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Text Functions)

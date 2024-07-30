@@ -1,7 +1,8 @@
 # Console Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `consoleGetColor` - Get the RGB color of the terminal (usually for background
@@ -38,6 +39,3 @@ Print the suggested color mode for the current environment
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

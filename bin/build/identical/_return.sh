@@ -25,5 +25,8 @@ _return() {
 # Usage: {fn} value
 # Exit Code: 0 - if value is an unsigned integer
 # Exit Code: 1 - if value is not an unsigned integer
-_integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
 # END of IDENTICAL _return

@@ -1,7 +1,8 @@
 # GitHub Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `githubLatestRelease` - Get the latest release version
@@ -47,6 +48,3 @@ Think of them of the "source" (user) and "target" (ssh key) access. Both must ex
 - `GITHUB_ACCESS_TOKEN_EXPIRE` - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
 - `GITHUB_REPOSITORY_OWNER` - Owner of the repository (`https://github.com/owner`)
 - `GITHUB_REPOSITORY_NAME` - Name of the repository (`https://github.com/owner/name`)
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

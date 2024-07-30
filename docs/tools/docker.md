@@ -1,7 +1,8 @@
 # Docker Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `dumpDockerTestFile` - Debugging, dumps the proc1file which is used to figure out
@@ -138,6 +139,3 @@ Returns a temporary file which should be deleted.
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

@@ -1,7 +1,8 @@
 # crontab Tools
 
-[⬅ Return to documentation root](crontab)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `crontab-application-sync.sh` - Application-specific crontab management
@@ -47,8 +48,3 @@ Any files not found are skipped. Note that environment values are not carried be
 #### See Also
 
 {SEE:whoami}
-
-[⬅ Return to documentation root](crontab)
-[⬅ Return to top](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=crontab Tools)

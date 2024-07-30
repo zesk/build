@@ -172,10 +172,3 @@ If no arguments are passed, returns exit code 1.
 
 - `0` - All arguments are callable as a command
 - `1` - One or or more arguments are callable as a command
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Type Functions)

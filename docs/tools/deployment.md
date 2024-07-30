@@ -1,7 +1,8 @@
 # Deployment Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `deployBuildEnvironment` - Deploy to a host
@@ -109,7 +110,7 @@ BUILD_DEBUG
 #### Exit codes
 
 - `0` - Always succeeds
-Unable to find "__deployRemoteAction" (using index "/root/.build")
+Unable to find "__deployRemoteAction" (using index "/Users/kent/.build")
 
 ### `__deployCommandsFile` - Generate our commands file
 
@@ -128,7 +129,4 @@ Argument commands must cd such that current directory is a project directory
 
 #### Errors
 
-Unable to find "__deployRemoteAction" (using index "/root/.build")
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+Unable to find "__deployRemoteAction" (using index "/Users/kent/.build")

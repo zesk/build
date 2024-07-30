@@ -2,8 +2,9 @@
 
 For systems with an `/etc/init.d` start up script system.
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `sysvInitScriptInstall` - Install a script to run upon initialization.
@@ -39,6 +40,3 @@ Remove an initialization script
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

@@ -1,10 +1,11 @@
 # Build Internal Operations
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
-Unable to find "buildBuild" (using index "/root/.build")
-Unable to find "buildDeploy" (using index "/root/.build")
+Unable to find "buildBuild" (using index "/Users/kent/.build")
+Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
 ### `buildDocumentationTemplating` - Map template files using our identical functionality
 
@@ -16,7 +17,7 @@ Map template files using our identical functionality
 
 #### Errors
 
-Unable to find "buildDeploy" (using index "/root/.build")
+Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
 ### `build-docs.sh` - Build documentation for build system.
 
@@ -38,7 +39,7 @@ Uses a cache at `buildCacheDirectory`
 
 #### Errors
 
-Unable to find "buildDeploy" (using index "/root/.build")
+Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
 ### `buildDocumentation_MergeWithDocsBranch` - Just merge into docs branch
 
@@ -50,7 +51,7 @@ Just merge into docs branch
 
 #### Errors
 
-Unable to find "buildDeploy" (using index "/root/.build")
+Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
 ### `buildDocumentation_Recommit` - Just merge into docs branch
 
@@ -62,7 +63,7 @@ Just merge into docs branch
 
 #### Errors
 
-Unable to find "buildDeploy" (using index "/root/.build")
+Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
 #### Usage
 
@@ -79,9 +80,4 @@ Unable to find "buildDeploy" (using index "/root/.build")
 
 #### Errors
 
-Unable to find "buildDeploy" (using index "/root/.build")
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Missing functions)
+Unable to find "buildDeploy" (using index "/Users/kent/.build")

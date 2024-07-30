@@ -1,7 +1,8 @@
 # Debug Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `debuggingStack` - Dump the function and include stacks and the current environment
@@ -166,6 +167,3 @@ Run a command and ensure files are not modified
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

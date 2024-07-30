@@ -1,7 +1,8 @@
 # Color Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 All console functions in the form `consoleAction` where `Action` is a color name or a semantic meaning behave similarly:
 
@@ -91,6 +92,3 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 {colorComboTest}
 
 {consoleBrightness}
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

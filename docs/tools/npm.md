@@ -1,7 +1,8 @@
 # npm Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `npmInstall` - Install NPM in the build environment
@@ -23,6 +24,3 @@ When this tool succeeds the `npm` binary is available in the local operating sys
 #### Environment
 
 - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

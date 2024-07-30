@@ -1,7 +1,8 @@
 # Console Color Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {consoleBlackBackground}
 {consoleBlack}
@@ -35,6 +36,3 @@
 {consoleWarning}
 {consoleWhite}
 {consoleYellow}
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

@@ -1,7 +1,8 @@
 # apt Package Manager Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `aptUpdateOnce` - Do `apt-get update` once
@@ -227,10 +228,3 @@ and assumes packages will be available. (For now)
 
 - `0` - If `apt-get` is not installed, returns 0.
 - `1` - If `apt-get` fails to remove the packages
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=apt Package Manager Functions)

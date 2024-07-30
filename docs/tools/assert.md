@@ -1,7 +1,8 @@
 # Assert Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## Equality
 
@@ -712,12 +713,3 @@ Outputs 40 random hexadecimal characters, lowercase.
 
     shasum, /dev/random
     
-
-[⬅ Return to top](../index.md)
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Assert Functions)

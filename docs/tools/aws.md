@@ -1,7 +1,8 @@
 # AWS Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
        ▄▄    ▄▄      ▄▄   ▄▄▄▄
       ████   ██      ██ ▄█▀▀▀▀█
@@ -221,12 +222,3 @@ Usage:
 
 - `0` - Region is a valid AWS region
 - `1` - Region is NOT a valid AWS region
-
-[⬅ Return to top](../index.md)
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=AWS Functions)

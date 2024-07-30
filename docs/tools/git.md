@@ -1,7 +1,8 @@
 # Git Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## git Installation
 
@@ -415,7 +416,3 @@ Clean up after our pre-commit (deletes cache directory)
 #### Exit codes
 
 - `0` - Always succeeds
-
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

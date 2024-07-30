@@ -1,7 +1,8 @@
 # Sugar Core
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 Sugar refers to syntactic sugar - code which makes other code more readable.
 
@@ -45,7 +46,20 @@ Run-related:
 
 ## Core tests
 
-Unable to find "_integer" (using index "/root/.build")
+
+### `_integer` - Is this an unsigned integer?
+
+Is this an unsigned integer?
+
+#### Usage
+
+    _integer value
+    
+
+#### Exit codes
+
+- `0` - if value is an unsigned integer
+- `1` - if value is not an unsigned integer
 
 ### `_boolean` - Boolean test
 
@@ -62,10 +76,6 @@ Is this a boolean? (`true` or `false`)
 
 - `0` - if value is a boolean
 - `1` - if value is not a boolean
-
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
 
 ## Error codes
 
@@ -100,10 +110,6 @@ Unknown error code is 254, end of range is 255 which is not used
 
 {SEE:https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux}
 
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
 ## Ternary selector
 
 
@@ -120,16 +126,12 @@ Boolean selector
 
 - `0` - Always succeeds
 
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
 ## Fail with an error code
 
 
-### `_return` - IDENTICAL _return 16
+### `_return` - IDENTICAL _return 18
 
-IDENTICAL _return 16
+IDENTICAL _return 18
 
 #### Usage
 
@@ -143,10 +145,6 @@ IDENTICAL _return 16
 #### Exit codes
 
 - exitCode
-
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
@@ -165,10 +163,6 @@ Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
 - 1
 
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
 ### `_argument` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 
 Return `$errorArgument` always. Outputs `message ...` to `stderr`.
@@ -185,10 +179,6 @@ Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 #### Exit codes
 
 - 2
-
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
 
 ## Run-related
 
@@ -210,10 +200,6 @@ Run `command ...` (with any arguments) and then `_return` if it fails.
 
 - `0` - Always succeeds
 
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
 ### `__try` - Run `command ...` (with any arguments) and then `_exit` if
 
 Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
@@ -231,10 +217,6 @@ Run `command ...` (with any arguments) and then `_exit` if it fails. Critical co
 
 - None
 
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
 ### `__echo` - Output the `command ...` to stdout prior to running, then
 
 Output the `command ...` to stdout prior to running, then `__execute` it
@@ -251,10 +233,6 @@ Output the `command ...` to stdout prior to running, then `__execute` it
 #### Exit codes
 
 - Any
-
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
 
 ### `__environment` - Run `command ...` (with any arguments) and then `_environment` if
 
@@ -274,10 +252,6 @@ Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `0` - Success
 - `1` - Failed
 
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
 ### `__argument` - Run `command ...` (with any arguments) and then `_argument` if
 
 Run `command ...` (with any arguments) and then `_argument` if it fails.
@@ -296,10 +270,6 @@ Run `command ...` (with any arguments) and then `_argument` if it fails.
 - `0` - Success
 - `2` - Failed
 
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
 ## Decorations
 
 
@@ -315,14 +285,3 @@ Output a titled list
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "_integer" (using index "/root/.build")
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Sugar Core)
