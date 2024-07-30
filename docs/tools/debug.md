@@ -1,4 +1,4 @@
-# Debug Functions
+# Debug Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
@@ -145,6 +145,23 @@ Run command and detect any global or local leaks
 
     plumber command ...
     
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `housekeeper` - Run a command and ensure files are not modified
+
+Run a command and ensure files are not modified
+
+#### Usage
+
+    housekeeper [ --help ] [ --ignore grepPattern ] [ --path path ] [ path ... ] callable
+    
+
+#### Arguments
+
+
 
 #### Exit codes
 

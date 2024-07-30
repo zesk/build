@@ -1,4 +1,4 @@
-# Console Functions
+# Console Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)

@@ -6,17 +6,43 @@
 <hr />
 
 
+### `urlMatchesLocalFileSize` - Compare a remote file size with a local file size
+
+Compare a remote file size with a local file size
+
+#### Usage
+
+    urlMatchesLocalFileSize url file
+    
+
+#### Arguments
+
+
+
 #### Exit codes
 
 - `0` - Always succeeds 
 
+### `urlContentLength` - Get the size of a remote URL
+
+Get the size of a remote URL
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Depends
+
+    curl
+     
+
 #### Exit codes
 
 - `0` - Always succeeds 
 
-#### Exit codes
+### `hostTTFB` - Fetch Time to First Byte and other stats
 
-- `0` - Always succeeds 
+Fetch Time to First Byte and other stats
 
 #### Exit codes
 

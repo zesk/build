@@ -284,6 +284,24 @@ Require an argument to be a boolean value
 - `2` - If `value` is not a boolean
 - `0` - If `value` is a boolean
 
+### `usageArgumentURL` - Require an argument to be a URL
+
+Require an argument to be a URL
+
+#### Usage
+
+    usageArgumentURL usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - If `value` is `urlValid`
+- `2` - If `value` is not `urlValid`
+
 ### `usageArgumentCallable` - Require an argument to be a callable
 
 Require an argument to be a callable

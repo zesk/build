@@ -26,7 +26,7 @@ When this tool succeeds the `php` binary is available in the local operating sys
 - `1` - If installation fails
 - `0` - If installation succeeds
 
-### `/var/folders/6r/r9y5y7f51q592kr56jyz4gh80000z_/T/tmp.l3wXhKabnm composer.sh` - Run Composer commands on code
+### `composer.sh` - Run Composer commands on code
 
 Runs composer validate and install on a directory.
 
@@ -36,9 +36,34 @@ When this tool succeeds the `composer` tool has run on a source tree and the `ve
 
 This tools does not install the `composer` binary into the local environment.
 
+
+
+
+
+#### Usage
+
+    composer.sh [ --help ] [ installDirectory ]
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    bin/build/pipeline/composer.sh ./app/
+
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Local cache
+
+This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.
+
+#### Environment
+
+BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
 
 ### `phpBuild` - Build deployment using composer, adding environment values to .env and
 
@@ -94,6 +119,14 @@ Outputs the path to the PHP log file
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `php.sh` - Test a docker-based PHP application during build
+
+Test a docker-based PHP application during build
+
+#### Arguments
+
+
 
 #### Exit codes
 

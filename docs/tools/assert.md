@@ -1,4 +1,4 @@
-# Assert Functions
+# Assert Tools
 
 [⬅ Return to index](index.md)
 [⬅ Return to top](../index.md)
@@ -682,8 +682,6 @@ If the file does not exist, this will fail.
 #### Environment
 
 If the file does not exist, this will fail.
-
-
 
 ## Random
 

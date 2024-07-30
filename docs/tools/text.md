@@ -693,13 +693,41 @@ The `cacheDirectory`
     shasum shaPipe
     
 
+### `cannon.sh` - Replace text `fromText` with `toText` in files, using `findArgs` to
+
+Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
+
+This can break your files so use with caution.
+
+#### Arguments
+
+
+
+#### Examples
+
+    cannon master main ! -path '*/old-version/*')
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Arguments are identical
+
+#### Usage
+
+    joinArguments separator text0 arg1 ...
+    
+
+#### Arguments
+
+
+
 #### Exit codes
 
 - `0` - Always succeeds
 
 #### Usage
 
-    joinArguments separator text0 arg1 ...
+    listAppend listValue separator [ --first | --last | item ]
     
 
 #### Arguments

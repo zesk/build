@@ -42,6 +42,10 @@ If this is called on a non-deployment system, use the application root instead o
 
 - `0` - Always succeeds
 
+#### Environment
+
+BUILD_TARGET
+
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
 Does a deploy version exist? versionName is the version identifier for deployments
