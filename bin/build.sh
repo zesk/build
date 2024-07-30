@@ -48,12 +48,21 @@ _integer() { case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac }
 # Build Zesk Build
 #
 __buildBuild() {
-  if ! ./bin/update-md.sh --skip-commit; then
-    _fail "Can not update the Markdown files" || return $?
-  fi
+  local usage="_${FUNCNAME[0]}"
+  local width=25
 
-  # This takes a long time, keep as pre-commit
-  # ./bin/build-docs.sh
+  if hasColors; then
+    consoleSuccess "Has colors"
+  else
+    consoleError "No colors"
+  fi
+  consoleNameValue "$width" "TERM" "${TERM-}"
+  consoleNameValue "$width" "DISPLAY" "${DISPLAY-}"
+  consoleNameValue "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
+
+  if ! ./bin/update-md.sh --skip-commit; then
+    __usageEnvironment "$usage" "Can not update the Markdown files" || return $?
+  fi
 
   if gitRepositoryChanged; then
     printf "%s\n" "CHANGES:" || :
