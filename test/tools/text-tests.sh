@@ -54,6 +54,15 @@ testEscapeDoubleQuotes() {
   assertEquals "Dude's place" "$(escapeDoubleQuotes "Dude's place")" || return $?
 }
 
+__testQuoteSedPatternData() {
+  cat <<'EOF'
+  __                  _   _
+ / _|_   _ _ __   ___| |_(_) ___  _ __  ___
+| |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+|  _| |_| | | | | (__| |_| | (_) | | | \__ \
+|_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+EOF
+}
 tests+=(testQuoteSedPattern)
 testQuoteSedPattern() {
   local value mappedValue
@@ -64,13 +73,7 @@ testQuoteSedPattern() {
   assertEquals '\\' "$(quoteSedPattern '\')" || return $?
   assertEquals "\\/" "$(quoteSedPattern "/")" || return $?
   # Fails in code somewhere
-  read -d"" -r value <<'EOF' || :
-  __                  _   _
- / _|_   _ _ __   ___| |_(_) ___  _ __  ___
-| |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-|  _| |_| | | | | (__| |_| | (_) | | | \__ \
-|_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-EOF
+  read -d"" -r value < <(__testQuoteSedPatternData)
 
   mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
   assertEquals "$mappedValue" "$value" || return $?
