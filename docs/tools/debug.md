@@ -167,3 +167,20 @@ Run a command and ensure files are not modified
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `outputTrigger` - Check output for content and trigger environment error if found
+
+Check output for content and trigger environment error if found
+Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
+
+#### Arguments
+
+
+
+#### Examples
+
+    source "$include" > >(outputTrigger source "$include") || return $?
+
+#### Exit codes
+
+- `0` - Always succeeds

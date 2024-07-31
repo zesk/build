@@ -25,6 +25,14 @@ Read user input and return 0 if the user says yes
 - `0` - Yes
 - `1` - No
 
+### `pause` - Pause for user input
+
+Pause for user input
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ## Copy files 
 
 

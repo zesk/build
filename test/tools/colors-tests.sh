@@ -13,6 +13,14 @@ tests+=(testSimpleMarkdownToConsole)
 tests+=(testColorComboTest)
 tests+=(colorTest)
 tests+=(allColorTest)
+tests+=(testSemanticColorTest)
+
+testSemanticColorTest() {
+  local mode
+  for mode in light dark; do
+    BUILD_COLORS_MODE=$mode semanticColorTest
+  done
+}
 
 testSimpleMarkdownToConsole() {
   local saveBC actual expected testString
@@ -44,5 +52,8 @@ testSimpleMarkdownToConsole() {
 }
 
 testColorComboTest() {
+  echo "NOT BOLD"
   colorComboTest " ZESK "
+  echo "BOLD"
+  colorComboTest --bold " ZESK "
 }
