@@ -80,7 +80,7 @@ __buildTestSuite() {
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start
-  local continueFile continueFlag
+  local continueFile continueFlag doStats statsFile allTestStart testStart
 
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
 
@@ -89,6 +89,8 @@ __buildTestSuite() {
 
   cleanExit=false
   FUNCNEST=200
+
+  allTestStart=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
   # shellcheck source=/dev/null
@@ -117,6 +119,7 @@ __buildTestSuite() {
   testTracing=options
   matchTests=()
   failExecutors=()
+  doStats=true
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
     __ARGUMENT="$1"
@@ -124,6 +127,9 @@ __buildTestSuite() {
       -l | --show)
         printf "%s\n" "${allTests[@]}"
         _textExit 0
+        ;;
+      --no-stats)
+        doStats=false
         ;;
       -c | --continue)
         continueFlag=true
@@ -197,6 +203,7 @@ __buildTestSuite() {
       consoleError "No tests found in $testFile" 1>&2
     fi
   done
+  ! $doStats || statsFile=$(__environment mktemp) || return $?
   rm -f "$testFunctions" || :
   [ "${#tests[@]}" -gt 0 ] || __failEnvironment "$usage" "No tests found" || return $?
   filteredTests=()
@@ -237,7 +244,9 @@ __buildTestSuite() {
         __testHeading "$sectionName"
         sectionNameHeading="$sectionName"
       fi
+      testStart=$(__environment date +%s) || return $?
       __testRun "$quietLog" "$item" || __buildTestSuiteExecutor "$item" "$sectionName" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$item" || return $?
+      ! $doStats || printf "%d %s\n" $(($(date +%s) - testStart)) "$item" >>"$statsFile"
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
     if $continueFlag; then
@@ -246,10 +255,28 @@ __buildTestSuite() {
   else
     __failEnvironment "$usage" "No tests match: $(consoleValue "${matchTests[*]}")"
   fi
+  [ -z "$statsFile" ] || __buildTestStats "$statsFile"
+  reportTiming "$allTestStart" "Completed in"
+
   _textExit 0
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__buildTestStats() {
+  local statsFile="$1" targetFile zeroTests
+  targetFile="$(buildHome)/test.stats"
+  sort -rn <"$statsFile" >"$targetFile"
+  rm -rf "$statsFile" || :
+  boxedHeading "Slowest tests"
+  head -n 20<"$targetFile"
+  boxedHeading "Fastest tests"
+  grep -v -e '^0 ' "$targetFile" | tail -n 20
+  boxedHeading "Zero-second tests"
+  IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $1 }')
+  printf "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
+  printf "\n"
 }
 
 __buildTestGetLine() {

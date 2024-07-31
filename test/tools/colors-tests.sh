@@ -17,9 +17,11 @@ tests+=(testSemanticColorTest)
 
 testSemanticColorTest() {
   local mode
+  export BUILD_COLORS_MODE
   for mode in light dark; do
     BUILD_COLORS_MODE=$mode semanticColorTest
   done
+  unset BUILD_COLORS_MODE
 }
 
 testSimpleMarkdownToConsole() {
