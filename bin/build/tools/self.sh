@@ -233,12 +233,14 @@ _buildCacheDirectory() {
 # Load one or more environment settings from bin/build/env or bin/env.
 #
 # Usage: {fn} [ envName ... ]
-# Argument: envName - The environment name to load
+# Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 #
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
 #
-# DO NOT run as a subshell. Modifies local environment.
+# Modifies local environment. Not usually run within a subshell.
+#
+# Environment: $envName
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
