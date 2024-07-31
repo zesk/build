@@ -51,8 +51,8 @@ releaseNotes() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   [ -n "${BUILD_RELEASE_NOTES}" ] || __failEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
-
-  releasePath="$home/$BUILD_RELEASE_NOTES"
+  releasePath="$BUILD_RELEASE_NOTES"
+  isAbsolutePath "$releasePath}" || releasePath="$home/$releasePath"
   [ -d "$releasePath" ] || __failEnvironment "$usage" "Not a directory $releasePath" || return $?
   printf "%s/%s.md\n" "${releasePath%%/}" "$version"
 }

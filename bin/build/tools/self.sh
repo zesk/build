@@ -236,20 +236,18 @@ _buildCacheDirectory() {
 # Argument: envName - The environment name to load
 #
 # If BOTH files exist, both are sourced, so application environments should anticipate values
-# created by default.
+# created by build's default.
+#
+# DO NOT run as a subshell. Modifies local environment.
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
-  local env file found
+  local env file found home
 
-  export BUILD_HOME "${@+$@}" || __failEnvironment "$usage" export BUILD_HOME "${@+$@}" return $?
-  if [ -z "${BUILD_HOME-}" ]; then
-    __usageEnvironment "$usage" source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || return $?
-    [ -n "${BUILD_HOME-}" ] || __failEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
-  fi
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
   for env in "$@"; do
     found=false
-    for file in "$BUILD_HOME/bin/build/env/$env.sh" "$BUILD_HOME/bin/env/$env.sh"; do
+    for file in "$home/bin/build/env/$env.sh" "$home/bin/env/$env.sh"; do
       if [ -x "$file" ]; then
         export "${env?}" || __failArgument "$usage" "export $env failed" || return $?
         found=true
