@@ -9,9 +9,6 @@
 # Docs: o ./docs/_templates/tools/version.md
 # Test: o ./test/tools/version-tests.sh
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 # Summary: Output path to current release notes
 #
 # Output path to current release notes

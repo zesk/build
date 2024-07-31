@@ -80,7 +80,7 @@ __buildTestSuite() {
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start
-  local continueFile continueFlag cleanFlag
+  local continueFile continueFlag
 
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
 
