@@ -30,7 +30,8 @@ testInstallInstallBuild() {
   local topDir targetDir marker testBinary
   export BUILD_HOME
 
-  assertDirectoryExists "$(__environment buildEnvironmentLoad BUILD_HOME)" || return $?
+  __environment buildEnvironmentLoad BUILD_HOME || return $?
+  assertDirectoryExists "$BUILD_HOME" || return $?
 
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"
