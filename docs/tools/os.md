@@ -67,47 +67,6 @@ Backup when `/etc/services` does not exist.
 
 {SEE:serviceToPort}
 
-## Caching
-
-
-### `buildCacheDirectory` - Path to cache directory for build system.
-
-Path to cache directory for build system.
-
-Defaults to `$HOME/.build` unless `$HOME` is not a directory.
-
-Appends any passed in arguments as path segments.
-
-#### Usage
-
-    buildCacheDirectory [ pathSegment ... ]
-    
-
-#### Arguments
-
-
-
-#### Examples
-
-    logFile=$(buildCacheDirectory test.log)
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Usage
-
-    buildQuietLog name
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
 ## Execution
 
 

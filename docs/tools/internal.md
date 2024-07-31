@@ -4,20 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-Unable to find "buildBuild" (using index "/Users/kent/.build")
-Unable to find "buildDeploy" (using index "/Users/kent/.build")
-
-### `buildDocumentationTemplating` - Map template files using our identical functionality
-
-Map template files using our identical functionality
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Errors
-
-Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
 ### `build-docs.sh` - Build documentation for build system.
 
@@ -37,38 +23,9 @@ Uses a cache at `buildCacheDirectory`
 - `1` - Issue with environment
 - `2` - Argument error
 
-#### Errors
+### `test.sh` - Run Zesk Build test suites
 
-Unable to find "buildDeploy" (using index "/Users/kent/.build")
-
-### `buildDocumentation_MergeWithDocsBranch` - Just merge into docs branch
-
-Just merge into docs branch
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Errors
-
-Unable to find "buildDeploy" (using index "/Users/kent/.build")
-
-### `buildDocumentation_Recommit` - Just merge into docs branch
-
-Just merge into docs branch
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Errors
-
-Unable to find "buildDeploy" (using index "/Users/kent/.build")
-
-#### Usage
-
-    buildDocumentation_UpdateUnlinked cacheDirectory envFile
-    
+Run Zesk Build test suites
 
 #### Arguments
 
@@ -77,7 +34,3 @@ Unable to find "buildDeploy" (using index "/Users/kent/.build")
 #### Exit codes
 
 - `0` - Always succeeds
-
-#### Errors
-
-Unable to find "buildDeploy" (using index "/Users/kent/.build")

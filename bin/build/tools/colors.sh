@@ -113,22 +113,24 @@ allColorTest() {
 
 colorComboTest() {
   local fg bg text extra padding
-  extra=
+  local top3=37
+
+  extra="0;"
   if [ "$1" = "--bold" ]; then
     shift || :
-    extra=";1"
+    extra="1;"
   fi
   text="${*-" ABC "}"
   padding="$(repeat $((${#text} - 3)) " ")"
   printf "   "
-  for fg in $(seq 30 37) $(seq 90 97); do
-    printf "\033[%d%sm%3d%s\033[0m " "$fg" "$extra" "$fg" "$padding"
+  for fg in $(seq 30 "$top3") $(seq 90 97); do
+    printf "\033[%s%dm%3d%s\033[0m " "$extra" "$fg" "$fg" "$padding"
   done
   printf "\n"
   for bg in $(seq 40 47) $(seq 100 107); do
-    printf "\033[%d%sm%3d\033[0m " "$bg" "$extra" "$bg"
-    for fg in $(seq 30 37) $(seq 90 97); do
-      printf "\033[%d;%d%sm$text\033[0m " "$fg" "$bg" "$extra"
+    printf "\033[%s%dm%3d\033[0m " "$extra" "$bg" "$bg"
+    for fg in $(seq 30 "$top3") $(seq 90 97); do
+      printf "\033[%s%d;%dm$text\033[0m " "$extra" "$fg" "$bg"
     done
     printf "\n"
   done
@@ -332,7 +334,7 @@ consoleWarning() {
 #
 # shellcheck disable=SC2120
 consoleSuccess() {
-  __consoleOutputMode "SUCCESS" '\033[42;30m' '\033[1;92;40m' '\033[0m' "$@"
+  __consoleOutputMode "SUCCESS" '\033[42;30m' '\033[0;32m' '\033[0m' "$@"
 }
 
 #

@@ -14,3 +14,4 @@
 {dumpPipe}
 {plumber}
 {housekeeper}
+{outputTrigger}

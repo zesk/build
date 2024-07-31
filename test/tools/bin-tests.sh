@@ -31,6 +31,7 @@ testInstallInstallBuild() {
   export BUILD_HOME
 
   __environment buildEnvironmentLoad BUILD_HOME || return $?
+  assertDirectoryExists "$BUILD_HOME" || return $?
 
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"

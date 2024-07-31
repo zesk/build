@@ -24,15 +24,18 @@ testUsageArguments1() {
   __environment rm "$results" || return $?
 }
 
+__testUsageArgumentsFile() {
+  cat <<'EOF'
+     --test^Optional thing.
+     variable^OptionalTHing
+     third^Required thing
+EOF
+}
 tests+=(testUsageArguments)
 testUsageArguments() {
   local value testIndex=0
 
-  IFS= read -r -d '' value <<'EOF' || :
---test^Optional thing.
-variable^OptionalTHing
-third^Required thing
-EOF
+  IFS= read -r -d '' value < <(__testUsageArgumentsFile)
 
   printf "VALUE=%s\n=====\n" "$value"
 
