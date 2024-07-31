@@ -5,27 +5,23 @@
 # Depends: assert.sh usage.sh
 #
 declare -a tests
-tests+=(usageTests)
+tests+=(testUsageArguments1)
 
-usageTests() {
+__sampleArgs() {
+  cat <<EOF
+  --name value is required
+  --value name
+EOF
+}
+testUsageArguments1() {
   local results
 
-  results=$(mktemp)
-  cat <<EOF | usageArguments " " "" "" >"$results"
---name value is required
---value name
-EOF
-  cat <<EOF | bin/build/tools.sh usageArguments
---name value is required
---value name
-EOF
+  results=$(__environment mktemp) || return $?
+  __sampleArgs | usageArguments " " "" "" >"$results"
 
   assertEquals " --name [ --value ]" "$(cat "$results")" || return $?
 
-  cat <<EOF | usageGenerator >/dev/null
-    --name value
-    --value name
-EOF
+  __environment rm "$results" || return $?
 }
 
 tests+=(testUsageArguments)

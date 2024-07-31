@@ -57,31 +57,30 @@ _integer() {
 __hookPreCommitPHP() {
   local file changed
   local usage="_${FUNCNAME[0]}"
+  local home
 
-  export BUILD_HOME
-
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
 
   printf "\n"
   __usageEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(consoleBoldBlue)" "$(consoleReset)"
 
-  if [ ! -d "$BUILD_HOME/vendor" ]; then
+  if [ ! -d "$home/vendor" ]; then
     consoleInfo "PHP commit - no vendor directory - no fixer"
     return $?
   fi
 
   changed=()
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension php)
-  if [ ! -x "$BUILD_HOME/vendor/bin/php-cs-fixer" ]; then
+  if [ ! -x "$home/vendor/bin/php-cs-fixer" ]; then
     clearLine
     _environment "No php-cs-fixer found" || return $?
   fi
   statusMessage consoleSuccess "Fixing PHP"
   fixResults=$(mktemp)
-  "$BUILD_HOME/vendor/bin/php-cs-fixer" fix --allow-risky=yes "${changed[@]}" ou >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
+  "$home/vendor/bin/php-cs-fixer" fix --allow-risky=yes "${changed[@]}" ou >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
     clearLine
-    grep -A 100 'not fixed' "$fixResults" | prefixLines "$(consoleError)"
+    grep -A 100 'not fixed' "$fixResults" | wrapLines "$(consoleError)" "$(consoleReset)"
     rm -f "$fixResults"
     _environment "PHP files failed" || return $?
   fi

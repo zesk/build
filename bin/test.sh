@@ -235,7 +235,7 @@ __buildTestSuite() {
         __testHeading "$sectionName"
         sectionNameHeading="$sectionName"
       fi
-      __testRun "$quietLog" "$item" || __buildTestSuiteExecutor "$item" "$sectionName" "${failExecutors[@]}" || __testFailed "$item" || return $?
+      __testRun "$quietLog" "$item" || __buildTestSuiteExecutor "$item" "$sectionName" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$item" || return $?
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
     if $continueFlag; then

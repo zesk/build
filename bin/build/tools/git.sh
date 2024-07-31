@@ -632,10 +632,9 @@ gitInstallHooks() {
   local hook
   local argument
   local usage="_${FUNCNAME[0]}"
-  local types didOne
+  local types didOne home
 
-  buildEnvironmentLoad BUILD_HOME || :
-  home="${BUILD_HOME:-}"
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
   verbose=false
   didOne=false
   read -r -a types < <(gitHookTypes)
@@ -704,8 +703,7 @@ gitInstallHook() {
   local types
 
   read -r -a types < <(gitHookTypes)
-  buildEnvironmentLoad BUILD_HOME || :
-  home="${BUILD_HOME:-}"
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
   execute=true
   verbose=false
   while [ $# -gt 0 ]; do

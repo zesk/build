@@ -9,11 +9,6 @@
 {serviceToPort}
 {serviceToStandardPort}
 
-## Caching
-
-{buildCacheDirectory}
-{buildQuietLog}
-
 ## Execution
 
 {whichExists}
