@@ -158,7 +158,7 @@ _installBinBuildDirectory() {
   local start tarArgs
   local target="$applicationHome/build.tar.gz"
 
-  if [ -z "$localPath" ]; then
+  if [ -n "$localPath" ]; then
     _installBinBuildDirectoryLocal "$usage" "$applicationHome" "$localPath"
     return $?
   fi
