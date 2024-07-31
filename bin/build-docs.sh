@@ -45,7 +45,7 @@ _integer() {
 # END of IDENTICAL _return
 
 # Map template files using our identical functionality
-buildDocumentationTemplating() {
+_buildDocumentationTemplating() {
   local failCount
 
   failCount=0
@@ -62,7 +62,7 @@ buildDocumentationTemplating() {
 # Argument: cacheDirectory - Required. Directory. Cache directory.
 # Argument: envFile - Required. File. Environment file used as base environment for all template generation.
 #
-buildDocumentation_UpdateUnlinked() {
+_buildDocumentation_UpdateUnlinked() {
   local argument cacheDirectory envFile unlinkedFunctions template total
   local usage
 
@@ -104,14 +104,14 @@ buildDocumentation_UpdateUnlinked() {
   fi
   rm -f "$unlinkedFunctions" || :
 }
-_buildDocumentation_UpdateUnlinked() {
+__buildDocumentation_UpdateUnlinked() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Just merge into docs branch
 #
-buildDocumentation_MergeWithDocsBranch() {
+_buildDocumentation_MergeWithDocsBranch() {
   local branch
   local this="${FUNCNAME[0]}"
   local usage="_$this"
@@ -125,14 +125,14 @@ buildDocumentation_MergeWithDocsBranch() {
   __usageEnvironment "$usage" git push || return $?
   __usageEnvironment "$usage" git checkout "$branch" || return $?
 }
-_buildDocumentation_MergeWithDocsBranch() {
+__buildDocumentation_MergeWithDocsBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Just merge into docs branch
 #
-buildDocumentation_Recommit() {
+_buildDocumentation_Recommit() {
   local branch
   local usage
 
@@ -152,7 +152,7 @@ buildDocumentation_Recommit() {
     consoleInfo "Branch $branch is unchanged"
   fi
 }
-_buildDocumentation_Recommit() {
+__buildDocumentation_Recommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -225,11 +225,11 @@ buildDocumentationBuild() {
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --git)
-        buildDocumentation_MergeWithDocsBranch
+        _buildDocumentation_MergeWithDocsBranch
         return $?
         ;;
       --commit)
-        buildDocumentation_Recommit
+        _buildDocumentation_Recommit
         return $?
         ;;
       --clean)
@@ -241,7 +241,7 @@ buildDocumentationBuild() {
         ;;
       --unlinked-update)
         envFile=$(_buildDocumentationGenerateEnvironment) || return $?
-        buildDocumentation_UpdateUnlinked "$cacheDirectory" "$envFile" || exitCode=$?
+        _buildDocumentation_UpdateUnlinked "$cacheDirectory" "$envFile" || exitCode=$?
         rm -f "$envFile" || :
         printf "\n" || :
         return $exitCode
@@ -264,7 +264,7 @@ buildDocumentationBuild() {
   done
   cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
-  __usageEnvironment "$usage" buildDocumentationTemplating || return $?
+  __usageEnvironment "$usage" _buildDocumentationTemplating || return $?
   #
   # Generate or update indexes
   #
@@ -286,7 +286,7 @@ buildDocumentationBuild() {
 
   # Update unlinked document
   envFile=$(_buildDocumentationGenerateEnvironment) || return $?
-  __usageEnvironment "$usage" buildDocumentation_UpdateUnlinked "$cacheDirectory" "$envFile" || return $?
+  __usageEnvironment "$usage" _buildDocumentation_UpdateUnlinked "$cacheDirectory" "$envFile" || return $?
   clearLine || :
 
   docArgs=()

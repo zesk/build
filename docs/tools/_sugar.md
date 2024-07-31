@@ -129,9 +129,9 @@ Boolean selector
 ## Fail with an error code
 
 
-### `_return` - IDENTICAL _return 18
+### `_return` - IDENTICAL _return 19
 
-IDENTICAL _return 18
+IDENTICAL _return 19
 
 #### Usage
 

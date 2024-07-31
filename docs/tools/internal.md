@@ -7,7 +7,7 @@
 Unable to find "buildBuild" (using index "/Users/kent/.build")
 Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
-### `buildDocumentationTemplating` - Map template files using our identical functionality
+### `_buildDocumentationTemplating` - Map template files using our identical functionality
 
 Map template files using our identical functionality
 
@@ -41,7 +41,7 @@ Uses a cache at `buildCacheDirectory`
 
 Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
-### `buildDocumentation_MergeWithDocsBranch` - Just merge into docs branch
+### `_buildDocumentation_MergeWithDocsBranch` - Just merge into docs branch
 
 Just merge into docs branch
 
@@ -53,7 +53,7 @@ Just merge into docs branch
 
 Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
-### `buildDocumentation_Recommit` - Just merge into docs branch
+### `_buildDocumentation_Recommit` - Just merge into docs branch
 
 Just merge into docs branch
 
@@ -67,7 +67,7 @@ Unable to find "buildDeploy" (using index "/Users/kent/.build")
 
 #### Usage
 
-    buildDocumentation_UpdateUnlinked cacheDirectory envFile
+    _buildDocumentation_UpdateUnlinked cacheDirectory envFile
     
 
 #### Arguments

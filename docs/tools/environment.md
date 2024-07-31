@@ -23,27 +23,6 @@ exported variables
 
 - `0` - Always succeeds
 
-### `buildEnvironmentLoad` - Load one or more environment settings from bin/build/env or bin/env.
-
-Load one or more environment settings from bin/build/env or bin/env.
-
-
-If BOTH files exist, both are sourced, so application environments should anticipate values
-created by default.
-
-#### Usage
-
-    buildEnvironmentLoad [ envName ... ]
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
 ## State files
 
 
