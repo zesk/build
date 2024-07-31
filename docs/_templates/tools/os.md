@@ -1,73 +1,36 @@
 # Operating System Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
-{buildEnvironmentLoad}
-{isAbsolutePath}
-
-{whichExists}
+## Services
 
 {serviceToPort}
 {serviceToStandardPort}
 
+## Caching
+
 {buildCacheDirectory}
 {buildQuietLog}
 
-{requireFileDirectory}
-{requireDirectory}
+## Execution
 
-{directoryClobber}
-{directoryIsEmpty}
-
-{fileDirectoryExists}
-{fileGroup}
-
+{whichExists}
 {runCount}
-
-{renameFiles}
-
-{createTarFile}
-
-{environmentVariables}
-
-{reverseFileLines}
-
 {makeShellFilesExecutable}
 
-{modificationTime}
-{modificationSeconds}
-
-{isNewestFile}
-{isOldestFile}
-
-{oldestFile}
-{newestFile}
-
-{modifiedDays}
-{modifiedSeconds}
-
-{listFileModificationTimes}
-{mostRecentlyModifiedFile}
-{mostRecentlyModifiedTimestamp}
+## Modify PATH or MANPATH
 
 {pathConfigure}
+{manPathConfigure}
 {pathCleanDuplicates}
 
-{manPathConfigure}
-{pathAppend}
-
-{realPath}
-{renameLink}
-
-{JSON}
-
-{fileOwner}
-{fileSize}
-{betterType}
+## Memory
 
 {processMemoryUsage}
 {processVirtualMemoryAllocation}
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+## Miscellaneous
+
+{JSON}

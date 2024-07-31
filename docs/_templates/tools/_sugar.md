@@ -1,7 +1,8 @@
 # Sugar Core
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 Sugar refers to syntactic sugar - code which makes other code more readable.
 
@@ -73,10 +74,3 @@ Run-related:
 ## Decorations
 
 {_list}
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})

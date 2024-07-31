@@ -6,20 +6,25 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-# shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/env/BUILD_COLORS.sh"
 
 declare -a tests
 
 tests+=(testSimpleMarkdownToConsole)
+tests+=(testColorComboTest)
+tests+=(colorTest)
+tests+=(allColorTest)
 
 testSimpleMarkdownToConsole() {
   local saveBC actual expected testString
   local this=${FUNCNAME[0]}
 
+  export BUILD_COLORS
+
+  __environment buildEnvironmentLoad BUILD_COLORS || return $?
+
   saveBC=${BUILD_COLORS-}
+
+  BUILD_COLORS=true
 
   # shellcheck disable=SC2016
   testString='`Code` text is *italic* and **bold**'
@@ -28,30 +33,16 @@ testSimpleMarkdownToConsole() {
 
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
 
-  assertEquals "$expected" "$actual" "$this:$LINENO" || return $?
+  assertEquals --line "$LINENO" "$expected" "$actual" "$this:$LINENO" || return $?
 
-  BUILD_COLORS=
+  BUILD_COLORS=false
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
   BUILD_COLORS="$saveBC"
 
   expected="Code text is italic and bold"
-
-  aptInstall xxd || return $?
-
-  echo "EXPECTED:"
-  echo "$expected" | xxd
-  echo "ACTUAL:"
-  echo "$actual" | xxd
-
-  assertEquals "$actual" "$expected" || return $?
+  assertEquals --line "$LINENO" "$actual" "$expected" || return $?
 }
 
 testColorComboTest() {
-  colorComboTest " ZB "
+  colorComboTest " ZESK "
 }
-
-tests+=(testColorComboTest)
-
-tests+=(colorTest)
-
-tests+=(allColorTest)

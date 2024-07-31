@@ -9,13 +9,14 @@
 
 # Dump a pipe with a title and stats
 # Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
+# Argument: --tail - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
 # Argument: name - Optional. String. The item name or title of this output.
 dumpPipe() {
   local usage="_${FUNCNAME[0]}"
   local argument
   local name names item nLines nBytes decoration symbol
   local item width suffix
-
+  local endBinary
   local showLines
 
   export BUILD_DEBUG_LINES
@@ -26,6 +27,7 @@ dumpPipe() {
 
   cat >"$item"
 
+  endBinary="head"
   names=()
   symbol="🐞"
   while [ $# -gt 0 ]; do
@@ -35,6 +37,9 @@ dumpPipe() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --tail)
+        endBinary="tail"
         ;;
       --symbol)
         shift || __failArgument "$usage" "missing $argument argument" || return $?
@@ -79,7 +84,7 @@ dumpPipe() {
   fi
   decoration="$(consoleCode "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
-  printf "%s\n%s\n%s\n" "$decoration" "$(head -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(consoleReset)")" "$decoration"
+  printf "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(consoleReset)")" "$decoration"
   rm -rf "$item" || :
 }
 _dumpPipe() {
@@ -148,8 +153,8 @@ _dumpFile() {
 #
 # Usage: validateShellScripts [ --exec binary ] [ file0 ... ]
 # Example:     if validateShellScripts; then git commit -m "saving things" -a; fi
-# Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
+# Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.
 # Argument: --delay - Optional. Integer. Delay between checks in interactive mode.
 # Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
@@ -160,8 +165,8 @@ _dumpFile() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
-  local this usage arg failedFiles failedReason failedReasons binary interactive sleepDelay
-  local verbose checkedFiles
+  local this usage argument failedFiles failedReason failedReasons binary interactive sleepDelay
+  local verbose checkedFiles ii source
 
   verbose=false
 
@@ -175,112 +180,173 @@ validateShellScripts() {
   failedFiles=()
   checkedFiles=()
   binary=
+  sleepDelay=7
+  ii=()
   interactive=false
   while [ $# -gt 0 ]; do
-    arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$arg" in
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
       --delay)
-        shift || __failArgument "$usage" "$arg missing argument" || return $?
+        shift || __failArgument "$usage" "$argument missing argument" || return $?
         sleepDelay="$1"
         ;;
+      --verbose)
+        verbose=true
+        ;;
       --exec)
-        shift || __failArgument "$usage" "$arg missing argument" || return $?
-        binary="${1}"
-        __usageEnvironment "$usage" isCallable "$binary" || return $?
+        shift
+        binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+        ii+=("$argument" "$binary")
         ;;
       --interactive)
         interactive=true
+        ii+=("$argument")
         ;;
       *)
-        statusMessage consoleInfo "👀 Checking \"$arg\" ..." || :
-        checkedFiles+=("$arg")
-        if ! failedReason=$(validateShellScript "$arg" 2>&1); then
-          ! $verbose || consoleSuccess "validateShellScript $arg failed: $failedReason"
-          failedFiles+=("$arg")
-          failedReasons+=("$failedReason")
-        else
-          ! $verbose || consoleSuccess "validateShellScript $arg passed"
-        fi
+        checkedFiles+=("$argument")
         ;;
     esac
-    shift || __failArgument "$usage" "shift after $arg failed" || return $?
+    shift || __failArgument "$usage" "shift after $argument failed" || return $?
   done
-
-  if [ $# -eq 0 ] && [ ${#checkedFiles[@]} -eq 0 ]; then
+  source=none
+  if [ ${#checkedFiles[@]} -gt 0 ]; then
+    source="argument"
+    ! $verbose || consoleInfo "Reading item list from arguments ..."
+    for argument in "${checkedFiles[@]}"; do
+      [ -n "$argument" ] || continue
+      if ! _validateShellScriptsHelper "$verbose" "$argument" "$source"; then
+        failedFiles+=("$argument")
+      fi
+    done
+  elif [ $# -eq 0 ]; then
+    source="stdin"
     ! $verbose || consoleInfo "Reading item list from stdin ..."
-    while read -r arg; do
-      statusMessage consoleInfo "👀 Checking \"$arg\" (stdin) ..." || :
-      if ! failedReason=$(validateShellScript "$arg"); then
-        ! $verbose || consoleSuccess "validateShellScript $arg failed: $failedReason"
-        failedReasons+=("$failedReason")
-        failedFiles+=("$arg")
-      else
-        ! $verbose || consoleSuccess "validateShellScript $arg passed"
-        checkedFiles+=("$arg")
+    while read -r argument; do
+      [ -n "$argument" ] || continue
+      if ! _validateShellScriptsHelper "$verbose" "$argument" "$source"; then
+        failedFiles+=("$argument")
       fi
     done
   fi
-
-  if [ "${#failedReasons[@]}" -gt 0 ]; then
+  if [ "${#failedFiles[@]}" -gt 0 ]; then
     {
       clearLine
-      _list "$(consoleWarning "Files failed:")" "${failedReasons[@]}"
-      consoleInfo "# ${#failedReasons[@]} $(plural ${#failedReasons[@]} error errors)"
+      _list "$(consoleWarning "Files failed:")" "${failedFiles[@]}"
+      consoleInfo "# ${#failedFiles[@]} $(plural ${#failedFiles[@]} error errors)"
     } 1>&2
-    if ! "$interactive" && [ -n "$binary" ]; then
+    if $interactive; then
+      validateShellScriptsInteractive "${ii[@]+"${ii[@]}"}" "${failedFiles[@]}"
+    elif [ -n "$binary" ]; then
       if [ ${#failedFiles[@]} -gt 0 ]; then
         "$binary" "${failedFiles[@]}"
       fi
     fi
-    if $interactive; then
-      validateShellScriptsInteractive "$sleepDelay" "${failedFiles[@]}"
-    fi
-    __failEnvironment "$usage" "${failedReasons[*]}" || return $?
+    __failEnvironment "$usage" "Failed:" "${failedFiles[*]}" || return $?
   fi
-  statusMessage consoleSuccess "All scripts passed validation"
+  statusMessage consoleSuccess "All scripts passed validation ($source)"
+  printf "\n"
 }
 _validateShellScripts() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-validateShellScriptsInteractive() {
-  local sleepDelay
+# Handle check consistently
+_validateShellScriptsHelper() {
+  local verbose="$1" file="$2" source="$3" reason vv=()
 
-  sleepDelay=$1
-  shift || :
+  ! $verbose || vv+=(--verbose)
+  statusMessage consoleInfo "👀 Checking \"$file\" ($source) ..." || :
+  if reason=$(validateShellScript "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
+    ! $verbose || consoleSuccess "validateShellScript $file passed"
+  else
+    ! $verbose || consoleInfo "validateShellScript $file failed: $reason"
+    printf "%s: %s\n" "$file" "$reason" 1>&2
+    return 1
+  fi
+}
+
+# Usage: [ fileToCheck ... ]
+# Argument: --exec binary - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
+# Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
+# Argument: fileToCheck ... - Optional. File. Shell file to validate.
+# Run checks interactively until errors are all fixed.
+validateShellScriptsInteractive() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local sleepDelay countdown binary
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --exec)
+        shift
+        binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
+        ;;
+      --delay)
+        shift
+        sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
 
   printf "%s\n%s\n%s\n" "$(consoleRed "BEFORE")" \
     "$(consoleLabel "Queue")" \
     "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
 
   while [ "$#" -gt 0 ]; do
-    printf "%s\n%s\n%s\n" "$(consoleRed "LOOP")" \
-      "$(consoleLabel "Queue")" \
-      "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
-
-    arg="$1"
-    if [ -z "$arg" ]; then
+    if _validateShellScriptInteractiveCheck "$usage" "$@"; then
       shift
-      contiuhe
-    fi
-    consoleBlue "$(echoBar "+-")"
-    consoleInfo "$# $(plural $# item files) remain"
-    if failedReason=$(validateShellScript --verbose "$1"); then
-      bigText "SUCCESS $(basename "$arg")" | wrapLines "$(consoleGreen)" "$(consoleReset)"
-      boxedHeading "$arg now passes" | wrapLines "$(consoleBoldGreen)" "$(consoleReset)"
-      shift
-      consoleOrange "$(echoBar "*")"
     else
-      bigText "FAIL $(basename "$arg")" | wrapLines "$(consoleSubtle shellcheck)  $(consoleBoldRed)" "$(consoleReset)"
-      printf "%s\n%s\n%s\n" "$(consoleRed "$failedReason")" \
-        "$(consoleLabel "Queue")" \
-        "$(consoleSubtle "$(printf -- "- %s\n" "${failedFiles[@]+${failedFiles[@]}}")")"
-
-      sleep "$sleepDelay"
+      countdown=$sleepDelay
+      while [ "$countdown" -gt 0 ]; do
+        statusMessage consoleWarning "Refresh in $(consoleValue " $countdown ") $(plural "$countdown" second seconds)"
+        countdown=$((countdown - 1))
+        sleep 1 || __failEnvironment "$usage" "Interrupt ..." || return $?
+      done
       clear
     fi
   done
+}
+_validateShellScriptsInteractive() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+_validateShellScriptInteractiveCheck() {
+  local usage="${1-}" script="${2-}" scriptPassed
+  if [ -z "$script" ]; then
+    return 0
+  fi
+  if failedReason=$(validateShellScript --verbose "$1"); then
+    scriptPassed=true
+  else
+    scriptPassed=false
+  fi
+  if $scriptPassed; then
+    bigText "SUCCESS $(basename "$script")" | wrapLines "$(consoleGreen)" "$(consoleReset)"
+    boxedHeading "$script now passes" | wrapLines "$(consoleBoldGreen)" "$(consoleReset)"
+    consoleOrange "$(echoBar "*")"
+    return 0
+  fi
+
+  shift 2
+  bigText "FAIL $(basename "$script")" | wrapLines "$(consoleSubtle validateShellScript)  $(consoleBoldRed)" "$(consoleReset)"
+  printf "%s\n%s\n%s\n" "$(consoleRed "$failedReason")" \
+    "$(consoleLabel "Queue")" \
+    "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
+  consoleBlue "$(echoBar "+-")"
+  consoleInfo "$# $(plural $# item files) remain"
+  return 1
 }
 
 #
@@ -432,7 +498,7 @@ validateFileContents() {
     clearLine
     consoleError "The following scripts failed:" 1>&2
     for item in "${failedReasons[@]}"; do
-      echo "    $(consoleMagenta -n "$item")$(consoleInfo -n ", ")" 1>&2
+      echo "    $(consoleMagenta "$item")$(consoleInfo ", ")" 1>&2
     done
     consoleError "done." 1>&2
     if [ -n "$binary" ]; then
@@ -526,7 +592,7 @@ validateFileExtensionContents() {
     clearLine
     consoleError "The following scripts failed:" 1>&2
     for item in "${failedReasons[@]}"; do
-      echo "    $(consoleMagenta -n "$item")$(consoleInfo -n ", ")" 1>&2
+      echo "    $(consoleMagenta "$item")$(consoleInfo ", ")" 1>&2
     done
     consoleError "done." 1>&2
     __failEnvironment "$usage" "$this failed" || return $?

@@ -116,6 +116,7 @@ nextMinorVersion() {
 #
 newRelease() {
   local newVersion readLoop currentVersion liveVersion nextVersion releaseNotes nonInteractive
+  local versionOrdering
   local width=40
 
   nonInteractive=
@@ -166,7 +167,6 @@ newRelease() {
   fi
   nextVersion=$(nextMinorVersion "$liveVersion")
   consoleNameValue $width "Current:" "$currentVersion"
-  # echo "$(consoleLabel -n "Default: ") $(consoleValue -n "v$nextVersion")"
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
     releaseNotes="$(releaseNotes)"

@@ -18,10 +18,10 @@ testCheckDockerEnvFile() {
 
   local testFile=./test/example/bad.env || return $?
   assertExitCode --stderr-ok 1 checkDockerEnvFile $testFile || return $?
-  assertOutputContains --stderr --exit 1 TEST_AWS_SECURITY_GROUP checkDockerEnvFile $testFile || return $?
-  assertOutputContains --stderr --exit 1 DOLLAR checkDockerEnvFile $testFile || return $?
-  assertOutputDoesNotContain --stderr --exit 1 GOOD checkDockerEnvFile $testFile || return $?
-  assertOutputDoesNotContain --stderr --exit 1 HELLO checkDockerEnvFile $testFile || return $?
+  assertExitCode --stderr-match TEST_AWS_SECURITY_GROUP 1 checkDockerEnvFile $testFile || return $?
+  assertExitCode --stderr-match DOLLAR 1 checkDockerEnvFile $testFile || return $?
+  assertExitCode --stderr-no-match GOOD 1 checkDockerEnvFile $testFile || return $?
+  assertExitCode --stderr-no-match HELLO 1 checkDockerEnvFile $testFile || return $?
 
   assertExitCode 0 dockerEnvToBash $testFile || return $?
 

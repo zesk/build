@@ -1,7 +1,8 @@
 # Pipeline Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## Application Configuration
 
@@ -37,7 +38,7 @@ Loads `.env` and `.env.local`, use with caution on trusted content only
 
 #### See Also
 
-{SEE:toDockerEnv}
+{SEE:environmentFileLoad}
 
 ## Hooks
 
@@ -306,13 +307,13 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 ## Application Environment
 
 
-### `makeEnvironment` - Create environment file `.env` for build.
+### `environmentFileApplicationMake` - Create environment file `.env` for build.
 
 Create environment file `.env` for build.
 
 #### Usage
 
-    makeEnvironment [ requireEnv1 requireEnv2 requireEnv3 ... ] [ -- optionalEnv1 optionalEnv2 ] "
+    environmentFileApplicationMake [ requiredEnvironment ... ] [ -- optionalEnvironment ...] "
     
 
 #### Arguments
@@ -338,7 +339,7 @@ APPLICATION_ID - reserved and set to `runHook application-tag`
 
 - `0` - Always succeeds
 
-### `applicationEnvironment` - Loads application environment variables, set them to their default values
+### `environmentApplicationLoad` - Loads application environment variables, set them to their default values
 
 Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
 
@@ -458,6 +459,3 @@ Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

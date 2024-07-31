@@ -23,6 +23,13 @@
 ####################################################################################################
 ####################################################################################################
 
+# Pause for user input
+pause() {
+  local prompt="${1-"PAUSE > "}"
+  printf "%s" "$prompt"
+  read -r prompt
+}
+
 #
 # Read user input and return 0 if the user says yes
 # Exit Code: 0 - Yes
@@ -142,7 +149,7 @@ copyFile() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argument="$1"
-    usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
+    usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
     case "$argument" in
       --map)
         mapFlag=true
@@ -152,17 +159,17 @@ copyFile() {
         ;;
       --owner)
         shift
-        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
+        usageArgumentString "$usage" "$argument" "${1-}" || return $?
         owner="$1"
         ;;
       --mode)
         shift
-        usageArgumentRequired "$usage" "$argument" "${1-}" || return $?
+        usageArgumentString "$usage" "$argument" "${1-}" || return $?
         mode="$1"
         ;;
       *)
         source="$1"
-        [ -f "$source" ] || __usageEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
+        [ -f "$source" ] || __failEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
         shift
         destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
         shift
@@ -224,7 +231,6 @@ copyFileWouldChange() {
   local mapFlag
 
   mapFlag=false
-  copyFunction=_copyFileRegular
   while [ $# -gt 0 ]; do
     arg="$1"
     [ -n "$arg" ] || _argument "blank argument" || return $?

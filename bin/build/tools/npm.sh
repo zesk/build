@@ -27,7 +27,7 @@ npmInstall() {
 
   nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentRequired "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     case "$argument" in
       --help)
         "$usage" 0
@@ -35,7 +35,7 @@ npmInstall() {
         ;;
       --version)
         shift
-        npm_version=$(usageArgumentRequired "$usage" "$argument" "${1-}") || return $?
+        npm_version=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
         usageArgumentUnknown "$usage" "$argument" || return $?

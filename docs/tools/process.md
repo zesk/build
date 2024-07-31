@@ -1,7 +1,8 @@
 # Process Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `processWait` - Wait for processes not owned by this process to exit,
@@ -20,6 +21,3 @@ Wait for processes not owned by this process to exit, and send signals to termin
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

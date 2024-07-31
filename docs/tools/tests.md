@@ -1,7 +1,8 @@
 # Tests Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `validateShellScripts` - Check files for the existence of a string
@@ -70,6 +71,19 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
+
+### `validateShellScriptsInteractive` - Run checks interactively until errors are all fixed.
+
+Run checks interactively until errors are all fixed.
+
+#### Usage
+
+    [ fileToCheck ... ]
+    
+
+#### Arguments
+
+
 
 #### Exit codes
 
@@ -145,10 +159,3 @@ By default, any directory which begins with a dot `.` will be ignored.
 #### Exit codes
 
 - `0` - Always succeeds
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Tests Functions)

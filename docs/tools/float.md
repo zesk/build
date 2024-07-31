@@ -1,7 +1,8 @@
 # Floating-Point Number Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 Bash really is not a huge fan of floating point numbers but once you turn them into integers it works fantastic.
 
@@ -31,6 +32,3 @@ Convert float to nearest integer
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

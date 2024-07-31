@@ -14,8 +14,19 @@
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertEquals [ --line lineNumber ] expected actual [ message ]
+# Usage: assertEquals expected actual [ message ]
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: expected - Expected string
 # Argument: actual - Actual string
 # Argument: message - Message to output if the assertion fails
@@ -34,7 +45,18 @@ _assertEquals() {
 # If this fails it will output an error and exit.
 # Summary: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: expected - Required. Expected string.
 # Argument: actual - Required. Actual string.
 # Argument: message - Message to output if the assertion fails. Optional.
@@ -59,22 +81,25 @@ _assertNotEquals() {
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --skip-exit-save - Optional. Flag. Skip saveErrorExit to test errorExit functions.
 # Argument: --debug - Optional. Flag. Debugging
-# Argument: --stderr-match - Optional. String. One or more strings which must match the outout in stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match the outout in stderr.
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
-#
-# Local cache: None.
-# Environment: None.
-# Examples: assertExitCode 0 hasHook version-current
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Examples:     assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with the provided exit code
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-  _assertExitCodeHelper "_${FUNCNAME[0]}" "$@" || return $?
+  _assertExitCodeHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertExitCode() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -89,19 +114,25 @@ _assertExitCode() {
 # Argument: expectedExitCode - A numeric exit code not expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --skip-exit-save - Optional. Flag. Skip saveErrorExit to test errorExit functions.
 # Argument: --debug - Optional. Flag. Debugging
-# Argument: --stderr-match - Optional. String. One or more strings which must match the outout in stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match the outout in stderr.
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Examples:     {fn} 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with a different exit code
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-  _assertExitCodeHelper "_${FUNCNAME[0]}" --not "$@" || return $?
+  _assertExitCodeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotExitCode() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -112,7 +143,18 @@ _assertNotExitCode() {
 #
 # Usage: {fn} needle haystack
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: needle - Thing we are looking for
 # Argument: haystack - Thing we are looking in
 # Exit Code: 0 - The assertion succeeded
@@ -131,7 +173,18 @@ _assertContains() {
 #
 # Usage: {fn} needle haystack
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: needle - Thing we are looking for
 # Argument: haystack - Thing we are looking in
 # Exit Code: 0 - The assertion succeeded
@@ -156,7 +209,18 @@ _assertNotContains() {
 #
 # Usage: assertDirectoryExists directory [ message ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: directory - Directory that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -176,7 +240,18 @@ _assertDirectoryExists() {
 #
 # Usage: assertDirectoryDoesNotExist directory [ message ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: directory - Directory that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -197,7 +272,18 @@ _assertDirectoryDoesNotExist() {
 #
 # Usage: {fn} directory [ message ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: directory - Directory that should exist and be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -218,7 +304,18 @@ _assertDirectoryEmpty() {
 #
 # Usage: {fn} directory [ message ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: directory - Directory that should exist and not be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -247,7 +344,18 @@ _assertDirectoryNotEmpty() {
 #
 # Usage: {fn} item [ message ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: item - File that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -267,7 +375,18 @@ _assertFileExists() {
 #
 # Usage: {fn} item [ message ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: file - File that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -298,7 +417,18 @@ _assertFileDoesNotExist() {
 # If this fails it will output an error and exit.
 #
 # Usage: assertOutputEquals expected binary [ parameters ]
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: expected - Expected string
 # Argument: binary - Binary to run and evaluate output
 # Argument: parameters - Any additional parameters to binary
@@ -318,7 +448,18 @@ _assertOutputEquals() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: {fn} expected command [ arguments ... ]
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: expected - A string to expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -330,7 +471,7 @@ _assertOutputEquals() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-  _assertOutputContainsHelper true "${FUNCNAME[0]}" "$@" || return $?
+  _assertOutputContainsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertOutputContains() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -342,7 +483,18 @@ _assertOutputContains() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: assertOutputDoesNotContain expected command [ arguments ... ]
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: expected - A string to NOT expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -355,7 +507,7 @@ _assertOutputContains() {
 # Reviewed: 2023-11-12
 #
 assertOutputDoesNotContain() {
-  _assertOutputContainsHelper false "${FUNCNAME[0]}" "$@" || return $?
+  _assertOutputContainsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertOutputDoesNotContain() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -363,7 +515,18 @@ _assertOutputDoesNotContain() {
 
 # Usage: assertFileContains fileName string0 [ ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must be found on at least one line in the file
 #
@@ -385,7 +548,18 @@ _assertFileContains() {
 #
 # Usage: assertFileDoesNotContain fileName string0 [ ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
 # Exit code: 1 - If the assertions fails
@@ -404,7 +578,18 @@ _assertFileDoesNotContain() {
 #
 # Usage: {fn} expectedSize [ fileName ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
 # Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
@@ -423,9 +608,20 @@ _assertFileSize() {
 #
 # Usage: {fn} expectedSize [ fileName ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
-# Argument: - `fileName ...` - One ore more file which should NOT be `expectedSize` bytes in size.
+# Argument: fileName ... - Required. File. One ore more file which should NOT be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
@@ -442,8 +638,19 @@ _assertNotFileSize() {
 #
 # Usage: {fn} [ fileName ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: - `fileName ...` - One ore more file which should be zero bytes in size.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: - fileName ... - Required. File. One ore more file which should be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
@@ -460,8 +667,19 @@ _assertZeroFileSize() {
 #
 # Usage: {fn} [ fileName ... ]
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: - `fileName ...` - One ore more file which should NOT be zero bytes in size.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: - fileName ... - Required. File. One ore more file which should NOT be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
@@ -486,7 +704,18 @@ _assertNotZeroFileSize() {
 #
 # Assert `leftValue > rightValue`
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -503,7 +732,18 @@ _assertGreaterThan() {
 
 # Assert `leftValue >= rightValue`
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -521,7 +761,18 @@ _assertGreaterThanOrEqual() {
 #
 # Assert `leftValue < rightValue`
 #
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -537,11 +788,21 @@ _assertLessThan() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Assert `leftValue <= rightValue`
 #
 # Usage: {fn} leftValue rightValue [ message ]
+# DOC TEMPLATE: assert-common 11
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails

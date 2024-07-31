@@ -43,7 +43,7 @@ errorArgument=2
 # Example:     echo $name
 #
 urlParse() {
-  local u="${1-}"
+  local v u="${1-}"
 
   # parts
   local url path name scheme user password host port error
@@ -131,6 +131,17 @@ urlParseItem() {
       return $errorArgument
     fi
     printf "%s\n" "${!component-}"
+    shift
+  done
+}
+
+#
+# Checks a URL is valid
+# Usage: {fn} url ...
+# Argument: url ... - String. URL. Required. A Uniform Resource Locator
+urlValid() {
+  while [ $# -gt 0 ]; do
+    urlParse "$1" >/dev/null || return 1
     shift
   done
 }

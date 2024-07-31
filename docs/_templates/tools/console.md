@@ -1,11 +1,9 @@
-# Console Functions
+# Console Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {consoleGetColor}
 {colorBrightness}
 {consoleConfigureColorMode}
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

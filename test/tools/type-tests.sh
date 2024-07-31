@@ -98,7 +98,6 @@ EOF
 callableFunctions() {
   cat <<EOF
 source
-alias
 declare
 echo
 contextOpen

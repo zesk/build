@@ -2,8 +2,9 @@
 
 Install software as `root` or superuser.
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 {aptInstall}
 {awsInstall}
@@ -26,6 +27,3 @@ Install software as `root` or superuser.
 {prettierUninstall}
 {pythonUninstall}
 {terraformUninstall}
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

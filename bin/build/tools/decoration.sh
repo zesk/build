@@ -6,7 +6,6 @@
 #
 # Docs: o ./docs/_templates/tools/decoration.md
 # Test: o ./test/tools/decoration-tests.sh
-# Depends: debug.sh whichApt apt.sh
 
 # IDENTICAL errorArgument 1
 errorArgument=2
@@ -399,7 +398,7 @@ boxedHeading() {
   spaces=$((${#bar} - ${#textString} - 4))
   consoleDecoration "$bar"
   runCount "$nLines" consoleDecoration "$emptyBar"
-  printf "%s%s%s%s\n" "$(consoleDecoration -n "| ")" "$(consoleDecoration "$textString")" "$(consoleDecoration "$(repeat $spaces " ")")" "$(consoleDecoration -n " |")"
+  printf "%s%s%s%s\n" "$(consoleDecoration "| ")" "$(consoleDecoration "$textString")" "$(consoleDecoration "$(repeat $spaces " ")")" "$(consoleDecoration " |")"
   runCount "$nLines" consoleDecoration "$emptyBar"
   consoleDecoration "$bar"
 }

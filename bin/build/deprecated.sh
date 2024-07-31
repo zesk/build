@@ -5,34 +5,71 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 13
-# Usage: __tools command ...
-# Load zesk build and run command
+# IDENTICAL __tools 18
+# Usage: {fn} [ relative [ command ... ] ]
+# Load build tools and run command
+# Argument: relative - Required. Directory. Path to application root.
+# Argument: command ... - Optional. Callable. A command to run and optional arguments.
 __tools() {
-  local relative="$1"
-  local source="${BASH_SOURCE[0]}"
+  local relative="${1:-".."}"
+  local source="${BASH_SOURCE[0]}" internalError=253
   local here="${source%/*}"
-  shift && set -eou pipefail
-  local tools="$here/$relative/bin/build/tools.sh"
-  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
+  local tools="$here/$relative/bin/build"
+  [ -d "$tools" ] || _return $internalError "$tools is not a directory" || return $?
+  tools="$tools/tools.sh"
+  [ -x "$tools" ] || _return $internalError "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  source "$tools" || _return $internalError source "$tools" "$@" || return $?
+  shift
+  [ $# -eq 0 ] && return 0
   "$@" || return $?
 }
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
+# IDENTICAL _return 19
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
 _return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+}
+
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+# END of IDENTICAL _return
+
+__deprecatedIgnore() {
+  local this="${BASH_SOURCE[0]##*/}"
+  local ignoreStuff=(! -path "*/$this" ! -path '*/docs/release/*.md')
+  printf "%s\n" "${ignoreStuff[@]}"
+}
+
+# Usage
+__deprecatedFind() {
+  local ignoreStuff
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore)
+  while [ "$#" -gt 0 ]; do
+    if find . -type f -name '*.sh' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
+      return 0
+    fi
+    shift
+  done
+  return 1
 }
 
 # Usage: {fn} search replace [ additionalCannonArgs ]
 __deprecatedCannon() {
-  local this="${BASH_SOURCE[0]##*/}"
-  local ignoreStuff=(! -path "*/$this" ! -path '*/docs/release/*.md')
-  statusMessage printf "%s %s\n" "$(consoleWarning "$1")" "$(consoleSuccess "$2")"
+  local ignoreStuff
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore)
+  statusMessage printf "%s %s \n" "$(consoleWarning "$1")" "$(consoleSuccess "$2")"
   cannon "$@" "${ignoreStuff[@]}" || :
 }
 
@@ -94,6 +131,31 @@ __deprecatedCleanup() {
   __deprecatedCannon 'crontabApplication''Sync' crontabApplicationUpdate
   __deprecatedCannon 'usageMissing''Argument' usageArgumentMissing
   __deprecatedCannon 'usageUnknown''Argument' usageArgumentUnknown
+
+  # v0.11.1
+  # Replace only if usageArgumentRequired has not been replaced yet as
+  # usageArgumentRequired -> usageArgumentString
+  # usageArgumentString -> usageArgumentEmptyString
+  # usageArgumentString is still in use with a different semantic
+  if __deprecatedFind usageArgumentRequired; then
+    __deprecatedCannon 'usageArgumentRequired' usageArgumentREMOVETHISRequired
+    __deprecatedCannon 'usageArgumentString' usageArgumentEmptyString
+    __deprecatedCannon 'usageArgumentREMOVETHISRequired' usageArgumentRequired
+  fi
+  __deprecatedCannon 'usageArgumentRequired' usageArgumentString
+
+  # v0.11.2
+  # crontab-application-sync.sh
+  deprecatedTokens+=(crontab-application-sync.sh)
+  __deprecatedCannon "show""Environment" environmentFileShow
+  __deprecatedCannon "make""Environment" environmentFileApplicationMake
+  __deprecatedCannon "dot""EnvConfigure"
+  __deprecatedCannon "application""EnvironmentVariables" environmentApplicationVariables
+  __deprecatedCannon "application""Environment" environmentApplicationLoad
+
+  __deprecatedCannon "path""Append" listAppend
+
+  deprecatedTokens+=("dotEnv""Configure")
 
   clearLine
   # Do all deprecations

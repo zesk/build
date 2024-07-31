@@ -4,8 +4,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh pipeline.sh
-#
 # Docs: o ./docs/_templates/tools/example.md
 # Test: o ./test/tools/example-tests.sh
 
@@ -16,39 +14,60 @@
 # - use `a || b || c || return $?` format when possible
 # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
 
-# IDENTICAL __tools 13
-# Usage: __tools command ...
-# Load zesk build and run command
+# IDENTICAL __tools 18
+# Usage: {fn} [ relative [ command ... ] ]
+# Load build tools and run command
+# Argument: relative - Required. Directory. Path to application root.
+# Argument: command ... - Optional. Callable. A command to run and optional arguments.
 __tools() {
-  local relative="$1"
-  local source="${BASH_SOURCE[0]}"
+  local relative="${1:-".."}"
+  local source="${BASH_SOURCE[0]}" internalError=253
   local here="${source%/*}"
-  shift && set -eou pipefail
-  local tools="$here/$relative/bin/build/tools.sh"
-  [ -x "$tools" ] || _return 97 "$tools not executable" "$@" || return $?
+  local tools="$here/$relative/bin/build"
+  [ -d "$tools" ] || _return $internalError "$tools is not a directory" || return $?
+  tools="$tools/tools.sh"
+  [ -x "$tools" ] || _return $internalError "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  source "$tools" || _return 42 source "$tools" "$@" || return $?
+  source "$tools" || _return $internalError source "$tools" "$@" || return $?
+  shift
+  [ $# -eq 0 ] && return 0
   "$@" || return $?
 }
 
-# IDENTICAL _return 6
-# Usage: {fn} _return [ exitCode [ message ... ] ]
-# Exit Code: exitCode or 1 if nothing passed
+# IDENTICAL _return 19
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
 _return() {
-  local code="${1-1}" # make this a two-liner ;)
-  shift || : && printf "[%d] ❌ %s\n" "$code" "${*-§}" 1>&2 || : && return "$code"
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
+
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+# END of IDENTICAL _return
 
 #
 # Usage: {fn}
-# Argument: --help - Optional. Flag. This help.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --easy - Optional. Flag. Easy mode.
 # Argument: binary - Required. String. The binary to look for.
 # Argument: remoteUrl - Required. URL. Remote URL.
-# Argument: --target target - Optional. File. File to create. Directory must exist.
+# Argument: --target target - Optional. File. File to create. File must exist.
 # Argument: --path path - Optional. Directory. Directory of path of thing.
 # Argument: --title title - Optional. String. Title of the thing.
 # Argument: --name name - Optional. String. Name of the thing.
+# Argument: --url url - Optional. URL. URL to download.
+# Argument: --callable callable - Optional. Callable. Function to call when url is downloaded.
 # This is a sample function with example code and patterns used in Zesk Build.
 #
 exampleFunction() {
@@ -64,8 +83,9 @@ exampleFunction() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentRequired "$usage" "argument #$argumentIndex")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -76,7 +96,7 @@ exampleFunction() {
       --name)
         # shift here never fails as [ #$ -gt 0 ]
         shift
-        name="$(usageArgumentRequired "$usage" "$argument" "${1-}")" || return $?
+        name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --path)
         shift
@@ -86,6 +106,7 @@ exampleFunction() {
         shift
         target="$(usageArgumentFileDirectory "$usage" "target" "${1-}")" || return $?
         ;;
+      # IDENTICAL argumentUnknown 3
       *)
         __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
         ;;
@@ -109,6 +130,7 @@ exampleFunction() {
   which library-which-should-be-there || __failEnvironment "$usage" "missing thing" || _environment "$(debuggingStack)" || return $?
 }
 _exampleFunction() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -130,6 +152,7 @@ __hookGitPostCommit() {
   __usageEnvironment "$usage" git push origin || return $?
 }
 ___hookGitPostCommit() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

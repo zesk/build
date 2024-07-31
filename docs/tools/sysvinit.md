@@ -2,17 +2,18 @@
 
 For systems with an `/etc/init.d` start up script system.
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
-### `sysvInitScript` - Install a script to run upon initialization.
+### `sysvInitScriptInstall` - Install a script to run upon initialization.
 
 Install a script to run upon initialization.
 
 #### Usage
 
-    sysvInitScript script
+    sysvInitScriptInstall script
     
 
 #### Arguments
@@ -23,5 +24,19 @@ Install a script to run upon initialization.
 
 - `0` - Always succeeds
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+### `sysvInitScriptUninstall` - Remove an initialization script
+
+Remove an initialization script
+
+#### Usage
+
+    sysvInitScriptUninstall script ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds

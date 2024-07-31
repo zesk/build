@@ -1,7 +1,8 @@
 # Sugar Core
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 Sugar refers to syntactic sugar - code which makes other code more readable.
 
@@ -19,15 +20,24 @@ Alternately, these can be used within an `if` or other compound statement but th
 
 Quick guide:
 
-- `_code name ...` - Exit codes. Outputs integers based on error names, one per line.
 - `_integer value` - Returns 0 if value passed is an integer, otherwise returns 1.
 - `_boolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
 - `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
+
+Error codes:
+
+- `_code name ...` - Exit codes. Outputs integers based on error names, one per line.
+
+Return errors:
+
 - `_return code message ...` - Return code always. Outputs `message ...` to `stderr`.
 - `_environment message ...` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 - `_argument message ...` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+
+Run-related:
+
 - `__execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
-- `__try command ...` - Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
+- `__try command ...` - Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
 - `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it
 - `__environment command ...` - Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `__argument command ...` - Run `command ...` (with any arguments) and then `_argument` if it fails.
@@ -37,10 +47,9 @@ Quick guide:
 ## Core tests
 
 
-### `_integer` - Unsigned integer test
+### `_integer` - Is this an unsigned integer?
 
-Unsigned integer test
-Returns 0 if `value` is an unsigned integer
+Is this an unsigned integer?
 
 #### Usage
 
@@ -82,7 +91,7 @@ Valid codes:
 - `leak` - function leaked globals
 - `test` - test failed
 - `internal` - internal errors
-Unknown error code is 254
+Unknown error code is 254, end of range is 255 which is not used
 
 #### Usage
 
@@ -120,13 +129,13 @@ Boolean selector
 ## Fail with an error code
 
 
-### `_return` - Return code always. Outputs `message ...` to `stderr`.
+### `_return` - IDENTICAL _return 18
 
-Return code always. Outputs `message ...` to `stderr`.
+IDENTICAL _return 18
 
 #### Usage
 
-    _return code command || return $?
+    _return [ exitCode [ message ... ] ]
     
 
 #### Arguments
@@ -135,7 +144,7 @@ Return code always. Outputs `message ...` to `stderr`.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- exitCode
 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
@@ -276,10 +285,3 @@ Output a titled list
 #### Exit codes
 
 - `0` - Always succeeds
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Sugar Core)

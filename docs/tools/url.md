@@ -58,9 +58,19 @@ Gets the component of the URL from a given database URL.
 
 - `0` - Always succeeds
 
-<!-- TEMPLATE footer 5 -->
-<hr />
+### `urlValid` - Checks a URL is valid
 
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
+Checks a URL is valid
 
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=URL Functions)
+#### Usage
+
+    urlValid url ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds

@@ -8,5 +8,6 @@ BUILD_HOME="${BUILD_HOME-}"
 if [ ! -d "$BUILD_HOME " ]; then
   if ! BUILD_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"; then
     printf "%s\n" "Unable to determine BUILD_HOME - system is unstable" 1>&2
+    false
   fi
 fi

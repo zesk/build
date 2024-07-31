@@ -1,7 +1,8 @@
 # BitBucket Repository Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 # BitBucket Functions
 
@@ -48,11 +49,6 @@ On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `sup
 
 Run the default build container for build testing on BitBucket
 
-#### Usage
-
-    bitbucket.sh [ envFile ... ] [ extraArgs ... ]
-    
-
 #### Arguments
 
 
@@ -62,6 +58,3 @@ Run the default build container for build testing on BitBucket
 - `1` - If already inside docker, or the environment file passed is not valid
 - `0` - Success
 - `Any` - `docker run` error code is returned if non-zero
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

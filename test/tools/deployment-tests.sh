@@ -8,6 +8,10 @@
 #
 declare -a tests
 
+tests+=(testDeployRemoteFinish)
+tests+=(testDeployToRemote)
+tests+=(testDeployBuildEnvironment)
+
 __prepareSampleApplicationDeployment() {
   local target="$1"
   local id="$2"
@@ -28,7 +32,13 @@ __prepareSampleApplicationDeployment() {
   __environment tar zxf "$target/app.tar.gz" || return $?
 }
 
-tests+=(testDeployRemoteFinish)
+#
+#
+#
+# deployRemoteFinish
+#
+#
+#
 testDeployRemoteFinish() {
   local tempDirectory id oldId matches finishArgs
 
@@ -139,10 +149,20 @@ testDeployRemoteFinish() {
   return 0
 }
 
-tests+=(testDeployToRemote)
+#
+#
+#
+# deployToRemote
+#
+#
+#
 testDeployToRemote() {
   local args matches
   local sampleHome sampleId sampleApplication onlyOne
+
+  export BUILD_DEBUG
+
+  BUILD_DEBUG=${BUILD_DEBUG-}
 
   sampleHome=/var/DEPLOY
   sampleApplication=/var/app
@@ -195,60 +215,73 @@ testDeployToRemote() {
   matches=(--stderr-match "No user hosts")
   assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
 
+  unset BUILD_DEBUG
 }
 
-tests=(testDeployBuildEnvironment "${tests[@]}")
+#
+#
+#
+# deployBuildEnvironment
+#
+#
+#
 testDeployBuildEnvironment() {
   local d args matches
   local sampleHome sampleId sampleApplication
 
-  # Important to clear these
-  # For tests which depend on export environments make sure to reset THOSE glboals at start of test
-  # Should likely clear test environment somehow
-  export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
-  unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+  (
+    # Important to clear these
+    # For tests which depend on export environments make sure to reset THOSE glboals at start of test
+    # Should likely clear test environment somehow
+    export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+    unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
 
-  d=$(mktemp -d)
-  __environment pushd "$d" >/dev/null || return $?
+    d=$(mktemp -d)
+    __environment pushd "$d" >/dev/null || return $?
 
-  assertExitCode --stderr-match "blank" 2 deployBuildEnvironment --id || return $?
+    assertExitCode --stderr-match "blank" 2 deployBuildEnvironment --id || return $?
 
-  assertExitCode --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
+    assertExitCode --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
 
-  assertExitCode --stderr-match "blank" 2 deployBuildEnvironment "" --id || return $?
+    assertExitCode --stderr-match "blank" 2 deployBuildEnvironment "" --id || return $?
 
-  assertExitCode --stderr-match "APPLICATION_ID" 2 deployBuildEnvironment || return $?
+    assertExitCode --stderr-match "APPLICATION_ID" 2 deployBuildEnvironment || return $?
 
-  sampleHome=/var/DEPLOY
-  sampleApplication=/var/app
-  sampleId=abcdef
+    sampleHome=/var/DEPLOY
+    sampleApplication=/var/app
+    sampleId=abcdef
 
-  args=(--id "$sampleId")
-  matches=(--stderr-match home --stderr-match non-blank --stderr-match "DEPLOY_REMOTE_PATH")
-  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-  APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
+    args=(--id "$sampleId")
+    matches=(--stderr-match home --stderr-match non-blank --stderr-match "DEPLOY_REMOTE_PATH")
+    assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
+    APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
-  args=(--id "$sampleId" --home "$sampleHome")
-  matches=(--stderr-match home --stderr-match non-blank --stderr-match "APPLICATION_REMOTE_PATH")
-  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-  DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
+    args=(--id "$sampleId" --home "$sampleHome")
+    matches=(--stderr-match home --stderr-match non-blank --stderr-match "APPLICATION_REMOTE_PATH")
+    assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
+    DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
-  args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication")
-  matches=(--stderr-match "user hosts" --stderr-match "DEPLOY_USER_HOSTS")
-  assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-  APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
+    args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication")
+    matches=(--stderr-match "user hosts" --stderr-match "DEPLOY_USER_HOSTS")
+    assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
+    APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
-  # this is the point we WOULD succeed but instead just run the dry run which outputs the script which can be used to
-  # generate the other tests
-  args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication" --host "www-data@remote0" --host "www-data@remote1")
-  matches=(--stderr-match ".build.env")
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 deployBuildEnvironment --dry-run "${args[@]}" || return $?
-  deployBuildEnvironment --dry-run "${args[@]}"
+    # this is the point we WOULD succeed but instead just run the dry run which outputs the script which can be used to
+    # generate the other tests
+    args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication" --host "www-data@remote0" --host "www-data@remote1")
+    matches=(--stderr-match ".build.env")
+    assertExitCode --line "$LINENO" "${matches[@]}" 0 deployBuildEnvironment --dry-run "${args[@]}" || return $?
 
-  DEPLOY_USER_HOSTS="www-data@remote0 www-data@remote1" APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" \
-    assertExitCode --dump "${matches[@]}" 0 deployBuildEnvironment --dry-run || return $?
+    DEPLOY_USER_HOSTS="www-data@remote0 www-data@remote1" \
+      APPLICATION_REMOTE_PATH="$sampleApplication" \
+      DEPLOY_REMOTE_PATH="$sampleHome" \
+      APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 0 deployBuildEnvironment --dry-run || return $?
 
-  rm -rf "$d" || :
-  export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
-  unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+    __environment popd >/dev/null || return $?
+    rm -rf "$d" || :
+
+    __echo unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+    export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+    unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+  ) || return $?
 }

@@ -18,7 +18,7 @@ installInstallBuild() {
   local usage="_${FUNCNAME[0]}"
   local argument exitCode
   local path applicationHome temp relTop
-  local installBinName target url showDiffFlag localFlag verb
+  local installBinName source target url showDiffFlag localFlag verb
 
   exitCode=0
   installBinName="install-bin-build.sh"
@@ -53,17 +53,13 @@ installInstallBuild() {
     shift || :
   done
 
-  # Validate paths
+  # Validate paths and force realPath
   # default application home is $(pwd)
   [ -n "$applicationHome" ] || applicationHome="$(__usageEnvironment "$usage" pwd)" || return $?
   # default installation path home is $(pwd)/bin
   [ -n "$path" ] || path="$applicationHome/bin"
-  if ! isAbsolutePath "$path"; then
-    path=$(__usageEnvironment "$usage" realPath "$path") || return $?
-  fi
-  if ! isAbsolutePath "$applicationHome"; then
-    applicationHome="$(__usageEnvironment "$usage" realPath "$applicationHome")" || return $?
-  fi
+  path=$(__usageEnvironment "$usage" realPath "$path") || return $?
+  applicationHome="$(__usageEnvironment "$usage" realPath "$applicationHome")" || return $?
 
   # Custom target binary?
   if [ "${path%.sh}" != "$path" ]; then
@@ -78,7 +74,7 @@ installInstallBuild() {
   # Compute relTop
   relTop="${path#"$applicationHome"}"
   if [ "$relTop" = "$path" ]; then
-    __failArgument "Path ($path) is not within applicationHome ($applicationHome)" || return $?
+    __failArgument "$usage" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
   if [ -z "$relTop" ]; then
     relTop=.

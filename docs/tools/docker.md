@@ -1,7 +1,8 @@
 # Docker Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 
 ### `dumpDockerTestFile` - Debugging, dumps the proc1file which is used to figure out
@@ -45,11 +46,6 @@ Ensure an environment file is compatible with non-quoted docker environment file
 Run a build container using given docker image.
 
 Runs ARM64 by default.
-
-#### Usage
-
-    docker.sh imageName imageApplicationPath [ envFile ... ] [ extraArgs ... ]
-    
 
 #### Arguments
 
@@ -143,6 +139,3 @@ Returns a temporary file which should be deleted.
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

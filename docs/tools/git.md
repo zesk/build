@@ -1,7 +1,8 @@
 # Git Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## git Installation
 
@@ -63,7 +64,7 @@ Delete git tag locally and at origin
 
 #### Exit codes
 
-- `2` - Any stage fails will result in this exit code. Partial deletion may occur.
+- `argument` - Any stage fails will result in this exit code. Partial deletion may occur.
 
 ### `gitTagAgain` - Remove a tag everywhere and tag again on the current
 
@@ -360,7 +361,6 @@ GIT_INDEX_FILE - Must be set to pass
 ### `gitRemoteHosts` - List remote hosts for the current git repository
 
 List remote hosts for the current git repository
-Not really test
 
 #### Exit codes
 
@@ -416,7 +416,3 @@ Clean up after our pre-commit (deletes cache directory)
 #### Exit codes
 
 - `0` - Always succeeds
-
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

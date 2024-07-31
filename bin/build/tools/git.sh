@@ -3,19 +3,11 @@
 # git tools, lame attempts have been made to have each function start with `git`.
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
-#
-# Depends: colors.sh documentation.sh
 # bin: git
 #
 # Docs: contextOpen ./docs/_templates/tools/git.md
 # Test: contextOpen ./test/bin/git-tests.sh
 #
-
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
 
 ###############################################################################
 #
@@ -57,45 +49,46 @@ gitUninstall() {
 # This adds the directory passed to that directory in the local user's environment
 #
 # Usage: gitEnsureSafeDirectory [ directory ... ]
-# Argument: directory - The directory to add to the `git` `safe.directory` configuration directive
+# Argument: directory - Required. Directory. The directory to add to the `git` `safe.directory` configuration directive
 # Exit Code: 0 - Success
 # Exit Code: 2 - Argument is not a valid directory
 # Exit Code: Other - git config error codes
 #
 gitEnsureSafeDirectory() {
+  local usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
-    if [ ! -d "$1" ]; then
-      consoleError "$1 is not a directory"
-      return "$errorArgument"
-    fi
+    [ -d "$1" ] || __failArgument "$usage" "$1 is not a directory" || return $?
     if ! git config --global --get safe.directory | grep -q "$1"; then
-      git config --global --add safe.directory "$1"
+      __usageEnvironment "$usage" git config --global --add safe.directory "$1" || return $?
     fi
     shift
   done
+}
+_gitEnsureSafeDirectory() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Delete git tag locally and at origin
 #
 # Usage: gitTagDelete [ tag ... ]
-# Argument: tag - The tag to delete locally and remote
-# Exit Code: 2 - Any stage fails will result in this exit code. Partial deletion may occur.
+# Argument: tag - The tag to delete locally and at origin
+# Exit Code: argument - Any stage fails will result in this exit code. Partial deletion may occur.
 #
 gitTagDelete() {
+  local usage="_${FUNCNAME[0]}"
   local exitCode=0
-
   while [ $# -gt 0 ]; do
-    if ! git tag -d "$1"; then
-      printf "%s %s" "$(consoleError "Error deleting local tag")" "$(consoleCode "$1")" 1>&2
-      exitCode=$errorArgument
-    elif ! git push origin :"$1"; then
-      printf "%s %s" "$(consoleError "Error deleting remote tag")" "$(consoleCode "$1")" 1>&2
-      exitCode=$errorArgument
-    fi
+    # Deleting local tag
+    __usageArgument "$usage" git tag -d "$1" || exitCode=$?
+    # Deleting remote tag
+    __usageArgument "$usage" git push origin :"$1" || exitCode=$?
     shift
   done
   return "$exitCode"
+}
+_gitTagDelete() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -106,15 +99,17 @@ gitTagDelete() {
 # Exit Code: 2 - Any stage fails will result in this exit code. Partial deletion may occur.
 #
 gitTagAgain() {
-  gitTagDelete "$1" || :
-  if ! git tag "$1"; then
-    printf "%s %s" "$(consoleError "Unable to tag")" "$(consoleCode "$1")" 1>&2
-    return $errorArgument
-  fi
-  if ! git push --tags; then
-    printf "%s %s %s" "$(consoleError "Unable to push")" "$(consoleCode "$1")" "$(consoleError "to remote")" 1>&2
-    return $errorArgument
-  fi
+  local usage="_${FUNCNAME[0]}" a=("$@")
+  [ $# -eq 0 ] || __failArgument "$usage" "No arguments" || return $?
+  while [ $# -gt 0 ]; do
+    statusMessage consoleInfo "Deleting tag $1 ..."
+    __usageArgument "$usage" gitTagDelete "$1" || return $?
+    statusMessage consoleInfo "Tagging again $1 ..."
+    __usageArgument "$usage" git tag "$1" || return $?
+    __usageArgument "$usage" git push --tags || return $?
+  done
+  statusMessage consoleInfo "All tags completed" "$(consoleOrange "${a[@]}")"
+  clearLine
 }
 
 #
@@ -126,14 +121,12 @@ gitTagAgain() {
 # Exit Code: 0 - Success
 #
 gitVersionList() {
-  if [ ! -d "./.git" ]; then
-    echo "No .git directory at $(pwd), stopping" 1>&2
-    return $errorEnvironment
-  fi
-
-  # versionSort works on vMMM.NNN.PPP
-  # skip any versions with extensions like v1.0.1d2
-  git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
+  local usage="_${FUNCNAME[0]}"
+  [ -d "./.git" ] || __failEnvironment "$usage" "No .git directory at $(pwd), stopping" || return $?
+  __usageEnvironment "$usage" git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
+}
+_gitVersionList() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the last reported version.
@@ -148,7 +141,6 @@ gitVersionLast() {
   else
     gitVersionList "$@" | tail -1
   fi
-
 }
 
 #
@@ -156,16 +148,17 @@ gitVersionLast() {
 # Delete the old tag as well
 #
 veeGitTag() {
-  local t="$1"
+  local usage="_${FUNCNAME[0]}"
+  local tagName="$1"
 
-  if [ "$t" != "${t##v}" ]; then
-    consoleError "Tag is already veed: $t" 1>&2
-    return 1
-  fi
-  git tag "v$t" "$t"
-  git tag -d "$t"
-  git push origin "v$t" ":$t"
-  git fetch -q --prune --prune-tags
+  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already veed: $(consoleValue "$tagName")" || return $?
+  __usageEnvironment "$usage" git tag "v$tagName" "$tagName" || return $?
+  __usageEnvironment "$usage" git tag -d "$tagName" || return $?
+  __usageEnvironment "$usage" git push origin "v$tagName" ":$tagName" || return $?
+  __usageEnvironment "$usage" git fetch -q --prune --prune-tags || return $?
+}
+_veeGitTag() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -245,18 +238,16 @@ gitInsideHook() {
 #
 # List remote hosts for the current git repository
 # Parses `user@host:path/project.git` and extracts `host`
-# Not really test
 #
 gitRemoteHosts() {
   local remoteUrl host
-  git remote -v | awk '{ print $2 }' | while read -r remoteUrl; do
-    if ! host=$(urlParseItem host "$remoteUrl") &&
-      ! host=$(urlParseItem host "git://$remoteUrl"); then
-      consoleError "Unable to parse $remoteUrl" 1>&2
-      return $errorArgument
-    fi
+  while read -r remoteUrl; do
+    host=$(urlParseItem host "$remoteUrl") || host=$(urlParseItem host "git://$remoteUrl") || __failArgument "$usage" "Unable to extract host from \"$remoteUrl\"" || return $?
     printf "%s\n" "$host"
-  done
+  done < <(git remote -v | awk '{ print $2 }')
+}
+_gitRemoteHosts() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Generates a git tag for a build version, so `v1.0d1`, `v1.0d2`, for version `v1.0`.
@@ -299,13 +290,13 @@ gitTagVersion() {
         [ -n "$versionSuffix" ] || __failArgument "$usage" "Blank $argument argument" || return $?
         ;;
       *)
-        __failArgument "$usage" $errorArgument "unknown argument: $argument" || return $?
+        __failArgument "$usage" "unknown argument: $argument" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift $argument" || return $?
   done
 
-  consoleInfo -n "Pulling tags from origin "
+  statusMessage consoleInfo "Pulling tags from origin "
   git pull --tags origin >/dev/null || __failEnvironment "$usage" "Pulling tags failed" || return $?
   reportTiming "$start" || :
 
@@ -367,7 +358,6 @@ gitTagVersion() {
 }
 _gitTagVersion() {
   usageTemplate "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-  return $?
 }
 
 #
@@ -425,11 +415,12 @@ _gitFindHome() {
 # Example: ... are all equivalent.
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
-  local updateReleaseNotes appendLast argument start notes comment
+  local updateReleaseNotes appendLast argument start notes comment home
 
   appendLast=false
   updateReleaseNotes=true
   comment=
+  home=
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -437,6 +428,10 @@ gitCommit() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --home)
+        shift
+        home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
         ;;
       --)
         updateReleaseNotes=false
@@ -449,7 +444,7 @@ gitCommit() {
         break
         ;;
     esac
-    shift || :
+    shift
   done
 
   appendLast=
@@ -458,8 +453,11 @@ gitCommit() {
     comment=
   fi
 
+  set -x
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
-  home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  if [ -z "$home" ]; then
+    home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  fi
   __usageEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then

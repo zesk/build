@@ -41,7 +41,7 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 
 ## Hook documentation
 
-{hookMakeEnvironment}
+{hookEnvironmentFileMake}
 
 {hookDeployStart} {hookDeployMove} {hookDeployConfirm} {hookDeployCleanup} {hookDeployFinish} {hookDeployRevert}
 

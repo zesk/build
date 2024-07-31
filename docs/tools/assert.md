@@ -1,7 +1,8 @@
-# Assert Functions
+# Assert Tools
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## Equality
 
@@ -14,7 +15,7 @@ If this fails it will output an error and exit.
 
 #### Usage
 
-    assertEquals [ --line lineNumber ] expected actual [ message ]
+    assertEquals expected actual [ message ]
     
 
 #### Arguments
@@ -231,14 +232,6 @@ If this fails it will output an error and exit.
 
 - `0` - If the process exits with the provided exit code
 - `1` - If the process exits with a different exit code
-
-#### Local cache
-
-None.
-
-#### Environment
-
-None.
 
 #### Review Status
 
@@ -691,8 +684,6 @@ If the file does not exist, this will fail.
 
 If the file does not exist, this will fail.
 
-
-
 ## Random
 
 
@@ -722,12 +713,3 @@ Outputs 40 random hexadecimal characters, lowercase.
 
     shasum, /dev/random
     
-
-[⬅ Return to top](../index.md)
-
-<!-- TEMPLATE footer 5 -->
-<hr />
-
-[⬅ Top](index.md) [⬅ Parent ](../index.md)
-
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=Assert Functions)

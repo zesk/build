@@ -11,44 +11,45 @@
 # documentTemplate: ./docs/_templates/__function.md
 #
 
+# IDENTICAL _return 19
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
+_return() {
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+}
+
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+# END of IDENTICAL _return
+
+# Load tools and optionally run a command
 __toolsMain() {
   local source="${BASH_SOURCE[0]}"
-  local here="${source%/*}"
+  local toolsPath="${source%/*}/tools"
+  local internalError=253
   local toolsFiles
   local toolFile
+  local toolsList
   export BUILD_HOME
 
-  #
-  # Ordering matters!
-  #
   toolsFiles=("../env/BUILD_HOME")
-
-  # test quote is required to not mess up syntax coloring :|
-
-  # Core stuff
-  toolsFiles+=(_sugar sugar debug type process os text date float url _colors colors sed hook utilities self)
-  # Strange quoting for Assert is to hide it from findUncaughtAssertions
-  toolsFiles+=("ass""ert" "_ass""ert")
-  toolsFiles+=(pipeline deploy deploy/application deployment apt log)
-  toolsFiles+=(decoration usage console security "test" version vendor)
-
-  # More complex tools
-  toolsFiles+=(security markdown interactive)
-  toolsFiles+=(documentation "documentation/index" "documentation/see")
-  toolsFiles+=(identical "identical/check" "identical/repair")
-
-  # Technology Integration
-  toolsFiles+=(aws web docker ssh npm prettier php install crontab terraform)
-
-  # Code
-  toolsFiles+=(bitbucket git github)
+  toolsList="$toolsPath/tools.conf"
+  [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
+  while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
 
   for toolFile in "${toolsFiles[@]}"; do
     # shellcheck source=/dev/null
-    if ! source "$here/tools/$toolFile.sh"; then
-      printf "%s\n" "Loading $toolFile.sh failed" 1>&2
-      return 96
-    fi
+    source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
   done
 
   # shellcheck source=/dev/null

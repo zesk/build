@@ -7,8 +7,6 @@
 #  ▌ ▌▛▀ ▙▄▘▐ ▌ ▌▚▄▌▌▐ ▌▛▀ ▌ ▌▐ ▖
 #  ▝▀▘▝▀▘▌   ▘▝▀ ▗▄▘▘▝ ▘▝▀▘▘ ▘ ▀
 #
-# Depends: colors.sh text.sh pipeline.sh
-#
 # Docs: o ./docs/_templates/tools/deployment.md
 # Test: o ./test/tools/deployment-tests.sh
 
@@ -192,11 +190,11 @@ ___deployBuildEnvironment() {
 # Clean up --revert and then exit
 #
 __deployBuildEnvironment() {
-  local fail="${FUNCNAME[0]#_}"
+  local usage="${FUNCNAME[0]#_}"
   if ! deployToRemote --revert "$@"; then
     consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
   fi
-  __failEnvironment "$fail" deployToRemote --deploy "$@" failed || return $?
+  __failEnvironment "$usage" deployToRemote --deploy "$@" failed || return $?
 }
 _deployBuildEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -294,12 +292,9 @@ deployRemoteFinish() {
 
   [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __failArgument "$usage" "deployPackageName $deployHome failed" || return $?
 
-  if test "${BUILD_DEBUG-}"; then
+  if buildDebugStart deployment; then
     debuggingFlag=true
-  fi
-  if $debuggingFlag; then
     consoleWarning "Debugging is enabled"
-    set -x
   fi
 
   if $revertFlag && $cleanupFlag; then
@@ -493,22 +488,16 @@ _deploySuccessful() {
 # TODO: add ability to prune past n versions safely on all hosts.
 #
 # Test: testDeployToRemote - INCOMPLETE
+# Environment: BUILD_DEBUG
 deployToRemote() {
-  local initTime start deployArgs exitCode
-  local makeDirectory
-  local commandSuffix color
-
-  local deployFlag revertFlag debuggingFlag cleanupFlag
-
-  local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
-  local showCommands
-  local verb temporaryCommandsFile
-  local commonArguments
+  local usage="_${FUNCNAME[0]}"
   local nameWidth=50
-  local argument
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local initTime start deployArgs exitCode
+  local makeDirectory commandSuffix color
+  local deployFlag revertFlag debuggingFlag cleanupFlag
+  local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
+  local showCommands addSSHHosts verb temporaryCommandsFile commonArguments
+  local argument currentIP deployArg
 
   __usageEnvironment "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
@@ -592,7 +581,7 @@ deployToRemote() {
         remoteArgs+=("$1")
         ;;
       --debug)
-        debuggingFlag=1
+        debuggingFlag=true
         ;;
       --commands)
         showCommands=true
@@ -601,22 +590,16 @@ deployToRemote() {
         ;;
       *)
         # Breaks a single argument "A B C" into three arguments "A" "B" "C" by space
-        IFS=' ' read -ra tokens <<<"$1"
-        for token in "${tokens[@]}"; do
-          userHosts+=("$token")
-        done
+        IFS=' ' read -r -a userHosts <<<"$1"
         ;;
     esac
     shift || :
   done
 
   # Debugging
-  if test "${BUILD_DEBUG-}"; then
-    debuggingFlag=1
-  fi
-  if test $debuggingFlag; then
+  if buildDebugStart deployment; then
+    debuggingFlag=true
     consoleWarning "Debugging is enabled"
-    set -x
   fi
 
   # Flag semantics
@@ -772,6 +755,7 @@ deployToRemote() {
     fi
     reportTiming "$start"
   done
+  buildDebugStop deployment || :
   reportTiming "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
   return "$exitCode"
 }
@@ -840,7 +824,7 @@ __deployUploadPackage() {
     __usageEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(for makeDirectory in "$applicationPath" "$remotePath"; do
       printf 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
     done) || return $?
-    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed -n "$remotePath/$buildTarget")"
+    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed "$remotePath/$buildTarget")"
     if ! printf '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
       __failEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
     fi

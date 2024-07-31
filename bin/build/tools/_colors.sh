@@ -4,50 +4,45 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL _colors 87
+# IDENTICAL _colors 82
 
-# This tests whether `TERM` is set, and if not, uses the `DISPLAY` variable to set `BUILD_COLORS` IFF `DISPLAY` is non-empty.
-# If `TERM` is set then uses the `tput colors` call to determine the console support for colors.
+# Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # Usage: hasColors
 # Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - No colors
-# Local Cache: this value is cached in BUILD_COLORS if it is not set.
-# Environment: BUILD_COLORS - Override value for this
+# Exit Code; 1 - Colors are likely not supported by console
+# Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 hasColors() {
   local termColors
-  export BUILD_COLORS TERM DISPLAY
-  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM DISPLAY; then
-  BUILD_COLORS="${BUILD_COLORS-z}"
-  if [ "z" = "$BUILD_COLORS" ]; then
-    if [ -z "${TERM-}" ] || [ "${TERM-}" = "dumb" ]; then
-      if [ -n "${DISPLAY-}" ]; then
-        BUILD_COLORS=1
-      fi
-    else
+  export BUILD_COLORS TERM
+  # Values allowed for this global are true and false
+  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
+  BUILD_COLORS="${BUILD_COLORS-}"
+  if [ -z "$BUILD_COLORS" ]; then
+    BUILD_COLORS=false
+    case "${TERM-}" in "" | "dumb" | "unknown") BUILD_COLORS=true ;; *)
       termColors="$(tput colors 2>/dev/null)"
-      if [ "${termColors-:2}" -ge 8 ]; then
-        BUILD_COLORS=1
-      fi
-    fi
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "1" ]; then
-    # Values allowed for this global are 1 and blank only
-    BUILD_COLORS=
+      [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
+      ;;
+    esac
+  elif [ "$BUILD_COLORS" = "1" ]; then
+    # Backwards
+    BUILD_COLORS=true
+  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
+    BUILD_COLORS=false
   fi
-  test "$BUILD_COLORS"
+  [ "${BUILD_COLORS-}" = "true" ]
 }
 
+#
+# Utility to output wrapped text
 __consoleOutput() {
-  local prefix="${1}" start="${2-}" end="${3}" newline="\n"
-  shift 3 || :
-  if [ "${1-}" = "-n" ]; then
-    shift || :
-    newline=
-  fi
+  local prefix="${1}" start="${2-}" end="${3-}"
+  shift && shift && shift
   if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end$newline" "$*"; fi
-  elif [ $# -eq 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s$newline" "$prefix" "$*"; else printf "%s$newline" "$*"; fi
+    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end\n" "$*"; fi
+  elif [ $# -gt 0 ]; then
+    if [ -n "$prefix" ]; then printf "%s: %s\n" "$prefix" "$*"; else printf "%s\n" "$*"; fi
   fi
 }
 

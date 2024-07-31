@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Amazon Web Services
 #
-# Depends: colors.sh text.sh
-# bin: test echo date
+# Copyright &copy; 2024 Market Acumen, Inc.
 #
 
 ###############################################################################
@@ -31,17 +30,16 @@
 # shellcheck disable=SC2120
 awsInstall() {
   local usage="_${FUNCNAME[0]}"
-  local zipFile=awscliv2.zip
-  local url buildDir quietLog
+  local start url
 
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
   __usageEnvironment "$usage" aptInstall unzip curl "$@" || return $?
 
   if whichExists aws; then
     return 0
   fi
 
-  consoleInfo -n "Installing aws-cli ... " || :
-  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  statusMessage consoleInfo "Installing aws-cli ... " || :
   case "${HOSTTYPE-}" in
     arm64 | aarch64)
       url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
@@ -50,23 +48,26 @@ awsInstall() {
       url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
       ;;
   esac
-
-  buildDir="$(buildCacheDirectory awsCache.$$)"
-  quietLog="$(buildQuietLog awsInstall)"
-  buildDir=$(requireDirectory "$buildDir") || __failEnvironment "$usage" requireDirectory "$buildDir" || return $?
-  if ! __usageEnvironment "$usage" curl -s "$url" -o "$buildDir/$zipFile" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  if ! __usageEnvironment "$usage" unzip -d "$buildDir" "$buildDir/$zipFile" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  if ! __usageEnvironment "$usage" "$buildDir/aws/install" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  # This failed once, not sure why, .build will be deleted
-  rm -rf "$buildDir" 2>/dev/null || :
-  consoleValue -n "$(aws --version) " || __failEnvironment "$usage" "aws --version" || return $?
-  __usageEnvironment "$usage" reportTiming "$start" OK || return $?
+  {
+    local buildDir quietLog clean
+    clean=()
+    {
+      buildDir="$(__usageEnvironment "$usage" buildCacheDirectory awsCache.$$)" &&
+        quietLog="$(__usageEnvironment "$usage" buildQuietLog awsInstall)" &&
+        buildDir=$(__usageEnvironment "$usage" requireDirectory "$buildDir")
+    } || return $?
+    clean+=("$buildDir" "$quietLog")
+    {
+      local zipFile=awscliv2.zip
+      local version
+      __usageEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" &&
+        __usageEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" &&
+        __usageEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" &&
+        version="$(__usageEnvironment "$usage" aws --version)" &&
+        printf "%s %s\n" "$version" "$(__usageEnvironment "$usage" reportTiming "$start" OK)"
+    }
+    _clean $? "${clean[@]}" || return $?
+  }
 }
 _awsInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -94,21 +95,55 @@ _awsInstall() {
 #
 # shellcheck disable=SC2120
 awsCredentialsFile() {
-  local credentials=$HOME/.aws/credentials verbose=${1-}
+  local usage="_${FUNCNAME[0]}"
+  local credentials=.aws/credentials
+  local verbose
+  local argument nArguments argumentIndex home
 
-  if [ ! -d "$HOME" ]; then
-    if test "$verbose"; then
-      consoleWarning "No HOME ($HOME) directory found" 1>&2
-    fi
-    return 1
+  home=
+  verbose=false
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --home)
+        shift
+        home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
+        ;;
+      --verbose)
+        verbose=true
+        ;;
+      *)
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+  if [ -z "$home" ]; then
+    export HOME
+    __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
+    home="$HOME"
   fi
-  if [ ! -f "$credentials" ]; then
-    if test "$verbose"; then
-      consoleWarning "No $credentials file found" 1>&2
+  if [ ! -d "$home" ]; then
+    # Argument is validated above MUST be environment
+    ! "$verbose" || _environment "HOME environment \"$(consoleValue "$home")\" directory not found" || return $?
+  else
+    credentials="$HOME/$credentials"
+    if [ -f "$credentials" ]; then
+      printf "%s\n" "$credentials"
+      return 0
     fi
-    return 1
+    ! $verbose || __failEnvironment "$usage" "No credentials file ($(consoleValue "$credentials")) found" || return $?
   fi
-  printf %s "$credentials"
+  return 1
+}
+_awsCredentialsFile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -180,16 +215,16 @@ awsHasEnvironment() {
 # Example:     fi
 #
 awsEnvironment() {
-  local credentials groupName=${1:-default} aws_access_key_id aws_secret_access_key
+  local usage="_${FUNCNAME[0]}"
+  local credentials groupName=${1:-default} name value
 
-  __environment awsCredentialsFile 1 >/dev/null || return $?
-  credentials="$(awsCredentialsFile)" || _environment awsCredentialsFile || return $?
-  eval "$(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 $3 $4 }' OFS='')"
-  if [ -n "${aws_access_key_id:-}" ] && [ -n "${aws_secret_access_key:-}" ]; then
-    echo AWS_ACCESS_KEY_ID="${aws_access_key_id}"
-    echo AWS_SECRET_ACCESS_KEY="$aws_secret_access_key"
-    return 0
-  fi
+  credentials="$(__usageEnvironment "$usage" awsCredentialsFile)" || return $?
+  while read -r name value; do
+    environmentValueWrite "$(uppercase "$name")" "$value"
+  done < <(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 " " $4 }' OFS='')
+}
+_awsEnvironment() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} --add --group group [ --region region ] --port port --description description --ip ip
@@ -375,13 +410,11 @@ awsSecurityGroupIPRegister() {
 # Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 #
 awsIPAccess() {
+  local usage="_${FUNCNAME[0]}"
   local argument service services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
   local sgArgs port
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
-  local usage
-
-  usage="_${FUNCNAME[0]}"
 
   services=()
   optionRevoke=
@@ -448,15 +481,15 @@ awsIPAccess() {
 
   if ! awsHasEnvironment; then
     consoleInfo "Need AWS Environment: $awsProfile" || :
-    if awsEnvironment "$awsProfile" >/dev/null; then
+    if awsEnvironment "$awsProfile"; then
       __usageEnvironment "$usage" eval "$(awsEnvironment "$awsProfile")" || return $?
     else
       __failEnvironment "$usage" "No AWS credentials available: $awsProfile" || return $?
     fi
   fi
 
-  usageRequireEnvironment _awsIPAccess AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
-  usageRequireBinary _awsIPAccess aws || return $?
+  usageRequireEnvironment "$usage" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
+  usageRequireBinary "$usage" aws || return $?
 
   clearLine || :
   if test $optionRevoke; then
@@ -486,10 +519,8 @@ awsIPAccess() {
       fi
     done
   done
-  buildDebugStop || :
 }
 _awsIPAccess() {
-  buildDebugStop || :
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

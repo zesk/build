@@ -59,6 +59,3 @@ You will need the password for this server for the current user.
 #### Exit codes
 
 - `0` - Always succeeds
-
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)

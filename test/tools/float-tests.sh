@@ -10,6 +10,7 @@ set -eou pipefail
 
 declare -a tests
 tests+=(testRoundFloat)
+tests+=(testTruncateFloat)
 
 testRoundFloat() {
   local expected testValue

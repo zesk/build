@@ -124,17 +124,17 @@ identicalCheck() {
     __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || return $?
-  while IFS= read -r searchFile; do
-    if [ "$(basename "$searchFile")" = "$me" ]; then
-      # We are exceptional ;)
-      continue
-    fi
-    prefixIndex=0
-    for prefix in "${prefixes[@]}"; do
+  prefixIndex=0
+  for prefix in "${prefixes[@]}"; do
+    while IFS= read -r searchFile; do
+      if [ "$(basename "$searchFile")" = "$me" ]; then
+        # We are exceptional ;)
+        continue
+      fi
       [ -d "$tempDirectory/$prefixIndex" ] || mkdir "$tempDirectory/$prefixIndex"
       totalLines=$(($(wc -l <"$searchFile") + 0))
       while read -r identicalLine; do
-        statusMessage consoleInfo "Processing $searchFile:$(consoleCode "$identicalLine") ... "
+        statusMessage consoleInfo "#$((prefixIndex + 1)): Processing $searchFile:$(consoleCode "$identicalLine") ... "
         # DEBUG # consoleBoldRed "$identicalLine" # DEBUG
         if ! parsed=$(__identicalLineParse "$searchFile" "$prefix" "$identicalLine"); then
           badFiles+=("$searchFile")
@@ -152,8 +152,8 @@ identicalCheck() {
           tokenLineCount=$(head -1 "$tokenFile")
           tokenFileName=$(tail -1 "$tokenFile")
           if [ ! -f "$countFile" ]; then
-            __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
-            printf "%s%s: %s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError -n "Token counts do not match:")" 1>&2
+            # __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
+            printf "%s%s: %s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token counts do not match:")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$tokenFileName")" "$(consoleSuccess "$tokenLineCount")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$searchFile")" "$(consoleError "$count")" 1>&2
             isBadFile=true
@@ -181,7 +181,7 @@ identicalCheck() {
               } 1>&2
             fi
             if ! diff -b -q "$countFile" "${countFile}.compare" >/dev/null; then
-              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError -n "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
+              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
               diff "$countFile" "${countFile}.compare" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" 1>&2
               isBadFile=true
             else
@@ -191,12 +191,13 @@ identicalCheck() {
           if $isBadFile; then
             if [ ${#repairSources[@]} -gt 0 ]; then
               statusMessage consoleWarning "Repairing $token in $(consoleCode "$searchFile") from \"$(consoleValue "$tokenFileName")\""
-              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
+              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
                 badFiles+=("$tokenFileName")
                 badFiles+=("$searchFile")
                 consoleError "$(clearLine)Unable to repair $(consoleValue "$token") in $(consoleCode "$searchFile")" 1>&2
               else
-                consoleSuccess "$(clearLine)Repaired $(consoleValue "$token") in $(consoleCode "$searchFile")"
+                isBadFile=false
+                statusMessage consoleSuccess "Repaired $(consoleValue "$token") in $(consoleCode "$searchFile")"
               fi
             else
               badFiles+=("$tokenFileName")
@@ -206,14 +207,12 @@ identicalCheck() {
         else
           printf "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
           __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
-          # dumpPipe countFile "$token" <"$countFile" 1>&2
           statusMessage consoleInfo "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(consoleCode "$token")" "$(consoleValue "$searchFile")")"
         fi
       done < <(grep -n "$prefix" <"$searchFile" || :)
-      prefixIndex=$((prefixIndex + 1))
-    done
-  done <"$searchFileList"
-
+    done <"$searchFileList"
+    prefixIndex=$((prefixIndex + 1))
+  done
   exitCode=0
   if [ ${#badFiles[@]} -gt 0 ]; then
     exitCode=$failureCode
@@ -245,7 +244,10 @@ identicalCheck() {
   done < <(find "$tempDirectory" -type f -name '*.match' || :)
   for token in "${singles[@]+"${singles[@]}"}"; do
     if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
-      printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token NOT found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
+      while read -r tokenFile; do
+        tokenFile="$(tail -n 1 "$tokenFile")"
+        printf "%s: %s %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
+      done < <(find "$tempDirectory" -name "$token" -type f)
     fi
   done
   rm -rf "$tempDirectory" || :
@@ -339,7 +341,7 @@ identicalCheckShell() {
       --interactive)
         aa+=("$argument")
         ;;
-      --repair | --single | --exec)
+      --repair | --single | --exec | --prefix | --exclude | --extension)
         shift
         aa+=("$argument" "${1-}")
         ;;

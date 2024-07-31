@@ -2,7 +2,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Depends: colors.sh text.sh
 # bin: head grep
 # Docs: contextOpen ./docs/_templates/tools/docker.md
 # Test: contextOpen ./test/tools/docker-tests.sh

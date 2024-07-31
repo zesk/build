@@ -8,11 +8,8 @@
 #  ▌ ▌▛▀ ▙▄▘▐ ▌ ▌▚▄▌
 #  ▝▀▘▝▀▘▌   ▘▝▀ ▗▄▘
 #
-# Depends: colors.sh text.sh pipeline.sh
-#
 # Docs: o ./docs/_templates/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
-
 
 # Deploy an application from a deployment repository
 #
@@ -128,7 +125,6 @@ deployApplication() {
   if [ -d "$applicationPath" ]; then
     if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
       if ! $firstFlag; then
-        set -x
         __failEnvironment "$usage" "Can not fetch version from $applicationPath,  need --first" || return $?
       fi
       currentApplicationId=
