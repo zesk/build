@@ -371,6 +371,7 @@ gitFindHome() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -425,6 +426,7 @@ gitCommit() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -515,6 +517,7 @@ gitMainly() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -629,10 +632,9 @@ gitInstallHooks() {
   local hook
   local argument
   local usage="_${FUNCNAME[0]}"
-  local types didOne
+  local types didOne home
 
-  buildEnvironmentLoad BUILD_HOME || :
-  home="${BUILD_HOME:-}"
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
   verbose=false
   didOne=false
   read -r -a types < <(gitHookTypes)
@@ -646,6 +648,7 @@ gitInstallHooks() {
       --verbose)
         verbose=true
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -700,8 +703,7 @@ gitInstallHook() {
   local types
 
   read -r -a types < <(gitHookTypes)
-  buildEnvironmentLoad BUILD_HOME || :
-  home="${BUILD_HOME:-}"
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
   execute=true
   verbose=false
   while [ $# -gt 0 ]; do
@@ -714,6 +716,7 @@ gitInstallHook() {
       --verbose)
         verbose=true
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -772,6 +775,7 @@ gitPreCommitShellFiles() {
         shift || __failArgument "$usage" "shift $argument" || return $?
         checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

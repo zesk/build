@@ -83,9 +83,10 @@ crontabApplicationUpdate() {
     argument="$1"
     usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "$argument" >/dev/null || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
-        return 0
+        return $?
         ;;
       --env)
         [ -z "$rootEnv" ] || __failArgument "$usage" "$argument already" || return $?

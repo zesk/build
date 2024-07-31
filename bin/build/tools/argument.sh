@@ -48,6 +48,7 @@ _arguments() {
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || _clean "$?" "${clean[@]}" || return $?
     case "$argument" in
+      # Not same as other --help
       --help)
         "$usage" 0 && _clean "$?" "${clean[@]}" || return $?
         return $?

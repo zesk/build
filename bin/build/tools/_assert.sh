@@ -281,6 +281,7 @@ __assertFileContainsHelper() {
         shift
         displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

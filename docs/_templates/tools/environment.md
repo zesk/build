@@ -7,7 +7,6 @@
 ## Environment
 
 {environmentVariables}
-{buildEnvironmentLoad}
 
 ## State files
 

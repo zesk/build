@@ -60,9 +60,10 @@ sshAddKnownHost() {
         verbose=true
         verboseArgs=("-v")
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
-        return 0
+        return $?
         ;;
       *)
         remoteHost="$1"
@@ -135,9 +136,10 @@ sshSetup() {
         minBits=512
         [ "$(("$1" + 0))" -ge "$minBits" ] || __failArgument "$usage" "Key bits is too small $minBits: $1 -> $(("$1" + 0))" || return $?
         ;;
+      # IDENTICAL --help 4
       --help)
-        usage 0
-        return 0
+        "$usage" 0
+        return $?
         ;;
       --force)
         flagForce=1

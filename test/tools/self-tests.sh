@@ -9,8 +9,20 @@
 
 declare -a tests
 
+tests+=(testBuildFunctions)
 tests+=(testInstallInstallBuildSelf)
 tests+=(testInstallBinBuild)
+
+testBuildFunctions() {
+  local fun
+
+  fun=$(__environment mktemp) || return $?
+  buildFunctions >"$fun" || _environment "buildFunctions failed" || return $?
+
+  assertFileContains "$fun" buildFunctions assertExitCode __environment _argument _environment _command _format __usage housekeeper || return $?
+
+  __environment rm -f "$fun" || return $?
+}
 
 testInstallInstallBuildSelf() {
   local tempD
@@ -130,7 +142,7 @@ testInstallBinBuild() {
   : Already installed
 
   matches=(
-    --stdout-no-match "we-like-head-rubs.sh"
+    --stdout-match "we-like-head-rubs.sh"
     --stdout-no-match "install-bin-build.sh"
 
     --stdout-no-match "Installed"
@@ -139,7 +151,7 @@ testInstallBinBuild() {
     --stdout-match "does not ignore"
     --stdout-match ".gitignore"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 "$testBinBuild" || return $?
   assertDirectoryExists --line "$LINENO" bin/build || return $?
 
   __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
@@ -152,7 +164,7 @@ testInstallBinBuild() {
 
   # .gitignore errors reversed
   matches=(
-    --stdout-no-match "we-like-head-rubs.sh"
+    --stdout-match "we-like-head-rubs.sh"
     --stdout-no-match "install-bin-build.sh"
 
     --stdout-no-match "Installed"

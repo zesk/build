@@ -69,6 +69,8 @@ bigText() {
 # Exaxmple:           ▌ ▌▌ ▌▌ ▌▛▀
 # Exaxmple:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
 labeledBigText() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
   local label banner linePrefix lineSuffix tweenLabel tweenNonLabel nLines plainLabel isBottom
 
   label=
@@ -77,42 +79,37 @@ labeledBigText() {
   lineSuffix=
   tweenLabel=
   tweenNonLabel=""
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    if [ -z "$1" ]; then
-      _labeledBigText "$errorArgument" "blank argument" || return $?
-    fi
-    case "$1" in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
       --help)
-        "_${FUNCNAME[0]}" 0 && return $?
-        ;;
-      --top)
-        isBottom=
+        "$usage" 0
+        return $?
         ;;
       --bottom)
         isBottom=1
         ;;
       --prefix)
         shift || :
-        linePrefix="$1"
+        linePrefix="$argument"
         ;;
       --suffix)
         shift || :
-        lineSuffix="$1"
+        lineSuffix="$argument"
         ;;
       --tween)
         shift || :
-        tweenLabel="$1"
-        tweenNonLabel="$1"
+        tweenLabel="$argument"
+        tweenNonLabel="$argument"
         ;;
       *)
-        if [ "$1" != "${1#-}" ]; then
-          _labeledBigText "$errorArgument" "Unknown option $1" || return $?
-        fi
+        [ "$argument" = "${argument#-}" ] || __failArgument "$usage" "Unknown argument #$argumentIndex: $argument" || return $?
         if [ -z "$label" ]; then
           label="$1"
-          if ! plainLabel="$(printf "%s\n" "$label" | stripAnsi)"; then
-            _labeledBigText "$errorArgument" "Unable to clean label" || return $?
-          fi
+          plainLabel="$(printf "%s\n" "$label" | stripAnsi)" || __failArgument "$usage" "Unable to clean label" || return $?
         else
           break
         fi
@@ -156,6 +153,7 @@ repeat() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -244,6 +242,7 @@ wrapLines() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -366,9 +365,10 @@ boxedHeading() {
       _boxedHeading "$errorArgument" "blank argument" || return $?
     fi
     case "$arg" in
+      # IDENTICAL --help 4
       --help)
-        _boxedHeading 0
-        return 0
+        "$usage" 0
+        return $?
         ;;
       --shrink)
         shift || _boxedHeading "$errorArgument" "Missing $arg" || return $?

@@ -22,12 +22,10 @@
 usageDocument() {
   local usage="_${FUNCNAME[0]}"
   local bashDebug=false
-  local tryFile functionDefinitionFile functionName exitCode variablesFile
+  local tryFile functionDefinitionFile functionName exitCode variablesFile home
 
-  export BUILD_HOME
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
   export PWD
-
-  __environment buildEnvironmentLoad BUILD_HOME || return $?
 
   [ $# -ge 2 ] || _argument "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
@@ -37,9 +35,9 @@ usageDocument() {
   shift 3 || :
 
   if [ ! -f "$functionDefinitionFile" ]; then
-    tryFile="${BUILD_HOME-.}/$functionDefinitionFile"
+    tryFile="$home/$functionDefinitionFile"
     if [ ! -f "$tryFile" ]; then
-      _argument "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (BUILD_HOME: ${BUILD_HOME-.}) not found" || return $?
+      _argument "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
     fi
     functionDefinitionFile="$tryFile"
   fi

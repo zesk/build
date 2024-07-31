@@ -2,18 +2,12 @@
 #
 # documentation-index.sh
 #
-# Generate an index of our bash funtions for faster documentation generation.
+# Generate an index of our bash functions for faster documentation generation.
 #
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
-
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-# IDENTICAL errorArgument 1
-errorArgument=2
 
 # Summary: Link `{SEE:name}` tokens in documentation
 #
@@ -22,6 +16,8 @@ errorArgument=2
 # Usage: {fn} cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
 #
 documentationIndex_SeeLinker() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
   local cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
   local start linkPattern linkPatternFile
   local matchingFile matchingToken cleanToken
@@ -36,9 +32,12 @@ documentationIndex_SeeLinker() {
   seeFileTemplate=
   seeFileLink=
   while [ $# -gt 0 ]; do
-    case $1 in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
       --help)
-        _documentationIndex_SeeLinker 0
+        "$usage" 0
         return $?
         ;;
       *)
@@ -52,23 +51,19 @@ documentationIndex_SeeLinker() {
           seeFunctionLink="$1"
         elif [ -z "$seeFileTemplate" ]; then
           seeFileTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFileTemplate "${1##./}") || return $?
-          shift || _documentationIndex_SeeLinker "$errorArgument" "seeFileLink required" || return $?
+          shift || __failArgument "$usage" "seeFileLink required" || return $?
           seeFileLink="$1"
         else
           break
         fi
         ;;
     esac
-    shift || _documentationIndex_SeeLinker "$errorArgument" "shift failed" || return $?
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   for arg in cacheDirectory documentationDirectory seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
-    if [ -z "${!arg}" ]; then
-      _documentationIndex_SeeLinker "$errorArgument" "$arg is required" || return $?
-    fi
+    [ -n "${!arg}" ] || __failArgument "$usage" "$arg is required" || return $?
   done
-  if ! seeVariablesFile=$(mktemp); then
-    _documentationIndex_SeeLinker "$errorEnvironment" "mktemp failed" || return $?
-  fi
+  seeVariablesFile=$(__usageEnvironment "$usage" mktemp) || return $?
   linkPatternFile="$seeVariablesFile.linkPatterns"
   variablesSedFile="$seeVariablesFile.variablesSedFile"
   if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 |
@@ -117,11 +112,11 @@ documentationIndex_SeeLinker() {
           ! sed -f "$variablesSedFile" <"$matchingFile" | mapEnvironment >"$matchingFile.new" ||
           ! mv "$matchingFile.new" "$matchingFile"; then
           rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
-          return "$errorEnvironment"
+          return "1"
         fi
       ); then
         rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
-        return "$errorEnvironment"
+        return "1"
       fi
     done; then
     clearLine
