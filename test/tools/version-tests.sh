@@ -37,18 +37,25 @@ testVersionNext() {
   assertEquals "5318005.5318006.5318007.5318008" "$(nextMinorVersion "5318005.5318006.5318007.5318007")" || return $?
 }
 
+__assertPathsEquals() {
+  assertEquals --line "$1" "$(simplifyPath "$2")" "$(simplifyPath "$3")" || return $?
+}
+
 tests+=(testReleaseNotes)
 testReleaseNotes() {
-  assertEquals "./docs/release/1.0.md" "$(releaseNotes "1.0")" || return $?
+  local home
+
+  home=$(buildHome)
+  __assertPathsEquals "$LINENO" "$home/docs/release/1.0.md" "$(releaseNotes "1.0")" || return $?
   export BUILD_RELEASE_NOTES
   BUILD_RELEASE_NOTES=./foo
-  assertEquals "./foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "$home/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
   BUILD_RELEASE_NOTES=./foo/
-  assertEquals "./foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "$home/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
   BUILD_RELEASE_NOTES=/foo/
-  assertEquals "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
   BUILD_RELEASE_NOTES=/foo
-  assertEquals "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
   unset BUILD_RELEASE_NOTES
-  assertEquals "./docs/release/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "$home/docs/release/1.0.md" "$(releaseNotes "1.0")" || return $?
 }

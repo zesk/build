@@ -82,7 +82,7 @@ labeledBigText() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    argument="${1-}"
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -110,12 +110,10 @@ labeledBigText() {
         ;;
       *)
         [ "$argument" = "${argument#-}" ] || __failArgument "$usage" "Unknown argument #$argumentIndex: $argument" || return $?
-        if [ -z "$label" ]; then
-          label="$1"
-          plainLabel="$(printf "%s\n" "$label" | stripAnsi)" || __failArgument "$usage" "Unable to clean label" || return $?
-        else
-          break
-        fi
+        label="$argument"
+        plainLabel="$(printf "%s\n" "$label" | stripAnsi)" || __failArgument "$usage" "Unable to clean label" || return $?
+        shift
+        break
         ;;
     esac
     shift

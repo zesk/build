@@ -53,7 +53,6 @@ releaseNotes() {
   [ -n "${BUILD_RELEASE_NOTES}" ] || __failEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="$BUILD_RELEASE_NOTES"
   isAbsolutePath "$releasePath}" || releasePath="$home/$releasePath"
-  [ -d "$releasePath" ] || __failEnvironment "$usage" "Not a directory $releasePath" || return $?
   printf "%s/%s.md\n" "${releasePath%%/}" "$version"
 }
 

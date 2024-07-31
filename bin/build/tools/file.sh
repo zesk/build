@@ -285,6 +285,19 @@ realPath() {
   fi
 }
 
+# Usage: simplifyPath path
+# Argument: path ... - Required. File. One or more paths to simplify
+simplifyPath() {
+  local path
+  while [ $# -gt 0 ]; do
+    path="$1"
+    path="${path#"./"}"
+    path="${path//\/\.\///}"
+    printf "%s\n" "$path"
+    shift
+  done
+}
+
 #
 # Outputs value of virtual memory allocated for a process, value is in kilobytes
 # Usage: {fn} file
