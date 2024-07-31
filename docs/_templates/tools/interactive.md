@@ -7,6 +7,7 @@
 ## User prompts
 
 {confirmYesNo}
+{pause}
 
 ## Copy files 
 
