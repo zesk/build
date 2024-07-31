@@ -74,7 +74,7 @@ labeledBigText() {
   local label banner linePrefix lineSuffix tweenLabel tweenNonLabel nLines plainLabel isBottom
 
   label=
-  isBottom=1
+  isBottom=true
   linePrefix=
   lineSuffix=
   tweenLabel=
@@ -89,8 +89,11 @@ labeledBigText() {
         "$usage" 0
         return $?
         ;;
+      --top)
+        isBottom=false
+        ;;
       --bottom)
-        isBottom=1
+        isBottom=true
         ;;
       --prefix)
         shift || :
@@ -121,7 +124,7 @@ labeledBigText() {
   nLines=$(printf "%s\n" "$banner" | wc -l)
   plainLabel="$(printf "%s\n" "$label" | stripAnsi)"
   tweenNonLabel="$(repeat "$((${#plainLabel}))" " ")$tweenNonLabel"
-  if test $isBottom; then
+  if $isBottom; then
     printf "%s%s\n""%s%s%s\n" \
       "$(printf "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | head -n "$((nLines - 1))")" "$lineSuffix" \
       "$linePrefix$label$tweenLabel" "$(printf "%s\n" "$banner" | tail -n 1)" "$lineSuffix"
