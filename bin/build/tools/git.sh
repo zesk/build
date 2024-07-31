@@ -371,6 +371,7 @@ gitFindHome() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -425,6 +426,7 @@ gitCommit() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -515,6 +517,7 @@ gitMainly() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -646,6 +649,7 @@ gitInstallHooks() {
       --verbose)
         verbose=true
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -714,6 +718,7 @@ gitInstallHook() {
       --verbose)
         verbose=true
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -772,6 +777,7 @@ gitPreCommitShellFiles() {
         shift || __failArgument "$usage" "shift $argument" || return $?
         checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

@@ -20,6 +20,7 @@ urlMatchesLocalFileSize() {
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

@@ -29,6 +29,7 @@ npmInstall() {
   while [ $# -gt 0 ]; do
     argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

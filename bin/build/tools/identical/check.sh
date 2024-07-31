@@ -67,6 +67,7 @@ identicalCheck() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return 0
@@ -345,6 +346,7 @@ identicalCheckShell() {
         shift
         aa+=("$argument" "${1-}")
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

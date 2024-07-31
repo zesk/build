@@ -7,7 +7,7 @@
 # Test: o test/tools/self-tests.sh
 # Docs: o docs/_templates/tools/self.md
 
-# Installs `install-bin-build.sh` the first time in a new project, and modifies it to work.
+# Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
 # Argument: --help - Optional. Flag. This help.
 # Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
 # Argument: --local - Optional. Flag. Use local copy of `install-bin-build.sh` instead of downloaded version.
@@ -30,6 +30,7 @@ installInstallBuild() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

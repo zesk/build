@@ -78,7 +78,7 @@ __hookPreCommitPHP() {
   fi
   statusMessage consoleSuccess "Fixing PHP"
   fixResults=$(mktemp)
-  "$BUILD_HOME/vendor/bin/php-cs-fixer" fix --allow-risky=yes "${changed[@]}" ou>"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
+  "$BUILD_HOME/vendor/bin/php-cs-fixer" fix --allow-risky=yes "${changed[@]}" ou >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
     clearLine
     grep -A 100 'not fixed' "$fixResults" | prefixLines "$(consoleError)"
