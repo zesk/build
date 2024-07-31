@@ -32,6 +32,7 @@ errorArgument=2
 # Example:     open $(bin/build/release-notes.sh)
 # Example:     vim $(releaseNotes)
 #
+# shellcheck disable=SC2120
 releaseNotes() {
   local version
 
@@ -64,10 +65,6 @@ releaseNotes() {
   source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_RELEASE_NOTES.sh"
   printf "%s/%s.md\n" "${BUILD_RELEASE_NOTES%%/}" "$version"
 
-}
-
-_newReleaseUsage() {
-  usageDocument "./bin/build/tools/$(basename "${BASH_SOURCE[0]}")" newRelease "$@"
 }
 
 #
@@ -115,7 +112,8 @@ nextMinorVersion() {
 # also added to `git` the first time.
 #
 newRelease() {
-  local newVersion readLoop currentVersion liveVersion nextVersion releaseNotes nonInteractive
+  local usage="_${FUNCNAME[0]}"
+  local newVersion readLoop currentVersion liveVersion nextVersion notes nonInteractive
   local versionOrdering
   local width=40
 
@@ -127,13 +125,14 @@ newRelease() {
         nonInteractive=1
         consoleWarning "Non-interactive mode set"
         ;;
+      # IDENTICAL --help 4
       --help)
-        _newReleaseUsage 0
-        return 0
+        "$usage" 0
+        return $?
         ;;
       *)
         if [ -n "$newVersion" ]; then
-          _newReleaseUsage $errorArgument "Unknown argument $1"
+          _newRelease $errorArgument "Unknown argument $1"
           return $?
         fi
         newVersion=$1
@@ -142,25 +141,16 @@ newRelease() {
     shift
   done
 
-  readLoop=
+  readLoop=false
   if [ -z "$newVersion" ]; then
-    readLoop=1
+    readLoop=true
   fi
-  if ! hasHook version-current; then
-    _newReleaseUsage $errorEnvironment "Requires hook version-current"
-    return "$errorEnvironment"
-  fi
-  currentVersion=$(runHook version-current)
-  if [ -z "$currentVersion" ]; then
-    _newReleaseUsage $errorEnvironment "version-current returned empty string"
-    return "$errorEnvironment"
-  fi
+  hasHook version-current || __failEnvironment "$usage" "Requires hook version-current" || return $?
+  currentVersion=$(__usageEnvironment "$usage" runHook version-current) || return $?
+  [ -n "$currentVersion" ] || __failEnvironment "$usage" "version-current hook returned empty string" || return $?
   if hasHook version-live; then
-    liveVersion=$(runHook version-live)
-    if [ -z "$liveVersion" ]; then
-      _newReleaseUsage $errorEnvironment "version-live returned empty string"
-      return "$errorEnvironment"
-    fi
+    liveVersion=$(__usageEnvironment "$usage" runHook version-live) || return $?
+    [ -n "$currentVersion" ] || __failEnvironment "$usage" "version-live hook returned empty string" || return $?
     consoleNameValue $width "Live:" "$liveVersion"
   else
     liveVersion=$currentVersion
@@ -169,24 +159,24 @@ newRelease() {
   consoleNameValue $width "Current:" "$currentVersion"
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
-    releaseNotes="$(releaseNotes)"
+    notes="$(releaseNotes)"
     consoleNameValue $width "Ready to deploy:" "$currentVersion"
-    consoleNameValue $width "Release notes:" "$releaseNotes"
-    if ! test $nonInteractive; then
-      runHook version-already "$currentVersion" "$releaseNotes"
+    consoleNameValue $width "Release notes:" "$notes"
+    if ! $nonInteractive; then
+      __usageEnvironment "$usage" runHook version-already "$currentVersion" "$notes" || return $?
     fi
     return 0
   fi
-  if test $nonInteractive; then
+  if $nonInteractive; then
     if [ -z "$newVersion" ]; then
       newVersion=$nextVersion
     elif ! isVersion "$newVersion"; then
-      _newReleaseUsage $errorArgument "New version $newVersion is not a valid version tag"
+      _newRelease $errorArgument "New version $newVersion is not a valid version tag"
       return $errorArgument
     fi
   else
     while true; do
-      if test $readLoop; then
+      if $readLoop; then
         printf "%s? (%s %s) " "$(consoleInfo "New version")" "$(consoleBoldMagenta "default")" "$(consoleCode "$nextVersion")"
         read -r newVersion || :
         if [ -z "$newVersion" ]; then
@@ -197,31 +187,34 @@ newRelease() {
         newVersion="v$newVersion"
         break
       else
-        if ! test $readLoop; then
-          _newReleaseUsage $errorArgument "Invalid version $newVersion"
-        else
-          consoleError "Invalid version $newVersion"
+        if ! $readLoop; then
+          __failArgument "$usage" "Invalid version $newVersion" || return $?
         fi
+        consoleError "Invalid version $newVersion"
       fi
     done
   fi
-  releaseNotes="$(releaseNotes "$newVersion")"
-  if [ ! -f "$releaseNotes" ]; then
-    trimSpace >"$releaseNotes" <<-EOF
+  notes="$(__usageEnvironment "$usage" releaseNotes "$newVersion")" || return $?
+  if [ ! -f "$notes" ]; then
+    trimSpace >"$notes" <<-EOF
         # Release $newVersion
 
         - Upgrade from $currentVersion
         - New snazzy features here
 EOF
-    consoleSuccess "Version $newVersion ready - release notes: $releaseNotes"
+    consoleSuccess "Version $newVersion ready - release notes: $notes"
     if ! test $nonInteractive; then
-      runHook version-created "$newVersion" "$releaseNotes"
+      __usageEnvironment "$usage" runHook version-created "$newVersion" "$notes" || return $?
     fi
   else
-    consoleWarning "Version $newVersion already - release notes: $releaseNotes"
+    consoleWarning "Version $newVersion already - release notes: $notes"
     if ! test $nonInteractive; then
-      runHook version-already "$newVersion" "$releaseNotes"
+      __usageEnvironment "$usage" runHook version-already "$newVersion" "$notes" || return $?
     fi
   fi
-  git add "$releaseNotes"
+  git add "$notes"
+}
+_newRelease() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

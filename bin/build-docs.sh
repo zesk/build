@@ -251,9 +251,10 @@ buildDocumentationBuild() {
           docArgs+=("$argument")
         fi
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
-        return 0
+        return $?
         ;;
       *)
         __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?

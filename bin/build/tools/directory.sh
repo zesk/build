@@ -131,6 +131,7 @@ directoryIsEmpty() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

@@ -49,17 +49,17 @@ _integer() {
 __buildIdenticalRepair() {
   local item
   local aa
+  local home
 
-  export BUILD_HOME
-  __environment buildEnvironmentLoad BUILD_HOME || return $?
-  __environment cd "$BUILD_HOME" || return $?
+  home=$(__environment buildHome) || return $?
+  __environment cd "$home" || return $?
   aa=()
   while read -r item; do
     aa+=(--singles "$item")
   done < <(find . -name 'singles.txt' -path '*/identical/*' ! -path '*/.*')
   while read -r item; do
     aa+=(--repair "$item")
-  done < <(find "$BUILD_HOME" -type d -name identical ! -path '*/.*')
+  done < <(find "$home" -type d -name identical ! -path '*/.*')
   __environment identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }
 

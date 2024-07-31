@@ -182,9 +182,13 @@ _installBinBuildDirectoryLocal() {
   # Clean target regardless
   backupPath="$installPath.aboutToDelete.$$"
   __usageEnvironment "$usage" rm -rf "$backupPath" || return $?
-  __usageEnvironment "$usage" mv -f "$installPath" "$backupPath" || return $?
-  __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$backupPath" "$installPath" || return $?
-  __usageEnvironment "$usage" rm -rf "$backupPath" || :
+  if [ -d "$installPath" ]; then
+    __usageEnvironment "$usage" mv -f "$installPath" "$backupPath" || return $?
+    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$backupPath" "$installPath" || return $?
+    __usageEnvironment "$usage" rm -rf "$backupPath" || :
+  else
+    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
+  fi
 }
 
 # Check the build directory after installation

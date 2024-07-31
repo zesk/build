@@ -111,11 +111,17 @@ __debuggingStackCodeList() {
 # Dump the function and include stacks and the current environment
 #
 debuggingStack() {
-  local prefix
+  local prefix index sources
   printf "STACK:\n"
   __debuggingStackCodeList "${FUNCNAME[@]}" || :00
   printf "SOURCE:\n"
-  __debuggingStackCodeList "${BASH_SOURCE[@]}" || :
+  sources=()
+  index=0
+  while [ $index -lt "${#BASH_SOURCE[@]}" ]; do
+    sources+=("${BASH_SOURCE[index]}:${BASH_LINENO[index]}")
+    index=$((index + 1))
+  done
+  __debuggingStackCodeList "${sources[@]}" || :
   if [ "${1-}" != "-s" ]; then
     printf "EXPORTS:\n"
     prefix="declare -x "
@@ -139,6 +145,7 @@ plumber() {
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -211,6 +218,7 @@ housekeeper() {
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -267,5 +275,64 @@ housekeeper() {
   return "$__result"
 }
 _housekeeper() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Check output for content and trigger environment error if found
+# Usage {fn} [ --help ] [ --verbose ] [ --name name ]
+# Argument: --help - Help
+# Argument: --verbose - Optional. Flag. Verbose messages when no errors exist.
+# Argument: --name name - Optional. String. Name for verbose mode.
+# # shellcheck source=/dev/null
+# Example:     source "$include" > >(outputTrigger source "$include") || return $?
+outputTrigger() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
+  local error message verbose name
+
+  name="${FUNCNAME[1]}}"
+  verbose=false
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --verbose)
+        verbose=true
+        ;;
+      --name)
+        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        name="$1"
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift || __failArgument "$usage" "shift argument $argument" || return $?
+  done
+
+  error=$(mktemp) || __failEnvironment "$usage" "mktemp" "$@" || return $?
+  lineCount=0
+  while read -r line; do
+    printf "%s\n" "$line" >>"$error"
+    lineCount=$((lineCount + 1))
+  done
+  lineText="$lineCount $(plural "$lineCount" line lines)"
+  if [ ! -s "$error" ]; then
+    rm -rf "$error" || :
+    ! $verbose || consoleInfo "No output in $(consoleCode "$name") $(consoleValue "$lineText")" || :
+    return 0
+  fi
+  message=$(dumpFile "$error") || message="dumpFile $error failed"
+  rm -rf "$error" || :
+  _environment "stderr found in $(consoleCode "$name") $(consoleValue "$lineText"): " "$@" "$message" || return $?
+}
+_outputTrigger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

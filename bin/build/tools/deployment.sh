@@ -53,6 +53,7 @@ deployBuildEnvironment() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -236,6 +237,7 @@ deployRemoteFinish() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -555,6 +557,7 @@ deployToRemote() {
         [ -z "$applicationId" ] || __failArgument "$usage" "$argument supplied twice" || return $?
         applicationId="$1"
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?

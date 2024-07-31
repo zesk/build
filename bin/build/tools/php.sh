@@ -122,6 +122,7 @@ phpBuild() {
     arg="$1"
     [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
     case $1 in
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -329,9 +330,10 @@ phpComposer() {
         consoleWarning "Requiring docker composer"
         forceDocker=true
         ;;
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
-        return 0
+        return $?
         ;;
       *)
         [ "$composerDirectory" = "." ] || __failArgument "$usage" "Unknown argument $1" || return $?

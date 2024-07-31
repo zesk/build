@@ -21,7 +21,7 @@ testDocumentation() {
     bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
     set -a
     # shellcheck source=/dev/null
-    source "$testOutput" > >(_environmentOutput --name "$testOutput" --verbose) || return $?
+    source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
     set +a
     assertEquals "Assert two strings are not equal"$'\n' "${summary}" || return $?
     assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n\n' "${description}" || return $?
@@ -29,7 +29,7 @@ testDocumentation() {
     bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertEquals)" assertEquals >"$testOutput" || return $?
     set -a
     # shellcheck source=/dev/null
-    source "$testOutput" > >(_environmentOutput --name "$testOutput" --verbose) || return $?
+    source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
     set +a
     echoBar '='
     assertEquals $'Assert two strings are equal.\n\nIf this fails it will output an error and exit.\n\n\n' "${description}" || return $?

@@ -60,6 +60,7 @@ incrementor() {
           rm -rf "$persistence" || :
           return 0
           ;;
+        # IDENTICAL --help 4
         --help)
           "$usage" 0
           return $?
