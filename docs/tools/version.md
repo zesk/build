@@ -13,6 +13,8 @@ If this fails it outputs an error to stderr
 
 When this tool succeeds it outputs the path to the current release notes file
 
+
+
 #### Usage
 
     releaseNotes [ version ]

@@ -230,7 +230,7 @@ documentationIndex_Generate() {
     return $?
   fi
   clearLine
-  printf "%s: %s %s %s\n" "$(consoleRed "${FUNCNAME[0]}")" Completed "$(consoleCode "$codePath")" "$(reportTiming "$start" in)"
+  printf "%s %s %s\n" "$(consoleInfo "Generated index for ")" "$(consoleCode "$codePath")" "$(reportTiming "$start" in)"
 }
 
 #

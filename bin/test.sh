@@ -60,17 +60,19 @@ _textExit() {
 
 #
 # fn: {base}
-# Usage: {fn} [ --help ] [ --clean ] [ --messy ]
+# Usage: {fn} [ --one suiteName | -1 suiteName ] [ --show ] [ --help ] [ --clean ] [ --messy ] [ --continue | -c ] [ testFunctionPattern ... ]
 # Run Zesk Build test suites
 #
 # Argument: --one test - Optional. Add one test suite to run.
 # Argument: --show - Optional. Flag. List all test suites.
 # Argument: -l - Optional. Flag. List all test suites.
 # Argument: --help - Optional. This help.
-# Argument: --clean - Optional. Delete test artifact files before starting.
+# Argument: --clean - Optional. Delete test artifact files and exit. (No tests run)
 # Argument: --continue - Optional. Flag. Continue from last successful test.
 # Argument: -c - Optional. Flag. Continue from last successful test.
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
+# Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files.
+# Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.
 #
 __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
@@ -78,7 +80,7 @@ __buildTestSuite() {
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start
-  local continueFile continueFlag
+  local continueFile continueFlag cleanFlag
 
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
 

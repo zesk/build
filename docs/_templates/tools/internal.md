@@ -4,10 +4,5 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-{buildBuild}
-{buildDeploy}
-{buildDocumentationTemplating}
 {buildDocumentationBuild}
-{buildDocumentation_MergeWithDocsBranch}
-{buildDocumentation_Recommit}
-{buildDocumentation_UpdateUnlinked}
+{__buildTestSuite}

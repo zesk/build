@@ -9,7 +9,6 @@
 
 declare -a tests
 
-tests+=(testRepeat)
 testRepeat() {
   assertEquals "$(repeat 10 "x")" "xxxxxxxxxx" || return $?
   assertEquals "$(repeat 11 "x")" "xxxxxxxxxxx" || return $?
@@ -17,14 +16,12 @@ testRepeat() {
   assertEquals "$(repeat 0 "x")" "" || return $?
 }
 
-tests+=(testAlignRight)
 testAlignRight() {
   assertEquals "$(alignRight 10 "Dogmatic")" "  Dogmatic" || return $?
   assertEquals "$(alignRight 10 "")" "          " || return $?
   assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic" || return $?
   assertEquals "$(alignRight 2 "")" "  " || return $?
 }
-tests+=(testAlignLeft)
 testAlignLeft() {
   assertEquals "$(alignLeft 10 "Dogmatic")" "Dogmatic  " || return $?
   assertEquals "$(alignLeft 10 "")" "          " || return $?
@@ -32,7 +29,6 @@ testAlignLeft() {
   assertEquals "$(alignLeft 2 "")" "  " || return $?
 }
 
-tests+=(testRepeat2)
 testRepeat2() {
   local string
   local n
@@ -44,3 +40,14 @@ testRepeat2() {
     n=$((n + 1))
   done
 }
+
+testLabeledBigText() {
+  assertOutputContains "foo" labeledBigText --top foo bar || return $?
+  assertOutputContains "foo" labeledBigText --bottom foo bar || return $?
+}
+
+tests+=(testRepeat)
+tests+=(testAlignRight)
+tests+=(testAlignLeft)
+tests+=(testRepeat2)
+tests+=(testLabeledBigText)
