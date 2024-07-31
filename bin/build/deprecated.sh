@@ -155,7 +155,7 @@ __deprecatedCleanup() {
   deprecatedTokens+=("dotEnv""Configure")
 
   # v0.11.2
-  __deprecatedCannon '_environment''Output' outputTrigger || return $?
+  __deprecatedCannon '_''environment''Output' outputTrigger
 
   clearLine
   # Do all deprecations
