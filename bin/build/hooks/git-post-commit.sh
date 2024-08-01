@@ -85,6 +85,7 @@ __gitPushHelper() {
 # fn: {base}
 __hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}"
+  clearLine
   __usageEnvironment "$usage" gitInstallHook post-commit || return $?
   __usageEnvironment "$usage" runOptionalHook post-commit || return $?
   __gitPushHelper "$usage" || return $?
