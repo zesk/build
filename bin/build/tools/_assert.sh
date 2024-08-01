@@ -204,7 +204,7 @@ _assertConditionHelper() {
   fi
   result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
   # shellcheck disable=SC2059
-  message="$(printf "$(consoleLabel %s) %s, " "${pairs[@]}")"
+  message="$(printf "$(consoleLabel %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
   message="$(
     printf -- "%s%s ➡️ %s -> (%s)" \
