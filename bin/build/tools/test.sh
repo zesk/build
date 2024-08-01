@@ -7,6 +7,29 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+#
+# Load test tools and make `testSuite` function available
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: binary ... - Optional. Callable. Run this program after loading test tools.
+#
+testTools() {
+  local usage="_${FUNCNAME[0]}"
+  local home stateFile
+
+  stateFile=$(_arguments "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$@") || return "$(_argumentReturn $?)"
+  home=$(__usageEnvironment "$usage" buildHome) || _clean $? "$stateFile" || return $?
+  # shellcheck source=/dev/null
+  source "$home/bin/build/test-tools.sh" || __failEnvironment "$usage" "test-tools.sh" || return $?
+  __usageEnvironment "$usage" isFunction testSuite || return $?
+  [ $# -ne 0 ] || return 0
+  __environment "$@" || return $?
+}
+_testTools() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Dump a pipe with a title and stats
 # Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
 # Argument: --tail - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.

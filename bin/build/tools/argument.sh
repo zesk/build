@@ -32,17 +32,18 @@
 #
 _arguments() {
   local usageArguments="_${FUNCNAME[0]}"
-  local this="${1-}" source="${2-}"
+  local source="${1-}" this="${2-}"
   local usage="_$this"
+  local helpFlag=false
   local argument nArguments argumentIndex
   local stateFile checkFunction value clean
 
   shift || __failArgument "$usageArguments" "Missing this" || return $?
   shift || __failArgument "$usageArguments" "Missing source" || return $?
   stateFile=$(__usageEnvironment "$usageArguments" mktemp) || return $?
-  spec=$(__usageEnvironment "$usageArguments" _usageArgumentsSpecification "$this" "$source") || return $?
+  spec=$(__usageEnvironment "$usageArguments" _usageArgumentsSpecification "$source" "$this") || return $?
   # Rest is calling function argument usage
-  clean=("$spec" "$stateFile")
+  clean=("$stateFile")
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -50,8 +51,7 @@ _arguments() {
     case "$argument" in
       # Not same as other --help
       --help)
-        "$usage" 0 && _clean "$?" "${clean[@]}" || return $?
-        return $?
+        helpFlag=true
         ;;
       *)
         type="$(_usageArgumentType "$spec" "$stateFile" "$argumentIndex" "$argument")" || return $?
@@ -62,6 +62,8 @@ _arguments() {
         elif _usageArgumentTypeValid "$type"; then
           shift
         else
+          find "$spec" -type f 1>&2
+          dumpPipe stateFile <"$stateFile" 1>&2
           __failArgument "$usage" "unhandled argument type $type #$argumentIndex: $argument" || return $?
         fi
         argumentName="$(_usageArgumentName "$spec" "$argumentIndex" "$argument")"
@@ -74,9 +76,23 @@ _arguments() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   _usageArgumentsRemainder "$spec" "$stateFile" "$@" || return $?
+  if $helpFlag; then
+    # Have to do this as this is run in subprocess - what to do?
+    "$usage" 0 1>&2
+    _clean "$?" "${clean[@]}"
+    return "$(_code exit)"
+  fi
+  printf "%s\n" "$stateFile"
 }
 __arguments() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Handle `exit` -> 0
+_argumentReturn() {
+  local exitCode="$1"
+  [ "$exitCode" -ne "$(_code exit)" ] || exitCode=0
+  printf "%d\n" "$exitCode"
 }
 
 # Validate spec directory
@@ -138,8 +154,8 @@ _usageArgumentsSpecification() {
 # Output: nothing
 _usageArgumentsSpecificationParseLine() {
   local argumentDirectory="${1-}" argumentId="${2-}"
-  local argument argumentIndex
-  local required saveRequired argumentType
+  local argument
+  local required saveRequired argumentIndex argumentType argumentName argumentFinder argumentRepeat
 
   [ -d "$argumentDirectory" ] || _argument "$argumentDirectory is not a directory" || return $?
   _integer "$argumentId" || _argument "$argumentId is not an integer" || return $?
@@ -147,6 +163,7 @@ _usageArgumentsSpecificationParseLine() {
 
   savedLine="$*"
   argumentIndex=
+  argumentRepeat=false
   while [ "$#" -gt 0 ]; do
     argument="$1"
     case "$argument" in
@@ -154,6 +171,13 @@ _usageArgumentsSpecificationParseLine() {
         argumentFinder="$argument"
         argumentName="${argument#-}"
         argumentName="${argumentName#-}"
+        if [ "${argumentName%...}" != "${argumentName}" ]; then
+          argumentRepeat=true
+          argumentName="${argumentName%...}"
+        fi
+        ;;
+      ...)
+        argumentRepeat=true
         ;;
       -)
         shift
@@ -165,7 +189,7 @@ _usageArgumentsSpecificationParseLine() {
         else
           argumentIndex=0
         fi
-        argumentFinder=$argumentIndex
+        argumentFinder="#--$argumentIndex"
         printf "%d\n" "$argumentIndex" >"$argumentDirectory/index"
         argumentName="$argument"
         ;;
@@ -196,18 +220,18 @@ _usageArgumentsSpecificationParseLine() {
   for argument in argumentType argumentName argumentFinder; do
     [ -n "${!argument}" ] || _argument "Require a value for $argument in line: $savedLine" || return $?
   done
-  if $required && [ "$argumentType" = "String" ]; then
-    argumentType=Required
-  fi
   {
     environmentValueWrite argumentName "$argumentName"
+    environmentValueWrite argumentRepeat "$argumentRepeat"
     environmentValueWrite argumentType "$argumentType"
     environmentValueWrite argumentId "$argumentIndex"
     environmentValueWrite argumentRequired "$required"
     environmentValueWrite argumentFinder "$argumentFinder"
     environmentValueWrite description "$description"
   } >"$argumentDirectory/$argumentFinder" || _argument "Unable to write $argumentDirectory/$argumentFinder" || return $?
-  __environment printf "%s\n" "$argumentName" >>"$argumentDirectory/required" || return $?
+  if $required; then
+    __environment printf "%s\n" "$argumentName" >>"$argumentDirectory/required" || return $?
+  fi
 }
 __usageArgumentsSpecification() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -236,7 +260,7 @@ _usageArgumentTypeValid() {
     File | FileDirectory | Directory | LoadEnvironmentFile | RealDirectory)
       return 0
       ;;
-    Required | String)
+    EmptyString | String)
       return 0
       ;;
     Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
@@ -284,7 +308,8 @@ __usageArgumentName() {
 # Argument: argumentValue - Optional. String.
 _usageArgumentType() {
   local usage="_${FUNCNAME[0]}"
-  local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}" argumentNamed
+  local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}"
+  local argumentNamed argumentRepeat indexSpec
 
   __usageArgumentSpecificationMagic "$usage" "$specification" || return $?
   if [ -f "$specification/$argumentValue" ]; then
@@ -292,17 +317,27 @@ _usageArgumentType() {
     return 0
   fi
   argumentNamed="$(environmentValueRead "$stateFile" argumentNamed "")"
+  argumentRepeat="$(environmentValueRead "$stateFile" argumentRepeat "")"
   if [ -z "$argumentNamed" ]; then
     argumentNamed=0
-  else
+  elif [ "$argumentRepeat" != "$argumentNamed" ]; then
     argumentNamed=$((argumentNamed + 1))
   fi
-  if [ ! -f "$specification/$argumentNamed" ]; then
+  indexSpec="$specification/#--$argumentNamed"
+  printf "%s\n" "$indexSpec" 1>&2
+  if [ ! -f "$indexSpec" ]; then
     printf -- "%s" "-"
     return 0
   fi
-  prinff "!%s" "$(environmentValueRead "$specification/$argumentNamed" argumentType undefined)"
-  environmentValueWrite "$stateFile" argumentNamed "$argumentNamed"
+  printf "%s%s" "$(environmentValueRead "$indexSpec" argumentType undefined)" "$(_choose "$argumentRepeat" '*' '')"
+  environmentValueWrite argumentNamed "$argumentNamed" >>"$stateFile"
+  if ! $argumentRepeat; then
+    argumentRepeat="$(environmentValueRead "$indexSpec" argumentRepeat false)"
+    _boolean "$argumentRepeat" || __failEnvironment "$usage" "$indexSpec non-boolean argumentRepeat" || return $?
+    if $argumentRepeat; then
+      environmentValueWrite argumentRepeat "$argumentNamed" >>"$stateFile"
+    fi
+  fi
   return 0
 }
 __usageArgumentType() {

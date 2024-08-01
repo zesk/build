@@ -9,14 +9,19 @@
 
 declare -a tests
 
-tests+=(testInstallInstallBuild)
 tests+=(testAdditionalBins)
-tests+=(testMapPortability)
+tests+=(testGitInstallation)
+tests+=(testInstallInstallBuild)
 tests+=(testInstallTerraform)
-tests+=(testScriptInstallations)
-tests+=(testVersionLive)
+tests+=(testMapBin)
+tests+=(testMapPortability)
+tests+=(testMariaDBInstallation)
 tests+=(testNewRelease)
-# tests+=(testAdditionalBins)
+tests+=(testNodeInstallations)
+tests+=(testPHPComposerInstallation)
+tests+=(testPHPInstallation)
+tests+=(testPythonInstallation)
+tests+=(testVersionLive)
 
 testVersionLive() {
   assertExitCode --line "$LINENO" 0 runHook version-live || return $?
@@ -115,18 +120,12 @@ _testComposerTempDirectory() {
 #
 # Side-effect: installs scripts
 #
-testScriptInstallations() {
+tests+=(testPHPComposerInstallation)
+testPHPComposerInstallation() {
   local d oldDir
 
   oldDir="${BITBUCKET_CLONE_DIR-NONE}"
 
-  if ! whichExists docker-compose; then
-    # Part of core install in some systems, so no uninstall
-    __doesScriptInstall docker-compose dockerComposeInstall || return $?
-  fi
-  __doesScriptInstallUninstall php phpInstall phpUninstall || return $?
-  __doesScriptInstallUninstall python pythonInstall pythonUninstall || return $?
-  __doesScriptInstallUninstall mariadb mariadbInstall mariadbUninstall || return $?
   # requires docker
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
 
@@ -135,27 +134,55 @@ testScriptInstallations() {
   __environment phpComposer "$d" || return $?
   [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
 
-  __doesScriptInstallUninstall git gitInstall gitUninstall || return $?
-
-  # npm 18 installed in this image
-  if ! whichExists npm; then
-    # Part of core install in some systems, so no uninstall
-    __doesScriptInstall npm npmInstall || return $?
-  fi
-  __doesScriptInstallUninstall prettier prettierInstall prettierUninstall || return $?
 
   export BITBUCKET_CLONE_DIR
   BITBUCKET_CLONE_DIR="$oldDir"
   [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
 }
 
+tests+=(testGitInstallation)
+testGitInstallation() {
+  __doesScriptInstallUninstall git gitInstall gitUninstall || return $?
+}
+
+tests+=(testPythonInstallation)
+testPythonInstallation() {
+  __doesScriptInstallUninstall python pythonInstall pythonUninstall || return $?
+}
+
+tests+=(testMariaDBInstallation)
+testMariaDBInstallation() {
+  __doesScriptInstallUninstall mariadb mariadbInstall mariadbUninstall || return $?
+}
+
+tests+=(testPHPInstallation)
+testPHPInstallation() {
+  __doesScriptInstallUninstall php phpInstall phpUninstall || return $?
+}
+
 #
-# Side-effect: installs scripts
+# Side-effect: installs and uninstalls scripts
 #
+tests+=(testNodeInstallations)
+testNodeInstallations() {
+  # npm 18 installed in this image
+  if ! whichExists npm; then
+    # Part of core install in some systems, so no uninstall
+    __doesScriptInstall npm npmInstall || return $?
+  fi
+  if ! whichExists docker-compose; then
+    # Part of core install in some systems, so no uninstall
+    __doesScriptInstall docker-compose dockerComposeInstall || return $?
+  fi
+  __doesScriptInstallUninstall prettier prettierInstall prettierUninstall || return $?
+}
+
+tests+=(testInstallTerraform)
 testInstallTerraform() {
   __doesScriptInstallUninstall terraform terraformInstall terraformUninstall || return $?
 }
 
+tests+=(testAdditionalBins)
 testAdditionalBins() {
   local binTest
   local aa
