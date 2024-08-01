@@ -733,13 +733,17 @@ gitInstallHook() {
           for item in "${fromTo[@]}"; do
             relFromTo+=(".${item#"$home"}")
           done
-          if diff -q "${fromTo[@]}" >/dev/null; then
-            ! $verbose || consoleNameValue 5 "no changes:" "$(_list "" "${relFromTo[@]}")" || :
-            return 0
+          if [ -f "${fromTo[1]}" ]; then
+            if diff -q "${fromTo[@]}" >/dev/null; then
+              ! $verbose || consoleNameValue 5 "No changes:" "$(_list "" "${relFromTo[@]}")" || :
+              return 0
+            fi
+            ! $verbose || consoleNameValue 5 "Changed:" "$(_list "" "${relFromTo[@]}")" || :
+          else
+            ! $verbose || consoleNameValue 5 "Installing" "${relFromTo[1]}" || :
           fi
-          ! $verbose || consoleNameValue 5 "CHANGED:" "$(_list "" "${relFromTo[@]}")" || :
           printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleCode "${relFromTo[1]}")" || :
-          __usageEnvironment "$usage" cp "${fromTo[@]}" || return $?
+          __usageEnvironment "$usage" cp -f "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
           return 3
         else

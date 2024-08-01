@@ -59,7 +59,7 @@ _code() {
 }
 
 # Boolean test
-# Returns 0 if `value` is an unsigned integer
+# Returns 0 if `value` is boolean `false` or `true`.
 # Usage: {fn} value
 # Is this a boolean? (`true` or `false`)
 # Exit Code: 0 - if value is a boolean
