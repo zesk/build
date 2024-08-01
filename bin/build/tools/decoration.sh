@@ -223,13 +223,14 @@ _echoBar() {
 # Output a line and fill columns with a character
 lineFill() {
   local usage="_${FUNCNAME[0]}"
-  local text width barText
+  local text cleanText width barText
 
   width=$(__usageEnvironment "$usage" consoleColumns) || return $?
   barText="${1:--}"
   shift || :
   text="$*"
-  count=$((width - ${#text}))
+  cleanText=$(stripAnsi <<<"$text")
+  count=$((width - ${#cleanText}))
   count=$((count / ${#barText}))
   printf "%s%s\n" "$text" "$(repeat "$count" "$barText")"
 }
