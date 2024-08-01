@@ -76,7 +76,7 @@ __hookGitPreCommit() {
   read -r -a extensions < <(printf "%s" "$BUILD_PRECOMMIT_EXTENSIONS")
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
-  consoleInfo "$(lineFill '*' "$APPLICATION_NAME ")"
+  consoleInfo "$(lineFill '*' "$APPLICATION_NAME $(consoleMagenta pre-commit) $(consoleOrange)")"
   gitPreCommitSetup || :
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
