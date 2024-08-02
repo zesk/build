@@ -833,16 +833,18 @@ __fileMatches() {
     exceptions+=("$1")
     shift
   done
+  consoleInfo "Exceptions: ${exceptions[*]-}"
   [ $# -gt 0 ] || _argument "missing files" || return $?
   while read -r file; do
     if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
+      consoleInfo "Skipping: $file"
       continue
     fi
     printf "%s%s\n" "$(lineFill "!" "$(printf "%s - %s %s" "$(consoleInfo "$file")" "$(consoleError "$error")" "$(consoleDecoration)")")" "$(consoleReset)"
     grep -n -e "$pattern" "$file"
     found=true
   done < <(grep -l -e "$pattern" "$@")
-  $found || return 1
+  $found
 }
 
 __gitPreCommitCache() {
