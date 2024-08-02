@@ -78,7 +78,7 @@ labeledBigText() {
   linePrefix=
   lineSuffix=
   tweenLabel=
-  tweenNonLabel=""
+  tweenNonLabel=
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -97,16 +97,16 @@ labeledBigText() {
         ;;
       --prefix)
         shift || :
-        linePrefix="$argument"
+        linePrefix="${1-}"
         ;;
       --suffix)
         shift || :
-        lineSuffix="$argument"
+        lineSuffix="${1-}"
         ;;
       --tween)
         shift || :
-        tweenLabel="$argument"
-        tweenNonLabel="$argument"
+        tweenLabel="${1-}"
+        tweenNonLabel="${1-}"
         ;;
       *)
         [ "$argument" = "${argument#-}" ] || __failArgument "$usage" "Unknown argument #$argumentIndex: $argument" || return $?
@@ -116,7 +116,7 @@ labeledBigText() {
         break
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   banner="$(bigText "$@")"
   nLines=$(printf "%s\n" "$banner" | wc -l)
