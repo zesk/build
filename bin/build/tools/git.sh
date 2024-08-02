@@ -772,6 +772,7 @@ gitPreCommitShellFiles() {
   local usage="_${FUNCNAME[0]}"
   local argument directory checkAssertions file
 
+  set -eou pipefail
   checkAssertions=()
   while [ $# -gt 0 ]; do
     argument="$1"
