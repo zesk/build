@@ -178,7 +178,6 @@ testCrontabApplicationSync() {
   fi
 
   dumpPipe "Cron results" <"$results"
-  # set -x
   find_count 1 "$results" "lover" || return $?
   find_count 1 "$results" "fighter" || return $?
   find_count 1 "$results" "Three" || return $?

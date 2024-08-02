@@ -285,6 +285,7 @@ _validateShellScriptsHelper() {
   if reason=$(validateShellScript "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
     ! $verbose || consoleSuccess "validateShellScript $file passed"
   else
+    clearLine
     ! $verbose || consoleInfo "validateShellScript $file failed: $reason"
     printf "%s: %s\n" "$file" "$reason" 1>&2
     return 1

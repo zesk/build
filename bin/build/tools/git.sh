@@ -455,7 +455,6 @@ gitCommit() {
     comment=
   fi
 
-  set -x
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
@@ -768,7 +767,7 @@ _gitInstallHook() {
 # Argument: ... - Additional arguments are passed to `validateShellScripts` `validateFileContents`
 gitPreCommitShellFiles() {
   local usage="_${FUNCNAME[0]}"
-  local argument directory checkAssertions
+  local argument directory checkAssertions file
 
   checkAssertions=()
   while [ $# -gt 0 ]; do
@@ -810,9 +809,35 @@ gitPreCommitShellFiles() {
       __failEnvironment "$usage" findUncaughtAssertions || return $?
     fi
   done
+  if __fileMatches'^[^#].*set ["]\?-x' 'debugging found' bin/build/install-bin-build.sh bin/build/tools/debug.sh -- "$@"; then
+    __failEnvironment "$usage" found debugging || return $?
+  fi
 }
 _gitPreCommitShellFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} pattern displayError exception ... -- file ...
+__fileMatches() {
+  local file pattern="$1" error="$2" found=false exceptions=()
+  shift 2 || _argument "missing arguments" || return $?
+  [ $# -gt 0 ] || return 0
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--" ]; then
+      break
+    fi
+    exceptions+=("$1")
+    shift
+  done
+  while read -r file; do
+    if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
+      continue
+    fi
+    lineFill "!" "$(printf "%s - %s " "$(consoleInfo "$file")" "$(consoleError "$error")")"
+    grep -n -e "$pattern" "$file"
+    found=true
+  done < <(grep -l -e "$pattern" "$@")
+  $found || return 1
 }
 
 __gitPreCommitCache() {

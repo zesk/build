@@ -13,3 +13,4 @@
 /.test*
 /scratch.txt
 /.last-run-test
+/test.stats

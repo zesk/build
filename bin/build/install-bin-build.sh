@@ -32,10 +32,7 @@ installBinBuild() {
   local myBinary myPath osName url applicationHome installPath
 
   shift
-  if test "${BUILD_DEBUG-}"; then
-    consoleOrange "BUILD_DEBUG on"
-    set -x # Debugging
-  fi
+  case "${BUILD_DEBUG-}" in 1 | true) __installBinBuildDebug BUILD_DEBUG ;; esac
 
   installArgs=()
   url=
@@ -46,8 +43,7 @@ installBinBuild() {
     [ -n "$argument" ] || "$usage" "$errorArgument" "blank argument" || return $?
     case "$argument" in
       --debug)
-        consoleOrange "Debug on"
-        set -x # Debugging
+        __installBinBuildDebug "$argument"
         ;;
       --diff)
         installArgs+=("$argument")
@@ -129,6 +125,10 @@ _installBinBuild() {
   shift || :
   printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
   return "$exitCode"
+}
+
+__installBinBuildDebug() {
+  consoleOrange "${1-} enabled" && set -x
 }
 
 # Fetch most recent URL from GitHub

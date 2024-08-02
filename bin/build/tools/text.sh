@@ -227,6 +227,19 @@ inArray() {
   return 1
 }
 
+# Usage: {fn} haystack needle ...
+# Argument: haystack - Required. String. String to search.
+# Argument: needle - Optional. String. One or more strings to find as a substring of `haystack`.
+# Exit Code: 0 - IFF ANY needle matches as a substring of haystack
+substringFound() {
+  local needle="${1-}"
+  while [ $# -gt 0 ]; do
+    [ -n "$1" ] && [ "${1#".*$needle"}" = "$needle" ] || return 0
+    shift
+  done
+  return 1
+}
+
 #
 # Check if one string is a substring of another set of strings (case-sensitive)
 #
