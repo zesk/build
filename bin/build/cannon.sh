@@ -10,5 +10,5 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -x
+# set -x
 "$(dirname "${BASH_SOURCE[0]}")/tools.sh" cannon "$@"

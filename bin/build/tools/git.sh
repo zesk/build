@@ -813,7 +813,7 @@ gitPreCommitShellFiles() {
       __failEnvironment "$usage" findUncaughtAssertions || return $?
     fi
   done
-  if __fileMatches '^[^#].*set ["]\?-x' 'debugging found' bin/build/install-bin-build.sh bin/build/tools/debug.sh -- "$@"; then
+  if __fileMatches 'set ["]\?-x' 'debugging found' bin/build/install-bin-build.sh bin/build/tools/debug.sh -- "$@"; then
     __failEnvironment "$usage" found debugging || return $?
   fi
 }
@@ -833,11 +833,12 @@ __fileMatches() {
     exceptions+=("$1")
     shift
   done
+  [ $# -gt 0 ] || _argument "missing files" || return $?
   while read -r file; do
     if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
       continue
     fi
-    lineFill "!" "$(printf "%s - %s " "$(consoleInfo "$file")" "$(consoleError "$error")")"
+    printf "%s%s\n" "$(lineFill "!" "$(printf "%s - %s %s" "$(consoleInfo "$file")" "$(consoleError "$error")" "$(consoleDecoration)")")" "$(consoleReset)"
     grep -n -e "$pattern" "$file"
     found=true
   done < <(grep -l -e "$pattern" "$@")
