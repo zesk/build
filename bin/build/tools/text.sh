@@ -232,9 +232,12 @@ inArray() {
 # Argument: needle - Optional. String. One or more strings to find as a substring of `haystack`.
 # Exit Code: 0 - IFF ANY needle matches as a substring of haystack
 substringFound() {
-  local needle="${1-}"
+  local haystack="${1-}"
+  shift
   while [ $# -gt 0 ]; do
-    [ -n "$1" ] && [ "${1#".*$needle"}" = "$needle" ] || return 0
+    if [ -n "$1" ]; then
+      ! isSubstring "$1" "$haystack" || return 0
+    fi
     shift
   done
   return 1

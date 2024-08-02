@@ -14,6 +14,14 @@ tests+=(testSingleBlankLines)
 tests+=(testText)
 tests+=(testEscapeSingleQuotes)
 tests+=(testEscapeDoubleQuotes)
+tests+=(testSubstringFound)
+
+testSubstringFound() {
+  assertExitCode 0 substringFound haystack needle needle needle needle needle aystac needle || return $?
+  assertExitCode 0 substringFound haystack needle needle needle needle needle haystac needle || return $?
+  assertExitCode 0 substringFound haystack needle needle needle needle needle aystack needle || return $?
+  assertNotExitCode 0 substringFound haystack needle needle needle needle needle Haystack needle || return $?
+}
 
 testTrimHeadTail() {
   local topSpace bottomSpace

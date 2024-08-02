@@ -482,7 +482,7 @@ __gitCommitReleaseNotesUpdate() {
 
   pattern="$(quoteGrepPattern "$comment")"
   __usageEnvironment "$usage" clearLine || return $?
-  __usageEnvironment "$usage" lineFill '>' "$(consoleLabel "Release notes") $(consoleValue "$notes") $(consoleDecoration)" || return $?
+  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(consoleLabel "Release notes") $(consoleValue "$notes") $(consoleDecoration)")" "$(consoleReset)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
     __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
@@ -833,11 +833,9 @@ __fileMatches() {
     exceptions+=("$1")
     shift
   done
-  consoleInfo "Exceptions: ${exceptions[*]-}"
   [ $# -gt 0 ] || _argument "missing files" || return $?
   while read -r file; do
     if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
-      consoleInfo "Skipping: $file"
       continue
     fi
     printf "%s%s\n" "$(lineFill "!" "$(printf "%s - %s %s" "$(consoleInfo "$file")" "$(consoleError "$error")" "$(consoleDecoration)")")" "$(consoleReset)"
