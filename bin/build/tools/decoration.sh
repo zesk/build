@@ -297,7 +297,7 @@ wrapLines() {
     actualIxes="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#actualIxes}))
     if [ "$actualWidth" -lt 0 ]; then
-      __failArgument "$usage" "$width is too small to support prefix and suffix characters"
+      __failArgument "$usage" "$width is too small to support prefix and suffix characters (${#actualIxes})"
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing
