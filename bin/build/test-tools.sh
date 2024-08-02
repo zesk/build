@@ -332,7 +332,7 @@ __testHeading() {
   consoleCode "$(consoleOrange "$(echoBar '=')")"
 }
 
-debugTermDisplay() {
+__testDebugTermDisplay() {
   printf "TERM: %s DISPLAY: %s\n" "${TERM-none}" "${DISPLAY-none} hasColors: $(
     hasColors
     printf %d $?

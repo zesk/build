@@ -455,7 +455,6 @@ gitCommit() {
     comment=
   fi
 
-  set -x
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
@@ -479,18 +478,21 @@ gitCommit() {
 }
 __gitCommitReleaseNotesUpdate() {
   local usage="_gitCommit"
-  local comment="$1" notes="$2"
+  local comment="$1" notes="$2" pattern
 
-  if ! grep -q -e "$(quoteGrepPattern "$comment")" "$notes"; then
+  pattern="$(quoteGrepPattern "$comment")"
+  __usageEnvironment "$usage" clearLine || return $?
+  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(consoleLabel "Release notes") $(consoleValue "$notes") $(consoleDecoration)")" "$(consoleReset)" || return $?
+  if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
+    __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
   else
     __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
+    __usageEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
   fi
-  __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes" || return $?
 }
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -768,8 +770,9 @@ _gitInstallHook() {
 # Argument: ... - Additional arguments are passed to `validateShellScripts` `validateFileContents`
 gitPreCommitShellFiles() {
   local usage="_${FUNCNAME[0]}"
-  local argument directory checkAssertions
+  local argument directory checkAssertions file
 
+  set -eou pipefail
   checkAssertions=()
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -810,9 +813,36 @@ gitPreCommitShellFiles() {
       __failEnvironment "$usage" findUncaughtAssertions || return $?
     fi
   done
+  if __fileMatches 'set ["]\?-x' 'debugging found' bin/build/install-bin-build.sh bin/build/tools/debug.sh -- "$@"; then
+    __failEnvironment "$usage" found debugging || return $?
+  fi
 }
 _gitPreCommitShellFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} pattern displayError exception ... -- file ...
+__fileMatches() {
+  local file pattern="$1" error="$2" found=false exceptions=()
+  shift 2 || _argument "missing arguments" || return $?
+  [ $# -gt 0 ] || return 0
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--" ]; then
+      break
+    fi
+    exceptions+=("$1")
+    shift
+  done
+  [ $# -gt 0 ] || _argument "missing files" || return $?
+  while read -r file; do
+    if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
+      continue
+    fi
+    printf "%s%s\n" "$(lineFill "!" "$(printf "%s - %s %s" "$(consoleInfo "$file")" "$(consoleError "$error")" "$(consoleDecoration)")")" "$(consoleReset)"
+    grep -n -e "$pattern" "$file"
+    found=true
+  done < <(grep -l -e "$pattern" "$@")
+  $found
 }
 
 __gitPreCommitCache() {

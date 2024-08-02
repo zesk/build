@@ -64,11 +64,12 @@ usageDocument() {
     [ "$exitCode" -eq 0 ] || exec 1>&2
     if isBashDebug; then
       bashDebug=true
-      set +x
+      # Hides a lot of unnecessary tracing
+      __buildDebugDisable
     fi
     usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$@"
     if $bashDebug; then
-      set -x
+      __buildDebugEnable
     fi
   )
   return "$exitCode"

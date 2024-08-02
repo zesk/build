@@ -342,7 +342,7 @@ consoleSuccess() {
 #
 # shellcheck disable=SC2120
 consoleDecoration() {
-  __consoleOutputMode '' '\033[30;94m' '\033[45;30m' '\033[0m' "$@"
+  __consoleOutputMode '' '\033[45;97m' '\033[45;30m' '\033[0m' "$@"
 }
 
 #

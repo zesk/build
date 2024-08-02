@@ -70,12 +70,14 @@ __hookGitPreCommit() {
   local usage="_${FUNCNAME[0]}"
   local extension extensions
 
-  export BUILD_PRECOMMIT_EXTENSIONS
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_PRECOMMIT_EXTENSIONS || return $?
+  export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
+  __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
   read -r -a extensions < <(printf "%s" "$BUILD_PRECOMMIT_EXTENSIONS")
+  clearLine
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
+  consoleInfo "$(lineFill '*' "$APPLICATION_NAME $(consoleMagenta pre-commit) $(consoleDecoration)")"
   gitPreCommitSetup || :
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 

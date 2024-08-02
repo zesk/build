@@ -776,7 +776,7 @@ __deployCommandsFile() {
   local appHome
   if buildDebugEnabled; then
     # Debugging remote shell
-    printf "%s\n%s\n" "export BUILD_DEBUG=1" "set -x"
+    printf "%s\n%s\n" "export BUILD_DEBUG=1" "set -vx" # Debugging
   fi
   appHome="$1"
   shift || :
