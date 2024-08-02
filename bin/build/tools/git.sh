@@ -478,18 +478,21 @@ gitCommit() {
 }
 __gitCommitReleaseNotesUpdate() {
   local usage="_gitCommit"
-  local comment="$1" notes="$2"
+  local comment="$1" notes="$2" pattern
 
-  if ! grep -q -e "$(quoteGrepPattern "$comment")" "$notes"; then
+  pattern="$(quoteGrepPattern "$comment")"
+  __usageEnvironment "$usage" clearLine || return $?
+  __usageEnvironment "$usage" lineFill '>' "$(consoleLabel "Release notes") $(consoleValue "$notes") $(consoleDecoration)" || return $?
+  if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
+    __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
   else
     __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
+    __usageEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
   fi
-  __usageEnvironment "$usage" wrapLines "$(consoleCode)" "$(consoleReset)" <"$notes" || return $?
 }
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
