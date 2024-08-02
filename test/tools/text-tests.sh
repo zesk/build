@@ -15,12 +15,31 @@ tests+=(testText)
 tests+=(testEscapeSingleQuotes)
 tests+=(testEscapeDoubleQuotes)
 tests+=(testSubstringFound)
+tests+=(testIsSubstring)
 
 testSubstringFound() {
   assertExitCode 0 substringFound haystack needle needle needle needle needle aystac needle || return $?
   assertExitCode 0 substringFound haystack needle needle needle needle needle haystac needle || return $?
   assertExitCode 0 substringFound haystack needle needle needle needle needle aystack needle || return $?
   assertNotExitCode 0 substringFound haystack needle needle needle needle needle Haystack needle || return $?
+}
+
+__testIsSubstringData() {
+  cat <<'EOF'
+0 foo food
+0 a ambulance
+0 a dora
+1 a DORA
+1 X ABCDEFGHIJKLMNOPQRSTUVWYZ
+0 X ABCDEFGHIJKLMNOPQRSTUVWXYZ
+EOF
+}
+
+testIsSubstring() {
+  local exitCode needle haystack
+  __testIsSubstringData | while read -r exitCode needle haystack; do
+    assertExitCode "$exitCode" isSubstring "$needle" "$haystack" || return $?
+  done
 }
 
 testTrimHeadTail() {

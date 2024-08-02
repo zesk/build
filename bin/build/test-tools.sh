@@ -28,7 +28,7 @@ export globalTestFailure=
 #
 testSuite() {
   local usage="_${FUNCNAME[0]}"
-  local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionNameHeading
+  local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start showFlag
   local continueFile continueFlag doStats statsFile allTestStart testStart testPaths
@@ -164,7 +164,7 @@ testSuite() {
     testCount="${#foundTests[@]}"
     if [ "$testCount" -gt 0 ]; then
       statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
-      tests+=("#$(__testCode "$item")" "${foundTests[@]+"${foundTests[@]}"}")
+      tests+=("#$item" "${foundTests[@]+"${foundTests[@]}"}")
     else
       consoleError "No tests found in $testFile" 1>&2
     fi
@@ -199,7 +199,8 @@ testSuite() {
     sectionNameHeading=
     for item in "${filteredTests[@]}"; do
       if [ "$item" != "${item#\#}" ]; then
-        sectionName="${item#\#}"
+        sectionFile="${item#\#}"
+        sectionName=$(__testCode "$sectionFile")
         continue
       fi
       if $continueFlag; then
@@ -211,7 +212,7 @@ testSuite() {
         sectionNameHeading="$sectionName"
       fi
       testStart=$(__environment date +%s) || return $?
-      __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionName" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$item" || return $?
+      __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$item" || return $?
       ! $doStats || printf "%d %s\n" $(($(date +%s) - testStart)) "$item" >>"$statsFile"
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
@@ -271,7 +272,7 @@ __testGetLine() {
 
 __testSuiteExecutor() {
   local item="${1-}" line
-  local file="$item"
+  local file="${2-}"
   local executorArgs
 
   shift 2 || _argument "Missing item or section" || return $?

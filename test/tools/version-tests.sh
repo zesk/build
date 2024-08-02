@@ -11,6 +11,13 @@ set -eou pipefail
 declare -a tests
 
 tests+=(testVersionNext)
+tests+=(testReleaseNotesSimple)
+tests+=(testReleaseNotes)
+
+testReleaseNotesSimple() {
+  assertExitCode --line "$LINENO" 0 releaseNotes || return $?
+  assertOutputContains --line "$LINENO"  'docs/release' releaseNotes || return $?
+}
 
 testVersionNext() {
   assertEquals --line "$LINENO" "" "$(nextMinorVersion "A" || :)" || return $?
@@ -41,7 +48,6 @@ __assertPathsEquals() {
   assertEquals --line "$1" "$(simplifyPath "$2")" "$(simplifyPath "$3")" || return $?
 }
 
-tests+=(testReleaseNotes)
 testReleaseNotes() {
   local home
 
