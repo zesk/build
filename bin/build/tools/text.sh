@@ -254,12 +254,11 @@ substringFound() {
 # Tested: No
 #
 isSubstring() {
-  local element=${1-} arrayElement
+  local element=${1-} item
   shift || return 1
-  for arrayElement; do
-    if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
-      return 0
-    fi
+  for item; do
+    [ "${item#*"$element"}" = "$item" ] || return 0
+    shift
   done
   return 1
 }
