@@ -94,7 +94,8 @@ isBashDebug() {
 # Returns whether the shell has the error exit flag set
 #
 # Useful if you need to temporarily enable or disable it.
-# Note that `set -e` is not inherited by shells so
+# Note that `set -e` is not inherited by shells so turning it
+# on has little effect except on the current script running.
 #
 #     set -e
 #     printf "$(isErrorExit; printf %d %?)"

@@ -35,6 +35,7 @@
 
 {realPath}
 {renameLink}
+{simplifyPath}
 
 ## Utilities
 

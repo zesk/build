@@ -32,7 +32,7 @@ If this fails it will output an error and exit.
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertEquals` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertEquals` was reviewed 2023-11-12.
 
 ### `assertNotEquals` - Assert two strings are not equal
 
@@ -60,7 +60,7 @@ If this fails it will output an error and exit.
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-11-12.
 
 ### `assertContains` - Assert one string contains another (case-sensitive)
 
@@ -102,7 +102,7 @@ Assert one string does not contains another (case-sensitive)
 
 #### See Also
 
-{SEE:assertContains}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Comparison
 
@@ -130,7 +130,7 @@ Assert `leftValue > rightValue`
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023-11-14.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023-11-14.
 
 ### `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
 
@@ -155,7 +155,7 @@ Assert `leftValue >= rightValue`
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12.
 
 
 ### `assertLessThan` - Assert `leftValue < rightValue`
@@ -182,7 +182,7 @@ Assert `leftValue < rightValue`
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11-12.
 
 ### `assertLessThanOrEqual` - Assert `leftValue <= rightValue`
 
@@ -208,7 +208,7 @@ Assert `leftValue <= rightValue`
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertLessThanOrEqual` was reviewed 2023-11-12.
 
 ## Exit code 
 
@@ -235,7 +235,7 @@ If this fails it will output an error and exit.
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-11-12.
 
 ### `assertNotExitCode` - Assert a process runs and exits with an exit code
 
@@ -259,7 +259,7 @@ If this fails it will output an error and exit.
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023-11-12.
 
 ## Output 
 
@@ -289,7 +289,7 @@ If this fails it will output an error and exit.
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertOutputEquals` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertOutputEquals` was reviewed 2023-11-12.
 
 ### `assertOutputContains` - Run a command and expect the output to contain the
 
@@ -317,7 +317,7 @@ If this fails it will output the command result to stdout.
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2023-11-12.
 
 ### `assertOutputDoesNotContain` - Run a command and expect the output to not contain
 
@@ -349,7 +349,7 @@ None
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12.
 
 ## Directory
 
@@ -412,7 +412,7 @@ None
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 
 ### `assertDirectoryEmpty` - Test that a directory exists
 
@@ -468,7 +468,7 @@ None
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertDirectoryNotEmpty` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertDirectoryNotEmpty` was reviewed 2023-11-12.
 
 ## File
 
@@ -531,7 +531,7 @@ None
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed 2023-11-12.
 
 
 #### Usage
@@ -563,7 +563,7 @@ If the file does not exist, this will fail.
 
 #### Review Status
 
-File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
+File `/Users/kent/marketacumen/build/bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
 
 #### Usage
 

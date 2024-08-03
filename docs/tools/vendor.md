@@ -34,7 +34,7 @@ Are we within the JetBrains PHPStorm terminal?
 
 #### See Also
 
-{SEE:contextOpen}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `isPyCharm` - Are we within the JetBrains PyCharm terminal?
 
@@ -52,7 +52,7 @@ Are we within the JetBrains PyCharm terminal?
 
 #### See Also
 
-{SEE:contextOpen}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `isVisualStudioCode` - Are we within the Microsoft Visual Studio Code terminal?
 
@@ -70,7 +70,7 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 #### See Also
 
-{SEE:contextOpen}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 #### Exit codes
 

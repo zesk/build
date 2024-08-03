@@ -338,6 +338,27 @@ Maps a string using an environment file
 
 - `0` - Always succeeds
 
+#### Usage
+
+    mapEnvironment [ environmentName0 environmentName1 ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+
+#### See Also
+
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+
 ### Space trimming
 
 
@@ -488,6 +509,19 @@ Check if one string is a substring of another set of strings (case-insensitive)
 - `0` - If element is a substring of any haystack
 - `1` - If element is NOT found as a substring of any haystack
 
+#### Usage
+
+    substringFound haystack needle ...
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - IFF ANY needle matches as a substring of haystack
+
 ### `stringOffset` - Outputs the integer offset of `needle` if found as substring
 
 Outputs the integer offset of `needle` if found as substring in `haystack`
@@ -586,7 +620,7 @@ Parses text and determines if it's true-ish
 
 #### See Also
 
-{SEE:lowercase}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Transformation
 

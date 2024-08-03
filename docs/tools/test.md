@@ -159,3 +159,30 @@ By default, any directory which begins with a dot `.` will be ignored.
 #### Exit codes
 
 - `0` - Always succeeds
+
+## Test Subsystem
+
+
+### `testTools` - Load test tools and make `testSuite` function available
+
+Load test tools and make `testSuite` function available
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `test-tools.sh` - Run Zesk Build test suites
+
+Run Zesk Build test suites
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds

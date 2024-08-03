@@ -31,8 +31,8 @@ Error codes:
 Return errors:
 
 - `_return code message ...` - Return code always. Outputs `message ...` to `stderr`.
-- `_environment message ...` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
-- `_argument message ...` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+- `_environment message ...` - Return `1` always. Outputs `message ...` to `stderr`.
+- `_argument message ...` - Return `2` always. Outputs `message ...` to `stderr`.
 
 Run-related:
 
@@ -44,7 +44,7 @@ Run-related:
 
 # Sugar Functions References
 
-## Core tests
+## Sugar utilties
 
 
 ### `_integer` - Is this an unsigned integer?
@@ -59,12 +59,11 @@ Is this an unsigned integer?
 #### Exit codes
 
 - `0` - if value is an unsigned integer
-- `1` - if value is not an unsigned integer
-
+- `1` - if value is not an unsigned integer 
 ### `_boolean` - Boolean test
 
 Boolean test
-Returns 0 if `value` is an unsigned integer
+Returns 0 if `value` is boolean `false` or `true`.
 Is this a boolean? (`true` or `false`)
 
 #### Usage
@@ -77,21 +76,35 @@ Is this a boolean? (`true` or `false`)
 - `0` - if value is a boolean
 - `1` - if value is not a boolean
 
-## Error codes
 
+### `_code` - Print one or more an exit codes by name.
 
-### `_code` - Print one or more an exit codes by name. Master
+Print one or more an exit codes by name.
 
-Print one or more an exit codes by name. Master list of exit code values.
 Valid codes:
+
 - `environment` - generic issue with environment
 - `argument` - issue with arguments
 - `assert` - assertion failed
 - `identical` - identical check failed
 - `leak` - function leaked globals
 - `test` - test failed
+- `exit` - exit function immediately
 - `internal` - internal errors
-Unknown error code is 254, end of range is 255 which is not used
+
+Unknown error code is 254, end of range is 255 which is not used.
+
+### Error codes reference (`_code`):
+
+- 1 - environment or general error
+- 2 - argument error
+- 97 - **a**ssert - ASCII 97 = `a`
+- 105 - **i**dentical - ASCII 105 = `i`
+- 108 - **l**eak - ASCII 108 = `l`
+- 116 - **t**est - ASCII 116 = `t`
+- 120 - e**x**it - ASCII 120 = `x`
+- 253 - internal
+- 254 - unknown
 
 #### Usage
 
@@ -108,9 +121,7 @@ Unknown error code is 254, end of range is 255 which is not used
 
 #### See Also
 
-{SEE:https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux}
-
-## Ternary selector
+Not found
 
 
 ### `_choose` - Boolean selector
@@ -144,8 +155,7 @@ IDENTICAL _return 19
 
 #### Exit codes
 
-- exitCode
-
+- exitCode 
 ### `_environment` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
 Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
@@ -161,8 +171,7 @@ Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
 
 #### Exit codes
 
-- 1
-
+- 1 
 ### `_argument` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 
 Return `$errorArgument` always. Outputs `message ...` to `stderr`.
@@ -198,8 +207,7 @@ Run `command ...` (with any arguments) and then `_return` if it fails.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Always succeeds 
 ### `__try` - Run `command ...` (with any arguments) and then `_exit` if
 
 Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
@@ -215,8 +223,7 @@ Run `command ...` (with any arguments) and then `_exit` if it fails. Critical co
 
 #### Exit codes
 
-- None
-
+- None 
 ### `__echo` - Output the `command ...` to stdout prior to running, then
 
 Output the `command ...` to stdout prior to running, then `__execute` it
@@ -232,8 +239,7 @@ Output the `command ...` to stdout prior to running, then `__execute` it
 
 #### Exit codes
 
-- Any
-
+- Any 
 ### `__environment` - Run `command ...` (with any arguments) and then `_environment` if
 
 Run `command ...` (with any arguments) and then `_environment` if it fails.
@@ -250,8 +256,7 @@ Run `command ...` (with any arguments) and then `_environment` if it fails.
 #### Exit codes
 
 - `0` - Success
-- `1` - Failed
-
+- `1` - Failed 
 ### `__argument` - Run `command ...` (with any arguments) and then `_argument` if
 
 Run `command ...` (with any arguments) and then `_argument` if it fails.
@@ -280,6 +285,30 @@ Output a titled list
 #### Usage
 
     _list title [ items ... ]
+    
+
+#### Exit codes
+
+- `0` - Always succeeds 
+#### Usage
+
+    _format [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds 
+### `_command` - Output a command, quoting individual arguments
+
+Output a command, quoting individual arguments
+
+#### Usage
+
+    _command command [ argument ... ]
     
 
 #### Exit codes

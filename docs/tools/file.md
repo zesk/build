@@ -319,6 +319,19 @@ Renames a link forcing replacement, and works on different versions of `mv` whic
 
 - `0` - Always succeeds
 
+#### Usage
+
+    simplifyPath path
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 ## Utilities
 
 

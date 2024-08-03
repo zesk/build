@@ -103,30 +103,3 @@ The `userAtHost` can be passed as follows:
 #### Environment
 
 BUILD_DEBUG
-
-## Internal functions
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-Unable to find "__deployRemoteAction" (using index "/Users/kent/.build")
-
-### `__deployCommandsFile` - Generate our commands file
-
-Generate our commands file
-
-Argument commands must cd such that current directory is a project directory
-
-#### Usage
-
-    __deployCommandsFile remoteDirectory  [ --deploy | --revert | --finish ] applicationId deployHome applicationPath
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Errors
-
-Unable to find "__deployRemoteAction" (using index "/Users/kent/.build")
