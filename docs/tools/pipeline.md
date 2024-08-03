@@ -38,7 +38,7 @@ Loads `.env` and `.env.local`, use with caution on trusted content only
 
 #### See Also
 
-{SEE:environmentFileLoad}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Hooks
 
@@ -78,8 +78,8 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 #### See Also
 
-{SEE:hooks.md}
-{SEE:runOptionalHook}
+Not found
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
 
@@ -103,8 +103,8 @@ Identical to `runHook` but returns exit code zero if the hook does not exist.
 
 #### See Also
 
-{SEE:hooks.md}
-{SEE:runHook}
+Not found
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `hasHook` - Determine if a hook exists
 
@@ -394,7 +394,7 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
 #### See Also
 
-{SEE:deployToRemote}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `deployNextVersion` - Get the next version of the supplied version
 

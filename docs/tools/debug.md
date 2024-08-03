@@ -46,6 +46,9 @@ Start build debugging if it is enabled.
 This does `set -x` which traces and outputs every shell command
 Use it to debug when you can not figure out what is happening internally.
 
+`BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
+Example:     buildDebugStart || :
+
 #### Usage
 
     buildDebugStart [ moduleName ... ]
@@ -57,13 +60,16 @@ Use it to debug when you can not figure out what is happening internally.
 
 #### Examples
 
-    buildDebugStart
     # ... complex code here
-    buildDebugStop
+    buildDebugStop || :. -
 
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Environment
+
+BUILD_DEBUG
 
 ### `buildDebugStop` - Stop build debugging if it is enabled
 
@@ -80,18 +86,13 @@ Stop build debugging if it is enabled
 
 #### See Also
 
-{SEE:buildDebugStart}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `isBashDebug` - Returns whether the shell has the debugging flag set
 
 Returns whether the shell has the debugging flag set
 
 Useful if you need to temporarily enable or disable it.
-
-#### Usage
-
-    isBashDebug
-    
 
 #### Exit codes
 
@@ -102,17 +103,13 @@ Useful if you need to temporarily enable or disable it.
 Returns whether the shell has the error exit flag set
 
 Useful if you need to temporarily enable or disable it.
-Note that `set -e` is not inherited by shells so
+Note that `set -e` is not inherited by shells so turning it
+on has little effect except on the current script running.
 
     set -e
     printf "$(isErrorExit; printf %d %?)"
 
 Outputs `1` always
-
-#### Usage
-
-    isErrorExit
-    
 
 #### Exit codes
 

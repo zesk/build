@@ -30,7 +30,7 @@
 releaseNotes() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
-  local version home
+  local version home releasePath
 
   version=
   nArguments=$#

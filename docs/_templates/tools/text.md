@@ -27,6 +27,7 @@
 
 {mapValue}
 {mapValueTrim}
+{mapEnvironment}
 
 ### Space trimming
 
@@ -41,6 +42,7 @@
 {inArray}
 {isSubstring}
 {isSubstringInsensitive}
+{substringFound}
 {stringOffset}
 {maximumFieldLength}
 {maximumLineLength}

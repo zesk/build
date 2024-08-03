@@ -30,7 +30,9 @@ Load one or more environment settings from bin/build/env or bin/env.
 
 
 If BOTH files exist, both are sourced, so application environments should anticipate values
-created by default.
+created by build's default.
+
+Modifies local environment. Not usually run within a subshell.
 
 #### Usage
 
@@ -44,6 +46,10 @@ created by default.
 #### Exit codes
 
 - `0` - Always succeeds
+
+#### Environment
+
+$envName
 
 ### `buildFunctions` - Prints the list of functions defined in Zesk Build
 
@@ -100,6 +106,9 @@ Appends any passed in arguments as path segments.
 
 - `0` - Always succeeds
 
+# Installing `install-bin-build.sh`
+
+
 ### `installInstallBuild` - Installs `install-bin-build.sh` the first time in a new project, and
 
 Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
@@ -116,3 +125,29 @@ Installs `install-bin-build.sh` the first time in a new project, and modifies it
 #### Exit codes
 
 - `0` - Always succeeds
+
+# `install-bin-build.sh`
+
+
+### `install-bin-build.sh` - Installs the build system in `./bin/build` if not installed. Also
+
+Installs the build system in `./bin/build` if not installed. Also
+will overwrite this binary with the latest version after installation.
+Determines the most recent version using GitHub API unless --url or --mock is specified.
+
+#### Usage
+
+    install-bin-build.sh [ --mock mockBuildRoot ] [ --url url ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `1` - Environment error
+
+#### Environment
+
+Needs internet access and creates a directory `./bin/build`

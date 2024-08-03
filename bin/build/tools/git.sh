@@ -856,11 +856,11 @@ __gitPreCommitCache() {
 # Set up a pre-commit hook
 gitPreCommitSetup() {
   local usage="_${FUNCNAME[0]}"
-  local directory total
+  local directory total=0
 
   directory=$(__gitPreCommitCache true) || return $?
   __usageEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __usageEnvironment "$usage" extensionLists --clean "$directory" || return $?
-  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  [ ! -f "$directory/@" ] || total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   [ $total -ne 0 ]
 }
 _gitPreCommitSetup() {

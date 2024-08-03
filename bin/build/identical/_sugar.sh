@@ -31,16 +31,18 @@ _list() {
   _format "\n" "- " "\n" "$@"
 }
 
-# Output a command
+# Output a command, quoting individual arguments
 # Usage: {fn} command [ argument ... ]
 _command() {
   _format "" " \"" "\"" "$@"
 }
 
 # Usage: {fn} name ...
-# Argument: name - Optional. String. Exit code value to output
-# Print one or more an exit codes by name. Master list of exit code values.
+# Argument: name ... - Optional. String. Exit code value to output.
+# Print one or more an exit codes by name.
+#
 # Valid codes:
+#
 # - `environment` - generic issue with environment
 # - `argument` - issue with arguments
 # - `assert` - assertion failed
@@ -49,7 +51,21 @@ _command() {
 # - `test` - test failed
 # - `exit` - exit function immediately
 # - `internal` - internal errors
-# Unknown error code is 254, end of range is 255 which is not used
+#
+# Unknown error code is 254, end of range is 255 which is not used.
+#
+# ### Error codes reference (`_code`):
+#
+# - 1 - environment or general error
+# - 2 - argument error
+# - 97 - **a**ssert - ASCII 97 = `a`
+# - 105 - **i**dentical - ASCII 105 = `i`
+# - 108 - **l**eak - ASCII 108 = `l`
+# - 116 - **t**est - ASCII 116 = `t`
+# - 120 - e**x**it - ASCII 120 = `x`
+# - 253 - internal
+# - 254 - unknown
+#
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 _code() {
   local k && while [ $# -gt 0 ]; do
@@ -93,10 +109,6 @@ _environment() {
 _argument() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
-
-#
-# RUN related
-#
 
 # Run `command ...` (with any arguments) and then `_return` if it fails.
 # Usage: {fn} command ...

@@ -46,7 +46,7 @@ Sets `kitty` incrementor to 2 and outputs `2`
 
 #### See Also
 
-{SEE:buildCacheDirectory}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `extensionLists` - Generates a directory containing files with `extension` as the file
 

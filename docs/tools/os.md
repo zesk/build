@@ -65,7 +65,7 @@ Backup when `/etc/services` does not exist.
 
 #### See Also
 
-{SEE:serviceToPort}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Execution
 
@@ -129,7 +129,7 @@ Works from the current directory
 
 #### See Also
 
-{SEE:makeShellFilesExecutable}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Modify PATH or MANPATH
 

@@ -15,8 +15,8 @@ tests+=(testReleaseNotesSimple)
 tests+=(testReleaseNotes)
 
 testReleaseNotesSimple() {
-  assertExitCode --line "$LINENO" 0 releaseNotes || return $?
-  assertOutputContains --line "$LINENO"  'docs/release' releaseNotes || return $?
+  assertExitCode --leak BUILD_RELEASE_NOTES --stdout-match "docs/release" --line "$LINENO" 0 releaseNotes || return $?
+  unset BUILD_RELEASE_NOTES
 }
 
 testVersionNext() {

@@ -201,3 +201,11 @@ This function will strip any ANSI from the label to calculate correct string siz
 #### Exit codes
 
 - `0` - Always succeeds
+
+### `lineFill` - Output a line and fill columns with a character
+
+Output a line and fill columns with a character
+
+#### Exit codes
+
+- `0` - Always succeeds

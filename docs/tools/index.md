@@ -47,7 +47,7 @@ Once included, all functions here are available for use:
 - [Sugar](./sugar.md)
 - [System V Init](./sysvinit.md)
 - [Terraform](./Terraform.md)
-- [Test Support](./tests.md)
+- [Testing](./test.md)
 - [Text](./text.md)
 - [Type](./type.md)
 - [URL](./url.md)

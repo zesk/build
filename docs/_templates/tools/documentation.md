@@ -4,6 +4,13 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+## Building documentation
+
+{documentationBuild}
+{documentationTemplateUpdate}
+{documentationTemplate}
+{documentationUnlinked}
+
 ## Generating documentation
 
 {bashDocumentFunction}
