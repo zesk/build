@@ -478,14 +478,16 @@ gitCommit() {
 }
 __gitCommitReleaseNotesUpdate() {
   local usage="_gitCommit"
-  local comment="$1" notes="$2" pattern
+  local comment="$1" notes="$2" pattern displayNotes
 
+  home=$(__usageEnvironment "$usage" buildHome)
+  displayNotes="${notes#"$home"/}"
   pattern="$(quoteGrepPattern "$comment")"
   __usageEnvironment "$usage" clearLine || return $?
-  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(consoleLabel "Release notes") $(consoleValue "$notes") $(consoleDecoration)")" "$(consoleReset)" || return $?
+  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(consoleLabel "Release notes") $(consoleValue "$displayNotes") $(consoleDecoration)")" "$(consoleReset)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$displayNotes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
     __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
   else
