@@ -860,7 +860,7 @@ gitPreCommitSetup() {
 
   directory=$(__gitPreCommitCache true) || return $?
   __usageEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __usageEnvironment "$usage" extensionLists --clean "$directory" || return $?
-  [ ! -f "$directory/@" ] || total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   [ $total -ne 0 ]
 }
 _gitPreCommitSetup() {
