@@ -15,21 +15,20 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL __tools 18
+# IDENTICAL __tools 17
 # Usage: {fn} [ relative [ command ... ] ]
 # Load build tools and run command
 # Argument: relative - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 __tools() {
-  local relative="${1:-".."}"
-  local source="${BASH_SOURCE[0]}" internalError=253
+  local source="${BASH_SOURCE[0]}" e=253
   local here="${source%/*}"
-  local tools="$here/$relative/bin/build"
-  [ -d "$tools" ] || _return $internalError "$tools is not a directory" || return $?
+  local tools="$here/${1:-".."}/bin/build"
+  [ -d "$tools" ] || _return $e "$tools is not a directory" || return $?
   tools="$tools/tools.sh"
-  [ -x "$tools" ] || _return $internalError "$tools not executable" "$@" || return $?
+  [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
   # shellcheck source=/dev/null
-  source "$tools" || _return $internalError source "$tools" "$@" || return $?
+  source "$tools" || _return $e source "$tools" "$@" || return $?
   shift
   [ $# -eq 0 ] && return 0
   "$@" || return $?
@@ -178,7 +177,6 @@ testCrontabApplicationSync() {
   fi
 
   dumpPipe "Cron results" <"$results"
-  # set -x
   find_count 1 "$results" "lover" || return $?
   find_count 1 "$results" "fighter" || return $?
   find_count 1 "$results" "Three" || return $?

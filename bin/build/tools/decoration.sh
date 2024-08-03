@@ -78,7 +78,7 @@ labeledBigText() {
   linePrefix=
   lineSuffix=
   tweenLabel=
-  tweenNonLabel=""
+  tweenNonLabel=
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -97,16 +97,16 @@ labeledBigText() {
         ;;
       --prefix)
         shift || :
-        linePrefix="$argument"
+        linePrefix="${1-}"
         ;;
       --suffix)
         shift || :
-        lineSuffix="$argument"
+        lineSuffix="${1-}"
         ;;
       --tween)
         shift || :
-        tweenLabel="$argument"
-        tweenNonLabel="$argument"
+        tweenLabel="${1-}"
+        tweenNonLabel="${1-}"
         ;;
       *)
         [ "$argument" = "${argument#-}" ] || __failArgument "$usage" "Unknown argument #$argumentIndex: $argument" || return $?
@@ -116,7 +116,7 @@ labeledBigText() {
         break
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   banner="$(bigText "$@")"
   nLines=$(printf "%s\n" "$banner" | wc -l)
@@ -216,8 +216,27 @@ echoBar() {
   printf "%s\n" "$(repeat "$count" "$barText")"
 }
 _echoBar() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
+# Output a line and fill columns with a character
+lineFill() {
+  local usage="_${FUNCNAME[0]}"
+  local text cleanText width barText
+
+  width=$(__usageEnvironment "$usage" consoleColumns) || return $?
+  barText="${1:--}"
+  shift || :
+  text="$*"
+  cleanText=$(stripAnsi <<<"$text")
+  count=$((width - ${#cleanText}))
+  count=$((count / ${#barText}))
+  printf "%s%s\n" "$text" "$(repeat "$count" "$barText")"
+}
+_lineFill() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -278,7 +297,7 @@ wrapLines() {
     actualIxes="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#actualIxes}))
     if [ "$actualWidth" -lt 0 ]; then
-      __failArgument "$usage" "$width is too small to support prefix and suffix characters"
+      __failArgument "$usage" "$width is too small to support prefix and suffix characters (${#actualIxes})"
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing

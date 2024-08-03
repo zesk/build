@@ -7,9 +7,3 @@
 {deployBuildEnvironment}
 {deployRemoteFinish}
 {deployToRemote}
-
-## Internal functions
-
-{__deploySSHOptions}
-{__deployRemoteAction}
-{__deployCommandsFile}

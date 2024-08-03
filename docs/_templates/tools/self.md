@@ -11,4 +11,11 @@ Easier access to `BUILD_HOME`, list of all functions, cache directory, known env
 {buildFunctions}
 {buildCacheDirectory}
 {buildQuietLog}
+
+# Installing `install-bin-build.sh`
+
 {installInstallBuild}
+
+# `install-bin-build.sh`
+
+{installBinBuild}

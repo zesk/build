@@ -1,10 +1,7 @@
 #!/bin/bash
 #
-# Build Build
-#
 # Copyright: Copyright &copy; 2024 Market Acumen, Inc.
 #
-# documentTemplate: ./docs/_templates/__binary.md
 
 # IDENTICAL __tools 17
 # Usage: {fn} [ relative [ command ... ] ]
@@ -47,38 +44,41 @@ _integer() {
 # END of IDENTICAL _return
 
 #
-# Build Zesk Build
+# Documentation configuration
 #
-__buildBuild() {
-  local usage="_${FUNCNAME[0]}"
-  local width=25
-  export BUILD_COLORS
-
-  printf "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
-  printf "tput colors %s" "$(tput colors 2>&1 || :)"
-  if hasColors; then
-    consoleSuccess "Has colors"
-  else
-    consoleError "No colors ${BUILD_COLORS-¢}"
-  fi
-  consoleNameValue "$width" "TERM" "${TERM-¢}"
-  consoleNameValue "$width" "DISPLAY" "${DISPLAY-}"
-  consoleNameValue "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
-
-  if ! ./bin/update-md.sh --skip-commit; then
-    __usageEnvironment "$usage" "Can not update the Markdown files" || return $?
-  fi
-
-  if gitRepositoryChanged; then
-    printf "%s\n" "CHANGES:" || :
-    gitShowChanges | wrapLines "$(consoleCode)    " "$(consoleReset)"
-    git commit -m "Build version $(runHook version-current)" -a || :
-    git push origin || :
-  fi
-  consoleSuccess Built successfully.
-}
-___buildBuild() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_buildDocumentationPaths() {
+  cat <<EOF
+tools function
+hooks hook
+bin binary
+EOF
 }
 
-__tools .. __buildBuild "$@"
+__buildDocumentationBuildDirectory() {
+  local home="$1" subPath="$2" template="$3"
+  shift 3
+  __environment documentationBuild --source "$home/bin" --template "$home/docs/_templates/$subPath" --unlinked-template "$home/docs/_templates/tools/todo.md" --unlinked-target "$home/docs/tools/todo.md" --target "$home/docs/$subPath" --function-template "$template" --page-template "$home/docs/_templates/__main.md" --see-prefix "./docs" "$@" || return $?
+}
+
+__buildDocumentationBuild() {
+  local here="${BASH_SOURCE[0]%/*}" home subPath templateCode
+
+  home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
+  case "$1" in
+    --unlinked)
+      documentationUnlinked
+      return 0
+      ;;
+    --unlinked-update)
+      __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@"
+      ;;
+    *)
+      documentationTemplateUpdate "$home/docs/_templates" "$home/docs/_templates/_parts" || return $?
+      while read -r subPath templateCode; do
+        template="$(__environment documentationTemplate "$templateCode")" || return $?
+        __buildDocumentationBuildDirectory "$home" "$subPath" "$template" "$@" || return $?
+      done < <(_buildDocumentationPaths)
+      ;;
+  esac
+}
+__tools .. __buildDocumentationBuild "$@"

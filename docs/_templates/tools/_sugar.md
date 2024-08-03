@@ -31,8 +31,8 @@ Error codes:
 Return errors:
 
 - `_return code message ...` - Return code always. Outputs `message ...` to `stderr`.
-- `_environment message ...` - Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
-- `_argument message ...` - Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+- `_environment message ...` - Return `1` always. Outputs `message ...` to `stderr`.
+- `_argument message ...` - Return `2` always. Outputs `message ...` to `stderr`.
 
 Run-related:
 
@@ -44,33 +44,22 @@ Run-related:
 
 # Sugar Functions References
 
-## Core tests
+## Sugar utilties
 
-{_integer}
-{_boolean}
-
-## Error codes
+{_integer} {_boolean}
 
 {_code}
-
-## Ternary selector
 
 {_choose}
 
 ## Fail with an error code
 
-{_return}
-{_environment}
-{_argument}
+{_return} {_environment} {_argument}
 
 ## Run-related
 
-{__execute}
-{__try}
-{__echo}
-{__environment}
-{__argument}
+{__execute} {__try} {__echo} {__environment} {__argument}
 
 ## Decorations
 
-{_list}
+{_list} {_format} {_command}

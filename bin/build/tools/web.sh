@@ -111,7 +111,14 @@ hostTTFB() {
 }
 
 _watchFile() {
-  tail -F "$1" | wrapLines "$(clearLine)$(consoleGreen)" "$(consoleReset)" | sed 's/^.*--  //g'
+  consoleInfo "Watching $1"
+  while IFS='' read -r line; do
+    if [ "${line}" != "${line#--}" ]; then
+      clearLine
+      line=$(trimSpace "${line##.*--}")
+      statusMessage consoleGreen "$line"
+    fi
+  done
 }
 
 #
@@ -122,9 +129,9 @@ _watchFile() {
 #
 websiteScrape() {
   local usage="_${FUNCNAME[0]}"
-  local logFile pid progressFile progressPid aa
+  local logFile pid progressFile aa
 
-  logFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$") || return $?
+  logFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.log") || return $?
   progressFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
 
   __usageEnvironment "$usage" whichApt wget wget || return $?
@@ -140,15 +147,8 @@ websiteScrape() {
     __usageEnvironment "$usage" wget "${aa[@]}" "$@" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!
   ) || _clean $? "$logFile" || return $?
-  progressPid=$(
-    __usageEnvironment "$usage" _watchFile "$progressFile" &
-    printf %d $!
-  ) || _clean $? "$logFile" || _kill "$?" "$pid" return $?
-  while kill -0 "$pid" 2>/dev/null; do
-    kill -0 "$progressPid" || :
-    sleep 1
-  done
-  kill -HUP "$progressPid" 2>/dev/null || :
+  statusMessage consoleSuccess "Launched scraping process $(consoleCode "$pid") ($progressFile)"
+  _watchFile "$progressFile"
 }
 _websiteScrape() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -33,23 +33,39 @@ buildDebugEnabled() {
   return 1
 }
 
+# Internal: true
+# Usage: {fn} [ setArgs ]
+# Turn on debugging and additional `set` arguments
+# Actually does 'set -x` - should be only occurrence.
+__buildDebugEnable() {
+  set "-x${1-}" # Debugging
+}
+
+# Usage: {fn} [ setArgs ]
+# Turn off debugging and additional `set` arguments
+# Internal: true
+__buildDebugDisable() {
+  set "+x${1-}" # Debugging off
+}
+
 #
 # Start build debugging if it is enabled.
 # This does `set -x` which traces and outputs every shell command
 # Use it to debug when you can not figure out what is happening internally.
 #
+# `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
+# Environment: BUILD_DEBUG
 # Usage: {fn} [ moduleName ... ]
 # Argument: moduleName - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
-# Example:     buildDebugStart
+# Example:     buildDebugStart || :
 # Example:     # ... complex code here
-# Example:     buildDebugStop
+# Example:     buildDebugStop || :. -
 #
 buildDebugStart() {
-  if buildDebugEnabled "$@"; then
-    set -x # Outputs each command for debugging
-    return 0
+  if ! buildDebugEnabled "$@"; then
+    return 1
   fi
-  return 1
+  __buildDebugEnable
 }
 
 #
@@ -58,19 +74,16 @@ buildDebugStart() {
 # See: buildDebugStart
 #
 buildDebugStop() {
-  if buildDebugEnabled "$@"; then
-    set +x # Debugging off
-    return 0
+  if ! buildDebugEnabled "$@"; then
+    return 1
   fi
-  return 1
+  __buildDebugDisable
 }
 
 #
 # Returns whether the shell has the debugging flag set
 #
 # Useful if you need to temporarily enable or disable it.
-#
-# Usage: {fn}
 #
 isBashDebug() {
   case $- in *x*) return 0 ;; esac
@@ -81,20 +94,22 @@ isBashDebug() {
 # Returns whether the shell has the error exit flag set
 #
 # Useful if you need to temporarily enable or disable it.
-# Note that `set -e` is not inherited by shells so
+# Note that `set -e` is not inherited by shells so turning it
+# on has little effect except on the current script running.
 #
 #     set -e
 #     printf "$(isErrorExit; printf %d %?)"
 #
 # Outputs `1` always
 #
-# Usage: {fn}
-#
 isErrorExit() {
   case "$-" in *e*) return 0 ;; esac
   return 1
 }
 
+# Internal: true
+# Utility function for debuggingStack
+# See: debuggingStack
 __debuggingStackCodeList() {
   local tick item index
   tick='`'

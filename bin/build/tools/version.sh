@@ -9,6 +9,7 @@
 # Docs: o ./docs/_templates/tools/version.md
 # Test: o ./test/tools/version-tests.sh
 
+
 # Summary: Output path to current release notes
 #
 # Output path to current release notes
@@ -27,20 +28,25 @@
 # Example:     vim $(releaseNotes)
 # shellcheck disable=SC2120
 releaseNotes() {
-  local version home
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local version home releasePath
 
   version=
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    case $1 in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
       *)
         if [ -n "$version" ]; then
-          consoleError "Version $version already specified: $1"
+          consoleError "Version $version already specified: $argument"
         else
-          version="${1-}"
+          version="$argument"
         fi
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   if [ -z "$version" ]; then
     version=$(__usageEnvironment "$usage" runHook version-current) || return $?
@@ -52,8 +58,12 @@ releaseNotes() {
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   [ -n "${BUILD_RELEASE_NOTES}" ] || __failEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="$BUILD_RELEASE_NOTES"
-  isAbsolutePath "$releasePath}" || releasePath="$home/$releasePath"
+  isAbsolutePath "$releasePath" || releasePath=$(simplifyPath "$home/$releasePath")
   printf "%s/%s.md\n" "${releasePath%%/}" "$version"
+}
+_releaseNotes() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -61,10 +71,11 @@ releaseNotes() {
 # Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 #
 nextMinorVersion() {
+  local usage="_${FUNCNAME[0]}"
   local last prefix
 
   last="${1##*.}"
-  __argument isInteger "$last" || return $?
+  __usageArgument "$usage" isInteger "$last" || return $?
   prefix="${1%.*}"
   prefix="${prefix#v*}"
   if [ "$prefix" != "${1-}" ]; then
@@ -74,6 +85,10 @@ nextMinorVersion() {
   fi
   last=$((last + 1))
   printf "%s%s" "$prefix" "$last"
+}
+_nextMinorVersion() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

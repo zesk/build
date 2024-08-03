@@ -227,6 +227,22 @@ inArray() {
   return 1
 }
 
+# Usage: {fn} haystack needle ...
+# Argument: haystack - Required. String. String to search.
+# Argument: needle - Optional. String. One or more strings to find as a substring of `haystack`.
+# Exit Code: 0 - IFF ANY needle matches as a substring of haystack
+substringFound() {
+  local haystack="${1-}"
+  shift
+  while [ $# -gt 0 ]; do
+    if [ -n "$1" ]; then
+      ! isSubstring "$1" "$haystack" || return 0
+    fi
+    shift
+  done
+  return 1
+}
+
 #
 # Check if one string is a substring of another set of strings (case-sensitive)
 #
@@ -238,12 +254,11 @@ inArray() {
 # Tested: No
 #
 isSubstring() {
-  local element=${1-} arrayElement
+  local element=${1-} item
   shift || return 1
-  for arrayElement; do
-    if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
-      return 0
-    fi
+  for item; do
+    [ "${item#*"$element"}" = "$item" ] || return 0
+    shift
   done
   return 1
 }

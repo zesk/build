@@ -189,13 +189,14 @@ _assertConditionHelper() {
   else
     runner=("$tester")
   fi
+  buildDebugStart "assert"
   if $debugFlag; then
-    set -xv
+    __buildDebugEnable v
   fi
   "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile"
   exitCode=$?
   if $debugFlag; then
-    set +xv
+    __buildDebugDisable v
   fi
   if [ "$exitCode" = "$expectedExitCode" ]; then
     testPassed=$success
@@ -204,7 +205,7 @@ _assertConditionHelper() {
   fi
   result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
   # shellcheck disable=SC2059
-  message="$(printf "$(consoleLabel %s) %s, " "${pairs[@]}")"
+  message="$(printf "$(consoleLabel %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
   message="$(
     printf -- "%s%s ➡️ %s -> (%s)" \

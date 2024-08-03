@@ -9,18 +9,21 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# Usage: install-bin-build.sh [ --mock mockBuildRoot ] [ --url url ]
-# fn: install-bin-build.sh
+# Usage: {fn} [ --local mockBuildRoot ] [ --url url ] [ --debug ] [ --force ] [ --diff ]
+# fn: {base}
 # Installs the build system in `./bin/build` if not installed. Also
 # will overwrite this binary with the latest version after installation.
-# Determines the most recent version using GitHub API unless --url or --mock is specified.
+#
+# Determines the most recent version using GitHub API unless --url or --local is specified.
 #
 # Argument: --local localPath - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
+# Argument: --debug - Optional. Flag. Debugging is on.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Exit Code: 1 - Environment error
+# Exit Code: 2 - Argument error
 installBinBuild() {
   local usage="_${FUNCNAME[0]}"
   local ibbPath="bin/build" ibbName="install-bin-build.sh"
@@ -32,10 +35,7 @@ installBinBuild() {
   local myBinary myPath osName url applicationHome installPath
 
   shift
-  if test "${BUILD_DEBUG-}"; then
-    consoleOrange "BUILD_DEBUG on"
-    set -x # Debugging
-  fi
+  case "${BUILD_DEBUG-}" in 1 | true) __installBinBuildDebug BUILD_DEBUG ;; esac
 
   installArgs=()
   url=
@@ -46,8 +46,7 @@ installBinBuild() {
     [ -n "$argument" ] || "$usage" "$errorArgument" "blank argument" || return $?
     case "$argument" in
       --debug)
-        consoleOrange "Debug on"
-        set -x # Debugging
+        __installBinBuildDebug "$argument"
         ;;
       --diff)
         installArgs+=("$argument")
@@ -129,6 +128,10 @@ _installBinBuild() {
   shift || :
   printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
   return "$exitCode"
+}
+
+__installBinBuildDebug() {
+  consoleOrange "${1-} enabled" && set -x
 }
 
 # Fetch most recent URL from GitHub
