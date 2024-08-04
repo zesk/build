@@ -19,6 +19,7 @@ Once included, all functions here are available for use:
 - [Console Color](./consoleColor.md)
 - [Crontab](./crontab.md)
 - [daemontools](./daemontools.md)
+- [Darwin](./darwin.md)
 - [Date](./date.md)
 - [Debug](./debug.md)
 - [Decoration](./decoration.md)

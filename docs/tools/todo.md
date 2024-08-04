@@ -24,6 +24,22 @@ This is a sample function with example code and patterns used in Zesk Build.
 
 - `0` - Always succeeds
 
+### `application-id.sh` - Generate a unique ID for the state of the application
+
+Generate a unique ID for the state of the application files
+
+The default hook uses the short git sha:
+
+    git rev-parse --short HEAD
+
+#### Examples
+
+    885acc3
+
+#### Exit codes
+
+- `0` - Always succeeds
+
 <!-- TEMPLATE footer 5 -->
 <hr />
 
