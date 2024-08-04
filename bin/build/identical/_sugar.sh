@@ -58,7 +58,7 @@ _command() {
 #
 # - 1 - environment or general error
 # - 2 - argument error
-p# - 97 - assert - ASCII 97 = `a`
+# - 97 - assert - ASCII 97 = `a`
 # - 105 - identical - ASCII 105 = `i`
 # - 108 - leak - ASCII 108 = `l`
 # - 116 - test - ASCII 116 = `t`
