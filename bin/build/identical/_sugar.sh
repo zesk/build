@@ -58,11 +58,11 @@ _command() {
 #
 # - 1 - environment or general error
 # - 2 - argument error
-# - 97 - **a**ssert - ASCII 97 = `a`
-# - 105 - **i**dentical - ASCII 105 = `i`
-# - 108 - **l**eak - ASCII 108 = `l`
-# - 116 - **t**est - ASCII 116 = `t`
-# - 120 - e**x**it - ASCII 120 = `x`
+p# - 97 - assert - ASCII 97 = `a`
+# - 105 - identical - ASCII 105 = `i`
+# - 108 - leak - ASCII 108 = `l`
+# - 116 - test - ASCII 116 = `t`
+# - 120 - exit - ASCII 120 = `x`
 # - 253 - internal
 # - 254 - unknown
 #
