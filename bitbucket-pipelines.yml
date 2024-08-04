@@ -14,13 +14,13 @@ pipelines:
     docs:
       - step:
           size: 2x
-          deployment: docs
+          deployment: documentation
           name: Build documentation
           services:
             - docker
           script:
-            - bin/build-docs.sh
-            - bin/build-docs.sh --commit
+            - bin/documentation.sh
+            - bin/documentation.sh --commit
     staging:
       - step:
           size: 2x

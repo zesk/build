@@ -10,9 +10,32 @@ set -eou pipefail
 
 declare -a tests
 
+tests+=(testIsVersion)
 tests+=(testVersionNext)
 tests+=(testReleaseNotesSimple)
 tests+=(testReleaseNotes)
+
+___testIsVersionData() {
+  cat <<EOF
+  0 0
+  0 1.0
+  0 1.1
+  0 1.2.3
+  0 1.2.3.4.5.6.7.8.8.10000.2.4
+  1 -1
+  1 -1.0
+  1 ab.0
+  1 v1.2.3
+  1 dude
+  1 1.0.1.a
+EOF
+}
+
+testIsVersion() {
+  ___testIsVersionData | while read -r exitCode versionSample; do
+    assertExitCode --line "$LINENO" "$exitCode" isVersion "$versionSample" || return $?
+  done
+}
 
 testReleaseNotesSimple() {
   assertExitCode --leak BUILD_RELEASE_NOTES --stdout-match "docs/release" --line "$LINENO" 0 releaseNotes || return $?

@@ -72,14 +72,15 @@ __deprecatedCannon() {
   cannon "$@" "${ignoreStuff[@]}" || :
 }
 
+
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on
 # a clean build checkout and examine changes manually each time.
 #
 # Does various checks for deprecated code and updates code.
-# Usage: deprecated.sh
+# Usage: {fn}
+# fn: {base}
 # Exit Code: 0 - All cleaned up
 # Exit Code: 1 - If fails or validation fails
-# fn: deprecated.sh
 #
 __deprecatedCleanup() {
   local this="${BASH_SOURCE[0]##*/}"

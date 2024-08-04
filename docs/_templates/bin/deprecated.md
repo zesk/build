@@ -1,1 +1,1 @@
-{deprecatedCleanup}
+{__deprecatedCleanup}

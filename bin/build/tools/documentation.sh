@@ -296,7 +296,7 @@ _documentationTemplateCompileUsage() {
 documentationTemplateDirectoryCompile() {
   local usage argument
   local start templateDirectory functionTemplate targetDirectory cacheDirectory passArgs
-  local base targetFile
+  local base targetFile templateFile
   local documentTokensFile
 
   usage="_${FUNCNAME[0]}"
@@ -342,7 +342,8 @@ documentationTemplateDirectoryCompile() {
 
   exitCode=0
   fileCount=0
-  for templateFile in "$templateDirectory/"*.md; do
+  templateFile=
+  while read -r templateFile; do
     base="$(basename "$templateFile")" || __failEnvironment "$usage" "basename $templateFile" || return $?
     targetFile="$targetDirectory/$base"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
@@ -350,7 +351,7 @@ documentationTemplateDirectoryCompile() {
       exitCode=1
     fi
     fileCount=$((fileCount + 1))
-  done
+  done < <(find "$templateDirectory" -type f -name '*.md' ! -path '*/.*' ! -name '_*' ! -name '.*')
   clearLine || :
   reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(consoleInfo "$targetDirectory") "
   return $exitCode

@@ -133,12 +133,8 @@ Installs `install-bin-build.sh` the first time in a new project, and modifies it
 
 Installs the build system in `./bin/build` if not installed. Also
 will overwrite this binary with the latest version after installation.
-Determines the most recent version using GitHub API unless --url or --mock is specified.
 
-#### Usage
-
-    install-bin-build.sh [ --mock mockBuildRoot ] [ --url url ]
-    
+Determines the most recent version using GitHub API unless --url or --local is specified.
 
 #### Arguments
 
@@ -147,6 +143,7 @@ Determines the most recent version using GitHub API unless --url or --mock is sp
 #### Exit codes
 
 - `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
