@@ -22,7 +22,7 @@ darwinDialog() {
   local message choices choice defaultButton choiceText messageText maxChoice
 
   export OSTYPE
-  requireBinary osascript || __failEnvironment "$usage" "Requires osascript typically on Darwin: ${OSTYPE-}" || return $?
+  usageRequireBinary "$usage" osascript || return $?
   message=()
   defaultButton=0
   choices=()
@@ -48,7 +48,7 @@ darwinDialog() {
         ;;
       --default)
         shift
-        defaultButton="$(usageArgumentInteger "$usage" "$argument" "${1-}")" || return $?
+        defaultButton="$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         message+=("$1")
@@ -63,7 +63,7 @@ darwinDialog() {
   for choice in "${choices[@]}"; do
     choiceText+=("$(printf '"%s"' "$(escapeDoubleQuotes "$choice")")")
   done
-  maxChoice=$((${choices[@]} - 1))
+  maxChoice=$((${#choices[@]} - 1))
   if [ "$defaultButton" -gt $maxChoice ]; then
     __failArgument "$usage" "defaultButton $defaultButton is out of range 0 ... $maxChoice" || return $?
   fi
