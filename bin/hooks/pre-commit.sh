@@ -60,6 +60,9 @@ __hookPreCommit() {
   original="bin/build/identical/_sugar.sh"
   nonOriginal=bin/build/tools/_sugar.sh
 
+  statusMessage consoleSuccess Making shell files exeutable ...
+  __usageEnvironment "$usage" makeShellFilesExecutable || return $?
+
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
     nonOriginalWithEOF=$(__usageEnvironment "$usage" mktemp) || return $?
     __usageEnvironment "$usage" sed 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
