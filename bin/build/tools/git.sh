@@ -151,7 +151,7 @@ veeGitTag() {
   local usage="_${FUNCNAME[0]}"
   local tagName="$1"
 
-  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already veed: $(consoleValue "$tagName")" || return $?
+  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already v'd': $(consoleValue "$tagName")" || return $?
   __usageEnvironment "$usage" git tag "v$tagName" "$tagName" || return $?
   __usageEnvironment "$usage" git tag -d "$tagName" || return $?
   __usageEnvironment "$usage" git push origin "v$tagName" ":$tagName" || return $?

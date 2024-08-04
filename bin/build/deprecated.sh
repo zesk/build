@@ -72,7 +72,6 @@ __deprecatedCannon() {
   cannon "$@" "${ignoreStuff[@]}" || :
 }
 
-
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on
 # a clean build checkout and examine changes manually each time.
 #
@@ -156,6 +155,9 @@ __deprecatedCleanup() {
 
   # v0.11.2
   __deprecatedCannon '_''environment''Output' outputTrigger
+
+  # v0.11.4
+  deprecatedTokens+=("ops"".sh" "__""ops")
 
   clearLine
   # Do all deprecations
