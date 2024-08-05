@@ -1,16 +1,16 @@
-class  | 0 1 2 3 4 5 6 7 8 9 a b c d e f g h w x y z A B C D E F G W X Y Z   ! % ' @ ^ - =
--------+----------------------------------------------------------------------------------
-alnum  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . . .
-alpha  | . . . . . . . . . . Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . . .
-ascii  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y
-blank  | . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Y . . . . . . .
-cntrl  | . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-digit  | Y Y Y Y Y Y Y Y Y Y . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-graph  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . Y Y Y Y Y Y Y
-lower  | . . . . . . . . . . Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . . . . . . . . . . . . . .
-print  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y
-punct  | . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Y Y Y Y Y Y Y
-space  | . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Y . . . . . . .
-upper  | . . . . . . . . . . . . . . . . . . . . . . Y Y Y Y Y Y Y Y Y Y Y . . . . . . . .
-word   | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . . .
-xdigit | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . Y Y Y Y Y Y . . . . . . . . . . . . .
+class  | 0 1 2 7 8 9 a b c x y z A B C X Y Z   ! % ' @ ^ - =
+-------+----------------------------------------------------
+alnum  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . . .
+alpha  | . . . . . . Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . . .
+ascii  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y
+blank  | . . . . . . . . . . . . . . . . . . Y . . . . . . .
+cntrl  | . . . . . . . . . . . . . . . . . . . . . . . . . .
+digit  | Y Y Y Y Y Y . . . . . . . . . . . . . . . . . . . .
+graph  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . Y Y Y Y Y Y Y
+lower  | . . . . . . Y Y Y Y Y Y . . . . . . . . . . . . . .
+print  | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y
+punct  | . . . . . . . . . . . . . . . . . . . Y Y Y Y Y Y Y
+space  | . . . . . . . . . . . . . . . . . . Y . . . . . . .
+upper  | . . . . . . . . . . . . Y Y Y Y Y Y . . . . . . . .
+word   | Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y . . . . . . . .
+xdigit | Y Y Y Y Y Y Y Y Y . . . Y Y Y . . . . . . . . . . .

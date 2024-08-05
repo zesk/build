@@ -15,35 +15,149 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-errorArgument=1
-errorEnvironment=1
-emptyArgument="§"
 
-set -eou pipefail
-
-# Return code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} code command || return $?
-# Argument: code - Integer. Required. Return code.
-# Argument: message ... - String. Optional. Message to output.
+# IDENTICAL _return 19
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
 _return() {
-  local code
-  code="${1-1}" && shift && printf "%s failed (%d)\n" "${*-"$emptyArgument"}" "$code" 1>&2 && return "$code"
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
-# Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+# END of IDENTICAL _return
+
+# IDENTICAL _sugar 139
+
+# Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
+# Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
+# Argument: separator - Optional. String.
+# Argument: prefix - Optional. String.
+# Argument: suffix - Optional. String.
+# Argument: title - Optional. String.
+# Argument: item - Optional. String. One or more items to list.
+_format() {
+  local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}"
+  sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
+  shift && shift && shift && shift
+  printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
+}
+
+# Output a titled list
+# Usage: {fn} title [ items ... ]
+_list() {
+  _format "\n" "- " "\n" "$@"
+}
+
+# Output a command, quoting individual arguments
+# Usage: {fn} command [ argument ... ]
+_command() {
+  _format "" " \"" "\"" "$@"
+}
+
+# Usage: {fn} name ...
+# Argument: name ... - Optional. String. Exit code value to output.
+# Print one or more an exit codes by name.
+#
+# Valid codes:
+#
+# - `environment` - generic issue with environment
+# - `argument` - issue with arguments
+# - `assert` - assertion failed
+# - `identical` - identical check failed
+# - `leak` - function leaked globals
+# - `test` - test failed
+# - `exit` - exit function immediately
+# - `internal` - internal errors
+#
+# Unknown error code is 254, end of range is 255 which is not used.
+#
+# ### Error codes reference (`_code`):
+#
+# - 1 - environment or general error
+# - 2 - argument error
+# - 97 - assert - ASCII 97 = `a`
+# - 105 - identical - ASCII 105 = `i`
+# - 108 - leak - ASCII 108 = `l`
+# - 116 - test - ASCII 116 = `t`
+# - 120 - exit - ASCII 120 = `x`
+# - 253 - internal
+# - 254 - unknown
+#
+# See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
+_code() {
+  local k && while [ $# -gt 0 ]; do
+    case "$(printf "%s" "$1" | tr '[:upper:]' '[:lower:]')" in
+      environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; test) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
+    esac && shift && printf "%d\n" "$k"
+  done
+}
+
+# Boolean test
+# Returns 0 if `value` is boolean `false` or `true`.
+# Usage: {fn} value
+# Is this a boolean? (`true` or `false`)
+# Exit Code: 0 - if value is a boolean
+# Exit Code: 1 - if value is not a boolean
+_boolean() {
+  case "${1-}" in true | false) ;; *) return 1 ;; esac
+}
+
+# Boolean selector
+# Usage: {fn} testValue trueChoice falseChoice
+_choose() {
+  local testValue="${1-}" && shift
+  _boolean "$testValue" || _argument "${FUNCNAME[1]-no function name}:${BASH_LINENO[1]-no line} -> ${FUNCNAME[0]} _choose non-boolean: \"$testValue\"" || return $?
+  "$testValue" && printf "%s\n" "${1-}" || printf "%s\n" "${2-}"
+}
+
+# Return `environment` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 _environment() {
-  _return "$errorEnvironment" "$@" || return $?
+  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
-# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+# Return `argument` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 _argument() {
-  _return "$errorArgument" "$@" || return $?
+  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+}
+
+# Run `command ...` (with any arguments) and then `_return` if it fails.
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+__execute() {
+  "$@" || _return $? "$(_command "$@")" || return $?
+}
+
+# Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: None
+__try() {
+  __execute "$@" || _return $? "💣 $(_command "$@")" || exit $?
+}
+
+# Output the `command ...` to stdout prior to running, then `__execute` it
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: Any
+__echo() {
+  printf "➡️ %s\n" "$(_command "$@")" && __execute "$@" || return $?
 }
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
@@ -55,9 +169,25 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# DO NOT EDIT THIS ONE
+# Run `command ...` (with any arguments) and then `_argument` if it fails.
+# Usage: {fn} command ...FUNCNAME
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: 0 - Success
+# Exit Code: 2 - Failed
+__argument() {
+  "$@" || _argument "$@" || return $?
+}
+
+# IDENTICAL quoteSedPattern 17
+
+# Summary: Quote sed strings for shell use
+# Quote a string to be used in a sed pattern on the command line.
+# Usage: quoteSedPattern text
+# Argument: text - Text to quote
+# Output: string quoted and appropriate to insert in a sed search or replacement phrase
+# Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+#
 quoteSedPattern() {
-  # IDENTICAL quoteSedPattern 6
   value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
@@ -66,6 +196,8 @@ quoteSedPattern() {
   value="${value//$'\n'/\\n}"
   printf "%s\n" "$value"
 }
+
+# IDENTICAL environmentVariables 12
 
 #
 # Output a list of environment variables and ignore function definitions
@@ -76,42 +208,23 @@ quoteSedPattern() {
 # Usage: {fn}
 #
 environmentVariables() {
-  # IDENTICAL environmentVariables 1
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
-_mapEnvironmentGenerateSedFile() {
-  # IDENTICAL _mapEnvironmentGenerateSedFile 11
-  local i
+# IDENTICAL mapEnvironment 74
 
-  for i in "$@"; do
-    case "$i" in
-      *[%{}]*) ;;
-      LD_*) ;;
-      *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || _environment "${FUNCNAME[0]}" || return $?
-        ;;
-    esac
-  done
-}
-
-#
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Usage: map.sh [ environmentName0 environmentName1 ... ]
-# Usage: mapEnvironment [ environmentName0 environmentName1 ... ]
-# fn: map.sh
+# Usage: {fn} [ environmentName0 environmentName1 ... ]
 # TODO: Do this like mapValue
 # See: mapValue
 # Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
-# Example:     echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world map.sh NAME PLACE
-#
+# Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 mapEnvironment() {
-  # IDENTICAL mapEnvironment 94 137
   local this argument
   local prefix suffix sedFile ee e rs
 
@@ -124,11 +237,13 @@ mapEnvironment() {
     [ -n "$argument" ] || _argument "blank argument" || return $?
     case "$argument" in
       --prefix)
-        shift || _argument "$this: missing $argument argument" || return $?
+        shift
+        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
         prefix="$1"
         ;;
       --suffix)
-        shift || _argument "$this: missing $argument argument" || return $?
+        shift
+        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
         suffix="$1"
         ;;
       *)
@@ -145,7 +260,7 @@ mapEnvironment() {
   fi
   sedFile=$(mktemp) || _environment "mktemp failed" || return $?
   rs=0
-  if __environment _mapEnvironmentGenerateSedFile "${ee[@]}" >"$sedFile"; then
+  if __environment _mapEnvironmentGenerateSedFile "$prefix" "$suffix" "${ee[@]}" >"$sedFile"; then
     if ! sed -f "$sedFile"; then
       rs=$?
       cat "$sedFile" 1>&2
@@ -157,4 +272,17 @@ mapEnvironment() {
   return $rs
 }
 
-mapEnvironment "$@"
+# Helper function
+_mapEnvironmentGenerateSedFile() {
+  local i prefix="${1-}" suffix="${2-}"
+
+  shift 2
+  for i in "$@"; do
+    case "$i" in
+      *[%{}]* | LD_*) ;; # skips
+      *)
+        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || return $?
+        ;;
+    esac
+  done
+}
