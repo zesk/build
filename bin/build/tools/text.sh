@@ -1169,15 +1169,30 @@ quoteSedPattern() {
   printf "%s\n" "$value"
 }
 
-# Usage: {fn}
-# Pipe to output a single newline before any output, otherwise, nothing is output.
-newlinePrefix() {
+# Usage: {fn} printfArguments
+# Pipe to output some text before any output, otherwise, nothing is output.
+printfOutputPrefix() {
   local prefixed=false
   while read -r line; do
     if ! $prefixed; then
-      printf "\n"
+      # shellcheck disable=SC2059
+      printf "$@"
       prefixed=true
     fi
     printf "%s\n" "$line"
   done
+}
+
+# Usage: {fn} printfArguments
+# Pipe to output some text after any output, otherwise, nothing is output.
+printfOutputSuffix() {
+  local output=false
+  while read -r line; do
+    if ! $output; then
+      output=true
+    fi
+    printf "%s\n" "$line"
+  done
+  # shellcheck disable=SC2059
+  ! $output || printf "$@"
 }

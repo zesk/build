@@ -61,7 +61,9 @@
 {cannon}
 {joinArguments}
 {listAppend}
-{listCleanDuplicates}
+{listCleanDuplicates} 
+{printfOutputPrefix}
+{printfOutputSuffix}
 
 # Characters
 

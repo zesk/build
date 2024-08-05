@@ -61,7 +61,7 @@ __hookPreCommit() {
   nonOriginal=bin/build/tools/_sugar.sh
 
   statusMessage consoleSuccess Making shell files exeutable ...
-  __usageEnvironment "$usage" makeShellFilesExecutable | newlinePrefix || return $?
+  __usageEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
     nonOriginalWithEOF=$(__usageEnvironment "$usage" mktemp) || return $?

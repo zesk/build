@@ -198,3 +198,11 @@ testCharacterFromInteger() {
   assertEquals l "$(characterFromInteger "$(_code leak)")" || return $?
   assertEquals a "$(characterFromInteger "$(_code assert)")" || return $?
 }
+
+tests+=(testPrintfOutput)
+testPrintfOutput() {
+  assertEquals --line "$LINENO" "$(echo "ab" | printfOutputPrefix "c")" "cab" || return $?
+  assertEquals --line "$LINENO" "$(printf "" | printfOutputPrefix "c")" "" || return $?
+  assertEquals --line "$LINENO" "$(echo "ab" | printfOutputSuffix "c")" "ab"$'\n'"c" || return $?
+  assertEquals --line "$LINENO" "$(printf "" | printfOutputSuffix "c")" "" || return $?
+}
