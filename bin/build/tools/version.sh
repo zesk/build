@@ -11,7 +11,7 @@
 
 # Check if something matches a version
 isVersion() {
-  local parts parts
+  local part parts
   [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
     IFS=. read -r -a parts < <(printf "%s\n" "$1")
