@@ -88,13 +88,12 @@ _boolean() {
 # Boolean selector
 # Usage: {fn} testValue trueChoice falseChoice
 _choose() {
-  local testValue
-  testValue="${1-}" && shift
-  _boolean "$testValue" || _argument "_choose non-boolean: \"$testValue\"" || return $?
+  local testValue="${1-}" && shift
+  _boolean "$testValue" || _argument "${FUNCNAME[1]-no function name}:${BASH_LINENO[1]-no line} -> ${FUNCNAME[0]} _choose non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf "%s\n" "${1-}" || printf "%s\n" "${2-}"
 }
 
-# Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
+# Return `environment` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
@@ -102,7 +101,7 @@ _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
-# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+# Return `argument` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
@@ -117,7 +116,7 @@ __execute() {
   "$@" || _return $? "$(_command "$@")" || return $?
 }
 
-# Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
+# Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: None

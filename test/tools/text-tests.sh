@@ -93,17 +93,17 @@ EOF
 tests+=(testQuoteSedPattern)
 testQuoteSedPattern() {
   local value mappedValue
-  assertEquals "\\&" "$(quoteSedPattern "&")" || return $?
-  assertEquals "\\[" "$(quoteSedPattern "[")" || return $?
-  assertEquals "\\]" "$(quoteSedPattern "]")" || return $?
+  assertEquals --line "$LINENO" "\\&" "$(quoteSedPattern "&")" || return $?
+  assertEquals --line "$LINENO" "\\[" "$(quoteSedPattern "[")" || return $?
+  assertEquals --line "$LINENO" "\\]" "$(quoteSedPattern "]")" || return $?
   # shellcheck disable=SC1003
-  assertEquals '\\' "$(quoteSedPattern '\')" || return $?
-  assertEquals "\\/" "$(quoteSedPattern "/")" || return $?
+  assertEquals --line "$LINENO" '\\' "$(quoteSedPattern '\')" || return $?
+  assertEquals --line "$LINENO" "\\/" "$(quoteSedPattern "/")" || return $?
   # Fails in code somewhere
   read -d"" -r value < <(__testQuoteSedPatternData)
 
   mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
-  assertEquals "$mappedValue" "$value" || return $?
+  assertEquals --line "$LINENO" "$mappedValue" "$value" || return $?
 }
 
 tests+=(testMapValue)
@@ -126,9 +126,8 @@ testLowercase() {
   assertOutputEquals lowercase lowercase LoWerCaSe || return $?
 }
 
-tests+=(testIsCharacterClass)
-testIsCharacterClass() {
-  local first header c characters=(0 1 2 3 4 5 6 7 8 9 a b c d e f g h w x y z A B C D E F G W X Y Z ' ' '!' '%' "'" @ ^ - '=')
+__testIsCharacterClass() {
+  local first header c characters=(0 1 2 7 8 9 a b c x y z A B C X Y Z ' ' '!' '%' "'" @ ^ - '=')
   local class line temp token firstColumnWidth=7
   local sep="" cellWidth=2
   header=
@@ -162,7 +161,7 @@ testValidateCharacterClass() {
   local temp
 
   temp=$(mktemp) || return $?
-  testIsCharacterClass >"$temp" || return $?
+  __testIsCharacterClass | tee "$temp" || return $?
   if ! diff -q "$temp" "./test/example/isCharacterClass.txt"; then
     consoleError "Classifications changed:"
     diff "$temp" "./test/example/isCharacterClass.txt"

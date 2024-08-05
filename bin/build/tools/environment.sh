@@ -7,26 +7,6 @@
 #
 
 #
-# Output a list of environment variables and ignore function definitions
-#
-# both `set` and `env` output functions and this is an easy way to just output
-# exported variables
-#
-# Returns the list of defined environment variables exported in the current bash context.
-#
-# Summary: Fetch a list of environment variable names
-# Usage: environmentVariables
-# Output: Environment variable names, one per line.
-# Example:     for f in $(environmentVariables); do
-# Example:     echo "$f"
-# Example:     done
-#
-environmentVariables() {
-  # IDENTICAL environmentVariables 1
-  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
-}
-
-#
 # Write a value to a state file as NAME="value"
 # Usage: name - Required. String. Name to write.
 # Usage: value - Optional. String. Value to write.
@@ -297,4 +277,18 @@ environmentFileApplicationVerify() {
 }
 _environmentFileApplicationVerify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+  # IDENTICAL environmentVariables 12
+
+#
+# Output a list of environment variables and ignore function definitions
+#
+# both `set` and `env` output functions and this is an easy way to just output
+# exported variables
+#
+# Usage: {fn}
+#
+environmentVariables() {
+  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }

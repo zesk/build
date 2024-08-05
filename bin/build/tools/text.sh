@@ -39,25 +39,6 @@ parseBoolean() {
 }
 
 #
-# Summary: Quote sed strings for shell use
-# Quote a string to be used in a sed pattern on the command line.
-# Usage: quoteSedPattern text
-# Argument: text - Text to quote
-# Output: string quoted and appropriate to insert in a sed search or replacement phrase
-# Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-#
-quoteSedPattern() {
-  # IDENTICAL quoteSedPattern 6
-  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
-  value="${value//\//\\/}"
-  value="${value//[/\\[}"
-  value="${value//]/\\]}"
-  value="${value//&/\\&}"
-  value="${value//$'\n'/\\n}"
-  printf "%s\n" "$value"
-}
-
-#
 # Summary: Quote grep -e patterns for shell use
 #
 # Usage: {fn} text
@@ -667,79 +648,6 @@ stringOffset() {
   printf %d "$offset"
 }
 
-_mapEnvironmentGenerateSedFile() {
-  # IDENTICAL _mapEnvironmentGenerateSedFile 11
-  local i
-
-  for i in "$@"; do
-    case "$i" in
-      *[%{}]*) ;;
-      LD_*) ;;
-      *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || _environment "${FUNCNAME[0]}" || return $?
-        ;;
-    esac
-  done
-}
-
-# Summary: Convert tokens in files to environment variable values
-#
-# Map tokens in the input stream based on environment values with the same names.
-# Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
-# Undefined values are not converted.
-# Usage: {fn} [ environmentName0 environmentName1 ... ]
-# TODO: Do this like mapValue
-# See: mapValue
-# Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
-# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
-# Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-mapEnvironment() {
-  # IDENTICAL mapEnvironment 94 137
-  local this argument
-  local prefix suffix sedFile ee e rs
-
-  this="${FUNCNAME[0]}"
-  prefix='{'
-  suffix='}'
-
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || _argument "blank argument" || return $?
-    case "$argument" in
-      --prefix)
-        shift || _argument "$this: missing $argument argument" || return $?
-        prefix="$1"
-        ;;
-      --suffix)
-        shift || _argument "$this: missing $argument argument" || return $?
-        suffix="$1"
-        ;;
-      *)
-        break
-        ;;
-    esac
-    shift || _argument "shift failed after $argument" || return $?
-  done
-
-  ee=("$@")
-  if [ $# -eq 0 ]; then
-    while read -r e; do ee+=("$e"); done < <(environmentVariables)
-    for e in $(environmentVariables); do ee+=("$e"); done
-  fi
-  sedFile=$(mktemp) || _environment "mktemp failed" || return $?
-  rs=0
-  if __environment _mapEnvironmentGenerateSedFile "${ee[@]}" >"$sedFile"; then
-    if ! sed -f "$sedFile"; then
-      rs=$?
-      cat "$sedFile" 1>&2
-    fi
-  else
-    rs=$?
-  fi
-  rm -f "$sedFile" || :
-  return $rs
-}
-
 characterClasses() {
   printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
 }
@@ -961,50 +869,62 @@ characterClassReport() {
   printf "%s total %s\n" "$(consoleBoldRed "$total")" "$(consoleRed "$(plural "$total" "${nouns[@]}")")"
 }
 
-#
-# fn: cannon.sh
+# See: cannon.sh
+# Usage: cannon [ --path directory ] [ --help ] fromText toText [ findArgs ... ]
 # Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
 #
-# This can break your files so use with caution.
+# This can break your files so use with caution. Blank searchText is not allowed.
 #
-# Example:     cannon master main ! -path '*/old-version/*')
-# _cannon: cannon fromText toText [ findArgs ... ]
+# Example:     {fn} master main ! -path '*/old-version/*')
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --path directory - Optional. Directory. Run cannon operation starting in this directory.
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
-# Argument: findArgs ... - Any additional arguments are meant to filter files.
+# Argument: findArgs ... - Optional. FindArgument. Any additional arguments are meant to filter files.
 # Exit Code: 0 - Success
-# Exit Code: 1 - Arguments are identical
-#
-#
+# Exit Code: 1 - --path is not a directory
+# Exit Code: 1 - searchText is not blank
+# Exit Code: 1 - mktemp failed
+# Exit Code: 2 - Arguments are identical
 cannon() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
   local search searchQuoted replace replaceQuoted cannonLog count
-  local usage
-
-  usage="_${FUNCNAME[0]}"
 
   search=
+  directory=.
   replace=
   while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --path)
+        shift
+        directory=$(usageArgumentDirectory "$usage" "$argument" "${1-}")
+        ;;
       *)
         if [ -z "$search" ]; then
-          search="$argument"
+          search="$(usageArgumentString "$usage" "searchText" "$argument")"
         elif [ -z "$replace" ]; then
           replace="$argument"
-        else
+          shift
           break
         fi
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   searchQuoted=$(quoteSedPattern "$search")
   replaceQuoted=$(quoteSedPattern "$replace")
   [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
-  cannonLog=$(mktemp)
-  if ! find . -type f ! -path '*/.*' "$@" -print0 >"$cannonLog"; then
+  cannonLog=$(__usageEnvironment "$usage" mktemp) || return $?
+  if ! find "$directory" -type f ! -path '*/.*' "$@" -print0 >"$cannonLog"; then
     printf "%s\n" "$(consoleSucces "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
     rm "$cannonLog" || :
     return 0
@@ -1024,22 +944,22 @@ _cannon() {
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 removeFields() {
   local usage="_${FUNCNAME[0]}"
-  local argument
+  local argument nArguments argumentIndex
+  local fieldCount=
 
-  local fieldCount=1
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
       *)
-        isUnsignedInteger "$argument" || __failArgument "$usage" "fieldCount should be integer: $(consoleCode "$argument")" || return $?
-        [ "$argument" -gt 0 ] || __failArgument "$usage" "fieldCount can not be 0" || return $?
-        fieldCount="$argument"
+        [ -z "$fieldCount" ] || __failArgument "$usage" "Only one fieldCount should be provided argument #$argumentIndex: $argument" || return $?
+        fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
-  awk '{for(i=0;i<'"$fieldCount"';i++){sub($1 FS,"")}}1'
+  awk '{for(i=0;i<'"${fieldCount:-1}"';i++){sub($1 FS,"")}}1'
 }
 
 # Usage: {fn} separator text0 arg1 ...
@@ -1152,4 +1072,99 @@ listCleanDuplicates() {
 }
 _listCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# IDENTICAL mapEnvironment 74
+
+# Summary: Convert tokens in files to environment variable values
+#
+# Map tokens in the input stream based on environment values with the same names.
+# Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
+# Undefined values are not converted.
+# Usage: {fn} [ environmentName0 environmentName1 ... ]
+# TODO: Do this like mapValue
+# See: mapValue
+# Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
+# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+# Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
+mapEnvironment() {
+  local this argument
+  local prefix suffix sedFile ee e rs
+
+  this="${FUNCNAME[0]}"
+  prefix='{'
+  suffix='}'
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || _argument "blank argument" || return $?
+    case "$argument" in
+      --prefix)
+        shift
+        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
+        prefix="$1"
+        ;;
+      --suffix)
+        shift
+        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
+        suffix="$1"
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift || _argument "shift failed after $argument" || return $?
+  done
+
+  ee=("$@")
+  if [ $# -eq 0 ]; then
+    while read -r e; do ee+=("$e"); done < <(environmentVariables)
+    for e in $(environmentVariables); do ee+=("$e"); done
+  fi
+  sedFile=$(mktemp) || _environment "mktemp failed" || return $?
+  rs=0
+  if __environment _mapEnvironmentGenerateSedFile "$prefix" "$suffix" "${ee[@]}" >"$sedFile"; then
+    if ! sed -f "$sedFile"; then
+      rs=$?
+      cat "$sedFile" 1>&2
+    fi
+  else
+    rs=$?
+  fi
+  rm -f "$sedFile" || :
+  return $rs
+}
+
+# Helper function
+_mapEnvironmentGenerateSedFile() {
+  local i prefix="${1-}" suffix="${2-}"
+
+  shift 2
+  for i in "$@"; do
+    case "$i" in
+      *[%{}]* | LD_*) ;; # skips
+      *)
+        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || return $?
+        ;;
+    esac
+  done
+}
+
+# IDENTICAL quoteSedPattern 17
+
+# Summary: Quote sed strings for shell use
+# Quote a string to be used in a sed pattern on the command line.
+# Usage: quoteSedPattern text
+# Argument: text - Text to quote
+# Output: string quoted and appropriate to insert in a sed search or replacement phrase
+# Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+#
+quoteSedPattern() {
+  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value="${value//\//\\/}"
+  value="${value//[/\\[}"
+  value="${value//]/\\]}"
+  value="${value//&/\\&}"
+  value="${value//$'\n'/\\n}"
+  printf "%s\n" "$value"
 }
