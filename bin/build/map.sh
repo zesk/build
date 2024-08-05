@@ -286,3 +286,5 @@ _mapEnvironmentGenerateSedFile() {
     esac
   done
 }
+
+mapEnvironment "$@"
