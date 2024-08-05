@@ -19,7 +19,7 @@
 # Exit Code: exitCode
 _return() {
   local r="${1-:1}" && shift
-  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 

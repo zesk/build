@@ -5,6 +5,8 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+  # IDENTICAL environmentVariables EOF
+
 #
 # Output a list of environment variables and ignore function definitions
 #
@@ -14,6 +16,5 @@
 # Usage: {fn}
 #
 environmentVariables() {
-  # IDENTICAL environmentVariables 1
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }

@@ -233,8 +233,8 @@ _aptUninstall() {
 # Usage: {fn} binary aptInstallPackage ...
 # Example:     whichApt shellcheck shellcheck
 # Example:     whichApt mariadb mariadb-client
-# Argument: binary - The binary to look for
-# Argument: aptInstallPackage - The package name to install if the binary is not found in the `$PATH`.
+# Argument: binary - Required. String. The binary to look for
+# Argument: aptInstallPackage - Required. String. The package name to install if the binary is not found in the `$PATH`.
 # Environment: Technically this will install the binary and any related files as a package.
 #
 whichApt() {

@@ -9,6 +9,18 @@
 # Docs: o ./docs/_templates/tools/version.md
 # Test: o ./test/tools/version-tests.sh
 
+# Check if something matches a version
+isVersion() {
+  local part parts
+  [ $# -gt 0 ] || return 1
+  while [ $# -gt 0 ]; do
+    IFS=. read -r -a parts < <(printf "%s\n" "$1")
+    for part in "${parts[@]}"; do
+      _integer "$part" || return 1
+    done
+    shift
+  done
+}
 
 # Summary: Output path to current release notes
 #
@@ -199,12 +211,7 @@ newRelease() {
   fi
   notes="$(__usageEnvironment "$usage" releaseNotes "$newVersion")" || return $?
   if [ ! -f "$notes" ]; then
-    trimSpace >"$notes" <<-EOF
-        # Release $newVersion
-
-        - Upgrade from $currentVersion
-        - New snazzy features here
-EOF
+    __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
     consoleSuccess "Version $newVersion ready - release notes: $notes"
     if $isInteractive; then
       __usageEnvironment "$usage" runHook version-created "$newVersion" "$notes" || return $?
@@ -220,4 +227,14 @@ EOF
 _newRelease() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__newReleaseNotes() {
+  local newVersion=$1 currentVersion=$2
+  cat <<EOF
+# Release $newVersion
+
+- Upgrade from $currentVersion
+- New snazzy features here
+EOF
 }

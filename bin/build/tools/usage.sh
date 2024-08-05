@@ -293,7 +293,7 @@ usageArgumentPositiveInteger() {
     __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger && __usageArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
+  __usageArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __usageArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
 }
 
 # Validates a value is not blank and is a file.

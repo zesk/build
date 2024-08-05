@@ -31,7 +31,7 @@ __tools() {
 # Exit Code: exitCode
 _return() {
   local r="${1-:1}" && shift
-  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
@@ -59,6 +59,9 @@ __hookPreCommit() {
   statusMessage consoleSuccess Updating _sugar.sh
   original="bin/build/identical/_sugar.sh"
   nonOriginal=bin/build/tools/_sugar.sh
+
+  statusMessage consoleSuccess Making shell files exeutable ...
+  __usageEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
     nonOriginalWithEOF=$(__usageEnvironment "$usage" mktemp) || return $?

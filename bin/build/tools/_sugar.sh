@@ -9,7 +9,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 140
+# IDENTICAL _sugar 139
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
@@ -58,11 +58,11 @@ _command() {
 #
 # - 1 - environment or general error
 # - 2 - argument error
-# - 97 - **a**ssert - ASCII 97 = `a`
-# - 105 - **i**dentical - ASCII 105 = `i`
-# - 108 - **l**eak - ASCII 108 = `l`
-# - 116 - **t**est - ASCII 116 = `t`
-# - 120 - e**x**it - ASCII 120 = `x`
+# - 97 - assert - ASCII 97 = `a`
+# - 105 - identical - ASCII 105 = `i`
+# - 108 - leak - ASCII 108 = `l`
+# - 116 - test - ASCII 116 = `t`
+# - 120 - exit - ASCII 120 = `x`
 # - 253 - internal
 # - 254 - unknown
 #
@@ -88,13 +88,12 @@ _boolean() {
 # Boolean selector
 # Usage: {fn} testValue trueChoice falseChoice
 _choose() {
-  local testValue
-  testValue="${1-}" && shift
-  _boolean "$testValue" || _argument "_choose non-boolean: \"$testValue\"" || return $?
+  local testValue="${1-}" && shift
+  _boolean "$testValue" || _argument "${FUNCNAME[1]-no function name}:${BASH_LINENO[1]-no line} -> ${FUNCNAME[0]} _choose non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf "%s\n" "${1-}" || printf "%s\n" "${2-}"
 }
 
-# Return `$errorEnvironment` always. Outputs `message ...` to `stderr`.
+# Return `environment` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
@@ -102,7 +101,7 @@ _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
-# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
+# Return `argument` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
@@ -117,7 +116,7 @@ __execute() {
   "$@" || _return $? "$(_command "$@")" || return $?
 }
 
-# Run `command ...` (with any arguments) and then `_exit` if it fails. Critical code only.
+# Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: None

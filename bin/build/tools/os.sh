@@ -417,6 +417,7 @@ extensionLists() {
       __usageEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
     done
   else
+    __usageEnvironment "$usage" touch "$directory/@" || return $?
     while read -r name; do
       __usageEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
     done

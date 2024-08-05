@@ -31,7 +31,7 @@ __tools() {
 # Exit Code: exitCode
 _return() {
   local r="${1-:1}" && shift
-  _integer "$r" || _return 2 "${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
@@ -76,10 +76,10 @@ __deprecatedCannon() {
 # a clean build checkout and examine changes manually each time.
 #
 # Does various checks for deprecated code and updates code.
-# Usage: deprecated.sh
+# Usage: {fn}
+# fn: {base}
 # Exit Code: 0 - All cleaned up
 # Exit Code: 1 - If fails or validation fails
-# fn: deprecated.sh
 #
 __deprecatedCleanup() {
   local this="${BASH_SOURCE[0]##*/}"
@@ -155,6 +155,9 @@ __deprecatedCleanup() {
 
   # v0.11.2
   __deprecatedCannon '_''environment''Output' outputTrigger
+
+  # v0.11.4
+  deprecatedTokens+=("ops"".sh" "__""ops")
 
   clearLine
   # Do all deprecations

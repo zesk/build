@@ -151,7 +151,7 @@ veeGitTag() {
   local usage="_${FUNCNAME[0]}"
   local tagName="$1"
 
-  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already veed: $(consoleValue "$tagName")" || return $?
+  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already v'd': $(consoleValue "$tagName")" || return $?
   __usageEnvironment "$usage" git tag "v$tagName" "$tagName" || return $?
   __usageEnvironment "$usage" git tag -d "$tagName" || return $?
   __usageEnvironment "$usage" git push origin "v$tagName" ":$tagName" || return $?
@@ -478,14 +478,16 @@ gitCommit() {
 }
 __gitCommitReleaseNotesUpdate() {
   local usage="_gitCommit"
-  local comment="$1" notes="$2" pattern
+  local comment="$1" notes="$2" pattern displayNotes
 
+  home=$(__usageEnvironment "$usage" buildHome)
+  displayNotes="${notes#"$home"/}"
   pattern="$(quoteGrepPattern "$comment")"
   __usageEnvironment "$usage" clearLine || return $?
-  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(consoleLabel "Release notes") $(consoleValue "$notes") $(consoleDecoration)")" "$(consoleReset)" || return $?
+  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(consoleLabel "Release notes") $(consoleValue "$displayNotes") $(consoleDecoration)")" "$(consoleReset)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$notes")" "$(boxedHeading "$comment")" || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$displayNotes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
     __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
   else
@@ -860,7 +862,7 @@ gitPreCommitSetup() {
 
   directory=$(__gitPreCommitCache true) || return $?
   __usageEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __usageEnvironment "$usage" extensionLists --clean "$directory" || return $?
-  [ ! -f "$directory/@" ] || total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   [ $total -ne 0 ]
 }
 _gitPreCommitSetup() {
