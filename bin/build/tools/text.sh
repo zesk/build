@@ -1168,3 +1168,16 @@ quoteSedPattern() {
   value="${value//$'\n'/\\n}"
   printf "%s\n" "$value"
 }
+
+# Usage: {fn}
+# Pipe to output a single newline before any output, otherwise, nothing is output.
+newlinePrefix() {
+  local prefixed=false
+  while read -r line; do
+    if ! $prefixed; then
+      printf "\n"
+      prefixed=true
+    fi
+    printf "%s\n" "$line"
+  done
+}
