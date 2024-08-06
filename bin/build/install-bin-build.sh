@@ -69,7 +69,7 @@ __installBinBuildCheck() {
 __installPackageConfiguration() {
   local rel="$1"
   shift
-  installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
+  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
 # IDENTICAL _installRemotePackage 251
