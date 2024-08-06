@@ -21,7 +21,7 @@ fi
 #
 # Environment: BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
 #
-hookVersionAlready() {
+__hookVersionAlready() {
   local currentVersion releaseNotes
   export BUILD_VERSION_NO_OPEN
 
@@ -37,4 +37,4 @@ hookVersionAlready() {
   fi
 }
 
-hookVersionAlready "$@"
+__hookVersionAlready "$@"

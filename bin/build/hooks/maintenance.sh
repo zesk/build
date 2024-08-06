@@ -25,8 +25,8 @@ __hookMaintenanceSetValue() {
   __environment mv -f "$envFile.$$" "$envFile" || return $?
 }
 
-#
-# fn: {base} [ --message message ] maintenanceSetting
+# fn: {base}
+# Usage: {fn} [ --message message ] maintenanceSetting
 # Argument: message - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
 # Argument: maintenanceSetting - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
 # Toggle maintenance on or off. The default version of this modifies

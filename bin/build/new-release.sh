@@ -4,4 +4,13 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-"$(dirname "${BASH_SOURCE[0]}")/tools.sh" newRelease "$@"
+
+# fn: {base}
+# Usage: {fn}
+# See `newRelease` for arguments and usage.
+# See: newRelease
+__binNewRelease() {
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" newRelease "$@"
+}
+
+__binNewRelease "$@"

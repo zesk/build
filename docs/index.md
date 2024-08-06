@@ -26,20 +26,10 @@ To use in your pipeline:
 - `./bin/build/install/*.sh` - Install dependencies in the pipeline - most of these exist as functions
 - `./bin/hooks/*.sh` - [Build Hooks](./hooks/index.md) - Hooks are a way to customize default behaviors in build scripts.
 
-## [Build Bash Functions](./tools/index.md)
+## Usage and arguments
 
-Handy tools
-
-- `chmod-sh.sh` - Make `.sh` files executable (function `makeShellFilesExecutable`)
-- `cannon.sh` - Replace text in all files specified (DANGER)
-- `deprecated.sh` - Replace or warn about deprecated build code - run this in your source tree to fix or warn.
-- `map.sh` - Replace environment tokens in a text file with values from the environment
-- `new-release.sh` - Make a new release version (see `newRelease`)
-- `version-last.sh` - The last version tagged (function `gitVersionLast`)
-- `version-list.sh` - List all version tags ordered by `versionSort` (function `gitVersionList`)
-- `identical-check.sh` - Quality tool to ensure code matches in different places (see `identicalCheck`)
-- `release-notes.sh` - Outputs file name of current release notes (Try `open $(bin/build/release-notes.sh)`)
-- `install-bin-build.sh` - Copy this into your project, rename it if you want, modify `relTop` and then use it to install this anywhere.
+- [Function Reference](./tools/index.md)
+- [Binaries](./tools/bin.md)
 
 ## Zesk Build Guides
 

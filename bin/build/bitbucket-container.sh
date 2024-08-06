@@ -4,4 +4,12 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-"$(dirname "${BASH_SOURCE[0]}")/tools.sh" bitbucketContainer "$@"
+
+# fn: {base}
+# Usage: {fn}
+# See `bitbucketContainer` for arguments and usage.
+# See: bitbucketContainer
+__binBitbucketContainer() {
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" bitbucketContainer "$@"
+}
+__binBitbucketContainer "$@"

@@ -102,7 +102,7 @@ Assert one string does not contains another (case-sensitive)
 
 #### See Also
 
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+{SEE:assertContains}
 
 ## Comparison
 

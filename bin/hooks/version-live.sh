@@ -24,7 +24,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # IDENTICAL __tools 17
 # Usage: {fn} [ relative [ command ... ] ]
@@ -45,4 +45,10 @@ __tools() {
   "$@" || return $?
 }
 
-__tools ../.. githubLatestRelease zesk/build "$@"
+# base: {fn}
+# Usage: {fn}
+# Fetch the current live version of the software
+__hookVersionLive() {
+  githubLatestRelease zesk/build "$@"
+}
+__tools ../.. __hookVersionLive "$@"

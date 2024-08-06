@@ -14,6 +14,7 @@ Once included, all functions here are available for use:
 - [Assertion](./assert.md)
 - [Amazon Web Services](./aws.md)
 - [BitBucket](./bitbucket.md)
+- [Binaries (direect)](./bin.md)
 - [Color](./colors.md)
 - [Console](./console.md)
 - [Console Color](./consoleColor.md)

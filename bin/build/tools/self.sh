@@ -16,7 +16,8 @@
 # Usage: {fn} [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]
 installInstallBuild() {
   local usage="_${FUNCNAME[0]}"
-  local argument exitCode
+  local argument nArguments argumentIndex
+  local exitCode
   local path applicationHome temp relTop home
   local installBinName source target url showDiffFlag localFlag verb
 
@@ -26,9 +27,10 @@ installInstallBuild() {
   applicationHome=
   showDiffFlag=false
   localFlag=false
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -47,11 +49,11 @@ installInstallBuild() {
         elif [ -z "$applicationHome" ]; then
           applicationHome=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         else
-          __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
         fi
         ;;
     esac
-    shift || :
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
   # Validate paths and force realPath
@@ -126,8 +128,8 @@ _installInstallBuildIsLegacy() {
   grep -q '^relTop=' >/dev/null
 }
 _installInstallBuildCustomize() {
-  grep -v -e '^installBinBuild '
-  printf "installBinBuild %s \"%s\"\n" "$1" '$@'
+  grep -v -e '^__installPackageConfiguration '
+  printf "__installPackageConfiguration %s \"%s\"\n" "$1" '$@'
 }
 _installInstallBuildCustomizeLegacy() {
   sed "s/^relTop=.*$/relTop=$(quoteSedPattern "$1")/g"
@@ -165,7 +167,7 @@ _installInstallBuildDiffer() {
 # Usage: {fn} diff-arguments
 # Argument: diff-arguments - Required. Arguments. Passed to diff.
 _installInstallBuildDifferFilter() {
-  diff "$@" | grep -v -e '^installBinBuild ' | grep -c '[<>]'
+  diff "$@" | grep -v -e '^__installPackageConfiguration ' | grep -c '[<>]'
 }
 
 # Usage: {fn}

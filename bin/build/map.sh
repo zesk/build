@@ -35,7 +35,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # IDENTICAL _sugar 139
 
@@ -287,4 +287,12 @@ _mapEnvironmentGenerateSedFile() {
   done
 }
 
-mapEnvironment "$@"
+# fn: {base}
+# Usage: {fn}
+# See `mapEnvironment` for arguments and usage.
+# See: mapEnvironment
+__binMapEnvironment() {
+  mapEnvironment "$@"
+}
+
+__binMapEnvironment "$@"

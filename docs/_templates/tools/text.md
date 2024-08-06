@@ -29,6 +29,9 @@
 {mapValueTrim}
 {mapEnvironment}
 
+{printfOutputPrefix}
+{printfOutputSuffix}
+
 ### Space trimming
 
 {trimWords}

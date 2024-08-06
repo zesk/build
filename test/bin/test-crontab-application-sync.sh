@@ -53,7 +53,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # Sample output (delete first 2 characters on each line to remove comments)
 #

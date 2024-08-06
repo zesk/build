@@ -16,6 +16,10 @@ Easier access to `BUILD_HOME`, list of all functions, cache directory, known env
 
 {installInstallBuild}
 
-# `install-bin-build.sh`
+# Intalling Zesk Build
 
-{installBinBuild}
+{__installPackageConfiguration}
+
+# Remote Package Installation
+
+{installRemotePackage}

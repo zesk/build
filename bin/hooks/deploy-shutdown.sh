@@ -49,7 +49,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 #
 # Runs at the end of the application life (before taking down application and replacing with another)

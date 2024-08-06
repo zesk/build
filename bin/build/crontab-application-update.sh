@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# ┏━╸┏━┓┏━┓┏┓╻╺┳╸┏━┓┏┓    ┏━┓┏━┓┏━┓╻  ╻┏━╸┏━┓╺┳╸╻┏━┓┏┓╻   ┏━┓╻ ╻┏┓╻┏━╸ ┏━┓╻ ╻
-# ┃  ┣┳┛┃ ┃┃┗┫ ┃ ┣━┫┣┻┓╺━╸┣━┫┣━┛┣━┛┃  ┃┃  ┣━┫ ┃ ┃┃ ┃┃┗┫╺━╸┗━┓┗┳┛┃┗┫┃   ┗━┓┣━┫
-# ┗━╸╹┗╸┗━┛╹ ╹ ╹ ╹ ╹┗━┛   ╹ ╹╹  ╹  ┗━╸╹┗━╸╹ ╹ ╹ ╹┗━┛╹ ╹   ┗━┛ ╹ ╹ ╹┗━╸╹┗━┛╹ ╹
+#  ┏━╸┏━┓┏━┓┏┓╻╺┳╸┏━┓┏┓    ┏━┓┏━┓┏━┓╻  ╻┏━╸┏━┓╺┳╸╻┏━┓┏┓╻   ╻ ╻┏━┓╺┳┓┏━┓╺┳╸┏━╸ ┏━┓╻ ╻
+#  ┃  ┣┳┛┃ ┃┃┗┫ ┃ ┣━┫┣┻┓╺━╸┣━┫┣━┛┣━┛┃  ┃┃  ┣━┫ ┃ ┃┃ ┃┃┗┫╺━╸┃ ┃┣━┛ ┃┃┣━┫ ┃ ┣╸  ┗━┓┣━┫
+#  ┗━╸╹┗╸┗━┛╹ ╹ ╹ ╹ ╹┗━┛   ╹ ╹╹  ╹  ┗━╸╹┗━╸╹ ╹ ╹ ╹┗━┛╹ ╹   ┗━┛╹  ╺┻┛╹ ╹ ╹ ┗━╸╹┗━┛╹ ╹
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -45,6 +45,14 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
+# Usage: {fn}
+# fn: {base}
+# Usage: {fn}
+# See `crontabApplicationUpdate` for arguments and usage.
+# See: crontabApplicationUpdate
+__binCrontabApplicationUpdate() {
+  crontabApplicationUpdate "$@"
+}
 __tools ../../.. crontabApplicationUpdate "$@"

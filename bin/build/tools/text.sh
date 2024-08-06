@@ -563,12 +563,12 @@ mapValue() {
         return $?
         ;;
       --search-filter)
-        searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "$1")") || return $?
-        return $?
+        shift
+        searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "${1-}")") || return $?
         ;;
       --replace-filter)
-        replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "$1")") || return $?
-        return $?
+        shift
+        replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "${1-}")") || return $?
         ;;
       *)
         if [ -z "$mapFile" ]; then

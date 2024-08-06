@@ -43,8 +43,17 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
+# fn: {base}
+# Usage: {fn}
+# By default will add any directory named `identical` as repair source and any file
+# at `identical/singles.txt` as a singles file.
+#
+# Failures will be opened using `contextOpen`.
+#
+# See `identicalCheckShell` for additional arguments and usage.
+# See: identicalCheckShell
 __buildIdenticalRepair() {
   local item
   local aa

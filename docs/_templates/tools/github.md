@@ -6,3 +6,10 @@
 
 {githubLatestRelease}
 {githubRelease}
+
+## GitHub Release Hooks
+
+These hooks are run in your code during `githubRelease`:
+
+{hookGithubReleaseBefore}
+{hookGithubReleaseAfter}

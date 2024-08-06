@@ -30,7 +30,7 @@ testTools() {
 tests+=(testHooks)
 testHooks() {
   local h
-  for h in deploy-cleanup deploy-confirm make-env version-created version-live; do
+  for h in deploy-cleanup deploy-confirm application-environment version-created version-live; do
     assertExitCode 0 hasHook $h || return $?
   done
   for h in misspelled-deployed-cleanup not-rude-confirm; do
