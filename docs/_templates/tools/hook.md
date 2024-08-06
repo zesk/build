@@ -27,6 +27,13 @@ These hooks interact with `new-release.sh` and deployment tools but are intended
 {__hookApplicationTag}
 {__hookMaintenance}
 
+{__hookDeployStart}
+{__hookDeployMove}
+{__hookDeployConfirm}
+{__hookDeployCleanup}
+{__hookDeployFinish}
+{__hookDeployRevert}
+
 ## Git hooks
 
 {__hookGitPreCommit}

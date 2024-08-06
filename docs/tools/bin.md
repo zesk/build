@@ -17,7 +17,7 @@ See `cannon` for arguments and usage.
 
 #### See Also
 
-{SEE:cannon}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `chmod-sh.sh` - See `makeShellFilesExecutable` for arguments and usage.
 
@@ -29,7 +29,7 @@ See `makeShellFilesExecutable` for arguments and usage.
 
 #### See Also
 
-{SEE:makeShellFilesExecutable}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `deprecated.sh` - Clean up deprecated code automatically. This can be dangerous (uses
 
@@ -53,7 +53,7 @@ See `identicalCheck` for arguments and usage.
 
 #### See Also
 
-{SEE:identicalCheck}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `identical-repair.sh` - By default will add any directory named `identical` as repair
 
@@ -70,7 +70,7 @@ See `identicalCheckShell` for additional arguments and usage.
 
 #### See Also
 
-{SEE:identicalCheckShell}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `install-bin-build.sh` - Installs a remote package system in a local project directory
 
@@ -102,7 +102,7 @@ See `bitbucketContainer` for arguments and usage.
 
 #### See Also
 
-{SEE:bitbucketContainer}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `local-container.sh` - See `dockerLocalContainer` for arguments and usage.
 
@@ -114,7 +114,7 @@ See `dockerLocalContainer` for arguments and usage.
 
 #### See Also
 
-{SEE:dockerLocalContainer}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `map.sh` - See `mapEnvironment` for arguments and usage.
 
@@ -126,7 +126,7 @@ See `mapEnvironment` for arguments and usage.
 
 #### See Also
 
-{SEE:mapEnvironment}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `new-release.sh` - See `newRelease` for arguments and usage.
 
@@ -138,7 +138,7 @@ See `newRelease` for arguments and usage.
 
 #### See Also
 
-{SEE:newRelease}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `release-notes.sh` - See `releaseNotes` for arguments and usage.
 
@@ -150,7 +150,7 @@ See `releaseNotes` for arguments and usage.
 
 #### See Also
 
-{SEE:releaseNotes}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `version-last.sh` - See `gitVersionLast` for arguments and usage.
 
@@ -162,7 +162,7 @@ See `gitVersionLast` for arguments and usage.
 
 #### See Also
 
-{SEE:gitVersionLast}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `version-list.sh` - See `gitVersionLast` for arguments and usage.
 
@@ -174,4 +174,4 @@ See `gitVersionLast` for arguments and usage.
 
 #### See Also
 
-{SEE:gitVersionLast}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})

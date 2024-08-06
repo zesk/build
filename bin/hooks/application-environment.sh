@@ -47,4 +47,13 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-__tools ../.. environmentFileApplicationMake "$@"
+# Hook is run to generate the application environment file
+# Outputs environment settings, one per line to be put into an environment file
+# Usage: {fn}
+# See `environmentFileApplicationMake` for usage and arguments.
+# See: environmentFileApplicationMake
+__hookApplicationEnvironment() {
+  __tools ../.. environmentFileApplicationMake "$@"
+}
+
+__hookApplicationEnvironment "$@"

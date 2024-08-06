@@ -77,9 +77,9 @@ Document a function and generate a function template (markdown)
 
 #### See Also
 
-{SEE:_bashDocumentation_Template}
-{SEE:bashDocumentFunction}
-{SEE:repeat}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `documentationTemplateCompile` - Convert a template file to a documentation file using templates
 
@@ -111,8 +111,8 @@ The process:
 
 #### See Also
 
-{SEE:documentationIndex_Lookup}
-{SEE:documentationIndexIndex}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+Not found
 
 ### `documentationTemplateDirectoryCompile` - Convert a directory of templates into documentation for Bash functions
 
@@ -143,7 +143,7 @@ to regenerate each time.
 
 #### See Also
 
-{SEE:documentationTemplateCompile}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Documentation Indexing
 
@@ -173,7 +173,7 @@ Use with documentationIndex_Lookup
 
 #### See Also
 
-{SEE:documentationIndex_Lookup}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `documentationIndex_Lookup` - Looks up information in the function index
 
@@ -194,7 +194,7 @@ Looks up information in the function index
 
 #### See Also
 
-{SEE:documentationIndex_Generate}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 # Linking documentation 
 
@@ -272,8 +272,8 @@ Within your function, add an ignore reason if you wish:
 
 #### See Also
 
-{SEE:documentationIndex_LinkDocumentationPaths}
-{SEE:documentationIndex_FunctionIterator}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `documentationIndex_FunctionIterator` - Output a list of all functions in the index as
 
@@ -296,8 +296,8 @@ Output a list of all functions in the index as pairs:
 
 #### See Also
 
-{SEE:documentationIndex_Lookup}
-{SEE:documentationIndex_LinkDocumentationPaths}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ### `documentationIndex_UnlinkedIterator` - List of functions which are not linked to anywhere in
 
@@ -317,9 +317,9 @@ List of functions which are not linked to anywhere in the documentation index
 - `0` - The settings file is unlinked within the documentation (not defined anywhere)
 - `1` - The settings file is linked within the documentation
 
-### `documentationIndex_SeeLinker` - Link `{SEE:name}` tokens in documentation
+### `documentationIndex_SeeLinker` - Link `Not found` tokens in documentation
 
-$\Link `{SEE:name}` tokens in documentation
+$\Link `Not found` tokens in documentation
 
 #### Usage
 
@@ -432,7 +432,7 @@ Generates a temporary file which is removed
 
 #### See Also
 
-{SEE:bashDocumentation_FindFunctionDefinitions}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Usage Utilities
 

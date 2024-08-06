@@ -130,7 +130,7 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
 #### See Also
 
-{SEE:deployToRemote}
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Utilities
 
@@ -255,7 +255,70 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 
 ## Hook documentation
 
-Unable to find "hookEnvironmentFileMake" (using index "/Users/kent/.build")
+
+### `__hookApplicationEnvironment` - Hook is run to generate the application environment file
+
+Hook is run to generate the application environment file
+Outputs environment settings, one per line to be put into an environment file
+See `environmentFileApplicationMake` for usage and arguments.
+
+#### Usage
+
+    __hookApplicationEnvironment
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+
+### `application-id.sh` - Generate a unique ID for the state of the application
+
+Generate a unique ID for the state of the application files
+
+The default hook uses the short git sha:
+
+    git rev-parse --short HEAD
+
+#### Examples
+
+    885acc3
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `application-tag.sh` - Get the "tag" (or current display version) for an application
+
+Get the "tag" (or current display version) for an application
+
+The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `maintenance.sh` - Toggle maintenance on or off. The default version of this
+
+Toggle maintenance on or off. The default version of this modifies
+the environment files for the application by modifying the `.env.local` file
+and dynamically adding or removing any line which matches the MAINTENANCE variable.
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
+
 
 ### `deploy-start.sh` - Deployment "start" script
 
@@ -267,11 +330,7 @@ Deployment "start" script
 
 #### Exit codes
 
-- `0` - This SHOULD exit successfully always
-
-#### Errors
-
-Unable to find "hookEnvironmentFileMake" (using index "/Users/kent/.build") 
+- `0` - This SHOULD exit successfully always 
 
 ### `deploy-move.sh` - Deployment move script
 
@@ -291,11 +350,7 @@ in order to activate it.
 
 #### Exit codes
 
-- `0` - This is called to replace the running application in-place
-
-#### Errors
-
-Unable to find "hookEnvironmentFileMake" (using index "/Users/kent/.build") 
+- `0` - This is called to replace the running application in-place 
 
 ### `deploy-confirm.sh` - Deployment confirmation script
 
@@ -311,11 +366,7 @@ should do wahtever is required to ensure that.
 #### Exit codes
 
 - `0` - Continue with deployment
-- `Non-zero` - Any non-zero exit code will run `deploy-revert` hook on all systems and cancel deployment
-
-#### Errors
-
-Unable to find "hookEnvironmentFileMake" (using index "/Users/kent/.build") 
+- `Non-zero` - Any non-zero exit code will run `deploy-revert` hook on all systems and cancel deployment 
 
 ### `deploy-cleanup.sh` - Run after a successful deployment
 
@@ -326,11 +377,7 @@ should do whatever is required to ensure that.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
-#### Errors
-
-Unable to find "hookEnvironmentFileMake" (using index "/Users/kent/.build") 
+- `0` - Always succeeds 
 
 ### `deploy-finish.sh` - Deployment "finish" script
 
@@ -342,11 +389,7 @@ $\Deployment "finish" script
 
 #### Exit codes
 
-- `0` - This SHOULD exit successfully always
-
-#### Errors
-
-Unable to find "hookEnvironmentFileMake" (using index "/Users/kent/.build") 
+- `0` - This SHOULD exit successfully always 
 
 ### `deploy-revert.sh` - Deployment "undo" script
 
@@ -355,7 +398,3 @@ After a deployment was successful on a host, this undos that deployment and goes
 #### Exit codes
 
 - `0` - This SHOULD exit successfully always
-
-#### Errors
-
-Unable to find "hookEnvironmentFileMake" (using index "/Users/kent/.build")
