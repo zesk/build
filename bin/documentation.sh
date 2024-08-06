@@ -41,18 +41,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
-
-#
-# Documentation configuration
-#
-_buildDocumentationPaths() {
-  cat <<EOF
-tools function
-hooks hook
-bin binary
-EOF
-}
+# <-- END of IDENTICAL _return
 
 __buildDocumentationBuildDirectory() {
   local home="$1" subPath="$2" template="$3"
@@ -61,24 +50,9 @@ __buildDocumentationBuildDirectory() {
 }
 
 __buildDocumentationBuild() {
-  local here="${BASH_SOURCE[0]%/*}" home subPath templateCode
+  local here="${BASH_SOURCE[0]%/*}" home
 
   home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
-  case "$1" in
-    --unlinked)
-      documentationUnlinked
-      return 0
-      ;;
-    --unlinked-update)
-      __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@"
-      ;;
-    *)
-      documentationTemplateUpdate "$home/docs/_templates" "$home/docs/_templates/_parts" || return $?
-      while read -r subPath templateCode; do
-        template="$(__environment documentationTemplate "$templateCode")" || return $?
-        __buildDocumentationBuildDirectory "$home" "$subPath" "$template" "$@" || return $?
-      done < <(_buildDocumentationPaths)
-      ;;
-  esac
+  __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@"
 }
 __tools .. __buildDocumentationBuild "$@"

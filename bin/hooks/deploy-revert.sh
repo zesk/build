@@ -47,7 +47,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # After a deployment was successful on a host, this undos that deployment and goes back to the previous version.
 #

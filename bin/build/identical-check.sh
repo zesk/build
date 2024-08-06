@@ -5,4 +5,13 @@
 # Utility to check source code for identical sections which MUST match to succeed.
 #
 # See: identicalCheck
-"$(dirname "${BASH_SOURCE[0]}")/tools.sh" identicalCheck "$@"
+
+# fn: {base}
+# Usage: {fn}
+# See `identicalCheck` for arguments and usage.
+# See: identicalCheck
+__binIdenticalCheck() {
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" identicalCheck "$@"
+}
+
+__binIdenticalCheck "$@"

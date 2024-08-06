@@ -13,9 +13,6 @@ if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
   exit 1
 fi
 
-export BUILD_VERSION_NO_OPEN
-BUILD_VERSION_NO_OPEN=${BUILD_VERSION_NO_OPEN-}
-
 # fn: {base}
 #
 # Run whenever `new-version.sh` is run and a version was just created.
@@ -24,11 +21,13 @@ BUILD_VERSION_NO_OPEN=${BUILD_VERSION_NO_OPEN-}
 #
 # Environment: BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
 #
-hookVersionCreated() {
+__hookVersionCreated() {
   currentVersion=$1
   shift
   releaseNotes=$1
   shift
+
+  export BUILD_VERSION_NO_OPEN
 
   printf "%s %s %s %s\n" "$(consoleSuccess "Created")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes are")" "$(consoleValue "$currentVersion")"
   if buildEnvironmentLoad BUILD_VERSION_NO_OPEN && ! test "$BUILD_VERSION_NO_OPEN"; then
@@ -37,4 +36,4 @@ hookVersionCreated() {
   fi
 }
 
-hookVersionCreated "$@"
+__hookVersionCreated "$@"

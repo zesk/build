@@ -6,4 +6,13 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-"$(dirname "${BASH_SOURCE[0]}")/tools.sh" gitVersionList "$@"
+
+# fn: {base}
+# Usage: {fn}
+# See `gitVersionLast` for arguments and usage.
+# See: gitVersionLast
+__binGitVersionList() {
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" gitVersionList "$@"
+}
+
+__binGitVersionList "$@"

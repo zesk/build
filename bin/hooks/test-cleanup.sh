@@ -43,7 +43,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # Runs after tests have been run to clean up any artifacts or other test files which
 # may have been generated.

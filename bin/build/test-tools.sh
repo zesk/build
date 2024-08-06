@@ -485,7 +485,9 @@ __testFailed() {
 # Usage: {fn}
 #
 __testCleanup() {
-  __environment rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" || :
+  local home
+  home=$(__environment buildHome) || return $?
+  __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" "$(buildCacheDirectory)" || return $?
 }
 
 __testCleanupMess() {

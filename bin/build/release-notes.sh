@@ -8,4 +8,13 @@
 #
 # See: releaseNotes
 #
-"$(dirname "${BASH_SOURCE[0]}")/tools.sh" releaseNotes "$@"
+
+# fn: {base}
+# Usage: {fn}
+# See `releaseNotes` for arguments and usage.
+# See: releaseNotes
+__binReleaseNotes() {
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" releaseNotes "$@"
+}
+
+__binReleaseNotes "$@"

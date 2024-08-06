@@ -47,7 +47,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # fn: {base}
 #
@@ -61,7 +61,6 @@ _integer() {
 # Argument: applicationPath - This is the target for the current application
 # Exit code: 0 - This is called to replace the running application in-place
 #
-
 __hookDeployMove() {
   ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }

@@ -6,13 +6,63 @@
 
 ## User prompts
 
-{confirmYesNo}
-{pause}
+
+### `confirmYesNo` - Read user input and return 0 if the user says
+
+Read user input and return 0 if the user says yes
+
+#### Usage
+
+    confirmYesNo [ defaultValue ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Yes
+- `1` - No
+
+### `pause` - Pause for user input
+
+Pause for user input
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ## Copy files 
 
-{copyFileWouldChange}
-{copyFile}
+
+#### Usage
+
+    copyFileWouldChange [ --map ] source destination
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Something would change
+- `1` - Nothing would change
+
+#### Usage
+
+    copyFile [ --map ] [ --escalate ] source destination
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Failed
 
 ## Examples
 

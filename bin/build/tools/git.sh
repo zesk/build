@@ -815,7 +815,7 @@ gitPreCommitShellFiles() {
       __failEnvironment "$usage" findUncaughtAssertions || return $?
     fi
   done
-  if __fileMatches 'set ["]\?-x' 'debugging found' bin/build/install-bin-build.sh bin/build/tools/debug.sh -- "$@"; then
+  if __fileMatches 'set ["]\?-x' 'debugging found' installRemotePackage bin/build/install-bin-build.sh bin/build/tools/debug.sh -- "$@"; then
     __failEnvironment "$usage" found debugging || return $?
   fi
 }

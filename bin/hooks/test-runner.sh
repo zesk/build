@@ -43,7 +43,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # Runs our tests; any non-zero exit code is considered a failure and will terminate
 # deployment steps.

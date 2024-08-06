@@ -65,30 +65,237 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 
 ## Additional commands
 
-{consoleColorMode}
 
-{clearLine}
+### `consoleColorMode` - Set colors to deal with dark or light-background consoles
 
-{statusMessage}
+Set colors to deal with dark or light-background consoles
+See:
 
-{consoleNameValue}
+#### Exit codes
 
-{hasColors}
+- `0` - Always succeeds
 
-{hasConsoleAnimation}
 
-{colorTest}
+### `clearLine` - Clear a line in the console
 
-{semanticColorTest}
+Clears current line of text in the console
 
-{allColorTest}
+Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
 
-{simpleMarkdownToConsole}
+#### Usage
 
-{statusMessage}
+    clearLine
+    
 
-{consoleColumns}
+#### Examples
 
-{colorComboTest}
+    statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
+    clearLine
 
-{consoleBrightness}
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+Intended to be run on an interactive console. Should support `tput cols`.
+
+
+### `statusMessage` - Output a status message with no newline
+
+Output a status line using a colorAction
+
+This is intended for messages on a line which are then overwritten using clearLine
+
+Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
+
+#### Usage
+
+    statusMessage command ...
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    statusMessage consoleInfo "Loading ..."
+    bin/load.sh >>"$loadLogFile"
+    clearLine
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+Intended to be run on an interactive console. Should support $(tput cols).
+
+
+### `consoleNameValue` - Output a name value pair
+
+Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
+right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
+
+
+
+#### Usage
+
+    consoleNameValue characterWidth name [ value ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+### `hasColors` - Sets the environment variable `BUILD_COLORS` if not set, uses `TERM`
+
+Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
+
+Exit Code; 1 - Colors are likely not supported by console
+
+#### Usage
+
+    hasColors
+    
+
+#### Exit codes
+
+- `0` - Console or output supports colors
+
+#### Environment
+
+BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
+
+
+### `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation
+
+Exit Code; 1 - Does not support console animation
+
+#### Usage
+
+    hasConsoleAnimation
+    
+
+#### Exit codes
+
+- `0` - Supports console animation
+
+
+### `colorTest` - Output colors
+
+Outputs sample sentences for the `consoleAction` commands to see what they look like.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+### `semanticColorTest` - Output colors
+
+Outputs sample sentences for the `consoleAction` commands to see what they look like.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+### `allColorTest` - Alternate color output
+
+If you want to explore what colors are available in your terminal, try this.
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+### `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
+
+Converts backticks, bold and italic to console colors.
+
+#### Usage
+
+    simpleMarkdownToConsole < $markdownFile
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+### `statusMessage` - Output a status message with no newline
+
+Output a status line using a colorAction
+
+This is intended for messages on a line which are then overwritten using clearLine
+
+Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
+
+#### Usage
+
+    statusMessage command ...
+    
+
+#### Arguments
+
+
+
+#### Examples
+
+    statusMessage consoleInfo "Loading ..."
+    bin/load.sh >>"$loadLogFile"
+    clearLine
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+Intended to be run on an interactive console. Should support $(tput cols).
+
+
+### `consoleColumns` - Column count in current console
+
+Column count in current console
+
+Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
+
+#### Usage
+
+    consoleColumns
+    
+
+#### Examples
+
+    repeat $(consoleColumns)
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Environment
+
+COLUMNS - May be defined after calling this
+LINES - May be defined after calling this
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+
+#### Usage
+
+    consoleBrightness [ --background | --foreground ]
+    
+
+#### Exit codes
+
+- `0` - Always succeeds

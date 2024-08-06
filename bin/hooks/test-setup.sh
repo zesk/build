@@ -43,7 +43,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 #
 # Sets up our environment for our tests. May build a test image, set up a test database, start a test version of the

@@ -6,35 +6,424 @@
 
 ## Usage formatting
 
-{usageDocument}
-{usageArguments}
-{usageGenerator}
-{usageTemplate}
+
+### `usageDocument` - Generates console usage output for a script using documentation tools
+
+Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
+
+Simplifies documentation and has it in one place for shell and online.
+
+#### Usage
+
+    usageDocument functionDefinitionFile functionName exitCode [ ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### Usage
+
+    usageArguments delimiter
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageGenerator` - Formats name value pairs separated by separatorChar (default " ")
+
+Formats name value pairs separated by separatorChar (default " ") and uses
+$nSpaces width for first field
+
+usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
+
+use with maximumFieldLength 1 to generate widths
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageTemplate` - Output usage messages to console
+
+Output usage messages to console
+
+Should look into an actual file template, probably
+
+Do not call usage functions here to avoid recursion
+
+#### Usage
+
+    usageTemplate binName options delimiter description exitCode message ...
+    
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+#### See Also
+
+- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
 
 ## Environment
 
-{usageRequireBinary}
-{usageRequireEnvironment}
+
+### `usageRequireBinary` - Check that one or more binaries are installed
+
+Requires the binaries to be found via `which`
+
+Runs `usageFunction` on failure
+
+#### Usage
+
+    usageRequireBinary usageFunction binary0 [ ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
+
+### `usageRequireEnvironment` - Requires environment variables to be set and non-blank
+
+Requires environment variables to be set and non-blank
+
+#### Usage
+
+    usageRequireEnvironment usageFunction [ env0 ... ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always succeeds
 
 ## Argument handling
 
-{usageArgumentFileDirectory}
-{usageArgumentFile}
-{usageArgumentInteger}
-{usageArgumentLoadEnvironmentFile}
-{usageArgumentUnsignedInteger}
-{usageArgumentPositiveInteger}
-{usageArgumentDirectory}
-{usageArgumentRealDirectory}
-{usageArgumentBoolean}
-{usageArgumentURL}
-{usageArgumentCallable}
-{usageArgumentFunction}
-{usageArgumentExecutable}
-{usageArgumentEmptyString}
-{usageArgumentString}
+
+### `usageArgumentFileDirectory` - Validates a value is not blank and is a file
+
+Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
+
+#### Usage
+
+    usageArgumentFileDirectory usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentFile` - Validates a value is not blank and is a file.
+
+Validates a value is not blank and is a file.
+Upon success, outputs the file name
+
+#### Usage
+
+    usageArgumentFile usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentInteger` - Validates a value is an integer
+
+Validates a value is an integer
+
+#### Usage
+
+    usageArgumentInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
+
+Validates a value is not blank and is an environment file which is loaded immediately.
+
+Upon success, outputs the file name to stdout, outputs a console message to stderr
+
+#### Usage
+
+    usageArgumentLoadEnvironmentFile processPid usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
+
+Validates a value is an unsigned integer
+
+#### Usage
+
+    usageArgumentUnsignedInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentPositiveInteger` - Validates a value is an unsigned integer and greater than
+
+Validates a value is an unsigned integer and greater than zero (NOT zero)
+
+#### Usage
+
+    usageArgumentPositiveInteger usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentDirectory` - Validates a value is not blank and is a directory.
+
+Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
+
+#### Usage
+
+    usageArgumentDirectory usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentRealDirectory` - Validates a value is not blank and is a directory
+
+Validates a value is not blank and is a directory and does `realPath` on it.
+
+#### Usage
+
+    usageArgumentRealDirectory usageFunction variableName variableValue [ noun ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentBoolean` - Require an argument to be a boolean value
+
+Require an argument to be a boolean value
+
+#### Usage
+
+    usageArgumentBoolean usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is not a boolean
+- `0` - If `value` is a boolean
+
+### `usageArgumentURL` - Require an argument to be a URL
+
+Require an argument to be a URL
+
+#### Usage
+
+    usageArgumentURL usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - If `value` is `urlValid`
+- `2` - If `value` is not `urlValid`
+
+### `usageArgumentCallable` - Require an argument to be a callable
+
+Require an argument to be a callable
+
+#### Usage
+
+    usageArgumentCallable usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is not `isCallable`
+- `0` - If `value` is `isCallable`
+
+### `usageArgumentFunction` - Require an argument to be a function
+
+Require an argument to be a function
+
+#### Usage
+
+    usageArgumentFunction usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is not `isFunction`
+- `0` - If `value` is `isFunction`
+
+### `usageArgumentExecutable` - Require an argument to be a executable
+
+Require an argument to be a executable
+
+#### Usage
+
+    usageArgumentExecutable usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is not `isExecutable`
+- `0` - If `value` is `isExecutable`
+
+### `usageArgumentEmptyString` - Do not require argument to be non-blank
+
+Do not require argument to be non-blank
+
+#### Usage
+
+    usageArgumentEmptyString usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `0` - Always
+
+### `usageArgumentString` - Require an argument to be non-blank
+
+Require an argument to be non-blank
+
+#### Usage
+
+    usageArgumentString usage argument [ value ]
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - If `value` is blank
+- `0` - If `value` is non-blank
 
 # Errors
 
-{usageArgumentMissing}
-{usageArgumentUnknown}
+
+### `usageArgumentMissing` - Throw an missing argument error
+
+Throw an missing argument error
+
+#### Usage
+
+    usageArgumentMissing usage argument
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Always
+
+### `usageArgumentUnknown` - Throw an unknown argument error
+
+Throw an unknown argument error
+
+#### Usage
+
+    usageArgumentUnknown usage argument
+    
+
+#### Arguments
+
+
+
+#### Exit codes
+
+- `2` - Always

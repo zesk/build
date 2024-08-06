@@ -91,7 +91,7 @@ testInstallBinBuild() {
 
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$buildHome/bin/build" || return $?
   assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
-  assertFileContains --line "$LINENO" "$testBinBuild" "installBinBuild ../.. " || return $?
+  assertFileContains --line "$LINENO" "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
 
   rm -rf bin/build || return $?
 
@@ -138,6 +138,11 @@ testInstallBinBuild() {
   section=$((section + 1))
   bigText "Section #$section"
 
+  #  ▞▀▖      ▐  ▗           ▞▀▖
+  #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖ ▄▘
+  #  ▖ ▌▛▀ ▌ ▖▐ ▖▐ ▌ ▌▌ ▌ ▟▟▖▖ ▌
+  #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝ ▝▀
+
   # Change
   : Already installed
 
@@ -151,7 +156,7 @@ testInstallBinBuild() {
     --stdout-match "does not ignore"
     --stdout-match ".gitignore"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 "$testBinBuild" || return $?
+  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testBinBuild" || return $?
   assertDirectoryExists --line "$LINENO" bin/build || return $?
 
   __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 #
-# Fetch the version tag for the application
-#
-# Depends: git
+# Generate the application environment file
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -16,13 +14,18 @@ if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
 fi
 
 # fn: {base}
+# Usage: {fn}
 #
-# Get the "tag" (or current display version) for an application
+# Generate the application environment file
 #
-# The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
+# See: make
 #
-__hookApplicationTag() {
-  local argument
+#     git rev-parse --short HEAD
+#
+# Example:     885acc3
+#
+__hookApplicationEnvironment() {
+  local here argument
   local usage
 
   usage="_${FUNCNAME[0]}"
@@ -43,13 +46,12 @@ __hookApplicationTag() {
     shift || :
   done
 
-  __usageEnvironment "$usage" gitEnsureSafeDirectory "$(pwd)" || return $?
-  if ! git for-each-ref --format '%(refname:short)' refs/tags/ | grep -E '^v[0-9\.]+$' | versionSort -r | head -n 1 2>/dev/null; then
-    printf %s "v0.0.1"
-  fi
+  here="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "pwd failed" || return $?
+  __usageEnvironment "$usage" gitEnsureSafeDirectory "$here" || return $?
+  __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
-___hookApplicationTag() {
+___hookApplicationEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__hookApplicationTag "$@"
+__hookApplicationEnvironment "$@"
