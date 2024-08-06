@@ -2,7 +2,7 @@
 #
 # Identical template
 #
-# Original of installRemotePackage
+# Original of _installRemotePackage
 #
 # See: bin/build/install-bin-build.sh
 #
@@ -10,7 +10,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 
-# IDENTICAL installRemotePackage EOF
+# IDENTICAL _installRemotePackage EOF
 
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
 # fn: {base}
@@ -21,6 +21,8 @@
 #
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
+# Argument: --user headerText - Optional. String. Add `username:password` to remote request.
+# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name.
 # Argument: --debug - Optional. Flag. Debugging is on.
@@ -29,13 +31,13 @@
 # Argument: --replace - Optional. Flag. Replace an old version of this script with this one and delete this one. Internal only, do not use.
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
-installRemotePackage() {
+_installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
   local relative="${1-}" packagePath="${2-}" packageInstallerName="${3-}"
   local argument start ignoreFile tarArgs
   local forceFlag installFlag localPath message installArgs
-  local myBinary myPath osName url urlFunction checkFunction applicationHome installPath
+  local myBinary myPath osName url urlFunction checkFunction applicationHome installPath headers
 
   shift 3
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
@@ -46,6 +48,7 @@ installRemotePackage() {
   forceFlag=false
   urlFunction=
   checkFunction=
+  headers=()
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -73,6 +76,14 @@ installRemotePackage() {
         [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$argumentIndex" || return $?
         localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
         [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$localPath")\") must be path to bin/build containing tools.sh" || return $?
+        ;;
+      --user)
+        shift
+        headers+=("--user" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+        ;;
+      --header)
+        shift
+        headers+=("-H" "$(usageArgumentString "$usage" "$argument" "${1-}")")
         ;;
       --url)
         shift
@@ -129,7 +140,7 @@ installRemotePackage() {
   binName=" ($(consoleBoldBlue "$(basename "$myBinary")"))"
   if $installFlag; then
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
-    _installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" || return $?
+    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
     messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
     if [ -n "$checkFunction" ]; then
@@ -149,15 +160,15 @@ installRemotePackage() {
     message="$(cat "$messageFile") already installed"
     rm -f "$messageFile" || :
   fi
-  _installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
+  __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
   message="$message (local)$binName"
   printf "%s\n" "$message"
-  _installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
+  __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
 }
 
-# Error handler for installRemotePackage
+# Error handler for _installRemotePackage
 # Usage: {fn} exitCode [ message ... ]
-_installRemotePackage() {
+__installRemotePackage() {
   local exitCode="$1"
   shift || :
   printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
@@ -170,16 +181,17 @@ __installRemotePackageDebug() {
 }
 
 # Install the package directory
-_installRemotePackageDirectory() {
+__installRemotePackageDirectory() {
   local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs
   local target="$applicationHome/.$$.package.tar.gz"
 
+  shift 5
   if [ -n "$localPath" ]; then
-    _installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
+    __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __usageEnvironment "$usage" curl -L -s "$url" -o "$target" || return $?
+  __usageEnvironment "$usage" curl -L -s "$url" -o "$target" "$@" || return $?
   [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
@@ -195,7 +207,7 @@ _installRemotePackageDirectory() {
 }
 
 # Install the build directory from a copy
-_installRemotePackageDirectoryLocal() {
+__installRemotePackageDirectoryLocal() {
   local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
   installPath="${applicationHome%/}/${packagePath#/}"
@@ -214,7 +226,7 @@ _installRemotePackageDirectoryLocal() {
 }
 
 # Check .gitignore is correct
-_installRemotePackageGitCheck() {
+__installRemotePackageGitCheck() {
   local applicationHome="$1" pattern="${2%/}"
   pattern="/${pattern#/}/"
   local ignoreFile="$1/.gitignore"
@@ -227,8 +239,8 @@ _installRemotePackageGitCheck() {
   fi
 }
 
-# Usage: {fn} installRemotePackageSource targetBinary relativePath
-_installRemotePackageLocal() {
+# Usage: {fn} _installRemotePackageSource targetBinary relativePath
+__installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3" count=0
   {
     grep -v -e '^__installPackageConfiguration ' <"$source"
