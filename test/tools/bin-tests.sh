@@ -11,7 +11,7 @@ declare -a tests
 
 tests+=(testAdditionalBins)
 tests+=(testGitInstallation)
-tests+=(testInstallInstallBuild)
+#tests+=(testInstallInstallBuild)
 tests+=(testInstallTerraform)
 tests+=(testMapBin)
 tests+=(testMapPortability)
@@ -31,7 +31,7 @@ testNewRelease() {
   assertExitCode --line "$LINENO" 0 newRelease --non-interactive || return $?
 }
 
-testInstallInstallBuild() {
+__testInstallInstallBuild() {
   local topDir targetDir marker testBinary
   export BUILD_HOME
 

@@ -5,7 +5,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-  # IDENTICAL environmentVariables EOF
+# IDENTICAL environmentVariables EOF
 
 #
 # Output a list of environment variables and ignore function definitions
