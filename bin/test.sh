@@ -10,23 +10,22 @@
 # bin/local-container.sh
 # . bin/test-reset.sh; bin/test.sh
 
-# IDENTICAL __tools 17
+# IDENTICAL __tools 16
 # Usage: {fn} [ relative [ command ... ] ]
 # Load build tools and run command
 # Argument: relative - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 __tools() {
   local source="${BASH_SOURCE[0]}" e=253
-  local here="${source%/*}"
+  local here="${source%/*}" arguments=()
   local tools="$here/${1:-".."}/bin/build"
   [ -d "$tools" ] || _return $e "$tools is not a directory" || return $?
-  tools="$tools/tools.sh"
-  [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
+  tools="$tools/tools.sh" && [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
+  shift && while [ $# -gt 0 ]; do arguments+=("$1") && shift; done
   # shellcheck source=/dev/null
   source "$tools" || _return $e source "$tools" "$@" || return $?
-  shift
-  [ $# -eq 0 ] && return 0
-  "$@" || return $?
+  [ ${#arguments[@]} -gt 0 ] || return 0
+  "${arguments[@]}" || return $?
 }
 
 __buildTestSuite() {

@@ -57,7 +57,7 @@ testInstallInstallBuild() {
 
   assertDirectoryDoesNotExist --line "$LINENO" "$topDir/bin/build" || return $?
 
-  assertExitCode --debug --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
+  assertExitCode --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
 
   if [ ! -d "$topDir/bin/build" ]; then
     find "$topDir" -type f
@@ -67,7 +67,7 @@ testInstallInstallBuild() {
   fi
   if grep -q "$marker" "$testBinary"; then
     consoleError "binary $testBinary did not update itself as it should have ($marker found)"
-    tail -n 20 "$testBinary" | dumpPipe "$testBinary last 20"
+    dumpPipe --tail "$testBinary last 20" <"$testBinary"
     return 1
   fi
   # Do not use updated binary as behavior is unpredictable (this is the last version)
@@ -133,7 +133,6 @@ testPHPComposerInstallation() {
   __environment cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/" || return $?
   __environment phpComposer "$d" || return $?
   [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
-
 
   export BITBUCKET_CLONE_DIR
   BITBUCKET_CLONE_DIR="$oldDir"
