@@ -376,15 +376,14 @@ _documentationTemplateDirectoryCompile() {
 # See: repeat
 #
 bashDocumentFunction() {
-  local envFile file=$1 fn=$2 template=$3
-  if [ ! -f "$template" ]; then
-    consoleError "Template $template not found" 1>&2
-    return 1
-  fi
-  envFile=$(mktemp)
-  printf "%s\n" "#!/usr/bin/env bash" >>"$envFile"
-  printf "%s\n" "set -eou pipefail" >>"$envFile"
-  if ! bashDocumentation_Extract "$file" "$fn" >>"$envFile"; then
+  local usage="_${BASH_SOURCE[0]}"
+  local envFile file=$1 fn=$2 template=$3 home
+
+  [ -f "$template" ] || __failArgument "$usage" "$template is not a file" || return $?
+  envFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  __usageEnvironment "$usage" printf "%s\n%s\n" "#!/usr/bin/env bash" "%s\n" "set -eou pipefail" >>"$envFile" || return $?
+  if ! bashDocumentation_Extract "$file" "$fn" "$home" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
   _bashDocumentation_Template "$envFile" "$template"
@@ -506,7 +505,7 @@ __dumpAliasedValue() {
 # Argument: `function` - Function defined in `file`
 #
 bashDocumentation_Extract() {
-  local maxLines=1000 definitionFile=$1 fn=$2 definitionFile
+  local maxLines=1000 definitionFile=$1 fn=$2 home="$3" definitionFile
   local line name value desc tempDoc foundNames docMap lastName values
   local base
 
@@ -522,6 +521,8 @@ bashDocumentation_Extract() {
   tempDoc=$(mktemp)
   docMap=$(mktemp)
 
+  __dumpNameValue "applicationHome" "$home" | tee -a "$docMap"
+  __dumpNameValue "applicationFile" "${definitionFile#"$home"/}" | tee -a "$docMap"
   __dumpNameValue "file" "$definitionFile" | tee -a "$docMap"
   __dumpNameValue "base" "$base" | tee -a "$docMap"
   __dumpNameValue "fn" "$fn" >>"$docMap" # just docMap

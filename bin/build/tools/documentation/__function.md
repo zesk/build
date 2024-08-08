@@ -44,7 +44,7 @@ Thanks to [{credits}]({source}).
 
 #### Review Status
 
-File `{file}`, function `{fn}` was reviewed {reviewed}.
+File `{applicationFile}`, function `{fn}` was reviewed {reviewed}.
 
 #### Errors
 
