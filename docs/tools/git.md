@@ -6,7 +6,6 @@
 
 ## git Installation
 
-
 ### `gitInstall` - Install git if needed
 
 Installs the `git` binary
@@ -18,12 +17,13 @@ Installs the `git` binary
 
 #### Arguments
 
-
+- `package` - Additional packages to install
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `gitEnsureSafeDirectory` - When running git operations on a deployment host, at times
 
 When running git operations on a deployment host, at times it's necessary to
@@ -38,7 +38,7 @@ This adds the directory passed to that directory in the local user's environment
 
 #### Arguments
 
-
+- `directory` - Required. Directory. The directory to add to the `git` `safe.directory` configuration directive
 
 #### Exit codes
 
@@ -47,7 +47,6 @@ This adds the directory passed to that directory in the local user's environment
 - `Other` - git config error codes
 
 ## git Tags
-
 
 ### `gitTagDelete` - Delete git tag locally and at origin
 
@@ -60,12 +59,11 @@ Delete git tag locally and at origin
 
 #### Arguments
 
-
+- `tag` - The tag to delete locally and at origin
 
 #### Exit codes
 
 - `argument` - Any stage fails will result in this exit code. Partial deletion may occur.
-
 ### `gitTagAgain` - Remove a tag everywhere and tag again on the current
 
 Remove a tag everywhere and tag again on the current branch
@@ -77,12 +75,11 @@ Remove a tag everywhere and tag again on the current branch
 
 #### Arguments
 
-
+- `tag` - The tag to delete locally and remote
 
 #### Exit codes
 
 - `2` - Any stage fails will result in this exit code. Partial deletion may occur.
-
 ### `gitTagVersion` - Generates a git tag for a build version, so `v1.0d1`,
 
 Generates a git tag for a build version, so `v1.0d1`, `v1.0d2`, for version `v1.0`.
@@ -95,24 +92,16 @@ When this tool succeeds the git repository contains a tag with the suffix and an
 - `s` - for **staging**
 - `rc` - for **release candidate**
 
-#### Usage
-
-    gitTagVersion [ --suffix versionSuffix ] Tag version in git
-    
-
-#### Arguments
-
-
-
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is `rc`.
 BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.
-
 ### `gitVersionList` - Fetches a list of tags from git and filters those
 
 Fetches a list of tags from git and filters those which start with v and a digit and returns
@@ -123,11 +112,14 @@ them sorted by version correctly.
     gitVersionList
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `1` - If the `.git` directory does not exist
 - `0` - Success
-
 ### `gitVersionLast` - Get the last reported version.
 
 Get the last reported version.
@@ -139,23 +131,29 @@ Get the last reported version.
 
 #### Arguments
 
-
+- `ignorePattern` - Optional. Specify a grep pattern to ignore; allows you to ignore current version
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `veeGitTag` - Given a tag in the form "1.1.3" convert it to
 
 Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
 Delete the old tag as well
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## git Development
-
 
 ### `gitCommit` - Commits all files added to git and also update release
 
@@ -163,14 +161,14 @@ Commits all files added to git and also update release notes with comment
 
 Comment wisely. Does not duplicate comments. Check your release notes.
 
-#### Usage
-
-    gitCommit [ --last ] [ -- ] [ comment ... ]
-    
+Example:
 
 #### Arguments
 
-
+- `--last` - Optional. Flag. Append last comment
+- `--` - Optional. Flag. Skip updating release notes with comment.
+- `--help` - Optional. Flag. I need somebody.
+- `comment` - Optional. Text. A text comment for release notes and describing in general terms, what was done for a commit message.
 
 #### Examples
 
@@ -181,8 +179,9 @@ Comment wisely. Does not duplicate comments. Check your release notes.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `gitMainly` - Merge `staging` and `main` branches of a Git repository into
 
 Merge `staging` and `main` branches of a Git repository into the current branch.
@@ -196,41 +195,44 @@ Current repository should be clean and have no modified files.
     gitMainly
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `1` - Already in main, staging, or HEAD, or git merge failed
 - `0` - git merge succeeded
-
 ### `gitPreCommitShellFiles` - Run pre-commit checks on shell-files
 
 Run pre-commit checks on shell-files
 
-#### Usage
-
-    gitPreCommitShellFiles [ --help ] [ --interactive ] [ --check checkDirectory ] ...
-    
-
 #### Arguments
 
-
+- `--singles singlesFiles` - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
+- `--help` - Flag. Optional. I need somebody.
+- `--interactive` - Flag. Optional. Interactive mode on fixing errors.
+- `--check checkDirectory` - Optional. Directory. Check shell scripts in this directory for common errors.
+- `...` - Additional arguments are passed to `validateShellScripts` `validateFileContents`
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `gitFindHome` - Finds .git directory above or in current one.
 
 Finds .git directory above or in current one.
 
-#### Usage
+#### Arguments
 
-    gitFindHome startingDirectory
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `gitHookTypes` - GIT_AUTHOR_DATE=@1702851863 +0000
 
 GIT_AUTHOR_DATE=@1702851863 +0000
@@ -241,10 +243,15 @@ GIT_EXEC_PATH=/usr/lib/git-core
 GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
 GIT_PREFIX=
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `gitInstallHook` - Install the most recent version of this hook and RUN
 
 Install the most recent version of this hook and RUN IT in place if it has changed.
@@ -253,14 +260,11 @@ When running within your hook, pass additional arguments so they can be preserve
 
     gitInstallHook --application "$myHome" pre-commit "$@" || return $?
 
-#### Usage
-
-    gitInstallHook [ --application applicationHome ] [ --copy ] hook
-    
-
 #### Arguments
 
-
+- `hook` - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
+- `--application` - Optional. Directory. Path to application home.
+- `--copy` - Optional. Flag. Do not execute the hook if it has changed.
 
 #### Exit codes
 
@@ -272,13 +276,17 @@ When running within your hook, pass additional arguments so they can be preserve
 #### Environment
 
 BUILD-HOME - The default application home directory used for `.git` and build hooks.
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## git History
-
 
 ### `gitRemoveFileFromHistory` - Has a lot of caveats
 
@@ -288,22 +296,30 @@ gitRemoveFileFromHistory path/to/file
 
 usually have to `git push --force`
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## git Working Tree State
-
 
 ### `gitRepositoryChanged` - Has a git repository been changed from HEAD?
 
 Has a git repository been changed from HEAD?
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `1` - the repo has NOT been modified
 - `0` - the repo has been modified
-
 ### `gitShowChanges` - Show changed files from HEAD
 
 Show changed files from HEAD
@@ -313,11 +329,14 @@ Show changed files from HEAD
     gitShowChanges
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - the repo has been modified
 - `1` - the repo has NOT bee modified
-
 ### `gitShowStatus` - Show changed files from HEAD with their status prefix character:
 
 Show changed files from HEAD with their status prefix character:
@@ -337,16 +356,23 @@ Show changed files from HEAD with their status prefix character:
     gitShowStatus
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - the repo has been modified
 - `1` - the repo has NOT bee modified
-
 ### `gitInsideHook` - Are we currently inside a git hook?
 
 Are we currently inside a git hook?
 
 Tests non-blank strings in our environment.
+
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
@@ -357,62 +383,97 @@ Tests non-blank strings in our environment.
 
 GIT_EXEC_PATH - Must be set to pass
 GIT_INDEX_FILE - Must be set to pass
-
 ### `gitRemoteHosts` - List remote hosts for the current git repository
 
 List remote hosts for the current git repository
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `gitCurrentBranch` - Get the current branch name
 
 Get the current branch name
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## git pre-commit hook
-
 
 ### `gitPreCommitSetup` - Set up a pre-commit hook
 
 Set up a pre-commit hook
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds 
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error 
 ### `gitPreCommitHeader` - Output a display for pre-commit files changed
 
 Output a display for pre-commit files changed
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds 
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error 
 ### `gitPreCommitHasExtension` - Does this commit have the following file extensions?
 
 Does this commit have the following file extensions?
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds 
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error 
 ### `gitPreCommitListExtension` - List the file(s) of an extension
 
 List the file(s) of an extension
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds 
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error 
 ### `gitPreCommitCleanup` - Clean up after our pre-commit (deletes cache directory)
 
 Clean up after our pre-commit (deletes cache directory)
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

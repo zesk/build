@@ -4,7 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `urlParse` - Simple Database URL Parsing
 
 Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
@@ -25,7 +24,7 @@ Does little to no validation of any characters so best used for well-formed inpu
 
 #### Arguments
 
-
+- `url` - a Uniform Resource Locator used to specify a database connection
 
 #### Examples
 
@@ -36,7 +35,6 @@ Does little to no validation of any characters so best used for well-formed inpu
 
 - `0` - If parsing succeeds
 - `1` - If parsing fails
-
 ### `urlParseItem` - Get a database URL component directly
 
 Gets the component of the URL from a given database URL.
@@ -48,7 +46,8 @@ Gets the component of the URL from a given database URL.
 
 #### Arguments
 
-
+- `url0` - String. URL. Required. A Uniform Resource Locator used to specify a database connection
+- `component` - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
 
 #### Examples
 
@@ -56,21 +55,19 @@ Gets the component of the URL from a given database URL.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `urlValid` - Checks a URL is valid
 
 Checks a URL is valid
 
-#### Usage
-
-    urlValid url ...
-    
-
 #### Arguments
 
-
+- `url ...` - String. URL. Required. A Uniform Resource Locator
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

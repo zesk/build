@@ -6,19 +6,14 @@
 
 ## Services
 
-
 ### `serviceToPort` - Get the port number associated with a service
 
 Get the port number associated with a service
 
-#### Usage
-
-    serviceToPort service [ ... ]
-    
-
 #### Arguments
 
-
+- `service` - A unix service typically found in `/etc/services`
+- `--services servicesFile` - Optional. File. File like '/etc/services`.
 
 #### Sample Output
 
@@ -30,7 +25,6 @@ Get the port number associated with a service
 - `1` - service not found
 - `2` - bad argument or invalid port
 - `0` - service found and output is an integer
-
 ### `serviceToStandardPort` - Hard-coded services for:
 
 Hard-coded services for:
@@ -44,14 +38,9 @@ Hard-coded services for:
 
 Backup when `/etc/services` does not exist.
 
-#### Usage
-
-    serviceToStandardPort service [ ... ]
-    
-
 #### Arguments
 
-
+- `service` - A unix service typically found in `/etc/services`
 
 #### Sample Output
 
@@ -63,103 +52,76 @@ Backup when `/etc/services` does not exist.
 - `1` - service not found
 - `0` - service found and output is an integer
 
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ## Execution
-
 
 ### `whichExists` - IDENTICAL whichExists EOF
 
 IDENTICAL whichExists EOF
 
-#### Usage
-
-    whichExists binary ...
-    
-
 #### Arguments
 
-
+- `binary` - Required. String. Binary to find in the system `PATH`.
 
 #### Exit codes
 
 - `0` - If all values are found
-
 ### `runCount` - Run a binary count times
 
 $\Run a binary count times
 
-#### Usage
-
-    runCount count binary [ args ... ]
-    
-
 #### Arguments
 
-
+- `count` - The number of times to run the binary
+- `binary` - The binary to run
+- `args ...` - Any arguments to pass to the binary each run
 
 #### Exit codes
 
 - `0` - success
 - `2` - `count` is not an unsigned number
 - `Any` - If `binary` fails, the exit code is returned
-
 ### `chmod-sh.sh` - Makes all `*.sh` files executable
 
 Makes all `*.sh` files executable
 
-#### Usage
-
-    chmod-sh.sh [ findArguments ... ]
-    
-
 #### Arguments
 
-
+- `findArguments` - Optional. Add arguments to exclude files or paths.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 Works from the current directory
 
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ## Modify PATH or MANPATH
 
-
-#### Usage
-
-    pathConfigure [ --first | --last | path ] ...
-    
-
 #### Arguments
 
-
+- `--first` - Optional. Place any paths after this flag first in the list
+- `--last` - Optional. Place any paths after this flag last in the list. Default.
+- `path` - the path to be added to the `PATH` environment
 
 #### Exit codes
 
-- `0` - Always succeeds
-
-#### Usage
-
-    manPathConfigure [ --first | --last | path ] ...
-    
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 #### Arguments
 
-
+- `--first` - Optional. Place any paths after this flag first in the list
+- `--last` - Optional. Place any paths after this flag last in the list. Default.
+- `path` - the path to be added to the `MANPATH` environment
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `pathCleanDuplicates` - Cleans the path and removes non-directory entries and duplicates
 
 Cleans the path and removes non-directory entries and duplicates
@@ -171,25 +133,25 @@ Maintains ordering.
     pathCleanDuplicates
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Memory
-
 
 ### `processMemoryUsage` - Outputs value of resident memory used by a process, value
 
 Outputs value of resident memory used by a process, value is in kilobytes
 
-#### Usage
-
-    processMemoryUsage pid
-    
-
 #### Arguments
 
-
+- `pid` - Process ID of running process
 
 #### Examples
 
@@ -204,19 +166,13 @@ Outputs value of resident memory used by a process, value is in kilobytes
 
 - `0` - Success
 - `2` - Argument error
-
 ### `processVirtualMemoryAllocation` - Outputs value of virtual memory allocated for a process, value
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
 
-#### Usage
-
-    processVirtualMemoryAllocation pid
-    
-
 #### Arguments
 
-
+- `pid` - Process ID of running process
 
 #### Examples
 
@@ -234,7 +190,6 @@ Outputs value of virtual memory allocated for a process, value is in kilobytes
 
 ## Miscellaneous
 
-
 ### `JSON` - Format something neatly as JSON
 
 Format something neatly as JSON
@@ -244,6 +199,12 @@ Format something neatly as JSON
     JSON < inputFile > outputFile
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

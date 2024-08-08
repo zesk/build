@@ -8,7 +8,6 @@
 
 ### Modification time
 
-
 ### `modificationTime` - Fetch the modification time of a file as a timestamp
 
 Fetch the modification time of a file as a timestamp
@@ -18,6 +17,10 @@ Fetch the modification time of a file as a timestamp
     modificationTime filename0 [ filename1 ... ]
     
 
+#### Arguments
+
+- No arguments.
+
 #### Examples
 
     modificationTime ~/.bash_profile
@@ -26,15 +29,13 @@ Fetch the modification time of a file as a timestamp
 
 - `2` - If file does not exist
 - `0` - If file exists and modification times are output, one per line
-
 ### `modificationSeconds` - Fetch the modification time in seconds from now of a
 
 Fetch the modification time in seconds from now of a file as a timestamp
 
-#### Usage
+#### Arguments
 
-    modificationSeconds filename0 [ filename1 ... ]
-    
+- No arguments.
 
 #### Examples
 
@@ -44,7 +45,6 @@ Fetch the modification time in seconds from now of a file as a timestamp
 
 - `2` - If file does not exist
 - `0` - If file exists and modification times are output, one per line
-
 
 ### `isNewestFile` - Check to see if the first file is the newest
 
@@ -53,20 +53,15 @@ Check to see if the first file is the newest one
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
-#### Usage
-
-    isNewestFile firstFile [ targetFile0 ... ]
-    
-
 #### Arguments
 
-
+- `sourceFile` - File to check
+- `targetFile0` - One or more files to compare
 
 #### Exit codes
 
 - `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
-
 ### `isOldestFile` - Check to see if the first file is the newest
 
 Check to see if the first file is the newest one
@@ -74,79 +69,67 @@ Check to see if the first file is the newest one
 If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 Otherwise return `1``
 
-#### Usage
-
-    isOldestFile firstFile [ targetFile0 ... ]
-    
-
 #### Arguments
 
-
+- `sourceFile` - File to check
+- `targetFile0` - One or more files to compare
 
 #### Exit codes
 
 - `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file
 
-
 ### `oldestFile` - Return the oldest file in the list.
 
 Return the oldest file in the list.
 
-#### Usage
-
-    oldestFile file0 [ file1 ... ]
-    
-
 #### Arguments
 
-
+- `file0` - One or more files to examine
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `newestFile` - Return the newest file in the list
 
 Return the newest file in the list
 
-#### Usage
-
-    newestFile file0 [ file1 ... ]
-    
-
 #### Arguments
 
-
+- `file0` - One or more files to examine
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `modifiedDays` - Prints days (integer) since modified
 
 Prints days (integer) since modified
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - Success
 - `2` - Can not get modification time
-
 ### `modifiedSeconds` - Prints seconds since modified
 
 Prints seconds since modified
 
-#### Usage
+#### Arguments
 
-    modifiedSeconds file
-    
+- No arguments.
 
 #### Exit codes
 
 - `0` - Success
 - `2` - Can not get modification time
-
 
 ### `listFileModificationTimes` - Lists files in a directory recursively along with their modification
 
@@ -154,14 +137,10 @@ Lists files in a directory recursively along with their modification time in sec
 
 Output is unsorted.
 
-#### Usage
-
-    listFileModificationTimes directory [ findArgs ... ]
-    
-
 #### Arguments
 
-
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
 
 #### Examples
 
@@ -176,99 +155,76 @@ listFileModificationTimes $myDir ! -path '*/.*'
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `mostRecentlyModifiedFile` - List the most recently modified file in a directory
 
 List the most recently modified file in a directory
 
-#### Usage
-
-    mostRecentlyModifiedFile directory [ findArgs ... ]
-    
-
 #### Arguments
 
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `mostRecentlyModifiedTimestamp` - List the most recently modified timestamp in a directory
-
-List the most recently modified timestamp in a directory
-
-#### Usage
-
-    mostRecentlyModifiedTimestamp directory [ findArgs ... ]
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### Owner Group Size Type
-
-
-### `fileOwner` - Outputs the file owner for each file passed on the
-
-Outputs the file owner for each file passed on the command line
-
-#### Usage
-
-    fileOwner file ...
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Unable to access file
-
-### `fileGroup` - Outputs the file group for each file passed on the
-
-Outputs the file group for each file passed on the command line
-
-#### Usage
-
-    fileGroup file ...
-    
-
-#### Arguments
-
-
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Unable to access file
-
-### `fileSize` - Outputs value of virtual memory allocated for a process, value
-
-Outputs value of virtual memory allocated for a process, value is in kilobytes
-
-#### Usage
-
-    fileSize file
-    
-
-#### Arguments
-
-
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
+- `2` - Argument error
+### `mostRecentlyModifiedTimestamp` - List the most recently modified timestamp in a directory
 
+List the most recently modified timestamp in a directory
+
+#### Arguments
+
+- `directory - Required. Directory. Must exists` - directory to list.
+- `findArgs` - Optional additional arguments to modify the find query
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### Owner Group Size Type
+
+### `fileOwner` - Outputs the file owner for each file passed on the
+
+Outputs the file owner for each file passed on the command line
+
+#### Arguments
+
+- `file` - File to get the owner for
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Unable to access file
+### `fileGroup` - Outputs the file group for each file passed on the
+
+Outputs the file group for each file passed on the command line
+
+#### Arguments
+
+- `file` - File to get the owner for
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Unable to access file
+### `fileSize` - Outputs value of virtual memory allocated for a process, value
+
+Outputs value of virtual memory allocated for a process, value is in kilobytes
+
+#### Arguments
+
+- `file` - Required. File to get size of.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
 ### `betterType` - Better type handling of shell objects
 
 Better type handling of shell objects
@@ -277,17 +233,17 @@ Outputs one of `type` output or enhancements:
 - `builtin`. `function`, `alias`, `file`
 - `link-directory`, `link-file`, `directory`, `integer`, `unknown`
 
-#### Usage
+#### Arguments
 
-    betterType [ thing ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Platform 
-
 
 ### `realPath` - IDENTICAL _realPath EOF
 
@@ -300,25 +256,26 @@ IDENTICAL _realPath EOF
 
 #### Arguments
 
-
+- `file ...` - Required. File. One or more files to `realpath`.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `renameLink` - Renames a link forcing replacement, and works on different versions
 
 Renames a link forcing replacement, and works on different versions of `mv` which differs between systems.
 
-#### Usage
+#### Arguments
 
-    renameLink from to
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 #### Usage
 
     simplifyPath path
@@ -326,14 +283,15 @@ Renames a link forcing replacement, and works on different versions of `mv` whic
 
 #### Arguments
 
-
+- `path ...` - Required. File. One or more paths to simplify
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Utilities
-
 
 ### `renameFiles` - Rename a list of files usually to back them up temporarily
 
@@ -345,14 +303,12 @@ Used to move files, temporarily, sometimes and then move back easily.
 
 Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 
-#### Usage
-
-    renameFiles oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
-    
-
 #### Arguments
 
-
+- `oldSuffix` - Required. String. Old suffix to look rename from.
+- `newSuffix` - Required. String. New suffix to rename to.
+- `actionVerb` - Required. String. Description to output for found files.
+- `file0` - Required. String. One or more files to rename, if found, renaming occurs.
 
 #### Examples
 
@@ -362,8 +318,9 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `createTarFile` - Platform agnostic tar cfz which ignores owner and attributes
 
 Platform agnostic tar cfz which ignores owner and attributes
@@ -377,19 +334,27 @@ Platform agnostic tar cfz which ignores owner and attributes
 
 #### Arguments
 
-
+- `target` - The tar.gz file to create
+- `files` - A list of files to include in the tar file
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `reverseFileLines` - Reverse output lines
 
 Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Credits
 

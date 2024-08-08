@@ -4,7 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `releaseNotes` - Output path to current release notes
 
 Output path to current release notes
@@ -14,19 +13,19 @@ If this fails it outputs an error to stderr
 When this tool succeeds it outputs the path to the current release notes file
 
 
-#### Usage
-
-    releaseNotes [ version ]
-    
-
 #### Arguments
 
-
+- `version` - Optional. String. Version for the release notes path. If not specified uses the current version.
 
 #### Examples
 
     open $(bin/build/release-notes.sh)
     vim $(releaseNotes)
+
+#### Sample Output
+
+    ${BUILD_RELEASE_NOTES%%/}/version.md
+    
 
 #### Exit codes
 
@@ -35,7 +34,6 @@ When this tool succeeds it outputs the path to the current release notes file
 #### Environment
 
 BUILD_RELEASE_NOTES
-
 ### `newRelease` - Generate a new release notes and bump the version
 
 **New release** - generates files in system for a new release.
@@ -52,30 +50,36 @@ also added to `git` the first time.
 
 #### Arguments
 
-
+- `--non-interactive` - Optional. If new version is needed, use default version
+- `versionName` - Optional. Set the new version name to this.
 
 #### Exit codes
 
 - `0` - Release generated or has already been generated
 - `1` - If new version needs to be created and `--non-interactive`
-
 ### `nextMinorVersion` - Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 
 Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 
-#### Usage
+#### Arguments
 
-    nextMinorVersion lastVersion
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `isVersion` - Check if something matches a version
 
 Check if something matches a version
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

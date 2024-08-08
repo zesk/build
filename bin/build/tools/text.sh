@@ -18,6 +18,54 @@
 #------------------------------------------------------------------------------
 #
 
+# Check if text contains mappable tokens
+# If any text passed contains a token which can be mapped, succeed.
+# Argument: --prefix - Optional. String. Token prefix defaults to `{`.
+# Argument: --suffix - Optional. String. Token suffix defaults to `}`.
+# Argument: --token - Optional. String. Classes permitted in a token
+# Argument: text - Optional. String. Text to search for mapping tokens.
+isMappable() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local prefix='{' suffix='}' tokenClasses='[-_A-Za-z0-9:]'
+
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --token)
+        shift
+        tokenClasses="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --prefix)
+        shift
+        prefix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --suffix)
+        shift
+        suffix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      *)
+        if printf "%s\n" "$1" | grep -q -e "$prefix$tokenClasses$tokenClasses*$suffix"; then
+          return 0
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+  return 1
+}
+_isMappable() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Parses text and determines if it's true-ish
 #
 # Usage: {fn} text
@@ -543,11 +591,13 @@ _cachedShaPipe() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: mapFile - Required. File. a file containing bash environment definitions
 # Argument: value - Optional. String. One or more values to map using said environment file
+# Argument: --prefix - Optional. String. Token prefix defaults to `{`.
+# Argument: --suffix - Optional. String. Token suffix defaults to `}`.
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 mapValue() {
   local usage="_${FUNCNAME[0]}"
-  local mapFile searchToken environmentValue searchFilters replaceFilters filter
+  local mapFile searchToken environmentValue searchFilters replaceFilters filter prefix='{' suffix='}'
 
   mapFile=
   nArguments=$#
@@ -561,6 +611,14 @@ mapValue() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --prefix)
+        shift
+        prefix=$(usageArgumentString "$usage" "$argument" "${1-}")
+        ;;
+      --suffix)
+        shift
+        suffix=$(usageArgumentString "$usage" "$argument" "${1-}")
         ;;
       --search-filter)
         shift
@@ -588,7 +646,7 @@ mapValue() {
     value="$*"
     while read -r environment; do
       environmentValue=$(__usageEnvironment "$usage" environmentValueRead "$mapFile" "$environment") || return $?
-      searchToken='{'"$environment"'}'
+      searchToken="$prefix$environment$suffix"
       if [ ${#searchFilters[@]} -gt 0 ]; then
         for filter in "${searchFilters[@]}"; do
           searchToken=$(__usageEnvironment "$usage" "$filter" "$searchToken") || return $?
@@ -1074,79 +1132,76 @@ _listCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 74
+# IDENTICAL mapEnvironment 71
 
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Usage: {fn} [ environmentName0 environmentName1 ... ]
+# Usage: {fn} [ environmentName ... ]
 # TODO: Do this like mapValue
 # See: mapValue
-# Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
+# Argument: environmentName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
+# Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
+# Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 mapEnvironment() {
-  local this argument
-  local prefix suffix sedFile ee e rs
+  local __arg
+  local __prefix __suffix __sedFile __ee __e
 
-  this="${FUNCNAME[0]}"
-  prefix='{'
-  suffix='}'
+  __prefix='{'
+  __suffix='}'
 
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || _argument "blank argument" || return $?
-    case "$argument" in
+    __arg="$1"
+    [ -n "$__arg" ] || _argument "blank argument" || return $?
+    case "$__arg" in
       --prefix)
         shift
-        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
-        prefix="$1"
+        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
+        __prefix="$1"
         ;;
       --suffix)
         shift
-        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
-        suffix="$1"
+        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
+        __suffix="$1"
         ;;
       *)
         break
         ;;
     esac
-    shift || _argument "shift failed after $argument" || return $?
+    shift || _argument "shift failed after $__arg" || return $?
   done
 
-  ee=("$@")
+  __ee=("$@")
   if [ $# -eq 0 ]; then
-    while read -r e; do ee+=("$e"); done < <(environmentVariables)
-    for e in $(environmentVariables); do ee+=("$e"); done
+    while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  sedFile=$(mktemp) || _environment "mktemp failed" || return $?
-  rs=0
-  if __environment _mapEnvironmentGenerateSedFile "$prefix" "$suffix" "${ee[@]}" >"$sedFile"; then
-    if ! sed -f "$sedFile"; then
-      rs=$?
-      cat "$sedFile" 1>&2
+  __sedFile=$(__environment mktemp) || return $?
+  if __environment _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile"; then
+    if ! sed -f "$__sedFile"; then
+      cat "$__sedFile" 1>&2
+      _environment "sed failed" || return $?
     fi
-  else
-    rs=$?
   fi
-  rm -f "$sedFile" || :
-  return $rs
+  rm -f "$__sedFile" || :
 }
 
 # Helper function
 _mapEnvironmentGenerateSedFile() {
-  local i prefix="${1-}" suffix="${2-}"
+  local __prefix="${1-}" __suffix="${2-}"
 
   shift 2
-  for i in "$@"; do
-    case "$i" in
+  while [ $# -gt 0 ]; do
+    case "$1" in
       *[%{}]* | LD_*) ;; # skips
       *)
-        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || return $?
+        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedPattern "${!1-}")" || return $?
         ;;
     esac
+    shift
   done
 }
 

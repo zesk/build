@@ -4,7 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 #### Usage
 
     markdown_removeUnfinishedSections < inputFile > outputFile
@@ -12,7 +11,7 @@
 
 #### Arguments
 
-
+- None
 
 #### Examples
 
@@ -30,7 +29,6 @@ None
 
     read printf
     
-
 ### `markdown_FormatList` - Simple function to make list-like things more list-like in Markdown
 
 Simple function to make list-like things more list-like in Markdown
@@ -39,6 +37,12 @@ Simple function to make list-like things more list-like in Markdown
 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
 3. Prefix each line with a "dash space" (`- `)
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

@@ -4,20 +4,24 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `contextOpen` - Open a file in a shell using the program we
 
 Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 EDITOR - Used as a default editor (first)
 VISUAL - Used as another default editor (last)
-
 ### `isPHPStorm` - Are we within the JetBrains PHPStorm terminal?
 
 Are we within the JetBrains PHPStorm terminal?
@@ -27,15 +31,14 @@ Are we within the JetBrains PHPStorm terminal?
     isPHPStorm
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - within the PhpStorm terminal
 - `1` - not within the PhpStorm terminal AFAIK
-
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ### `isPyCharm` - Are we within the JetBrains PyCharm terminal?
 
 Are we within the JetBrains PyCharm terminal?
@@ -45,15 +48,14 @@ Are we within the JetBrains PyCharm terminal?
     isPyCharm
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - within the PyCharm terminal
 - `1` - not within the PyCharm terminal AFAIK
-
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ### `isVisualStudioCode` - Are we within the Microsoft Visual Studio Code terminal?
 
 Are we within the Microsoft Visual Studio Code terminal?
@@ -63,36 +65,44 @@ Are we within the Microsoft Visual Studio Code terminal?
     isVisualStudioCode
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - within the Visual Studio Code terminal
 - `1` - not within the Visual Studio Code terminal AFAIK
+#### Arguments
 
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
 
-#### Usage
-
-    isBitBucketPipeline
-    
+- No arguments.
 
 #### Exit codes
 
 - `0` - is BitBucket pipeline
 - `1` - Not a BitBucket pipeline
-
 ### `showContext` - Open a file in a shell using the program we
 
 Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 

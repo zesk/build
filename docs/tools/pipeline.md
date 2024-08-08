@@ -6,7 +6,6 @@
 
 ## Application Configuration
 
-
 ### `dotEnvConfigure` - Load `.env` and optional `.env.local` into bash context
 
 Loads `.env` which is the current project configuration file
@@ -25,7 +24,7 @@ If `.env.local` exists, it is also loaded in a similar manner.
 
 #### Arguments
 
-
+- `where` - Optional. Directory. Where to load the `.env` files.
 
 #### Exit codes
 
@@ -36,12 +35,7 @@ If `.env.local` exists, it is also loaded in a similar manner.
 
 Loads `.env` and `.env.local`, use with caution on trusted content only
 
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ## Hooks
-
 
 ### `runHook` - Run a project hook
 
@@ -58,14 +52,11 @@ Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
 
 Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
 
-#### Usage
-
-    runHook [ --application applicationHome ] hookName [ arguments ... ]
-    
-
 #### Arguments
 
-
+- `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- `hookName` - String. Required. Hook name to run.
+- `arguments` - Optional. Arguments are passed to `hookName`.
 
 #### Examples
 
@@ -75,20 +66,13 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 - `Any` - The hook exit code is returned if it is run
 - `1` - is returned if the hook is not found
-
-#### See Also
-
-Not found
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
 
 Identical to `runHook` but returns exit code zero if the hook does not exist.
 
-#### Usage
+#### Arguments
 
-    runOptionalHook hookName [ arguments ... ]
-    
+- No arguments.
 
 #### Examples
 
@@ -100,31 +84,20 @@ Identical to `runHook` but returns exit code zero if the hook does not exist.
 
 - `Any` - The hook exit code is returned if it is run
 - `0` - is returned if the hook is not found
-
-#### See Also
-
-Not found
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ### `hasHook` - Determine if a hook exists
 
 Does a hook exist in the local project?
 
 Check if one or more hook exists. All hooks must exist to succeed.
 
-#### Usage
-
-    hasHook [ --application applicationHome ] hookName0 [ hookName1 ... ]
-    
-
 #### Arguments
 
-
+- `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+- `hookName0` - one or more hook names which must exist
 
 #### Exit codes
 
 - `0` - If all hooks exist
-
 ### `whichHook` - Find the path to a hook binary file
 
 Does a hook exist in the local project?
@@ -136,21 +109,17 @@ Find the path to a hook. The search path is:
 
 If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
 
-#### Usage
-
-    whichHook [ --application applicationHome ] hookName0 [ hookName1 ... ]
-    
-
 #### Arguments
 
-
+- `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Reporting timing
-
 
 ### `beginTiming` - Start a timer for a section of the build
 
@@ -161,6 +130,10 @@ Outputs the offset in seconds from January 1, 1970.
     beginTiming
     
 
+#### Arguments
+
+- No arguments.
+
 #### Examples
 
     init=$(beginTiming)
@@ -169,8 +142,9 @@ Outputs the offset in seconds from January 1, 1970.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `reportTiming` - Output the time elapsed
 
 Outputs the timing in magenta optionally prefixed by a message in green
@@ -184,7 +158,8 @@ Outputs a nice colorful message showing the number of seconds elapsed as well as
 
 #### Arguments
 
-
+- `start` - Unix timestamp seconds of start timestamp
+- `message` - Any additional arguments are output before the elapsed value computed
 
 #### Examples
 
@@ -197,7 +172,6 @@ Outputs a nice colorful message showing the number of seconds elapsed as well as
 - `0` - Exits with exit code zero
 
 ## Build Utilities
-
 
 ### `buildFailed` - Output debugging information when the build fails
 
@@ -214,7 +188,7 @@ Outputs debugging information after build fails:
 
 #### Arguments
 
-
+- `logFile` - the most recent log from the current script
 
 #### Examples
 
@@ -232,7 +206,6 @@ Outputs debugging information after build fails:
 #### Exit codes
 
 - `1` - Always fails
-
 ### `versionSort` - Sort versions in the format v0.0.0
 
 Sorts semantic versions prefixed with a `v` character; intended to be used as a pipe.
@@ -250,7 +223,7 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 
 #### Arguments
 
-
+- `-r` - Reverse the sort order (optional)
 
 #### Examples
 
@@ -258,16 +231,20 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `ipLookup` - Get the current IP address of the host
 
 Get the current IP address of the host
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `1` - Returns
-
 ### `isUpToDate` - Test whether the key needs to be updated
 
 For security one should update keys every N days
@@ -284,14 +261,11 @@ It will also fail if:
 
 Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
 
-#### Usage
-
-    isUpToDate [ --name name ] keyDate upToDateDays
-    
-
 #### Arguments
 
-
+- `keyDate` - Required. Date. Formatted like `YYYY-MM-DD`
+- `--name name` - Optional. Name of the expiring item for error messages.
+- `upToDateDays` - Required. Integer. Days that key expires after `keyDate`.
 
 #### Examples
 
@@ -302,27 +276,27 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Application Environment
-
 
 ### `environmentFileApplicationMake` - Create environment file `.env` for build.
 
 Create environment file `.env` for build.
 
-#### Usage
-
-    environmentFileApplicationMake [ requiredEnvironment ... ] [ -- optionalEnvironment ...] "
-    
-
 #### Arguments
 
-
+- `requiredEnvironment ...` - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+- `--` - Optional. Divider. Divides the requiredEnvironment values from the optionalEnvironment
+- `optionalEnvironment ...` - Optional. One or more environment variables which are included if blank or not
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
@@ -330,22 +304,37 @@ APPLICATION_VERSION - reserved and set to `runHook version-current` if not set a
 APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 APPLICATION_TAG - reserved and set to `runHook application-id`
 APPLICATION_ID - reserved and set to `runHook application-tag`
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `environmentApplicationLoad` - Loads application environment variables, set them to their default values
 
 Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
@@ -356,7 +345,6 @@ APPLICATION_ID
 APPLICATION_TAG
 
 ## Deployment tools
-
 
 ### `deployApplication` - Deploy an application from a deployment repository
 
@@ -371,14 +359,16 @@ Deploy an application from a deployment repository
 
 This acts on the local file system only but used in tandem with `deployment.sh` functions.
 
-#### Usage
-
-    deployApplication deployHome applicationId applicationPath [ targetPackage ]
-    
-
 #### Arguments
 
-
+- `--help` - Optional. Flag. This help.
+- `--first` - Optional. Flag. The first deployment has no prior version and can not be reverted.
+- `--revert` - Optional. Flag. Means this is part of the undo process of a deployment.
+- `--home deployHome` - Required. Directory. Path where the deployments database is on remote system.
+- `--id applicationId` - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
+- `--application applicationPath` - Required. String. Path on the remote system where the application is live
+- `--target targetPackage` - Optional. Filename. Package name, defaults to `BUILD_TARGET`
+- `--message message` - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
 
 #### Examples
 
@@ -386,60 +376,52 @@ deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/ap
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 BUILD_TARGET APPLICATION_ID APPLICATION_TAG
-
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ### `deployNextVersion` - Get the next version of the supplied version
 
 Get the next version of the supplied version
 
-#### Usage
+#### Arguments
 
-    deployNextVersion deployHome versionName
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `deployPreviousVersion` - Get the previous version of the supplied version
 
 Get the previous version of the supplied version
 
-#### Usage
+#### Arguments
 
-    deployPreviousVersion deployHome versionName
-    
+- No arguments.
 
 #### Exit codes
 
 - `1` - No version exists
 - `2` - Argument error
-
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
 Does a deploy version exist? versionName is the version identifier for deployments
 
-#### Usage
-
-    deployHasVersion deployHome versionName [ targetPackage ]
-    
-
 #### Arguments
 
-
+- `deployHome` - Required. Directory. Deployment database home.
+- `versionName` - Required. String. Application ID to look for
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `deployApplicationVersion` - Extracts version from an application either from `.deploy` files or
 
 Extracts version from an application either from `.deploy` files or from the the `.env` if
@@ -447,15 +429,12 @@ that does not exist.
 
 Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
-#### Usage
-
-    deployApplicationVersion applicationHome
-    
-
 #### Arguments
 
-
+- `applicationHome` - Required. Directory. Application home to get the version from.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

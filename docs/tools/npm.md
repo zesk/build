@@ -4,17 +4,15 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `npmInstall` - Install NPM in the build environment
 
 Install NPM in the build environment
 If this fails it will output the installation log.
 When this tool succeeds the `npm` binary is available in the local operating system.
 
-#### Usage
+#### Arguments
 
-    npmInstall npmVersion
-    
+- No arguments.
 
 #### Exit codes
 

@@ -4,20 +4,19 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `githubLatestRelease` - Get the latest release version
 
 Get the latest release version
 
-#### Usage
+#### Arguments
 
-    githubLatestRelease projectName [ ... ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `githubRelease` - Generate a release on GitHub using API
 
 Use GitHub API to generate a release
@@ -29,18 +28,21 @@ GitHub MUST have two sets of credentials enabled:
 
 Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
 
-#### Usage
-
-    githubRelease [ --token token ] [ --owner owner ] [ --name name ] [ --expire expire ] descriptionFilePath releaseName commitish
-    
-
 #### Arguments
 
-
+- `--token token` - Optional. Uses `GITHUB_ACCESS_TOKEN` if not supplied. Access token for GitHub REST API.
+- `--owner owner` - Optional. Uses `GITHUB_REPOSITORY_OWNER` if not supplied. Repository owner of release.
+- `--name name` - Optional. Uses `GITHUB_REPOSITORY_NAME` if not supplied. Repository name to release.
+- `--expire expireString` - Optional. Uses `GITHUB_ACCESS_TOKEN_EXPIRE` if not supplied. Expiration time for the token.
+- `descriptionFilePath` - Required. File which exists. Path to file containing release notes (typically markdown)
+- `releaseName` - Required. String. Name of the release (e.g. `v1.0.0`)
+- `commitish` - Required. String. The GIT short SHA tag for the release
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 

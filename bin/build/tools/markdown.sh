@@ -35,21 +35,30 @@
 # Example:     map.sh < $templateFile | markdown_removeUnfinishedSections
 #
 markdown_removeUnfinishedSections() {
-  local section=() foundVar=
-  while IFS= read -r line; do
+  local line section=() foundVar=false blankContent=true
+  while IFS='' read -r line; do
     if [ "${line:0:1}" = "#" ]; then
-      if ! test "$foundVar"; then
+      if ! $foundVar && ! $blankContent; then
         printf '%s\n' "${section[@]+${section[@]}}"
       fi
-      section=()
-      foundVar=
+      foundVar=false
+      blankContent=true
+      if isMappable "$line"; then
+        foundVar=true
+      fi
+      section=("$line")
+    else
+      temp="$(trimSpace "$line")"
+      if [ -n "$temp" ]; then
+        if isMappable "$temp"; then
+          foundVar=true
+        fi
+        blankContent=false
+      fi
+      section+=("$line")
     fi
-    if [ "$line" != "$(printf "%s" "$line" | sed 's/{[^:}]*}//g')" ]; then
-      foundVar=1
-    fi
-    section+=("$line")
   done
-  if ! test $foundVar; then
+  if ! $foundVar && ! $blankContent; then
     printf '%s\n' "${section[@]+${section[@]}}"
   fi
 }

@@ -412,7 +412,7 @@ _gitFindHome() {
 # Example:     c last
 # Example:     c --last
 # Example:     c --
-#
+# Example:
 # Example: ... are all equivalent.
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
