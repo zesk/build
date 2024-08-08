@@ -279,7 +279,7 @@ _environmentFileApplicationVerify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-  # IDENTICAL environmentVariables 12
+# IDENTICAL environmentVariables 12
 
 #
 # Output a list of environment variables and ignore function definitions
