@@ -95,7 +95,7 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 #### Examples
 
-    if !awsIsKeyUpToDate 90; then
+    if ! awsIsKeyUpToDate 90; then
         bigText Failed, update key and reset date
         exit 99
     fi
@@ -112,7 +112,7 @@ AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which repre
 ### `awsHasEnvironment` - Test whether the AWS environment variables are set or not
 
 This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
-Fails if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
+Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 
 #### Arguments
 
@@ -121,7 +121,7 @@ Fails if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
 #### Examples
 
     if awsHasEnvironment; then
-   ...
+    ...
     fi
 
 #### Exit codes

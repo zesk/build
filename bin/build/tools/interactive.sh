@@ -201,10 +201,10 @@ copyFile() {
         "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
         exitCode=$?
         if [ $exitCode -eq 0 ] && [ -n "$owner" ]; then
-          __usageEnvironment chown "$owner" "$destination" || exitCode=$?
+          __usageEnvironment "$usage" chown "$owner" "$destination" || exitCode=$?
         fi
         if [ $exitCode -eq 0 ] && [ -n "$mode" ]; then
-          __usageEnvironment chmod "$mode" "$destination" || exitCode=$?
+          __usageEnvironment "$usage" chmod "$mode" "$destination" || exitCode=$?
         fi
         if $mapFlag; then
           rm "$actualSource" || :

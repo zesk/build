@@ -59,6 +59,8 @@ EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 
 Fetch the current live version of the software
 
+- Location: `bin/hooks/version-live.sh`
+
 #### Arguments
 
 - No arguments.

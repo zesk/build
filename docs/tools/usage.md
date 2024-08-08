@@ -12,6 +12,8 @@ Generates console usage output for a script using documentation tools parsed fro
 
 Simplifies documentation and has it in one place for shell and online.
 
+- Location: `bin/build/tools/documentation.sh`
+
 #### Usage
 
     usageDocument functionDefinitionFile functionName exitCode [ ... ]
@@ -50,6 +52,8 @@ usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
 
 use with maximumFieldLength 1 to generate widths
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `nSpaces` - Required. Integer. Number of spaces to indent arguments.
@@ -69,6 +73,8 @@ Output usage messages to console
 Should look into an actual file template, probably
 
 Do not call usage functions here to avoid recursion
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Usage
 
@@ -93,6 +99,8 @@ Requires the binaries to be found via `which`
 
 Runs `usageFunction` on failure
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usageFunction` - Required. `bash` function already defined to output usage
@@ -106,6 +114,8 @@ Runs `usageFunction` on failure
 ### `usageRequireEnvironment` - Requires environment variables to be set and non-blank
 
 Requires environment variables to be set and non-blank
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
@@ -124,6 +134,8 @@ Requires environment variables to be set and non-blank
 
 Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -140,6 +152,8 @@ Validates a value is not blank and is a file path with a directory that exists. 
 Validates a value is not blank and is a file.
 Upon success, outputs the file name
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -154,6 +168,8 @@ Upon success, outputs the file name
 ### `usageArgumentInteger` - Validates a value is an integer
 
 Validates a value is an integer
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
@@ -172,6 +188,8 @@ Validates a value is not blank and is an environment file which is loaded immedi
 
 Upon success, outputs the file name to stdout, outputs a console message to stderr
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -186,6 +204,8 @@ Upon success, outputs the file name to stdout, outputs a console message to stde
 ### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
 
 Validates a value is an unsigned integer
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
@@ -202,6 +222,8 @@ Validates a value is an unsigned integer
 
 Validates a value is an unsigned integer and greater than zero (NOT zero)
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -216,6 +238,8 @@ Validates a value is an unsigned integer and greater than zero (NOT zero)
 ### `usageArgumentDirectory` - Validates a value is not blank and is a directory.
 
 Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
@@ -232,6 +256,8 @@ Validates a value is not blank and is a directory. Upon success, outputs the dir
 
 Validates a value is not blank and is a directory and does `realPath` on it.
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -247,6 +273,8 @@ Validates a value is not blank and is a directory and does `realPath` on it.
 
 Require an argument to be a boolean value
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -260,6 +288,8 @@ Require an argument to be a boolean value
 ### `usageArgumentURL` - Require an argument to be a URL
 
 Require an argument to be a URL
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
@@ -275,6 +305,8 @@ Require an argument to be a URL
 
 Require an argument to be a callable
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -288,6 +320,8 @@ Require an argument to be a callable
 ### `usageArgumentFunction` - Require an argument to be a function
 
 Require an argument to be a function
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
@@ -303,6 +337,8 @@ Require an argument to be a function
 
 Require an argument to be a executable
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -317,6 +353,8 @@ Require an argument to be a executable
 
 Do not require argument to be non-blank
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -329,6 +367,8 @@ Do not require argument to be non-blank
 ### `usageArgumentString` - Require an argument to be non-blank
 
 Require an argument to be non-blank
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
@@ -347,6 +387,8 @@ Require an argument to be non-blank
 
 Throw an missing argument error
 
+- Location: `bin/build/tools/usage.sh`
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -358,6 +400,8 @@ Throw an missing argument error
 ### `usageArgumentUnknown` - Throw an unknown argument error
 
 Throw an unknown argument error
+
+- Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 

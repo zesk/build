@@ -70,18 +70,22 @@ _integer() {
 #
 exampleFunction() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local name easyFlag width
+  local argument nArguments argumentIndex saved
+  local start name easyFlag width
+
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   width=50
   name=
   easyFlag=false
   target=
   path=
+  saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -104,12 +108,12 @@ exampleFunction() {
         shift
         target="$(usageArgumentFileDirectory "$usage" "target" "${1-}")" || return $?
         ;;
-      # IDENTICAL argumentUnknown 3
       *)
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
   done
 
   # Load MANPATH environment
@@ -126,6 +130,8 @@ exampleFunction() {
   # Add ` || _environment "$(debuggingStack)"` to any chain to debug details
   #
   which library-which-should-be-there || __failEnvironment "$usage" "missing thing" || _environment "$(debuggingStack)" || return $?
+
+  reportTiming "$start" "Completed in"
 }
 _exampleFunction() {
   # IDENTICAL usageDocument 1

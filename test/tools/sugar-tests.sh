@@ -187,15 +187,15 @@ __testMoreSugarUsage() {
 }
 
 testArgEnvStuff() {
-  local k
+  local k usage="_return"
 
   k=$(_code environment)
   assertExitCode --stderr-match foo "$k" _environment "foo" || return $?
   assertExitCode --stderr-match foo "$k" __failEnvironment _return "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __usageEnvironment _return _return 99 foo || return $?
+  assertExitCode --stderr-match foo "$k" __usageEnvironment "$usage" _return 99 foo || return $?
 
   k=$(_code argument)
   assertExitCode --stderr-match foo "$k" _argument "foo" || return $?
   assertExitCode --stderr-match foo "$k" __failArgument _return "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __usageArgument _return _return 99 foo || return $?
+  assertExitCode --stderr-match foo "$k" __usageArgument "$usage" _return 99 foo || return $?
 }
