@@ -8,80 +8,17 @@
 
 ### Modification time
 
-### `modificationTime` - Fetch the modification time of a file as a timestamp
 
-Fetch the modification time of a file as a timestamp
 
-#### Usage
 
-    modificationTime filename0 [ filename1 ... ]
-    
 
-#### Arguments
 
-- No arguments.
-
-#### Examples
-
-    modificationTime ~/.bash_profile
-
-#### Exit codes
-
-- `2` - If file does not exist
-- `0` - If file exists and modification times are output, one per line
-### `modificationSeconds` - Fetch the modification time in seconds from now of a
-
-Fetch the modification time in seconds from now of a file as a timestamp
-
-#### Arguments
-
-- No arguments.
-
-#### Examples
-
-    modificationTime ~/.bash_profile
-
-#### Exit codes
-
-- `2` - If file does not exist
-- `0` - If file exists and modification times are output, one per line
-
-### `isNewestFile` - Check to see if the first file is the newest
-
-Check to see if the first file is the newest one
-
-If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
-Otherwise return `1``
-
-#### Arguments
-
-- `sourceFile` - File to check
-- `targetFile0` - One or more files to compare
-
-#### Exit codes
-
-- `1` - `sourceFile`, 'targetFile' does not exist, or
-- `0` - All files exist and `sourceFile` is the oldest file
-### `isOldestFile` - Check to see if the first file is the newest
-
-Check to see if the first file is the newest one
-
-If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
-Otherwise return `1``
-
-#### Arguments
-
-- `sourceFile` - File to check
-- `targetFile0` - One or more files to compare
-
-#### Exit codes
-
-- `1` - `sourceFile`, 'targetFile' does not exist, or
-- `0` - All files exist and `sourceFile` is the oldest file
 
 ### `oldestFile` - Return the oldest file in the list.
 
 Return the oldest file in the list.
+
+- Location: `bin/build/tools/file.sh`
 
 #### Arguments
 
@@ -95,6 +32,8 @@ Return the oldest file in the list.
 ### `newestFile` - Return the newest file in the list
 
 Return the newest file in the list
+
+- Location: `bin/build/tools/file.sh`
 
 #### Arguments
 
@@ -110,6 +49,8 @@ Return the newest file in the list
 
 Prints days (integer) since modified
 
+- Location: `bin/build/tools/file.sh`
+
 #### Arguments
 
 - No arguments.
@@ -121,6 +62,8 @@ Prints days (integer) since modified
 ### `modifiedSeconds` - Prints seconds since modified
 
 Prints seconds since modified
+
+- Location: `bin/build/tools/file.sh`
 
 #### Arguments
 
@@ -136,6 +79,8 @@ Prints seconds since modified
 Lists files in a directory recursively along with their modification time in seconds.
 
 Output is unsorted.
+
+- Location: `bin/build/tools/file.sh`
 
 #### Arguments
 
@@ -162,6 +107,8 @@ listFileModificationTimes $myDir ! -path '*/.*'
 
 List the most recently modified file in a directory
 
+- Location: `bin/build/tools/file.sh`
+
 #### Arguments
 
 - `directory - Required. Directory. Must exists` - directory to list.
@@ -175,6 +122,8 @@ List the most recently modified file in a directory
 ### `mostRecentlyModifiedTimestamp` - List the most recently modified timestamp in a directory
 
 List the most recently modified timestamp in a directory
+
+- Location: `bin/build/tools/file.sh`
 
 #### Arguments
 
@@ -193,6 +142,8 @@ List the most recently modified timestamp in a directory
 
 Outputs the file owner for each file passed on the command line
 
+- Location: `bin/build/tools/file.sh`
+
 #### Arguments
 
 - `file` - File to get the owner for
@@ -205,6 +156,8 @@ Outputs the file owner for each file passed on the command line
 
 Outputs the file group for each file passed on the command line
 
+- Location: `bin/build/tools/file.sh`
+
 #### Arguments
 
 - `file` - File to get the owner for
@@ -216,6 +169,8 @@ Outputs the file group for each file passed on the command line
 ### `fileSize` - Outputs value of virtual memory allocated for a process, value
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
+
+- Location: `bin/build/tools/file.sh`
 
 #### Arguments
 
@@ -233,6 +188,8 @@ Outputs one of `type` output or enhancements:
 - `builtin`. `function`, `alias`, `file`
 - `link-directory`, `link-file`, `directory`, `integer`, `unknown`
 
+- Location: `bin/build/tools/file.sh`
+
 #### Arguments
 
 - No arguments.
@@ -245,9 +202,11 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath EOF
+### `realPath` - IDENTICAL _realPath 10
 
-IDENTICAL _realPath EOF
+IDENTICAL _realPath 10
+
+- Location: `bin/build/tools/file.sh`
 
 #### Usage
 
@@ -266,6 +225,8 @@ IDENTICAL _realPath EOF
 ### `renameLink` - Renames a link forcing replacement, and works on different versions
 
 Renames a link forcing replacement, and works on different versions of `mv` which differs between systems.
+
+- Location: `bin/build/tools/file.sh`
 
 #### Arguments
 
@@ -303,6 +264,8 @@ Used to move files, temporarily, sometimes and then move back easily.
 
 Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 
+- Location: `bin/build/tools/file.sh`
+
 #### Arguments
 
 - `oldSuffix` - Required. String. Old suffix to look rename from.
@@ -327,6 +290,8 @@ Platform agnostic tar cfz which ignores owner and attributes
 
 `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
 
+- Location: `bin/build/tools/os.sh`
+
 #### Usage
 
     createTarFile target files
@@ -345,6 +310,8 @@ Platform agnostic tar cfz which ignores owner and attributes
 ### `reverseFileLines` - Reverse output lines
 
 Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
+
+- Location: `bin/build/tools/os.sh`
 
 #### Arguments
 

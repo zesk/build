@@ -136,14 +136,25 @@ _documentationIndex_GeneratePath() {
 # Argument: cacheDirectory - Required. Directory. Store cached information
 # See: documentationIndex_Lookup
 documentationIndex_Generate() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
   local codePath cacheDirectory
   local start shellFile functionName lineNumber fileCacheMarker functionIndex fileIndex
   local cleanFlag=
 
   codePath=
   cacheDirectory=
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    case $1 in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --clean)
         cleanFlag=1
         ;;
@@ -157,16 +168,14 @@ documentationIndex_Generate() {
           codePath="${codePath#./}"
           codePath="${codePath%/}"
         elif [ -z "$cacheDirectory" ]; then
-          if ! cacheDirectory="$(_documentationIndex_GeneratePath "$1")"; then
-            return $?
-          fi
+          cacheDirectory="$(__usageEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
         else
-          _buildBuildDocumentationUsage "$errorArgument" "Unknown argument $1"
-          return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
-    shift
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
   done
   if [ -z "$codePath" ]; then
     _buildBuildDocumentationUsage "$errorArgument" "codePath required"
@@ -200,12 +209,9 @@ documentationIndex_Generate() {
     if [ ! -f "$fileIndex" ] || ! grep -q "$shellFile" "$fileIndex"; then
       printf "%s\n" "$shellFile" >>"$fileIndex"
     fi
-    fileCacheMarker="$cacheDirectory/code/$shellFile"
+    fileCacheMarker="$cacheDirectory/code/${shellFile#/}"
     if [ ! -d "$fileCacheMarker" ]; then
-      if ! mkdir -p "$fileCacheMarker"; then
-        consoleError "Unable to create $fileCacheMarker" 1>&2
-        return $errorEnvironment
-      fi
+      __usageEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
     elif isNewestFile "$fileCacheMarker/.marker" "$shellFile"; then
       statusMessage consoleInfo "$shellFile is already cached"
       continue
@@ -231,6 +237,10 @@ documentationIndex_Generate() {
   fi
   clearLine
   printf "%s %s %s\n" "$(consoleInfo "Generated index for ")" "$(consoleCode "$codePath")" "$(reportTiming "$start" in)"
+}
+_documentationIndex_Generate() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

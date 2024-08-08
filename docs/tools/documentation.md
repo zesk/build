@@ -14,6 +14,8 @@ Given that bash is not an ideal template language, caching is mandatory.
 
 Uses a cache at `buildCacheDirectory`
 
+- Location: `bin/build/tools/documentation/template.sh`
+
 #### Arguments
 
 - `--git` - Merge current branch in with `docs` branch
@@ -35,6 +37,8 @@ Uses a cache at `buildCacheDirectory`
 
 Map template files using our identical functionality
 
+- Location: `bin/build/tools/documentation/template.sh`
+
 #### Arguments
 
 - No arguments.
@@ -48,6 +52,8 @@ Map template files using our identical functionality
 
 Get an internal template name
 
+- Location: `bin/build/tools/documentation/template.sh`
+
 #### Arguments
 
 - No arguments.
@@ -60,6 +66,8 @@ Get an internal template name
 ### `documentationUnlinked` - List unlinked functions in documentation index
 
 List unlinked functions in documentation index
+
+- Location: `bin/build/tools/documentation/template.sh`
 
 #### Arguments
 
@@ -76,6 +84,8 @@ List unlinked functions in documentation index
 ### `bashDocumentFunction` - Document a function and generate a function template (markdown)
 
 Document a function and generate a function template (markdown)
+
+- Location: `bin/build/tools/documentation.sh`
 
 #### Usage
 
@@ -105,10 +115,12 @@ The process:
 
 `cacheDirectory` is required - build an index using `documentationIndexIndex` prior to using this.
 
+- Location: `bin/build/tools/documentation.sh`
+
 #### Arguments
 
-- `cacheDirectory` - Required. Cache directory where the indexes live.
 - `--env envFile` - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
+- `cacheDirectory` - Required. Cache directory where the indexes live.
 - `documentTemplate` - Required. The document template containing functions to define
 - `functionTemplate` - Required. The template for individual functions defined in the `documentTemplate`.
 - `targetFile` - Required. Target file to generate
@@ -129,6 +141,8 @@ The process:
 
 If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
 to regenerate each time.
+
+- Location: `bin/build/tools/documentation.sh`
 
 #### Arguments
 
@@ -155,6 +169,8 @@ cacheDirectory/files/baseName
 
 Use with documentationIndex_Lookup
 
+- Location: `bin/build/tools/documentation/index.sh`
+
 #### Arguments
 
 - `codePath` - Required. Directory. Path where code is stored (should remain identical between invocations)
@@ -168,6 +184,8 @@ Use with documentationIndex_Lookup
 ### `documentationIndex_Lookup` - Looks up information in the function index
 
 Looks up information in the function index
+
+- Location: `bin/build/tools/documentation/index.sh`
 
 #### Arguments
 
@@ -199,6 +217,8 @@ and adds the `documentationPath` to it
 
 Use with documentationIndex_Lookup
 
+- Location: `bin/build/tools/documentation/index.sh`
+
 #### Arguments
 
 - `cacheDirectory` - Required. Cache directory where the indexes live.
@@ -213,6 +233,8 @@ Use with documentationIndex_Lookup
 ### `documentationIndex_SetUnlinkedDocumentationPath` - List of functions which are not linked to anywhere in
 
 List of functions which are not linked to anywhere in the documentation index
+
+- Location: `bin/build/tools/documentation/index.sh`
 
 #### Arguments
 
@@ -238,6 +260,8 @@ Within your function, add an ignore reason if you wish:
     ...
     }
 
+- Location: `bin/build/tools/documentation/index.sh`
+
 #### Arguments
 
 - `cacheDirectory` - Required. Directory. Index cache directory.
@@ -253,6 +277,8 @@ Output a list of all functions in the index as pairs:
 
     functionName functionSettings
 
+- Location: `bin/build/tools/documentation/index.sh`
+
 #### Arguments
 
 - `cacheDirectory` - Required. Directory. Index cache directory.
@@ -265,6 +291,8 @@ Output a list of all functions in the index as pairs:
 ### `documentationIndex_UnlinkedIterator` - List of functions which are not linked to anywhere in
 
 List of functions which are not linked to anywhere in the documentation index
+
+- Location: `bin/build/tools/documentation/index.sh`
 
 #### Arguments
 
@@ -310,6 +338,8 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 - `example` - An example of usage (code, many)
 - `depends` - Any dependencies (list)
 
+- Location: `bin/build/tools/documentation.sh`
+
 #### Arguments
 
 - `definitionFile` - File in which function is defined
@@ -327,6 +357,8 @@ function definition is found. Searches solely `.sh` files. (Bash or sh scripts)
 
 Note this function succeeds if it finds all occurrences of each function, but
 may output partial results with a failure.
+
+- Location: `bin/build/tools/documentation.sh`
 
 #### Usage
 
@@ -359,6 +391,8 @@ Searches solely `.sh` files. (Bash or sh scripts)
 
 Succeeds IFF only one version of a function is found.
 
+- Location: `bin/build/tools/documentation.sh`
+
 #### Usage
 
     bashDocumentation_FindFunctionDefinition directory fn
@@ -390,6 +424,8 @@ Generates console usage output for a script using documentation tools parsed fro
 
 Simplifies documentation and has it in one place for shell and online.
 
+- Location: `bin/build/tools/documentation.sh`
+
 #### Usage
 
     usageDocument functionDefinitionFile functionName exitCode [ ... ]
@@ -411,6 +447,8 @@ Simplifies documentation and has it in one place for shell and online.
 ### `__dumpNameValue` - Utility to export multi-line values as Bash variables
 
 Utility to export multi-line values as Bash variables
+
+- Location: `bin/build/tools/documentation.sh`
 
 #### Usage
 
@@ -449,6 +487,8 @@ Utility to export multi-line values as Bash variables
 
 Format code blocks (does markdown_FormatList)
 
+- Location: `bin/build/tools/documentation.sh`
+
 #### Arguments
 
 - No arguments.
@@ -461,6 +501,8 @@ Format code blocks (does markdown_FormatList)
 ### `_bashDocumentationFormatter_usage` - Format usage blocks (indents as a code block)
 
 Format usage blocks (indents as a code block)
+
+- Location: `bin/build/tools/documentation.sh`
 
 #### Arguments
 
@@ -475,6 +517,8 @@ Format usage blocks (indents as a code block)
 
 Format argument blocks (does markdown_FormatList)
 
+- Location: `bin/build/tools/documentation.sh`
+
 #### Arguments
 
 - No arguments.
@@ -487,6 +531,8 @@ Format argument blocks (does markdown_FormatList)
 ### `_bashDocumentationFormatter_depends` - Format depends blocks (indents as a code block)
 
 Format depends blocks (indents as a code block)
+
+- Location: `bin/build/tools/documentation.sh`
 
 #### Arguments
 

@@ -313,6 +313,23 @@ None.
     sed quoteSedPattern
     
 
+### `isMappable` - Check if text contains mappable tokens
+
+Check if text contains mappable tokens
+If any text passed contains a token which can be mapped, succeed.
+
+#### Arguments
+
+- `--prefix` - Optional. String. Token prefix defaults to `{`.
+- `--suffix` - Optional. String. Token suffix defaults to `}`.
+- `--token` - Optional. String. Classes permitted in a token
+- `text` - Optional. String. Text to search for mapping tokens.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `mapValue` - Maps a string using an environment file
 
 Maps a string using an environment file
@@ -353,7 +370,9 @@ Maps a string using an environment file
 - `2` - Argument error
 #### Arguments
 
-- `environmentName0` - Map this value only. If not specified, all environment variables are mapped.
+- `environmentName` - Optional. String. Map this value only. If not specified, all environment variables are mapped.
+- `--prefix` - Optional. String. Prefix character for tokens, defaults to `{`.
+- `--suffix` - Optional. String. Suffix character for tokens, defaults to `}`.
 
 #### Exit codes
 

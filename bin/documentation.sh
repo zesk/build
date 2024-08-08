@@ -45,13 +45,21 @@ _integer() {
 __buildDocumentationBuildDirectory() {
   local home="$1" subPath="$2" template="$3"
   shift 3
-  __environment documentationBuild --source "$home/bin" --template "$home/docs/_templates/$subPath" --unlinked-template "$home/docs/_templates/tools/todo.md" --unlinked-target "$home/docs/tools/todo.md" --target "$home/docs/$subPath" --function-template "$template" --page-template "$home/docs/_templates/__main.md" --see-prefix "./docs" "$@" || return $?
+  documentationBuild --source "$home/bin" --template "$home/docs/_templates/$subPath" --unlinked-template "$home/docs/_templates/tools/todo.md" --unlinked-target "$home/docs/tools/todo.md" --target "$home/docs/$subPath" --function-template "$template" --page-template "$home/docs/_templates/__main.md" --see-prefix "./docs" "$@" || return $?
 }
 
 __buildDocumentationBuild() {
+  local usage="_${FUNCNAME[0]}"
   local here="${BASH_SOURCE[0]%/*}" home
 
+  __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
+  lineFill . "$(consoleInfo "${APPLICATION_NAME} documentation started on $(consoleValue "$(date +"%D %T")")") "
   home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
-  __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@"
+  __usageEnvironment "$usage" __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@" || return $?
 }
+___buildDocumentationBuild() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 __tools .. __buildDocumentationBuild "$@"

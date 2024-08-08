@@ -25,6 +25,7 @@
 
 {listTokens}
 
+{isMappable}
 {mapValue}
 {mapValueTrim}
 {mapEnvironment}

@@ -2,6 +2,8 @@
 
 {description}
 
+- Location: `{applicationFile}`
+
 #### Usage
 
 {usage}
