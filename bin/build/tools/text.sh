@@ -1132,17 +1132,19 @@ _listCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 69
+# IDENTICAL mapEnvironment 71
 
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Usage: {fn} [ environmentName0 environmentName1 ... ]
+# Usage: {fn} [ environmentName ... ]
 # TODO: Do this like mapValue
 # See: mapValue
-# Argument: environmentName0 - Map this value only. If not specified, all environment variables are mapped.
+# Argument: environmentName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
+# Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
+# Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 mapEnvironment() {
