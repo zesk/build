@@ -130,6 +130,28 @@ The process:
 - `0` - If success
 - `1` - Issue with file generation
 - `2` - Argument error
+### `documentationTemplateFunctionCompile` - Generate a function documentation block using `functionTemplate` for `functionName`
+
+Requires function indexes to be generated in `cacheDirectory`.
+
+Generate documentation for a single function.
+
+Template is output to stdout.
+
+- Location: `bin/build/tools/documentation.sh`
+
+#### Arguments
+
+- `--env envFile` - Optional. File. One (or more) environment files used during map of `functionTemplate`
+- `cacheDirectory` - Required. Cache directory where the indexes live.
+- `functionName` - Required. The function name to document.
+- `functionTemplate` - Required. The template for individual functions.
+
+#### Exit codes
+
+- `0` - If success
+- `1` - Issue with file generation
+- `2` - Argument error
 ### `documentationTemplateDirectoryCompile` - Convert a directory of templates into documentation for Bash functions
 
 Convert a directory of templates for bash functions into full-fledged documentation.
@@ -258,7 +280,7 @@ Within your function, add an ignore reason if you wish:
 
     userFunction() {
     ...
-    }
+    d}
 
 - Location: `bin/build/tools/documentation/index.sh`
 
