@@ -65,16 +65,20 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 
 ## Additional commands
 
-
 ### `consoleColorMode` - Set colors to deal with dark or light-background consoles
 
 Set colors to deal with dark or light-background consoles
 See:
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `clearLine` - Clear a line in the console
 
@@ -87,6 +91,10 @@ Intended to be run on an interactive console, this clears the current line of an
     clearLine
     
 
+#### Arguments
+
+- No arguments.
+
 #### Examples
 
     statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
@@ -94,12 +102,13 @@ Intended to be run on an interactive console, this clears the current line of an
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 Intended to be run on an interactive console. Should support `tput cols`.
-
 
 ### `statusMessage` - Output a status message with no newline
 
@@ -116,7 +125,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Arguments
 
-
+- `command` - Required. Commands which output a message.
 
 #### Examples
 
@@ -126,12 +135,13 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 Intended to be run on an interactive console. Should support $(tput cols).
-
 
 ### `consoleNameValue` - Output a name value pair
 
@@ -147,12 +157,15 @@ right-aligned to the `characterWidth` given and colored using `consoleLabel`; th
 
 #### Arguments
 
-
+- `characterWidth` - Required. Number of characters to format the value for spacing
+- `name` - Required. Name to output
+- `value ...` - Optional. One or more Value to output
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `hasColors` - Sets the environment variable `BUILD_COLORS` if not set, uses `TERM`
 
@@ -165,6 +178,10 @@ Exit Code; 1 - Colors are likely not supported by console
     hasColors
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - Console or output supports colors
@@ -172,7 +189,6 @@ Exit Code; 1 - Colors are likely not supported by console
 #### Environment
 
 BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
-
 
 ### `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation
 
@@ -183,37 +199,55 @@ Exit Code; 1 - Does not support console animation
     hasConsoleAnimation
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
 - `0` - Supports console animation
-
 
 ### `colorTest` - Output colors
 
 Outputs sample sentences for the `consoleAction` commands to see what they look like.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `semanticColorTest` - Output colors
 
 Outputs sample sentences for the `consoleAction` commands to see what they look like.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `allColorTest` - Alternate color output
 
 If you want to explore what colors are available in your terminal, try this.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
 
@@ -224,10 +258,15 @@ Converts backticks, bold and italic to console colors.
     simpleMarkdownToConsole < $markdownFile
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `statusMessage` - Output a status message with no newline
 
@@ -244,7 +283,7 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Arguments
 
-
+- `command` - Required. Commands which output a message.
 
 #### Examples
 
@@ -254,12 +293,13 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 Intended to be run on an interactive console. Should support $(tput cols).
-
 
 ### `consoleColumns` - Column count in current console
 
@@ -272,30 +312,41 @@ Output the number of columns in the terminal. Default is 80 if not able to be de
     consoleColumns
     
 
+#### Arguments
+
+- No arguments.
+
 #### Examples
 
     repeat $(consoleColumns)
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 COLUMNS - May be defined after calling this
 LINES - May be defined after calling this
 
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Arguments
 
-#### Usage
-
-    consoleBrightness [ --background | --foreground ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

@@ -211,7 +211,7 @@ environmentVariables() {
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
-# IDENTICAL mapEnvironment 74
+# IDENTICAL mapEnvironment 69
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -225,65 +225,60 @@ environmentVariables() {
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 mapEnvironment() {
-  local this argument
-  local prefix suffix sedFile ee e rs
+  local __arg
+  local __prefix __suffix __sedFile __ee __e
 
-  this="${FUNCNAME[0]}"
-  prefix='{'
-  suffix='}'
+  __prefix='{'
+  __suffix='}'
 
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || _argument "blank argument" || return $?
-    case "$argument" in
+    __arg="$1"
+    [ -n "$__arg" ] || _argument "blank argument" || return $?
+    case "$__arg" in
       --prefix)
         shift
-        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
-        prefix="$1"
+        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
+        __prefix="$1"
         ;;
       --suffix)
         shift
-        [ -n "${1-}" ] || _argument "$this: blank $argument argument" || return $?
-        suffix="$1"
+        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
+        __suffix="$1"
         ;;
       *)
         break
         ;;
     esac
-    shift || _argument "shift failed after $argument" || return $?
+    shift || _argument "shift failed after $__arg" || return $?
   done
 
-  ee=("$@")
+  __ee=("$@")
   if [ $# -eq 0 ]; then
-    while read -r e; do ee+=("$e"); done < <(environmentVariables)
-    for e in $(environmentVariables); do ee+=("$e"); done
+    while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  sedFile=$(mktemp) || _environment "mktemp failed" || return $?
-  rs=0
-  if __environment _mapEnvironmentGenerateSedFile "$prefix" "$suffix" "${ee[@]}" >"$sedFile"; then
-    if ! sed -f "$sedFile"; then
-      rs=$?
-      cat "$sedFile" 1>&2
+  __sedFile=$(__environment mktemp) || return $?
+  if __environment _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile"; then
+    if ! sed -f "$__sedFile"; then
+      cat "$__sedFile" 1>&2
+      _environment "sed failed" || return $?
     fi
-  else
-    rs=$?
   fi
-  rm -f "$sedFile" || :
-  return $rs
+  rm -f "$__sedFile" || :
 }
 
 # Helper function
 _mapEnvironmentGenerateSedFile() {
-  local i prefix="${1-}" suffix="${2-}"
+  local __prefix="${1-}" __suffix="${2-}"
 
   shift 2
-  for i in "$@"; do
-    case "$i" in
+  while [ $# -gt 0 ]; do
+    case "$1" in
       *[%{}]* | LD_*) ;; # skips
       *)
-        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$prefix$i$suffix")" "$(quoteSedPattern "${!i-}")" || return $?
+        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedPattern "${!1-}")" || return $?
         ;;
     esac
+    shift
   done
 }
 

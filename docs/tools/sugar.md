@@ -18,76 +18,74 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
-
 ### `__usage` - Run `command`, handle failure with `usage` with `code` and `command`
 
 Run `command`, handle failure with `usage` with `code` and `command` as error
 
-#### Usage
-
-    __usage code usage command ...
-    
-
 #### Arguments
 
-
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Usage
-
-    __usageEnvironment usage command
-    
+- `code` - Required. Integer. Exit code to return
+- `usage` - Required. String. Failure command, passed remaining arguments and error code.
+- `command` - Required. String. Command to run.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
 
-#### Usage
-
-    __usageArgument usage command
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### Usage
-
-    __failEnvironment usage message
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
 
-#### Usage
-
-    __failArgument usage message
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Deprecated Logging
-
 
 ### `_deprecated` - Logs all deprecated functions to application root in a file
 
 Logs all deprecated functions to application root in a file called `.deprecated`
 
-#### Usage
-
-    _deprecated command ...
-    
-
 #### Arguments
 
+- `function` - Required. String. Function which is deprecated.
 
+#### Examples
+
+    _deprecated "${FUNCNAME[0]}"
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

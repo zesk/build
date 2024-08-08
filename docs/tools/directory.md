@@ -4,29 +4,25 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `isAbsolutePath` - Is a path an absolute path?
 
 Is a path an absolute path?
 
-#### Usage
+#### Arguments
 
-    isAbsolutePath path ...
-    
+- No arguments.
 
 #### Exit codes
 
 - `0` - if all paths passed in are absolute paths (begin with `/`).
 - `1` - one ore more paths are not absolute paths
-
 ### `directoryIsEmpty` - Does a directory exist and is it empty?
 
 Does a directory exist and is it empty?
 
-#### Usage
+#### Arguments
 
-    directoryIsEmpty directory
-    
+- No arguments.
 
 #### Exit codes
 
@@ -34,24 +30,19 @@ Does a directory exist and is it empty?
 - `1` - Directory is not empty
 - `0` - Directory is empty
 
-
 ### `fileDirectoryExists` - Does the file's directory exist?
 
 Does the file's directory exist?
 
-#### Usage
-
-    fileDirectoryExists directory
-    
-
 #### Arguments
 
-
+- `directory` - Test if file directory exists (file does not have to exist)
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `requireFileDirectory` - Given a list of files, ensure their parent directories exist
 
@@ -59,10 +50,9 @@ Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
 
-#### Usage
+#### Arguments
 
-    requireFileDirectory file1 file2 ...
-    
+- No arguments.
 
 #### Examples
 
@@ -71,20 +61,16 @@ Creates the directories for all files passed in.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `requireDirectory` - Given a list of directories, ensure they exist and create
 
 Given a list of directories, ensure they exist and create them if they do not.
 
-#### Usage
-
-    requireDirectory dir1 [ dir2 ... ]
-    
-
 #### Arguments
 
-
+- `dir1` - One or more directories to create
 
 #### Examples
 
@@ -92,18 +78,20 @@ Given a list of directories, ensure they exist and create them if they do not.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `directoryClobber` - Copy directory over another sort-of-atomically
 
 Copy directory over another sort-of-atomically
 
-#### Usage
+#### Arguments
 
-    directoryClobber source target
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

@@ -10,6 +10,7 @@ set -eou pipefail
 
 declare -a tests
 tests+=(testMarkdownFormatList)
+tests+=(testMarkdownRemoveSections)
 
 assertMarkdownFormatList() {
   assertEquals "$1" "$(printf %s "$2" | markdown_FormatList)" "markdown_FormatList \"$2\" !== \"$1\"" || return $?
@@ -26,4 +27,24 @@ testMarkdownFormatList() {
   assertMarkdownFormatList '- Hello' 'Hello' || return $?
   # shellcheck disable=SC2016
   assertMarkdownFormatList '- `--arg1` - Argument One' '--arg1 - Argument One' || return $?
+}
+
+testMarkdownRemoveSections() {
+  cat <<'EOF' | markdown_removeUnfinishedSections
+# ABC
+
+Hello
+
+# DEF
+
+World
+
+# EFG
+
+{token}
+
+## Foo {token}
+
+Content
+EOF
 }

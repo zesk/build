@@ -6,7 +6,6 @@
 
 ## Usage formatting
 
-
 ### `usageDocument` - Generates console usage output for a script using documentation tools
 
 Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
@@ -20,12 +19,14 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-
+- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
+- `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 #### Usage
 
     usageArguments delimiter
@@ -33,12 +34,13 @@ Simplifies documentation and has it in one place for shell and online.
 
 #### Arguments
 
-
+- `delimiter` - Required. String. The character to separate name value pairs in the input
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `usageGenerator` - Formats name value pairs separated by separatorChar (default " ")
 
 Formats name value pairs separated by separatorChar (default " ") and uses
@@ -50,12 +52,16 @@ use with maximumFieldLength 1 to generate widths
 
 #### Arguments
 
-
+- `nSpaces` - Required. Integer. Number of spaces to indent arguments.
+- `separatorChar` - Optional. String. Default is space.
+- `labelPrefix` - Optional. String. Defaults to blue color text.
+- `valuePrefix` - Optional. String. Defaults to red color text.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `usageTemplate` - Output usage messages to console
 
 Output usage messages to console
@@ -69,16 +75,17 @@ Do not call usage functions here to avoid recursion
     usageTemplate binName options delimiter description exitCode message ...
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Environment
-
 
 ### `usageRequireBinary` - Check that one or more binaries are installed
 
@@ -86,305 +93,248 @@ Requires the binaries to be found via `which`
 
 Runs `usageFunction` on failure
 
-#### Usage
-
-    usageRequireBinary usageFunction binary0 [ ... ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. `bash` function already defined to output usage
+- `binary0` - Required. Binary which must have a `which` path.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `usageRequireEnvironment` - Requires environment variables to be set and non-blank
 
 Requires environment variables to be set and non-blank
 
-#### Usage
-
-    usageRequireEnvironment usageFunction [ env0 ... ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. `bash` function already defined to output usage
+- `env0` - Optional. String. One or more environment variables which should be set and non-empty.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Argument handling
-
 
 ### `usageArgumentFileDirectory` - Validates a value is not blank and is a file
 
 Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
 
-#### Usage
-
-    usageArgumentFileDirectory usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentFile` - Validates a value is not blank and is a file.
 
 Validates a value is not blank and is a file.
 Upon success, outputs the file name
 
-#### Usage
-
-    usageArgumentFile usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentInteger` - Validates a value is an integer
 
 Validates a value is an integer
 
-#### Usage
-
-    usageArgumentInteger usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
 
 Validates a value is not blank and is an environment file which is loaded immediately.
 
 Upon success, outputs the file name to stdout, outputs a console message to stderr
 
-#### Usage
-
-    usageArgumentLoadEnvironmentFile processPid usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
 
 Validates a value is an unsigned integer
 
-#### Usage
-
-    usageArgumentUnsignedInteger usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentPositiveInteger` - Validates a value is an unsigned integer and greater than
 
 Validates a value is an unsigned integer and greater than zero (NOT zero)
 
-#### Usage
-
-    usageArgumentPositiveInteger usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentDirectory` - Validates a value is not blank and is a directory.
 
 Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
 
-#### Usage
-
-    usageArgumentDirectory usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentRealDirectory` - Validates a value is not blank and is a directory
 
 Validates a value is not blank and is a directory and does `realPath` on it.
 
-#### Usage
-
-    usageArgumentRealDirectory usageFunction variableName variableValue [ noun ]
-    
-
 #### Arguments
 
-
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
 
 #### Exit codes
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentBoolean` - Require an argument to be a boolean value
 
 Require an argument to be a boolean value
 
-#### Usage
-
-    usageArgumentBoolean usage argument [ value ]
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 
 #### Exit codes
 
 - `2` - If `value` is not a boolean
 - `0` - If `value` is a boolean
-
 ### `usageArgumentURL` - Require an argument to be a URL
 
 Require an argument to be a URL
 
-#### Usage
-
-    usageArgumentURL usage argument [ value ]
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value which should be a URL otherwise an argument error is thrown.
 
 #### Exit codes
 
 - `0` - If `value` is `urlValid`
 - `2` - If `value` is not `urlValid`
-
 ### `usageArgumentCallable` - Require an argument to be a callable
 
 Require an argument to be a callable
 
-#### Usage
-
-    usageArgumentCallable usage argument [ value ]
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value which should be callable otherwise an argument error is thrown.
 
 #### Exit codes
 
 - `2` - If `value` is not `isCallable`
 - `0` - If `value` is `isCallable`
-
 ### `usageArgumentFunction` - Require an argument to be a function
 
 Require an argument to be a function
 
-#### Usage
-
-    usageArgumentFunction usage argument [ value ]
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value which should be a function otherwise an argument error is thrown.
 
 #### Exit codes
 
 - `2` - If `value` is not `isFunction`
 - `0` - If `value` is `isFunction`
-
 ### `usageArgumentExecutable` - Require an argument to be a executable
 
 Require an argument to be a executable
 
-#### Usage
-
-    usageArgumentExecutable usage argument [ value ]
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value which should be executable otherwise an argument error is thrown.
 
 #### Exit codes
 
 - `2` - If `value` is not `isExecutable`
 - `0` - If `value` is `isExecutable`
-
 ### `usageArgumentEmptyString` - Do not require argument to be non-blank
 
 Do not require argument to be non-blank
 
-#### Usage
-
-    usageArgumentEmptyString usage argument [ value ]
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value to output.
 
 #### Exit codes
 
 - `0` - Always
-
 ### `usageArgumentString` - Require an argument to be non-blank
 
 Require an argument to be non-blank
 
-#### Usage
-
-    usageArgumentString usage argument [ value ]
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 
 #### Exit codes
 
@@ -393,36 +343,26 @@ Require an argument to be non-blank
 
 # Errors
 
-
 ### `usageArgumentMissing` - Throw an missing argument error
 
 Throw an missing argument error
 
-#### Usage
-
-    usageArgumentMissing usage argument
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
 
 #### Exit codes
 
 - `2` - Always
-
 ### `usageArgumentUnknown` - Throw an unknown argument error
 
 Throw an unknown argument error
 
-#### Usage
-
-    usageArgumentUnknown usage argument
-    
-
 #### Arguments
 
-
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
 
 #### Exit codes
 

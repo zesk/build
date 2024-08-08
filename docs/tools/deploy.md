@@ -6,7 +6,6 @@
 
 ## Deploy Information
 
-
 ### `deployApplicationVersion` - Extracts version from an application either from `.deploy` files or
 
 Extracts version from an application either from `.deploy` files or from the the `.env` if
@@ -14,19 +13,15 @@ that does not exist.
 
 Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
-#### Usage
-
-    deployApplicationVersion applicationHome
-    
-
 #### Arguments
 
-
+- `applicationHome` - Required. Directory. Application home to get the version from.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `deployPackageName` - Outputs the build target name which is based on the
 
 Outputs the build target name which is based on the environment `BUILD_TARGET`.
@@ -34,65 +29,60 @@ Outputs the build target name which is based on the environment `BUILD_TARGET`.
 If this is called on a non-deployment system, use the application root instead of
 `deployHome` for compatibility.
 
-#### Usage
+#### Arguments
 
-    deployPackageName deployHome
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 BUILD_TARGET
-
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
 Does a deploy version exist? versionName is the version identifier for deployments
 
-#### Usage
-
-    deployHasVersion deployHome versionName [ targetPackage ]
-    
-
 #### Arguments
 
-
+- `deployHome` - Required. Directory. Deployment database home.
+- `versionName` - Required. String. Application ID to look for
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `deployPreviousVersion` - Get the previous version of the supplied version
 
 Get the previous version of the supplied version
 
-#### Usage
+#### Arguments
 
-    deployPreviousVersion deployHome versionName
-    
+- No arguments.
 
 #### Exit codes
 
 - `1` - No version exists
 - `2` - Argument error
-
 ### `deployNextVersion` - Get the next version of the supplied version
 
 Get the next version of the supplied version
 
-#### Usage
+#### Arguments
 
-    deployNextVersion deployHome versionName
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Deploy
-
 
 ### `deployApplication` - Deploy an application from a deployment repository
 
@@ -107,14 +97,16 @@ Deploy an application from a deployment repository
 
 This acts on the local file system only but used in tandem with `deployment.sh` functions.
 
-#### Usage
-
-    deployApplication deployHome applicationId applicationPath [ targetPackage ]
-    
-
 #### Arguments
 
-
+- `--help` - Optional. Flag. This help.
+- `--first` - Optional. Flag. The first deployment has no prior version and can not be reverted.
+- `--revert` - Optional. Flag. Means this is part of the undo process of a deployment.
+- `--home deployHome` - Required. Directory. Path where the deployments database is on remote system.
+- `--id applicationId` - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
+- `--application applicationPath` - Required. String. Path on the remote system where the application is live
+- `--target targetPackage` - Optional. Filename. Package name, defaults to `BUILD_TARGET`
+- `--message message` - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
 
 #### Examples
 
@@ -122,18 +114,15 @@ deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/ap
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ## Utilities
-
 
 ### `deployMove` - Safe application deployment by moving
 
@@ -142,28 +131,28 @@ Safe application deployment by moving
 
 Deploy current application to target path
 
-#### Usage
+#### Arguments
 
-    deployMove applicationPath
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `deployMigrateDirectoryToLink` - Automatically convert application deployments using non-links to links.
 
 Automatically convert application deployments using non-links to links.
 
-#### Usage
+#### Arguments
 
-    deployMigrateDirectoryToLink deployHome applicationPath
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `deployLink` - Link deployment to new version of the application
 
 Link new version of application.
@@ -172,14 +161,9 @@ When called, current directory is the **new** application and the `applicationLi
 passed as an argument is the place where the **new** application should be linked to
 in order to activate it.
 
-#### Usage
-
-    deployLink applicationLinkPath
-    
-
 #### Arguments
 
-
+- `applicationLinkPath` - This is the target for the current application
 
 #### Exit codes
 
@@ -190,7 +174,6 @@ in order to activate it.
 #### Environment
 
 PWD
-
 ### `deployRemoteFinish` - This is **run on the remote system** after deployment; environment
 
 This is **run on the remote system** after deployment; environment files are correct.
@@ -201,18 +184,22 @@ Current working directory on cleanup is `applicationHome/`
 Current working directory on undo is `applicationHome/`
 Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 
-#### Usage
-
-    deployRemoteFinish [ --revert | --cleanup ] [ --debug ] deployPath applicationId applicationPath
-    
-
 #### Arguments
 
-
+- `--debug` - Enable debugging. Defaults to `BUILD_DEBUG`
+- `--deploy` - Optional. Flag, default setting - handles the remote deploy.
+- `--revert` - Optional. Flag, Revert changes just made.
+- `--cleanup` - Optional. Flag, Cleanup after success.
+- `--home deployPath` - Required. Directory. Path where the deployments database is on remote system.
+- `--id applicationId` - Required. String. Should match `APPLICATION_ID` in `.env`
+- `--application applicationPath` - Required. String. Path on the remote system where the application is live
+- `--target targetPackage` - Optional. Filename. Package name, defaults to `app.tar.gz`
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Deployment Hooks
 
@@ -255,33 +242,9 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 
 ## Hook documentation
 
+#### Arguments
 
-### `__hookApplicationEnvironment` - Hook is run to generate the application environment file
-
-Hook is run to generate the application environment file
-Outputs environment settings, one per line to be put into an environment file
-See `environmentFileApplicationMake` for usage and arguments.
-
-#### Usage
-
-    __hookApplicationEnvironment
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
-### `application-id.sh` - Generate a unique ID for the state of the application
-
-Generate a unique ID for the state of the application files
-
-The default hook uses the short git sha:
-
-    git rev-parse --short HEAD
+- No arguments.
 
 #### Examples
 
@@ -289,40 +252,49 @@ The default hook uses the short git sha:
 
 #### Exit codes
 
-- `0` - Always succeeds
-
-### `application-tag.sh` - Get the "tag" (or current display version) for an application
-
-Get the "tag" (or current display version) for an application
-
-The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
-
-#### Exit codes
-
-- `0` - Always succeeds
-
-### `maintenance.sh` - Toggle maintenance on or off. The default version of this
-
-Toggle maintenance on or off. The default version of this modifies
-the environment files for the application by modifying the `.env.local` file
-and dynamically adding or removing any line which matches the MAINTENANCE variable.
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 #### Arguments
 
+- No arguments.
 
+#### Examples
+
+    885acc3
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- `message` - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
+- `maintenanceSetting` - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 
+#### Arguments
 
-### `deploy-start.sh` - Deployment "start" script
-
-Deployment "start" script
+- No arguments.
 
 #### Examples
 
@@ -331,14 +303,6 @@ Deployment "start" script
 #### Exit codes
 
 - `0` - This SHOULD exit successfully always 
-
-### `deploy-move.sh` - Deployment move script
-
-This is called where the current working directory at the time of
-running is the **new** application and the `applicationPath` which is
-passed as an argument is the place where the **new** application should be moved to
-in order to activate it.
-
 #### Usage
 
     runHook deploy-activate applicationPath
@@ -346,15 +310,14 @@ in order to activate it.
 
 #### Arguments
 
-
+- `applicationPath` - This is the target for the current application
 
 #### Exit codes
 
 - `0` - This is called to replace the running application in-place 
+#### Arguments
 
-### `deploy-confirm.sh` - Deployment confirmation script
-
-should do wahtever is required to ensure that.
+- No arguments.
 
 #### Examples
 
@@ -367,21 +330,18 @@ should do wahtever is required to ensure that.
 
 - `0` - Continue with deployment
 - `Non-zero` - Any non-zero exit code will run `deploy-revert` hook on all systems and cancel deployment 
+#### Arguments
 
-### `deploy-cleanup.sh` - Run after a successful deployment
-
-Run on remote systems after deployment has succeeded on all systems.
-
-This step must always succeed on the remote system; the deployment step prior to this
-should do whatever is required to ensure that.
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds 
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error 
+#### Arguments
 
-### `deploy-finish.sh` - Deployment "finish" script
-
-$\Deployment "finish" script
+- No arguments.
 
 #### Examples
 
@@ -390,10 +350,9 @@ $\Deployment "finish" script
 #### Exit codes
 
 - `0` - This SHOULD exit successfully always 
+#### Arguments
 
-### `deploy-revert.sh` - Deployment "undo" script
-
-After a deployment was successful on a host, this undos that deployment and goes back to the previous version.
+- No arguments.
 
 #### Exit codes
 

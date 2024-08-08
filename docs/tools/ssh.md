@@ -4,7 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `sshAddKnownHost` - Adds the host to the `~/.known_hosts` if it is not
 
 Adds the host to the `~/.known_hosts` if it is not found in it already
@@ -22,20 +21,14 @@ If this function fails then ~/.ssh/known_hosts may be modified for any hosts whi
 
 If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 
-#### Usage
-
-    sshAddKnownHost [ host0 ]
-    
-
 #### Arguments
 
-
+- `host0` - String. Optional. One ore more hosts to add to the known hosts file
 
 #### Exit codes
 
 - `1` - Environment errors
 - `0` - All hosts exist in or were successfully added to the known hosts file
-
 ### `sshSetup` - Set up SSH for a user with ID and backup
 
 Set up SSH for a user with ID and backup keys in `~/.ssh`
@@ -48,15 +41,13 @@ Add .ssh key for current user
 
 You will need the password for this server for the current user.
 
-#### Usage
-
-    sshSetup [ --force ] [ server ... ]
-    
-
 #### Arguments
 
-
+--force Force the program to create a new key if one exists
+- server- Servers to connect to to set up authorization
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

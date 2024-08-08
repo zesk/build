@@ -4,11 +4,15 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `dateToTimestamp` - Converts a date to an integer timestamp
 
 Converts a date to an integer timestamp
@@ -20,7 +24,7 @@ Converts a date to an integer timestamp
 
 #### Arguments
 
-
+- `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 
 #### Examples
 
@@ -34,23 +38,22 @@ Converts a date to an integer timestamp
 #### Environment
 
 Compatible with BSD and GNU date.
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `todayDate` - Today's date
 
 Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 
-#### Usage
-
-    todayDate
-    
-
 #### Arguments
 
-
+- None.
 
 #### Examples
 
@@ -58,16 +61,28 @@ Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 Compatible with BSD and GNU date.
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

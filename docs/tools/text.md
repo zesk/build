@@ -5,7 +5,6 @@
 
 ## Patterns
 
-
 ### `isCharacterClass` - Poor-man's bash character class matching
 
 Poor-man's bash character class matching
@@ -16,22 +15,27 @@ Returns true if all `characters` are of `className`
     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
     print   punct   space   upper   word    xdigit
 
-#### Usage
+#### Arguments
 
-    isCharacterClass className character0 [ character1 ... ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Filters
 
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `quoteSedPattern` - Quote sed strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
@@ -43,7 +47,7 @@ Quote a string to be used in a sed pattern on the command line.
 
 #### Arguments
 
-
+- `text` - Text to quote
 
 #### Examples
 
@@ -56,8 +60,9 @@ Quote a string to be used in a sed pattern on the command line.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `quoteBashString` - Quote bash strings for inclusion as single-quoted for eval
 
 Quote bash strings for inclusion as single-quoted for eval
@@ -69,7 +74,7 @@ Quote bash strings for inclusion as single-quoted for eval
 
 #### Arguments
 
-
+- `text` - Text to quote
 
 #### Examples
 
@@ -82,25 +87,21 @@ Quote bash strings for inclusion as single-quoted for eval
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Depends
 
     sed
     
-
 ### `quoteGrepPattern` - Quote grep -e patterns for shell use
 
 $\Quote grep -e patterns for shell use
 
-#### Usage
-
-    quoteGrepPattern text
-    
-
 #### Arguments
 
-
+- `text` - Text to quote
 
 #### Examples
 
@@ -113,8 +114,9 @@ $\Quote grep -e patterns for shell use
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `escapeQuotes` - Quote strings for inclusion in shell quoted strings
 
@@ -127,7 +129,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Arguments
 
-
+- `text` - Text to quote
 
 #### Examples
 
@@ -140,8 +142,9 @@ Quote strings for inclusion in shell quoted strings
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `escapeSingleQuotes` - Quote strings for inclusion in shell quoted strings
 
 Quote strings for inclusion in shell quoted strings
@@ -153,7 +156,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Arguments
 
-
+- `text` - Text to quote
 
 #### Examples
 
@@ -166,8 +169,9 @@ Quote strings for inclusion in shell quoted strings
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `escapeDoubleQuotes` - Quote strings for inclusion in shell quoted strings
 
 Quote strings for inclusion in shell quoted strings
@@ -179,7 +183,7 @@ Quote strings for inclusion in shell quoted strings
 
 #### Arguments
 
-
+- `text` - Text to quote
 
 #### Examples
 
@@ -192,21 +196,22 @@ Quote strings for inclusion in shell quoted strings
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `escapeBash` - Converts strings to shell escaped strings
 
 Converts strings to shell escaped strings
 
-#### Usage
+#### Arguments
 
-    escapeBash [ text }
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `replaceFirstPattern` - Replaces the first and only the first occurrence of a
 
 Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
@@ -216,27 +221,28 @@ Replaces the first and only the first occurrence of a pattern in a line with a r
     replaceFirstPattern pattern replacement
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `removeFields` - Remove fields from left to right from a text file
 
 Remove fields from left to right from a text file as a pipe
 
-#### Usage
-
-    removeFields fieldCount < input > output
-    
-
 #### Arguments
 
-
+- `fieldCount` - Optional. Integer. Number of field to remove. Default is just first `1`.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `stripAnsi` - Strip ANSI console escape sequences from a file
 
@@ -249,11 +255,13 @@ Strip ANSI console escape sequences from a file
 
 #### Arguments
 
-
+- None.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Local cache
 
@@ -272,7 +280,6 @@ None.
 
 Thanks to [commandlinefu tripleee](https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc).
 
-
 ### `listTokens` - listTokens
 
 listTokens
@@ -284,11 +291,14 @@ listTokens
 
 #### Arguments
 
-
+- `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
+- `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Local cache
 
@@ -303,7 +313,6 @@ None.
     sed quoteSedPattern
     
 
-
 ### `mapValue` - Maps a string using an environment file
 
 Maps a string using an environment file
@@ -315,79 +324,75 @@ Maps a string using an environment file
 
 #### Arguments
 
-
+- `--help` - Optional. Flag. Display this help.
+- `mapFile` - Required. File. a file containing bash environment definitions
+- `value` - Optional. String. One or more values to map using said environment file
+- `--prefix` - Optional. String. Token prefix defaults to `{`.
+- `--suffix` - Optional. String. Token suffix defaults to `}`.
+- `--search-filter` - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
+- `--replace-filter` - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `mapValueTrim` - Maps a string using an environment file
 
 Maps a string using an environment file
 
-#### Usage
-
-    mapValueTrim mapFile [ value ... ]
-    
-
 #### Arguments
 
-
+- `mapFile` - Required. File. a file containing bash environment definitions
+- `value` - Optional. String. One or more values to map using said environment file.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
-#### Usage
-
-    mapEnvironment [ environmentName0 environmentName1 ... ]
-    
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 #### Arguments
 
-
+- `environmentName0` - Map this value only. If not specified, all environment variables are mapped.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
-
 ### `printfOutputPrefix` - Pipe to output some text before any output, otherwise, nothing
 
 Pipe to output some text before any output, otherwise, nothing is output.
 
-#### Usage
+#### Arguments
 
-    printfOutputPrefix printfArguments
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `printfOutputSuffix` - Pipe to output some text after any output, otherwise, nothing
 
 Pipe to output some text after any output, otherwise, nothing is output.
 
-#### Usage
+#### Arguments
 
-    printfOutputSuffix printfArguments
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### Space trimming
-
 
 ### `trimWords` - Remove words from the end of a phrase
 
@@ -400,7 +405,8 @@ Remove words from the end of a phrase
 
 #### Arguments
 
-
+- `wordCount` - Words to output
+- `word0` - One or more words to output
 
 #### Examples
 
@@ -408,20 +414,16 @@ Remove words from the end of a phrase
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `trimSpace` - Trim whitespace of a bash argument
 
 Trim spaces and only spaces from arguments or a pipe
 
-#### Usage
-
-    trimSpace text
-    
-
 #### Arguments
 
-
+- `text` - Text to remove spaces
 
 #### Examples
 
@@ -434,54 +436,56 @@ Trim spaces and only spaces from arguments or a pipe
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Credits
 
 Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816).
-
 ### `trimHead` - Removes any blank lines from the beginning of a stream
 
 Removes any blank lines from the beginning of a stream
 
-#### Usage
+#### Arguments
 
-    trimHead
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `trimTail` - Removes any blank lines from the end of a stream
 
 Removes any blank lines from the end of a stream
 
-#### Usage
+#### Arguments
 
-    trimTail
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `singleBlankLines` - Ensures blank lines are singular
 
 Ensures blank lines are singular
 
-#### Usage
+#### Arguments
 
-    singleBlankLines
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Finding or Calculating
 
-
+Unable to find "hasPattern" (using index "/Users/kent/.build") 
 ### `inArray` - Check if an element exists in an array
 
 Check if an element exists in an array
@@ -493,62 +497,69 @@ Check if an element exists in an array
 
 #### Arguments
 
+- `element` - Thing to search for
+- `arrayElement0` - One or more array elements to match
 
+#### Examples
+
+    if inArray "$thing" "${things[@]}"; then things+=("$thing");
+        things+=("$thing")
+    fi
 
 #### Exit codes
 
 - `0` - If element is found in array
 - `1` - If element is NOT found in array
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `isSubstring` - Check if one string is a substring of another set
 
 Check if one string is a substring of another set of strings (case-sensitive)
 
-#### Usage
-
-    isSubstring needle [ haystack ... ]
-    
-
 #### Arguments
 
-
+- `needle` - Required. String. Thing to search for, not blank.
+- `haystack ...` - Optional. EmptyString. One or more array elements to match
 
 #### Exit codes
 
 - `0` - If element is a substring of any haystack
 - `1` - If element is NOT found as a substring of any haystack
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `isSubstringInsensitive` - Check if one string is a substring of another set
 
 Check if one string is a substring of another set of strings (case-insensitive)
 
-#### Usage
-
-    isSubstringInsensitive needle [ haystack ... ]
-    
-
 #### Arguments
 
-
+- `needle` - Required. String. Thing to search for, not blank.
+- `haystack ...` - Optional. EmptyString. One or more array elements to match
 
 #### Exit codes
 
 - `0` - If element is a substring of any haystack
 - `1` - If element is NOT found as a substring of any haystack
 
-#### Usage
+#### Errors
 
-    substringFound haystack needle ...
-    
-
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
-
+- `haystack` - Required. String. String to search.
+- `needle` - Optional. String. One or more strings to find as a substring of `haystack`.
 
 #### Exit codes
 
 - `0` - IFF ANY needle matches as a substring of haystack
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `stringOffset` - Outputs the integer offset of `needle` if found as substring
 
 Outputs the integer offset of `needle` if found as substring in `haystack`
@@ -559,10 +570,19 @@ If `haystack` is not found, -1 is output
     stringOffset needle haystack
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
 
 Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
@@ -576,7 +596,9 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 #### Arguments
 
-
+- `fieldIndex` - The field to compute the maximum length for
+- `separatorChar` - The separator character to delineate fields
+- `fieldBasedFile` - A file with fields
 
 #### Examples
 
@@ -584,23 +606,32 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `maximumLineLength` - Outputs the maximum line length passed into stdin
 
 Outputs the maximum line length passed into stdin
 
-#### Usage
+#### Arguments
 
-    maximumLineLength
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 
 ## Language-related
-
 
 ### `plural` - Outputs the `singular` value to standard out when the value
 
@@ -616,7 +647,9 @@ Example:
 
 #### Arguments
 
-
+- `number` - An integer or floating point number
+- `singular` - The singular form of a noun
+- `plural` - The plural form of a noun
 
 #### Examples
 
@@ -630,14 +663,16 @@ Example:
 - `1` - If count is non-numeric
 - `0` - If count is numeric
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `parseBoolean` - Parses text and determines if it's true-ish
 
 Parses text and determines if it's true-ish
 
-#### Usage
+#### Arguments
 
-    parseBoolean text
-    
+- No arguments.
 
 #### Exit codes
 
@@ -645,39 +680,46 @@ Parses text and determines if it's true-ish
 - `1` - false
 - `2` - Neither
 
-#### See Also
+#### Errors
 
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 
 ## Transformation
-
 
 ### `lowercase` - Convert text to lowercase
 
 Convert text to lowercase
 
-#### Usage
+#### Arguments
 
-    lowercase [ text ... ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `uppercase` - Convert text to uppercase
 
 Convert text to uppercase
 
-#### Usage
+#### Arguments
 
-    uppercase [ text ... ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `shaPipe` - SHA1 checksum of standard input
 
 Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -691,7 +733,7 @@ You can use this as a pipe or pass in arguments which are files to be hashed.
 
 #### Arguments
 
-
+- `filename` - One or more filenames to generate a checksum for
 
 #### Examples
 
@@ -705,7 +747,9 @@ You can use this as a pipe or pass in arguments which are files to be hashed.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
@@ -716,6 +760,9 @@ DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe ca
     shasum
     
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `cachedShaPipe` - SHA1 checksum of standard input
 
 Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -733,7 +780,7 @@ The `cacheDirectory`
 
 #### Arguments
 
-
+- `cacheDirectory` - Optional. Directory. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
 
 #### Examples
 
@@ -747,13 +794,18 @@ The `cacheDirectory`
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Depends
 
     shasum shaPipe
     
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `cannon` - Replace text `fromText` with `toText` in files, using `findArgs` to
 
 Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
@@ -767,7 +819,11 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 #### Arguments
 
-
+- `--help` - Optional. Flag. Display this help.
+- `--path directory` - Optional. Directory. Run cannon operation starting in this directory.
+- `fromText` - Required. String of text to search for.
+- `toText` - Required. String of text to replace.
+- `findArgs ...` - Optional. FindArgument. Any additional arguments are meant to filter files.
 
 #### Examples
 
@@ -785,117 +841,155 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 - [Source {fn}]({sourceLink})
 
-#### Usage
+#### Errors
 
-    joinArguments separator text0 arg1 ...
-    
-
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
-
+- `separator` - Required. String. Single character to join elements.
+- `text0` - Optional. String. One or more strings to join
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
-#### Usage
+#### Errors
 
-    listAppend listValue separator [ --first | --last | item ]
-    
-
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
-
+- `listValue` - Required. Path value to modify.
+- `separator` - Required. Separator string for item values (typically `:`)
+- `--first` - Optional. Place any items after this flag first in the list
+- `--last` - Optional. Place any items after this flag last in the list. Default.
+- `item` - the path to be added to the `listValue`
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `listCleanDuplicates` - Removes duplicates from a list and maintains ordering.
 
 Removes duplicates from a list and maintains ordering.
 
-#### Usage
-
-    listCleanDuplicates separator listText
-    
-
 #### Arguments
 
-
+- `--help` - Optional. Flag. This help.
+- `--removed` - Optional. Flag. Show removed items instead of the new list.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 
 # Characters
-
 
 ### `characterClassReport` - Write a report of the character classes
 
 Write a report of the character classes
 
-#### Usage
+#### Arguments
 
-    characterClassReport
-    
-
-#### Exit codes
-
-- `0` - Always succeeds
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `characterFromInteger` - Given a list of integers, output the character codes associated
 
 Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `characterToInteger` - Convert one or more characters from their ascii representation to
 
 Convert one or more characters from their ascii representation to an integer value.
 Requires a single character to be passed
 
-#### Usage
+#### Arguments
 
-    characterToInteger [ character ... ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `isCharacterClasses` - Does this character match one or more character classes?
 
 Does this character match one or more character classes?
 
-#### Usage
-
-    isCharacterClasses character [ class0 class1 ... ]
-    
-
 #### Arguments
 
-
+- `character` - Required. Single character to test.
+- `class0` - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
-#### Usage
+#### Errors
 
-    stringValidate text class0 [ ... ]
-    
-
+Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
-
+- `text` - Text to validate
+- `class0` - One ore more character classes that the characters in string should match
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Errors
+
+Unable to find "hasPattern" (using index "/Users/kent/.build")

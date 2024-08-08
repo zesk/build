@@ -4,32 +4,26 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `debuggingStack` - Dump the function and include stacks and the current environment
 
 Dump the function and include stacks and the current environment
 
-#### Usage
+#### Arguments
 
-    debuggingStack [ -s ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `buildDebugEnabled` - Is build debugging enabled?
 
 Is build debugging enabled?
 
-#### Usage
-
-    buildDebugEnabled [ moduleName ... ]
-    
-
 #### Arguments
 
-
+- `moduleName` - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
 
 #### Exit codes
 
@@ -39,7 +33,6 @@ Is build debugging enabled?
 #### Environment
 
 BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. BUILD_DEBUG may be a comma-separated list of modules to target debugging.
-
 ### `buildDebugStart` - Start build debugging if it is enabled.
 
 Start build debugging if it is enabled.
@@ -49,14 +42,9 @@ Use it to debug when you can not figure out what is happening internally.
 `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
 Example:     buildDebugStart || :
 
-#### Usage
-
-    buildDebugStart [ moduleName ... ]
-    
-
 #### Arguments
 
-
+- `moduleName` - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
 
 #### Examples
 
@@ -65,12 +53,13 @@ Example:     buildDebugStart || :
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 BUILD_DEBUG
-
 ### `buildDebugStop` - Stop build debugging if it is enabled
 
 Stop build debugging if it is enabled
@@ -80,24 +69,30 @@ Stop build debugging if it is enabled
     buildDebugStop
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `isBashDebug` - Returns whether the shell has the debugging flag set
 
 Returns whether the shell has the debugging flag set
 
 Useful if you need to temporarily enable or disable it.
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `isErrorExit` - Returns whether the shell has the error exit flag set
 
 Returns whether the shell has the error exit flag set
@@ -111,30 +106,43 @@ on has little effect except on the current script running.
 
 Outputs `1` always
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
 
 dumpFile fileName0 [ fileName1 ... ]
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `dumpPipe` - Dump a pipe with a title and stats
 
 Dump a pipe with a title and stats
 
 #### Arguments
 
-
+- `--symbol symbol` - Optional. String. Symbol to place before each line. (Blank is ok).
+- `--tail` - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
+- `name` - Optional. String. The item name or title of this output.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `plumber` - Run command and detect any global or local leaks
 
 Run command and detect any global or local leaks
@@ -144,27 +152,28 @@ Run command and detect any global or local leaks
     plumber command ...
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `housekeeper` - Run a command and ensure files are not modified
 
 Run a command and ensure files are not modified
 
-#### Usage
-
-    housekeeper [ --help ] [ --ignore grepPattern ] [ --path path ] [ path ... ] callable
-    
-
 #### Arguments
 
-
+- `--path path` - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `outputTrigger` - Check output for content and trigger environment error if found
 
 Check output for content and trigger environment error if found
@@ -172,7 +181,9 @@ Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
 
 #### Arguments
 
-
+- `--help` - Help
+- `--verbose` - Optional. Flag. Verbose messages when no errors exist.
+- `--name name` - Optional. String. Name for verbose mode.
 
 #### Examples
 
@@ -180,4 +191,6 @@ Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

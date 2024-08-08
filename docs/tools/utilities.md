@@ -4,7 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 ### `incrementor` - Set or increment a process-wide incrementor. If no numeric value
 
 Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.
@@ -26,28 +25,22 @@ Sets `kitty` incrementor to 2 and outputs `2`
     incrementor 2 kitty
 
 
-#### Usage
-
-    incrementor [ count | variable ] ...
-    
-
 #### Arguments
 
-
+- `count` - Optional. Integer. Sets the value for any following named variables to this value.
+- `variable` - Optional. String. Variable to change or increment.
+- `--reset` - Optional. Flag. Reset all counters to zero.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Depends
 
     buildCacheDirectory
     
-
-#### See Also
-
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
-
 ### `extensionLists` - Generates a directory containing files with `extension` as the file
 
 Generates a directory containing files with `extension` as the file names.
@@ -58,28 +51,29 @@ Extension parsing is done by removing the final dot from the filename:
 - `foo.` -> `"!"``
 - `foo-bar` -> `"!"``
 
-#### Usage
-
-    extensionLists directory file0 ...
-    
-
 #### Arguments
 
-
+- `--help` - Optional. Flag. This help.
+- `--clean` - Optional. Flag. Clean directory of all files first.
+- `directory` - Required. Directory. Directory to create extension lists.
+- `directory` - Required. Directory. Directory to create extension lists.
+- `file0` - Optional. List of files to add to the extension list.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `pipeRunner` - Single reader, multiple writers
 
 Single reader, multiple writers
 
-#### Usage
+#### Arguments
 
-    pipeRunner [ --mode mode ] namedPipe [ --writer line | readerExecutable ... ]
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

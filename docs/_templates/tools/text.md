@@ -42,6 +42,7 @@
 
 ## Finding or Calculating
 
+{hasPattern} 
 {inArray}
 {isSubstring}
 {isSubstringInsensitive}

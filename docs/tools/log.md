@@ -6,7 +6,6 @@
 
 ## Rotation
 
-
 ### `rotateLog` - Rotate a log file
 
 Rotate a log file
@@ -20,33 +19,28 @@ Backs up files as:
 
 But maintains file` descriptors for `logFile`.
 
-#### Usage
-
-    rotateLog [ --dry-run ] logFile count
-    
-
 #### Arguments
 
-
+- `logFile` - Required. A log file which exists.
+- `count` - Required. Integer of log files to maintain.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `rotateLogs` - Rotate log files
 
 Rotate log files
 For all log files in logPath with extension `.log`, rotate them safely
 
-#### Usage
-
-    rotateLogs [ --dry-run ] logPath count
-    
-
 #### Arguments
 
-
+- `logPath` - Required. Path where log files exist.
+- `count` - Required. Integer of log files to maintain.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

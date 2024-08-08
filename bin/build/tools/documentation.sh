@@ -419,14 +419,11 @@ _bashDocumentation_Template() {
   if ! (
     # subshell this does not affect anything except these commands
     set -eou pipefail
-    set -a
     # shellcheck source=/dev/null
     if ! source "$envFile"; then
-      set +a
       wrapLines "$(consoleCode)" "$(consoleReset)" <"$envFile"
       _environment "$envFile Failed" || return $?
     fi
-    set +a
     while read -r envVar; do
       formatter="_bashDocumentationFormatter_${envVar}"
       if [ "$(type -t "$formatter")" = "function" ]; then
@@ -586,12 +583,13 @@ bashDocumentation_Extract() {
     __dumpAliasedValue description summary
   fi
   if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
-    __dumpNameValue "exit_code" '0 - success'
-    __dumpNameValue "exit_code" '1 - environment error'
-    __dumpNameValue "exit_code" '2 - argument error'
+    __dumpNameValue "exit_code" '0 - Success' '1 - Environment error' '2 - Argument error'
   fi
   if ! inArray "fn" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "fn" "$fn"
+  fi
+  if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
+    __dumpNameValue "argument" "No arguments."
   fi
   printf "# DocMap: %s\n" "$docMap"
 }
