@@ -651,7 +651,7 @@ bashDocumentation_Extract() {
     __dumpAliasedValue description summary
   fi
   if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
-    __dumpNameValue "exit_code" '0 - Success' '1 - Environment error' '2 - Argument error' ""
+    __dumpNameValue "exit_code" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
   fi
   if ! inArray "fn" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "fn" "$fn"
