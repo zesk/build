@@ -130,8 +130,8 @@ _usageArgumentsSpecification() {
   [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(newestFile "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
     __usageEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile"
-    for file in "$(__usageArgumentsSpecification__required "$argumentDirectory")" "$(__usageArgumentsSpecification__defaults "$argumentDirectory")"; do
-      __usageEnvironment "$usage" printf "" "$file" || return $?
+    for file in "$(__usageArgumentsSpecification__required "$cacheDirectory")" "$(__usageArgumentsSpecification__defaults "$cacheDirectory")"; do
+      __usageEnvironment "$usage" printf "" >"$file" || return $?
     done
   fi
   argumentsFile="$cacheDirectory/arguments"
