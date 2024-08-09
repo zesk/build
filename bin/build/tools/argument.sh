@@ -130,6 +130,9 @@ _usageArgumentsSpecification() {
   [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(newestFile "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
     __usageEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile"
+    for file in "$(__usageArgumentsSpecification__required "$argumentDirectory")" "$(__usageArgumentsSpecification__defaults "$argumentDirectory")"; do
+      __usageEnvironment "$usage" printf "" "$file" || return $?
+    done
   fi
   argumentsFile="$cacheDirectory/arguments"
   if [ ! -f "$argumentsFile" ] || [ "$(newestFile "$cacheFile" "$argumentsFile")" = "$cacheFile" ]; then
@@ -265,12 +268,10 @@ _usageArgumentsSpecificationParseLine() {
     environmentValueWrite description "$description"
   } >"$argumentDirectory/$argumentFinder" || _argument "Unable to write $argumentDirectory/$argumentFinder" || return $?
   file=$(__usageArgumentsSpecification__required "$argumentDirectory")
-  __environment printf "" >"$file" || return $?
   if $required; then
     __environment printf "%s\n" "$argumentName" >>"$file" || return $?
   fi
   file=$(__usageArgumentsSpecification__defaults "$argumentDirectory")
-  __environment printf "" >"$file" || return $?
   if inArray "$argumentType" "Boolean" "Flag"; then
     __environment environmentValueWrite "$argumentName" false >>"$file" || return $?
   fi
