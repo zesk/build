@@ -108,7 +108,7 @@ documentationTemplateCompile() {
   local argument nArguments argumentIndex saved
   local cacheDirectory="" documentTemplate="" functionTemplate="" targetFile=""
   local start mappedDocumentTemplate checkFiles forceFlag
-  local compiledFunctionTarget tokenNames
+  local compiledFunctionTarget tokenNames message
   local targetDirectory settingsFile base envFiles envFileArgs envFile
   local tokenName documentTokensFile envChecksum envChecksumCache compiledTemplateCache
 
@@ -149,8 +149,8 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -170,7 +170,7 @@ documentationTemplateCompile() {
 
   base="$(basename "$targetFile")" || __failArgument "$usage" basename "$targetFile" || return $?
   base="${base%%.md}"
-  statusMessage consoleInfo "Generating $base ..."
+  statusMessage consoleInfo "Generating $(consoleCode "$base") $(consoleInfo "...")"
 
   documentTokensFile=$(mktemp)
   mappedDocumentTemplate=$(mktemp)
@@ -226,6 +226,7 @@ documentationTemplateCompile() {
       checkFiles+=("$settingsFile")
     done <"$documentTokensFile"
     if $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
+      message="Generated"
       compiledFunctionEnv=$(__usageEnvironment "$usage" mktemp) || return $?
       # subshell to hide environment tokens
       while read -r tokenName; do
@@ -235,7 +236,7 @@ documentationTemplateCompile() {
           continue
         fi
         if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && isNewestFile "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
-          : Skip and use cache
+          statusMessage consoleInfo "Skip $tokenName and use cache"
         else
           __usageEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" >"$compiledTemplateCache/$tokenName" || return $?
         fi
@@ -251,11 +252,13 @@ documentationTemplateCompile() {
         mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
       ) || __failEnvironment "$usage" "mapEnvironment $tokenName" || return $?
       __usageEnvironment "$usage" cp "$compiledFunctionEnv" "$envChecksumCache" || return $?
+    else
+      message="Cached"
     fi
   fi
   rm -f "$documentTokensFile" || :
   rm -f "$mappedDocumentTemplate" || :
-  statusMessage consoleInfo "$(reportTiming "$start" Generated "$targetFile" in)"
+  statusMessage consoleInfo "$(reportTiming "$start" "$message" "$targetFile" in)"
 }
 _documentationTemplateCompile() {
   usageDocument "${BASH_SOURCE[0]}" "documentationTemplateCompile" "$@"
@@ -311,8 +314,8 @@ documentationTemplateFunctionCompile() {
         elif [ -z "$functionTemplate" ]; then
           functionTemplate=$1
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -392,8 +395,8 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac

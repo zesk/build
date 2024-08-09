@@ -280,7 +280,7 @@ Within your function, add an ignore reason if you wish:
 
     userFunction() {
     ...
-    d}
+    }
 
 - Location: `bin/build/tools/documentation/index.sh`
 

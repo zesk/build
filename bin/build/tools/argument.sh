@@ -18,17 +18,17 @@
 # Argument: this - Required. Function. Function to collect arguments for. Assume usage function is "_$this".
 # Argument: source - Required. File. File of the function to collect the specification.
 # Argument: arguments - Optional. String. One or more arguments to parse.
-# Output is
+# Output is a temporary `stateFile` on line 1
 #
 # Type is one of:
 #
-# - Integer
-# - UnsignedInteger
-# - Number
-# - File
-# - FileDirectory
-# - Directory
-# - String
+# - File FileDirectory Directory LoadEnvironmentFile RealDirectory
+# - EmptyString String
+# - Boolean PositiveInteger Integer UnsignedInteger Number
+# - Executable Callable Function
+# - URL
+#
+# And uses the associated `usageArgument` function for validation.
 #
 _arguments() {
   local usageArguments="_${FUNCNAME[0]}"
@@ -36,12 +36,15 @@ _arguments() {
   local usage="_$this"
   local helpFlag=false
   local argument nArguments argumentIndex
-  local stateFile checkFunction value clean
+  local stateFile checkFunction value clean required
 
   shift || __failArgument "$usageArguments" "Missing this" || return $?
   shift || __failArgument "$usageArguments" "Missing source" || return $?
   stateFile=$(__usageEnvironment "$usageArguments" mktemp) || return $?
   spec=$(__usageEnvironment "$usageArguments" _usageArgumentsSpecification "$source" "$this") || return $?
+  __usageEnvironment "$usageArguments" _usageArgumentsSpecificationDefaults "$spec" >"$stateFile" || return $?
+  IFS=$'\n' read -d '' -r -a required <"$(__usageArgumentsSpecification__required "$spec")"
+
   # Rest is calling function argument usage
   clean=("$stateFile")
   nArguments=$#
@@ -52,6 +55,10 @@ _arguments() {
       # Not same as other --help
       --help)
         helpFlag=true
+        ;;
+      Flag)
+        argumentName="$(_usageArgumentName "$spec" "$argumentIndex" "$argument")"
+        __usageEnvironment "$usage" environmentValueWrite "$argumentName" "true" >>"$stateFile"
         ;;
       *)
         type="$(_usageArgumentType "$spec" "$stateFile" "$argumentIndex" "$argument")" || return $?
@@ -66,12 +73,10 @@ _arguments() {
           dumpPipe stateFile <"$stateFile" 1>&2
           __failArgument "$usage" "unhandled argument type $type #$argumentIndex: $argument" || return $?
         fi
-        argumentName="$(_usageArgumentName "$spec" "$argumentIndex" "$argument")"
         checkFunction="usageArgument${argument}"
         value="$("$checkFunction" "$usage" "$argumentName" "${1-}")" || _clean "$?" || return $?
         __usageEnvironment "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || _clean "$?" || return $?
         ;;
-
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
@@ -148,13 +153,43 @@ _usageArgumentsSpecification() {
   fi
   printf "%s\n" "$cacheDirectory"
 }
+__usageArgumentsSpecification() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__usageArgumentsSpecification__defaults() {
+  printf "%s/%s\n" "$1" "._defaults"
+}
+
+__usageArgumentsSpecification__required() {
+  printf "%s/%s\n" "$1" "._required"
+}
+
+# Argument: specification - Required. String.
+_usageArgumentsSpecificationDefaults() {
+  local usage="_${FUNCNAME[0]}"
+  local specification="${1-}"
+
+  __usageArgumentSpecificationMagic "$usage" "$specification" || return $?
+  file=$(__usageArgumentsSpecification__defaults "$specification")
+  if [ -f "$file" ]; then
+    cat "$file"
+  else
+    printf "%s\n" "# No defaults"
+  fi
+}
+__usageArgumentsSpecificationDefaults() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Argument: argumentDirectory - Required. Directory. Directory where the arguments structure is stored.
 # Argument: argumentId - Required. Integer. This argument ID.
 # Output: nothing
 _usageArgumentsSpecificationParseLine() {
   local argumentDirectory="${1-}" argumentId="${2-}"
-  local argument
+  local argument file
   local required saveRequired argumentIndex argumentType argumentName argumentFinder argumentRepeat
 
   [ -d "$argumentDirectory" ] || _argument "$argumentDirectory is not a directory" || return $?
@@ -229,11 +264,18 @@ _usageArgumentsSpecificationParseLine() {
     environmentValueWrite argumentFinder "$argumentFinder"
     environmentValueWrite description "$description"
   } >"$argumentDirectory/$argumentFinder" || _argument "Unable to write $argumentDirectory/$argumentFinder" || return $?
+  file=$(__usageArgumentsSpecification__required "$argumentDirectory")
+  __environment printf "" >"$file" || return $?
   if $required; then
-    __environment printf "%s\n" "$argumentName" >>"$argumentDirectory/required" || return $?
+    __environment printf "%s\n" "$argumentName" >>"$file" || return $?
+  fi
+  file=$(__usageArgumentsSpecification__defaults "$argumentDirectory")
+  __environment printf "" >"$file" || return $?
+  if inArray "$argumentType" "Boolean" "Flag"; then
+    __environment environmentValueWrite "$argumentName" false >>"$file" || return $?
   fi
 }
-__usageArgumentsSpecification() {
+__usageArgumentsSpecificationParseLine() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
