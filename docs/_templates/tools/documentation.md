@@ -15,6 +15,7 @@
 
 {bashDocumentFunction}
 {documentationTemplateCompile}
+{documentationTemplateFunctionCompile}
 {documentationTemplateDirectoryCompile}
 
 ## Documentation Indexing

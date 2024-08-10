@@ -13,6 +13,8 @@ Output a list of environment variables and ignore function definitions
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
+- Location: `bin/build/identical/environmentVariables.sh`
+
 #### Arguments
 
 - No arguments.
@@ -37,10 +39,13 @@ exported variables
 
 Write a value to a state file as NAME="value"
 
+- Location: `bin/build/tools/environment.sh`
+
 #### Usage
 
     name - Required. String. Name to write.
-    value - Optional. String. Value to write.
+    value - Optional. EmptyString. Value to write.
+    ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
     
 
 #### Arguments
@@ -56,6 +61,8 @@ Write a value to a state file as NAME="value"
 
 Read one or more values values safely from a environment file
 
+- Location: `bin/build/tools/environment.sh`
+
 #### Arguments
 
 - `stateFile` - Required. File. File to access, must exist.
@@ -67,9 +74,28 @@ Read one or more values values safely from a environment file
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `environmentValueReadArray` - Read an array value from a state file
+
+Read an array value from a state file
+Outputs array elements, one per line.
+
+- Location: `bin/build/tools/environment.sh`
+
+#### Arguments
+
+- `stateFile` - Required. File. File to access, must exist.
+- `name` - Required. String. Name to read.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `environmentLines` - List lines of environment values set in a bash state
 
 List lines of environment values set in a bash state file
+
+- Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 
@@ -83,6 +109,8 @@ List lines of environment values set in a bash state file
 ### `environmentNames` - List names of environment values set in a bash state
 
 List names of environment values set in a bash state file
+
+- Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 
@@ -99,6 +127,8 @@ List names of environment values set in a bash state file
 ### `environmentFileApplicationMake` - Create environment file `.env` for build.
 
 Create environment file `.env` for build.
+
+- Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 
@@ -122,6 +152,8 @@ APPLICATION_ID - reserved and set to `runHook application-tag`
 
 Check application environment is populated correctly.
 Also verifies that `environmentApplicationVariables` and `environmentApplicationLoad` are defined.
+
+- Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 

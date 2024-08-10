@@ -31,9 +31,7 @@ __tools() {
 __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
   local here="${BASH_SOURCE[0]%/*}"
-  # shellcheck source=/dev/null
-  testTools || __failEnvironment "$usage" "testTools" || return $?
-  testSuite --tests "$(realPath "${here%/*}/../test/tools")" "$@"
+  testTools testSuite --tests "$(realPath "${here%/*}/../test/tools")" "$@" || __failEnvironment "$usage" "testTools" || return $?
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

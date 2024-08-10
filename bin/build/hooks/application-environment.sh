@@ -1,57 +1,56 @@
 #!/usr/bin/env bash
 #
-# Generate the application environment file
+# Generate the .env file
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-set -eou pipefail
-
-# shellcheck source=/dev/null
-if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
-  printf "tools.sh failed" 1>&2
-  exit 1
-fi
-
-# fn: {base}
-# Usage: {fn}
-#
-# Generate the application environment file
-#
-# See: make
-#
-#     git rev-parse --short HEAD
-#
-# Example:     885acc3
-#
-__hookApplicationEnvironment() {
-  local here argument
-  local usage
-
-  usage="_${FUNCNAME[0]}"
-
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        __failArgument "$usage" "unknown argument: $argument" || return $?
-        ;;
-    esac
-    shift || :
-  done
-
-  here="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "pwd failed" || return $?
-  __usageEnvironment "$usage" gitEnsureSafeDirectory "$here" || return $?
-  __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
+# IDENTICAL __tools 16
+# Usage: {fn} [ relative [ command ... ] ]
+# Load build tools and run command
+# Argument: relative - Required. Directory. Path to application root.
+# Argument: command ... - Optional. Callable. A command to run and optional arguments.
+__tools() {
+  local source="${BASH_SOURCE[0]}" e=253
+  local here="${source%/*}" arguments=()
+  local tools="$here/${1:-".."}/bin/build"
+  [ -d "$tools" ] || _return $e "$tools is not a directory" || return $?
+  tools="$tools/tools.sh" && [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
+  shift && while [ $# -gt 0 ]; do arguments+=("$1") && shift; done
+  # shellcheck source=/dev/null
+  source "$tools" || _return $e source "$tools" "$@" || return $?
+  [ ${#arguments[@]} -gt 0 ] || return 0
+  "${arguments[@]}" || return $?
 }
-___hookApplicationEnvironment() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+
+# IDENTICAL _return 19
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
+_return() {
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+}
+
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+# <-- END of IDENTICAL _return
+
+# Hook is run to generate the application environment file
+# Outputs environment settings, one per line to be put into an environment file
+# Usage: {fn}
+# See `environmentFileApplicationMake` for usage and arguments.
+# See: environmentFileApplicationMake
+__hookApplicationEnvironment() {
+  __tools ../../.. environmentFileApplicationMake "$@"
 }
 
 __hookApplicationEnvironment "$@"

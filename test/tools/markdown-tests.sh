@@ -30,7 +30,11 @@ testMarkdownFormatList() {
 }
 
 testMarkdownRemoveSections() {
-  cat <<'EOF' | markdown_removeUnfinishedSections
+  assertEquals --line "$LINENO" "$(__dataMarkdownRemoveSections | markdown_removeUnfinishedSections)" "$(__dataMarkdownRemoveSectionsExpected)" || return $?
+}
+
+__dataMarkdownRemoveSections() {
+  cat <<'EOF'
 # ABC
 
 Hello
@@ -46,5 +50,18 @@ World
 ## Foo {token}
 
 Content
+EOF
+}
+
+__dataMarkdownRemoveSectionsExpected() {
+  cat <<'EOF'
+# ABC
+
+Hello
+
+# DEF
+
+World
+
 EOF
 }

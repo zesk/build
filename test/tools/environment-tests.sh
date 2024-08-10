@@ -14,6 +14,7 @@ tests+=(testDotEnvConfigure)
 tests+=(testEnvironmentFileMake)
 tests+=(testEnvironmentFileLoad)
 tests+=(testEnvironmentVariables)
+tests+=(testEnvironmentValueReadWrite)
 
 testDotEnvConfigure() {
   local tempDir tempEnv magic
@@ -122,4 +123,24 @@ testEnvironmentVariables() {
   rm "$e"
 
   unset BUILD_TEST_UNIQUE
+}
+
+__testEnvironmentValueReadWriteData() {
+  cat <<'EOF'
+hello This is a test
+world Earth
+argumentIndex 0
+EOF
+}
+
+testEnvironmentValueReadWrite() {
+  local foo
+
+  foo=$(__environment mktemp) || return $?
+
+  __testEnvironmentValueReadWriteData | while read -r testName testValue; do
+    __environment environmentValueWrite "$testName" "$testValue" >>"$foo" || return $?
+    value=$(__environment environmentValueRead "$foo" "$testName" "*default*") || return $?
+    assertEquals --line "$LINENO" "$testValue" "$value" "Read write value changed" || return $?
+  done
 }

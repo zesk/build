@@ -11,6 +11,8 @@ validateShellScripts
 Requires shellcheck so should be later in the testing process to have a cleaner build
 This can be run on any directory tree to test scripts in any application.
 
+- Location: `bin/build/tools/test.sh`
+
 #### Usage
 
     validateShellScripts [ --exec binary ] [ file0 ... ]
@@ -50,6 +52,8 @@ Shell comments must not be immediately after a function end, e.g. this is invali
     }
     # Hey
 
+- Location: `bin/build/tools/test.sh`
+
 #### Arguments
 
 - `script` - Shell script to validate
@@ -70,6 +74,8 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 ### `validateShellScriptsInteractive` - Run checks interactively until errors are all fixed.
 
 Run checks interactively until errors are all fixed.
+
+- Location: `bin/build/tools/test.sh`
 
 #### Usage
 
@@ -94,6 +100,8 @@ Search for item extensions and ensure that text is found in each item.
 This can be run on any directory tree to test files in any application.
 
 By default, any directory which begins with a dot `.` will be ignored.
+
+- Location: `bin/build/tools/test.sh`
 
 #### Usage
 
@@ -128,6 +136,8 @@ Search for item extensions and ensure that text is found in each item.
 This can be run on any directory tree to test files in any application.
 
 By default, any directory which begins with a dot `.` will be ignored.
+
+- Location: `bin/build/tools/test.sh`
 
 #### Arguments
 
@@ -169,10 +179,13 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 Load test tools and make `testSuite` function available
 
+- Location: `bin/build/tools/test.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
-- `binary ...` - Optional. Callable. Run this program after loading test tools.
+- `binary` - Optional. Callable. Run this program after loading test tools.
+- `...` - Optional. Arguments for binary.
 
 #### Exit codes
 

@@ -234,10 +234,8 @@ phpBuild() {
     declare -x "$environment=$(environmentValueRead ".env" "$environment" "")"
   done
   _phpEchoBar || :
-  consoleGreen "${BASH_SOURCE[0]}:$LINENO"
-  echo "DEPLOYMENT=$DEPLOYMENT"
+  # echo "DEPLOYMENT=$DEPLOYMENT"
   environmentFileShow "${environments[@]}" -- "${optionals[@]}" || :
-  consoleGreen "${BASH_SOURCE[0]}:$LINENO"
 
   [ ! -d ./.deploy ] || rm -rf ./.deploy || __failEnvironment "$usage" "Can not delete .deploy" || return $?
 

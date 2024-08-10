@@ -45,12 +45,13 @@ testDocumentation() {
 
 tests+=(testDocSections)
 testDocSections() {
-  local doc
+  local doc home
 
+  home=$(__environment buildHome) || return $?
   doc=$(__environment mktemp) || return $?
-  __environment bashDocumentFunction bin/build/tools/git.sh gitMainly bin/build/tools/documentation/__function.md >"$doc" || return $?
+  __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitMainly "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
   assertFileContains --line "$LINENO" "$doc" 'No arguments' || return $?
 
-  __environment bashDocumentFunction bin/build/tools/git.sh gitCommit bin/build/tools/documentation/__function.md >"$doc" || return $?
+  __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitCommit "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
   assertFileContains --line "$LINENO" "$doc" '#### Arguments' '--help' || return $?
 }

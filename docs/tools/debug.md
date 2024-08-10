@@ -8,9 +8,11 @@
 
 Dump the function and include stacks and the current environment
 
+- Location: `bin/build/tools/debug.sh`
+
 #### Arguments
 
-- No arguments.
+- `-x` - Optional. Flag. Show exported variables. (verbose)
 
 #### Exit codes
 
@@ -20,6 +22,8 @@ Dump the function and include stacks and the current environment
 ### `buildDebugEnabled` - Is build debugging enabled?
 
 Is build debugging enabled?
+
+- Location: `bin/build/tools/debug.sh`
 
 #### Arguments
 
@@ -41,6 +45,8 @@ Use it to debug when you can not figure out what is happening internally.
 
 `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
 Example:     buildDebugStart || :
+
+- Location: `bin/build/tools/debug.sh`
 
 #### Arguments
 
@@ -64,6 +70,8 @@ BUILD_DEBUG
 
 Stop build debugging if it is enabled
 
+- Location: `bin/build/tools/debug.sh`
+
 #### Usage
 
     buildDebugStop
@@ -83,6 +91,8 @@ Stop build debugging if it is enabled
 Returns whether the shell has the debugging flag set
 
 Useful if you need to temporarily enable or disable it.
+
+- Location: `bin/build/tools/debug.sh`
 
 #### Arguments
 
@@ -106,6 +116,8 @@ on has little effect except on the current script running.
 
 Outputs `1` always
 
+- Location: `bin/build/tools/debug.sh`
+
 #### Arguments
 
 - No arguments.
@@ -119,6 +131,8 @@ Outputs `1` always
 
 dumpFile fileName0 [ fileName1 ... ]
 
+- Location: `bin/build/tools/test.sh`
+
 #### Arguments
 
 - No arguments.
@@ -131,6 +145,8 @@ dumpFile fileName0 [ fileName1 ... ]
 ### `dumpPipe` - Dump a pipe with a title and stats
 
 Dump a pipe with a title and stats
+
+- Location: `bin/build/tools/test.sh`
 
 #### Arguments
 
@@ -146,6 +162,8 @@ Dump a pipe with a title and stats
 ### `plumber` - Run command and detect any global or local leaks
 
 Run command and detect any global or local leaks
+
+- Location: `bin/build/tools/debug.sh`
 
 #### Usage
 
@@ -165,6 +183,8 @@ Run command and detect any global or local leaks
 
 Run a command and ensure files are not modified
 
+- Location: `bin/build/tools/debug.sh`
+
 #### Arguments
 
 - `--path path` - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
@@ -178,6 +198,8 @@ Run a command and ensure files are not modified
 
 Check output for content and trigger environment error if found
 Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
+
+- Location: `bin/build/tools/debug.sh`
 
 #### Arguments
 
