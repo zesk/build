@@ -61,5 +61,4 @@ pipelines:
             - docker
           script:
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
-            - printf -- "Test Arguments: %s\n" "${aa[@]+"${aa[@]}"}"
             - bin/test.sh "${aa[@]+"${aa[@]}"}"
