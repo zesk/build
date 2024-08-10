@@ -248,7 +248,7 @@ __installRemotePackageLocal() {
   } >"$myBinary.$$"
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
   pid=$(
-    "$myBinary.$$" --replace &
+    "$myBinary.$$" --replace >"$myBinary.$$.log" 1>&2 &
     printf %d $!
   )
   if ! _integer "$pid"; then
@@ -259,10 +259,12 @@ __installRemotePackageLocal() {
     count=$((count + 1))
     sleep 1
     if [ "$count" -gt "$total" ]; then
-      printf "\n"
+      printf "\n%s: %s %d\n" "Replacement log" "Lines" "$(wc -l <"$myBinary.$$.log")"
+      cat "$myBinary.$$.log"
       _environment "Stopping waiting for $pid after $total seconds" || return $?
     fi
   done
+  rm -f "$myBinary.$$.log" || :
   printf "\r     \r"
   return 0
 }
