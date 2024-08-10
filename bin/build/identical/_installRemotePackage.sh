@@ -254,8 +254,8 @@ __installRemotePackageLocal() {
     printf %d $!
   )
   if ! _integer "$pid"; then
-    _environment "$usage" "Unable to run $myBinary.$$" || return $?
+    _environment "Unable to run $myBinary.$$" || return $?
   fi
-  __usageEnvironment wait "$pid" || _environment "$(dumpPipe "install log failed" <"$log")" || _clean $? "$log" || return $?
+  wait "$pid" || _environment "$(dumpPipe "install log failed: $pid" <"$log")" || _clean $? "$log" || return $?
   _clean 0 "$log" || return $?
 }
