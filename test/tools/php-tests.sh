@@ -54,11 +54,11 @@ testPHPBuild() {
   assertFileExists --line "$LINENO" "$testPath/bin/install-bin-build.sh" || return $?
   assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
 
-  consoleInfo "${BASH_SOURCE{0]}:$LINENO"
+  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
   "$testPath/bin/install-bin-build.sh" --mock "$home/bin/build" || return $?
-  consoleInfo "${BASH_SOURCE{0]}:$LINENO"
+  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
   assertDirectoryExists --line "$LINENO" "$testPath/bin/build" || return $?
-  consoleInfo "${BASH_SOURCE{0]}:$LINENO"
+  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
 
   consoleWarning "Building PHP app" || :
 
