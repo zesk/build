@@ -50,7 +50,7 @@ _integer() {
 # See `environmentFileApplicationMake` for usage and arguments.
 # See: environmentFileApplicationMake
 __hookApplicationEnvironment() {
-  __tools ../.. environmentFileApplicationMake "$@"
+  __tools ../../.. environmentFileApplicationMake "$@"
 }
 
 __hookApplicationEnvironment "$@"
