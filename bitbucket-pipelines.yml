@@ -57,6 +57,8 @@ pipelines:
           size: 2x
           deployment: test
           name: Just Test
+          artifacts:
+            - .last-run-test
           services:
             - docker
           script:
