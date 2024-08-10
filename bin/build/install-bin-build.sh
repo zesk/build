@@ -72,7 +72,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
-# IDENTICAL _installRemotePackage 251
+# IDENTICAL _installRemotePackage 255
 
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
 # fn: {base}
@@ -303,7 +303,7 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 __installRemotePackageLocal() {
-  local source="$1" myBinary="$2" relTop="$3" count=0
+  local source="$1" myBinary="$2" relTop="$3" count=0 total=5
   {
     grep -v -e '^__installPackageConfiguration ' <"$source"
     printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
@@ -320,6 +320,10 @@ __installRemotePackageLocal() {
     printf "%d\r" "$pid" "$count"
     count=$((count + 1))
     sleep 1
+    if [ "$count" -gt "$total" ]; then
+      printf "\n"
+      _environment "Stopping waiting for $pid after $total seconds" || return $?
+    fi
   done
   printf "\r     \r"
   return 0
