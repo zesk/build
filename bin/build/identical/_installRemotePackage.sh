@@ -242,31 +242,20 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 __installRemotePackageLocal() {
-  local source="$1" myBinary="$2" relTop="$3" count=0 total=5
+  local source="$1" myBinary="$2" relTop="$3"
+  local log="$myBinary.$$.log"
   {
     grep -v -e '^__installPackageConfiguration ' <"$source"
     printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
   } >"$myBinary.$$"
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
   pid=$(
-    "$myBinary.$$" --replace >"$myBinary.$$.log" 1>&2 &
+    "$myBinary.$$" --replace >"$log" 1>&2 &
     printf %d $!
   )
   if ! _integer "$pid"; then
     _environment "$usage" "Unable to run $myBinary.$$" || return $?
   fi
-  while kill -0 "$pid" 2>/dev/null; do
-    count=$((count + 1))
-    printf "pid %d: %d of %d\n" "$pid" "$count" "$total"
-    read -r -t 1 < /dev/zero || true
-    kill -CONT "$pid:" || :
-    if [ "$count" -gt "$total" ]; then
-      printf "\n%s: %s %d\n" "Replacement log" "Lines" "$(wc -l <"$myBinary.$$.log")"
-      cat "$myBinary.$$.log"
-      _environment "Stopping waiting for $pid after $total seconds" || return $?
-    fi
-  done
-  rm -f "$myBinary.$$.log" || :
-  printf "\r     \r"
-  return 0
+  __usageEnvironment wait "$pid" || _environment "$(dumpPipe "install log failed" <"$log")" || _clean $? "$log" || return $?
+  _clean 0 "$log" || return $?
 }
