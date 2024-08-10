@@ -17,6 +17,8 @@ Requires the file `.env` to exist and is loaded via bash `source` and all variab
 
 If `.env.local` exists, it is also loaded in a similar manner.
 
+- Location: `bin/build/tools/environment.sh`
+
 #### Usage
 
     dotEnvConfigure where
@@ -52,6 +54,8 @@ Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
 
 Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
 
+- Location: `bin/build/tools/hook.sh`
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home.
@@ -69,6 +73,8 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 ### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
 
 Identical to `runHook` but returns exit code zero if the hook does not exist.
+
+- Location: `bin/build/tools/hook.sh`
 
 #### Arguments
 
@@ -90,6 +96,8 @@ Does a hook exist in the local project?
 
 Check if one or more hook exists. All hooks must exist to succeed.
 
+- Location: `bin/build/tools/hook.sh`
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
@@ -109,6 +117,8 @@ Find the path to a hook. The search path is:
 
 If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
 
+- Location: `bin/build/tools/hook.sh`
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
@@ -124,6 +134,8 @@ If a file named `hookName` with the extension `.sh` is found which is executable
 ### `beginTiming` - Start a timer for a section of the build
 
 Outputs the offset in seconds from January 1, 1970.
+
+- Location: `bin/build/tools/pipeline.sh`
 
 #### Usage
 
@@ -150,6 +162,8 @@ Outputs the offset in seconds from January 1, 1970.
 Outputs the timing in magenta optionally prefixed by a message in green
 
 Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
+
+- Location: `bin/build/tools/pipeline.sh`
 
 #### Usage
 
@@ -180,6 +194,8 @@ Outputs debugging information after build fails:
 - last 50 lines in build log
 - Failed message
 - last 3 lines in build log
+
+- Location: `bin/build/tools/pipeline.sh`
 
 #### Usage
 
@@ -216,6 +232,8 @@ for sort - -k 1.c,1 - the `c` is the 1-based character index, so 2 means skip th
 
 Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume
 
+- Location: `bin/build/tools/pipeline.sh`
+
 #### Usage
 
     versionSort [ -r ]
@@ -237,6 +255,8 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 ### `ipLookup` - Get the current IP address of the host
 
 Get the current IP address of the host
+
+- Location: `bin/build/tools/pipeline.sh`
 
 #### Arguments
 
@@ -260,6 +280,8 @@ It will also fail if:
 - `keyDate` is empty or has an invalid value
 
 Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
+
+- Location: `bin/build/tools/pipeline.sh`
 
 #### Arguments
 
@@ -285,6 +307,8 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 ### `environmentFileApplicationMake` - Create environment file `.env` for build.
 
 Create environment file `.env` for build.
+
+- Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 
@@ -326,6 +350,8 @@ APPLICATION_ID - reserved and set to `runHook application-tag`
 
 Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
 
+- Location: `bin/build/tools/environment.sh`
+
 #### Arguments
 
 - No arguments.
@@ -359,6 +385,8 @@ Deploy an application from a deployment repository
 
 This acts on the local file system only but used in tandem with `deployment.sh` functions.
 
+- Location: `bin/build/tools/deploy/application.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. This help.
@@ -387,6 +415,8 @@ BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 
 Get the next version of the supplied version
 
+- Location: `bin/build/tools/deploy.sh`
+
 #### Arguments
 
 - No arguments.
@@ -400,6 +430,8 @@ Get the next version of the supplied version
 
 Get the previous version of the supplied version
 
+- Location: `bin/build/tools/deploy.sh`
+
 #### Arguments
 
 - No arguments.
@@ -411,6 +443,8 @@ Get the previous version of the supplied version
 ### `deployHasVersion` - Does a deploy version exist? versionName is the version identifier
 
 Does a deploy version exist? versionName is the version identifier for deployments
+
+- Location: `bin/build/tools/deploy.sh`
 
 #### Arguments
 
@@ -428,6 +462,8 @@ Extracts version from an application either from `.deploy` files or from the the
 that does not exist.
 
 Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
+
+- Location: `bin/build/tools/deploy.sh`
 
 #### Arguments
 

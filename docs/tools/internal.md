@@ -4,7 +4,7 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-Unable to find "buildDocumentationBuild" (using index "/Users/kent/.build")
+
 #### Arguments
 
 - No arguments.
@@ -14,7 +14,3 @@ Unable to find "buildDocumentationBuild" (using index "/Users/kent/.build")
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "buildDocumentationBuild" (using index "/Users/kent/.build")

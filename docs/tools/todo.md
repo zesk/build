@@ -1,5 +1,5 @@
 <!-- TEMPLATE prefix 1 -->
-# notitle - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build
+# notitle - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build
 
 <!-- TEMPLATE header 2 -->
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
@@ -39,4 +39,4 @@ This is a sample function with example code and patterns used in Zesk Build.
 
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 
-Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=notitle - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build)
+Copyright &copy; 2024 [Market Acumen, Inc.](https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw=notitle - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build - Zesk Build)

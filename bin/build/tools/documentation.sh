@@ -446,8 +446,8 @@ _documentationTemplateDirectoryCompile() {
 # See: repeat
 #
 bashDocumentFunction() {
-  local usage="_${BASH_SOURCE[0]}"
-  local envFile file=$1 fn=$2 template=$3 home
+  local usage="_${FUNCNAME[0]}"
+  local envFile file=$1 fn=$2 template=$3 home exitCode
 
   [ -f "$template" ] || __failArgument "$usage" "$template is not a file" || return $?
   envFile=$(__usageEnvironment "$usage" mktemp) || return $?
