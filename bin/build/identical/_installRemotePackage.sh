@@ -258,7 +258,7 @@ __installRemotePackageLocal() {
   while kill -0 "$pid" 2>/dev/null; do
     count=$((count + 1))
     printf "pid %d: %d of %d\n" "$pid" "$count" "$total"
-    sleep 1
+    read -r -t 1 < /dev/zero || true
     kill -CONT "$pid:" || :
     if [ "$count" -gt "$total" ]; then
       printf "\n%s: %s %d\n" "Replacement log" "Lines" "$(wc -l <"$myBinary.$$.log")"
