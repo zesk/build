@@ -63,6 +63,7 @@ _installRemotePackage() {
         ;;
       --replace)
         newName="${BASH_SOURCE[0]%.*}"
+        consoleInfo "Replacing ${BASH_SOURCE[0]} -> $newName"
         __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
@@ -255,9 +256,10 @@ __installRemotePackageLocal() {
     _environment "$usage" "Unable to run $myBinary.$$" || return $?
   fi
   while kill -0 "$pid" 2>/dev/null; do
-    printf "%d\r" "$pid" "$count"
     count=$((count + 1))
+    printf "pid %d: %d of %d\n" "$pid" "$count" "$total"
     sleep 1
+    kill -CONT "$pid:" || :
     if [ "$count" -gt "$total" ]; then
       printf "\n%s: %s %d\n" "Replacement log" "Lines" "$(wc -l <"$myBinary.$$.log")"
       cat "$myBinary.$$.log"
