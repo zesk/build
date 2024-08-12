@@ -72,7 +72,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
-# IDENTICAL _installRemotePackage 248
+# IDENTICAL _installRemotePackage 246
 
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
 # fn: {base}
@@ -311,10 +311,8 @@ __installRemotePackageLocal() {
     printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
   } >"$myBinary.$$"
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
-  pid=$(
-    "$myBinary.$$" --replace >"$log" 1>&2 &
-    printf %d $!
-  )
+  "$myBinary.$$" --replace >"$log" 1>&2 &
+  pid=$!
   if ! _integer "$pid"; then
     _environment "Unable to run $myBinary.$$" || return $?
   fi
@@ -452,7 +450,7 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 40
+# IDENTICAL _tinySugar 48
 # Error codes
 _code() {
   case "${1-}" in *nvironment) printf 1 ;; *rgument) printf 2 ;; *) printf 126 ;; esac
@@ -482,7 +480,6 @@ __usageEnvironment() {
   shift && "$@" || __failEnvironment "$usage" "$@" || return $?
 }
 
-# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
@@ -490,8 +487,17 @@ _argument() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
+# Usage: {fn} message ..`.
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 1
 _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+}
+
+# Usage: {fn} exitCode itemToDelete ...
+_clean() {
+  local r="${1-}" && shift && rm -rf "$@"
+  return "$r"
 }
 
 # Final line will be rewritten on update

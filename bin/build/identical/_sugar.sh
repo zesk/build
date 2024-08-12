@@ -93,6 +93,21 @@ _choose() {
   "$testValue" && printf "%s\n" "${1-}" || printf "%s\n" "${2-}"
 }
 
+# Usage: {fn} exitCode item ...
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+_clean() {
+  local exitCode="${1-}"
+  shift
+  _integer "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  while [ $# -gt 0 ]; do
+    [ ! -f "$1" ] || __environment rm "$1" || return $?
+    [ ! -d "$1" ] || __environment rm -rf "$1" || return $?
+    shift
+  done
+  return "$exitCode"
+}
+
 # Return `environment` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.

@@ -37,7 +37,7 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _sugar 139
+# IDENTICAL _sugar 154
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
@@ -119,6 +119,21 @@ _choose() {
   local testValue="${1-}" && shift
   _boolean "$testValue" || _argument "${FUNCNAME[1]-no function name}:${BASH_LINENO[1]-no line} -> ${FUNCNAME[0]} _choose non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf "%s\n" "${1-}" || printf "%s\n" "${2-}"
+}
+
+# Usage: {fn} exitCode item ...
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+_clean() {
+  local exitCode="${1-}"
+  shift
+  _integer "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  while [ $# -gt 0 ]; do
+    [ ! -f "$1" ] || __environment rm "$1" || return $?
+    [ ! -d "$1" ] || __environment rm -rf "$1" || return $?
+    shift
+  done
+  return "$exitCode"
 }
 
 # Return `environment` error code always. Outputs `message ...` to `stderr`.
