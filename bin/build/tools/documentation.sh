@@ -25,7 +25,6 @@ usageDocument() {
   local tryFile functionDefinitionFile functionName exitCode variablesFile home
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  export PWD
 
   [ $# -ge 2 ] || _argument "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
@@ -37,6 +36,7 @@ usageDocument() {
   if [ ! -f "$functionDefinitionFile" ]; then
     tryFile="$home/$functionDefinitionFile"
     if [ ! -f "$tryFile" ]; then
+      export PWD
       _argument "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
     fi
     functionDefinitionFile="$tryFile"
@@ -47,7 +47,7 @@ usageDocument() {
     exitCode=1
   fi
   __argument isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
-  variablesFile=$(mktemp)
+  variablesFile=$(__environment mktemp) || return $?
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
       _environment "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?

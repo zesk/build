@@ -50,9 +50,8 @@ dumpPipe() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
   showLines="${BUILD_DEBUG_LINES:-100}"
 
-  item=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
-
-  cat >"$item"
+  item=$(__usageEnvironment "$usage" mktemp) || return $?
+  __usageEnvironment "$usage" cat >"$item" || return $?
 
   endBinary="head"
   names=()

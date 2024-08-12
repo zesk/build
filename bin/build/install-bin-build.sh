@@ -72,7 +72,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
-# IDENTICAL _installRemotePackage 251
+# IDENTICAL _installRemotePackage 248
 
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
 # fn: {base}
@@ -125,6 +125,7 @@ _installRemotePackage() {
         ;;
       --replace)
         newName="${BASH_SOURCE[0]%.*}"
+        consoleInfo "Replacing ${BASH_SOURCE[0]} -> $newName"
         __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
@@ -303,26 +304,22 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 __installRemotePackageLocal() {
-  local source="$1" myBinary="$2" relTop="$3" count=0
+  local source="$1" myBinary="$2" relTop="$3"
+  local log="$myBinary.$$.log"
   {
     grep -v -e '^__installPackageConfiguration ' <"$source"
     printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
   } >"$myBinary.$$"
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
   pid=$(
-    "$myBinary.$$" --replace &
+    "$myBinary.$$" --replace >"$log" 1>&2 &
     printf %d $!
   )
   if ! _integer "$pid"; then
-    _environment "$usage" "Unable to run $myBinary.$$" || return $?
+    _environment "Unable to run $myBinary.$$" || return $?
   fi
-  while kill -0 "$pid" 2>/dev/null; do
-    printf "%d\r" "$pid" "$count"
-    count=$((count + 1))
-    sleep 1
-  done
-  printf "\r     \r"
-  return 0
+  wait "$pid" || _environment "$(dumpPipe "install log failed: $pid" <"$log")" || _clean $? "$log" || return $?
+  _clean 0 "$log" || return $?
 }
 
 # IDENTICAL _realPath 10
