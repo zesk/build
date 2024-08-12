@@ -249,10 +249,8 @@ __installRemotePackageLocal() {
     printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
   } >"$myBinary.$$"
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
-  pid=$(
-    "$myBinary.$$" --replace >"$log" 1>&2 &
-    printf %d $!
-  )
+  "$myBinary.$$" --replace >"$log" 1>&2 &
+  pid=$!
   if ! _integer "$pid"; then
     _environment "Unable to run $myBinary.$$" || return $?
   fi
