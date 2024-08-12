@@ -450,7 +450,7 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 40
+# IDENTICAL _tinySugar 48
 # Error codes
 _code() {
   case "${1-}" in *nvironment) printf 1 ;; *rgument) printf 2 ;; *) printf 126 ;; esac
@@ -480,7 +480,6 @@ __usageEnvironment() {
   shift && "$@" || __failEnvironment "$usage" "$@" || return $?
 }
 
-# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
@@ -488,8 +487,17 @@ _argument() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
+# Usage: {fn} message ..`.
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 1
 _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+}
+
+# Usage: {fn} exitCode itemToDelete ...
+_clean() {
+  local r="${1-}" && shift && rm -rf "$@"
+  return "$r"
 }
 
 # Final line will be rewritten on update
