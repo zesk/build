@@ -133,11 +133,15 @@ testExtensionLists() {
   target=$(mktemp -d) || _environment "mktemp -d" || return $?
 
   assertDirectoryEmpty --line "$LINENO" "$target" || return $?
-  find "$BUILD_HOME" -type f ! -path '*/.*/*' | extensionLists --clean "$target"
+  find "$BUILD_HOME/test" -type f ! -path '*/.*/*' | extensionLists --clean "$target"
 
   assertDirectoryNotEmpty --line "$LINENO" "$target" || return $?
   assertFileContains --line "$LINENO" "$target/@" "$me" || return $?
   assertFileContains --line "$LINENO" "$target/sh" "$me" || return $?
+  assertFileContains --line "$LINENO" "$target/php" "test/example/simple-php/bin/cron.php" || return $?
+  assertFileContains --line "$LINENO" "$target/env" "test/example/bad.env" || return $?
+  assertFileContains --line "$LINENO" "$target/md" "test/example/listTokensBad.md" || return $?$()
+  assertFileContains --line "$LINENO" "$target/txt" "test/example/identical-source.txt" || return $?
 
   rm -rf "$target" || return $?
 }
