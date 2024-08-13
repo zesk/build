@@ -63,7 +63,7 @@ _installRemotePackage() {
         ;;
       --replace)
         newName="${BASH_SOURCE[0]%.*}"
-        consoleInfo "Replacing ${BASH_SOURCE[0]} -> $newName"
+        consoleBoldBlue "Replacing $(consoleOrange "${BASH_SOURCE[0]}") -> $(consoleBoldOrange "$newName")"
         __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
