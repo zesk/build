@@ -326,7 +326,7 @@ __testSection() {
 }
 
 __testHeading() {
-  whichApt toilet toilet 2>/dev/null 1>&2 || _environment "Unable to install toilet" || return $?
+  whichApt toilet toilet >/dev/null 2>&1 || _environment "Unable to install toilet" || return $?
   consoleCode "$(consoleOrange "$(echoBar '*')")"
   printf "%s" "$(consoleCode)$(clearLine)"
   bigText "$@" | wrapLines --fill " " "$(consoleCode)    " "$(consoleReset)"

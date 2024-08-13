@@ -28,7 +28,7 @@ testSSHAddKnownHosts() {
 
   assertDirectoryDoesNotExist "$tempHome/.ssh" || return $?
 
-  sshAddKnownHost >"$output" 1>&2 || return $?
+  sshAddKnownHost >"$output" 2>&1 || return $?
   assertZeroFileSize "$output" || return $?
 
   assertDirectoryExists "$tempHome/.ssh" || return $?
@@ -36,12 +36,12 @@ testSSHAddKnownHosts() {
   assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
   assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
 
-  sshAddKnownHost "$sampleDomainA" >"$output" 1>&2 || return $?
+  sshAddKnownHost "$sampleDomainA" >"$output" 2>&1 || return $?
   assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
   assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
   assertZeroFileSize "$output" || return $?
 
-  sshAddKnownHost "$sampleDomainB" >"$output" 1>&2 || return $?
+  sshAddKnownHost "$sampleDomainB" >"$output" 2>&1 || return $?
   assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
   assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
   assertZeroFileSize "$output" || return $?
