@@ -163,6 +163,6 @@ isCallable() {
     if ! isFunction "$1" && ! isExecutable "$1"; then
       return 1
     fi
-    shift || :
+    shift
   done
 }

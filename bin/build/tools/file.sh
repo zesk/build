@@ -426,3 +426,69 @@ fileGroup() {
 _fileGroup() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Find one or more patterns in a list of files, with a list of file name pattern exceptions.
+#
+# Usage: {fn} [ --help ] pattern ... -- [ exception ... ] -- file ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: pattern ... - Required. String. Pattern to find in files.
+# Argument: -- - Required. Delimiter. exception.
+# Argument: exception ... - Optional. String. File pattern which should be ignored.
+# Argument: -- - Required. Delimiter. file.
+# Argument: file ... - Required. File. File to search. Special file `-` indicates files should be read from `stdin`.
+fileMatches() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local file patterns=() found=false exceptions=() fileGenerator
+
+  [ $# -gt 0 ] || return 0
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        patterns+=("$1")
+        ;;
+    esac
+    shift
+  done
+  [ "${#patterns[@]}" -gt 0 ] || __usageArgument "$usage" "No patterns" || return $?
+  [ $# -gt 0 ] || __usageArgument "$usage" "no exceptions or files" || return $?
+  while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
+  [ $# -gt 0 ] || __usageArgument "$usage" "no files" || return $?
+#  _list patterns "${patterns[@]}"
+#  _list exceptions "${exceptions[@]}"
+#  _list files "$@"
+  for pattern in "${patterns[@]}"; do
+    if [ "$1" = "-" ]; then
+      fileGenerator=(cat)
+    else
+      fileGenerator=(grep -l -e "$pattern" "$@")
+    fi
+    while read -r file; do
+      if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
+        continue
+      fi
+      if grep -n -e "$(quoteGrepPattern "$pattern")" "$file" | wrapLines "$file:" ""; then
+        found=true
+      fi
+    done < <("${fileGenerator[@]}")
+  done
+  $found
+}
+_fileMatches() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

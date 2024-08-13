@@ -22,7 +22,6 @@
 
 {gitCommit}
 {gitMainly}
-{gitPreCommitShellFiles}
 {gitFindHome}
 {gitHookTypes}
 {gitInstallHook}

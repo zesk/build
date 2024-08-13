@@ -193,17 +193,17 @@ _dumpFile() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 validateShellScripts() {
-  local this usage argument failedFiles failedReason failedReasons binary interactive sleepDelay
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+
+  local failedFiles failedReason failedReasons binary interactive sleepDelay
   local verbose checkedFiles ii source
 
   verbose=false
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
 
   clearLine || :
-  statusMessage consoleInfo "Checking all shell scripts ..." || :
   failedReasons=()
   failedFiles=()
   checkedFiles=()
@@ -211,10 +211,18 @@ validateShellScripts() {
   sleepDelay=7
   ii=()
   interactive=false
+  saved=("$@")
+  statusMessage consoleInfo "Checking all shell scripts ..."
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --delay)
         shift || __failArgument "$usage" "$argument missing argument" || return $?
         sleepDelay="$1"
@@ -224,7 +232,7 @@ validateShellScripts() {
         ;;
       --exec)
         shift
-        binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+        binary="$(usageArgumentCallable "$usage" "$argument" "${1-}")" || return $?
         ii+=("$argument" "$binary")
         ;;
       --interactive)
@@ -232,11 +240,12 @@ validateShellScripts() {
         ii+=("$argument")
         ;;
       *)
-        checkedFiles+=("$argument")
+        checkedFiles+=("$(usageArgumentFile "$usage" "checkFile" "$argument")") || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift after $argument failed" || return $?
   done
+
   source=none
   if [ ${#checkedFiles[@]} -gt 0 ]; then
     source="argument"
@@ -499,7 +508,7 @@ validateFileContents() {
     shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
-  [ "${#fileArgs[@]}" -gt 0 ] || __failArgument "$usage" "No extension arguments" || return $?
+  [ "${#fileArgs[@]}" -gt 0 ] || __failArgument "$usage" "No file arguments" || return $?
   [ "${#textMatches[@]}" -gt 0 ] || __failArgument "$usage" "No text match arguments" || return $?
 
   failedReasons=()
