@@ -51,3 +51,11 @@ tests+=(testAlignRight)
 tests+=(testAlignLeft)
 tests+=(testRepeat2)
 tests+=(testLabeledBigText)
+tests+=(testBoxedHeading)
+
+testBoxedHeading() {
+  local header="A really long string which should likely be longer than any console or testing window that would likely be available at any point in the near or potential future which may have longer text widths perhaps even more than a few hundred. Waldo"
+  assertExitCode --stdout-match "A really long" --stdout-no-match Waldo 0 boxedHeading "$header" || return $?
+  assertExitCode --stdout-match "A really long" --stdout-no-match Waldo 0 boxedHeading --size 10 "$header" || return $?
+  assertExitCode --stdout-match "A really long" --stdout-no-match Waldo 0 boxedHeading --shrink 20 "$header" || return $?
+}
