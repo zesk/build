@@ -10,6 +10,8 @@
 
 Installs the `git` binary
 
+- Location: `bin/build/tools/git.sh`
+
 #### Usage
 
     gitInstall [ package ... ]
@@ -30,6 +32,8 @@ When running git operations on a deployment host, at times it's necessary to
 add the current directory (or a directory) to the git `safe.directory` directive.
 
 This adds the directory passed to that directory in the local user's environment
+
+- Location: `bin/build/tools/git.sh`
 
 #### Usage
 
@@ -52,6 +56,8 @@ This adds the directory passed to that directory in the local user's environment
 
 Delete git tag locally and at origin
 
+- Location: `bin/build/tools/git.sh`
+
 #### Usage
 
     gitTagDelete [ tag ... ]
@@ -67,6 +73,8 @@ Delete git tag locally and at origin
 ### `gitTagAgain` - Remove a tag everywhere and tag again on the current
 
 Remove a tag everywhere and tag again on the current branch
+
+- Location: `bin/build/tools/git.sh`
 
 #### Usage
 
@@ -92,6 +100,8 @@ When this tool succeeds the git repository contains a tag with the suffix and an
 - `s` - for **staging**
 - `rc` - for **release candidate**
 
+- Location: `bin/build/tools/git.sh`
+
 #### Exit codes
 
 - `0` - Success
@@ -106,6 +116,8 @@ BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look 
 
 Fetches a list of tags from git and filters those which start with v and a digit and returns
 them sorted by version correctly.
+
+- Location: `bin/build/tools/git.sh`
 
 #### Usage
 
@@ -123,6 +135,8 @@ them sorted by version correctly.
 ### `gitVersionLast` - Get the last reported version.
 
 Get the last reported version.
+
+- Location: `bin/build/tools/git.sh`
 
 #### Usage
 
@@ -143,6 +157,8 @@ Get the last reported version.
 Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
 Delete the old tag as well
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -162,6 +178,8 @@ Commits all files added to git and also update release notes with comment
 Comment wisely. Does not duplicate comments. Check your release notes.
 
 Example:
+
+- Location: `bin/build/tools/git.sh`
 
 #### Arguments
 
@@ -190,6 +208,8 @@ Will merge `origin/staging` and `origin/main` after doing a `--pull` for both of
 
 Current repository should be clean and have no modified files.
 
+- Location: `bin/build/tools/git.sh`
+
 #### Usage
 
     gitMainly
@@ -203,26 +223,11 @@ Current repository should be clean and have no modified files.
 
 - `1` - Already in main, staging, or HEAD, or git merge failed
 - `0` - git merge succeeded
-### `gitPreCommitShellFiles` - Run pre-commit checks on shell-files
-
-Run pre-commit checks on shell-files
-
-#### Arguments
-
-- `--singles singlesFiles` - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
-- `--help` - Flag. Optional. I need somebody.
-- `--interactive` - Flag. Optional. Interactive mode on fixing errors.
-- `--check checkDirectory` - Optional. Directory. Check shell scripts in this directory for common errors.
-- `...` - Additional arguments are passed to `validateShellScripts` `validateFileContents`
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `gitFindHome` - Finds .git directory above or in current one.
 
 Finds .git directory above or in current one.
+
+- Location: `bin/build/tools/git.sh`
 
 #### Arguments
 
@@ -243,6 +248,8 @@ GIT_EXEC_PATH=/usr/lib/git-core
 GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
 GIT_PREFIX=
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -259,6 +266,8 @@ You should ONLY run this from within your hook, or provide the `--copy` flag to 
 When running within your hook, pass additional arguments so they can be preserved:
 
     gitInstallHook --application "$myHome" pre-commit "$@" || return $?
+
+- Location: `bin/build/tools/git.sh`
 
 #### Arguments
 
@@ -296,6 +305,8 @@ gitRemoveFileFromHistory path/to/file
 
 usually have to `git push --force`
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -312,6 +323,8 @@ usually have to `git push --force`
 
 Has a git repository been changed from HEAD?
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -323,6 +336,8 @@ Has a git repository been changed from HEAD?
 ### `gitShowChanges` - Show changed files from HEAD
 
 Show changed files from HEAD
+
+- Location: `bin/build/tools/git.sh`
 
 #### Usage
 
@@ -351,6 +366,8 @@ Show changed files from HEAD with their status prefix character:
 
 (See `man git` for more details on status flags)
 
+- Location: `bin/build/tools/git.sh`
+
 #### Usage
 
     gitShowStatus
@@ -370,6 +387,8 @@ Are we currently inside a git hook?
 
 Tests non-blank strings in our environment.
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -387,6 +406,8 @@ GIT_INDEX_FILE - Must be set to pass
 
 List remote hosts for the current git repository
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -399,6 +420,8 @@ List remote hosts for the current git repository
 ### `gitCurrentBranch` - Get the current branch name
 
 Get the current branch name
+
+- Location: `bin/build/tools/git.sh`
 
 #### Arguments
 
@@ -416,6 +439,8 @@ Get the current branch name
 
 Set up a pre-commit hook
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -428,6 +453,8 @@ Set up a pre-commit hook
 ### `gitPreCommitHeader` - Output a display for pre-commit files changed
 
 Output a display for pre-commit files changed
+
+- Location: `bin/build/tools/git.sh`
 
 #### Arguments
 
@@ -442,6 +469,8 @@ Output a display for pre-commit files changed
 
 Does this commit have the following file extensions?
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -455,6 +484,8 @@ Does this commit have the following file extensions?
 
 List the file(s) of an extension
 
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.
@@ -467,6 +498,8 @@ List the file(s) of an extension
 ### `gitPreCommitCleanup` - Clean up after our pre-commit (deletes cache directory)
 
 Clean up after our pre-commit (deletes cache directory)
+
+- Location: `bin/build/tools/git.sh`
 
 #### Arguments
 

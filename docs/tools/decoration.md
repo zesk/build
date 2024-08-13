@@ -32,6 +32,8 @@ Typically used to output text to the console using pretty colors and ANSI art.
 
 Output a bar as wide as the console using the `=` symbol.
 
+- Location: `bin/build/tools/decoration.sh`
+
 #### Usage
 
     echoBar [ alternateChar [ offset ] ]
@@ -62,6 +64,8 @@ Console width is captured using `tput cols` or if no `TERM` set, then uses the v
 Wrap lines with a string, useful to format output or add color codes to
 consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
+- Location: `bin/build/tools/decoration.sh`
+
 #### Usage
 
     wrapLines [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
@@ -83,6 +87,8 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 ### `alignRight` - align text right
 
 Format text and align it right using spaces.
+
+- Location: `bin/build/tools/decoration.sh`
 
 #### Usage
 
@@ -110,6 +116,8 @@ Format text and align it right using spaces.
 
 Format text and align it left using spaces.
 
+- Location: `bin/build/tools/decoration.sh`
+
 #### Usage
 
     alignLeft characterWidth text [ ... ]
@@ -135,6 +143,8 @@ Format text and align it left using spaces.
 ### `boxedHeading` - Text heading decoration
 
 Heading for section output
+
+- Location: `bin/build/tools/decoration.sh`
 
 #### Usage
 
@@ -184,6 +194,8 @@ smmono12 (--bigger)
 ▝▘▀▘ ▝▀▀▀▘ ▞▀▐▌  ▀   ▝▀▀ ▝▀ ▀▘  ▀▀
         ▜█▛▘
 
+- Location: `bin/build/tools/decoration.sh`
+
 #### Usage
 
     bigText [ --bigger ] Text to output
@@ -204,6 +216,8 @@ Outputs a label before a bigText for output.
 
 This function will strip any ANSI from the label to calculate correct string sizes.
 
+- Location: `bin/build/tools/decoration.sh`
+
 #### Arguments
 
 - `--top` - Optional. Flag. Place label at the top.
@@ -214,6 +228,19 @@ This function will strip any ANSI from the label to calculate correct string siz
 - `label` - Required. String. Label to place on the left of big text.
 - `text` - Required. String. Text for `bigText`.
 
+#### Examples
+
+    > bin/build/tools.sh labeledBigText --top "Neat: " Done
+    Neat: ▛▀▖
+          ▌ ▌▞▀▖▛▀▖▞▀▖
+          ▌ ▌▌ ▌▌ ▌▛▀
+          ▀▀ ▝▀ ▘ ▘▝▀▘
+    > bin/build/tools.sh labeledBigText --bottom "Neat: " Done
+          ▛▀▖
+          ▌ ▌▞▀▖▛▀▖▞▀▖
+          ▌ ▌▌ ▌▌ ▌▛▀
+    Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
+
 #### Exit codes
 
 - `0` - Success
@@ -222,6 +249,8 @@ This function will strip any ANSI from the label to calculate correct string siz
 ### `lineFill` - Output a line and fill columns with a character
 
 Output a line and fill columns with a character
+
+- Location: `bin/build/tools/decoration.sh`
 
 #### Arguments
 

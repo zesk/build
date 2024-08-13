@@ -16,6 +16,7 @@ tests+=(testFormat)
 tests+=(testMoreSugar)
 tests+=(testExitCode)
 tests+=(testSugar)
+tests+=(testMuzzle)
 
 _wasRun() {
   local exitCode
@@ -198,4 +199,22 @@ testArgEnvStuff() {
   assertExitCode --stderr-match foo "$k" _argument "foo" || return $?
   assertExitCode --stderr-match foo "$k" __failArgument _return "foo" || return $?
   assertExitCode --stderr-match foo "$k" __usageArgument "$usage" _return 99 foo || return $?
+}
+
+testMuzzle() {
+  local home mantra="I'm sorry, Dave, I'm afraid I can't do that."
+
+  home=$(__environment buildHome) || return $?
+
+  # produces nothing
+  assertOutputEquals "" muzzle cat "${BASH_SOURCE[0]}" || return $?
+  assertOutputEquals "" muzzle echo "${FUNCNAME[0]}" || return $?
+  assertOutputEquals "" muzzle consoleInfo "$mantra" || return $?
+  # ls produces something
+  assertOutputContains "bin" ls "$home" || return $?
+  assertOutputContains "README.md" ls "$home" || return $?
+  # ls produces nothing
+  assertOutputEquals "" muzzle ls "$home" || return $?
+  # Does not block stderr
+  assertExitCode --stderr-match "Dave" 71 muzzle _return 71 "$mantra" || return $?
 }
