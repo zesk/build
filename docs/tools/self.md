@@ -10,6 +10,8 @@ Easier access to `BUILD_HOME`, list of all functions, cache directory, known env
 
 Prints the build home directory (usually same as the application root)
 
+- Location: `bin/build/tools/self.sh`
+
 #### Arguments
 
 - No arguments.
@@ -33,6 +35,8 @@ created by build's default.
 
 Modifies local environment. Not usually run within a subshell.
 
+- Location: `bin/build/tools/self.sh`
+
 #### Arguments
 
 - `envName` - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
@@ -49,6 +53,8 @@ $envName
 ### `buildFunctions` - Prints the list of functions defined in Zesk Build
 
 Prints the list of functions defined in Zesk Build
+
+- Location: `bin/build/tools/self.sh`
 
 #### Arguments
 
@@ -70,6 +76,8 @@ Path to cache directory for build system.
 Defaults to `$HOME/.build` unless `$HOME` is not a directory.
 
 Appends any passed in arguments as path segments.
+
+- Location: `bin/build/tools/self.sh`
 
 #### Arguments
 
@@ -100,6 +108,8 @@ Appends any passed in arguments as path segments.
 ### `installInstallBuild` - Installs `install-bin-build.sh` the first time in a new project, and
 
 Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
+
+- Location: `bin/build/tools/self.sh`
 
 #### Arguments
 
@@ -136,4 +146,4 @@ Needs internet access and creates a directory `./bin/build`
 
 # Remote Package Installation
 
-Unable to find "installRemotePackage" (using index "/Users/kent/.build")
+

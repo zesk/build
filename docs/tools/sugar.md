@@ -22,6 +22,8 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 Run `command`, handle failure with `usage` with `code` and `command` as error
 
+- Location: `bin/build/tools/sugar.sh`
+
 #### Arguments
 
 - `code` - Required. Integer. Exit code to return
@@ -75,6 +77,8 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 ### `_deprecated` - Logs all deprecated functions to application root in a file
 
 Logs all deprecated functions to application root in a file called `.deprecated`
+
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
