@@ -14,23 +14,22 @@
 # - use `a || b || c || return $?` format when possible
 # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
 
-# IDENTICAL __tools 17
+# IDENTICAL __tools 16
 # Usage: {fn} [ relative [ command ... ] ]
 # Load build tools and run command
 # Argument: relative - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 __tools() {
   local source="${BASH_SOURCE[0]}" e=253
-  local here="${source%/*}"
+  local here="${source%/*}" arguments=()
   local tools="$here/${1:-".."}/bin/build"
   [ -d "$tools" ] || _return $e "$tools is not a directory" || return $?
-  tools="$tools/tools.sh"
-  [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
+  tools="$tools/tools.sh" && [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
+  shift && while [ $# -gt 0 ]; do arguments+=("$1") && shift; done
   # shellcheck source=/dev/null
   source "$tools" || _return $e source "$tools" "$@" || return $?
-  shift
-  [ $# -eq 0 ] && return 0
-  "$@" || return $?
+  [ ${#arguments[@]} -gt 0 ] || return 0
+  "${arguments[@]}" || return $?
 }
 
 # IDENTICAL _return 19
@@ -52,7 +51,7 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 #
 # Usage: {fn}
@@ -71,18 +70,22 @@ _integer() {
 #
 exampleFunction() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local name easyFlag width
+  local argument nArguments argumentIndex saved
+  local start name easyFlag width
+
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   width=50
   name=
   easyFlag=false
   target=
   path=
+  saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -105,12 +108,12 @@ exampleFunction() {
         shift
         target="$(usageArgumentFileDirectory "$usage" "target" "${1-}")" || return $?
         ;;
-      # IDENTICAL argumentUnknown 3
       *)
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
   done
 
   # Load MANPATH environment
@@ -127,6 +130,8 @@ exampleFunction() {
   # Add ` || _environment "$(debuggingStack)"` to any chain to debug details
   #
   which library-which-should-be-there || __failEnvironment "$usage" "missing thing" || _environment "$(debuggingStack)" || return $?
+
+  reportTiming "$start" "Completed in"
 }
 _exampleFunction() {
   # IDENTICAL usageDocument 1

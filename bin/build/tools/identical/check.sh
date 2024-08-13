@@ -116,7 +116,7 @@ identicalCheck() {
   [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
-  resultsFile=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
+  resultsFile=$(__usageEnvironment "$usage" mktemp) || return $?
   rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
   ! $debug || printf "COMMAND: %s\n" __identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}"
   searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?

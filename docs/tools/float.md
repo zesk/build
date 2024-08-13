@@ -6,29 +6,29 @@
 
 Bash really is not a huge fan of floating point numbers but once you turn them into integers it works fantastic.
 
-
 ### `truncateFloat` - Convert float to an integer, round down always
 
 Convert float to an integer, round down always
 
-#### Usage
+#### Arguments
 
-    truncateFloat float
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `roundFloat` - Convert float to nearest integer
 
 Convert float to nearest integer
 
-#### Usage
+#### Arguments
 
-    roundFloat float
-    
+- No arguments.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

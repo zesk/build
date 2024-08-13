@@ -326,7 +326,7 @@ __testSection() {
 }
 
 __testHeading() {
-  whichApt toilet toilet 2>/dev/null 1>&2 || _environment "Unable to install toilet" || return $?
+  whichApt toilet toilet >/dev/null 2>&1 || _environment "Unable to install toilet" || return $?
   consoleCode "$(consoleOrange "$(echoBar '*')")"
   printf "%s" "$(consoleCode)$(clearLine)"
   bigText "$@" | wrapLines --fill " " "$(consoleCode)    " "$(consoleReset)"
@@ -485,7 +485,9 @@ __testFailed() {
 # Usage: {fn}
 #
 __testCleanup() {
-  __environment rm -rf ./vendor/ ./node_modules/ ./composer.json ./composer.lock ./test.*/ ./aws "$(buildCacheDirectory)" || :
+  local home
+  home=$(__environment buildHome) || return $?
+  __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" "$(buildCacheDirectory)" || return $?
 }
 
 __testCleanupMess() {

@@ -165,7 +165,7 @@ _awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Variable used to test
 # Summary: Test whether the AWS keys do not need to be updated
 # Usage: {fn} upToDateDays
-# Example:     if !{fn} 90; then
+# Example:     if ! {fn} 90; then
 # Example:         bigText Failed, update key and reset date
 # Example:         exit 99
 # Example:     fi
@@ -179,14 +179,14 @@ awsIsKeyUpToDate() {
 
 #
 # This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
-# Fails if either AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is blank
+# Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 #
 # Exit Code: 0 - If environment needs to be updated
 # Exit Code: 1 - If the environment seems to be set already
 # Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
 # Environment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)
 # Example:     if awsHasEnvironment; then
-# Example:    ...
+# Example:     ...
 # Example:     fi
 # Summary: Test whether the AWS environment variables are set or not
 #

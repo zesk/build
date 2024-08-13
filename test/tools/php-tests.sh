@@ -17,41 +17,49 @@ tests+=(testPHPBuild)
 # Argument: --keep - Optional. Flag. Do not delete artifacts when done, print created values.
 #
 testPHPBuild() {
-  local here testPath manifest appName
+  local here testPath manifest appName home
 
-  here=$(pwd)
+  home=$(__environment buildHome) || return $?
+  here=$(__environment pwd) || return $?
 
   #
   # This MUST be inside the source tree root to run docker in pipelines
   #
   testPath="$(randomString)"
   testPath="${testPath:0:8}"
-  testPath="$here/.test.PHPBuild.$testPath"
-  __environment mkdir -p "$testPath" || return $?
   appName="sublimeApplication"
-
-  __environment cp -r ./test/example/simple-php "$testPath/$appName" || return $?
+  testPath="$here/.test.PHPBuild.$testPath/$appName"
+  __environment mkdir -p "$(dirname "$testPath")" || return $?
+  __environment cp -r ./test/example/simple-php "$testPath" || return $?
   echo "PWD: $(pwd)"
 
   buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
   assertEquals --line "$LINENO" "${BUILD_TARGET}" "app.tar.gz" || return $?
 
-  __environment mkdir -p "$testPath/$appName/bin" || return $?
-  __environment installInstallBuild "$testPath/$appName/bin" "$testPath/$appName" || return $?
-
+  assertExitCode --line "$LINENO" 0 mkdir -p "$testPath/bin" || return $?
+  assertExitCode --line "$LINENO" 0 installInstallBuild "$testPath/bin" "$testPath" || return $?
+  assertFileExists --line "$LINENO" "$testPath/bin/install-bin-build.sh" || return $?
+  assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
   here=$(pwd) || _environment pwd || return $?
 
   consoleInfo "Test build directory is: $testPath" || :
 
-  __environment cd "$testPath/$appName" || return $?
+  __environment cd "$testPath" || return $?
   assertFileDoesNotExist --line "$LINENO" "./app.tar.gz" || return $?
-  assertDirectoryDoesNotExist --line "$LINENO" bin/build || return $?
+  assertDirectoryDoesNotExist --line "$LINENO" "$testPath/bin/build" || return $?
 
-  assertFileExists --line "$LINENO" ./bin/install-bin-build.sh || return $?
+  # Test this version only
+  assertExitCode --line "$LINENO" 0 installInstallBuild --local "$testPath/bin" "$testPath" || return $?
+  assertFileExists --line "$LINENO" "$testPath/bin/install-bin-build.sh" || return $?
+  assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
 
-  ./bin/install-bin-build.sh --mock "$here/bin/build" || return $?
-  assertDirectoryExists --line "$LINENO" bin/build || return $?
+  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
+  # OLD INSTALLER IS BROKEN
+  "$testPath/bin/install-bin-build.sh" --mock "$home/bin/build" || return $?
+  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
+  assertDirectoryExists --line "$LINENO" "$testPath/bin/build" || return $?
+  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
 
   consoleWarning "Building PHP app" || :
 
@@ -60,7 +68,7 @@ testPHPBuild() {
   printf "\n"
   # No environment
   bin/build.sh || return $?
-  assertFileExists --line "$LINENO" "./app.tar.gz" || return $?
+  assertFileExists --line "$LINENO" "$testPath/app.tar.gz" || return $?
   rm ./app.tar.gz || return $?
 
   export APP_THING=secret
@@ -68,12 +76,12 @@ testPHPBuild() {
   # Add an environment
   printf "\n"
   bin/build.sh APP_THING || return $?
-  assertFileExists --line "$LINENO" "./app.tar.gz" || return $?
+  assertFileExists --line "$LINENO" "$testPath/app.tar.gz" || return $?
 
   BUILD_TARGET=alternate.tar.gz
   printf "\n"
   bin/build.sh || return $?
-  assertFileExists --line "$LINENO" "$BUILD_TARGET" || return $?
+  assertFileExists --line "$LINENO" "$testPath/$BUILD_TARGET" || return $?
 
   mkdir ./compare-app || return $?
   mkdir ./compare-alternate || return $?

@@ -6,5 +6,29 @@ For systems with an `/etc/init.d` start up script system.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-{sysvInitScriptInstall}
-{sysvInitScriptUninstall}
+### `sysvInitScriptInstall` - Install a script to run upon initialization.
+
+Install a script to run upon initialization.
+
+#### Arguments
+
+- `binary` - Required. String. Binary to install at startup.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `sysvInitScriptUninstall` - Remove an initialization script
+
+Remove an initialization script
+
+#### Arguments
+
+- `binary` - Required. String. Basename of installed
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

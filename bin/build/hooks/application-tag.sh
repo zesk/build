@@ -21,7 +21,7 @@ fi
 #
 # The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
 #
-hookApplicationTag() {
+__hookApplicationTag() {
   local argument
   local usage
 
@@ -48,8 +48,8 @@ hookApplicationTag() {
     printf %s "v0.0.1"
   fi
 }
-_hookApplicationTag() {
+___hookApplicationTag() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-hookApplicationTag "$@"
+__hookApplicationTag "$@"

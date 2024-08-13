@@ -9,139 +9,18 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# Usage: {fn} [ --local mockBuildRoot ] [ --url url ] [ --debug ] [ --force ] [ --diff ]
-# fn: {base}
-# Installs the build system in `./bin/build` if not installed. Also
-# will overwrite this binary with the latest version after installation.
-#
-# Determines the most recent version using GitHub API unless --url or --local is specified.
-#
-# Argument: --local localPath - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
-# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
-# Argument: --debug - Optional. Flag. Debugging is on.
-# Argument: --force - Optional. Flag. Force installation even if file is up to date.
-# Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Environment: Needs internet access and creates a directory `./bin/build`
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
-installBinBuild() {
-  local usage="_${FUNCNAME[0]}"
-  local ibbPath="bin/build" ibbName="install-bin-build.sh"
-  local relative="${1-}"
-  local errorEnvironment=1
-  local errorArgument=2
-  local argument start ignoreFile tarArgs
-  local forceFlag installFlag localPath message installArgs
-  local myBinary myPath osName url applicationHome installPath
-
-  shift
-  case "${BUILD_DEBUG-}" in 1 | true) __installBinBuildDebug BUILD_DEBUG ;; esac
-
-  installArgs=()
-  url=
-  localPath=
-  forceFlag=false
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || "$usage" "$errorArgument" "blank argument" || return $?
-    case "$argument" in
-      --debug)
-        __installBinBuildDebug "$argument"
-        ;;
-      --diff)
-        installArgs+=("$argument")
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      --mock | --local)
-        [ -z "$localPath" ] || __failArgument "$usage" "$argument already" || return $?
-        shift
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
-        localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
-        [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$localPath")\") must be path to bin/build containing tools.sh" || return $?
-        ;;
-      --url)
-        [ -z "$url" ] || __failArgument "$usage" "$argument already" || return $?
-        shift
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
-        url="$1"
-        ;;
-    esac
-    shift || "$usage" "$errorArgument" "shift after $argument failed" || return $?
-  done
-
-  if [ -z "$url" ]; then
-    url=$(_installBinBuildFetch "$usage") || return $?
-  elif [ -z "$localPath" ]; then
-    __failArgument "$usage" "--url is required" || return $?
-  else
-    __failArgument "$usage" "--mock and --url are mutually exclusive" || return $?
-  fi
-
-  # Move to starting point
-  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
-  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
-  installPath="$applicationHome/$ibbPath"
-  installFlag=false
-  if [ ! -d "$installPath" ]; then
-    if $forceFlag; then
-      printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBlue "directory does not exist")"
-    fi
-    installFlag=true
-  elif $forceFlag; then
-    printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBoldBlue "directory exists")"
-    installFlag=true
-  fi
-  if $installFlag; then
-    start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
-    _installBinBuildDirectory "$usage" "$applicationHome" "$url" "$localPath" || return $?
-    [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install zesk/build ($installPath not a directory, still)" || return $?
-    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
-    _installBinBuildCheck "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
-    binName=" ($(consoleBoldBlue "$(basename "$myBinary")"))"
-    message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
-    rm -f "$messageFile" || :
-  else
-    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
-    _installBinBuildCheck "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
-    message="$(cat "$messageFile") already installed"
-    rm -f "$messageFile" || :
-  fi
-  _installBinBuildGitCheck "$applicationHome" || :
-  if "$installPath/tools.sh" isFunction installInstallBuild; then
-    message="$message (install)"
-    printf "%s\n" "$message"
-    __usageEnvironment "$usage" "$installPath/tools.sh" installInstallBuild "${installArgs[@]+"${installArgs[@]}"}" "$myBinary" "$applicationHome" || return $?
-  else
-    message="$message (local)"
-    printf "%s\n" "$message"
-    exec _installBinBuildLocal "$installPath/$ibbName" "$myBinary" "$relative" 2>/dev/null
-  fi
+# URL of latest release
+__installBinBuildLatest() {
+  cat <<'EOF'
+https://api.github.com/repos/zesk/build/releases/latest
+EOF
 }
 
-# Error handler for installBinBuild
-# Usage: {fn} exitCode [ message ... ]
-_installBinBuild() {
-  local exitCode="$1"
-  shift || :
-  printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
-  return "$exitCode"
-}
-
-__installBinBuildDebug() {
-  consoleOrange "${1-} enabled" && set -x
-}
-
-# Fetch most recent URL from GitHub
-_installBinBuildFetch() {
+__installBinBuildURL() {
   local usage="$1" latestVersion
 
-  if ! latestVersion=$(mktemp); then
-    "$usage" "$errorEnvironment" "Unable to create temporary file:" || return $?
-  fi
-  if ! curl -s "https://api.github.com/repos/zesk/build/releases/latest" >"$latestVersion"; then
+  latestVersion=$(__usageEnvironment "$usage" mktemp) || return $?
+  if ! curl -s "$(__installBinBuildLatest)" >"$latestVersion"; then
     message="$(printf "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$latestVersion")")"
     rm -f "$latestVersion" || :
     __failEnvironment "$usage" "$message" || return $?
@@ -155,47 +34,9 @@ _installBinBuildFetch() {
   printf "%s\n" "$url"
 }
 
-# Install the build directory
-_installBinBuildDirectory() {
-  local usage="$1" applicationHome="$2" url="$3" localPath="$4"
-  local start tarArgs
-  local target="$applicationHome/build.tar.gz"
-
-  if [ -n "$localPath" ]; then
-    _installBinBuildDirectoryLocal "$usage" "$applicationHome" "$localPath"
-    return $?
-  fi
-  __usageEnvironment "$usage" curl -L -s "$url" -o "$target" || return $?
-  [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
-  if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
-    tarArgs=(--wildcards '*/bin/build/*')
-  else
-    tarArgs=(--include='*/bin/build/*')
-  fi
-  __usageEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
-  __usageEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
-  __usageEnvironment "$usage" popd >/dev/null || return $?
-  rm -f "$target" || :
-}
-
-# Install the build directory from a copy
-_installBinBuildDirectoryLocal() {
-  local usage="$1" applicationHome="$2" localPath="$3" installPath backupPath
-  installPath="$applicationHome/bin/build"
-  # Clean target regardless
-  backupPath="$installPath.aboutToDelete.$$"
-  __usageEnvironment "$usage" rm -rf "$backupPath" || return $?
-  if [ -d "$installPath" ]; then
-    __usageEnvironment "$usage" mv -f "$installPath" "$backupPath" || return $?
-    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$backupPath" "$installPath" || return $?
-    __usageEnvironment "$usage" rm -rf "$backupPath" || :
-  else
-    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
-  fi
-}
-
-# Check the build directory after installation
-_installBinBuildCheck() {
+# was _installRemotePackageCheck
+# Check the build directory after installation and output the version
+__installBinBuildCheck() {
   local usage="$1"
   local installPath="$2"
   local toolsBin="$installPath/tools.sh"
@@ -210,36 +51,273 @@ _installBinBuildCheck() {
   printf "%s %s (%s)\n" "$(consoleBoldBlue "zesk/build")" "$(consoleCode "$version")" "$(consoleOrange "$id")"
 }
 
+# Environment: Needs internet access and creates a directory `./bin/build`
+# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
+# fn: {base}
+# Installs a remote package system in a local project directory if not installed. Also
+# will overwrite the installation binary with the latest version after installation.
+#
+# Determines the most recent version using GitHub API unless --url or --local is specified
+#
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
+# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
+# Argument: --debug - Optional. Flag. Debugging is on.
+# Argument: --force - Optional. Flag. Force installation even if file is up to date.
+# Argument: --diff - Optional. Flag. Show differences between old and new file.
+# Exit Code: 1 - Environment error
+# Exit Code: 2 - Argument error
+__installPackageConfiguration() {
+  local rel="$1"
+  shift
+  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
+}
+
+# IDENTICAL _installRemotePackage 246
+
+# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
+# fn: {base}
+# Installs a remote package system in a local project directory if not installed. Also
+# will overwrite the installation binary with the latest version after installation.
+#
+# URL can be determined programmatically using `urlFunction`.
+#
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
+# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
+# Argument: --user headerText - Optional. String. Add `username:password` to remote request.
+# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
+# Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download.
+# Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name.
+# Argument: --debug - Optional. Flag. Debugging is on.
+# Argument: --force - Optional. Flag. Force installation even if file is up to date.
+# Argument: --diff - Optional. Flag. Show differences between old and new file.
+# Argument: --replace - Optional. Flag. Replace an old version of this script with this one and delete this one. Internal only, do not use.
+# Exit Code: 1 - Environment error
+# Exit Code: 2 - Argument error
+_installRemotePackage() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex
+  local relative="${1-}" packagePath="${2-}" packageInstallerName="${3-}"
+  local argument start ignoreFile tarArgs
+  local forceFlag installFlag localPath message installArgs
+  local myBinary myPath osName url urlFunction checkFunction applicationHome installPath headers
+
+  shift 3
+  case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
+
+  installArgs=()
+  url=
+  localPath=
+  forceFlag=false
+  urlFunction=
+  checkFunction=
+  headers=()
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument #$argumentIndex: $argument" || return $?
+    case "$argument" in
+      --debug)
+        __installRemotePackageDebug "$argument"
+        ;;
+      --diff)
+        installArgs+=("$argument")
+        ;;
+      --replace)
+        newName="${BASH_SOURCE[0]%.*}"
+        consoleBoldBlue "Replacing $(consoleOrange "${BASH_SOURCE[0]}") -> $(consoleBoldOrange "$newName")"
+        __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+        __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+        return 0
+        ;;
+      --force)
+        forceFlag=true
+        ;;
+      --mock | --local)
+        [ -z "$localPath" ] || __failArgument "$usage" "$argument already" || return $?
+        shift
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$argumentIndex" || return $?
+        localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
+        [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$localPath")\") must be path to bin/build containing tools.sh" || return $?
+        ;;
+      --user)
+        shift
+        headers+=("--user" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+        ;;
+      --header)
+        shift
+        headers+=("-H" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+        ;;
+      --url)
+        shift
+        [ -z "$url" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        url="$1"
+        ;;
+      --url-function)
+        shift
+        [ -z "$urlFunction" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        urlFunction="$1"
+        ;;
+      --check-function)
+        shift
+        [ -z "$checkFunction" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        checkFunction="$1"
+        ;;
+      *)
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+  done
+
+  if [ -z "$url" ]; then
+    if [ -n "$urlFunction" ]; then
+      url=$(__usageEnvironment "$usage" "$urlFunction" "$usage") || return $?
+      if [ -z "$url" ]; then
+        __failArgument "$usage" "$urlFunction failed" || return $?
+      fi
+    fi
+  fi
+  if [ -z "$url" ] && [ -z "$localPath" ]; then
+    __failArgument "$usage" "--local or --url|--url-function is required" || return $?
+  fi
+
+  # Move to starting point
+  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
+  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
+  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
+  installPath="$applicationHome/$packagePath"
+  installFlag=false
+  if [ ! -d "$installPath" ]; then
+    if $forceFlag; then
+      printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBlue "directory does not exist")"
+    fi
+    installFlag=true
+  elif $forceFlag; then
+    printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBoldBlue "directory exists")"
+    installFlag=true
+  fi
+  binName=" ($(consoleBoldBlue "$(basename "$myBinary")"))"
+  if $installFlag; then
+    start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
+    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
+    [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
+    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    if [ -n "$checkFunction" ]; then
+      "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
+    else
+      __usageEnvironment "$usage" printf "%s\n" "$packagePath" >"$messageFile" || return $?
+    fi
+    message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
+    rm -f "$messageFile" || :
+  else
+    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    if [ -n "$checkFunction" ]; then
+      "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
+    else
+      __usageEnvironment "$usage" printf "%s\n" "$packagePath" >"$messageFile" || return $?
+    fi
+    message="$(cat "$messageFile") already installed"
+    rm -f "$messageFile" || :
+  fi
+  __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
+  message="$message (local)$binName"
+  printf "%s\n" "$message"
+  __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
+}
+
+# Error handler for _installRemotePackage
+# Usage: {fn} exitCode [ message ... ]
+__installRemotePackage() {
+  local exitCode="$1"
+  shift || :
+  printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
+  return "$exitCode"
+}
+
+# Debug is enabled, show why
+__installRemotePackageDebug() {
+  consoleOrange "${1-} enabled" && set -x
+}
+
+# Install the package directory
+__installRemotePackageDirectory() {
+  local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
+  local start tarArgs
+  local target="$applicationHome/.$$.package.tar.gz"
+
+  shift 5
+  if [ -n "$localPath" ]; then
+    __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
+    return $?
+  fi
+  __usageEnvironment "$usage" curl -L -s "$url" -o "$target" "$@" || return $?
+  [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
+  packagePath=${packagePath%/}
+  packagePath=${packagePath#/}
+  if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
+    tarArgs=(--wildcards "*/$packagePath/*")
+  else
+    tarArgs=(--include="*/$packagePath/*")
+  fi
+  __usageEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
+  __usageEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
+  __usageEnvironment "$usage" popd >/dev/null || return $?
+  rm -f "$target" || :
+}
+
+# Install the build directory from a copy
+__installRemotePackageDirectoryLocal() {
+  local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
+
+  installPath="${applicationHome%/}/${packagePath#/}"
+  # Clean target regardless
+  if [ -d "$installPath" ]; then
+    tempPath="$installPath.aboutToDelete.$$"
+    __usageEnvironment "$usage" rm -rf "$tempPath" || return $?
+    __usageEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
+    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$tempPath" "$installPath" || return $?
+    __usageEnvironment "$usage" rm -rf "$tempPath" || :
+  else
+    tempPath=$(__usageEnvironment "$usage" dirname "$installPath") || return $?
+    [ -d "$tempPath" ] || __usageEnvironment "$usage" mkdir -p "$tempPath" || return $?
+    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
+  fi
+}
+
 # Check .gitignore is correct
-_installBinBuildGitCheck() {
-  local applicationHome="$1"
+__installRemotePackageGitCheck() {
+  local applicationHome="$1" pattern="${2%/}"
+  pattern="/${pattern#/}/"
   local ignoreFile="$1/.gitignore"
-  if [ -f "$ignoreFile" ] && ! grep -q -e "^/bin/build/" "$ignoreFile"; then
+  if [ -f "$ignoreFile" ] && ! grep -q -e "^$pattern" "$ignoreFile"; then
     printf "%s %s %s %s:\n\n    %s\n" "$(consoleCode "$ignoreFile")" \
       "does not ignore" \
-      "$(consoleCode "./bin/build")" \
+      "$(consoleCode "$pattern")" \
       "$(consoleError "recommend adding it")" \
-      "$(consoleCode "echo /bin/build/ >> $ignoreFile")"
+      "$(consoleCode "echo $pattern/ >> $ignoreFile")"
   fi
 }
 
-_installBinBuildFinalize() {
-  if [ -f "$1" ]; then
-    # printf "MOVE: %s -> %s\n" "$@"
-    # once and only once
-    cp -f "$@" || :
-    rm -f "$1" || :
-  fi
-}
-
-# Usage: {fn} installBinBuildSource targetBinary relativePath
-_installBinBuildLocal() {
+# Usage: {fn} _installRemotePackageSource targetBinary relativePath
+__installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
+  local log="$myBinary.$$.log"
   {
-    grep -v -e '^installBinBuild ' <"$source"
-    printf "%s %s %s\n" "installBinBuild" "$relTop" '$@'
+    grep -v -e '^__installPackageConfiguration ' <"$source"
+    printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
   } >"$myBinary.$$"
-  (_installBinBuildFinalize "$myBinary.$$" "$myBinary" 2>/dev/null 1>&2) || :
+  chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
+  "$myBinary.$$" --replace >"$log" 2>&1 &
+  pid=$!
+  if ! _integer "$pid"; then
+    _environment "Unable to run $myBinary.$$" || return $?
+  fi
+  wait "$pid" || _environment "$(dumpPipe "install log failed: $pid" <"$log")" || _clean $? "$log" || return $?
+  _clean 0 "$log" || return $?
 }
 
 # IDENTICAL _realPath 10
@@ -351,9 +429,31 @@ consoleBoldBlue() {
   __consoleOutput "" '\033[1;94m' '\033[0m' "$@"
 }
 
+# IDENTICAL _return 19
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
+_return() {
+  local r="${1-:1}" && shift
+  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+}
+
+# Is this an unsigned integer?
+# Usage: {fn} value
+# Exit Code: 0 - if value is an unsigned integer
+# Exit Code: 1 - if value is not an unsigned integer
+_integer() {
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+# <-- END of IDENTICAL _return
+
+# IDENTICAL _tinySugar 48
 # Error codes
 _code() {
-  case "${1-}" in environment) printf 1 ;; argument) printf 2 ;; *) printf 126 ;; esac
+  case "${1-}" in *nvironment) printf 1 ;; *rgument) printf 2 ;; *) printf 126 ;; esac
 }
 
 # Usage: {fn} usage message
@@ -380,7 +480,6 @@ __usageEnvironment() {
   shift && "$@" || __failEnvironment "$usage" "$@" || return $?
 }
 
-# Return `$errorArgument` always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
@@ -388,30 +487,18 @@ _argument() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
+# Usage: {fn} message ..`.
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 1
 _environment() {
   _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
 }
 
-# IDENTICAL _return 19
-# Usage: {fn} [ exitCode [ message ... ] ]
-# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output to stderr.
-# Exit Code: exitCode
-_return() {
-  local r="${1-:1}" && shift
-  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+# Usage: {fn} exitCode itemToDelete ...
+_clean() {
+  local r="${1-}" && shift && rm -rf "$@"
+  return "$r"
 }
-
-# Is this an unsigned integer?
-# Usage: {fn} value
-# Exit Code: 0 - if value is an unsigned integer
-# Exit Code: 1 - if value is not an unsigned integer
-_integer() {
-  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
-}
-
-# END of IDENTICAL _return
 
 # Final line will be rewritten on update
 #
@@ -424,4 +511,4 @@ _integer() {
 # - "bin/app/vendorApp/install-bin-build.sh" -> "../../.."
 #
 # -- DO NOT EDIT ANYTHING ABOVE THIS LINE IT WILL BE OVERWRITTEN --
-installBinBuild ../.. "$@"
+__installPackageConfiguration ../.. "$@"

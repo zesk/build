@@ -9,8 +9,8 @@
 
 declare -a tests
 
-tests+=(testTools)
-testTools() {
+tests+=(testAPITools)
+testAPITools() {
   assertEquals "$(plural 0 singular plural)" "plural" || return $?
   assertEquals "$(plural 1 singular plural)" "singular" || return $?
   assertEquals "$(plural 2 singular plural)" "plural" || return $?
@@ -30,7 +30,7 @@ testTools() {
 tests+=(testHooks)
 testHooks() {
   local h
-  for h in deploy-cleanup deploy-confirm make-env version-created version-live; do
+  for h in deploy-cleanup deploy-confirm application-environment version-created version-live; do
     assertExitCode 0 hasHook $h || return $?
   done
   for h in misspelled-deployed-cleanup not-rude-confirm; do

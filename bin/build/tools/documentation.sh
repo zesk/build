@@ -25,7 +25,6 @@ usageDocument() {
   local tryFile functionDefinitionFile functionName exitCode variablesFile home
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  export PWD
 
   [ $# -ge 2 ] || _argument "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
@@ -37,6 +36,7 @@ usageDocument() {
   if [ ! -f "$functionDefinitionFile" ]; then
     tryFile="$home/$functionDefinitionFile"
     if [ ! -f "$tryFile" ]; then
+      export PWD
       _argument "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
     fi
     functionDefinitionFile="$tryFile"
@@ -47,7 +47,7 @@ usageDocument() {
     exitCode=1
   fi
   __argument isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
-  variablesFile=$(mktemp)
+  variablesFile=$(__environment mktemp) || return $?
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
       _environment "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
@@ -81,8 +81,8 @@ _usageDocument() {
 # Summary: Convert a template file to a documentation file using templates
 #
 # Usage: {fn} [ --env envFile ] cacheDirectory documentTemplate functionTemplate templateFile targetFile
-# Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: --env envFile - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
+# Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: documentTemplate - Required. The document template containing functions to define
 # Argument: functionTemplate - Required. The template for individual functions defined in the `documentTemplate`.
 # Argument: targetFile - Required. Target file to generate
@@ -104,36 +104,39 @@ _usageDocument() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateCompile() {
-  local usage argument
-  local start documentTemplate mappedDocumentTemplate functionTemplate targetFile cacheDirectory checkFiles forceFlag
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local cacheDirectory="" documentTemplate="" functionTemplate="" targetFile=""
+  local start mappedDocumentTemplate checkFiles forceFlag
+  local compiledFunctionTarget tokenNames message
+  local targetDirectory settingsFile base envFiles envFileArgs envFile
+  local tokenName documentTokensFile envChecksum envChecksumCache compiledTemplateCache
 
-  local targetDirectory settingsFile
-  local base
-  local envFiles envFile
-  local error tokenName
-  local documentTokensFile
-  local envChecksum envChecksumCache
-  local compiledTemplateCache
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  usage="_${FUNCNAME[0]}"
-
-  cacheDirectory=
-  documentTemplate=
-  functionTemplate=
-  targetFile=
-  forceFlag=
+  forceFlag=false
   envFiles=()
+  envFileArgs=()
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --env)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         envFiles+=("$envFile")
+        envFileArgs+=("$argument" "$envFile")
         ;;
       --force)
-        forceFlag=1
+        forceFlag=true
         ;;
       *)
         # Load arguments one-by-one
@@ -146,14 +149,13 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-          __failArgument "$usage" "Unknown argument" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
-    shift || :
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
   done
-
-  start=$(beginTiming) || __failArgument "$usage" beginTiming || return $?
 
   # Validate arguments
   cacheDirectory=$(usageArgumentDirectory "$usage" cacheDirectory "$cacheDirectory") || return $?
@@ -168,7 +170,7 @@ documentationTemplateCompile() {
 
   base="$(basename "$targetFile")" || __failArgument "$usage" basename "$targetFile" || return $?
   base="${base%%.md}"
-  statusMessage consoleInfo "Generating $base ..."
+  statusMessage consoleInfo "Generating $(consoleCode "$base") $(consoleInfo "...")"
 
   documentTokensFile=$(mktemp)
   mappedDocumentTemplate=$(mktemp)
@@ -207,69 +209,129 @@ documentationTemplateCompile() {
   fi
   # Environment change will affect this template
   # Function template change will affect this template
-  checkFiles=("$envChecksumCache" "$functionTemplate")
-  while read -r tokenName; do
-    if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
-      continue
-    fi
-    # Source file of any token in the documentTemplate change will affect this template
-    checkFiles+=("$settingsFile")
-  done <"$documentTokensFile"
 
   # As well, document template change will affect this template
-  if test $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]}" "$documentTemplate"; then
-    (
+  if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
+    if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
+      printf "%s (mapped) -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
+      cp "$mappedDocumentTemplate" "$targetFile"
+    fi
+  else
+    checkFiles=()
+    while read -r tokenName; do
+      if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
+        continue
+      fi
+      # Source file of any token in the documentTemplate change will affect this template
+      checkFiles+=("$settingsFile")
+    done <"$documentTokensFile"
+    if $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
+      message="Generated"
+      compiledFunctionEnv=$(__usageEnvironment "$usage" mktemp) || return $?
       # subshell to hide environment tokens
-      set -a
-      for envFile in "${envFiles[@]+${envFiles[@]}}"; do
-        # shellcheck source=/dev/null
-        . "$envFile" || __failEnvironment "$usage" "source $envFile failed" || return $?
-      done
       while read -r tokenName; do
-        if ! settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$tokenName"); then
-          error="Unable to find \"$tokenName\" (using index \"$cacheDirectory\")"
-          consoleError "$error" 1>&2
-          if [ "${tokenName#* }${tokenName#*@}" = "${tokenName}${tokenName}" ]; then
-            declare "$tokenName"="$error"
-          fi
+        compiledFunctionTarget="$compiledTemplateCache/$tokenName"
+        if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
+          __usageEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || return $?
           continue
         fi
-        # echo "Checking TEMPLATE files isNewestFile" "$compiledTemplateCache/$tokenName" "$settingsFile" "${checkFiles[@]}"
-        if test $forceFlag || [ ! -f "$compiledTemplateCache/$tokenName" ] || ! isNewestFile "$compiledTemplateCache/$tokenName" "$settingsFile" "${checkFiles[@]}"; then
-          statusMessage consoleInfo "Generating $base ... $(consoleValue "[$tokenName]") ..."
-          export "${tokenName?}"
-          if ! _bashDocumentation_Template "$settingsFile" "$functionTemplate" >"$compiledTemplateCache/$tokenName"; then
-            mv "$compiledTemplateCache/$tokenName" "$compiledTemplateCache/$tokenName.failed"
-            # shellcheck disable=SC2140
-            declare "$tokenName"="ExitCode _bashDocumentation_Template $tokenName $settingsFile $functionTemplate: $?"
-          else
-            declare "$tokenName"="$(cat "$compiledTemplateCache/$tokenName")"
-          fi
+        if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && isNewestFile "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
+          statusMessage consoleInfo "Skip $tokenName and use cache"
         else
-          statusMessage consoleInfo "Using cached $base ... $(consoleValue "[$tokenName]") ..."
-          declare "$tokenName"="$(cat "$compiledTemplateCache/$tokenName")"
+          __usageEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" >"$compiledTemplateCache/$tokenName" || return $?
         fi
+        environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
       done <"$documentTokensFile"
-      if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
-        if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
-          printf "%s (mapped) -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
-          cp "$mappedDocumentTemplate" "$targetFile"
-        fi
-      else
-        statusMessage consoleSuccess "Writing $targetFile using $documentTemplate (mapped) ..."
-        mapEnvironment <"$mappedDocumentTemplate" >"$targetFile"
-      fi
-      clearLine
-      touch "$envChecksumCache"
-      set +a
-    )
+
+      IFS=$'\n' read -r -d '' -a tokenNames <"$documentTokensFile"
+      statusMessage consoleSuccess "Writing $targetFile using $documentTemplate (mapped) ..."
+      (
+        set -a
+        #shellcheck source=/dev/null
+        source "$compiledFunctionEnv" || __failEnvironment "$usage" "source $compiledFunctionEnv compiled for $targetFile" || return $?
+        mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
+      ) || __failEnvironment "$usage" "mapEnvironment $tokenName" || return $?
+      __usageEnvironment "$usage" cp "$compiledFunctionEnv" "$envChecksumCache" || return $?
+    else
+      message="Cached"
+    fi
   fi
   rm -f "$documentTokensFile" || :
   rm -f "$mappedDocumentTemplate" || :
-  statusMessage consoleInfo "$(reportTiming "$start" Generated "$targetFile" in)"
+  statusMessage consoleInfo "$(reportTiming "$start" "$message" "$targetFile" in)"
 }
-_documentationTemplateCompileUsage() {
+_documentationTemplateCompile() {
   usageDocument "${BASH_SOURCE[0]}" "documentationTemplateCompile" "$@"
+}
+
+# Summary: Generate a function documentation block using `functionTemplate` for `functionName`
+#
+#
+# Requires function indexes to be generated in `cacheDirectory`.
+#
+# Generate documentation for a single function.
+#
+# Template is output to stdout.
+#
+# Exit Code: 0 - If success
+# Exit Code: 1 - Issue with file generation
+# Exit Code: 2 - Argument error
+# Argument: --env envFile - Optional. File. One (or more) environment files used during map of `functionTemplate`
+# Argument: cacheDirectory - Required. Cache directory where the indexes live.
+# Argument: functionName - Required. The function name to document.
+# Argument: functionTemplate - Required. The template for individual functions.
+# Usage: {fn} [ --env envFile ] cacheDirectory functionName functionTemplate
+documentationTemplateFunctionCompile() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local start cacheDirectory="" functionName="" functionTemplate="" envFiles=()
+  local start functionName functionTemplate targetFile checkFiles forceFlag
+
+  start=$(__usageEnvironment "$usage" beginTiming) || __failArgument "$usage" beginTiming || return $?
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --env)
+        shift
+        envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
+        envFiles+=("$envFile")
+        ;;
+      *)
+        # Load arguments one-by-one
+        if [ -z "$cacheDirectory" ]; then
+          cacheDirectory=$1
+        elif [ -z "$functionName" ]; then
+          functionName=$1
+        elif [ -z "$functionTemplate" ]; then
+          functionTemplate=$1
+        else
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+  done
+
+  # Validate arguments
+  cacheDirectory=$(usageArgumentDirectory "$usage" cacheDirectory "$cacheDirectory") || return $?
+  functionName="$(usageArgumentString "$usage" functionName "$functionName")" || return $?
+  functionTemplate="$(usageArgumentFile "$usage" functionTemplate "$functionTemplate")" || return $?
+  settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$functionName") || __failEnvironment "$usage" "Unable to find \"$functionName\" (using index \"$cacheDirectory\")" || return $?
+
+  __usageEnvironment "$usage" _bashDocumentation_Template "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
+}
+_documentationTemplateFunctionCompile() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} cacheDirectory documentDirectory functionTemplate targetDirectory
@@ -305,10 +367,16 @@ documentationTemplateDirectoryCompile() {
   functionTemplate=
   targetDirectory=
   passArgs=()
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --force)
         passArgs+=("$argument")
         ;;
@@ -327,11 +395,12 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift after $argument failed" || return $?
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
   start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
@@ -349,9 +418,10 @@ documentationTemplateDirectoryCompile() {
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       consoleError "Failed to generate $targetFile" 1>&2
       exitCode=1
+      break
     fi
     fileCount=$((fileCount + 1))
-  done < <(find "$templateDirectory" -type f -name '*.md' ! -path '*/.*' ! -name '_*' ! -name '.*')
+  done < <(find "$templateDirectory" -type f -name '*.md' ! -path '*/.*' ! -name '_*')
   clearLine || :
   reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(consoleInfo "$targetDirectory") "
   return $exitCode
@@ -376,18 +446,16 @@ _documentationTemplateDirectoryCompile() {
 # See: repeat
 #
 bashDocumentFunction() {
-  local envFile file=$1 fn=$2 template=$3
-  if [ ! -f "$template" ]; then
-    consoleError "Template $template not found" 1>&2
-    return 1
-  fi
-  envFile=$(mktemp)
-  printf "%s\n" "#!/usr/bin/env bash" >>"$envFile"
-  printf "%s\n" "set -eou pipefail" >>"$envFile"
+  local usage="_${FUNCNAME[0]}"
+  local envFile file=$1 fn=$2 template=$3 home exitCode
+
+  [ -f "$template" ] || __failArgument "$usage" "$template is not a file" || return $?
+  envFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  __usageEnvironment "$usage" printf "%s\n%s\n" "#!/usr/bin/env bash" "%s\n" "set -eou pipefail" >>"$envFile" || return $?
   if ! bashDocumentation_Extract "$file" "$fn" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
-  _bashDocumentation_Template "$envFile" "$template"
+  _bashDocumentation_Template "$template" "$envFile"
   exitCode=$?
   rm "$envFile" || :
   return $exitCode
@@ -401,42 +469,41 @@ _bashDocumentFunction() {
 # of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}Format` such that
 # name matches the variable name (lowercase alphanumeric characters and underscores).
 #
-# Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
+# Filter functions should modify the input/output pipe; an example can be found in `{applicationFile}` by looking at
 # sample function `_bashDocumentationFormatter_exit_code`.
 #
 # See: _bashDocumentationFormatter_exit_code
-# Usage: {fn} settingsFile template
-# Argument: settingsFile - Required. Cached documentation settings.
+# Usage: {fn} template [ settingsFile ...
 # Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
+# Argument: settingsFile - Required. Settings file to be loaded.
 # Exit code: 0 - Success
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
 #
 _bashDocumentation_Template() {
-  local envFile=$1 template=$2
-  [ -f "$envFile" ] || _argument "Settings file $envFile not found" || return $?
+  local template="$1" envFile
   [ -f "$template" ] || _argument "Template $template not found" || return $?
-  if ! (
+  shift || :
+  (
     # subshell this does not affect anything except these commands
-    set -eou pipefail
-    set -a
-    # shellcheck source=/dev/null
-    if ! source "$envFile"; then
-      set +a
-      wrapLines "$(consoleCode)" "$(consoleReset)" <"$envFile"
-      _environment "$envFile Failed" || return $?
-    fi
-    set +a
+    set -aeou pipefail
+    while [ $# -gt 0 ]; do
+      envFile="$1"
+      [ -f "$envFile" ] || _argument "Settings file $envFile not found" || return $?
+      # shellcheck source=/dev/null
+      source "$envFile" || _environment "$envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
+      shift
+    done
+    # Format our values
     while read -r envVar; do
       formatter="_bashDocumentationFormatter_${envVar}"
-      if [ "$(type -t "$formatter")" = "function" ]; then
+      if isFunction "$formatter"; then
         declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
       fi
     done < <(environmentVariables)
+    # shellcheck source=/dev/null
     mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || return $?
-  ); then
-    _environment "Template $template not found" || return $?
-  fi
+  ) || _environment "$template failed" || return $?
 }
 
 #
@@ -509,22 +576,20 @@ __dumpAliasedValue() {
 # Argument: `function` - Function defined in `file`
 #
 bashDocumentation_Extract() {
-  local maxLines=1000 definitionFile=$1 fn=$2 definitionFile
-  local line name value desc tempDoc foundNames docMap lastName values
-  local base
+  local usage="_${FUNCNAME[0]}"
+  local maxLines=1000 definitionFile="$1" fn="$2" definitionFile
+  local home line name value desc tempDoc foundNames docMap lastName values base
 
-  if [ ! -f "$definitionFile" ]; then
-    consoleError "$definitionFile is not a file" 1>&2
-    return 2
-  fi
-  if [ -z "$fn" ]; then
-    consoleError "function name is blank" 1>&2
-    return 2
-  fi
-  base="$(basename "$definitionFile")"
-  tempDoc=$(mktemp)
-  docMap=$(mktemp)
+  [ -f "$definitionFile" ] || __failArgument "$usage" "$definitionFile is not a file" || return $?
+  [ -n "$fn" ] || __failArgument "function name is blank" || return $?
 
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  base="$(__usageEnvironment "$usage" basename "$definitionFile")" || return $?
+  tempDoc=$(__usageEnvironment "$usage" mktemp) || return $?
+  docMap=$(__usageEnvironment "$usage" mktemp) || return $?
+
+  __dumpNameValue "applicationHome" "$home" | tee -a "$docMap"
+  __dumpNameValue "applicationFile" "${definitionFile#"${home%/}"/}" | tee -a "$docMap"
   __dumpNameValue "file" "$definitionFile" | tee -a "$docMap"
   __dumpNameValue "base" "$base" | tee -a "$docMap"
   __dumpNameValue "fn" "$fn" >>"$docMap" # just docMap
@@ -566,7 +631,7 @@ bashDocumentation_Extract() {
         values=()
       fi
       if inArray "$name" fn; then
-        value=$(mapValue "$docMap" "$value")
+        value="$(mapValue "$docMap" "$value")"
       fi
       values+=("$value")
       lastName="$name"
@@ -586,12 +651,19 @@ bashDocumentation_Extract() {
     __dumpAliasedValue description summary
   fi
   if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
-    __dumpNameValue "exit_code" '0 - Always succeeds'
+    __dumpNameValue "exit_code" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
   fi
   if ! inArray "fn" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "fn" "$fn"
   fi
+  if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
+    __dumpNameValue "argument" "No arguments."
+  fi
   printf "# DocMap: %s\n" "$docMap"
+}
+_bashDocumentation_Extract() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

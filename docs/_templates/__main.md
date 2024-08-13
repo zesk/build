@@ -1,4 +1,5 @@
-# {title}
+<!-- TEMPLATE prefix 1 -->
+# {title} - {APPLICATION_NAME}
 
 <!-- TEMPLATE header 2 -->
 [⬅ Top](index.md) [⬅ Parent ](../index.md)

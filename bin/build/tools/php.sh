@@ -220,9 +220,8 @@ phpBuild() {
   #
   # Generate .env
   #
-  if hasHook make-env; then
-    # this script usually runs ./bin/build/pipeline/make-env.sh
-    __usageEnvironment "$usage" runHook make-env "${environments[@]}" -- "${optionals[@]}" >.env || return $?
+  if hasHook application-environment; then
+    __usageEnvironment "$usage" runHook application-environment "${environments[@]}" -- "${optionals[@]}" >.env || return $?
   else
     __usageEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >.env || return $?
   fi
@@ -235,10 +234,8 @@ phpBuild() {
     declare -x "$environment=$(environmentValueRead ".env" "$environment" "")"
   done
   _phpEchoBar || :
-  consoleGreen "${BASH_SOURCE[0]}:$LINENO"
-  echo "DEPLOYMENT=$DEPLOYMENT"
+  # echo "DEPLOYMENT=$DEPLOYMENT"
   environmentFileShow "${environments[@]}" -- "${optionals[@]}" || :
-  consoleGreen "${BASH_SOURCE[0]}:$LINENO"
 
   [ ! -d ./.deploy ] || rm -rf ./.deploy || __failEnvironment "$usage" "Can not delete .deploy" || return $?
 

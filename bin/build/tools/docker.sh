@@ -82,7 +82,7 @@ anyEnvToDockerEnv() {
   local usage="_${FUNCNAME[0]}"
   local f temp
   for f in "$@"; do
-    temp=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
+    temp=$(__usageEnvironment "$usage" mktemp) || return $?
     if ! checkDockerEnvFile "$f" 2>/dev/null; then
       if ! dockerEnvFromBashEnv "$f" >"$temp"; then
         rm -rf "$temp" || :
@@ -112,17 +112,11 @@ anyEnvToBashEnv() {
   local usage="_${FUNCNAME[0]}"
   local f temp
   for f in "$@"; do
-    temp=$(mktemp) || __failEnvironment "$usage" mktemp || return $?
+    temp=$(__usageEnvironment "$usage" mktemp) || return $?
     if checkDockerEnvFile "$f" 2>/dev/null; then
-      if ! dockerEnvToBash "$f" >"$temp"; then
-        rm -rf "$temp" || :
-        __failEnvironment "$usage" "dockerEnvToBash $f" || return $?
-      fi
+      __usageEnvironment "$usage" dockerEnvToBash "$f" >"$temp" || _clean $? "$temp" || return $?
     else
-      if ! cp "$f" "$temp"; then
-        rm -rf "$temp" || :
-        __failEnvironment "$usage" "cp $f $temp" || return $?
-      fi
+      __usageEnvironment "$usage" cp "$f" "$temp" || _clean $? "$temp" || return $?
     fi
     printf "%s\n" "$temp"
   done

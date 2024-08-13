@@ -5,18 +5,14 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-set -eou pipefail
-
 # shellcheck source=/dev/null
 if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
-  printf "tools.sh failed" 1>&2
+  printf "tools.sh failed\n" 1>&2
   exit 1
 fi
 
-# shellcheck source=/dev/null
-. ./bin/build/env/BUILD_RELEASE_NOTES.sh
-
 # fn: {base}
+# Usage: {fn}
 #
 # Hook to return the current version
 #
@@ -25,7 +21,7 @@ fi
 # Environment: BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
 # Environment: EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 #
-hookVersionCurrent() {
+__hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
   local usage
 
@@ -38,7 +34,8 @@ hookVersionCurrent() {
     echo "$f"
   done | versionSort -r | head -1
 }
-_hookVersionCurrent() {
+___hookVersionCurrent() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-hookVersionCurrent
+
+__hookVersionCurrent

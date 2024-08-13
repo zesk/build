@@ -16,6 +16,53 @@ tests+=(testEscapeSingleQuotes)
 tests+=(testEscapeDoubleQuotes)
 tests+=(testSubstringFound)
 tests+=(testIsSubstring)
+tests+=(testIsMappable)
+
+__testIsMappableData() {
+  cat <<'EOF'
+0 {alphabet}
+0 {a}
+0 {name-and-value}
+0 {name_and_value}
+0 {name_and_value:123}
+0 {name_and_value:123}
+1 []
+1 [abc]
+1 [abc][abc]
+1 {}
+1 alphabet
+1 {alphabet
+1 alphabet}
+EOF
+}
+
+__testIsMappableDataBracket() {
+  cat <<'EOF'
+1 {alphabet}
+1 {a}
+1 {name-and-value}
+1 {name_and_value}
+1 {name_and_value:123}
+1 {name_and_value:123}
+1 []
+0 [abc]
+0 [abc][abc]
+1 {}
+1 alphabet
+1 {alphabet
+1 alphabet}
+EOF
+}
+
+testIsMappable() {
+  local exitCode token
+  while read -r exitCode token; do
+    assertExitCode --line "$LINENO" "$exitCode" isMappable "$token" || return $?
+  done < <(__testIsMappableData)
+  while read -r exitCode token; do
+    assertExitCode --line "$LINENO" "$exitCode" isMappable --prefix '[' --suffix ']' "$token" || return $?
+  done < <(__testIsMappableDataBracket)
+}
 
 testSubstringFound() {
   assertExitCode 0 substringFound haystack needle needle needle needle needle aystac needle || return $?

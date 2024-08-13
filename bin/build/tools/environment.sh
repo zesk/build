@@ -9,16 +9,24 @@
 #
 # Write a value to a state file as NAME="value"
 # Usage: name - Required. String. Name to write.
-# Usage: value - Optional. String. Value to write.
+# Usage: value - Optional. EmptyString. Value to write.
+# Usage: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
 environmentValueWrite() {
   local usage="_${FUNCNAME[0]}"
-  local name="${1-}" value="${2-}"
+  local name="${1-}" value output
 
-  [ $# -eq 2 ] || __failArgument "$usage" "Requires name and value" || return $?
-  name=$(usageArgumentString "$usage" name "${1-}") || return $?
-  value="$(declare -p value)"
-  value="${value#declare*value=}"
-  printf "%s=%s\n" "$name" "$value"
+  shift || __failArgument "$usage" "name required" || return $?
+  name=$(usageArgumentString "$usage" name "$name") || return $?
+  [ $# -ge 1 ] || __failArgument "$usage" "value required" || return $?
+  if [ $# -eq 1 ]; then
+    value="${1-}"
+    output="$(declare -p value)"
+  else
+    value=("$@")
+    output="$(declare -pa value)"
+  fi
+  output="${output#declare*value=}"
+  printf "%s=%s\n" "$name" "$output"
 }
 _environmentValueWrite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -32,13 +40,12 @@ _environmentValueWrite() {
 # Argument: default - Optional. String. Value to return if value not found.
 environmentValueRead() {
   local usage="_${FUNCNAME[0]}"
-  local stateFile="${1-}" name="${2-}" default="${3-}" line
+  local stateFile="${1-}" name="${2-}" default="${3-}" value
   [ -f "$stateFile" ] || __failArgument "$usage" "stateFile \"$stateFile\" is not a file" || return $?
   [ -n "$name" ] || __failArgument "$usage" "stateFile \"$stateFile\" name is blank (default=$default)" || return $?
   [ $# -le 3 ] || __failArgument "$usage" "Extra arguments: $#" || return $?
-
-  line="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1)"
-  if [ -z "$line" ]; then
+  value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)"
+  if [ -z "$value" ]; then
     if [ -z "$default" ]; then
       return 1
     fi
@@ -46,11 +53,31 @@ environmentValueRead() {
   else
     declare "$name=$default"
     # Wondering if this can run shell code - do not believe so
-    declare "$line"
+    value="${value#\"}"
+    value="${value%\"}"
+    declare "$name=$value"
     printf "%s\n" "${!name-}"
   fi
 }
 _environmentValueRead() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Read an array value from a state file
+# Usage: {fn} stateFile
+# Argument: stateFile - Required. File. File to access, must exist.
+# Argument: name - Required. String. Name to read.
+# Outputs array elements, one per line.
+environmentValueReadArray() {
+  local usage="_${FUNCNAME[0]}"
+  local stateFile="${1-}" name="${2-}" value
+
+  value=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")
+  declare -a "value=$value"
+  printf "%s\n" "${value[@]+"${value[@]}"}"
+}
+_environmentValueReadArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -279,7 +306,7 @@ _environmentFileApplicationVerify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-  # IDENTICAL environmentVariables 12
+# IDENTICAL environmentVariables 12
 
 #
 # Output a list of environment variables and ignore function definitions

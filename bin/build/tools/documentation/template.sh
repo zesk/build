@@ -124,10 +124,13 @@ __buildDocumentation_Recommit() {
 }
 
 _buildDocumentationGenerateEnvironment() {
+  export APPLICATION_NAME
+  buildEnvironmentLoad APPLICATION_NAME || :
   envFile=$(mktemp) || __failEnvironment "$usage" "mktemp failed" || return $?
   {
     __dumpNameValue summary "{fn}"
     __dumpNameValue vendor "$1"
+    __dumpNameValue APPLICATION_NAME "$3"
     __dumpNameValue BUILD_COMPANY "$1"
     __dumpNameValue vendorLink "$2"
     __dumpNameValue BUILD_COMPANY_LINK "$2"
@@ -185,10 +188,10 @@ documentationBuild() {
   local cacheDirectory start docArgs indexArgs=()
   local functionLinkPattern fileLinkPattern documentationTemplate
   local start envFile verbose
-  local company companyLink home
+  local company companyLink home applicationName
   local templatePath sourcePaths targetPath actionFlag unlinkedTemplate unlinkedTarget seeFunction seeFile seePrefix
   local pageTemplate functionTemplate
-  export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME
+  export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
@@ -207,6 +210,7 @@ documentationBuild() {
 
   company=${BUILD_COMPANY-}
   companyLink=${BUILD_COMPANY_LINK-}
+  applicationName="${APPLICATION_NAME-}"
   sourcePaths=()
   targetPath=
   actionFlag=
@@ -232,6 +236,10 @@ documentationBuild() {
       --company)
         shift
         company=$(usageArgumentString "$usage" "$argument" "${1-}")
+        ;;
+      --name)
+        shift
+        applicationName=$(usageArgumentString "$usage" "$argument" "${1-}")
         ;;
       --template)
         [ -z "$templatePath" ] || __failArgument "$usage" "$argument already supplied" || return $?
@@ -334,7 +342,7 @@ documentationBuild() {
   if [ -n "$unlinkedTemplate" ]; then
     [ -n "$unlinkedTarget" ] || __failArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
     ! $verbose || consoleInfo "Update unlinked document $unlinkedTarget"
-    envFile=$(_buildDocumentationGenerateEnvironment "$company" "$companyLink") || return $?
+    envFile=$(_buildDocumentationGenerateEnvironment "$company" "$companyLink" "$applicationName") || return $?
     __usageEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     if [ "$actionFlag" = "--unlinked-update" ]; then
       printf "\n"

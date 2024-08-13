@@ -21,23 +21,25 @@ If your terminal supports colors, then colors are used to make the help more rea
 
 ## Usage basics
 
-The `usage` function in your own function in any form has the following call:
+Most functions have a 2nd "usage" function which is the function name with a prefixed underscore.
 
     _usageFunction exitCode message
 
 e.g.
 
-    _myFunction "$errorEnvironment" "Missing file $file"
+    _myFunction 1 "Missing file $file"
 
 The `exitCode` is required, and `0` is considered success.
 
 - `usage` implementations SHOULD NEVER `exit`, instead it should return the passed in `exitCode`
 - `message` - Is optional but highly recommended for all errors.
 
-Typically it would be written as follows in your code:
+An example:
 
     myFunction() {
-        if ! curl -L "$bigFile" -o - > "$savedFile"; then
+        local usage="_${FUNCNAME[0]}"
+        local bigFile="$1" savedFile="$2"
+        __usageEnvironment "$usage" curl -L "$bigFile" -o - > "$savedFile" || return $?
             _myFunction 1 "Unable to download $bigFile" || return $?
         fi
         ..
@@ -56,15 +58,9 @@ Usage for a command typically consists of the following components:
 - Arguments to the command and their meanings and descriptions
 - Any further description
 
-## Usage generation - two methods
+### Usage using comments
 
-The **first** version of usage generation uses `usageMain` which depends on functions defined locally so only works in isolated shell scripts.
-
-The **most recent** version uses a file name and a function name and the document comments to generate the usage. Both work similarly.
-
-### Usage using comments (Most recent)
-
-The comment-method is more flexible as it allows for any name/value pair to be associated with the usage, but requires a `function`
+The comment-method allows for any name/value pair to be associated with the usage, but requires a `function`
 and the current file to generate (as the code reads the script to extract the comment):
 
     #!/usr/bin/env bash
@@ -113,8 +109,17 @@ And the output:
 
 As additional features are added (using different arguments), the comment method is likely the best bet long-term.
 
-### English-based Argument Descriptions
+### Argument Descriptions
 
+By default all argument descriptions should use the following pattern:
+
+    Argument: argumentName - Optional. ArgumentType. Description 
+
+With the following specification:
+
+- `argumentName` - Name and one or more value names. May end with `...` if this argument can be repeated infinitely.
+- `-` - The dash separates the name from the type and description.
+- `Optional | Required`. Determines how many of an argument are requried.
 - If a description contains the term `Required` which matches any case, then arguments are assumed to be required.
 
 [⬅ Return to top](../index.md)

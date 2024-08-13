@@ -6,20 +6,20 @@
 
 ## User prompts
 
-{confirmYesNo}
-{pause}
+
+
 
 ## Copy files 
 
-{copyFileWouldChange}
-{copyFile}
+
+
 
 ## Examples
 
 Example:
 
     args=(--map configure/sshd_config /etc/ssh/sshd_config)
-    if copyFileWouldChange "${args[@]}"; then
-        __environment copyFile "${args[@]}" || return $?
+    if copyFileWouldChange "$"; then
+        __environment copyFile "$" || return $?
         __environment service ssh restart || return $?
     fi

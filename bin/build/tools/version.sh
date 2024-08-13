@@ -171,6 +171,7 @@ newRelease() {
   else
     liveVersion=$currentVersion
   fi
+
   nextVersion=$(nextMinorVersion "$liveVersion")
   consoleNameValue $width "Current:" "$currentVersion"
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"

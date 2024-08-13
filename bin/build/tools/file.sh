@@ -196,14 +196,15 @@ __gamutFile() {
 
   shift 2 || _argument "${FUNCNAME[0]} used incorrectly" || return $?
 
-  local argument
-  local tempTime gamutTime theFile=
+  local argument saved
+  local tempTime gamutTime theFile=""
 
+  saved=("$@")
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    [ -f "$argument" ] || __failArgument "$usage" "Not a file $(consoleCode "$argument")" || return $?
-    tempTime=$(modificationTime "$argument") || __failEnvironment modificationTime "$argument" || return $?
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument: $(_command "${saved[@]}")" || return $?
+    [ -f "$argument" ] || __failArgument "$usage" "Not a file $(consoleCode "$argument"): $(_command "${saved[@]}")" || return $?
+    tempTime=$(modificationTime "$argument") || __failEnvironment "modificationTime $argument: $(_command "${saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
       theFile="$1"
       gamutTime="$tempTime"

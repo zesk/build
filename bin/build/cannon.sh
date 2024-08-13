@@ -10,4 +10,13 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-"$(dirname "${BASH_SOURCE[0]}")/tools.sh" cannon "$@"
+
+# fn: {base}
+# Usage: {fn}
+# See `cannon` for arguments and usage.
+# See: cannon
+__binCannon() {
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" cannon "$@"
+}
+
+__binCannon "$@"

@@ -121,23 +121,22 @@ __debuggingStackCodeList() {
 }
 
 #
-# Usage: {fn} [ -s ]
+# Usage: {fn} [ -x ]
 #
 # Dump the function and include stacks and the current environment
+# Argument: -x - Optional. Flag. Show exported variables. (verbose)
 #
 debuggingStack() {
   local prefix index sources
   printf "STACK:\n"
-  __debuggingStackCodeList "${FUNCNAME[@]}" || :00
-  printf "SOURCE:\n"
   sources=()
   index=0
   while [ $index -lt "${#BASH_SOURCE[@]}" ]; do
-    sources+=("${BASH_SOURCE[index]}:${BASH_LINENO[index]}")
+    sources+=("${BASH_SOURCE[index]}:${BASH_LINENO[index]} - ${FUNCNAME[index]-}")
     index=$((index + 1))
   done
   __debuggingStackCodeList "${sources[@]}" || :
-  if [ "${1-}" != "-s" ]; then
+  if [ "${1-}" = "-x" ]; then
     printf "EXPORTS:\n"
     prefix="declare -x "
     declare -px | cut -c "$((${#prefix} + 1))-"

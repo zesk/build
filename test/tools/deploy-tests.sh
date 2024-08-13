@@ -455,6 +455,6 @@ testDeployPackageName() {
 }
 
 _exportWorksRight() {
-  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" 2>/dev/null 1>&2 || return $?
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" >/dev/null 2>&1 || return $?
   printf "%s" "$BUILD_TARGET"
 }

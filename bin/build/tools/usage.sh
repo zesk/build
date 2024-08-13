@@ -75,6 +75,9 @@ usageTemplate() {
       "$(consoleInfo "$binName")" \
       "$description"
   fi
+  if buildDebugEnabled usage; then
+    debuggingStack
+  fi
   return "$exitCode"
 }
 
@@ -445,7 +448,7 @@ usageArgumentEmptyString() {
 usageArgumentBoolean() {
   local usage="$1" argument="$2"
   shift 2 || :
-  _boolean "${1-}" || __failArgument "$usage" "not boolean: \"$argument\"" || return $?
+  _boolean "${1-}" || __failArgument "$usage" "$argument not boolean: \"${1-}\"" || return $?
   printf "%s\n" "$1"
 }
 
@@ -473,7 +476,7 @@ usageArgumentURL() {
 usageArgumentCallable() {
   local usage="$1" argument="$2"
   shift 2 || :
-  isCallable "${1-}" || __failArgument "$usage" "$argument is not callable" || return $?
+  isCallable "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not callable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -487,7 +490,7 @@ usageArgumentCallable() {
 usageArgumentExecutable() {
   local usage="$1" argument="$2"
   shift 2 || :
-  isExecutable "${1-}" || __failArgument "$usage" "$argument is not executable" || return $?
+  isExecutable "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not executable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -501,7 +504,7 @@ usageArgumentExecutable() {
 usageArgumentFunction() {
   local usage="$1" argument="$2"
   shift 2 || :
-  isFunction "${1-}" || __failArgument "$usage" "$argument is not a function" || return $?
+  isFunction "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not a function" || return $?
   printf "%s\n" "$1"
 }
 
@@ -513,7 +516,7 @@ usageArgumentFunction() {
 usageArgumentUnknown() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+  __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" "$@" || return $?
 }
 
 # Throw an missing argument error
@@ -524,5 +527,5 @@ usageArgumentUnknown() {
 usageArgumentMissing() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+  __failArgument "$usage" "missing argument $(consoleLabel "$argument")" "$@" || return $?
 }

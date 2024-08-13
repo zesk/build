@@ -52,3 +52,15 @@ pipelines:
           script:
             - bin/build.sh
             - bin/deploy.sh
+    test:
+      - step:
+          size: 2x
+          deployment: test
+          name: Just Test
+          artifacts:
+            - .last-run-test
+          services:
+            - docker
+          script:
+            - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
+            - bin/test.sh "${aa[@]+"${aa[@]}"}"

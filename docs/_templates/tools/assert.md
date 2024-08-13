@@ -19,7 +19,7 @@
 {assertLessThan}
 {assertLessThanOrEqual}
 
-## Exit code 
+## Exit code
 
 {assertExitCode}
 {assertNotExitCode}

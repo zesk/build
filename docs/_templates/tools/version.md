@@ -7,3 +7,4 @@
 {releaseNotes}
 {newRelease}
 {nextMinorVersion}
+{isVersion}

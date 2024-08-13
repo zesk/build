@@ -26,7 +26,7 @@ fi
 #
 # Example:     885acc3
 #
-hookApplicationChecksum() {
+__hookApplicationChecksum() {
   local here argument
   local usage
 
@@ -52,8 +52,8 @@ hookApplicationChecksum() {
   __usageEnvironment "$usage" gitEnsureSafeDirectory "$here" || return $?
   __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
-_hookApplicationChecksum() {
+___hookApplicationChecksum() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-hookApplicationChecksum "$@"
+__hookApplicationChecksum "$@"

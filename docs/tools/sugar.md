@@ -18,12 +18,78 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
-{__usage}
-{__usageEnvironment}
-{__usageArgument}
-{__failEnvironment}
-{__failArgument}
+### `__usage` - Run `command`, handle failure with `usage` with `code` and `command`
+
+Run `command`, handle failure with `usage` with `code` and `command` as error
+
+- Location: `bin/build/tools/sugar.sh`
+
+#### Arguments
+
+- `code` - Required. Integer. Exit code to return
+- `usage` - Required. String. Failure command, passed remaining arguments and error code.
+- `command` - Required. String. Command to run.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Deprecated Logging
 
-{_deprecated}
+### `_deprecated` - Logs all deprecated functions to application root in a file
+
+Logs all deprecated functions to application root in a file called `.deprecated`
+
+- Location: `bin/build/tools/sugar.sh`
+
+#### Arguments
+
+- `function` - Required. String. Function which is deprecated.
+
+#### Examples
+
+    _deprecated "${FUNCNAME[0]}"
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

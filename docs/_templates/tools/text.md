@@ -25,9 +25,13 @@
 
 {listTokens}
 
+{isMappable}
 {mapValue}
 {mapValueTrim}
 {mapEnvironment}
+
+{printfOutputPrefix}
+{printfOutputSuffix}
 
 ### Space trimming
 
@@ -39,6 +43,7 @@
 
 ## Finding or Calculating
 
+{hasPattern} 
 {inArray}
 {isSubstring}
 {isSubstringInsensitive}

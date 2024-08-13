@@ -6,7 +6,6 @@ Typically used to output text to the console using pretty colors and ANSI art.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-
 #### Usage
 
     repeat count string [ ... ]
@@ -14,7 +13,9 @@ Typically used to output text to the console using pretty colors and ANSI art.
 
 #### Arguments
 
-
+- `count` - Required, integer count of times to repeat
+- `string` - A sequence of characters to repeat
+- `...` - Additional arguments are output using shell expansion of `$*`
 
 #### Examples
 
@@ -24,8 +25,9 @@ Typically used to output text to the console using pretty colors and ANSI art.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `echoBar` - Output a bar as wide as the console using the
 
 Output a bar as wide as the console using the `=` symbol.
@@ -37,7 +39,8 @@ Output a bar as wide as the console using the `=` symbol.
 
 #### Arguments
 
-
+- `alternateChar` - Use an alternate character or string output
+- `offset` - an integer offset to increase or decrease the size of the bar (default is `0`)
 
 #### Examples
 
@@ -47,12 +50,13 @@ Output a bar as wide as the console using the `=` symbol.
 
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
 Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
-
 ### `wrapLines` - Prefix output lines with a string
 
 Wrap lines with a string, useful to format output or add color codes to
@@ -65,7 +69,8 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Arguments
 
-
+- `prefix` - Prefix each line with this text
+- `suffix` - Prefix each line with this text
 
 #### Examples
 
@@ -75,7 +80,6 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #### Exit codes
 
 - 0
-
 ### `alignRight` - align text right
 
 Format text and align it right using spaces.
@@ -87,7 +91,8 @@ Format text and align it right using spaces.
 
 #### Arguments
 
-
+- `characterWidth` - Characters to align right
+- `text ...` - Text to align right
 
 #### Examples
 
@@ -98,8 +103,9 @@ Format text and align it right using spaces.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `alignLeft` - align text left
 
 Format text and align it left using spaces.
@@ -111,7 +117,8 @@ Format text and align it left using spaces.
 
 #### Arguments
 
-
+- `characterWidth` - Characters to align left
+- `text ...` - Text to align left
 
 #### Examples
 
@@ -122,8 +129,9 @@ Format text and align it left using spaces.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `boxedHeading` - Text heading decoration
 
 Heading for section output
@@ -135,7 +143,8 @@ Heading for section output
 
 #### Arguments
 
-
+- `--size size` - Optional. Integer. Number of liens to output. Defaults to 1.
+- `text ...` - Text to put in the box
 
 #### Examples
 
@@ -152,8 +161,9 @@ Heading for section output
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `bigText` - smblock (regular)
 
 smblock (regular)
@@ -179,33 +189,46 @@ smmono12 (--bigger)
     bigText [ --bigger ] Text to output
     
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `labeledBigText` - Outputs a label before a bigText for output.
 
 Outputs a label before a bigText for output.
 
 This function will strip any ANSI from the label to calculate correct string sizes.
 
-#### Usage
-
-    labeledBigText [ --top | --bottom ] [ --prefix prefix ] label Text ...
-    
-
 #### Arguments
 
-
+- `--top` - Optional. Flag. Place label at the top.
+- `--bottom` - Optional. Flag. Place label at the bottom.
+- `--prefix prefixText` - Optional. String. Optional prefix on each line.
+- `--tween tweenText` - Optional. String. Optional between text after label and before `bigText` on each line (allows coloring or other decorations).
+- `--suffix suffixText` - Optional. String. Optional suffix on each line.
+- `label` - Required. String. Label to place on the left of big text.
+- `text` - Required. String. Text for `bigText`.
 
 #### Exit codes
 
-- `0` - Always succeeds
-
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `lineFill` - Output a line and fill columns with a character
 
 Output a line and fill columns with a character
 
+#### Arguments
+
+- No arguments.
+
 #### Exit codes
 
-- `0` - Always succeeds
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

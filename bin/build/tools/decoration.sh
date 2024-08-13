@@ -7,9 +7,6 @@
 # Docs: o ./docs/_templates/tools/decoration.md
 # Test: o ./test/tools/decoration-tests.sh
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Usage: bigText [ --bigger ] Text to output
 #
@@ -58,16 +55,16 @@ bigText() {
 #
 # This function will strip any ANSI from the label to calculate correct string sizes.
 #
-# Exaxmple:     > bin/build/tools.sh labeledBigText --top "Neat: " Done
-# Exaxmple:     Neat: ▛▀▖
-# Exaxmple:           ▌ ▌▞▀▖▛▀▖▞▀▖
-# Exaxmple:           ▌ ▌▌ ▌▌ ▌▛▀
-# Exaxmple:           ▀▀ ▝▀ ▘ ▘▝▀▘
-# Exaxmple:     > bin/build/tools.sh labeledBigText --bottom "Neat: " Done
-# Exaxmple:           ▛▀▖
-# Exaxmple:           ▌ ▌▞▀▖▛▀▖▞▀▖
-# Exaxmple:           ▌ ▌▌ ▌▌ ▌▛▀
-# Exaxmple:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
+# Example:     > bin/build/tools.sh labeledBigText --top "Neat: " Done
+# Example:     Neat: ▛▀▖
+# Example:           ▌ ▌▞▀▖▛▀▖▞▀▖
+# Example:           ▌ ▌▌ ▌▌ ▌▛▀
+# Example:           ▀▀ ▝▀ ▘ ▘▝▀▘
+# Example:     > bin/build/tools.sh labeledBigText --bottom "Neat: " Done
+# Example:           ▛▀▖
+# Example:           ▌ ▌▞▀▖▛▀▖▞▀▖
+# Example:           ▌ ▌▌ ▌▌ ▌▛▀
+# Example:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
 labeledBigText() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
@@ -253,7 +250,7 @@ _lineFill() {
 #
 wrapLines() {
   local usage="_${FUNCNAME[0]}"
-  local argument fill prefix suffix width actualWidth actualIxes cleanLine pad line
+  local argument fill prefix suffix width actualWidth strippedText cleanLine pad line
 
   prefix=$'\1'
   suffix=$'\1'
@@ -294,10 +291,10 @@ wrapLines() {
     width=$(consoleColumns) || __failEnvironment "$usage" "consoleColumns" || return $?
   fi
   if [ -n "$width" ]; then
-    actualIxes="$(printf "%s" "$prefix$suffix" | stripAnsi)"
-    actualWidth=$((width - ${#actualIxes}))
+    strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
+    actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
-      __failArgument "$usage" "$width is too small to support prefix and suffix characters (${#actualIxes})"
+      __failArgument "$usage" "$width is too small to support prefix and suffix characters (${#strippedText})"
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing
@@ -375,31 +372,30 @@ alignLeft() {
 # Output: +================================================================================================+
 #
 boxedHeading() {
-  local arg bar spaces text=() textString emptyBar nLines shrink
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local bar spaces text=() textString emptyBar nLines shrink width
 
   nLines=1
   shrink=0
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    arg="$1"
-    if [ -z "$arg" ]; then
-      _boxedHeading "$errorArgument" "blank argument" || return $?
-    fi
-    case "$arg" in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
         ;;
       --shrink)
-        shift || _boxedHeading "$errorArgument" "Missing $arg" || return $?
-        shrink=$(usageArgumentUnsignedInteger "_${FUNCNAME[0]}" "shrink" "$1") || return $?
+        shift
+        shrink=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
         ;;
       --size)
         shift
-        nLines="$1"
-        if ! isUnsignedNumber "$nLines"; then
-          _boxedHeading "$errorArgument" "--size requires an unsigned integer" || return $?
-        fi
+        nLines=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
         text+=("$1")
@@ -415,10 +411,17 @@ boxedHeading() {
   # convert to string
   textString="${text[*]}"
 
-  spaces=$((${#bar} - ${#textString} - 4))
+  width=${#bar}
+  spaces=$((width - ${#textString} - 4))
+  if [ "$spaces" -gt 0 ]; then
+    spaces="$(repeat "$spaces" " ")"
+  else
+    textString="${textString:0:$((width - 4))}"
+    spaces=""
+  fi
   consoleDecoration "$bar"
   runCount "$nLines" consoleDecoration "$emptyBar"
-  printf "%s%s%s%s\n" "$(consoleDecoration "| ")" "$(consoleDecoration "$textString")" "$(consoleDecoration "$(repeat $spaces " ")")" "$(consoleDecoration " |")"
+  printf "%s%s%s\n" "$(consoleDecoration "| ")" "$(consoleDecoration "$textString")" "$(consoleDecoration "$spaces |")"
   runCount "$nLines" consoleDecoration "$emptyBar"
   consoleDecoration "$bar"
 }

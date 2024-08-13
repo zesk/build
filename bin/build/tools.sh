@@ -30,20 +30,16 @@ _integer() {
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
-# END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 # Load tools and optionally run a command
 __toolsMain() {
-  local source="${BASH_SOURCE[0]}"
+  local source="${BASH_SOURCE[0]}" internalError=253
   local toolsPath="${source%/*}/tools"
-  local internalError=253
-  local toolsFiles
-  local toolFile
-  local toolsList
+  local toolsFiles=("../env/BUILD_HOME") toolsList="$toolsPath/tools.conf" toolFile
+
   export BUILD_HOME
 
-  toolsFiles=("../env/BUILD_HOME")
-  toolsList="$toolsPath/tools.conf"
   [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
 
