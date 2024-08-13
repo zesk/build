@@ -89,7 +89,7 @@ buildFailed() {
   printf -- "\n%s\n%s\n%s\n\n" \
     "$(printf -- "\n%s\n\n" "$(bigText "Failed" | wrapLines "" "    ")" | wrapLines --fill "*" "$(consoleError)" "$(consoleReset)")" \
     "$failBar" \
-    "$(dumpPipe "$(basename "$quietLog")" "$@" --lines "$showLines" <"$quietLog")"
+    "$(dumpPipe --tail "$(basename "$quietLog")" "$@" --lines "$showLines" <"$quietLog")"
   _environment "Build failed:" "$@" || return $?
 }
 
