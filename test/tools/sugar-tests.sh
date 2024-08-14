@@ -6,17 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-declare -a tests
-
-tests+=(testExitCodeCase)
-tests+=(testArgEnvStuff)
-tests+=(testChoose)
-tests+=(testBoolean)
-tests+=(testFormat)
-tests+=(testMoreSugar)
-tests+=(testExitCode)
-tests+=(testSugar)
-tests+=(testMuzzle)
 
 _wasRun() {
   local exitCode

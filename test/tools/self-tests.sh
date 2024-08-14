@@ -7,12 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
-
-tests+=(testBuildFunctions)
-tests+=(testInstallInstallBuildSelf)
-tests+=(testInstallBinBuild)
-
 testBuildFunctions() {
   local fun
 

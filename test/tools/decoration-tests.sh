@@ -7,7 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
 
 testRepeat() {
   assertEquals "$(repeat 10 "x")" "xxxxxxxxxx" || return $?
@@ -45,13 +44,6 @@ testLabeledBigText() {
   assertOutputContains "foo" labeledBigText --top foo bar || return $?
   assertOutputContains "foo" labeledBigText --bottom foo bar || return $?
 }
-
-tests+=(testRepeat)
-tests+=(testAlignRight)
-tests+=(testAlignLeft)
-tests+=(testRepeat2)
-tests+=(testLabeledBigText)
-tests+=(testBoxedHeading)
 
 testBoxedHeading() {
   local header="A really long string which should likely be longer than any console or testing window that would likely be available at any point in the near or potential future which may have longer text widths perhaps even more than a few hundred. Waldo"

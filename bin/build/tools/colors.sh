@@ -456,6 +456,24 @@ consoleColumns() {
 }
 
 #
+# Row count in current console
+#
+# Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
+# Usage: consoleColumns
+# Environment: Uses the `tput lines` tool to find the value if `TERM` is non-blank.
+# Example:     tail -n $(consoleRows) "$file"
+# Environment: COLUMNS - May be defined after calling this
+# Environment: LINES - May be defined after calling this
+# Side Effect: MAY define two environment variables
+consoleRows() {
+  if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
+    printf %d 60
+  else
+    tput lines
+  fi
+}
+
+#
 # Converts backticks, bold and italic to console colors.
 #
 # Usage: simpleMarkdownToConsole < $markdownFile

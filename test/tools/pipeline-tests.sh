@@ -7,7 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
 
 _uptoDateTest() {
   local pass=$1
@@ -25,7 +24,6 @@ _uptoDateTest() {
 }
 
 
-tests+=(testIsUpToDate)
 testIsUpToDate() {
   local thisYear thisMonth expirationDays start testDate
 

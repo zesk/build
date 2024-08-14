@@ -101,7 +101,6 @@ bashSanitize() {
       __failEnvironment "$usage" findUncaughtAssertions || _undo $? "${undo[@]}" || return $?
     fi
   done
-  set -x
   debugPatterns=()
   while read -r debugPatternFile; do
     while read -r debugPattern; do

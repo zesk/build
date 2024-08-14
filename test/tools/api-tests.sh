@@ -7,9 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
-
-tests+=(testAPITools)
 testAPITools() {
   assertEquals "$(plural 0 singular plural)" "plural" || return $?
   assertEquals "$(plural 1 singular plural)" "singular" || return $?
@@ -27,7 +24,6 @@ testAPITools() {
   consoleSuccess testTools OK
 }
 
-tests+=(testHooks)
 testHooks() {
   local h
   for h in deploy-cleanup deploy-confirm application-environment version-created version-live; do
@@ -39,7 +35,6 @@ testHooks() {
   consoleSuccess testHooks OK
 }
 
-tests+=(testEnvironmentVariables)
 testEnvironmentVariables() {
   assertOutputContains PWD environmentVariables || return $?
   assertOutputContains SHLVL environmentVariables || return $?
@@ -50,27 +45,31 @@ testEnvironmentVariables() {
   consoleSuccess testEnvironmentVariables OK || return $?
 }
 
-tests+=(testDates)
 testDates() {
-  local t y
-  assertEquals "$(timestampToDate 1697666075 %F)" "2023-10-18" || return $?
-  assertEquals "$(todayDate)" "$(date +%F)" || return $?
-  if ! t="$(todayDate)"; then
-    _environment todayDate failed || return $?
-  fi
-  if ! y="$(yesterdayDate)"; then
-    _environment yesterdayDate failed || return $?
-  fi
+  local t y ty tm td yy ym yd
+  assertEquals --line "$LINENO" "$(timestampToDate 1697666075 %F)" "2023-10-18" || return $?
+  assertEquals --line "$LINENO" "$(todayDate)" "$(date +%F)" || return $?
+
+  t="$(todayDate)" || _environment todayDate failed || return $?
+  y="$(yesterdayDate)" || _environment yesterdayDate failed || return $?
+
   assertEquals "${#t}" "${#y}" || return $?
 
-  if [[ "$y" < "$t" ]]; then
-    consoleSuccess testDates OK
-  else
-    _environment "$y \< $t" failed || return $?
+  IFS="-" read -r ty tm td <<<"$t"
+  IFS="-" read -r yy ym yd <<<"$y"
+
+  # today 2024-01-01
+  # yesterday 2023-12-31
+  # Shell is AOK with `[ "02" -ge "01" ]` as integers
+  assertGreaterThanOrEqual --line "$LINENO" "$ty" "$yy" || return $?
+  if [ "$td" != 1 ]; then
+    if [ "$tm" != 1 ]; then
+      assertGreaterThanOrEqual --line "$LINENO" "$tm" "$ym" || return $?
+    fi
+    assertGreaterThanOrEqual --line "$LINENO" "$td" "$yd" || return $?
   fi
 }
 
-tests+=(testMapPrefixSuffix)
 testMapPrefixSuffix() {
   local itemIndex=1
   assertEquals "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world bin/build/map.sh --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?

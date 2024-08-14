@@ -7,11 +7,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Test: o bin/build/tools/type.sh
-export tests
 
-declare -a tests
-
-tests+=(testBinaryTypes)
 testBinaryTypes() {
   assertExitCode 0 isExecutable ./bin/build/map.sh || return $?
   assertExitCode 0 isExecutable ./bin/build/tools.sh || return $?
@@ -123,13 +119,11 @@ EOF
 
 }
 
-tests+=(testNotExecutable)
 testNotExecutable() {
   sampleNotExecutable | validateMissingItems || return $?
   sampleNotExecutable | validateNotExecutable || return $?
 }
 
-tests+=(testExecutableCallable)
 testExecutableCallable() {
   callableExecutables | validateExecutable || return $?
   callableExecutables | validateCallable || return $?
@@ -284,7 +278,6 @@ validateNotSignedNumber() {
   done
 }
 
-tests+=(testSignedIntegerSamples)
 testSignedIntegerSamples() {
   #
   # signed Integer
@@ -298,7 +291,6 @@ testSignedIntegerSamples() {
   signedIntegerSamples | validateNotUnsignedNumber || return $?
 }
 
-tests+=(testUnsignedIntegerSamples)
 testUnsignedIntegerSamples() {
 
   #
@@ -318,7 +310,6 @@ testUnsignedIntegerSamples() {
   unsignedIntegerSamples | validateSignedNumber || return $?
 }
 
-tests+=(testSignedNumberSamples)
 testSignedNumberSamples() {
 
   #
@@ -335,7 +326,6 @@ testSignedNumberSamples() {
   signedNumberSamples | validateNotUnsignedInteger || return $?
 }
 
-tests+=(testUnsignedNumberSamples)
 testUnsignedNumberSamples() {
 
   # Number are neither signed nor unsigned
@@ -350,7 +340,6 @@ testUnsignedNumberSamples() {
   unsignedNumberSamples | validateNotUnsignedInteger || return $?
 }
 
-tests+=(testBadNumericSamples)
 testBadNumericSamples() {
   #
   # Nothing is good

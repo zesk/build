@@ -8,9 +8,6 @@
 #
 errorEnvironment=1
 
-declare -a tests
-tests+=(testDeployApplication)
-
 _testDeployApplicationSetup() {
   local home="$1" ts
   if ! d=$(mktemp -d); then

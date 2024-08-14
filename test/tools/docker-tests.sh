@@ -6,12 +6,8 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
 
 errorEnvironment=1
-
-declare -a tests
-tests+=(testCheckDockerEnvFile)
 
 testCheckDockerEnvFile() {
   local out
@@ -32,7 +28,6 @@ testCheckDockerEnvFile() {
   rm "$out"
 }
 
-tests+=(testDockerEnvToBash)
 testDockerEnvToBash() {
   local out err
 
@@ -57,7 +52,6 @@ testDockerEnvToBash() {
 }
 
 # Same as above but this is a pipe
-tests+=(testDockerEnvToBashPipe)
 testDockerEnvToBashPipe() {
   local out err
 
@@ -83,7 +77,6 @@ testDockerEnvToBashPipe() {
   rm -f "$out" "$err" || :
 }
 
-tests+=(testDockerEnvFromBash)
 testDockerEnvFromBash() {
   local out err
 

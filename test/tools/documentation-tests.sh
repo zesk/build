@@ -6,10 +6,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
 
-declare -a tests
-tests+=(testDocumentation)
 testDocumentation() {
   local testOutput
   local summary description
@@ -43,7 +40,6 @@ testDocumentation() {
   ) || _environment "subshell failed" || return $?
 }
 
-tests+=(testDocSections)
 testDocSections() {
   local doc home
 

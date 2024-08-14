@@ -8,10 +8,6 @@
 #
 # errorEnvironment=1
 
-declare -a tests
-
-tests+=(testSysvInitScript)
-
 testSysvInitScript() {
   sysvInitScriptUninstall install-bin-build.sh || :
 

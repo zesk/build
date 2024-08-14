@@ -4,11 +4,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-
-tests+=(testLogFileRotate)
 testLogFileRotate() {
   local tempDir
   local count=5 n
@@ -122,7 +117,6 @@ testLogFileRotate() {
   bigText "$name OK"
 }
 
-tests+=(testLogFileRotate1)
 testLogFileRotate1() {
   local tempDir count=1 i n
 

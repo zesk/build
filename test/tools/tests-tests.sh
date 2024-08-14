@@ -6,9 +6,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-declare -a tests
 
-tests+=(testWrapperShellScripts)
 testWrapperShellScripts() {
   local quietLog
   local findArgs=(! -path '*/vendor/*' ! -path "*/.*")

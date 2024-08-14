@@ -7,18 +7,13 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
-declare -a tests
 
 _hookTestFailed() {
   printf "%s\n" "Listing $1/bin/hooks"
   ls -la "$1/bin/hooks"
-  return $errorEnvironment
+  return 1
 }
 
-tests+=(testHookSystem)
 testHookSystem() {
   local testDir here randomApp randomDefault path
   local hook exitCode f

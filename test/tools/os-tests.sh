@@ -4,16 +4,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-
-tests+=(testExtensionLists)
-tests+=(testNewestAndOldest)
-tests+=(testMemoryRelated)
-tests+=(testRunCount)
-tests+=(testServiceToPortStandard)
-tests+=(testServiceToPort)
 
 testNewestAndOldest() {
   local waitSeconds=1 place aTime bTime cTime

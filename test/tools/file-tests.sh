@@ -4,12 +4,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-
-tests+=(testBasicFileStuff)
-tests+=(testBetterType)
 
 testBasicFileStuff() {
   local testDir

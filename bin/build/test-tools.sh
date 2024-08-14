@@ -363,17 +363,24 @@ __testLoad() {
     # shellcheck source=/dev/null
     source "$1" 1>&2 || __failEnvironment source "./test/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
     set +a
-
+    if [ "${#tests[@]}" -gt 0 ]; then
+      for __test in "${tests[@]}"; do
+        [ "$__test" = "${__test#"test"}" ] || consoleError "$1 - no longer need tests+=(\"$__test\")" 1>&2
+      done
+      __tests+=("${tests[@]}")
+    fi
     declare -pF | removeFields 2 | grep -e '^test' | diff "$__beforeFunctions" - | grep -e '^[<>]' | cut -c 3- >"$__testFunctions" || :
-    [ "${#tests[@]}" -gt 0 ] || break
-    __tests+=("${tests[@]}")
     while read -r __test; do
-      inArray "$__test" "${tests[@]}" || consoleError "$(clearLine)Test defined but not run: $(consoleCode "$__test")" 1>&2
+      ! inArray "$__test" "${__tests[@]+"${__tests[@]}"}" || {
+        clearLine
+        consoleError "$1 - Duplicated: $(consoleCode "$__test")"
+      } 1>&2
       __tests+=("$__test")
     done <"$__testFunctions"
     shift
   done
   rm -rf "$__beforeFunctions" "$__testFunctions" || :
+  [ "${#__tests[@]}" -gt 0 ] || return 0
   printf "%s\n" "${__tests[@]}"
 }
 ___testLoad() {

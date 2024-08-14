@@ -4,11 +4,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-
-tests+=(testPHPBuild)
 
 #
 # Usage: {fn} [ --show ] [ --verbose ] [ --keep ]

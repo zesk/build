@@ -6,11 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-declare -a tests
-
-tests+=(testDeployRemoteFinish)
-tests+=(testDeployToRemote)
-tests+=(testDeployBuildEnvironment)
 
 __prepareSampleApplicationDeployment() {
   local target="$1"
