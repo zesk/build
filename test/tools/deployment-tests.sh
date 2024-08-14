@@ -66,11 +66,7 @@ testDeployRemoteFinish() {
     "--id" "$id"
     "--application" "$tempDirectory/app"
   )
-  #  consoleInfo deployRemoteFinish "${finishArgs[@]}"
-  #  consoleMagenta "$(echoBar)"
-  #  deployRemoteFinish "${finishArgs[@]}"
-  #  consoleError "Exit code: $?"
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "${finishArgs[@]}" || return $?
+  assertExitCode --line "$LINENO" --dump "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "${finishArgs[@]}" || return $?
 
   __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id"
   __environment mkdir -p "$tempDirectory/app" || return $?

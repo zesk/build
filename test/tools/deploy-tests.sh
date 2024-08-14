@@ -412,7 +412,6 @@ testDeployApplication() {
   unset BUILD_DEBUG
 }
 
-tests=(testDeployPackageName "${tests[@]}")
 testDeployPackageName() {
   local saveTarget
 

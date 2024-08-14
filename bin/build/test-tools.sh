@@ -349,9 +349,11 @@ __testDebugTermDisplay() {
 __testLoad() {
   local usage="_${FUNCNAME[0]}"
   local tests __testDirectory resultCode stickyCode resultReason
-  local __test __tests tests
+  local __test __tests tests __errors
 
   __beforeFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
+  __testFunctions="$__beforeFunctions.after"
+  __errors="$__beforeFunctions.error"
   __testFunctions="$__beforeFunctions.after"
   __tests=()
   while [ "$#" -gt 0 ]; do
@@ -361,7 +363,8 @@ __testLoad() {
     tests=()
     set -a
     # shellcheck source=/dev/null
-    source "$1" 1>&2 || __failEnvironment source "./test/tools/$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    source "$1" >"$__errors" 2>&1 || __failEnvironment source "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    isEmptyFile "$__errors" || __failEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then
       for __test in "${tests[@]}"; do
@@ -387,6 +390,10 @@ ___testLoad() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__testRunShellInitialize() {
+  shopt -s shift_verbose failglob
+}
+
 #
 # Load one or more test files and run the tests defined within
 #
@@ -402,6 +409,8 @@ __testRun() {
 
   export testTracing
   export resultReason
+
+  __testRunShellInitialize
 
   errorTest=$(_code test)
   stickyCode=0
@@ -494,6 +503,7 @@ __testFailed() {
 __testCleanup() {
   local home
   home=$(__environment buildHome) || return $?
+  shopt -u failglob
   __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" "$(buildCacheDirectory)" || return $?
 }
 

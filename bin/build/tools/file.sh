@@ -468,9 +468,9 @@ fileMatches() {
   [ $# -gt 0 ] || __usageArgument "$usage" "no exceptions or files" || return $?
   while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
   [ $# -gt 0 ] || __usageArgument "$usage" "no files" || return $?
-#  _list patterns "${patterns[@]}"
-#  _list exceptions "${exceptions[@]}"
-#  _list files "$@"
+  #  _list patterns "${patterns[@]}"
+  #  _list exceptions "${exceptions[@]}"
+  #  _list files "$@"
   for pattern in "${patterns[@]}"; do
     if [ "$1" = "-" ]; then
       fileGenerator=(cat)
@@ -491,4 +491,11 @@ fileMatches() {
 _fileMatches() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+isEmptyFile() {
+  while [ $# -gt 0 ]; do
+    [ ! -s "$1" ] || return 1
+    shift
+  done
 }
