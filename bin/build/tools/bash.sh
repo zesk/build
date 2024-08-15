@@ -135,12 +135,15 @@ _bashSanitizeCheckCopyright() {
 
   year="$(date +%Y)"
   statusMessage consoleWarning "Checking $year and $BUILD_COMPANY ..." || :
+  set -v
   if fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- - >"$matches"; then
+    set +v
     while IFS=":" read -r file pattern; do
       error="$(consoleError "No pattern found")" pattern="$(consoleValue "$pattern")" file="$(consoleCode "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
     __failEnvironment "$usage" found debugging || _clean $? "$matches" || return $?
   fi
+  set +v
 }
 
 _bashSanitizeCheckDebugging() {
