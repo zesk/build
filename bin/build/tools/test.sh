@@ -451,7 +451,7 @@ _validateShellScript() {
 #
 # Usage: {fn} file0 [ file1 ... ] -- text0 [ text1 ... ]
 # Example:     {fn} foo.sh my.sh -- "Copyright 2024" "Company, LLC"
-# Argument: `file0` - Required - a item to look for matches in
+# Argument: `file0` - Required - a item to look for matches in. Use `-` to read file list from `stdin`.
 # Argument: `--` - Required. Separates files from text
 # Argument: `text0` - Required. Text which must exist in each item
 # Side-effect: Errors written to stderr, status written to stdout
@@ -462,7 +462,7 @@ _validateShellScript() {
 #
 validateFileContents() {
   local this usage argument
-  local fileArgs total item
+  local fileArgs total item fileGenerator
 
   local textMatches text binary
   local failedReasons failedFiles
@@ -483,6 +483,9 @@ validateFileContents() {
         shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
         binary="$1"
         isCallable "$binary" || __failArgument "$usage" "--exec $binary Not callable" || return $?
+        ;;
+      -)
+        fileArgs=()
         ;;
       *)
         usageArgumentFile "$usage" "file${#fileArgs[@]}" "$1" >/dev/null || return $?
@@ -508,7 +511,6 @@ validateFileContents() {
     shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
-  [ "${#fileArgs[@]}" -gt 0 ] || __failArgument "$usage" "No file arguments" || return $?
   [ "${#textMatches[@]}" -gt 0 ] || __failArgument "$usage" "No text match arguments" || return $?
 
   failedReasons=()
@@ -519,7 +521,12 @@ validateFileContents() {
   statusMessage consoleInfo "Searching $total $(plural "$total" item files) for text: $(printf " $(consoleReset)\"$(consoleCode "%s")\"" "${textMatches[@]}")"
 
   total=0
-  for item in "${fileArgs[@]}"; do
+  if [ "${#fileArgs[@]}" -gt 0 ]; then
+    fileGenerator=("printf" "%s\n" "${fileArgs[@]}")
+  else
+    fileGenerator=("cat")
+  fi
+  while read -r item; do
     total=$((total + 1))
     for text in "${textMatches[@]}"; do
       if ! grep -q "$text" "$item"; then
@@ -530,7 +537,7 @@ validateFileContents() {
         statusMessage consoleSuccess "Searching $item ... found"
       fi
     done
-  done
+  done < <("${fileGenerator[@]}")
   statusMessage consoleInfo "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
@@ -694,7 +701,7 @@ findUncaughtAssertions() {
   suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
     find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '_(argument|environment|return)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '_(clean|undo|argument|environment|return)' | grep -E -v "$suffixCheck" || :
     find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
   } >"$tempFile"
 

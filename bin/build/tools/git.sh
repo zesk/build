@@ -416,15 +416,18 @@ _gitFindHome() {
 # Example: ... are all equivalent.
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
-  local updateReleaseNotes appendLast argument start notes comment home
+  local argument nArguments argumentIndex saved
+  local updateReleaseNotes appendLast argument start notes comment home codeHome
 
   appendLast=false
   updateReleaseNotes=true
   comment=
   home=
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -456,7 +459,13 @@ gitCommit() {
 
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
+    codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+    if [ "$codeHome" != "$home" ]; then
+      statusMessage consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
+      [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
+      exec "$home/bin/build/tools.sh" gitCommit "${saved[@]+"${saved[@]}"}"
+    fi
   fi
   __usageEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?

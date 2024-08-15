@@ -46,3 +46,162 @@ testBetterType() {
 
   rm -rf "$d" || return $?
 }
+
+_invertMatches() {
+  local output
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --stdout-match)
+        output="--stdout-no-match"
+        ;;
+      --stdout-no-match)
+        output="--stdout-match"
+        ;;
+      *)
+        output="$1"
+        ;;
+    esac
+    printf "%s\n" "$output"
+    shift
+  done
+}
+
+testFileMatches() {
+  local home matchFiles match matches invertedMatches ex pattern neverMatches
+
+  ex=()
+  matchFiles=$(__environment mktemp) || return $?
+  home=$(__environment buildHome) || return $?
+
+  __environment find "$home/test/matches" -type f >"$matchFiles" || return $?
+
+  dumpPipe "match file list" <"$matchFiles"
+  # zulu simple
+  pattern="zulu"
+  ex=()
+  matches=(
+    --stdout-match "/a.txt"
+    --stdout-match "/aa.txt"
+    --stdout-match "/bb.txt"
+    --stdout-no-match "/b.txt"
+    --stdout-no-match "/ab.txt"
+    --stdout-no-match "/ba.txt"
+  )
+  invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  # zulu exceptions
+  pattern="zulu"
+  ex=(b.txt)
+  matches=(
+    --stdout-match "/a.txt"
+    --stdout-match "/aa.txt"
+    --stdout-no-match "/ba.txt"
+  )
+  invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
+  # exception never matches i
+  neverMatches=(--stdout-no-match "/bb.txt" --stdout-no-match "/b.txt" --stdout-no-match "/ab.txt")
+  matches+=("${neverMatches[@]}")
+  invertedMatches+=("${neverMatches[@]}")
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  # zulu beginning of line
+  pattern="^zulu"
+  ex=()
+  matches=(
+    --stdout-match "/a.txt"
+    --stdout-no-match "/aa.txt"
+    --stdout-match "/bb.txt"
+    --stdout-no-match "/b.txt"
+    --stdout-no-match "/ab.txt"
+    --stdout-no-match "/ba.txt"
+  )
+  invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  # zulu EOL
+  pattern="zulu$"
+  ex=()
+  matches=(
+    --stdout-match "/a.txt"
+    --stdout-match "/aa.txt"
+    --stdout-no-match "/bb.txt"
+    --stdout-no-match "/b.txt"
+    --stdout-no-match "/ab.txt"
+    --stdout-no-match "/ba.txt"
+  )
+  invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  # Devops
+  pattern="Devops"
+  ex=()
+  matches=(
+    --stdout-no-match "/a.txt"
+    --stdout-no-match "/aa.txt"
+    --stdout-no-match "/bb.txt"
+    --stdout-match "/b.txt"
+    --stdout-no-match "/ab.txt"
+    --stdout-match "/ba.txt"
+  )
+  invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  # Fancier RE
+  pattern='set ["]\?-x'
+  ex=()
+  matches=(
+    --stdout-match "/a.txt"
+    --stdout-no-match "/aa.txt"
+    --stdout-match "/bb.txt"
+    --stdout-no-match "/b.txt"
+    --stdout-no-match "/ab.txt"
+    --stdout-match "/ba.txt"
+  )
+  invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  # Exclude everything
+  pattern='.'
+  ex=(txt)
+  matches=(
+    --stdout-no-match "/a.txt"
+    --stdout-no-match "/aa.txt"
+    --stdout-no-match "/bb.txt"
+    --stdout-no-match "/b.txt"
+    --stdout-no-match "/ab.txt"
+    --stdout-no-match "/ba.txt"
+  )
+  invertedMatches=("${matches[@]}")
+
+  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertNotExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  # Include everything (blank files are skipped)
+  pattern='.'
+  ex=()
+  matches=(
+    --stdout-match "/a.txt"
+    --stdout-match "/aa.txt"
+    --stdout-match "/bb.txt"
+    --stdout-match "/b.txt"
+    --stdout-no-match "/ab.txt"
+    --stdout-match "/ba.txt"
+  )
+  invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+}

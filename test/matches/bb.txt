@@ -1,0 +1,5 @@
+zulu Bee
+foxtrot Bee
+kilo Bee
+
+  set -x
