@@ -462,9 +462,10 @@ gitCommit() {
     codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
     if [ "$codeHome" != "$home" ]; then
-      statusMessage consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
+      consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
       [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
-      exec "$home/bin/build/tools.sh" gitCommit "${saved[@]+"${saved[@]}"}"
+      "$home/bin/build/tools.sh" gitCommit "${saved[@]+"${saved[@]}"}"
+      return $?
     fi
   fi
   __usageEnvironment "$usage" cd "$home" || return $?
