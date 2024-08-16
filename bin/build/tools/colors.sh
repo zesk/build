@@ -25,38 +25,105 @@
 #
 consoleReset() {
   if hasColors; then
-    echo -en '\033[0m' # Reset
+    printf "\e[0m"
+  fi
+}
+
+__wrapColor() {
+  # This modifies text containing escape sequences to best make text look correct
+  # So
+  # Quick brown fox jumped *over* the `lazy` dog.
+  # `lazy` is blue, *over* is red
+  #
+  # Tokens are:
+  #  "Quick brown fox jumped " ESCAPE-BLUE-START "over" ESCAPE-END " is red"
+  #
+  # We break on `ESCAPE-END` so starts:
+  # 1. "Quick brown fox jumped " ESCAPE-BLUE-START "over"
+  # 2. " is red"
+  #
+  # We break again on `ESCAPE` and insert our *end* before it
+  #
+  # "Quick brown fox jumped " ESCAPE-BLUE-START "over" ->
+  # 1. "Quick brown fox jumped "
+  # 2. BLUE-START "over"
+  local escape=$'\e' prefix="$1" && shift
+  local suffix="${escape}[0m" text="$*" _magic=$'\7' start starts end ends
+
+  text="${text//"$suffix"/"$_magic"}"
+  IFS="$_magic" read -r -a starts <<<"$text" || :
+  if [ "${#starts[@]}" -gt 0 ]; then
+    for start in "${starts[@]}"; do
+      start="${start//"$escape"/"$_magic"}"
+      IFS="$_magic" read -r -a ends <<<"$start" || :
+      if [ "${#ends[@]}" -gt 0 ]; then
+        for end in "${ends[@]}"; do
+          # ends are divided by "$escape" so must be added back AFTER we stop formatting
+          printf "%s %s %s %s %s" "$prefix" "$escape" "$end" "$suffix" "$escape"
+        done
+        printf "%s" "[0m" # Escape is above
+      else
+        # starts are divided by "$suffix" so must be added back
+        printf "%s%s%s" "$start" "$suffix" "$prefix"
+      fi
+    done
+  else
+    printf "%s%s%s" "$prefix" "$text" "$suffix"
   fi
 }
 
 #
 # Set colors to deal with dark or light-background consoles
-# See:
+# Usage: {fn} [ --dark ] [ --light ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --dark - Optional. Flag. Dark mode for darker backgrounds.
+# Argument: --light - Optional. Flag. Light mode for lighter backgrounds.
+# Environment: BUILD_COLORS_MODE
 #
 consoleColorMode() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+
   export BUILD_COLORS_MODE
 
-  # shellcheck source=/dev/null
-  if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
-    return 1
-  fi
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
 
-  case "$1" in
-    --dark)
-      BUILD_COLORS_MODE=dark
-      ;;
-    --light)
-      BUILD_COLORS_MODE=light
-      ;;
-    *)
-      consoleError "Unknown console mode $1" 1>&2
-      return 1
-      ;;
-  esac
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --dark)
+        BUILD_COLORS_MODE=dark
+        ;;
+      --light)
+        BUILD_COLORS_MODE=light
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+  done
+
+  [ -n "${BUILD_COLORS_MODE-}" ] || __usageEnvironment "$usage" "Empty BUILD_COLORS_MODE" || return $?
+  printf "%s\n" "${BUILD_COLORS_MODE-}"
+}
+_consoleColorMode() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Usage: hasConsoleAnimation
+# Usage: {fn}
 # Exit Code: 0 - Supports console animation
 # Exit Code; 1 - Does not support console animation
 #
