@@ -341,8 +341,8 @@ interactiveManager() {
       didClear=true
       clear
       message="$(consoleCode "$file") failed $(consoleError "$verificationCallable")"
-      if ! $tredRepair && [ -n "$repairFunction" ]; then
-        tredRepair=true
+      if ! $triedRepair && [ -n "$repairFunction" ]; then
+        triedRepair=true
         if ! "$repairFunction" "$file" >"$output"; then
           message="$message ($repairFunction failed)"
         fi
