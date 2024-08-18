@@ -279,10 +279,11 @@ copyFileWouldChange() {
 # Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
 # Argument: fileToCheck ... - Optional. File. Shell file to validate. May also supply file names via stdin.
 # Run checks interactively until errors are all fixed.
+# Not ready for prime time yet - written not tested.
 interactiveManager() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local verificationCallable="" sleepDelay=15 binary="" didClear=false files=() file
+  local argument nArguments argumentIndex saved triedRepair
+  local verificationCallable="" repairFunction="" sleepDelay=15 binary="" didClear=false files=() file
   local rowsAllowed output index nextMessage
 
   didClear=false
@@ -305,6 +306,10 @@ interactiveManager() {
       --delay)
         shift
         sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --repair)
+        shift
+        repairFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
         if [ -z "$verificationCallable" ]; then
@@ -331,10 +336,21 @@ interactiveManager() {
   output=$(__usageEnvironment "$usage" mktemp) || return $?
   index=1
   for file in "${files[@]}"; do
+    triedRepair=false
     while ! "$verificationCallable" "$file" >"$output" 2>&1; do
       didClear=true
       clear
-      boxedHeading --size 1 "$(consoleCode "$file") failed $(consoleError "$verificationCallable")"
+      message="$(consoleCode "$file") failed $(consoleError "$verificationCallable")"
+      if ! $tredRepair && [ -n "$repairFunction" ]; then
+        tredRepair=true
+        if ! "$repairFunction" "$file" >"$output"; then
+          message="$message ($repairFunction failed)"
+        fi
+        if ! "$verificationCallable" "$file" >"$output"; then
+          message="$message (not repaired)"
+        fi
+      fi
+      boxedHeading --size 1 "$message"
       dumpPipe --head --lines "$rowsAllowed" "OUTPUT" <"$output"
       if [ $index -eq "${#files[@]}" ]; then
         nextMessage=$(consoleGreen "(last one)")
