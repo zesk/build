@@ -15,6 +15,8 @@ Returns true if all `characters` are of `className`
     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
     print   punct   space   upper   word    xdigit
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -39,6 +41,8 @@ Returns true if all `characters` are of `className`
 ### `quoteSedPattern` - Quote sed strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
+
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -66,6 +70,8 @@ Quote a string to be used in a sed pattern on the command line.
 ### `quoteBashString` - Quote bash strings for inclusion as single-quoted for eval
 
 Quote bash strings for inclusion as single-quoted for eval
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -99,6 +105,8 @@ Quote bash strings for inclusion as single-quoted for eval
 
 $\Quote grep -e patterns for shell use
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `text` - Text to quote
@@ -121,6 +129,8 @@ $\Quote grep -e patterns for shell use
 ### `escapeQuotes` - Quote strings for inclusion in shell quoted strings
 
 Quote strings for inclusion in shell quoted strings
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -149,6 +159,8 @@ Quote strings for inclusion in shell quoted strings
 
 Quote strings for inclusion in shell quoted strings
 
+- Location: `bin/build/tools/text.sh`
+
 #### Usage
 
     escapeSingleQuotes text
@@ -175,6 +187,8 @@ Quote strings for inclusion in shell quoted strings
 ### `escapeDoubleQuotes` - Quote strings for inclusion in shell quoted strings
 
 Quote strings for inclusion in shell quoted strings
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -203,6 +217,8 @@ Quote strings for inclusion in shell quoted strings
 
 Converts strings to shell escaped strings
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -215,6 +231,8 @@ Converts strings to shell escaped strings
 ### `replaceFirstPattern` - Replaces the first and only the first occurrence of a
 
 Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -234,6 +252,8 @@ Replaces the first and only the first occurrence of a pattern in a line with a r
 
 Remove fields from left to right from a text file as a pipe
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `fieldCount` - Optional. Integer. Number of field to remove. Default is just first `1`.
@@ -247,6 +267,8 @@ Remove fields from left to right from a text file as a pipe
 ### `stripAnsi` - Strip ANSI console escape sequences from a file
 
 Strip ANSI console escape sequences from a file
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -284,6 +306,8 @@ Thanks to [commandlinefu tripleee](https://stackoverflow.com/questions/6534556/h
 
 listTokens
 
+- Location: `bin/build/tools/text.sh`
+
 #### Usage
 
     listTokens prefix suffix < input > output
@@ -318,6 +342,8 @@ None.
 Check if text contains mappable tokens
 If any text passed contains a token which can be mapped, succeed.
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `--prefix` - Optional. String. Token prefix defaults to `{`.
@@ -333,6 +359,8 @@ If any text passed contains a token which can be mapped, succeed.
 ### `mapValue` - Maps a string using an environment file
 
 Maps a string using an environment file
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -357,6 +385,8 @@ Maps a string using an environment file
 ### `mapValueTrim` - Maps a string using an environment file
 
 Maps a string using an environment file
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -388,6 +418,8 @@ Argument-passed or entire environment variables which are exported are used and 
 
 Pipe to output some text before any output, otherwise, nothing is output.
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -400,6 +432,8 @@ Pipe to output some text before any output, otherwise, nothing is output.
 ### `printfOutputSuffix` - Pipe to output some text after any output, otherwise, nothing
 
 Pipe to output some text after any output, otherwise, nothing is output.
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -416,6 +450,8 @@ Pipe to output some text after any output, otherwise, nothing is output.
 ### `trimWords` - Remove words from the end of a phrase
 
 Remove words from the end of a phrase
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -439,6 +475,8 @@ Remove words from the end of a phrase
 ### `trimSpace` - Trim whitespace of a bash argument
 
 Trim spaces and only spaces from arguments or a pipe
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -466,6 +504,8 @@ Thanks to [Chris F.A. Johnson (2008)](https://web.archive.org/web/20121022051228
 
 Removes any blank lines from the beginning of a stream
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -478,6 +518,8 @@ Removes any blank lines from the beginning of a stream
 ### `trimTail` - Removes any blank lines from the end of a stream
 
 Removes any blank lines from the end of a stream
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -492,6 +534,8 @@ Removes any blank lines from the end of a stream
 
 Ensures blank lines are singular
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -504,10 +548,12 @@ Ensures blank lines are singular
 
 ## Finding or Calculating
 
-Unable to find "hasPattern" (using index "/Users/kent/.build") 
+ 
 ### `inArray` - Check if an element exists in an array
 
 Check if an element exists in an array
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -529,14 +575,12 @@ Check if an element exists in an array
 
 - `0` - If element is found in array
 - `1` - If element is NOT found in array
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `isSubstring` - Check if one string is a substring of another set
 
 Check if one string is a substring of another set of strings (case-sensitive)
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `needle` - Required. String. Thing to search for, not blank.
@@ -546,14 +590,12 @@ Check if one string is a substring of another set of strings (case-sensitive)
 
 - `0` - If element is a substring of any haystack
 - `1` - If element is NOT found as a substring of any haystack
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `isSubstringInsensitive` - Check if one string is a substring of another set
 
 Check if one string is a substring of another set of strings (case-insensitive)
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `needle` - Required. String. Thing to search for, not blank.
@@ -563,10 +605,6 @@ Check if one string is a substring of another set of strings (case-insensitive)
 
 - `0` - If element is a substring of any haystack
 - `1` - If element is NOT found as a substring of any haystack
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
 - `haystack` - Required. String. String to search.
@@ -575,14 +613,12 @@ Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Exit codes
 
 - `0` - IFF ANY needle matches as a substring of haystack
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `stringOffset` - Outputs the integer offset of `needle` if found as substring
 
 Outputs the integer offset of `needle` if found as substring in `haystack`
 If `haystack` is not found, -1 is output
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -598,15 +634,13 @@ If `haystack` is not found, -1 is output
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
 
 Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
 
 Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -628,13 +662,11 @@ Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `maximumLineLength` - Outputs the maximum line length passed into stdin
 
 Outputs the maximum line length passed into stdin
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -646,10 +678,6 @@ Outputs the maximum line length passed into stdin
 - `1` - Environment error
 - `2` - Argument error
 
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
-
 ## Language-related
 
 ### `plural` - Outputs the `singular` value to standard out when the value
@@ -658,6 +686,8 @@ Outputs the `singular` value to standard out when the value of `number` is one. 
 
 
 Example:
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -681,13 +711,11 @@ Example:
 
 - `1` - If count is non-numeric
 - `0` - If count is numeric
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `parseBoolean` - Parses text and determines if it's true-ish
 
 Parses text and determines if it's true-ish
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -699,16 +727,14 @@ Parses text and determines if it's true-ish
 - `1` - false
 - `2` - Neither
 
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
-
 ## Transformation
 
 ### `lowercase` - Convert text to lowercase
 
 Convert text to lowercase
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -718,14 +744,12 @@ Convert text to lowercase
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `uppercase` - Convert text to uppercase
 
 Convert text to uppercase
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -735,15 +759,13 @@ Convert text to uppercase
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `shaPipe` - SHA1 checksum of standard input
 
 Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
 
 You can use this as a pipe or pass in arguments which are files to be hashed.
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -778,10 +800,6 @@ DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe ca
 
     shasum
     
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `cachedShaPipe` - SHA1 checksum of standard input
 
 Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -791,6 +809,8 @@ You can use this as a pipe or pass in arguments which are files to be hashed.
 Speeds up shaPipe using modification dates of the files instead.
 
 The `cacheDirectory`
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -821,15 +841,13 @@ The `cacheDirectory`
 
     shasum shaPipe
     
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `cannon` - Replace text `fromText` with `toText` in files, using `findArgs` to
 
 Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
 
 This can break your files so use with caution. Blank searchText is not allowed.
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -859,10 +877,6 @@ This can break your files so use with caution. Blank searchText is not allowed.
 #### See Also
 
 - [Source {fn}]({sourceLink})
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
 - `separator` - Required. String. Single character to join elements.
@@ -873,10 +887,6 @@ Unable to find "hasPattern" (using index "/Users/kent/.build")
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
 - `listValue` - Required. Path value to modify.
@@ -890,13 +900,11 @@ Unable to find "hasPattern" (using index "/Users/kent/.build")
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `listCleanDuplicates` - Removes duplicates from a list and maintains ordering.
 
 Removes duplicates from a list and maintains ordering.
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -909,16 +917,14 @@ Removes duplicates from a list and maintains ordering.
 - `1` - Environment error
 - `2` - Argument error
 
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
-
 # Characters
 
 ### `characterClassReport` - Write a report of the character classes
 
 Write a report of the character classes
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -928,10 +934,6 @@ Write a report of the character classes
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
 - No arguments.
@@ -941,14 +943,12 @@ Unable to find "hasPattern" (using index "/Users/kent/.build")
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `characterFromInteger` - Given a list of integers, output the character codes associated
 
 Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -958,15 +958,13 @@ Given a list of integers, output the character codes associated with them (e.g. 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `characterToInteger` - Convert one or more characters from their ascii representation to
 
 Convert one or more characters from their ascii representation to an integer value.
 Requires a single character to be passed
 
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -976,13 +974,11 @@ Requires a single character to be passed
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 ### `isCharacterClasses` - Does this character match one or more character classes?
 
 Does this character match one or more character classes?
+
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -994,10 +990,6 @@ Does this character match one or more character classes?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")
 #### Arguments
 
 - `text` - Text to validate
@@ -1008,7 +1000,3 @@ Unable to find "hasPattern" (using index "/Users/kent/.build")
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Errors
-
-Unable to find "hasPattern" (using index "/Users/kent/.build")

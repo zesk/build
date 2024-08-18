@@ -4,13 +4,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-
-tests+=(testIsAbsolutePath)
-tests+=(testRequireFileDirectory)
-tests+=(testFileDirectoryExists)
 
 __testIsAbsolutePathData() {
   cat <<EOF

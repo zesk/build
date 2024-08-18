@@ -6,9 +6,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-declare -a tests
 
-tests+=(testSSHAddKnownHosts)
 testSSHAddKnownHosts() {
   local tempHome originalHome
   local output

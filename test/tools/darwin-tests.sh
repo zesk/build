@@ -6,10 +6,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
 
-declare -a tests
-tests+=(testDarwinDialog)
 testDarwinDialog() {
   if whichExists osascript; then
     # Only can test on Darwin, but not sure how to manage dialog interaction if at all

@@ -4,95 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `validateShellScripts` - Check files for the existence of a string
-
-validateShellScripts
-
-Requires shellcheck so should be later in the testing process to have a cleaner build
-This can be run on any directory tree to test scripts in any application.
-
-- Location: `bin/build/tools/test.sh`
-
-#### Usage
-
-    validateShellScripts [ --exec binary ] [ file0 ... ]
-    
-
-#### Arguments
-
-- `--interactive` - Flag. Optional. Interactive mode on fixing errors.
-- `--exec binary` - Run binary with files as an argument for any failed files. Only works if you pass in item names.
-- `--delay` - Optional. Integer. Delay between checks in interactive mode.
-- `findArgs` - Additional find arguments for .sh files (or exclude directories).
-
-#### Examples
-
-    if validateShellScripts; then git commit -m "saving things" -a; fi
-
-#### Sample Output
-
-    This outputs `statusMessage`s to `stdout` and errors to `stderr`.
-    
-
-#### Exit codes
-
-- `0` - All found files pass `shellcheck` and `bash -n`
-- `1` - One or more files did not pass
-
-#### Environment
-
-This operates in the current working directory
-### `validateShellScript` - Requires shellcheck so should be later in the testing process
-
-Requires shellcheck so should be later in the testing process to have a cleaner build
-This can be run on any directory tree to test scripts in any application.
-Shell comments must not be immediately after a function end, e.g. this is invalid:
-
-    myFunc() {
-    }
-    # Hey
-
-- Location: `bin/build/tools/test.sh`
-
-#### Arguments
-
-- `script` - Shell script to validate
-
-#### Examples
-
-    validateShellScript goo.sh
-
-#### Sample Output
-
-    This outputs `statusMessage`s to `stdout` and errors to `stderr`.
-    
-
-#### Exit codes
-
-- `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
-- `1` - One or more files did not pass
-### `validateShellScriptsInteractive` - Run checks interactively until errors are all fixed.
-
-Run checks interactively until errors are all fixed.
-
-- Location: `bin/build/tools/test.sh`
-
-#### Usage
-
-    [ fileToCheck ... ]
-    
-
-#### Arguments
-
-- `--exec binary` - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
-- `--delay delaySeconds` - Optional. Integer. Delay in seconds between checks in interactive mode.
-- `fileToCheck ...` - Optional. File. Shell file to validate.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `validateFileExtensionContents` - Check files for the existence of a string
 
 Search for item extensions and ensure that text is found in each item.
@@ -141,7 +52,7 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 #### Arguments
 
-- `file0 - Required` - a item to look for matches in
+- `file0 - Required` - a item to look for matches in. Use `-` to read file list from `stdin`.
 - `--` - Required. Separates files from text
 - `text0` - Required. Text which must exist in each item
 
@@ -154,6 +65,12 @@ By default, any directory which begins with a dot `.` will be ignored.
 - `0` - All found files contain all text string or strings
 - `1` - One or more files does not contain all text string or strings
 - `2` - Arguments error (missing extension or text)
+### `evalCheck` - Check files to ensure `eval`s in code have been checked
+
+Check files to ensure `eval`s in code have been checked
+
+- Location: `bin/build/tools/security.sh`
+
 #### Arguments
 
 - No arguments.

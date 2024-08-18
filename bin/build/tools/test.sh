@@ -174,13 +174,13 @@ _dumpFile() {
 }
 
 #
-# validateShellScripts
+# bashLintFiles
 #
 # Requires shellcheck so should be later in the testing process to have a cleaner build
 # This can be run on any directory tree to test scripts in any application.
 #
-# Usage: validateShellScripts [ --exec binary ] [ file0 ... ]
-# Example:     if validateShellScripts; then git commit -m "saving things" -a; fi
+# Usage: bashLintFiles [ --exec binary ] [ file0 ... ]
+# Example:     if bashLintFiles; then git commit -m "saving things" -a; fi
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.
 # Argument: --delay - Optional. Integer. Delay between checks in interactive mode.
@@ -192,18 +192,18 @@ _dumpFile() {
 # Exit Code: 0 - All found files pass `shellcheck` and `bash -n`
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
-validateShellScripts() {
-  local this usage argument failedFiles failedReason failedReasons binary interactive sleepDelay
+bashLintFiles() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+
+  local failedFiles failedReason failedReasons binary interactive sleepDelay
   local verbose checkedFiles ii source
 
   verbose=false
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
 
   clearLine || :
-  statusMessage consoleInfo "Checking all shell scripts ..." || :
   failedReasons=()
   failedFiles=()
   checkedFiles=()
@@ -211,10 +211,18 @@ validateShellScripts() {
   sleepDelay=7
   ii=()
   interactive=false
+  saved=("$@")
+  statusMessage consoleInfo "Checking all shell scripts ..."
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --delay)
         shift || __failArgument "$usage" "$argument missing argument" || return $?
         sleepDelay="$1"
@@ -224,7 +232,7 @@ validateShellScripts() {
         ;;
       --exec)
         shift
-        binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+        binary="$(usageArgumentCallable "$usage" "$argument" "${1-}")" || return $?
         ii+=("$argument" "$binary")
         ;;
       --interactive)
@@ -232,18 +240,19 @@ validateShellScripts() {
         ii+=("$argument")
         ;;
       *)
-        checkedFiles+=("$argument")
+        checkedFiles+=("$(usageArgumentFile "$usage" "checkFile" "$argument")") || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift after $argument failed" || return $?
   done
+
   source=none
   if [ ${#checkedFiles[@]} -gt 0 ]; then
     source="argument"
     ! $verbose || consoleInfo "Reading item list from arguments ..."
     for argument in "${checkedFiles[@]}"; do
       [ -n "$argument" ] || continue
-      if ! _validateShellScriptsHelper "$verbose" "$argument" "$source"; then
+      if ! _bashLintFilesHelper "$verbose" "$argument" "$source"; then
         failedFiles+=("$argument")
       fi
     done
@@ -252,7 +261,7 @@ validateShellScripts() {
     ! $verbose || consoleInfo "Reading item list from stdin ..."
     while read -r argument; do
       [ -n "$argument" ] || continue
-      if ! _validateShellScriptsHelper "$verbose" "$argument" "$source"; then
+      if ! _bashLintFilesHelper "$verbose" "$argument" "$source"; then
         failedFiles+=("$argument")
       fi
     done
@@ -264,7 +273,7 @@ validateShellScripts() {
       consoleInfo "# ${#failedFiles[@]} $(plural ${#failedFiles[@]} error errors)"
     } 1>&2
     if $interactive; then
-      validateShellScriptsInteractive "${ii[@]+"${ii[@]}"}" "${failedFiles[@]}"
+      bashLintFilesInteractive "${ii[@]+"${ii[@]}"}" "${failedFiles[@]}"
     elif [ -n "$binary" ]; then
       if [ ${#failedFiles[@]} -gt 0 ]; then
         "$binary" "${failedFiles[@]}"
@@ -275,21 +284,21 @@ validateShellScripts() {
   statusMessage consoleSuccess "All scripts passed validation ($source)"
   printf "\n"
 }
-_validateShellScripts() {
+_bashLintFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Handle check consistently
-_validateShellScriptsHelper() {
+_bashLintFilesHelper() {
   local verbose="$1" file="$2" source="$3" reason vv=()
 
   ! $verbose || vv+=(--verbose)
   statusMessage consoleInfo "👀 Checking \"$file\" ($source) ..." || :
-  if reason=$(validateShellScript "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
-    ! $verbose || consoleSuccess "validateShellScript $file passed"
+  if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
+    ! $verbose || consoleSuccess "bashLint $file passed"
   else
     clearLine
-    ! $verbose || consoleInfo "validateShellScript $file failed: $reason"
+    ! $verbose || consoleInfo "bashLint $file failed: $reason"
     printf "%s: %s\n" "$file" "$reason" 1>&2
     return 1
   fi
@@ -300,7 +309,7 @@ _validateShellScriptsHelper() {
 # Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
 # Argument: fileToCheck ... - Optional. File. Shell file to validate.
 # Run checks interactively until errors are all fixed.
-validateShellScriptsInteractive() {
+bashLintFilesInteractive() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
   local sleepDelay countdown binary
@@ -335,7 +344,7 @@ validateShellScriptsInteractive() {
     "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
 
   while [ "$#" -gt 0 ]; do
-    if _validateShellScriptInteractiveCheck "$usage" "$@"; then
+    if _bashLintInteractiveCheck "$usage" "$@"; then
       shift
     else
       countdown=$sleepDelay
@@ -348,16 +357,16 @@ validateShellScriptsInteractive() {
     fi
   done
 }
-_validateShellScriptsInteractive() {
+_bashLintFilesInteractive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-_validateShellScriptInteractiveCheck() {
+_bashLintInteractiveCheck() {
   local usage="${1-}" script="${2-}" scriptPassed
   if [ -z "$script" ]; then
     return 0
   fi
-  if failedReason=$(validateShellScript --verbose "$1"); then
+  if failedReason=$(bashLint --verbose "$1"); then
     scriptPassed=true
   else
     scriptPassed=false
@@ -370,7 +379,7 @@ _validateShellScriptInteractiveCheck() {
   fi
 
   shift 2
-  bigText "FAIL $(basename "$script")" | wrapLines "$(consoleSubtle validateShellScript)  $(consoleBoldRed)" "$(consoleReset)"
+  bigText "FAIL $(basename "$script")" | wrapLines "$(consoleSubtle bashLint)  $(consoleBoldRed)" "$(consoleReset)"
   printf "%s\n%s\n%s\n" "$(consoleRed "$failedReason")" \
     "$(consoleLabel "Queue")" \
     "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
@@ -390,14 +399,14 @@ _validateShellScriptInteractiveCheck() {
 #     }
 #     # Hey
 #
-# Example:     validateShellScript goo.sh
+# Example:     bashLint goo.sh
 # Argument: script - Shell script to validate
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
 # Exit Code: 0 - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
-validateShellScript() {
+bashLint() {
   local this usage argument found
 
   this=${FUNCNAME[0]}
@@ -429,7 +438,7 @@ validateShellScript() {
     shift || __failArgument "$usage" "shifting $argument failed" || return $?
   done
 }
-_validateShellScript() {
+_bashLint() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -442,7 +451,7 @@ _validateShellScript() {
 #
 # Usage: {fn} file0 [ file1 ... ] -- text0 [ text1 ... ]
 # Example:     {fn} foo.sh my.sh -- "Copyright 2024" "Company, LLC"
-# Argument: `file0` - Required - a item to look for matches in
+# Argument: `file0` - Required - a item to look for matches in. Use `-` to read file list from `stdin`.
 # Argument: `--` - Required. Separates files from text
 # Argument: `text0` - Required. Text which must exist in each item
 # Side-effect: Errors written to stderr, status written to stdout
@@ -453,7 +462,7 @@ _validateShellScript() {
 #
 validateFileContents() {
   local this usage argument
-  local fileArgs total item
+  local fileArgs total item fileGenerator
 
   local textMatches text binary
   local failedReasons failedFiles
@@ -474,6 +483,9 @@ validateFileContents() {
         shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
         binary="$1"
         isCallable "$binary" || __failArgument "$usage" "--exec $binary Not callable" || return $?
+        ;;
+      -)
+        fileArgs=()
         ;;
       *)
         usageArgumentFile "$usage" "file${#fileArgs[@]}" "$1" >/dev/null || return $?
@@ -499,7 +511,6 @@ validateFileContents() {
     shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
   done
 
-  [ "${#fileArgs[@]}" -gt 0 ] || __failArgument "$usage" "No extension arguments" || return $?
   [ "${#textMatches[@]}" -gt 0 ] || __failArgument "$usage" "No text match arguments" || return $?
 
   failedReasons=()
@@ -510,7 +521,12 @@ validateFileContents() {
   statusMessage consoleInfo "Searching $total $(plural "$total" item files) for text: $(printf " $(consoleReset)\"$(consoleCode "%s")\"" "${textMatches[@]}")"
 
   total=0
-  for item in "${fileArgs[@]}"; do
+  if [ "${#fileArgs[@]}" -gt 0 ]; then
+    fileGenerator=("printf" "%s\n" "${fileArgs[@]}")
+  else
+    fileGenerator=("cat")
+  fi
+  while read -r item; do
     total=$((total + 1))
     for text in "${textMatches[@]}"; do
       if ! grep -q "$text" "$item"; then
@@ -521,7 +537,7 @@ validateFileContents() {
         statusMessage consoleSuccess "Searching $item ... found"
       fi
     done
-  done
+  done < <("${fileGenerator[@]}")
   statusMessage consoleInfo "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
@@ -685,7 +701,7 @@ findUncaughtAssertions() {
   suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
     find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '_(argument|environment|return)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '_(clean|undo|argument|environment|return)' | grep -E -v "$suffixCheck" || :
     find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
   } >"$tempFile"
 

@@ -6,11 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-tests+=(testMarkdownFormatList)
-tests+=(testMarkdownRemoveSections)
 
 assertMarkdownFormatList() {
   assertEquals "$1" "$(printf %s "$2" | markdown_FormatList)" "markdown_FormatList \"$2\" !== \"$1\"" || return $?

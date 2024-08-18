@@ -49,7 +49,7 @@ _integer() {
 _format() {
   local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}"
   sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
-  shift && shift && shift && shift
+  exec 2>/dev/null && shift && shift && shift && shift
   printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
 }
 

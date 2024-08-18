@@ -12,6 +12,8 @@ Assert two strings are equal.
 
 If this fails it will output an error and exit.
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Usage
 
     assertEquals expected actual [ message ]
@@ -53,6 +55,8 @@ Assert two strings are not equal.
 
 If this fails it will output an error and exit.
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Usage
 
     assertNotEquals expected actual [ message ]
@@ -93,6 +97,8 @@ File `bin/build/tools/assert.sh`, function `assertNotEquals` was reviewed 2023-1
 
 Assert one string contains another (case-sensitive)
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -117,6 +123,8 @@ Assert one string contains another (case-sensitive)
 ### `assertNotContains` - Assert one string does not contains another (case-sensitive)
 
 Assert one string does not contains another (case-sensitive)
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Arguments
 
@@ -146,6 +154,8 @@ Assert one string does not contains another (case-sensitive)
 
 Assert `leftValue > rightValue`
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `leftValue` - Value to compare on the left hand side of the comparison
@@ -168,6 +178,8 @@ File `bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023
 ### `assertGreaterThanOrEqual` - Assert actual value is greater than or equal to expected value
 
 Assert `leftValue >= rightValue`
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Arguments
 
@@ -193,6 +205,8 @@ File `bin/build/tools/assert.sh`, function `assertGreaterThanOrEqual` was review
 
 Assert `leftValue < rightValue`
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `leftValue` - Value to compare on the left hand side of the comparison
@@ -214,6 +228,8 @@ File `bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11
 ### `assertLessThanOrEqual` - Assert `leftValue <= rightValue`
 
 Assert `leftValue <= rightValue`
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Arguments
 
@@ -253,6 +269,8 @@ Assert a process runs and exits with the correct exit code.
 
 If this fails it will output an error and exit.
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Usage
 
     assertExitCode expectedExitCode command [ arguments ... ]
@@ -285,6 +303,8 @@ File `bin/build/tools/assert.sh`, function `assertExitCode` was reviewed 2023-11
 Assert a process runs and exits with an exit code which does not match the passed in exit code.
 
 If this fails it will output an error and exit.
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Usage
 
@@ -321,6 +341,8 @@ File `bin/build/tools/assert.sh`, function `assertNotExitCode` was reviewed 2023
 Assert output of a binary equals a string
 
 If this fails it will output an error and exit.
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Usage
 
@@ -363,6 +385,8 @@ Run a command and expect the output to contain the occurrence of a string.
 
 If this fails it will output the command result to stdout.
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -399,6 +423,8 @@ File `bin/build/tools/assert.sh`, function `assertOutputContains` was reviewed 2
 Run a command and expect the output to not contain the occurrence of a string.
 
 If this fails it will output the command result to stdout.
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Usage
 
@@ -447,6 +473,8 @@ File `bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was revi
 
 $\Test that a directory exists
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Usage
 
     assertDirectoryExists directory [ message ... ]
@@ -487,6 +515,8 @@ None
 ### `assertDirectoryDoesNotExist` - Test that a directory does not exist
 
 $\Test that a directory does not exist
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Usage
 
@@ -529,6 +559,8 @@ File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was rev
 
 $\Test that a directory exists
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -565,6 +597,8 @@ None
 
 $\Test that a directory does not exist
 
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -599,6 +633,8 @@ File `bin/build/tools/assert.sh`, function `assertDirectoryNotEmpty` was reviewe
 ### `assertFileExists` - Test that a file exists
 
 $\Test that a file exists
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Arguments
 
@@ -635,6 +671,8 @@ None
 ### `assertFileDoesNotExist` - Test that a file does not exist
 
 $\Test that a file does not exist
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Arguments
 
@@ -869,6 +907,8 @@ If the file does not exist, this will fail.
 ### `randomString` - Outputs 40 random hexadecimal characters, lowercase.
 
 Outputs 40 random hexadecimal characters, lowercase.
+
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 

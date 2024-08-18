@@ -6,15 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-
-tests+=(testHousekeeper)
-tests+=(testPlumber)
-tests+=(testErrorExit)
-tests+=(testBuildDebugEnabled)
-
 _testBuildDebugEnabledStart() {
   local quietLog="$1"
   consoleInfo "Suppressing stderr"

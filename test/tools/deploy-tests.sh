@@ -8,9 +8,6 @@
 #
 errorEnvironment=1
 
-declare -a tests
-tests+=(testDeployApplication)
-
 _testDeployApplicationSetup() {
   local home="$1" ts
   if ! d=$(mktemp -d); then
@@ -154,8 +151,8 @@ _waitForValueTimeout() {
       printf "%s %s %s %s\n" "$(consoleCode "Waiting for")" "$(consoleCode "$1")" "$(consoleInfo ", received")" "$(consoleRed "$value")"
       sleep 1
       delta=$(($(beginTiming) - start))
-      if [ "$delta" -gt 2 ]; then
-        printf "%s %s %s %s\n" "$(consoleError "Waiting for")" "$(consoleCode "$1")" "$(consoleError " failed, found: ")" "$(consoleRed "$value")"
+      if [ "$delta" -gt 1 ]; then
+        printf "Timeout\n"
         return "$errorTimeout"
       fi
       printf "%s" "$(consoleGreen .)"
@@ -415,7 +412,6 @@ testDeployApplication() {
   unset BUILD_DEBUG
 }
 
-tests=(testDeployPackageName "${tests[@]}")
 testDeployPackageName() {
   local saveTarget
 

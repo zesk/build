@@ -110,7 +110,7 @@ exampleFunction() {
         ;;
       *)
         # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
@@ -139,6 +139,14 @@ _exampleFunction() {
 }
 
 __tools ../.. exampleFunction "$@"
+
+__testFunction() {
+  local exceptions=()
+
+  # Load variables until "--" is found
+  while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
+  printf "%s\n" "${exceptions[@]+"${exceptions[@]}"}"
+}
 
 #
 # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will

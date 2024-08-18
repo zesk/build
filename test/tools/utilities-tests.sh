@@ -4,8 +4,6 @@
 #
 # Depends: assert.sh usage.sh
 #
-declare -a tests
-tests+=(testIncrementor)
 
 testIncrementor() {
   local i nl

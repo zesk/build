@@ -59,7 +59,7 @@ __hookPreCommitShell() {
   __usageEnvironment "$usage" gitPreCommitListExtension sh | wrapLines "- $(consoleBoldMagenta)" "$(consoleReset)"
   changed=()
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
-  __usageEnvironment "$usage" gitPreCommitShellFiles --check test/ --check bin/ "${changed[@]}" || return $?
+  __usageEnvironment "$usage" bashSanitize "${changed[@]}" || return $?
 }
 ___hookPreCommitShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

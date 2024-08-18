@@ -158,6 +158,13 @@ __deprecatedCleanup() {
   # v0.11.4
   deprecatedTokens+=("ops"".sh" "__""ops")
 
+  # v0.11.6
+  __deprecatedCannon 'gitPre''CommitShellFiles' bashSanitize
+  __deprecatedCannon 'validate''ShellScripts' bashLintFiles
+  __deprecatedCannon 'validate''ShellScript' bashLint
+
+  # END OF CANNONS
+
   clearLine
   # Do all deprecations
   for deprecatedToken in "${deprecatedTokens[@]}"; do

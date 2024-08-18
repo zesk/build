@@ -13,6 +13,8 @@ that does not exist.
 
 Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
+- Location: `bin/build/tools/deploy.sh`
+
 #### Arguments
 
 - `applicationHome` - Required. Directory. Application home to get the version from.
@@ -28,6 +30,8 @@ Outputs the build target name which is based on the environment `BUILD_TARGET`.
 
 If this is called on a non-deployment system, use the application root instead of
 `deployHome` for compatibility.
+
+- Location: `bin/build/tools/deploy.sh`
 
 #### Arguments
 
@@ -46,6 +50,8 @@ BUILD_TARGET
 
 Does a deploy version exist? versionName is the version identifier for deployments
 
+- Location: `bin/build/tools/deploy.sh`
+
 #### Arguments
 
 - `deployHome` - Required. Directory. Deployment database home.
@@ -60,6 +66,8 @@ Does a deploy version exist? versionName is the version identifier for deploymen
 
 Get the previous version of the supplied version
 
+- Location: `bin/build/tools/deploy.sh`
+
 #### Arguments
 
 - No arguments.
@@ -71,6 +79,8 @@ Get the previous version of the supplied version
 ### `deployNextVersion` - Get the next version of the supplied version
 
 Get the next version of the supplied version
+
+- Location: `bin/build/tools/deploy.sh`
 
 #### Arguments
 
@@ -96,6 +106,8 @@ Deploy an application from a deployment repository
                |_|            |___/
 
 This acts on the local file system only but used in tandem with `deployment.sh` functions.
+
+- Location: `bin/build/tools/deploy/application.sh`
 
 #### Arguments
 
@@ -131,6 +143,8 @@ Safe application deployment by moving
 
 Deploy current application to target path
 
+- Location: `bin/build/tools/deploy.sh`
+
 #### Arguments
 
 - No arguments.
@@ -143,6 +157,8 @@ Deploy current application to target path
 ### `deployMigrateDirectoryToLink` - Automatically convert application deployments using non-links to links.
 
 Automatically convert application deployments using non-links to links.
+
+- Location: `bin/build/tools/deploy.sh`
 
 #### Arguments
 
@@ -160,6 +176,8 @@ Link new version of application.
 When called, current directory is the **new** application and the `applicationLinkPath` which is
 passed as an argument is the place where the **new** application should be linked to
 in order to activate it.
+
+- Location: `bin/build/tools/deploy.sh`
 
 #### Arguments
 
@@ -183,6 +201,8 @@ Current working directory on deploy is `deployHome/applicationId/app`.
 Current working directory on cleanup is `applicationHome/`
 Current working directory on undo is `applicationHome/`
 Note that these MAY be the same or different directories depending on how the application is linked to the deployment
+
+- Location: `bin/build/tools/deployment.sh`
 
 #### Arguments
 
@@ -242,13 +262,17 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 
 ## Hook documentation
 
+### `__hookApplicationEnvironment` - Hook is run to generate the application environment file
+
+Hook is run to generate the application environment file
+Outputs environment settings, one per line to be put into an environment file
+See `environmentFileApplicationMake` for usage and arguments.
+
+- Location: `bin/build/hooks/application-environment.sh`
+
 #### Arguments
 
 - No arguments.
-
-#### Examples
-
-    885acc3
 
 #### Exit codes
 

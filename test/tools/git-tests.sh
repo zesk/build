@@ -6,7 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-declare -a tests
 
 gitHasAnyRefs() {
   if [ $((0 + $(git show-ref | grep -c refs/tags))) -gt 0 ]; then
@@ -40,7 +39,6 @@ gitAddRemotesToSSHKnown() {
   done
 }
 
-tests+=(testGitVersionList)
 testGitVersionList() {
 
   if ! gitHasAnyRefs; then
@@ -58,7 +56,6 @@ testGitVersionList() {
   assertGreaterThan $(($(gitVersionList | wc -l | trimSpace) + 0)) 0 || return $?
 }
 
-tests+=(testGitCommitFailures)
 testGitCommitFailures() {
   local tempDirectory
 

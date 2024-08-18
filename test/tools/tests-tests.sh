@@ -6,9 +6,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-declare -a tests
 
-tests+=(testWrapperShellScripts)
 testWrapperShellScripts() {
   local quietLog
   local findArgs=(! -path '*/vendor/*' ! -path "*/.*")
@@ -22,7 +20,7 @@ testWrapperShellScripts() {
   if ! thisYear=$(date +%Y); then
     return 1
   fi
-  if ! find . -name '*.sh' "${findArgs[@]}" | validateShellScripts >>"$quietLog"; then
+  if ! find . -name '*.sh' "${findArgs[@]}" | bashLintFiles >>"$quietLog"; then
     return 1
   fi
   if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}" >>"$quietLog"; then

@@ -17,7 +17,7 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-- copy `bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually (this line is the only thing that survives updates)
+- copy `bin/build/install-bin-build.sh` into your project (changing last line as needed).
 - run it before you need this code (will be installed at `bin/build`)
 - installation pulls from `github.com` using `curl`
 
@@ -30,14 +30,23 @@ To install it in the operating system:
 
 - `bin/build/tools.sh` - The only include required for all build tools functions, also can be used as `tools.sh identicalCheck ...`
 
-## Project structure
+## Zesk Build Project structure
 
 - `bin/build/env/*.sh` - Any external environment variable is referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files.
 - `bin/build/tools/*.sh` - Build tools function implementations.
 - `bin/build/pipeline/*.sh` - Tools or steps for deployment
 - `bin/build/install/*.sh` - Install dependencies in the pipeline (most of these exist as functions)
-- `bin/build/ops/*.sh` - Operations scripts or tools
 - `bin/build/hooks/*.sh` - All default hooks are here.
+
+## Your project structure
+
+Defaults:
+
+- ./ - Application root
+- ./bin/build - Zesk Build installation location (may *not* be changed)
+- ./bin/hooks/ - Application hook implementation (`hook-name` with `.sh` on the end)
+- ./bin/env/ - Your project's environment variables defaults (`NAME` with `.sh` on the end)
+- ./docs/release/v1.0.0.md - Release notes
 
 ## Other binaries
 
@@ -52,6 +61,7 @@ Binaries are:
 - `deprecated.sh` - Run this on your code to update it to the latest. May break it, so use source control.
 - `identical-check.sh` - `identicalCheck`
 - `local-container.sh` - `dockerLocalContainer`
+- `bitbucket-container.sh` - `bitbucketContainer`
 - `map.sh` - `mapEnvironment`
 - `new-release.sh` - `newRelease`
 - `release-notes.sh` - `releaseNotes`
@@ -64,23 +74,11 @@ A single binary can be used to load and run commands:
 
 ## Artifacts: Build Directory and `.deploy`
 
-A `./.build` directory is created at a configured location set by the environment variable `BUILD_CACHE`. If not set, it uses a default location your `$HOME` directory, or the project root (if `$HOME` is not set).
+A `.build` directory is created at a configured location set by the environment variable `BUILD_CACHE`. If not set, it uses a default location your `$HOME` directory, or the project root (if `$HOME` is not set).
 
-You can preserve the build directory post-build to see the details. Most failures will still output the log but they will not be output to your primary build log unless a failure occurs.
+You can preserve the build directory post-build to see the details. Most failures will still output the log, but they will not be output to your primary build log unless a failure occurs.
 
-A `./.deploy` directory is created for build steps and contains metadata about the deployment. This is always created in the project root and the expectation is that it will be included in any deployments as metadata.
-
-## Operations
-
-Operations support is currently sparse by goal is to support **setup and configuration** of:
-
-- OS base installation
-- Web server
-- Application server
-- `crontab`
-- `daemontools`
-
-System patches and updates are also planned to be a part of the operations' functionality.
+A top-level `.deploy` directory is created for build steps and contains metadata about the deployment. This is always created in the project root and the expectation is that it will be included in any deployments as metadata.
 
 ## Run tests in docker
 
