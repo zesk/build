@@ -20,7 +20,7 @@ testWrapperShellScripts() {
   if ! thisYear=$(date +%Y); then
     return 1
   fi
-  if ! find . -name '*.sh' "${findArgs[@]}" | validateShellScripts >>"$quietLog"; then
+  if ! find . -name '*.sh' "${findArgs[@]}" | bashLintFiles >>"$quietLog"; then
     return 1
   fi
   if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}" >>"$quietLog"; then

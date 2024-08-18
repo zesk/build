@@ -5,3 +5,9 @@
 <hr />
 
 {bashSanitize}
+{bashLintFiles}
+{bashLint}
+
+## Deprecated
+
+{bashLintFilesInteractive}

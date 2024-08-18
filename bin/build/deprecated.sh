@@ -160,6 +160,8 @@ __deprecatedCleanup() {
 
   # v0.11.6
   __deprecatedCannon 'gitPre''CommitShellFiles' bashSanitize
+  __deprecatedCannon 'validate''ShellScripts' bashLintFiles
+  __deprecatedCannon 'validate''ShellScript' bashLint
 
   # END OF CANNONS
 

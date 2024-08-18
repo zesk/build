@@ -4,9 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-{validateShellScripts}
-{validateShellScript}
-{validateShellScriptsInteractive}
 {validateFileExtensionContents}
 {validateFileContents}
 {evalCheck}

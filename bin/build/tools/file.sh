@@ -466,7 +466,7 @@ _fileMatches() {
 _fileMatchesHelper() {
   local usage="$1" success="$2" && shift 2
   local argument nArguments argumentIndex saved
-  local file patterns=() found=false exceptions=()
+  local file patterns=() found=false exceptions=() clean fileList foundLines
 
   [ $# -gt 0 ] || return 0
   saved=("$@")

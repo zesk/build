@@ -29,46 +29,35 @@ consoleReset() {
   fi
 }
 
+# This modifies text containing escape sequences to best make text look correct
 __wrapColor() {
-  # This modifies text containing escape sequences to best make text look correct
-  # So
-  # Quick brown fox jumped *over* the `lazy` dog.
-  # `lazy` is blue, *over* is red
-  #
-  # Tokens are:
-  #  "Quick brown fox jumped " ESCAPE-BLUE-START "over" ESCAPE-END " is red"
-  #
-  # We break on `ESCAPE-END` so starts:
-  # 1. "Quick brown fox jumped " ESCAPE-BLUE-START "over"
-  # 2. " is red"
-  #
-  # We break again on `ESCAPE` and insert our *end* before it
-  #
-  # "Quick brown fox jumped " ESCAPE-BLUE-START "over" ->
-  # 1. "Quick brown fox jumped "
-  # 2. BLUE-START "over"
-  local escape=$'\e' prefix="$1" && shift
-  local suffix="${escape}[0m" text="$*" _magic=$'\7' start starts end ends
+  local escapeColor=$'\e'"[" prefix="$1" && shift
+  local suffix="${escapeColor}0m" text="$*" _magic="¢" start starts end ends
 
-  text="${text//"$suffix"/"$_magic"}"
+  # "This is a (1word) and (2phrase)"
+  text="${text//$suffix/$_magic}"
+  # "This is a (1word* and (2phrase*"
   IFS="$_magic" read -r -a starts <<<"$text" || :
-  if [ "${#starts[@]}" -gt 0 ]; then
+  # [ "This is a (1word", " and (2phrase", "" ]
+  if [ "${#starts[@]}" -ge 1 ]; then
     for start in "${starts[@]}"; do
-      start="${start//"$escape"/"$_magic"}"
+      # "This is a (1word"
+      start="${start//$escapeColor/$_magic}"
+      # "This is a (1word"
       IFS="$_magic" read -r -a ends <<<"$start" || :
-      if [ "${#ends[@]}" -gt 0 ]; then
-        for end in "${ends[@]}"; do
-          # ends are divided by "$escape" so must be added back AFTER we stop formatting
-          printf "%s %s %s %s %s" "$prefix" "$escape" "$end" "$suffix" "$escape"
-        done
-        printf "%s" "[0m" # Escape is above
+      # [ "This is a ", "1word" ]
+      if [ "${#ends[@]}" -eq 2 ]; then
+        printf "%s" "$prefix"
+        printf "%s" "${ends[0]}"
+        printf "%s" "$suffix"
+        printf "%s%s" "$escapeColor" "${ends[1]}"
       else
         # starts are divided by "$suffix" so must be added back
-        printf "%s%s%s" "$start" "$suffix" "$prefix"
+        printf -- "%s%s%s" "$prefix" "$start" "$suffix"
       fi
     done
   else
-    printf "%s%s%s" "$prefix" "$text" "$suffix"
+    printf -- "%s%s%s" "$prefix" "$text" "$suffix"
   fi
 }
 
@@ -150,6 +139,25 @@ __consoleEscape() {
     printf "%s\n" "$*"
   fi
 }
+
+# Usage: {fn} prefix suffix [ text ]
+# Argument: prefix - Required. String.
+# Argument: suffix - Required. String.
+# Argument: text ... - Optional. String.
+__consoleEscape1() {
+  local start="$1"
+  shift
+  if hasColors; then
+    if [ -z "$*" ]; then
+      printf "%s$start" ""
+    else
+      __wrapColor "$start" "$@"
+    fi
+  else
+    printf "%s\n" "$*"
+  fi
+}
+
 
 #
 # Summary: Alternate color output

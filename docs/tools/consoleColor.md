@@ -4,6 +4,11 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `consoleBlackBackground` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -13,6 +18,11 @@
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleBlack` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -27,6 +37,50 @@
 Blue
 
 
+- Location: `bin/build/identical/_colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldBlack` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldBlue` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/identical/_colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldCyan` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -45,6 +99,25 @@ Blue
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleBoldOrange` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/identical/_colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldMagenta` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -63,42 +136,11 @@ Blue
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Arguments
+### `consoleBoldWhite` - shellcheck disable=SC2120
 
-- No arguments.
 
-#### Exit codes
+- Location: `bin/build/tools/colors.sh`
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 #### Arguments
 
 - No arguments.
@@ -111,6 +153,8 @@ Blue
 ### `consoleBold` - Styles
 
 Styles
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
@@ -126,6 +170,8 @@ Styles
 Code or variables in output
 
 
+- Location: `bin/build/identical/_colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -135,6 +181,11 @@ Code or variables in output
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleCyan` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -149,6 +200,8 @@ Code or variables in output
 decorations to output (like bars and lines)
 
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -162,6 +215,8 @@ decorations to output (like bars and lines)
 
 Errors
 
+
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 
@@ -186,6 +241,8 @@ Errors
 info
 
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -200,6 +257,8 @@ info
 Name/Value pairs
 
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -209,6 +268,11 @@ Name/Value pairs
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleMagenta` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -222,6 +286,8 @@ Name/Value pairs
 
 Styles
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -234,6 +300,8 @@ Styles
 ### `consoleNoUnderline` - Styles
 
 Styles
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
@@ -249,6 +317,8 @@ Styles
 Orange
 
 
+- Location: `bin/build/identical/_colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -262,6 +332,8 @@ Orange
 
 Color-based
 
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
@@ -288,6 +360,8 @@ This is typically appended after most `consoleAction` calls to reset the state o
 
 It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -300,6 +374,8 @@ It does *not* take the optional `-n` argument ever, and outputs the reset escape
 ### `consoleSubtle` - Keep things subtle
 
 Keep things subtle
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
@@ -315,6 +391,8 @@ Keep things subtle
 things went well
 
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -327,6 +405,8 @@ things went well
 ### `consoleUnderline` - Styles
 
 Styles
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
@@ -342,6 +422,8 @@ Styles
 Name/Value pairs
 
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -356,6 +438,8 @@ Name/Value pairs
 warning things are not normal
 
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -365,6 +449,11 @@ warning things are not normal
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleWhite` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -374,6 +463,11 @@ warning things are not normal
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleYellow` - shellcheck disable=SC2120
+
+
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.

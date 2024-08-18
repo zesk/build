@@ -16,10 +16,12 @@
 # Argument: --home home - Optional. Directory. Sanitize files starting here. (Defaults to `buildHome`)
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: --check checkDirectory - Optional. Directory. Check shell scripts in this directory for common errors.
-# Argument: ... - Additional arguments are passed to `validateShellScripts` `validateFileContents`
+# Argument: ... - Additional arguments are passed to `bashLintFiles` `validateFileContents`
 # Placing a `.debugging` file in your project with a list of permitted files which contain debugging (`set` with `-x`)
 # Configuration File: .debugging (list of file paths which are ok to allow debugging)
 # Configuration File: .check-assertions (location determines check root)
+# Configuration File: .skip-lint (file patterns to skip lint check, one per line)
+# Configuration File: .skip-copyright (file patterns to skip copyright check, one per line)
 # See: buildHome
 bashSanitize() {
   local usage="_${FUNCNAME[0]}"
@@ -79,7 +81,7 @@ bashSanitize() {
 
   # Operates on specific files
   statusMessage consoleSuccess Checking syntax ...
-  _bashSanitizeCheckSyntax "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
+  _bashSanitizeCheckLint "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
 
   statusMessage consoleSuccess Checking copyright ...
   _bashSanitizeCheckCopyright "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
@@ -95,11 +97,11 @@ _bashSanitize() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-_bashSanitizeCheckSyntax() {
+_bashSanitizeCheckLint() {
   local usage="$1" && shift
 
   statusMessage consoleSuccess "Running shellcheck ..." || :
-  __usageEnvironment "$usage" validateShellScripts || return $?
+  __usageEnvironment "$usage" bashLintFiles || return $?
 }
 
 _bashSanitizeCheckAssertions() {
@@ -123,7 +125,7 @@ _bashSanitizeCheckAssertions() {
 
 _bashSanitizeCheckCopyright() {
   local file line usage="$1" && shift
-  local year copyrightExceptions=()
+  local matches year copyrightExceptions=()
 
   while read -r file; do
     while read -r line; do
@@ -135,7 +137,7 @@ _bashSanitizeCheckCopyright() {
 
   year="$(date +%Y)"
   statusMessage consoleWarning "Checking $year and $BUILD_COMPANY ..." || :
-  set -v
+  matches=$(__usageEnvironment "$usage" mktemp) || return $?
   if fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- - >"$matches"; then
     set +v
     while IFS=":" read -r file pattern; do
