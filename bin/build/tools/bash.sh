@@ -166,3 +166,41 @@ _bashSanitizeCheckDebugging() {
     __failEnvironment "$usage" found debugging || return $?
   fi
 }
+
+# Usage: {fn} [ directory ... ]
+# Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files found.
+bashSourcePath() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local tool
+
+  [ $# -gt 0 ] || __failArgument "$usage" "Requires a directory" || return $?
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        argument=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+        while read -r tool; do
+          [ -f "$tool" ] || __failEnvironment "$usage" "$tool is not a bash source file" || return $?
+          [ -x "$tool" ] || __failEnvironment "$usage" "$tool is not executable" || return $?
+          # shellcheck source=/dev/null
+          __environment source "$tool" || return $?
+        done < <(find "$1" -type f -name '*.sh' ! -path '*/.*' || :)
+        ;;
+    esac
+    shift
+  done
+}
+_bashSourcePath() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
