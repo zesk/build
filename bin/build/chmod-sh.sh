@@ -8,7 +8,6 @@
 # See `makeShellFilesExecutable` for arguments and usage.
 # See: makeShellFilesExecutable
 __binMakeShellFilesExecutable() {
-  # IDENTICAL makeShellFilesExecutable 1
-  find . -name '*.sh' -type f ! -path '*/.*' "$@" -print0 | xargs -0 chmod -v +x
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" makeShellFilesExecutable "$@"
 }
 __binMakeShellFilesExecutable "$@"

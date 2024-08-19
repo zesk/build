@@ -362,7 +362,7 @@ ___assertIsEqual() {
 ___assertIsEqualFormat() {
   local testPassed="${1-}" success="${2-}" left="${3-}"
   shift && shift && shift
-  printf -- "%s %s %s\n" "$(consoleCode "$left")" "$(_choose "$success" "=" "!=")" "$(__resultText "$testPassed" "$*")"
+  printf -- "%s %s %s\n" "$(__resultText "$testPassed" "$left")" "$(_choose "$success" "=" "!=")" "$(__resultText "$testPassed" "$*")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
