@@ -63,10 +63,10 @@ __buildIdenticalRepair() {
   aa=()
   while read -r item; do
     aa+=(--singles "$item")
-  done < <(find . -name 'singles.txt' -path '*/identical/*' ! -path '*/.*')
+  done < <(find . -name 'singles.txt' -path '*/identical/*' ! -path "*/.*/*")
   while read -r item; do
     aa+=(--repair "$item")
-  done < <(find "$home" -type d -name identical ! -path '*/.*')
+  done < <(find "$home" -type d -name identical ! -path "*/.*/*")
   __environment identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }
 

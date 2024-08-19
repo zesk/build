@@ -9,7 +9,7 @@
 
 testWrapperShellScripts() {
   local quietLog
-  local findArgs=(! -path '*/vendor/*' ! -path "*/.*")
+  local findArgs=(! -path '*/vendor/*' ! -path "*/.*/*")
   local thisYear
 
   quietLog=$1

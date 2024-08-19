@@ -614,7 +614,7 @@ validateFileExtensionContents() {
   total=0
   foundFiles=$(mktemp)
   # Final arguments for find
-  find . "${extensionArgs[@]}" ! -path '*/.*' "$@" >"$foundFiles"
+  find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
   total=$(($(wc -l <"$foundFiles") + 0))
   # shellcheck disable=SC2059
   statusMessage consoleInfo "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf " $(consoleReset)\"$(consoleCode "%s")\"" "${textMatches[@]}")"
@@ -700,9 +700,9 @@ findUncaughtAssertions() {
   tempFile=$(mktemp) || __failEnvironment "$usage" "mktemp failed" || return $?
   suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
-    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '_(clean|undo|argument|environment|return)' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path '*/.*' -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '_(clean|undo|argument|environment|return)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
   } >"$tempFile"
 
   if [ ! -s "$tempFile" ]; then

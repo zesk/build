@@ -176,7 +176,7 @@ Output is unsorted.
 
 #### Examples
 
-listFileModificationTimes $myDir ! -path '*/.*'
+listFileModificationTimes $myDir ! -path "*/.*/*"
 
 #### Sample Output
 

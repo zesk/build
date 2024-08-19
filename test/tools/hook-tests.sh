@@ -131,11 +131,11 @@ testHookSystem() {
 }
 
 testHooksWhichSeemBenign() {
-  local cache home
+  local cache home hook
 
   home="$(__environment buildHome)" || return $?
   cache=$(__environment __gitPreCommitCache true) || return $?
-  find "$home/test/example" -type f ! -path '*/.*' | extensionLists --clean "$cache"
+  find "$home/test/example" -type f ! -path "*/.*/*" | extensionLists --clean "$cache"
 
   assertExitCode 0 gitPreCommitHeader || return $?
   for hook in application-environment application-id application-tag pre-commit-php pre-commit-sh version-current; do

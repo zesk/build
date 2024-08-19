@@ -142,7 +142,7 @@ makeShellFilesExecutable() {
         ;;
       *)
         path=$(usageArgumentDirectory "$usage" "directory" "${1:-.}") || return $?
-        find "$path" -name '*.sh' -type f ! -path '*/.*' "${findArgs[@]+"${findArgs[@]}"}" -print0 | xargs -0 chmod -v +x
+        find "$path" -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -print0 | xargs -0 chmod -v +x
         ;;
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?

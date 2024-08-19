@@ -421,7 +421,7 @@ documentationTemplateDirectoryCompile() {
       break
     fi
     fileCount=$((fileCount + 1))
-  done < <(find "$templateDirectory" -type f -name '*.md' ! -path '*/.*' ! -name '_*')
+  done < <(find "$templateDirectory" -type f -name '*.md' ! -path "*/.*/*" ! -name '_*')
   clearLine || :
   reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(consoleInfo "$targetDirectory") "
   return $exitCode
@@ -695,7 +695,7 @@ bashDocumentation_FindFunctionDefinitions() {
   while [ "$#" -gt 0 ]; do
     fn=$1
     functionPattern="^$fn\(\) \{|^function $fn \{"
-    find "$directory" -type f -name '*.sh' ! -path '*/.*' | while read -r f; do
+    find "$directory" -type f -name '*.sh' ! -path "*/.*/*" | while read -r f; do
       if grep -E -q "$functionPattern" "$f"; then
         printf "%s\n" "$f"
       fi
