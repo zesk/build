@@ -35,15 +35,15 @@ testBashSourcePath() {
   testPath=$(__environment mktemp -d) || return $?
 
   assertNotExitCode --line "$LINENO" --stderr-match "Requires a directory" 0 bashSourcePath || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match "not directory" 0 bashSourcePath "$testPath/does-not-exist-i-hope"
+  assertNotExitCode --line "$LINENO" --stderr-match "not directory" 0 bashSourcePath "$testPath/does-not-exist-i-hope" || return $?
 
   printf "%s\n" "#!/usr/bin/env bash" "rm \${BASH_SOURCE[0]%/*}/2.sh" >"$testPath/1.sh"
   printf "%s\n" "#!/usr/bin/env bash" "rm \${BASH_SOURCE[0]%/*}/1.sh" >"$testPath/2.sh"
   # Regardless of order someone will not exist
 
-  assertNotExitCode --line "$LINENO" --stderr-match "not executable" 0 bashSourcePath "$testPath"
+  assertNotExitCode --line "$LINENO" --stderr-match "not executable" 0 bashSourcePath "$testPath" || return $?
   __environment muzzle makeShellFilesExecutable "$testPath" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match "not a bash source" 0 bashSourcePath "$testPath"
+  assertNotExitCode --line "$LINENO" --stderr-match "not a bash source" 0 bashSourcePath "$testPath" || return $?
 
   __environment rm -rf "$testPath/"*.sh || return $?
 
@@ -52,7 +52,7 @@ testBashSourcePath() {
   printf "%s\n" "#!/usr/bin/env bash" "_testZeskBuildFunction() {" "    consoleGreen Not easy being green." "}" >"$testPath/2.sh"
   __environment muzzle makeShellFilesExecutable "$testPath" || return $?
 
-  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath"
+  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath" || return $?
 
   assertEquals --line "$LINENO" "${ZESK_BUILD-}" "true" || return $?
   assertExitCode --line "$LINENO" 0 isFunction _testZeskBuildFunction || return $?

@@ -87,7 +87,7 @@ _arguments() {
   if inArray "help" "${flags[@]+"${flags[@]}"}"; then
     # Have to do this as this is run in subprocess - what to do?
     "$usage" 0 1>&2
-    _clean "$?" "${clean[@]}"
+    rm -rf "${clean[@]}" || :
     return "$(_code exit)"
   fi
   if [ "${#flags[@]}" -gt 0 ]; then

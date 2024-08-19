@@ -111,7 +111,7 @@ _bashSanitizeCheckAssertions() {
   checkAssertions=("$@")
   while read -r item; do
     checkAssertions+=("$(__usageEnvironment "$usage" dirname "${item}")") || return $?
-  done < <(find "." -type f -name '.check-assertions' ! -path '*/.*')
+  done < <(find "." -type f -name '.check-assertions' ! -path "*/.*/*")
 
   for directory in "${checkAssertions[@]+"${checkAssertions[@]}"}"; do
     statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}") - " || :
@@ -131,7 +131,7 @@ _bashSanitizeCheckCopyright() {
     while read -r line; do
       copyrightExceptions+=("$line")
     done <"$file"
-  done < <(find . -name ".skip-copyright" -type f ! -path '*/.*')
+  done < <(find . -name ".skip-copyright" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
 
@@ -156,7 +156,7 @@ _bashSanitizeCheckDebugging() {
     while read -r line; do
       debugPatterns+=("$line")
     done <"$file"
-  done < <(find "." -type f -name '.debugging' ! -path '*/.*')
+  done < <(find "." -type f -name '.debugging' ! -path "*/.*/*")
   matches=$(__usageEnvironment "$usage" mktemp) || return $?
   if fileMatches 'set ["]\?-x' -- "${debugPatterns[@]+${debugPatterns[@]}}" -- - >"$matches"; then
     dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
@@ -197,7 +197,7 @@ bashSourcePath() {
           [ -x "$tool" ] || __failEnvironment "$usage" "$tool is not executable" || return $?
           # shellcheck source=/dev/null
           source "$tool" || __failEnvironment "$usage" "source $tool" || return $?
-        done < <(find "$1" -type f -name '*.sh' ! -path '*/.*' || :)
+        done < <(find "$1" -type f -name '*.sh' ! -path "*/.*/*" || :)
         ;;
     esac
     shift

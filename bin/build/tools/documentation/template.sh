@@ -61,7 +61,8 @@ _documentationTemplateUpdateUnlinked() {
   (
     total=$total content=$(printf "%s\n\n%s\n" "$(cat "$todoTemplate")" "$(sort <"$unlinkedFunctions")") mapEnvironment content total <"$pageTemplate" >"$template.$$"
   ) || _clean $? "${clean[@]}" || return $?
-  _clean 0 "${clean[@]}"
+
+  __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
   if [ -f "$template" ] && diff -q "$template" "$template.$$" >/dev/null; then
     statusMessage consoleInfo "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"

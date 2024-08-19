@@ -128,7 +128,7 @@ rotateLogs() {
   [ "$count" -gt 0 ] || __failArgument "$usage" "$this count $count must be a positive integer greater than zero" || return $?
 
   statusMessage consoleInfo "Rotating log files in path $logPath"
-  find "$logPath" -type f -name '*.log' ! -path '*/.*' | while IFS= read -r logFile; do
+  find "$logPath" -type f -name '*.log' ! -path "*/.*/*" | while IFS= read -r logFile; do
     statusMessage consoleInfo "Rotating log file $logFile" || :
     rotateLog "${dryRunArgs[@]+${dryRunArgs[@]}}" "$logFile" "$count" || return $?
   done
