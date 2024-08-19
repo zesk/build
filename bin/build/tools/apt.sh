@@ -104,6 +104,10 @@ _aptListInstalled() {
 # Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 # and assumes packages will be available.
 #
+# Main reason to use this instead of `apt-get` raw is it's quieter.
+#
+# Also does a simple lookup in the list of installed packages to avoid double-installation.
+#
 # Usage: aptInstall [ package ... ]
 # Example:     aptInstall shellcheck
 # Exit Code: 0 - If `apt-get` is not installed, returns 0.
@@ -259,18 +263,18 @@ _whichApt() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Installs an apt package if a binary does not exist in the which path.
-# The assumption here is that `aptInstallPackage` will install the desired `binary`.
+# Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
+# The assumption here is that `aptUninstall` will install the desired `binary`.
 #
 # Confirms that `binary` is installed after installation succeeds.
 #
 # Summary: Install tools using `apt-get` if they are not found
 # Usage: {fn} binary aptInstallPackage ...
-# Example:     whichApt shellcheck shellcheck
-# Example:     whichApt mariadb mariadb-client
+# Example:     whichAptUninstall shellcheck shellcheck
+# Example:     whichAptUninstall mariadb mariadb-client
 # Argument: binary - Required. String. The binary to look for.
-# Argument: aptInstallPackage - The package name to install if the binary is not found in the `$PATH`.
-# Environment: Technically this will install the binary and any related files as a package.
+# Argument: aptInstallPackage - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
+# Environment: Technically this will uninstall the binary and any related files as a package.
 #
 whichAptUninstall() {
   local usage="_${FUNCNAME[0]}"
@@ -281,7 +285,7 @@ whichAptUninstall() {
   if ! whichExists "$binary"; then
     return 0
   fi
-  __environment aptUninstall "$@" || return $?
+  __usageEnvironment "$usage" aptUninstall "$@" || return $?
   foundPath="$(which "$binary" || :)"
   [ -z "$foundPath" ] || __failEnvironment "$usage" "aptUninstall \"$*\" did not remove $(consoleCode "$foundPath") FROM the PATH: $(consoleValue "${PATH-}")" || return $?
 }

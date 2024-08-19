@@ -50,6 +50,7 @@ Modifies local environment. Not usually run within a subshell.
 #### Environment
 
 $envName
+BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
 ### `buildFunctions` - Prints the list of functions defined in Zesk Build
 
 Prints the list of functions defined in Zesk Build

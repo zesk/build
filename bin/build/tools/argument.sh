@@ -8,19 +8,15 @@
 # Idea is to have a central argument manager
 # Which uses the comments to specify the arguments automatically
 
-# Generic argument parsing
+# Generic argument parsing using Bash comments.
 #
-# Argument formatting is as follows:
+# Argument formatting (in comments) is as follows:
 #
-#     # Argument: flag [ variable ... ] - [ Optional | Required ] . type. Description.
+#     Argument: argumentName [ variable ... ] - [ Optional | Required ]. argumentType. Description.`
 #
-# Usage:
-# Argument: this - Required. Function. Function to collect arguments for. Assume usage function is "_$this".
-# Argument: source - Required. File. File of the function to collect the specification.
-# Argument: arguments - Optional. String. One or more arguments to parse.
-# Output is a temporary `stateFile` on line 1
+# `...` token means one or more arguments may be passed.
 #
-# Type is one of:
+# `argumentType` is one of:
 #
 # - File FileDirectory Directory LoadEnvironmentFile RealDirectory
 # - EmptyString String
@@ -29,7 +25,11 @@
 # - URL
 #
 # And uses the associated `usageArgument` function for validation.
-#
+# Usage: {fn} this source [ arguments ... ]
+# Argument: this - Required. Function. Function to collect arguments for. Assume usage function is "_$this".
+# Argument: source - Required. File. File of the function to collect the specification.
+# Argument: arguments - Optional. String. One or more arguments to parse.
+# Output is a temporary `stateFile` on line 1
 _arguments() {
   local usageArguments="_${FUNCNAME[0]}"
   local source="${1-}" this="${2-}"

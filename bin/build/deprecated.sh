@@ -163,6 +163,8 @@ __deprecatedCleanup() {
   __deprecatedCannon 'validate''ShellScripts' bashLintFiles
   __deprecatedCannon 'validate''ShellScript' bashLint
 
+  # v0.11.7
+
   # END OF CANNONS
 
   clearLine

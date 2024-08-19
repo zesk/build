@@ -7,7 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-
 _hookTestFailed() {
   printf "%s\n" "Listing $1/bin/hooks"
   ls -la "$1/bin/hooks"
@@ -129,4 +128,18 @@ testHookSystem() {
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test2 || return $?
 
   unset BUILD_DEBUG
+}
+
+testHooksWhichSeemBenign() {
+  local cache home
+
+  home="$(__environment buildHome)" || return $?
+  cache=$(__environment __gitPreCommitCache true) || return $?
+  find "$home/test/example" -type f ! -path '*/.*' | extensionLists --clean "$cache"
+
+  assertExitCode 0 gitPreCommitHeader || return $?
+  for hook in application-environment application-id application-tag pre-commit-php pre-commit-sh version-current; do
+    assertExitCode 0 runHook "$hook" || return $?
+  done
+  assertExitCode 0 gitPreCommitCleanup || return $?
 }

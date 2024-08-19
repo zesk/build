@@ -200,9 +200,22 @@ testBuildEnvironmentLoad() {
   assertEquals --line "$LINENO" "${FOO-}" "" || return $?
 
   printf "%s\n" "export FOO" "FOO=hello" >>"$target"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --leak FOO --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
 
   assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
 
   unset FOO
+}
+
+testUnderscoreUnderscoreBuild() {
+  local testPath home
+
+  home=$(__environment buildHome) || return $?
+  testPath=$(__environment mktemp -d) || return $?
+  __environment cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
+  assertExitCode --line "$LINENO" 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
+
+  assertDirectoryDoesNotExist --line "$LINENO" "$testPath/app/bin/build/" || return $?
+  assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?
+  assertDirectoryExists --line "$LINENO" "$testPath/app/bin/build/" || return $?
 }

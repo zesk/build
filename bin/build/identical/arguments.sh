@@ -7,6 +7,11 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# IDENTICAL zesk-build-hook-header 3
+# shellcheck source=/dev/null
+set -eou pipefail
+source "${BASH_SOURCE[0]%/*}/../tools.sh"
+
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 

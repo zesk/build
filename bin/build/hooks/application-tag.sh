@@ -7,13 +7,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-set -eou pipefail
-
+# IDENTICAL zesk-build-hook-header 3
 # shellcheck source=/dev/null
-if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
-  printf "tools.sh failed" 1>&2
-  exit 1
-fi
+set -eou pipefail
+source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
 #
@@ -42,8 +39,9 @@ __hookApplicationTag() {
     esac
     shift || :
   done
-
-  __usageEnvironment "$usage" gitEnsureSafeDirectory "$(pwd)" || return $?
+  home=$(gitFindHome 2>/dev/null) || printf "%s" "v0.0.0" && return 0
+  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
+  __usageEnvironment "$usage" gitEnsureSafeDirectory "$home" || return $?
   if ! git for-each-ref --format '%(refname:short)' refs/tags/ | grep -E '^v[0-9\.]+$' | versionSort -r | head -n 1 2>/dev/null; then
     printf %s "v0.0.1"
   fi
