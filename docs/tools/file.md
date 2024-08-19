@@ -8,11 +8,84 @@
 
 ### Modification time
 
+### `modificationTime` - Fetch the modification time of a file as a timestamp
 
+Fetch the modification time of a file as a timestamp
 
+- Location: `bin/build/tools/file.sh`
 
+#### Usage
 
+    modificationTime filename0 [ filename1 ... ]
+    
 
+#### Arguments
+
+- No arguments.
+
+#### Examples
+
+    modificationTime ~/.bash_profile
+
+#### Exit codes
+
+- `2` - If file does not exist
+- `0` - If file exists and modification times are output, one per line
+### `modificationSeconds` - Fetch the modification time in seconds from now of a
+
+Fetch the modification time in seconds from now of a file as a timestamp
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Examples
+
+    modificationTime ~/.bash_profile
+
+#### Exit codes
+
+- `2` - If file does not exist
+- `0` - If file exists and modification times are output, one per line
+
+### `isNewestFile` - Check to see if the first file is the newest
+
+Check to see if the first file is the newest one
+
+If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+Otherwise return `1``
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- `sourceFile` - File to check
+- `targetFile0` - One or more files to compare
+
+#### Exit codes
+
+- `1` - `sourceFile`, 'targetFile' does not exist, or
+- `0` - All files exist and `sourceFile` is the oldest file
+### `isOldestFile` - Check to see if the first file is the newest
+
+Check to see if the first file is the newest one
+
+If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+Otherwise return `1``
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- `sourceFile` - File to check
+- `targetFile0` - One or more files to compare
+
+#### Exit codes
+
+- `1` - `sourceFile`, 'targetFile' does not exist, or
+- `0` - All files exist and `sourceFile` is the oldest file
 
 ### `oldestFile` - Return the oldest file in the list.
 
@@ -202,11 +275,11 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath 10
+### `realPath` - IDENTICAL _realPath EOF
 
-IDENTICAL _realPath 10
+IDENTICAL _realPath EOF
 
-- Location: `bin/build/tools/file.sh`
+- Location: `bin/build/identical/realPath.sh`
 
 #### Usage
 

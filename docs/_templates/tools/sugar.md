@@ -18,11 +18,15 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
+{__return}
 {__usage}
 {__usageEnvironment}
+{__usageEnvironmentQuiet}
 {__usageArgument}
 {__failEnvironment}
 {__failArgument}
+{_undo}
+{muzzle}
 
 ## Deprecated Logging
 

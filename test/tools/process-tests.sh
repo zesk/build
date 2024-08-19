@@ -4,20 +4,20 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
 
-declare -a tests
-
-if isBitBucketPipeline; then
-  timingFactor=10
-else
-  timingFactor=4
-fi
+_timingFactor() {
+  if isBitBucketPipeline; then
+    printf "%d\n" 10
+  else
+    printf "%d\n" 4
+  fi
+}
 
 slowDaemon() {
-  local start
+  local start timingFactor
   local this
 
+  timingFactor="$(_timingFactor)"
   this="${FUNCNAME[0]}"
 
   start=$(beginTiming) || _environment "$this beginTiming failed" || return $?
@@ -26,13 +26,14 @@ slowDaemon() {
   reportTiming "$start" "$this finished in"
 }
 
-tests+=(testProcessWait)
 testProcessWait() {
-  local background
+  local background timingFactor
 
   slowDaemon &
   disown
   background=$!
+
+  timingFactor="$(_timingFactor)"
 
   export BUILD_DEBUG_LINES=9999
   assertNotExitCode --dump --stderr-match Expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?

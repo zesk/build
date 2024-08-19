@@ -324,6 +324,7 @@ deployRemoteFinish() {
     if [ -z "$applicationId" ]; then
       __failArgument "$usage" "No argument applicationId passed" || return $?
     fi
+    __usageEnvironment "$usage" cd "$deployHome" || return $?
     deployArguments=(
       "${firstFlags[@]+${firstFlags[@]}}"
       --home "$deployHome"

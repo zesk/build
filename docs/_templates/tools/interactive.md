@@ -4,15 +4,17 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+## File pipelines
+
+{interactiveManager}
+
 ## User prompts
 
-{confirmYesNo}
-{pause}
+{confirmYesNo} {pause}
 
-## Copy files 
+## Copy files
 
-{copyFileWouldChange}
-{copyFile}
+{copyFileWouldChange} {copyFile}
 
 ## Examples
 

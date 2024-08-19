@@ -4,8 +4,6 @@
 #
 # Depends: assert.sh usage.sh
 #
-declare -a tests
-tests+=(testUsageArguments1)
 
 __sampleArgs() {
   cat <<EOF
@@ -31,7 +29,6 @@ __testUsageArgumentsFile() {
      third^Required thing
 EOF
 }
-tests+=(testUsageArguments)
 testUsageArguments() {
   local value testIndex=0
 
@@ -89,7 +86,6 @@ _testUsageArgumentHelperFail() {
   done
 }
 
-tests=(testUsageArgumentFunctions "${tests[@]}")
 testUsageArgumentFunctions() {
   local d intTests unsignedIntTests positiveIntTests
 

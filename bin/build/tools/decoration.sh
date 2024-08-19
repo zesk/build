@@ -197,16 +197,40 @@ _repeat() {
 # Example:     consoleMagenta $(echoBar +-)
 echoBar() {
   local usage="_${FUNCNAME[0]}"
-  local barText width count delta
+  local argument nArguments argumentIndex saved
+  local barText="" width count delta=""
 
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
-  barText="${1:-=}"
-  if [ -z "$barText" ]; then
-    barText="="
-  fi
-  shift || :
-  delta=$((${1:-0} + 0))
-  isInteger "$delta" || __failArgument "$usage" "delta is not integer $(consoleCode "$delta")" || return $?
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$1"
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ $# -gt 2 ]; then
+          __failArgument "$usage" "unknown argument #3: $3 (Arguments: $(_command "${saved[@]}"))" || return $?
+        fi
+        barText="$argument"
+        shift
+        if [ -n "${1-}" ]; then
+          delta=$(usageArgumentInteger "$usage" "delta" "$1")
+        else
+          delta=0
+          break
+        fi
+        ;;
+    esac
+    shift
+  done
+  [ -n "$barText" ] || barText="="
+  [ -n "$delta" ] || delta=0
+
   count=$((width / ${#barText}))
   count=$((count + delta))
   [ $count -gt 0 ] || __failArgument "$usage" "count $count (delta $delta) less than zero?" || return $?

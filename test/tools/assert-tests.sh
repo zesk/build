@@ -6,12 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-declare -a tests
-
-tests+=(testOutputEquals)
-tests+=(testAssertEquality)
-tests+=(testAssertComparisons)
-
 testOutputEquals() {
   assertExitCode --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "a" || return $?
   assertNotExitCode --stderr-ok --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "b" || return $?

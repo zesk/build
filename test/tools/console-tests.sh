@@ -31,8 +31,6 @@ _colorBrightnessBadValues() {
 EOF
 }
 
-declare -a tests
-tests+=(testColorBrightness)
 testColorBrightness() {
   local expected r g b
   _colorBrightnessValues | while read -r expected r g b; do

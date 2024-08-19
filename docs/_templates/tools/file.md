@@ -10,6 +10,7 @@
 
 {modificationTime}
 {modificationSeconds}
+{isEmptyFile}
 
 {isNewestFile}
 {isOldestFile}
@@ -42,3 +43,8 @@
 {renameFiles}
 {createTarFile}
 {reverseFileLines}
+
+## Finding
+
+{fileMatches}
+{fileNotMatches}

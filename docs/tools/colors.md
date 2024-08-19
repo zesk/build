@@ -68,11 +68,14 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 ### `consoleColorMode` - Set colors to deal with dark or light-background consoles
 
 Set colors to deal with dark or light-background consoles
-See:
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
+- `--dark` - Optional. Flag. Dark mode for darker backgrounds.
+- `--light` - Optional. Flag. Light mode for lighter backgrounds.
 
 #### Exit codes
 
@@ -80,11 +83,17 @@ See:
 - `1` - Environment error
 - `2` - Argument error
 
+#### Environment
+
+BUILD_COLORS_MODE
+
 ### `clearLine` - Clear a line in the console
 
 Clears current line of text in the console
 
 Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Usage
 
@@ -118,6 +127,8 @@ This is intended for messages on a line which are then overwritten using clearLi
 
 Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Usage
 
     statusMessage command ...
@@ -150,6 +161,8 @@ right-aligned to the `characterWidth` given and colored using `consoleLabel`; th
 
 
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Usage
 
     consoleNameValue characterWidth name [ value ... ]
@@ -173,6 +186,8 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 Exit Code; 1 - Colors are likely not supported by console
 
+- Location: `bin/build/identical/_colors.sh`
+
 #### Usage
 
     hasColors
@@ -194,10 +209,7 @@ BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colo
 
 Exit Code; 1 - Does not support console animation
 
-#### Usage
-
-    hasConsoleAnimation
-    
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
@@ -210,6 +222,8 @@ Exit Code; 1 - Does not support console animation
 ### `colorTest` - Output colors
 
 Outputs sample sentences for the `consoleAction` commands to see what they look like.
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
@@ -225,6 +239,8 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 
 Outputs sample sentences for the `consoleAction` commands to see what they look like.
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -239,6 +255,8 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 
 If you want to explore what colors are available in your terminal, try this.
 
+- Location: `bin/build/tools/colors.sh`
+
 #### Arguments
 
 - No arguments.
@@ -252,6 +270,8 @@ If you want to explore what colors are available in your terminal, try this.
 ### `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
 
 Converts backticks, bold and italic to console colors.
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Usage
 
@@ -275,6 +295,8 @@ Output a status line using a colorAction
 This is intended for messages on a line which are then overwritten using clearLine
 
 Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Usage
 
@@ -306,6 +328,8 @@ Intended to be run on an interactive console. Should support $(tput cols).
 Column count in current console
 
 Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
+
+- Location: `bin/build/tools/colors.sh`
 
 #### Usage
 

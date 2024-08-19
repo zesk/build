@@ -181,7 +181,7 @@ gitRemoveFileFromHistory() {
 # Credit: Chris Johnsen
 #
 gitRepositoryChanged() {
-  ! git diff-index --quiet HEAD
+  ! git diff-index --quiet HEAD 2>/dev/null
 }
 
 #
@@ -416,15 +416,18 @@ _gitFindHome() {
 # Example: ... are all equivalent.
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
-  local updateReleaseNotes appendLast argument start notes comment home
+  local argument nArguments argumentIndex saved
+  local updateReleaseNotes appendLast argument start notes comment home codeHome
 
   appendLast=false
   updateReleaseNotes=true
   comment=
   home=
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -449,7 +452,6 @@ gitCommit() {
     shift
   done
 
-  appendLast=
   if [ "$comment" = "last" ]; then
     appendLast=true
     comment=
@@ -457,7 +459,14 @@ gitCommit() {
 
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
+    codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+    if [ "$codeHome" != "$home" ]; then
+      consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
+      [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
+      "$home/bin/build/tools.sh" gitCommit "${saved[@]+"${saved[@]}"}"
+      return $?
+    fi
   fi
   __usageEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
@@ -467,7 +476,7 @@ gitCommit() {
     __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
   fi
   if $appendLast || [ -z "$comment" ]; then
-    statusMessage consoleInfo "Using last commit message ..."
+    statusMessage consoleInfo "Using last commit message ($appendLast, \"$comment\") ..."
     __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
   else
     statusMessage consoleInfo "Using commit comment \"$comment\" ..."
@@ -760,91 +769,6 @@ gitInstallHook() {
 }
 _gitInstallHook() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Run pre-commit checks on shell-files
-# Usage: {fn} [ --help ] [ --interactive ] [ --check checkDirectory ] ...
-# Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
-# Argument: --help - Flag. Optional. I need somebody.
-# Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
-# Argument: --check checkDirectory - Optional. Directory. Check shell scripts in this directory for common errors.
-# Argument: ... - Additional arguments are passed to `validateShellScripts` `validateFileContents`
-gitPreCommitShellFiles() {
-  local usage="_${FUNCNAME[0]}"
-  local argument directory checkAssertions file
-
-  set -eou pipefail
-  checkAssertions=()
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$argument" in
-      --check)
-        shift || __failArgument "$usage" "shift $argument" || return $?
-        checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
-        ;;
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        break
-        ;;
-    esac
-    shift || :
-  done
-
-  statusMessage consoleSuccess Making shell files executable ...
-  __usageEnvironment "$usage" makeShellFilesExecutable || return $?
-
-  statusMessage consoleSuccess "Running shellcheck ..." || :
-  __usageEnvironment "$usage" validateShellScripts --exec contextOpen "$@" || return $?
-
-  export BUILD_COMPANY
-  year="$(date +%Y)"
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
-  statusMessage consoleWarning "Checking $year and $BUILD_COMPANY ..." || :
-  __usageEnvironment "$usage" validateFileContents --exec contextOpen "$@" -- "Copyright &copy; $year" "$BUILD_COMPANY" || return $?
-
-  for directory in "${checkAssertions[@]+${checkAssertions[@]}}"; do
-    statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}") - " || :
-    if ! findUncaughtAssertions "$directory" --list; then
-      findUncaughtAssertions "$directory" --exec contextOpen &
-      __failEnvironment "$usage" findUncaughtAssertions || return $?
-    fi
-  done
-  if __fileMatches 'set ["]\?-x' 'debugging found' _installRemotePackage bin/build/install-bin-build.sh bin/build/tools/debug.sh -- "$@"; then
-    __failEnvironment "$usage" found debugging || return $?
-  fi
-}
-_gitPreCommitShellFiles() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Usage: {fn} pattern displayError exception ... -- file ...
-__fileMatches() {
-  local file pattern="$1" error="$2" found=false exceptions=()
-  shift 2 || _argument "missing arguments" || return $?
-  [ $# -gt 0 ] || return 0
-  while [ $# -gt 0 ]; do
-    if [ "$1" = "--" ]; then
-      break
-    fi
-    exceptions+=("$1")
-    shift
-  done
-  [ $# -gt 0 ] || _argument "missing files" || return $?
-  while read -r file; do
-    if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
-      continue
-    fi
-    printf "%s%s\n" "$(lineFill "!" "$(printf "%s - %s %s" "$(consoleInfo "$file")" "$(consoleError "$error")" "$(consoleDecoration)")")" "$(consoleReset)"
-    grep -n -e "$pattern" "$file"
-    found=true
-  done < <(grep -l -e "$pattern" "$@")
-  $found
 }
 
 __gitPreCommitCache() {

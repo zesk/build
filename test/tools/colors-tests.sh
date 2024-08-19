@@ -9,11 +9,8 @@
 
 declare -a tests
 
-tests+=(testSimpleMarkdownToConsole)
-tests+=(testColorComboTest)
 tests+=(colorTest)
 tests+=(allColorTest)
-tests+=(testSemanticColorTest)
 
 testSemanticColorTest() {
   local mode

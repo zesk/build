@@ -18,6 +18,23 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
+### `__return` - IDENTICAL __return EOF
+
+IDENTICAL __return EOF
+Run binary and output failed command upon error
+
+- Location: `bin/build/identical/__return.sh`
+
+#### Arguments
+
+- `binary` - Required. Executable.
+- `...` - Any arguments are passed to binary
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `__usage` - Run `command`, handle failure with `usage` with `code` and `command`
 
 Run `command`, handle failure with `usage` with `code` and `command` as error
@@ -44,6 +61,12 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `__usageEnvironmentQuiet` - Run `usage` with an environment error
+
+Run `usage` with an environment error
+
+- Location: `bin/build/tools/sugar.sh`
+
 #### Arguments
 
 - No arguments.
@@ -65,6 +88,45 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 #### Arguments
 
 - No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- `exitCode` - Required. Integer. Exit code to return.
+- `undoFunction` - Required. Command to run to undo something. Returns `exitCode`
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `muzzle` - Suppress stdout without piping. Handy when you just want a
+
+Suppress stdout without piping. Handy when you just want a behavior not the output. e.g. `muzzle pushd`
+
+- Location: `bin/build/tools/sugar.sh`
+
+#### Arguments
+
+- `command` - Required. Callable. Thing to muzzle.
+- `...` - Optional. Arguments. Additional arguments.
+
+#### Examples
+
+    muzzle pushd
 
 #### Exit codes
 

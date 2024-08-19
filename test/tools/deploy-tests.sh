@@ -8,9 +8,6 @@
 #
 errorEnvironment=1
 
-declare -a tests
-tests+=(testDeployApplication)
-
 _testDeployApplicationSetup() {
   local home="$1" ts
   if ! d=$(mktemp -d); then
@@ -415,7 +412,6 @@ testDeployApplication() {
   unset BUILD_DEBUG
 }
 
-tests=(testDeployPackageName "${tests[@]}")
 testDeployPackageName() {
   local saveTarget
 

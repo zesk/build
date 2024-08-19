@@ -426,3 +426,133 @@ fileGroup() {
 _fileGroup() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Find list of files which do NOT match a specific pattern or patterns and output them
+#
+# Usage: {fn} [ --help ] pattern ... -- [ exception ... ] -- file ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: pattern ... - Required. String. Pattern to find in files.
+# Argument: -- - Required. Delimiter. exception.
+# Argument: exception ... - Optional. String. File pattern which should be ignored.
+# Argument: -- - Required. Delimiter. file.
+# Argument: file ... - Required. File. File to search. Special file `-` indicates files should be read from `stdin`.
+fileNotMatches() {
+  _fileMatchesHelper "_${FUNCNAME[0]}" false "$@"
+}
+_fileNotMatches() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Find one or more patterns in a list of files, with a list of file name pattern exceptions.
+#
+# Usage: {fn} [ --help ] pattern ... -- [ exception ... ] -- file ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: pattern ... - Required. String. Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
+# Argument: -- - Required. Delimiter. exception.
+# Argument: exception ... - Optional. String. File pattern which should be ignored.
+# Argument: -- - Required. Delimiter. file.
+# Argument: file ... - Required. File. File to search. Special file `-` indicates files should be read from `stdin`.
+fileMatches() {
+  _fileMatchesHelper "_${FUNCNAME[0]}" true "$@"
+}
+_fileMatches() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+_fileMatchesHelper() {
+  local usage="$1" success="$2" && shift 2
+  local argument nArguments argumentIndex saved
+  local file patterns=() found=false exceptions=() clean fileList foundLines
+
+  [ $# -gt 0 ] || return 0
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        patterns+=("$1")
+        ;;
+    esac
+    shift
+  done
+  [ "${#patterns[@]}" -gt 0 ] || __usageArgument "$usage" "No patterns" || return $?
+  [ $# -gt 0 ] || __usageArgument "$usage" "no exceptions or files" || return $?
+  while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
+  [ $# -gt 0 ] || __usageArgument "$usage" "no files" || return $?
+  fileList=$(__usageEnvironment "$usage" mktemp) || return $?
+  foundLines="$fileList.found"
+  clean=("$fileList" "$foundLines")
+  if [ "$1" = "-" ]; then
+    __usageEnvironment "$usage" cat >"$fileList" || _clean $? "${clean[@]}" || return $?
+  fi
+  for pattern in "${patterns[@]}"; do
+    if [ "$1" != "-" ]; then
+      __usageEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || _clean $? "${clean[@]}" || return $?
+    fi
+    while read -r file; do
+      if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
+        continue
+      fi
+      if $success; then
+        if grep -n -e "$pattern" "$file" >"$foundLines"; then
+          if ! isEmptyFile "$foundLines"; then
+            found=true
+            wrapLines "$file:" "" <"$foundLines"
+          fi
+        fi
+      else
+        if ! grep -q -e "$pattern" "$file"; then
+          printf "%s:%s\n" "$file" "$pattern"
+          found=true
+        fi
+      fi
+    done <"$fileList"
+  done
+  _clean 0 "$fileList" || return $?
+  $found
+}
+
+# Is this an empty (zero-sized) file?
+# Exit code: 0 - if all files passed in are empty files
+# Exit code: 1 - if any files passed in are non-empty files
+isEmptyFile() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        argument="$(usageArgumentFile "$usage" "file" "$1")" || return $?
+        [ ! -s "$argument" ] || return 1
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+  done
+}
+_isEmptyFile() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

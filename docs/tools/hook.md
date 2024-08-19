@@ -73,13 +73,17 @@ Fetch the current live version of the software
 
 ## Deployment Hooks
 
+### `__hookApplicationEnvironment` - Hook is run to generate the application environment file
+
+Hook is run to generate the application environment file
+Outputs environment settings, one per line to be put into an environment file
+See `environmentFileApplicationMake` for usage and arguments.
+
+- Location: `bin/build/hooks/application-environment.sh`
+
 #### Arguments
 
 - No arguments.
-
-#### Examples
-
-    885acc3
 
 #### Exit codes
 

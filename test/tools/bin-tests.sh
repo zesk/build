@@ -7,21 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
-
-tests+=(testAdditionalBins)
-tests+=(testGitInstallation)
-#tests+=(testInstallInstallBuild)
-tests+=(testInstallTerraform)
-tests+=(testMapBin)
-tests+=(testMapPortability)
-tests+=(testMariaDBInstallation)
-tests+=(testNewRelease)
-tests+=(testNodeInstallations)
-tests+=(testPHPComposerInstallation)
-tests+=(testPHPInstallation)
-tests+=(testPythonInstallation)
-tests+=(testVersionLive)
 
 testVersionLive() {
   assertExitCode --line "$LINENO" 0 runHook version-live || return $?
@@ -79,7 +64,6 @@ __testInstallInstallBuild() {
   rm -rf "$topDir"
 }
 
-tests+=(testMapBin)
 testMapBin() {
   local expected actual
 
@@ -120,7 +104,6 @@ _testComposerTempDirectory() {
 #
 # Side-effect: installs scripts
 #
-tests+=(testPHPComposerInstallation)
 testPHPComposerInstallation() {
   local d oldDir
 
@@ -139,22 +122,18 @@ testPHPComposerInstallation() {
   [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
 }
 
-tests+=(testGitInstallation)
 testGitInstallation() {
   __doesScriptInstallUninstall git gitInstall gitUninstall || return $?
 }
 
-tests+=(testPythonInstallation)
 testPythonInstallation() {
   __doesScriptInstallUninstall python pythonInstall pythonUninstall || return $?
 }
 
-tests+=(testMariaDBInstallation)
 testMariaDBInstallation() {
   __doesScriptInstallUninstall mariadb mariadbInstall mariadbUninstall || return $?
 }
 
-tests+=(testPHPInstallation)
 testPHPInstallation() {
   __doesScriptInstallUninstall php phpInstall phpUninstall || return $?
 }
@@ -162,7 +141,6 @@ testPHPInstallation() {
 #
 # Side-effect: installs and uninstalls scripts
 #
-tests+=(testNodeInstallations)
 testNodeInstallations() {
   # npm 18 installed in this image
   if ! whichExists npm; then
@@ -176,12 +154,10 @@ testNodeInstallations() {
   __doesScriptInstallUninstall prettier prettierInstall prettierUninstall || return $?
 }
 
-tests+=(testInstallTerraform)
 testInstallTerraform() {
   __doesScriptInstallUninstall terraform terraformInstall terraformUninstall || return $?
 }
 
-tests+=(testAdditionalBins)
 testAdditionalBins() {
   local binTest
   local aa

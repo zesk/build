@@ -93,3 +93,13 @@ _undo() {
   __execute "$@" || :
   return "$exitCode"
 }
+
+# Usage: {fn} command ...
+# Suppress stdout without piping. Handy when you just want a behavior not the output. e.g. `muzzle pushd`
+# Argument: command - Required. Callable. Thing to muzzle.
+# Argument: ... - Optional. Arguments. Additional arguments.
+# Example:     {fn} pushd
+# Examepl:     __usageEnvironment "$usage" phpBuild || _undo $? {fn} popd || return $?
+muzzle() {
+  "$@" >/dev/null
+}

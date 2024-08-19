@@ -8,6 +8,8 @@
 
 Check if an element exists in an array
 
+- Location: `bin/build/tools/text.sh`
+
 #### Usage
 
     inArray element [ arrayElement0 arrayElement1 ... ]
@@ -33,6 +35,8 @@ Check if an element exists in an array
 Test if an argument is a positive floating point number
 (`1e3` notation NOT supported)
 
+- Location: `bin/build/tools/type.sh`
+
 #### Arguments
 
 - No arguments.
@@ -50,6 +54,8 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if an argument is a floating point number
 (`1e3` notation NOT supported)
 
+- Location: `bin/build/tools/type.sh`
+
 #### Arguments
 
 - No arguments.
@@ -66,6 +72,8 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 
 Test if an argument is a signed integer
 
+- Location: `bin/build/tools/type.sh`
+
 #### Arguments
 
 - No arguments.
@@ -81,6 +89,8 @@ Thanks to [F. Hauri - Give Up GitHub (isuint_Case)](https://stackoverflow.com/qu
 ### `isUnsignedInteger` - Test if an argument is an unsigned integer
 
 Test if an argument is an unsigned integer
+
+- Location: `bin/build/tools/type.sh`
 
 #### Arguments
 
@@ -99,6 +109,8 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if an argument is a floating point number
 (`1e3` notation NOT supported)
 
+- Location: `bin/build/tools/type.sh`
+
 #### Arguments
 
 - No arguments.
@@ -116,6 +128,8 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if all arguments are bash functions
 If no arguments are passed, returns exit code 1.
 
+- Location: `bin/build/tools/type.sh`
+
 #### Arguments
 
 - `string` - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
@@ -129,6 +143,8 @@ If no arguments are passed, returns exit code 1.
 Test if all arguments are executable binaries
 If no arguments are passed, returns exit code 1.
 
+- Location: `bin/build/tools/type.sh`
+
 #### Arguments
 
 - `string` - Required. Path to binary to test if it is executable.
@@ -141,6 +157,8 @@ If no arguments are passed, returns exit code 1.
 
 Test if all arguments are callable as a command
 If no arguments are passed, returns exit code 1.
+
+- Location: `bin/build/tools/type.sh`
 
 #### Arguments
 

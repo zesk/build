@@ -7,16 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
-
-tests+=(testTrimHeadTail)
-tests+=(testSingleBlankLines)
-tests+=(testText)
-tests+=(testEscapeSingleQuotes)
-tests+=(testEscapeDoubleQuotes)
-tests+=(testSubstringFound)
-tests+=(testIsSubstring)
-tests+=(testIsMappable)
 
 __testIsMappableData() {
   cat <<'EOF'
@@ -137,7 +127,7 @@ __testQuoteSedPatternData() {
 |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 EOF
 }
-tests+=(testQuoteSedPattern)
+
 testQuoteSedPattern() {
   local value mappedValue
   assertEquals --line "$LINENO" "\\&" "$(quoteSedPattern "&")" || return $?
@@ -153,7 +143,6 @@ testQuoteSedPattern() {
   assertEquals --line "$LINENO" "$mappedValue" "$value" || return $?
 }
 
-tests+=(testMapValue)
 testMapValue() {
   local tempEnv
 
@@ -168,7 +157,6 @@ testMapValue() {
   __environment rm "$tempEnv" || return $?
 }
 
-tests+=(testLowercase)
 testLowercase() {
   assertOutputEquals lowercase lowercase LoWerCaSe || return $?
 }
@@ -203,7 +191,6 @@ __testIsCharacterClass() {
   done
 }
 
-tests+=(testValidateCharacterClass)
 testValidateCharacterClass() {
   local temp
 
@@ -217,7 +204,6 @@ testValidateCharacterClass() {
   rm "$temp" || :
 }
 
-tests+=(testStringValidate)
 testStringValidate() {
   assertExitCode 0 stringValidate string alpha || return $?
   assertExitCode 0 stringValidate string alnum || return $?
@@ -230,7 +216,6 @@ testStringValidate() {
   assertExitCode 1 stringValidate A_B_C lower _ || return $?
 }
 
-tests=(testListTokens "${tests[@]}")
 testListTokens() {
   local COLUMNS LINES
 
@@ -240,13 +225,11 @@ testListTokens() {
   assertEquals "$(printf "%s\n" confirmYesNo copyFileWouldChange copyFile 'args[@]' 'args[@]')" "$(listTokens <"./test/example/listTokensBad.md")" || return $?
 }
 
-tests+=(testCharacterFromInteger)
 testCharacterFromInteger() {
   assertEquals l "$(characterFromInteger "$(_code leak)")" || return $?
   assertEquals a "$(characterFromInteger "$(_code assert)")" || return $?
 }
 
-tests+=(testPrintfOutput)
 testPrintfOutput() {
   assertEquals --line "$LINENO" "$(echo "ab" | printfOutputPrefix "c")" "cab" || return $?
   assertEquals --line "$LINENO" "$(printf "" | printfOutputPrefix "c")" "" || return $?

@@ -6,14 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-set -eou pipefail
-
-declare -a tests
-
-tests+=(testIsVersion)
-tests+=(testVersionNext)
-tests+=(testReleaseNotesSimple)
-tests+=(testReleaseNotes)
 
 ___testIsVersionData() {
   cat <<EOF

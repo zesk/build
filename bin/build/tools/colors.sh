@@ -25,38 +25,94 @@
 #
 consoleReset() {
   if hasColors; then
-    echo -en '\033[0m' # Reset
+    printf "\e[0m"
+  fi
+}
+
+# This modifies text containing escape sequences to best make text look correct
+__wrapColor() {
+  local escapeColor=$'\e'"[" prefix="$1" && shift
+  local suffix="${escapeColor}0m" text="$*" _magic="¢" start starts end ends
+
+  # "This is a (1word) and (2phrase)"
+  text="${text//$suffix/$_magic}"
+  # "This is a (1word* and (2phrase*"
+  IFS="$_magic" read -r -a starts <<<"$text" || :
+  # [ "This is a (1word", " and (2phrase", "" ]
+  if [ "${#starts[@]}" -ge 1 ]; then
+    for start in "${starts[@]}"; do
+      # "This is a (1word"
+      start="${start//$escapeColor/$_magic}"
+      # "This is a (1word"
+      IFS="$_magic" read -r -a ends <<<"$start" || :
+      # [ "This is a ", "1word" ]
+      if [ "${#ends[@]}" -eq 2 ]; then
+        printf "%s" "$prefix"
+        printf "%s" "${ends[0]}"
+        printf "%s" "$suffix"
+        printf "%s%s" "$escapeColor" "${ends[1]}"
+      else
+        # starts are divided by "$suffix" so must be added back
+        printf -- "%s%s%s" "$prefix" "$start" "$suffix"
+      fi
+    done
+  else
+    printf -- "%s%s%s" "$prefix" "$text" "$suffix"
   fi
 }
 
 #
 # Set colors to deal with dark or light-background consoles
-# See:
+# Usage: {fn} [ --dark ] [ --light ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --dark - Optional. Flag. Dark mode for darker backgrounds.
+# Argument: --light - Optional. Flag. Light mode for lighter backgrounds.
+# Environment: BUILD_COLORS_MODE
 #
 consoleColorMode() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+
   export BUILD_COLORS_MODE
 
-  # shellcheck source=/dev/null
-  if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
-    return 1
-  fi
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
 
-  case "$1" in
-    --dark)
-      BUILD_COLORS_MODE=dark
-      ;;
-    --light)
-      BUILD_COLORS_MODE=light
-      ;;
-    *)
-      consoleError "Unknown console mode $1" 1>&2
-      return 1
-      ;;
-  esac
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --dark)
+        BUILD_COLORS_MODE=dark
+        ;;
+      --light)
+        BUILD_COLORS_MODE=light
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+  done
+
+  [ -n "${BUILD_COLORS_MODE-}" ] || __usageEnvironment "$usage" "Empty BUILD_COLORS_MODE" || return $?
+  printf "%s\n" "${BUILD_COLORS_MODE-}"
+}
+_consoleColorMode() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Usage: hasConsoleAnimation
+# Usage: {fn}
 # Exit Code: 0 - Supports console animation
 # Exit Code; 1 - Does not support console animation
 #
@@ -83,6 +139,25 @@ __consoleEscape() {
     printf "%s\n" "$*"
   fi
 }
+
+# Usage: {fn} prefix suffix [ text ]
+# Argument: prefix - Required. String.
+# Argument: suffix - Required. String.
+# Argument: text ... - Optional. String.
+__consoleEscape1() {
+  local start="$1"
+  shift
+  if hasColors; then
+    if [ -z "$*" ]; then
+      printf "%s$start" ""
+    else
+      __wrapColor "$start" "$@"
+    fi
+  else
+    printf "%s\n" "$*"
+  fi
+}
+
 
 #
 # Summary: Alternate color output
@@ -452,6 +527,24 @@ consoleColumns() {
     printf %d 80
   else
     tput cols
+  fi
+}
+
+#
+# Row count in current console
+#
+# Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
+# Usage: consoleColumns
+# Environment: Uses the `tput lines` tool to find the value if `TERM` is non-blank.
+# Example:     tail -n $(consoleRows) "$file"
+# Environment: COLUMNS - May be defined after calling this
+# Environment: LINES - May be defined after calling this
+# Side Effect: MAY define two environment variables
+consoleRows() {
+  if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
+    printf %d 60
+  else
+    tput lines
   fi
 }
 

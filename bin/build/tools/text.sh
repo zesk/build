@@ -334,7 +334,7 @@ _isSubstringInsensitive() {
 trimWords() {
   local wordCount=$((${1-0} + 0)) words=() result
   shift || return 0
-  while [ ${#words[@]} -lt $wordCount ]; do
+  while [ $# -gt 0 ] && [ ${#words[@]} -lt $wordCount ]; do
     IFS=' ' read -ra argumentWords <<<"${1-}"
     for argumentWord in "${argumentWords[@]+${argumentWords[@]}}"; do
       words+=("$argumentWord")
@@ -342,7 +342,7 @@ trimWords() {
         break
       fi
     done
-    shift || break
+    shift
   done
   result=$(printf '%s ' "${words[@]+${words[@]}}")
   printf %s "${result%% }"

@@ -7,15 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
-
-tests+=(testDotEnvConfigure)
-tests+=(testDotEnvConfigure)
-tests+=(testEnvironmentFileMake)
-tests+=(testEnvironmentFileLoad)
-tests+=(testEnvironmentVariables)
-tests+=(testEnvironmentValueReadWrite)
-
 testDotEnvConfigure() {
   local tempDir tempEnv magic
   export TESTENVWORKS TESTENVLOCALWORKS

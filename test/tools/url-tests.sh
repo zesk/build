@@ -7,9 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-declare -a tests
-
-tests+=(testUrlParse)
 testUrlParse() {
   local parsed u url user name password host port path error scheme
 
@@ -51,7 +48,6 @@ testUrlParse() {
 
 }
 
-tests+=(testGitUrlParse)
 testGitUrlParse() {
   local parsed u url user name password host port path error scheme
 
@@ -79,7 +75,6 @@ mysqli://user:secret@dbhost/moneymaker
 EOF
 }
 
-tests+=(testUrlValid)
 testUrlValid() {
   __validUrls | while read -r url; do
     assertExitCode --line "$LINENO" 0 urlValid "$url" || return $?

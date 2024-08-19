@@ -12,8 +12,6 @@ _testAWSIPAccessUsage() {
   return "$1"
 }
 
-declare -a tests
-tests+=(testAWSIPAccess)
 testAWSIPAccess() {
   local quietLog=$1 id key start
 
@@ -106,7 +104,6 @@ _isAWSKeyUpToDateTest() {
   fi
 }
 
-tests=(testAWSExpiration "${tests[@]}")
 testAWSExpiration() {
   local thisYear thisMonth expirationDays start
   local oldDate
