@@ -35,7 +35,7 @@ bashSanitize() {
   executor=contextOpen
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -169,6 +169,9 @@ _bashSanitizeCheckDebugging() {
 
 # Usage: {fn} [ directory ... ]
 # Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files found.
+# Security: Loads bash files
+# Load a directory of `.sh` files using `source` to make the code available.
+# Has security implications. Use with caution and ensure your directory is protected.
 bashSourcePath() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
@@ -180,7 +183,7 @@ bashSourcePath() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -193,7 +196,7 @@ bashSourcePath() {
           [ -f "$tool" ] || __failEnvironment "$usage" "$tool is not a bash source file" || return $?
           [ -x "$tool" ] || __failEnvironment "$usage" "$tool is not executable" || return $?
           # shellcheck source=/dev/null
-          __environment source "$tool" || return $?
+          source "$tool" || __failEnvironment "$usage" "source $tool" || return $?
         done < <(find "$1" -type f -name '*.sh' ! -path '*/.*' || :)
         ;;
     esac

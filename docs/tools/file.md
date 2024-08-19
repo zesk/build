@@ -49,6 +49,20 @@ Fetch the modification time in seconds from now of a file as a timestamp
 
 - `2` - If file does not exist
 - `0` - If file exists and modification times are output, one per line
+### `isEmptyFile` - Is this an empty (zero-sized) file?
+
+Is this an empty (zero-sized) file?
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - if all files passed in are empty files
+- `1` - if any files passed in are non-empty files
 
 ### `isNewestFile` - Check to see if the first file is the newest
 
@@ -399,3 +413,46 @@ Reverses a pipe's input lines to output using an awk trick. Do not recommend on 
 #### Credits
 
 Thanks to [Eric Pement](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt).
+
+## Finding
+
+### `fileMatches` - Find one or more patterns in a list of files,
+
+Find one or more patterns in a list of files, with a list of file name pattern exceptions.
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `pattern ...` - Required. String. Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
+- `--` - Required. Delimiter. exception.
+- `exception ...` - Optional. String. File pattern which should be ignored.
+- `--` - Required. Delimiter. file.
+- `file ...` - Required. File. File to search. Special file `-` indicates files should be read from `stdin`.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `fileNotMatches` - Find list of files which do NOT match a specific
+
+Find list of files which do NOT match a specific pattern or patterns and output them
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `pattern ...` - Required. String. Pattern to find in files.
+- `--` - Required. Delimiter. exception.
+- `exception ...` - Optional. String. File pattern which should be ignored.
+- `--` - Required. Delimiter. file.
+- `file ...` - Required. File. File to search. Special file `-` indicates files should be read from `stdin`.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

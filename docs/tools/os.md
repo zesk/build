@@ -10,6 +10,8 @@
 
 Get the port number associated with a service
 
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `service` - A unix service typically found in `/etc/services`
@@ -38,6 +40,8 @@ Hard-coded services for:
 
 Backup when `/etc/services` does not exist.
 
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `service` - A unix service typically found in `/etc/services`
@@ -58,6 +62,8 @@ Backup when `/etc/services` does not exist.
 
 IDENTICAL whichExists EOF
 
+- Location: `bin/build/identical/whichExists.sh`
+
 #### Arguments
 
 - `binary` - Required. String. Binary to find in the system `PATH`.
@@ -68,6 +74,8 @@ IDENTICAL whichExists EOF
 ### `runCount` - Run a binary count times
 
 $\Run a binary count times
+
+- Location: `bin/build/tools/os.sh`
 
 #### Arguments
 
@@ -83,6 +91,8 @@ $\Run a binary count times
 ### `chmod-sh.sh` - Makes all `*.sh` files executable
 
 Makes all `*.sh` files executable
+
+- Location: `bin/build/tools/os.sh`
 
 #### Arguments
 
@@ -128,6 +138,8 @@ Cleans the path and removes non-directory entries and duplicates
 
 Maintains ordering.
 
+- Location: `bin/build/tools/os.sh`
+
 #### Usage
 
     pathCleanDuplicates
@@ -149,6 +161,8 @@ Maintains ordering.
 
 Outputs value of resident memory used by a process, value is in kilobytes
 
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `pid` - Process ID of running process
@@ -169,6 +183,8 @@ Outputs value of resident memory used by a process, value is in kilobytes
 ### `processVirtualMemoryAllocation` - Outputs value of virtual memory allocated for a process, value
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
+
+- Location: `bin/build/tools/os.sh`
 
 #### Arguments
 
@@ -193,6 +209,8 @@ Outputs value of virtual memory allocated for a process, value is in kilobytes
 ### `JSON` - Format something neatly as JSON
 
 Format something neatly as JSON
+
+- Location: `bin/build/tools/os.sh`
 
 #### Usage
 
