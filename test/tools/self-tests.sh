@@ -200,7 +200,7 @@ testBuildEnvironmentLoad() {
   assertEquals --line "$LINENO" "${FOO-}" "" || return $?
 
   printf "%s\n" "export FOO" "FOO=hello" >>"$target"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --leak FOO --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
 
   assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
 
