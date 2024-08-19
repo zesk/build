@@ -42,11 +42,11 @@ To install it in the operating system:
 
 Defaults:
 
-- ./ - Application root
-- ./bin/build - Zesk Build installation location (may *not* be changed)
-- ./bin/hooks/ - Application hook implementation (`hook-name` with `.sh` on the end)
-- ./bin/env/ - Your project's environment variables defaults (`NAME` with `.sh` on the end)
-- ./docs/release/v1.0.0.md - Release notes
+- `./` - Application root
+- `./bin/build` - Zesk Build installation location (may *not* be changed)
+- `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` on the end)
+- `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end)
+- `./docs/release/v1.0.0.md` - Release notes (override by adding `BUILD_RELEASE_NOTES` environment)
 
 ## Other binaries
 
@@ -59,7 +59,7 @@ Binaries are:
 - `cannon.sh` - `cannon` - replace strings in many files. Destructive! Warning! Danger!
 - `chmod-sh.sh` - `makeShellFilesExecutable` - Makes `.sh` files `+x`
 - `deprecated.sh` - Run this on your code to update it to the latest. May break it, so use source control.
-- `identical-check.sh` - `identicalCheck`
+- `identical-check.sh` - `identicalCheck` with some automatic configuration for your project
 - `local-container.sh` - `dockerLocalContainer`
 - `bitbucket-container.sh` - `bitbucketContainer`
 - `map.sh` - `mapEnvironment`
@@ -70,7 +70,25 @@ Binaries are:
 
 A single binary can be used to load and run commands:
 
-- `tools.sh` - `Zesk Tools - loads or runs tools`
+- `tools.sh` - loads or runs tools
+
+## Sample usages
+
+As a shortcut to running functions:
+
+    #!/usr/bin/env bash
+    "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh" consoleOrange "The code is working."
+
+To load all functions:
+
+    #!/usr/bin/env bash
+    # shellcheck source=/dev/null
+    source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh" 
+
+    consoleOrange "The code is working."
+    bigText "Hooray."
+
+For more complex (and more robust error handling) see `__install` and `__tools` identical code in `bin/build/identical`.
 
 ## Artifacts: Build Directory and `.deploy`
 
@@ -113,4 +131,4 @@ If you test on another OS or need support on a specific platform, report an issu
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 
-Reviewed: 2024-05-22
+Reviewed: 2024-08-19

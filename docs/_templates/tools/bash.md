@@ -7,6 +7,7 @@
 {bashSanitize}
 {bashLintFiles}
 {bashLint}
+{bashSourcePath}
 
 ## Deprecated
 
