@@ -236,7 +236,7 @@ _buildEnvironmentPath() {
 
   export BUILD_ENVIRONMENT_PATH
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  printf "%s\n" "$home/bin/build/env/$env.sh" "$home/bin/env/$env.sh"
+  printf "%s\n" "$home/bin/build/env" "$home/bin/env"
   IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_PATH-}"
   printf "%s\n" "${paths[@]+"${paths[@]}"}"
 }
@@ -257,12 +257,14 @@ _buildEnvironmentPath() {
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
-  local env file found home
+  local env path file found home
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   for env in "$@"; do
     found=false
-    while read -r file; do
+    while read -r path; do
+      [ -d "$path" ] || continue
+      file="$path/$env.sh"
       if [ -x "$file" ]; then
         export "${env?}" || __failArgument "$usage" "export $env failed" || return $?
         found=true

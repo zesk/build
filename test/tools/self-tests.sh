@@ -182,3 +182,27 @@ testInstallBinBuild() {
 _testInstallBinBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+testBuildEnvironmentLoad() {
+  local tempDir target
+
+  tempDir=$(__environment mktemp -d) || return $?
+
+  target="$tempDir/FOO.sh"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  __environment touch "$target" || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  printf "%s\n" "#!/usr/bin/env bash" >"$target"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  __environment chmod +x "$target" || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+
+  assertEquals --line "$LINENO" "${FOO-}" "" || return $?
+
+  printf "%s\n" "export FOO" "FOO=hello" >>"$target"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+
+  assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
+
+  unset FOO
+}
