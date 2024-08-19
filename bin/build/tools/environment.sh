@@ -186,15 +186,18 @@ environmentApplicationLoad() {
   done
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
-    APPLICATION_VERSION="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
+    APPLICATION_VERSION="$(__environment runHook "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_ID-}" ]; then
     hook=application-id
-    APPLICATION_ID="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
+    APPLICATION_ID="$(__environment runHook "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_TAG-}" ]; then
     hook=application-tag
-    APPLICATION_TAG="$(runHook "$hook")" || _environment "runHook" "$hook" || return $?
+    APPLICATION_TAG="$(__environment runHook "$hook")" || return $?
+    if [ -z "${APPLICATION_TAG-}" ]; then
+      APPLICATION_TAG=$APPLICATION_ID
+    fi
   fi
   printf "%s\n" "${variables[@]}"
 }

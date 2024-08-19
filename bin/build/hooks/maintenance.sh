@@ -7,14 +7,13 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-set -eou pipefail
-
+# IDENTICAL zesk-build-hook-header 3
 # shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh" || exit 1
-
-envFile=.env.local
+set -eou pipefail
+source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 __hookMaintenanceSetValue() {
+  local envFile=.env.local
   local variable=$1 value=$2
   if [ ! -f "$envFile" ]; then
     touch "$envFile"

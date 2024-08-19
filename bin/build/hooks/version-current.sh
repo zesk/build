@@ -5,11 +5,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# IDENTICAL zesk-build-hook-header 3
 # shellcheck source=/dev/null
-if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
-  printf "tools.sh failed\n" 1>&2
-  exit 1
-fi
+set -eou pipefail
+source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
 # Usage: {fn}

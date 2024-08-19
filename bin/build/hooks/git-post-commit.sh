@@ -8,6 +8,9 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# DOES NOT USE zesk-build-hook-header because this may be installed as a git hook as well so
+# it determines where it is installed and finds the build directory appropriately
+
 # IDENTICAL __tools 16
 # Usage: {fn} [ relative [ command ... ] ]
 # Load build tools and run command

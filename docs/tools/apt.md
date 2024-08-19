@@ -9,6 +9,8 @@
 Run apt-get update once and only once in the pipeline, at least
 once an hour as well (when testing)
 
+- Location: `bin/build/tools/apt.sh`
+
 #### Arguments
 
 - `--force` - Optional. Flag. Force apt-update regardless.
@@ -28,6 +30,8 @@ Installs an apt package if a binary does not exist in the which path.
 The assumption here is that `aptInstallPackage` will install the desired `binary`.
 
 Confirms that `binary` is installed after installation succeeds.
+
+- Location: `bin/build/tools/apt.sh`
 
 #### Arguments
 
@@ -50,20 +54,22 @@ Confirms that `binary` is installed after installation succeeds.
 Technically this will install the binary and any related files as a package.
 ### `whichAptUninstall` - Install tools using `apt-get` if they are not found
 
-Installs an apt package if a binary does not exist in the which path.
-The assumption here is that `aptInstallPackage` will install the desired `binary`.
+Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
+The assumption here is that `aptUninstall` will install the desired `binary`.
 
 Confirms that `binary` is installed after installation succeeds.
+
+- Location: `bin/build/tools/apt.sh`
 
 #### Arguments
 
 - `binary` - Required. String. The binary to look for.
-- `aptInstallPackage` - The package name to install if the binary is not found in the `$PATH`.
+- `aptInstallPackage` - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
 
 #### Examples
 
-    whichApt shellcheck shellcheck
-    whichApt mariadb mariadb-client
+    whichAptUninstall shellcheck shellcheck
+    whichAptUninstall mariadb mariadb-client
 
 #### Exit codes
 
@@ -73,13 +79,19 @@ Confirms that `binary` is installed after installation succeeds.
 
 #### Environment
 
-Technically this will install the binary and any related files as a package.
+Technically this will uninstall the binary and any related files as a package.
 ### `aptInstall` - Install packages using `apt-get`
 
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available.
 
+Main reason to use this instead of `apt-get` raw is it's quieter.
 
+Also does a simple lookup in the list of installed packages to avoid double-installation.
+
+
+
+- Location: `bin/build/tools/apt.sh`
 
 #### Usage
 
@@ -104,6 +116,8 @@ OS upgrade and potential restart
 Progress is written to stderr
 Result is `ok` or `restart` written to stdout
 
+- Location: `bin/build/tools/apt.sh`
+
 #### Arguments
 
 - No arguments.
@@ -115,6 +129,8 @@ Result is `ok` or `restart` written to stdout
 ### `aptKeyAdd` - Add keys to enable apt to download terraform directly from
 
 Add keys to enable apt to download terraform directly from hashicorp.com
+
+- Location: `bin/build/tools/apt.sh`
 
 #### Arguments
 
@@ -129,6 +145,8 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 ### `aptKeyRemoveHashicorp` - Add keys to enable apt to download terraform directly from
 
 Add keys to enable apt to download terraform directly from hashicorp.com
+
+- Location: `bin/build/tools/terraform.sh`
 
 #### Usage
 
@@ -147,6 +165,8 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 Remove apt keys
 
+- Location: `bin/build/tools/apt.sh`
+
 #### Arguments
 
 - `keyName` - Required. String. One or more key names to remove.
@@ -158,6 +178,8 @@ Remove apt keys
 ### `aptListInstalled` - List installed packages
 
 List installed packages
+
+- Location: `bin/build/tools/apt.sh`
 
 #### Arguments
 
@@ -172,6 +194,8 @@ List installed packages
 
 INTERNAL - has `aptUpToDate` set the `restart` flag at some point?
 
+- Location: `bin/build/tools/apt.sh`
+
 #### Arguments
 
 - `value` - Set the restart flag to this value (blank to remove)
@@ -185,6 +209,8 @@ INTERNAL - has `aptUpToDate` set the `restart` flag at some point?
 
 Removes packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available. (For now)
+
+- Location: `bin/build/tools/apt.sh`
 
 #### Usage
 

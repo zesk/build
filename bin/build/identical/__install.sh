@@ -24,7 +24,7 @@ __install() {
   [ -n "$include" ] || _return $e "blank include" || return $?
   if [ ! -x "$tools" ]; then
     "$install" || _return $e "$install failed" || return $?
-    [ -d "${tools%/*}" ] || _return $e "${tools%/*} is not a directory" || return $?
+    [ -d "${tools%/*}" ] || _return $e "$install failed to create directory ${tools%/*}" || return $?
   fi
   [ -x "$tools" ] || _return $e "$install failed to create $tools" "$@" || return $?
   shift && shift && shift && while [ $# -gt 0 ]; do arguments+=("$1") && shift; done
