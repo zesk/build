@@ -7,7 +7,6 @@
 # Test: o test/tools/self-tests.sh
 # Docs: o docs/_templates/tools/self.md
 
-
 # Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
 # Argument: --help - Optional. Flag. This help.
 # Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
@@ -232,6 +231,16 @@ _buildCacheDirectory() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+_buildEnvironmentPath() {
+  local usage="$1" paths
+
+  export BUILD_ENVIRONMENT_PATH
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  printf "%s\n" "$home/bin/build/env/$env.sh" "$home/bin/env/$env.sh"
+  IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_PATH-}"
+  printf "%s\n" "${paths[@]+"${paths[@]}"}"
+}
+
 #
 # Load one or more environment settings from bin/build/env or bin/env.
 #
@@ -244,6 +253,7 @@ _buildCacheDirectory() {
 # Modifies local environment. Not usually run within a subshell.
 #
 # Environment: $envName
+# Environment: BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
@@ -252,7 +262,7 @@ buildEnvironmentLoad() {
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   for env in "$@"; do
     found=false
-    for file in "$home/bin/build/env/$env.sh" "$home/bin/env/$env.sh"; do
+    while read -r file; do
       if [ -x "$file" ]; then
         export "${env?}" || __failArgument "$usage" "export $env failed" || return $?
         found=true
@@ -261,7 +271,7 @@ buildEnvironmentLoad() {
         source "$file" || __failEnvironment "$usage" source "$file" return $?
         set +a || :
       fi
-    done
+    done < <(_buildEnvironmentPath "$usage")
     $found || __failEnvironment "$usage" "Missing $file" || return $?
   done
 }
