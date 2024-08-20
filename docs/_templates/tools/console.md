@@ -5,5 +5,7 @@
 <hr />
 
 {consoleGetColor}
-{colorBrightness}
 {consoleConfigureColorMode}
+{consoleColumns}
+{consoleRows}
+{consoleBrightness}

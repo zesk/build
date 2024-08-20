@@ -13,7 +13,7 @@
 
 - `BUILD_COMPOSER_VERSION` - String. Default `latest`. Version of composer to use for building vendor directory. (See [`composer.sh`](composer.md))
 - `BUILD_NPM_VERSION` - String. Default `latest`. Version of npm to install using native `npm` binary. (Affects [`npm.sh`](npm.md))
-- `HOSTTYPE` - String. Affects which version of the AWS cli is installed (arm64 or amd64) (See `aws-cli.sh`). OS-specific.
+- `HOSTTYPE` - String. Affects which version of the AWS cli is installed (arm64 or amd64) (See `aws.sh`). OS-specific.
 
 # GitHub Releases
 
@@ -36,8 +36,8 @@
 Tools: `aws-ip-access.sh`
 
 - `AWS_REGION` - Default region for operations in AWS - required for `aws-ip-access.sh`
-- `AWS_ACCESS_KEY_ID` - Credentials for `aws-cli.sh` once installed
-- `AWS_SECRET_ACCESS_KEY` - Credentials for `aws-cli.sh` once installed
+- `AWS_ACCESS_KEY_ID` - Credentials for `aws.sh` once installed
+- `AWS_SECRET_ACCESS_KEY` - Credentials for `aws.sh` once installed
 
 # Development
 
