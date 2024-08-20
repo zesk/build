@@ -13,6 +13,8 @@ If this fails it outputs an error to stderr
 When this tool succeeds it outputs the path to the current release notes file
 
 
+- Location: `bin/build/tools/version.sh`
+
 #### Arguments
 
 - `version` - Optional. String. Version for the release notes path. If not specified uses the current version.
@@ -24,12 +26,14 @@ When this tool succeeds it outputs the path to the current release notes file
 
 #### Sample Output
 
-    ${BUILD_RELEASE_NOTES%%/}/version.md
+    docs/release/version.md
     
 
 #### Exit codes
 
-- `1` - if an error occurs
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 #### Environment
 
@@ -48,6 +52,8 @@ generate a new release file if needed.
 A release notes template file is added at `./docs/release/`. This file is
 also added to `git` the first time.
 
+- Location: `bin/build/tools/version.sh`
+
 #### Arguments
 
 - `--non-interactive` - Optional. If new version is needed, use default version
@@ -61,9 +67,11 @@ also added to `git` the first time.
 
 Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 
+- Location: `bin/build/tools/version.sh`
+
 #### Arguments
 
-- No arguments.
+- `lastVersion` - Required. String. Version to calculate the next minor version.
 
 #### Exit codes
 
@@ -73,6 +81,8 @@ Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 ### `isVersion` - Check if something matches a version
 
 Check if something matches a version
+
+- Location: `bin/build/tools/version.sh`
 
 #### Arguments
 
