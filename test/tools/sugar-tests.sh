@@ -147,7 +147,7 @@ testSugar() {
     assertExitCode --line "$LINENO" --stderr-ok "$code" _return "$code" || return $?
   done
   # __return
-  for code in $(seq 0 11 255); do
+  for code in $(seq 0 13 255); do
     assertExitCode --line "$LINENO" --stderr-ok "$code" __return _return "$code" || return $?
   done
 
