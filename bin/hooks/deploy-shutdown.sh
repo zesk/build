@@ -11,22 +11,32 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# IDENTICAL __tools 16
-# Usage: {fn} [ relative [ command ... ] ]
+# IDENTICAL __source 17
+# Usage: {fn} source relativeHome  [ command ... ] ]
+# Load a source file and run a command
+# Argument: source - Required. File. Path to source relative to application root..
+# Argument: relativeHome - Required. Directory. Path to application root.
+# Argument: command ... - Optional. Callable. A command to run and optional arguments.
+__source() {
+  local me="${BASH_SOURCE[0]}" e=253
+  local here="${me%/*}" a=()
+  local source="$here/${2:-".."}/${1-}" && shift 2 || _return $e "missing source" || return $?
+  [ -d "${source%/*}" ] || _return $e "${source%/*} is not a directory" || return $?
+  [ -f "$source" ] && [ -x "$source" ] || _return $e "$source not an executable file" "$@" || return $?
+  while [ $# -gt 0 ]; do a+=("$1") && shift; done
+  # shellcheck source=/dev/null
+  source "$source" || _return $e source "$source" "$@" || return $?
+  [ ${#a[@]} -gt 0 ] || return 0
+  "${a[@]}" || return $?
+}
+
+# IDENTICAL __tools 7
+# Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
-# Argument: relative - Required. Directory. Path to application root.
+# Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 __tools() {
-  local source="${BASH_SOURCE[0]}" e=253
-  local here="${source%/*}" arguments=()
-  local tools="$here/${1:-".."}/bin/build"
-  [ -d "$tools" ] || _return $e "$tools is not a directory" || return $?
-  tools="$tools/tools.sh" && [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
-  shift && while [ $# -gt 0 ]; do arguments+=("$1") && shift; done
-  # shellcheck source=/dev/null
-  source "$tools" || _return $e source "$tools" "$@" || return $?
-  [ ${#arguments[@]} -gt 0 ] || return 0
-  "${arguments[@]}" || return $?
+  __source bin/build/tools.sh "$@"
 }
 
 # IDENTICAL _return 19
