@@ -25,6 +25,8 @@ Sets `kitty` incrementor to 2 and outputs `2`
     incrementor 2 kitty
 
 
+- Location: `bin/build/tools/utilities.sh`
+
 #### Arguments
 
 - `count` - Optional. Integer. Sets the value for any following named variables to this value.
@@ -51,6 +53,8 @@ Extension parsing is done by removing the final dot from the filename:
 - `foo.` -> `"!"``
 - `foo-bar` -> `"!"``
 
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. This help.
@@ -67,6 +71,8 @@ Extension parsing is done by removing the final dot from the filename:
 ### `pipeRunner` - Single reader, multiple writers
 
 Single reader, multiple writers
+
+- Location: `bin/build/tools/utilities.sh`
 
 #### Arguments
 

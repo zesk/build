@@ -93,6 +93,22 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
+### `bashSourcePath` - Load a directory of `.sh` files using `source` to make
+
+Load a directory of `.sh` files using `source` to make the code available.
+Has security implications. Use with caution and ensure your directory is protected.
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- `directory ...` - Required. Directory. Directory to `source` all `.sh` files found.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Deprecated
 

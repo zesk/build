@@ -4,75 +4,19 @@
 
 So, as we've been coding here it's starting to make sense to follow various patterns in our `bash` coding.
 
-## Always `cd` to the application root somehow
+## NO: Always `cd` to the application root somehow
 
-Context is important when running code as is the concept that a script should be able to *self-orient itself* based on its current location to find things. When writing scripts and functions, the intent is that the **current working directory** is initially set to the application root. This is done using `${BASH_SOURCE[0]}` in most scripts to self-orient.
+We no longer require this except for scripts which require it. The recommendation is to `pushd` and `popd` to places you need to go.
 
-Code:
+## NO: Always `set -eou pipefail`
 
-    errorEnvironment=1
+Again, this is good for testing scripts but should be avoided in production as it does not work as a good method to catch errors; code should catch errors itself using the `|| return $?` structures you see everywhere.
 
-    deployCoolApp() {
-        cd "$(dirname "${BASH_SOURCE[0]}")/.." || return $errorEnvironment
-    
-        if ! source "bin/build/tools.sh"; then
-            printf "%s\n" "Unable to load tools.sh" 1>&2
-            # was exit, prefer return
-            return $errorEnvironment;
-        fi
-        deployApplication --id "$1" --application /var/www/coolApp --home /var/www/DEPLOY/coolApp "$@"
-    }
-
-    deployCoolApp "$@"
-
-Alternately, single-function scripts can invoke Zesk Build Tools directly without any `cd` required:
-
-Code:
-
-    #!/usr/bin/env bash
-    "$(dirname "${BASH_SOURCE[0]}")/../bin/build/tools.sh" deployApplication --id "$1" --application /var/www/coolApp --home /var/www/DEPLOY/coolApp
-
-## Always `set -eou pipefail`
-
-All code in Zesk Build has the settings `set -eou pipefail` for all scripts when run internally; the goal being that no errors should ever occur due to these handlers.
-
-Despite having these items set, the standard is to **ALWAYS** check return values for **ALL** `bash` code and explicitly dampen errors using `|| :` when required.
-
-Code will at times look like this:
-
-    doSomeCommand arg1 arg2 "$var3" || return $?
-    doAnotherCommand arg1 arg2 "$var2" || return $?
-
-Which terminates the function
-
-## Despite `set -eou pipefail` do not depend on it
-
-Check all return codes **always** and handle all errors **always** for everything in the code, regardless, with a few minor exceptions:
-
-- `bash` code which is guaranteed to succeed
-- checking errors on failed operations which are absolutely going to cause an error later and be caught
-
-A simple example is checking errors on `shift` to capture missing arguments:
-
-For example, this is allowed and absolutely fine:
-
-    shift || :
-    if [ -z "${1-}" ]; then
-      "_${FUNCNAME[0]}" "$errorArgument" "Blank --id"
-    fi
-    id="$1"
-
-While this gives even more details and is preferred:
-
-    shift || "_${FUNCNAME[0]}" "$errorArgument" "--id id missing" || return $?
-    if [ -z "$1" ]; then
-      "_${FUNCNAME[0]}" "$errorArgument" "Blank --id"
-    fi
-    id="$1"
+Additionally, use `_clean` and `_undo` to back out of functions.
 
 ## Avoid exit like the plague
 
-`exit` in bash functions is not recommended largely because it can exit the shell or another program inadvertently when `exit` is called incorrectly or a file is `source`d when it should be run as a subprocess. 
+`exit` in bash functions is not recommended largely because it can exit the shell or another program inadvertently when `exit` is called incorrectly or a file is `source`d when it should be run as a subprocess.
 
 The use of `return` to pass exit status is always preferred; and when `exit` is required the addition of a function to wrap it (see above) can avoid `exit` again.
 
@@ -86,16 +30,17 @@ Pattern:
     # This describes the usage
     # Argument: file - Required. File. Description of file argument.
     functionName() {
+        local usage="_${FUNCNAME[0]}"
        ...
-        if somethingFails; then
-            _functionName "$errorEnvironment" "Error message why" || return $?
+        if ! trySomething; then
+            __failEnvironment "$usage" "Error message why" || return $?
         fi
     }
     _functionName() {
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
-Typically any defined function `deployApplication` has a mirror underscore-prefixed `usageDocument` function used for error handling:
+Typically, any defined function `deployApplication` has a mirror underscore-prefixed `usageDocument` function used for error handling:
 
     deployApplication() {
         ...
@@ -123,7 +68,7 @@ Two types of errors prevail in `Zesk Build` and those are:
 
 Additional errors typically extend these two types with more specific information or specific error codes for specific applications.
 
-### Environment errors `errorEnvironment` (Exit Code `1`)
+### Environment errors (Exit Code `1`)
 
 Examples:
 
@@ -135,14 +80,13 @@ Examples:
 
 Code:
 
-    # IDENTICAL errorEnvironment 1
-    errorEnvironment=1
+    return "$(_code environment)"
 
 Usage:
 
-    _myCoolFunction "$errorEnvironment" "No deployment application directory exists" || return $?
+    __failEnvironment "$usage" "No deployment application directory exists" || return $?
 
-### Argument errors `errorArgument` (Exit Code `2`)
+### Argument errors (Exit Code `2`)
 
 - Missing or blank arguments
 - Unknown arguments
@@ -160,109 +104,184 @@ Usage:
 
 Code:
 
-    # IDENTICAL errorArgument 2
-    errorArgument=1
-
-    if myFile=$(usageArgumentFile "_${FUNCNAME[0]}" "myFile" "$1"; then
-        return $errorArgument
-    fi
+    myFile=$(usageArgumentFile "_${FUNCNAME[0]}" "myFile" "${1-}") || return $?
 
 ## Appendix - `simpleBashFunction`
 
-    # A contrived function to show some features and patterns.
+A simple example to show some patterns:
+
+    #!/usr/bin/env bash
     #
-    # Usage: {fn} [ --debug ] [ --cleanup ] [ --undo ] [ --id id ] --home home --target target --application application
-    # Argument: --debug - Flag. Optional. Debugging mode.
-    # Argument: --cleanup - Flag. Optional. Debugging mode.
-    # Argument: --undo - Flag. Optional. Debugging mode.
-    # Argument: --home homePath - Required. Directory. Home path to show off directory validation.
-    # Argument: --target target - Required. File. Target file to show off file validation.
-    # Argument: --id id - Optional. String. Just an argument with a value.
-    # Argument: --application applicationPath - Required. Directory. Application path to show off directory validation.
+    # Example code and patterns
     #
-    simpleBashFunction() {
-      local debuggingFlag cleanupFlag revertFlag homePath target id applicationPath
+    # Copyright &copy; 2024 Market Acumen, Inc.
+    #
+    # Docs: o ./docs/_templates/tools/example.md
+    # Test: o ./test/tools/example-tests.sh
     
-      # --debug
-      debuggingFlag=
-      # --cleanup
-      cleanupFlag=
-      # --undo
-      revertFlag=
+    # Current Code Cleaning:
+    #
+    # - Migrating to `_sugar` and `__usageArgument` model
+    # - Removing all errorArgument and errorEnvironment globals when found
+    # - use `a || b || c || return $?` format when possible
+    # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
     
-      # --home
-      homePath=
-      # --target
+    # IDENTICAL __tools 16
+    # Usage: {fn} [ relative [ command ... ] ]
+    # Load build tools and run command
+    # Argument: relative - Required. Directory. Path to application root.
+    # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+    __tools() {
+      local source="${BASH_SOURCE[0]}" e=253
+      local here="${source%/*}" arguments=()
+      local tools="$here/${1:-".."}/bin/build"
+      [ -d "$tools" ] || _return $e "$tools is not a directory" || return $?
+      tools="$tools/tools.sh" && [ -x "$tools" ] || _return $e "$tools not executable" "$@" || return $?
+      shift && while [ $# -gt 0 ]; do arguments+=("$1") && shift; done
+      # shellcheck source=/dev/null
+      source "$tools" || _return $e source "$tools" "$@" || return $?
+      [ ${#arguments[@]} -gt 0 ] || return 0
+      "${arguments[@]}" || return $?
+    }
+    
+    # IDENTICAL _return 19
+    # Usage: {fn} [ exitCode [ message ... ] ]
+    # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+    # Argument: message ... - Optional. String. Message to output to stderr.
+    # Exit Code: exitCode
+    _return() {
+      local r="${1-:1}" && shift
+      _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
+      printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+    }
+    
+    # Is this an unsigned integer?
+    # Usage: {fn} value
+    # Exit Code: 0 - if value is an unsigned integer
+    # Exit Code: 1 - if value is not an unsigned integer
+    _integer() {
+      case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+    }
+    
+    # <-- END of IDENTICAL _return
+    
+    #
+    # Usage: {fn}
+    # DOC TEMPLATE: --help 1
+    # Argument: --help - Optional. Flag. Display this help.
+    # Argument: --easy - Optional. Flag. Easy mode.
+    # Argument: binary - Required. String. The binary to look for.
+    # Argument: remoteUrl - Required. URL. Remote URL.
+    # Argument: --target target - Optional. File. File to create. File must exist.
+    # Argument: --path path - Optional. Directory. Directory of path of thing.
+    # Argument: --title title - Optional. String. Title of the thing.
+    # Argument: --name name - Optional. String. Name of the thing.
+    # Argument: --url url - Optional. URL. URL to download.
+    # Argument: --callable callable - Optional. Callable. Function to call when url is downloaded.
+    # This is a sample function with example code and patterns used in Zesk Build.
+    #
+    exampleFunction() {
+      local usage="_${FUNCNAME[0]}"
+      local argument nArguments argumentIndex saved
+      local start name easyFlag width
+    
+      # IDENTICAL startBeginTiming 1
+      start=$(__usageEnvironment "$usage" beginTiming) || return $?
+    
+      width=50
+      name=
+      easyFlag=false
       target=
-      # --id
-      id=
-      # --application
-      applicationPath=
-    
+      path=
+      saved=("$@")
+      nArguments=$#
       while [ $# -gt 0 ]; do
-        if [ -z "$1" ]; then
-          "_${FUNCNAME[0]}" "$errorArgument" "Blank argument $1" || return $?
-        fi
-        case "$1" in
-          --debug)
-            debuggingFlag=1
+        argumentIndex=$((nArguments - $# + 1))
+        argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+        case "$argument" in
+          # IDENTICAL --help 4
+          --help)
+            "$usage" 0
+            return $?
             ;;
-          --cleanup)
-            cleanupFlag=1
+          --easy)
+            easyFlag=true
             ;;
-          --revert)
-            revertFlag=1
+          --name)
+            # shift here never fails as [ #$ -gt 0 ]
+            shift
+            name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
             ;;
-          --home)
-            shift || :
-            if ! homePath=$(usageArgumentDirectory "_${FUNCNAME[0]}" homePath "${1-}"); then
-              return "$errorArgument"
-            fi
-            ;;
-          --id)
-            shift || "_${FUNCNAME[0]}" "$errorArgument" "--id id missing" || return $?
-            if [ -z "$1" ]; then
-              "_${FUNCNAME[0]}" "$errorArgument" "Blank --id"
-            fi
-            id="$1"
-            ;;
-          --application)
-            shift || "_${FUNCNAME[0]}" "$errorArgument" "--application applicationPath missing" || return $?
-            if ! applicationPath=$(usageArgumentDirectory "_${FUNCNAME[0]}" application "$1"); then
-              return "$errorArgument"
-            fi
+          --path)
+            shift
+            path="$(usageArgumentDirectory "$usage" "path" "${1-}")" || return $?
             ;;
           --target)
-            shift || "_${FUNCNAME[0]}" "$errorArgument" "--target target missing" || return $?
-            if ! target=$(usageArgumentFile "_${FUNCNAME[0]}" target "$1"); then
-              return "$errorArgument"
-            fi
+            shift
+            target="$(usageArgumentFileDirectory "$usage" "target" "${1-}")" || return $?
             ;;
           *)
-            "_${FUNCNAME[0]}" "$errorArgument" "Unknown argument $1" || return $?
+            # IDENTICAL argumentUnknown 1
+            __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
             ;;
         esac
-        shift || "_${FUNCNAME[0]}" "$errorArgument" "shift failed" || return $?
-      done
-      # Check arguments are non-blank and actually supplied
-      for name in home application target; do
-        if [ -z "${!name}" ]; then
-          "_${FUNCNAME[0]}" "$errorArgument" "$name is required" || return $?
-        fi
+        shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
       done
     
-      consoleNameValue 30 "debuggingFlag" "$debuggingFlag"
-      consoleNameValue 30 "cleanupFlag" "$cleanupFlag"
-      consoleNameValue 30 "homePath" "$homePath"
-      consoleNameValue 30 "revertFlag" "$revertFlag"
-      consoleNameValue 30 "homePath" "$homePath"
-      consoleNameValue 30 "id" "$id"
-      consoleNameValue 30 "applicationPath" "$applicationPath"
-      consoleNameValue 30 "target" "$target"
+      # Load MANPATH environment
+      export MANPATH
+      __usageEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+    
+      ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "$width" "$name: Easy mode enabled" || return $?
+      ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "path" "$path" || return $?
+      ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "target" "$target" || return $?
+    
+      # Trouble debugging
+    
+      whichExists library-which-should-be-there || __failEnvironment "$usage" "missing thing" || return $?
+    
+      reportTiming "$start" "Completed in"
     }
-    _simpleBashFunction() {
+    _exampleFunction() {
+      # IDENTICAL usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
-
+    
+    __tools ../.. exampleFunction "$@"
+    
+    #
+    # How to load arguments until -- found
+    #
+    __testFunction() {
+      local exceptions=()
+    
+      # Load variables until "--" is found
+      while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
+      printf "%s\n" "${exceptions[@]+"${exceptions[@]}"}"
+    }
+    
+    # Post-commit hook code
+    
+    #
+    # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will
+    # overwrite any existing `post-commit` hook.
+    #
+    # Merges `main` and `staging` and pushes to `origin`
+    #
+    # fn: {base}
+    __hookGitPostCommit() {
+      local usage="_${FUNCNAME[0]}"
+    
+      __usageEnvironment "$usage" gitInstallHook post-commit || return $?
+    
+      __usageEnvironment "$usage" gitMainly || return $?
+      __usageEnvironment "$usage" git push origin || return $?
+    }
+    ___hookGitPostCommit() {
+      # IDENTICAL usageDocument 1
+      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    }
+    
+    # __tools ../.. __hookGitPostCommit "$@"
 
 [⬅ Return to index](index.md)

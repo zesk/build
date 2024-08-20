@@ -35,7 +35,7 @@ bashSanitize() {
   executor=contextOpen
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -111,7 +111,7 @@ _bashSanitizeCheckAssertions() {
   checkAssertions=("$@")
   while read -r item; do
     checkAssertions+=("$(__usageEnvironment "$usage" dirname "${item}")") || return $?
-  done < <(find "." -type f -name '.check-assertions' ! -path '*/.*')
+  done < <(find "." -type f -name '.check-assertions' ! -path "*/.*/*")
 
   for directory in "${checkAssertions[@]+"${checkAssertions[@]}"}"; do
     statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}") - " || :
@@ -131,7 +131,7 @@ _bashSanitizeCheckCopyright() {
     while read -r line; do
       copyrightExceptions+=("$line")
     done <"$file"
-  done < <(find . -name ".skip-copyright" -type f ! -path '*/.*')
+  done < <(find . -name ".skip-copyright" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
 
@@ -156,7 +156,7 @@ _bashSanitizeCheckDebugging() {
     while read -r line; do
       debugPatterns+=("$line")
     done <"$file"
-  done < <(find "." -type f -name '.debugging' ! -path '*/.*')
+  done < <(find "." -type f -name '.debugging' ! -path "*/.*/*")
   matches=$(__usageEnvironment "$usage" mktemp) || return $?
   if fileMatches 'set ["]\?-x' -- "${debugPatterns[@]+${debugPatterns[@]}}" -- - >"$matches"; then
     dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
@@ -165,4 +165,45 @@ _bashSanitizeCheckDebugging() {
     done <"$matches"
     __failEnvironment "$usage" found debugging || return $?
   fi
+}
+
+# Usage: {fn} [ directory ... ]
+# Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files found.
+# Security: Loads bash files
+# Load a directory of `.sh` files using `source` to make the code available.
+# Has security implications. Use with caution and ensure your directory is protected.
+bashSourcePath() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local tool
+
+  [ $# -gt 0 ] || __failArgument "$usage" "Requires a directory" || return $?
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        argument=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+        while read -r tool; do
+          [ -f "$tool" ] || __failEnvironment "$usage" "$tool is not a bash source file" || return $?
+          [ -x "$tool" ] || __failEnvironment "$usage" "$tool is not executable" || return $?
+          # shellcheck source=/dev/null
+          source "$tool" || __failEnvironment "$usage" "source $tool" || return $?
+        done < <(find "$1" -type f -name '*.sh' ! -path "*/.*/*" || :)
+        ;;
+    esac
+    shift
+  done
+}
+_bashSourcePath() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

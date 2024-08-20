@@ -4,7 +4,8 @@ The `tools.sh` shell is the only include you need in your scripts:
 
     # shellcheck source=/dev/null
     . ./bin/build/tools.sh
-    (see `bin/build/identical/__tools.sh` for a safe loader)
+
+(see `bin/build/identical/__tools.sh` for an error-reporting loader)
 
 Once included, all functions here are available for use:
 

@@ -982,7 +982,7 @@ cannon() {
   replaceQuoted=$(quoteSedPattern "$replace")
   [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(__usageEnvironment "$usage" mktemp) || return $?
-  if ! find "$directory" -type f ! -path '*/.*' "$@" -print0 >"$cannonLog"; then
+  if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
     printf "%s\n" "$(consoleSucces "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
     rm "$cannonLog" || :
     return 0

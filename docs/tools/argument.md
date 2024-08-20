@@ -14,7 +14,7 @@ To handle a possible `--help` ending the arguments early:
         stateFile=$(_arguments "$bin/../bin/build/tools/text.sh" "$_mapEnvironmentGenerateSedFile" "$@") || return "$(_argumentReturn $?)"
         # shellcheck source=/dev/null
         source "$stateFile"
-        # filaName set to a valid file, json is set to true or false
+        # fileName set to a valid file, json is set to true or false
         # ...
     }
 
@@ -22,17 +22,16 @@ To handle a possible `--help` ending the arguments early:
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `_arguments` - Generic argument parsing
+### `_arguments` - Generic argument parsing using Bash comments.
 
-Generic argument parsing
+Generic argument parsing using Bash comments.
 
-Argument formatting is as follows:
+Argument formatting (in comments) is as follows:
 
 
-Usage:
-Output is a temporary `stateFile` on line 1
+`...` token means one or more arguments may be passed.
 
-Type is one of:
+`argumentType` is one of:
 
 - File FileDirectory Directory LoadEnvironmentFile RealDirectory
 - EmptyString String
@@ -41,6 +40,7 @@ Type is one of:
 - URL
 
 And uses the associated `usageArgument` function for validation.
+Output is a temporary `stateFile` on line 1
 
 - Location: `bin/build/tools/argument.sh`
 

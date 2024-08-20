@@ -182,3 +182,39 @@ testInstallBinBuild() {
 _testInstallBinBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+testBuildEnvironmentLoad() {
+  local tempDir target
+
+  tempDir=$(__environment mktemp -d) || return $?
+
+  target="$tempDir/FOO.sh"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  __environment touch "$target" || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  printf "%s\n" "#!/usr/bin/env bash" >"$target"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  __environment chmod +x "$target" || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+
+  assertEquals --line "$LINENO" "${FOO-}" "" || return $?
+
+  printf "%s\n" "export FOO" "FOO=hello" >>"$target"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --leak FOO --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+
+  assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
+
+  unset FOO
+}
+
+testUnderscoreUnderscoreBuild() {
+  local testPath home
+
+  home=$(__environment buildHome) || return $?
+  testPath=$(__environment mktemp -d) || return $?
+  __environment cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
+  assertExitCode --line "$LINENO" 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
+  __environment cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
+
+  APPLICATION_ID=testID.$$ assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?
+}

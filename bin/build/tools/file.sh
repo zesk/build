@@ -96,7 +96,7 @@ _modificationSeconds() {
 # Usage: {fn} directory [ findArgs ... ]
 # Argument: directory - Required. Directory. Must exists - directory to list.
 # Argument: findArgs - Optional additional arguments to modify the find query
-# Example: {fn} $myDir ! -path '*/.*'
+# Example: {fn} $myDir ! -path "*/.*/*"
 # Output: 1705347087 bin/build/tools.sh
 # Output: 1704312758 bin/build/deprecated.sh
 # Output: 1705442647 bin/build/build.json
@@ -473,7 +473,7 @@ _fileMatchesHelper() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -537,7 +537,7 @@ isEmptyFile() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)

@@ -11,6 +11,10 @@ Install software as `root` or superuser.
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available.
 
+Main reason to use this instead of `apt-get` raw is it's quieter.
+
+Also does a simple lookup in the list of installed packages to avoid double-installation.
+
 
 
 - Location: `bin/build/tools/apt.sh`

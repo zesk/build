@@ -75,7 +75,7 @@ testSuite() {
         ;;
       --tests)
         shift
-        testPaths+=("$(usageArgumentDirectory "$usage" "$argument" "${1-}")") || return $?
+        testPaths+=("$(usageArgumentDirectory "$usage" "$__ARGUMENT" "${1-}")") || return $?
         ;;
       --no-stats)
         doStats=false
@@ -84,9 +84,9 @@ testSuite() {
         continueFlag=true
         ;;
       -1 | --one)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$__ARGUMENT") argument" || return $?
+        shift
+        checkTests+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
-        checkTests+=("$1")
         ;;
       -h | --help)
         "$usage" 0

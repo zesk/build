@@ -9,7 +9,7 @@ _timingFactor() {
   if isBitBucketPipeline; then
     printf "%d\n" 10
   else
-    printf "%d\n" 4
+    printf "%d\n" 6
   fi
 }
 

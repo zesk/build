@@ -66,59 +66,57 @@ documentationIndex_SeeLinker() {
   seeVariablesFile=$(__usageEnvironment "$usage" mktemp) || return $?
   linkPatternFile="$seeVariablesFile.linkPatterns"
   variablesSedFile="$seeVariablesFile.variablesSedFile"
-  if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 |
-    xargs -0 pcre2grep -l "$seePattern" |
-    while read -r matchingFile; do
-      statusMessage consoleSuccess "$matchingFile Found"
-      pcre2grep -o1 "$seePattern" "$matchingFile" | while read -r matchingToken; do
-        statusMessage consoleSuccess "$matchingFile: $(consoleCyan "$matchingToken") Found"
-        cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
-        tokenName="SEE_$cleanToken"
-        sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
-        {
-          if settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
-            cat "$settingsFile"
-            linkPattern="$seeFunctionLink"
-            templateFile="$seeFunctionTemplate"
-            __dumpNameValue "linkType" "function"
-            # __dumpNameValue "file" "$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken")"
-            __dumpNameValue "line" "$(documentationIndex_Lookup --line "$cacheDirectory" "$matchingToken")"
-          elif settingsFile=$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken"); then
-            linkPattern="$seeFileLink"
-            templateFile="$seeFileTemplate"
-            __dumpNameValue "linkType" "file"
-            __dumpNameValue "file" "$settingsFile"
-          else
-            linkPattern=""
-            templateFile=""
-            __dumpNameValue "linkType" "unknown"
-          fi
-          __dumpNameValue "fn" "$matchingToken"
-        } >"$linkPatternFile"
-
-        # shellcheck disable=SC2094
-        __dumpNameValue "sourceLink" "$(mapValueTrim "$linkPatternFile" "$linkPattern")" >>"$linkPatternFile"
-        if [ -z "$templateFile" ]; then
-          __dumpNameValue "$tokenName" "Not found" >>"$seeVariablesFile"
+  if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 pcregrep -l "$seePattern" | while read -r matchingFile; do
+    statusMessage consoleSuccess "$matchingFile Found"
+    pcre2grep -o1 "$seePattern" "$matchingFile" | while read -r matchingToken; do
+      statusMessage consoleSuccess "$matchingFile: $(consoleCyan "$matchingToken") Found"
+      cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
+      tokenName="SEE_$cleanToken"
+      sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
+      {
+        if settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
+          cat "$settingsFile"
+          linkPattern="$seeFunctionLink"
+          templateFile="$seeFunctionTemplate"
+          __dumpNameValue "linkType" "function"
+          # __dumpNameValue "file" "$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken")"
+          __dumpNameValue "line" "$(documentationIndex_Lookup --line "$cacheDirectory" "$matchingToken")"
+        elif settingsFile=$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken"); then
+          linkPattern="$seeFileLink"
+          templateFile="$seeFileTemplate"
+          __dumpNameValue "linkType" "file"
+          __dumpNameValue "file" "$settingsFile"
         else
-          __dumpNameValue "$tokenName" "$(mapValue "$linkPatternFile" "$(cat "$templateFile")")" >>"$seeVariablesFile"
+          linkPattern=""
+          templateFile=""
+          __dumpNameValue "linkType" "unknown"
         fi
-      done
-      if ! (
-        statusMessage consoleInfo "Linking $matchingFile ..."
-        set -a
-        # shellcheck source=/dev/null
-        if ! source "$seeVariablesFile" ||
-          ! sed -f "$variablesSedFile" <"$matchingFile" | mapEnvironment >"$matchingFile.new" ||
-          ! mv "$matchingFile.new" "$matchingFile"; then
-          rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
-          return "1"
-        fi
-      ); then
+        __dumpNameValue "fn" "$matchingToken"
+      } >"$linkPatternFile"
+
+      # shellcheck disable=SC2094
+      __dumpNameValue "sourceLink" "$(mapValueTrim "$linkPatternFile" "$linkPattern")" >>"$linkPatternFile"
+      if [ -z "$templateFile" ]; then
+        __dumpNameValue "$tokenName" "Not found" >>"$seeVariablesFile"
+      else
+        __dumpNameValue "$tokenName" "$(mapValue "$linkPatternFile" "$(cat "$templateFile")")" >>"$seeVariablesFile"
+      fi
+    done
+    if ! (
+      statusMessage consoleInfo "Linking $matchingFile ..."
+      set -a
+      # shellcheck source=/dev/null
+      if ! source "$seeVariablesFile" ||
+        ! sed -f "$variablesSedFile" <"$matchingFile" | mapEnvironment >"$matchingFile.new" ||
+        ! mv "$matchingFile.new" "$matchingFile"; then
         rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
         return "1"
       fi
-    done; then
+    ); then
+      rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
+      return "1"
+    fi
+  done; then
     clearLine
     consoleWarning "No matching see directives found" || :
   fi

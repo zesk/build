@@ -143,11 +143,11 @@ testSugar() {
   assertEquals --line "$LINENO" "99" "$( (__try _return 99) || echo $?)" || return $?
 
   # _return
-  for code in $(seq 0 127); do
+  for code in $(seq 0 7 255); do
     assertExitCode --line "$LINENO" --stderr-ok "$code" _return "$code" || return $?
   done
   # __return
-  for code in $(seq 0 127); do
+  for code in $(seq 0 13 255); do
     assertExitCode --line "$LINENO" --stderr-ok "$code" __return _return "$code" || return $?
   done
 

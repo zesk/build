@@ -33,9 +33,8 @@ isVersion() {
 # Environment: BUILD_RELEASE_NOTES
 # Usage: {fn} [ version ]
 # Argument: version - Optional. String. Version for the release notes path. If not specified uses the current version.
-# Output: ${BUILD_RELEASE_NOTES%%/}/version.md
+# Output: docs/release/version.md
 # Hook: version-current
-# Exit code: 1 - if an error occurs
 # Example:     open $(bin/build/release-notes.sh)
 # Example:     vim $(releaseNotes)
 # shellcheck disable=SC2120
@@ -69,9 +68,9 @@ releaseNotes() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   [ -n "${BUILD_RELEASE_NOTES}" ] || __failEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
-  releasePath="$BUILD_RELEASE_NOTES"
+  releasePath="${BUILD_RELEASE_NOTES%/}"
   isAbsolutePath "$releasePath" || releasePath=$(simplifyPath "$home/$releasePath")
-  printf "%s/%s.md\n" "${releasePath%%/}" "$version"
+  printf "%s/%s.md\n" "${releasePath%/}" "$version"
 }
 _releaseNotes() {
   # IDENTICAL usageDocument 1
@@ -81,7 +80,7 @@ _releaseNotes() {
 #
 # Usage: {fn} lastVersion
 # Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
-#
+# Argument: lastVersion - Required. String. Version to calculate the next minor version.
 nextMinorVersion() {
   local usage="_${FUNCNAME[0]}"
   local last prefix

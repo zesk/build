@@ -120,8 +120,37 @@ reverseFileLines() {
 # See: makeShellFilesExecutable
 # fn: chmod-sh.sh
 makeShellFilesExecutable() {
-  # IDENTICAL makeShellFilesExecutable 1
-  find . -name '*.sh' -type f ! -path '*/.*' "$@" -print0 | xargs -0 chmod -v +x
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local path findArgs=() tempArgs
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --find)
+        shift
+        IFS=' ' read -r -a tempArgs <<<"${1-}"
+        findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
+        ;;
+      *)
+        path=$(usageArgumentDirectory "$usage" "directory" "${1:-.}") || return $?
+        find "$path" -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -print0 | xargs -0 chmod -v +x
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+  done
+}
+_makeShellFilesExecutable() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

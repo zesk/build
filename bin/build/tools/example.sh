@@ -85,7 +85,7 @@ exampleFunction() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${saved[@]}"))" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -126,10 +126,7 @@ exampleFunction() {
 
   # Trouble debugging
 
-  #
-  # Add ` || _environment "$(debuggingStack)"` to any chain to debug details
-  #
-  which library-which-should-be-there || __failEnvironment "$usage" "missing thing" || _environment "$(debuggingStack)" || return $?
+  whichExists library-which-should-be-there || __failEnvironment "$usage" "missing thing" || return $?
 
   reportTiming "$start" "Completed in"
 }
@@ -140,6 +137,9 @@ _exampleFunction() {
 
 __tools ../.. exampleFunction "$@"
 
+#
+# How to load arguments until -- found
+#
 __testFunction() {
   local exceptions=()
 
@@ -147,6 +147,8 @@ __testFunction() {
   while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
   printf "%s\n" "${exceptions[@]+"${exceptions[@]}"}"
 }
+
+# Post-commit hook code
 
 #
 # The `git-post-commit` hook will be installed as a `git` post-commit hook in your project and will
@@ -169,6 +171,3 @@ ___hookGitPostCommit() {
 }
 
 # __tools ../.. __hookGitPostCommit "$@"
-
-# (assert[A-Za-z]+) ([^-])
-# $1 --line "\$LINENO" $2

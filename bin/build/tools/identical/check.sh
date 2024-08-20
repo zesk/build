@@ -118,8 +118,8 @@ identicalCheck() {
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(__usageEnvironment "$usage" mktemp) || return $?
   rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
-  ! $debug || printf "COMMAND: %s\n" __identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}"
-  searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
+  ! $debug || printf "COMMAND: %s\n" __identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}"
+  searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
 
   if [ ! -s "$searchFileList" ]; then
     __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || return $?

@@ -7,14 +7,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-set -eou pipefail
-
+# IDENTICAL zesk-build-hook-header 3
 # shellcheck source=/dev/null
-if ! source "$(dirname "${BASH_SOURCE[0]}")/../tools.sh"; then
-  printf "tools.sh failed" 1>&2
-  exit 1
-fi
-
+set -eou pipefail
+source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # fn: {base}
 # Usage: {fn}
 #
@@ -27,10 +23,8 @@ fi
 # Example:     885acc3
 #
 __hookApplicationChecksum() {
-  local here argument
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
+  local home argument
 
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -47,9 +41,13 @@ __hookApplicationChecksum() {
     esac
     shift || :
   done
-
-  here="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "pwd failed" || return $?
-  __usageEnvironment "$usage" gitEnsureSafeDirectory "$here" || return $?
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  if ! home="$(gitFindHome "$home" 2>/dev/null)" || [ -z "$home" ]; then
+    printf "%s\n" "$(date +%F)"
+    return 0
+  fi
+  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
+  __usageEnvironment "$usage" gitEnsureSafeDirectory "$home" || return $?
   __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
 ___hookApplicationChecksum() {

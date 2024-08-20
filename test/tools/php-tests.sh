@@ -62,6 +62,7 @@ testPHPBuild() {
 
   printf "\n"
   # No environment
+  pause "GO to $testPath and do the build>"
   bin/build.sh || return $?
   assertFileExists --line "$LINENO" "$testPath/app.tar.gz" || return $?
   rm ./app.tar.gz || return $?
