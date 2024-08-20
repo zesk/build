@@ -19,6 +19,8 @@ Backs up files as:
 
 But maintains file` descriptors for `logFile`.
 
+- Location: `bin/build/tools/log.sh`
+
 #### Arguments
 
 - `logFile` - Required. A log file which exists.
@@ -33,6 +35,8 @@ But maintains file` descriptors for `logFile`.
 
 Rotate log files
 For all log files in logPath with extension `.log`, rotate them safely
+
+- Location: `bin/build/tools/log.sh`
 
 #### Arguments
 

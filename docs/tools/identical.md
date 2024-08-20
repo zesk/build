@@ -8,6 +8,8 @@
 
 Repair an identical `token` in `destination` from `source`
 
+- Location: `bin/build/tools/identical/repair.sh`
+
 #### Arguments
 
 - `--prefix prefix` - Required. A text prefix to search for to identify identical sections (e.g. `# IDENICAL`) (may specify more than one)
@@ -45,6 +47,8 @@ Failures are considered:
 
 This is best used as a pre-commit check, for example. Wink.
 
+- Location: `bin/build/tools/identical/check.sh`
+
 #### Arguments
 
 - `--extension extension` - Required. String. One or more extensions to search for in the current directory.
@@ -62,6 +66,8 @@ This is best used as a pre-commit check, for example. Wink.
 ### `identicalCheckShell` - Identical check for shell files
 
 Identical check for shell files
+
+- Location: `bin/build/tools/identical/check.sh`
 
 #### Arguments
 
