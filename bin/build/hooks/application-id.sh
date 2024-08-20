@@ -23,10 +23,8 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Example:     885acc3
 #
 __hookApplicationChecksum() {
+  local usage="_${FUNCNAME[0]}"
   local home argument
-  local usage
-
-  usage="_${FUNCNAME[0]}"
 
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -43,8 +41,11 @@ __hookApplicationChecksum() {
     esac
     shift || :
   done
-
-  home=$(gitFindHome 2>/dev/null) || printf "%s\n" "$(date +%F)" && return 0
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  if ! home="$(gitFindHome "$home" 2>/dev/null)" || [ -z "$home" ]; then
+    printf "%s\n" "$(date +%F)"
+    return 0
+  fi
   __usageEnvironment "$usage" muzzle pushd "$home" || return $?
   __usageEnvironment "$usage" gitEnsureSafeDirectory "$home" || return $?
   __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
