@@ -118,7 +118,7 @@ dotEnvConfigure() {
 
   where=
   [ $# -eq 0 ] || where=$(usageArgumentDirectory "$usage" "where" "${1-}") || return $?
-  [ -n "$where" ] || where=$(__usageEnvironment "$usage" pwd) || return $?
+  [ -n "$where" ] || where=$(__usageEnvironment "$usage" buildHome) || return $?
   dotEnv="$where/.env"
   [ -f "$dotEnv" ] || __failEnvironment "$usage" "Missing $dotEnv" || return $?
   files=("$dotEnv")

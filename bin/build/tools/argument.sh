@@ -215,6 +215,7 @@ _usageArgumentsSpecificationParseLine() {
   local argumentDirectory="${functionCache%/}/parsed"
   local argument file
   local required saveRequired argumentIndex="" argumentType argumentName argumentFinder argumentRepeat=false argumentDefault=""
+  local argumentRemainder=false
 
   [ -d "$argumentDirectory" ] || _argument "$argumentDirectory is not a directory" || return $?
   _integer "$argumentId" || _argument "$argumentId is not an integer" || return $?

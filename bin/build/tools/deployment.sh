@@ -508,8 +508,6 @@ deployToRemote() {
 
   [ -d "$HOME" ] || __failEnvironment "$usage" "No HOME defined or not a directory: $HOME" || return $?
 
-  # dotEnvConfigure
-
   # DEBUGGING # consoleWarning "ARGS: $*"
   exitCode=0
   deployFlag=

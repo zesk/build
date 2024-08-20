@@ -1,13 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
-# test.sh
+# Identical template
 #
-# Testing
+# Original of __source
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+# Requires: IDENTICAL _return
 
-# IDENTICAL __source 17
+# IDENTICAL __source EOF
 # Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
@@ -25,23 +26,3 @@ __source() {
   [ ${#a[@]} -gt 0 ] || return 0
   "${a[@]}" || return $?
 }
-
-# IDENTICAL __tools 7
-# Usage: {fn} [ relativeHome [ command ... ] ]
-# Load build tools and run command
-# Argument: relativeHome - Required. Directory. Path to application root.
-# Argument: command ... - Optional. Callable. A command to run and optional arguments.
-__tools() {
-  __source bin/build/tools.sh "$@"
-}
-
-__buildTestSuite() {
-  local usage="_${FUNCNAME[0]}"
-  local here="${BASH_SOURCE[0]%/*}"
-  testTools testSuite --tests "$(realPath "${here%/*}/../test/tools")" "$@" || __failEnvironment "$usage" "testTools" || return $?
-}
-___buildTestSuite() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-__tools .. __buildTestSuite "$@"
