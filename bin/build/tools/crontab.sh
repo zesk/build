@@ -57,12 +57,11 @@ __crontabGenerate() {
 # Any files not found are skipped. Note that environment values are not carried between applications.
 #
 # Usage: {fn} [ --env environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
-# fn: crontab-application-sync.sh
 # Argument: --env environment - Top-level environment file to pass variables into the user `crontab` template
 # Argument: --show - Show the crontab instead of installing it
 # Argument: --user user - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.
 # Argument: --mapper envMapper - Optional. Binary. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
-# Example:     crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/applications
+# Example:     {fn} --env /etc/myCoolApp.conf --user www-data /var/www/applications
 # Example:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 # See: whoami
 crontabApplicationUpdate() {

@@ -4,7 +4,7 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `crontab-application-sync.sh` - Application-specific crontab management
+### `crontabApplicationUpdate` - Application-specific crontab management
 
 Keep crontab synced with files and environment files in an application folder structure.
 
@@ -26,6 +26,8 @@ Feasibly for each file, the following environment files are loaded:
 
 Any files not found are skipped. Note that environment values are not carried between applications.
 
+- Location: `bin/build/tools/crontab.sh`
+
 #### Arguments
 
 - `--env environment` - Top-level environment file to pass variables into the user `crontab` template
@@ -35,8 +37,8 @@ Any files not found are skipped. Note that environment values are not carried be
 
 #### Examples
 
-    crontab-application-sync.sh --env /etc/myCoolApp.conf --user www-data /var/www/applications
-    crontab-application-sync.sh /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
+    crontabApplicationUpdate --env /etc/myCoolApp.conf --user www-data /var/www/applications
+    crontabApplicationUpdate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 
 #### Exit codes
 

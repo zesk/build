@@ -16,13 +16,14 @@ __build() {
   __install "$installerPath/install-bin-build.sh" "bin/build/tools.sh" "$relative" "$@" || return $?
 }
 
-# IDENTICAL __install 23
+# IDENTICAL __install 24
 # Load build tools (installing if needed) and run command
 # Usage: {fn} [ relativeHome installer source [ command ... ] ]
 # Argument: installer - Required. File. Installation binary.
 # Argument: source - Required. File. Include file which should exist after installation.
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+# Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. consoleOrange "$@"
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${1:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 arguments=()

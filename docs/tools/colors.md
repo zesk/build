@@ -323,48 +323,6 @@ Clears the line and outputs a message using a color command. Meant to show statu
 
 Intended to be run on an interactive console. Should support $(tput cols).
 
-### `consoleColumns` - Column count in current console
-
-Column count in current console
-
-Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-    consoleColumns
-    
-
-#### Arguments
-
-- No arguments.
-
-#### Examples
-
-    repeat $(consoleColumns)
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-COLUMNS - May be defined after calling this
-LINES - May be defined after calling this
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
 #### Arguments
 
 - No arguments.

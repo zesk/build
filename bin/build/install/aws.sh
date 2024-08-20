@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# aws-cli.sh
+# aws.sh
 #
 # Depends: python
 #
