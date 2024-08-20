@@ -12,6 +12,8 @@ If this fails it will output the installation log.
 
 When this tool succeeds the `php` binary is available in the local operating system.
 
+- Location: `bin/build/tools/php.sh`
+
 #### Arguments
 
 - `package` - Additional packages to install
@@ -33,6 +35,8 @@ This tools does not install the `composer` binary into the local environment.
 
 
 
+
+- Location: `bin/build/tools/php.sh`
 
 #### Usage
 
@@ -86,6 +90,8 @@ Files are specified from the application root directory.
 - `s` - staging
 - `t` - test
 
+- Location: `bin/build/tools/php.sh`
+
 #### Arguments
 
 - `--name tarFileName` - Set BUILD_TARGET via command line (wins)
@@ -108,6 +114,8 @@ Files are specified from the application root directory.
 ### `phpLog` - Outputs the path to the PHP log file
 
 Outputs the path to the PHP log file
+
+- Location: `bin/build/tools/php.sh`
 
 #### Arguments
 
