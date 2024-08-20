@@ -19,7 +19,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
 #
 __hookApplicationTag() {
-  local argument
+  local home argument
   local usage
 
   usage="_${FUNCNAME[0]}"

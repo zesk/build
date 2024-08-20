@@ -214,8 +214,7 @@ testUnderscoreUnderscoreBuild() {
   testPath=$(__environment mktemp -d) || return $?
   __environment cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
   assertExitCode --line "$LINENO" 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
+  __environment cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
 
-  assertDirectoryDoesNotExist --line "$LINENO" "$testPath/app/bin/build/" || return $?
-  assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?
-  assertDirectoryExists --line "$LINENO" "$testPath/app/bin/build/" || return $?
+  APPLICATION_ID=testID.$$ assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?
 }

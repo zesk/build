@@ -6,9 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# Test locally:
-# bin/local-container.sh
-# . bin/test-reset.sh; bin/test.sh
 
 # IDENTICAL __tools 16
 # Usage: {fn} [ relative [ command ... ] ]

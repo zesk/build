@@ -103,7 +103,7 @@ phpBuild() {
   local arg e tagDeploymentFlag optClean versionSuffix missingFile initTime deployment composerArgs
   local targetName
   local environment
-  local environments=(BUILD_TIMESTAMP DEPLOYMENT APPLICATION_ID APPLICATION_TAG)
+  local environments=(BUILD_TIMESTAMP DEPLOYMENT APPLICATION_BUILD_DATE APPLICATION_ID APPLICATION_TAG APPLICATION_VERSION)
   local optionals=(BUILD_DEBUG)
 
   export DEPLOYMENT
@@ -111,7 +111,6 @@ phpBuild() {
   usageRequireBinary "$usage" tar || return $?
   __usageEnvironment "$usage" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
 
-  consoleInfo "$usage" "$@"
   targetName="$(deployPackageName)"
   tagDeploymentFlag=1
   deployment=${DEPLOYMENT:-}
@@ -225,16 +224,17 @@ phpBuild() {
   else
     __usageEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >.env || return $?
   fi
-  dumpPipe '.env' <.env
   if ! grep -q APPLICATION .env; then
     buildFailed ".env" || __failEnvironment "$usage" ".env file seems to be invalid:" || return $?
   fi
   for environment in "${environments[@]}" "${optionals[@]}"; do
     # Safely load .env file
-    declare -x "$environment=$(environmentValueRead ".env" "$environment" "")"
+    # shellcheck disable=SC2163
+    export "$environment"
+    declare "$environment=$(environmentValueRead ".env" "$environment" "")"
   done
   _phpEchoBar || :
-  # echo "DEPLOYMENT=$DEPLOYMENT"
+
   environmentFileShow "${environments[@]}" -- "${optionals[@]}" || :
 
   [ ! -d ./.deploy ] || rm -rf ./.deploy || __failEnvironment "$usage" "Can not delete .deploy" || return $?
