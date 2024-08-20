@@ -9,7 +9,6 @@
 
 # IDENTICAL zesk-build-hook-header 3
 # shellcheck source=/dev/null
-set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
@@ -24,7 +23,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Example:     885acc3
 #
 __hookApplicationChecksum() {
-  local here argument
+  local home argument
   local usage
 
   usage="_${FUNCNAME[0]}"
@@ -45,8 +44,9 @@ __hookApplicationChecksum() {
     shift || :
   done
 
-  here="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "pwd failed" || return $?
-  __usageEnvironment "$usage" gitEnsureSafeDirectory "$here" || return $?
+  home=$(gitFindHome 2>/dev/null) || printf "%s\n" "$(date +%F)" && return 0
+  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
+  __usageEnvironment "$usage" gitEnsureSafeDirectory "$home" || return $?
   __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
 ___hookApplicationChecksum() {
