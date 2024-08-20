@@ -75,9 +75,13 @@ __hookPreCommit() {
     rm -f "$nonOriginalWithEOF" || :
   fi
   if gitPreCommitHasExtension sh; then
-    ii=(--prefix '# ''DOC TEMPLATE:')
-    if ! bin/build/identical-repair.sh "${ii[@]}" && ! bin/build/identical-repair.sh "${ii[@]}"; then
-      __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
+    local file files=()
+    while read -r file; do files+=("$file"); done < <(gitPreCommitListExtension)
+    if grep -q '# '"IDENTICAL" "${files[@]}"; then
+      ii=(--prefix '# ''DOC TEMPLATE:')
+      if ! bin/build/identical-repair.sh "${ii[@]}" && ! bin/build/identical-repair.sh "${ii[@]}"; then
+        __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
+      fi
     fi
   fi
 
