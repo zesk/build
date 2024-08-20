@@ -64,9 +64,7 @@ testEnvironmentFileLoad() {
   assertEquals --line "$LINENO" "${TESTVAR-}" "" || return $?
 
   __environment touch .env.local || return $?
-  if ! dotEnvConfigure; then
-    _environment "dotEnvConfigure failed with both .env" || return $?
-  fi
+  assertExitCode 0 dotEnvConfigure || _environment "dotEnvConfigure failed with both .env" || return $?
   __environment cd .. || return $?
   __environment rm -rf "$tempDir" || return $?
   consoleSuccess dotEnvConfigure works AOK
