@@ -145,6 +145,29 @@ Installs `install-bin-build.sh` the first time in a new project, and modifies it
 
 Needs internet access and creates a directory `./bin/build`
 
-# Remote Package Installation
+# Package Installation
 
 
+### `installInstallBinary` - Installs an installer the first time in a new project,
+
+Installs an installer the first time in a new project, and modifies it to work in the application path.
+
+- Location: `bin/build/tools/self.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. This help.
+- `--diff` - Optional. Flag. Show differences between new and old files if changed.
+- `--url` - Optional. URL. A remote URL to download the installation script.
+- `--url-function` - Optional. Callable. Fetch the remote URL where the installation script is found.
+- `--source` - Required. File. The local copy of the `--bin` file.
+- `--local` - Optional. Flag. Use local copy `--bin` instead of downloaded version.
+- `--bin` - Required. String. Name of the installer file.
+- `path` - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
+- `applicationHome` - Optional. Directory. Path to the application home directory. Default is current directory.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

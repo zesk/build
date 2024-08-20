@@ -52,7 +52,7 @@ testBashSourcePath() {
   printf "%s\n" "#!/usr/bin/env bash" "_testZeskBuildFunction() {" "    consoleGreen Not easy being green." "}" >"$testPath/2.sh"
   __environment muzzle makeShellFilesExecutable "$testPath" || return $?
 
-  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath" || return $?
+  assertExitCode --leak ZESK_BUILD --line "$LINENO" 0 bashSourcePath "$testPath" || return $?
 
   assertEquals --line "$LINENO" "${ZESK_BUILD-}" "true" || return $?
   assertExitCode --line "$LINENO" 0 isFunction _testZeskBuildFunction || return $?

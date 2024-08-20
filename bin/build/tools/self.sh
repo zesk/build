@@ -7,35 +7,54 @@
 # Test: o test/tools/self-tests.sh
 # Docs: o docs/_templates/tools/self.md
 
-# Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
+# Installs an installer the first time in a new project, and modifies it to work in the application path.
 # Argument: --help - Optional. Flag. This help.
 # Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
-# Argument: --local - Optional. Flag. Use local copy of `install-bin-build.sh` instead of downloaded version.
+# Argument: --url - Optional. URL. A remote URL to download the installation script.
+# Argument: --url-function - Optional. Callable. Fetch the remote URL where the installation script is found.
+# Argument: --source - Required. File. The local copy of the `--bin` file.
+# Argument: --local - Optional. Flag. Use local copy `--bin` instead of downloaded version.
+# Argument: --bin - Required. String. Name of the installer file.
 # Argument: path - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
 # Argument: applicationHome - Optional. Directory. Path to the application home directory. Default is current directory.
 # Usage: {fn} [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]
-installInstallBuild() {
+installInstallBinary() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local exitCode
-  local path applicationHome temp relTop home
-  local installBinName source target url showDiffFlag localFlag verb
+  local argument nArguments argumentIndex saved
+  local exitCode=0
+  local path="" applicationHome="" temp relTop home
+  local installBinName="" source="" target url="" urlFunction="" postFunction="" showDiffFlag=false source verb localFlag=false
 
-  exitCode=0
-  installBinName="install-bin-build.sh"
-  path=
-  applicationHome=
-  showDiffFlag=false
-  localFlag=false
+  saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
+        ;;
+      --bin)
+        shift
+        installBinName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --url-function)
+        shift
+        urlFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --post)
+        shift
+        postFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --url)
+        shift
+        url=$(usageArgumentURL "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --source)
+        shift
+        source=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
         ;;
       --diff)
         showDiffFlag=true
@@ -49,12 +68,16 @@ installInstallBuild() {
         elif [ -z "$applicationHome" ]; then
           applicationHome=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         else
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
   done
+
+  [ -n "$installBinName" ] || __failArgument "$usage" "--bin is required" || return $?
+  [ -n "$source" ] || __failArgument "$usage" "--local-path is required" || return $?
 
   # Validate paths and force realPath
   # default application home is $(pwd)
@@ -90,29 +113,32 @@ installInstallBuild() {
   temp="$path/.downloaded.$$"
   if $localFlag; then
     home=$(__usageEnvironment "$usage" buildHome) || return $?
-    source="$home/bin/build/$installBinName"
     [ -x "$source" ] || __failEnvironment "$usage" "$source is not executable" || return $?
     __usageEnvironment "$usage" cp "$source" "$temp" || return $?
   else
-    url=$(_installInstallBuildRemote "$usage") || _clean $? "$temp" || return $?
+    if [ -z "$url" ]; then
+      [ -n "$urlFunction" ] || __usageArgument "$usage" "Need --url or --url-function" || return $?
+      url=$("$urlFunction" "$usage") || return $?
+      [ -n "$url" ] || __failEnvironment "$urlFunction failed to generate a URL" || return $?
+      urlValid "$url" || __failEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
+    fi
     if ! curl -s -o - "$url" >"$temp"; then
       __failEnvironment "$usage" "Unable to download $(consoleCode "$url")" || _clean $? "$temp" || return $?
     fi
   fi
-
-  # Modify based on current published version
-  if _installInstallBuildIsLegacy <"$temp"; then
-    __usageEnvironment "$usage" _installInstallBuildCustomizeLegacy "$relTop" <"$temp" >"$temp.custom"
-  else
-    __usageEnvironment "$usage" _installInstallBuildCustomize "$relTop" <"$temp" >"$temp.custom"
+  if _installInstallBinaryCanCustomize "$temp"; then
+    __usageEnvironment "$usage" _installInstallBinaryCustomize "$relTop" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
+    __usageEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
   fi
+  if [ -n "$postFunction" ]; then
+    __usageEnvironment "$usage" "$postFunction" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
+    __usageEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
+  fi
+
   verb=Installed
   [ ! -f "$target" ] || verb=Updated
-  # Work modified file
-  rm -f "$temp" || :
-  temp="$temp.custom"
   # Show diffs
-  ! $showDiffFlag || _installInstallBuildDiffer "$usage" "$temp" "$target" || _clean $? "$temp" || return $?
+  ! $showDiffFlag || _installInstallBinaryDiffer "$usage" "$temp" "$target" || _clean $? "$temp" || return $?
   # Copy to target
   __usageEnvironment "$usage" cp "$temp" "$target" || _clean $? "$temp" || return $?
   rm -rf "$temp" || :
@@ -124,22 +150,39 @@ installInstallBuild() {
   clearLine || :
   return 0
 }
-_installInstallBuildIsLegacy() {
-  grep -q '^relTop=' >/dev/null
+_installInstallBinary() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-_installInstallBuildCustomize() {
+
+_installInstallBinaryCanCustomize() {
+  grep -q -e '^__installPackageConfiguration ' "$@"
+}
+_installInstallBinaryCustomize() {
   grep -v -e '^__installPackageConfiguration '
   printf "__installPackageConfiguration %s \"%s\"\n" "$1" '$@'
 }
-_installInstallBuildCustomizeLegacy() {
-  sed "s/^relTop=.*$/relTop=$(quoteSedPattern "$1")/g"
+
+# Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
+# Argument: --help - Optional. Flag. This help.
+# Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
+# Argument: --local - Optional. Flag. Use local copy of `install-bin-build.sh` instead of downloaded version.
+# Argument: path - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
+# Argument: applicationHome - Optional. Directory. Path to the application home directory. Default is current directory.
+# Usage: {fn} [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]
+installInstallBuild() {
+  local usage="_${FUNCNAME[0]}"
+  local home
+  local binName="install-bin-build.sh"
+
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  installInstallBinary "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fetch the remote URL to get installer
-_installInstallBuildRemote() {
+__installInstallBuildRemote() {
   local usage="$1"
   export BUILD_INSTALL_URL
 
@@ -150,23 +193,43 @@ _installInstallBuildRemote() {
   printf "%s\n" "${BUILD_INSTALL_URL}"
 }
 
+# Helper for installInstallBuild
+__installInstallBinaryLegacy() {
+  local temp
+
+  temp=$(__environment mktemp) || return $?
+  cat >"$temp"
+  if __installInstallBinaryIsLegacy <"$temp"; then
+    __usageEnvironment "$usage" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || _clean $? "$temp" || return $?
+  else
+    __environment cat "$temp" || return $?
+  fi
+  __environment rm "$temp" || return $?
+}
+__installInstallBinaryIsLegacy() {
+  grep -q '^relTop=' >/dev/null
+}
+__installInstallBinaryCustomizeLegacy() {
+  sed "s/^relTop=.*$/relTop=$(quoteSedPattern "$1")/g"
+}
+
 # Usage: {fn} source target
 # Show differences between installations
-_installInstallBuildDiffer() {
+_installInstallBinaryDiffer() {
   local usage="$1" diffLines
   shift
   if [ -x "$target" ]; then
-    diffLines="$(__usageEnvironment "$usage" _installInstallBuildDifferFilter -c "$@")" || return $?
+    diffLines="$(__usageEnvironment "$usage" _installInstallBinaryDifferFilter -c "$@")" || return $?
     [ "$diffLines" -gt 0 ] || return 0
     consoleMagenta "--- Changes: $diffLines ---"
-    _installInstallBuildDifferFilter "$@" || :
+    _installInstallBinaryDifferFilter "$@" || :
     consoleMagenta "--- End of changes ---"
   fi
 }
 
 # Usage: {fn} diff-arguments
 # Argument: diff-arguments - Required. Arguments. Passed to diff.
-_installInstallBuildDifferFilter() {
+_installInstallBinaryDifferFilter() {
   diff "$@" | grep -v -e '^__installPackageConfiguration ' | grep -c '[<>]'
 }
 
