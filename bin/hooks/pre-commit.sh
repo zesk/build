@@ -74,7 +74,7 @@ __hookPreCommit() {
 
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
     nonOriginalWithEOF=$(__usageEnvironment "$usage" mktemp) || return $?
-    __usageEnvironment "$usage" sed 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
+    __usageEnvironment "$usage" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
     fileCopies=("$nonOriginalWithEOF" "$original")
     # Can not be trusted to not edit the right one
     if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
