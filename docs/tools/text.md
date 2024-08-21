@@ -38,20 +38,9 @@ Returns true if all `characters` are of `className`
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `quoteSedPattern` - Quote sed strings for shell use
-
-Quote a string to be used in a sed pattern on the command line.
-
-- Location: `bin/build/identical/quoteSedPattern.sh`
-
-#### Usage
-
-    quoteSedPattern text
-    
-
 #### Arguments
 
-- `text` - Text to quote
+- No arguments.
 
 #### Examples
 
