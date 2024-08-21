@@ -37,7 +37,7 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _sugar 154
+# IDENTICAL _sugar 146
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
@@ -159,7 +159,6 @@ __execute() {
   "$@" || _return $? "$(_command "$@")" || return $?
 }
 
-
 # Output the `command ...` to stdout prior to running, then `__execute` it
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
@@ -186,12 +185,6 @@ __argument() {
   "$@" || _argument "$@" || return $?
 }
 
-# IDENTICAL quoteSedPattern 17
-
-# Summary: Quote sed strings for shell use
-# Quote a string to be used in a sed pattern on the command line.
-# Usage: quoteSedPattern text
-# Argument: text - Text to quote
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 #
