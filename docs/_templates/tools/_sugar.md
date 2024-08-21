@@ -37,7 +37,6 @@ Return errors:
 Run-related:
 
 - `__execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
-- `__try command ...` - Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
 - `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it
 - `__environment command ...` - Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `__argument command ...` - Run `command ...` (with any arguments) and then `_argument` if it fails.
@@ -58,7 +57,7 @@ Run-related:
 
 ## Run-related
 
-{__execute} {__try} {__echo} {__environment} {__argument}
+{__execute} {__echo} {__environment} {__argument}
 
 ## Decorations
 

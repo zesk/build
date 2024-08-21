@@ -159,13 +159,6 @@ __execute() {
   "$@" || _return $? "$(_command "$@")" || return $?
 }
 
-# Run `command ...` (with any arguments) and then `exit` if it fails. Critical code only.
-# Usage: {fn} command ...
-# Argument: command ... - Any command and arguments to run.
-# Exit Code: None
-__try() {
-  __execute "$@" || _return $? "💣 $(_command "$@")" || exit $?
-}
 
 # Output the `command ...` to stdout prior to running, then `__execute` it
 # Usage: {fn} command ...

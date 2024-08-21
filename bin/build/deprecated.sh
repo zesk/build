@@ -176,7 +176,8 @@ __deprecatedCleanup() {
   # v0.11.7
 
   # v0.11.8
-    __deprecatedCannon 'aws-cli''.sh' "aws.sh"
+  __deprecatedCannon 'aws-cli''.sh' "aws.sh"
+  deprecatedToken+=('__''try')
 
   # END OF CANNONS
 
