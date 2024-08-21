@@ -17,7 +17,7 @@
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. consoleOrange "$@"
 __install() {
-  local installer="${1-}" source="${2-}" relativeHome="${1:-".."}" me="${BASH_SOURCE[0]}"
+  local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 arguments=()
   local install="$here/$relativeHome/$installer" tools="$here/$relativeHome/$source"
   [ -n "$installer" ] || _return $e "blank installer" || return $?
