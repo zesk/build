@@ -4,6 +4,7 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+
 testLogFileRotate() {
   local tempDir
   local count=5 n
