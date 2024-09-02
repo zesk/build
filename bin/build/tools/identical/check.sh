@@ -11,6 +11,7 @@
 # Argument: --exclude pattern - Optional. String. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 # Argument: --cd directory - Optional. Directory. Change to this directory before running. Defaults to current directory.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
+# Argument: --no-map - Optional. Flag. Do not map __BASE__, __FILE__, __DIR__ tokens.
 # Argument: --help - Optional. Flag. This help.
 #
 # Exit Code: 2 - Argument error
@@ -31,6 +32,8 @@
 # This is largely useful for projects in which specific functions are replicated between scripts for code independence, yet
 # should remain identical.
 #
+# Mapping also automatically handles file names and paths, so `__FILE__` maps to path to a file relative to the project root.
+#
 # Failures are considered:
 #
 # - Partial success, but warnings occurred with an invalid number in a file
@@ -41,12 +44,12 @@
 #
 identicalCheck() {
   local this argument usage me
-  local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix
+  local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix quotedPrefix
   local totalLines lineNumber token count parsed tokenFile countFile searchFile
   local identicalLine binary matchFile repairSource repairSources isBadFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
   local excludes searchFileList debug extensionText
-  local failureCode
+  local failureCode mapFile
 
   failureCode="$(_code identical)"
   this="${FUNCNAME[0]}"
@@ -63,6 +66,7 @@ identicalCheck() {
   repairSources=()
   debug=false
   extensionText=
+  mapFile=true
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -71,6 +75,9 @@ identicalCheck() {
       --help)
         "$usage" 0
         return 0
+        ;;
+      --no-map)
+        mapFile=false
         ;;
       --debug)
         debug=true
@@ -127,6 +134,7 @@ identicalCheck() {
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || return $?
   prefixIndex=0
   for prefix in "${prefixes[@]}"; do
+    quotedPrefix=$(quoteGrepPattern "$prefix")
     while IFS= read -r searchFile; do
       if [ "$(basename "$searchFile")" = "$me" ]; then
         # We are exceptional ;)
@@ -171,17 +179,19 @@ identicalCheck() {
             # 10 lines in file, line 9 means: tail -n 2
             # 10 lines in file, line 10 means: tail -n 1
             __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
-            if [ "$(grep -c "$prefix" "$compareFile")" -gt 0 ]; then
+            if [ "$(grep -c -e "$quotedPrefix" "$compareFile")" -gt 0 ]; then
               dumpPipe compareFile <"$compareFile"
               badFiles+=("$searchFile")
               {
                 clearLine
                 printf "%s: %s\n< %s\n%s" "$(consoleInfo "$token")" "$(consoleWarning "Identical sections overlap:")" "$(consoleSuccess "$searchFile")" "$(consoleCode)" || :
-                grep "$prefix" "$compareFile" | wrapLines "$(consoleCode)    " "$(consoleReset)" || :
+                grep -e "$quotedPrefix" "$compareFile" | wrapLines "$(consoleCode)    " "$(consoleReset)" || :
                 consoleReset || :
               } 1>&2
+            elif $mapFile; then
+              _identicalMapAttributesFile "$usage" "$compareFile" "$searchFile" || return $?
             fi
-            if ! diff -b -q "$countFile" "${countFile}.compare" >/dev/null; then
+            if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
               printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
               diff "$countFile" "${countFile}.compare" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" 1>&2
               isBadFile=true
@@ -210,7 +220,7 @@ identicalCheck() {
           __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
           statusMessage consoleInfo "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(consoleCode "$token")" "$(consoleValue "$searchFile")")"
         fi
-      done < <(grep -n "$prefix" <"$searchFile" || :)
+      done < <(grep -n -e "$quotedPrefix" <"$searchFile" || :)
     done <"$searchFileList"
     prefixIndex=$((prefixIndex + 1))
   done

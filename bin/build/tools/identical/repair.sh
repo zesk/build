@@ -26,6 +26,7 @@ identicalRepair() {
   token=
   prefix=
   stdout=false
+  fileMap=true
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -34,6 +35,9 @@ identicalRepair() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --no-map)
+        fileMap=false
         ;;
       --prefix)
         [ -z "$prefix" ] || __failArgument "$usage" "single $argument only:" "$arguments" || return $?
@@ -83,7 +87,9 @@ identicalRepair() {
   # Include header but map EOF to count on the first line
   __usageEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || return $?
   __usageEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || return $?
-
+  if $fileMap; then
+    _identicalMapAttributesFile "$usage" "$sourceText" "$destination" || return $?
+  fi
   if ! $stdout; then
     targetFile=$(__usageEnvironment "$usage" mktemp) || return $?
     exec 3>"$targetFile"

@@ -1,0 +1,6 @@
+
+# IDENTICAL maptarget 4
+- test/example/ACTUAL-maptarget-identical-map-target.txt
+- ACTUAL-maptarget-identical-map-target.txt
+- test/example
+- txt

@@ -1,0 +1,7 @@
+# IGNORE THIS
+
+# IDENTICAL maptarget EOF
+- __FILE__
+- __BASE__
+- __DIRECTORY__
+- __EXTENSION__

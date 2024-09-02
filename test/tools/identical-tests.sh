@@ -6,12 +6,43 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+
+testIdenticalCheckAndRepairMap() {
+  local testPath home name
+
+  home=$(__environment buildHome) || return $?
+  testPath=$(__environment mktemp -d) || return $?
+  __environment mkdir -p "$testPath/identical" || return $?
+  __environment mkdir -p "$testPath/tests" || return $?
+  __environment mkdir -p "$testPath/alternate" || return $?
+  __environment cp "$home/test/example/repair.txt" "$testPath/identical" || return $?
+  for name in dog cat bird forest snake duck leopard; do
+    __environment cp "$home/test/example/repair-target.txt" "$testPath/tests/$name.txt" || return $?
+    __environment cp "$home/test/example/repair-target.txt" "$testPath/alternate/$name.txt" || return $?
+  done
+
+  assertExitCode --stderr-ok 0 identicalCheck --cd "$testPath" --repair "$testPath/identical" --extension "txt" --prefix '-- IDENTICAL' || return $?
+
+  for name in dog cat bird forest snake duck leopard; do
+    assertFileDoesNotContain --line "$LINENO" "$testPath/tests/$name.txt" __EXTENSION__ __FILE__ __DIRECTORY__ __BASE__ || return $?
+    assertFileDoesNotContain --line "$LINENO" "$testPath/alternate/$name.txt" __EXTENSION__ __FILE__ __DIRECTORY__ __BASE__ || return $?
+    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- EXTENSION txt" || return $?
+    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- DIRECTORY" "tests/" || return $?
+    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- FILE" "tests/$name.txt" || return $?
+    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- BASE $name.txt" || return $?
+    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- EXTENSION txt" || return $?
+    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- DIRECTORY" "alternate/" || return $?
+    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- FILE" "alternate/$name.txt" || return $?
+    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- BASE $name.txt" || return $?
+  done
+}
+
 testIdenticalRepair() {
   local output source token target expectedTarget testPath prefix
 
   testPath="test/example"
 
-  for token in eoftarget foetarget; do
+  for token in eoftarget foetarget maptarget; do
     prefix="${token%target}"
     source="$testPath/identical-$prefix-source.txt"
     target="$testPath/identical-$prefix-target.txt"
@@ -36,7 +67,6 @@ testIdenticalRepair() {
     assertExitCode --dump 0 diff "$output" "$(dirname $target)/$token-$(basename $target)" || return $?
     rm "$output" || :
   done
-
 }
 
 testIdenticalLineParsing() {
