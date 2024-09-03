@@ -182,6 +182,9 @@ __deprecatedCleanup() {
   # v0.11.9
   __deprecatedCannon 'aws''ValidRegion' "awsRegionValid"
 
+  # v0.11.10
+  __deprecatedCannon '__''return' "__execute"
+
   # END OF CANNONS
 
   clearLine

@@ -43,7 +43,7 @@ _user() {
   APPLICATION_USER="$1"
   HOME=$(grep "^$APPLICATION_USER:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $APPLICATION_USER in $userDatabase" || return $?
   [ -d "$HOME" ] || _return 1 "User $APPLICATION_USER HOME=$HOME is not a directory" || return $?
-  printf "%s\n" "$APPLICATION_USER"
+  printf -- "%s\n" "$APPLICATION_USER"
 }
 
 exec setuidgid "$(_user "{APPLICATION_USER}")" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?

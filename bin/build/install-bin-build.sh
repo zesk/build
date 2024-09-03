@@ -209,7 +209,7 @@ _installRemotePackage() {
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __usageEnvironment "$usage" printf "%s\n" "$packagePath" >"$messageFile" || return $?
+      __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
     rm -f "$messageFile" || :
@@ -218,14 +218,14 @@ _installRemotePackage() {
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __usageEnvironment "$usage" printf "%s\n" "$packagePath" >"$messageFile" || return $?
+      __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="$(cat "$messageFile") already installed"
     rm -f "$messageFile" || :
   fi
   __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
   message="$message (local)$binName"
-  printf "%s\n" "$message"
+  printf -- "%s\n" "$message"
   __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
 }
 
@@ -381,9 +381,9 @@ __consoleOutput() {
   local prefix="${1}" start="${2-}" end="${3-}"
   shift && shift && shift
   if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end\n" "$*"; fi
+    if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
   elif [ $# -gt 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s\n" "$prefix" "$*"; else printf "%s\n" "$*"; fi
+    if [ -n "$prefix" ]; then printf -- "%s: %s\n" "$prefix" "$*"; else printf -- "%s\n" "$*"; fi
   fi
 }
 

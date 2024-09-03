@@ -26,13 +26,14 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL __return 8
-# Usage: {fn} __return binary [ ... ]
+# IDENTICAL __execute 9
+# Usage: {fn} __execute binary [ ... ]
 # Argument: binary - Required. Executable.
 # Argument: ... - Any arguments are passed to binary
 # Run binary and output failed command upon error
-__return() {
-  [ $# -gt 0 ] || _argument "${FUNCNAME[0]} no arguments $(debuggingStack -s)" || return $?
+# Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
+# Requires-IDENTICAL: _return
+__execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
@@ -46,7 +47,7 @@ _user() {
   APPLICATION_USER="$1"
   HOME=$(grep "^$APPLICATION_USER:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $APPLICATION_USER in $userDatabase" || return $?
   [ -d "$HOME" ] || _return 1 "User $APPLICATION_USER HOME=$HOME is not a directory" || return $?
-  printf "%s\n" "$APPLICATION_USER"
+  printf -- "%s\n" "$APPLICATION_USER"
 }
 
 # Usage: {fn} user logPath
@@ -75,12 +76,12 @@ _logger() {
   logPath="${2-}"
   [ -d "$logPath" ] || _return 4 "$logPath is not a directory" || return $?
 
-  __return _ownFiles "$user" "$logPath" || return $?
+  __execute _ownFiles "$user" "$logPath" || return $?
   logPath="$logPath/$name"
-  [ -d "$logPath" ] || __return mkdir -p "$logPath" || return $?
-  __return chown -R "$user:" "$logPath" || return $?
-  __return chmod 775 "$logPath" || return $?
-  __return cd "$logPath" || return $?
+  [ -d "$logPath" ] || __execute mkdir -p "$logPath" || return $?
+  __execute chown -R "$user:" "$logPath" || return $?
+  __execute chmod 775 "$logPath" || return $?
+  __execute cd "$logPath" || return $?
 
   exec setuidgid "$user" multilog t "$logPath"
 }

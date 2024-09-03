@@ -40,9 +40,9 @@ __consoleOutput() {
   local prefix="${1}" start="${2-}" end="${3-}"
   shift && shift && shift
   if hasColors; then
-    if [ $# -eq 0 ]; then printf "%s$start" ""; else printf "$start%s$end\n" "$*"; fi
+    if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
   elif [ $# -gt 0 ]; then
-    if [ -n "$prefix" ]; then printf "%s: %s\n" "$prefix" "$*"; else printf "%s\n" "$*"; fi
+    if [ -n "$prefix" ]; then printf -- "%s: %s\n" "$prefix" "$*"; else printf -- "%s\n" "$*"; fi
   fi
 }
 

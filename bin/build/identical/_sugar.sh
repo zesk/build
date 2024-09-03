@@ -69,9 +69,9 @@ _command() {
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 _code() {
   local k && while [ $# -gt 0 ]; do
-    case "$(printf "%s" "$1" | tr '[:upper:]' '[:lower:]')" in
+    case "$(printf -- "%s" "$1" | tr '[:upper:]' '[:lower:]')" in
       environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; test) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
-    esac && shift && printf "%d\n" "$k"
+    esac && shift && printf -- "%d\n" "$k"
   done
 }
 
@@ -136,7 +136,7 @@ __execute() {
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: Any
 __echo() {
-  printf "➡️ %s\n" "$(_command "$@")" && __execute "$@" || return $?
+  printf -- "➡️ %s\n" "$(_command "$@")" && __execute "$@" || return $?
 }
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.

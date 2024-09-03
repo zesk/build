@@ -18,12 +18,12 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
-### `__return` - IDENTICAL __return EOF
+### `__execute` - IDENTICAL __execute EOF
 
-IDENTICAL __return EOF
+IDENTICAL __execute EOF
 Run binary and output failed command upon error
 
-- Location: `bin/build/identical/__return.sh`
+- Location: `bin/build/identical/__execute.sh`
 
 #### Arguments
 

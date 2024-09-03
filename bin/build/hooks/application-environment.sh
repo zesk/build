@@ -16,7 +16,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # See `environmentFileApplicationMake` for usage and arguments.
 # See: environmentFileApplicationMake
 __hookApplicationEnvironment() {
-  __return environmentFileApplicationMake "$@" || return $?
+  __execute environmentFileApplicationMake "$@" || return $?
 }
 
 __hookApplicationEnvironment "$@"

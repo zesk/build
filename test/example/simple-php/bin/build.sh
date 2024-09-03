@@ -39,7 +39,7 @@ __install() {
   # shellcheck source=/dev/null
   source "$tools" || _return $e source "$tools" || return $?
   [ ${#arguments[@]} -gt 0 ] || return 0
-  __return "${arguments[@]}" || return $?
+  __execute "${arguments[@]}" || return $?
 }
 
 # IDENTICAL _return 19

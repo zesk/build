@@ -18,7 +18,7 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
-{__return}
+{__execute}
 {__usage}
 {__usageEnvironment}
 {__usageEnvironmentQuiet}

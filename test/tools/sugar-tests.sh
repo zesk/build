@@ -109,27 +109,27 @@ testExitCodeCase() {
 testSugar() {
   local code expected actual
 
-  # __return running stuff
+  # __execute running stuff
   export SUGAR_FILE
   SUGAR_FILE=$(mktemp) || _environment mktemp || return $?
   assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=98
-  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __execute _wasRun || return $?
   assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=99
-  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __execute _wasRun || return $?
   assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   assertEquals --line "$LINENO" $(($(wc -l <"$SUGAR_FILE") + 0)) 2 || return $?
   __environment rm -rf "$SUGAR_FILE" || return $?
   assertFileDoesNotExist --line "$LINENO" "$SUGAR_FILE" || return $?
   code=0
-  assertExitCode --line "$LINENO" 0 __return _wasRun || return $?
+  assertExitCode --line "$LINENO" 0 __execute _wasRun || return $?
   assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=99
-  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __execute _wasRun || return $?
   assertFileExists --line "$LINENO" "$SUGAR_FILE" || return $?
   code=99
-  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __return _wasRun || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$code" "$code" __execute _wasRun || return $?
   assertEquals --line "$LINENO" $(($(wc -l <"$SUGAR_FILE") + 0)) 3 || return $?
   rm -rf "$SUGAR_FILE"
   unset SUGAR_FILE
@@ -143,9 +143,9 @@ testSugar() {
   for code in $(seq 0 7 255); do
     assertExitCode --line "$LINENO" --stderr-ok "$code" _return "$code" || return $?
   done
-  # __return
+  # __execute
   for code in $(seq 0 13 255); do
-    assertExitCode --line "$LINENO" --stderr-ok "$code" __return _return "$code" || return $?
+    assertExitCode --line "$LINENO" --stderr-ok "$code" __execute _return "$code" || return $?
   done
 
   # _environment

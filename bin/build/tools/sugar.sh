@@ -9,13 +9,14 @@
 # Docs: contextOpen ./docs/_templates/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
-# IDENTICAL __return 8
-# Usage: {fn} __return binary [ ... ]
+# IDENTICAL __execute 9
+# Usage: {fn} __execute binary [ ... ]
 # Argument: binary - Required. Executable.
 # Argument: ... - Any arguments are passed to binary
 # Run binary and output failed command upon error
-__return() {
-  [ $# -gt 0 ] || _argument "${FUNCNAME[0]} no arguments $(debuggingStack -s)" || return $?
+# Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
+# Requires-IDENTICAL: _return
+__execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
