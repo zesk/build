@@ -17,5 +17,8 @@ testMariaDump() {
     --stdout-match "secret"
     --stdout-match "example.com"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 mariadbDump --echo --user john --password secret --port 99 --host example.com || return $?
+  # assertExitCode --line "$LINENO" 0 mariadbInstall || return $?
+  assertExitCode --leak MARIADB_BINARY_DUMP --line "$LINENO" "${matches[@]}" 0 mariadbDump --binary echo --echo --user john --password secret --port 99 --host example.com || return $?
+
+  unset MARIADB_BINARY_DUMP
 }
