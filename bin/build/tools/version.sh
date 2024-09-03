@@ -131,9 +131,9 @@ _nextMinorVersion() {
 newRelease() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
+  local isInteractive newVersion
 
   isInteractive=true
-  readLoop=false
   newVersion=
   nArguments=$#
   while [ $# -gt 0 ]; do
