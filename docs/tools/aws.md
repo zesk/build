@@ -186,13 +186,13 @@ services are looked up in /etc/services and match /tcp services only for port se
 
 #### Arguments
 
-- `--profile awsProfile` - Use this AWS profile when connecting using ~/.aws/credentials
---services service0,service1,- `...` - Required. List of services to add or remove (maps to ports)
-- `--id developerId` - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
-- `--group securityGroup` - Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
-- `--ip ip` - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
-- `--revoke` - Flag. Remove permissions
-- `--help` - Flag. Show this help
+- `--profile awsProfile` - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
+--services service0,service1,- `...` - List. Required. List of services to add or remove (maps to ports)
+- `--id developerId` - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+- `--group securityGroup` - String. Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
+- `--ip ip` - Optional. IP. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+- `--revoke` - Flag. Optional. Remove permissions
+- `--help` - Flag. Optional. Show this help
 
 #### Exit codes
 
@@ -239,9 +239,9 @@ Usage:
 - `2` - Argument error
 #### Arguments
 
-- `region` - The AWS Region to validate
+- `region ...` - String. Required. The AWS Region to validate.
 
 #### Exit codes
 
-- `0` - Region is a valid AWS region
-- `1` - Region is NOT a valid AWS region
+- `0` - All regions are valid AWS region
+- `1` - One or more regions are NOT a valid AWS region

@@ -238,7 +238,8 @@ documentationTemplateCompile() {
         if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && isNewestFile "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
           statusMessage consoleInfo "Skip $tokenName and use cache"
         else
-          __usageEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" >"$compiledTemplateCache/$tokenName" || return $?
+          __usageEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || return $?
+          __usageEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || return $?
         fi
         environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
       done <"$documentTokensFile"

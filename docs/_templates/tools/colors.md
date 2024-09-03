@@ -88,3 +88,5 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 {statusMessage}
 
 {colorComboTest}
+
+{colorBrightness}

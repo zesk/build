@@ -39,6 +39,7 @@
 {gitInsideHook}
 {gitRemoteHosts}
 {gitCurrentBranch}
+{gitHasAnyRefs}
 
 ## git pre-commit hook
 

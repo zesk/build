@@ -432,6 +432,21 @@ Get the current branch name
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `gitHasAnyRefs` - Does git have any tags? (May need to `git pull
+
+Does git have any tags? (May need to `git pull --tags`)
+
+- Location: `bin/build/tools/git.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## git pre-commit hook
 

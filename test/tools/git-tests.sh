@@ -7,17 +7,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-gitHasAnyRefs() {
-  if [ $((0 + $(git show-ref | grep -c refs/tags))) -gt 0 ]; then
-    return 0
-  fi
-  return 1
-}
-
 gitAddRemotesToSSHKnown() {
   local remoteHost
   local sshKnown=.ssh/known_hosts
-
+  local extension
   # shellcheck source=/dev/null
   source "./bin/build/env/HOME.sh"
 
@@ -29,18 +22,15 @@ gitAddRemotesToSSHKnown() {
   __environment chmod 600 "$sshKnown" || return $?
 
   git remote -v | awk '{ print $2 }' | cut -f 1 -d : | cut -f 2 -d @ | sort -u | while read -r remoteHost; do
-    if grep -q "$remoteHost" "$sshKnown"; then
-      consoleInfo "Host $remoteHost already known"
-    elif ssh-keyscan "$remoteHost" >"$sshKnown"; then
-      printf "%s %s %s %s\n" "$(consoleSuccess "Added")" "$(consoleInfo "$remoteHost")" "$(consoleSuccess "to")" "$(consoleCode "$sshKnown")"
-    else
-      _environment "$(printf "%s %s %s %s\n" "$(consoleError "Failed to add")" "$(consoleInfo "$remoteHost")" "$(consoleError "to")" "$(consoleCode "$sshKnown")")" || return $?
+    extension="${remoteHost##*.}"
+    if [ "$extension" = "$remoteHost" ]; then
+      continue
     fi
+    __environment sshAddKnownHost "$remoteHost" || return $?
   done
 }
 
 testGitVersionList() {
-
   # if ! gitHasAnyRefs; then
   # gitAddRemotesToSSHKnown || return $?
   # git pull --tags >/dev/null 2>&1 || _environment "Unable to pull git tags ... failed" || return $?

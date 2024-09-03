@@ -51,6 +51,22 @@ Modifies local environment. Not usually run within a subshell.
 
 $envName
 BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
+### `buildEnvironmentContext` - Run a command and ensure the build tools context matches
+
+Run a command and ensure the build tools context matches the current project
+Avoid infinite loops here, call down.
+
+- Location: `bin/build/tools/self.sh`
+
+#### Arguments
+
+- `arguments ...` - Required. Command to run in new context.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `buildFunctions` - Prints the list of functions defined in Zesk Build
 
 Prints the list of functions defined in Zesk Build

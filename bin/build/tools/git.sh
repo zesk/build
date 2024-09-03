@@ -595,14 +595,25 @@ _gitMainly() {
 # Get the current branch name
 #
 gitCurrentBranch() {
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
 
   # git rev-parse --abbrev-ref HEAD
   __usageEnvironment "$usage" git symbolic-ref --short HEAD || return $?
 }
 _gitCurrentBranch() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Does git have any tags?
+# May need to `git pull --tags`, or no tags exist.
+gitHasAnyRefs() {
+  local usage="_${FUNCNAME[0]}"
+  local count
+
+  count=$(__usageEnvironment "$usage" git show-ref | grep -c refs/tags) || return $?
+  [ $((0 + count)) -gt 0 ]
+}
+_gitHasAnyRefs() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

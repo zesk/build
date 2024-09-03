@@ -332,3 +332,20 @@ Intended to be run on an interactive console. Should support $(tput cols).
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+### `colorBrightness` - Return an integer between 0 and 100
+
+Return an integer between 0 and 100
+Colors are between 0 and 255
+
+- Location: `bin/build/tools/console.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
