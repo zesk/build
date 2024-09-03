@@ -41,10 +41,10 @@ gitAddRemotesToSSHKnown() {
 
 testGitVersionList() {
 
-  if ! gitHasAnyRefs; then
-    gitAddRemotesToSSHKnown || return $?
-    git pull --tags >/dev/null 2>&1 || _environment "Unable to pull git tags ... failed" || return $?
-  fi
+  # if ! gitHasAnyRefs; then
+  # gitAddRemotesToSSHKnown || return $?
+  # git pull --tags >/dev/null 2>&1 || _environment "Unable to pull git tags ... failed" || return $?
+  # fi
 
   #  echo "PWD: $(pwd)"
   #  echo Version List:
