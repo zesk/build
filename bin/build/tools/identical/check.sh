@@ -11,6 +11,7 @@
 # Argument: --exclude pattern - Optional. String. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 # Argument: --cd directory - Optional. Directory. Change to this directory before running. Defaults to current directory.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
+# Argument: --ignore-singles - Optional. Flag. Skip the check to see if single entries exist.
 # Argument: --no-map - Optional. Flag. Do not map __BASE__, __FILE__, __DIR__ tokens.
 # Argument: --help - Optional. Flag. This help.
 #
@@ -50,7 +51,7 @@ identicalCheck() {
   local identicalLine binary matchFile repairSources isBadFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
   local excludes searchFileList debug extensionText
-  local failureCode mapFile
+  local failureCode mapFile ignoreSingles
 
   failureCode="$(_code identical)"
   me="$(basename "${BASH_SOURCE[0]}")"
@@ -66,9 +67,11 @@ identicalCheck() {
   debug=false
   extensionText=
   mapFile=true
+  ignoreSingles=false
+
   saved=("$@")
   nArguments=$#
-  consoleInfo "$(_command "${usage#_}" "${saved[@]}")"
+
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -108,6 +111,9 @@ identicalCheck() {
       --prefix)
         shift
         prefixes+=("$1")
+        ;;
+      --ignore-singles)
+        ignoreSingles=true
         ;;
       --exclude)
         shift
@@ -242,35 +248,42 @@ identicalCheck() {
     fi
   fi
   clearLine
-  foundSingles=()
-  while read -r matchFile; do
-    if [ ! -f "$matchFile.compare" ]; then
-      tokenFile="$(dirname "$matchFile")"
-      token="$(basename "$matchFile")"
-      token="${token%%.match}"
-      token="${token#*@}"
-      tokenFile="$tokenFile/$token"
-      tokenFile="$(tail -n 1 "$tokenFile")"
-      if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
-        printf "%s: %s in %s\n" "$(consoleSuccess "Single instance of token ok:")" "$(consoleCode "$token")" "$(consoleInfo "$tokenFile")"
-        foundSingles+=("$token")
-      else
-        printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")" >>"$resultsFile"
-        if [ -n "$binary" ]; then
-          "$binary" "$tokenFile"
-        fi
-        exitCode=$failureCode
-      fi
-    fi
-  done < <(find "$tempDirectory" -type f -name '*.match' || :)
-  for token in "${singles[@]+"${singles[@]}"}"; do
-    if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
-      while read -r tokenFile; do
+
+  #
+  # Singles checks
+  #
+  if ! $ignoreSingles; then
+    foundSingles=()
+    while read -r matchFile; do
+      if [ ! -f "$matchFile.compare" ]; then
+        tokenFile="$(dirname "$matchFile")"
+        token="$(basename "$matchFile")"
+        token="${token%%.match}"
+        token="${token#*@}"
+        tokenFile="$tokenFile/$token"
         tokenFile="$(tail -n 1 "$tokenFile")"
-        printf "%s: %s %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
-      done < <(find "$tempDirectory" -name "$token" -type f)
-    fi
-  done
+        if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
+          printf "%s: %s in %s\n" "$(consoleSuccess "Single instance of token ok:")" "$(consoleCode "$token")" "$(consoleInfo "$tokenFile")"
+          foundSingles+=("$token")
+        else
+          printf "%s: %s in %s\n" "$(consoleWarning "Single instance of token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")" >>"$resultsFile"
+          if [ -n "$binary" ]; then
+            "$binary" "$tokenFile"
+          fi
+          exitCode=$failureCode
+        fi
+      fi
+    done < <(find "$tempDirectory" -type f -name '*.match' || :)
+    for token in "${singles[@]+"${singles[@]}"}"; do
+      if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
+        while read -r tokenFile; do
+          tokenFile="$(tail -n 1 "$tokenFile")"
+          printf "%s: %s %s\n" "$(consoleWarning "Multiple instance of --single token found:")" "$(consoleError "$token")" "$(consoleInfo "$tokenFile")"
+        done < <(find "$tempDirectory" -name "$token" -type f)
+      fi
+    done
+  fi
+
   rm -rf "$tempDirectory" || :
   if [ $(($(wc -l <"$resultsFile") + 0)) -ne 0 ]; then
     exitCode=$failureCode

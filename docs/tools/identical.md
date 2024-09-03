@@ -47,7 +47,7 @@ Failures are considered:
 - Two code instances with the same token were found which were not identical
 - Two code instances with the same token were found which have different line counts
 
-This is best used as a pre-commit check, for example. Wink.
+This is best used as a pre-commit check, for example. Wink!
 
 - Location: `bin/build/tools/identical/check.sh`
 
