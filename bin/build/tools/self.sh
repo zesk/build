@@ -380,3 +380,25 @@ buildQuietLog() {
 _buildQuietLog() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+#
+# Run a command and ensure the build tools context matches the current project
+# Usage: {fn} arguments ...
+# Argument: arguments ... - Required. Command to run in new context.
+# Avoid infinite loops here, call down.
+buildEnvironmentContext() {
+  local start codeHome home
+  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
+  codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  if [ "$codeHome" != "$home" ]; then
+    consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
+    [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
+    "$home/bin/build/tools.sh" "$@"
+    return $?
+  fi
+  __environment "$@" || return $?
+}
+_buildEnvironmentContext() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

@@ -417,7 +417,7 @@ _gitFindHome() {
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
-  local updateReleaseNotes appendLast argument start notes comment home codeHome
+  local updateReleaseNotes appendLast argument start notes comment home
 
   appendLast=false
   updateReleaseNotes=true
@@ -459,14 +459,9 @@ gitCommit() {
 
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
-    codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
-    if [ "$codeHome" != "$home" ]; then
-      consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
-      [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
-      "$home/bin/build/tools.sh" gitCommit "${saved[@]+"${saved[@]}"}"
-      return $?
-    fi
+    buildEnvironmentContext gitCommit --home "$home" "${saved[@]}" || return $?
+    return 0
   fi
   __usageEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?

@@ -59,11 +59,15 @@ releaseNotes() {
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
+  buildEnvironmentContext __releaseNotes "$usage" "$version"
+}
+__releaseNotes() {
+  local usage="$1" version="${2-}"
+
   if [ -z "$version" ]; then
     version=$(__usageEnvironment "$usage" runHook version-current) || return $?
     [ -n "$version" ] || __failEnvironment "$usage" "version-current hook returned blank" || return $?
   fi
-
   export BUILD_RELEASE_NOTES
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
   home=$(__usageEnvironment "$usage" buildHome) || return $?
@@ -127,9 +131,6 @@ _nextMinorVersion() {
 newRelease() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
-  local newVersion readLoop currentVersion liveVersion nextVersion notes isInteractive
-  local versionOrdering
-  local width=40
 
   isInteractive=true
   readLoop=false
@@ -155,6 +156,14 @@ newRelease() {
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
+
+  buildEnvironmentContext __newRelease "$usage" "$isInteractive" "$newVersion"
+}
+__newRelease() {
+  local usage="$1" isInteractive="$2" newVersion="$3"
+  local newVersion readLoop currentVersion liveVersion nextVersion notes isInteractive
+  local versionOrdering
+  local width=40
 
   # No version on command-line *potentially* ask (interactive only)
   if [ -z "$newVersion" ]; then
