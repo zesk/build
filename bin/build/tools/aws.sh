@@ -534,6 +534,7 @@ _awsIPAccess() {
 # Exit Code: 1 - One or more regions are NOT a valid AWS region
 # Checked: 2024-09-02
 awsRegionValid() {
+  [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
     case "$1" in
       eu-north-1) ;;
@@ -551,5 +552,5 @@ awsRegionValid() {
     esac
     shift
   done
-  return 1
+  return 0
 }
