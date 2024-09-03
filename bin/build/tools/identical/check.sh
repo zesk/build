@@ -125,8 +125,7 @@ identicalCheck() {
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(__usageEnvironment "$usage" mktemp) || return $?
   rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
-  ! $debug || printf "COMMAND: %s\n" __identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}"
-  searchFileList="$(__identicalCheckGenerateSearchFiles "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}")" || __failEnvironment "$usage" "Unable to generate file list" || return $?
+  searchFileList="$(__identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}")" || return $?
 
   if [ ! -s "$searchFileList" ]; then
     __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || return $?
@@ -274,38 +273,36 @@ _identicalCheck() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} repairSource ... -- findArgs ...
+# Usage: {fn} usage repairSource ... -- directory findArgs ...
+# stdout: list of files
 __identicalCheckGenerateSearchFiles() {
-  local searchFileList orderedList ignorePatterns repairSources
+  local  usage="$1" searchFileList  ignorePatterns repairSource repairSources directory
 
+  shift # usage
   repairSources=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
       break
     fi
-    [ -n "$1" ] || _argument "Blank repairSource?" || return $?
-    repairSources+=("${1%/}/")
-    shift
+    repairSources+=("$(usageArgumentDirectory "$usage" repairSource "${1%/}/")")
+    shift # repairSource
   done
-  searchFileList=$(mktemp) || _environment "mktemp" || return $?
-  orderedList="$searchFileList.ordered"
-  if ! find "$@" >"$searchFileList"; then
-    rm -rf "$searchFileList" || :
-    _environment "No files found" || return $?
-  fi
-  if [ ${#repairSources[@]} -gt 0 ]; then
-    __environment touch "$orderedList" || return $?
-    ignorePatterns=()
-    for repairSource in "${repairSources[@]}"; do
-      grep -e "$(quoteGrepPattern "$repairSource")" <"$searchFileList" >>"$orderedList"
-      ignorePatterns+=(-e "$(quoteGrepPattern "$repairSource")")
-    done
-    grep -v "${ignorePatterns[@]}" <"$searchFileList" >>"$orderedList" || :
-    rm -rf "$searchFileList"
-    printf "%s\n" "$orderedList"
-  else
-    printf "%s\n" "$searchFileList"
-  fi
+  directory=$(usageArgumentDirectory "$usage" "directory" "${1-}") || return $?
+  directories=("${repairSources[@]+"${repairSources[@]}"}" "$directory") && shift
+
+  searchFileList=$(__usageEnvironment "$usage" mktemp) || return $?
+  ignorePatterns=()
+  for directory in "${directories[@]}"; do
+    filter=("cat")
+    if [ "${#ignorePatterns[@]}" -gt 0 ]; then
+      filter=("grep" "-v" "${ignorePatterns[@]}")
+    fi
+    if ! find "$directory" "$@" | "${filter[@]}" >>"$searchFileList"; then
+      __failEnvironment "$usage" "No matching files found in $directory" || _clean "$?" "$searchFileList" || return $?
+    fi
+  done
+  __usageEnvironment "$usage" cat "$searchFileList" || _clean "$?" "$searchFileList" || return $?
+  __usageEnvironment "$usage"  rm -rf "$searchFileList" || return $?
 }
 
 # Usage: {fn} searchFile lineNumber totalLines count
