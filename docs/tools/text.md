@@ -42,7 +42,7 @@ Returns true if all `characters` are of `className`
 
 Quote a string to be used in a sed pattern on the command line.
 
-- Location: `bin/build/identical/quoteSedPattern.sh`
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 

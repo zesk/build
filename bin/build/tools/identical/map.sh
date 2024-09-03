@@ -16,7 +16,7 @@ _identicalMapAttributesFilter() {
   base=$(basename "$full")
   file="${file#"$home"}"
   extension="${base##*.}"
-  dir=$(dirname "$file")
+  dir=$(dirname -- "$file")
   __usageEnvironment "$usage" sed \
     -e 's/__EXTENSION__/'"$(quoteSedPattern "$extension")"'/g' \
     -e 's/__DIRECTORY__/'"$(quoteSedPattern "$dir")"'/g' \

@@ -40,8 +40,7 @@
 # - Two code instances with the same token were found which were not identical
 # - Two code instances with the same token were found which have different line counts
 #
-# This is best used as a pre-commit check, for example. Wink.
-#
+# This is best used as a pre-commit check, for example. Wink!
 identicalCheck() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
@@ -160,7 +159,6 @@ identicalCheck() {
           tokenLineCount=$(head -1 "$tokenFile")
           tokenFileName=$(tail -1 "$tokenFile")
           if [ ! -f "$countFile" ]; then
-            # __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
             printf "%s%s: %s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token counts do not match:")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$tokenFileName")" "$(consoleSuccess "$tokenLineCount")" 1>&2
             printf "    %s has %s specified\n" "$(consoleCode "$searchFile")" "$(consoleError "$count")" 1>&2
@@ -173,6 +171,7 @@ identicalCheck() {
             printf "%s\n" "$(consoleCode "$searchFile:$lineNumber") - not integers: $(consoleValue "$identicalLine")"
           else
             compareFile="${countFile}.compare"
+            # statusMessage consoleInfo "compareFile $compareFile"
             # Extract our section of the file. Matching is done, use line numbers and math to extract exact section
             # 10 lines in file, line 1 means: tail -n 10
             # 10 lines in file, line 9 means: tail -n 2
@@ -188,14 +187,26 @@ identicalCheck() {
                 consoleReset || :
               } 1>&2
             elif $mapFile; then
+              #              # DEBUG TODO
+              #              printf -- "%s %s: \n\t%s USING\n\t%s\n" "$(consoleInfo "MAPPING")" "$(consoleBlue "$token")" "$(consoleCode "$compareFile")" "$(consoleValue "$searchFile")"
+              __usageEnvironment "$usage" cp "$countFile" "$countFile.mapped" || return $?
+              __usageEnvironment "$usage" cp "$compareFile" "$compareFile.mapped" || return $?
+              countFile="$countFile.mapped"
+              compareFile="$compareFile.mapped"
+              _identicalMapAttributesFile "$usage" "$countFile" "$searchFile" || return $?
               _identicalMapAttributesFile "$usage" "$compareFile" "$searchFile" || return $?
             fi
+            #            # DEBUG TODO
+            #            consoleSuccess diff -b -q "$countFile" "$compareFile"
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
               printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
-              diff "$countFile" "${countFile}.compare" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" 1>&2
+              diff "$countFile" "$compareFile" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" || : 1>&2
               isBadFile=true
             else
               statusMessage consoleSuccess "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))"
+            fi
+            if $mapFile; then
+              rm -rf "$countFile" "$compareFile" || return $?
             fi
           fi
           if $isBadFile; then
@@ -288,20 +299,21 @@ __identicalCheckGenerateSearchFiles() {
     repairSources+=("$(usageArgumentDirectory "$usage" repairSource "${1%/}/")")
     shift # repairSource
   done
-  directory=$(usageArgumentDirectory "$usage" "directory" "${1-}") || return $?
+  directory=$(usageArgumentDirectory "$usage" "directory" "${1-%/}") || return $?
   directories=("${repairSources[@]+"${repairSources[@]}"}" "$directory") && shift
 
   searchFileList=$(__usageEnvironment "$usage" mktemp) || return $?
   ignorePatterns=()
   for directory in "${directories[@]}"; do
+    directory="${directory%/}"
     filter=("cat")
     if [ "${#ignorePatterns[@]}" -gt 0 ]; then
-      IFS='|' filter=("grep" "-v" -e "${ignorePatterns[*]}")
+      filter=("grep" "-v" "${ignorePatterns[@]}")
     fi
     if ! find "$directory" "$@" | "${filter[@]}" >>"$searchFileList"; then
       __failEnvironment "$usage" "No matching files found in $directory" || _clean "$?" "$searchFileList" || return $?
     fi
-    ignorePatterns+=("$(quoteGrepPattern "$directory")")
+    ignorePatterns+=(-e "$(quoteGrepPattern "$directory")")
   done
   __usageEnvironment "$usage" cat "$searchFileList" || _clean "$?" "$searchFileList" || return $?
   __usageEnvironment "$usage" rm -rf "$searchFileList" || return $?
