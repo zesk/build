@@ -4,15 +4,15 @@
 
 So, as we've been coding here it's starting to make sense to follow various patterns in our `bash` coding.
 
-## NO: Always `cd` to the application root somehow
-
-We no longer require this except for scripts which require it. The recommendation is to `pushd` and `popd` to places you need to go.
-
-## NO: Always `set -eou pipefail`
+## Avoid depending on `set -eou pipefail`
 
 Again, this is good for testing scripts but should be avoided in production as it does not work as a good method to catch errors; code should catch errors itself using the `|| return $?` structures you see everywhere.
 
-Additionally, use `_clean` and `_undo` to back out of functions.
+In short - good for debugging but scripts internally should NOT depend on this behavior unless they set it and unset it.
+
+## Clean up after ourselves
+
+Use `_clean` and `_undo` to back out of functions.
 
 ## Avoid exit like the plague
 
@@ -37,6 +37,7 @@ Pattern:
         fi
     }
     _functionName() {
+      # IDENTICAL usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -46,6 +47,7 @@ Typically, any defined function `deployApplication` has a mirror underscore-pref
         ...
     }
     _deployApplication() {
+      # IDENTICAL usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -84,9 +86,19 @@ Code:
 
 Usage:
 
+    tempFile=(__usageEnvironment "$usage" mktemp) || return $?
     __failEnvironment "$usage" "No deployment application directory exists" || return $?
 
+See:
+
+- [`_environment`](./tools/sugar.md#_environment)
+- [`__environment`](./tools/sugar.md#__environment)
+- [`__failEnvironment`](./tools/sugar.md#__failEnvironment)
+- [`__usageEnvironment`](./tools/sugar.md#__usageEnvironment)
+
 ### Argument errors (Exit Code `2`)
+
+Examples:
 
 - Missing or blank arguments
 - Unknown arguments
@@ -96,11 +108,28 @@ Usage:
 - Arguments should match a specific pattern
 - Invalid argument semantics
 
-#### Argument utilities
+Code:
 
-- `usageArgumentDirectory` - Argument must be a valid directory
-- `usageArgumentFile` - Argument must be a valid file
-- `usageArgumentFileDirectory` - Argument must be a file which may or may not exist in a directory which exists
+    return "$(_code argument)"
+
+Usage:
+
+    __usageArgument "$usage" isInteger "$argument" || return $?
+    __failArgument "$usage" "No deployment application directory exists" || return $?
+
+### Argument utilities
+
+- [`usageArgumentDirectory`](./tools/usage.md#usageArgumentDirectory) - Argument must be a valid directory
+- [`usageArgumentFile`](./tools/usage.md#usageArgumentFile) - Argument must be a valid file
+- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file which may or may not exist in a directory which exists
+
+### See 
+
+- [`_argument`](./tools/sugar.md#_argument)
+- [`__argument`](./tools/sugar.md#__argument)
+- [`__failArgument`](./tools/sugar.md#__failArgument)
+- [`__usageArgument`](./tools/sugar.md#__usageArgument)
+
 
 Code:
 
