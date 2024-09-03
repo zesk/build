@@ -22,6 +22,8 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 
 
+- Location: `bin/build/tools/aws.sh`
+
 #### Usage
 
     awsInstall [ package ... ]
@@ -51,6 +53,8 @@ output the credentials file path.
 If not found, returns with exit code 1.
 
 
+
+- Location: `bin/build/tools/aws.sh`
 
 #### Usage
 
@@ -89,6 +93,8 @@ It will also fail if:
 
 Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `AWS_ACCESS_KEY_DATE` has not exceeded the number of days.
 
+- Location: `bin/build/tools/aws.sh`
+
 #### Arguments
 
 - No arguments.
@@ -113,6 +119,8 @@ AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which repre
 
 This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
 Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
+
+- Location: `bin/build/tools/aws.sh`
 
 #### Arguments
 
@@ -139,6 +147,8 @@ Load the credentials supplied from the AWS credentials file and output shell com
 
 If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
 If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+
+- Location: `bin/build/tools/aws.sh`
 
 #### Usage
 
@@ -171,6 +181,8 @@ Register current IP address in listed security groups to allow for access to dep
 Use this during deployment to grant temporary access to your systems during deployment only.
 Build scripts should have a $(consoleCode --revoke) step afterward, always.
 services are looked up in /etc/services and match /tcp services only for port selection
+
+- Location: `bin/build/tools/aws.sh`
 
 #### Arguments
 
@@ -213,6 +225,8 @@ AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 ### `awsSecurityGroupIPRegister` - Usage:
 
 Usage:
+
+- Location: `bin/build/tools/aws.sh`
 
 #### Arguments
 

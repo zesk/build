@@ -38,6 +38,7 @@ Once included, all functions here are available for use:
 - [Installation](./install.md)
 - [Interactive](./interactive.md)
 - [Log](./log.md)
+- [MariaDB](./mariadb.md)
 - [Markdown](./markdown.md)
 - [npm](./npm.md)
 - [Operating System](./os.md)

@@ -241,13 +241,10 @@ _awsEnvironment() {
 #
 #
 awsSecurityGroupIPModify() {
-  local argument group port description start region ip foundIP mode verb tempErrorFile
-  local savedArgs json
-  local usage
-
-  usage="_${FUNCNAME[0]}"
-
-  savedArgs=("$@")
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local group port description start region ip foundIP mode verb tempErrorFile
+  local json
 
   __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
 
@@ -262,9 +259,11 @@ awsSecurityGroupIPModify() {
   mode=--add
   verb="Adding (default)"
 
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -272,20 +271,20 @@ awsSecurityGroupIPModify() {
         return $?
         ;;
       --group)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        group="$1"
+        shift
+        group=$(usageArgumentString "$usage" "$argument" "${1-}")
         ;;
       --port)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        port="$1"
+        shift
+        port=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")
         ;;
       --description)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        description="$1"
+        shift
+        description=$(usageArgumentString "$usage" "$argument" "${1-}")
         ;;
       --ip)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        ip="$1"
+        shift
+        ip=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --add)
         verb="Adding"
@@ -300,8 +299,8 @@ awsSecurityGroupIPModify() {
         mode="$argument"
         ;;
       --region)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        region="$1"
+        shift
+        region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
         __failArgument "unknown argument: $argument" || return $?
@@ -313,17 +312,18 @@ awsSecurityGroupIPModify() {
 
   for argument in group description region; do
     if [ -z "${!argument}" ]; then
-      __failArgument "$usage" "--$argument is required (${savedArgs[*]})" || return $?
+      __failArgument "$usage" "--$argument is required (${saved[*]})" || return $?
     fi
   done
 
   if [ "$mode" != "--remove" ]; then
     for argument in ip port; do
-      [ -n "${!argument}" ] || __failArgument "$usage" "--$argument is required for $mode (${savedArgs[*]})" || return $?
+      [ -n "${!argument}" ] || __failArgument "$usage" "--$argument is required for $mode (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
     done
   fi
 
   tempErrorFile=$(mktemp) || __failEnvironment mktemp || return $?
+
   #
   # 3 modes: Add, Remove, Register
   #
@@ -386,18 +386,18 @@ __awwSGOutput() {
 # Usage:
 #
 awsSecurityGroupIPRegister() {
-  awsSecurityGroupIPModify --register "$@" || :
+  awsSecurityGroupIPModify --register "$@"
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
 # Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
-# Argument: --profile awsProfile - Use this AWS profile when connecting using ~/.aws/credentials
-# Argument: --services service0,service1,... - Required. List of services to add or remove (maps to ports)
-# Argument: --id developerId - Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
-# Argument: --group securityGroup - Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
-# Argument: --ip ip - Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
-# Argument: --revoke - Flag. Remove permissions
-# Argument: --help - Flag. Show this help
+# Argument: --profile awsProfile - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
+# Argument: --services service0,service1,... - List. Required. List of services to add or remove (maps to ports)
+# Argument: --id developerId - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+# Argument: --group securityGroup - String. Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
+# Argument: --ip ip - Optional. IP. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+# Argument: --revoke - Flag. Optional. Remove permissions
+# Argument: --help - Flag. Optional. Show this help
 #
 # Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
 # Use this during deployment to grant temporary access to your systems during deployment only.
@@ -529,21 +529,27 @@ _awsIPAccess() {
 
 #
 # Usage: {fn} region
-# Argument: region - The AWS Region to validate
-# Exit Code: 0 - Region is a valid AWS region
-# Exit Code: 1 - Region is NOT a valid AWS region
-# Checked: 2023-12-31
-awsValidRegion() {
-  case "${1-}" in
-    eu-north-1) return 0 ;;
-    eu-central-1) return 0 ;;
-    eu-west-1 | eu-west-2 | eu-west-3) return 0 ;;
-    ap-south-1) return 0 ;;
-    ap-southeast-1 | ap-southeast-2) return 0 ;;
-    ap-northeast-3 | ap-northeast-2 | ap-northeast-1) return 0 ;;
-    ca-central-1) return 0 ;;
-    sa-east-1) return 0 ;;
-    us-east-1 | us-east-2 | us-west-1 | us-west-2) return 0 ;;
-  esac
+# Argument: region ... - String. Required. The AWS Region to validate.
+# Exit Code: 0 - All regions are valid AWS region
+# Exit Code: 1 - One or more regions are NOT a valid AWS region
+# Checked: 2024-09-02
+awsRegionValid() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      eu-north-1) ;;
+      eu-central-1) ;;
+      eu-west-1 | eu-west-2 | eu-west-3) ;;
+      ap-south-1) ;;
+      ap-southeast-1 | ap-southeast-2) ;;
+      ap-northeast-3 | ap-northeast-2 | ap-northeast-1) ;;
+      ca-central-1) ;;
+      sa-east-1) ;;
+      us-east-1 | us-east-2 | us-west-1 | us-west-2) ;;
+      *)
+        return 1
+        ;;
+    esac
+    shift
+  done
   return 1
 }

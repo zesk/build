@@ -179,6 +179,9 @@ __deprecatedCleanup() {
   __deprecatedCannon 'aws-cli''.sh' "aws.sh"
   deprecatedToken+=('__''try')
 
+  # v0.11.9
+  __deprecatedCannon 'aws''ValidRegion' "awsRegionValid"
+
   # END OF CANNONS
 
   clearLine

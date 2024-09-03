@@ -174,3 +174,15 @@ testAWSExpiration() {
 
   AWS_ACCESS_KEY_DATE="$oldDate"
 }
+
+testAwsRegionValid() {
+  local r
+
+  for r in us-east-1 us-east-2 us-west-1 us-west-2; do
+    assertExitCode --line "$LINENO" 0 awsRegionValid "$r" || return $?
+    assertNotExitCode --line "$LINENO" 0 awsRegionValid "$r" "FAKE" || return $?
+  done
+  assertNotExitCode --line "$LINENO" 0 awsRegionValid || return $?
+  assertNotExitCode --line "$LINENO" 0 awsRegionValid bad || return $?
+  assertNotExitCode --line "$LINENO" 0 awsRegionValid us-east-1000 || return $?
+}
