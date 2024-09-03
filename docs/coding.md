@@ -116,13 +116,11 @@ A simple example to show some patterns:
     #
     # Copyright &copy; 2024 Market Acumen, Inc.
     #
-    # Docs: o ./docs/_templates/tools/example.md
-    # Test: o ./test/tools/example-tests.sh
+    # Docs: ./docs/_templates/tools/example.md
+    # Test: ./test/tools/example-tests.sh
     
     # Current Code Cleaning:
     #
-    # - Migrating to `_sugar` and `__usageArgument` model
-    # - Removing all errorArgument and errorEnvironment globals when found
     # - use `a || b || c || return $?` format when possible
     # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
     

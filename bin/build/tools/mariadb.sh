@@ -8,12 +8,26 @@
 # Docs: ./docs/_templates/tools/mariadb.md
 # Test: ./test/tools/mariadb-tests.sh
 
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --echo - Optional. Flag. Show the command.
+# Argument: --binary - Optional. Executable. The binary to use to do the dump. Defaults to `MARIADB_BINARY_DUMP`.
+# Argument: --lock - Optional. Flag. Lock the database during dump
+# Argument: --password password - Optional. String. Password to connect
+# Argument: --user user - Optional. String. User to connect
+# Argument: --host host - Optional. String. Host to connect
+# Argument: --port port - Optional. Integer. Port to connect
 mariadbDump() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
-  local options binary
+  local options binary echoFlag=false
 
-  binary=mariadbdump
+  export MARIADB_BINARY_DUMP
+
+  __usageEnvironment "$usage" buildEnvironmentLoad MARIADB_BINARY_DUMP || return $?
+
+  binary="${MARIADB_BINARY_DUMP-}"
+  [ -n "$binary" ] || binary=mariadbdump
   saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -24,6 +38,9 @@ mariadbDump() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --echo)
+        echoFlag=true
         ;;
       --binary)
         shift
@@ -59,5 +76,13 @@ mariadbDump() {
   whichExists "$binary" || __usageEnvironment "$usage" "$binary not found in PATH: $PATH" || return $?
   options+=(--add-drop-table -c)
 
-  "$binary" "${options[@]}"
+  if $echoFlag; then
+    printf "%s\n" "$binary ${options[*]-}"
+  else
+    "$binary" "${options[@]}"
+  fi
+}
+_mariadbDump() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
