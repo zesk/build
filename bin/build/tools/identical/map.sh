@@ -8,7 +8,7 @@
 # Usage: {fn} usageFunction fileNameToUse
 # stdin: converts magic attributes
 _identicalMapAttributesFilter() {
-  local usage="${1-}" file="${2-}" base home full
+  local usage="${1-}" file="${2-}" base home full dir extension
 
   home=$(__usageEnvironment "$usage" buildHome)
   home="${home%/}/"

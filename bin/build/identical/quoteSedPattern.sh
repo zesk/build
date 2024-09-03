@@ -15,11 +15,11 @@
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 #
 quoteSedPattern() {
-  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value=$(printf -- "%s\n" "${1-}" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//\//\\/}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
   value="${value//&/\\&}"
   value="${value//$'\n'/\\n}"
-  printf "%s\n" "$value"
+  printf -- "%s\n" "$value"
 }

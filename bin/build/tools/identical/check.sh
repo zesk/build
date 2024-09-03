@@ -43,17 +43,17 @@
 # This is best used as a pre-commit check, for example. Wink.
 #
 identicalCheck() {
-  local this argument usage me
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local usage me
   local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix quotedPrefix
   local totalLines lineNumber token count parsed tokenFile countFile searchFile
-  local identicalLine binary matchFile repairSource repairSources isBadFile
+  local identicalLine binary matchFile repairSources isBadFile
   local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
   local excludes searchFileList debug extensionText
   local failureCode mapFile
 
   failureCode="$(_code identical)"
-  this="${FUNCNAME[0]}"
-  usage="_$this"
   me="$(basename "${BASH_SOURCE[0]}")"
 
   binary=
@@ -67,14 +67,17 @@ identicalCheck() {
   debug=false
   extensionText=
   mapFile=true
+  saved=("$@")
+  nArguments=$#
+  consoleInfo "$(_command "${usage#_}" "${saved[@]}")"
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
-        return 0
+        return $?
         ;;
       --no-map)
         mapFile=false
@@ -83,35 +86,32 @@ identicalCheck() {
         debug=true
         ;;
       --cd)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        rootDir=$1
-        [ -d "$rootDir" ] || __failArgument "$usage" "--cd \"$1\" is not a directory" || return $?
+        shift
+        rootDir=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
         ;;
       --repair)
         shift
-        repairSource=$(usageArgumentRealDirectory "$usage" "repairSource" "${1-}") || return $?
-        repairSources+=("$repairSource")
+        repairSources+=("$(usageArgumentRealDirectory "$usage" "repairSource" "${1-}")") || return $?
         ;;
       --extension)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        findArgs+=("-name" "*.$1")
+        shift
+        findArgs+=("-name" "*.$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         extensionText="$extensionText .$1"
         ;;
       --exec)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        binary="$1"
-        isCallable "$binary" || __failArgument "$usage" "$(consoleLabel "$argument") \"$(consoleValue "$binary")\" is not callable" || return $?
+        shift
+        binary=$(usageArgumentCallable "$usage" "$argument" "$1") || return $?
         ;;
       --single)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
         singles+=("$1")
         ;;
       --prefix)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
         prefixes+=("$1")
         ;;
       --exclude)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
         [ -n "$1" ] || __failArgument "$usage" "Empty $(consoleCode "$argument") argument" || return $?
         excludes+=(! -path "$1")
         ;;
@@ -124,11 +124,11 @@ identicalCheck() {
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
   resultsFile=$(__usageEnvironment "$usage" mktemp) || return $?
-  rootDir=$(realPath "$rootDir") || __failEnvironment realPath "$rootDir" || return $?
-  searchFileList="$(__identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}")" || return $?
-
+  searchFileList=$(__usageEnvironment "$usage" mktemp) || return $?
+  rootDir=$(__usageEnvironment "$usage" realPath "$rootDir") || return $?
+  __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || _clean $? "$searchFileList" || return $?
   if [ ! -s "$searchFileList" ]; then
-    __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || return $?
+    __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || _clean $? "$searchFileList" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || return $?
   prefixIndex=0
@@ -148,7 +148,7 @@ identicalCheck() {
           badFiles+=("$searchFile")
           continue
         fi
-        read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
+        IFS=' ' read -r lineNumber token count <<<"$(printf -- "%s\n" "$parsed")" || :
         if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count"; then
           badFiles+=("$searchFile")
           continue
@@ -276,12 +276,13 @@ _identicalCheck() {
 # Usage: {fn} usage repairSource ... -- directory findArgs ...
 # stdout: list of files
 __identicalCheckGenerateSearchFiles() {
-  local  usage="$1" searchFileList  ignorePatterns repairSource repairSources directory
+  local usage="$1" searchFileList ignorePatterns repairSources directory directories filter IFS
 
   shift # usage
   repairSources=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
+      shift
       break
     fi
     repairSources+=("$(usageArgumentDirectory "$usage" repairSource "${1%/}/")")
@@ -295,14 +296,15 @@ __identicalCheckGenerateSearchFiles() {
   for directory in "${directories[@]}"; do
     filter=("cat")
     if [ "${#ignorePatterns[@]}" -gt 0 ]; then
-      filter=("grep" "-v" "${ignorePatterns[@]}")
+      IFS='|' filter=("grep" "-v" -e "${ignorePatterns[*]}")
     fi
     if ! find "$directory" "$@" | "${filter[@]}" >>"$searchFileList"; then
       __failEnvironment "$usage" "No matching files found in $directory" || _clean "$?" "$searchFileList" || return $?
     fi
+    ignorePatterns+=("$(quoteGrepPattern "$directory")")
   done
   __usageEnvironment "$usage" cat "$searchFileList" || _clean "$?" "$searchFileList" || return $?
-  __usageEnvironment "$usage"  rm -rf "$searchFileList" || return $?
+  __usageEnvironment "$usage" rm -rf "$searchFileList" || return $?
 }
 
 # Usage: {fn} searchFile lineNumber totalLines count

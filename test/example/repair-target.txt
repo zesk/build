@@ -1,2 +1,2 @@
--- IDENTICAL abc 1
+-- IDENTICAL foobar 1
 - REPLACE __FILE__ __DIR__ __BASE__ __EXTENSION__

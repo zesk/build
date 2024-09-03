@@ -18,6 +18,7 @@ identicalRepair() {
   local source destination token stdout prefix
   local identicalLine grepPattern parsed
   local currentLineNumber count lineNumber targetFile sourceText totalLines isEOF
+  local fileMap
 
   # shellcheck disable=SC2059
   arguments="$(printf "\"$(consoleCode %s)\" " "$@")"
@@ -76,7 +77,7 @@ identicalRepair() {
   # totalLines is *source* lines
   totalLines="$(($(wc -l <"$source") + 0))"
   parsed=$(__identicalLineParse "$source" "$prefix" "$identicalLine") || __failArgument "$usage" "$source" return $?
-  read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
+  IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
   count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
 
   if ! isUnsignedInteger "$count"; then
@@ -102,7 +103,7 @@ identicalRepair() {
   while read -r identicalLine; do
     isEOF=false
     parsed=$(__usageArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || return $?
-    read -r lineNumber token count < <(printf "%s\n" "$parsed") || :
+    IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
