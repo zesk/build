@@ -8,6 +8,8 @@
 
 Wait for processes not owned by this process to exit, and send signals to terminate processes.
 
+- Location: `bin/build/tools/process.sh`
+
 #### Arguments
 
 - `processId` - Integer. Required. Wait for process ID to exit.

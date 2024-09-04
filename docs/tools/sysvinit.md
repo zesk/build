@@ -10,6 +10,8 @@ For systems with an `/etc/init.d` start up script system.
 
 Install a script to run upon initialization.
 
+- Location: `bin/build/tools/sysvinit.sh`
+
 #### Arguments
 
 - `binary` - Required. String. Binary to install at startup.
@@ -22,6 +24,8 @@ Install a script to run upon initialization.
 ### `sysvInitScriptUninstall` - Remove an initialization script
 
 Remove an initialization script
+
+- Location: `bin/build/tools/sysvinit.sh`
 
 #### Arguments
 

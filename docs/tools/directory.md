@@ -8,6 +8,8 @@
 
 Is a path an absolute path?
 
+- Location: `bin/build/tools/directory.sh`
+
 #### Arguments
 
 - No arguments.
@@ -19,6 +21,8 @@ Is a path an absolute path?
 ### `directoryIsEmpty` - Does a directory exist and is it empty?
 
 Does a directory exist and is it empty?
+
+- Location: `bin/build/tools/directory.sh`
 
 #### Arguments
 
@@ -33,6 +37,8 @@ Does a directory exist and is it empty?
 ### `fileDirectoryExists` - Does the file's directory exist?
 
 Does the file's directory exist?
+
+- Location: `bin/build/tools/directory.sh`
 
 #### Arguments
 
@@ -49,6 +55,8 @@ Does the file's directory exist?
 Given a list of files, ensure their parent directories exist
 
 Creates the directories for all files passed in.
+
+- Location: `bin/build/tools/directory.sh`
 
 #### Arguments
 
@@ -68,6 +76,8 @@ Creates the directories for all files passed in.
 
 Given a list of directories, ensure they exist and create them if they do not.
 
+- Location: `bin/build/tools/directory.sh`
+
 #### Arguments
 
 - `dir1` - One or more directories to create
@@ -85,6 +95,8 @@ Given a list of directories, ensure they exist and create them if they do not.
 ### `directoryClobber` - Copy directory over another sort-of-atomically
 
 Copy directory over another sort-of-atomically
+
+- Location: `bin/build/tools/directory.sh`
 
 #### Arguments
 

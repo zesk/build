@@ -10,6 +10,8 @@ Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.h
 
 Print the daemontools service home path
 
+- Location: `bin/build/tools/daemontools.sh`
+
 #### Arguments
 
 - No arguments.
@@ -21,6 +23,8 @@ Print the daemontools service home path
 ### `daemontoolsInstall` - Install daemontools and dependencies
 
 Install daemontools and dependencies
+
+- Location: `bin/build/tools/daemontools.sh`
 
 #### Arguments
 
@@ -38,6 +42,8 @@ Install a daemontools service which runs a binary as the file owner.
 
 Installs a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.
 
+- Location: `bin/build/tools/daemontools.sh`
+
 #### Arguments
 
 - `--home serviceHome` - Optional. Path. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
@@ -54,6 +60,8 @@ Installs a `daemontools` service with an optional logging daemon process. Uses `
 
 Is daemontools running?
 
+- Location: `bin/build/tools/daemontools.sh`
+
 #### Arguments
 
 - No arguments.
@@ -66,6 +74,8 @@ Is daemontools running?
 ### `daemontoolsProcessIds` - List any processes associated with daemontools supervisors
 
 List any processes associated with daemontools supervisors
+
+- Location: `bin/build/tools/daemontools.sh`
 
 #### Arguments
 
@@ -80,6 +90,8 @@ List any processes associated with daemontools supervisors
 
 Remove a daemontools service by name
 
+- Location: `bin/build/tools/daemontools.sh`
+
 #### Arguments
 
 - `serviceName` - String. Required. Service name to remove.
@@ -93,6 +105,8 @@ Remove a daemontools service by name
 
 Restart the daemontools processes from scratch.
 Dangerous. Stops any running services and restarts them.
+
+- Location: `bin/build/tools/daemontools.sh`
 
 #### Arguments
 
@@ -112,6 +126,8 @@ To request a specific action write the file with the action as the first line.
 Allows control across user boundaries. (e.g. user can control root services)
 
 Specify actions more than once on the command line to specify more than one set of permissions.
+
+- Location: `bin/build/tools/daemontools.sh`
 
 #### Arguments
 
@@ -141,6 +157,8 @@ Launch the daemontools daemon
 Do not use this for production
 Run the daemontools root daemon
 
+- Location: `bin/build/tools/daemontools.sh`
+
 #### Arguments
 
 - No arguments.
@@ -153,6 +171,8 @@ Run the daemontools root daemon
 ### `daemontoolsTerminate` - Terminate daemontools as gracefully as possible
 
 Terminate daemontools as gracefully as possible
+
+- Location: `bin/build/tools/daemontools.sh`
 
 #### Arguments
 

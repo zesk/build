@@ -8,6 +8,8 @@
 
 Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
 
+- Location: `bin/build/tools/vendor.sh`
+
 #### Arguments
 
 - No arguments.
@@ -26,6 +28,8 @@ VISUAL - Used as another default editor (last)
 
 Are we within the JetBrains PHPStorm terminal?
 
+- Location: `bin/build/tools/vendor.sh`
+
 #### Usage
 
     isPHPStorm
@@ -43,6 +47,8 @@ Are we within the JetBrains PHPStorm terminal?
 
 Are we within the JetBrains PyCharm terminal?
 
+- Location: `bin/build/tools/vendor.sh`
+
 #### Usage
 
     isPyCharm
@@ -59,6 +65,8 @@ Are we within the JetBrains PyCharm terminal?
 ### `isVisualStudioCode` - Are we within the Microsoft Visual Studio Code terminal?
 
 Are we within the Microsoft Visual Studio Code terminal?
+
+- Location: `bin/build/tools/vendor.sh`
 
 #### Usage
 
@@ -93,6 +101,8 @@ Are we within the Microsoft Visual Studio Code terminal?
 ### `showContext` - Open a file in a shell using the program we
 
 Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
+
+- Location: `bin/build/tools/vendor.sh`
 
 #### Arguments
 

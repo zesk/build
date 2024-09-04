@@ -10,6 +10,8 @@ Bash really is not a huge fan of floating point numbers but once you turn them i
 
 Convert float to an integer, round down always
 
+- Location: `bin/build/tools/float.sh`
+
 #### Arguments
 
 - No arguments.
@@ -22,6 +24,8 @@ Convert float to an integer, round down always
 ### `roundFloat` - Convert float to nearest integer
 
 Convert float to nearest integer
+
+- Location: `bin/build/tools/float.sh`
 
 #### Arguments
 

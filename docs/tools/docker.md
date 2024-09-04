@@ -9,6 +9,8 @@
 Debugging, dumps the proc1file which is used to figure out if we
 are insideDocker or not; use this to confirm platform implementation
 
+- Location: `bin/build/tools/docker.sh`
+
 #### Arguments
 
 - No arguments.
@@ -22,6 +24,8 @@ are insideDocker or not; use this to confirm platform implementation
 
 Are we inside a docker container right now?
 
+- Location: `bin/build/tools/docker.sh`
+
 #### Arguments
 
 - No arguments.
@@ -33,6 +37,8 @@ Are we inside a docker container right now?
 ### `checkDockerEnvFile` - Ensure an environment file is compatible with non-quoted docker environment
 
 Ensure an environment file is compatible with non-quoted docker environment files
+
+- Location: `bin/build/tools/docker.sh`
 
 #### Usage
 
@@ -60,6 +66,8 @@ BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image
 
 Ensure an environment file is compatible with non-quoted docker environment files
 
+- Location: `bin/build/tools/docker.sh`
+
 #### Usage
 
     checkDockerEnvFile [ filename ... ]
@@ -82,6 +90,8 @@ Outputs bash-compatible entries to stdout
 Any output to stdout is considered valid output
 Any output to stderr is errors in the file but is written to be compatible with a bash
 
+- Location: `bin/build/tools/docker.sh`
+
 #### Arguments
 
 - `filename` - Docker environment file to check for common issues
@@ -95,6 +105,8 @@ Any output to stderr is errors in the file but is written to be compatible with 
 Takes any environment file and makes it bash-compatible
 
 Returns a temporary file which should be deleted.
+
+- Location: `bin/build/tools/docker.sh`
 
 #### Arguments
 
@@ -110,6 +122,8 @@ Returns a temporary file which should be deleted.
 Takes any environment file and makes it docker-compatible
 
 Returns a temporary file which should be deleted.
+
+- Location: `bin/build/tools/docker.sh`
 
 #### Arguments
 

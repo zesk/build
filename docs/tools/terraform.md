@@ -8,6 +8,8 @@
 
 Add keys to enable apt to download terraform directly from hashicorp.com
 
+- Location: `bin/build/tools/terraform.sh`
+
 #### Usage
 
     aptKeyAddHashicorp
@@ -24,6 +26,8 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 ### `aptKeyRemoveHashicorp` - Add keys to enable apt to download terraform directly from
 
 Add keys to enable apt to download terraform directly from hashicorp.com
+
+- Location: `bin/build/tools/terraform.sh`
 
 #### Usage
 
@@ -42,6 +46,8 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 Install terraform binary
 
+- Location: `bin/build/tools/terraform.sh`
+
 #### Usage
 
     terraformInstall [ package ... ]
@@ -58,6 +64,8 @@ Install terraform binary
 ### `terraformUninstall` - Remove terraform binary
 
 Remove terraform binary
+
+- Location: `bin/build/tools/terraform.sh`
 
 #### Arguments
 

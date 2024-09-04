@@ -9,6 +9,8 @@
 
 Compare a remote file size with a local file size
 
+- Location: `bin/build/tools/web.sh`
+
 #### Arguments
 
 - `url` - Required. URL. URL to check.
@@ -22,6 +24,8 @@ Compare a remote file size with a local file size
 ### `urlContentLength` - Get the size of a remote URL
 
 Get the size of a remote URL
+
+- Location: `bin/build/tools/web.sh`
 
 #### Arguments
 
@@ -50,6 +54,8 @@ Get the size of a remote URL
 
 Fetch Time to First Byte and other stats
 
+- Location: `bin/build/tools/web.sh`
+
 #### Arguments
 
 - No arguments.
@@ -63,6 +69,8 @@ Fetch Time to First Byte and other stats
 
 Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
 SIte is stored in a directory called `host` for the URL requested
+
+- Location: `bin/build/tools/web.sh`
 
 #### Arguments
 

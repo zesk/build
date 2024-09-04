@@ -37,6 +37,8 @@ Simple function to make list-like things more list-like in Markdown
 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
 3. Prefix each line with a "dash space" (`- `)
 
+- Location: `bin/build/tools/markdown.sh`
+
 #### Arguments
 
 - No arguments.

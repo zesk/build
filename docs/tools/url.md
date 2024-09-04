@@ -17,6 +17,8 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 
 Does little to no validation of any characters so best used for well-formed input.
 
+- Location: `bin/build/tools/url.sh`
+
 #### Usage
 
     urlParse url
@@ -38,6 +40,8 @@ Does little to no validation of any characters so best used for well-formed inpu
 ### `urlParseItem` - Get a database URL component directly
 
 Gets the component of the URL from a given database URL.
+
+- Location: `bin/build/tools/url.sh`
 
 #### Usage
 
@@ -61,6 +65,8 @@ Gets the component of the URL from a given database URL.
 ### `urlValid` - Checks a URL is valid
 
 Checks a URL is valid
+
+- Location: `bin/build/tools/url.sh`
 
 #### Arguments
 

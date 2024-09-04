@@ -27,6 +27,8 @@ An example `bitbucket-pipelines.yml` file may have a header which looks like thi
 
 On this file, the value of `$(getFromPipelineYML MARIADB_ROOT_PASSWORD)` is `super-secret`; it uses `grep` and `sed` to extract the value.
 
+- Location: `bin/build/tools/bitbucket.sh`
+
 #### Arguments
 
 - `varName` - Name of the value to extract from `bitbucket-pipelines.yml`

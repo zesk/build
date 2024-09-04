@@ -21,6 +21,8 @@ If this function fails then ~/.ssh/known_hosts may be modified for any hosts whi
 
 If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 
+- Location: `bin/build/tools/ssh.sh`
+
 #### Arguments
 
 - `host0` - String. Optional. One ore more hosts to add to the known hosts file
@@ -40,6 +42,8 @@ Add .ssh key for current user
 
 
 You will need the password for this server for the current user.
+
+- Location: `bin/build/tools/ssh.sh`
 
 #### Arguments
 

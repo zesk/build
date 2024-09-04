@@ -17,6 +17,8 @@
 
 Converts a date to an integer timestamp
 
+- Location: `bin/build/tools/date.sh`
+
 #### Usage
 
     dateToTimestamp date
@@ -50,6 +52,8 @@ Compatible with BSD and GNU date.
 ### `todayDate` - Today's date
 
 Returns the current date, in YYYY-MM-DD format. (same as `%F`)
+
+- Location: `bin/build/tools/date.sh`
 
 #### Arguments
 

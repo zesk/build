@@ -393,7 +393,7 @@ consoleInfo() {
 _consoleInfo() {
   local label="$1"
   shift || :
-  __consoleOutputMode "$label" '\033[38;5;20m' '\033[1;34m' '\033[0m' "$@"
+  __consoleOutputMode "$label" '\033[38;5;20m' '\033[1;33m' '\033[0m' "$@"
 }
 
 #

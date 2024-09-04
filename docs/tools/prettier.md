@@ -10,6 +10,8 @@ Install prettier in the build environment
 If this fails it will output the installation log.
 When this tool succeeds the `prettier` binary is available in the local operating system.
 
+- Location: `bin/build/tools/prettier.sh`
+
 #### Usage
 
     prettierInstall [ npmVersion ]

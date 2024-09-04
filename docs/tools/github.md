@@ -8,6 +8,8 @@
 
 Get the latest release version
 
+- Location: `bin/build/tools/github.sh`
+
 #### Arguments
 
 - No arguments.
@@ -27,6 +29,8 @@ GitHub MUST have two sets of credentials enabled:
 - The `token` must have the permission to create releases for this repository
 
 Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
+
+- Location: `bin/build/tools/github.sh`
 
 #### Arguments
 
@@ -55,5 +59,5 @@ Think of them of the "source" (user) and "target" (ssh key) access. Both must ex
 
 These hooks are run in your code during `githubRelease`:
 
-Unable to find "hookGithubReleaseBefore" (using index "/Users/kent/.build")
-Unable to find "hookGithubReleaseAfter" (using index "/Users/kent/.build")
+
+
