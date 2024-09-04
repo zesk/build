@@ -1,0 +1,6 @@
+# A file
+
+locals {
+  # IDENTICAL infrastructureProfile 1
+  profile = "devops"
+}

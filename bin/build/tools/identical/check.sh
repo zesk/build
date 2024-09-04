@@ -193,17 +193,10 @@ identicalCheck() {
                 consoleReset || :
               } 1>&2
             elif $mapFile; then
-              #              # DEBUG TODO
-              #              printf -- "%s %s: \n\t%s USING\n\t%s\n" "$(consoleInfo "MAPPING")" "$(consoleBlue "$token")" "$(consoleCode "$compareFile")" "$(consoleValue "$searchFile")"
               __usageEnvironment "$usage" cp "$countFile" "$countFile.mapped" || return $?
-              __usageEnvironment "$usage" cp "$compareFile" "$compareFile.mapped" || return $?
-              countFile="$countFile.mapped"
-              compareFile="$compareFile.mapped"
               _identicalMapAttributesFile "$usage" "$countFile" "$searchFile" || return $?
-              _identicalMapAttributesFile "$usage" "$compareFile" "$searchFile" || return $?
+              countFile="$countFile.mapped"
             fi
-            #            # DEBUG TODO
-            #            consoleSuccess diff -b -q "$countFile" "$compareFile"
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
               printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
               diff "$countFile" "$compareFile" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" || : 1>&2
@@ -212,7 +205,7 @@ identicalCheck() {
               statusMessage consoleSuccess "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))"
             fi
             if $mapFile; then
-              rm -rf "$countFile" "$compareFile" || return $?
+              rm -rf "$countFile" || return $?
             fi
           fi
           if $isBadFile; then

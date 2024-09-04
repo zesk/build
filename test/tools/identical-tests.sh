@@ -7,6 +7,17 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+testIdenticalEofWithBracket() {
+  local temp home
+
+  home=$(__environment buildHome) || return $?
+  temp=$(__environment mktemp -d) || return $?
+  __environment cp -R "$home/test/example/similar" "$temp/similar" || return $?
+  assertDirectoryExists --line "$LINENO" "$temp/similar" "$temp/similar/fix" || return $?
+  assertExitCode --line "$LINENO" 0 identicalCheck --repair "$temp/similar/fix" --prefix '# ''IDENTICAL' --extension txt --cd "$temp/similar" || return $?
+  assertFileContains --line "$LINENO" "$temp/similar/eofbug-target.txt" "}" || return $?
+}
+
 testIdenticalCheckAndRepairMap() {
   local testPath home name
 
