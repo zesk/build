@@ -193,12 +193,11 @@ identicalCheck() {
                 consoleReset || :
               } 1>&2
             elif $mapFile; then
-              __usageEnvironment "$usage" cp "$countFile" "$countFile.mapped" || return $?
-              _identicalMapAttributesFile "$usage" "$countFile" "$searchFile" || return $?
+              _identicalMapAttributesFilter "$usage" "$searchFile" <"$countFile" >"$countFile.mapped" || return $?
               countFile="$countFile.mapped"
             fi
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token code changed ($count):")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
+              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(consoleInfo "$token")" "$(consoleError "Token code changed ($count): ($countFile)")" "$(consoleSuccess "$tokenFileName")" "$(consoleWarning "$searchFile")" "$(consoleCode)" 1>&2
               diff "$countFile" "$compareFile" | wrapLines "$(consoleSubtle "diff:") $(consoleCode)" "$(consoleReset)" || : 1>&2
               isBadFile=true
             else
@@ -227,6 +226,9 @@ identicalCheck() {
         else
           printf "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
           __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
+          if [ "$token" = "" ]; then
+            dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
+          fi
           statusMessage consoleInfo "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(consoleCode "$token")" "$(consoleValue "$searchFile")")"
         fi
       done < <(grep -n -e "$quotedPrefix" <"$searchFile" || :)
