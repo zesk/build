@@ -60,6 +60,25 @@ environmentValueRead() {
   fi
 }
 _environmentValueRead() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Convert an array value which was loaded already
+# Usage: {fn} encodedValue
+environmentValueConvertArray() {
+  local usage="_${FUNCNAME[0]}"
+  local value prefix='([0]="' suffix='")'
+
+  value="${1-}"
+  [ "${value#"$prefix"}" != "$value" ] || __failArgument "$usage" "Not an array value (prefix)" || return $?
+  [ "${value%"$suffix"}" != "$value" ] || __failArgument "$usage" "Not an array value (suffix)" || return $?
+  declare -a "value=$value"
+  printf "%s\n" "${value[@]+"${value[@]}"}"
+}
+_environmentValueConvertArray() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -78,6 +97,7 @@ environmentValueReadArray() {
   printf "%s\n" "${value[@]+"${value[@]}"}"
 }
 _environmentValueReadArray() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -126,7 +146,20 @@ dotEnvConfigure() {
   environmentFileLoad "${files[@]}" || __failEnvironment "$usage" environmentFileLoad "${files[@]}" return $?
 }
 _dotEnvConfigure() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Unquote a string
+# Argument: quote - String. Required. Must match beginning and end of string.
+# Argument: value - String. Required. Value to unquote.
+unquote() {
+  local quote="$1" value="$2"
+  if [ "$value" != "${value#"$quote"}" ] && [ "$value" != "${value%"$quote"}" ]; then
+    value="${value#"$quote"}"
+    value="${value%"$quote"}"
+  fi
+  printf "%s\n" "$value"
 }
 
 #
@@ -142,8 +175,15 @@ environmentFileLoad() {
     while read -r environmentLine; do
       name="${environmentLine%%=*}"
       value="${environmentLine#*=}"
-      value="${value#\"}"
-      value="${value%\"}"
+      case "${value:0:1}" in
+        "'")
+          value=$(unquote "'" "$value")
+          ;;
+        '"')
+          value=$(unquote '"' "$value")
+          ;;
+        *) ;;
+      esac
       # SECURITY CHECK
       export "$name"="$value"
     done < <(environmentLines <"$environmentFile")
@@ -151,6 +191,7 @@ environmentFileLoad() {
   done
 }
 _environmentFileLoad() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -272,6 +313,7 @@ environmentFileApplicationMake() {
   done
 }
 _environmentFileApplicationMake() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -300,6 +342,7 @@ environmentFileApplicationVerify() {
   [ ${#missing[@]} -eq 0 ] || __failEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
 }
 _environmentFileApplicationVerify() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

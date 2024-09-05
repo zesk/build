@@ -221,6 +221,7 @@ _usageArgumentsSpecificationParseLine() {
   _integer "$argumentId" || _argument "$argumentId is not an integer" || return $?
   shift 2
 
+  argumentName=
   savedLine="$(_command "$@")"
   while [ "$#" -gt 0 ]; do
     argument="$1"

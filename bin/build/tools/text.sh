@@ -1251,3 +1251,16 @@ printfOutputSuffix() {
   # shellcheck disable=SC2059
   ! $output || printf "$@"
 }
+
+
+# Unquote a string
+# Argument: quote - String. Required. Must match beginning and end of string.
+# Argument: value - String. Required. Value to unquote.
+unquote() {
+  local quote="$1" value="$2"
+  if [ "$value" != "${value#"$quote"}" ] && [ "$value" != "${value%"$quote"}" ]; then
+    value="${value#"$quote"}"
+    value="${value%"$quote"}"
+  fi
+  printf "%s\n" "$value"
+}

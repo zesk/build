@@ -389,14 +389,14 @@ usageArgumentFileDirectory() {
 # Exit Code: 0 - Success
 # Upon success, outputs the file name to stdout, outputs a console message to stderr
 usageArgumentLoadEnvironmentFile() {
-  local envFile bashEnv usageFunction returnCode count
+  local envFile bashEnv usageFunction returnCode
 
   usageFunction="$1"
   if ! envFile=$(usageArgumentFile "$@"); then
     return "$errorArgument"
   fi
-  bashEnv=$(__usageEnvironment "$usageFunction" anyEnvToBashEnv "$envFile") || return $?
-  count=$(($(wc -l <"$bashEnv") + 0))
+  bashEnv=$(__usageEnvironment "$usageFunction" mktemp) || return $?
+  __usageEnvironment "$usageFunction" anyEnvToBashEnv "$envFile" >"$bashEnv" || _clean $? "$bashEnv" || return $?
   set -a
   # shellcheck source=/dev/null
   source "$bashEnv"
@@ -406,7 +406,6 @@ usageArgumentLoadEnvironmentFile() {
   if [ $returnCode -ne 0 ]; then
     "$usageFunction" "$returnCode" "source $envFile -> $bashEnv failed" || return $?
   fi
-  printf "%s %s\n" "$(consoleBoldBlack "$count")" "$(consoleBoldBlue "$(plural "$count" variable variables)")" 1>&2
   printf "%s\n" "$envFile"
 }
 

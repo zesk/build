@@ -74,27 +74,22 @@ checkDockerEnvFile() {
 #
 # Takes any environment file and makes it docker-compatible
 #
-# Returns a temporary file which should be deleted.
-# Usage: {fn} filename [ ... ]
-# Argument: filename - Required. File. One or more files to convert.
+# Outputs the compatible env to stdout
+# Usage: {fn} envFile [ ... ]
+# Argument: envFile - Required. File. One or more files to convert.
 #
 anyEnvToDockerEnv() {
   local usage="_${FUNCNAME[0]}"
-  local f temp
-  for f in "$@"; do
-    temp=$(__usageEnvironment "$usage" mktemp) || return $?
+  local f
+  while [ $# -gt 0 ]; do
+    f=$(usageArgumentFile "$usage" envFile "$1")
     if ! checkDockerEnvFile "$f" 2>/dev/null; then
-      if ! dockerEnvFromBashEnv "$f" >"$temp"; then
-        rm -rf "$temp" || :
+      if ! dockerEnvFromBashEnv "$f"; then
         __failEnvironment "$usage" "dockerEnvFromBashEnv $f" || return $?
       fi
     else
-      if ! cp "$f" "$temp"; then
-        rm -rf "$temp" || :
-        __failEnvironment "$usage" "cp $f $temp" || return $?
-      fi
+      __usageEnvironment "$usage" cat "$f" || return $?
     fi
-    printf "%s\n" "$temp"
   done
 }
 _anyEnvToDockerEnv() {
@@ -104,21 +99,20 @@ _anyEnvToDockerEnv() {
 #
 # Takes any environment file and makes it bash-compatible
 #
-# Returns a temporary file which should be deleted.
+# Outputs the compatible env to stdout
+#
 # Usage: {fn} filename [ ... ]
 # Argument: filename - Required. File. One or more files to convert.
 #
 anyEnvToBashEnv() {
   local usage="_${FUNCNAME[0]}"
-  local f temp
+  local f
   for f in "$@"; do
-    temp=$(__usageEnvironment "$usage" mktemp) || return $?
     if checkDockerEnvFile "$f" 2>/dev/null; then
-      __usageEnvironment "$usage" dockerEnvToBash "$f" >"$temp" || _clean $? "$temp" || return $?
+      __usageEnvironment "$usage" dockerEnvToBash "$f"
     else
-      __usageEnvironment "$usage" cp "$f" "$temp" || _clean $? "$temp" || return $?
+      __usageEnvironment "$usage" cat "$f" || return $?
     fi
-    printf "%s\n" "$temp"
   done
 }
 _anyEnvToBashEnv() {
@@ -263,7 +257,8 @@ dockerLocalContainer() {
       --env)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
-        tempEnv=$(anyEnvToDockerEnv "$envFile") || __failArgument "$usage" "$argument $envFile unable to convert" || return $?
+        tempEnv=$(__usageEnvironment "$usage" mktemp) || return $?
+        __usageArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
         tempEnvs+=("$tempEnv")
         envFiles+=("--env-file" "$tempEnv")
         ;;

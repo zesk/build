@@ -7,7 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-
 __testIsMappableData() {
   cat <<'EOF'
 0 {alphabet}
@@ -235,4 +234,23 @@ testPrintfOutput() {
   assertEquals --line "$LINENO" "$(printf "" | printfOutputPrefix "c")" "" || return $?
   assertEquals --line "$LINENO" "$(echo "ab" | printfOutputSuffix "c")" "ab"$'\n'"c" || return $?
   assertEquals --line "$LINENO" "$(printf "" | printfOutputSuffix "c")" "" || return $?
+}
+
+testUnquote() {
+  __testUnquoteData | while read -r quote quoted unquoted; do
+    assertEquals --line "$LINENO" "$(unquote "$quote" "$quoted")" "$unquoted" --message "unquote \"$quote\" \"$quoted\"" || return $?
+  done
+}
+
+__testUnquoteData() {
+  cat <<'EOF'
+' 'Hello' Hello
+' 'Hello 'Hello
+' Hello' Hello'
+" "Hello" Hello
+" "Hello "Hello
+" Hello" Hello"
+" "12345"""67890" 12345"""67890
+boo booLoveboo Love
+EOF
 }
