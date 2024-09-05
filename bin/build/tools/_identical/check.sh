@@ -4,6 +4,11 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
+# In case you forgot, the directory in which this file is named `_identical` and *NOT* `identical`.
+#
+# This is to avoid having this match when doing `identicalRepair` - causes issues.
+#
+# Thanks for your consideration.
 
 # Usage: {fn} --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
 # Argument: --extension extension - Required. String. One or more extensions to search for in the current directory.
