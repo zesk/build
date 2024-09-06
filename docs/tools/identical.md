@@ -8,7 +8,7 @@
 
 Repair an identical `token` in `destination` from `source`
 
-- Location: `bin/build/tools/identical/repair.sh`
+- Location: `bin/build/tools/_identical/repair.sh`
 
 #### Arguments
 
@@ -49,7 +49,7 @@ Failures are considered:
 
 This is best used as a pre-commit check, for example. Wink!
 
-- Location: `bin/build/tools/identical/check.sh`
+- Location: `bin/build/tools/_identical/check.sh`
 
 #### Arguments
 
@@ -71,7 +71,7 @@ This is best used as a pre-commit check, for example. Wink!
 
 Identical check for shell files
 
-- Location: `bin/build/tools/identical/check.sh`
+- Location: `bin/build/tools/_identical/check.sh`
 
 #### Arguments
 

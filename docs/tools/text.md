@@ -42,7 +42,7 @@ Returns true if all `characters` are of `className`
 
 Quote a string to be used in a sed pattern on the command line.
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -994,6 +994,22 @@ Does this character match one or more character classes?
 
 - `text` - Text to validate
 - `class0` - One ore more character classes that the characters in string should match
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `unquote` - Unquote a string
+
+Unquote a string
+
+- Location: `bin/build/tools/text.sh`
+
+#### Arguments
+
+- `quote` - String. Required. Must match beginning and end of string.
+- `value` - String. Required. Value to unquote.
 
 #### Exit codes
 
