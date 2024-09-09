@@ -90,6 +90,7 @@ anyEnvToDockerEnv() {
     else
       __usageEnvironment "$usage" cat "$f" || return $?
     fi
+    shift
   done
 }
 _anyEnvToDockerEnv() {
