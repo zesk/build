@@ -52,6 +52,57 @@ _runCount() {
 }
 
 #
+# Platform agnostic tar extract with wildcards
+#
+# e.g. `tar -xf '*/file.json'` or `tar -xf --wildcards '*/file.json'` depending on OS
+#
+# `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments.
+#
+# Short description: Platform agnostic tar extract
+# Usage: {fn} pattern
+# Argument: pattern - The file pattern to extract
+# stdin: A gzipped-tar file
+# stdout: The desired file
+extractTarFilePattern() {
+  local usage="_${FUNCNAME[0]}"
+  local argument
+  local pattern
+
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        pattern="$argument"
+        shift || __failArgument "No pattern supplied" || return $?
+        # -h means follow symlinks
+        if tar --version | grep -q GNU; then
+          # GNU
+          # > tar --version
+          # tar (GNU tar) 1.34
+          # ...
+          tar -O -zx --wildcards "$pattern" "$@"
+        else
+          # BSD
+          # > tar --version
+          # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
+          tar -O -zx "$pattern" "$@"
+        fi
+        return 0
+        ;;
+    esac
+  done
+}
+_extractTarFilePattern() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
 # Platform agnostic tar cfz which ignores owner and attributes
 #
 # `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
