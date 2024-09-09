@@ -371,7 +371,7 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `createTarFile` - Platform agnostic tar cfz which ignores owner and attributes
+### `tarCreate` - Platform agnostic tar cfz which ignores owner and attributes
 
 Platform agnostic tar cfz which ignores owner and attributes
 
@@ -381,7 +381,7 @@ Platform agnostic tar cfz which ignores owner and attributes
 
 #### Usage
 
-    createTarFile target files
+    tarCreate target files
     
 
 #### Arguments

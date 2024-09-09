@@ -269,7 +269,7 @@ phpBuild() {
   _phpBuildBanner "Application Tag" "$APPLICATION_TAG" || :
   _phpEchoBar || :
 
-  __usageEnvironment "$usage" createTarFile "$targetName" .env vendor/ .deploy/ "$@" || return $?
+  __usageEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || return $?
 
   reportTiming "$initTime" "PHP built $(consoleCode "$targetName") in"
 }

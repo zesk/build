@@ -107,11 +107,11 @@ _extractTarFilePattern() {
 #
 # `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
 # Short description: Platform agnostic tar create which keeps user and group as user 0
-# Usage: createTarFile target files
+# Usage: tarCreate target files
 # Argument: target - The tar.gz file to create
 # Argument: files - A list of files to include in the tar file
 #
-createTarFile() {
+tarCreate() {
   local usage="_${FUNCNAME[0]}"
   local argument
   local target
@@ -148,7 +148,7 @@ createTarFile() {
     esac
   done
 }
-_createTarFile() {
+_tarCreate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

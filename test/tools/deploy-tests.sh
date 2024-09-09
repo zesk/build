@@ -34,7 +34,7 @@ _testDeployApplicationSetup() {
     echo "APPLICATION_ID=$t" >.env
     echo "APPLICATION_TAG=$t" >>.env
     mkdir -p "$d/DEPLOY/$t" || return $?
-    createTarFile "$d/DEPLOY/$t/app.tar.gz" .deploy bin public timestamp.txt .env || return $?
+    tarCreate "$d/DEPLOY/$t/app.tar.gz" .deploy bin public timestamp.txt .env || return $?
     ts=$((ts + 1))
   done
   cd .. || return $?

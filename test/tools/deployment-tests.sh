@@ -19,7 +19,7 @@ __prepareSampleApplicationDeployment() {
   __environment cd "$BUILD_HOME/test/example/simple-php" || return $?
   __environment mkdir ".deploy" || return $?
   printf "%s\n" "$id" >".deploy/APPLICATION_ID" || return $?
-  __environment createTarFile "$target/app.tar.gz" .webApplication bin docs public src simple.application.php .env .deploy || return $?
+  __environment tarCreate "$target/app.tar.gz" .webApplication bin docs public src simple.application.php .env .deploy || return $?
   __environment rm -rf ".deploy" || return $?
   __environment cd "$target/app" || return $?
 

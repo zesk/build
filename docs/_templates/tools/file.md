@@ -41,7 +41,6 @@
 ## Utilities
 
 {renameFiles}
-{createTarFile}
 {reverseFileLines}
 
 ## Finding

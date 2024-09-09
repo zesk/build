@@ -185,6 +185,9 @@ __deprecatedCleanup() {
   # v0.11.10
   __deprecatedCannon '__''return' "__execute"
 
+  # v0.11.14
+  __deprecatedCannon 'create''TarFile' "tarCreate"
+
   # END OF CANNONS
 
   clearLine
