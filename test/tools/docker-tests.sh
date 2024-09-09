@@ -94,3 +94,18 @@ testDockerEnvFromBash() {
 
   rm -f "$out" "$err" || :
 }
+
+testAnyEnvToDockerEnv() {
+  local testEnv
+
+  testEnv=$(__environment mktemp) || return $?
+
+  assertExitCode --line "$LINENO" 0 anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
+  __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
+  assertExitCode --line "$LINENO" 0 isEmptyFile "$testEnv.result" || return $?
+
+  printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
+  assertExitCode --line "$LINENO" --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
+
+  rm -rf "$testEnv" "$testEnv.result"
+}
