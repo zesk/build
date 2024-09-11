@@ -350,3 +350,71 @@ outputTrigger() {
 _outputTrigger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+function _bashDebugHelp() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$@"
+}
+
+function _bashDebugTrap() {
+  local __where __command
+  export BUILD_HOME
+  case "$BASH_COMMAND" in
+    bashDebuggerDisable | "trap - DEBUG") return 0 ;;
+    *) ;;
+  esac
+  __where="$(realPath "${BASH_SOURCE[1]}")"
+  __where="${__where#"$BUILD_HOME"}"
+  printf "@ %s:%s\n" "$(consoleBoldOrange "$__where")" "$(consoleBoldBlue "${BASH_LINENO[1]}")"
+  printf -- "%s %s\n" "$(consoleGreen ">")" "$(consoleCode "$BASH_COMMAND")"
+  while read -r -e -p "debug> " __command; do
+    [ -n "$__command" ] || break
+    case "$__command" in
+      "\s")
+        consoleWarning "Skipping $BASH_COMMAND"
+        return 1
+        ;;
+      "?" | "help" | "\?")
+        _bashDebug 0
+        ;;
+      "\q")
+        trap - DEBUG
+        return 0
+        ;;
+      *)
+        eval "$__command"
+        ;;
+    esac
+  done
+}
+
+bashDebuggerEnable() {
+  set -o functrace
+  shopt -s extdebug
+  trap _bashDebugTrap DEBUG
+}
+
+bashDebuggerDisable() {
+  trap - DEBUG
+  shopt -u extdebug
+  set +o functrace
+}
+
+# Simple debugger to walk through a program
+#
+# Usage: {fn} commandToDebug ...
+# Argument: commandToDebug - Callable. Required. Command to debug.
+#
+# Debugger accepts the following commands:
+#
+# `\s` - Skip next bash command
+# `\h` - This help
+# `\q` - Quit debugger (continue execution)
+#
+bashDebug() {
+  bashDebuggerEnable
+  "$@"
+  bashDebuggerDisable
+}
+_bashDebug() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}"
+}

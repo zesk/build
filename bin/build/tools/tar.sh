@@ -6,52 +6,6 @@
 # Test: o ./test/tools/os-tests.sh
 
 #
-# Usage: {fn} count binary [ args ... ]
-# Argument: count - The number of times to run the binary
-# Argument: binary - The binary to run
-# Argument: args ... - Any arguments to pass to the binary each run
-# Exit Code: 0 - success
-# Exit Code: 2 - `count` is not an unsigned number
-# Exit Code: Any - If `binary` fails, the exit code is returned
-# Summary: Run a binary count times
-#
-runCount() {
-  local usage="_${FUNCNAME[0]}"
-  local argument index total
-
-  total=
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$total" ]; then
-          isUnsignedInteger "$argument" || __failArgument "$usage" "$argument must be a positive integer" || return $?
-          total="$argument"
-        else
-          index=0
-          while [ "$index" -lt "$total" ]; do
-            index=$((index + 1))
-            "$@" || __failEnvironment "$usage" "iteration #$index" "$@" return $?
-          done
-          return 0
-        fi
-        ;;
-    esac
-    shift || __failArgument "$usage" shift || return $?
-  done
-
-}
-_runCount() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
 # Platform agnostic tar extract with wildcards
 #
 # e.g. `tar -xf '*/file.json'` or `tar -xf --wildcards '*/file.json'` depending on OS
@@ -63,7 +17,7 @@ _runCount() {
 # Argument: pattern - The file pattern to extract
 # stdin: A gzipped-tar file
 # stdout: The desired file
-extractTarFilePattern() {
+tarExtractPattern() {
   local usage="_${FUNCNAME[0]}"
   local argument
   local pattern
@@ -98,7 +52,7 @@ extractTarFilePattern() {
     esac
   done
 }
-_extractTarFilePattern() {
+_tarExtractPattern() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -31,7 +31,7 @@ testSuite() {
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start showFlag
-  local continueFile continueFlag doStats statsFile allTestStart testStart testPaths
+  local continueFile continueFlag doStats statsFile allTestStart testStart testPaths runner
 
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
 
@@ -66,6 +66,7 @@ testSuite() {
   doStats=true
   showFlag=false
   testPaths=()
+  runner=()
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
     __ARGUMENT="$1"
@@ -76,6 +77,10 @@ testSuite() {
       --tests)
         shift
         testPaths+=("$(usageArgumentDirectory "$usage" "$__ARGUMENT" "${1-}")") || return $?
+        ;;
+      --coverage)
+        consoleWarning "Will collect coverage statistics ..."
+        runner=(bashCoverage)
         ;;
       --no-stats)
         doStats=false
@@ -212,7 +217,7 @@ testSuite() {
         sectionNameHeading="$sectionName"
       fi
       testStart=$(__environment date +%s) || return $?
-      __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$item" || return $?
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$item" || return $?
       ! $doStats || printf "%d %s\n" $(($(date +%s) - testStart)) "$item" >>"$statsFile"
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
@@ -501,10 +506,15 @@ __testFailed() {
 # Usage: {fn}
 #
 __testCleanup() {
-  local home
+  local home cache
   home=$(__environment buildHome) || return $?
+  cache=$(__environment buildCacheDirectory) || return $?
   shopt -u failglob
-  __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" "$(buildCacheDirectory)" || return $?
+  __environment rm -v -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
+  # __environment find "$cache" -type f ! -path '*/.build/.*/*'
+  __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || return $?
+  # Delete empty directories
+  __environment find "$cache" -depth -type d -empty -delete || return $?
 }
 
 __testCleanupMess() {
@@ -534,3 +544,39 @@ _textExit() {
   fi
   exit "$@"
 }
+
+# TODO: https://github.com/Perl-Toolchain-Gang/Test-Harness/blob/master/reference/Test-Harness-2.64/lib/Test/Harness/TAP.pod#php
+# Argument: --tap - Optional. Flag. TAP output instead of console output.
+#
+# TAP's general format is:
+#
+#    1..N
+#    ok 1 Description # Directive
+#    not ok 2 Something
+#    # Diagnostic
+#    ....
+#    ok 47 Description
+#    ok 48 Description
+#    more tests....
+#
+# TAP syntax:
+#
+#     1..N
+#
+# N is number of tests
+#
+# Directives for comments in descriptions:
+#
+#     not ok 2 # skip No processor installed.
+#     not ok 3 # SKIP Note case does not matter
+#
+# Terminate testing:
+#
+#     Bail out!
+#
+# Test may pass or fail:
+#
+#     not ok 2 # TO DO This test may pass when Intel ships ARM chips
+#
+# Not the words TO and DO are together but are not here to avoid having this show up as a thing to do in the IDE.
+#

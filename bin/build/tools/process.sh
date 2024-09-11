@@ -148,3 +148,54 @@ processWait() {
 _processWait() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+#
+# Outputs value of resident memory used by a process, value is in kilobytes
+#
+# Usage: {fn} pid
+# Argument: pid - Process ID of running process
+# Example:     > {fn} 23
+# Output: 423
+# Exit Code: 0 - Success
+# Exit Code: 2 - Argument error
+processMemoryUsage() {
+  local usage="_${FUNCNAME[0]}"
+  local pid
+  while [ $# -gt 0 ]; do
+    pid="$1"
+    __usageArgument "$usage" isInteger "$pid" || return $?
+    # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
+    value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __failEnvironment "$usage" "Failed to get process status for $pid" || return $?
+    isInteger "$value" || __failEnvironment "$usage" "Bad memory value for $pid: $value" || return $?
+    printf %d $((value * 1))
+    shift || __failArgument "$usage" "shift" || return $?
+  done
+}
+_processMemoryUsage() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Outputs value of virtual memory allocated for a process, value is in kilobytes
+#
+# Usage: {fn} pid
+# Argument: pid - Process ID of running process
+# Example:     {fn} 23
+# Output: 423
+# Exit Code: 0 - Success
+# Exit Code: 2 - Argument error
+processVirtualMemoryAllocation() {
+  local usage="_${FUNCNAME[0]}"
+  local pid value
+  while [ $# -gt 0 ]; do
+    pid="$1"
+    __usageArgument "$usage" isInteger "$pid" || return $?
+    value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
+    isInteger "$value" || __failEnvironment "$usage" "ps returned non-integer: \"$(consoleCode "$value")\"" || return $?
+    printf %d $((value * 1))
+    shift || __failArgument "$usage" "shift" || return $?
+  done
+}
+_processVirtualMemoryAllocation() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

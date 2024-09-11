@@ -140,7 +140,7 @@ _usageArgumentsSpecification() {
   local functionDefinitionFile="${1-}" functionName="${2-}"
   local functionCache cacheFile argumentIndex argumentDirectory argumentLine
 
-  functionCache=$(__usageEnvironment "$usage" buildCacheDirectory ".arguments") || return $?
+  functionCache=$(__usageEnvironment "$usage" buildCacheDirectory "ARGUMENTS") || return $?
   functionCache="$functionCache/$functionName"
 
   cacheFile="$functionCache/documentation"

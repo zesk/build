@@ -1055,7 +1055,6 @@ listAppend() {
         ;;
       *)
         if [ "$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")" -lt 0 ]; then
-          [ -d "$argument" ] || __failEnvironment "$usage" "not a directory $(consoleCode "$argument")" || return $?
           if [ -z "$listValue" ]; then
             listValue="$argument"
           elif "$firstFlag"; then
@@ -1071,6 +1070,7 @@ listAppend() {
   printf "%s\n" "$listValue"
 }
 _listAppend() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1084,7 +1084,7 @@ _listAppend() {
 listCleanDuplicates() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
-  local item items removed=() separator="" removedFlag=false
+  local item items removed=() separator="" removedFlag=false IFS
 
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -1095,6 +1095,10 @@ listCleanDuplicates() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --test)
+        shift
+        test=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
         ;;
       --removed)
         removedFlag=true
@@ -1110,23 +1114,24 @@ listCleanDuplicates() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
-  shift
   newItems=()
   while [ $# -gt 0 ]; do
     IFS="$separator" read -r -a items < <(printf "%s\n" "$1")
     for item in "${items[@]}"; do
-      if ! tempPath=$(listAppend "$tempPath" "$separator" "$item"); then
+      if [ -n "$test" ] && "$test" "$item" || ! tempPath=$(listAppend "$tempPath" "$separator" "$item"); then
         removed+=("$item")
       else
         newItems+=("$item")
       fi
     done
-    if $removedFlag; then
-      IFS="$separator" printf "%s\n" "${removed[*]}"
-    else
-      IFS="$separator" printf "%s\n" "${newItems[*]}"
-    fi
+    shift
   done
+  IFS="$separator"
+  if $removedFlag; then
+    printf "%s\n" "${removed[*]}"
+  else
+    printf "%s\n" "${newItems[*]}"
+  fi
 }
 _listCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -1251,7 +1256,6 @@ printfOutputSuffix() {
   # shellcheck disable=SC2059
   ! $output || printf "$@"
 }
-
 
 # Unquote a string
 # Argument: quote - String. Required. Must match beginning and end of string.

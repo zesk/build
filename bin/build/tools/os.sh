@@ -220,17 +220,50 @@ manPathConfigure() {
 }
 
 #
+# Cleans the MANPATH and removes non-directory entries and duplicates
+#
+# Maintains ordering.
+#
+# Usage: manPathCleanDuplicates
+#
+manPathCleanDuplicates() {
+  local usage="_${FUNCNAME[0]}" newPath
+  export MANPATH
+
+  __usageEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+
+  newPath=$(__usageEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
+
+  MANPATH="$newPath"
+}
+_manPathCleanDuplicates() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
 # Usage: {fn} [ --first | --last | path ] ...
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `PATH` environment
 pathConfigure() {
+  local usage="_${FUNCNAME[0]}"
   local tempPath
   export PATH
 
-  __environment buildEnvironmentLoad PATH || return $?
-  tempPath="$(listAppend "$PATH" ':' "$@")" || _environment listAppend "$PATH" ':' "$@" || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad PATH || return $?
+  tempPath="$(__usageEnvironment "$usage" listAppend "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
+}
+_pathConfigure() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Utility for pathCleanDuplicates to show bad directories
+_pathIsDirectory() {
+  [ -n "${1-}" ] || _environment "blank entry" || return $?
+  [ -d "${1-}" ] || _environment "$1 is not a directory" || return $?
 }
 
 #
@@ -241,27 +274,16 @@ pathConfigure() {
 # Usage: pathCleanDuplicates
 #
 pathCleanDuplicates() {
-  local tempPath elements delta removed=() s=':'
-
+  local usage="_${FUNCNAME[0]}" newPath
   export PATH
-  IFS=$s read -r -a elements < <(printf %s "$PATH")
-  delta="${#elements[@]}"
-  tempPath=
-  for p in "${elements[@]}"; do
-    if [ ! -d "$p" ]; then
-      removed+=("$(consoleError "Not a directory: $p")")
-    elif ! tempPath=$(listAppend "$tempPath" "$s" "$p"); then
-      removed+=("$(consoleWarning "Duplicate: $p")")
-    fi
-  done
-  IFS=$s read -r -a elements < <(printf %s "$tempPath")
-  delta=$((delta - ${#elements[@]}))
-  if [ "$delta" -gt 0 ]; then
-    consoleSuccess "Removed $delta path $(plural "$delta" element elements)"
-    printf "    %s\n" "${removed[@]}"
-  fi
-  echo "NEW PATH IS $tempPath"
-  # PATH="$tempPath"
+
+  newPath=$(__usageEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
+
+  PATH="$newPath"
+}
+_pathCleanDuplicates() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL whichExists 11
@@ -283,57 +305,6 @@ whichExists() {
 # Depend: python
 JSON() {
   python -c "import sys, json; print(json.dumps(json.load(sys.stdin), indent=4))"
-}
-
-#
-# Outputs value of resident memory used by a process, value is in kilobytes
-#
-# Usage: {fn} pid
-# Argument: pid - Process ID of running process
-# Example:     > {fn} 23
-# Output: 423
-# Exit Code: 0 - Success
-# Exit Code: 2 - Argument error
-processMemoryUsage() {
-  local usage="_${FUNCNAME[0]}"
-  local pid
-  while [ $# -gt 0 ]; do
-    pid="$1"
-    __usageArgument "$usage" isInteger "$pid" || return $?
-    # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
-    value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __failEnvironment "$usage" "Failed to get process status for $pid" || return $?
-    isInteger "$value" || __failEnvironment "$usage" "Bad memory value for $pid: $value" || return $?
-    printf %d $((value * 1))
-    shift || __failArgument "$usage" "shift" || return $?
-  done
-}
-_processMemoryUsage() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Outputs value of virtual memory allocated for a process, value is in kilobytes
-#
-# Usage: {fn} pid
-# Argument: pid - Process ID of running process
-# Example:     {fn} 23
-# Output: 423
-# Exit Code: 0 - Success
-# Exit Code: 2 - Argument error
-processVirtualMemoryAllocation() {
-  local usage="_${FUNCNAME[0]}"
-  local pid value
-  while [ $# -gt 0 ]; do
-    pid="$1"
-    __usageArgument "$usage" isInteger "$pid" || return $?
-    value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
-    isInteger "$value" || __failEnvironment "$usage" "ps returned non-integer: \"$(consoleCode "$value")\"" || return $?
-    printf %d $((value * 1))
-    shift || __failArgument "$usage" "shift" || return $?
-  done
-}
-_processVirtualMemoryAllocation() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Hard-coded services for:

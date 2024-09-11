@@ -5,7 +5,9 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-testExtractFilePattern() {
+# Covers: tarCreate
+# Covers: tarExtractPattern
+testTarExtractFilePattern() {
   local temp base
 
   temp=$(__environment mktemp -d) || return $?
@@ -13,14 +15,42 @@ testExtractFilePattern() {
   base="$temp/base"
   __environment mkdir -p "$base/a/b/c/d" || return $?
   __environment mkdir -p "$base/a/e/foo/bar" || return $?
+  __environment mkdir -p "$base/a/e/bar/apron" || return $?
   __environment mkdir -p "$base/a/e/bar/dog" || return $?
-  __environment printf "%s\n" "never" >"$base/a/b/c/d/a.json" || return $?
-  __environment printf "%s\n" "up" >"$base/a/b/c/a.json" || return $?
-  __environment printf "%s\n" "going" >"$base/a/e/a.json" || return $?
-  __environment printf "%s\n" "to" >"$base/a/e/bar/a.json" || return $?
+
+  __environment printf "%s\n" "up" >"$base/a/e/bar/apron/a.json" || return $?
+  __environment printf "%s\n" "down" >"$base/a/e/bar/apron/b.json" || return $?
   __environment printf "%s\n" "you" >"$base/a/e/bar/dog/a.json" || return $?
+  __environment printf "%s\n" "you" >"$base/a/e/bar/dog/b.json" || return $?
+  __environment printf "%s\n" "to" >"$base/a/e/a.json" || return $?
+  __environment printf "%s\n" "to" >"$base/a/e/b.json" || return $?
+  __environment printf "%s\n" "never" >"$base/a/b/c/a.json" || return $?
+  __environment printf "%s\n" "never" >"$base/a/b/c/b.json" || return $?
+  __environment printf "%s\n" "give" >"$base/a/e/bar/a.json" || return $?
+  __environment printf "%s\n" "let" >"$base/a/e/bar/b.json" || return $?
+  __environment printf "%s\n" "going" >"$base/a/b/c/d/a.json" || return $?
+  __environment printf "%s\n" "going" >"$base/a/b/c/d/b.json" || return $?
 
   __environment muzzle pushd "$temp" || return $?
-  tarCreate foo.tar.gz temp
-  tarExtractPattern '*/a.json' <foo.tar.gz
+  assertExitCode --line "$LINENO" 0 tarCreate foo.tar.gz base || return $?$()
+
+  IFS=" " content="$(__environment tarExtractPattern '*/a.json' <foo.tar.gz)" || return $?
+  content=${content//$'\n'/ }
+  assertEquals --line "$LINENO" "$content" "never going to give you up" || return $?
+
+  IFS=" " content="$(__environment tarExtractPattern '*/e/*/a.json' <foo.tar.gz)" || return $?
+  content=${content//$'\n'/ }
+  assertEquals --line "$LINENO" "$content" "give you up" || return $?
+
+  IFS=" " content="$(__environment tarExtractPattern '*/e*/a.json' <foo.tar.gz)" || return $?
+  content=${content//$'\n'/ }
+  assertEquals --line "$LINENO" "$content" "to give you up" || return $?
+
+  IFS=" " content="$(__environment tarExtractPattern '*/b/*/a.json' <foo.tar.gz)" || return $?
+  content=${content//$'\n'/ }
+  assertEquals --line "$LINENO" "$content" "never going" || return $?
+
+  IFS=" " content="$(__environment tarExtractPattern '*/b.json' <foo.tar.gz)" || return $?
+  content=${content//$'\n'/ }
+  assertEquals --line "$LINENO" "$content" "never going to let you down" || return $?
 }

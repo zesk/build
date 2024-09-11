@@ -1,0 +1,22 @@
+#!{bashPath}
+# shellcheck disable=SC2239
+#
+# This acts as a replacement bash for any shell scripts called while doing coverage
+#
+source "{tools}"
+removeThisPath() {
+  local IFS=":"
+  read -r -a paths <<<"$PATH" || :
+  newPaths=()
+  for path in "${paths[@]+"${paths[@]}"}"; do
+    path="${path%/}"
+    if [ "$path" != "${path%.coverage-bin}" ]; then
+      continue
+    else
+      newPaths+=("$path")
+    fi
+  done
+  PATH="${newPaths[*]}"
+}
+removeThisPath
+__bashCoverageWrapper {bashPath} "$@"
