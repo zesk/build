@@ -8,11 +8,11 @@
 #
 
 testCoverageBasics() {
-  assertExitCode --dump --stdout-match "Target is" --stdout-match "Coverage completed" --line "$LINENO" 0 bashCoverage isInteger 2 || return $?
+  assertExitCode --dump --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" --line "$LINENO" 0 bashCoverage --verbose isInteger 2 || return $?
 }
 
 #
-testCoverageSubtools() {
+testCoverageNeedToUpdate() {
   local home
 
   home=$(__environment buildHome) || return $?

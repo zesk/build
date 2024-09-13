@@ -127,24 +127,12 @@ _bashCoverageReport() {
 
 # Internal: true
 # Debugger function tracks coverage calls and stores them in target file (1st argument)
+# KISS as this needs to be AFAFP
 __bashCoverageMarker() {
-  local usage="_${FUNCNAME[0]}"
-  local source line home command
   export BUILD_HOME
-
-  if [ -z "$1" ]; then
-    __failEnvironment "$usage" "target is empty" || return $?
-  fi
-  if [ -z "$BUILD_HOME" ]; then
-    BUILD_HOME=$(__usageEnvironment "$usage" buildHome) || return $?
-  fi
-  home="${BUILD_HOME%/}/"
-  source=${BASH_SOURCE[1]}
-  line=${BASH_LINENO[0]}
+  local source=${BASH_SOURCE[1]} home="${BUILD_HOME%/}/" command="${BASH_COMMAND//$'\n'/\n}"
   source="${source#"$home"}"
-  command="$BASH_COMMAND"
-  command="${command/$'\n'/\\n}"
-  __usageEnvironment "$usage" printf "%s:%d %s\n" "$source" "$line" "$command" >>"$1" || return $?
+  printf "%s:%d %s\n" "$source" "${BASH_LINENO[0]}" "$command" >>"$1"
   # debuggingStack >>"$1.stack" || return $?
 }
 ___bashCoverageMarker() {

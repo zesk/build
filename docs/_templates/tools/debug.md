@@ -15,3 +15,10 @@
 {plumber}
 {housekeeper}
 {outputTrigger}
+
+## Simple debugger
+
+{bashDebug}
+
+{bashDebuggerDisable}
+{bashDebuggerEnable}

@@ -18,8 +18,12 @@
 ## Modify PATH or MANPATH
 
 {pathConfigure}
-{manPathConfigure}
 {pathCleanDuplicates}
+
+## Modify MANPATH
+
+{manPathConfigure}
+{manPathCleanDuplicates}
 
 ## Memory
 

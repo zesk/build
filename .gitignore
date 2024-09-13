@@ -14,5 +14,5 @@
 /scratch.txt
 /.last-run-test
 /test.stats
-/coverage.stats
+/coverage.stats*
 /test-coverage/

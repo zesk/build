@@ -4,6 +4,7 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+{directoryRelativePath}
 {isAbsolutePath}
 {directoryIsEmpty}
 

@@ -139,7 +139,7 @@ This is a sample function with example code and patterns used in Zesk Build.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `extractTarFilePattern` - Platform agnostic tar extract with wildcards
+### `tarExtractPattern` - Platform agnostic tar extract with wildcards
 
 Platform agnostic tar extract with wildcards
 
