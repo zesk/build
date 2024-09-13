@@ -229,7 +229,7 @@ plumber() {
       __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $__changed" || return $?
     fi
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$__changed" | dumpPipe "$__command leaked local or export ($__before -> $__after)" 1>&2
+      printf "%s\n" "$__changed" | dumpPipe "$__command leaked local or export" 1>&2
       __result=$(_code leak)
     fi
   else
