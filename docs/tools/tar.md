@@ -12,7 +12,7 @@ Platform agnostic tar cfz which ignores owner and attributes
 
 `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
 
-- Location: `bin/build/tools/os.sh`
+- Location: `bin/build/tools/tar.sh`
 
 #### Usage
 

@@ -129,12 +129,27 @@ EOF
 
 testQuoteSedPattern() {
   local value mappedValue
-  assertEquals --line "$LINENO" "\\&" "$(quoteSedPattern "&")" || return $?
   assertEquals --line "$LINENO" "\\[" "$(quoteSedPattern "[")" || return $?
   assertEquals --line "$LINENO" "\\]" "$(quoteSedPattern "]")" || return $?
   # shellcheck disable=SC1003
   assertEquals --line "$LINENO" '\\' "$(quoteSedPattern '\')" || return $?
   assertEquals --line "$LINENO" "\\/" "$(quoteSedPattern "/")" || return $?
+  # Fails in code somewhere
+  read -d"" -r value < <(__testQuoteSedPatternData)
+
+  mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
+  assertEquals --line "$LINENO" "$mappedValue" "$value" || return $?
+}
+
+testQuoteSedReplacement() {
+  local value mappedValue
+  assertEquals --line "$LINENO" "\\&" "$(quoteSedReplacement "&")" || return $?
+  # shellcheck disable=SC1003
+  assertEquals --line "$LINENO" '\\' "$(quoteSedReplacement '\')" || return $?
+  # shellcheck disable=SC1003
+  assertEquals --line "$LINENO" '\\' "$(quoteSedReplacement '\' '~')" || return $?
+  assertEquals --line "$LINENO" "\\/" "$(quoteSedReplacement "/")" || return $?
+  assertEquals --line "$LINENO" "/" "$(quoteSedReplacement "/" "~")" || return $?
   # Fails in code somewhere
   read -d"" -r value < <(__testQuoteSedPatternData)
 

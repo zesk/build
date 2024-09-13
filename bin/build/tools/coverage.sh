@@ -89,7 +89,7 @@ bashCoverageReport() {
         ;;
       *)
         # IDENTICAL argumentUnknown 1
-        files+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         ;;
     esac
     # IDENTICAL argument-esac-shift 1

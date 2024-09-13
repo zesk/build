@@ -205,7 +205,7 @@ __installInstallBinaryIsLegacy() {
   grep -q '^relTop=' >/dev/null
 }
 __installInstallBinaryCustomizeLegacy() {
-  sed "s/^relTop=.*$/relTop=$(quoteSedPattern "$1")/g"
+  sed "s/^relTop=.*$/relTop=$(quoteSedReplacement "$1")/g"
 }
 
 # Usage: {fn} source target

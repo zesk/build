@@ -58,11 +58,11 @@ Backup when `/etc/services` does not exist.
 
 ## Execution
 
-### `whichExists` - IDENTICAL whichExists EOF
+### `whichExists` - IDENTICAL whichExists 11
 
-IDENTICAL whichExists EOF
+IDENTICAL whichExists 11
 
-- Location: `bin/build/identical/whichExists.sh`
+- Location: `bin/build/tools/os.sh`
 
 #### Arguments
 
@@ -121,17 +121,6 @@ Works from the current directory
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Arguments
-
-- `--first` - Optional. Place any paths after this flag first in the list
-- `--last` - Optional. Place any paths after this flag last in the list. Default.
-- `path` - the path to be added to the `MANPATH` environment
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `pathCleanDuplicates` - Cleans the path and removes non-directory entries and duplicates
 
 Cleans the path and removes non-directory entries and duplicates
@@ -143,6 +132,42 @@ Maintains ordering.
 #### Usage
 
     pathCleanDuplicates
+    
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Modify MANPATH
+
+#### Arguments
+
+- `--first` - Optional. Place any paths after this flag first in the list
+- `--last` - Optional. Place any paths after this flag last in the list. Default.
+- `path` - the path to be added to the `MANPATH` environment
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `manPathCleanDuplicates` - Cleans the MANPATH and removes non-directory entries and duplicates
+
+Cleans the MANPATH and removes non-directory entries and duplicates
+
+Maintains ordering.
+
+- Location: `bin/build/tools/os.sh`
+
+#### Usage
+
+    manPathCleanDuplicates
     
 
 #### Arguments

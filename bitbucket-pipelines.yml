@@ -64,3 +64,14 @@ pipelines:
           script:
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - bin/test.sh "${aa[@]+"${aa[@]}"}"
+    coverage:
+      - step:
+          size: 2x
+          deployment: coverage
+          name: Coverage stats
+          artifacts:
+            - coverage.stats
+          services:
+            - docker
+          script:
+            - bin/test.sh --coverage

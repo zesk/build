@@ -216,3 +216,47 @@ Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+## Simple debugger
+
+### `bashDebug` - Simple debugger to walk through a program
+
+Simple debugger to walk through a program
+
+
+Debugger accepts the following commands:
+
+`\s` - Skip next bash command
+`\h` - This help
+`\q` - Quit debugger (continue execution)
+
+- Location: `bin/build/tools/debug.sh`
+
+#### Arguments
+
+- `commandToDebug` - Callable. Required. Command to debug.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

@@ -18,11 +18,11 @@ _identicalMapAttributesFilter() {
   extension="${base##*.}"
   dir=$(dirname -- "$file")
   __usageEnvironment "$usage" sed \
-    -e 's/__EXTENSION__/'"$(quoteSedPattern "$extension")"'/g' \
-    -e 's/__DIRECTORY__/'"$(quoteSedPattern "$dir")"'/g' \
-    -e 's/__FILE__/'"$(quoteSedPattern "$file")"'/g' \
-    -e 's/__FULL__/'"$(quoteSedPattern "$full")"'/g' \
-    -e 's/__BASE__/'"$(quoteSedPattern "$base")"'/g'
+    -e 's/__EXTENSION__/'"$(quoteSedReplacement "$extension")"'/g' \
+    -e 's/__DIRECTORY__/'"$(quoteSedReplacement "$dir")"'/g' \
+    -e 's/__FILE__/'"$(quoteSedReplacement "$file")"'/g' \
+    -e 's/__FULL__/'"$(quoteSedReplacement "$full")"'/g' \
+    -e 's/__BASE__/'"$(quoteSedReplacement "$base")"'/g'
 }
 
 # Usage: {fn} usageFunction fileToModify fileNameToUse

@@ -570,6 +570,7 @@ simpleMarkdownToConsole() {
 _toggleCharacterToColor() {
   local sequence line code reset lastItem lastLine=
 
+  # TODO is quoteSedPattern correct for BASH // replacement?
   sequence="$(quoteSedPattern "$1")"
   code="$2"
   reset="${3-$(consoleReset)}"

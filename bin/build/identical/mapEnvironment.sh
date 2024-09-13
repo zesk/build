@@ -76,7 +76,7 @@ _mapEnvironmentGenerateSedFile() {
     case "$1" in
       *[%{}]* | LD_*) ;; # skips
       *)
-        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedPattern "${!1-}")" || return $?
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
         ;;
     esac
     shift

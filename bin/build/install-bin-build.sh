@@ -261,7 +261,7 @@ __installRemotePackageDirectory() {
   if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
     tarArgs=(--wildcards "*/$packagePath/*")
   else
-    tarArgs=(--include="*/$packagePath/*")
+    tarArgs=(--include="*$packagePath/*")
   fi
   __usageEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
   __usageEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?

@@ -476,12 +476,14 @@ stripAnsi() {
 # Depends: sed quoteSedPattern
 #
 listTokens() {
-  local prefix suffix removeQuotesPattern
+  local prefix prefixQ suffix suffixQ removeQuotesPattern argument
 
-  prefix="$(quoteSedPattern "${1-"{"}")"
-  suffix="$(quoteSedPattern "${2-"}"}")"
+  prefix="${1-"{"}"
+  prefixQ=$(quoteSedPattern "$prefix")
+  suffix="${2-"}"}"
+  suffixQ=$(quoteSedPattern "$suffix")
 
-  removeQuotesPattern="s/.*$prefix\([^$suffix]*\)$suffix.*/\1/g"
+  removeQuotesPattern="s/.*$prefixQ\([^$suffixQ]*\)$suffixQ.*/\1/g"
 
   # insert newline before all found prefix
   # insert newline after all found suffix
@@ -489,7 +491,7 @@ listTokens() {
   # remove all content before prefix and after suffix
   # remaining lines are our raw tokens
   # tokens may be any character except prefix or suffix or nul
-  sed -e "s/$prefix/\n$prefix/g" -e "s/$suffix/$suffix\n/g" | sed -e "/$prefix/!d" -e "/$suffix/!d" -e "$removeQuotesPattern"
+  sed -e "s/$prefixQ/\n$(quoteSedReplacement "$prefix")/g" -e "s/$suffixQ/$(quoteSedReplacement "$suffix")\n)/g" | sed -e "/$prefixQ/!d" -e "/$suffixQ/!d" -e "$removeQuotesPattern"
 }
 
 # Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -1203,30 +1205,40 @@ _mapEnvironmentGenerateSedFile() {
     case "$1" in
       *[%{}]* | LD_*) ;; # skips
       *)
-        __environment printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedPattern "${!1-}")" || return $?
+        printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
         ;;
     esac
     shift
   done
 }
 
-# IDENTICAL quoteSedPattern 17
+# IDENTICAL quoteSedPattern 27
 
-# Summary: Quote sed strings for shell use
+# Summary: Quote sed search strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
 # Usage: quoteSedPattern text
 # Argument: text - Text to quote
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-#
+# needSlash='$.*/[\]^'
 quoteSedPattern() {
-  value=$(printf -- "%s\n" "${1-}" | sed 's/\([\\.*+?]\)/\\\1/g')
-  value="${value//\//\\/}"
-  value="${value//[/\\[}"
-  value="${value//]/\\]}"
-  value="${value//&/\\&}"
+  local value
+  value=$(printf -- "%s\n" "${1-}" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
-  printf -- "%s\n" "$value"
+  printf "%s\n" "$value"
+}
+
+# Summary: Quote sed replacement strings for shell use
+# Usage: quoteSedReplacement text separatorChar
+# Argument: text - Text to quote
+# Output: string quoted and appropriate to insert in a sed search or replacement phrase
+# Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
+# needSlash='$.*/[\]^'
+quoteSedReplacement() {
+  local value separator="${2-/}"
+  value=$(printf -- "%s\n" "${1-}" | sed 's~\([\&'"$separator"']\)~\\\1~g')
+  value="${value//$'\n'/\\n}"
+  printf "%s\n" "$value"
 }
 
 # Usage: {fn} printfArguments

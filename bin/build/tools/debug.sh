@@ -386,11 +386,11 @@ _outputTrigger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-function _bashDebugHelp() {
+_bashDebugHelp() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$@"
 }
 
-function _bashDebugWatch() {
+_bashDebugWatch() {
   if [ "${#BASH_DEBUG_WATCH[@]}" -gt 0 ]; then
     for __item in "${BASH_DEBUG_WATCH[@]}"; do
       if ! __value="$(eval "printf \"%s\n\" \"$__item\"" 2>/dev/null)"; then
@@ -403,7 +403,7 @@ function _bashDebugWatch() {
   fi
 }
 
-function __bashDebugStackDump() {
+__bashDebugStackDump() {
   local index="$1" __where
   export BUILD_HOME
   __where="$(realPath "${BASH_SOURCE[index]}")"
@@ -411,29 +411,54 @@ function __bashDebugStackDump() {
   printf "@ %s:%s %s()\n" "$(consoleBoldOrange "$__where")" "$(consoleBoldBlue "${BASH_LINENO[index]}")" "$(consoleCode "${FUNCNAME[index]}")"
 }
 
-function _bashDebugTrap() {
-  local __where __command __item __value
+# Internal trap to capture DEBUG events and allow control
+# See: bashDebug
+_bashDebugTrap() {
+  local __where __command __item __value __list __found
   export BUILD_HOME BASH_DEBUG_WATCH
   case "$BASH_COMMAND" in
-    bashDebuggerDisable | "trap - DEBUG") return 0 ;;
+    bashDebuggerDisable | "trap - DEBUG" | '"$@"') return 0 ;;
     *) ;;
   esac
-  # exec 20>&0 21>&1 22>&2 1>/dev/console # save
-  __bashDebugStackDump 0
-  __bashDebugStackDump 1
+
+  # Save Application FDs
+  exec 30>&0 31>&1 32>&2
+  # Restore Debugger FDs
+  exec 0>&20 1>&21 2>&22
+
   __bashDebugStackDump 2
   _bashDebugWatch
   printf -- "%s %s\n" "$(consoleGreen ">")" "$(consoleCode "$BASH_COMMAND")"
-  while read -r -e -p "debug> " __command </dev/stdin; do
+  while read -r -e -p "bashDebug> " __command; do
     [ -n "$__command" ] || break
     case "$__command" in
       "\s")
         consoleWarning "Skipping $BASH_COMMAND"
-        # exec 0>&20 1>&21 2>&22 # restore
+        # Restore Application FDs
+        exec 0>&30 1>&31 2>&32
         return 1
         ;;
       "?" | "help" | "\?")
         _bashDebug 0
+        ;;
+      "\u "*)
+        __item="${__command:3}"
+        __list=()
+        __found=false
+        for __value in "${BASH_DEBUG_WATCH[@]+"${BASH_DEBUG_WATCH[@]}"}"; do
+          if [ "$__value" = "$__item" ]; then
+            consoleBoldOrange "Removed $__item from watch list"
+            __found=true
+          else
+            __list+=("$__value")
+          fi
+        done
+        if ! $__found; then
+          # shellcheck disable=SC2059
+          printf -- "%s\n%s" "$(consoleError "No $__item found in watch list:")" "$(printf -- "- $(consoleCode %s)\n" "${__list[@]+"${__list[@]}"}")"
+        fi
+        BASH_DEBUG_WATCH=("${__list[@]+"${__list[@]}"}")
+        _bashDebugWatch
         ;;
       "\w "*)
         __item="${__command:3}"
@@ -443,15 +468,21 @@ function _bashDebugTrap() {
         ;;
       "\q")
         trap - DEBUG
-        # exec 0>&20 1>&21 2>&22 # restore
+        # Restore Application FDs
+        exec 0>&30 1>&31 2>&32
         return 0
         ;;
       *)
-        consoleWarning "EVALUATE \"$__command\"" >/dev/stdout
-        # exec 0>&20 1>&21 2>&22 # restore
-        eval "$__command" >/dev/stdout
-        # exec 20>&0 21>&1 22>&2 1>/dev/console
-        # save
+        printf "%s \"%s\"\n" "$(consoleWarning "Evaluating")" "$(consoleCode "$__command")" >/dev/stdout
+        # Restore Application FDs
+        exec 0>&30 1>&31 2>&32
+        set +eu
+        set +o pipefail
+        eval "$__command" || printf "%s\n" "$(consoleError "EXIT $?")" 1>&2
+        # Save Application FDs (may have changed)
+        exec 30>&0 31>&1 32>&2
+        # Restore Debugger FDs
+        exec 0>&20 1>&21 2>&22
         ;;
     esac
   done
@@ -460,6 +491,8 @@ function _bashDebugTrap() {
 bashDebuggerEnable() {
   export BASH_DEBUG_WATCH
   BASH_DEBUG_WATCH=()
+  # Save debugger FDs for later
+  exec 20>&0 21>&1 22>&2
   set -o functrace
   shopt -s extdebug
   trap _bashDebugTrap DEBUG
@@ -469,6 +502,8 @@ bashDebuggerDisable() {
   trap - DEBUG
   shopt -u extdebug
   set +o functrace
+  # Restore debugger FDs
+  exec 0>&20 1>&21 2>&22
 }
 
 # Simple debugger to walk through a program
@@ -481,6 +516,10 @@ bashDebuggerDisable() {
 # `\s` - Skip next bash command
 # `\h` - This help
 # `\q` - Quit debugger (continue execution)
+# `\w variable` - Evaluate this expression upon each debugger breakpoint
+# `\u variable` - Unwatch a variable
+#
+# Any other command entered in the debugger is evaluated immediately.
 #
 bashDebug() {
   bashDebuggerEnable
