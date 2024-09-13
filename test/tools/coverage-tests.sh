@@ -9,7 +9,6 @@
 
 testCoverageBasics() {
   assertExitCode --leak BASH_ARGC --leak BASH_ARGV --dump --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" --line "$LINENO" 0 bashCoverage --verbose isInteger 2 || return $?
-  unset BASH_ARGV BASH_ARGC
 }
 
 #
