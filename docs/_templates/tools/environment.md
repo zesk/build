@@ -13,7 +13,8 @@
 {environmentFileLoad}
 {environmentValueWrite}
 {environmentValueRead}
-{environmentValueReadArray}
+{environmentValueReadArray} 
+{environmentValueConvertArray}
 {environmentLines}
 {environmentNames}
 

@@ -93,8 +93,7 @@ environmentValueReadArray() {
   local stateFile="${1-}" name="${2-}" value
 
   value=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")
-  declare -a "value=$value"
-  printf "%s\n" "${value[@]+"${value[@]}"}"
+  environmentValueConvertArray "$value"
 }
 _environmentValueReadArray() {
   # IDENTICAL usageDocument 1

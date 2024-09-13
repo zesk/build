@@ -18,17 +18,15 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
-### `__execute` - IDENTICAL __execute EOF
+### `__execute` - Run `command ...` (with any arguments) and then `_return` if
 
-IDENTICAL __execute EOF
-Run binary and output failed command upon error
+Run `command ...` (with any arguments) and then `_return` if it fails.
 
-- Location: `bin/build/identical/__execute.sh`
+- Location: `bin/build/map.sh`
 
 #### Arguments
 
-- `binary` - Required. Executable.
-- `...` - Any arguments are passed to binary
+- `command ...` - Any command and arguments to run.
 
 #### Exit codes
 

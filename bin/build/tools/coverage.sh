@@ -58,6 +58,9 @@ _bashCoverage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Usage: {fn} [ --help ] [ --cache cacheDirectory ] [ --target targetDirectory ] [ statsFile ]
+# stdin: Accepts a stats file
 bashCoverageReport() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
@@ -88,8 +91,7 @@ bashCoverageReport() {
         target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        files+=("$(usageArgumentFile "$usage" "coverageFile" "$1")") || return $?
         ;;
     esac
     # IDENTICAL argument-esac-shift 1

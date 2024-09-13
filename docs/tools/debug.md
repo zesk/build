@@ -229,6 +229,10 @@ Debugger accepts the following commands:
 `\s` - Skip next bash command
 `\h` - This help
 `\q` - Quit debugger (continue execution)
+`\w variable` - Evaluate this expression upon each debugger breakpoint
+`\u variable` - Unwatch a variable
+
+Any other command entered in the debugger is evaluated immediately.
 
 - Location: `bin/build/tools/debug.sh`
 

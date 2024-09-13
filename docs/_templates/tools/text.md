@@ -11,6 +11,7 @@
 
 {sedReplacePattern}
 {quoteSedPattern}
+{quoteSedReplacement}
 {quoteBashString}
 {quoteGrepPattern}
 

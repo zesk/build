@@ -70,8 +70,13 @@ pipelines:
           deployment: coverage
           name: Coverage stats
           artifacts:
-            - coverage.stats
+            - coverage.stats.gz
           services:
             - docker
           script:
             - bin/test.sh --coverage
+            - ls -la coverage.stats
+            - sort < coverage.stats | uniq -c > coverage.stats.uniq
+            - mv -f coverage.stats.uniq coverage.stats
+            - ls -la coverage.stats
+            - gzip coverage.stats

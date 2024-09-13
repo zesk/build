@@ -38,11 +38,12 @@ Returns true if all `characters` are of `className`
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `quoteSedPattern` - Quote sed strings for shell use
+### `quoteSedPattern` - Quote sed search strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
+needSlash='$.*/[\]^'
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -56,6 +57,35 @@ Quote a string to be used in a sed pattern on the command line.
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+
+#### Sample Output
+
+    string quoted and appropriate to insert in a sed search or replacement phrase
+    
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `quoteSedReplacement` - Quote sed replacement strings for shell use
+
+needSlash='$.*/[\]^'
+
+- Location: `bin/build/identical/quoteSedPattern.sh`
+
+#### Usage
+
+    quoteSedReplacement text separatorChar
+    
+
+#### Arguments
+
+- `text` - Text to quote
+
+#### Examples
+
+    sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
 
 #### Sample Output
 

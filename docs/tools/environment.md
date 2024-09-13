@@ -13,7 +13,7 @@ Output a list of environment variables and ignore function definitions
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
-- Location: `bin/build/identical/environmentVariables.sh`
+- Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 
@@ -85,6 +85,21 @@ Outputs array elements, one per line.
 
 - `stateFile` - Required. File. File to access, must exist.
 - `name` - Required. String. Name to read.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error 
+### `environmentValueConvertArray` - Convert an array value which was loaded already
+
+Convert an array value which was loaded already
+
+- Location: `bin/build/tools/environment.sh`
+
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 
