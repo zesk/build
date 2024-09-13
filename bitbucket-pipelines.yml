@@ -76,7 +76,7 @@ pipelines:
           script:
             - bin/test.sh --coverage
             - ls -la coverage.stats
-            - sort < coverage.stats | uniq -c > coverage.stats.uniq
+            - sort < coverage.stats | uniq -c | sort -rn > coverage.stats.uniq
             - mv -f coverage.stats.uniq coverage.stats
             - ls -la coverage.stats
             - gzip coverage.stats
