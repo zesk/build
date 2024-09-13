@@ -1,0 +1,48 @@
+
+.coverage em {
+    background-color: rgba(255,0,0,0.5);
+    color: black;
+}
+
+.coverage strong {
+    background-color: rgba(0,255,0,0.5);
+    color: black;
+}
+
+.coverage {
+    font-family: monospace;
+}
+
+.coverage .line {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    align-content: center;
+}
+
+.coverage .number {
+    background-color: rgba(84, 85, 84, 0.67);
+    border: 1px solid black;
+    padding: 1px 5px;
+    color: white;
+    font-weight: bold;
+    width: 3ex;
+    text-align: right;
+}
+
+.coverage .code {
+    background-color: rgba(0, 0, 0, 0);
+    border-bottom: 1px solid #DDD;
+    width: 100%;
+    padding: 1px 5px;
+}
+.coverage .line.not-coverable {
+    background-color: #EEE;
+    color: #AAA;
+}
+.coverage .covered {
+    background-color: rgba(85,0,3,0.48);
+}
+.coverage .covered {
+    background-color: rgba(255,0,0,0.3);
+}

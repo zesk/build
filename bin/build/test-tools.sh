@@ -511,10 +511,12 @@ __testCleanup() {
   cache=$(__environment buildCacheDirectory) || return $?
   shopt -u failglob
   __environment rm -v -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
-  # __environment find "$cache" -type f ! -path '*/.build/.*/*'
-  __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || return $?
-  # Delete empty directories
-  __environment find "$cache" -depth -type d -empty -delete || return $?
+  if [ -d "$cache" ]; then
+    # __environment find "$cache" -type f ! -path '*/.build/.*/*'
+    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || return $?
+    # Delete empty directories
+    __environment find "$cache" -depth -type d -empty -delete || return $?
+  fi
 }
 
 __testCleanupMess() {

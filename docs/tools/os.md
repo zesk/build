@@ -58,11 +58,11 @@ Backup when `/etc/services` does not exist.
 
 ## Execution
 
-### `whichExists` - IDENTICAL whichExists 11
+### `whichExists` - IDENTICAL whichExists EOF
 
-IDENTICAL whichExists 11
+IDENTICAL whichExists EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/whichExists.sh`
 
 #### Arguments
 
@@ -161,7 +161,7 @@ Maintains ordering.
 
 Outputs value of resident memory used by a process, value is in kilobytes
 
-- Location: `bin/build/tools/os.sh`
+- Location: `bin/build/tools/process.sh`
 
 #### Arguments
 
@@ -184,7 +184,7 @@ Outputs value of resident memory used by a process, value is in kilobytes
 
 Outputs value of virtual memory allocated for a process, value is in kilobytes
 
-- Location: `bin/build/tools/os.sh`
+- Location: `bin/build/tools/process.sh`
 
 #### Arguments
 

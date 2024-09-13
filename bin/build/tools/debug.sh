@@ -127,16 +127,50 @@ __debuggingStackCodeList() {
 # Argument: -x - Optional. Flag. Show exported variables. (verbose)
 #
 debuggingStack() {
-  local prefix index sources
-  printf "STACK:\n"
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local prefix index next sources=() last showExports=false addMe=false
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      -x)
+        showExports=true
+        ;;
+      --me)
+        addMe=true
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
   sources=()
   index=0
-  while [ $index -lt "${#BASH_SOURCE[@]}" ]; do
-    sources+=("${BASH_SOURCE[index]}:${BASH_LINENO[index]} - ${FUNCNAME[index]-}")
+  next=1
+  last=$((${#BASH_SOURCE[@]} - 1))
+  if $addMe; then
+    sources+=("${BASH_SOURCE[index]-}:$LINENO - ${FUNCNAME[0]}")
+  fi
+  while [ $index -lt $last ]; do
+    sources+=("${BASH_SOURCE[next]-}:${BASH_LINENO[index]} - ${FUNCNAME[next]-}")
     index=$((index + 1))
+    next=$((index + 1))
   done
   __debuggingStackCodeList "${sources[@]}" || :
-  if [ "${1-}" = "-x" ]; then
+  if $showExports; then
     printf "EXPORTS:\n"
     prefix="declare -x "
     declare -px | cut -c "$((${#prefix} + 1))-"
@@ -152,8 +186,9 @@ plumber() {
   local argument nArguments argumentIndex
   local __before __after __changed __ignore __pattern __command
   local __result=0
-  local __ignore=(OLDPWD _ resultCode LINENO PWD)
+  local __ignore=(OLDPWD _ resultCode LINENO PWD BASH_COMMAND)
 
+  # BASH_COMMAND for DEBUG
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -355,39 +390,76 @@ function _bashDebugHelp() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$@"
 }
 
-function _bashDebugTrap() {
-  local __where __command
+function _bashDebugWatch() {
+  if [ "${#BASH_DEBUG_WATCH[@]}" -gt 0 ]; then
+    for __item in "${BASH_DEBUG_WATCH[@]}"; do
+      if ! __value="$(eval "printf \"%s\n\" \"$__item\"" 2>/dev/null)"; then
+        __value="$(consoleRed "unbound")"
+      else
+        __value="\"$(consoleCode "$__value")\""
+      fi
+      printf -- "WATCH %s: %s\n" "$__item" "$__value"
+    done
+  fi
+}
+
+function __bashDebugStackDump() {
+  local index="$1" __where
   export BUILD_HOME
+  __where="$(realPath "${BASH_SOURCE[index]}")"
+  __where="${__where#"$BUILD_HOME"}"
+  printf "@ %s:%s %s()\n" "$(consoleBoldOrange "$__where")" "$(consoleBoldBlue "${BASH_LINENO[index]}")" "$(consoleCode "${FUNCNAME[index]}")"
+}
+
+function _bashDebugTrap() {
+  local __where __command __item __value
+  export BUILD_HOME BASH_DEBUG_WATCH
   case "$BASH_COMMAND" in
     bashDebuggerDisable | "trap - DEBUG") return 0 ;;
     *) ;;
   esac
-  __where="$(realPath "${BASH_SOURCE[1]}")"
-  __where="${__where#"$BUILD_HOME"}"
-  printf "@ %s:%s\n" "$(consoleBoldOrange "$__where")" "$(consoleBoldBlue "${BASH_LINENO[1]}")"
+  # exec 20>&0 21>&1 22>&2 1>/dev/console # save
+  __bashDebugStackDump 0
+  __bashDebugStackDump 1
+  __bashDebugStackDump 2
+  _bashDebugWatch
   printf -- "%s %s\n" "$(consoleGreen ">")" "$(consoleCode "$BASH_COMMAND")"
-  while read -r -e -p "debug> " __command; do
+  while read -r -e -p "debug> " __command </dev/stdin; do
     [ -n "$__command" ] || break
     case "$__command" in
       "\s")
         consoleWarning "Skipping $BASH_COMMAND"
+        # exec 0>&20 1>&21 2>&22 # restore
         return 1
         ;;
       "?" | "help" | "\?")
         _bashDebug 0
         ;;
+      "\w "*)
+        __item="${__command:3}"
+        consoleBoldOrange "Watching $__item"
+        BASH_DEBUG_WATCH+=("$__item")
+        _bashDebugWatch
+        ;;
       "\q")
         trap - DEBUG
+        # exec 0>&20 1>&21 2>&22 # restore
         return 0
         ;;
       *)
-        eval "$__command"
+        consoleWarning "EVALUATE \"$__command\"" >/dev/stdout
+        # exec 0>&20 1>&21 2>&22 # restore
+        eval "$__command" >/dev/stdout
+        # exec 20>&0 21>&1 22>&2 1>/dev/console
+        # save
         ;;
     esac
   done
 }
 
 bashDebuggerEnable() {
+  export BASH_DEBUG_WATCH
+  BASH_DEBUG_WATCH=()
   set -o functrace
   shopt -s extdebug
   trap _bashDebugTrap DEBUG

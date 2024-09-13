@@ -201,7 +201,7 @@ documentationBuild() {
 
   start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
 
-  cacheDirectory="$(__usageEnvironment "$usage" buildCacheDirectory)" || return $?
+  cacheDirectory="$(__usageEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}")" || return $?
   cacheDirectory=$(__usageEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
   seeFunction=$(__usageEnvironment "$usage" documentationTemplate seeFunction) || return $?
   seeFile=$(__usageEnvironment "$usage" documentationTemplate seeFile) || return $?

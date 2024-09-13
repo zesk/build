@@ -289,12 +289,23 @@ realPath() {
 # Usage: simplifyPath path
 # Argument: path ... - Required. File. One or more paths to simplify
 simplifyPath() {
-  local path
+  local path elements segment dot=0 result IFS="/"
   while [ $# -gt 0 ]; do
     path="$1"
     path="${path#"./"}"
     path="${path//\/\.\///}"
-    printf "%s\n" "$path"
+    read -r -a elements <<<"$path"
+    result=()
+    for segment in "${elements[@]}"; do
+      if [ "$segment" = ".." ]; then
+        dot=$((dot + 1))
+      elif [ $dot -gt 0 ]; then
+        dot=$((dot - 1))
+      else
+        result+=("$segment")
+      fi
+    done
+    printf "%s\n" "${result[*]}"
     shift
   done
 }

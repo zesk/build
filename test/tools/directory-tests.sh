@@ -44,3 +44,21 @@ testFileDirectoryExists() {
   assertExitCode --line "$LINENO" 0 fileDirectoryExists "${BASH_SOURCE[0]}}" || return $?
   assertNotExitCode --line "$LINENO" 0 fileDirectoryExists "${BASH_SOURCE[0]}}/not-a-dir" || return $?
 }
+
+testDirectoryRelativePath() {
+  while IFS=: read -r test expected; do
+    assertEquals --line "$LINENO" "$(directoryRelativePath "$test")" "$expected" || return $?
+  done < <(__testDirectoryRelativePathData)
+}
+
+__testDirectoryRelativePathData() {
+  cat<<'EOF'
+:.
+abc:
+/abc:..
+abc/:..
+a/b/c:../..
+/antidisestablishmentarianism/:../..
+///////:../../../../../../..
+EOF
+}

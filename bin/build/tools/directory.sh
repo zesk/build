@@ -146,3 +146,28 @@ directoryIsEmpty() {
 _directoryIsEmpty() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Given a path to a file, compute the path back up to the top in reverse (../..)
+# If path is blank, outputs `.`.
+#
+# Essentially converts the slash `/` to a `..`, so convert your source appropriately.
+#
+#      directoryRelativePath "/" -> ".."
+#      directoryRelativePath "/a/b/c" -> ../../..
+#
+# Usage: {fn} directory ...
+# Argument: directory - String. A path to convert.
+# stdout: Relative paths, one per line
+directoryRelativePath() {
+  local relTop
+  while [ $# -gt 0 ]; do
+    if [ -z "$1" ]; then
+      relTop=.
+    else
+      relTop=$(printf "%s\n" "$1" | sed -e 's/[^/]//g' -e 's/\//..\//g')
+      relTop="${relTop%/}"
+    fi
+    printf "%s\n" "$relTop"
+    shift
+  done
+}

@@ -104,7 +104,7 @@ Any output to stderr is errors in the file but is written to be compatible with 
 
 Takes any environment file and makes it bash-compatible
 
-Returns a temporary file which should be deleted.
+Outputs the compatible env to stdout
 
 - Location: `bin/build/tools/docker.sh`
 
@@ -121,13 +121,13 @@ Returns a temporary file which should be deleted.
 
 Takes any environment file and makes it docker-compatible
 
-Returns a temporary file which should be deleted.
+Outputs the compatible env to stdout
 
 - Location: `bin/build/tools/docker.sh`
 
 #### Arguments
 
-- `filename` - Required. File. One or more files to convert.
+- `envFile` - Required. File. One or more files to convert.
 
 #### Exit codes
 

@@ -289,11 +289,11 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath 10
+### `realPath` - IDENTICAL _realPath EOF
 
-IDENTICAL _realPath 10
+IDENTICAL _realPath EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/realPath.sh`
 
 #### Usage
 
@@ -365,29 +365,6 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
     renameFiles "" ".$$.backup" hiding etc/app.json etc/config.json
     ...
     renameFiles ".$$.backup" "" restoring etc/app.json etc/config.json
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `tarCreate` - Platform agnostic tar cfz which ignores owner and attributes
-
-Platform agnostic tar cfz which ignores owner and attributes
-
-`tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
-
-- Location: `bin/build/tools/os.sh`
-
-#### Usage
-
-    tarCreate target files
-    
-
-#### Arguments
-
-- `target` - The tar.gz file to create
-- `files` - A list of files to include in the tar file
 
 #### Exit codes
 

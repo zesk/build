@@ -102,12 +102,7 @@ installInstallBinary() {
   if [ "$relTop" = "$path" ]; then
     __failArgument "$usage" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
-  if [ -z "$relTop" ]; then
-    relTop=.
-  else
-    relTop=$(printf "%s\n" "$relTop" | sed -e 's/[^/]//g' -e 's/\//..\//g')
-    relTop="${relTop%/}"
-  fi
+  relTop=$(directoryRelativePath "$relTop")
 
   # Get installation binary
   temp="$path/.downloaded.$$"
