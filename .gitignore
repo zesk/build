@@ -4,7 +4,8 @@
 /vendor/
 .composer/
 /.env*
-/.idea/
+/.idea/*.xml
+/.idea/*.iml
 /.build-docs/
 /shaPipe.log
 /.pipeline-key*
