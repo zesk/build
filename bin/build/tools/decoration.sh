@@ -253,7 +253,11 @@ lineFill() {
   cleanText=$(stripAnsi <<<"$text")
   count=$((width - ${#cleanText}))
   count=$((count / ${#barText}))
-  printf "%s%s\n" "$text" "$(repeat "$count" "$barText")"
+  if [ $count -gt 0 ]; then
+    printf "%s%s\n" "$text" "$(repeat "$count" "$barText")"
+  else
+    printf "%s\n" "${text:0:$width}"
+  fi
 }
 _lineFill() {
   # IDENTICAL usageDocument 1

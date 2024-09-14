@@ -7,8 +7,10 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# Leak: BASH_ARGC
+# Leak: BASH_ARGV
 testCoverageBasics() {
-  assertExitCode --leak BASH_ARGC --leak BASH_ARGV --dump --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" --line "$LINENO" 0 bashCoverage --verbose isInteger 2 || return $?
+  assertExitCode --dump --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" --line "$LINENO" 0 bashCoverage --verbose isInteger 2 || return $?
 }
 
 #

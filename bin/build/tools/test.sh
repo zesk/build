@@ -425,7 +425,7 @@ bashLint() {
         exec 3>&1
         ;;
       *)
-        [ -f "$argument" ] || __failArgument "$usage" "$(printf "%s: %s" "Not a item" "$(consoleCode "$argument")")" || return $?
+        [ -f "$argument" ] || __failArgument "$usage" "$(printf "%s: %s PWD: %s" "Not a item" "$(consoleCode "$argument")" "$(pwd)")" || return $?
         # shellcheck disable=SC2210
         __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
