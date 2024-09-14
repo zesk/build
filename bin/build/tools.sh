@@ -39,6 +39,7 @@ __toolsMain() {
   local toolsFiles=("../env/BUILD_HOME") toolsList="$toolsPath/tools.conf" toolFile
 
   export BUILD_HOME
+  unset BUILD_HOME
 
   [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
