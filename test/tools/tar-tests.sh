@@ -34,23 +34,23 @@ testTarExtractFilePattern() {
   __environment muzzle pushd "$temp" || return $?
   assertExitCode --line "$LINENO" 0 tarCreate foo.tar.gz base || return $?$()
 
-  IFS=" " content="$(__environment tarExtractPattern '*/a.json' <foo.tar.gz)" || return $?
+  IFS=" " content="$(__environment tarExtractPattern '*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "never going to give you up" || return $?
+  assertEquals --line "$LINENO" "$content" "give going never to up you" || return $?
 
-  IFS=" " content="$(__environment tarExtractPattern '*/e/*/a.json' <foo.tar.gz)" || return $?
+  IFS=" " content="$(__environment tarExtractPattern '*/e/*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "give you up" || return $?
+  assertEquals --line "$LINENO" "$content" "give up you" || return $?
 
-  IFS=" " content="$(__environment tarExtractPattern '*/e*/a.json' <foo.tar.gz)" || return $?
+  IFS=" " content="$(__environment tarExtractPattern '*/e*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "to give you up" || return $?
+  assertEquals --line "$LINENO" "$content" "give to up you" || return $?
 
-  IFS=" " content="$(__environment tarExtractPattern '*/b/*/a.json' <foo.tar.gz)" || return $?
+  IFS=" " content="$(__environment tarExtractPattern '*/b/*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "never going" || return $?
+  assertEquals --line "$LINENO" "$content" "going never" || return $?
 
-  IFS=" " content="$(__environment tarExtractPattern '*/b.json' <foo.tar.gz)" || return $?
+  IFS=" " content="$(__environment tarExtractPattern '*/b.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "never going to let you down" || return $?
+  assertEquals --line "$LINENO" "$content" "down going let never to you" || return $?
 }
