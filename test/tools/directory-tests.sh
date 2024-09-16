@@ -46,6 +46,7 @@ testFileDirectoryExists() {
 }
 
 testDirectoryRelativePath() {
+  local test expected
   while IFS=: read -r test expected; do
     assertEquals --line "$LINENO" "$(directoryRelativePath "$test")" "$expected" || return $?
   done < <(__testDirectoryRelativePathData)
