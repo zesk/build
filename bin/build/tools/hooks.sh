@@ -18,6 +18,7 @@ _hookContextWrapper() {
   local argument nArguments argumentIndex saved
   local application
 
+  shift 2 || :
   application=
   saved=("$@")
   nArguments=$#
