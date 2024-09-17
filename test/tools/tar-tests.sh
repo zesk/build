@@ -8,7 +8,7 @@
 # Covers: tarCreate
 # Covers: tarExtractPattern
 testTarExtractFilePattern() {
-  local temp base
+  local temp base content IFS
 
   temp=$(__environment mktemp -d) || return $?
 
