@@ -41,13 +41,15 @@ __hookPreCommitPHP() {
   fi
   statusMessage consoleSuccess "Fixing PHP"
   fixResults=$(mktemp)
-  "$home/vendor/bin/php-cs-fixer" fix --allow-risky=yes "${changed[@]}" ou >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
+  "$home/vendor/bin/php-cs-fixer" fix "${changed[@]}" >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
     clearLine
     grep -A 100 'not fixed' "$fixResults" | wrapLines "$(consoleError)" "$(consoleReset)"
     rm -f "$fixResults"
     _environment "PHP files failed" || return $?
   fi
+  clearLine
+  consoleSuccess "PHP fixer ran"
   rm -f "$fixResults" || :
 
 }

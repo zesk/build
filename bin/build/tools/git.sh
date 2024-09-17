@@ -656,7 +656,7 @@ gitInstallHooks() {
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   verbose=false
   didOne=false
-  read -r -a types < <(gitHookTypes)
+  read -r -a types < <(gitHookTypes) || :
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -721,7 +721,7 @@ gitInstallHook() {
   local usage="_${FUNCNAME[0]}"
   local types
 
-  read -r -a types < <(gitHookTypes)
+  read -r -a types < <(gitHookTypes) || :
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   execute=true
   verbose=false

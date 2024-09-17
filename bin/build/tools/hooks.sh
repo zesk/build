@@ -14,7 +14,7 @@
 # Argument: --home home - Optional. Directory. Application home directory.
 # Argument: arguments ... - String. Optional. Arguments to `hookName`'s hook.
 _hookContextWrapper() {
-  local usage="_${FUNCNAME[0]}"
+  local usage="$1" hookName="$2"
   local argument nArguments argumentIndex saved
   local home
 
@@ -47,7 +47,7 @@ _hookContextWrapper() {
     buildEnvironmentContext hookVersionCurrent --home "$home" "${saved[@]}" || return $?
     return 0
   fi
-  __usageEnvironment "$usage" runHook "version-current" "$@" || return $?
+  __usageEnvironment "$usage" runHook "$hookName" "$@" || return $?
 }
 
 # Application current version
