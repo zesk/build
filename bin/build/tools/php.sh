@@ -94,6 +94,8 @@ _deploymentGenerateValue() {
 # Argument: --composer arg - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
 # Argument: --deployment deployment - Set DEPLOYMENT via command line (wins)
 # Argument: --suffix versionSuffix - Set tag suffix via command line (wins, default inferred from deployment)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: ENV_VAR1 - Optional. Environment variables to build into the deployed .env file
 # Argument: -- - Required. Separates environment variables to file list
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
