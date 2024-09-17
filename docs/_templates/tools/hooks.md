@@ -4,13 +4,12 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-# Context run hooks
+## Context hook runners
 
 These run within the current project regardless of where Zesk Build is loaded:
 
-- {SEE:hookVersionCurrent}
-
 {hookVersionCurrent}
+{hookVersionLive}
 
 # Version hooks
 

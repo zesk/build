@@ -50,6 +50,10 @@ _hookContextWrapper() {
   __usageEnvironment "$usage" runHook "version-current" "$@" || return $?
 }
 
+# Application current version
+#
+# Extracts the version from the repository
+#
 # Usage: {fn}  [ --help ] [ --home home ] arguments ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -58,5 +62,17 @@ hookVersionCurrent() {
   _hookContextWrapper "_${FUNCNAME[0]}" "version-current" "$@"
 }
 _hookVersionCurrent() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Application deployed version
+# Usage: {fn}  [ --help ] [ --home home ] arguments ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --home home - Optional. Directory. Application home directory.
+hookVersionLive() {
+  _hookContextWrapper "_${FUNCNAME[0]}" "version-live" "$@"
+}
+_hookVersionLive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
