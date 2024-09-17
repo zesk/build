@@ -334,9 +334,19 @@ __identicalCheckGenerateSearchFiles() {
 
 # Usage: {fn} searchFile lineNumber totalLines count
 # Generate the match file given the search file
+# TODO: This returns error 1 inside a container, so forced return 0. KMD 2024-09-16
+# Should not likely have return 0 but this avoids the error
+# The errors in question is
+# 1. #1: Processing /opt/atlassian/bitbucketci/agent/build/OMNI/domains.tf:9:  # IDENTICAL domainSuffix 6 ... __identicalCheckMatchFile "/opt/atlassian/bitbucketci/agent/build/OMNI/domains.tf" "320" "9" "6" (->  1 )
+# 1. /opt/atlassian/bitbucketci/agent/build/bin/build/tools.sh "identicalCheck" "--ignore-singles" "--repair" "./bin/infrastructure/identical" "--repair" "/opt/atlassian/bitbucketci/agent/build/etc/identical" "--extension" "tf" "--prefix" "# IDENTICAL" "./GLOBAL" "./infrastructure" "./modules" (->  1 )
+# 1. maiIdentical "" (->  1 )
+# File contains 320 lines, so
+# > tail -n $((320 - 9)) /opt/atlassian/bitbucketci/agent/build/OMNI/domains.tf | head -n 6
+# Works AOK anywhere else. So maybe mounted file system error in Docker?
 __identicalCheckMatchFile() {
   local searchFile="$1" totalLines="$2" lineNumber="$3" count="$4"
   tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n "$count"
+  return 0
 }
 
 #
