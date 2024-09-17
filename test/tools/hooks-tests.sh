@@ -11,3 +11,8 @@ testHookVersionCurrent() {
   assertExitCode 0 hookVersionCurrent || return $?
   assertEquals "$(hookVersionCurrent)" "$(runHook version-current)" || return $?
 }
+
+testHookVersionLive() {
+  assertExitCode 0 hookVersionLive || return $?
+  assertEquals "$(hookVersionLive)" "$(runHook version-live)" || return $?
+}
