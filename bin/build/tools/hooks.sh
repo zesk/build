@@ -16,9 +16,9 @@
 _hookContextWrapper() {
   local usage="$1" hookName="$2"
   local argument nArguments argumentIndex saved
-  local home
+  local application
 
-  home=
+  application=
   saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -30,9 +30,9 @@ _hookContextWrapper() {
         "$usage" 0
         return $?
         ;;
-      --home)
+      --application)
         shift
-        home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
+        application=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
         ;;
       *)
         break
@@ -42,12 +42,15 @@ _hookContextWrapper() {
   done
 
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
-  if [ -z "$home" ]; then
-    home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
-    buildEnvironmentContext hookVersionCurrent --home "$home" "${saved[@]}" || return $?
-    return 0
+  if [ -z "$application" ]; then
+    application=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+    application="${application%/}"
+    if [ "${start#"$application"}" = "$start" ]; then
+      buildEnvironmentContext hookVersionCurrent --application "$application" "${saved[@]}" || return $?
+      return 0
+    fi
   fi
-  __usageEnvironment "$usage" runHook "$hookName" "$@" || return $?
+  __usageEnvironment "$usage" runHook --application "$application" "$hookName" "$@" || return $?
 }
 
 # Application current version
@@ -57,7 +60,7 @@ _hookContextWrapper() {
 # Usage: {fn}  [ --help ] [ --home home ] arguments ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --home home - Optional. Directory. Application home directory.
+# Argument: --application application - Optional. Directory. Application home directory.
 hookVersionCurrent() {
   _hookContextWrapper "_${FUNCNAME[0]}" "version-current" "$@"
 }
@@ -69,7 +72,7 @@ _hookVersionCurrent() {
 # Usage: {fn}  [ --help ] [ --home home ] arguments ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --home home - Optional. Directory. Application home directory.
+# Argument: --application application - Optional. Directory. Application home directory.
 hookVersionLive() {
   _hookContextWrapper "_${FUNCNAME[0]}" "version-live" "$@"
 }
