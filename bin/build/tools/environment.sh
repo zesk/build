@@ -26,7 +26,7 @@ environmentValueWrite() {
     output="$(declare -pa value)"
   fi
   output="${output#declare*value=}"
-  printf "%s=%s\n" "$name" "$output"
+  printf -- "%s=%s\n" "$name" "$output"
 }
 _environmentValueWrite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -49,14 +49,14 @@ environmentValueRead() {
     if [ -z "$default" ]; then
       return 1
     fi
-    printf "%s\n" "$default"
+    printf -- "%s\n" "$default"
   else
     declare "$name=$default"
     # Wondering if this can run shell code - do not believe so
     value="${value#\"}"
     value="${value%\"}"
     declare "$name=$value"
-    printf "%s\n" "${!name-}"
+    printf -- "%s\n" "${!name-}"
   fi
 }
 _environmentValueRead() {
@@ -75,7 +75,7 @@ environmentValueConvertArray() {
   [ "${value#"$prefix"}" != "$value" ] || __failArgument "$usage" "Not an array value (prefix)" || return $?
   [ "${value%"$suffix"}" != "$value" ] || __failArgument "$usage" "Not an array value (suffix)" || return $?
   declare -a "value=$value"
-  printf "%s\n" "${value[@]+"${value[@]}"}"
+  printf -- "%s\n" "${value[@]+"${value[@]}"}"
 }
 _environmentValueConvertArray() {
   # IDENTICAL usageDocument 1
@@ -158,7 +158,7 @@ unquote() {
     value="${value#"$quote"}"
     value="${value%"$quote"}"
   fi
-  printf "%s\n" "$value"
+  printf -- "%s\n" "$value"
 }
 
 #
@@ -195,7 +195,7 @@ _environmentFileLoad() {
 }
 
 environmentApplicationVariables() {
-  printf "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
+  printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
 }
 
 #
@@ -233,7 +233,7 @@ environmentApplicationLoad() {
       APPLICATION_TAG=$APPLICATION_ID
     fi
   fi
-  printf "%s\n" "${variables[@]}"
+  printf -- "%s\n" "${variables[@]}"
 }
 
 environmentFileShow() {
@@ -259,7 +259,7 @@ environmentFileShow() {
   done
   buildEnvironment=("$@")
 
-  printf "%s %s %s %s%s\n" "$(consoleInfo "Application")" "$(consoleMagenta "$APPLICATION_VERSION")" "$(consoleInfo "on")" "$(consoleBoldRed "$APPLICATION_BUILD_DATE")" "$(consoleInfo "...")"
+  printf -- "%s %s %s %s%s\n" "$(consoleInfo "Application")" "$(consoleMagenta "$APPLICATION_VERSION")" "$(consoleInfo "on")" "$(consoleBoldRed "$APPLICATION_BUILD_DATE")" "$(consoleInfo "...")"
   if buildDebugEnabled; then
     consoleNameValue "$width" Checksum "$APPLICATION_ID"
     consoleNameValue "$width" Tag "$APPLICATION_TAG"

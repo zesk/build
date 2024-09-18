@@ -31,8 +31,9 @@ testSuite() {
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start showFlag mode
-  local continueFile continueFlag doStats statsFile allTestStart testStart testPaths runner
+  local continueFile continueFlag doStats statsFile allTestStart testStart testPaths runner startString
 
+  startString="$(__usageEnvironment "$usage" date +"%F %T")" || return $?
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
 
   export cleanExit=
@@ -45,7 +46,8 @@ testSuite() {
 
   hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
 
-  quietLog="$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}")" || return $?
+  quietLog="$(__usageEnvironment "$usage" buildQuietLog "${usage#_}")" || return $?
+  __usageEnvironment "$usage" printf "%s started on %s\n" "${usage#_}" "$startString" >"$quietLog" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)
 
@@ -54,7 +56,7 @@ testSuite() {
   mode="$BUILD_COLORS_MODE"
   [ -n "$mode" ] || mode=none
 
-  printf "%s started on %s (%s)\n" "$(consoleBoldRed "${FUNCNAME[0]}")" "$(consoleValue "$(date +"%F %T")")" "$(consoleCode "$mode")"
+  printf "%s started on %s (%s)\n" "$(consoleBoldRed "${usage#_}")" "$(consoleValue "$startString")" "$(consoleCode "$mode")"
 
   testTracing=initialization
   trap __testCleanupMess EXIT QUIT TERM

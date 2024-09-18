@@ -192,13 +192,16 @@ testAwsRegionValid() {
 }
 
 testAwsEnvironmentFromCredentials() {
-  local savedHome credFile firstKey
+  local savedHome credFile firstKey firstId year matches
 
   export HOME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 
   savedHome=$HOME
 
+  year=$(date +%Y)
   HOME=$(__environment mktemp -d) || return $?
+  # Fake home
+  credFile="$HOME/.aws/credentials"
 
   assertNotExitCode --line "$LINENO" 0 awsHasEnvironment || return $?
   assertNotExitCode --line "$LINENO" --stderr-match awsCredentialsFile 0 awsCredentialsHasProfile || return $?
@@ -209,40 +212,93 @@ testAwsEnvironmentFromCredentials() {
   AWS_ACCESS_KEY_ID=
   AWS_SECRET_ACCESS_KEY=
 
+  assertFileDoesNotExist --line "$LINENO" "$credFile" || return $?
+
   assertNotExitCode --line "$LINENO" --stderr-match awsCredentialsFile 0 awsEnvironmentFromCredentials || return $?
   assertNotExitCode --line "$LINENO" --stderr-match AWS_ACCESS_KEY_ID --stderr-match AWS_SECRET_ACCESS_KEY 0 awsCredentialsFromEnvironment || return $?
+
+  assertFileDoesNotExist --line "$LINENO" "$credFile" || return $?
 
   AWS_ACCESS_KEY_ID=AKIAZ0123456789ABCDE
   AWS_SECRET_ACCESS_KEY="VAcpL47ZIqi3NLzsBuSImsXl4n6r9UpQpTmNz3p1"
 
+  assertNotExitCode --line "$LINENO" --stderr-match "awsCredentialsFile" 0 awsCredentialsHasProfile || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "awsCredentialsFile" 0 awsCredentialsHasProfile default || return $?
+
   assertExitCode --line "$LINENO" 0 awsHasEnvironment || return $?
 
-  credFile="$HOME/.aws/credentials"
-
   assertFileDoesNotExist --line "$LINENO" "$credFile" || return $?
+
   assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment || return $?
+
   assertFileExists --line "$LINENO" "$credFile" || return $?
+
+  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --line "$LINENO" --display "No [hello-world] line in credentials" 0 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsHasProfile || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsHasProfile default || return $?
+
   assertFileContains --line "$LINENO" "$credFile" "[default]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
+  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
 
-  assertNotExitCode --line "$LINENO" --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment || return $?
+  assertNotExitCode --dump --line "$LINENO" --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment || return $?
 
-  firstKey=$AWS_ACCESS_KEY_ID
+  firstId=$AWS_ACCESS_KEY_ID
+  firstKey=$AWS_SECRET_ACCESS_KEY
 
   AWS_ACCESS_KEY_ID=AKIAZZZZZZZZZ789ABCDE
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --force || return $?
+  BUILD_DEBUG=usage assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --force || return $?
 
-  assertFileContains --line "$LINENO" "$credFile" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "Removed profile default" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$credFile" "$firstKey" || return $?
+  dumpPipe credentials post --force <"$credFile"
+
+  assertFileContains --line "$LINENO" "$credFile" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "Removed profile default" "$year" || return $?
+  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --line "$LINENO" --display "No [hello-world] line in credentials" 0 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+
+  assertFileDoesNotContain --line "$LINENO" "$credFile" "$firstId" || return $?
+
+  AWS_SECRET_ACCESS_KEY="VaAaAaAaAaAaAaAaAzZBzZzZzZzZzZzZzZzZzZzZ"
 
   assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --profile hello-world || return $?
+
+  dumpPipe credentials post hello-world <"$credFile"
+
   assertFileContains --line "$LINENO" "$credFile" "[default]" "[hello-world]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
+
+  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --line "$LINENO" --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+
   assertNotExitCode --line "$LINENO" --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment --profile hello-world || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --force || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --profile hello-world --force || return $?
 
-  assertFileContains --line "$LINENO" "$credFile" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "Removed profile default" "Removed profile hello-world" '[default]' '[hello-world]' || return $?
-  assertFileDoesNotContain --line "$LINENO" "$credFile" "$firstKey" || return $?
+  dumpPipe credentials post hello-world 2 <"$credFile"
 
+  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --line "$LINENO" --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+
+  assertFileContains --line "$LINENO" "$credFile" "$firstKey" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "Removed profile default" "Removed profile hello-world" "$year" '[default]' '[hello-world]' || return $?
+  assertFileDoesNotContain --line "$LINENO" "$credFile" "$firstId" || return $?
+
+  matches=(
+    --stdout-match AWS_SECRET_ACCESS_KEY
+    --stdout-match "$AWS_SECRET_ACCESS_KEY"
+    --stdout-match AWS_ACCESS_KEY_ID
+    --stdout-match "$AWS_ACCESS_KEY_ID"
+  )
+  __echo awsCredentialsFile
+  __echo __awsCredentialsExtractProfile "hello-world" <"$(awsCredentialsFile)"
+  awsEnvironmentFromCredentials hello-world | dumpPipe "awsEnvironmentFromCredentials hello-world"
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 awsEnvironmentFromCredentials --profile hello-world || return $?
+  matches=(
+    --stdout-match AWS_SECRET_ACCESS_KEY
+    --stdout-match "$firstKey"
+    --stdout-match AWS_ACCESS_KEY_ID
+    --stdout-match "$AWS_ACCESS_KEY_ID"
+  )
+  awsEnvironmentFromCredentials default | dumpPipe "awsEnvironmentFromCredentials default"
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 awsEnvironmentFromCredentials --profile default || return $?
   HOME="$savedHome"
 }

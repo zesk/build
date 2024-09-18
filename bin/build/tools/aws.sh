@@ -152,7 +152,7 @@ awsCredentialsFile() {
     __usageEnvironment "$usage" mkdir -p "$credentialsPath" || return $?
     __usageEnvironment "$usage" chmod 0700 "$credentialsPath" || return $?
     __usageEnvironment "$usage" touch "$credentials" || return $?
-    __usageEnvironment "$usage" chmod 0400 "$credentials" || return $?
+    __usageEnvironment "$usage" chmod 0600 "$credentials" || return $?
   fi
   printf "%s\n" "$credentials"
   return 0
@@ -223,8 +223,10 @@ _awsHasEnvironment() {
 # If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
 #
 # Summary: Get credentials and output environment variables for AWS authentication
-# Usage: awsEnvironmentFromCredentials profileName
-# Argument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+# Usage: {fn} [ profileName ] | [ --profile profileName ]
+# Argument: profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+# Argument: --profile profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+# Both forms can be used, but the profile should be supplied once and only once.
 # Example:     setFile=$(mktemp)
 # Example:     if awsEnvironment "$profile" > "$setFile"; then
 # Example:     eval $(cat "$setFile")
@@ -235,11 +237,38 @@ _awsHasEnvironment() {
 # Example:     fi
 awsEnvironmentFromCredentials() {
   local usage="_${FUNCNAME[0]}"
-  local credentials profileName=${1:-default} name value
+  local argument nArguments argumentIndex saved
+
+  local credentials profileName name value
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --profile)
+        shift
+        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        [ -z "$profileName" ] || __failArgument "$usage" "profileName already supplied" || return $?
+        profileName="$1"
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  [ -n "$profileName" ] || profileName="default"
 
   credentials="$(__usageEnvironment "$usage" awsCredentialsFile)" || return $?
   while read -r name value; do
-    environmentValueWrite "$(uppercase "$name")" "$value"
+    __usageEnvironment "$usage" environmentValueWrite "$(uppercase "$name")" "$value" || return $?
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
 }
 _awsEnvironmentFromCredentials() {
@@ -248,7 +277,7 @@ _awsEnvironmentFromCredentials() {
 }
 
 __awsCredentialsExtractProfile() {
-  awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' | grep "\[$1\]" | awk '{ print $2 " " $4 }' OFS=''
+  grep -v -e '^\s*#' | awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' | grep "\[$1\]" | awk '{ print $2 " " $4 }' OFS=''
 }
 
 #
@@ -271,15 +300,17 @@ __awsCredentialsExtractProfile() {
 awsCredentialsHasProfile() {
   local usage="_${FUNCNAME[0]}"
   local credentials profileName=${1:-default} name value
-  local found_values
+  local foundValues=()
+  [ -n "$profileName" ] || __failArgument "$usage" "profileName is somehow blank" || return $?
   credentials="$(__usageEnvironment "$usage" awsCredentialsFile)" || return $?
   while read -r name value; do
-    found_values+=("$(uppercase "$name")=$value")
+    foundValues+=("$(uppercase "$name")")
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
-  if [ "${#found_values[@]}" -lt 2 ]; then
-    __failEnvironment "$usage" "${#found_values[@]} minimum 2 values found in $(consoleValue "$credentials")" || return $?
+  [ "${#foundValues[@]}" -gt 0 ] || return 1
+  if [ "${#foundValues[@]}" -lt 2 ]; then
+    __failEnvironment "$usage" "${#foundValues[@]} minimum 2 values found in $(consoleValue "$credentials")" || return $?
   fi
-  inArray AWS_ACCESS_KEY_ID "${found_values[@]}" && inArray AWS_SECRET_ACCESS_KEY "${found_values[@]}"
+  inArray AWS_ACCESS_KEY_ID "${foundValues[@]}" && inArray AWS_SECRET_ACCESS_KEY "${foundValues[@]}"
 }
 _awsCredentialsHasProfile() {
   # IDENTICAL usageDocument 1
@@ -299,11 +330,12 @@ awsCredentialsFromEnvironment() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
 
-  local credentials profileName forceFlag
+  local credentials profileName forceFlag lines
   export AWS_PROFILE
 
   __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
 
+  forceFlag=false
   saved=("$@")
   nArguments=$#
   profileName="${AWS_PROFILE-}"
@@ -320,6 +352,7 @@ awsCredentialsFromEnvironment() {
         forceFlag=true
         ;;
       --profile)
+        shift
         profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
@@ -331,13 +364,22 @@ awsCredentialsFromEnvironment() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
   [ -n "$profileName" ] || profileName=default
+
   awsHasEnvironment || __failEnvironment "$usage" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
   credentials="$(__usageEnvironment "$usage" awsCredentialsFile --create)" || return $?
   if awsCredentialsHasProfile "$profileName"; then
     $forceFlag || __failEnvironment "$usage" "Profile $(consoleValue "$profileName") exists in $(consoleCode "$credentials")" || return $?
-    _awsCredentialsRemoveSection "$usage" "$credentials" default || return $?
+    _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" || return $?
   fi
-  __usageEnvironment "$usage" printf "[%s]\n""aws_access_key_id=%s\n""aws_access_key_id=\%s\n" "$profileName" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" >>"$credentials" || return $?
+  lines=(
+    "# Added profile $profileName ($(date))"
+    "[$profileName]"
+    "aws_access_key_id = $AWS_ACCESS_KEY_ID"
+    "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
+  )
+  printf -- "%s\n" "${lines[@]}" >>"$credentials" || return $?
+  echo "--" >>"$home/$usage.log"
+  cat "$credentials" >>"$home/$usage.log"
 }
 _awsCredentialsFromEnvironment() {
   # IDENTICAL usageDocument 1
@@ -347,10 +389,9 @@ _awsCredentialsFromEnvironment() {
 _awsCredentialsRemoveSection() {
   local usage="$1" credentials="$2" profileName=$3
   local pattern="\[\s*$profileName\s*\]" temp lines total
-
   total=$((0 + $(__usageEnvironment "$usage" wc -l <"$credentials"))) || return $?
   temp=$(__usageEnvironment "$usage" mktemp) || return $?
-  lines=$((0 + $(grep -m 1 -B 32767 "$credentials" -e "$pattern" | grep -v -e "$pattern" | __usageEnvironment "$usage" tee "$temp" | wc -l || :))) || _clean $? "$temp" || return $?
+  lines=$((0 + $(grep -m 1 -B 32767 "$credentials" -e "$pattern" | grep -v -e "$pattern" | __usageEnvironment "$usage" tee "$temp" | wc -l))) || _clean $? "$temp" || return $?
   printf -- "# Removed profile %s (%s)\n" "$profileName" "$(date)" >>"$temp"
   __usageEnvironment "$usage" grep -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' >>"$temp" || _clean $? "$temp" || return $?
   __usageEnvironment "$usage" cp -f "$temp" "$credentials" || _clean $? "$temp" || return $?
