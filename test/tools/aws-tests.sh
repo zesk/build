@@ -108,7 +108,7 @@ testAWSExpiration() {
   local thisYear thisMonth expirationDays start
   local oldDate
 
-  oldDate="${AWS_ACCESS_KEY_DATE-}"
+  oldDate="${AWS_ACCESS_KEY_DATE-NOPE}"
 
   start=$(beginTiming)
   __testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
@@ -172,7 +172,11 @@ testAWSExpiration() {
 
   reportTiming "$start" Done
 
-  AWS_ACCESS_KEY_DATE="$oldDate"
+  if [ "$oldDate" = "NOPE" ]; then
+    unset AWS_ACCESS_KEY_DATE
+  else
+    AWS_ACCESS_KEY_DATE="$oldDate"
+  fi
 }
 
 testAwsRegionValid() {

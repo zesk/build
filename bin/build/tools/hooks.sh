@@ -16,7 +16,7 @@
 _hookContextWrapper() {
   local usage="$1" hookName="$2"
   local argument nArguments argumentIndex saved
-  local application
+  local application start
 
   shift 2 || :
   application=

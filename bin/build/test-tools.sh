@@ -30,7 +30,7 @@ testSuite() {
   local usage="_${FUNCNAME[0]}"
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
   # Avoid conflict with __argument
-  local __ARGUMENT start showFlag
+  local __ARGUMENT start showFlag mode
   local continueFile continueFlag doStats statsFile allTestStart testStart testPaths runner
 
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
@@ -51,7 +51,10 @@ testSuite() {
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME BUILD_COLORS || return $?
 
-  printf "%s started on %s (color %s %s)\n" "$(consoleBoldRed "${FUNCNAME[0]}")" "$(consoleValue "$(date +"%F %T")")" "${BUILD_COLORS-no colors}" "$(consoleCode "$BUILD_COLORS_MODE")"
+  mode="$BUILD_COLORS_MODE"
+  [ -n "$mode" ] || mode=none
+
+  printf "%s started on %s (%s)\n" "$(consoleBoldRed "${FUNCNAME[0]}")" "$(consoleValue "$(date +"%F %T")")" "$(consoleCode "$mode")"
 
   testTracing=initialization
   trap __testCleanupMess EXIT QUIT TERM
@@ -510,7 +513,7 @@ __testCleanup() {
   home=$(__environment buildHome) || return $?
   cache=$(__environment buildCacheDirectory) || return $?
   shopt -u failglob
-  __environment rm -v -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
+  __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
   if [ -d "$cache" ]; then
     # __environment find "$cache" -type f ! -path '*/.build/.*/*'
     __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || return $?
