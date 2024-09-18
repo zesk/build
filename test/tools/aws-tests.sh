@@ -15,13 +15,17 @@ _testAWSIPAccessUsage() {
 testAWSIPAccess() {
   local quietLog=$1 id key start
 
+  local oldHome
+
+  export HOME
+
+  oldHome=$HOME
+
+  HOME=$(__environment mktemp -d) || return $?
   usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -z "$quietLog" ]; then
     _argument "testAWSIPAccess missing log" || return $?
-  fi
-  if [ ! -d "$HOME" ]; then
-    _environment "No HOME defined or exists: $HOME" || return $?
   fi
   if [ -d "$HOME/.aws" ]; then
     _environment "No .aws directory should exist already" || return $?
@@ -89,7 +93,7 @@ testAWSIPAccess() {
   export AWS_ACCESS_KEY_ID=$id
   export AWS_SECRET_ACCESS_KEY=$key
 
-  unset BUILD_DEBUG
+  HOME="$oldHome"
 }
 
 _isAWSKeyUpToDateTest() {
@@ -192,10 +196,19 @@ testAwsRegionValid() {
 }
 
 testAwsEnvironmentFromCredentials() {
-  local savedHome credFile firstKey firstId year matches
+  local savedHome credFile firstKey firstId year matches savedID savedKey
 
-  export HOME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
+  export HOME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE
+  local oldHome savedProfile
 
+  savedProfile=${AWS_PROFILE-NONE}
+  oldHome=$HOME
+
+  savedID=${AWS_ACCESS_KEY_ID-NONE}
+  savedKey=${AWS_SECRET_ACCESS_KEY-NONE}
+
+  AWS_ACCESS_KEY_ID=
+  AWS_SECRET_ACCESS_KEY=
   savedHome=$HOME
 
   year=$(date +%Y)
@@ -249,7 +262,7 @@ testAwsEnvironmentFromCredentials() {
 
   AWS_ACCESS_KEY_ID=AKIAZZZZZZZZZ789ABCDE
 
-  BUILD_DEBUG=usage assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --force || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --force || return $?
 
   dumpPipe credentials post --force <"$credFile"
 
@@ -301,4 +314,21 @@ testAwsEnvironmentFromCredentials() {
   awsEnvironmentFromCredentials default | dumpPipe "awsEnvironmentFromCredentials default"
   assertExitCode --line "$LINENO" "${matches[@]}" 0 awsEnvironmentFromCredentials --profile default || return $?
   HOME="$savedHome"
+
+  if [ "$savedID" = "NONE" ]; then
+    unset AWS_ACCESS_KEY_ID
+  else
+    AWS_ACCESS_KEY_ID=$savedID
+  fi
+  if [ "$savedKey" = "NONE" ]; then
+    unset AWS_SECRET_ACCESS_KEY
+  else
+    AWS_SECRET_ACCESS_KEY=$savedKey
+  fi
+  if [ "$savedProfile" = "NONE" ]; then
+    unset AWS_PROFILE
+  else
+    AWS_PROFILE=$savedProfile
+  fi
+
 }

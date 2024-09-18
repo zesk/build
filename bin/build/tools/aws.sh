@@ -99,7 +99,7 @@ awsCredentialsFile() {
   local usage="_${FUNCNAME[0]}"
   local credentialsPath credentials=.aws/credentials
   local verbose
-  local argument nArguments argumentIndex home
+  local argument nArguments argumentIndex home createFlag
 
   usageRequireBinary "$usage" mkdir chmod touch || return $?
 
@@ -378,8 +378,6 @@ awsCredentialsFromEnvironment() {
     "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
   )
   printf -- "%s\n" "${lines[@]}" >>"$credentials" || return $?
-  echo "--" >>"$home/$usage.log"
-  cat "$credentials" >>"$home/$usage.log"
 }
 _awsCredentialsFromEnvironment() {
   # IDENTICAL usageDocument 1
@@ -584,12 +582,12 @@ awsSecurityGroupIPRegister() {
 awsIPAccess() {
   local usage="_${FUNCNAME[0]}"
   local argument service services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
-  local sgArgs port
+  local sgArgs port verboseFlag=false
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
 
   services=()
-  optionRevoke=
+  optionRevoke=false
   awsProfile=
   currentIP=
   developerId=
@@ -614,7 +612,10 @@ awsIPAccess() {
         awsProfile="$1"
         ;;
       --revoke)
-        optionRevoke=1
+        optionRevoke=true
+        ;;
+      --verbose)
+        verboseFlag=true
         ;;
       --group)
         shift || __failArgument "$usage" "missing $argument argument" || return $?
@@ -653,9 +654,9 @@ awsIPAccess() {
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    consoleInfo "Need AWS Environment: $awsProfile" || :
-    if awsEnvironment "$awsProfile"; then
-      __usageEnvironment "$usage" eval "$(awsEnvironment "$awsProfile")" || return $?
+    ! $verboseFlag || statusMessage consoleInfo "Need AWS Environment: $awsProfile" || :
+    if awsCredentialsHasProfile "$awsProfile"; then
+      __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$awsProfile")" || return $?
     else
       __failEnvironment "$usage" "No AWS credentials available: $awsProfile" || return $?
     fi
@@ -664,18 +665,19 @@ awsIPAccess() {
   usageRequireEnvironment "$usage" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
   usageRequireBinary "$usage" aws || return $?
 
-  clearLine || :
-  if test $optionRevoke; then
-    bigText "Closing ..." | wrapLines "$(consoleMagenta)" "$(consoleReset)"
-  else
-    bigText "Opening ..." | wrapLines "$(consoleBlue)" "$(consoleReset)"
+  if $verboseFlag; then
+    clearLine
+    if $optionRevoke; then
+      bigText "Closing ..." | wrapLines "$(consoleMagenta)" "$(consoleReset)"
+    else
+      bigText "Opening ..." | wrapLines "$(consoleBlue)" "$(consoleReset)"
+    fi
+    consoleNameValue 40 ID "$developerId" || :
+    consoleNameValue 40 IP "$currentIP" || :
+    consoleNameValue 40 "Security Groups" "${securityGroups[@]}" || :
+    consoleNameValue 40 Region "$AWS_REGION" || :
+    consoleNameValue 40 AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
   fi
-  consoleNameValue 40 ID "$developerId" || :
-  consoleNameValue 40 IP "$currentIP" || :
-  consoleNameValue 40 "Security Groups" "${securityGroups[@]}" || :
-  consoleNameValue 40 Region "$AWS_REGION" || :
-  consoleNameValue 40 AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
-
   for service in "${services[@]}"; do
     if ! serviceToPort "$service" >/dev/null; then
       __failArgument "$usage" "Invalid service $(consoleCode "$service")" || return $?
@@ -685,7 +687,7 @@ awsIPAccess() {
     for service in "${services[@]}"; do
       port=$(serviceToPort "$service") || __failEnvironment "$usage" "serviceToPort $service failed 2nd round?" || return $?
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
-      if test $optionRevoke; then
+      if $optionRevoke; then
         __usageEnvironment "$usage" awsSecurityGroupIPModify --remove "${sgArgs[@]}" || return $?
       else
         __usageEnvironment "$usage" awsSecurityGroupIPRegister "${sgArgs[@]}" || return $?
