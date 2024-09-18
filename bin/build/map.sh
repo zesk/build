@@ -37,7 +37,7 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _sugar 146
+# IDENTICAL _sugar 152
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
@@ -49,8 +49,14 @@ _integer() {
 _format() {
   local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}"
   sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
-  exec 2>/dev/null && shift && shift && shift && shift
-  printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
+  exec 2>/dev/null
+  # shellcheck disable=SC2015
+  shift && shift && shift && shift || :
+  if [ $# -eq 0 ]; then
+    printf -- "%s\n" "$title"
+  else
+    printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
+  fi
 }
 
 # Output a titled list

@@ -6,207 +6,56 @@ Hooks are called to enable custom actions at specific times which can be overwri
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-# Version hooks
+# Hook Running
 
-These hooks interact with `new-release.sh` and deployment tools but are intended to be used anywhere.
+### `runHook` - Run a project hook
 
-- `version-current` - Required. The current version. Defaults to the highest version in `docs/release`.
-- `version-live` - Optional. Determine the live version.
-- `version-created` - Optional. Run when a new version is created.
-- `version-already` - Optional. Run when a new version is requested, but it already exists in the source code.
+Run a hook in the project located at `./bin/hooks/`
 
-#### Arguments
+See (Hooks documentation)[../hooks/index.md] for standard hooks.
 
-- No arguments.
+Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
+So the hook for `version-current` would be a file at:
 
-#### Exit codes
+    bin/hooks/version-current.sh
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
 
-#### Environment
+Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
 
-BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
-EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
-### `__hookVersionLive` - Fetch the current live version of the software
-
-Fetch the current live version of the software
-
-- Location: `bin/hooks/version-live.sh`
+- Location: `bin/build/tools/hook.sh`
 
 #### Arguments
 
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-## Deployment Hooks
-
-### `__hookApplicationEnvironment` - Hook is run to generate the application environment file
-
-Hook is run to generate the application environment file
-Outputs environment settings, one per line to be put into an environment file
-See `environmentFileApplicationMake` for usage and arguments.
-
-- Location: `bin/build/hooks/application-environment.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- No arguments.
+- `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- `hookName` - String. Required. Hook name to run.
+- `arguments` - Optional. Arguments are passed to `hookName`.
 
 #### Examples
 
-    885acc3
+    version="$(runHook version-current)"
 
 #### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
+- `Any` - The hook exit code is returned if it is run
+- `1` - is returned if the hook is not found
 
-- No arguments.
+### `whichHook` - Find the path to a hook binary file
 
-#### Exit codes
+Does a hook exist in the local project?
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
+Find the path to a hook. The search path is:
 
-- `message` - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
-- `maintenanceSetting` - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
+- `./bin/hooks/`
+- `./bin/build/hooks/`
 
-#### Exit codes
+If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
+- Location: `bin/build/tools/hook.sh`
 
 #### Arguments
 
-- No arguments.
-
-#### Examples
-
-- Move directories to make deployment final
-
-#### Exit codes
-
-- `0` - This SHOULD exit successfully always
-#### Usage
-
-    runHook deploy-activate applicationPath
-    
-
-#### Arguments
-
-- `applicationPath` - This is the target for the current application
-
-#### Exit codes
-
-- `0` - This is called to replace the running application in-place
-#### Arguments
-
-- No arguments.
-
-#### Examples
-
-- Enable a health endpoint which returns version number and ensure all servers return the same version number (which was just updated)
-- Check the home page for a version number
-- Check for a known artifact (build sha) in the server somehow
-- etc.
-
-#### Exit codes
-
-- `0` - Continue with deployment
-- `Non-zero` - Any non-zero exit code will run `deploy-revert` hook on all systems and cancel deployment
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- No arguments.
-
-#### Examples
-
-- Move directories to make deployment final
-
-#### Exit codes
-
-- `0` - This SHOULD exit successfully always
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - This SHOULD exit successfully always
-
-## Git hooks
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- No arguments.
+- `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 
 #### Exit codes
 
@@ -214,30 +63,4 @@ BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable
 - `1` - Environment error
 - `2` - Argument error
 
-## Test Hooks
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - If the test setup was successful
-- `Non-Zero` - Any error will terminate testing
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - If the tests all pass
-- `Non-Zero` - If any test fails for any reason
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+See [Defined Hooks](hooks.md)

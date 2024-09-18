@@ -94,10 +94,7 @@ Files are specified from the application root directory.
 
 #### Arguments
 
-- `--name tarFileName` - Set BUILD_TARGET via command line (wins)
-- `--composer arg` - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
-- `--deployment deployment` - Set DEPLOYMENT via command line (wins)
-- `--suffix versionSuffix` - Set tag suffix via command line (wins, default inferred from deployment)
+- `--help` - Optional. Flag. Display this help.
 - `ENV_VAR1` - Optional. Environment variables to build into the deployed .env file
 - `--` - Required. Separates environment variables to file list
 - `file1 file2 dir3 ...` - Required. List of files and directories to build into the application package.

@@ -84,24 +84,28 @@ _awsInstall() {
 # If not found, returns with exit code 1.
 #
 # Summary: Get the path to the AWS credentials file
-# Usage:  awsCredentialsFile [ verboseFlag ]
-# Example:     if ! awsCredentialsFile 1 >/dev/null; then
-# Example:     consoleError "No AWS credentials"
-# Example:     exit 1
-# Example:     fi
-# Example:     file=$(awsCredentialsFile)
+# Usage:  {fn} [ --verbose ] [ --help ] [ --home homeDirectory ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --verbose - Flag. Optional. Verbose mode
+# Argument: --create - Optional. Flag. Create the directory and file if it does not exist
+# Argument: --home homeDirectory - Optional. Directory. Home directory to use instead of `$HOME`.
+# Example:     credentials=$(awsCredentialsFile) || __failEnvironment "$usage" "No credentials file found" || return $?
 # Exit Code: 1 - If `$HOME` is not a directory or credentials file does not exist
 # Exit Code: 0 - If credentials file is found and output to stdout
 #
 # shellcheck disable=SC2120
 awsCredentialsFile() {
   local usage="_${FUNCNAME[0]}"
-  local credentials=.aws/credentials
+  local credentialsPath credentials=.aws/credentials
   local verbose
   local argument nArguments argumentIndex home
 
+  usageRequireBinary "$usage" mkdir chmod touch || return $?
+
   home=
   verbose=false
+  createFlag=false
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -111,6 +115,9 @@ awsCredentialsFile() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --create)
+        createFlag=true
         ;;
       --home)
         shift
@@ -133,15 +140,22 @@ awsCredentialsFile() {
   if [ ! -d "$home" ]; then
     # Argument is validated above MUST be environment
     ! "$verbose" || _environment "HOME environment \"$(consoleValue "$home")\" directory not found" || return $?
-  else
-    credentials="$HOME/$credentials"
-    if [ -f "$credentials" ]; then
-      printf "%s\n" "$credentials"
-      return 0
-    fi
-    ! $verbose || __failEnvironment "$usage" "No credentials file ($(consoleValue "$credentials")) found" || return $?
+    return 1
   fi
-  return 1
+  credentials="$HOME/$credentials"
+  if [ ! -f "$credentials" ]; then
+    if ! $createFlag; then
+      ! $verbose || __failEnvironment "$usage" "No credentials file ($(consoleValue "$credentials")) found" || return $?
+      return 1
+    fi
+    credentialsPath="${credentials%/*}"
+    __usageEnvironment "$usage" mkdir -p "$credentialsPath" || return $?
+    __usageEnvironment "$usage" chmod 0700 "$credentialsPath" || return $?
+    __usageEnvironment "$usage" touch "$credentials" || return $?
+    __usageEnvironment "$usage" chmod 0400 "$credentials" || return $?
+  fi
+  printf "%s\n" "$credentials"
+  return 0
 }
 _awsCredentialsFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -191,14 +205,54 @@ awsIsKeyUpToDate() {
 # Summary: Test whether the AWS environment variables are set or not
 #
 awsHasEnvironment() {
+  local usage="_${FUNCNAME[0]}"
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
-  __environment buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
+}
+_awsHasEnvironment() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
+#
+# If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+# If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+#
+# Summary: Get credentials and output environment variables for AWS authentication
+# Usage: awsEnvironmentFromCredentials profileName
+# Argument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+# Example:     setFile=$(mktemp)
+# Example:     if awsEnvironment "$profile" > "$setFile"; then
+# Example:     eval $(cat "$setFile")
+# Example:     rm "$setFile"
+# Example:     else
+# Example:     consoleError "Need $profile profile in aws credentials file"`
+# Example:     exit 1
+# Example:     fi
+awsEnvironmentFromCredentials() {
+  local usage="_${FUNCNAME[0]}"
+  local credentials profileName=${1:-default} name value
+
+  credentials="$(__usageEnvironment "$usage" awsCredentialsFile)" || return $?
+  while read -r name value; do
+    environmentValueWrite "$(uppercase "$name")" "$value"
+  done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
+}
+_awsEnvironmentFromCredentials() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__awsCredentialsExtractProfile() {
+  awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' | grep "\[$1\]" | awk '{ print $2 " " $4 }' OFS=''
+}
+
+#
+# Extract a profile from a credentials file
 #
 # If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
 # If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
@@ -214,18 +268,93 @@ awsHasEnvironment() {
 # Example:     consoleError "Need $profile profile in aws credentials file"`
 # Example:     exit 1
 # Example:     fi
-#
-awsEnvironment() {
+awsCredentialsHasProfile() {
   local usage="_${FUNCNAME[0]}"
-  local credentials groupName=${1:-default} name value
-
+  local credentials profileName=${1:-default} name value
+  local found_values
   credentials="$(__usageEnvironment "$usage" awsCredentialsFile)" || return $?
   while read -r name value; do
-    environmentValueWrite "$(uppercase "$name")" "$value"
-  done < <(awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' "$credentials" | grep "\[$groupName\]" | awk '{ print $2 " " $4 }' OFS='')
+    found_values+=("$(uppercase "$name")=$value")
+  done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
+  if [ "${#found_values[@]}" -lt 2 ]; then
+    __failEnvironment "$usage" "${#found_values[@]} minimum 2 values found in $(consoleValue "$credentials")" || return $?
+  fi
+  inArray AWS_ACCESS_KEY_ID "${found_values[@]}" && inArray AWS_SECRET_ACCESS_KEY "${found_values[@]}"
 }
-_awsEnvironment() {
+_awsCredentialsHasProfile() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Write the credentials supplied from the AWS credentials file.
+#
+# If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+# If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+#
+# Summary: Write an AWS profile to the AWS credentials file
+# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ]
+# Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
+# Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists
+awsCredentialsFromEnvironment() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+
+  local credentials profileName forceFlag
+  export AWS_PROFILE
+
+  __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
+
+  saved=("$@")
+  nArguments=$#
+  profileName="${AWS_PROFILE-}"
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --force)
+        forceFlag=true
+        ;;
+      --profile)
+        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  [ -n "$profileName" ] || profileName=default
+  awsHasEnvironment || __failEnvironment "$usage" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
+  credentials="$(__usageEnvironment "$usage" awsCredentialsFile --create)" || return $?
+  if awsCredentialsHasProfile "$profileName"; then
+    $forceFlag || __failEnvironment "$usage" "Profile $(consoleValue "$profileName") exists in $(consoleCode "$credentials")" || return $?
+    _awsCredentialsRemoveSection "$usage" "$credentials" default || return $?
+  fi
+  __usageEnvironment "$usage" printf "[%s]\n""aws_access_key_id=%s\n""aws_access_key_id=\%s\n" "$profileName" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" >>"$credentials" || return $?
+}
+_awsCredentialsFromEnvironment() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+_awsCredentialsRemoveSection() {
+  local usage="$1" credentials="$2" profileName=$3
+  local pattern="\[\s*$profileName\s*\]" temp lines total
+
+  total=$((0 + $(__usageEnvironment "$usage" wc -l <"$credentials"))) || return $?
+  temp=$(__usageEnvironment "$usage" mktemp) || return $?
+  lines=$((0 + $(grep -m 1 -B 32767 "$credentials" -e "$pattern" | grep -v -e "$pattern" | __usageEnvironment "$usage" tee "$temp" | wc -l || :))) || _clean $? "$temp" || return $?
+  printf -- "# Removed profile %s (%s)\n" "$profileName" "$(date)" >>"$temp"
+  __usageEnvironment "$usage" grep -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' >>"$temp" || _clean $? "$temp" || return $?
+  __usageEnvironment "$usage" cp -f "$temp" "$credentials" || _clean $? "$temp" || return $?
+  __usageEnvironment "$usage" rm -rf "$temp" || return $?
 }
 
 # Usage: {fn} --add --group group [ --region region ] --port port --description description --ip ip

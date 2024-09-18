@@ -52,17 +52,17 @@ testChoose() {
 }
 
 testFormat() {
-  assertOutputEquals "§" _format || return $?
-  assertOutputEquals "§a" _format a || return $?
-  assertOutputEquals "§ab" _format a b || return $?
-  assertOutputEquals "§abc" _format a b c || return $?
-  assertOutputEquals "dabc" _format a b c d || return $?
-  assertOutputEquals "iabc" _format a b c i || return $?
-  assertOutputEquals "dabic" _format a b c d i || return $?
-  assertOutputEquals "dabicbocbacbucbyc" _format a b c d i o a u y || return $?
-  assertOutputEquals "d%sbicbocbacbucbyc" _format %s b c d i o a u y || return $?
-  assertOutputEquals "d%s%dic%doc%dac%duc%dyc" _format %s %d c d i o a u y || return $?
-  assertOutputEquals "d%s%di%f%do%f%da%f%du%f%dy%f" _format %s %d %f d i o a u y || return $?
+  assertOutputEquals --line "$LINENO" "§" _format || return $?
+  assertOutputEquals --line "$LINENO" "§" _format a || return $?
+  assertOutputEquals --line "$LINENO" "§" _format a b || return $?
+  assertOutputEquals --line "$LINENO" "§" _format a b c || return $?
+  assertOutputEquals --line "$LINENO" "d" _format a b c d || return $?
+  assertOutputEquals --line "$LINENO" "i" _format a b c i || return $?
+  assertOutputEquals --line "$LINENO" "dabic" _format a b c d i || return $?
+  assertOutputEquals --line "$LINENO" "dabicbocbacbucbyc" _format a b c d i o a u y || return $?
+  assertOutputEquals --line "$LINENO" "d%sbicbocbacbucbyc" _format %s b c d i o a u y || return $?
+  assertOutputEquals --line "$LINENO" "d%s%dic%doc%dac%duc%dyc" _format %s %d c d i o a u y || return $?
+  assertOutputEquals --line "$LINENO" "d%s%di%f%do%f%da%f%du%f%dy%f" _format %s %d %f d i o a u y || return $?
 }
 
 testExitCode() {

@@ -56,22 +56,15 @@ If not found, returns with exit code 1.
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-     awsCredentialsFile [ verboseFlag ]
-    
-
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
+- `--verbose` - Optional. Flag. Verbose mode
+- `--home homeDirectory` - Optional. Directory. Home directory to use instead of `$HOME`.
 
 #### Examples
 
-    if ! awsCredentialsFile 1 >/dev/null; then
-    consoleError "No AWS credentials"
-    exit 1
-    fi
-    file=$(awsCredentialsFile)
+    credentials=$(awsCredentialsFile) || __failEnvironment "$usage" "No credentials file found" || return $?
 
 #### Exit codes
 

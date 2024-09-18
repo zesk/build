@@ -21,8 +21,9 @@
 _format() {
   local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}"
   sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
-  exec 2>/dev/null && shift && shift && shift && shift
-  printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
+  # shellcheck disable=SC2015
+  exec 2>/dev/null && shift && shift && shift && shift || :
+  [ $# -eq 0 ] && printf -- "%s\n" "$title" || printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
 }
 
 # Output a titled list

@@ -169,6 +169,61 @@ Delete the old tag as well
 - `1` - Environment error
 - `2` - Argument error
 
+## git Branches
+
+### `gitBranchExists` - Does a branch exist locally or remotely?
+
+Does a branch exist locally or remotely?
+
+- Location: `bin/build/tools/git.sh`
+
+#### Arguments
+
+- `branch ...` - String. Required. List of branch names to check.
+
+#### Exit codes
+
+- `0` - All branches passed exist
+### `gitBranchExistsRemote` - Does a branch exist remotely?
+
+Does a branch exist remotely?
+
+- Location: `bin/build/tools/git.sh`
+
+#### Arguments
+
+- `branch ...` - String. Required. List of branch names to check.
+
+#### Exit codes
+
+- `0` - All branches passed exist
+### `gitBranchExistsLocal` - Does a branch exist locally?
+
+Does a branch exist locally?
+
+- Location: `bin/build/tools/git.sh`
+
+#### Arguments
+
+- `branch ...` - String. Required. List of branch names to check.
+
+#### Exit codes
+
+- `0` - All branches passed exist
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+BUILD_BRANCH_FORMAT
+
 ## git Development
 
 ### `gitCommit` - Commits all files added to git and also update release
@@ -432,9 +487,10 @@ Get the current branch name
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `gitHasAnyRefs` - Does git have any tags? (May need to `git pull
+### `gitHasAnyRefs` - Does git have any tags?
 
-Does git have any tags? (May need to `git pull --tags`)
+Does git have any tags?
+May need to `git pull --tags`, or no tags exist.
 
 - Location: `bin/build/tools/git.sh`
 
