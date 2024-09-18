@@ -18,6 +18,13 @@
 {gitVersionLast}
 {veeGitTag}
 
+## git Branches
+
+{gitBranchExists}
+{gitBranchExistsRemote}
+{gitBranchExistsLocal}
+{gitBranchify}
+
 ## git Development
 
 {gitCommit}

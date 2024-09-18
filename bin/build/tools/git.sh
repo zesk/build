@@ -5,21 +5,21 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 # bin: git
 #
-# Docs: contextOpen ./docs/_templates/tools/git.md
-# Test: contextOpen ./test/bin/git-tests.sh
+# Docs: ./docs/_templates/tools/git.md
+# Test: ./test/bin/git-tests.sh
 #
 
 ###############################################################################
-#
-#            ██
-#            ▀▀       ██
-#   ▄███▄██   ████     ███████
-#  ██▀  ▀██     ██       ██
-#  ██    ██     ██       ██
-#  ▀██▄▄███  ▄▄▄██▄▄▄    ██▄▄▄
-#   ▄▀▀▀ ██  ▀▀▀▀▀▀▀▀     ▀▀▀▀
-#   ▀████▀▀
-#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~██~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~▀▀~~~~~██~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~▄███▄██~~~████~~~███████~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~██▀  ▀██~~~~~██~~~~~██~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~██    ██~~~~~██~~~~~██~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~▀██▄▄███~~▄▄▄██▄▄▄~~██▄▄▄~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~▄▀▀▀ ██~~▀▀▀▀▀▀▀▀~~~▀▀▀▀~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~▀████▀▀~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #------------------------------------------------------------------------------
 
 #
@@ -78,11 +78,15 @@ _gitEnsureSafeDirectory() {
 gitTagDelete() {
   local usage="_${FUNCNAME[0]}"
   local exitCode=0
+  export GIT_REMOTE
+
+  __usageEnvironment "$usage" buildEnvironmentLoad GIT_REMOTE || return $?
+  usageRequireEnvironment "$usage" GIT_REMOTE || return $?
   while [ $# -gt 0 ]; do
     # Deleting local tag
     __usageArgument "$usage" git tag -d "$1" || exitCode=$?
     # Deleting remote tag
-    __usageArgument "$usage" git push origin :"$1" || exitCode=$?
+    __usageArgument "$usage" git push "$GIT_REMOTE" :"$1" || exitCode=$?
     shift
   done
   return "$exitCode"
@@ -847,4 +851,121 @@ gitPreCommitCleanup() {
   local directory
   directory=$(__gitPreCommitCache) || return $?
   [ ! -d "$directory" ] || __environment rm -rf "$directory" || return $?
+}
+
+# Does a branch exist locally or remotely?
+# Usage: {fn} branch ...
+# Argument: branch ... - String. Required. List of branch names to check.
+# Exit Code: 0 - All branches passed exist
+# Exit Cdoe: 1 - At least one branch does not exist locally or remotely
+gitBranchExists() {
+  local usage="_${FUNCNAME[0]}"
+
+  [ $# -gt 0 ] || __failArgument "$usage" "Requires at least one branch name" || return $?
+  while [ $# -gt 0 ]; do
+    if ! gitBranchExistsLocal "$1" && ! gitBranchExistsRemote "$1"; then
+      return 1
+    fi
+    shift
+  done
+}
+_gitBranchExists() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Does a branch exist locally?
+# Usage: {fn} branch ...
+# Argument: branch ... - String. Required. List of branch names to check.
+# Exit Code: 0 - All branches passed exist
+# Exit Cdoe: 1 - At least one branch does not exist locally
+gitBranchExistsLocal() {
+  local usage="_${FUNCNAME[0]}"
+  local branch
+
+  [ $# -gt 0 ] || __failArgument "$usage" "Requires at least one branch name" || return $?
+  while [ $# -gt 0 ]; do
+    branch=$(__usageEnvironment "$usage" git branch --list "$1") || return $?
+    [ -n "$branch" ] || return 1
+    shift
+  done
+}
+_gitBranchExistsLocal() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Does a branch exist remotely?
+# Usage: {fn} branch ...
+# Argument: branch ... - String. Required. List of branch names to check.
+# Exit Code: 0 - All branches passed exist
+# Exit Cdoe: 1 - At least one branch does not exist remotely
+gitBranchExistsRemote() {
+  local usage="_${FUNCNAME[0]}"
+  local branch
+
+  export GIT_REMOTE
+
+  __usageEnvironment "$usage" buildEnvironmentLoad GIT_REMOTE || return $?
+  [ -n "$GIT_REMOTE" ] || __usageEnvironment "$usage" "GIT_REMOTE requires a value" || return $?
+
+  [ $# -gt 0 ] || __failArgument "$usage" "Requires at least one branch name" || return $?
+  while [ $# -gt 0 ]; do
+    branch=$(__usageEnvironment "$usage" git ls-remote --heads "$GIT_REMOTE" "$1") || return $?
+    [ -n "$branch" ] || return 1
+    shift
+  done
+}
+_gitBranchExistsRemote() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Check out a branch with the current version and optional formatting
+#
+# `BUILD_BRANCH_FORMAT` is a string which can contain tokens in the form `{user}` and `{version}`
+#
+# The default value is `{version}-{user}`
+#
+# Environment: BUILD_BRANCH_FORMAT
+#
+gitBranchify() {
+  local usage="_${FUNCNAME[0]}"
+  local version user format branchName currentBranch
+
+  export GIT_BRANCH_FORMAT GIT_REMOTE
+
+  usageRequireBinary "$usage" whoami || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
+  [ -n "$GIT_REMOTE" ] || __usageEnvironment "$usage" "GIT_REMOTE requires a value" || return $?
+
+  version=$(__usageEnvironment "$usage" hookVersionCurrent) || return $?
+  user=$(__usageEnvironment "$usage" whoami) || return $?
+
+  format="${BUILD_BRANCH_FORMAT-}"
+  [ -n "$format" ] || format="{version}-{user}"
+  branchName="$(version=$version user=$user mapEnvironment < <(printf "%s\n" "$format"))"
+  [ -n "$branchName" ] || __failEnvironment "$usage" "BUILD_BRANCH_FORMAT=\"$BUILD_BRANCH_FORMAT\" -> \"$format\" made blank branch (user=$user version=$version)" || return $?
+
+  if gitBranchExists "$branchName"; then
+    currentBranch=$(__usageEnvironment "$usage" gitCurrentBranch) || return $?
+    if [ "$currentBranch" != "$branchName" ]; then
+      if ! muzzle git checkout "$branchName" 2>&1; then
+        __failEnvironment "$usage" "Local changes in $(consoleValue "$currentBranch") prevent switching to $(consoleCode "$branchName") due to local changes" || return $?
+      fi
+      consoleSuccess "Switched to $(consoleCode "$branchName")"
+    else
+      consoleSuccess "Branch is $(consoleCode "$branchName")"
+    fi
+  else
+    __usageEnvironment "$usage" git checkout -b "$branchName" || return $?
+    __usageEnvironment "$usage" git push -u "$GIT_REMOTE" "$branchName" || return $?
+    printf "%s %s %s%s%s\n" "$(consoleSuccess "Branch is")" "$(consoleCode "$branchName")" "$(consoleInfo "(pushed to ")" "$(consoleValue "$GIT_REMOTE")" "$(consoleInfo ")")"
+  fi
+
+}
+_gitBranchify() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
