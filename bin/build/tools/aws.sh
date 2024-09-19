@@ -239,7 +239,7 @@ awsEnvironmentFromCredentials() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
 
-  local credentials profileName name value
+  local credentials profileName="" name value
 
   saved=("$@")
   nArguments=$#
