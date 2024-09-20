@@ -72,7 +72,7 @@ reverseFileLines() {
 makeShellFilesExecutable() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
-  local path findArgs=() tempArgs
+  local path findArgs=() tempArgs paths=()
 
   saved=("$@")
   nArguments=$#
@@ -91,12 +91,18 @@ makeShellFilesExecutable() {
         findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
         ;;
       *)
-        path=$(usageArgumentDirectory "$usage" "directory" "${1:-.}") || return $?
-        find "$path" -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -print0 | xargs -0 chmod -v +x
+        paths+=("$(usageArgumentDirectory "$usage" "directory" "$1")") || return $?
         ;;
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
   done
+  [ "${#paths[@]}" -gt 0 ] || paths+=("$(__usageEnvironment "$usage" pwd)") || return $?
+  (
+    for path in "${paths[@]}"; do
+      __usageEnvironment "$usage" cd "$path" || return $?
+      find "." -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -print0 | xargs -0 chmod -v +x
+    done
+  ) || return $?
 }
 _makeShellFilesExecutable() {
   # IDENTICAL usageDocument 1

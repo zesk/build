@@ -328,14 +328,15 @@ usageArgumentFile() {
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentDirectory() {
-  local usage="$1" args
+  local usage="$1" args directory
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
     __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "directory" "${args[@]}" test -d
+  directory="$(__usageArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  printf "%s\n" "${directory%/}"
 }
 
 # Validates a value is not blank and is a directory and does `realPath` on it.
@@ -347,16 +348,16 @@ usageArgumentDirectory() {
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentRealDirectory() {
-  local this="${FUNCNAME[0]}"
-  local usage="$1" args
+  local usage="$1" args directory
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "$this Need at least 3 arguments" || return $?
+    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
   args[2]=$(realPath "${args[2]}") || __failArgument "$usage" "realPath" "${args[2]}" || return $?
-  __usageArgumentHelper "directory" "${args[@]}" test -d
+  directory="$(__usageArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  printf "%s\n" "${directory%/}"
 }
 
 # Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.

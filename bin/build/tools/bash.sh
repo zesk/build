@@ -175,7 +175,7 @@ _bashSanitizeCheckDebugging() {
 bashSourcePath() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
-  local tool
+  local path tool
 
   [ $# -gt 0 ] || __failArgument "$usage" "Requires a directory" || return $?
 
@@ -191,13 +191,15 @@ bashSourcePath() {
         return $?
         ;;
       *)
-        argument=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+        path=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+        # shellcheck disable=SC2015
         while read -r tool; do
-          [ -f "$tool" ] || __failEnvironment "$usage" "$tool is not a bash source file" || return $?
-          [ -x "$tool" ] || __failEnvironment "$usage" "$tool is not executable" || return $?
+          tool="${tool#./}"
+          [ -f "$path/$tool" ] || __failEnvironment "$usage" "$path/$tool is not a bash source file" || return $?
+          [ -x "$path/$tool" ] || __failEnvironment "$usage" "$path/$tool is not executable" || return $?
           # shellcheck source=/dev/null
-          source "$tool" || __failEnvironment "$usage" "source $tool" || return $?
-        done < <(find "$1" -type f -name '*.sh' ! -path "*/.*/*" || :)
+          source "$path/$tool" || __failEnvironment "$usage" "source $path/$tool" || return $?
+        done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" || :)
         ;;
     esac
     shift

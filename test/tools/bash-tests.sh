@@ -59,3 +59,35 @@ testBashSourcePath() {
 
   unset ZESK_BUILD
 }
+
+testBashSourcePathDot() {
+  local testPath testPasses=false
+
+  testPath=$(__environment mktemp -d) || return $?
+
+  __environment mkdir -p "$testPath/.foobar/.eefo/.dots" || return $?
+  printf "%s\n" "testPasses=dots" >"$testPath/.foobar/.eefo/.dots/test.sh" || return $?
+  printf "%s\n" "testPasses=eefo" >"$testPath/.foobar/.eefo/goo.sh" || return $?
+  printf "%s\n" "testPasses=foobar" >"$testPath/.foobar/beep.sh" || return $?
+
+  # Nothing works until chmod +x
+  assertNotExitCode --stderr-match 'not executable' --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
+  assertNotExitCode --stderr-match 'not executable' --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
+  assertNotExitCode --stderr-match 'not executable' --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
+  assertExitCode --stdout-match test.sh --stdout-match goo.sh --stdout-match beep.sh 0 makeShellFilesExecutable "$testPath/.foobar/.eefo/.dots/" "$testPath/.foobar/.eefo/" "$testPath/.foobar/" || return $?
+
+  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
+  assertEquals --line "$LINENO" "$testPasses" "dots" || return $?
+
+  testPasses=false
+
+  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
+  assertEquals --line "$LINENO" "$testPasses" "eefo" || return $?
+
+  testPasses=false
+
+  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
+  assertEquals --line "$LINENO" "$testPasses" "foobar" || return $?
+
+  # Behavior is correct - ignore .dot directories within the bashSourcePath but not above it
+}
