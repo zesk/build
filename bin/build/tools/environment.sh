@@ -161,7 +161,7 @@ unquote() {
   printf -- "%s\n" "$value"
 }
 
-#
+# Safely load an environment file (no code execution)
 # Usage: {fn} environmentFile ...
 # Argument: environmentFile - Required. Environment file to load.
 #
