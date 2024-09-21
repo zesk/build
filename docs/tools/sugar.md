@@ -22,7 +22,7 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 Run `command ...` (with any arguments) and then `_return` if it fails.
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/_sugar.sh`
 
 #### Arguments
 

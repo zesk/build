@@ -43,7 +43,7 @@ Returns true if all `characters` are of `className`
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/identical/quoteSedPattern.sh`
+- Location: `bin/build/map.sh`
 
 #### Usage
 
@@ -72,7 +72,7 @@ needSlash='$.*/[\]^'
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/identical/quoteSedPattern.sh`
+- Location: `bin/build/map.sh`
 
 #### Usage
 
@@ -1034,7 +1034,7 @@ Does this character match one or more character classes?
 
 Unquote a string
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 

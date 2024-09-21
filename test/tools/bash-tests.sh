@@ -76,17 +76,17 @@ testBashSourcePathDot() {
   assertNotExitCode --stderr-match 'not executable' --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
   assertExitCode --stdout-match test.sh --stdout-match goo.sh --stdout-match beep.sh 0 makeShellFilesExecutable "$testPath/.foobar/.eefo/.dots/" "$testPath/.foobar/.eefo/" "$testPath/.foobar/" || return $?
 
-  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
+  assertExitCode --leak testPasses --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
   assertEquals --line "$LINENO" "$testPasses" "dots" || return $?
 
   testPasses=false
 
-  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
+  assertExitCode --leak testPasses --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
   assertEquals --line "$LINENO" "$testPasses" "eefo" || return $?
 
   testPasses=false
 
-  assertExitCode --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
+  assertExitCode --leak testPasses --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
   assertEquals --line "$LINENO" "$testPasses" "foobar" || return $?
 
   # Behavior is correct - ignore .dot directories within the bashSourcePath but not above it

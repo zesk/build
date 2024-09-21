@@ -289,11 +289,11 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath 10
+### `realPath` - IDENTICAL _realPath EOF
 
-IDENTICAL _realPath 10
+IDENTICAL _realPath EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/realPath.sh`
 
 #### Usage
 

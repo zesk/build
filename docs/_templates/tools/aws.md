@@ -15,12 +15,13 @@
 AWS stands for Amazon Web Services and tools related to interacting with the `aws` binary.
 
 {awsInstall}
-{awsCredentialsFile}
 {awsIsKeyUpToDate}
 {awsHasEnvironment}
 {awsIPAccess}
 {awsSecurityGroupIPModify}
 {awsSecurityGroupIPRegister}
 {awsRegionValid}
+{awsCredentialsFile}
 {awsEnvironmentFromCredentials}
 {awsCredentialsFromEnvironment}
+{awsCredentialsHasProfile}

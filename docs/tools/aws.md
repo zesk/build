@@ -41,35 +41,6 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
     apt-get
     
-### `awsCredentialsFile` - Get the path to the AWS credentials file
-
-Get the credentials file path, optionally outputting errors
-
-Pass a true-ish value to output warnings to stderr on failure
-
-Pass any value to output warnings if the environment or file is not found; otherwise
-output the credentials file path.
-
-If not found, returns with exit code 1.
-
-
-
-- Location: `bin/build/tools/aws.sh`
-
-#### Arguments
-
-- `--help` - Optional. Flag. Display this help.
-- `--verbose` - Optional. Flag. Verbose mode
-- `--home homeDirectory` - Optional. Directory. Home directory to use instead of `$HOME`.
-
-#### Examples
-
-    credentials=$(awsCredentialsFile) || __failEnvironment "$usage" "No credentials file found" || return $?
-
-#### Exit codes
-
-- `1` - If `$HOME` is not a directory or credentials file does not exist
-- `0` - If credentials file is found and output to stdout
 ### `awsIsKeyUpToDate` - Test whether the AWS keys do not need to be updated
 
 For security we gotta update our keys every 90 days
@@ -134,40 +105,6 @@ Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 
 AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
 AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)
-### `awsEnvironment` - Get credentials and output environment variables for AWS authentication
-
-Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
-
-If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
-If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
-
-- Location: `bin/build/tools/aws.sh`
-
-#### Usage
-
-    awsEnvironment profileName
-    
-
-#### Arguments
-
-- `profileName` - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
-
-#### Examples
-
-    setFile=$(mktemp)
-    if awsEnvironment "$profile" > "$setFile"; then
-    eval $(cat "$setFile")
-    rm "$setFile"
-    else
-    consoleError "Need $profile profile in aws credentials file"`
-    exit 1
-    fi
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `awsIPAccess` - Grant access to AWS security group for this IP only using Amazon IAM credentials
 
 Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
@@ -238,3 +175,118 @@ Usage:
 
 - `0` - All regions are valid AWS region
 - `1` - One or more regions are NOT a valid AWS region
+### `awsCredentialsFile` - Get the path to the AWS credentials file
+
+Get the credentials file path, optionally outputting errors
+
+Pass a true-ish value to output warnings to stderr on failure
+
+Pass any value to output warnings if the environment or file is not found; otherwise
+output the credentials file path.
+
+If not found, returns with exit code 1.
+
+
+
+- Location: `bin/build/tools/aws.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `--verbose` - Flag. Optional. Verbose mode
+- `--create` - Optional. Flag. Create the directory and file if it does not exist
+- `--home homeDirectory` - Optional. Directory. Home directory to use instead of `$HOME`.
+
+#### Examples
+
+    credentials=$(awsCredentialsFile) || __failEnvironment "$usage" "No credentials file found" || return $?
+
+#### Exit codes
+
+- `1` - If `$HOME` is not a directory or credentials file does not exist
+- `0` - If credentials file is found and output to stdout
+### `awsEnvironmentFromCredentials` - Get credentials and output environment variables for AWS authentication
+
+Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
+
+If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+
+Both forms can be used, but the profile should be supplied once and only once.
+
+- Location: `bin/build/tools/aws.sh`
+
+#### Arguments
+
+- `profileName` - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+- `--profile profileName` - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+
+#### Examples
+
+    setFile=$(mktemp)
+    if awsEnvironment "$profile" > "$setFile"; then
+    eval $(cat "$setFile")
+    rm "$setFile"
+    else
+    consoleError "Need $profile profile in aws credentials file"`
+    exit 1
+    fi
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `awsCredentialsFromEnvironment` - Write an AWS profile to the AWS credentials file
+
+Write the credentials supplied from the AWS credentials file.
+
+If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+
+- Location: `bin/build/tools/aws.sh`
+
+#### Arguments
+
+- `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
+- `--force` - Flag. Optional. Write the credentials file even if the profile already exists
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `awsCredentialsHasProfile` - Get credentials and output environment variables for AWS authentication
+
+Extract a profile from a credentials file
+
+If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+
+- Location: `bin/build/tools/aws.sh`
+
+#### Usage
+
+    awsEnvironment profileName
+    
+
+#### Arguments
+
+- `profileName` - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+
+#### Examples
+
+    setFile=$(mktemp)
+    if awsEnvironment "$profile" > "$setFile"; then
+    eval $(cat "$setFile")
+    rm "$setFile"
+    else
+    consoleError "Need $profile profile in aws credentials file"`
+    exit 1
+    fi
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
