@@ -550,13 +550,6 @@ __awwSGOutput() {
   printf "%s %s %s %s %s %s\n" "$title" "$(consoleRed "$foundIP")" "$(consoleLabel "in group-id:")" "$(consoleValue "$group")" "$(consoleLabel "port:")" "$(consoleValue "$port")"
 }
 
-#
-# Usage:
-#
-awsSecurityGroupIPRegister() {
-  awsSecurityGroupIPModify --register "$@"
-}
-
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
 # Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
 # Argument: --profile awsProfile - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
@@ -690,7 +683,7 @@ awsIPAccess() {
       if $optionRevoke; then
         __usageEnvironment "$usage" awsSecurityGroupIPModify --remove "${sgArgs[@]}" || return $?
       else
-        __usageEnvironment "$usage" awsSecurityGroupIPRegister "${sgArgs[@]}" || return $?
+        __usageEnvironment "$usage" awsSecurityGroupIPModify --register "${sgArgs[@]}" || return $?
       fi
     done
   done

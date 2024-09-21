@@ -28,10 +28,7 @@ Placing a `.debugging` file in your project with a list of permitted files which
 - `2` - Argument error
 ### `bashLintFiles` - Check files for the existence of a string
 
-bashLintFiles
-
-Requires shellcheck so should be later in the testing process to have a cleaner build
-This can be run on any directory tree to test scripts in any application.
+Run `bashLint` on a set of bash files.
 
 - Location: `bin/build/tools/test.sh`
 
@@ -64,10 +61,12 @@ This can be run on any directory tree to test scripts in any application.
 #### Environment
 
 This operates in the current working directory
-### `bashLint` - Requires shellcheck so should be later in the testing process
+### `bashLint` - Run `shellcheck` and `bash -n` on a set of bash
 
-Requires shellcheck so should be later in the testing process to have a cleaner build
+Run `shellcheck` and `bash -n` on a set of bash files.
+
 This can be run on any directory tree to test scripts in any application.
+
 Shell comments must not be immediately after a function end, e.g. this is invalid:
 
     myFunc() {

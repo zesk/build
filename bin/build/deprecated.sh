@@ -188,6 +188,9 @@ __deprecatedCleanup() {
   # v0.11.14
   __deprecatedCannon 'create''TarFile' "tarCreate"
 
+  # v0.12.2
+  __deprecatedCannon 'awsSecurityGroupIP''Register' "awsSecurityGroupIPModify --register"
+
   # END OF CANNONS
 
   clearLine

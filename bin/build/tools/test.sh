@@ -118,9 +118,9 @@ _dumpPipe() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Output a file for debugging
 #
-# dumpFile fileName0 [ fileName1 ... ]
-#
+# Usage: {fn} fileName0 [ fileName1 ... ]
 dumpFile() {
   local usage="_${FUNCNAME[0]}"
   local argument
@@ -173,11 +173,7 @@ _dumpFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# bashLintFiles
-#
-# Requires shellcheck so should be later in the testing process to have a cleaner build
-# This can be run on any directory tree to test scripts in any application.
+# Run `bashLint` on a set of bash files.
 #
 # Usage: bashLintFiles [ --exec binary ] [ file0 ... ]
 # Example:     if bashLintFiles; then git commit -m "saving things" -a; fi
@@ -388,11 +384,12 @@ _bashLintInteractiveCheck() {
   return 1
 }
 
-#
 # Usage: {fn} [ script ... ]
 #
-# Requires shellcheck so should be later in the testing process to have a cleaner build
+# Run `shellcheck` and `bash -n` on a set of bash files.
+#
 # This can be run on any directory tree to test scripts in any application.
+#
 # Shell comments must not be immediately after a function end, e.g. this is invalid:
 #
 #     myFunc() {

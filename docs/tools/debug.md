@@ -127,9 +127,9 @@ Outputs `1` always
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `dumpFile` - dumpFile fileName0 [ fileName1 ... ]
+### `dumpFile` - Output a file for debugging
 
-dumpFile fileName0 [ fileName1 ... ]
+Output a file for debugging
 
 - Location: `bin/build/tools/test.sh`
 
