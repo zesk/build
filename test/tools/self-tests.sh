@@ -7,6 +7,51 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+testBuildEnvironmentLoadAll() {
+  local home loadIt nonBlankEnvs=(
+    APACHE_HOME
+    APPLICATION_BUILD_DATE
+    APPLICATION_CODE
+    APPLICATION_CODE
+    APPLICATION_NAME
+    BUILD_CACHE
+    BUILD_COMPANY
+    BUILD_COMPANY_LINK
+    BUILD_DOCKER_BITBUCKET_IMAGE
+    BUILD_DOCKER_BITBUCKET_PATH
+    BUILD_DOCKER_IMAGE
+    BUILD_DOCKER_PATH
+    BUILD_DOCKER_PLATFORM
+    BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN
+    BUILD_HOME
+    BUILD_INSTALL_URL
+    BUILD_INTERACTIVE_REFRESH
+    BUILD_MAINTENANCE_MESSAGE_VARIABLE
+    BUILD_MAINTENANCE_VARIABLE
+    BUILD_MAXIMUM_TAGS_PER_VERSION
+    BUILD_RELEASE_NOTES
+    BUILD_TARGET
+    BUILD_TIMESTAMP
+    DAEMONTOOLS_HOME
+    GIT_REMOTE
+    HOME
+    MARIADB_BINARY_DUMP
+    OSTYPE
+    PATH
+  )
+
+  home=$(__environment buildHome) || return $?
+
+  while read -r loadIt; do
+    export "${loadIt?}"
+    buildEnvironmentLoad "$loadIt" || _environment "buildEnvironmentLoad $loadIt failed" return $?
+    # statusMessage consoleInfo Loaded "$loadIt=${!loadIt}"
+    if inArray "$loadIt" "${nonBlankEnvs[@]}"; then
+      assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
+    fi
+  done < <(find "$home" -type f -name '*.sh' -path '*/env/*' -exec basename {} + | cut -d . -f 1) || return $?
+}
+
 testBuildFunctions() {
   local fun
 
