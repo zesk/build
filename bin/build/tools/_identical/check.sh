@@ -324,7 +324,8 @@ __identicalCheckGenerateSearchFiles() {
       filter=("grep" "-v" "${ignorePatterns[@]}")
     fi
     if ! find "$directory" "$@" | "${filter[@]}" >>"$searchFileList"; then
-      __failEnvironment "$usage" "No matching files found in $directory" || _clean "$?" "$searchFileList" || return $?
+      # consoleWarning "No matching files found in $directory" 1>&2
+      : Do nothing for now
     fi
     ignorePatterns+=(-e "$(quoteGrepPattern "$directory")")
   done

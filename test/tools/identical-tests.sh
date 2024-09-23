@@ -144,3 +144,15 @@ testIdenticalCheckSingles() {
   singles=(--single single1 --single single2)
   assertExitCode --line "$LINENO" "0" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
 }
+
+# Simple case when an identical directory exists and is supplied but contains no matching files
+testIdenticalCheckRepairWithEmptyDir() {
+  local temp
+
+  temp=$(__environment mktemp -d) || return $?
+
+  mkdir -p "$temp/foo/identical/"
+  mkdir -p "$temp/bar/identical/"
+  touch "$temp/hey.sh"
+  assertExitCode 0 identicalCheck --cd "$temp" --repair "$temp/foo/identical/" --repair "$temp/bar/identical/" --prefix '# ''IDENTICAL' --extension sh || return $?
+}

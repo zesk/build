@@ -595,6 +595,16 @@ _gitMainly() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Get the commit hash
+gitCommitHash() {
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __failArgument "$usage" "No arguments allowed" || return $?
+  __usageEnvironment "$usage" git rev-parse --short HEAD || return $?
+}
+_gitCommitHash() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Get the current branch name
 #

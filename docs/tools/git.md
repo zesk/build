@@ -226,6 +226,21 @@ BUILD_BRANCH_FORMAT
 
 ## git Development
 
+### `gitCommitHash` - Get the commit hash
+
+Get the commit hash
+
+- Location: `bin/build/tools/git.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `gitCommit` - Commits all files added to git and also update release
 
 Commits all files added to git and also update release notes with comment
@@ -472,9 +487,9 @@ List remote hosts for the current git repository
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `gitCurrentBranch` - Get the current branch name
+### `gitCurrentBranch` - Get the commit hash
 
-Get the current branch name
+Get the commit hash
 
 - Location: `bin/build/tools/git.sh`
 

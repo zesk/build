@@ -192,22 +192,22 @@ documentationBuild() {
   local company companyLink home applicationName
   local templatePath sourcePaths targetPath actionFlag unlinkedTemplate unlinkedTarget seeFunction seeFile seePrefix
   local pageTemplate functionTemplate
-  export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME
+  export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
+
+  __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   __usageEnvironment "$usage" whichApt pcregrep pcregrep || return $?
 
   start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
 
-  cacheDirectory="$(__usageEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}")" || return $?
+  cacheDirectory="$(__usageEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
   cacheDirectory=$(__usageEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
   seeFunction=$(__usageEnvironment "$usage" documentationTemplate seeFunction) || return $?
   seeFile=$(__usageEnvironment "$usage" documentationTemplate seeFile) || return $?
   seePrefix="./docs"
-
-  buildEnvironmentLoad BUILD_COMPANY BUILD_COMPANY_LINK || :
 
   company=${BUILD_COMPANY-}
   companyLink=${BUILD_COMPANY_LINK-}

@@ -27,6 +27,12 @@ exported variables
 
 ## State files
 
+### `environmentFileLoad` - Safely load an environment file (no code execution)
+
+Safely load an environment file (no code execution)
+
+- Location: `bin/build/tools/environment.sh`
+
 #### Arguments
 
 - `environmentFile` - Required. Environment file to load.

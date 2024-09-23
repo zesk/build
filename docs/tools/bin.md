@@ -50,22 +50,21 @@ These are found in the `bin/build` directory and have equivalent functions.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `__installPackageConfiguration` - Configuration
+
+Configuration
+
+- Location: `bin/infrastructure/install-bin-infrastructure.sh`
+
 #### Arguments
 
-- `--local localPackageDirectory` - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
-- `--url url` - Optional. URL. URL of a tar.gz. file. Download source code from here.
-- `--debug` - Optional. Flag. Debugging is on.
-- `--force` - Optional. Flag. Force installation even if file is up to date.
-- `--diff` - Optional. Flag. Show differences between old and new file.
+- No arguments.
 
 #### Exit codes
 
+- `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Environment
-
-Needs internet access and creates a directory `./bin/build`
 #### Arguments
 
 - No arguments.

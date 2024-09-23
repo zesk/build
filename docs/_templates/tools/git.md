@@ -27,6 +27,7 @@
 
 ## git Development
 
+{gitCommitHash}
 {gitCommit}
 {gitMainly}
 {gitFindHome}

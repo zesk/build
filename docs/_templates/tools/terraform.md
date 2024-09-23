@@ -8,3 +8,4 @@
 {aptKeyRemoveHashicorp}
 {terraformInstall}
 {terraformUninstall}
+{terraformGetDirectory}
