@@ -95,7 +95,7 @@ _boolean() {
 # Usage: {fn} testValue trueChoice falseChoice
 _choose() {
   local testValue="${1-}" && shift
-  _boolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
+  _boolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 
