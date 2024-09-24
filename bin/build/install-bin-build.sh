@@ -37,8 +37,18 @@ __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
-# IDENTICAL __installCheck 1
+# IDENTICAL __installCheck 11
 # Check the directory after installation and output the version
+# Usage: {fn} name versionFile usageFunction installPath
+__installCheck() {
+  local name="$1" version="$2" usage="$3" installPath="$4"
+  local versionFile="$installPath/$version"
+  if [ ! -f "$versionFile" ]; then
+    __failEnvironment "$usage" "$(printf "%s\n\n  %s\n  %s\n" "Incorrect version or broken install (can't find $version):" "rm -rf bin/build" "${BASH_SOURCE[0]}")" || return $?
+  fi
+  read -r version id < <(jq -r '(.version + " " + .id)' <"$versionFile") || :
+  printf "%s %s (%s)\n" "$(consoleBoldBlue "$name")" "$(consoleCode "$version")" "$(consoleOrange "$id")"
+}
 
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
@@ -61,7 +71,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
-# IDENTICAL _installRemotePackage 246
+# IDENTICAL _installRemotePackage 257
 
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
 # fn: {base}
@@ -69,6 +79,17 @@ __installPackageConfiguration() {
 # will overwrite the installation binary with the latest version after installation.
 #
 # URL can be determined programmatically using `urlFunction`.
+#
+# Calling signature for `url-function`:
+#
+#    urlFunction usageFunction
+#    usageFunction - Function. Required. Function to call when an error occurs.
+#
+# Calling signature for `check-function`:
+#
+#    checkFunction usageFunction installPath
+#
+# If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 #
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
@@ -164,7 +185,7 @@ _installRemotePackage() {
 
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
-      url=$(__usageEnvironment "$usage" "$urlFunction" "$usage" "$installPath") || return $?
+      url=$(__usageEnvironment "$usage" "$urlFunction" "$usage") || return $?
       if [ -z "$url" ]; then
         __failArgument "$usage" "$urlFunction failed" || return $?
       fi

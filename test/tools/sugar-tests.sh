@@ -38,6 +38,12 @@ testBoolean() {
 }
 
 testChoose() {
+  local errors here
+
+  assertEquals "2" "$(_choose falseish A B || printf "%d" $?)"
+  errors="$(_choose falseish A B 2>&1 || :)" || : && here="${BASH_SOURCE[0]}:$LINENO"
+  assertExitCode 0 isSubstring "$here" "$errors" || return $?
+
   assertExitCode --line "$LINENO" 0 _choose true || return $?
   assertExitCode --line "$LINENO" 0 _choose false || return $?
   assertNotExitCode --line "$LINENO" --stderr-match 'non-boolean' 0 _choose True || return $?
