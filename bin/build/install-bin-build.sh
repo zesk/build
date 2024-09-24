@@ -11,9 +11,7 @@
 
 # URL of latest release
 __installBinBuildLatest() {
-  cat <<'EOF'
-https://api.github.com/repos/zesk/build/releases/latest
-EOF
+  printf "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
 }
 
 __installBinBuildURL() {
@@ -34,22 +32,13 @@ __installBinBuildURL() {
   printf "%s\n" "$url"
 }
 
-# was _installRemotePackageCheck
-# Check the build directory after installation and output the version
+# Check the install directory after installation and output the version
 __installBinBuildCheck() {
-  local usage="$1"
-  local installPath="$2"
-  local toolsBin="$installPath/tools.sh"
-  exec 2>&1
-  if [ ! -f "$toolsBin" ]; then
-    __failEnvironment "$usage" "$(printf "%s\n\n  %s\n  %s\n" "Incorrect build version or broken install (can't find tools.sh):" "rm -rf bin/build" "${BASH_SOURCE[0]}")" || return $?
-  fi
-  # shellcheck source=/dev/null
-  # source "$toolsBin" || __failEnvironment "$usage" "$toolsBin failed" || return $?
-  read -r version id < <(jq -r '(.version + " " + .id)' <"$installPath/build.json") || :
-  # printf "%s %s (%s)\n" "zesk/build" "$version" "$id"
-  printf "%s %s (%s)\n" "$(consoleBoldBlue "zesk/build")" "$(consoleCode "$version")" "$(consoleOrange "$id")"
+  __installCheck "zesk/build" "build.json" "$@"
 }
+
+# IDENTICAL __installCheck 1
+# Check the directory after installation and output the version
 
 # Environment: Needs internet access and creates a directory `./bin/build`
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
