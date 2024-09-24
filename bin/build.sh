@@ -84,6 +84,7 @@ __buildBuild() {
     git commit -m "Build version $(runHook version-current)" -a || :
     git push origin || :
   fi
+  ./bin/build/identical-repair.sh || _environment "Identical repair failed" || return $?
   consoleSuccess Built successfully.
 }
 ___buildBuild() {
