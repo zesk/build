@@ -19,6 +19,17 @@
 #
 # URL can be determined programmatically using `urlFunction`.
 #
+# Calling signature for `url-function`:
+#
+#    urlFunction usageFunction
+#    usageFunction - Function. Required. Function to call when an error occurs.
+#
+# Calling signature for `check-function`:
+#
+#    checkFunction usageFunction installPath
+#
+# If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
+#
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
 # Argument: --user headerText - Optional. String. Add `username:password` to remote request.

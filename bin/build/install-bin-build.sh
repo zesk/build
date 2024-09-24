@@ -164,7 +164,7 @@ _installRemotePackage() {
 
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
-      url=$(__usageEnvironment "$usage" "$urlFunction" "$usage") || return $?
+      url=$(__usageEnvironment "$usage" "$urlFunction" "$usage" "$installPath") || return $?
       if [ -z "$url" ]; then
         __failArgument "$usage" "$urlFunction failed" || return $?
       fi
