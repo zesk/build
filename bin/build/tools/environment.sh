@@ -6,29 +6,45 @@
 # Test: o ./test/tools/environment-tests.sh
 #
 
+
 #
 # Write a value to a state file as NAME="value"
 # Usage: name - Required. String. Name to write.
 # Usage: value - Optional. EmptyString. Value to write.
 # Usage: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
 environmentValueWrite() {
-  local usage="_${FUNCNAME[0]}"
-  local name="${1-}" value output
+  local usage="_${FUNCNAME[0]}" name="${1-}" && shift
+  local value output
 
-  shift || __failArgument "$usage" "name required" || return $?
   name=$(usageArgumentString "$usage" name "$name") || return $?
   [ $# -ge 1 ] || __failArgument "$usage" "value required" || return $?
   if [ $# -eq 1 ]; then
     value="${1-}"
     output="$(declare -p value)"
+    output="${output#declare*value=}"
+    printf -- "%s=%s\n" "$name" "$output"
   else
-    value=("$@")
-    output="$(declare -pa value)"
+    environmentValueWriteArray "$name" "$@"
   fi
+}
+_environmentValueWrite() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Write an array value as NAME=([0]="a" [1]="b" [2]="c")
+# Supports empty arrays
+environmentValueWriteArray() {
+  local usage="_${FUNCNAME[0]}" name="${1-}" && shift
+  local value output
+
+  name=$(usageArgumentString "$usage" name "$name") || return $?
+  value=("$@")
+  output="$(declare -pa value)"
   output="${output#declare*value=}"
   printf -- "%s=%s\n" "$name" "$output"
 }
-_environmentValueWrite() {
+_environmentValueWriteArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
