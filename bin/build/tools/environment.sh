@@ -6,7 +6,6 @@
 # Test: o ./test/tools/environment-tests.sh
 #
 
-
 #
 # Write a value to a state file as NAME="value"
 # Usage: name - Required. String. Name to write.
@@ -14,15 +13,13 @@
 # Usage: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
 environmentValueWrite() {
   local usage="_${FUNCNAME[0]}" name="${1-}" && shift
-  local value output
+  local value
 
   name=$(usageArgumentString "$usage" name "$name") || return $?
   [ $# -ge 1 ] || __failArgument "$usage" "value required" || return $?
   if [ $# -eq 1 ]; then
     value="${1-}"
-    output="$(declare -p value)"
-    output="${output#declare*value=}"
-    printf -- "%s=%s\n" "$name" "$output"
+    __environmentValueWrite "$name" "$(declare -p value)" || return $?
   else
     environmentValueWriteArray "$name" "$@"
   fi
@@ -36,16 +33,21 @@ _environmentValueWrite() {
 # Supports empty arrays
 environmentValueWriteArray() {
   local usage="_${FUNCNAME[0]}" name="${1-}" && shift
-  local value output
+  local value
 
   name=$(usageArgumentString "$usage" name "$name") || return $?
   value=("$@")
-  output="$(declare -pa value)"
-  output="${output#declare*value=}"
-  printf -- "%s=%s\n" "$name" "$output"
+  __environmentValueWrite "$name" "$(declare -pa value)" || return $?
 }
 _environmentValueWriteArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Utility function to strip "declare value=" from a string
+__environmentValueWrite() {
+  local output="$2"
+  output="${output#declare*value=}"
+  printf -- "%s=%s\n" "$1" "$output"
 }
 
 #
@@ -68,10 +70,7 @@ environmentValueRead() {
     printf -- "%s\n" "$default"
   else
     declare "$name=$default"
-    # Wondering if this can run shell code - do not believe so
-    value="${value#\"}"
-    value="${value%\"}"
-    declare "$name=$value"
+    declare "$name=$(__unquote "$value")"
     printf -- "%s\n" "${!name-}"
   fi
 }
@@ -87,8 +86,8 @@ environmentValueConvertArray() {
   local usage="_${FUNCNAME[0]}"
   local value prefix='([0]="' suffix='")'
 
-  value="${1-}"
-  [ "${value#"$prefix"}" != "$value" ] || __failArgument "$usage" "Not an array value (prefix)" || return $?
+  value=$(__unquote "${1-}")
+  [ "${value#"$prefix"}" != "$value" ] || __failArgument "$usage" "Not an array value (prefix: \"${value:0:4}\")" || return $?
   [ "${value%"$suffix"}" != "$value" ] || __failArgument "$usage" "Not an array value (suffix)" || return $?
   declare -a "value=$value"
   printf -- "%s\n" "${value[@]+"${value[@]}"}"
@@ -175,6 +174,18 @@ unquote() {
     value="${value%"$quote"}"
   fi
   printf -- "%s\n" "$value"
+}
+
+
+# Primary case to unquote quoted things "" ''
+__unquote() {
+  local value="${1-}"
+  case "${value:0:1}" in
+    "'") value="$(unquote "'" "$value")" ;;
+    '"') value="$(unquote '"' "$value")" ;;
+    *) ;;
+  esac
+  printf "%s\n" "$value"
 }
 
 # Safely load an environment file (no code execution)

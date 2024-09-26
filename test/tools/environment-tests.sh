@@ -133,3 +133,36 @@ testEnvironmentValueReadWrite() {
     assertEquals --line "$LINENO" "$testValue" "$value" "Read write value changed" || return $?
   done
 }
+
+testEnvironmentValueWriteArray() {
+  local testArrayText testArray testArrays index envFile restoredValue item
+
+  envFile=$(__environment mktemp) || return $?
+  testArrays=(
+    "1:2:3:4:5"
+    "a:b:c:de"
+    "ten:twenty"
+    "-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-"
+  )
+
+  assertExitCode --stdout-match "NAME=()" 0 environmentValueWriteArray NAME || return $?
+  assertEquals --line "$LINENO" "NAME='([0]=\"\")'" "$(environmentValueWriteArray NAME "")" || return $?
+  assertEquals --line "$LINENO" "NAME='([0]=\"One\" [1]=\"Two\")'" "$(environmentValueWriteArray NAME "One" "Two")" || return $?
+
+  consoleNameValue 20 envFile "$envFile"
+  index=0
+  declare -a restoredValue
+  for testArrayText in "${testArrays[@]}"; do
+    IFS=":" read -r -a testArray <<<"$testArrayText"
+    assertGreaterThan --line "$LINENO" ${#testArray[@]} 1 || return $?
+    environmentValueWrite "STRING$index" "${testArray[@]}" >>"$envFile"
+    environmentValueWriteArray "ARRAY$index" "${testArray[@]}" >>"$envFile"
+    dumpPipe envFile <"$envFile"
+    restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(__environment environmentValueReadArray "$envFile" "ARRAY$index" || return $?)
+    assertEquals --line "$LINENO" "${#testArray[*]}" "${#restoredValue[*]}" || return $?
+    assertEquals --line "$LINENO" "${testArray[*]}" "${restoredValue[*]}" || return $?
+    restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(__environment environmentValueReadArray "$envFile" "STRING$index" || return $?)
+    assertEquals --line "$LINENO" "${testArray[*]}" "${restoredValue[*]}" || return $?
+    index=$((index + 1))
+  done
+}

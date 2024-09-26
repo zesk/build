@@ -110,11 +110,11 @@ exampleFunction() {
         ;;
       --path)
         shift
-        path="$(usageArgumentDirectory "$usage" "path" "${1-}")" || return $?
+        path="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
         ;;
       --target)
         shift
-        target="$(usageArgumentFileDirectory "$usage" "target" "${1-}")" || return $?
+        target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         # IDENTICAL argumentUnknown 1
