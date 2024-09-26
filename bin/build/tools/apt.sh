@@ -7,26 +7,14 @@
 # Docs: o ./docs/_templates/tools/apt.md
 # Test: o ./test/tools/apt-tests.sh
 
-# sources constant with checking
-# Usage: {fn} usageFunction
-_aptSourcesPath() {
-  local usage="$1" sourcesPath=/etc/apt/sources.list.d
-  [ -d "$sourcesPath" ] || __failEnvironment "$usage" "No $sourcesPath exists - not an apt system" || return $?
-  printf "%s\n" "$sourcesPath"
+# Get key ring directory path
+aptKeyRingDirectory() {
+  printf "%s\n" "/etc/apt/keyrings"
 }
 
-# key rings directory constant with creation
-_aptKeyRings() {
-  local usage="$1" ring=/etc/apt/keyrings
-  [ -d "$ring" ] || __failEnvironment "$usage" mkdir -p "$ring" || return $?
-  printf "%s\n" "$ring"
-}
-
-# permissions check for sourcesPath modifications
-_usageAptPermissions() {
-  local usage="$1" sourcesPath="$2"
-  touch "$sourcesPath/$$.test" 2>/dev/null || __failEnvironment "$usage" "No permission to modify $sourcesPath, failing" || return $?
-  rm -f "$sourcesPath/$$.test" 2>/dev/null || __failEnvironment "$usage" "No permission to delete in $sourcesPath, failing" || return $?
+# Get APT source list path
+aptSourcesDirectory() {
+  printf "%s\n" "/etc/apt/sources.list.d"
 }
 
 #
@@ -80,12 +68,13 @@ aptUpdateOnce() {
   fi
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   statusMessage consoleInfo "apt-get update ... " || :
-  DEBIAN_FRONTEND=noninteractive __usageEnvironmentQuiet "$usage" "$quietLog" apt-get update -y || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" aptNonInteractive update -y || return $?
   statusMessage reportTiming "$start" "System sources updated in"
   date +%s >"$name" || :
   clearLine || :
 }
 _aptUpdateOnce() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -97,6 +86,7 @@ aptListInstalled() {
   dpkg --get-selections | grep -v deinstall | awk '{ print $1 }'
 }
 _aptListInstalled() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -146,9 +136,8 @@ aptInstall() {
     shift || usageArgumentMissing "$usage" "$argument" || return $?
   done
 
-  apt=$(which apt-get || :)
-  if [ -z "$apt" ]; then
-    statusMessage consoleWarning "No apt-get, blundering ahead ..."
+  if ! aptIsInstalled; then
+    statusMessage consoleWarning "No apt-get – blundering ahead ..."
     return 0
   fi
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
@@ -166,17 +155,24 @@ aptInstall() {
   done
 
   if [ "${#actualPackages[@]}" -eq 0 ]; then
-    if [ -n "$*" ]; then
+    if [ "${#packages[@]}" -gt 0 ]; then
       consoleSuccess "Already installed: ${packages[*]}"
     fi
     return 0
   fi
   statusMessage consoleInfo "Installing ${packages[*]+"${packages[*]}"} ... "
-  DEBIAN_FRONTEND=noninteractive __usageEnvironmentQuiet "$usage" "$quietLog" "$apt" install -y "${actualPackages[@]}" || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" aptNonInteractive install -y "${actualPackages[@]}" || return $?
   reportTiming "$start" OK
 }
 _aptInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Is apt-get installed?
+#
+aptIsInstalled() {
+  whichExists apt-get
 }
 
 # Usage: {fn}
@@ -367,24 +363,23 @@ _aptUpToDate() {
 #
 aptKeyAdd() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments
-  local name title remoteUrl host quietLog
-  local start ring sourcesPath keyFile skipUpdate
+  local argument argumentIndex nArguments saved
+  local names=() title="" remoteUrls=() skipUpdate=false listName="" releaseName="" repoUrl=""
+  local name url host index IFS file listTarget
+  local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  sourcesPath="$(_aptSourcesPath "$usage")" || return $?
-  ring=$(_aptKeyRings "$usage") || return $?
+  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
+  ring=$(_usageAptKeyRings "$usage") || return $?
 
   # apt-key is deprecated for good reasons
   # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
 
-  name=
-  title=
-  remoteUrl=
-  skipUpdate=false
+  saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -393,7 +388,7 @@ aptKeyAdd() {
         ;;
       --name)
         shift
-        name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       --skip)
         skipUpdate=true
@@ -402,30 +397,70 @@ aptKeyAdd() {
         shift
         title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
+      --source)
+        shift
+        sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --repository-url)
+        shift
+        repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --list)
+        shift
+        listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --release)
+        shift
+        releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
       --url)
         shift
-        remoteUrl="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument #$((nArguments - $# + 1)): $argument" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         ;;
     esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
-  name="$(usageArgumentString "$usage" "--name" "$name")" || return $?
-  remoteUrl="$(usageArgumentString "$usage" "--name" "$remoteUrl")" || return $?
-  host=$(urlParseItem host "$remoteUrl") || __failArgument "$usage" "Unable to get host from $remoteUrl" || return $?
+  [ "${#names[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one --name" || return $?
+  [ "${#remoteUrls[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one --url" || return $?
+  [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || __failArgument "$usage" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?
+
+  [ -n "$releaseName" ] || releaseName="$(__usageEnvironment "$usage" lsb_release -cs)" || return $?
 
   _usageAptPermissions "$usage" "$sourcesPath" || return $?
 
-  title="${title:-"$name"}"
-  statusMessage consoleInfo "Fetching $title key ... "
-  keyFile="$ring/$name.gpg"
-  __usageEnvironment "$usage" curl -fsSL "$remoteUrl" | gpg --dearmor | tee "$keyFile" >/dev/null || return $?
+  index=0
+  for name in "${names[@]}"; do
+    url="${remoteUrls[index]}"
+    host=$(urlParseItem host "$url") || __failArgument "$usage" "Unable to get host from $url" || return $?
+    title="${title:-"$name"}"
+
+    statusMessage consoleInfo "Fetching $title key ... "
+    keyFile="$ring/$name.gpg"
+    __usageEnvironment "$usage" curl -fsSL "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
+    __usageEnvironment "$usage" chmod a+r "$keyFile" || return $?
+    signFiles+=("$keyFile")
+    index=$((index + 1))
+  done
+
+  [ -n "$repoUrl" ] || repoUrl="https://$host/"
+
+  signFileText="$(joinArguments "," "${signFiles[@]}")"
   statusMessage consoleInfo "Adding repository and updating sources ... "
-  __usageEnvironment "$usage" printf "deb [signed-by=%s] https://%s %s main" "$keyFile" "$host" "$(lsb_release -cs)" >"/etc/apt/sources.list.d/$name.list" || return $?
-  quietLog=$(buildQuietLog "$usage") || __failEnvironment "$usage" buildQuietLog "$usage" || return $?
+
+  [ -n "$listName" ] || listName="${names[0]}"
+  sourcesPath=$(_usageAptSourcesPath "$usage") || return $?
+  listTarget="$sourcesPath/$listName.list"
+  printf -- "%s\n" "# Generated by ${FUNCNAME[0]} on $(date "+%F %T")" >"$listTarget"
+  for sourceType in "${sourceTypes[@]}"; do
+    __usageEnvironment "$usage" printf -- "%s [signed-by=%s] %s %s %s\n" "$sourceType" "$signFileText" "$repoUrl" "$releaseName" "main" >>"$listTarget" || return $?
+  done
+  __usageEnvironment "$usage" chmod a+r "$listTarget" || return $?
   if ! $skipUpdate; then
     statusMessage consoleSuccess "Updating apt sources ... "
     __usageEnvironment "$usage" aptUpdateOnce --force || return $?
@@ -436,6 +471,7 @@ aptKeyAdd() {
   clearLine || :
 }
 _aptKeyAdd() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -449,15 +485,16 @@ _aptKeyAdd() {
 #
 aptKeyRemove() {
   local usage="_${FUNCNAME[0]}"
-  local ring=/etc/apt/keyrings
-  local argument nArguments
+  local ring
+  local argument nArguments file
   local name start
   local sourcesPath
-  local quietLog names skipUpdate
+  local names skipUpdate
 
+  ring=$(__usageEnvironment "$usage" aptKeyRingDirectory) || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  sourcesPath="$(_aptSourcesPath "$usage")" || return $?
-  ring=$(_aptKeyRings "$usage") || return $?
+  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
+  ring=$(_usageAptKeyRings "$usage") || return $?
 
   names=()
   skipUpdate=false
@@ -480,6 +517,7 @@ aptKeyRemove() {
     shift || __failArgument "$usage" "missing argument #$((nArguments - $# + 1)): $argument" || return $?
   done
 
+  [ -d "$ring" ] || __failEnvironment "$usage" "Unable to remove key as $ring is not a directory" || return $?
   [ "${#names[@]}" -gt 0 ] || __failArgument "$usage" "No keyNames supplied" || return $?
 
   _usageAptPermissions "$usage" "$sourcesPath" || return $?
@@ -503,5 +541,38 @@ aptKeyRemove() {
   statusMessage reportTiming "$start" "Removed ${names[*]} from sources in "
 }
 _aptKeyRemove() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# sources constant with checking
+# Usage: {fn} usageFunction
+_usageAptSourcesPath() {
+  local usage="$1" sourcesPath
+  sourcesPath=$(__usageEnvironment "$usage" aptSourcesDirectory) || return $?
+  [ -d "$sourcesPath" ] || __failEnvironment "$usage" "No $sourcesPath exists - not an apt system" || return $?
+  printf "%s\n" "$sourcesPath"
+}
+
+# key rings directory constant with creation
+_usageAptKeyRings() {
+  local usage="$1" ring
+  # In case this changes later and may fail
+  ring=$(__usageEnvironment "$usage" aptKeyRingDirectory) || return $?
+  if ! [ -d "$ring" ]; then
+    __usageEnvironment "$usage" mkdir -p "$ring" || return $?
+    __usageEnvironment "$usage" chmod 0755 "$ring" || return $?
+  fi
+  printf "%s\n" "$ring"
+}
+
+# permissions check for sourcesPath modifications
+_usageAptPermissions() {
+  local usage="$1" sourcesPath="$2"
+  touch "$sourcesPath/$$.test" 2>/dev/null || __failEnvironment "$usage" "No permission to modify $sourcesPath, failing" || return $?
+  rm -f "$sourcesPath/$$.test" 2>/dev/null || __failEnvironment "$usage" "No permission to delete in $sourcesPath, failing" || return $?
+}
+
+aptNonInteractive() {
+  DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get "$@"
 }

@@ -462,7 +462,7 @@ usageArgumentBoolean() {
 usageArgumentURL() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __usageArgument urlValid "${1-}" || return $?
+  urlValid "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not a valid URL" || return $?
   printf "%s\n" "$1"
 }
 

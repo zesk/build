@@ -4,10 +4,6 @@
 #
 # Terraform tools
 #
-# Depends: apt
-#
-# terraform install if needed
-#
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
@@ -36,19 +32,17 @@ aptKeyRemoveHashicorp() {
 #
 # Install terraform binary
 #
-# Exit Code: 1 - Problems
-# Exit Code: 0 - Installed successfully
-# Usage: terraformInstall [ package ... ]
+# Usage: {fn} [ package ... ]
 # Argument: package - Additional packages to install using `aptInstall`
 #
 terraformInstall() {
-  local usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}" binary="terraform"
 
-  ! whichExists terraform || return 0
+  ! whichExists "$binary" || return 0
   __usageEnvironment "$usage" aptInstall gnupg software-properties-common curl figlet
   __usageEnvironment "$usage" aptKeyAddHashicorp || return $?
-  __usageEnvironment "$usage" aptInstall terraform "$@" || return $?
-  whichExists terraform || __failEnvironment "$usage" "No terraform binary found - installation failed" || return $?
+  __usageEnvironment "$usage" aptInstall "$binary" "$@" || return $?
+  whichExists "$binary" || __failEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -63,8 +57,9 @@ _terraformInstall() {
 terraformUninstall() {
   local usage="_${FUNCNAME[0]}"
 
-  # removeHashicorpAptKey - TODO
   __usageEnvironment "$usage" whichAptUninstall terraform terraform "$@" || return $?
+  __usageEnvironment "$usage" aptKeyRemoveHashicorp || return $?
+  __usageEnvironment "$usage" aptUpdateOnce --force || return $?
 }
 _terraformUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

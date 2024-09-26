@@ -10,8 +10,9 @@
 {aptInstall}
 {aptUpToDate}
 {aptKeyAdd}
-{aptKeyRemoveHashicorp}
 {aptKeyRemove}
 {aptListInstalled}
 {aptNeedRestartFlag}
 {aptUninstall}
+{aptKeyRingDirectory}
+{aptIsInstalled}

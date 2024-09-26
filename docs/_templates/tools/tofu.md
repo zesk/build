@@ -1,13 +1,13 @@
-# Terraform
+# OpenTOFU
 
 <!-- TEMPLATE header 2 -->
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-{terraformInstall}
-{terraformUninstall}
+{tofuInstall}
+{tofuUninstall}
 
 ## Support functions
 
-{aptKeyAddHashicorp}
-{aptKeyRemoveHashicorp}
+{aptKeyAddOpenTofu}
+{aptKeyRemoveOpenTofu}
