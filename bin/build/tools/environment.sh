@@ -31,23 +31,37 @@ _environmentValueWrite() {
 #
 # Write an array value as NAME=([0]="a" [1]="b" [2]="c")
 # Supports empty arrays
+# Bash outputs on different versions:
+#
+#     declare -a foo='([0]="a'\''s" [1]="b" [2]="c")'
+#     declare -a foo=([0]="a's" [1]="b" [2]="c")
+#
 environmentValueWriteArray() {
   local usage="_${FUNCNAME[0]}" name="${1-}" && shift
-  local value
+  local value result search="'" replace="'\''"
 
   name=$(usageArgumentString "$usage" name "$name") || return $?
   value=("$@")
-  __environmentValueWrite "$name" "$(declare -pa value)" || return $?
+  result="$(__environmentValueClean "$(declare -pa value)")" || return $?
+  if [ "${result:0:1}" = "'" ]; then
+    result="$(unquote \' "$result")"
+    printf "%s=%s\n" "$name" "${result//"$replace"/$search}"
+  else
+    printf "%s=%s\n" "$name" "$result"
+  fi
 }
 _environmentValueWriteArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Utility function to strip "declare value=" from a string
+__environmentValueClean() {
+  printf -- "%s\n" "${1#declare*value=}"
+}
+
+# Utility function to write a value
 __environmentValueWrite() {
-  local output="$2"
-  output="${output#declare*value=}"
-  printf -- "%s=%s\n" "$1" "$output"
+  printf "%s=%s\n" "$1" "$(__environmentValueClean "$2")" || return $?
 }
 
 #
@@ -175,7 +189,6 @@ unquote() {
   fi
   printf -- "%s\n" "$value"
 }
-
 
 # Primary case to unquote quoted things "" ''
 __unquote() {

@@ -143,11 +143,12 @@ testEnvironmentValueWriteArray() {
     "a:b:c:de"
     "ten:twenty"
     "-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-"
+    "':'':''':'''':''''':'''''"
   )
 
   assertExitCode --stdout-match "NAME=()" 0 environmentValueWriteArray NAME || return $?
-  assertEquals --line "$LINENO" "NAME='([0]=\"\")'" "$(environmentValueWriteArray NAME "")" || return $?
-  assertEquals --line "$LINENO" "NAME='([0]=\"One\" [1]=\"Two\")'" "$(environmentValueWriteArray NAME "One" "Two")" || return $?
+  assertEquals --line "$LINENO" "NAME=([0]=\"\")" "$(environmentValueWriteArray NAME "")" || return $?
+  assertEquals --line "$LINENO" "NAME=([0]=\"One\" [1]=\"Two\")" "$(environmentValueWriteArray NAME "One" "Two")" || return $?
 
   consoleNameValue 20 envFile "$envFile"
   index=0
