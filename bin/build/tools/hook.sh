@@ -163,7 +163,13 @@ _hasHook() {
 whichHook() {
   local usage="_${FUNCNAME[0]}"
   local argument
-  local applicationHome binary p e
+  local applicationHome binary hookPath extension hookPaths=()
+
+  export BUILD_HOOK_PATH
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_PATH || return $?
+
+  IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_PATH" || :
+  [ ${#hookPaths[@]} -gt 0 ] || __failEnvironment "$usage" "BUILD_HOOK_PATH is blank" || return $?
 
   applicationHome="."
   while [ $# -gt 0 ]; do
@@ -175,9 +181,9 @@ whichHook() {
         applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
         ;;
       *)
-        for p in "$applicationHome/bin/hooks" "$applicationHome/bin/build/hooks"; do
-          for e in "" ".sh"; do
-            binary="${p%%/}/$1$e"
+        for hookPath in "${hookPaths[@]}"; do
+          for extension in "" ".sh"; do
+            binary="${hookPath%%/}/$1$extension"
             if [ -x "$binary" ]; then
               printf "%s\n" "$binary"
               return 0
