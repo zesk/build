@@ -33,11 +33,11 @@ _integer() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _user 11
+# IDENTICAL _home 11
 # Usage: {fn} user
 # Summary: Quick user database look up
 # Look user up, set environment HOME and APPLICATION_USER and output user if valid
-_user() {
+_home() {
   local userDatabase=/etc/passwd
   export APPLICATION_USER HOME
   APPLICATION_USER="$1"
@@ -46,4 +46,10 @@ _user() {
   printf -- "%s\n" "$APPLICATION_USER"
 }
 
-exec setuidgid "$(_user "{APPLICATION_USER}")" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
+__daemontoolsService() {
+  export HOME
+  HOME=$(_home "{APPLICATION_USER}") || _return $? "No home for {APPLICATION_USER}" || return $?
+  exec setuidgid "{APPLICATION_USER}" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
+}
+
+__daemontoolsService "$@"

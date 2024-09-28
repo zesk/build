@@ -37,11 +37,11 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL _user 11
+# IDENTICAL _home 11
 # Usage: {fn} user
 # Summary: Quick user database look up
 # Look user up, set environment HOME and APPLICATION_USER and output user if valid
-_user() {
+_home() {
   local userDatabase=/etc/passwd
   export APPLICATION_USER HOME
   APPLICATION_USER="$1"
@@ -68,11 +68,12 @@ _ownFiles() {
 # Argument: logPath - Directory to log to
 _logger() {
   local user name logPath user
+  export HOME
 
   name="$(basename "$(dirname "$(pwd)")")" || _return $? determining name || return $?
   printf "Logging for %s\n" "$name"
 
-  user=$(_user "${1-}") || _return $? _user "{APPLICATION_USER}" || return $?
+  HOME=$(_home "${1-}") || _return $? _home "{APPLICATION_USER}" || return $?
   logPath="${2-}"
   [ -d "$logPath" ] || _return 4 "$logPath is not a directory" || return $?
 
