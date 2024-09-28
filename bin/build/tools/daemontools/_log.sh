@@ -67,16 +67,14 @@ _ownFiles() {
 # Argument: user - User to run as
 # Argument: logPath - Directory to log to
 _logger() {
-  local user name logPath user
+  local user="${1-}" name logPath="${2-}" user
   export HOME
 
   name="$(basename "$(dirname "$(pwd)")")" || _return $? determining name || return $?
   printf "Logging for %s\n" "$name"
+  HOME=$(__environment _home "$user") || _return $?
 
-  HOME=$(_home "${1-}") || _return $? _home "{APPLICATION_USER}" || return $?
-  logPath="${2-}"
   [ -d "$logPath" ] || _return 4 "$logPath is not a directory" || return $?
-
   __execute _ownFiles "$user" "$logPath" || return $?
   logPath="$logPath/$name"
   [ -d "$logPath" ] || __execute mkdir -p "$logPath" || return $?
