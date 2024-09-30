@@ -37,6 +37,7 @@ To use in your pipeline:
 - [Usage formatting](./guide/usage.md)
 - [Documentation](./guide/documentation.md)
 - [Functions to be documented](./tools/todo.md)
+- [Test cheatsheet](./test-cheatsheet.md)
 
 ## Zesk Build Reference
 
