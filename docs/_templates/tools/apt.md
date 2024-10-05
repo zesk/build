@@ -4,9 +4,9 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+{aptNonInteractive}
+{aptSourcesDirectory}
 {aptUpdateOnce}
-{whichApt}
-{whichAptUninstall}
 {aptInstall}
 {aptUpToDate}
 {aptKeyAdd}
@@ -16,3 +16,6 @@
 {aptUninstall}
 {aptKeyRingDirectory}
 {aptIsInstalled}
+
+{whichApt}
+{whichAptUninstall}

@@ -142,25 +142,6 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 - `1` - if environment is awry
 - `0` - Apt key is installed AOK
-### `aptKeyRemoveHashicorp` - Add keys to enable apt to download terraform directly from
-
-Add keys to enable apt to download terraform directly from hashicorp.com
-
-- Location: `bin/build/tools/terraform.sh`
-
-#### Usage
-
-    aptKeyAddHashicorp
-    
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `1` - if environment is awry
-- `0` - All good to install terraform
 ### `aptKeyRemove` - Remove apt keys
 
 Remove apt keys
@@ -229,3 +210,33 @@ and assumes packages will be available. (For now)
 
 - `0` - If `apt-get` is not installed, returns 0.
 - `1` - If `apt-get` fails to remove the packages
+### `aptKeyRingDirectory` - Get key ring directory path
+
+Get key ring directory path
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `aptIsInstalled` - Is apt-get installed?
+
+Is apt-get installed?
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

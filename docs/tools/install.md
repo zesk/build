@@ -230,19 +230,15 @@ Install terraform binary
 
 - Location: `bin/build/tools/terraform.sh`
 
-#### Usage
-
-    terraformInstall [ package ... ]
-    
-
 #### Arguments
 
 - `package` - Additional packages to install using `aptInstall`
 
 #### Exit codes
 
-- `1` - Problems
-- `0` - Installed successfully
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `gitUninstall` - Uninstall git
 

@@ -62,7 +62,7 @@ Backup when `/etc/services` does not exist.
 
 IDENTICAL whichExists 11
 
-- Location: `bin/build/tools/os.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
