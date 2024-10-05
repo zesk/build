@@ -168,3 +168,19 @@ If no arguments are passed, returns exit code 1.
 
 - `0` - All arguments are callable as a command
 - `1` - One or or more arguments are callable as a command
+### `isTrue` - True-ish
+
+True-ish
+Succeeds when all arguments are "true"-ish
+
+- Location: `bin/build/tools/type.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
