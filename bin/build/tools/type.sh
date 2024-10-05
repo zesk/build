@@ -166,3 +166,21 @@ isCallable() {
     shift
   done
 }
+
+# True-ish
+# Usage: {fn} value ...
+# Succeeds when all arguments are "true"-ish
+isTrue() {
+  local value
+  [ $# -gt 0 ] || return 1
+  while [ $# -gt 0 ]; do
+    value=$(lowercase "$1")
+    case "$value" in
+      1 | true | yes | enabled | y) ;;
+      "" | 0 | false | no | disabled | n | null | nil) return 1 ;;
+      *) ! isInteger "$value" || [ "$value" -ne 0 ] || return 1 ;;
+    esac
+    shift
+  done
+  return 0
+}

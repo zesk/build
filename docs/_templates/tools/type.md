@@ -13,3 +13,4 @@
 {isFunction}
 {isExecutable}
 {isCallable}
+{isTrue}

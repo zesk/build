@@ -353,3 +353,50 @@ testBadNumericSamples() {
   consoleCode validateNotUnsignedNumber
   badNumericSamples | validateNotUnsignedNumber || return $?
 }
+
+__trueValues() {
+  cat <<EOF
+true
+enabled
+yes
+y
+1
+2
+3
+4
+5
+1923
+1924123
+EOF
+}
+
+__falseValues() {
+  cat <<EOF
+true
+enabled
+yes
+y
+1
+2
+3
+4
+5
+1923
+1924123
+EOF
+}
+
+testIsTrue() {
+  local value trues=()
+  while read -r value; do
+    assertExitCode --line "$LINENO" 0 isTrue "$value" || return $?
+    trues+=("$value")
+  done < <(__trueValues)
+  assertExitCode --line "$LINENO" 0 isTrue "${trues[@]}" || return $?
+  assertExitCode --line "$LINENO" 0 isTrue "${trues[@]}" "${trues[@]}" || return $?
+  while read -r value; do
+    assertNotExitCode --line "$LINENO" 0 isTrue "$value" || return $?
+  done < <(__falseValues)
+  assertNotExitCode --line "$LINENO" 0 isTrue "${trues[@]}" "$value" || return $?
+  assertNotExitCode --line "$LINENO" 0 isTrue "$value" "${trues[@]}" || return $?
+}
