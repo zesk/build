@@ -4,6 +4,30 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `aptSourcesDirectory` - Get APT source list path
+
+Get APT source list path
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `aptUpdateOnce` - Do `apt-get update` once
 
 Run apt-get update once and only once in the pipeline, at least
@@ -24,62 +48,6 @@ once an hour as well (when testing)
 #### Environment
 
 Stores state files in `./.build/` directory which is created if it does not exist.
-### `whichApt` - Install tools using `apt-get` if they are not found
-
-Installs an apt package if a binary does not exist in the which path.
-The assumption here is that `aptInstallPackage` will install the desired `binary`.
-
-Confirms that `binary` is installed after installation succeeds.
-
-- Location: `bin/build/tools/apt.sh`
-
-#### Arguments
-
-- `binary` - Required. String. The binary to look for
-- `aptInstallPackage` - Required. String. The package name to install if the binary is not found in the `$PATH`.
-
-#### Examples
-
-    whichApt shellcheck shellcheck
-    whichApt mariadb mariadb-client
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-Technically this will install the binary and any related files as a package.
-### `whichAptUninstall` - Install tools using `apt-get` if they are not found
-
-Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
-The assumption here is that `aptUninstall` will install the desired `binary`.
-
-Confirms that `binary` is installed after installation succeeds.
-
-- Location: `bin/build/tools/apt.sh`
-
-#### Arguments
-
-- `binary` - Required. String. The binary to look for.
-- `aptInstallPackage` - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
-
-#### Examples
-
-    whichAptUninstall shellcheck shellcheck
-    whichAptUninstall mariadb mariadb-client
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-Technically this will uninstall the binary and any related files as a package.
 ### `aptInstall` - Install packages using `apt-get`
 
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
@@ -240,3 +208,60 @@ Is apt-get installed?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+### `whichApt` - Install tools using `apt-get` if they are not found
+
+Installs an apt package if a binary does not exist in the which path.
+The assumption here is that `aptInstallPackage` will install the desired `binary`.
+
+Confirms that `binary` is installed after installation succeeds.
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- `binary` - Required. String. The binary to look for
+- `aptInstallPackage` - Required. String. The package name to install if the binary is not found in the `$PATH`.
+
+#### Examples
+
+    whichApt shellcheck shellcheck
+    whichApt mariadb mariadb-client
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+Technically this will install the binary and any related files as a package.
+### `whichAptUninstall` - Install tools using `apt-get` if they are not found
+
+Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
+The assumption here is that `aptUninstall` will install the desired `binary`.
+
+Confirms that `binary` is installed after installation succeeds.
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- `binary` - Required. String. The binary to look for.
+- `aptInstallPackage` - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
+
+#### Examples
+
+    whichAptUninstall shellcheck shellcheck
+    whichAptUninstall mariadb mariadb-client
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+Technically this will uninstall the binary and any related files as a package.

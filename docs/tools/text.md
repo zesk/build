@@ -43,7 +43,7 @@ Returns true if all `characters` are of `className`
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -72,7 +72,7 @@ needSlash='$.*/[\]^'
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -964,6 +964,12 @@ Write a report of the character classes
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `characterClasses` - List the valid character classes allowed in `isCharacterClass`
+
+List the valid character classes allowed in `isCharacterClass`
+
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - No arguments.
@@ -1034,7 +1040,7 @@ Does this character match one or more character classes?
 
 Unquote a string
 
-- Location: `bin/build/tools/environment.sh`
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 

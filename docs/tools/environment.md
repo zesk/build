@@ -63,6 +63,26 @@ Write a value to a state file as NAME="value"
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `environmentValueWriteArray` - Write an array value as NAME=([0]="a" [1]="b" [2]="c")
+
+Write an array value as NAME=([0]="a" [1]="b" [2]="c")
+Supports empty arrays
+Bash outputs on different versions:
+
+    declare -a foo='([0]="a'\''s" [1]="b" [2]="c")'
+    declare -a foo=([0]="a's" [1]="b" [2]="c")
+
+- Location: `bin/build/tools/environment.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `environmentValueRead` - Read one or more values values safely from a environment
 
 Read one or more values values safely from a environment file

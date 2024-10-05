@@ -708,6 +708,7 @@ stringOffset() {
   printf %d "$offset"
 }
 
+# List the valid character classes allowed in `isCharacterClass`
 characterClasses() {
   printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
 }
@@ -724,18 +725,13 @@ characterClasses() {
 #     print   punct   space   upper   word    xdigit
 #
 isCharacterClass() {
-  local class="${1-}" character
+  local class="${1-}" classes character
   local usage
 
   usage="_${FUNCNAME[0]}"
-
-  case "$class" in
-    alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;;
-    *)
-      __failArgument "$usage" "Invalid class: $class" || return $?
-      ;;
-  esac
-  shift || __failArgument "$usage" "shift failed" || return $?
+  IFS=$'\n' read -r -d '' -a classes < <(characterClasses)
+  inArray "$class" "${classes[@]}" || __failArgument "$usage" "Invalid class: $class" || return $?
+  shift
   while [ $# -gt 0 ]; do
     character="${1:0:1}"
     character="$(escapeBash "$character")"
