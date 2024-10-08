@@ -42,17 +42,19 @@ _integer() {
 # stdout: the home directory
 _home() {
   local user="${1-}" home userDatabase=/etc/passwd
-  set -o pipefail && home=$(grep "^$APPLICATION_USER:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?
+  set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?
   [ -d "$home" ] || _return 1 "User $user home \"$home\" is not a directory" || return $?
-  printf -- "%s\n" "$HOME" && export APPLICATION_USER=$user HOME=$home
+  printf -- "%s\n" "$home"
 }
 
 # Usage: {fn}
 # Run a service as a user
 __daemontoolsService() {
-  export HOME
-  HOME=$(_home "{APPLICATION_USER}") || _return $? "No home for {APPLICATION_USER}" || return $?
-  exec setuidgid "{APPLICATION_USER}" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
+  local user="${1-}" && shift
+  export HOME APPLICATION_USER
+  HOME=$(_home "$user}") || _return $? "No home for {APPLICATION_USER}" || return $?
+  APPLICATION_USER="$user"
+  exec setuidgid "$user" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
 }
 
-__daemontoolsService "$@"
+__daemontoolsService "{APPLICATION_USER}" "$@"

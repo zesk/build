@@ -46,9 +46,9 @@ __execute() {
 # stdout: the home directory
 _home() {
   local user="${1-}" home userDatabase=/etc/passwd
-  set -o pipefail && home=$(grep "^$APPLICATION_USER:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?
+  set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?
   [ -d "$home" ] || _return 1 "User $user home \"$home\" is not a directory" || return $?
-  printf -- "%s\n" "$HOME" && export APPLICATION_USER=$user HOME=$home
+  printf -- "%s\n" "$home"
 }
 
 # Usage: {fn} user logPath
@@ -69,11 +69,12 @@ _ownFiles() {
 # Argument: logPath - Directory to log to
 _logger() {
   local user="${1-}" name logPath="${2-}" user
-  export HOME
+  export HOME APPLICATION_USER
 
   name="$(basename "$(dirname "$(pwd)")")" || _return $? determining name || return $?
   printf "Logging for %s\n" "$name"
-  HOME=$(__environment _home "$user") || _return $?
+  HOME=$(__environment _setHome "$user") || _return $?
+  APPLICATION_USER=$user
 
   [ -d "$logPath" ] || _return 4 "$logPath is not a directory" || return $?
   __execute _ownFiles "$user" "$logPath" || return $?
