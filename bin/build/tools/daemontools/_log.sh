@@ -73,7 +73,7 @@ _logger() {
 
   name="$(basename "$(dirname "$(pwd)")")" || _return $? determining name || return $?
   printf "Logging for %s\n" "$name"
-  HOME=$(__environment _setHome "$user") || _return $?
+  HOME=$(_home "$user") || _return $?
   APPLICATION_USER=$user
 
   [ -d "$logPath" ] || _return 4 "$logPath is not a directory" || return $?

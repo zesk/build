@@ -6,9 +6,8 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-tests+=(daemontoolsTests)
 
-daemontoolsTests() {
+testDaemontools() {
   local logPath start waitFor logWaitFor
 
   assertExitCode --line "$LINENO" --stderr-match 2024-03-21 --stderr-match "not production" 0 daemontoolsInstall || return $?

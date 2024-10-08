@@ -181,7 +181,7 @@ daemontoolsRemoveService() {
   [ -d "$serviceHome/$serviceName" ] || __failEnvironment "$usage" "$serviceHome/$serviceName does not exist" || return $?
 
   __usageEnvironment "$usage" pushd "$serviceHome/$serviceName" >/dev/null || return $?
-  __usageEnvironment "$usage" svc -dx . log || return $?
+  __usageEnvironment "$usage" muzzle svc -dx . log 2>&1 || return $?
   __usageEnvironment "$usage" rm -rf "$serviceHome/$serviceName" || return $?
   __usageEnvironment "$usage" popd >/dev/null || return $?
 }

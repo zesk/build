@@ -52,7 +52,7 @@ _home() {
 __daemontoolsService() {
   local user="${1-}" && shift
   export HOME APPLICATION_USER
-  HOME=$(_home "$user}") || _return $? "No home for {APPLICATION_USER}" || return $?
+  HOME=$(_home "$user") || _return $? "No home for {APPLICATION_USER}" || return $?
   APPLICATION_USER="$user"
   exec setuidgid "$user" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
 }
