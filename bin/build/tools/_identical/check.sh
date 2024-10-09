@@ -368,6 +368,8 @@ identicalCheckShell() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
 
   aa=()
+  aa+=(--prefix '# ''IDENTICAL' )
+  aa+=(--prefix '# ''DOC TEMPLATE:' )
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"
