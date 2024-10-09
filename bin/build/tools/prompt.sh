@@ -120,9 +120,12 @@ __bashPromptRemove() {
 
 #
 # Check which bin/build we are running and keep local to current project
+# When changing projects, runs the `project-selected` hook in the new project
+# Also shows the change in Zesk Build version numbers
 #
+# Run-Hook: project-selected
 bashPromptModule_binBuild() {
-  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldColor=consoleRed newColor=consoleRed oldVersion newVersion
+  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldColor=consoleRed newColor=consoleRed oldVersion newVersion message
   home=$(__environment buildHome) || return $?
   gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
   [ "$home" != "$gitHome" ] || return 0
@@ -135,7 +138,8 @@ bashPromptModule_binBuild() {
   # shellcheck source=/dev/null
   source "$gitHome/$tools" || __environment "Failed ot load $gitHome/$tools" || return $?
   # buildHome will be changed here
-  printf -- "%s %s -> %s @ %s\n" "$(consoleInfo "Zesk Build")" "$("$oldColor" "$oldVersion")" "$("$newColor" "$newVersion")" "$(consoleCode "$(buildHome)")"
+  message="$(runOptionalHook project-selected "$gitHome")"
+  printf -- "%s %s -> %s @ %s\n" "$message" "$("$oldColor" "$oldVersion")" "$("$newColor" "$newVersion")" "$(consoleCode "$(buildHome)")"
 }
 
 # Usage: {fn} [ --first | --last | module ] [ --colors colorsText ]
