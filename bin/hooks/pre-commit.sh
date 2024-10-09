@@ -88,8 +88,7 @@ __hookPreCommit() {
     local file files=()
     while read -r file; do files+=("$file"); done < <(gitPreCommitListExtension)
     if grep -q '# '"IDENTICAL" "${files[@]}"; then
-      ii=(--prefix '# ''DOC TEMPLATE:')
-      if ! bin/build/identical-repair.sh "${ii[@]}" && ! bin/build/identical-repair.sh "${ii[@]}"; then
+      if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
         __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
       fi
     fi

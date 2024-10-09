@@ -20,39 +20,41 @@ testBashPrompt() {
 
   assertExitCode --line "$LINENO" 0 bashPrompt --help || return $?
 
+  [ -t 0 ] || assertNotExitCode --stderr-match "Requires a terminal" --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --colors "::::" || return $?
+
   for leak in "${leaks[@]}"; do
     ll+=(--leak "$leak")
   done
-  assertExitCode --line "$LINENO" "${ll[@]}" 0 bashPrompt --colors "::::" || return $?
+  assertExitCode --line "$LINENO" "${ll[@]}" 0 bashPrompt --skip-terminal --colors "::::" || return $?
   matches=(--stdout-match __testBashPromptA --stdout-match __testBashPromptB --stdout-match __testBashPromptC)
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --first __testBashPromptA __testBashPromptB __testBashPromptC __testBashPromptA __testBashPromptB __testBashPromptC --list || return $?
+  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --first __testBashPromptA __testBashPromptB __testBashPromptC __testBashPromptA __testBashPromptB __testBashPromptC --list || return $?
 
   # Remove A
   matches=(--stdout-no-match __testBashPromptA --stdout-match __testBashPromptB --stdout-match __testBashPromptC)
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt -__testBashPromptA --list || return $?
+  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptA --list || return $?
 
   # Remove C
   matches=(--stdout-no-match __testBashPromptA --stdout-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt -__testBashPromptC --list || return $?
+  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptC --list || return $?
 
   # Remove J (?)
   matches=()
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
-  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt -__testBashPromptJ --list || return $?
+  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
 
   # Remove B
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt -__testBashPromptB --list || return $?
+  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
 
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
   # Remove J (?)
-  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt -__testBashPromptJ --list || return $?
+  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
 
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptK was not found in modules")
   # Remove K (?)
-  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt -__testBashPromptK --list || return $?
+  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptK --list || return $?
 
   unset "${leaks[@]}"
 }
