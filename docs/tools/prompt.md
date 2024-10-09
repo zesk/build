@@ -2,9 +2,19 @@
 
 Tools to work with the shell prompt `PS1`
 
+- `bashPromptModule_binBuild` is a module for `bashPrompt` which sets the Zesk Build home depending on your current directory
+- `consoleDefaultTitle` can be used as a module to set the current title
+
+Examples:
+
+    bashPrompt bashPromptModule_binBuild consoleDefaultTitle
+    bashPrompt --colors "$(bashPromptColorScheme forest)"
+
 <!-- TEMPLATE header 2 -->
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
+
+## Functions
 
 ### `bashPrompt` - Bash prompt creates a prompt and adds return code status
 
@@ -27,6 +37,40 @@ Modules are any binary or executable to run each prompt, and can be added or rem
 #### Examples
 
 bashPrompt --colors "$(consoleBoldCyan):$(consoleBoldMagenta):$(consoleGreen):$(consoleOrange):$(consoleCode)"
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `bashPromptColorScheme` - Color schemes for prompts
+
+Color schemes for prompts
+Options are:
+- forest
+- default
+
+- Location: `bin/build/tools/prompt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### `bashPromptModule_binBuild` - Check which bin/build we are running and keep local to
+
+Check which bin/build we are running and keep local to current project
+
+- Location: `bin/build/tools/prompt.sh`
+
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 

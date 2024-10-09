@@ -118,6 +118,26 @@ __bashPromptRemove() {
   __BASH_PROMPT_MODULES=("${modules[@]}")
 }
 
+#
+# Check which bin/build we are running and keep local to current project
+#
+bashPromptModule_binBuild() {
+  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldColor=consoleRed newColor=consoleRed oldVersion newVersion
+  home=$(__environment buildHome) || return $?
+  gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
+  [ "$home" != "$gitHome" ] || return 0
+  [ -x "$gitHome/$tools" ] || return 0
+  oldVersion="$(jq .version "$home/$version")"
+  newVersion="$(jq .version "$gitHome/$version")"
+  newestVersion="$(printf -- "%s\n" "$oldVersion" "$newVersion" | versionSort | tail -n 1)"
+  [ "$oldVersion" != "$newestVersion" ] || oldColor=consoleBlue
+  [ "$newVersion" != "$newestVersion" ] || newColor=consoleGreen
+  # shellcheck source=/dev/null
+  source "$gitHome/$tools" || __environment "Failed ot load $gitHome/$tools" || return $?
+  # buildHome will be changed here
+  printf -- "%s %s -> %s @ %s\n" "$(consoleInfo "Zesk Build")" "$("$oldColor" "$oldVersion")" "$("$newColor" "$newVersion")" "$(consoleCode "$(buildHome)")"
+}
+
 # Usage: {fn} [ --first | --last | module ] [ --colors colorsText ]
 # Argument: --reset - Flag. Optional. Remove all prompt modules.
 # Argument: --list - Flag. Optional. List the current modules.

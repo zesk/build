@@ -11,7 +11,9 @@ testIterm2() {
   saved_HOME=$HOME
   saved_LC_TERMINAL=${LC_TERMINAL+none}
 
-  export LC_TERMINAL HOME
+  export LC_TERMINAL HOME ITERM2_SHELL_INTEGRATION_WORKS
+
+  ITERM2_SHELL_INTEGRATION_WORKS=false
 
   HOME=$(__environment mktemp -d) || return $?
   printf "export ITERM2_SHELL_INTEGRATION_WORKS=true\n" >"$HOME/.iterm2_shell_integration.bash"
@@ -19,7 +21,7 @@ testIterm2() {
 
   LC_TERMINAL=wrong
   assertExitCode --line "$LINENO" 0 iTerm2Init || return $?
-  assertEquals --line "$LINENO" "${ITERM2_SHELL_INTEGRATION_WORKS-}" "" || return $?
+  assertEquals --line "$LINENO" "$ITERM2_SHELL_INTEGRATION_WORKS" "false" || return $?
   assertNotExitCode --line "$LINENO" 0 isiTerm2 || return $?
   assertNotExitCode --line "$LINENO" --stderr-match "does not support" 0 iTerm2Badge "foo" || return $?
 
@@ -27,7 +29,7 @@ testIterm2() {
   assertExitCode --line "$LINENO" 0 isiTerm2 || return $?
   assertExitCode --dump-binary --line "$LINENO" --stdout-match "Zm9v" 0 iTerm2Badge "foo" </dev/null || return $?
   assertExitCode --line "$LINENO" 0 iTerm2Init || return $?
-  assertEquals --line "$LINENO" "${ITERM2_SHELL_INTEGRATION_WORKS-}" "true" || return $?
+  assertEquals --line "$LINENO" "$ITERM2_SHELL_INTEGRATION_WORKS" "true" || return $?
 
   if [ "$saved_LC_TERMINAL" = "none" ]; then
     unset LC_TERMINAL

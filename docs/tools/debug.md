@@ -127,9 +127,26 @@ Outputs `1` always
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `dumpFile` - Output a file for debugging
+### `dumpPipe` - Dump a pipe with a title and stats
 
-Output a file for debugging
+Dump a pipe with a title and stats
+
+- Location: `bin/build/tools/test.sh`
+
+#### Arguments
+
+- `--symbol symbol` - Optional. String. Symbol to place before each line. (Blank is ok).
+- `--tail` - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
+- `name` - Optional. String. The item name or title of this output.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `dumpBinary` - Dumps output as hex
+
+Dumps output as hex
 
 - Location: `bin/build/tools/test.sh`
 
@@ -142,17 +159,20 @@ Output a file for debugging
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `dumpPipe` - Dump a pipe with a title and stats
 
-Dump a pipe with a title and stats
+#### Depends
+
+    xxd
+    
+### `dumpFile` - Output a file for debugging
+
+Output a file for debugging
 
 - Location: `bin/build/tools/test.sh`
 
 #### Arguments
 
-- `--symbol symbol` - Optional. String. Symbol to place before each line. (Blank is ok).
-- `--tail` - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
-- `name` - Optional. String. The item name or title of this output.
+- No arguments.
 
 #### Exit codes
 
