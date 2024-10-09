@@ -138,7 +138,7 @@ bashPromptModule_binBuild() {
   # shellcheck source=/dev/null
   source "$gitHome/$tools" || __environment "Failed ot load $gitHome/$tools" || return $?
   # buildHome will be changed here
-  message="$(runOptionalHook project-selected "$gitHome")"
+  message="$(runOptionalHook project-selected "$home")"
   printf -- "%s %s -> %s @ %s\n" "$message" "$("$oldColor" "$oldVersion")" "$("$newColor" "$newVersion")" "$(consoleCode "$(buildHome)")"
 }
 

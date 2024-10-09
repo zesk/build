@@ -300,7 +300,7 @@ _buildEnvironmentPath() {
 }
 
 #
-# Load one or more environment settings from bin/build/env or bin/env.
+# Load one or more environment settings from the environment file path.
 #
 # Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
@@ -343,6 +343,32 @@ _buildEnvironmentLoad() {
   printf "bin/build/env ERROR: %s\n" "$@" 1>&2
   debuggingStack
   return "$exitCode"
+}
+
+# Load and print one or more environment settings
+#
+# Usage: {fn} [ envName ... ]
+# Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+#
+# If BOTH files exist, both are sourced, so application environments should anticipate values
+# created by build's default.
+#
+# Modifies local environment. Not usually run within a subshell.
+#
+# Environment: $envName
+# Environment: BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
+#
+buildEnvironmentGet() {
+  local usage="_${FUNCNAME[0]}"
+  local env
+
+  for env in "$@"; do
+    __usageEnvironment "$usage" buildEnvironmentLoad "$env" || return $?
+    printf "%s\n" "${!env-}"
+  done
+}
+_buildEnvironmentGet() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
