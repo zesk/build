@@ -103,7 +103,7 @@ consoleColorMode() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
   done
 
-  [ -n "${BUILD_COLORS_MODE-}" ] || __usageEnvironment "$usage" "Empty BUILD_COLORS_MODE" || return $?
+  [ -n "${BUILD_COLORS_MODE-}" ] || __failArgument "$usage" "Empty BUILD_COLORS_MODE" || return $?
   printf "%s\n" "${BUILD_COLORS_MODE-}"
 }
 _consoleColorMode() {

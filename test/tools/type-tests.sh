@@ -372,17 +372,15 @@ EOF
 
 __falseValues() {
   cat <<EOF
-true
-enabled
-yes
-y
-1
-2
-3
-4
-5
-1923
-1924123
+false
+disabled
+no
+n
+0
+null
+00000
+
+0.0
 EOF
 }
 

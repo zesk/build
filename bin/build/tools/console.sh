@@ -135,3 +135,25 @@ consoleConfigureColorMode() {
   fi
   printf "%s\n" "$colorMode"
 }
+
+# Set the title of the window for the console
+consoleSetTitle() {
+  local usage="_${FUNCNAME[0]}"
+  [ -t 0 ] || __failEnvironment "$usage" "stdin is not a terminal" || return $?
+  printf "\e%s\007" "]0;$*"
+}
+_consoleSetTitle() {
+  # IDENTICAL usageDocument 1
+  : usageDocument
+}
+
+# Set the title of the window for the console to "user@hostname: pwd"
+consoleDefaultTitle() {
+  local usage="_${FUNCNAME[0]}"
+  [ -t 0 ] || __failEnvironment "$usage" "stdin is not a terminal" || return $?
+  consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
+}
+_consoleDefaultTitle() {
+  # IDENTICAL usageDocument 1
+  : usageDocument
+}

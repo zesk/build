@@ -65,5 +65,3 @@ Once included, all functions here are available for use:
 
 - [Function Template](../__function.md)
 - [Binary Template](../__binary.md)
-
-[⬅ Return to top](../index.md)

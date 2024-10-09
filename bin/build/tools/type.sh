@@ -178,9 +178,19 @@ isTrue() {
     case "$value" in
       1 | true | yes | enabled | y) ;;
       "" | 0 | false | no | disabled | n | null | nil) return 1 ;;
-      *) ! isInteger "$value" || [ "$value" -ne 0 ] || return 1 ;;
+      *)
+        ! isInteger "$value" || [ "$value" -ne 0 ] || ! isNumber "$value" || [ "$(truncateFloat "$value")" -ne 0 ] || return 1
+        ;;
     esac
     shift
   done
   return 0
+}
+
+# Usage: {fn} variableName
+# Argument: variableName - Required. String. Variable to check is an array.
+isArray() {
+  local declareText
+  declareText=$(declare -p "$1" 2>/dev/null) || return 1
+  [ "${declareText#declare -a}" != "$declareText" ]
 }

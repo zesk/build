@@ -9,3 +9,5 @@
 {consoleColumns}
 {consoleRows}
 {consoleBrightness}
+{consoleSetTitle}
+{consoleDefaultTitle}
