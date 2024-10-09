@@ -176,7 +176,7 @@ documentationTemplateCompile() {
   mappedDocumentTemplate=$(mktemp)
   if ! envChecksum=$(
     set -a
-    title="$(grep -E '^# ' -m 1 <"$targetFile" | cut -c 3-)"
+    [ ! -f "$targetFile" ] || title="$(grep -E '^# ' -m 1 <"$targetFile" | cut -c 3-)"
     title="${title:-notitle}"
     for envFile in "${envFiles[@]+${envFiles[@]}}"; do
       # shellcheck source=/dev/null

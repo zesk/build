@@ -140,7 +140,6 @@ documentationIndex_Generate() {
   local argument nArguments argumentIndex saved
   local codePath cacheDirectory
   local start shellFile functionName lineNumber fileCacheMarker functionIndex fileIndex
-  local cleanFlag=
 
   codePath=
   cacheDirectory=
@@ -154,9 +153,6 @@ documentationIndex_Generate() {
       --help)
         "$usage" 0
         return $?
-        ;;
-      --clean)
-        cleanFlag=1
         ;;
       *)
         if [ -z "$codePath" ]; then
@@ -187,9 +183,6 @@ documentationIndex_Generate() {
   fi
   if ! start=$(beginTiming); then
     return $?
-  fi
-  if test $cleanFlag; then
-    rm -rf "$cacheDirectory"
   fi
   functionIndex="$cacheDirectory/index"
   if [ ! -d "$functionIndex" ]; then
@@ -363,14 +356,10 @@ _documentationIndex_UnlinkedIteratorUsage() {
 documentationIndex_FunctionIterator() {
   local cacheDirectory functionIndexPath
   local functionName settingsFile
-  local cleanFlag=
 
   cacheDirectory=
   while [ $# -gt 0 ]; do
     case $1 in
-      --clean)
-        cleanFlag=1
-        ;;
       *)
         if [ -z "$cacheDirectory" ]; then
           cacheDirectory="$1"

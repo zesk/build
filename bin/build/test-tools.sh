@@ -25,7 +25,9 @@ export globalTestFailure=
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files.
 # Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.
-#
+# Hook: bash-test-start
+# Hook: bash-test-pass
+# Hook: bash-test-fail
 testSuite() {
   local usage="_${FUNCNAME[0]}"
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
@@ -222,8 +224,10 @@ testSuite() {
         sectionNameHeading="$sectionName"
       fi
       testStart=$(__environment date +%s) || return $?
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$item" || return $?
+      __usageEnvironment "$usage" runOptionalHook bash-test-start "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
       ! $doStats || printf "%d %s\n" $(($(date +%s) - testStart)) "$item" >>"$statsFile"
+      __usageEnvironment "$usage" runOptionalHook bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
     if $continueFlag; then
@@ -495,12 +499,14 @@ __testMatches() {
 }
 
 __testFailed() {
-  local errorCode name
+  local errorCode name sectionName="$1" item="$2"
+
+  __usageEnvironment "$usage" runOptionalHook bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
 
   errorCode="$(_code test)"
   export IFS
-  printf "%s: %s - %s %s\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo "$*")"
-  for name in IFS HOME LINES COLUMNS OSTYPE PPID PID; do
+  printf "%s: %s - %s %s (%s)\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo "$item")" "$(consoleMagenta "$sectionName")"
+  for name in IFS HOME LINES COLUMNS OSTYPE PPID PID PWD TERM; do
     printf "%s=%s\n" "$(consoleLabel "$name")" "$(consoleValue "${!name-}")"
   done
   export globalTestFailure="$*"

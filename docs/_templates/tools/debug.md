@@ -10,8 +10,9 @@
 {buildDebugStop}
 {isBashDebug}
 {isErrorExit}
-{dumpFile}
 {dumpPipe}
+{dumpBinary}
+{dumpFile}
 {plumber}
 {housekeeper}
 {outputTrigger}

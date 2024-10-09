@@ -47,7 +47,7 @@ _assertSuccess() {
 }
 
 # Core condition assertion handler
-# DOC TEMPLATE: assert-common 11
+# DOC TEMPLATE: assert-common 13
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
@@ -58,41 +58,33 @@ _assertSuccess() {
 # Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
-#
 _assertConditionHelper() {
-  local this="$1"
+  local this="$1" && shift
   local usage="_$this"
-  local argument pairs debugFlag
-  local exitCode success testPassed file lineNumber linePrefix displayName tester formatter message result
-  local doPlumber runner leaks outputContains outputNotContains stderrContains stderrNotContains
-  local errorsOk outputFile errorFile stderrTitle stdoutTitle dumpFlag expectedExitCode code1
+  local argument nArguments argumentIndex saved
+  local pairs=() debugFlag=false
+  local success=true file="" lineNumber="" linePrefix="" displayName="" tester="" formatter="__resultFormatter"
+  local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
+  local doPlumber=true leaks=()
+  local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false
+  local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
-  shift
-  file=
-  lineNumber=
-  linePrefix=
-  pairs=()
-  outputContains=()
-  outputNotContains=()
-  stderrContains=()
-  stderrNotContains=()
-  displayName=
-  tester=
-  errorsOk=false
-  dumpFlag=false
-  formatter="__resultFormatter"
-  doPlumber=true
-  leaks=()
-  code1=false
-  success=true
-  debugFlag=false
-  expectedExitCode=0
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
     argument="$1"
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --exit)
         shift
         expectedExitCode=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")
@@ -106,11 +98,6 @@ _assertConditionHelper() {
         shift
         success="$(usageArgumentBoolean "$usage" "$argument" "${1-}")" || return $?
         pairs+=("should" "$(_choose "$success" "succeed" "$(consoleWarning "fail")")")
-        ;;
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
         ;;
       --debug)
         debugFlag=true
@@ -155,6 +142,11 @@ _assertConditionHelper() {
         ;;
       --dump)
         dumpFlag=true
+        dumpBinaryFlag=false
+        ;;
+      --dump-binary)
+        dumpBinaryFlag=true
+        dumpFlag=true
         ;;
       --skip-plumber)
         doPlumber=false
@@ -171,7 +163,8 @@ _assertConditionHelper() {
         break
         ;;
     esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
   [ -n "$tester" ] || __failArgument "$usage" "--test required ($*)" || return $?
 
@@ -245,8 +238,13 @@ _assertConditionHelper() {
     _assertFailure "$this" "$displayName $message" || exitCode=$?
   fi
   if $dumpFlag; then
-    dumpPipe "$stdoutTitle" <"$outputFile" || :
-    dumpPipe "$stderrTitle" <"$errorFile" || :
+    if $dumpBinaryFlag; then
+      dumpBinary <"$outputFile" | dumpPipe "$stdoutTitle" || :
+      dumpBinary <"$errorFile" | dumpPipe "$stderrTitle" || :
+    else
+      dumpPipe "$stdoutTitle" <"$outputFile" || :
+      dumpPipe "$stderrTitle" <"$errorFile" || :
+    fi
   fi
   return $exitCode
 }

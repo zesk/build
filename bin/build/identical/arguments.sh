@@ -15,7 +15,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 
-# DOC TEMPLATE: assert-common 11
+# DOC TEMPLATE: assert-common 13
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
@@ -26,8 +26,9 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # This function serves as a sample for all other templates.
 __documentTemplateFunction() {
   local usage="_${FUNCNAME[0]}"

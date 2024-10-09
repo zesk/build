@@ -191,7 +191,8 @@ documentationBuild() {
   local start envFile verbose
   local company companyLink home applicationName
   local templatePath sourcePaths targetPath actionFlag unlinkedTemplate unlinkedTarget seeFunction seeFile seePrefix
-  local pageTemplate functionTemplate
+  local pageTemplate functionTemplate cleanFlag=false
+
   export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
@@ -280,6 +281,7 @@ documentationBuild() {
         ;;
       --clean)
         indexArgs+=("$argument")
+        cleanFlag=true
         ;;
       --see-prefix)
         shift
@@ -308,12 +310,24 @@ documentationBuild() {
     esac
     shift
   done
+
+  if $cleanFlag; then
+    __usageEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
+    reportTiming "$start" "Emptied documentation cache in" || :
+    return 0
+  fi
   cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
   [ -n "$functionTemplate" ] || __failArgument "$usage" "--function-template required" || return $?
   [ -n "$pageTemplate" ] || __failArgument "$usage" "--page-template required" || return $?
   [ -n "$targetPath" ] || __failArgument "$usage" "--target required" || return $?
   [ 0 -lt "${#sourcePaths[@]}" ] || __failArgument "$usage" "--source required" || return $?
+
+  if [ "$actionFlag" = "--unlinked-update" ]; then
+    for argument in unlinkedTemplate unlinkedTarget; do
+      [ -n "${!argument-}" ] || __failArgument "$usage" "$argument is required for $actionFlag" || return $?
+    done
+  fi
 
   #
   # Generate or update indexes
@@ -322,11 +336,6 @@ documentationBuild() {
     __usageEnvironment "$usage" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
   done
 
-  if [ "$actionFlag" = "--unlinked-update" ]; then
-    for argument in unlinkedTemplate unlinkedTarget; do
-      [ -n "${!argument-}" ] || __failArgument "$usage" "$argument is required for $actionFlag" || return $?
-    done
-  fi
   #
   # Update indexes with function -> documentationPath
   #

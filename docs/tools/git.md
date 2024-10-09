@@ -487,9 +487,9 @@ List remote hosts for the current git repository
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `gitCurrentBranch` - Get the commit hash
+### `gitCurrentBranch` - Get the current branch name
 
-Get the commit hash
+Get the current branch name
 
 - Location: `bin/build/tools/git.sh`
 

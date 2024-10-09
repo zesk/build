@@ -31,7 +31,9 @@ If this fails it will output an error and exit.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - Expected string
 - `actual` - Actual string
 - `message` - Message to output if the assertion fails
@@ -74,7 +76,9 @@ If this fails it will output an error and exit.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - Required. Expected string.
 - `actual` - Required. Actual string.
 - `message` - Message to output if the assertion fails. Optional.
@@ -111,7 +115,9 @@ Assert one string contains another (case-sensitive)
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `needle` - Thing we are looking for
 - `haystack` - Thing we are looking in
 
@@ -138,7 +144,9 @@ Assert one string does not contains another (case-sensitive)
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `needle` - Thing we are looking for
 - `haystack` - Thing we are looking in
 
@@ -243,7 +251,9 @@ Assert `leftValue <= rightValue`
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `leftValue` - Value to compare on the left hand side of the comparison
 - `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
@@ -288,7 +298,9 @@ If this fails it will output an error and exit.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 
 #### Exit codes
 
@@ -323,7 +335,9 @@ If this fails it will output an error and exit.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 
 #### Exit codes
 
@@ -361,7 +375,9 @@ If this fails it will output an error and exit.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - Expected string
 - `binary` - Binary to run and evaluate output
 - `parameters` - Any additional parameters to binary
@@ -399,7 +415,9 @@ If this fails it will output the command result to stdout.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - A string to expect in the output
 - `command` - The command to run
 - `arguments` - Any arguments to pass to the command to run
@@ -443,7 +461,9 @@ If this fails it will output the command result to stdout.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - A string to NOT expect in the output
 - `command` - The command to run
 - `arguments` - Any arguments to pass to the command to run
@@ -492,7 +512,9 @@ $\Test that a directory exists
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should exist
 - `message` - An error message if this fails
 
@@ -535,7 +557,9 @@ $\Test that a directory does not exist
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should NOT exist
 - `message` - An error message if this fails
 
@@ -573,7 +597,9 @@ $\Test that a directory exists
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should exist and be empty
 - `message` - An error message if this fails
 
@@ -611,7 +637,9 @@ $\Test that a directory does not exist
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should exist and not be empty
 - `message` - An error message if this fails
 
@@ -648,7 +676,9 @@ $\Test that a file exists
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `item` - File that should exist
 - `message` - An error message if this fails
 
@@ -686,7 +716,9 @@ $\Test that a file does not exist
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `file` - File that should NOT exist
 - `message` - An error message if this fails
 
@@ -724,7 +756,9 @@ File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName` - File to search
 - `string0 ...` - One or more strings which must be found on at least one line in the file
 
@@ -766,7 +800,9 @@ File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 202
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName` - File to search
 - `string0 ...` - One or more strings which must NOT be found anywhere in `fileName`
 
@@ -798,7 +834,9 @@ If the file does not exist, this will fail.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expectedSize` - Integer file size which `fileName` should be, in bytes.
 - `fileName ...` - One ore more file which should be `expectedSize` bytes in size.
 
@@ -827,7 +865,9 @@ If the file does not exist, this will fail.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expectedSize` - Integer file size which `fileName` should NOT be, in bytes.
 - `fileName ...` - Required. File. One ore more file which should NOT be `expectedSize` bytes in size.
 
@@ -857,7 +897,9 @@ If the file does not exist, this will fail.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName ...` - Required. File. One ore more file which should be zero bytes in size.
 
 #### Examples
@@ -885,7 +927,9 @@ If the file does not exist, this will fail.
 - `--stdout-match` - Optional. String. One or more strings which must match stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName ...` - Required. File. One ore more file which should NOT be zero bytes in size.
 
 #### Examples

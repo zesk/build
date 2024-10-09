@@ -34,10 +34,25 @@ _testTools() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Dumps output as hex
+# Depends: xxd
+# apt-get: xxd
+# stdin: binary
+# stdout: formatted output set to ideal `consoleColumns`
+dumpBinary() {
+  local columns
+  # Is this installed by default?
+  __environment muzzle whichApt xxd xxd || return $?
+  columns=$(consoleColumns) || columns=120
+  xxd -c "$((columns / 4))"
+}
+
 # Dump a pipe with a title and stats
 # Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
 # Argument: --tail - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
 # Argument: name - Optional. String. The item name or title of this output.
+# stdin: text
+# stdout: formatted text for debugging
 dumpPipe() {
   local usage="_${FUNCNAME[0]}"
   local argument
@@ -121,6 +136,8 @@ _dumpPipe() {
 # Output a file for debugging
 #
 # Usage: {fn} fileName0 [ fileName1 ... ]
+# stdin: text (optional)
+# stdout: formatted text (optional)
 dumpFile() {
   local usage="_${FUNCNAME[0]}"
   local argument
