@@ -144,7 +144,7 @@ consoleSetTitle() {
 }
 _consoleSetTitle() {
   # IDENTICAL usageDocument 1
-  : usageDocument
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set the title of the window for the console to "user@hostname: pwd"
@@ -155,5 +155,5 @@ consoleDefaultTitle() {
 }
 _consoleDefaultTitle() {
   # IDENTICAL usageDocument 1
-  : usageDocument
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
