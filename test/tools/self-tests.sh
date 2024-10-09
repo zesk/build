@@ -252,6 +252,30 @@ testBuildEnvironmentLoad() {
   unset FOO
 }
 
+testBuildEnvironmentGet() {
+  local tempDir target
+
+  tempDir=$(__environment mktemp -d) || return $?
+
+  target="$tempDir/FOO.sh"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  __environment touch "$target" || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  printf "%s\n" "#!/usr/bin/env bash" >"$target"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  __environment chmod +x "$target" || return $?
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+
+  assertEquals --line "$LINENO" "${FOO-}" "" || return $?
+
+  printf "%s\n" "export FOO" "FOO=hello" >>"$target"
+  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --leak FOO --line "$LINENO" --stdout-match "hello" 0 buildEnvironmentGet FOO || return $?
+
+  assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
+
+  unset FOO
+}
+
 testUnderscoreUnderscoreBuild() {
   local testPath home
 
