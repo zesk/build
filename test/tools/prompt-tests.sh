@@ -48,7 +48,7 @@ testBashPrompt() {
 
   # Remove B
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode --debug --dump --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
+  assertExitCode --dump --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
 
   # DEBUG LINE
   printf -- "%s:%s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleMagenta "$LINENO")" # DEBUG LINE
