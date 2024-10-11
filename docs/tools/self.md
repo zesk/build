@@ -25,9 +25,9 @@ Prints the build home directory (usually same as the application root)
 #### Environment
 
 BUILD_HOME
-### `buildEnvironmentLoad` - Load one or more environment settings from bin/build/env or bin/env.
+### `buildEnvironmentLoad` - Load one or more environment settings from the environment file
 
-Load one or more environment settings from bin/build/env or bin/env.
+Load one or more environment settings from the environment file path.
 
 
 If BOTH files exist, both are sourced, so application environments should anticipate values

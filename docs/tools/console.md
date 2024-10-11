@@ -105,6 +105,12 @@ LINES - May be defined after calling this
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleSetTitle` - Set the title of the window for the console
+
+Set the title of the window for the console
+
+- Location: `bin/build/tools/console.sh`
+
 #### Arguments
 
 - No arguments.
