@@ -183,7 +183,7 @@ _installRemotePackage() {
 __installRemotePackage() {
   local exitCode="$1"
   shift || :
-  printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
+  printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")" 1>&2
   return "$exitCode"
 }
 
