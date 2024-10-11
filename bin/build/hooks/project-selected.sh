@@ -28,7 +28,7 @@ __hookProjectSelected() {
   name=$(__usageEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
-  printf -- "%s %s %s %s\n" "🌎" "$(consoleSubtle "$oldName")" "➜" "$(consoleInfo "$APPLICATION_NAME")"
+  printf -- "%s %s %s %s\n" "🌎" "$(consoleSubtle "$oldName")" "➜" "$(consoleInfo "$name")"
 }
 ___hookProjectSelected() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
