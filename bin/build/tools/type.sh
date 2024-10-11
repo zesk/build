@@ -177,7 +177,7 @@ isTrue() {
     value=$(lowercase "$1")
     case "$value" in
       1 | true | yes | enabled | y) ;;
-      "" | 0 | false | no | disabled | n | null | nil) return 1 ;;
+      "" | 0 | false | no | disabled | n | null | nil | "0.0") return 1 ;;
       *)
         ! isInteger "$value" || [ "$value" -ne 0 ] || ! isNumber "$value" || [ "$(truncateFloat "$value")" -ne 0 ] || return 1
         ;;
