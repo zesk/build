@@ -37,16 +37,17 @@ __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
-# IDENTICAL __installCheck 11
+# IDENTICAL __installCheck 12
 # Check the directory after installation and output the version
 # Usage: {fn} name versionFile usageFunction installPath
 __installCheck() {
   local name="$1" version="$2" usage="$3" installPath="$4"
   local versionFile="$installPath/$version"
   if [ ! -f "$versionFile" ]; then
-    __failEnvironment "$usage" "$(printf "%s\n\n  %s\n  %s\n" "Incorrect version or broken install (can't find $version):" "rm -rf bin/build" "${BASH_SOURCE[0]}")" || return $?
+    __failEnvironment "$usage" "$(printf "%s: %s\n\n  %s\n  %s\n" "$(consoleError "$name")" "Incorrect version or broken install (can't find $version):" "rm -rf $(dirname "$installPath/$version")" "${BASH_SOURCE[0]}")" || return $?
   fi
-  read -r version id < <(jq -r '(.version + " " + .id)' <"$versionFile") || :
+  read -r version id < <(jq -r '(.version + " " + .id)' <"$versionFile" || :) || :
+  [ -n "$version" ] && [ -n "$id" ] || __failEnvironment "$usage" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
   printf "%s %s (%s)\n" "$(consoleBoldBlue "$name")" "$(consoleCode "$version")" "$(consoleOrange "$id")"
 }
 
@@ -244,7 +245,7 @@ _installRemotePackage() {
 __installRemotePackage() {
   local exitCode="$1"
   shift || :
-  printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")"
+  printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")" 1>&2
   return "$exitCode"
 }
 
