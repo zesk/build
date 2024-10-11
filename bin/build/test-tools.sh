@@ -509,6 +509,7 @@ __testFailed() {
   for name in IFS HOME LINES COLUMNS OSTYPE PPID PID PWD TERM; do
     printf "%s=%s\n" "$(consoleLabel "$name")" "$(consoleValue "${!name-}")"
   done
+  consoleInfo "$(consoleMagenta "$sectionName") $(consoleCode "$item") failed on $(consoleValue "$(date +"%F %T")")"
   export globalTestFailure="$*"
   return "$errorCode"
 }

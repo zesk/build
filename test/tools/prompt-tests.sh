@@ -41,33 +41,21 @@ testBashPrompt() {
   # Remove J (?)
   matches=()
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
-  assertNotExitCode --dump --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
-
-  # DEBUG LINE
-  printf -- "%s:%s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleMagenta "$LINENO")" # DEBUG LINE
+  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
 
   # Remove B
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode --dump --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
-
-  # DEBUG LINE
-  printf -- "%s:%s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleMagenta "$LINENO")" # DEBUG LINE
+  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
 
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
   # Remove J (?)
   assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
 
-  # DEBUG LINE
-  printf -- "%s:%s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleMagenta "$LINENO")" # DEBUG LINE
-
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptK was not found in modules")
   # Remove K (?)
   assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptK --list || return $?
-
-  # DEBUG LINE
-  printf -- "%s:%s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleMagenta "$LINENO")" # DEBUG LINE
 
   unset "${leaks[@]}"
 }
