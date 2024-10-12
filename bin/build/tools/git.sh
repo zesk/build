@@ -361,45 +361,18 @@ gitTagVersion() {
   reportTiming "$init" "Tagged version completed in" || :
 }
 _gitTagVersion() {
+  # IDENTICAL usageDocument 1
   usageTemplate "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Usage: {fn} startingDirectory
-# Finds .git directory above or in current one.
+# Finds `.git` directory above or at `startingDirectory`
+# See: findFileHome
 gitFindHome() {
-  local usage="_${FUNCNAME[0]}"
-  local argument directory gitDirectory
-
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        directory="$(usageArgumentDirectory "$usage" "directory" "$argument")" || return $?
-        directory=$(realPath "$directory") || __failEnvironment "$usage" "realPath $directory" || return $?
-        lastDirectory=
-        while [ "$directory" != "$lastDirectory" ]; do
-          gitDirectory="$directory/.git"
-          if [ -d "$gitDirectory" ]; then
-            printf "%s\n" "$directory"
-            return 0
-          fi
-          lastDirectory="$directory"
-          directory="$(dirname "$directory")"
-        done
-        __failEnvironment "$usage" "No .git found above \"$argument\"" || return $?
-        ;;
-    esac
-    shift || __failArgument "$usage" shift || return $?
-  done
+  __directoryParent "_${FUNCNAME[0]}" --pattern ".git" "$@"
 }
 _gitFindHome() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

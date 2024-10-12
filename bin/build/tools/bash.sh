@@ -7,6 +7,26 @@
 # Docs: ./docs/_templates/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
+# Run or source a library
+# Usage: {fn} libraryRelativePath [ command ... ]
+bashLibrary() {
+  local usage="_${FUNCNAME[0]}"
+  local home run="${1-}" && shift
+  home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$(pwd)") || return $?
+  if [ $# -eq 0 ]; then
+    export HOME
+    # shellcheck source=/dev/null
+    source "$home/$run" || __failEnvironment "$usage" "${run//${HOME-}/~} failed" || return $?
+    consoleInfo "Reloaded $(consoleCode "$run") @ $(consoleInfo "${home//${HOME-}/~}")"
+  else
+    __echo "$home/$run" "$@"
+  fi
+}
+_bashLibrary() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Sanitize bash files for code quality.
 #
 # Usage: {fn} [ --help ] [ --interactive ] [ --check checkDirectory ] ...
@@ -94,6 +114,7 @@ bashSanitize() {
   printf "\n"
 }
 _bashSanitize() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

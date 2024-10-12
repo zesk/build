@@ -20,6 +20,7 @@ isAbsolutePath() {
   done
 }
 _isAbsolutePath() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -50,6 +51,7 @@ directoryClobber() {
   __usageEnvironment "$usage" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -74,6 +76,7 @@ requireFileDirectory() {
   done
 }
 _requireFileDirectory() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -95,6 +98,7 @@ fileDirectoryExists() {
   done
 }
 _fileDirectoryExists() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -117,6 +121,7 @@ requireDirectory() {
   done
 }
 _requireDirectory() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -144,6 +149,7 @@ directoryIsEmpty() {
   done
 }
 _directoryIsEmpty() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -170,4 +176,92 @@ directoryRelativePath() {
     printf "%s\n" "$relTop"
     shift
   done
+}
+
+# Usage: {fn} startingDirectory filePattern [ testExpression ... ]
+# Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)
+# Argument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.
+# Argument: --pattern filePattern - Required. RelativePath. The file or directory to find the home for.
+# Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
+directoryParent() {
+  __directoryParent "_${FUNCNAME[0]}" "$@"
+}
+_directoryParent() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Utility for specific implementations of `directoryParent`
+# See: gitFindHome
+# Usage: {fn} usageFunction [ --help ] startingDirectory filePattern [ testExpression ]
+# Argument: usageFunction - Required. Function. Called when an error occurs.
+# Argument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.
+# Argument: --pattern filePattern - Required. RelativePath. The file or directory to find the home for.
+# Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
+__directoryParent() {
+  local usage="${1-}" && shift
+  local argument nArguments argumentIndex saved
+  local testExpression directory lastDirectory="" passed passedExpression failedExpression
+  local startingDirectory="" filePattern="" testExpressions=() bestFailure=""
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$1"
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --pattern)
+        [ -z "$filePattern" ] || __failArgument "$usage" "$argument already specified" || return $?
+        shift
+        filePattern=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --test)
+        shift
+        testExpressions+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      *)
+        [ -z "$startingDirectory" ] || __failArgument "$usage" "startingDirectory $(consoleCode "$argument") was already specified $(consoleValue "$startingDirectory") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+        [ -n "$argument" ] || argument=$(__usageEnvironment "$usage" pwd) || return $?
+        startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  # Default is directory test
+  [ ${#testExpressions[@]} -gt 0 ] || testExpressions+=("-d")
+
+  directory="$startingDirectory"
+  while [ "$directory" != "$lastDirectory" ]; do
+    passed=true
+    passedExpression=""
+    failedExpression=""
+    for testExpression in "${testExpressions[@]+"${testExpressions[@]}"}"; do
+      [ "$testExpression" != "${testExpression#-}" ] || __failArgument "$usage" "Invalid expression: $(consoleCode "$testExpression") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+      if ! test "$testExpression" "$directory/$filePattern"; then
+        passed=false
+        failedExpression="$testExpression"
+        break
+      fi
+      passedExpression="$testExpression"
+    done
+    if $passed; then
+      printf "%s\n" "$directory"
+      return 0
+    fi
+    if [ -n "$passedExpression" ]; then
+      bestFailure="$directory/$filePattern ${#testExpressions[@]} passed $(consoleGreen "$passedExpression") failed: $(consoleRed "$failedExpression")" || return $?
+    fi
+    lastDirectory="$directory"
+    directory="$(dirname "$directory")"
+  done
+  [ -n "$bestFailure" ] || bestFailure="No $(consoleCode "$filePattern") found above $(consoleValue "$argument")"
+  __failEnvironment "$usage" "$bestFailure" || return $?
+  return 1
 }
