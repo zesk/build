@@ -18,13 +18,13 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
-### `__execute` - IDENTICAL __execute 9
+### `__execute` - IDENTICAL __execute EOF
 
-IDENTICAL __execute 9
+IDENTICAL __execute EOF
 Run binary and output failed command upon error
 Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 
-- Location: `bin/build/tools/daemontools/_log.sh`
+- Location: `bin/build/identical/__execute.sh`
 
 #### Arguments
 

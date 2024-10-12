@@ -14,3 +14,4 @@
 {isExecutable}
 {isCallable}
 {isTrue}
+{isArray}

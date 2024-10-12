@@ -35,14 +35,14 @@ _documentationTemplateUpdate() {
 # Usage: {fn} cacheDirectory envFile unlinkedTemplateFile unlinkedTarget pageTemplateFile [ todoTemplateCode ]
 # Argument: cacheDirectory - Required. Directory. Cache directory.
 # Argument: envFile - Required. File. Environment file used as base environment for all template generation.
-# Argument: template - Required. File. Environment file used as base environment for all template generation.
-# Argument: target - Required. FileDirectory. Environment file used as base environment for all template generation.
-# Argument: pageTemplate - Required. File. Environment file used as base environment for all template generation.
+# Argument: template - Required. File. Final template file.
+# Argument: target - Required. FileDirectory. Path to documentationPath.
+# - Argument: pageTemplate - Required. File. Environment file used as base environment for all template generation.
 # Argument: todoTemplateCode - Optional. File. Template code for template.
 #
 _documentationTemplateUpdateUnlinked() {
   local usage="_${FUNCNAME[0]}"
-  local cacheDirectory envFile template target unlinkedFunctions todoTemplate template total clean
+  local cacheDirectory envFile template target unlinkedFunctions todoTemplate template total clean content
 
   clean=()
   cacheDirectory=$(usageArgumentDirectory "$usage" "cacheDirectory" "${1-}") || return $?
@@ -59,7 +59,8 @@ _documentationTemplateUpdateUnlinked() {
 
   # Subshell hide globals
   (
-    total=$total content=$(printf "%s\n\n%s\n" "$(cat "$todoTemplate")" "$(sort <"$unlinkedFunctions")") mapEnvironment content total <"$pageTemplate" >"$template.$$"
+    content="$(sort <"$unlinkedFunctions")"
+    content=$content total=$total mapEnvironment content total <"$todoTemplate" >"$template.$$"
   ) || _clean $? "${clean[@]}" || return $?
 
   __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?

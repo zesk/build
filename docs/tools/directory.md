@@ -128,3 +128,40 @@ Copy directory over another sort-of-atomically
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+### `__directoryParent` - Utility for specific implementations of `directoryParent`
+
+Utility for specific implementations of `directoryParent`
+
+- Location: `bin/build/tools/directory.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Called when an error occurs.
+- `startingDirectory` - Required. EmptyString|RealDirectory. Uses the current directory if blank.
+- `--pattern filePattern` - Required. RelativePath. The file or directory to find the home for.
+- `--test testExpression` - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### `directoryParent` - Finds a file above `startingDirectory`, uses `testExpression` to test (defaults
+
+Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)
+
+- Location: `bin/build/tools/directory.sh`
+
+#### Arguments
+
+- `startingDirectory` - Required. EmptyString|RealDirectory. Uses the current directory if blank.
+- `--pattern filePattern` - Required. RelativePath. The file or directory to find the home for.
+- `--test testExpression` - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

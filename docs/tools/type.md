@@ -184,3 +184,12 @@ Succeeds when all arguments are "true"-ish
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+#### Arguments
+
+- `variableName` - Required. String. Variable to check is an array.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

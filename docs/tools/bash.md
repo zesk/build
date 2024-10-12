@@ -4,6 +4,21 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `bashLibrary` - Run or source a library
+
+Run or source a library
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `bashSanitize` - Sanitize bash files for code quality.
 
 Sanitize bash files for code quality.

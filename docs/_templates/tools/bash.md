@@ -5,6 +5,7 @@
 <hr />
 
 {bashLibrary}
+{bashLibraryHome}
 {bashSanitize}
 {bashLintFiles}
 {bashLint}

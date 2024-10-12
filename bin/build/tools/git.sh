@@ -362,7 +362,7 @@ gitTagVersion() {
 }
 _gitTagVersion() {
   # IDENTICAL usageDocument 1
-  usageTemplate "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} startingDirectory
@@ -840,7 +840,7 @@ gitPreCommitCleanup() {
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
 # Exit Code: 0 - All branches passed exist
-# Exit Cdoe: 1 - At least one branch does not exist locally or remotely
+# Exit Code: 1 - At least one branch does not exist locally or remotely
 gitBranchExists() {
   local usage="_${FUNCNAME[0]}"
 
@@ -861,7 +861,7 @@ _gitBranchExists() {
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
 # Exit Code: 0 - All branches passed exist
-# Exit Cdoe: 1 - At least one branch does not exist locally
+# Exit Code: 1 - At least one branch does not exist locally
 gitBranchExistsLocal() {
   local usage="_${FUNCNAME[0]}"
   local branch
@@ -882,7 +882,7 @@ _gitBranchExistsLocal() {
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
 # Exit Code: 0 - All branches passed exist
-# Exit Cdoe: 1 - At least one branch does not exist remotely
+# Exit Code: 1 - At least one branch does not exist remotely
 gitBranchExistsRemote() {
   local usage="_${FUNCNAME[0]}"
   local branch

@@ -293,9 +293,9 @@ Current repository should be clean and have no modified files.
 
 - `1` - Already in main, staging, or HEAD, or git merge failed
 - `0` - git merge succeeded
-### `gitFindHome` - Finds .git directory above or in current one.
+### `gitFindHome` - Finds `.git` directory above or at `startingDirectory`
 
-Finds .git directory above or in current one.
+Finds `.git` directory above or at `startingDirectory`
 
 - Location: `bin/build/tools/git.sh`
 

@@ -291,9 +291,10 @@ documentationIndex_ShowUnlinked() {
 documentationIndex_SetUnlinkedDocumentationPath() {
   local cacheDirectory="$1" target="$2"
   local functionName settingsFile
+  target="$(trimSpace "$target")"
   documentationIndex_UnlinkedIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     if ! grep -q "'documentationPath'" "$settingsFile"; then
-      __dumpNameValue documentationPath "$(trimSpace "$target")" >>"$settingsFile"
+      __dumpNameValue documentationPath "$target" >>"$settingsFile"
       __dumpNameValue documentationPathUnlinked 1 >>"$settingsFile"
     fi
     printf '%s %s\n' "$functionName" "$settingsFile"

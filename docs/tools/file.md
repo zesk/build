@@ -432,4 +432,4 @@ Find list of files which do NOT match a specific pattern or patterns and output 
 
 - `0` - Success
 - `1` - Environment error
-- `2` - Argument error
+- `2` - Argument error 
