@@ -7,12 +7,22 @@
 # Docs: ./docs/_templates/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
+# Output the home for a library in the parent path
+# Usage: {fn} libraryRelativePath
+# stdout: Parent path where libraryRelativePath exists
+bashLibraryHome() {
+  local usage="_${FUNCNAME[0]}"
+  local home run="${1-}"
+  home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$(pwd)") || return $?
+  printf "%s\n" "$home"
+}
+
 # Run or source a library
 # Usage: {fn} libraryRelativePath [ command ... ]
 bashLibrary() {
   local usage="_${FUNCNAME[0]}"
   local home run="${1-}" && shift
-  home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$(pwd)") || return $?
+  home=$(bashLibraryHome "$run") || return $?
   if [ $# -eq 0 ]; then
     export HOME
     # shellcheck source=/dev/null

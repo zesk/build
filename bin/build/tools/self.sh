@@ -352,7 +352,20 @@ _buildEnvironmentLoad() {
 # Example:
 # Example:
 Build() {
-  bashLibrary bin/build/tools.sh "$@"
+  local usage="_${FUNCNAME[0]}"
+  local run="bin/build/tools.sh"
+  local home
+
+  if ! home=$(bashLibraryHome "$run" 2>/dev/null); then
+    home=$(__usageEnvironment "$usage" buildHome) || return $?
+    __echo "$home/$run" "$@" || return $?
+  else
+    bashLibrary "$run" "$@"
+  fi
+}
+_Build() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Load and print one or more environment settings
@@ -378,6 +391,7 @@ buildEnvironmentGet() {
   done
 }
 _buildEnvironmentGet() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
