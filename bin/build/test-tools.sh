@@ -32,8 +32,9 @@ testSuite() {
   local usage="_${FUNCNAME[0]}"
   local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
   # Avoid conflict with __argument
-  local __ARGUMENT start showFlag mode
-  local continueFile continueFlag doStats statsFile allTestStart testStart testPaths runner startString
+  local __ARGUMENT start mode
+  local statsFile allTestStart testStart testPaths runner startString continueFile verboseMode
+  local listFlag=false runner=() testPaths=() messyOption="" checkTests=() continueFlag=false matchTests=() failExecutors=() doStats=true showFlag=false
 
   startString="$(__usageEnvironment "$usage" date +"%F %T")" || return $?
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
@@ -46,8 +47,6 @@ testSuite() {
 
   allTestStart=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
-
   quietLog="$(__usageEnvironment "$usage" buildQuietLog "${usage#_}")" || return $?
   __usageEnvironment "$usage" printf "%s started on %s\n" "${usage#_}" "$startString" >"$quietLog" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
@@ -58,28 +57,18 @@ testSuite() {
   mode="$BUILD_COLORS_MODE"
   [ -n "$mode" ] || mode=none
 
-  printf "%s started on %s (%s)\n" "$(consoleBoldRed "${usage#_}")" "$(consoleValue "$startString")" "$(consoleCode "$mode")"
-
   testTracing=initialization
-  trap __testCleanupMess EXIT QUIT TERM
+  trap '__testCleanupMess' EXIT QUIT TERM
 
-  messyOption=
-  checkTests=()
-  continueFile="$BUILD_HOME/.last-run-test"
-  continueFlag=false
-  testTracing=options
-  matchTests=()
-  failExecutors=()
-  doStats=true
-  showFlag=false
-  testPaths=()
-  runner=()
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
     __ARGUMENT="$1"
     case "$__ARGUMENT" in
       -l | --show)
         showFlag=true
+        ;;
+      --verbose)
+        verboseMode=true
         ;;
       --tests)
         shift
@@ -104,6 +93,10 @@ testSuite() {
         "$usage" 0
         _textExit 0
         ;;
+      --list)
+        verboseMode=false
+        listFlag=true
+        ;;
       --fail)
         shift
         failExecutors+=("$(usageArgumentCallable "$usage" "failExecutor" "${1-}")") || return $?
@@ -117,7 +110,7 @@ testSuite() {
         return 0
         ;;
       --messy)
-        messyOption=1
+        trap '__testCleanupMess true' EXIT QUIT TERM
         ;;
       *)
         matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
@@ -127,6 +120,11 @@ testSuite() {
   done
 
   [ "${#testPaths[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one --tests directory" || return $?
+
+  if $verboseMode; then
+    hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
+    printf "%s started on %s (%s)\n" "$(consoleBoldRed "${usage#_}")" "$(consoleValue "$startString")" "$(consoleCode "$mode")"
+  fi
 
   allTests=()
   while read -r item; do
@@ -138,6 +136,7 @@ testSuite() {
     _textExit 0
   fi
 
+  continueFile="$BUILD_HOME/.last-run-test"
   $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?
 
   if [ ${#checkTests[@]} -eq 0 ]; then
@@ -169,13 +168,13 @@ testSuite() {
         if isCallable "$foundTest"; then
           foundTests+=("$foundTest")
         else
-          consoleError "Invalid test $foundTest is not callable"
+          consoleError "Invalid test $foundTest is not callable" 1>&2
         fi
       fi
     done < <(sort -u "$testFunctions")
     testCount="${#foundTests[@]}"
     if [ "$testCount" -gt 0 ]; then
-      statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
+      ! $verboseMode || statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
       tests+=("#$item" "${foundTests[@]+"${foundTests[@]}"}")
     else
       consoleError "No tests found in $testFile" 1>&2
@@ -206,7 +205,23 @@ testSuite() {
     fi
     filteredTests+=("$item")
   done
+  if $listFlag; then
+    sectionName=
+    for item in "${filteredTests[@]}"; do
+      if [ "$item" != "${item#\#}" ]; then
+        sectionFile="${item#\#}"
+        sectionName=$(__testCode "$sectionFile")
+        printf -- "# %s\n" "$sectionName"
+        continue
+      fi
+      printf "%s\n" "$item"
+    done
+    cleanExit=true
+    return 0
+  fi
+
   if [ ${#filteredTests[@]} -gt 0 ]; then
+    testTracing=options
     sectionName=
     sectionNameHeading=
     for item in "${filteredTests[@]}"; do
@@ -532,7 +547,7 @@ __testCleanup() {
 }
 
 __testCleanupMess() {
-  local fn exitCode=$?
+  local fn exitCode=$? messyOption="${1-}"
 
   export cleanExit
 
@@ -544,7 +559,7 @@ __testCleanupMess() {
     done
     printf "\n%s\n" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $testTracing"
   fi
-  if test "$messyOption"; then
+  if [ "$messyOption" = "true" ]; then
     printf "%s\n" "Messy ... no cleanup"
     return 0
   fi
