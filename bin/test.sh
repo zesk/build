@@ -40,9 +40,9 @@ __buildTestSuite() {
   local here="${BASH_SOURCE[0]%/*}"
   local testHome
 
-  testHome="$(__environment realPath "${here%/*}/../test")" || return $?
-  __environment bashSourcePath "$testHome/support" || return $?
-  testTools testSuite --tests "$(realPath "$testHome/tools")" "$@" || __failEnvironment "$usage" "testTools" || return $?
+  testHome="$(__environment realPath "$here/..")" || return $?
+  __environment bashSourcePath "$testHome/test/support" || return $?
+  testTools testSuite --tests "$testHome/test/tools" "$@" || __failEnvironment "$usage" "testTools" || return $?
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

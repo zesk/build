@@ -29,3 +29,11 @@ testWrapperShellScripts() {
   fi
   unset BUILD_COMPANY
 }
+
+testTestSuite() {
+  local home
+
+  home=$(__environment buildHome) || return $?
+  # env -i is to avoid having our functions inherited to parent and no tests found in test/tools when loaded by __testLoad
+  assertExitCode --line "$LINENO" --stdout-match testWrapperShellScripts --stdout-match "${FUNCNAME[0]}" 0 env -i "$home/bin/test.sh" --list || return $?
+}

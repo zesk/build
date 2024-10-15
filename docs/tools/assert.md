@@ -32,6 +32,7 @@ If this fails it will output an error and exit.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - Expected string
@@ -77,6 +78,7 @@ If this fails it will output an error and exit.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - Required. Expected string.
@@ -116,6 +118,7 @@ Assert one string contains another (case-sensitive)
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `needle` - Thing we are looking for
@@ -145,6 +148,7 @@ Assert one string does not contains another (case-sensitive)
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `needle` - Thing we are looking for
@@ -252,6 +256,7 @@ Assert `leftValue <= rightValue`
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `leftValue` - Value to compare on the left hand side of the comparison
@@ -299,6 +304,7 @@ If this fails it will output an error and exit.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 
@@ -336,6 +342,7 @@ If this fails it will output an error and exit.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 
@@ -376,6 +383,7 @@ If this fails it will output an error and exit.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - Expected string
@@ -416,6 +424,7 @@ If this fails it will output the command result to stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - A string to expect in the output
@@ -462,6 +471,7 @@ If this fails it will output the command result to stdout.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expected` - A string to NOT expect in the output
@@ -513,6 +523,7 @@ $\Test that a directory exists
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should exist
@@ -558,6 +569,7 @@ $\Test that a directory does not exist
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should NOT exist
@@ -598,6 +610,7 @@ $\Test that a directory exists
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should exist and be empty
@@ -638,6 +651,7 @@ $\Test that a directory does not exist
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `directory` - Directory that should exist and not be empty
@@ -677,6 +691,7 @@ $\Test that a file exists
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `item` - File that should exist
@@ -717,6 +732,7 @@ $\Test that a file does not exist
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `file` - File that should NOT exist
@@ -757,6 +773,7 @@ File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName` - File to search
@@ -801,6 +818,7 @@ File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 202
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName` - File to search
@@ -835,6 +853,7 @@ If the file does not exist, this will fail.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expectedSize` - Integer file size which `fileName` should be, in bytes.
@@ -866,6 +885,7 @@ If the file does not exist, this will fail.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `expectedSize` - Integer file size which `fileName` should NOT be, in bytes.
@@ -898,6 +918,7 @@ If the file does not exist, this will fail.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName ...` - Required. File. One ore more file which should be zero bytes in size.
@@ -928,6 +949,7 @@ If the file does not exist, this will fail.
 - `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
 - `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
 - `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
 - `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
 - `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `fileName ...` - Required. File. One ore more file which should NOT be zero bytes in size.

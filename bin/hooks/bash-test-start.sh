@@ -60,8 +60,10 @@ _integer() {
 # Summary: Run before a test
 # Usage: {fn} module testFunction
 __hookBashTestStart() {
-  local module="$1" testFunction="$2"
-  iTerm2Badge -i "👀 $module \n➡️ $testFunction"
+  local module="$1" testFunction="$2" name
+  name=$(buildEnvironmentGet APPLICATION_NAME)
+  [ -z "$name" ] || name="🍎 ${name}\n"
+  iTerm2Badge -i "${name}👀 ${module} \n➡️ ${testFunction}"
 }
 
 __tools ../.. __hookBashTestStart "$@"

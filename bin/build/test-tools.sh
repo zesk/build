@@ -30,10 +30,10 @@ export globalTestFailure=
 # Hook: bash-test-fail
 testSuite() {
   local usage="_${FUNCNAME[0]}"
-  local testFile quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
+  local quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start mode
-  local statsFile allTestStart testStart testPaths runner startString continueFile verboseMode
+  local statsFile allTestStart testStart testPaths runner startString continueFile verboseMode=false
   local listFlag=false runner=() testPaths=() messyOption="" checkTests=() continueFlag=false matchTests=() failExecutors=() doStats=true showFlag=false
 
   startString="$(__usageEnvironment "$usage" date +"%F %T")" || return $?
@@ -159,6 +159,7 @@ testSuite() {
   testFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
   tests=()
   for item in "${checkTests[@]}"; do
+    set -eou pipefail
     if ! __testLoad "$item" >"$testFunctions"; then
       __failEnvironment "$usage" "Can not load $item" || return $?
     fi
@@ -177,7 +178,8 @@ testSuite() {
       ! $verboseMode || statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
       tests+=("#$item" "${foundTests[@]+"${foundTests[@]}"}")
     else
-      consoleError "No tests found in $testFile" 1>&2
+      consoleError "No tests found in $item" 1>&2
+      dumpPipe testFunctions <"$testFunctions" 1>&2
     fi
   done
   ! $doStats || statsFile=$(__environment mktemp) || return $?
@@ -377,8 +379,10 @@ __testDebugTermDisplay() {
 #
 __testLoad() {
   local usage="_${FUNCNAME[0]}"
-  local tests __testDirectory resultCode stickyCode resultReason
+  local tests
   local __test __tests tests __errors
+
+  export DEBUGGING_TEST_LOAD
 
   __beforeFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
   __testFunctions="$__beforeFunctions.after"

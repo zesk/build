@@ -16,7 +16,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --env 1
 # Argument: --env envFile - Optional. File. Environment file to load - can handle any format.
-# DOC TEMPLATE: assert-common 13
+# DOC TEMPLATE: assert-common 14
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --debug - Optional. Flag. Debugging
@@ -28,6 +28,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
 # Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
+# Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # This function serves as a sample for all other templates.

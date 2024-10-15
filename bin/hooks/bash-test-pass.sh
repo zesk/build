@@ -54,14 +54,18 @@ _integer() {
 }
 
 # <-- END of IDENTICAL _return
+# <-- END of IDENTICAL _return
 
 #
 # fn: {base}
 # Summary: Run before a test
 # Usage: {fn} module testFunction
 __hookBashTestPass() {
-  local module="$1" testFunction="$2"
-  iTerm2Badge -i "👀 $module \n✅️ $testFunction"
+  local module="$1" testFunction="$2" name symbol="✅"
+  # IDENTICAL hookBashTestFinish 3
+  name=$(buildEnvironmentGet APPLICATION_NAME)
+  [ -z "$name" ] || name="🍎 ${name}\n"
+  iTerm2Badge -i "${name}👀 ${module} \n${symbol}️ ${testFunction}"
 }
 
 __tools ../.. __hookBashTestPass "$@"
