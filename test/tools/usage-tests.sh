@@ -5,12 +5,25 @@
 # Depends: assert.sh usage.sh
 #
 
+testUsageFunctions() {
+  local match
+
+  match=$(randomString)
+  assertExitCode --line "$LINENO" --stderr-match "$match" 1 _environment "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 2 _argument "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __failEnvironment _return "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __failArgument _return "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __usageEnvironment _return _return 99 "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __usageArgument _return _return 99 "$match" || return $?
+}
+
 __sampleArgs() {
   cat <<EOF
   --name value is required
   --value name
 EOF
 }
+
 testUsageArguments1() {
   local results
 

@@ -63,7 +63,7 @@ __failEnvironment() {
 __failArgument() {
   local usage="${1-}"
   isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift && "$usage" 1 "$@" || return $?
+  shift && "$usage" 2 "$@" || return $?
 }
 
 # Run `usage` with an environment error

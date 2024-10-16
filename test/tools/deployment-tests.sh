@@ -230,13 +230,13 @@ testDeployBuildEnvironment() {
     d=$(mktemp -d)
     __environment pushd "$d" >/dev/null || return $?
 
-    assertExitCode --stderr-match "blank" 2 deployBuildEnvironment --id || return $?
+    assertExitCode --line "$LINENO" --stderr-match "blank" 2 deployBuildEnvironment --id || return $?
 
-    assertExitCode --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
+    assertExitCode --line "$LINENO"  --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
 
-    assertExitCode --stderr-match "blank" 2 deployBuildEnvironment "" --id || return $?
+    assertExitCode --line "$LINENO"  --stderr-match "blank" 2 deployBuildEnvironment "" --id || return $?
 
-    assertExitCode --stderr-match "APPLICATION_ID" 2 deployBuildEnvironment || return $?
+    assertExitCode --line "$LINENO"  --stderr-match "APPLICATION_ID" 2 deployBuildEnvironment || return $?
 
     sampleHome=/var/DEPLOY
     sampleApplication=/var/app

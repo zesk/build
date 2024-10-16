@@ -9,11 +9,6 @@
 #
 
 # IDENTICAL _tinySugar EOF
-# Error codes
-_code() {
-  case "${1-}" in *nvironment) printf 1 ;; *rgument) printf 2 ;; *) printf 126 ;; esac
-}
-
 # Usage: {fn} usage message
 __failArgument() {
   local usage="${1-}"
