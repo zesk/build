@@ -16,6 +16,10 @@ bashLibraryHome() {
   home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$(pwd)") || return $?
   printf "%s\n" "$home"
 }
+_bashLibraryHome() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Run or source a library
 # Usage: {fn} libraryRelativePath [ command ... ]

@@ -123,7 +123,7 @@ hasHook() {
   local binary
   local applicationHome
 
-  applicationHome="."
+  applicationHome="$(__usageEnvironment "$usage" buildHome)" || return $?
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -171,7 +171,7 @@ whichHook() {
   IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_PATH" || :
   [ ${#hookPaths[@]} -gt 0 ] || __failEnvironment "$usage" "BUILD_HOOK_PATH is blank" || return $?
 
-  applicationHome="."
+  applicationHome="$(__usageEnvironment "$usage" buildHome)" || return $?
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?

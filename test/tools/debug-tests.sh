@@ -144,7 +144,7 @@ testHousekeeper() {
   local testDir testFile
 
   export BUILD_HOME
-  leakCode=$(_code LeAk)
+  leakCode=$(_code leak)
 
   buildEnvironmentLoad BUILD_HOME || return $?
 
@@ -154,7 +154,7 @@ testHousekeeper() {
   __environment cp -r "$BUILD_HOME" "$testDir" || return $?
   __environment cd "$testDir" || return $?
 
-  assertEquals 108 "$leakCode" || return $?
+  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
 
   statusMessage consoleInfo Housekeeper tests
   assertNotExitCode --stderr-match "is not directory" --line "$LINENO" 0 housekeeper --path NOT-A-DIR || return $?

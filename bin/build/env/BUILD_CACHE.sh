@@ -21,3 +21,4 @@ _BUILD_CACHE_DEFAULT() {
   printf "%s/%s\n" "${useDir%%/}" ".build"
 }
 BUILD_CACHE="${BUILD_CACHE:-"$(_BUILD_CACHE_DEFAULT)"}"
+unset _BUILD_CACHE_DEFAULT

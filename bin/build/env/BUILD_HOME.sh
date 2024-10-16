@@ -5,14 +5,8 @@ export BUILD_HOME
 
 BUILD_HOME="${BUILD_HOME-}"
 if [ -z "$BUILD_HOME" ]; then
-  __buildHome() {
-    # shellcheck disable=SC2015
-    printf "%s\n" "$(cd "${BASH_SOURCE[0]%/*}/../../.." && pwd || printf "%s\n" "Unable to determine BUILD_HOME: $(pwd)")"
-  }
-  BUILD_HOME="$(__buildHome)"
-  if [ -z "$BUILD_HOME" ]; then
-    printf "%s\n" "Unable to determine BUILD_HOME - system is unstable" 1>&2
-    false
+  BUILD_HOME="$(printf "%s\n" "$(cd "${BASH_SOURCE[0]%/*}/../../.." && pwd || printf "%s\n" "Unable to determine BUILD_HOME: $(pwd)")")"
+  if [ ! -d "$BUILD_HOME" ]; then
+    printf "%s\n" "Unable to determine BUILD_HOME - system is unstable: $BUILD_HOME" 1>&2
   fi
-  unset __buildHome
 fi
