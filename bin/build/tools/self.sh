@@ -230,24 +230,6 @@ _installInstallBinaryDifferFilter() {
 
 # Usage: {fn}
 # Environment: BUILD_HOME
-# Prints the build home directory (usually same as the application root)
-buildHome() {
-  local usage="_${FUNCNAME[0]}"
-  export BUILD_HOME
-  if [ -z "${BUILD_HOME-}" ]; then
-    # Special for a reason - do not use buildEnvironmentLoad - as it causes recursion problems
-    __usageEnvironment "$usage" source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || return $?
-    [ -n "${BUILD_HOME-}" ] || __failEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
-  fi
-  printf "%s\n" "${BUILD_HOME-}"
-}
-_buildHome() {
-  # IDENTICAL usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Usage: {fn}
-# Environment: BUILD_HOME
 # Prints the list of functions defined in Zesk Build
 buildFunctions() {
   local usage="_${FUNCNAME[0]}"
@@ -289,11 +271,30 @@ _buildCacheDirectory() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-_buildEnvironmentPath() {
-  local usage="$1" paths
+# Usage: {fn}
+# Environment: BUILD_HOME
+# Prints the build home directory (usually same as the application root)
+# Environment: BUILD_HOME
+buildHome() {
+  export BUILD_HOME
+  if [ -z "${BUILD_HOME-}" ]; then
+    # shellcheck source=/dev/null
+    source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || _environment "BUILD_HOME.sh failed" || return $?
+    [ -n "${BUILD_HOME-}" ] || _environment "BUILD_HOME STILL blank" || return $?
+  fi
+  printf "%s\n" "${BUILD_HOME-}"
+}
 
-  export BUILD_ENVIRONMENT_PATH
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+# Parent: buildHome
+_buildEnvironmentPath() {
+  local paths home
+
+  export BUILD_ENVIRONMENT_PATH BUILD_HOME
+  if [ -z "$BUILD_HOME" ]; then
+    home=$(__environment buildHome) || return $?
+  else
+    home="$BUILD_HOME"
+  fi
   printf "%s\n" "$home/bin/build/env" "$home/bin/env"
   IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_PATH-}"
   printf "%s\n" "${paths[@]+"${paths[@]}"}"
@@ -315,33 +316,34 @@ _buildEnvironmentPath() {
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
-  local env path file found home
+  local env paths=() path file found
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
-  for env in "$@"; do
+  while [ $# -gt 0 ]; do
+    env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
     found=false
-    while read -r path; do
+    read -d '' -r -a paths < <(_buildEnvironmentPath)
+    for path in "${paths[@]}"; do
       [ -d "$path" ] || continue
       file="$path/$env.sh"
       if [ -x "$file" ]; then
-        export "${env?}" || __failArgument "$usage" "export $env failed" || return $?
+        export "${env?}" || __failEnvironment "$usage" "export $env failed" || return $?
         found=true
         set -a || :
         # shellcheck source=/dev/null
         source "$file" || __failEnvironment "$usage" source "$file" return $?
         set +a || :
       fi
-    done < <(_buildEnvironmentPath "$usage")
+    done
     $found || __failEnvironment "$usage" "Missing $file" || return $?
+    shift
   done
 }
 _buildEnvironmentLoad() {
   local exitCode
-
   exitCode="${1-}"
   shift || :
   printf "bin/build/env ERROR: %s\n" "$@" 1>&2
-  debuggingStack
+  # debuggingStack
   return "$exitCode"
 }
 
@@ -402,19 +404,26 @@ _buildEnvironmentGet() {
 # Argument: --no-create - Optional. Do not require creation of the directory where the log file will appear.
 #
 buildQuietLog() {
-  local argument logFile flagMake argument
   local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local logFile flagMake
 
-  flagMake=true
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    case $1 in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --no-create)
         flagMake=false
         ;;
       *)
-        logFile="$(buildCacheDirectory "$1.log")" || __failEnvironment "$usage" buildCacheDirectory "$1.log" || return $?
+        logFile="$(buildCacheDirectory "$1.log")" || __failEnvironment "$usage" buildCacheDirectory "$argument.log" || return $?
         ! "$flagMake" || __usageEnvironment "$usage" requireFileDirectory "$logFile" || return $?
         printf "%s\n" "$logFile"
         ;;
@@ -432,14 +441,15 @@ _buildQuietLog() {
 # Argument: arguments ... - Required. Command to run in new context.
 # Avoid infinite loops here, call down.
 buildEnvironmentContext() {
+  local usage="_${FUNCNAME[0]}"
   local start codeHome home
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
-  home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+  home=$(__usageEnvironment "$usage" gitFindHome "$start") || return $?
   if [ "$codeHome" != "$home" ]; then
     consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
     [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
-    "$home/bin/build/tools.sh" "$@"
+    __usageEnvironment "$usage" "$home/bin/build/tools.sh" "$@" || return $?
     return $?
   fi
   __environment "$@" || return $?

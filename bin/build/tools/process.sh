@@ -172,6 +172,7 @@ processMemoryUsage() {
   done
 }
 _processMemoryUsage() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -197,5 +198,80 @@ processVirtualMemoryAllocation() {
   done
 }
 _processVirtualMemoryAllocation() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# TODO: This is in progress
+# Output the number of open files for a process ID or group
+# Not completed yet
+processOpenPipes() {
+  # -c n - character width of COMMAND output
+  # -F field format
+  # -g pid | -p pid - process or group to list
+  # -l - Do not translate uid to login
+  # -n - Do not translate IPs to names
+  # -s - Show SIZE always
+  # -s - Show SIZE always
+  local usage="_${FUNCNAME[0]}"
+  local pid
+  while [ $# -gt 0 ]; do
+    pid="$(usageArgumentInteger "$usage" "pid" "$1")"
+    lsof -c 9999 -g "$pid" -l -F ckns
+    shift
+  done
+}
+_processOpenPipes() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# lsof
+# Fields
+#
+#    a    file access mode
+#    c    process command name (all characters from proc or
+#        user structure)
+#    C    file structure share count
+#    d    file's device character code
+#    D    file's major/minor device number (0x<hexadecimal>)
+#    f    file descriptor
+#    F    file structure address (0x<hexadecimal>)
+#    G    file flaGs (0x<hexadecimal>; names if +fg follows)
+#    i    file's inode number
+#    k    link count
+#    l    file's lock status
+#    L    process login name
+#    m    marker between repeated output
+#    n    file name, comment, Internet address
+#    N    node identifier (ox<hexadecimal>
+#    o    file's offset (decimal)
+#    p    process ID (always selected)
+#    g    process group ID
+#    P    protocol name
+#    r    raw device number (0x<hexadecimal>)
+#    R    parent process ID
+#    s    file's size (decimal)
+#    S    file's stream identification
+#    t    file's type
+#    T    TCP/TPI information, identified by prefixes (the
+#        '=' is part of the prefix):
+#            QR=<read queue size>
+#            QS=<send queue size>
+#            SO=<socket options and values> (not all dialects)
+#            SS=<socket states> (not all dialects)
+#            ST=<connection state>
+#            TF=<TCP flags and values> (not all dialects)
+#            WR=<window read size>  (not all dialects)
+#            WW=<window write size>  (not all dialects)
+#        (TCP/TPI information isn't reported for all supported
+#          UNIX dialects. The -h or -? help output for the
+#          -T option will show what TCP/TPI reporting can be
+#          requested.)
+#    u    process user ID
+#    z    Solaris 10 and higher zone name
+#    Z    SELinux security context (inhibited when SELinux is disabled)
+#    0    use NUL field terminator character in place of NL
+#    1-9    dialect-specific field identifiers (The output
+#        of -F? identifies the information to be found
+#        in dialect-specific fields.)

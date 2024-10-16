@@ -793,8 +793,12 @@ characterFromInteger() {
     arg="$1"
     __usageArgument "$usage" isUnsignedInteger "$arg" || return $?
     [ "$arg" -lt 256 ] || __failArgument "$usage" "Integer out of range: \"$arg\"" || return $?
-    # shellcheck disable=SC2059
-    printf "\\$(printf '%03o' "$arg")"
+    if [ "$arg" -eq 0 ]; then
+      printf "%s\n" $'\0'
+    else
+      # shellcheck disable=SC2059
+      printf "\\$(printf '%03o' "$arg")"
+    fi
     shift || __failArgument "$usage" "shift $arg failed" || return $?
   done
 }
@@ -848,28 +852,47 @@ _characterToInteger() {
 # Usage: {fn}
 #
 # Write a report of the character classes
-#
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --class - Optional. Flag. Show class and then characters in that class.
+# Argument: --char - Optional. Flag. Show characters and then class for that character.
 characterClassReport() {
-  local arg character classList indexList outer matched total classOuter outerList innerList nouns outerText width
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local arg character classList indexList outer matched total classOuter=false outerList innerList nouns outerText width=5
+  local savedLimit
 
-  classOuter=false
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$arg" in
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --class)
         classOuter=true
         ;;
       --char)
         classOuter=false
         ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
     esac
-    shift || __failArgument "$usage" "shift $arg failed" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
   classList=()
   for arg in $(characterClasses); do
     classList+=("$arg")
   done
+
+  savedLimit="$(__usageEnvironment "$usage" ulimit -n)" || return $?
+  __usageEnvironment "$usage" ulimit -n 10240 || return $?
   # shellcheck disable=SC2207
   indexList=($(seq 0 127))
 
@@ -890,7 +913,7 @@ characterClassReport() {
       class="$outer"
       outerText="$(consoleLabel "$(alignRight 10 "$outer")")"
     else
-      character=$(characterFromInteger "$outer")
+      character="$(characterFromInteger "$outer")" 2>/dev/null
       if ! isCharacterClass print "$character"; then
         outerText="$(printf "x%x " "$outer")"
         outerText="$(alignRight 5 "$outerText")"
@@ -902,7 +925,7 @@ characterClassReport() {
     printf "%s: " "$(alignLeft "$width" "$outerText")"
     for inner in "${innerList[@]}"; do
       if $classOuter; then
-        character=$(characterFromInteger "$inner")
+        character="$(characterFromInteger "$inner")"
       else
         class="$inner"
       fi
@@ -923,6 +946,11 @@ characterClassReport() {
     total=$((total + matched))
   done
   printf "%s total %s\n" "$(consoleBoldRed "$total")" "$(consoleRed "$(plural "$total" "${nouns[@]}")")"
+  __usageEnvironment "$usage" ulimit -n "$savedLimit" || return $?
+}
+_characterClassReport() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # See: cannon.sh
@@ -1274,5 +1302,16 @@ unquote() {
     value="${value#"$quote"}"
     value="${value%"$quote"}"
   fi
+  printf "%s\n" "$value"
+}
+
+# Primary case to unquote quoted things "" ''
+__unquote() {
+  local value="${1-}"
+  case "${value:0:1}" in
+    "'") value="$(unquote "'" "$value")" ;;
+    '"') value="$(unquote '"' "$value")" ;;
+    *) ;;
+  esac
   printf "%s\n" "$value"
 }

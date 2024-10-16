@@ -508,6 +508,22 @@ usageArgumentFunction() {
   printf "%s\n" "$1"
 }
 
+# Validates a value is ok for an environment variable name
+# Upon success, outputs the name
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Environment variable name.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `environment variable`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentEnvironmentVariable() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  environmentVariableNameValid "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not a valid environment variable name" || return $?
+  printf "%s\n" "$1"
+}
+
 # Throw an unknown argument error
 # Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.

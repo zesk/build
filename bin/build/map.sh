@@ -103,7 +103,7 @@ _command() {
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 _code() {
   local k && while [ $# -gt 0 ]; do
-    case "$(printf -- "%s" "$1" | tr '[:upper:]' '[:lower:]')" in
+    case "$1" in
       environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; test) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
     esac && shift && printf -- "%d\n" "$k"
   done
@@ -147,7 +147,7 @@ _clean() {
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 _environment() {
-  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+  _return 1 "$@" || return $?
 }
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
@@ -155,7 +155,7 @@ _environment() {
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 _argument() {
-  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+  _return 2 "$@" || return $?
 }
 
 # Run `command ...` (with any arguments) and then `_return` if it fails.

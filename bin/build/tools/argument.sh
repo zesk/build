@@ -332,18 +332,23 @@ _usageArgumentParseRequired() {
 _usageArgumentTypeValid() {
   local type="${1-}"
   case "$type" in
+    # File system
     File | FileDirectory | Directory | LoadEnvironmentFile | RealDirectory)
       return 0
       ;;
-    EmptyString | String)
+    # Strings
+    EmptyString | String | EnvironmentVariable)
       return 0
       ;;
+    # Types
     Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
       return 0
       ;;
+    # Functional
     Executable | Callable | Function)
       return 0
       ;;
+    # Internet
     URL)
       return 0
       ;;

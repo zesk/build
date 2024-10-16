@@ -50,24 +50,40 @@ testDotEnvConfigure() {
 }
 
 testEnvironmentFileLoad() {
-  local tempDir
-  export TESTVAR
+  local tempDir envFile name=TESTVAR
+
+  export "${name?}"
+
+  set -eou pipefail
 
   tempDir="$(__environment buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
 
   __environment mkdir -p "$tempDir" || return $?
-  __environment cd "$tempDir" || return $?
-  assertNotExitCode --stderr-match "is not file" --line "$LINENO" 0 environmentFileLoad .env || return $?
+  __environment muzzle pushd "$tempDir" || return $?
 
-  touch .env
-  assertExitCode --line "$LINENO" 0 environmentFileLoad .env || return $?
+  envFile="$tempDir/.env"
+
+  assertNotExitCode --stderr-match "is not file" --line "$LINENO" 0 environmentFileLoad "$envFile" || return $?
+
+  __environment touch "$envFile" || return $?
+  assertExitCode --line "$LINENO" 0 environmentFileLoad "$envFile" || return $?
   assertEquals --line "$LINENO" "${TESTVAR-}" "" || return $?
 
-  __environment touch .env.local || return $?
-  assertExitCode 0 dotEnvConfigure || _environment "dotEnvConfigure failed with both .env" || return $?
-  __environment cd .. || return $?
+  envFile="$tempDir/.env.local"
+  __environment touch "$envFile" || return $?
+  assertExitCode --line "$LINENO" 0 dotEnvConfigure || _environment "dotEnvConfigure failed with both .env" || return $?
+
+  envFile="$tempDir/.env.$name"
+  printf "%s\n" "$name=worked" >"$envFile"
+
+  assertEquals --line "$LINENO" "$(export "$name"=none && environmentFileLoad "$envFile" && printf "%s\n" "${!name-}")" "worked" || return $?
+  assertEquals --line "$LINENO" "$(export "$name"=none && environmentFileLoad --ignore TESTVAR "$envFile" && printf "%s\n" "${!name-}")" "none" || return $?
+  assertNotExitCode --line "$LINENO" 0 environmentFileLoad --secure TESTVAR "$envFile" || return $?
+
+  unset TESTVAR
+
+  __environment muzzle popd || return $?
   __environment rm -rf "$tempDir" || return $?
-  consoleSuccess dotEnvConfigure works AOK
 }
 
 testEnvironmentFileMake() {
@@ -166,4 +182,39 @@ testEnvironmentValueWriteArray() {
     assertEquals --line "$LINENO" "${testArray[*]}" "${restoredValue[*]}" || return $?
     index=$((index + 1))
   done
+}
+
+__testEnvironmentNameValidPassValues() {
+  environmentVariables
+  cat <<'EOF'
+ABC_DEF
+____FOOOBAR1231
+_112312312312
+EOF
+}
+
+__testEnvironmentNameValidFailValues() {
+  cat <<'EOF'
+"QUOTES"
+'Single quotes'
+Dash-is-my-buddy
+ LEADING_SPACE_IS_NO_BUENO
+1____DIGIT_FIRST_SCHLECT
+_112312312312^_BAD_POW
+THIS MAY NOT WORK
+[THINGS]
+.EMPTY
+$WOW
+EOF
+}
+
+testEnvironmentNameValid() {
+  local testValue IFS
+  IFS=""
+  while read -r testValue; do
+    assertNotExitCode --line "$LINENO" 0 environmentVariableNameValid "$testValue" || return $?
+  done < <(__testEnvironmentNameValidFailValues)
+  while read -r testValue; do
+    assertExitCode --line "$LINENO" 0 environmentVariableNameValid "$testValue" || return $?
+  done < <(__testEnvironmentNameValidPassValues)
 }

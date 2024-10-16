@@ -408,6 +408,7 @@ consoleWarning() {
 # things went well
 #
 # shellcheck disable=SC2120
+# @see decoration
 consoleSuccess() {
   __consoleOutputMode "SUCCESS" '\033[42;30m' '\033[0;32m' '\033[0m' "$@"
 }
@@ -416,6 +417,7 @@ consoleSuccess() {
 # decorations to output (like bars and lines)
 #
 # shellcheck disable=SC2120
+# @see decoration
 consoleDecoration() {
   __consoleOutputMode '' '\033[45;97m' '\033[45;30m' '\033[0m' "$@"
 }
@@ -423,6 +425,7 @@ consoleDecoration() {
 #
 # Keep things subtle
 #
+# @see decoration
 consoleSubtle() {
   __consoleOutputMode '' '\033[1;38;5;252m' '\033[1;38;5;240m' '\033[0m' "$@"
 }
@@ -434,13 +437,14 @@ consoleSubtle() {
 #
 # Name/Value pairs
 #
+# @see decoration
 # shellcheck disable=SC2120
 consoleLabel() {
   __consoleOutputMode '' '\033[34;103m' '\033[1;96m' '\033[0m' "$@"
 }
 
 #
-# Name/Value pairs
+# @see decoration
 #
 # shellcheck disable=SC2120
 consoleValue() {

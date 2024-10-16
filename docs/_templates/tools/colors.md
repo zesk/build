@@ -4,20 +4,27 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-All console functions in the form `consoleAction` where `Action` is a color name or a semantic meaning behave similarly:
+All console functions in the form `decorate style` where `style` is a color name or a semantic meaning behave similarly:
 
 - With no arguments output the color escape codes with no newline to standard out
 - With arguments wrap the arguments with color escape code to color and reset the console state afterwards
-- Optionally add a `-n` as the first argument to prevent output of a newline which is output by default
 
 Examples:
 
-    cat $file | wrapLines "$(consoleGreen)" "$(consoleReset)"
+    cat $file | wrapLines "$(decorate green)" "$(decorate reset)"
     consoleInfo Starting to deploy ...
 
 ## Color Mode
 
 Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use `consoleColorMode`.
+
+## New color command
+
+This is still in progress but will likely be the new mechanism.
+
+{decorate}
+
+# Old method (pre October 2024)
 
 ## Semantic color commands
 

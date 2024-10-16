@@ -17,13 +17,13 @@ _code() {
 # Usage: {fn} usage message
 __failArgument() {
   local usage="${1-}"
-  shift && "$usage" "$(_code argument)" "$@" || return $?
+  shift && "$usage" 2 "$@" || return $?
 }
 
 # Usage: {fn} usage message
 __failEnvironment() {
   local usage="${1-}"
-  shift && "$usage" "$(_code environment)" "$@" || return $?
+  shift && "$usage" 1 "$@" || return $?
 }
 
 # Usage: {fn} usage command
@@ -42,14 +42,14 @@ __usageEnvironment() {
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 _argument() {
-  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+  _return 2 "$@" || return $?
 }
 
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 _environment() {
-  _return "$(_code "${FUNCNAME[0]#_}")" "$@" || return $?
+  _return 1 "$@" || return $?
 }
 
 # Usage: {fn} exitCode itemToDelete ...

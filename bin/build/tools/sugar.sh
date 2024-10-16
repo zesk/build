@@ -39,7 +39,7 @@ __usage() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageEnvironment() {
-  __usage "$(_code "${FUNCNAME[0]#__usage}")" "$@"
+  __usage 1 "$@"
 }
 
 # Run `command`, upon failure run `usage` with an argument error
@@ -47,7 +47,7 @@ __usageEnvironment() {
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __usageArgument() {
-  __usage "$(_code "${FUNCNAME[0]#__usage}")" "$@"
+  __usage 2 "$@"
 }
 
 # Run `usage` with an environment error
@@ -55,7 +55,7 @@ __usageArgument() {
 __failEnvironment() {
   local usage="${1-}"
   isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift && "$usage" "$(_code environment)" "$@" || return $?
+  shift && "$usage" 1 "$@" || return $?
 }
 
 # Run `usage` with an argument error
@@ -63,7 +63,7 @@ __failEnvironment() {
 __failArgument() {
   local usage="${1-}"
   isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift && "$usage" "$(_code argument)" "$@" || return $?
+  shift && "$usage" 1 "$@" || return $?
 }
 
 # Run `usage` with an environment error

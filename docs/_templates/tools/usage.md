@@ -1,5 +1,9 @@
 # Usage Functions
 
+The concept of a "usage" function is one that fails, and displays a reasonable error to the user or controlling program.
+
+Essentially a `usage` function is a failure handler. If you need a simple `usage` function use `_return`.
+
 <!-- TEMPLATE header 2 -->
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
@@ -16,25 +20,39 @@
 {usageRequireBinary}
 {usageRequireEnvironment}
 
-## Argument handling
+## Argument check: File System
 
-{usageArgumentFileDirectory}
 {usageArgumentFile}
-{usageArgumentInteger}
-{usageArgumentLoadEnvironmentFile}
-{usageArgumentUnsignedInteger}
-{usageArgumentPositiveInteger}
+{usageArgumentFileDirectory}
 {usageArgumentDirectory}
 {usageArgumentRealDirectory}
+{usageArgumentLoadEnvironmentFile}
+
+## Argument check: Strings
+
+{usageArgumentEmptyString}
+{usageArgumentString}
+{usageArgumentEnvironmentVariable}
+
+## Argument check: Types
+
 {usageArgumentBoolean}
-{usageArgumentURL}
+{usageArgumentInteger}
+{usageArgumentNumber}
+{usageArgumentPositiveInteger}
+{usageArgumentUnsignedInteger}
+
+## Argument check: Functional
+
 {usageArgumentCallable}
 {usageArgumentFunction}
 {usageArgumentExecutable}
-{usageArgumentEmptyString}
-{usageArgumentString}
 
-# Errors
+## Argument check: URL
+
+{usageArgumentURL}
+
+## Argument Errors (fail)
 
 {usageArgumentMissing}
 {usageArgumentUnknown}

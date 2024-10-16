@@ -7,6 +7,7 @@
 ## Environment
 
 {environmentVariables}
+{environmentVariableNameValid}
 
 ## State files
 

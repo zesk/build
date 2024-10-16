@@ -92,7 +92,7 @@ __deprecatedCannon() {
 #
 __deprecatedCleanup() {
   local this="${BASH_SOURCE[0]##*/}"
-  local deprecatedToken deprecatedTokens exitCode ignoreStuff deprecatedIgnoreStuff
+  local deprecatedToken deprecatedTokens exitCode ignoreStuff deprecatedIgnoreStuff file
 
   exitCode=0
   deprecatedTokens=()
@@ -190,6 +190,12 @@ __deprecatedCleanup() {
 
   # v0.12.2
   __deprecatedCannon 'awsSecurityGroupIP''Register' "awsSecurityGroupIPModify --register"
+
+  # v0.14.3
+  home=$(__environment buildHome) || return $?
+  for file in "$home/"*.sh; do
+    deprecatedToken+=("${file#"$home"}")
+  done
 
   # END OF CANNONS
 

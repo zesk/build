@@ -12,10 +12,11 @@
 # Usage: value - Optional. EmptyString. Value to write.
 # Usage: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
 environmentValueWrite() {
-  local usage="_${FUNCNAME[0]}" name="${1-}" && shift
+  local usage="_${FUNCNAME[0]}" name
   local value
 
-  name=$(usageArgumentString "$usage" name "$name") || return $?
+  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
+  shift
   [ $# -ge 1 ] || __failArgument "$usage" "value required" || return $?
   if [ $# -eq 1 ]; then
     value="${1-}"
@@ -37,10 +38,11 @@ _environmentValueWrite() {
 #     declare -a foo=([0]="a's" [1]="b" [2]="c")
 #
 environmentValueWriteArray() {
-  local usage="_${FUNCNAME[0]}" name="${1-}" && shift
-  local value result search="'" replace="'\''"
+  local usage="_${FUNCNAME[0]}"
+  local name value result search="'" replace="'\''"
 
-  name=$(usageArgumentString "$usage" name "$name") || return $?
+  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
+  shift
   value=("$@")
   result="$(__environmentValueClean "$(declare -pa value)")" || return $?
   if [ "${result:0:1}" = "'" ]; then
@@ -72,9 +74,9 @@ __environmentValueWrite() {
 # Argument: default - Optional. String. Value to return if value not found.
 environmentValueRead() {
   local usage="_${FUNCNAME[0]}"
-  local stateFile="${1-}" name="${2-}" default="${3-}" value
-  [ -f "$stateFile" ] || __failArgument "$usage" "stateFile \"$stateFile\" is not a file" || return $?
-  [ -n "$name" ] || __failArgument "$usage" "stateFile \"$stateFile\" name is blank (default=$default)" || return $?
+  local stateFile name default="${3-}" value
+  stateFile=$(usageArgumentFile "$usage" "stateFile" "${1-}") || return $?
+  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
   [ $# -le 3 ] || __failArgument "$usage" "Extra arguments: $#" || return $?
   value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)"
   if [ -z "$value" ]; then
@@ -112,17 +114,49 @@ _environmentValueConvertArray() {
 }
 
 #
+#
+# Usage: {fn} variableName ...
+# variableName - String. Required. Exit status 0 if all variables names are valid ones.
+# Validates an environment variable name
+#
+# - alpha
+# - digit
+# - underscore
+#
+# First letter MUST NOT be a digit
+#
+environmentVariableNameValid() {
+  local name
+  while [ $# -gt 0 ]; do
+    [ -n "$1" ] || return 1
+    case "$1" in
+      *[!A-Za-z0-9_]*)
+        return 1
+        ;;
+      *)
+        case "${1:0:1}" in
+          [A-Za-z_]) ;;
+          *) return 1 ;;
+        esac
+        ;;
+    esac
+    shift
+  done
+}
+
+#
 # Read an array value from a state file
 # Usage: {fn} stateFile
 # Argument: stateFile - Required. File. File to access, must exist.
-# Argument: name - Required. String. Name to read.
+# Argument: name - Required. EnvironmentVariable. Name to read.
 # Outputs array elements, one per line.
 environmentValueReadArray() {
   local usage="_${FUNCNAME[0]}"
-  local stateFile="${1-}" name="${2-}" value
+  local stateFile="${1-}" name value
 
-  value=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")
-  environmentValueConvertArray "$value"
+  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
+  value=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" "$name" "") || return $?
+  environmentValueConvertArray "$value" || return $?
 }
 _environmentValueReadArray() {
   # IDENTICAL usageDocument 1
@@ -178,55 +212,99 @@ _dotEnvConfigure() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Unquote a string
-# Argument: quote - String. Required. Must match beginning and end of string.
-# Argument: value - String. Required. Value to unquote.
-unquote() {
-  local quote="$1" value="$2"
-  if [ "$value" != "${value#"$quote"}" ] && [ "$value" != "${value%"$quote"}" ]; then
-    value="${value#"$quote"}"
-    value="${value%"$quote"}"
-  fi
-  printf -- "%s\n" "$value"
-}
-
-# Primary case to unquote quoted things "" ''
-__unquote() {
-  local value="${1-}"
-  case "${value:0:1}" in
-    "'") value="$(unquote "'" "$value")" ;;
-    '"') value="$(unquote '"' "$value")" ;;
-    *) ;;
-  esac
-  printf "%s\n" "$value"
-}
-
 # Safely load an environment file (no code execution)
-# Usage: {fn} environmentFile ...
+# Usage: {fn} [ --required | --optional ] [ --ignore name ] environmentFile ...
 # Argument: environmentFile - Required. Environment file to load.
-#
+# Argument: environmentFile - Required. Environment file to load.
+# Argument: --required - Flag. Optional. All subsequent environment files on the command line will be required.
+# Argument: --optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
+# Argument: --verbose - Flag. Optional. Output errors with variables in files.
+# Argument: environmentFile - Required. Environment file to load. For `--optional` files the directory must exist.
+# Argument: --ignore environmentName - Optional. String. Environment value to ignore on load.
+# Argument: --secure environmentName - Optional. String. If found in a loaded file, entire file fails.
+# Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 # Exit code: 2 - if file does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 environmentFileLoad() {
-  local usage="_${FUNCNAME[0]}" environmentFile environmentLine name value
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+
+  local environmentFile environmentLine name value required=true ignoreList=() secureList=() toExport=() line=1
+  local verboseMode=false
+
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
-    environmentFile=$(usageArgumentFile "$usage" "environmentFile" "$1") || return $?
-    while read -r environmentLine; do
-      name="${environmentLine%%=*}"
-      value="${environmentLine#*=}"
-      case "${value:0:1}" in
-        "'")
-          value=$(unquote "'" "$value")
-          ;;
-        '"')
-          value=$(unquote '"' "$value")
-          ;;
-        *) ;;
-      esac
-      # SECURITY CHECK
-      export "$name"="$value"
-    done < <(environmentLines <"$environmentFile")
-    shift
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --verbose)
+        verboseMode=true
+        ;;
+      --secure)
+        shift
+        secureList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --secure-defaults)
+        secureList+=(OSTYPE PATH LD_LIBRARY HOME HOSTNAME EDITOR HISTCONTROL HISTSIZE LANG MANPATH PS1 PWD SHELL SHLVL TERM TMPDIR USER VISUAL)
+        ;;
+      --ignore)
+        shift
+        ignoreList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --require)
+        required=true
+        ;;
+      --optional)
+        required=false
+        ;;
+      *)
+        if $required; then
+          environmentFile=$(usageArgumentFile "$usage" "environmentFile" "$argument") || return $?
+        else
+          environmentFile=$(usageArgumentFileDirectory "$usage" "environmentFile" "$argument") || return $?
+          [ -f "$environmentFile" ] || continue
+        fi
+        while read -r environmentLine; do
+          name="${environmentLine%%=*}"
+          [ -n "$name" ] || continue
+          # Skip comments
+          [ "$name" != "${name###}" ] || continue
+          # Skip "bad" variables
+          if ! environmentVariableNameValid "$name"; then
+            ! $verboseMode || consoleWarning "$(consoleCode "$name") invalid name ($environmentFile:$line)"
+            continue
+          fi
+          # Skip insecure variables
+          [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(consoleBoldRed "$name")"
+          # Ignore stuff as a feature
+          if [ "${#ignoreList[@]}" -eq 0 ] || ! inArray "$name" "${ignoreList[@]}"; then
+            ! $verboseMode || consoleWarning "$(consoleCode "$name") is ignored ($environmentFile:$line)"
+            continue
+          fi
+          # Load and unquote value
+          value="$(__unquote "${environmentLine#*=}")"
+          # SECURITY CHECK
+          toExport+=("$name=$value")
+          line=$((line + 1))
+        done < <(environmentLines <"$environmentFile")
+        if [ "${#toExport[@]}" -gt 0 ]; then
+          for value in "${toExport[@]+}"; do
+            name=${value%%=*}
+            value=${value#*=}
+            # NAME must pass validation above
+            export "$name"="$value"
+          done
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 }
 _environmentFileLoad() {
@@ -234,6 +312,9 @@ _environmentFileLoad() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+environmentSecureVariables() {
+  printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
+}
 environmentApplicationVariables() {
   printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
 }
@@ -277,11 +358,19 @@ environmentApplicationLoad() {
 }
 
 environmentFileShow() {
+  local usage="_${FUNCNAME[0]}"
   local missing name buildEnvironment
   local width=40
-  local variables=()
+  local variables=() checked=()
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationLoad) || :
+  for name in "${variables[@]+"${variables[@]}"}"; do
+    if environmentVariableNameValid "$name"; then
+      checked+=("$name")
+    else
+      consoleWarning "Invalid environment value $(consoleCode "$name")" 1>&2
+    fi
+  done
   export "${variables[@]}"
 
   # Will be exported to the environment file, only if defined
@@ -292,7 +381,7 @@ environmentFileShow() {
         break
         ;;
       *)
-        variables+=("$1")
+        variables+=("$(usageArgumentEnvironmentVariable "$usage" "variableName" "$1")") || return $?
         ;;
     esac
     shift
@@ -315,13 +404,20 @@ environmentFileShow() {
     fi
   done
   for name in "${buildEnvironment[@]+"${buildEnvironment[@]}"}"; do
-    if [ -z "${!name:-}" ]; then
-      consoleNameValue "$width" "$name" "** Blank **"
+    if environmentVariableNameValid "$name"; then
+      if [ -z "${!name:-}" ]; then
+        consoleNameValue "$width" "$name" "** Blank **"
+      else
+        consoleNameValue "$width" "$name" "${!name}"
+      fi
     else
-      consoleNameValue "$width" "$name" "${!name}"
+      consoleWarning "Invalid build environment value $(consoleCode "$name")" 1>&2
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || _environment "Missing environment" "${missing[@]}" || return $?
+  [ ${#missing[@]} -eq 0 ] || __usageEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?
+}
+_environmentFileShow() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -374,6 +470,7 @@ environmentFileApplicationVerify() {
   done
   missing=()
   for name in "${requireEnvironment[@]}"; do
+    environmentVariableNameValid "$name" || __failEnvironment "$usage" "Invalid environment name found: $(consoleCode "$name")" || return $?
     if [ -z "${!name:-}" ]; then
       missing+=("$name")
     fi

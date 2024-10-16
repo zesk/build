@@ -14,4 +14,5 @@ if [ -z "$BUILD_HOME" ]; then
     printf "%s\n" "Unable to determine BUILD_HOME - system is unstable" 1>&2
     false
   fi
+  unset __buildHome
 fi
