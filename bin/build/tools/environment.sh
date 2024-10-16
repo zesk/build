@@ -196,41 +196,9 @@ environmentLines() {
 # DEPRECATED: 2024-07-20
 # See: environmentFileLoad
 dotEnvConfigure() {
-  local usage="_${FUNCNAME[0]}" files where dotEnv
-
-  where=
-  [ $# -eq 0 ] || where=$(usageArgumentDirectory "$usage" "where" "${1-}") || return $?
-  [ -n "$where" ] || where=$(__usageEnvironment "$usage" pwd) || return $?
-  dotEnv="$where/.env"
-  [ -f "$dotEnv" ] || __failEnvironment "$usage" "Missing $dotEnv" || return $?
-  files=("$dotEnv")
-  [ ! -f "$dotEnv.local" ] || files+=("$dotEnv.local")
-  environmentFileLoad "${files[@]}" || __failEnvironment "$usage" environmentFileLoad "${files[@]}" return $?
-}
-_dotEnvConfigure() {
-  # IDENTICAL usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Safely load an environment file (no code execution)
-# Usage: {fn} [ --required | --optional ] [ --ignore name ] environmentFile ...
-# Argument: environmentFile - Required. Environment file to load.
-# Argument: environmentFile - Required. Environment file to load.
-# Argument: --required - Flag. Optional. All subsequent environment files on the command line will be required.
-# Argument: --optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
-# Argument: --verbose - Flag. Optional. Output errors with variables in files.
-# Argument: environmentFile - Required. Environment file to load. For `--optional` files the directory must exist.
-# Argument: --ignore environmentName - Optional. String. Environment value to ignore on load.
-# Argument: --secure environmentName - Optional. String. If found in a loaded file, entire file fails.
-# Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
-# Exit code: 2 - if file does not exist; outputs an error
-# Exit code: 0 - if files are loaded successfully
-environmentFileLoad() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
-
-  local environmentFile environmentLine name value required=true ignoreList=() secureList=() toExport=() line=1
-  local verboseMode=false
+  local aa where=""
 
   saved=("$@")
   nArguments=$#
@@ -243,8 +211,70 @@ environmentFileLoad() {
         "$usage" 0
         return $?
         ;;
+      --verbose | --debug)
+        aa+=("$argument")
+        ;;
+      *)
+        where=$(usageArgumentDirectory "$usage" "where" "$1") || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  if [ -n "$where" ]; then
+    where=$(__usageEnvironment "$usage" pwd) || return $?
+  fi
+  aa+=(--require "$where/.env" --optional "$where/.env.local" --require)
+  __usageEnvironment "$usage" environmentFileLoad "${aa[@]}" "$@" || return $?
+}
+_dotEnvConfigure() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Safely load an environment file (no code execution)
+# Usage: {fn} [ --required | --optional ] [ --ignore name ] environmentFile ...
+# Argument: environmentFile - Required. Environment file to load.
+# Argument: environmentFile - Required. Environment file to load.
+# Argument: --require - Flag. Optional. All subsequent environment files on the command line will be required.
+# Argument: --optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
+# Argument: --verbose - Flag. Optional. Output errors with variables in files.
+# Argument: environmentFile - Required. Environment file to load. For `--optional` files the directory must exist.
+# Argument: --ignore environmentName - Optional. String. Environment value to ignore on load.
+# Argument: --secure environmentName - Optional. String. If found in a loaded file, entire file fails.
+# Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
+# Exit code: 2 - if file does not exist; outputs an error
+# Exit code: 0 - if files are loaded successfully
+environmentFileLoad() {
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+
+  local ff=() environmentFile environmentLine name value required=true ignoreList=() secureList=() toExport=() line=1
+  local verboseMode=false debugMode=false
+
+  set -eou pipefail
+
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    ! $debugMode || printf -- "%d: %d %s\n" "$argumentIndex" ${#ff[@]} "$(consoleBoldRed "ARGS: $#" "$@")"
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --verbose)
         verboseMode=true
+        ! $verboseMode || printf -- "VERBOSE MODE on (Arguments: %s)\n" "$(_command "${usage#_}" "${saved[@]}")"
+        ;;
+      --debug)
+        debugMode=true
+        verboseMode=true
+        consoleInfo "Debug mode enabled"
         ;;
       --secure)
         shift
@@ -259,53 +289,68 @@ environmentFileLoad() {
         ;;
       --require)
         required=true
+        ! $debugMode || printf -- "Current: %s\n" "$argument"
         ;;
       --optional)
         required=false
+        ! $debugMode || printf -- "Current: %s\n" "$argument"
         ;;
       *)
         if $required; then
-          environmentFile=$(usageArgumentFile "$usage" "environmentFile" "$argument") || return $?
+          ! $debugMode || printf -- "Loading required file: %s\n" "$argument"
+          ff+=("$(usageArgumentFile "$usage" "environmentFile" "$argument")") || return $?
         else
+          ! $debugMode || printf -- "Loading optional file: %s\n" "$argument"
           environmentFile=$(usageArgumentFileDirectory "$usage" "environmentFile" "$argument") || return $?
-          [ -f "$environmentFile" ] || continue
-        fi
-        while read -r environmentLine; do
-          name="${environmentLine%%=*}"
-          [ -n "$name" ] || continue
-          # Skip comments
-          [ "$name" != "${name###}" ] || continue
-          # Skip "bad" variables
-          if ! environmentVariableNameValid "$name"; then
-            ! $verboseMode || consoleWarning "$(consoleCode "$name") invalid name ($environmentFile:$line)"
-            continue
+          if [ -f "$environmentFile" ]; then
+            ff+=("$environmentFile")
           fi
-          # Skip insecure variables
-          [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(consoleBoldRed "$name")"
-          # Ignore stuff as a feature
-          if [ "${#ignoreList[@]}" -eq 0 ] || ! inArray "$name" "${ignoreList[@]}"; then
-            ! $verboseMode || consoleWarning "$(consoleCode "$name") is ignored ($environmentFile:$line)"
-            continue
-          fi
-          # Load and unquote value
-          value="$(__unquote "${environmentLine#*=}")"
-          # SECURITY CHECK
-          toExport+=("$name=$value")
-          line=$((line + 1))
-        done < <(environmentLines <"$environmentFile")
-        if [ "${#toExport[@]}" -gt 0 ]; then
-          for value in "${toExport[@]+}"; do
-            name=${value%%=*}
-            value=${value#*=}
-            # NAME must pass validation above
-            export "$name"="$value"
-          done
         fi
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
+  ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
+  for environmentFile in "${ff[@]}"; do
+    ! $debugMode || printf "%s lines:\n%s\n" "$(consoleCode "$environmentFile")" "$(environmentLines <"$environmentFile")"
+    line=1
+    while read -r environmentLine; do
+      ! $verboseMode || printf "%s:%d: %s" "$environmentFile" "$line" "$(consoleCode "$environmentLine")"
+      name="${environmentLine%%=*}"
+      # Skip comments
+      if [ -z "$name" ] || [ "$name" != "${name###}" ]; then
+        continue
+      fi
+      # Skip "bad" variables
+      if ! environmentVariableNameValid "$name"; then
+        ! $verboseMode || consoleWarning "$(consoleCode "$name") invalid name ($environmentFile:$line)"
+        continue
+      fi
+      # Skip insecure variables
+      [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(consoleBoldRed "$name")"
+      # Ignore stuff as a feature
+      if [ "${#ignoreList[@]}" -gt 0 ] && inArray "$name" "${ignoreList[@]}"; then
+        ! $verboseMode || consoleWarning "$(consoleCode "$name") is ignored ($environmentFile:$line)"
+        continue
+      fi
+      # Load and unquote value
+      value="$(__unquote "${environmentLine#*=}")"
+      # SECURITY CHECK
+      toExport+=("$name=$value")
+      ! $verboseMode || printf "toExport: %s=%s\n" "$name" "$value"
+      line=$((line + 1))
+    done < <(environmentLines <"$environmentFile") || :
+  done
+  if [ "${#toExport[@]}" -gt 0 ]; then
+    for value in "${toExport[@]}"; do
+      name=${value%%=*}
+      value=${value#*=}
+      # NAME must pass validation above
+      ! $debugMode || printf "EXPORTING: %s=%s\n" "$name" "$value"
+      export "${name?}"="$value"
+    done
+  fi
 }
 _environmentFileLoad() {
   # IDENTICAL usageDocument 1

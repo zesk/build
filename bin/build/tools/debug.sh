@@ -408,7 +408,7 @@ __bashDebugStackDump() {
   export BUILD_HOME
   __where="$(realPath "${BASH_SOURCE[index]}")"
   __where="${__where#"$BUILD_HOME"}"
-  printf "@ %s:%s %s()\n" "$(consoleBoldOrange "$__where")" "$(consoleBoldBlue "${BASH_LINENO[index]}")" "$(consoleCode "${FUNCNAME[index]}")"
+  printf "@ %s:%s %s()\n" "$(consoleBoldOrange "$__where")" "$(consoleBoldBlue "${BASH_LINENO[index + 1]}")" "$(consoleCode "${FUNCNAME[index]}")"
 }
 
 # Internal trap to capture DEBUG events and allow control
@@ -426,7 +426,12 @@ _bashDebugTrap() {
   # Restore Debugger FDs
   exec 0>&20 1>&21 2>&22
 
+  __bashDebugStackDump 4
+  __bashDebugStackDump 3
   __bashDebugStackDump 2
+  __bashDebugStackDump 1
+  __bashDebugStackDump 0
+
   _bashDebugWatch
   printf -- "%s %s\n" "$(consoleGreen ">")" "$(consoleCode "$BASH_COMMAND")"
   while read -r -e -p "bashDebug> " __command; do

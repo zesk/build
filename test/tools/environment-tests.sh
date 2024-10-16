@@ -17,7 +17,7 @@ testDotEnvConfigure() {
   __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
   consoleInfo "$(pwd)"
-  assertNotExitCode --line "$LINENO" --stderr-match "Missing" 0 dotEnvConfigure || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 dotEnvConfigure || return $?
 
   tempEnv="$tempDir/.env"
   __environment touch "$tempEnv" || return $?
@@ -26,10 +26,11 @@ testDotEnvConfigure() {
   assertEquals --line "$LINENO" "" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
+  assertExitCode --leak TESTENVWORKS --line "$LINENO" 0 dotEnvConfigure --debug "$tempDir" || return $?
   dotEnvConfigure "$tempDir" || return $?
-  assertExitCode --line "$LINENO" 0 dotEnvConfigure "$tempDir" || return $?
 
   assertEquals --line "$LINENO" "$magic" "${TESTENVWORKS-}" || return $?
+
   assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
   __environment environmentValueWrite TESTENVLOCALWORKS "$magic" >>"$tempEnv" || return $?
