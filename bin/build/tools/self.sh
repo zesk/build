@@ -406,7 +406,7 @@ _buildEnvironmentGet() {
 buildQuietLog() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
-  local logFile flagMake
+  local logFile flagMake=true
 
   saved=("$@")
   nArguments=$#
