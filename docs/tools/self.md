@@ -25,6 +25,7 @@ Prints the build home directory (usually same as the application root)
 #### Environment
 
 BUILD_HOME
+BUILD_HOME
 ### `buildEnvironmentLoad` - Load one or more environment settings from the environment file
 
 Load one or more environment settings from the environment file path.
@@ -113,6 +114,28 @@ Appends any passed in arguments as path segments.
 
 - `name` - The log file name
 - `--no-create` - Optional. Do not require creation of the directory where the log file will appear.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+# Running commands
+
+### `Build` - Installs `install-bin-build.sh` the first time in a new project, and
+
+Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
+
+- Location: `bin/build/tools/self.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. This help.
+- `--diff` - Optional. Flag. Show differences between new and old files if changed.
+- `--local` - Optional. Flag. Use local copy of `install-bin-build.sh` instead of downloaded version.
+- `path` - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
+- `applicationHome` - Optional. Directory. Path to the application home directory. Default is current directory.
 
 #### Exit codes
 

@@ -199,6 +199,7 @@ Code or variables in output
 
 decorations to output (like bars and lines)
 
+@see decoration
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -256,6 +257,7 @@ info
 
 Name/Value pairs
 
+@see decoration
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -375,6 +377,8 @@ It does *not* take the optional `-n` argument ever, and outputs the reset escape
 
 Keep things subtle
 
+@see decoration
+
 - Location: `bin/build/tools/colors.sh`
 
 #### Arguments
@@ -390,6 +394,7 @@ Keep things subtle
 
 things went well
 
+@see decoration
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -417,9 +422,9 @@ Styles
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleValue` - Name/Value pairs
+### `consoleValue` - @see decoration
 
-Name/Value pairs
+@see decoration
 
 
 - Location: `bin/build/tools/colors.sh`

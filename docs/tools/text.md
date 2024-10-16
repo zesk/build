@@ -43,7 +43,7 @@ Returns true if all `characters` are of `className`
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/identical/quoteSedPattern.sh`
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -72,7 +72,7 @@ needSlash='$.*/[\]^'
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/identical/quoteSedPattern.sh`
+- Location: `bin/build/tools/text.sh`
 
 #### Usage
 
@@ -957,7 +957,9 @@ Write a report of the character classes
 
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
+- `--class` - Optional. Flag. Show class and then characters in that class.
+- `--char` - Optional. Flag. Show characters and then class for that character.
 
 #### Exit codes
 

@@ -24,6 +24,28 @@ exported variables
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `environmentVariableNameValid` - variableName - String. Required. Exit status 0 if all variables
+
+variableName - String. Required. Exit status 0 if all variables names are valid ones.
+Validates an environment variable name
+
+- alpha
+- digit
+- underscore
+
+First letter MUST NOT be a digit
+
+- Location: `bin/build/tools/environment.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## State files
 
@@ -36,6 +58,14 @@ Safely load an environment file (no code execution)
 #### Arguments
 
 - `environmentFile` - Required. Environment file to load.
+- `environmentFile` - Required. Environment file to load.
+- `--required` - Flag. Optional. All subsequent environment files on the command line will be required.
+- `--optional` - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
+- `--verbose` - Flag. Optional. Output errors with variables in files.
+- `environmentFile` - Required. Environment file to load. For `--optional` files the directory must exist.
+- `--ignore environmentName` - Optional. String. Environment value to ignore on load.
+- `--secure environmentName` - Optional. String. If found in a loaded file, entire file fails.
+- `--secure-defaults` - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 
 #### Exit codes
 
@@ -110,7 +140,7 @@ Outputs array elements, one per line.
 #### Arguments
 
 - `stateFile` - Required. File. File to access, must exist.
-- `name` - Required. String. Name to read.
+- `name` - Required. EnvironmentVariable. Name to read.
 
 #### Exit codes
 

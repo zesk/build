@@ -1,5 +1,9 @@
 # Usage Functions
 
+The concept of a "usage" function is one that fails, and displays a reasonable error to the user or controlling program.
+
+Essentially a `usage` function is a failure handler. If you need a simple `usage` function use `_return`.
+
 <!-- TEMPLATE header 2 -->
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
@@ -128,25 +132,8 @@ Requires environment variables to be set and non-blank
 - `1` - Environment error
 - `2` - Argument error
 
-## Argument handling
+## Argument check: File System
 
-### `usageArgumentFileDirectory` - Validates a value is not blank and is a file
-
-Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
-
-- Location: `bin/build/tools/usage.sh`
-
-#### Arguments
-
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
-
-#### Exit codes
-
-- `2` - Argument error
-- `0` - Success
 ### `usageArgumentFile` - Validates a value is not blank and is a file.
 
 Validates a value is not blank and is a file.
@@ -165,28 +152,9 @@ Upon success, outputs the file name
 
 - `2` - Argument error
 - `0` - Success
-### `usageArgumentInteger` - Validates a value is an integer
+### `usageArgumentFileDirectory` - Validates a value is not blank and is a file
 
-Validates a value is an integer
-
-- Location: `bin/build/tools/usage.sh`
-
-#### Arguments
-
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
-
-#### Exit codes
-
-- `2` - Argument error
-- `0` - Success
-### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
-
-Validates a value is not blank and is an environment file which is loaded immediately.
-
-Upon success, outputs the file name to stdout, outputs a console message to stderr
+Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
 
 - Location: `bin/build/tools/usage.sh`
 
@@ -196,40 +164,6 @@ Upon success, outputs the file name to stdout, outputs a console message to stde
 - `variableName` - Required. String. Name of variable being tested
 - `variableValue` - Required. String. Required only in that if it's blank, it fails.
 - `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
-
-#### Exit codes
-
-- `2` - Argument error
-- `0` - Success
-### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
-
-Validates a value is an unsigned integer
-
-- Location: `bin/build/tools/usage.sh`
-
-#### Arguments
-
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
-
-#### Exit codes
-
-- `2` - Argument error
-- `0` - Success
-### `usageArgumentPositiveInteger` - Validates a value is an unsigned integer and greater than
-
-Validates a value is an unsigned integer and greater than zero (NOT zero)
-
-- Location: `bin/build/tools/usage.sh`
-
-#### Arguments
-
-- `usageFunction` - Required. Function. Run if usage fails
-- `variableName` - Required. String. Name of variable being tested
-- `variableValue` - Required. String. Required only in that if it's blank, it fails.
-- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
 
 #### Exit codes
 
@@ -269,6 +203,80 @@ Validates a value is not blank and is a directory and does `realPath` on it.
 
 - `2` - Argument error
 - `0` - Success
+### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
+
+Validates a value is not blank and is an environment file which is loaded immediately.
+
+Upon success, outputs the file name to stdout, outputs a console message to stderr
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+## Argument check: Strings
+
+### `usageArgumentEmptyString` - Do not require argument to be non-blank
+
+Do not require argument to be non-blank
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value to output.
+
+#### Exit codes
+
+- `0` - Always
+### `usageArgumentString` - Require an argument to be non-blank
+
+Require an argument to be non-blank
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+- `value` - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+
+#### Exit codes
+
+- `2` - If `value` is blank
+- `0` - If `value` is non-blank
+### `usageArgumentEnvironmentVariable` - Validates a value is ok for an environment variable name
+
+Validates a value is ok for an environment variable name
+Upon success, outputs the name
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Environment variable name.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `environment variable`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+## Argument check: Types
+
 ### `usageArgumentBoolean` - Require an argument to be a boolean value
 
 Require an argument to be a boolean value
@@ -285,22 +293,61 @@ Require an argument to be a boolean value
 
 - `2` - If `value` is not a boolean
 - `0` - If `value` is a boolean
-### `usageArgumentURL` - Require an argument to be a URL
+### `usageArgumentInteger` - Validates a value is an integer
 
-Require an argument to be a URL
+Validates a value is an integer
 
 - Location: `bin/build/tools/usage.sh`
 
 #### Arguments
 
-- `usage` - Required. Function. Usage function to call upon failure.
-- `argument` - Required. String. Name of the argument used in error messages.
-- `value` - Optional. String, Value which should be a URL otherwise an argument error is thrown.
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
 
 #### Exit codes
 
-- `0` - If `value` is `urlValid`
-- `2` - If `value` is not `urlValid`
+- `2` - Argument error
+- `0` - Success
+
+### `usageArgumentPositiveInteger` - Validates a value is an unsigned integer and greater than
+
+Validates a value is an unsigned integer and greater than zero (NOT zero)
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+### `usageArgumentUnsignedInteger` - Validates a value is an unsigned integer
+
+Validates a value is an unsigned integer
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+
+## Argument check: Functional
+
 ### `usageArgumentCallable` - Require an argument to be a callable
 
 Require an argument to be a callable
@@ -349,24 +396,12 @@ Require an argument to be a executable
 
 - `2` - If `value` is not `isExecutable`
 - `0` - If `value` is `isExecutable`
-### `usageArgumentEmptyString` - Do not require argument to be non-blank
 
-Do not require argument to be non-blank
+## Argument check: URL
 
-- Location: `bin/build/tools/usage.sh`
+### `usageArgumentURL` - Require an argument to be a URL
 
-#### Arguments
-
-- `usage` - Required. Function. Usage function to call upon failure.
-- `argument` - Required. String. Name of the argument used in error messages.
-- `value` - Optional. String, Value to output.
-
-#### Exit codes
-
-- `0` - Always
-### `usageArgumentString` - Require an argument to be non-blank
-
-Require an argument to be non-blank
+Require an argument to be a URL
 
 - Location: `bin/build/tools/usage.sh`
 
@@ -374,14 +409,14 @@ Require an argument to be non-blank
 
 - `usage` - Required. Function. Usage function to call upon failure.
 - `argument` - Required. String. Name of the argument used in error messages.
-- `value` - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+- `value` - Optional. String, Value which should be a URL otherwise an argument error is thrown.
 
 #### Exit codes
 
-- `2` - If `value` is blank
-- `0` - If `value` is non-blank
+- `0` - If `value` is `urlValid`
+- `2` - If `value` is not `urlValid`
 
-# Errors
+## Argument Errors (fail)
 
 ### `usageArgumentMissing` - Throw an missing argument error
 
