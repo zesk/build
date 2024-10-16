@@ -19,6 +19,21 @@ Run or source a library
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `bashLibraryHome` - Output the home for a library in the parent path
+
+Output the home for a library in the parent path
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `bashSanitize` - Sanitize bash files for code quality.
 
 Sanitize bash files for code quality.
