@@ -337,15 +337,6 @@ APPLICATION_ID - reserved and set to `runHook application-tag`
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `environmentApplicationLoad` - Loads application environment variables, set them to their default values
 
 Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.

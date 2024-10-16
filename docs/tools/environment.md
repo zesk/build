@@ -47,6 +47,27 @@ First letter MUST NOT be a digit
 - `1` - Environment error
 - `2` - Argument error
 
+## Variable lists
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
 ## State files
 
 ### `environmentFileLoad` - Safely load an environment file (no code execution)

@@ -31,7 +31,6 @@
 
 {environmentFileApplicationMake}
 {environmentFileShow}
-{environmentApplicationVariables}
 {environmentApplicationLoad}
 
 ## Deployment tools

@@ -251,7 +251,7 @@ environmentFileLoad() {
         secureList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       --secure-defaults)
-        secureList+=(OSTYPE PATH LD_LIBRARY HOME HOSTNAME EDITOR HISTCONTROL HISTSIZE LANG MANPATH PS1 PWD SHELL SHLVL TERM TMPDIR USER VISUAL)
+        read -d "" -r -a secureList < <(environmentSecureVariables)
         ;;
       --ignore)
         shift

@@ -9,6 +9,11 @@
 {environmentVariables}
 {environmentVariableNameValid}
 
+## Variable lists
+
+{environmentSecureVariables}
+{environmentApplicationVariables}
+
 ## State files
 
 {environmentFileLoad}
