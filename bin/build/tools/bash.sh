@@ -8,12 +8,16 @@
 # Test: ./test/tools/bash-tests.sh
 
 # Output the home for a library in the parent path
-# Usage: {fn} libraryRelativePath
-# stdout: Parent path where libraryRelativePath exists
+# Usage: {fn} libraryRelativePath [ startDirectory ]
+# Argument: libraryRelativePath - String. Required. Path of file to find from the home directory.
+# Argument: startDirectory - Directory. Optional. Place to start searching. Uses `pwd` if not specified.
+# stdout: Parent path where `libraryRelativePath` exists
 bashLibraryHome() {
   local usage="_${FUNCNAME[0]}"
-  local home run="${1-}"
-  home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$(pwd)") || return $?
+  local home run startDirectory="${2-}"
+  run=$(usageArgumetnString "$usage" "libraryRelativePath" "${1-}") || return $?
+  [ -z "$startDirectory" ] || startDirectory=$(__usageEnvironment "$usage" pwd) || return $?
+  home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {

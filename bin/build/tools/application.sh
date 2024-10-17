@@ -6,17 +6,19 @@
 # Test: ./test/tools/application-tests.sh
 
 __applicationHomeFile() {
-  local f="${HOME=}/.applicationHome"
+  local f
+  export HOME
   [ -d "${HOME-}" ] || __failEnvironment "$usage" "HOME needs to be defined to use applicationHome" || return $?
+  f="${HOME-}/.applicationHome"
   [ -f "$f" ] || touch "$f"
   printf "%s\n" "$f"
 }
 
 __applicationHomeGo() {
   local usage="$1" && shift
-  local home label
+  local home label userHome
 
-  home=$(trimSpace "$(head -n 1 "$(__applicationHomeFile "$usage")")") || return $?
+  home=$(trimSpace "$(head -n 1 "$(__applicationHomeFile)")") || return $?
   if [ -z "$home" ]; then
     __failEnvironment "$usage" "No code home set, try $(consoleCode "applicationHome")" || return $?
   fi
@@ -27,7 +29,8 @@ __applicationHomeGo() {
     label="${*-}"
     [ -n "$label" ] || return 0
   fi
-  printf "%s %s\n" "$(consoleLabel "$label")" "$(consoleValue "${home##"${HOME%/}/"}")"
+  userHome="${HOME%/}"
+  printf "%s %s\n" "$(consoleLabel "$label")" "$(consoleValue "${home//"$userHome"/~}")"
   return 0
 }
 
@@ -36,46 +39,39 @@ __applicationHomeGo() {
 # Usage: {fn} [ directory ]
 #
 applicationHome() {
-  local usage="_${FUNCNAME[0]}" buildTools="bin/build/tools.sh"
-  local argument nArguments argumentIndex saved here
+  local usage="_${FUNCNAME[0]}"
+  local argument nArguments argumentIndex saved
+  local here="" home="" buildTools="bin/build/tools.sh"
 
-  if [ $# -eq 0 ]; then
-    here=$(__usageEnvironment "$usage" pwd) || return $?
-    if ! home=$(bashLibraryHome "$buildTools" "$here"); then
-      home="$here"
-    fi
-    printf "%s\n" "$home" >"$(__applicationHomeFile)"
-    __applicationHomeGo "$usage" "Application home is current directory"
-  else
-    saved=("$@")
-    nArguments=$#
-    while [ $# -gt 0 ]; do
-      argumentIndex=$((nArguments - $# + 1))
-      argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
-      case "$argument" in
-        # IDENTICAL --help 4
-        --help)
-          "$usage" 0
-          return $?
-          ;;
-        --go)
-          shift
-          __applicationHomeGo "$usage" "$@"
-          return 0
-          ;;
-        *)
-          here=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
-          if ! home=$(bashLibraryHome "$buildTools" "$here"); then
-            home="$here"
-          fi
-          printf "%s\n" "$home" >"$(__applicationHomeFile)"
-          __applicationHomeGo "$usage" "Application home set to"
-          ;;
-      esac
-      # IDENTICAL argument-esac-shift 1
-      shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
-    done
-  fi
+  export HOME
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --go)
+        shift
+        __applicationHomeGo "$usage" "$@"
+        return 0
+        ;;
+      *)
+        [ -z "$here" ] || __failArgument "$usage" "Unknown argument (applicationHome set already to $(consoleCode "$here"))"
+        here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  [ -n "$here" ] || here=$(__usageEnvironment "$usage" pwd) || return $?
+  home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
+  printf "%s\n" "$home" >"$(__applicationHomeFile)"
+  __applicationHomeGo "$usage" "${saved[0]-} Application home set to" || return $?
 }
 _applicationHome() {
   # IDENTICAL usageDocument 1
