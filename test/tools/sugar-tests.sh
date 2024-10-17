@@ -86,7 +86,7 @@ testExitCode() {
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj1)" || return $?
 
-  assertExitCdoe --stderr-match non-integer --stderr-match "message for return" "$(_code argument)" _return notInt "message for return"
+  assertExitCode --stderr-match non-integer --stderr-match "message for return" "$(_code argument)" _return notInt "message for return"
 
   for code in assert identical leak "test"; do
     char="${code:0:1}"
@@ -99,15 +99,16 @@ testExitCode() {
 testExitCodeCase() {
   local code char digit
 
-  assertEquals --line "$LINENO" 1 "$(_code EnViRoNmEnT)" || return $?
-  assertEquals --line "$LINENO" 2 "$(_code argumenT)" || return $?
+  assertEquals --line "$LINENO" 254 "$(_code EnViRoNmEnT)" || return $?
+  assertEquals --line "$LINENO" 1 "$(_code environment)" || return $?
+  assertEquals --line "$LINENO" 2 "$(_code argument)" || return $?
   assertEquals --line "$LINENO" "" "$(_code)" || return $?
-  assertEquals --line "$LINENO" "97" "$(_code ASSeRt)" || return $?
-  assertEquals --line "$LINENO" "$(printf "%d\n" 97 97)" "$(_code AssErT aSSert)" || return $?
-  assertEquals --line "$LINENO" "105" "$(_code idenTIcal)" || return $?
-  assertEquals --line "$LINENO" "108" "$(_code lEAk)" || return $?
-  assertEquals --line "$LINENO" "116" "$(_code tESt)" || return $?
-  assertEquals --line "$LINENO" "253" "$(_code inTErnal)" || return $?
+  assertEquals --line "$LINENO" "97" "$(_code assert)" || return $?
+  assertEquals --line "$LINENO" "$(printf "%d\n" 97 97)" "$(_code assert assert)" || return $?
+  assertEquals --line "$LINENO" "105" "$(_code identical)" || return $?
+  assertEquals --line "$LINENO" "108" "$(_code leak)" || return $?
+  assertEquals --line "$LINENO" "116" "$(_code test)" || return $?
+  assertEquals --line "$LINENO" "253" "$(_code internal)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsFa01324kjadksfj)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj1)" || return $?
 }
