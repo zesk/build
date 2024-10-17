@@ -39,12 +39,13 @@
 incrementor() {
   local this="${FUNCNAME[0]}"
   local usage="_$this"
-  local argument
+  local argument cacheDirectory
   local name value persistence counterFile
 
-  name=
-  value=
-  persistence="$(requireDirectory "$(buildCacheDirectory "$this/$$")")" || __failEnvironment "$usage" "create cache" || return $?
+  cacheDirectory=$(__usageEnvironment "$usage" buildCacheDirectory "$this/$$") || return $?
+  persistence="$(__usageEnvironment "$usage" requireDirectory "$cacheDirectory")" || return $?
+  name=""
+  value=""
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?

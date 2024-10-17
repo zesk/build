@@ -257,14 +257,12 @@ _buildFunctions() {
 #
 buildCacheDirectory() {
   local usage="_${FUNCNAME[0]}"
+  local cache suffix
 
-  local suffix
-  export BUILD_CACHE
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_CACHE || return $?
-
+  cache=$(__usageEnvironment "$usage" buildEnvironmentGet BUILD_CACHE) || return $?
   suffix="$(printf "%s/" "$@")"
   suffix="${suffix%/}"
-  suffix="$(printf "%s/%s" "${BUILD_CACHE%/}" "${suffix%/}")"
+  suffix="$(printf "%s/%s" "${cache%/}" "${suffix%/}")"
   printf "%s\n" "${suffix%/}"
 }
 _buildCacheDirectory() {
@@ -316,7 +314,7 @@ _buildEnvironmentPath() {
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
-  local env paths=() path file found
+  local env paths=() path file="" found
 
   while [ $# -gt 0 ]; do
     env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
@@ -330,11 +328,11 @@ buildEnvironmentLoad() {
         found=true
         set -a || :
         # shellcheck source=/dev/null
-        source "$file" || __failEnvironment "$usage" source "$file" return $?
+        source "$file" || __failEnvironment "$usage" source "$file" || return $?
         set +a || :
       fi
     done
-    $found || __failEnvironment "$usage" "Missing $file" || return $?
+    $found || __failEnvironment "$usage" "Missing $env" || return $?
     shift
   done
 }
@@ -346,7 +344,6 @@ _buildEnvironmentLoad() {
   # debuggingStack
   return "$exitCode"
 }
-
 
 # Run zesk/build command or load it
 #

@@ -210,12 +210,12 @@ EOF
 }
 
 testEnvironmentNameValid() {
-  local testValue IFS
-  IFS=""
-  while read -r testValue; do
+  local testValue
+
+  while IFS="" read -r testValue; do
     assertNotExitCode --line "$LINENO" 0 environmentVariableNameValid "$testValue" || return $?
   done < <(__testEnvironmentNameValidFailValues)
-  while read -r testValue; do
+  while IFS="" read -r testValue; do
     assertExitCode --line "$LINENO" 0 environmentVariableNameValid "$testValue" || return $?
   done < <(__testEnvironmentNameValidPassValues)
 }
