@@ -80,7 +80,7 @@ Safely load an environment file (no code execution)
 
 - `environmentFile` - Required. Environment file to load.
 - `environmentFile` - Required. Environment file to load.
-- `--required` - Flag. Optional. All subsequent environment files on the command line will be required.
+- `--require` - Flag. Optional. All subsequent environment files on the command line will be required.
 - `--optional` - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
 - `--verbose` - Flag. Optional. Output errors with variables in files.
 - `environmentFile` - Required. Environment file to load. For `--optional` files the directory must exist.
