@@ -198,7 +198,7 @@ environmentLines() {
 dotEnvConfigure() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
-  local aa where=""
+  local aa=() where=""
 
   saved=("$@")
   nArguments=$#
@@ -222,7 +222,7 @@ dotEnvConfigure() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
-  if [ -n "$where" ]; then
+  if [ -z "$where" ]; then
     where=$(__usageEnvironment "$usage" pwd) || return $?
   fi
   aa+=(--require "$where/.env" --optional "$where/.env.local" --require)
@@ -328,7 +328,7 @@ environmentFileLoad() {
         continue
       fi
       # Skip insecure variables
-      [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(consoleBoldRed "$name")"
+      [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(consoleBoldRed "$name")" || return $?
       # Ignore stuff as a feature
       if [ "${#ignoreList[@]}" -gt 0 ] && inArray "$name" "${ignoreList[@]}"; then
         ! $verboseMode || consoleWarning "$(consoleCode "$name") is ignored ($environmentFile:$line)"

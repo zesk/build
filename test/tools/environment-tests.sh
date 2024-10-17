@@ -26,7 +26,7 @@ testDotEnvConfigure() {
   assertEquals --line "$LINENO" "" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
-  assertExitCode --leak TESTENVWORKS --line "$LINENO" 0 dotEnvConfigure --debug "$tempDir" || return $?
+  assertExitCode --leak TESTENVWORKS --line "$LINENO" 0 dotEnvConfigure "$tempDir" || return $?
   dotEnvConfigure "$tempDir" || return $?
 
   assertEquals --line "$LINENO" "$magic" "${TESTENVWORKS-}" || return $?
@@ -79,7 +79,7 @@ testEnvironmentFileLoad() {
 
   assertEquals --line "$LINENO" "$(export "$name"=none && environmentFileLoad "$envFile" && printf "%s\n" "${!name-}")" "worked" || return $?
   assertEquals --line "$LINENO" "$(export "$name"=none && environmentFileLoad --ignore TESTVAR "$envFile" && printf "%s\n" "${!name-}")" "none" || return $?
-  assertNotExitCode --line "$LINENO" 0 environmentFileLoad --secure TESTVAR "$envFile" || return $?
+  assertNotExitCode --stderr-match "secure value" --line "$LINENO" 0 environmentFileLoad --secure TESTVAR "$envFile" || return $?
 
   unset TESTVAR
 
