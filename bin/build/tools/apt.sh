@@ -112,8 +112,8 @@ aptInstall() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments
   local quietLog
-  local actualPackages package packages installed standardPackages
-  local apt start forceFlag
+  local actualPackages package installed standardPackages
+  local start forceFlag=false packages=()
 
   nArguments=$#
   forceFlag=false
