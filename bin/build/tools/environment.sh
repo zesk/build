@@ -481,15 +481,16 @@ _environmentFileShow() {
 environmentFileApplicationMake() {
   local usage="_${FUNCNAME[0]}"
   local variables=()
-  local variableNames
+  local variableNames name
 
   variableNames=$(__usageEnvironment "$usage" mktemp) || return $?
   environmentApplicationLoad >"$variableNames" || __failEnvironment "$usage" "environmentApplicationLoad" || return $?
   environmentFileApplicationVerify "$@" || __failArgument "$usage" "Verify failed" || return $?
-  IFS=$'\n' read -d '' -r -a variables <"$variableNames"
-  for name in "${variables[@]}" "$@"; do
+  IFS=$'\n' read -d '' -r -a variables <"$variableNames" || :
+  __usageEnvironment "$usage" rm -rf "$variableNames" || return $?
+  for name in "${variables[@]+"${variables[@]}"}" "$@"; do
     [ "$name" != "--" ] || continue
-    environmentValueWrite "$name" "${!name-}"
+    __usageEnvironment "$usage" environmentValueWrite "$name" "${!name-}" || return $?
   done
 }
 _environmentFileApplicationMake() {
