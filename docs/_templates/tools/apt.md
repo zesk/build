@@ -6,16 +6,14 @@
 
 {aptNonInteractive}
 {aptSourcesDirectory}
-{aptUpdateOnce}
-{aptInstall}
 {aptUpToDate}
 {aptKeyAdd}
 {aptKeyRemove}
-{aptListInstalled}
-{aptNeedRestartFlag}
-{aptUninstall}
 {aptKeyRingDirectory}
 {aptIsInstalled}
 
-{whichApt}
-{whichAptUninstall}
+## Deprecated
+
+{aptUpdateOnce}
+{aptInstall}
+{aptKeyAdd}

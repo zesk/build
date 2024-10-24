@@ -69,7 +69,7 @@ crontabApplicationUpdate() {
   local argument nArguments
   local rootEnv appPath user flagShow flagDiff environmentMapper newCrontab returnCode
 
-  __usageEnvironment "$usage" whichApt crontab cron || return $?
+  __usageEnvironment "$usage" packageWhich crontab cron || return $?
   rootEnv=
   appPath=
   user=$(whoami) || __failEnvironment "$usage" whoami || return $?

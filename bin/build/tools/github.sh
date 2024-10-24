@@ -23,7 +23,7 @@ githubLatestRelease() {
   if [ $# -eq 0 ]; then
     _githubLatestRelease "$errorArgument" "projectName required" || return $?
   fi
-  if ! whichApt curl curl; then
+  if ! packageWhich curl curl; then
     _githubLatestRelease "$errorArgument" "curl is a required dependency" || return $?
   fi
   while [ $# -gt 0 ]; do
@@ -124,7 +124,7 @@ githubRelease() {
   #
   # Preflight our environment to make sure we have the basics defined in the calling script
   #
-  __usageEnvironment "$usage" whichApt curl curl || return $?
+  __usageEnvironment "$usage" packageWhich curl curl || return $?
 
   host=github.com
   __usageEnvironment "$usage" sshAddKnownHost "$host" || return $?

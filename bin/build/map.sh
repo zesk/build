@@ -220,7 +220,6 @@ quoteSedReplacement() {
   printf "%s\n" "$value"
 }
 
-
 # IDENTICAL environmentVariables 12
 
 #
@@ -280,7 +279,7 @@ mapEnvironment() {
 
   __ee=("$@")
   if [ $# -eq 0 ]; then
-    while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
+    while read -r __e; do __ee+=("$__e"); done < <(environmentVariables | grep -v -e '^_')
   fi
   __sedFile=$(__environment mktemp) || return $?
   if __environment _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile"; then

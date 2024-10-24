@@ -8,20 +8,19 @@
 #
 
 testAPITools() {
-  assertEquals "$(plural 0 singular plural)" "plural" || return $?
-  assertEquals "$(plural 1 singular plural)" "singular" || return $?
-  assertEquals "$(plural 2 singular plural)" "plural" || return $?
-  assertEquals "$(plural -1 singular plural)" "plural" || return $?
-  assertExitCode --stderr-ok 1 plural X singular plural || return $?
+  assertEquals --line "$LINENO" "$(plural 0 singular plural)" "plural" || return $?
+  assertEquals --line "$LINENO"  "$(plural 1 singular plural)" "singular" || return $?
+  assertEquals --line "$LINENO"  "$(plural 2 singular plural)" "plural" || return $?
+  assertEquals --line "$LINENO"  "$(plural -1 singular plural)" "plural" || return $?
+  assertExitCode --line "$LINENO"  --stderr-ok 1 plural X singular plural || return $?
 
-  assertEquals "$(alignRight 20 012345)" "              012345" || return $?
-  assertEquals "$(alignRight 5 012345)" "012345" || return $?
-  assertEquals "$(alignRight 0 012345)" "012345" || return $?
+  assertEquals --line "$LINENO"  "$(alignRight 20 012345)" "              012345" || return $?
+  assertEquals --line "$LINENO"  "$(alignRight 5 012345)" "012345" || return $?
+  assertEquals --line "$LINENO"  "$(alignRight 0 012345)" "012345" || return $?
 
-  assertEquals "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
-  assertEquals "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
-  assertEquals "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
-  consoleSuccess testTools OK
+  assertEquals --line "$LINENO"  "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
+  assertEquals --line "$LINENO"  "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
+  assertEquals --line "$LINENO"  "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
 }
 
 testHooks() {

@@ -53,7 +53,7 @@ npmInstall() {
   npm_version="${1-${BUILD_NPM_VERSION:-latest}}"
   quietLog=$(buildQuietLog npmInstall) || __failEnvironment "buildQuietLog $usage"
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" aptInstall npm || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" npm i -g "npm@$npm_version" --force 2>&1
 }
 _npmInstall() {
@@ -65,5 +65,5 @@ _npmInstall() {
 # Core as part of some systems - so this succeeds and it still exists
 #
 npmUninstall() {
-  whichAptUninstall npm npm "$@"
+  packageWhichUninstall npm npm "$@"
 }

@@ -356,7 +356,7 @@ whichExists() {
   done
 }
 
-# IDENTICAL _colors 82
+# IDENTICAL _colors 83
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -374,7 +374,8 @@ hasColors() {
     BUILD_COLORS=false
     case "${TERM-}" in "" | "dumb" | "unknown") BUILD_COLORS=true ;; *)
       termColors="$(tput colors 2>/dev/null)"
-      [ "${termColors-:2}" -lt 8 ] || BUILD_COLORS=true
+      isPositiveInteger "$termColors" || termColors=2
+      [ "$termColors" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
   elif [ "$BUILD_COLORS" = "1" ]; then

@@ -53,15 +53,15 @@ _aptKeyRemoveOpenTofu() {
 # Install tofu binary
 #
 # Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to install using `aptInstall`
+# Argument: package - Additional packages to install using `packageInstall`
 #
 tofuInstall() {
   local usage="_${FUNCNAME[0]}" binary="tofu"
 
   ! whichExists "$binary" || return 0
-  __usageEnvironment "$usage" aptInstall apt-transport-https ca-certificates curl gnupg
+  __usageEnvironment "$usage" packageInstall apt-transport-https ca-certificates curl gnupg
   __usageEnvironment "$usage" aptKeyAddOpenTofu || return $?
-  __usageEnvironment "$usage" aptInstall "$binary" "$@" || return $?
+  __usageEnvironment "$usage" packageInstall "$binary" "$@" || return $?
   whichExists "$binary" || __failEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
@@ -73,14 +73,14 @@ _tofuInstall() {
 # Uninstall tofu binary and apt sources keys
 #
 # Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to uninstall using `aptUninstall`
+# Argument: package - Additional packages to uninstall using `packageUninstall`
 #
 tofuUninstall() {
   local usage="_${FUNCNAME[0]}"
 
-  __usageEnvironment "$usage" whichAptUninstall tofu tofu "$@" || return $?
+  __usageEnvironment "$usage" packageWhichUninstall tofu tofu "$@" || return $?
   __usageEnvironment "$usage" aptKeyRemoveOpenTofu || return $?
-  __usageEnvironment "$usage" aptUpdateOnce --force || return $?
+  __usageEnvironment "$usage" packageUpdate --force || return $?
 }
 _tofuUninstall() {
   # IDENTICAL usageDocument 1

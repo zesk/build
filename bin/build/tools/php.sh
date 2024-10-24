@@ -20,7 +20,7 @@
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
 phpInstall() {
-  whichApt php php-common php-cli "$@"
+  packageWhich php php-common php-cli "$@"
 }
 
 # Uninstall `php`
@@ -34,7 +34,7 @@ phpInstall() {
 # Exit Code: 1 - If uninstallation fails
 # Exit Code: 0 - If uninstallation succeeds
 phpUninstall() {
-  whichAptUninstall php php-common php-cli "$@"
+  packageWhichUninstall php php-common php-cli "$@"
 }
 
 #
@@ -200,7 +200,7 @@ phpBuild() {
   consoleInfo "Installing build tools ..." || :
 
   # Ensure we're up to date
-  aptInstall || __failEnvironment "$usage" "Failed to install operating system basics" || return $?
+  packageInstall || __failEnvironment "$usage" "Failed to install operating system basics" || return $?
 
   clearLine || :
   # Ensure we're up to date
@@ -359,7 +359,7 @@ phpComposer() {
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
   else
-    __usageEnvironmentQuiet "$usage" "$quietLog" aptInstall composer composer || return $?
+    __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall composer composer || return $?
     statusMessage consoleSuccess "Installed composer ... " || :
     composerBin=(composer)
   fi

@@ -59,6 +59,7 @@ testSuite() {
 
   testTracing=initialization
   trap '__testCleanupMess' EXIT QUIT TERM
+  trap '__testInterrupt' INT
 
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
@@ -158,8 +159,8 @@ testSuite() {
   __environment requireFileDirectory "$quietLog" || return $?
   testFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
   tests=()
+  __bashCoverageStart "$home/test.stats"
   for item in "${checkTests[@]}"; do
-    set -eou pipefail
     if ! __testLoad "$item" >"$testFunctions"; then
       __failEnvironment "$usage" "Can not load $item" || return $?
     fi
@@ -182,6 +183,7 @@ testSuite() {
       dumpPipe testFunctions <"$testFunctions" 1>&2
     fi
   done
+  __bashCoverageEnd
   ! $doStats || statsFile=$(__environment mktemp) || return $?
   rm -f "$testFunctions" || :
   [ "${#tests[@]}" -gt 0 ] || __failEnvironment "$usage" "No tests found" || return $?
@@ -207,6 +209,7 @@ testSuite() {
     fi
     filteredTests+=("$item")
   done
+
   if $listFlag; then
     sectionName=
     for item in "${filteredTests[@]}"; do
@@ -357,7 +360,7 @@ __testSection() {
 }
 
 __testHeading() {
-  whichApt toilet toilet >/dev/null 2>&1 || _environment "Unable to install toilet" || return $?
+  packageWhich toilet toilet >/dev/null 2>&1 || _environment "Unable to install toilet" || return $?
   consoleCode "$(consoleOrange "$(echoBar '*')")"
   printf "%s" "$(consoleCode)$(clearLine)"
   bigText "$@" | wrapLines --fill " " "$(consoleCode)    " "$(consoleReset)"
@@ -392,7 +395,7 @@ __testLoad() {
   while [ "$#" -gt 0 ]; do
     __usageEnvironment "$usage" isExecutable "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
-    declare -pF | removeFields 2 | grep -e '^test' >"$__beforeFunctions"
+    declare -pF | awk '{ print $3 }' | grep -e '^test' | sort >"$__beforeFunctions"
     tests=()
     set -a
     # shellcheck source=/dev/null
@@ -405,7 +408,8 @@ __testLoad() {
       done
       __tests+=("${tests[@]}")
     fi
-    declare -pF | removeFields 2 | grep -e '^test' | diff "$__beforeFunctions" - | grep -e '^[<>]' | cut -c 3- >"$__testFunctions" || :
+    # diff outputs ("-" and "+") prefixes or ("< " and "> ")
+    declare -pF | awk '{ print $3 }' | grep -e '^test' | diff "$__beforeFunctions" - | grep 'test' | cut -c 2- | trimSpace >"$__testFunctions" || :
     while read -r __test; do
       ! inArray "$__test" "${__tests[@]+"${__tests[@]}"}" || {
         clearLine
@@ -569,7 +573,13 @@ __testCleanupMess() {
   fi
   __testCleanup
 }
+__testInterrupt() {
+  export BUILD_HOME
 
+  trap - INT EXIT QUIT TERM
+  debuggingStack >"$BUILD_HOME/.interrupt" || :
+  exit 99
+}
 _textExit() {
   export cleanExit
   if [ "${1-}" = 0 ]; then

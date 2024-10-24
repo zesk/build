@@ -28,7 +28,7 @@ Get APT source list path
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `aptUpdateOnce` - Do `apt-get update` once
+### `packageUpdate` - Do `apt-get update` once
 
 Run apt-get update once and only once in the pipeline, at least
 once an hour as well (when testing)
@@ -48,7 +48,7 @@ once an hour as well (when testing)
 #### Environment
 
 Stores state files in `./.build/` directory which is created if it does not exist.
-### `aptInstall` - Install packages using `apt-get`
+### `packageInstall` - Install packages using `apt-get`
 
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available.
@@ -63,7 +63,7 @@ Also does a simple lookup in the list of installed packages to avoid double-inst
 
 #### Usage
 
-    aptInstall [ package ... ]
+    packageInstall [ package ... ]
     
 
 #### Arguments
@@ -72,7 +72,7 @@ Also does a simple lookup in the list of installed packages to avoid double-inst
 
 #### Examples
 
-    aptInstall shellcheck
+    packageInstall shellcheck
 
 #### Exit codes
 
@@ -124,7 +124,7 @@ Remove apt keys
 
 - `1` - if environment is awry
 - `0` - Apt key is installed AOK
-### `aptListInstalled` - List installed packages
+### `packageInstalledList` - List installed packages
 
 List installed packages
 
@@ -139,7 +139,7 @@ List installed packages
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `aptNeedRestartFlag` - INTERNAL - has `aptUpToDate` set the `restart` flag at some
+### `packageNeedRestartFlag` - INTERNAL - has `aptUpToDate` set the `restart` flag at some
 
 INTERNAL - has `aptUpToDate` set the `restart` flag at some point?
 
@@ -154,7 +154,7 @@ INTERNAL - has `aptUpToDate` set the `restart` flag at some point?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `aptUninstall` - Removes packages using `apt-get`
+### `packageUninstall` - Removes packages using `apt-get`
 
 Removes packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available. (For now)
@@ -163,7 +163,7 @@ and assumes packages will be available. (For now)
 
 #### Usage
 
-    aptUninstall [ package ... ]
+    packageUninstall [ package ... ]
     
 
 #### Arguments
@@ -172,7 +172,7 @@ and assumes packages will be available. (For now)
 
 #### Examples
 
-    aptInstall shellcheck
+    packageInstall shellcheck
 
 #### Exit codes
 
@@ -209,10 +209,10 @@ Is apt-get installed?
 - `1` - Environment error
 - `2` - Argument error
 
-### `whichApt` - Install tools using `apt-get` if they are not found
+### `packageWhich` - Install tools using `apt-get` if they are not found
 
 Installs an apt package if a binary does not exist in the which path.
-The assumption here is that `aptInstallPackage` will install the desired `binary`.
+The assumption here is that `packageInstallPackage` will install the desired `binary`.
 
 Confirms that `binary` is installed after installation succeeds.
 
@@ -221,12 +221,12 @@ Confirms that `binary` is installed after installation succeeds.
 #### Arguments
 
 - `binary` - Required. String. The binary to look for
-- `aptInstallPackage` - Required. String. The package name to install if the binary is not found in the `$PATH`.
+- `packageInstallPackage` - Required. String. The package name to install if the binary is not found in the `$PATH`.
 
 #### Examples
 
-    whichApt shellcheck shellcheck
-    whichApt mariadb mariadb-client
+    packageWhich shellcheck shellcheck
+    packageWhich mariadb mariadb-client
 
 #### Exit codes
 
@@ -237,10 +237,10 @@ Confirms that `binary` is installed after installation succeeds.
 #### Environment
 
 Technically this will install the binary and any related files as a package.
-### `whichAptUninstall` - Install tools using `apt-get` if they are not found
+### `packageWhichUninstall` - Install tools using `apt-get` if they are not found
 
 Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
-The assumption here is that `aptUninstall` will install the desired `binary`.
+The assumption here is that `packageUninstall` will install the desired `binary`.
 
 Confirms that `binary` is installed after installation succeeds.
 
@@ -249,12 +249,12 @@ Confirms that `binary` is installed after installation succeeds.
 #### Arguments
 
 - `binary` - Required. String. The binary to look for.
-- `aptInstallPackage` - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
+- `packageInstallPackage` - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
 
 #### Examples
 
-    whichAptUninstall shellcheck shellcheck
-    whichAptUninstall mariadb mariadb-client
+    packageWhichUninstall shellcheck shellcheck
+    packageWhichUninstall mariadb mariadb-client
 
 #### Exit codes
 

@@ -19,7 +19,7 @@ daemontoolsInstall() {
   else
     packages+=(daemontools-run)
   fi
-  __environment aptInstall "${packages[@]}" || return $?
+  __environment packageInstall "${packages[@]}" || return $?
   if insideDocker; then
     consoleWarning "daemontools run in background - not production" 1>&2
     __environment daemontoolsExecute || return $?

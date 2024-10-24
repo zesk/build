@@ -82,7 +82,7 @@ hostIPList() {
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
       --install)
-        __usageEnvironment "$usage" whichApt ifconfig net-tools || return $?
+        __usageEnvironment "$usage" packageWhich ifconfig net-tools || return $?
         ;;
       # IDENTICAL --help 4
       --help)
@@ -134,7 +134,7 @@ websiteScrape() {
   logFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.log") || return $?
   progressFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
 
-  __usageEnvironment "$usage" whichApt wget wget || return $?
+  __usageEnvironment "$usage" packageWhich wget wget || return $?
 
   aa=()
   aa+=(-e robots=off)

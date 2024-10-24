@@ -176,7 +176,7 @@ environmentLines() {
 }
 
 #
-# Usage: dotEnvConfigure where
+# Usage: environmentFileLoad .env --optional .env.local where
 # Argument: where - Optional. Directory. Where to load the `.env` files.
 #
 # Loads `.env` which is the current project configuration file

@@ -6,7 +6,7 @@ Install software as `root` or superuser.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `aptInstall` - Install packages using `apt-get`
+### `packageInstall` - Install packages using `apt-get`
 
 Install packages using `apt-get`. If `apt-get` is not available, this succeeds
 and assumes packages will be available.
@@ -21,7 +21,7 @@ Also does a simple lookup in the list of installed packages to avoid double-inst
 
 #### Usage
 
-    aptInstall [ package ... ]
+    packageInstall [ package ... ]
     
 
 #### Arguments
@@ -30,7 +30,7 @@ Also does a simple lookup in the list of installed packages to avoid double-inst
 
 #### Examples
 
-    aptInstall shellcheck
+    packageInstall shellcheck
 
 #### Exit codes
 
@@ -57,7 +57,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 #### Exit codes
 
-- if `aptInstall` fails, the exit code is returned
+- if `packageInstall` fails, the exit code is returned
 
 #### Depends
 
@@ -232,7 +232,7 @@ Install terraform binary
 
 #### Arguments
 
-- `package` - Additional packages to install using `aptInstall`
+- `package` - Additional packages to install using `packageInstall`
 
 #### Exit codes
 
@@ -335,7 +335,7 @@ Remove terraform binary
 
 #### Arguments
 
-- `package` - Additional packages to uninstall using `aptUninstall`
+- `package` - Additional packages to uninstall using `packageUninstall`
 
 #### Exit codes
 

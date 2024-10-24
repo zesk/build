@@ -7,6 +7,17 @@
 # Docs: o ./docs/_templates/tools/apt.md
 # Test: o ./test/tools/apt-tests.sh
 
+#
+# Is apt-get installed?
+#
+aptIsInstalled() {
+  whichExists apt apt-get dpkg && [ -f /etc/debian_version ]
+}
+
+aptNonInteractive() {
+  DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get "$@"
+}
+
 # Get key ring directory path
 aptKeyRingDirectory() {
   printf "%s\n" "/etc/apt/keyrings"
@@ -15,340 +26,6 @@ aptKeyRingDirectory() {
 # Get APT source list path
 aptSourcesDirectory() {
   printf "%s\n" "/etc/apt/sources.list.d"
-}
-
-#
-# Run apt-get update once and only once in the pipeline, at least
-# once an hour as well (when testing)
-#
-# Summary: Do `apt-get update` once
-# Usage: {fn} [ --force ]
-# Argument: --force - Optional. Flag. Force apt-update regardless.
-# Environment: Stores state files in `./.build/` directory which is created if it does not exist.
-# Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-#
-aptUpdateOnce() {
-  local usage="_${FUNCNAME[0]}"
-  local cacheFile=.apt-update
-  local argument nArguments
-  local forceFlag
-  local name quietLog start lastModified
-
-  nArguments=$#
-  forceFlag=false
-  while [ $# -gt 0 ]; do
-    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
-    case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      *)
-        usageArgumentUnknown "$usage" "$argument" || return $?
-        ;;
-    esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
-  done
-  __usageEnvironment "$usage" whichExists apt-get || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog aptUpdateOnce) || return $?
-  name=$(__usageEnvironment "$usage" buildCacheDirectory "$cacheFile") || return $?
-  __usageEnvironment "$usage" requireFileDirectory "$name" || return $?
-  if $forceFlag; then
-    statusMessage consoleInfo "Forcing apt-update ..."
-  elif [ -f "$name" ]; then
-    lastModified="$(modificationSeconds "$name")"
-    # once an hour, technically
-    if [ "$lastModified" -lt 3600 ]; then
-      return 0
-    fi
-  fi
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  statusMessage consoleInfo "apt-get update ... " || :
-  __usageEnvironmentQuiet "$usage" "$quietLog" aptNonInteractive update -y || return $?
-  statusMessage reportTiming "$start" "System sources updated in"
-  date +%s >"$name" || :
-  clearLine || :
-}
-_aptUpdateOnce() {
-  # IDENTICAL usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Usage: {fn}
-# List installed packages
-aptListInstalled() {
-  whichExists dpkg || __failEnvironment "$usage" "Not an apt system (no dpkg)" || return $?
-  [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
-  dpkg --get-selections | grep -v deinstall | awk '{ print $1 }'
-}
-_aptListInstalled() {
-  # IDENTICAL usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Install packages using `apt-get`. If `apt-get` is not available, this succeeds
-# and assumes packages will be available.
-#
-# Main reason to use this instead of `apt-get` raw is it's quieter.
-#
-# Also does a simple lookup in the list of installed packages to avoid double-installation.
-#
-# Usage: aptInstall [ package ... ]
-# Example:     aptInstall shellcheck
-# Exit Code: 0 - If `apt-get` is not installed, returns 0.
-# Exit Code: 1 - If `apt-get` fails to install the packages
-# Summary: Install packages using `apt-get`
-# Argument: package - One or more packages to install
-# Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-# Default: apt-utils figlet jq pcregrep
-#
-# shellcheck disable=SC2120
-aptInstall() {
-  local usage="_${FUNCNAME[0]}"
-  local argument nArguments
-  local quietLog
-  local actualPackages package installed standardPackages
-  local start forceFlag=false packages=()
-
-  nArguments=$#
-  forceFlag=false
-  read -r -a standardPackages < <(_aptStandardPackages)
-  while [ $# -gt 0 ]; do
-    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
-    case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      *)
-        packages+=("$argument")
-        ;;
-    esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
-  done
-
-  if ! aptIsInstalled; then
-    statusMessage consoleWarning "No apt-get – blundering ahead ..."
-    return 0
-  fi
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
-  installed="$(__usageEnvironment "$usage" mktemp)" || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" aptUpdateOnce || return $?
-  __usageEnvironment "$usage" aptListInstalled >"$installed" || return $?
-  actualPackages=()
-  for package in "${packages[@]+"${packages[@]}"}"; do
-    if ! grep -q -e "^$package" <"$installed"; then
-      actualPackages+=("$package")
-    elif $forceFlag; then
-      actualPackages+=("$package")
-    fi
-  done
-
-  if [ "${#actualPackages[@]}" -eq 0 ]; then
-    if [ "${#packages[@]}" -gt 0 ]; then
-      consoleSuccess "Already installed: ${packages[*]}"
-    fi
-    return 0
-  fi
-  statusMessage consoleInfo "Installing ${packages[*]+"${packages[*]}"} ... "
-  __usageEnvironmentQuiet "$usage" "$quietLog" aptNonInteractive install -y "${actualPackages[@]}" || return $?
-  reportTiming "$start" OK
-}
-_aptInstall() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Is apt-get installed?
-#
-aptIsInstalled() {
-  whichExists apt-get
-}
-
-# Usage: {fn}
-# Output list of apt standard packages (constant)
-_aptStandardPackages() {
-  printf "%s\n" apt-utils figlet toilet toilet-fonts jq pcregrep
-}
-
-# Removes packages using `apt-get`. If `apt-get` is not available, this succeeds
-# and assumes packages will be available. (For now)
-#
-# Usage: aptUninstall [ package ... ]
-# Example:     aptInstall shellcheck
-# Exit Code: 0 - If `apt-get` is not installed, returns 0.
-# Exit Code: 1 - If `apt-get` fails to remove the packages
-# Summary: Removes packages using `apt-get`
-# Argument: package - One or more packages to install
-# Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-#
-aptUninstall() {
-  local usage="_${FUNCNAME[0]}"
-  local quietLog standardPackages
-  local package
-  local apt start
-
-  read -r -a standardPackages < <(_aptStandardPackages)
-  start=$(beginTiming)
-  quietLog=$(buildQuietLog "${FUNCNAME[0]}")
-  apt=$(which apt-get || :)
-  if [ -z "$apt" ]; then
-    statusMessage consoleWarning "No apt-get, blundering ahead ..."
-    return 0
-  fi
-
-  __usageEnvironmentQuiet "$usage" "$quietLog" aptUpdateOnce || return $?
-
-  for package in "$@"; do
-    if inArray "$package" "${standardPackages[@]}"; then
-      __failArgument "$usage" "Unable to remove standard package $(consoleCode "$package")" || return $?
-    fi
-  done
-
-  statusMessage consoleInfo "Uninstalling $* ... "
-  DEBIAN_FRONTEND=noninteractive __usageEnvironmentQuiet "$usage" "$quietLog" "$apt" remove -y "$@" || return $?
-  statusMessage reportTiming "$start" "Uninstallation of $* completed in" || :
-  clearLine
-}
-_aptUninstall() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Installs an apt package if a binary does not exist in the which path.
-# The assumption here is that `aptInstallPackage` will install the desired `binary`.
-#
-# Confirms that `binary` is installed after installation succeeds.
-#
-# Summary: Install tools using `apt-get` if they are not found
-# Usage: {fn} binary aptInstallPackage ...
-# Example:     whichApt shellcheck shellcheck
-# Example:     whichApt mariadb mariadb-client
-# Argument: binary - Required. String. The binary to look for
-# Argument: aptInstallPackage - Required. String. The package name to install if the binary is not found in the `$PATH`.
-# Environment: Technically this will install the binary and any related files as a package.
-#
-whichApt() {
-  local usage="_${FUNCNAME[0]}"
-  local savedArguments
-  local binary="${1-}"
-  savedArguments=("$@")
-
-  [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
-  shift
-  [ $# -gt 0 ] || __failArgument "$usage" "Missing apt packages (${savedArguments[*]})" || return $?
-  if whichExists "$binary"; then
-    return 0
-  fi
-  __environment aptInstall --force "$@" || return $?
-  if whichExists "$binary"; then
-    return 0
-  fi
-  __failEnvironment "$usage" "Apt packages \"$*\" did not add $binary to the PATH: ${PATH-}" || return $?
-}
-_whichApt() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
-# The assumption here is that `aptUninstall` will install the desired `binary`.
-#
-# Confirms that `binary` is installed after installation succeeds.
-#
-# Summary: Install tools using `apt-get` if they are not found
-# Usage: {fn} binary aptInstallPackage ...
-# Example:     whichAptUninstall shellcheck shellcheck
-# Example:     whichAptUninstall mariadb mariadb-client
-# Argument: binary - Required. String. The binary to look for.
-# Argument: aptInstallPackage - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
-# Environment: Technically this will uninstall the binary and any related files as a package.
-#
-whichAptUninstall() {
-  local usage="_${FUNCNAME[0]}"
-  local binary="${1-}" foundPath
-  [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
-  shift
-  [ $# -ne 0 ] || __failArgument "$usage" "Missing apt packages" || return $?
-  if ! whichExists "$binary"; then
-    return 0
-  fi
-  __usageEnvironment "$usage" aptUninstall "$@" || return $?
-  foundPath="$(which "$binary" || :)"
-  [ -z "$foundPath" ] || __failEnvironment "$usage" "aptUninstall \"$*\" did not remove $(consoleCode "$foundPath") FROM the PATH: $(consoleValue "${PATH-}")" || return $?
-}
-_whichAptUninstall() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Usage: {fn} [ value ]
-# INTERNAL - has `aptUpToDate` set the `restart` flag at some point?
-# Argument: value - Set the restart flag to this value (blank to remove)
-aptNeedRestartFlag() {
-  local usage="_${FUNCNAME[0]}"
-  local quietLog upgradeLog restartFlag result
-
-  restartFlag=$(__usageEnvironment "$usage" buildCacheDirectory ".needRestart") || return $?
-  if [ $# -eq 0 ]; then
-    if [ -f "$restartFlag" ]; then
-      __usageEnvironment "$usage" cat "$restartFlag" || return $?
-    else
-      return 1
-    fi
-  else
-    if [ "$1" = "" ]; then
-      rm -f "$restartFlag" || :
-    else
-      printf "%s\n" "$@" >"$restartFlag" || __failEnvironment "$usage" "Unable to write $restartFlag" || return $?
-    fi
-  fi
-}
-_aptNeedRestartFlag() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Usage: {fn}
-# OS upgrade and potential restart
-# Progress is written to stderr
-# Result is `ok` or `restart` written to stdout
-#
-# Exit code: 0 - Success
-# Exit code: 1 - Failed due to issues with environment
-# Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-# Artifact: `aptUpdateOnce.log` is left in the `buildCacheDirectory`
-# Artifact: `aptInstall.log` is left in the `buildCacheDirectory`
-aptUpToDate() {
-  local usage="_${FUNCNAME[0]}"
-  local quietLog upgradeLog result
-
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
-  upgradeLog=$(__usageEnvironment "$usage" buildQuietLog "STATE_${FUNCNAME[0]}") || return $?
-  # statusMessage consoleInfo "Update ... " 1>&2
-  __usageEnvironmentQuiet "$quietLog" aptUpdateOnce || return $?
-  __usageEnvironmentQuiet "$quietLog" aptInstall || return $?
-  DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l __usageEnvironment "$usage" apt-get -y dist-upgrade | tee -a "$upgradeLog" >>"$quietLog"
-  if ! aptNeedRestartFlag >/dev/null; then
-    if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog"; then
-      __usageEnvironment "$usage" aptNeedRestartFlag "$restartFlag" || return $?
-    fi
-    result=restart
-  else
-    aptNeedRestartFlag "" || __failEnvironment "$usage" "Unable to delete restart flag" || return $?
-    result=ok
-  fi
-  printf "%s\n" "$result"
-}
-_aptUpToDate() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -573,6 +250,97 @@ _usageAptPermissions() {
   rm -f "$sourcesPath/$$.test" 2>/dev/null || __failEnvironment "$usage" "No permission to delete in $sourcesPath, failing" || return $?
 }
 
-aptNonInteractive() {
-  DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get "$@"
+################################################################################################################################
+#
+#             ▌                ▌
+#    ▛▀▖▝▀▖▞▀▖▌▗▘▝▀▖▞▀▌▞▀▖  ▞▀▘▛▀▖
+#    ▙▄▘▞▀▌▌ ▖▛▚ ▞▀▌▚▄▌▛▀ ▗▖▝▀▖▌ ▌
+#    ▌  ▝▀▘▝▀ ▘ ▘▝▀▘▗▄▘▝▀▘▝▘▀▀ ▘ ▘
+#
+
+# Install apt packages
+__aptInstall() {
+  aptNonInteractive install -y "$@"
+}
+
+# Uninstall apt packages
+__aptUninstall() {
+  aptNonInteractive remove -y "$@"
+}
+
+#
+# Usage: {fn}
+# OS upgrade and potential restart
+# Progress is written to stderr
+# Result is `ok` or `restart` written to stdout
+#
+# Exit code: 0 - Success
+# Exit code: 1 - Failed due to issues with environment
+# Artifact: `{fn}.log` is left in the `buildCacheDirectory`
+# Artifact: `aptUpdateOnce.log` is left in the `buildCacheDirectory`
+# Artifact: `aptInstall.log` is left in the `buildCacheDirectory`
+__aptUpgrade() {
+  aptNonInteractive dist-upgrade -y "$@"
+}
+
+# Update the global database
+# See: packageUpdate
+# package.sh: true
+__aptUpdate() {
+  aptNonInteractive update -y "$@"
+}
+
+# Usage: {fn}
+# List installed packages
+# package.sh: true
+__aptInstalledList() {
+  local usage="_${FUNCNAME[0]}"
+  whichExists dpkg || __failEnvironment "$usage" "Not an apt system (no dpkg)" || return $?
+  [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
+  dpkg --get-selections | grep -v deinstall | awk '{ print $1 }'
+}
+___aptInstalledList() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn}
+# Output list of apt standard packages (constant)
+# See: _packageStandardPackages
+# package.sh: true
+__aptStandardPackages() {
+  printf "%s\n" apt-utils figlet toilet toilet-fonts jq pcregrep
+}
+
+#
+#   ____                                _           _
+#  |  _ \  ___ _ __  _ __ ___  ___ __ _| |_ ___  __| |
+#  | | | |/ _ \ '_ \| '__/ _ \/ __/ _` | __/ _ \/ _` |
+#  | |_| |  __/ |_) | | |  __/ (_| (_| | ||  __/ (_| |
+#  |____/ \___| .__/|_|  \___|\___\__,_|\__\___|\__,_|
+#             |_|
+#
+
+# DEPRECATED
+# See: packageUninstall
+aptUninstall() {
+  packageUninstall --manager apt "$@"
+}
+
+# DEPRECATED
+# See: packageWhich
+whichApt() {
+  packageWhich --manager apt "$@"
+}
+
+# DEPRECATED
+# See: packageWhichUninstall
+whichAptUninstall() {
+  packageWhichUninstall --manager apt "$@"
+}
+
+# DEPRECATED
+# See: packageNeedRestartFlag
+aptNeedRestartFlag() {
+  packageNeedRestartFlag "$@"
 }

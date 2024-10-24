@@ -17,7 +17,7 @@ testDotEnvConfigure() {
   __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
   consoleInfo "$(pwd)"
-  assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 dotEnvConfigure || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
 
   tempEnv="$tempDir/.env"
   __environment touch "$tempEnv" || return $?
@@ -26,8 +26,8 @@ testDotEnvConfigure() {
   assertEquals --line "$LINENO" "" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
 
-  assertExitCode --leak TESTENVWORKS --line "$LINENO" 0 dotEnvConfigure "$tempDir" || return $?
-  dotEnvConfigure "$tempDir" || return $?
+  assertExitCode --leak TESTENVWORKS --line "$LINENO" 0 environmentFileLoad .env --optional .env.local "$tempDir" || return $?
+  environmentFileLoad .env --optional .env.local "$tempDir" || return $?
 
   assertEquals --line "$LINENO" "$magic" "${TESTENVWORKS-}" || return $?
 
@@ -37,15 +37,15 @@ testDotEnvConfigure() {
   __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
   __environment touch .env.local || return $?
 
-  dotEnvConfigure "$tempDir" || return $?
-  assertExitCode --line "$LINENO" 0 dotEnvConfigure "$tempDir" || return $?
+  environmentFileLoad .env --optional .env.local "$tempDir" || return $?
+  assertExitCode --line "$LINENO" 0 environmentFileLoad .env --optional .env.local "$tempDir" || return $?
 
   assertEquals --line "$LINENO" "NEW-$magic" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "$magic" "${TESTENVLOCALWORKS-}" || return $?
 
   __environment cd .. || return $?
   __environment rm -rf "$tempDir" || return $?
-  consoleSuccess dotEnvConfigure works AOK
+  consoleSuccess environmentFileLoad .env --optional .env.local works AOK
 
   unset TESTENVWORKS TESTENVLOCALWORKS
 }
@@ -72,7 +72,7 @@ testEnvironmentFileLoad() {
 
   envFile="$tempDir/.env.local"
   __environment touch "$envFile" || return $?
-  assertExitCode --line "$LINENO" 0 dotEnvConfigure || _environment "dotEnvConfigure failed with both .env" || return $?
+  assertExitCode --line "$LINENO" 0 environmentFileLoad .env --optional .env.local || _environment "environmentFileLoad .env --optional .env.local failed with both .env" || return $?
 
   envFile="$tempDir/.env.$name"
   printf "%s\n" "$name=worked" >"$envFile"

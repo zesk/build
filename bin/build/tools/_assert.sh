@@ -75,6 +75,7 @@ _assertConditionHelper() {
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
+  set -eou pipefail
   saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -211,7 +212,7 @@ _assertConditionHelper() {
     message="$message -> [$exitCode $(_choose "$success" "=" "!=") $expectedExitCode] $(__resultText "$testPassed" "$(_choose "$testPassed" correct incorrect)")"
   fi
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
-    message="$(printf -- "%s - %s\n%s\n" "$message" "$(consoleError "produced stderr")" "$(dumpPipe stderr <"$errorFile")")"
+    message="$(printf -- "%s - %s\n%s\n" "$message" "$(consoleError "produced stderr")" "$(dumpPipe --tail stderr <"$errorFile")")"
     _assertFailure "$this" "$displayName $message" || return $?
   fi
   if $errorsOk && [ ! -s "$errorFile" ]; then
@@ -243,8 +244,8 @@ _assertConditionHelper() {
       dumpBinary <"$outputFile" | dumpPipe "$stdoutTitle" || :
       dumpBinary <"$errorFile" | dumpPipe "$stderrTitle" || :
     else
-      dumpPipe "$stdoutTitle" <"$outputFile" || :
-      dumpPipe "$stderrTitle" <"$errorFile" || :
+      dumpPipe --tail "$stdoutTitle" <"$outputFile" || :
+      dumpPipe --tail "$stderrTitle" <"$errorFile" || :
     fi
   fi
   return $exitCode

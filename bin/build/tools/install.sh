@@ -24,12 +24,12 @@
 # Binary: mariadb-client.sh
 #
 mariadbInstall() {
-  whichApt mariadb mariadb-common mariadb-client "$@"
+  packageWhich mariadb mariadb-common mariadb-client "$@"
 }
 
 # Uninstall mariadb
 mariadbUninstall() {
-  whichAptUninstall mariadb mariadb-common mariadb-client "$@"
+  packageWhichUninstall mariadb mariadb-common mariadb-client "$@"
 }
 
 # Install `python`
@@ -45,12 +45,12 @@ mariadbUninstall() {
 # Binary: python.sh
 #
 pythonInstall() {
-  whichApt python python-is-python3 python3 python3-pip "$@"
+  packageWhich python python-is-python3 python3 python3-pip "$@"
 }
 
 # Uninstall python
 pythonUninstall() {
-  whichAptUninstall python python-is-python3 python3 python3-pip "$@"
+  packageWhichUninstall python python-is-python3 python3 python3-pip "$@"
 }
 
 # Utility to install python dependencies via pip
@@ -88,7 +88,7 @@ _pipUninstall() {
   if ! whichExists "$name"; then
     return 0
   fi
-  whichApt pip python3-pip || __failEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
+  packageWhich pip python3-pip || __failEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage consoleInfo "Removing $name ... "
@@ -136,7 +136,7 @@ dockerComposeUninstall() {
   if ! whichExists "$name"; then
     return 0
   fi
-  whichApt pip python3-pip || __failEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
+  packageWhich pip python3-pip || __failEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage consoleInfo "Removing $name ... "

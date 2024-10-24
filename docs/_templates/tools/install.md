@@ -6,7 +6,7 @@ Install software as `root` or superuser.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-{aptInstall}
+{packageInstall}
 {awsInstall}
 
 {dockerComposeInstall}

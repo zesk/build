@@ -42,7 +42,7 @@ _testTools() {
 dumpBinary() {
   local columns
   # Is this installed by default?
-  __environment muzzle whichApt xxd xxd || return $?
+  __environment muzzle packageWhich xxd xxd || return $?
   columns=$(consoleColumns) || columns=120
   xxd -c "$((columns / 4))"
 }
@@ -425,8 +425,8 @@ bashLint() {
 
   this=${FUNCNAME[0]}
   usage="_$this"
-  __usageEnvironment "$usage" whichApt shellcheck shellcheck || return $?
-  __usageEnvironment "$usage" whichApt pcregrep pcregrep || return $?
+  __usageEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
+  __usageEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
   # Open 3 to pipe to nowhere
   exec 3>/dev/null

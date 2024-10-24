@@ -181,7 +181,7 @@ __installInstallBuildRemote() {
   local usage="$1"
   export BUILD_INSTALL_URL
 
-  __usageEnvironment "$usage" whichApt curl curl || return $?
+  __usageEnvironment "$usage" packageWhich curl curl || return $?
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
   urlParse "${BUILD_INSTALL_URL-}" >/dev/null || __failEnvironment "$usage" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
 

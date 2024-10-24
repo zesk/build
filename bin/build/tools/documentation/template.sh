@@ -201,7 +201,7 @@ documentationBuild() {
   __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  __usageEnvironment "$usage" whichApt pcregrep pcregrep || return $?
+  __usageEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
   start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
 

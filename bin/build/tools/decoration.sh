@@ -10,14 +10,34 @@
 #
 # Usage: bigText [ --bigger ] Text to output
 #
-# smblock (regular)
+# big (figlet)
+#
+#   _     _    _______        _
+#  | |   (_)  |__   __|      | |
+#  | |__  _  __ _| | _____  _| |_
+#  | '_ \| |/ _` | |/ _ \ \/ / __|
+#  | |_) | | (_| | |  __/>  <| |_
+#  |_.__/|_|\__, |_|\___/_/\_\\__|
+#            __/ |
+#           |___/
+#
+# standard (figlet)
+#
+#   _     _      _____         _
+#  | |__ (_) __ |_   _|____  _| |_
+#  | '_ \| |/ _` || |/ _ \ \/ / __|
+#  | |_) | | (_| || |  __/>  <| |_
+#  |_.__/|_|\__, ||_|\___/_/\_\\__|
+#           |___/
+#
+# smblock (regular) toilet
 #
 # ▌  ▗   ▀▛▘     ▐
 # ▛▀▖▄ ▞▀▌▌▞▀▖▚▗▘▜▀
 # ▌ ▌▐ ▚▄▌▌▛▀ ▗▚ ▐ ▖
 # ▀▀ ▀▘▗▄▘▘▝▀▘▘ ▘ ▀
 #
-# smmono12 (--bigger)
+# smmono12 (--bigger) toilet
 #
 # ▗▖     █       ▗▄▄▄▖
 # ▐▌     ▀       ▝▀█▀▘           ▐▌
@@ -29,16 +49,23 @@
 #         ▜█▛▘
 #
 bigText() {
-  local font=smblock
-  if ! whichApt toilet toilet >/dev/null; then
+  local fonts binary index=0
+  if apkIsInstalled; then
+    fonts=("standard" "big")
+    binary=figlet
+  else
+    fonts=(smblock smmono12)
+    binary=toilet
+  fi
+  if ! packageWhich "$binary" "$binary" >/dev/null; then
     consoleGreen "BIG TEXT: $*"
     return 0
   fi
   if [ "$1" = "--bigger" ]; then
-    font=smmono12
+    index=1
     shift
   fi
-  toilet -f $font "$@"
+  "$binary" -f "${fonts[index]}" "$@"
 }
 
 #

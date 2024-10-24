@@ -35,7 +35,7 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 #### Exit codes
 
-- if `aptInstall` fails, the exit code is returned
+- if `packageInstall` fails, the exit code is returned
 
 #### Depends
 

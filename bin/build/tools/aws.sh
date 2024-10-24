@@ -24,7 +24,7 @@
 #
 # Usage: awsInstall [ package ... ]
 # Argument: package - One or more packages to install using `apt-get` prior to installing AWS
-# Exit Code: if `aptInstall` fails, the exit code is returned
+# Exit Code: if `packageInstall` fails, the exit code is returned
 # Depends: apt-get
 #
 # shellcheck disable=SC2120
@@ -33,7 +33,7 @@ awsInstall() {
   local start url
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  __usageEnvironment "$usage" aptInstall unzip curl "$@" || return $?
+  __usageEnvironment "$usage" packageInstall unzip curl "$@" || return $?
 
   if whichExists aws; then
     return 0

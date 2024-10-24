@@ -29,7 +29,7 @@
 # Summary: Install git if needed
 #
 gitInstall() {
-  whichApt git git "$@"
+  packageWhich git git "$@"
 }
 
 #
@@ -39,7 +39,7 @@ gitInstall() {
 # Summary: Uninstall git
 #
 gitUninstall() {
-  whichAptUninstall git git "$@"
+  packageWhichUninstall git git "$@"
 }
 
 #

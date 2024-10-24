@@ -75,10 +75,11 @@ __deprecatedFind() {
 
 # Usage: {fn} search replace [ additionalCannonArgs ]
 __deprecatedCannon() {
-  local ignoreStuff
+  local from="$1" to="$2" ignoreStuff
+  shift 2
   read -d '' -r -a ignoreStuff < <(__deprecatedIgnore)
-  statusMessage printf "%s %s \n" "$(consoleWarning "$1")" "$(consoleSuccess "$2")"
-  cannon "$@" "${ignoreStuff[@]}" || :
+  statusMessage printf "%s %s \n" "$(consoleWarning "$from")" "$(consoleSuccess "$to")"
+  cannon "$from" "$to" "${ignoreStuff[@]}" "$@" || :
 }
 
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on
@@ -93,6 +94,8 @@ __deprecatedCannon() {
 __deprecatedCleanup() {
   local this="${BASH_SOURCE[0]##*/}"
   local deprecatedToken deprecatedTokens exitCode ignoreStuff deprecatedIgnoreStuff file
+
+  set -eou pipefail
 
   exitCode=0
   deprecatedTokens=()
@@ -154,13 +157,13 @@ __deprecatedCleanup() {
   deprecatedTokens+=(crontab-application-sync.sh)
   __deprecatedCannon "show""Environment" environmentFileShow
   __deprecatedCannon "make""Environment" environmentFileApplicationMake
-  __deprecatedCannon "dot""EnvConfigure"
   __deprecatedCannon "application""EnvironmentVariables" environmentApplicationVariables
   __deprecatedCannon "application""Environment" environmentApplicationLoad
 
   __deprecatedCannon "path""Append" listAppend
 
-  deprecatedTokens+=("dotEnv""Configure")
+  # __deprecatedCannon "dot""EnvConfigure" 'environmentFileLoad .env --optional .env.local' ! -path '*/environment.sh'
+  # deprecatedTokens+=("dotEnv""Configure")
 
   # v0.11.2
   __deprecatedCannon '_''environment''Output' outputTrigger
@@ -196,6 +199,15 @@ __deprecatedCleanup() {
   for file in "$home/"*.sh; do
     deprecatedToken+=("${file#"$home"}")
   done
+
+  # v0.14.6
+  __deprecatedCannon 'aptListInstalled' "aptInstalledList"
+  __deprecatedCannon 'aptInstall' "packageInstall" ! -path '*/apt.sh'
+  __deprecatedCannon 'aptUninstall' "packageUninstall" ! -path '*/apt.sh'
+  __deprecatedCannon 'aptUpdateOnce' "packageUpdate" ! -path '*/apt.sh'
+  __deprecatedCannon 'whichApt' "packageWhich" ! -path '*/apt.sh'
+  __deprecatedCannon 'whichAptUninstall' "packageWhichUninstall" ! -path '*/apt.sh'
+  __deprecatedCannon 'aptNeedRestartFlag' "packageNeedRestartFlag" ! -path '*/apt.sh'
 
   # END OF CANNONS
 

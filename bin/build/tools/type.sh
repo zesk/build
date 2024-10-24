@@ -28,14 +28,8 @@
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isUnsignedNumber() {
-  while [ $# -gt 0 ]; do
-    case ${1#+} in
-      '' | . | *[!0-9.]* | *.*.*)
-        return 1
-        ;;
-    esac
-    shift || :
-  done
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+    case ${1#+} in '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
 #
@@ -49,14 +43,8 @@ isUnsignedNumber() {
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isNumber() {
-  while [ $# -gt 0 ]; do
-    case ${1#[-+]} in
-      '' | . | *[!0-9.]* | *.*.*)
-        return 1
-        ;;
-    esac
-    shift || :
-  done
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  case ${1#[-+]} in '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
 #
@@ -69,14 +57,8 @@ isNumber() {
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isInteger() {
-  while [ $# -gt 0 ]; do
-    case ${1#[-+]} in
-      '' | *[!0-9]*)
-        return 1
-        ;;
-    esac
-    shift || :
-  done
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  case ${1#[-+]} in '' | *[!0-9]*) return 1 ;; esac
 }
 
 #
@@ -90,14 +72,22 @@ isInteger() {
 # Exit Code: 1 - if it is not an unsigned integer
 #
 isUnsignedInteger() {
-  while [ $# -gt 0 ]; do
-    case "${1#+}" in
-      '' | *[!0-9]*)
-        return 1
-        ;;
-    esac
-    shift || :
-  done
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+#
+# Test if an argument is a positive integer (non-zero)
+#
+# Usage: {fn} argument ...
+# Exit Code: 0 - if it is a positive integer
+# Exit Code: 1 - if it is not a positive integer
+#
+isPositiveInteger() {
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  isUnsignedInteger "$1" || return 1
+  # Find pesky "0" or "+0"
+  [ "$1" -gt 0 ] || return 1
 }
 
 #
@@ -108,13 +98,10 @@ isUnsignedInteger() {
 # Exit code: 0 - All arguments are bash functions
 # Exit code: 1 - One or or more arguments are not a bash function
 isFunction() {
-  [ $# -gt 0 ] || return 1
-  while [ $# -gt 0 ]; do
-    # Skip illegal options "--" and "-foo"
-    [ "$1" = "${1#-}" ] || return 1
-    case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
-    shift || :
-  done
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  # Skip illegal options "--" and "-foo"
+  [ "$1" = "${1#-}" ] || return 1
+  case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
 }
 
 #
@@ -128,26 +115,23 @@ isFunction() {
 isExecutable() {
   local lsMask
 
-  [ $# -gt 0 ] || return 1
-  while [ $# -gt 0 ]; do
-    # Skip illegal options "--" and "-foo"
-    [ "$1" = "${1#-}" ] || return 1
-    if [ -f "$1" ]; then
-      # FAILS on plain files in docker on Mac OS X
-      if [ ! -x "$1" ]; then
-        return 1
-      fi
-      # shellcheck disable=SC2012
-      if lsMask="$(ls -lhaF "$1" | awk '{ print $1 }')"; then
-        if [ "$lsMask" = "${lsMask%%x*}" ]; then
-          return 2
-        fi
-      fi
-    elif [ -z "$(which "$1")" ]; then
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  # Skip illegal options "--" and "-foo"
+  [ "$1" = "${1#-}" ] || return 1
+  if [ -f "$1" ]; then
+    # FAILS on plain files in docker on Mac OS X
+    if [ ! -x "$1" ]; then
       return 1
     fi
-    shift || :
-  done
+    # shellcheck disable=SC2012
+    if lsMask="$(ls -lhaF "$1" | awk '{ print $1 }')"; then
+      if [ "$lsMask" = "${lsMask%%x*}" ]; then
+        return 2
+      fi
+    fi
+  elif [ -z "$(which "$1")" ]; then
+    return 1
+  fi
   return 0
 }
 
@@ -158,13 +142,10 @@ isExecutable() {
 # Exit code: 0 - All arguments are callable as a command
 # Exit code: 1 - One or or more arguments are callable as a command
 isCallable() {
-  [ $# -gt 0 ] || return 1
-  while [ $# -gt 0 ]; do
-    if ! isFunction "$1" && ! isExecutable "$1"; then
-      return 1
-    fi
-    shift
-  done
+  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  if ! isFunction "$1" && ! isExecutable "$1"; then
+    return 1
+  fi
 }
 
 # True-ish

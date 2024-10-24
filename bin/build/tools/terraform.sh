@@ -33,15 +33,15 @@ aptKeyRemoveHashicorp() {
 # Install terraform binary
 #
 # Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to install using `aptInstall`
+# Argument: package - Additional packages to install using `packageInstall`
 #
 terraformInstall() {
   local usage="_${FUNCNAME[0]}" binary="terraform"
 
   ! whichExists "$binary" || return 0
-  __usageEnvironment "$usage" aptInstall gnupg software-properties-common curl figlet
+  __usageEnvironment "$usage" packageInstall gnupg software-properties-common curl figlet
   __usageEnvironment "$usage" aptKeyAddHashicorp || return $?
-  __usageEnvironment "$usage" aptInstall "$binary" "$@" || return $?
+  __usageEnvironment "$usage" packageInstall "$binary" "$@" || return $?
   whichExists "$binary" || __failEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
@@ -52,14 +52,14 @@ _terraformInstall() {
 # Remove terraform binary
 #
 # Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to uninstall using `aptUninstall`
+# Argument: package - Additional packages to uninstall using `packageUninstall`
 #
 terraformUninstall() {
   local usage="_${FUNCNAME[0]}"
 
-  __usageEnvironment "$usage" whichAptUninstall terraform terraform "$@" || return $?
+  __usageEnvironment "$usage" packageWhichUninstall terraform terraform "$@" || return $?
   __usageEnvironment "$usage" aptKeyRemoveHashicorp || return $?
-  __usageEnvironment "$usage" aptUpdateOnce --force || return $?
+  __usageEnvironment "$usage" packageUpdate --force || return $?
 }
 _terraformUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

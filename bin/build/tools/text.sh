@@ -974,14 +974,14 @@ _characterClassReport() {
 cannon() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
-  local search searchQuoted replace replaceQuoted cannonLog count
+  local searchQuoted replaceQuoted cannonLog count
+  local search="" directory="." replace=""
 
-  search=
-  directory=.
-  replace=
+  saved=("$@")
+  nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    argument="$1"
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -1009,13 +1009,18 @@ cannon() {
   [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(__usageEnvironment "$usage" mktemp) || return $?
   if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
-    printf "%s\n" "$(consoleSucces "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
+    printf "%s\n" "$(consoleSuccess "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
     rm "$cannonLog" || :
     return 0
   fi
-  xargs -0 grep -l "$search" <"$cannonLog" | tee "$cannonLog.found" | xargs sed -i '' -e "s/$searchQuoted/$replaceQuoted/g"
+  xargs -0 grep -l "$search" <"$cannonLog" >"$cannonLog.found"
   count="$(($(wc -l <"$cannonLog.found") + 0))"
-  consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
+  if [ "$count" -eq 0 ]; then
+    consoleInfo "Modified (NO) files"
+  else
+    __usageEnvironment "$usage" xargs sed --in-place -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || return $?
+    consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
+  fi
   rm -f "$cannonLog" "$cannonLog.found" || :
 }
 _cannon() {
@@ -1029,7 +1034,7 @@ _cannon() {
 removeFields() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
-  local fieldCount=
+  local fieldCount="" fields=()
 
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -1043,7 +1048,14 @@ removeFields() {
     esac
     shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
   done
-  awk '{for(i=0;i<'"${fieldCount:-1}"';i++){sub($1 FS,"")}}1'
+  fieldCount=${fieldCount:-1}
+  #  awk '{for(i=0;i<'"${fieldCount:-1}"';i++){sub($1 FS,"")}}1'
+  while IFS=' ' read -d $'\n' -r -a fields; do
+    echo "${fields[@]:$fieldCount}"
+  done
+}
+_removeFields() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} separator text0 arg1 ...

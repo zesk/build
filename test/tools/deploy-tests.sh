@@ -187,7 +187,7 @@ testDeployApplication() {
   local d quietLog migrateVersion startingValue firstArgs home lastOne t
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
-  if ! whichApt curl curl; then
+  if ! packageWhich curl curl; then
     consoleError "Failed to install curl" 1>&2
     return $errorEnvironment
   fi

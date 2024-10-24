@@ -152,7 +152,7 @@ bashPromptModule_binBuild() {
 # Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to standard in.
 # Bash prompt creates a prompt and adds return code status display and modules
 # Modules are any binary or executable to run each prompt, and can be added or removed here
-# - `defaultTitle`
+# - `consoleDefaultTitle`
 # Example: bashPrompt --colors "$(consoleBoldCyan):$(consoleBoldMagenta):$(consoleGreen):$(consoleOrange):$(consoleCode)"
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"

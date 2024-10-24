@@ -89,19 +89,23 @@ testBuildDebugEnabled() {
 testErrorExit() {
   local actual
 
+  set +E
   set +e
-  assertNotExitCode --line "$LINENO" 0 isErrorExit || return $?
+  assertExitCode --line "$LINENO" 0 isErrorExit || return $?
+  set -E
   set -e
   assertExitCode --line "$LINENO" 0 isErrorExit || return $?
+  set -E
   set -e
   actual="$(
     isErrorExit
     printf %d $?
   )"
-  assertEquals --line "$LINENO" "1" "$actual" "\$(isErrorExit; printf %d $?)" || return $?
+  assertEquals --line "$LINENO" "0" "$actual" "\$(isErrorExit; printf %d $?)" || return $?
 
   # `set -e` DOES NOT INHERIT TO SUBSHELLS AFAIK and there is no easy way to do so
   # In general, the consensus is to avoid using set -e and use trap ERR
+  # 2024-10
 }
 
 # leaks world

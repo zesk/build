@@ -131,7 +131,7 @@ _versionSort() {
 ipLookup() {
   # Courtesy of Market Ruler, LLC thanks
   local default="https://www.conversionruler.com/showip/?json"
-  if ! whichApt curl curl; then
+  if ! packageWhich curl curl; then
     return 1
   fi
   curl -s "${IP_URL:-$default}"

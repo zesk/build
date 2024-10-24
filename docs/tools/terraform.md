@@ -12,7 +12,7 @@ Install terraform binary
 
 #### Arguments
 
-- `package` - Additional packages to install using `aptInstall`
+- `package` - Additional packages to install using `packageInstall`
 
 #### Exit codes
 
@@ -27,7 +27,7 @@ Remove terraform binary
 
 #### Arguments
 
-- `package` - Additional packages to uninstall using `aptUninstall`
+- `package` - Additional packages to uninstall using `packageUninstall`
 
 #### Exit codes
 

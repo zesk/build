@@ -398,3 +398,8 @@ testIsTrue() {
   assertNotExitCode --line "$LINENO" 0 isTrue "${trues[@]}" "$value" || return $?
   assertNotExitCode --line "$LINENO" 0 isTrue "$value" "${trues[@]}" || return $?
 }
+
+testPositiveIntegers() {
+  assertExitCode --line "$LINENO" 0 isPositiveInteger 1 || return $?
+  assertExitCode --line "$LINENO" 0 isPositiveInteger 1 || return $?
+}
