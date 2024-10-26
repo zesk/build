@@ -1018,7 +1018,9 @@ cannon() {
   if [ "$count" -eq 0 ]; then
     consoleInfo "Modified (NO) files"
   else
-    __usageEnvironment "$usage" xargs sed --in-place -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || return $?
+    local inPlaceArguments
+    if [ "$(uname -s)" = "Darwin" ]; then inPlaceArguments=('-i' ''); else inPlaceArguments=('--in-place'); fi
+    __usageEnvironment "$usage" xargs sed "${inPlaceArguments[@]}" -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || return $?
     consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
   fi
   rm -f "$cannonLog" "$cannonLog.found" || :

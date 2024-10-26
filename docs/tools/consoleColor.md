@@ -37,7 +37,7 @@
 Blue
 
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 
@@ -65,7 +65,7 @@ Blue
 ### `consoleBoldBlue` - shellcheck disable=SC2120
 
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 
@@ -102,7 +102,7 @@ Blue
 ### `consoleBoldOrange` - shellcheck disable=SC2120
 
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 
@@ -170,7 +170,7 @@ Styles
 Code or variables in output
 
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 
@@ -217,7 +217,7 @@ decorations to output (like bars and lines)
 Errors
 
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 
@@ -319,7 +319,7 @@ Styles
 Orange
 
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 

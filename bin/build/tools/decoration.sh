@@ -49,14 +49,17 @@
 #         ▜█▛▘
 #
 bigText() {
+  local usage="_${FUNCNAME[0]}"
   local fonts binary index=0
-  if apkIsInstalled; then
-    fonts=("standard" "big")
-    binary=figlet
-  else
-    fonts=(smblock smmono12)
-    binary=toilet
-  fi
+
+  __usageEnvironment "$usage" packageUpdate || return $?
+  __usageEnvironment "$usage" packageInstall || return $?
+  binary=$(__usageEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  case "$binary" in
+    figlet) fonts=("standard" "big") ;;
+    toilet) fonts=("smblock" "smmono12") ;;
+    *) __failEnvironment "$usage" "Unknown binary $binary" || return $? ;;
+  esac
   if ! packageWhich "$binary" "$binary" >/dev/null; then
     consoleGreen "BIG TEXT: $*"
     return 0

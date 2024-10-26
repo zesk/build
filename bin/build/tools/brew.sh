@@ -87,6 +87,19 @@ ___brewInstalledList() {
 }
 
 # Usage: {fn}
+# List available bottles
+# package.sh: true
+__brewAvailableList() {
+  local usage="_${FUNCNAME[0]}"
+  whichExists brew || __failEnvironment "$usage" "brew not installed - can not list" || return $?
+  brew search --formula '/.*/'
+}
+___brewAvailableList() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn}
 # Output list of apt standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true

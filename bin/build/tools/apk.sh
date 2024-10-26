@@ -15,7 +15,9 @@ apkIsInstalled() {
 
 # Open an Alpine container shell
 alpineContainer() {
-  dockerLocalContainer --image alpine:latest --path /root/build /root/build/bin/build/need-bash.sh apk add bash ncurses -- "$@"
+  export LC_TERMINAL TERM
+  __environment buildEnvironmentLoad LC_TERMINAL TERM || return $?
+  dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@"
 }
 
 ################################################################################################################################
@@ -82,7 +84,6 @@ __apkUpdate() {
 # package.sh: true
 __apkInstalledList() {
   local usage="_${FUNCNAME[0]}"
-  whichExists apk || __failEnvironment "$usage" "apk not installed - can not list" || return $?
   [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
   apk list -I -q
 }
@@ -96,5 +97,21 @@ ___apkInstalledList() {
 # See: _packageStandardPackages
 # package.sh: true
 __apkStandardPackages() {
-  printf "%s\n" figlet curl pcre2 pcre psutils readline
+  # no toilet
+  printf "%s\n" figlet curl pcre2 pcre psutils readline jq
+  export BUILD_TEXT_BINARY
+  BUILD_TEXT_BINARY="figlet"
+}
+
+# Usage: {fn}
+# List available packages
+# package.sh: true
+__apkAvailableList() {
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
+  apk list -a -q
+}
+___apkAvailableList() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

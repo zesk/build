@@ -23,5 +23,5 @@ testPackageAPI() {
   assertExitCode --line "$LINENO" 0 packageManagerValid apt || return $?
   assertExitCode --line "$LINENO" 0 packageManagerValid brew || return $?
   assertNotExitCode --line "$LINENO" 0 packageManagerValid apt-get || return $?
-  assertExitCode --line "$LINENO" 0 packageManagerValid "$(packageDefaultManager)" || return $?
+  assertExitCode --line "$LINENO" 0 packageManagerValid "$(packageManagerDefault)" || return $?
 }

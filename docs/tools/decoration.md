@@ -174,16 +174,36 @@ Heading for section output
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `bigText` - smblock (regular)
+### `bigText` - big (figlet)
 
-smblock (regular)
+big (figlet)
+
+  _     _    _______        _
+ | |   (_)  |__   __|      | |
+ | |__  _  __ _| | _____  _| |_
+ | '_ \| |/ _` | |/ _ \ \/ / __|
+ | |_) | | (_| | |  __/>  <| |_
+ |_.__/|_|\__, |_|\___/_/\_\\__|
+           __/ |
+          |___/
+
+standard (figlet)
+
+  _     _      _____         _
+ | |__ (_) __ |_   _|____  _| |_
+ | '_ \| |/ _` || |/ _ \ \/ / __|
+ | |_) | | (_| || |  __/>  <| |_
+ |_.__/|_|\__, ||_|\___/_/\_\\__|
+          |___/
+
+smblock (regular) toilet
 
 ▌  ▗   ▀▛▘     ▐
 ▛▀▖▄ ▞▀▌▌▞▀▖▚▗▘▜▀
 ▌ ▌▐ ▚▄▌▌▛▀ ▗▚ ▐ ▖
 ▀▀ ▀▘▗▄▘▘▝▀▘▘ ▘ ▀
 
-smmono12 (--bigger)
+smmono12 (--bigger) toilet
 
 ▗▖     █       ▗▄▄▄▖
 ▐▌     ▀       ▝▀█▀▘           ▐▌

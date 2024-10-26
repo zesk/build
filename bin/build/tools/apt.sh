@@ -295,7 +295,6 @@ __aptUpdate() {
 # package.sh: true
 __aptInstalledList() {
   local usage="_${FUNCNAME[0]}"
-  whichExists dpkg || __failEnvironment "$usage" "Not an apt system (no dpkg)" || return $?
   [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
   dpkg --get-selections | grep -v deinstall | awk '{ print $1 }'
 }
@@ -305,11 +304,25 @@ ___aptInstalledList() {
 }
 
 # Usage: {fn}
+# List available packages
+# package.sh: true
+__aptAvailableList() {
+  local usage="_${FUNCNAME[0]}"
+  apt-cache pkgnames
+}
+___aptAvailableList() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn}
 # Output list of apt standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true
 __aptStandardPackages() {
-  printf "%s\n" apt-utils figlet toilet toilet-fonts jq pcregrep
+  printf "%s\n" apt-utils toilet toilet-fonts jq pcregrep
+  export BUILD_TEXT_BINARY
+  BUILD_TEXT_BINARY="toilet"
 }
 
 #

@@ -6,7 +6,7 @@
 
 ## Application Configuration
 
-### `environmentFileLoad .env --optional .env.local` - Load `.env` and optional `.env.local` into bash context
+### `dotEnvConfigure` - Load `.env` and optional `.env.local` into bash context
 
 Loads `.env` which is the current project configuration file
 Also loads `.env.local` if it exists

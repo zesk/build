@@ -6,23 +6,18 @@ Install software as `root` or superuser.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `packageInstall` - Install packages using `apt-get`
+### `packageInstall` - Install packages using a package manager
 
-Install packages using `apt-get`. If `apt-get` is not available, this succeeds
-and assumes packages will be available.
+Install packages using a package manager.
 
-Main reason to use this instead of `apt-get` raw is it's quieter.
+Supported managers:
+- apk
+- apt-get
+- brew
 
-Also does a simple lookup in the list of installed packages to avoid double-installation.
 
 
-
-- Location: `bin/build/tools/apt.sh`
-
-#### Usage
-
-    packageInstall [ package ... ]
-    
+- Location: `bin/build/tools/package.sh`
 
 #### Arguments
 
@@ -34,8 +29,8 @@ Also does a simple lookup in the list of installed packages to avoid double-inst
 
 #### Exit codes
 
-- `0` - If `apt-get` is not installed, returns 0.
-- `1` - If `apt-get` fails to install the packages
+- `0` - If `apk` is not installed, returns 0.
+- `1` - If `apk` fails to install the packages
 ### `awsInstall` - aws Command-Line install
 
 aws Command-Line install

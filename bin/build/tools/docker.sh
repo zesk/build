@@ -212,7 +212,8 @@ _dockerEnvFromBashEnv() {
 # Argument: --image imageName - Optional. String. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
 # Argument: --path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
 # Argument: --platform platform - Optional. String. Platform to run (arm vs intel).
-# Argument: envFile - Optional. File. One or more environment files which are suitable to load for docker; must be valid
+# Argument: --env-file envFile - Optional. File. One or more environment files which are suitable to load for docker; must be valid
+# Argument: --env envVariable=envValue - Optional. File. One or more environment variables to set.
 # Argument: extraArgs - Optional. Mixed. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
 # Exit Code: 1 - If already inside docker, or the environment file passed is not valid
 # Exit Code: 0 - Success
@@ -222,9 +223,9 @@ _dockerEnvFromBashEnv() {
 dockerLocalContainer() {
   local usage="_${FUNCNAME[0]}"
   local platform imageName imageApplicationPath
-  local envFiles extraArgs
+  local envFile envPair envFiles extraArgs
   local tempEnvs tempEnv exitCode
-  local failedWhy
+  local failedWhy localPath=""
 
   export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
 
@@ -248,20 +249,30 @@ dockerLocalContainer() {
         return $?
         ;;
       --image)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        imageName="$1"
+        shift
+        imageName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --local)
+        shift
+        localPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
         ;;
       --path)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
-        imageApplicationPath="$1"
+        shift
+        imageApplicationPath=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        envFiles+=("-w" "$imageApplicationPath")
         ;;
       --env)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift
+        envPair=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        envFiles+=("$argument" "$envPair")
+        ;;
+      --env-file)
+        shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         tempEnv=$(__usageEnvironment "$usage" mktemp) || return $?
         __usageArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
         tempEnvs+=("$tempEnv")
-        envFiles+=("--env-file" "$tempEnv")
+        envFiles+=("$argument" "$tempEnv")
         ;;
       --platform)
         shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
@@ -273,6 +284,9 @@ dockerLocalContainer() {
     esac
     shift || :
   done
+  if [ -z "$localPath" ]; then
+    localPath=$(__usageEnvironment "$usage" pwd) || return $?
+  fi
   failedWhy=
   if [ -z "$imageName" ]; then
     failedWhy="imageName is empty"
@@ -285,7 +299,7 @@ dockerLocalContainer() {
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
     __failEnvironment "$usage" "$failedWhy" || return $?
   fi
-  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$(pwd):$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }

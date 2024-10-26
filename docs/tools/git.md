@@ -184,6 +184,7 @@ Does a branch exist locally or remotely?
 #### Exit codes
 
 - `0` - All branches passed exist
+- `1` - At least one branch does not exist locally or remotely
 ### `gitBranchExistsRemote` - Does a branch exist remotely?
 
 Does a branch exist remotely?
@@ -197,6 +198,7 @@ Does a branch exist remotely?
 #### Exit codes
 
 - `0` - All branches passed exist
+- `1` - At least one branch does not exist remotely
 ### `gitBranchExistsLocal` - Does a branch exist locally?
 
 Does a branch exist locally?
@@ -210,6 +212,7 @@ Does a branch exist locally?
 #### Exit codes
 
 - `0` - All branches passed exist
+- `1` - At least one branch does not exist locally
 #### Arguments
 
 - No arguments.

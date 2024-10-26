@@ -20,7 +20,7 @@ Examples:
 
 Bash prompt creates a prompt and adds return code status display and modules
 Modules are any binary or executable to run each prompt, and can be added or removed here
-- `defaultTitle`
+- `consoleDefaultTitle`
 
 - Location: `bin/build/tools/prompt.sh`
 
@@ -65,6 +65,8 @@ Options are:
 ### `bashPromptModule_binBuild` - Check which bin/build we are running and keep local to
 
 Check which bin/build we are running and keep local to current project
+When changing projects, runs the `project-selected` hook in the new project
+Also shows the change in Zesk Build version numbers
 
 - Location: `bin/build/tools/prompt.sh`
 

@@ -17,3 +17,6 @@
 /test.stats
 /coverage.stats*
 /test-coverage/
+.interrupt
+# For now - too big
+/etc/packages/

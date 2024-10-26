@@ -108,11 +108,11 @@ Useful if you need to temporarily enable or disable it.
 Returns whether the shell has the error exit flag set
 
 Useful if you need to temporarily enable or disable it.
-Note that `set -e` is not inherited by shells so turning it
-on has little effect except on the current script running.
+
+October 2024 - Does appear to be inherited by subshells
 
     set -e
-    printf "$(isErrorExit; printf %d %?)"
+    printf "$(isErrorExit; printf %d $?)"
 
 Outputs `1` always
 

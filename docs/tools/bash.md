@@ -27,7 +27,8 @@ Output the home for a library in the parent path
 
 #### Arguments
 
-- No arguments.
+- `libraryRelativePath` - String. Required. Path of file to find from the home directory.
+- `startDirectory` - Directory. Optional. Place to start searching. Uses `pwd` if not specified.
 
 #### Exit codes
 

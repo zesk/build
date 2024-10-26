@@ -10,7 +10,62 @@
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it seems to be installed.
-__packageFunction() {
+# Argument: --before beforeFunction - Optional. Function. One or more functions to run before list function. `muzzle`d.
+__packageListFunction() {
+  local usage="$1" functionVerb="$2"
+  local argument nArguments argumentIndex saved
+  local quietLog manager="" packageFunction name cacheFile=".packageUpdate" forceFlag=false start lastModified
+  local beforeFunction
+
+  shift 2
+  saved=("$@")
+  nArguments=$#
+  while [ $# -gt 0 ]; do
+    argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --before)
+        shift
+        beforeFunctions+=("$(usageArgumentFunction "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      # IDENTICAL managerArgumentHandler 5
+      --manager)
+        shift
+        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  # IDENTICAL managerArgumentValidation 2
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
+
+  listFunction="__${manager}${functionVerb}List"
+  isFunction "$listFunction" || __failEnvironment "$usage" "$listFunction is not defined" || return $?
+  [ ${#beforeFunctions[@]} -eq 0 ] || for beforeFunction in "${beforeFunctions[@]}"; do
+    __usageEnvironment "$usage" muzzle "$beforeFunction" || return $?
+  done
+  __usageEnvironment "$usage" "$listFunction" || return $?
+}
+
+# Usage: {fn} usageFunction functionSuffix [ --help ] [ --manager packageManager ] [ --force ] ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
+# Argument: --force - Optional. Flag. Force even if it seems to be installed.
+__pacakgeUpFunction() {
   local usage="$1" suffix="$2"
   local argument nArguments argumentIndex saved
   local quietLog manager="" packageFunction name cacheFile=".packageUpdate" forceFlag=false start lastModified
@@ -45,7 +100,7 @@ __packageFunction() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageDefaultManager) || __failEnvironment "$usage" "No package manager" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
   packageFunction="__${manager}${suffix}"
@@ -78,7 +133,7 @@ __packageFunction() {
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it was updated recently.
 packageUpgrade() {
-  __packageFunction "_${FUNCNAME[0]}" Upgrade "$@"
+  __pacakgeUpFunction "_${FUNCNAME[0]}" Upgrade "$@"
 }
 _packageUpgrade() {
   # IDENTICAL usageDocument 1
@@ -92,7 +147,7 @@ _packageUpgrade() {
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it was updated recently.
 packageUpdate() {
-  __packageFunction "_${FUNCNAME[0]}" Update "$@"
+  __pacakgeUpFunction "_${FUNCNAME[0]}" Update "$@"
 }
 _packageUpdate() {
   # IDENTICAL usageDocument 1
@@ -148,7 +203,7 @@ packageWhich() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageDefaultManager) || __failEnvironment "$usage" "No package manager" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
   [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
@@ -217,7 +272,7 @@ packageWhichUninstall() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageDefaultManager) || __failEnvironment "$usage" "No package manager" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
   [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
@@ -289,7 +344,7 @@ packageInstall() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageDefaultManager) || __failEnvironment "$usage" "No package manager" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
@@ -370,7 +425,7 @@ packageUninstall() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageDefaultManager) || __failEnvironment "$usage" "No package manager" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
   [ 0 -lt "${#packages[@]}" ] || __failArgument "$usage" "Requires at least one package to uninstall" || return $?
@@ -422,7 +477,7 @@ _packageDebugging() {
 }
 
 # Determine the default manager
-packageDefaultManager() {
+packageManagerDefault() {
   if apkIsInstalled; then
     printf "%s\n" "apk"
   elif aptIsInstalled; then
@@ -436,43 +491,18 @@ packageDefaultManager() {
 
 # List installed packages on this system using package manager
 packageInstalledList() {
-  local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local manager="" listFunction
-
-  saved=("$@")
-  nArguments=$#
-  while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
-    case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --manager)
-        shift
-        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
-        ;;
-      *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
-        ;;
-    esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
-  done
-
-  # IDENTICAL packageManagerValidate 2
-  [ -n "$manager" ] || manager=$(packageDefaultManager) || __failEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist in PATH: $PATH" || return $?
-
-  listFunction="__${manager}InstalledList"
-  isFunction "$listFunction" || __failEnvironment "$usage" "$listFunction is not defined" || return $?
-  __usageEnvironment "$usage" "$listFunction" || return $?
+  __packageListFunction "_${FUNCNAME[0]}" "Installed" "$@"
 }
 _packageInstalledList() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# List installed packages on this system using package manager
+packageAvailableList() {
+  __packageListFunction "_${FUNCNAME[0]}" "Available" --before packageUpdate "$@"
+}
+_packageAvailableList() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

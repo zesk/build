@@ -9,6 +9,7 @@
 {isNumber}
 {isInteger}
 {isUnsignedInteger}
+{isPositiveInteger}
 {isNumber}
 {isFunction}
 {isExecutable}

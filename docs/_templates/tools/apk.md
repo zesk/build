@@ -7,3 +7,4 @@
 <hr />
 
 {apkIsInstalled}
+{alpineContainer}

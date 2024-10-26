@@ -8,6 +8,11 @@
 # Some containers do not have bash installed by default
 #
 __needBash() {
+  export LC_TERMINAL
+  export TERM
+  verboseFlag=false
+  title="${1-}"
+  shift
   install=""
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
@@ -18,16 +23,16 @@ __needBash() {
     shift
   done
   if [ -z "$(which bash)" ]; then
-    printf "%s" "Installing bash ..."
+    ! $verboseFlag || printf "%s" "Installing bash ..."
     if ! ${install# } >/dev/null; then
       printf "\n%s\n" "Failed installing bash, exiting." 1>&2
       return 1
     fi
-    printf "\r                  \r"
+    ! $verboseFlag || printf "\r                  \r"
   fi
   if [ ! -f "$HOME/.bashrc" ]; then
     here=$(dirname "$0")
-    printf "%s\n" "#!/usr/bin/env bash" "source $here/tools.sh" "bashPrompt consoleDefaultTitle" "cd \$HOME/build" >"$HOME/.bashrc"
+    printf "%s\n" "#!/usr/bin/env bash" "source $here/tools.sh" "bashPrompt consoleDefaultTitle" "cd \$HOME/build" "iTerm2Badge -i \"$title\"" >"$HOME/.bashrc"
     chmod +x "$HOME/.bashrc"
   fi
   exec bash "$@"
