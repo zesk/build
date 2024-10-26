@@ -104,6 +104,20 @@ Test if an argument is an unsigned integer
 #### Credits
 
 Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash).
+### `isPositiveInteger` - Test if an argument is a positive integer (non-zero)
+
+Test if an argument is a positive integer (non-zero)
+
+- Location: `bin/build/tools/type.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - if it is a positive integer
+- `1` - if it is not a positive integer
 ### `isNumber` - Test if an argument is a floating point number
 
 Test if an argument is a floating point number

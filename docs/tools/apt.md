@@ -4,6 +4,12 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `aptIsInstalled` - Is apt-get installed?
+
+Is apt-get installed?
+
+- Location: `bin/build/tools/apt.sh`
+
 #### Arguments
 
 - No arguments.
@@ -13,6 +19,18 @@
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Apt Key Management
+
 ### `aptSourcesDirectory` - Get APT source list path
 
 Get APT source list path
@@ -28,22 +46,6 @@ Get APT source list path
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `aptUpToDate` - OS upgrade and potential restart
-
-OS upgrade and potential restart
-Progress is written to stderr
-Result is `ok` or `restart` written to stdout
-
-- Location: `bin/build/tools/apt.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Failed due to issues with environment
 ### `aptKeyAdd` - Add keys to enable apt to download terraform directly from
 
 Add keys to enable apt to download terraform directly from hashicorp.com
@@ -89,23 +91,10 @@ Get key ring directory path
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `aptIsInstalled` - Is apt-get installed?
 
-Is apt-get installed?
+## Deprecated October 2024
 
-- Location: `bin/build/tools/apt.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-## Deprecated
+See (package)[./package.md] functions for replacements.
 
 ### `aptUpdateOnce` - Do `apt-get update` once
 
@@ -157,19 +146,63 @@ Also does a simple lookup in the list of installed packages to avoid double-inst
 
 - `0` - If `apt-get` is not installed, returns 0.
 - `1` - If `apt-get` fails to install the packages
-### `aptKeyAdd` - Add keys to enable apt to download terraform directly from
+### `aptUninstall` - Uninstall apt packages
 
-Add keys to enable apt to download terraform directly from hashicorp.com
+Uninstall apt packages
 
 - Location: `bin/build/tools/apt.sh`
 
 #### Arguments
 
-- `--title title` - Optional. String. Title of the key.
-- `--name name` - Required. String. Name of the key used to generate file names.
-- `--url remoteUrl` - Required. URL. Remote URL of gpg key.
+- No arguments.
 
 #### Exit codes
 
-- `1` - if environment is awry
-- `0` - Apt key is installed AOK
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `aptNeedRestartFlag` - DEPRECATED
+
+DEPRECATED
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `whichAptUninstall` - DEPRECATED
+
+DEPRECATED
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `whichApt` - DEPRECATED
+
+DEPRECATED
+
+- Location: `bin/build/tools/apt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

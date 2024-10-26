@@ -4,16 +4,23 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+{aptIsInstalled}
 {aptNonInteractive}
+
+## Apt Key Management
+
 {aptSourcesDirectory}
-{aptUpToDate}
 {aptKeyAdd}
 {aptKeyRemove}
 {aptKeyRingDirectory}
-{aptIsInstalled}
 
-## Deprecated
+## Deprecated October 2024
+
+See (package)[./package.md] functions for replacements.
 
 {aptUpdateOnce}
 {aptInstall}
-{aptKeyAdd}
+{aptUninstall}
+{aptNeedRestartFlag}
+{whichAptUninstall}
+{whichApt}
