@@ -78,21 +78,14 @@ _integer() {
 #
 exampleFunction() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local start name easyFlag width
+  local name="" easyFlag=false width=50 target="" start
 
   # IDENTICAL startBeginTiming 1
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  width=50
-  name=
-  easyFlag=false
-  target=
-  path=
-  saved=("$@")
-  nArguments=$#
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4

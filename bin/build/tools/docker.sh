@@ -264,6 +264,9 @@ dockerLocalContainer() {
       --env)
         shift
         envPair=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        if [ "${envPair#*=}" = "$envPair" ]; then
+          consoleWarning "$argument does not look like a variable: $(consoleError "$envPair")" 1>&2
+        fi
         envFiles+=("$argument" "$envPair")
         ;;
       --env-file)
@@ -299,7 +302,7 @@ dockerLocalContainer() {
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
     __failEnvironment "$usage" "$failedWhy" || return $?
   fi
-  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __echo __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }

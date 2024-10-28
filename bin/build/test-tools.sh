@@ -360,7 +360,6 @@ __testSection() {
 }
 
 __testHeading() {
-  packageWhich toilet toilet >/dev/null 2>&1 || _environment "Unable to install toilet" || return $?
   consoleCode "$(consoleOrange "$(echoBar '*')")"
   printf "%s" "$(consoleCode)$(clearLine)"
   bigText "$@" | wrapLines --fill " " "$(consoleCode)    " "$(consoleReset)"

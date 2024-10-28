@@ -279,7 +279,7 @@ mapEnvironment() {
 
   __ee=("$@")
   if [ $# -eq 0 ]; then
-    while read -r __e; do __ee+=("$__e"); done < <(environmentVariables | grep -v -e '^_')
+    while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
   __sedFile=$(__environment mktemp) || return $?
   if __environment _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile"; then

@@ -139,8 +139,8 @@ aptKeyAdd() {
   done
   __usageEnvironment "$usage" chmod a+r "$listTarget" || return $?
   if ! $skipUpdate; then
-    statusMessage consoleSuccess "Updating apt sources ... "
-    __usageEnvironment "$usage" aptUpdateOnce --force || return $?
+    statusMessage consoleSuccess "Updating sources ... "
+    __usageEnvironment "$usage" packageUpdate --force || return $?
   else
     statusMessage consoleSuccess "Skipped update ... "
   fi
@@ -211,7 +211,7 @@ aptKeyRemove() {
   done
   if ! $skipUpdate; then
     statusMessage consoleSuccess "Updating apt sources ... "
-    __usageEnvironment "$usage" aptUpdateOnce --force || return $?
+    __usageEnvironment "$usage" packageUpdate --force || return $?
   else
     statusMessage consoleSuccess "Skipped update ... "
   fi

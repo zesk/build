@@ -161,7 +161,7 @@ __debianGenerator() {
   __usageEnvironment "$1" dockerLocalContainer --local "$home" --image debian:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __ubuntuGenerator() {
-  __usageEnvironment "$1" dockerLocalContainer --local "$home" --image ubuntu:latest --path "/root/build" "/root/build/bin/build/tools.sh" bashCoverage "packageAvailableList" || return $?
+  __usageEnvironment "$1" dockerLocalContainer --local "$home" --image ubuntu:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __brewGenerator() {
   __usageEnvironment "$1" "$home/bin/build/tools.sh" "packageAvailableList" || return $?

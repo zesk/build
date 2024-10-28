@@ -16,9 +16,18 @@ testPackageAPI() {
   assertNotExitCode --line "$LINENO" 0 packageNeedRestartFlag || return $?
 
   assertExitCode --line "$LINENO" 0 packageWhichUninstall "$ourTestBinary" "$ourTestPackage" || return $?
-  assertOutputNotContains --line "$LINENO" "$ourTestPackage" packageInstalledList || return $?
-  assertExitCode --line "$LINENO" 0 packageWhich --force "$ourTestBinary" "$ourTestPackage" || return $?
-  assertOutputContains --line "$LINENO" "$ourTestPackage" packageInstalledList || return $?
+  local installed
+
+  IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList)
+  assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?
+  assertNotExitCode --line "$LINENO" 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
+
+  assertExitCode --dump --line "$LINENO" 0 packageWhich --force "$ourTestBinary" "$ourTestPackage" || return $?
+
+  IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList)
+  assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?
+  assertExitCode --line "$LINENO" 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
+
   assertExitCode --line "$LINENO" 0 packageManagerValid apk || return $?
   assertExitCode --line "$LINENO" 0 packageManagerValid apt || return $?
   assertExitCode --line "$LINENO" 0 packageManagerValid brew || return $?

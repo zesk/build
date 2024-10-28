@@ -13,15 +13,14 @@
 # Argument: --before beforeFunction - Optional. Function. One or more functions to run before list function. `muzzle`d.
 __packageListFunction() {
   local usage="$1" functionVerb="$2"
-  local argument nArguments argumentIndex saved
-  local quietLog manager="" packageFunction name cacheFile=".packageUpdate" forceFlag=false start lastModified
-  local beforeFunction
+  local manager=""
+  local beforeFunctions=()
 
   shift 2
-  saved=("$@")
-  nArguments=$#
+  local saved=("$@")
+  local nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -52,8 +51,9 @@ __packageListFunction() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
-  listFunction="__${manager}${functionVerb}List"
+  local listFunction="__${manager}${functionVerb}List"
   isFunction "$listFunction" || __failEnvironment "$usage" "$listFunction is not defined" || return $?
+  local beforeFunction
   [ ${#beforeFunctions[@]} -eq 0 ] || for beforeFunction in "${beforeFunctions[@]}"; do
     __usageEnvironment "$usage" muzzle "$beforeFunction" || return $?
   done
@@ -65,11 +65,12 @@ __packageListFunction() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it seems to be installed.
-__pacakgeUpFunction() {
-  local usage="$1" suffix="$2"
+__packageUpFunction() {
+  local usage="$1" suffix="$2" verb
   local argument nArguments argumentIndex saved
-  local quietLog manager="" packageFunction name cacheFile=".packageUpdate" forceFlag=false start lastModified
+  local manager="" forceFlag=false start lastModified
 
+  verb=$(lowercase "$suffix")
   shift 2
   saved=("$@")
   nArguments=$#
@@ -103,16 +104,18 @@ __pacakgeUpFunction() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
-  packageFunction="__${manager}${suffix}"
+  local packageFunction="__${manager}${suffix}"
   isFunction "$packageFunction" || __failEnvironment "$usage" "$packageFunction is not a defined function" || return $?
 
+  local name quietLog
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
-  name=$(__usageEnvironment "$usage" buildCacheDirectory "$cacheFile") || return $?
+  name=$(__usageEnvironment "$usage" buildCacheDirectory ".packageUpdate") || return $?
   __usageEnvironment "$usage" requireFileDirectory "$name" || return $?
 
   if $forceFlag; then
-    statusMessage consoleInfo "Forcing $manager $suffix ..."
+    statusMessage consoleInfo "Forcing $manager $verb ..."
   elif [ -f "$name" ]; then
+    local lastModified
     lastModified="$(modificationSeconds "$name")"
     # once an hour, technically
     if [ "$lastModified" -lt 3600 ]; then
@@ -121,7 +124,7 @@ __pacakgeUpFunction() {
   fi
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" "$packageFunction" "$@" || return $?
-  statusMessage reportTiming "$start" "${suffix} in"
+  statusMessage reportTiming "$start" "$verb in"
   date +%s >"$name" || :
   clearLine || :
 }
@@ -133,7 +136,7 @@ __pacakgeUpFunction() {
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it was updated recently.
 packageUpgrade() {
-  __pacakgeUpFunction "_${FUNCNAME[0]}" Upgrade "$@"
+  __packageUpFunction "_${FUNCNAME[0]}" Upgrade "$@"
 }
 _packageUpgrade() {
   # IDENTICAL usageDocument 1
@@ -147,7 +150,7 @@ _packageUpgrade() {
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it was updated recently.
 packageUpdate() {
-  __pacakgeUpFunction "_${FUNCNAME[0]}" Update "$@"
+  __packageUpFunction "_${FUNCNAME[0]}" Update "$@"
 }
 _packageUpdate() {
   # IDENTICAL usageDocument 1
@@ -170,13 +173,11 @@ _packageUpdate() {
 #
 packageWhich() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local binary="" packages=() manager=""
+  local binary="" packages=() manager="" forceFlag=false
 
-  saved=("$@")
-  nArguments=$#
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -184,11 +185,18 @@ packageWhich() {
         "$usage" 0
         return $?
         ;;
+      --force)
+        forceFlag=true
+        ;;
       # IDENTICAL managerArgumentHandler 5
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
         packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        ;;
+      -*)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         ;;
       *)
         if [ -z "$binary" ]; then
@@ -206,10 +214,12 @@ packageWhich() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
 
-  [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
-  [ 0 -lt "${#packages[@]}" ] || __failArgument "$usage" "Missing packages" || return $?
-  if whichExists "$binary"; then
-    return 0
+  if ! $forceFlag; then
+    [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
+    [ 0 -lt "${#packages[@]}" ] || __failArgument "$usage" "Missing packages" || return $?
+    if whichExists "$binary"; then
+      return 0
+    fi
   fi
   __environment packageInstall --force "${packages[@]}" || return $?
   if whichExists "$binary"; then
