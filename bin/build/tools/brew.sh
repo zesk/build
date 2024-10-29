@@ -104,5 +104,5 @@ ___brewAvailableList() {
 # See: _packageStandardPackages
 # package.sh: true
 __brewStandardPackages() {
-  printf "%s\n" toilet figlet curl pcre2 pcre psutils readline
+  printf "%s\n" toilet figlet curl pcre2 pcre psutils readline unzip
 }
