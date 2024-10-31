@@ -155,6 +155,6 @@ consoleFileLink() {
     if [ "${path:0:1}" != "/" ]; then
       path="$(pwd)/$(simplifyPath "$path")"
     fi
-    consoleHyperlink "file://$HOSTNAME$path" "${2-$1}"
+    consoleLink "file://$HOSTNAME$path" "${2-$1}"
   fi
 }
