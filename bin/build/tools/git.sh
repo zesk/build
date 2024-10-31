@@ -797,13 +797,13 @@ gitPreCommitHeader() {
   printf "%s%s: %s\n" "$(clearLine)" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
-    color=decorate warning
+    color="warning"
     if [ -f "$directory/$1" ]; then
       total=$(($(wc -l <"$directory/$1") + 0))
-      color=decorate success
+      color="success"
     fi
     # shellcheck disable=SC2015
-    printf "%s: %s\n" "$("$color" "$(alignRight "$width" "$1")")" "$(decorate info "$total $(plural "$total" file files) changed")"
+    printf "%s: %s\n" "$(decorate "$color" "$(alignRight "$width" "$1")")" "$(decorate info "$total $(plural "$total" file files) changed")"
     shift
   done
 }
