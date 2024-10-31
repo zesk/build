@@ -37,8 +37,8 @@ awsInstall() {
 
   local start
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  __usageEnvironment "$usage" packageWhichInstall unzip unzip || return $?
-  __usageEnvironment "$usage" packageWhichInstall curl curl "$@" || return $?
+  __usageEnvironment "$usage" packageWhich unzip unzip || return $?
+  __usageEnvironment "$usage" packageWhich curl curl "$@" || return $?
 
   local url
   statusMessage decorate info "Installing aws-cli ... " || :
