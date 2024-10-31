@@ -930,6 +930,17 @@ This can break your files so use with caution. Blank searchText is not allowed.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+#### Arguments
+
+- `listValue` - Required. List value to modify.
+- `separator` - Required. Separator string for item values (typically `:`)
+- `item` - the item to be removed from the `listValue`
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `listCleanDuplicates` - Removes duplicates from a list and maintains ordering.
 
 Removes duplicates from a list and maintains ordering.

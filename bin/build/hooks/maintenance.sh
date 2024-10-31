@@ -74,19 +74,19 @@ __hookMaintenance() {
     shift
   done
   if test "$enable"; then
-    messageColor=decorate success
+    messageColor=success
     maintenanceValue=1
     messageValue=$(decorate code "[ ON ]")
-    messageSuffix=$(decorate bold-red "currently in maintenance mode")
+    messageSuffix=$(decorate bold-red "(maintenance mode)")
   else
-    messageColor=decorate success
-    messageValue=$(decorate bold-green "off")
+    messageColor=info
+    messageValue=$(decorate bold-green "- off -")
     maintenanceValue=
-    messageSuffix=$(decorate bold-magenta "Now LIVE")
+    messageSuffix=$(decorate bold-magenta "NOW LIVE!")
   fi
   __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __failEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
   __hookMaintenanceSetValue "$messageVariable" "$message" || decorate warning "Maintenance message not set, continuing with errors"
-  printf "%s %s - %s\n" "$("$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
+  printf "%s %s - %s\n" "$(decorate "$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }
 _hookMaintenance() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

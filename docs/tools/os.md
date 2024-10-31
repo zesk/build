@@ -121,6 +121,15 @@ Works from the current directory
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+#### Arguments
+
+- `path` - the path to be removed from the `PATH` environment
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `pathCleanDuplicates` - Cleans the path and removes non-directory entries and duplicates
 
 Cleans the path and removes non-directory entries and duplicates
@@ -151,6 +160,15 @@ Maintains ordering.
 - `--first` - Optional. Place any paths after this flag first in the list
 - `--last` - Optional. Place any paths after this flag last in the list. Default.
 - `path` - the path to be added to the `MANPATH` environment
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- `path` - Directory. Required. The path to be removed from the `MANPATH` environment
 
 #### Exit codes
 
