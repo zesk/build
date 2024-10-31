@@ -106,6 +106,5 @@ decorate() {
   __decorate "$text" "$lp" "${dp-$lp}" "\033[0m" "$@"
 }
 _decorate() {
-  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

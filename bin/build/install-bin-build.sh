@@ -356,7 +356,7 @@ whichExists() {
   done
 }
 
-# IDENTICAL _colors 102
+# IDENTICAL _colors 101
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -456,7 +456,6 @@ decorate() {
   __decorate "$text" "$lp" "${dp-$lp}" "\033[0m" "$@"
 }
 _decorate() {
-  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
