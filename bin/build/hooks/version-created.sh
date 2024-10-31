@@ -26,9 +26,9 @@ __hookVersionCreated() {
 
   export BUILD_VERSION_NO_OPEN
 
-  printf "%s %s %s %s\n" "$(consoleSuccess "Created")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes are")" "$(consoleValue "$currentVersion")"
+  printf "%s %s %s %s\n" "$(decorate success "Created")" "$(decorate code "$currentVersion")" "$(decorate success "release notes are")" "$(decorate value "$currentVersion")"
   if buildEnvironmentLoad BUILD_VERSION_NO_OPEN && ! test "$BUILD_VERSION_NO_OPEN"; then
-    printf "%s %s %s %s\n" "$(consoleSuccess "Opening")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes at")" "$(consoleValue "$releaseNotes")"
+    printf "%s %s %s %s\n" "$(decorate success "Opening")" "$(decorate code "$currentVersion")" "$(decorate success "release notes at")" "$(decorate value "$releaseNotes")"
     contextOpen "$releaseNotes"
   fi
 }

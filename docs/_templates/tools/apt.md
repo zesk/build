@@ -18,9 +18,9 @@
 
 See (package)[./package.md] functions for replacements.
 
-{aptUpdateOnce}
-{aptInstall}
-{aptUninstall}
-{aptNeedRestartFlag}
-{whichAptUninstall}
-{whichApt}
+{packageUpdate}
+{packageInstall}
+{packageUninstall}
+{packageNeedRestartFlag}
+{packageWhichUninstall}
+{packageWhich}

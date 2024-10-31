@@ -28,7 +28,7 @@ _subprocessSavedValue() {
 }
 
 _fail() {
-  printf "\n%s\n" "$(consoleError "$@")" 1>&2
+  printf "\n%s\n" "$(decorate error "$@")" 1>&2
   exit "$errorEnvironment"
 }
 _loadTools || _fail "_loadTools"
@@ -77,11 +77,11 @@ testsWhichAppearToWork() {
 }
 
 _subprocessAssertValue() {
-  printf "%s %s" "$(consoleCode "$(alignLeft "$width" "$2") ")" " -> "
+  printf "%s %s" "$(decorate code "$(alignLeft "$width" "$2") ")" " -> "
   assertEquals --line "$LINENO" "$1" "$(_subprocessSavedValue)" "_subprocessAssertValue $2 buildFailed " || _fail "_subprocessAssertValue $*"
 }
 _scopeAssert() {
-  printf "%s %s" "$(consoleCode "$(alignLeft "$width" "$3") ")" " -> "
+  printf "%s %s" "$(decorate code "$(alignLeft "$width" "$3") ")" " -> "
   assertEquals --line "$LINENO" "$1" "$2" "$3 failed" || _fail "$1 $2 $3"
 }
 
@@ -263,4 +263,4 @@ testLocalScope
 
 rm "$savedValue"
 
-consoleBoldRed 'Conclusion: Do not use declare -x in any function - locks scope to existing function and subprocesses'
+decorate bold-red 'Conclusion: Do not use declare -x in any function - locks scope to existing function and subprocesses'

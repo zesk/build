@@ -99,11 +99,11 @@ deployBuildEnvironment() {
         userHosts+=("$argument")
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
   if [ ! -f "$buildEnv" ]; then
-    consoleWarning "No .build.env found - environment must be already configured" 1>&2
+    decorate warning "No .build.env found - environment must be already configured" 1>&2
   fi
 
   for envFile in "${envFiles[@]+${envFiles[@]}}"; do
@@ -139,7 +139,7 @@ deployBuildEnvironment() {
   ## $DEPLOY_USER_HOSTS --home or just non-flagged arguments
   ##
   if [ ${#userHosts[@]} -eq 0 ]; then
-    consoleInfo "Loading DEPLOY_USER_HOSTS: $DEPLOY_USER_HOSTS"
+    decorate info "Loading DEPLOY_USER_HOSTS: $DEPLOY_USER_HOSTS"
     read -r -a userHosts < <(printf "%s" "$DEPLOY_USER_HOSTS") || :
   fi
   # shellcheck disable=SC2016
@@ -157,12 +157,12 @@ deployBuildEnvironment() {
   deployArgs=(--id "$applicationId" --home "${deployHome%/}" --application "${applicationPath%/}" "${userHosts[@]}")
 
   # shellcheck disable=SC2059
-  statusMessage consoleInfo "Deploying:$(printf " \"$(consoleCode "%s")\"" "${deployArgs[@]}")" || :
+  statusMessage decorate info "Deploying:$(printf " \"$(decorate code "%s")\"" "${deployArgs[@]}")" || :
   if $dryRun; then
     printf "\n%s %s\b" ___deployBuildEnvironment "$(printf "\"%s\" " "${deployArgs[@]}")"
   else
     ___deployBuildEnvironment "${deployArgs[@]}" || return $?
-    printf "\n%s\n" "$(bigText --bigger Success)" | wrapLines --fill " " "$(consoleSuccess)    " "$(consoleReset)"
+    printf "\n%s\n" "$(bigText --bigger Success)" | wrapLines --fill " " "$(decorate success)    " "$(consoleReset)"
   fi
 }
 
@@ -172,17 +172,17 @@ deployBuildEnvironment() {
 ___deployBuildEnvironment() {
   local fail="${FUNCNAME[0]#_}"
   # shellcheck disable=SC2059
-  statusMessage consoleInfo "Deploying:$(printf " \"$(consoleCode "%s")\"" "$@")" || :
+  statusMessage decorate info "Deploying:$(printf " \"$(decorate code "%s")\"" "$@")" || :
   if ! deployToRemote --deploy "$@"; then
-    statusMessage consoleError "Deployment failed, reverting ..." || :
+    statusMessage decorate error "Deployment failed, reverting ..." || :
     "$fail" "$@" || return $?
   fi
   if hasHook deploy-confirm && ! runHook deploy-confirm; then
-    statusMessage consoleWarning "Deployment confirmation failed, reverting" || :
+    statusMessage decorate warning "Deployment confirmation failed, reverting" || :
     "$fail" "$@" || return $?
   fi
   if ! deployToRemote --cleanup "$@"; then
-    statusMessage consoleError "Deployment cleanup failed, reverting"
+    statusMessage decorate error "Deployment cleanup failed, reverting"
     "$fail" "$@" || return $?
   fi
 }
@@ -193,7 +193,7 @@ ___deployBuildEnvironment() {
 __deployBuildEnvironment() {
   local usage="${FUNCNAME[0]#_}"
   if ! deployToRemote --revert "$@"; then
-    consoleError "Deployment REVERT failed, system is unstable, intervention required." || :
+    decorate error "Deployment REVERT failed, system is unstable, intervention required." || :
   fi
   __failEnvironment "$usage" deployToRemote --deploy "$@" failed || return $?
 }
@@ -279,10 +279,10 @@ deployRemoteFinish() {
         targetPackage="${1-}"
         ;;
       *)
-        __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
+        __failArgument "unknown argument: $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
   # Check arguments are non-blank and actually supplied
@@ -296,7 +296,7 @@ deployRemoteFinish() {
 
   if buildDebugStart deployment; then
     debuggingFlag=true
-    consoleWarning "Debugging is enabled"
+    decorate warning "Debugging is enabled"
   fi
 
   if $revertFlag && $cleanupFlag; then
@@ -312,11 +312,11 @@ deployRemoteFinish() {
 
   if $cleanupFlag; then
     __usageEnvironment "$usage" cd "$applicationPath" || return $?
-    consoleInfo "Cleaning up ... "
+    decorate info "Cleaning up ... "
     if hasHook --application "$applicationPath" deploy-cleanup; then
       __usageEnvironment "$usage" runHook deploy-cleanup || return $?
     else
-      printf "No %s hook in %s\n" "$(consoleInfo "deploy-cleanup")" "$(consoleCode "$applicationPath")"
+      printf "No %s hook in %s\n" "$(decorate info "deploy-cleanup")" "$(decorate code "$applicationPath")"
     fi
   elif $revertFlag; then
     __usageEnvironment "$usage" _deployRevertApplication "$deployHome" "$applicationId" "$applicationPath" "$targetPackage" || return $?
@@ -388,7 +388,7 @@ _deployRevertApplication() {
         elif [ -z "$targetPackage" ]; then
           targetPackage="$1"
         else
-          __failArgument "unknown argument: $(consoleValue "$argument")" || return $?
+          __failArgument "unknown argument: $(decorate value "$argument")" || return $?
         fi
         ;;
     esac
@@ -407,15 +407,15 @@ _deployRevertApplication() {
       __failEnvironment "$usage" "Unable to get previous checksum for $versionName" || return $?
     fi
   else
-    printf "%s %s -> %s\n" "$(consoleInfo "Reverting installation")" "$(consoleOrange "$applicationId")" "$(consoleGreen "$previousChecksum")"
+    printf "%s %s -> %s\n" "$(decorate info "Reverting installation")" "$(decorate orange "$applicationId")" "$(decorate green "$previousChecksum")"
     if ! deployApplication --revert --home "$deployHome" --id "$applicationId" --application "$applicationPath" --target "$targetPackage"; then
       __failEnvironment "$usage" "Undo deployment to $previousChecksum failed $applicationPath - system is unstable" || return $?
     fi
   fi
   if ! runOptionalHook deploy-revert "$deployHome" "$applicationId"; then
-    printf "%s %s\n" "$(consoleCode "deploy-revert")" "$(consoleError "hook failed, continuing anyway")"
+    printf "%s %s\n" "$(decorate code "deploy-revert")" "$(decorate error "hook failed, continuing anyway")"
   fi
-  consoleSuccess "Application successfully reverted to version $(consoleCode "$applicationId")" || :
+  decorate success "Application successfully reverted to version $(decorate code "$applicationId")" || :
   return 0
 }
 __deployRevertApplication() {
@@ -423,10 +423,10 @@ __deployRevertApplication() {
 }
 
 _deploySuccessful() {
-  bigText Deployed AOK | wrapLines "$(consoleGreen)" "$(consoleReset)"
+  bigText Deployed AOK | wrapLines "$(decorate green)" "$(consoleReset)"
   echo
-  consoleWarning "No $deployedHostArtifact file found ..."
-  consoleSuccess "Nothing deployed or clean exit."
+  decorate warning "No $deployedHostArtifact file found ..."
+  decorate success "Nothing deployed or clean exit."
 }
 
 #
@@ -508,7 +508,7 @@ deployToRemote() {
 
   [ -d "$HOME" ] || __failEnvironment "$usage" "No HOME defined or not a directory: $HOME" || return $?
 
-  # DEBUGGING # consoleWarning "ARGS: $*"
+  # DEBUGGING # decorate warning "ARGS: $*"
   exitCode=0
   deployFlag=
   revertFlag=
@@ -601,7 +601,7 @@ deployToRemote() {
   # Debugging
   if buildDebugStart deployment; then
     debuggingFlag=true
-    consoleWarning "Debugging is enabled"
+    decorate warning "Debugging is enabled"
   fi
 
   # Flag semantics
@@ -647,13 +647,13 @@ deployToRemote() {
   commonArguments=("${firstFlags[@]+${firstFlags[@]}}" "--target" "$buildTarget" "--home" "$deployHome" "--id" "$applicationId" "--application" "$applicationPath")
   if test $revertFlag; then
     verb=Revert
-    color="$(consoleOrange)"
+    color="$(decorate orange)"
     deployArg=--revert
   elif test $cleanupFlag; then
     # Clean up deployed target
     applicationPath="$deployHome/$applicationId/app"
     verb="Clean up"
-    color="$(consoleBoldBlue)"
+    color="$(decorate bold-blue)"
     deployArg=--cleanup
   else
     #
@@ -682,7 +682,7 @@ deployToRemote() {
     fi
 
     verb="Deploy"
-    bigText "$verb" | wrapLines "$(consoleGreen)" "$(consoleReset)"
+    bigText "$verb" | wrapLines "$(decorate green)" "$(consoleReset)"
 
     {
       consoleNameValue $nameWidth "Current IP:" "$currentIP"
@@ -699,22 +699,22 @@ deployToRemote() {
     printf "" >"$deployedHostArtifact"
     __usageEnvironment "$usage" __deployUploadPackage "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
 
-    # wrapLines "COMMANDS: $(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"
+    # wrapLines "COMMANDS: $(decorate code)" "$(consoleReset)" <"$temporaryCommandsFile"
     for userHost in "${userHosts[@]}"; do
       start=$(beginTiming) || :
 
       host="${userHost##*@}"
-      printf "%s %s: %s\n%s\n" "$(consoleInfo "Deploying the code to")" "$(consoleGreen "$userHost")" "$(consoleRed "$applicationPath")" "$(consoleInfo "$host output BEGIN :::")"
+      printf "%s %s: %s\n%s\n" "$(decorate info "Deploying the code to")" "$(decorate green "$userHost")" "$(decorate red "$applicationPath")" "$(decorate info "$host output BEGIN :::")"
       if buildDebugEnabled; then
-        consoleInfo "DEBUG: Commands file is:"
-        wrapLines "$(consoleCode)" "$(consoleReset)" <"$temporaryCommandsFile"
+        decorate info "DEBUG: Commands file is:"
+        wrapLines "$(decorate code)" "$(consoleReset)" <"$temporaryCommandsFile"
       fi
-      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | wrapLines "$(consoleOrange "$userHost"): $(consoleBoldBlue)" "$(consoleReset)"; then
+      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | wrapLines "$(decorate orange "$userHost"): $(decorate bold-blue)" "$(consoleReset)"; then
         __failEnvironment "$usage" "Unable to deploy to $host" || return $?
       fi
-      consoleInfo "::: END $host output"
+      decorate info "::: END $host output"
       printf "%s\n" "$host" >>"$deployedHostArtifact" || __failEnvironment "$usage" "Unable to write $host to $deployedHostArtifact" || return $?
-      reportTiming "$start" "Deployed to $(consoleGreen "$userHost")" || :
+      reportTiming "$start" "Deployed to $(decorate green "$userHost")" || :
     done
 
     reportTiming "$initTime" "Deploy completed in" || :
@@ -733,7 +733,7 @@ deployToRemote() {
       _deploySuccessful
       return 0
     else
-      consoleError "$deployedHostArtifact file NOT found ... no remotes changed"
+      decorate error "$deployedHostArtifact file NOT found ... no remotes changed"
       return 99
     fi
   fi
@@ -747,13 +747,13 @@ deployToRemote() {
     start=$(beginTiming)
     host="${userHost##*@}"
     if grep -q "$host" "$deployedHostArtifact"; then
-      printf "%s %s (%s) " "$(consoleSuccess "$verb")" "$(consoleCode "$userHost")" "$(consoleBoldRed "$applicationPath")"
+      printf "%s %s (%s) " "$(decorate success "$verb")" "$(decorate code "$userHost")" "$(decorate bold-red "$applicationPath")"
       if ! ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"; then
-        printf "%s %s %s\n" "$(consoleError "$verb failed on")" "$(consoleCode "$userHost")" "$(consoleError "- continuing")"
+        printf "%s %s %s\n" "$(decorate error "$verb failed on")" "$(decorate code "$userHost")" "$(decorate error "- continuing")"
         exitCode=1
       fi
     else
-      printf "%s %s\n" "$(consoleCode "$host")" "$(consoleSuccess "no artifact, so no $verb")"
+      printf "%s %s\n" "$(decorate code "$host")" "$(decorate success "no artifact, so no $verb")"
     fi
     reportTiming "$start"
   done
@@ -822,14 +822,14 @@ __deployUploadPackage() {
   #
   for userHost in "$@"; do
     start=$(beginTiming) || :
-    printf "%s: %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Setting up")"
+    printf "%s: %s\n" "$(decorate green "$userHost")" "$(decorate info "Setting up")"
     __usageEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(for makeDirectory in "$applicationPath" "$remotePath"; do
       printf 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
     done) || return $?
-    printf "%s: %s %s\n" "$(consoleGreen "$userHost")" "$(consoleInfo "Uploading to")" "$(consoleRed "$remotePath/$buildTarget")"
+    printf "%s: %s %s\n" "$(decorate green "$userHost")" "$(decorate info "Uploading to")" "$(decorate red "$remotePath/$buildTarget")"
     if ! printf '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
       __failEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
     fi
-    reportTiming "$start" "Deployment setup completed on $(consoleGreen "$userHost") in " || :
+    reportTiming "$start" "Deployment setup completed on $(decorate green "$userHost") in " || :
   done
 }

@@ -18,7 +18,7 @@ testBinaryTypes() {
   assertNotExitCode 0 isExecutable ./bin/MISSING || return $?
 }
 _testLineLabel() {
-  printf "%s %s " "$(consoleInfo "$1")" "$(consoleCode "$2")"
+  printf "%s %s " "$(decorate info "$1")" "$(decorate code "$2")"
 }
 validateMissingItems() {
   while IF='' read -r testLine; do
@@ -297,16 +297,16 @@ testUnsignedIntegerSamples() {
   # unsigned Integer
   #
 
-  consoleInfo "unsignedIntegerSamples"
+  decorate info "unsignedIntegerSamples"
   # Unsigned integers are just unsigned
-  consoleInfo validateUnsignedInteger
+  decorate info validateUnsignedInteger
   unsignedIntegerSamples | validateUnsignedInteger || return $?
-  consoleInfo validateSignedInteger
+  decorate info validateSignedInteger
   unsignedIntegerSamples | validateSignedInteger || return $?
   # Unsigned integers are both signed and unsigned numbers
-  consoleInfo validateUnsignedNumber
+  decorate info validateUnsignedNumber
   unsignedIntegerSamples | validateUnsignedNumber || return $?
-  consoleInfo validateSignedNumber
+  decorate info validateSignedNumber
   unsignedIntegerSamples | validateSignedNumber || return $?
 }
 
@@ -315,28 +315,28 @@ testSignedNumberSamples() {
   #
   # signed Number
   #
-  consoleCode validateSignedNumber
+  decorate code validateSignedNumber
   signedNumberSamples | validateSignedNumber || return $?
-  consoleCode validateNotUnsignedNumber
+  decorate code validateNotUnsignedNumber
   signedNumberSamples | validateNotUnsignedNumber || return $?
   # signed numbers are not integers, ever
-  consoleCode validateNotSignedInteger
+  decorate code validateNotSignedInteger
   signedNumberSamples | validateNotSignedInteger || return $?
-  consoleCode validateNotUnsignedInteger
+  decorate code validateNotUnsignedInteger
   signedNumberSamples | validateNotUnsignedInteger || return $?
 }
 
 testUnsignedNumberSamples() {
 
   # Number are neither signed nor unsigned
-  consoleCode validateUnsignedNumber
+  decorate code validateUnsignedNumber
   unsignedNumberSamples | validateUnsignedNumber || return $?
-  consoleCode validateSignedNumber
+  decorate code validateSignedNumber
   unsignedNumberSamples | validateSignedNumber || return $?
   # unsigned numbers are not integers, ever
-  consoleCode validateNotSignedInteger
+  decorate code validateNotSignedInteger
   unsignedNumberSamples | validateNotSignedInteger || return $?
-  consoleCode validateNotUnsignedInteger
+  decorate code validateNotUnsignedInteger
   unsignedNumberSamples | validateNotUnsignedInteger || return $?
 }
 
@@ -344,13 +344,13 @@ testBadNumericSamples() {
   #
   # Nothing is good
   #
-  consoleCode validateNotSignedInteger
+  decorate code validateNotSignedInteger
   badNumericSamples | validateNotSignedInteger || return $?
-  consoleCode validateNotUnsignedInteger
+  decorate code validateNotUnsignedInteger
   badNumericSamples | validateNotUnsignedInteger || return $?
-  consoleCode validateNotSignedNumber
+  decorate code validateNotSignedNumber
   badNumericSamples | validateNotSignedNumber || return $?
-  consoleCode validateNotUnsignedNumber
+  decorate code validateNotUnsignedNumber
   badNumericSamples | validateNotUnsignedNumber || return $?
 }
 

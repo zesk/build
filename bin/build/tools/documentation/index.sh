@@ -56,13 +56,13 @@ documentationIndex_Lookup() {
     shift
   done
   if [ -z "$cacheDirectory" ]; then
-    consoleError "${FUNCNAME[0]} cacheDirectory function - missing cacheDirectory" 1>&2
+    decorate error "${FUNCNAME[0]} cacheDirectory function - missing cacheDirectory" 1>&2
     return $errorArgument
   fi
   if [ "$mode" = "file" ]; then
     indexRoot="$cacheDirectory/files"
     if [ ! -d "$indexRoot" ]; then
-      consoleError "No index exists" 1>&2
+      decorate error "No index exists" 1>&2
       return "$errorEnvironment"
     fi
     if [ ! -f "$indexRoot/$1" ]; then
@@ -73,11 +73,11 @@ documentationIndex_Lookup() {
   fi
   indexRoot="$cacheDirectory/index"
   if [ ! -d "$indexRoot" ]; then
-    consoleError "No index exists" 1>&2
+    decorate error "No index exists" 1>&2
     return "$errorEnvironment"
   fi
   if [ $# -eq 0 ]; then
-    consoleError "${FUNCNAME[0]} cacheDirectory function - missing function" 1>&2
+    decorate error "${FUNCNAME[0]} cacheDirectory function - missing function" 1>&2
     return $errorArgument
   fi
   if [ ! -f "$indexRoot/$1" ]; then
@@ -87,7 +87,7 @@ documentationIndex_Lookup() {
   lineNumber="$(tail -n 1 "$indexRoot/$1")"
   resultFile="$(printf "%s/%s/%s\n" "$cacheDirectory/code" "${sourceFile##./}" "$1")"
   if [ ! -f "$resultFile" ]; then
-    consoleError "Index is corrupt, file $resultFile is not found. regenerate" 1>&2
+    decorate error "Index is corrupt, file $resultFile is not found. regenerate" 1>&2
     return "$errorEnvironment"
   fi
   case $mode in
@@ -116,7 +116,7 @@ documentationIndex_Lookup() {
 _documentationIndex_GeneratePath() {
   cacheDirectory="$1"
   if [ ! -d "$cacheDirectory" ]; then
-    consoleError "$cacheDirectory is not a directory" 1>&2
+    decorate error "$cacheDirectory is not a directory" 1>&2
     return $errorEnvironment
   fi
   printf "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
@@ -158,7 +158,7 @@ documentationIndex_Generate() {
         if [ -z "$codePath" ]; then
           codePath="$1"
           if [ ! -d "$codePath" ]; then
-            consoleError "$codePath is not a directory" 1>&2
+            decorate error "$codePath is not a directory" 1>&2
             return $errorEnvironment
           fi
           codePath="${codePath#./}"
@@ -187,13 +187,13 @@ documentationIndex_Generate() {
   functionIndex="$cacheDirectory/index"
   if [ ! -d "$functionIndex" ]; then
     if ! mkdir -p "$functionIndex"; then
-      consoleError "Unable to create $functionIndex" 1>&2
+      decorate error "Unable to create $functionIndex" 1>&2
       return $errorEnvironment
     fi
   fi
   if [ ! -d "$cacheDirectory/files" ]; then
     if ! mkdir -p "$cacheDirectory/files"; then
-      consoleError "Unable to create files index" 1>&2
+      decorate error "Unable to create files index" 1>&2
       return $errorEnvironment
     fi
   fi
@@ -206,17 +206,17 @@ documentationIndex_Generate() {
     if [ ! -d "$fileCacheMarker" ]; then
       __usageEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
     elif isNewestFile "$fileCacheMarker/.marker" "$shellFile"; then
-      statusMessage consoleInfo "$shellFile is already cached"
+      statusMessage decorate info "$shellFile is already cached"
       continue
     fi
     pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$shellFile" | while read -r functionName; do
       lineNumber="${functionName%%:*}"
       functionName="${functionName#*:}"
-      statusMessage consoleInfo "$(printf "Found %s at %s:%s\n" "$(consoleCode "$functionName")" "$(consoleMagenta "$shellFile")" "$(consoleRed "$lineNumber")")"
+      statusMessage decorate info "$(printf "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$shellFile")" "$(decorate red "$lineNumber")")"
       if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
         clearLine
-        consoleError "Documentation failed for $functionName" 1>&2
+        decorate error "Documentation failed for $functionName" 1>&2
         return $errorEnvironment
       fi
       printf "%s\n%s\n" "$shellFile" "$lineNumber" >"$functionIndex/$functionName"
@@ -224,12 +224,12 @@ documentationIndex_Generate() {
     touch "$fileCacheMarker/.marker"
     count="$(find "$fileCacheMarker" -type f | wc -l | trimSpace)"
     count=$((count - 1))
-    statusMessage consoleSuccess "Generated $count functions for $shellFile "
+    statusMessage decorate success "Generated $count functions for $shellFile "
   done; then
     return $?
   fi
   clearLine
-  printf "%s %s %s\n" "$(consoleInfo "Generated index for ")" "$(consoleCode "$codePath")" "$(reportTiming "$start" in)"
+  printf "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$codePath")" "$(reportTiming "$start" in)"
 }
 _documentationIndex_Generate() {
   # IDENTICAL usageDocument 1
@@ -270,13 +270,13 @@ documentationIndex_ShowUnlinked() {
         # shellcheck source=/dev/null
         source "$settingsFile"
         if [ -n "$ignore" ]; then
-          printf "%s %s %s\n" "$(consoleCode "$functionName")" "$(consoleWarning "ignored because")" "$(consoleMagenta "$ignore")"
+          printf "%s %s %s\n" "$(decorate code "$functionName")" "$(decorate warning "ignored because")" "$(decorate magenta "$ignore")"
         elif [ -z "$documentationPath" ] || [ -n "$documentationPathUnlinked" ]; then
-          printf "%s %s\n" "$(consoleCode "$functionName")" "$(consoleError "not documented anywhere")"
+          printf "%s %s\n" "$(decorate code "$functionName")" "$(decorate error "not documented anywhere")"
         fi
       )
     else
-      printf "%s %s %s\n" "$(consoleCode "$functionName")" "$(consoleWarning "ignored because")" "$(consoleBlue "begins with underscore")"
+      printf "%s %s %s\n" "$(decorate code "$functionName")" "$(decorate warning "ignored because")" "$(decorate blue "begins with underscore")"
     fi
   done
 }
@@ -468,13 +468,13 @@ documentationIndex_LinkDocumentationPaths() {
       continue
     fi
     if ! grep -q "'documentationPath'" "$settingsFile"; then
-      statusMessage consoleInfo "Adding documentationPath to $(consoleValue "[$token]") settings" || :
+      statusMessage decorate info "Adding documentationPath to $(decorate value "[$token]") settings" || :
       if ! __dumpNameValue documentationPath "$(trimSpace "$documentationPath")" >>"$settingsFile"; then
-        consoleError "Error writing documentationPath to $settingsFile" 1>&2
+        decorate error "Error writing documentationPath to $settingsFile" 1>&2
         break
       fi
       if ! printf x >>"$modifiedCountFile"; then
-        consoleError "Error writing count file: $modifiedCountFile" 1>&2
+        decorate error "Error writing count file: $modifiedCountFile" 1>&2
         break
       fi
     fi
@@ -486,5 +486,5 @@ documentationIndex_LinkDocumentationPaths() {
   total="$(trimSpace "$(wc -l <"$documentTokensFile")")"
   rm "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
   clearLine || :
-  statusMessage consoleInfo "$(printf "%s %s %s %s %s %s %s %s\n" "$(consoleCyan Indexed)" "$(consoleBoldRed "$processed")" "$(consoleGreen "of $total")" "$(consoleCyan "$(plural "$processed" function functions)")" for "$(consoleCode "$documentationPath")" in "$(reportTiming "$start")")"
+  statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" for "$(decorate code "$documentationPath")" in "$(reportTiming "$start")")"
 }

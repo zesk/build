@@ -55,7 +55,7 @@ Gets the component of the URL from a given database URL.
 
 #### Examples
 
-    consoleInfo "Connecting as $(urlParseItem user "$url")"
+    decorate info "Connecting as $(urlParseItem user "$url")"
 
 #### Exit codes
 

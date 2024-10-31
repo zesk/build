@@ -63,7 +63,7 @@ _integer() {
 #
 # fn: {base}
 __hookTestRunner() {
-  ! buildDebugEnabled || consoleError "Test runner does nothing, failing, rewrite this."
+  ! buildDebugEnabled || decorate error "Test runner does nothing, failing, rewrite this."
   return 99
 }
 

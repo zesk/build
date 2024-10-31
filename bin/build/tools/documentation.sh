@@ -43,7 +43,7 @@ usageDocument() {
   fi
   [ -n "$functionName" ] || _argument "functionName is blank" || return $?
   if [ "$exitCode" = "NONE" ]; then
-    consoleError "NO EXIT CODE" 1>&2
+    decorate error "NO EXIT CODE" 1>&2
     exitCode=1
   fi
   __argument isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
@@ -170,7 +170,7 @@ documentationTemplateCompile() {
 
   base="$(basename "$targetFile")" || __failArgument "$usage" basename "$targetFile" || return $?
   base="${base%%.md}"
-  statusMessage consoleInfo "Generating $(consoleCode "$base") $(consoleInfo "...")"
+  statusMessage decorate info "Generating $(decorate code "$base") $(decorate info "...")"
 
   documentTokensFile=$(mktemp)
   mappedDocumentTemplate=$(mktemp)
@@ -213,7 +213,7 @@ documentationTemplateCompile() {
   # As well, document template change will affect this template
   if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
     if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
-      printf "%s (mapped) -> %s %s" "$(consoleWarning "$documentTemplate")" "$(consoleSuccess "$targetFile")" "$(consoleError "(no tokens found)")"
+      printf "%s (mapped) -> %s %s" "$(decorate warning "$documentTemplate")" "$(decorate success "$targetFile")" "$(decorate error "(no tokens found)")"
       cp "$mappedDocumentTemplate" "$targetFile"
     fi
   else
@@ -236,7 +236,7 @@ documentationTemplateCompile() {
           continue
         fi
         if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && isNewestFile "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
-          statusMessage consoleInfo "Skip $tokenName and use cache"
+          statusMessage decorate info "Skip $tokenName and use cache"
         else
           __usageEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || return $?
           __usageEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || return $?
@@ -245,7 +245,7 @@ documentationTemplateCompile() {
       done <"$documentTokensFile"
 
       IFS=$'\n' read -r -d '' -a tokenNames <"$documentTokensFile"
-      statusMessage consoleSuccess "Writing $targetFile using $documentTemplate (mapped) ..."
+      statusMessage decorate success "Writing $targetFile using $documentTemplate (mapped) ..."
       (
         set -a
         #shellcheck source=/dev/null
@@ -259,7 +259,7 @@ documentationTemplateCompile() {
   fi
   rm -f "$documentTokensFile" || :
   rm -f "$mappedDocumentTemplate" || :
-  statusMessage consoleInfo "$(reportTiming "$start" "$message" "$targetFile" in)"
+  statusMessage decorate info "$(reportTiming "$start" "$message" "$targetFile" in)"
 }
 _documentationTemplateCompile() {
   usageDocument "${BASH_SOURCE[0]}" "documentationTemplateCompile" "$@"
@@ -417,14 +417,14 @@ documentationTemplateDirectoryCompile() {
     base="$(basename "$templateFile")" || __failEnvironment "$usage" "basename $templateFile" || return $?
     targetFile="$targetDirectory/$base"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
-      consoleError "Failed to generate $targetFile" 1>&2
+      decorate error "Failed to generate $targetFile" 1>&2
       exitCode=1
       break
     fi
     fileCount=$((fileCount + 1))
   done < <(find "$templateDirectory" -type f -name '*.md' ! -path "*/.*/*" ! -name '_*')
   clearLine || :
-  reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(consoleInfo "$targetDirectory") "
+  reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(decorate info "$targetDirectory") "
   return $exitCode
 }
 _documentationTemplateDirectoryCompile() {

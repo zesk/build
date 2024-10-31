@@ -52,10 +52,10 @@ reportTiming() {
   shift
   prefix=
   if [ $# -gt 0 ]; then
-    prefix="$(consoleGreen "$@") "
+    prefix="$(decorate green "$@") "
   fi
   delta=$(($(date +%s) - start))
-  printf "%s%s\n" "$prefix" "$(consoleBoldMagenta "$delta $(plural $delta second seconds)")"
+  printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$delta $(plural $delta second seconds)")"
 }
 _reportTiming() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -74,7 +74,7 @@ _reportTiming() {
 #
 # Example:     quietLog="$(buildQuietLog "$me")"
 # Example:     if ! ./bin/deploy.sh >>"$quietLog"; then
-# Example:         consoleError "Deploy failed"
+# Example:         decorate error "Deploy failed"
 # Example:         buildFailed "$quietLog"
 # Example:     fi
 # Exit Code: 1 - Always fails
@@ -84,10 +84,10 @@ buildFailed() {
 
   shift
   clearLine || :
-  failBar="$(consoleReset)$(consoleMagenta "$(repeat 80 "❌")")"
+  failBar="$(consoleReset)$(decorate magenta "$(repeat 80 "❌")")"
   # shellcheck disable=SC2094
   printf -- "\n%s\n%s\n%s\n\n" \
-    "$(printf -- "\n%s\n\n" "$(bigText "Failed" | wrapLines "" "    ")" | wrapLines --fill "*" "$(consoleError)" "$(consoleReset)")" \
+    "$(printf -- "\n%s\n\n" "$(bigText "Failed" | wrapLines "" "    ")" | wrapLines --fill "*" "$(decorate error)" "$(consoleReset)")" \
     "$failBar" \
     "$(dumpPipe --tail "$(basename "$quietLog")" "$@" --lines "$showLines" <"$quietLog")"
   _environment "Build failed:" "$@" || return $?
@@ -185,7 +185,7 @@ isUpToDate() {
         elif [ -n "$upToDateDays" ]; then
           upToDateDays="$argument"
         else
-          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+          __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         fi
         ;;
     esac
@@ -209,27 +209,27 @@ isUpToDate() {
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))
   if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
-    label=$(printf "%s %s\n" "$(consoleError "${name}expired on ")" "$(consoleRed "$keyDate")")
+    label=$(printf "%s %s\n" "$(decorate error "${name}expired on ")" "$(decorate red "$keyDate")")
     case "$daysAgo" in
       0) timeText="Today" ;;
       1) timeText="Yesterday" ;;
       *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
     esac
-    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleRed)" "$label" "EXPIRED $timeText"
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(decorate red)" "$label" "EXPIRED $timeText"
     return 1
   fi
   daysAgo=$((-daysAgo))
   if [ $daysAgo -lt 14 ]; then
-    labeledBigText --prefix "$(consoleReset)" --top --tween "$(consoleOrange)" "${name}expires on $(consoleCode "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+    labeledBigText --prefix "$(consoleReset)" --top --tween "$(decorate orange)" "${name}expires on $(decorate code "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
   elif [ $daysAgo -lt 30 ]; then
-    # consoleInfo "keyDate $keyDate"
-    # consoleInfo "accessKeyTimestamp $accessKeyTimestamp"
-    # consoleInfo "expireDate $expireDate"
+    # decorate info "keyDate $keyDate"
+    # decorate info "accessKeyTimestamp $accessKeyTimestamp"
+    # decorate info "expireDate $expireDate"
     printf "%s %s %s %s\n" \
-      "$(consoleWarning "${name}expires on")" \
-      "$(consoleRed "$expireDate")" \
-      "$(consoleWarning ", in")" \
-      "$(consoleMagenta "$daysAgo $(plural $daysAgo day days)")"
+      "$(decorate warning "${name}expires on")" \
+      "$(decorate red "$expireDate")" \
+      "$(decorate warning ", in")" \
+      "$(decorate magenta "$daysAgo $(plural $daysAgo day days)")"
     return 0
   fi
   return 0

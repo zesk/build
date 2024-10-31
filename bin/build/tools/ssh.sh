@@ -68,13 +68,13 @@ sshAddKnownHost() {
       *)
         remoteHost="$1"
         if grep -q "$remoteHost" "$sshKnown"; then
-          ! $verbose || consoleInfo "Host $remoteHost already known"
+          ! $verbose || decorate info "Host $remoteHost already known"
         elif ssh-keyscan "${verboseArgs[@]+"${verboseArgs[@]+}"}" "$remoteHost" >"$output" 2>&1; then
           cat "$output" >>"$sshKnown"
-          ! $verbose || consoleSuccess "Added $remoteHost to $sshKnown"
+          ! $verbose || decorate success "Added $remoteHost to $sshKnown"
         else
           exitCode=$?
-          printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(consoleError "Failed to add $remoteHost to $sshKnown")" "$(consoleCode)$exitCode" "$(wrapLines ">> $(consoleCode)" "$(consoleReset) <<" <"$output")" 1>&2
+          printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code)$exitCode" "$(wrapLines ">> $(decorate code)" "$(consoleReset) <<" <"$output")" 1>&2
         fi
         ;;
     esac
@@ -159,7 +159,7 @@ sshSetup() {
   if [ $flagForce = 0 ] && [ -f "$keyName" ]; then
     [ ${#servers[@]} -gt 0 ] || _argument "Key $keyName already exists, exiting." || return $?
   else
-    statusMessage consoleInfo "Generating $keyName (keyType $keyType $keyBits keyBits)"
+    statusMessage decorate info "Generating $keyName (keyType $keyType $keyBits keyBits)"
     __usageEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N "" || return $?
     __usageEnvironment "$usage" cp "$keyName" id_"$keyType" || return $?
     __usageEnvironment "$usage" cp "$keyName".pub id_"$keyType".pub || return $?

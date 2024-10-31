@@ -46,9 +46,9 @@ Output a bar as wide as the console using the `=` symbol.
 
 #### Examples
 
-    consoleSuccess $(echoBar =-)
-    consoleSuccess $(echoBar "- Success ")
-    consoleMagenta $(echoBar +-)
+    decorate success $(echoBar =-)
+    decorate success $(echoBar "- Success ")
+    decorate magenta $(echoBar +-)
 
 #### Exit codes
 
@@ -78,7 +78,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Examples
 
-    cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
+    cat "$file" | wrapLines "$(decorate code)" "$(consoleReset)"
     cat "$errors" | wrapLines "    ERROR: [" "]"
 
 #### Exit codes

@@ -129,3 +129,40 @@ Set the title of the window for the console
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleLink` - Output a hyperlink to the console
+
+Output a hyperlink to the console
+OSC 8 standard for terminals
+No way to test ability, I think. Maybe `tput`.
+
+- Location: `bin/build/tools/console.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleFileLink` - Output a local file link to the console
+
+Output a local file link to the console
+
+- Location: `bin/build/tools/console.sh`
+
+#### Usage
+
+    file [ text ]
+    
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

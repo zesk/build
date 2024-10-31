@@ -111,21 +111,21 @@ testCrontabApplicationSync() {
     case "$argument" in
       -v | --verbose)
         verboseFlag=1
-        consoleInfo "Verbosity on" 1>&2
+        decorate info "Verbosity on" 1>&2
         ;;
       -k | --keep)
         keepFlag=1
-        consoleWarning "Keeping test artifacts" 1>&2
+        decorate warning "Keeping test artifacts" 1>&2
         ;;
       -s | --show)
         showFlag=1
         ;;
       *)
         [ -d "$argument" ] || __failArgument "$usage" "No arguments" || return $?
-        consoleInfo "Home is $argument"
+        decorate info "Home is $argument"
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
   testEnv=$(mktemp)
@@ -217,7 +217,7 @@ testCrontabApplicationSync() {
       echo "Removed temporary files"
     fi
   fi
-  consoleSuccess Passed.
+  decorate success Passed.
 }
 _testCrontabApplicationSync() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

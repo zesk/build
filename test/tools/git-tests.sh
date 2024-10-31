@@ -21,13 +21,13 @@ gitAddRemotesToSSHKnown() {
   __environment chmod 700 "$HOME/.ssh" || return $?
   __environment chmod 600 "$sshKnown" || return $?
 
-  statusMessage consoleInfo "Listing remotes ..."
+  statusMessage decorate info "Listing remotes ..."
   git remote -v | awk '{ print $2 }' | cut -f 1 -d : | cut -f 2 -d @ | sort -u | while read -r remoteHost; do
     extension="${remoteHost##*.}"
     if [ "$extension" = "$remoteHost" ]; then
       continue
     fi
-    statusMessage consoleInfo "Adding $remoteHost to SSH known hosts ..."
+    statusMessage decorate info "Adding $remoteHost to SSH known hosts ..."
     __environment sshAddKnownHost "$remoteHost" || return $?
   done
   clearLine
@@ -36,9 +36,9 @@ gitAddRemotesToSSHKnown() {
 testGitVersionList() {
   if ! gitHasAnyRefs; then
     gitAddRemotesToSSHKnown || return $?
-    statusMessage consoleInfo "Pulling tags ..."
+    statusMessage decorate info "Pulling tags ..."
     git pull --tags >/dev/null 2>&1 || _environment "Unable to pull git tags ... failed" || return $?
-    consoleSuccess " done"
+    decorate success " done"
   fi
 
   #  echo "PWD: $(pwd)"

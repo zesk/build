@@ -568,7 +568,7 @@ cachedShaPipe() {
     while [ $# -gt 0 ]; do
       argument="$1"
       [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-      [ -f "$argument" ] || __failArgument "$usage" "not a file $(consoleLabel "$argument")" || return $?
+      [ -f "$argument" ] || __failArgument "$usage" "not a file $(decorate label "$argument")" || return $?
       cacheFile="$cacheDirectory/${argument#/}"
       __environment requireFileDirectory "$cacheFile" || return $?
       if [ -f "$cacheFile" ] && isNewestFile "$cacheFile" "$1"; then
@@ -911,15 +911,15 @@ characterClassReport() {
     matched=0
     if $classOuter; then
       class="$outer"
-      outerText="$(consoleLabel "$(alignRight 10 "$outer")")"
+      outerText="$(decorate label "$(alignRight 10 "$outer")")"
     else
       character="$(characterFromInteger "$outer")" 2>/dev/null
       if ! isCharacterClass print "$character"; then
         outerText="$(printf "x%x " "$outer")"
         outerText="$(alignRight 5 "$outerText")"
-        outerText="$(consoleSubtle "$outerText")"
+        outerText="$(decorate subtle "$outerText")"
       else
-        outerText="$(consoleBlue "$(alignRight 5 "$character")")"
+        outerText="$(decorate blue "$(alignRight 5 "$character")")"
       fi
     fi
     printf "%s: " "$(alignLeft "$width" "$outerText")"
@@ -933,19 +933,19 @@ characterClassReport() {
         matched=$((matched + 1))
         if $classOuter; then
           if ! isCharacterClass print "$character"; then
-            printf "%s " "$(consoleSubtle "$(printf "x%x" "$inner")")"
+            printf "%s " "$(decorate subtle "$(printf "x%x" "$inner")")"
           else
-            printf "%s " "$(consoleBlue "$(characterFromInteger "$inner")")"
+            printf "%s " "$(decorate blue "$(characterFromInteger "$inner")")"
           fi
         else
-          printf "%s " "$(consoleBlue "$class")"
+          printf "%s " "$(decorate blue "$class")"
         fi
       fi
     done
-    printf "[%s %s]\n" "$(consoleBoldMagenta "$matched")" "$(consoleSubtle "$(plural "$matched" "${nouns[@]}")")"
+    printf "[%s %s]\n" "$(decorate bold-magenta "$matched")" "$(decorate subtle "$(plural "$matched" "${nouns[@]}")")"
     total=$((total + matched))
   done
-  printf "%s total %s\n" "$(consoleBoldRed "$total")" "$(consoleRed "$(plural "$total" "${nouns[@]}")")"
+  printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
   __usageEnvironment "$usage" ulimit -n "$savedLimit" || return $?
 }
 _characterClassReport() {
@@ -1009,19 +1009,19 @@ cannon() {
   [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(__usageEnvironment "$usage" mktemp) || return $?
   if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
-    printf "%s\n" "$(consoleSuccess "# \"")$(consoleCode "$1")$(consoleSuccess "\" Not found")"
+    printf "%s\n" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
     rm "$cannonLog" || :
     return 0
   fi
   xargs -0 grep -l "$search" <"$cannonLog" >"$cannonLog.found"
   count="$(($(wc -l <"$cannonLog.found") + 0))"
   if [ "$count" -eq 0 ]; then
-    consoleInfo "Modified (NO) files"
+    decorate info "Modified (NO) files"
   else
     local inPlaceArguments
     if [ "$(uname -s)" = "Darwin" ]; then inPlaceArguments=('-i' ''); else inPlaceArguments=('--in-place'); fi
     __usageEnvironment "$usage" xargs sed "${inPlaceArguments[@]}" -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || return $?
-    consoleSuccess "Modified $(consoleCode "$count $(plural "$count" file files)")"
+    decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
   fi
   rm -f "$cannonLog" "$cannonLog.found" || :
 }
@@ -1048,7 +1048,7 @@ removeFields() {
         fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
   fieldCount=${fieldCount:-1}
   #  awk '{for(i=0;i<'"${fieldCount:-1}"';i++){sub($1 FS,"")}}1'
@@ -1067,6 +1067,38 @@ joinArguments() {
   local IFS="$1"
   shift || :
   printf "%s" "$*"
+}
+
+#
+# Usage: {fn} listValue separator item ...
+# Argument: listValue - Required. List value to modify.
+# Argument: separator - Required. Separator string for item values (typically `:`)
+# Argument: item - the item to be removed from the `listValue`
+#
+listRemove() {
+  local usage="_${FUNCNAME[0]}"
+  local argument listValue="${1-}" separator="${2-}"
+
+  shift 2 || __failArgument "$usage" "Missing arguments" || return $?
+  firstFlag=false
+  while [ $# -gt 0 ]; do
+    local offset next argument="$1"
+    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    offset="$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")"
+    if [ "$offset" -lt 0 ]; then
+      shift
+      continue
+    fi
+    offset=$((offset - ${#separator} * 2))
+    next=$((offset + ${#argument} + ${#separator}))
+    listValue="${listValue:0:$offset}${listValue:$next}"
+    shift
+  done
+  printf "%s\n" "$listValue"
+}
+_listRemove() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

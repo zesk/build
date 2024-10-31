@@ -66,11 +66,11 @@ _documentationTemplateUpdateUnlinked() {
   __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
   if [ -f "$template" ] && diff -q "$template" "$template.$$" >/dev/null; then
-    statusMessage consoleInfo "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
+    statusMessage decorate info "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
     __usageEnvironment "$usage" rm -f "$template.$$" || return $?
   else
     __usageEnvironment "$usage" mv -f "$template.$$" "$template" || return $?
-    statusMessage consoleInfo "Updated $template with $total unlinked $(plural "$total" function functions)"
+    statusMessage decorate info "Updated $template with $total unlinked $(plural "$total" function functions)"
   fi
 }
 __documentationTemplateUpdateUnlinked() {
@@ -112,13 +112,13 @@ _buildDocumentation_Recommit() {
     __failEnvironment "$usage" "Already on docs branch" || return $?
   fi
   if gitRepositoryChanged; then
-    statusMessage consoleWarning "Committing to branch $branch ..."
+    statusMessage decorate warning "Committing to branch $branch ..."
     __usageEnvironment "$usage" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
-    statusMessage consoleInfo "Pushing branch $branch ..."
+    statusMessage decorate info "Pushing branch $branch ..."
     __usageEnvironment "$usage" git push || return $?
-    statusMessage consoleSuccess "Documentation committed"
+    statusMessage decorate success "Documentation committed"
   else
-    consoleInfo "Branch $branch is unchanged"
+    decorate info "Branch $branch is unchanged"
   fi
 }
 __buildDocumentation_Recommit() {
@@ -306,7 +306,7 @@ documentationBuild() {
         return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
     shift
@@ -352,7 +352,7 @@ documentationBuild() {
 
   if [ -n "$unlinkedTemplate" ]; then
     [ -n "$unlinkedTarget" ] || __failArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
-    ! $verbose || consoleInfo "Update unlinked document $unlinkedTarget"
+    ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
     envFile=$(_buildDocumentationGenerateEnvironment "$company" "$companyLink" "$applicationName") || return $?
     __usageEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     if [ "$actionFlag" = "--unlinked-update" ]; then
@@ -360,7 +360,7 @@ documentationBuild() {
       return 0
     fi
   else
-    ! $verbose || consoleWarning "No --unlinked-template supplied"
+    ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
   clearLine || :
 

@@ -38,8 +38,8 @@ __brewUninstall() {
 # Exit code: 0 - Success
 # Exit code: 1 - Failed due to issues with environment
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-# Artifact: `aptUpdateOnce.log` is left in the `buildCacheDirectory`
-# Artifact: `aptInstall.log` is left in the `buildCacheDirectory`
+# Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
+# Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 __brewUpgrade() {
   local usage="_${FUNCNAME[0]}"
   local quietLog upgradeLog result
@@ -49,7 +49,7 @@ __brewUpgrade() {
   __usageEnvironmentQuiet "$quietLog" packageUpdate || return $?
   __usageEnvironmentQuiet "$quietLog" packageInstall || return $?
   __usageEnvironment "$usage" brew upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog"
-  if ! muzzle aptNeedRestartFlag; then
+  if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
       __usageEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?
     fi

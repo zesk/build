@@ -43,7 +43,7 @@ rotateLog() {
         elif [ -z "$count" ]; then
           count="$argument"
         else
-          __failArgument "$usage" "$this: Unknown argument $(consoleValue "$argument")"
+          __failArgument "$usage" "$this: Unknown argument $(decorate value "$argument")"
         fi
         ;;
     esac
@@ -52,8 +52,8 @@ rotateLog() {
 
   logFile="$(usageArgumentFile _rotateLog logFile "$logFile")" || return $?
 
-  isInteger "$count" || __failArgument "$usage" "$this count $(consoleValue "$count") must be a positive integer" || return $?
-  [ "$count" -gt 0 ] || __failArgument "$usage" "$this count $(consoleValue "$count") must be a positive integer greater than zero" || return $?
+  isInteger "$count" || __failArgument "$usage" "$this count $(decorate value "$count") must be a positive integer" || return $?
+  [ "$count" -gt 0 ] || __failArgument "$usage" "$this count $(decorate value "$count") must be a positive integer greater than zero" || return $?
 
   index="$count"
   if [ "$count" -gt 1 ]; then
@@ -120,16 +120,16 @@ rotateLogs() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
   logPath=$(usageArgumentDirectory _rotateLogs logPath "$logPath") || return $?
 
   __usageArgument "$usage" isInteger "$count" || return $?
   [ "$count" -gt 0 ] || __failArgument "$usage" "$this count $count must be a positive integer greater than zero" || return $?
 
-  statusMessage consoleInfo "Rotating log files in path $logPath"
+  statusMessage decorate info "Rotating log files in path $logPath"
   find "$logPath" -type f -name '*.log' ! -path "*/.*/*" | while IFS= read -r logFile; do
-    statusMessage consoleInfo "Rotating log file $logFile" || :
+    statusMessage decorate info "Rotating log file $logFile" || :
     rotateLog "${dryRunArgs[@]+${dryRunArgs[@]}}" "$logFile" "$count" || return $?
   done
   clearLine

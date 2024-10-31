@@ -259,7 +259,7 @@ environmentFileLoad() {
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
-    ! $debugMode || printf -- "%d: %d %s\n" "$argumentIndex" ${#ff[@]} "$(consoleBoldRed "ARGS: $#" "$@")"
+    ! $debugMode || printf -- "%d: %d %s\n" "$argumentIndex" ${#ff[@]} "$(decorate bold-red "ARGS: $#" "$@")"
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -274,7 +274,7 @@ environmentFileLoad() {
       --debug)
         debugMode=true
         verboseMode=true
-        consoleInfo "Debug mode enabled"
+        decorate info "Debug mode enabled"
         ;;
       --secure)
         shift
@@ -313,10 +313,10 @@ environmentFileLoad() {
   done
   ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
   for environmentFile in "${ff[@]}"; do
-    ! $debugMode || printf "%s lines:\n%s\n" "$(consoleCode "$environmentFile")" "$(environmentLines <"$environmentFile")"
+    ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
     line=1
     while read -r environmentLine; do
-      ! $verboseMode || printf "%s:%d: %s" "$environmentFile" "$line" "$(consoleCode "$environmentLine")"
+      ! $verboseMode || printf "%s:%d: %s" "$environmentFile" "$line" "$(decorate code "$environmentLine")"
       name="${environmentLine%%=*}"
       # Skip comments
       if [ -z "$name" ] || [ "$name" != "${name###}" ]; then
@@ -324,14 +324,14 @@ environmentFileLoad() {
       fi
       # Skip "bad" variables
       if ! environmentVariableNameValid "$name"; then
-        ! $verboseMode || consoleWarning "$(consoleCode "$name") invalid name ($environmentFile:$line)"
+        ! $verboseMode || decorate warning "$(decorate code "$name") invalid name ($environmentFile:$line)"
         continue
       fi
       # Skip insecure variables
-      [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(consoleBoldRed "$name")" || return $?
+      [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(decorate bold-red "$name")" || return $?
       # Ignore stuff as a feature
       if [ "${#ignoreList[@]}" -gt 0 ] && inArray "$name" "${ignoreList[@]}"; then
-        ! $verboseMode || consoleWarning "$(consoleCode "$name") is ignored ($environmentFile:$line)"
+        ! $verboseMode || decorate warning "$(decorate code "$name") is ignored ($environmentFile:$line)"
         continue
       fi
       # Load and unquote value
@@ -413,7 +413,7 @@ environmentFileShow() {
     if environmentVariableNameValid "$name"; then
       checked+=("$name")
     else
-      consoleWarning "Invalid environment value $(consoleCode "$name")" 1>&2
+      decorate warning "Invalid environment value $(decorate code "$name")" 1>&2
     fi
   done
   export "${variables[@]}"
@@ -433,7 +433,7 @@ environmentFileShow() {
   done
   buildEnvironment=("$@")
 
-  printf -- "%s %s %s %s%s\n" "$(consoleInfo "Application")" "$(consoleMagenta "$APPLICATION_VERSION")" "$(consoleInfo "on")" "$(consoleBoldRed "$APPLICATION_BUILD_DATE")" "$(consoleInfo "...")"
+  printf -- "%s %s %s %s%s\n" "$(decorate info "Application")" "$(decorate magenta "$APPLICATION_VERSION")" "$(decorate info "on")" "$(decorate bold-red "$APPLICATION_BUILD_DATE")" "$(decorate info "...")"
   if buildDebugEnabled; then
     consoleNameValue "$width" Checksum "$APPLICATION_ID"
     consoleNameValue "$width" Tag "$APPLICATION_TAG"
@@ -456,7 +456,7 @@ environmentFileShow() {
         consoleNameValue "$width" "$name" "${!name}"
       fi
     else
-      consoleWarning "Invalid build environment value $(consoleCode "$name")" 1>&2
+      decorate warning "Invalid build environment value $(decorate code "$name")" 1>&2
     fi
   done
   [ ${#missing[@]} -eq 0 ] || __usageEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?
@@ -516,7 +516,7 @@ environmentFileApplicationVerify() {
   done
   missing=()
   for name in "${requireEnvironment[@]}"; do
-    environmentVariableNameValid "$name" || __failEnvironment "$usage" "Invalid environment name found: $(consoleCode "$name")" || return $?
+    environmentVariableNameValid "$name" || __failEnvironment "$usage" "Invalid environment name found: $(decorate code "$name")" || return $?
     if [ -z "${!name:-}" ]; then
       missing+=("$name")
     fi

@@ -45,9 +45,9 @@ __doEvalCheck() {
       else
         if "$checkLineFailed"; then
           failed=$((failed + 1))
-          printf "%s in %s line %s: %s\n" "$(consoleError "Unchecked eval")" "$(consoleInfo "$1")" "$(consoleBlue "$lineNo")" "$(consoleCode "$line")"
+          printf "%s in %s line %s: %s\n" "$(decorate error "Unchecked eval")" "$(decorate info "$1")" "$(decorate blue "$lineNo")" "$(decorate code "$line")"
         else
-          printf "%s in %s line %s: %s\n" "$(consoleSuccess "evalCheck FOUND")" "$(consoleInfo "$1")" "$(consoleBlue "$lineNo")" "$(consoleCode "$checkLine")"
+          printf "%s in %s line %s: %s\n" "$(decorate success "evalCheck FOUND")" "$(decorate info "$1")" "$(decorate blue "$lineNo")" "$(decorate code "$checkLine")"
         fi
       fi
     done <"$tempResults"
@@ -63,7 +63,7 @@ evalCheck() {
     __doEvalCheck "$usage" "$@" || return $?
   else
     while IFS= read -r fileName; do
-      statusMessage consoleInfo "Checking $fileName"
+      statusMessage decorate info "Checking $fileName"
       __doEvalCheck "$usage" "$fileName" || return $?
     done
   fi

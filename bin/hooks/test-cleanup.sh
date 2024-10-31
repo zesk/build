@@ -59,7 +59,7 @@ _integer() {
 #
 # fn: {base}
 __hookTestCleanup() {
-  ! buildDebugEnabled || consoleSuccess "Test cleanup does nothing - please rewrite"
+  ! buildDebugEnabled || decorate success "Test cleanup does nothing - please rewrite"
 }
 
 __tools ../.. __hookTestCleanup "$@"

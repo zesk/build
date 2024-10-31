@@ -14,7 +14,7 @@ testApplicationHome() {
   savedHome=$HOME
   HOME=$(__environment mktemp -d) || return $?
 
-  consoleInfo "New Home is $HOME"
+  decorate info "New Home is $HOME"
   assertFileDoesNotExist --line "$LINENO" "$HOME/.applicationHome" || return $?
   assertExitCode --dump --stdout-match "Application home set" --line "$LINENO" 0 applicationHome "$HOME" || return $?
   assertFileContains --line "$LINENO" "$HOME/.applicationHome" "$HOME" || return $?

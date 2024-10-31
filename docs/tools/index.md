@@ -18,7 +18,6 @@ Once included, all functions here are available for use:
 - [Binaries (direct)](./bin.md)
 - [Color](./colors.md)
 - [Console](./console.md)
-- [Console Color](./consoleColor.md)
 - [Crontab](./crontab.md)
 - [daemontools](./daemontools.md)
 - [Darwin](./darwin.md)

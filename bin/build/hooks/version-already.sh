@@ -27,10 +27,10 @@ __hookVersionAlready() {
   releaseNotes=$1
   shift
   if buildEnvironmentLoad BUILD_VERSION_NO_OPEN && ! test "$BUILD_VERSION_NO_OPEN"; then
-    printf "%s %s %s %s\n" "$(consoleSuccess "Opening")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes at")" "$(consoleValue "$releaseNotes")"
+    printf "%s %s %s %s\n" "$(decorate success "Opening")" "$(decorate code "$currentVersion")" "$(decorate success "release notes at")" "$(decorate value "$releaseNotes")"
     contextOpen "$releaseNotes"
   else
-    printf "%s %s %s %s\n" "$(consoleSuccess "Already at")" "$(consoleCode "$currentVersion")" "$(consoleSuccess "release notes")" "$(consoleValue "$releaseNotes")"
+    printf "%s %s %s %s\n" "$(decorate success "Already at")" "$(decorate code "$currentVersion")" "$(decorate success "release notes")" "$(decorate value "$releaseNotes")"
   fi
 }
 

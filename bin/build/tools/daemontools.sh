@@ -15,13 +15,13 @@ daemontoolsInstall() {
 
   packages=(daemontools svtools)
   if insideDocker; then
-    consoleWarning "daemontools-run can not be installed because Docker exits 2024-03-21" 1>&2
+    decorate warning "daemontools-run can not be installed because Docker exits 2024-03-21" 1>&2
   else
     packages+=(daemontools-run)
   fi
   __environment packageInstall "${packages[@]}" || return $?
   if insideDocker; then
-    consoleWarning "daemontools run in background - not production" 1>&2
+    decorate warning "daemontools run in background - not production" 1>&2
     __environment daemontoolsExecute || return $?
   fi
 }
@@ -136,7 +136,7 @@ _daemontoolsSuperviseWait() {
     sleep 1 || __failEnvironment "$usage" "interrupted" || return $?
     elapsed=$(($(date +%s) - start))
     if [ $elapsed -gt 5 ]; then
-      statusMessage consoleInfo "Waiting for $1/supervise ($elapsed) ..."
+      statusMessage decorate info "Waiting for $1/supervise ($elapsed) ..."
     elif [ $elapsed -gt 10 ]; then
       __failEnvironment "$usage" "supervise is not running - $target/supervise never found" || return $?
     fi
@@ -274,19 +274,19 @@ daemontoolsTerminate() {
         timeout=$(usageArgumentInteger "$usage" "seconds" "$1") || return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
   clearLine
-  statusMessage consoleWarning "Shutting down services ..."
+  statusMessage decorate warning "Shutting down services ..."
   while read -r service; do
     service="${service%/}"
     if [ "$service" = "$home" ]; then
       continue
     fi
-    statusMessage consoleWarning "Shutting down $service ..."
+    statusMessage decorate warning "Shutting down $service ..."
     __environment svc -dx "$service" || return $?
     [ ! -d "$service/log" ] || __environment svc -dx "$service/log" || return $?
   done < <(find "$home" -maxdepth 1 -type d)
@@ -294,16 +294,16 @@ daemontoolsTerminate() {
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   if [ ${#processIds[@]} -eq 0 ]; then
     clearLine
-    consoleWarning "daemontools is not running"
+    decorate warning "daemontools is not running"
   else
-    statusMessage consoleWarning "Shutting down processes ..."
+    statusMessage decorate warning "Shutting down processes ..."
     printf "\n%s\n\n" "$(_list "processIds" "${processIds[@]}")"
     __environment processWait --verbose --signals TERM,QUIT,KILL --timeout "$timeout" "${processIds[@]}" || return $?
     remaining="$(daemontoolsProcessIds)"
     if [ -n "$remaining" ]; then
       _environment "daemontools processes still exist: $remaining" || return $?
     fi
-    consoleSuccess "Terminated daemontools"
+    decorate success "Terminated daemontools"
   fi
 }
 _daemontoolsTerminate() {
@@ -323,14 +323,14 @@ daemontoolsRestart() {
   export DAEMONTOOLS_HOME
 
   __failEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-  statusMessage consoleInfo "Restarting daemontools ..."
+  statusMessage decorate info "Restarting daemontools ..."
   killLoop=0
   maxLoops=4
   foundOne=true
   while $foundOne; do
     foundOne=false
     while read -r pid name; do
-      statusMessage consoleInfo "$(printf "Killing %s %s " "$name" "$(consoleValue "($pid)")")"
+      statusMessage decorate info "$(printf "Killing %s %s " "$name" "$(decorate value "($pid)")")"
       kill -9 "$pid" || printf "kill %s FAILED (?: %d) " "$name" $?
       foundOne=true
     done < <(pgrep svscan -l)
@@ -495,7 +495,7 @@ daemontoolsManager() {
     done
     # Does this work?
     if ! sleep "$intervalSeconds"; then
-      printf "%s%s%s\n" "$(clearLine)" "$(consoleReset)" "$(consoleWarning "Interrupt")"
+      printf "%s%s%s\n" "$(clearLine)" "$(consoleReset)" "$(decorate warning "Interrupt")"
       break
     fi
     if [ "$chirpSeconds" -gt 0 ]; then

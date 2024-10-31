@@ -158,7 +158,6 @@ __consoleEscape1() {
   fi
 }
 
-
 #
 # Summary: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
@@ -216,48 +215,37 @@ colorComboTest() {
 #
 colorTest() {
   local i colors=(
-    consoleRed consoleBoldRed
-    consoleGreen consoleBoldGreen
-    consoleBlue consoleBoldBlue
-    consoleCyan consoleBoldCyan
-    consoleOrange consoleBoldOrange
-    consoleMagenta consoleBoldMagenta
-    consoleBlack consoleBoldBlack
-    consoleWhite consoleBoldWhite
-    consoleUnderline
-    consoleBold
-    consoleCode
-    consoleSuccess
-    consoleError
-    consoleLabel
-    consoleValue
-    consoleWarning
-    consoleDecoration
-    consoleSubtle
+    red bold-red
+    green bold-green
+    blue bold-blue
+    cyan bold-cyan
+    orange bold-orange
+    magenta bold-magenta
+    black bold-black
+    black-contrast bold-black-contrast
+    white bold-white
+    underline
+    bold
+    code
+    success
+    error
+    label
+    value
+    warning
+    decoration
+    subtle
   )
   for i in "${colors[@]}"; do
     consoleReset
-    $i "$i: The quick brown fox jumped over the lazy dog."
+    decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
   done
 }
 
 # Summary: Output colors
-# Outputs sample sentences for the `consoleAction` commands to see what they look like.
+# Outputs sample sentences for the `action` commands to see what they look like.
 #
 semanticColorTest() {
-  local i colors extra
-
-  colors=(
-    consoleInfo
-    consoleSuccess
-    consoleWarning
-    consoleError
-    consoleCode
-    consoleLabel
-    consoleValue
-    consoleDecoration
-    consoleSubtle
-  )
+  local extra
 
   if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
     return 1
@@ -265,190 +253,32 @@ semanticColorTest() {
   extra=
   if [ -z "$BUILD_COLORS_MODE" ]; then
     BUILD_COLORS_MODE=$(consoleConfigureColorMode)
-    extra="$(consoleMagenta Computed)"
+    extra="$(magenta Computed)"
   fi
   if [ -z "$BUILD_COLORS_MODE" ]; then
-    consoleError "BUILD_COLORS_MODE not set"
+    decorate error "BUILD_COLORS_MODE not set"
   else
     printf "%s%s\n" "$(consoleNameValue 25 "BUILD_COLORS_MODE:" "$BUILD_COLORS_MODE")" "$extra"
   fi
+  local i colors=(
+    info
+    success
+    warning
+    error
+    code
+    label
+    value
+    decoration
+    subtle
+  )
   for i in "${colors[@]}"; do
     consoleReset
-    $i "$i: The quick brown fox jumped over the lazy dog."
+    decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
   done
 }
 
-#
-# Color-based
-#
-# shellcheck disable=SC2120
-consoleRed() {
-  _consoleRed '' "$@"
-}
-
-_consoleRed() {
-  local label="$1"
-  shift
-  __consoleOutput "$label" '\033[31m' '\033[0m' "$@"
-}
-consoleBoldRed() {
-  __consoleEscape '\033[31;1m' '\033[0m' "$@"
-}
-
-consoleGreen() {
-  _consoleGreen "" "$@"
-}
-_consoleGreen() {
-  local label="$1"
-  shift
-  __consoleOutput "$label" '\033[92m' '\033[0m' "$@"
-}
-consoleBoldGreen() {
-  __consoleOutput "" '\033[1;92m' '\033[0m' "$@"
-}
-
-# shellcheck disable=SC2120
-consoleCyan() {
-  _consoleCyan "" "$@"
-}
-_consoleCyan() {
-  local label="$1"
-  shift
-  __consoleOutput "$label" '\033[36m' '\033[0m' "$@"
-}
-consoleBoldCyan() {
-  __consoleOutput "" '\033[36;1m' '\033[0m' "$@"
-}
 consoleBlackBackground() {
   __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
-}
-consoleYellow() {
-  __consoleEscape '\033[48;5;16;38;5;11m' '\033[0m' "$@"
-}
-
-# shellcheck disable=SC2120
-consoleMagenta() {
-  __consoleEscape '\033[35m' '\033[0m' "$@"
-}
-consoleBlack() {
-  __consoleEscape '\033[109;7m' '\033[0m' "$@"
-}
-consoleBoldBlack() {
-  __consoleEscape '\033[109;7;1m' '\033[0m' "$@"
-}
-consoleBoldWhite() {
-  __consoleEscape '\033[48;5;0;37;1m' '\033[0m' "$@"
-}
-consoleWhite() {
-  __consoleEscape '\033[48;5;0;37m' '\033[0m' "$@"
-}
-consoleBoldMagenta() {
-  __consoleEscape '\033[1m\033[35m' '\033[0m' "$@"
-}
-
-#
-# Styles
-#
-consoleUnderline() {
-  __consoleEscape '\033[4m' '\033[24m' "$@"
-}
-consoleBold() {
-  __consoleEscape '\033[1m' '\033[0m' "$@"
-}
-consoleNoBold() {
-  echo -en '\033[21m'
-}
-consoleNoUnderline() {
-  echo -en '\033[24m'
-}
-
-#
-# Semantics-based
-#
-# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
-#
-__consoleOutputMode() {
-  local label="$1" start
-  export BUILD_COLORS_MODE
-
-  shift || :
-  if [ "${BUILD_COLORS_MODE-}" = "dark" ]; then
-    shift || :
-    __consoleOutput "$label" "$@"
-  else
-    start="$1"
-    shift || :
-    shift || :
-    __consoleOutput "$label" "$start" "$@"
-  fi
-}
-
-#
-# info
-#
-# shellcheck disable=SC2120
-consoleInfo() {
-  _consoleInfo "Info" "$@"
-}
-_consoleInfo() {
-  local label="$1"
-  shift || :
-  __consoleOutputMode "$label" '\033[38;5;20m' '\033[1;33m' '\033[0m' "$@"
-}
-
-#
-# warning things are not normal
-#
-# shellcheck disable=SC2120
-consoleWarning() {
-  __consoleOutput "Warning" '\033[1;93;41m' '\033[0m' "$@"
-}
-
-#
-# things went well
-#
-# shellcheck disable=SC2120
-# @see decoration
-consoleSuccess() {
-  __consoleOutputMode "SUCCESS" '\033[42;30m' '\033[0;32m' '\033[0m' "$@"
-}
-
-#
-# decorations to output (like bars and lines)
-#
-# shellcheck disable=SC2120
-# @see decoration
-consoleDecoration() {
-  __consoleOutputMode '' '\033[45;97m' '\033[45;30m' '\033[0m' "$@"
-}
-
-#
-# Keep things subtle
-#
-# @see decoration
-consoleSubtle() {
-  __consoleOutputMode '' '\033[1;38;5;252m' '\033[1;38;5;240m' '\033[0m' "$@"
-}
-
-#
-# things went poorly
-#
-
-#
-# Name/Value pairs
-#
-# @see decoration
-# shellcheck disable=SC2120
-consoleLabel() {
-  __consoleOutputMode '' '\033[34;103m' '\033[1;96m' '\033[0m' "$@"
-}
-
-#
-# @see decoration
-#
-# shellcheck disable=SC2120
-consoleValue() {
-  __consoleOutputMode '' '\033[1;40;97m' '\033[1;97m' '\033[0m' "$@"
 }
 
 #
@@ -465,7 +295,7 @@ consoleValue() {
 # shellcheck disable=SC2120
 consoleNameValue() {
   local characterWidth=$1 name=$2
-  shift 2 && printf "%s %s\n" "$(consoleLabel "$(alignLeft "$characterWidth" "$name")")" "$(consoleValue "$@")"
+  shift 2 && printf "%s %s\n" "$(decorate label "$(alignLeft "$characterWidth" "$name")")" "$(decorate value "$@")"
 }
 
 #
@@ -474,16 +304,16 @@ consoleNameValue() {
 # Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
 #
 # Summary: Clear a line in the console
-# Usage: clearLine
+# Usage: clearLine textToOutput
 # Environment: Intended to be run on an interactive console. Should support `tput cols`.
 # Example:     statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
 # Example:     clearLine
 #
 clearLine() {
   if hasConsoleAnimation; then
-    printf "\r%s\r" "$(repeat "$(consoleColumns)" " ")"
+    printf "\r%s\r%s" "$(repeat "$(consoleColumns)" " ")" "$*"
   else
-    printf "\n"
+    printf "%s\n" "$*"
   fi
 }
 
@@ -509,11 +339,7 @@ _clearLine() {
 # Example:     clearLine
 #
 statusMessage() {
-  if hasConsoleAnimation; then
-    printf "%s%s" "$(clearLine)" "$("$@")"
-  else
-    printf "%s\n" "$("$@")"
-  fi
+  clearLine "$("$@")"
 }
 
 #
@@ -559,7 +385,33 @@ consoleRows() {
 #
 simpleMarkdownToConsole() {
   # shellcheck disable=SC2119
-  _toggleCharacterToColor '`' "$(consoleCode)" | _toggleCharacterToColor '**' "$(consoleRed)" | _toggleCharacterToColor '*' "$(consoleCyan)"
+  _toggleCharacterToColor '`' "$(decorate code)" | _toggleCharacterToColor '**' "$(decorate red)" | _toggleCharacterToColor '*' "$(decorate cyan)"
+}
+
+# Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11
+# Return an integer between 0 and 100
+# Colors are between 0 and 255
+# Usage: {fn}
+# shellcheck disable=SC2120
+colorBrightness() {
+  local usage="_${FUNCNAME[0]}"
+  local r g b
+
+  if [ $# -eq 0 ]; then
+    # 0.299 R + 0.587 G + 0.114 B
+    read -r r g b || :
+  elif [ $# -eq 3 ]; then
+    r=$1 g=$2 b=$3
+  else
+    __failArgument "$usage" "Requires 3 arguments" || return $?
+  fi
+  __usageArgument "$usage" isUnsignedInteger "$r" || return $?
+  __usageArgument "$usage" isUnsignedInteger "$g" || return $?
+  __usageArgument "$usage" isUnsignedInteger "$b" || return $?
+  printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+}
+_colorBrightness() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -614,4 +466,127 @@ _toggleCharacterToColor() {
       return 0
     fi
   done
+}
+
+#
+# Deprecated use `decorate` now
+#
+consoleCode() {
+  decorate code "$@"
+}
+
+consoleError() {
+  decorate error "$@"
+}
+
+consoleOrange() {
+  decorate orange "$@"
+}
+
+consoleBoldOrange() {
+  decorate bold-orange "$@"
+}
+
+consoleBlue() {
+  decorate blue "$@"
+}
+
+consoleBoldBlue() {
+  decorate bold-blue "$@"
+}
+
+consoleRed() {
+  decorate red "$@"
+}
+
+consoleBoldRed() {
+  decorate bold-red "$@"
+}
+
+consoleGreen() {
+  decorate green "$@"
+}
+
+consoleBoldGreen() {
+  decorate bold-green "$@"
+}
+
+consoleCyan() {
+  decorate cyan "$@"
+}
+
+consoleBoldCyan() {
+  decorate bold-cyan "$@"
+}
+
+consoleYellow() {
+  decorate yellow "$@"
+}
+
+consoleMagenta() {
+  decorate magenta "$@"
+}
+
+consoleBlack() {
+  decorate black "$@"
+}
+
+consoleBoldBlack() {
+  decorate bold-black "$@"
+}
+
+consoleBoldWhite() {
+  decorate bold-white "$@"
+}
+
+consoleWhite() {
+  decorate white "$@"
+}
+
+consoleBoldMagenta() {
+  decorate bold-magenta "$@"
+}
+
+consoleUnderline() {
+  decorate underline "$@"
+}
+
+consoleBold() {
+  decorate bold "$@"
+}
+
+consoleNoBold() {
+  decorate no-bold "$@"
+}
+
+consoleNoUnderline() {
+  decorate no-underline "$@"
+}
+
+consoleInfo() {
+  decorate info "$@"
+}
+
+consoleWarning() {
+  decorate warning "$@"
+}
+
+consoleSuccess() {
+  decorate success "$@"
+}
+
+consoleDecoration() {
+  decorate decoration "$@"
+}
+
+consoleSubtle() {
+  decorate subtle "$@"
+}
+
+consoleLabel() {
+  decorate label "$@"
+}
+
+consoleValue() {
+  decorate value "$@"
 }

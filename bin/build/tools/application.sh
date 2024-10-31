@@ -20,9 +20,9 @@ __applicationHomeGo() {
 
   home=$(trimSpace "$(head -n 1 "$(__applicationHomeFile)")") || return $?
   if [ -z "$home" ]; then
-    __failEnvironment "$usage" "No code home set, try $(consoleCode "applicationHome")" || return $?
+    __failEnvironment "$usage" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi
-  [ -d "$home" ] || __failEnvironment "$usage" "Application home directory deleted $(consoleCode "$home")" || return $?
+  [ -d "$home" ] || __failEnvironment "$usage" "Application home directory deleted $(decorate code "$home")" || return $?
   __usageEnvironment "$usage" cd "$home" || return $?
   label="Working in"
   if [ $# -gt 0 ]; then
@@ -30,7 +30,7 @@ __applicationHomeGo() {
     [ -n "$label" ] || return 0
   fi
   userHome="${HOME%/}"
-  printf "%s %s\n" "$(consoleLabel "$label")" "$(consoleValue "${home//"$userHome"/~}")"
+  printf "%s %s\n" "$(decorate label "$label")" "$(decorate value "${home//"$userHome"/~}")"
   return 0
 }
 
@@ -61,7 +61,7 @@ applicationHome() {
         return 0
         ;;
       *)
-        [ -z "$here" ] || __failArgument "$usage" "Unknown argument (applicationHome set already to $(consoleCode "$here"))"
+        [ -z "$here" ] || __failArgument "$usage" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
         here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
         ;;
     esac

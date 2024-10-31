@@ -65,7 +65,7 @@ _integer() {
 #
 # fn: {base}
 __hookTestSetup() {
-  ! buildDebugEnabled || consoleSuccess "Test setup does nothing - please rewrite"
+  ! buildDebugEnabled || decorate success "Test setup does nothing - please rewrite"
 }
 
 __tools ../.. __hookTestSetup "$@"

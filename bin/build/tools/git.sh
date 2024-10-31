@@ -106,13 +106,13 @@ gitTagAgain() {
   local usage="_${FUNCNAME[0]}" a=("$@")
   [ $# -eq 0 ] || __failArgument "$usage" "No arguments" || return $?
   while [ $# -gt 0 ]; do
-    statusMessage consoleInfo "Deleting tag $1 ..."
+    statusMessage decorate info "Deleting tag $1 ..."
     __usageArgument "$usage" gitTagDelete "$1" || return $?
-    statusMessage consoleInfo "Tagging again $1 ..."
+    statusMessage decorate info "Tagging again $1 ..."
     __usageArgument "$usage" git tag "$1" || return $?
     __usageArgument "$usage" git push --tags || return $?
   done
-  statusMessage consoleInfo "All tags completed" "$(consoleOrange "${a[@]}")"
+  statusMessage decorate info "All tags completed" "$(decorate orange "${a[@]}")"
   clearLine
 }
 
@@ -155,7 +155,7 @@ veeGitTag() {
   local usage="_${FUNCNAME[0]}"
   local tagName="$1"
 
-  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already v'd': $(consoleValue "$tagName")" || return $?
+  [ "$tagName" = "${tagName#v}" ] || __failArgument "$usage" "already v'd': $(decorate value "$tagName")" || return $?
   __usageEnvironment "$usage" git tag "v$tagName" "$tagName" || return $?
   __usageEnvironment "$usage" git tag -d "$tagName" || return $?
   __usageEnvironment "$usage" git push origin "v$tagName" ":$tagName" || return $?
@@ -300,7 +300,7 @@ gitTagVersion() {
     shift || __failArgument "$usage" "shift $argument" || return $?
   done
 
-  statusMessage consoleInfo "Pulling tags from origin "
+  statusMessage decorate info "Pulling tags from origin "
   git pull --tags origin >/dev/null || __failEnvironment "$usage" "Pulling tags failed" || return $?
   reportTiming "$start" || :
 
@@ -310,21 +310,21 @@ gitTagVersion() {
   fi
 
   if git show-ref --tags "$currentVersion" --quiet; then
-    consoleError "Version $currentVersion already exists, already tagged." 1>&2
+    decorate error "Version $currentVersion already exists, already tagged." 1>&2
     return 16
   fi
   if [ "$previousVersion" = "$currentVersion" ]; then
-    consoleError "Version $currentVersion up to date, nothing to do." 1>&2
+    decorate error "Version $currentVersion up to date, nothing to do." 1>&2
     return 17
   fi
   printf "%s %s\n%s %s\n" \
-    "$(consoleLabel "Previous version is: ")" "$(consoleValue "$previousVersion")" \
-    "$(consoleLabel " Release version is: ")" "$(consoleValue "$currentVersion")"
+    "$(decorate label "Previous version is: ")" "$(decorate value "$previousVersion")" \
+    "$(decorate label " Release version is: ")" "$(decorate value "$currentVersion")"
 
   releaseNotes="$(releaseNotes "$currentVersion")" || __failEnvironment "$usage" "releaseNotes $currentVersion failed" || return $?
 
   if [ ! -f "$releaseNotes" ]; then
-    consoleError "Version $currentVersion no release notes \"$releaseNotes\" found, stopping." 1>&2
+    decorate error "Version $currentVersion no release notes \"$releaseNotes\" found, stopping." 1>&2
     return 18
   fi
 
@@ -339,22 +339,22 @@ gitTagVersion() {
     fi
     index=$((index + 1))
     if [ $index -gt "$maximumTagsPerVersion" ]; then
-      consoleError "Tag version exceeded maximum of $maximumTagsPerVersion" 1>&2
+      decorate error "Tag version exceeded maximum of $maximumTagsPerVersion" 1>&2
       return 19
     fi
   done
 
-  consoleInfo "Tagging version $tryVersion and pushing ... " || :
+  decorate info "Tagging version $tryVersion and pushing ... " || :
   if ! git tag "$tryVersion"; then
-    consoleError "Failed to tag $tryVersion"
+    decorate error "Failed to tag $tryVersion"
     return 20
   fi
   if ! git push --tags --quiet; then
-    consoleError "git push --tags failed"
+    decorate error "git push --tags failed"
     return 21
   fi
   if ! git fetch -q; then
-    consoleError "git fetch failed"
+    decorate error "git fetch failed"
     return 22
   fi
 
@@ -443,15 +443,15 @@ gitCommit() {
   __usageEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then
-    statusMessage consoleInfo "Updating release notes ..."
+    statusMessage decorate info "Updating release notes ..."
     notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
     __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
   fi
   if $appendLast || [ -z "$comment" ]; then
-    statusMessage consoleInfo "Using last commit message ($appendLast, \"$comment\") ..."
+    statusMessage decorate info "Using last commit message ($appendLast, \"$comment\") ..."
     __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
   else
-    statusMessage consoleInfo "Using commit comment \"$comment\" ..."
+    statusMessage decorate info "Using commit comment \"$comment\" ..."
     __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
   fi
   __usageEnvironment "$usage" cd "$start" || return $?
@@ -465,16 +465,16 @@ __gitCommitReleaseNotesUpdate() {
   displayNotes="${notes#"$home"/}"
   pattern="$(quoteGrepPattern "$comment")"
   __usageEnvironment "$usage" clearLine || return $?
-  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(consoleLabel "Release notes") $(consoleValue "$displayNotes") $(consoleDecoration)")" "$(consoleReset)" || return $?
+  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate value "$displayNotes") $(decorate decoration)")" "$(consoleReset)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(consoleInfo "Adding comment")" "$(consoleCode "$displayNotes")" "$(boxedHeading "$comment")" || return $?
+    __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(decorate info "Adding comment")" "$(decorate code "$displayNotes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
-    __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
+    __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(consoleReset)" || return $?
   else
     __usageEnvironment "$usage" clearLine || return $?
-    __usageEnvironment "$usage" printf -- "%s %s:\n" "$(consoleInfo "Comment already added to")" "$(consoleCode "$notes")" || return $?
-    __usageEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(consoleCode)" "$(consoleReset)" || return $?
+    __usageEnvironment "$usage" printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
+    __usageEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(consoleReset)" || return $?
   fi
 }
 _gitCommit() {
@@ -511,32 +511,32 @@ gitMainly() {
         verboseFlag=true
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
   errorLog=$(mktemp)
   branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
     main | staging)
-      __failEnvironment "$usage" "Already in branch $(consoleCode "$branch")" || return $?
+      __failEnvironment "$usage" "Already in branch $(decorate code "$branch")" || return $?
       ;;
     HEAD)
-      __failEnvironment "$usage" "Ignore branches named $(consoleCode "$branch")" || return $?
+      __failEnvironment "$usage" "Ignore branches named $(decorate code "$branch")" || return $?
       ;;
     *)
       returnCode=0
       for updateOther in staging main; do
-        ! $verboseFlag || consoleInfo git checkout "$updateOther"
+        ! $verboseFlag || decorate info git checkout "$updateOther"
         if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
-          printf "%s %s\n" "$(consoleError "Unable to checkout branch")" "$(consoleCode "$updateOther")" 1>&2
+          printf "%s %s\n" "$(decorate error "Unable to checkout branch")" "$(decorate code "$updateOther")" 1>&2
           returnCode=1
           __environment git status -s || :
           break
         else
-          ! $verboseFlag || consoleInfo git pull "# ($updateOther)"
+          ! $verboseFlag || decorate info git pull "# ($updateOther)"
           if ! __environment git pull >"$errorLog" 2>&1; then
             returnCode=1
             break
@@ -547,18 +547,18 @@ gitMainly() {
         __environment git checkout -f "$branch" || :
         return "$returnCode"
       fi
-      ! $verboseFlag || consoleInfo git checkout "$branch"
+      ! $verboseFlag || decorate info git checkout "$branch"
       if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
-        printf "%s %s\n" "$(consoleError "Unable to switch BACK to branch")" "$(consoleCode "$updateOther")" 1>&2
+        printf "%s %s\n" "$(decorate error "Unable to switch BACK to branch")" "$(decorate code "$updateOther")" 1>&2
         rm -rf "$errorLog"
         return 1
       fi
-      ! $verboseFlag || consoleInfo git merge -m
+      ! $verboseFlag || decorate info git merge -m
       __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
       if grep -q 'Already' "$errorLog"; then
-        printf "%s %s\n" "$(consoleInfo "Already up to date")" "$(consoleCode "$branch")"
+        printf "%s %s\n" "$(decorate info "Already up to date")" "$(decorate code "$branch")"
       else
-        printf "%s %s\n" "$(consoleInfo "Merged staging and main into branch")" "$(consoleCode "$branch")"
+        printf "%s %s\n" "$(decorate info "Merged staging and main into branch")" "$(decorate code "$branch")"
       fi
       rm -rf "$errorLog"
       ;;
@@ -666,7 +666,7 @@ gitInstallHooks() {
       *)
         if inArray "$argument" "${types[@]}"; then
           __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
-          ! $verbose || consoleSuccess "Installed $(consoleValue "$hook")" || :
+          ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
           didOne=true
         else
           __failArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
@@ -679,7 +679,7 @@ gitInstallHooks() {
     for hook in pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit; do
       if hasHook --application "$home" "git-$hook"; then
         __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
-        ! $verbose || consoleSuccess "Installed $(consoleValue "$hook")" || :
+        ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
       fi
     done
   fi
@@ -748,7 +748,7 @@ gitInstallHook() {
           else
             ! $verbose || consoleNameValue 5 "Installing" "${relFromTo[1]}" || :
           fi
-          printf "%s %s -> %s\n" "$(consoleSuccess "git hook:")" "$(consoleWarning "${relFromTo[0]}")" "$(consoleCode "${relFromTo[1]}")" || :
+          printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
           __usageEnvironment "$usage" cp -f "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
           return 3
@@ -794,16 +794,16 @@ gitPreCommitHeader() {
   directory=$(__gitPreCommitCache true) || return $?
 
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
-  printf "%s%s: %s\n" "$(clearLine)" "$(consoleSuccess "$(alignRight "$width" "all")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+  printf "%s%s: %s\n" "$(clearLine)" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
-    color=consoleWarning
+    color=decorate warning
     if [ -f "$directory/$1" ]; then
       total=$(($(wc -l <"$directory/$1") + 0))
-      color=consoleSuccess
+      color=decorate success
     fi
     # shellcheck disable=SC2015
-    printf "%s: %s\n" "$("$color" "$(alignRight "$width" "$1")")" "$(consoleInfo "$total $(plural "$total" file files) changed")"
+    printf "%s: %s\n" "$("$color" "$(alignRight "$width" "$1")")" "$(decorate info "$total $(plural "$total" file files) changed")"
     shift
   done
 }
@@ -935,16 +935,16 @@ gitBranchify() {
     currentBranch=$(__usageEnvironment "$usage" gitCurrentBranch) || return $?
     if [ "$currentBranch" != "$branchName" ]; then
       if ! muzzle git checkout "$branchName" 2>&1; then
-        __failEnvironment "$usage" "Local changes in $(consoleValue "$currentBranch") prevent switching to $(consoleCode "$branchName") due to local changes" || return $?
+        __failEnvironment "$usage" "Local changes in $(decorate value "$currentBranch") prevent switching to $(decorate code "$branchName") due to local changes" || return $?
       fi
-      consoleSuccess "Switched to $(consoleCode "$branchName")"
+      decorate success "Switched to $(decorate code "$branchName")"
     else
-      consoleSuccess "Branch is $(consoleCode "$branchName")"
+      decorate success "Branch is $(decorate code "$branchName")"
     fi
   else
     __usageEnvironment "$usage" git checkout -b "$branchName" || return $?
     __usageEnvironment "$usage" git push -u "$GIT_REMOTE" "$branchName" || return $?
-    printf "%s %s %s%s%s\n" "$(consoleSuccess "Branch is")" "$(consoleCode "$branchName")" "$(consoleInfo "(pushed to ")" "$(consoleValue "$GIT_REMOTE")" "$(consoleInfo ")")"
+    printf "%s %s %s%s%s\n" "$(decorate success "Branch is")" "$(decorate code "$branchName")" "$(decorate info "(pushed to ")" "$(decorate value "$GIT_REMOTE")" "$(decorate info ")")"
   fi
 
 }

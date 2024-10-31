@@ -67,7 +67,7 @@ _integer() {
 # should do whatever is required to ensure that.
 #
 __hookDeployCleanup() {
-  ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  ! buildDebugEnabled || decorate success "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
   : "$@"
 }
 

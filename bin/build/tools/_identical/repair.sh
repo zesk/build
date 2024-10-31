@@ -21,7 +21,7 @@ identicalRepair() {
   local fileMap
 
   # shellcheck disable=SC2059
-  arguments="$(printf "\"$(consoleCode %s)\" " "$@")"
+  arguments="$(printf "\"$(decorate code %s)\" " "$@")"
   source=
   destination=
   token=
@@ -59,11 +59,11 @@ identicalRepair() {
         elif [ -z "$destination" ]; then
           destination=$(usageArgumentFile "$usage" "destination" "$argument") || return $?
         else
-          __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+          __failArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
   [ -n "$prefix" ] || __failArgument "$usage" "missing --prefix" || return $?
@@ -72,8 +72,8 @@ identicalRepair() {
   [ -n "$destination" ] || __failArgument "$usage" "missing destination" || return $?
 
   grepPattern="$(quoteGrepPattern "$prefix $token")"
-  identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || __failArgument "$usage" "\"$prefix $token\" not found in source $(consoleCode "$source")" || return $?
-  [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || __failArgument "$usage" "\"$prefix $token\" not found in destination $(consoleCode "$destination")" || return $?
+  identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || __failArgument "$usage" "\"$prefix $token\" not found in source $(decorate code "$source")" || return $?
+  [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || __failArgument "$usage" "\"$prefix $token\" not found in destination $(decorate code "$destination")" || return $?
   # totalLines is *source* lines
   totalLines="$(($(wc -l <"$source") + 0))"
   parsed=$(__identicalLineParse "$source" "$prefix" "$identicalLine") || __failArgument "$usage" "$source" return $?
@@ -81,7 +81,7 @@ identicalRepair() {
   count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
 
   if ! isUnsignedInteger "$count"; then
-    __failEnvironment "$usage" "$(consoleCode "$source") not an integer: \"$(consoleValue "$identicalLine")\"" || return $?
+    __failEnvironment "$usage" "$(decorate code "$source") not an integer: \"$(decorate value "$identicalLine")\"" || return $?
   fi
   sourceText=$(__usageEnvironment "$usage" mktemp) || return $?
 
@@ -140,21 +140,21 @@ __identicalCheckRepair() {
   local prefix="$1" token="$2" fileA="$3" fileB="$4"
   local checkPath
 
-  statusMessage consoleInfo "realPath $fileA"
+  statusMessage decorate info "realPath $fileA"
   fileA=$(realPath "$fileA") || _argument "realPath fileA $fileA" || return $?
-  statusMessage consoleInfo "realPath $fileB"
+  statusMessage decorate info "realPath $fileB"
   fileB=$(realPath "$fileB") || _argument "realPath fileB $fileB" || return $?
-  statusMessage consoleInfo "Shifting ..."
+  statusMessage decorate info "Shifting ..."
   shift && shift && shift && shift
   while [ $# -gt 0 ]; do
     checkPath="$1"
-    statusMessage consoleInfo "Checking path $checkPath ..."
+    statusMessage decorate info "Checking path $checkPath ..."
     if [ "${fileA#"$checkPath"}" != "$fileA" ]; then
-      statusMessage consoleInfo Repairing "$fileB" with "$fileA"
+      statusMessage decorate info Repairing "$fileB" with "$fileA"
       identicalRepair --prefix "$prefix" --token "$token" "$fileA" "$fileB" || return $?
       return $?
     elif [ "${fileB#"$checkPath"}" != "$fileB" ]; then
-      statusMessage consoleInfo Repairing "$fileA" with "$fileB"
+      statusMessage decorate info Repairing "$fileA" with "$fileB"
       identicalRepair --prefix "$prefix" --token "$token" "$fileB" "$fileA" || return $?
       return $?
     fi

@@ -67,9 +67,9 @@ documentationIndex_SeeLinker() {
   linkPatternFile="$seeVariablesFile.linkPatterns"
   variablesSedFile="$seeVariablesFile.variablesSedFile"
   if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 pcregrep -l "$seePattern" | while read -r matchingFile; do
-    statusMessage consoleSuccess "$matchingFile Found"
+    statusMessage decorate success "$matchingFile Found"
     pcre2grep -o1 "$seePattern" "$matchingFile" | while read -r matchingToken; do
-      statusMessage consoleSuccess "$matchingFile: $(consoleCyan "$matchingToken") Found"
+      statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
       cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
@@ -103,7 +103,7 @@ documentationIndex_SeeLinker() {
       fi
     done
     if ! (
-      statusMessage consoleInfo "Linking $matchingFile ..."
+      statusMessage decorate info "Linking $matchingFile ..."
       set -a
       # shellcheck source=/dev/null
       if ! source "$seeVariablesFile" ||
@@ -118,7 +118,7 @@ documentationIndex_SeeLinker() {
     fi
   done; then
     clearLine
-    consoleWarning "No matching see directives found" || :
+    decorate warning "No matching see directives found" || :
   fi
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
   reportTiming "$start" "$(clearLine)See completed in" || :

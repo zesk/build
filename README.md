@@ -77,7 +77,7 @@ A single binary can be used to load and run commands:
 As a shortcut to running functions:
 
     #!/usr/bin/env bash
-    "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh" consoleOrange "The code is working."
+    "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh" decorate orange "The code is working."
 
 To load all functions:
 
@@ -85,7 +85,7 @@ To load all functions:
     # shellcheck source=/dev/null
     source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh" 
 
-    consoleOrange "The code is working."
+    decorate orange "The code is working."
     bigText "Hooray."
 
 For more complex (and more robust error handling) see `__install` and `__tools` identical code in `bin/build/identical`.

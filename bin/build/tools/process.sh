@@ -124,11 +124,11 @@ processWait() {
         unset 'sendSignals[0]'
         sendSignals=("${sendSignals[@]}")
         # Reset aliveIds, load them from _processSignal
-        ! $verboseFlag || statusMessage consoleInfo "Sending $(consoleLabel "$signal") to $(IFS=, consoleCode "${processIds[*]}")"
+        ! $verboseFlag || statusMessage decorate info "Sending $(decorate label "$signal") to $(IFS=, decorate code "${processIds[*]}")"
         __environment _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
         aliveIds=()
         while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
-        ! $verboseFlag && IFS=, statusMessage consoleInfo "Processes: ${processIds[*]} -> Alive: $(IFS=, consoleCode "${aliveIds[*]-none}")"
+        ! $verboseFlag && IFS=, statusMessage decorate info "Processes: ${processIds[*]} -> Alive: $(IFS=, decorate code "${aliveIds[*]-none}")"
       fi
       lastSignal=$now
       sinceLastSignal=0
@@ -137,7 +137,7 @@ processWait() {
       __failEnvironment "$usage" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
     fi
     if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
-      statusMessage consoleInfo "$this ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
+      statusMessage decorate info "$this ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
     fi
     sleep 1 || __failEnvironment "$usage" "sleep interrupted" || return $?
   done
@@ -192,7 +192,7 @@ processVirtualMemoryAllocation() {
     pid="$1"
     __usageArgument "$usage" isInteger "$pid" || return $?
     value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
-    isInteger "$value" || __failEnvironment "$usage" "ps returned non-integer: \"$(consoleCode "$value")\"" || return $?
+    isInteger "$value" || __failEnvironment "$usage" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
     printf %d $((value * 1))
     shift || __failArgument "$usage" "shift" || return $?
   done

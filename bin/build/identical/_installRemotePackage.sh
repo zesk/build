@@ -74,7 +74,7 @@ _installRemotePackage() {
         ;;
       --replace)
         newName="${BASH_SOURCE[0]%.*}"
-        consoleBoldBlue "Replacing $(consoleOrange "${BASH_SOURCE[0]}") -> $(consoleBoldOrange "$newName")"
+        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate boldOrange "$newName")"
         __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
@@ -87,7 +87,7 @@ _installRemotePackage() {
         shift
         [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$argumentIndex" || return $?
         localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
-        [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(consoleCode "$localPath")\") must be path to bin/build containing tools.sh" || return $?
+        [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
       --user)
         shift
@@ -142,14 +142,14 @@ _installRemotePackage() {
   installFlag=false
   if [ ! -d "$installPath" ]; then
     if $forceFlag; then
-      printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBlue "directory does not exist")"
+      printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "directory does not exist")"
     fi
     installFlag=true
   elif $forceFlag; then
-    printf "%s (%s)\n" "$(consoleOrange "Forcing installation")" "$(consoleBoldBlue "directory exists")"
+    printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "directory exists")"
     installFlag=true
   fi
-  binName=" ($(consoleBoldBlue "$(basename "$myBinary")"))"
+  binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
   if $installFlag; then
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
@@ -183,13 +183,13 @@ _installRemotePackage() {
 __installRemotePackage() {
   local exitCode="$1"
   shift || :
-  printf "%s: %s -> %s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleError "$*")" "$(consoleOrange "$exitCode")" 1>&2
+  printf "%s: %s -> %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate error "$*")" "$(decorate orange "$exitCode")" 1>&2
   return "$exitCode"
 }
 
 # Debug is enabled, show why
 __installRemotePackageDebug() {
-  consoleOrange "${1-} enabled" && set -x
+  decorate orange "${1-} enabled" && set -x
 }
 
 # Install the package directory
@@ -243,11 +243,11 @@ __installRemotePackageGitCheck() {
   pattern="/${pattern#/}/"
   local ignoreFile="$1/.gitignore"
   if [ -f "$ignoreFile" ] && ! grep -q -e "^$pattern" "$ignoreFile"; then
-    printf "%s %s %s %s:\n\n    %s\n" "$(consoleCode "$ignoreFile")" \
+    printf "%s %s %s %s:\n\n    %s\n" "$(decorate code "$ignoreFile")" \
       "does not ignore" \
-      "$(consoleCode "$pattern")" \
-      "$(consoleError "recommend adding it")" \
-      "$(consoleCode "echo $pattern/ >> $ignoreFile")"
+      "$(decorate code "$pattern")" \
+      "$(decorate error "recommend adding it")" \
+      "$(decorate code "echo $pattern/ >> $ignoreFile")"
   fi
 }
 

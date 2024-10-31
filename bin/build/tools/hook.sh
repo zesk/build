@@ -38,17 +38,17 @@ _runHookWrapper() {
         if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
           if $requireHook; then
             # runHook
-            __failArgument "$usageFunction" "Hook not found $(consoleCode "$binary")" || return $?
+            __failArgument "$usageFunction" "Hook not found $(decorate code "$binary")" || return $?
           else
             if buildDebugEnabled; then
-              printf "%s %s %s %s\n" "$(consoleWarning "No hook")" "$(consoleCode "$binary")" "$(consoleWarning "in this project:")" "$(consoleCode "$applicationHome")"
+              printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
             fi
             # runOptionalHook
             return 0
           fi
         fi
         if buildDebugEnabled; then
-          consoleSuccess "Running hook $binary $*"
+          decorate success "Running hook $binary $*"
         fi
         "$hook" "$@"
         return $?

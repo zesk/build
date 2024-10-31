@@ -41,10 +41,10 @@ consoleGetColor() {
         xtermCode="10"
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
   colors=()
   if ! sttyOld=$(stty -g 2>/dev/null); then
@@ -86,35 +86,11 @@ _consoleGetColor() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11
-# Return an integer between 0 and 100
-# Colors are between 0 and 255
-# Usage: {fn}
-# shellcheck disable=SC2120
-colorBrightness() {
-  local usage="_${FUNCNAME[0]}"
-  local r g b
-
-  if [ $# -eq 0 ]; then
-    # 0.299 R + 0.587 G + 0.114 B
-    read -r r g b || :
-  elif [ $# -eq 3 ]; then
-    r=$1 g=$2 b=$3
-  else
-    __failArgument "$usage" "Requires 3 arguments" || return $?
-  fi
-  __usageArgument "$usage" isUnsignedInteger "$r" "$g" "$b" || return $?
-  printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
-}
-_colorBrightness() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 #
 # Usage: {fn} [ --background | --foreground ]
 #
 consoleBrightness() {
-  colorBrightness 2>/dev/null < <(consoleGetColor "$@")
+  colorBrightness < <(consoleGetColor "$@")
 }
 
 #
@@ -156,4 +132,29 @@ consoleDefaultTitle() {
 _consoleDefaultTitle() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Output a hyperlink to the console
+# OSC 8 standard for terminals
+# No way to test ability, I think. Maybe `tput`.
+# Usage: {fn} link [ text ]
+consoleLink() {
+  local link="$1" text="${2-$1}" OSC="\e]" ST="\e\\"
+  local OSC8="${OSC}8;;"
+  printf -- "${OSC8}%s${ST}%s${OSC8}${ST}" "$link" "$text"
+}
+
+# Output a local file link to the console
+# Usage: file [ text ]
+consoleFileLink() {
+  export HOSTNAME
+  if [ -z "${HOSTNAME-}" ]; then
+    printf "%s\n" "$1"
+  else
+    local path="$1"
+    if [ "${path:0:1}" != "/" ]; then
+      path="$(pwd)/$(simplifyPath "$path")"
+    fi
+    consoleHyperlink "file://$HOSTNAME$path" "${2-$1}"
+  fi
 }

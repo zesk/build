@@ -61,7 +61,7 @@ _integer() {
 # Optional hook run during `github-release.sh` after release is completed. Do any post-release work here.
 #
 __hookGithubReleaseAfter() {
-  ! buildDebugEnabled || consoleSuccess "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
+  ! buildDebugEnabled || decorate success "$(basename "${BASH_SOURCE[0]}") is the sample script, please update for production sites."
 }
 
 __tools ../.. __hookGithubReleaseAfter "$@"

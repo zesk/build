@@ -18,7 +18,7 @@ testBasicFileStuff() {
 }
 
 _assertBetterType() {
-  assertEquals --line "$1" "$2" "$(betterType "$3")" "$2 != betterType $3 $(consoleRed "=> $(betterType "$3")")" || return $?
+  assertEquals --line "$1" "$2" "$(betterType "$3")" "$2 != betterType $3 $(decorate red "=> $(betterType "$3")")" || return $?
 }
 
 testBetterType() {

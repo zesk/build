@@ -15,7 +15,7 @@ testUrlParse() {
   u=foo://user:hard-to-type@identity:4232/dbname
 
   if ! parsed="$(urlParse "$u")"; then
-    consoleError "Failed to parse $u"
+    decorate error "Failed to parse $u"
     return 1
   fi
   echo "$parsed"
@@ -44,7 +44,7 @@ testUrlParse() {
   assertEquals "$password" hard-to-type || return $?
   assertEquals "$error" "" || return $?
   assertEquals "$scheme" "mysql" || return $?
-  consoleSuccess testUrlParse OK || return $?
+  decorate success testUrlParse OK || return $?
 
 }
 

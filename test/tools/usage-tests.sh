@@ -93,8 +93,8 @@ _testUsageArgumentHelperFail() {
 
   while [ $# -gt 0 ]; do
     printf "%s" "" >"$TEST_USAGE"
-    assertNotExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || _environment "$usageFunction $(consoleWarning "fail $1")" || return $?
-    assertEquals "yes" "$(cat "$TEST_USAGE")" || _environment "$usageFunction did not write $(consoleCode "$TEST_USAGE")" || return $?
+    assertNotExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || _environment "$usageFunction $(decorate warning "fail $1")" || return $?
+    assertEquals "yes" "$(cat "$TEST_USAGE")" || _environment "$usageFunction did not write $(decorate code "$TEST_USAGE")" || return $?
     shift || :
   done
 }
@@ -134,7 +134,7 @@ testUsageArgumentFunctions() {
 }
 
 _usageWasCalled() {
-  consoleError "_usageWasCalled ${FUNCNAME[0]} $*"
+  decorate error "_usageWasCalled ${FUNCNAME[0]} $*"
   export TEST_USAGE
   printf "%s" "yes" >"$TEST_USAGE"
   return "$1"

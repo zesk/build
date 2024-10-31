@@ -62,7 +62,7 @@ bigText() {
     *) __failEnvironment "$usage" "Unknown binary $binary" || return $? ;;
   esac
   if ! packageWhich "$binary" "$binary" >/dev/null; then
-    consoleGreen "BIG TEXT: $*"
+    decorate green "BIG TEXT: $*"
     return 0
   fi
   if [ "$1" = "--bigger" ]; then
@@ -228,9 +228,9 @@ _repeat() {
 # Argument: alternateChar - Use an alternate character or string output
 # Argument: offset - an integer offset to increase or decrease the size of the bar (default is `0`)
 # Environment: Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
-# Example:     consoleSuccess $(echoBar =-)
-# Example:     consoleSuccess $(echoBar "- Success ")
-# Example:     consoleMagenta $(echoBar +-)
+# Example:     decorate success $(echoBar =-)
+# Example:     decorate success $(echoBar "- Success ")
+# Example:     decorate magenta $(echoBar +-)
 echoBar() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
@@ -309,7 +309,7 @@ _lineFill() {
 # Exit Code: 0
 # Argument: `prefix` - Prefix each line with this text
 # Argument: `suffix` - Prefix each line with this text
-# Example:     cat "$file" | wrapLines "$(consoleCode)" "$(consoleReset)"
+# Example:     cat "$file" | wrapLines "$(decorate code)" "$(consoleReset)"
 # Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
 #
 wrapLines() {
@@ -483,11 +483,11 @@ boxedHeading() {
     textString="${textString:0:$((width - 4))}"
     spaces=""
   fi
-  consoleDecoration "$bar"
-  runCount "$nLines" consoleDecoration "$emptyBar"
-  printf "%s%s%s\n" "$(consoleDecoration "| ")" "$(consoleDecoration "$textString")" "$(consoleDecoration "$spaces |")"
-  runCount "$nLines" consoleDecoration "$emptyBar"
-  consoleDecoration "$bar"
+  decorate decoration "$bar"
+  runCount "$nLines" decorate decoration "$emptyBar"
+  printf "%s%s%s\n" "$(decorate decoration "| ")" "$(decorate decoration "$textString")" "$(decorate decoration "$spaces |")"
+  runCount "$nLines" decorate decoration "$emptyBar"
+  decorate decoration "$bar"
 }
 _boxedHeading() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

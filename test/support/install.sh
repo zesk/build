@@ -17,12 +17,12 @@ __doesScriptInstallUninstall() {
     __environment "$undoScript" || return $?
     uninstalledAlready=true
   else
-    consoleInfo "binary $binary is not installed - installing"
+    decorate info "binary $binary is not installed - installing"
   fi
   __doesScriptInstall "$binary" "$script" || return $?
   if ! $uninstalledAlready; then
     __testSection "UNINSTALL $binary (just installed)" || :
     __environment "$undoScript" || return $?
-    ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "exists after uninstalling" || return $?
+    ! whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "exists after uninstalling" || return $?
   fi
 }

@@ -36,7 +36,7 @@ Modules are any binary or executable to run each prompt, and can be added or rem
 
 #### Examples
 
-bashPrompt --colors "$(consoleBoldCyan):$(consoleBoldMagenta):$(consoleGreen):$(consoleOrange):$(consoleCode)"
+bashPrompt --colors "$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)"
 
 #### Exit codes
 

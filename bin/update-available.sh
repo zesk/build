@@ -55,7 +55,7 @@ _integer() {
 # <-- END of IDENTICAL _return
 
 __addNoteTo() {
-  statusMessage consoleInfo "Adding note to $1"
+  statusMessage decorate info "Adding note to $1"
   cp "$1" bin/build
   printf "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
   git add "bin/build/$1"
@@ -101,7 +101,7 @@ __updateAvailable() {
     managers+=(brew)
     allKnown=true
   else
-    statusMessage consoleInfo "No brew manager available ..."
+    statusMessage decorate info "No brew manager available ..."
     # TODO look at OS X inside Docker
   fi
   requireDirectory "$home/etc/packages/" || return $?
@@ -111,13 +111,13 @@ __updateAvailable() {
   allManagerLists=()
   for manager in "${managers[@]}"; do
     allManagerLists+=("$manager")
-    statusMessage consoleInfo "Generating $manager list ..."
+    statusMessage decorate info "Generating $manager list ..."
     generator="__${manager}Generator"
     isFunction "$generator" || __failEnvironment "$usage" "$generator is not a function" || return $?
     if [ -f "$manager" ] && ! $forceFlag; then
       ageInSeconds=$(__usageEnvironment "$usage" modificationSeconds "$manager") || return $?
       if [ "$ageInSeconds" -lt 3600 ]; then
-        statusMessage consoleWarning "Skipping generated $manager ($((ageInSeconds / 60)) minutes old ..."
+        statusMessage decorate warning "Skipping generated $manager ($((ageInSeconds / 60)) minutes old ..."
         continue
       fi
     fi
@@ -126,7 +126,7 @@ __updateAvailable() {
   done
   if ! $allKnown; then
     forceFlag=true
-    statusMessage consoleInfo "No access to all package managers - forcing group generation"
+    statusMessage decorate info "No access to all package managers - forcing group generation"
   fi
   IFS=$'\n' read -d '' -r -a packageLists < <(find "." -type f ! -path '*/_*') || :
 
@@ -147,10 +147,10 @@ __commonGenerator() {
 
   shift 2
   if $forceFlag || [ ! -f "$target" ] || ! isNewestFile "$target" "$@"; then
-    statusMessage consoleInfo "Generating $(basename "$target") ..."
+    statusMessage decorate info "Generating $(basename "$target") ..."
     cat "$@" | sort | uniq -c | grep -e "^[[:space:]]*$# " | awk '{ print $2 }' | tee "$target" >/dev/null
   else
-    statusMessage consoleInfo "$(basename "$target") is up to date"
+    statusMessage decorate info "$(basename "$target") is up to date"
   fi
 }
 

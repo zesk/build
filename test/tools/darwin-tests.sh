@@ -18,7 +18,7 @@ testDarwinDialog() {
   else
     (
       export OSTYPE
-      consoleInfo "${FUNCNAME[0]} skipped not on Darwin ${OSTYPE-}"
+      decorate info "${FUNCNAME[0]} skipped not on Darwin ${OSTYPE-}"
     ) || :
   fi
 }

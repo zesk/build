@@ -36,7 +36,7 @@ __packageListFunction() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       *)
         # IDENTICAL argumentUnknown 1
@@ -87,7 +87,7 @@ __packageUpFunction() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       --force)
         forceFlag=true
@@ -113,7 +113,7 @@ __packageUpFunction() {
   __usageEnvironment "$usage" requireFileDirectory "$name" || return $?
 
   if $forceFlag; then
-    statusMessage consoleInfo "Forcing $manager $verb ..."
+    statusMessage decorate info "Forcing $manager $verb ..."
   elif [ -f "$name" ]; then
     local lastModified
     lastModified="$(modificationSeconds "$name")"
@@ -192,7 +192,7 @@ packageWhich() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       -*)
         # IDENTICAL argumentUnknown 1
@@ -266,7 +266,7 @@ packageWhichUninstall() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
 
       *)
@@ -292,7 +292,7 @@ packageWhichUninstall() {
   fi
   __usageEnvironment "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
   if foundPath="$(which "$binary")" && [ -n "$foundPath" ]; then
-    __failEnvironment "$usage" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(consoleCode "$foundPath") FROM the PATH: $(consoleValue "${PATH-}")" || return $?
+    __failEnvironment "$usage" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
   fi
 }
 _packageWhichUninstall() {
@@ -339,7 +339,7 @@ packageInstall() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       --force)
         forceFlag=true
@@ -383,11 +383,11 @@ packageInstall() {
   fi
   if [ "${#actualPackages[@]}" -eq 0 ]; then
     if [ "${#packages[@]}" -gt 0 ]; then
-      consoleSuccess "Already installed: ${packages[*]}"
+      decorate success "Already installed: ${packages[*]}"
     fi
     return 0
   fi
-  statusMessage consoleInfo "Installing ${packages[*]+"${packages[*]}"} ... "
+  statusMessage decorate info "Installing ${packages[*]+"${packages[*]}"} ... "
   installFunction="__${manager}Install"
   isFunction "$installFunction" || __failEnvironment "$usage" "$installFunction is not defined" || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" "$installFunction" "${actualPackages[@]}" || return $?
@@ -425,7 +425,7 @@ packageUninstall() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(consoleCode "$manager")" || return $?
+        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       *)
         packages+=("$argument")
@@ -445,13 +445,13 @@ packageUninstall() {
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager")
   for package in "${packages[@]}"; do
     if inArray "$package" "${standardPackages[@]}"; then
-      __failEnvironment "$usage" "Unable to remove standard package $(consoleCode "$package")" || return $?
+      __failEnvironment "$usage" "Unable to remove standard package $(decorate code "$package")" || return $?
     fi
   done
   uninstallFunction="__${manager}Uninstall"
   isFunction "$uninstallFunction" || __failEnvironment "$usage" "$uninstallFunction is not defined" || return $?
 
-  statusMessage consoleInfo "Uninstalling ${packages[*]} ... "
+  statusMessage decorate info "Uninstalling ${packages[*]} ... "
   __usageEnvironmentQuiet "$usage" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
   statusMessage reportTiming "$start" "Uninstallation of $* completed in" || :
   clearLine

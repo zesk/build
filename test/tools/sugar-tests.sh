@@ -143,7 +143,7 @@ testSugar() {
 
   expected="$(printf "Hello\n- a\n- b\n- c\n- d e\n")"
   actual="$(_list "Hello" "a" "b" "c" "d e")"
-  assertEquals --line "$LINENO" "${#expected}" "${#actual}" "Actual: \"$(consoleCode "$actual")\" Expected: \"$(consoleCode "$expected")\"" || return $?
+  assertEquals --line "$LINENO" "${#expected}" "${#actual}" "Actual: \"$(decorate code "$actual")\" Expected: \"$(decorate code "$expected")\"" || return $?
   assertEquals --line "$LINENO" "$expected" "$actual" || return $?
 
   # _return
@@ -202,7 +202,7 @@ testMuzzle() {
   # produces nothing
   assertOutputEquals "" muzzle cat "${BASH_SOURCE[0]}" || return $?
   assertOutputEquals "" muzzle echo "${FUNCNAME[0]}" || return $?
-  assertOutputEquals "" muzzle consoleInfo "$mantra" || return $?
+  assertOutputEquals "" muzzle decorate info "$mantra" || return $?
   # ls produces something
   assertOutputContains "bin" ls "$home" || return $?
   assertOutputContains "README.md" ls "$home" || return $?

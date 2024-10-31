@@ -61,7 +61,7 @@ _integer() {
 # We need to fetch an unshallow version for deployment to GitHub
 #
 __hookGithubReleaseBefore() {
-  ! buildDebugEnabled || consoleInfo "${FUNCNAME[0]} does nothing. Nice!"
+  ! buildDebugEnabled || decorate info "${FUNCNAME[0]} does nothing. Nice!"
 }
 
 __tools ../.. __hookGithubReleaseBefore "$@"

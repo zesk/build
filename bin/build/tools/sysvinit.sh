@@ -32,20 +32,20 @@ sysvInitScriptInstall() {
         [ -x "$argument" ] || __failArgument "$usage" "Not executable: $argument" || return $?
         if [ -f "$target" ]; then
           if diff -q "$1" "$target" >/dev/null; then
-            statusMessage consoleSuccess "reinstalling script: $(consoleCode "$baseName")"
+            statusMessage decorate success "reinstalling script: $(decorate code "$baseName")"
           else
-            __failEnvironment "$usage" "$(consoleCode "$target") already exists - remove first" || return $?
+            __failEnvironment "$usage" "$(decorate code "$target") already exists - remove first" || return $?
           fi
         else
-          statusMessage consoleSuccess "installing script: $(consoleCode "$baseName")"
+          statusMessage decorate success "installing script: $(decorate code "$baseName")"
         fi
         __usageEnvironment "$usage" cp -f "$argument" "$target" || return $?
-        statusMessage consoleWarning "Updating mode of $(consoleCode "$baseName") ..."
+        statusMessage decorate warning "Updating mode of $(decorate code "$baseName") ..."
         __usageEnvironment "$usage" chmod +x "$target" || return $?
-        statusMessage consoleWarning "rc.d defaults $(consoleCode "$baseName") ..."
+        statusMessage decorate warning "rc.d defaults $(decorate code "$baseName") ..."
         __usageEnvironment "$usage" update-rc.d "$baseName" defaults || return $?
         clearLine
-        printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleSuccess "installed successfully")"
+        printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "installed successfully")"
         ;;
     esac
     shift
@@ -80,9 +80,9 @@ sysvInitScriptUninstall() {
         if [ -f "$target" ]; then
           update-rc.d -f "$baseName" remove || __failEnvironment "$usage" "update-rc.d $baseName remove failed" || return $?
           __usageEnvironment "$usage" rm -f "$target" || return $?
-          printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleSuccess "removed successfully")"
+          printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "removed successfully")"
         else
-          printf "%s %s\n" "$(consoleCode "$baseName")" "$(consoleWarning "not installed")"
+          printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate warning "not installed")"
         fi
         ;;
     esac
@@ -96,6 +96,6 @@ _sysvInitScriptUninstall() {
 # Fetch the home directory and make sure it exists
 __sysvInitScriptInitHome() {
   local usage="$1" initHome=/etc/init.d
-  [ -d "$initHome" ] || __failEnvironment "$usage" "sysvInit directory does not exist $(consoleCode "$initHome")" || return $?
+  [ -d "$initHome" ] || __failEnvironment "$usage" "sysvInit directory does not exist $(decorate code "$initHome")" || return $?
   printf "%s\n" "$initHome"
 }

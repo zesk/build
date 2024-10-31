@@ -49,7 +49,7 @@ bashCoverage() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
   [ -n "$target" ] || target="$home/coverage.stats"
-  ! $verbose || consoleInfo "Collecting coverage to $(consoleCode "${target#"$home"}")"
+  ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
   __usageEnvironment "$usage" __bashCoverageWrapper "$target" "$@" || return $?
   ! $verbose || reportTiming "$start" "Coverage completed in"
 }
@@ -105,18 +105,18 @@ bashCoverageReport() {
   fi
   target=$(__usageEnvironment "$usage" requireDirectory "$target") || return $?
 
-  consoleInfo "$reportCache"
-  consoleInfo "Report: $target"
+  decorate info "$reportCache"
+  decorate info "Report: $target"
 
   if [ "${#files[@]}" -eq 0 ]; then
     __bashCoverageReportFile "$usage" "$reportCache" "$target"
   else
     for file in "${files[@]}"; do
-      statusMessage consoleInfo "$(pwd) Loading $(consoleCode "$file")"
+      statusMessage decorate info "$(pwd) Loading $(decorate code "$file")"
       __bashCoverageReportFile "$usage" "$reportCache" "$target" <"$file"
     done
   fi
-  statusMessage consoleInfo "Reporting to $(consoleCode "$target")"
+  statusMessage decorate info "Reporting to $(decorate code "$target")"
   for file in coverage.css coverage.js; do
     __usageEnvironment "$usage" cp "$(__bashCoverageReportTemplate "$file")" "$target/$file" || return $?
   done
@@ -202,7 +202,7 @@ __bashCoverageReportProcessStats() {
     [ -f "$targetFile" ] || __usageEnvironment "$usage" touch "$targetFile" || return $?
     __usageEnvironment "$usage" printf "%s\n" "$file" >>"$reportCache/all"
     index=$((index + 1))
-    statusMessage consoleInfo "Line $index/$totalLines ..."
+    statusMessage decorate info "Line $index/$totalLines ..."
   done
   __usageEnvironment "$usage" sort -u <"$reportCache/all" >"$reportCache/files" || return $?
 }
@@ -243,14 +243,14 @@ __bashCoverageReportConvertFiles() {
 
   lineContentFile=$(__usageEnvironment "$usage" mktemp) || return $?
   while read -r file; do
-    statusMessage consoleInfo "Generating $(consoleCode "$file")"
+    statusMessage decorate info "Generating $(decorate code "$file")"
     if isAbsolutePath "$file"; then
       source="$file"
     else
       source="${home%/}/${file#/}"
     fi
     if [ ! -f "$file" ]; then
-      consoleWarning "$file is no longer available"
+      decorate warning "$file is no longer available"
       continue
     fi
     file="${file#/}" # Trim leading slash
@@ -275,7 +275,7 @@ __bashCoverageReportConvertFiles() {
         notCoverableLines=$((notCoverableLines + 1))
       fi
       index=$((index + 1))
-      statusMessage consoleInfo "Processing $(consoleCode "$file"):$index"
+      statusMessage decorate info "Processing $(decorate code "$file"):$index"
       if [ $((index & 1)) ]; then
         lineClasses+=(odd "row-1")
       else
@@ -317,7 +317,7 @@ __bashCoverageReportConvertFiles() {
       coverage=$((coveredLines * 100 / coverableLines))
     fi
     # lineContent is too big for mapEnvironment
-    statusMessage consoleInfo "Final template $(consoleCode "$file") $coverage%"
+    statusMessage decorate info "Final template $(decorate code "$file") $coverage%"
 
     export "${fileTemplateVariables[@]}"
     fileContent="$(file_classes="${fileClasses[*]}" total="$index" name="$file" coverage=$coverage content=$'\n'"$magic"$'\n' mapEnvironment "${fileTemplateVariables[@]}" <"$fileTemplate")"
@@ -331,7 +331,7 @@ __bashCoverageReportConvertFiles() {
     } >"$targetFile"
     __usageEnvironment "$usage" rm -rf "$targetFile.$$" || return $?
     clearLine
-    printf "%s %s\n" "$(consoleInfo "Wrote")" "$(consoleCode "$targetFile")"
+    printf "%s %s\n" "$(decorate info "Wrote")" "$(decorate code "$targetFile")"
   done <"$reportCache/files"
 }
 

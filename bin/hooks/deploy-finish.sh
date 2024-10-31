@@ -67,7 +67,7 @@ _integer() {
 #
 # Example: - Move directories to make deployment final
 __hookDeployFinish() {
-  ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted." || :
+  ! buildDebugEnabled || decorate success "${BASH_SOURCE[0]} is a noop and should be replaced or deleted." || :
   : "$@"
 }
 

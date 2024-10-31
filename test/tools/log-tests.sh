@@ -17,19 +17,19 @@ testLogFileRotate() {
   n=1
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
 
   assertFileDoesNotExist "$tempDir/test.log" || return $?
 
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
 
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
   # Not a file
   mkdir "$tempDir/test.log" || :
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
   rm -rf "$tempDir/test.log/" || :
 
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
   # File now exists
   touch "$tempDir/test.log"
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" NOTINT || return $?
@@ -40,7 +40,7 @@ testLogFileRotate() {
   rm "$tempDir/test.log" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
 
   printf "%s" "$(repeat "$n" "x")" >"$tempDir/test.log" || return $?
   assertFileDoesNotExist "$tempDir/test.log.1" || return $?
@@ -51,7 +51,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -63,7 +63,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -75,7 +75,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -87,7 +87,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -99,7 +99,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  consoleSuccess "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(clearLine)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -171,7 +171,7 @@ testLogFileRotate1() {
   i=10
   while [ "$i" -gt 0 ]; do
     if [ ! -d "$tempDir" ]; then
-      consoleError "$tempDir got deleted i=$i" 1>&2
+      decorate error "$tempDir got deleted i=$i" 1>&2
       return 1
     fi
     rotateLog "$tempDir/test.log" "$count" || return $?

@@ -71,16 +71,16 @@ confirmYesNo() {
 #
 _copyFileEscalated() {
   consoleReset
-  printf "\n%s -> %s: %s\n\n" "$(consoleGreen "$1")" "$(consoleRed "$3")" "$(consoleBoldRed "$4")"
+  printf "\n%s -> %s: %s\n\n" "$(decorate green "$1")" "$(decorate red "$3")" "$(decorate bold-red "$4")"
   if confirmYesNo yes "$(printf "%s: %s\n(%s/%s - default %s)? " \
-    "$(consoleBold Copy privileged file to)" \
-    "$(consoleCode "$3")" \
-    "$(consoleRed Yes)" \
-    "$(consoleGreen No)" "$(consoleRed Yes)")"; then
+    "$(decorate bold Copy privileged file to)" \
+    "$(decorate code "$3")" \
+    "$(decorate red Yes)" \
+    "$(decorate green No)" "$(decorate red Yes)")"; then
     __execute cp "$2" "$3" || return $?
     return $?
   fi
-  printf "%s \"%s\"\n" "$(consoleError "Used declined update of")" "$(consoleRed "$3")" 1>&2
+  printf "%s \"%s\"\n" "$(decorate error "Used declined update of")" "$(decorate red "$3")" 1>&2
   _argument || return $?
 }
 
@@ -97,7 +97,7 @@ _copyFileRegular() {
 
 _copyFilePrompt() {
   local source="$1" destination="$2" verb="$3"
-  printf "%s -> %s %s\n" "$(consoleGreen "$source")" "$(consoleRed "$destination")" "$(consoleCyan "$verb")"
+  printf "%s -> %s %s\n" "$(decorate green "$source")" "$(decorate red "$destination")" "$(decorate cyan "$verb")"
 }
 
 # Usage: {fn} source destination verb
@@ -106,7 +106,7 @@ _copyFilePrompt() {
 # Argument: verb - Descriptive verb of what's up
 _copyFileShow() {
   _copyFilePrompt "$@"
-  wrapLines "$(consoleCode)" "$(consoleReset)"
+  wrapLines "$(decorate code)" "$(consoleReset)"
 }
 
 #
@@ -121,7 +121,7 @@ _copyFileShowNew() {
   local lines
   head -10 "$source" | _copyFileShow "$displaySource" "$destination" "Created"
   lines=$(($(wc -l <"$source") + 0))
-  consoleInfo "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
+  decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
 }
 
 ####################################################################################################
@@ -187,9 +187,9 @@ copyFile() {
         fi
         if [ -f "$destination" ]; then
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
-            prefix="$(consoleSubtle "$(basename "$source")"): "
+            prefix="$(decorate subtle "$(basename "$source")"): "
             _copyFilePrompt "$source" "$destination" "Changes" || :
-            diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(consoleCode)" "$(consoleReset)" || :
+            diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(decorate code)" "$(consoleReset)" || :
             verb="File changed${verb}"
           else
             return 0
@@ -340,7 +340,7 @@ interactiveManager() {
     while ! "$verificationCallable" "$file" >"$output" 2>&1; do
       didClear=true
       clear
-      message="$(consoleCode "$file") failed $(consoleError "$verificationCallable")"
+      message="$(decorate code "$file") failed $(decorate error "$verificationCallable")"
       if ! $triedRepair && [ -n "$repairFunction" ]; then
         triedRepair=true
         if ! "$repairFunction" "$file" >"$output"; then
@@ -353,11 +353,11 @@ interactiveManager() {
       boxedHeading --size 1 "$message"
       dumpPipe --head --lines "$rowsAllowed" "OUTPUT" <"$output"
       if [ $index -eq "${#files[@]}" ]; then
-        nextMessage=$(consoleGreen "(last one)")
+        nextMessage=$(decorate green "(last one)")
       else
-        nextMessage="$(printf -- "(%s %s)" "$(consoleSubtle "next file is")" "$(consoleCode "${files["$index"]}")")"
+        nextMessage="$(printf -- "(%s %s)" "$(decorate subtle "next file is")" "$(decorate code "${files["$index"]}")")"
       fi
-      printf "%s %s %s files %s" "$(consoleBoldGreen "$index")" "$(consoleSubtle "of")" "$(consoleBoldBlue "${#files[@]}")" "$nextMessage"
+      printf "%s %s %s files %s" "$(decorate bold-green "$index")" "$(decorate subtle "of")" "$(decorate bold-blue "${#files[@]}")" "$nextMessage"
       if [ -n "$binary" ]; then
         "$binary" "$file"
       fi
@@ -367,7 +367,7 @@ interactiveManager() {
   done
   if $didClear; then
     clear
-    _list "$(consoleSuccess "All files now pass:")" "${files[@]}"
+    _list "$(decorate success "All files now pass:")" "${files[@]}"
   fi
 }
 _interactiveManager() {

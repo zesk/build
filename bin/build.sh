@@ -66,9 +66,9 @@ __buildBuild() {
   printf "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
   printf "tput colors %s" "$(tput colors 2>&1 || :)"
   if hasColors; then
-    consoleSuccess "Has colors"
+    decorate success "Has colors"
   else
-    consoleError "No colors ${BUILD_COLORS-¢}"
+    decorate error "No colors ${BUILD_COLORS-¢}"
   fi
   consoleNameValue "$width" "TERM" "${TERM-¢}"
   consoleNameValue "$width" "DISPLAY" "${DISPLAY-}"
@@ -80,12 +80,12 @@ __buildBuild() {
 
   if gitRepositoryChanged; then
     printf "%s\n" "CHANGES:" || :
-    gitShowChanges | wrapLines "$(consoleCode)    " "$(consoleReset)"
+    gitShowChanges | wrapLines "$(decorate code)    " "$(consoleReset)"
     git commit -m "Build version $(runHook version-current)" -a || :
     git push origin || :
   fi
   ./bin/build/identical-repair.sh || _environment "Identical repair failed" || return $?
-  consoleSuccess Built successfully.
+  decorate success Built successfully.
 }
 ___buildBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

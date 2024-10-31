@@ -47,8 +47,8 @@ __apkUninstall() {
 # Exit code: 0 - Success
 # Exit code: 1 - Failed due to issues with environment
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-# Artifact: `aptUpdateOnce.log` is left in the `buildCacheDirectory`
-# Artifact: `aptInstall.log` is left in the `buildCacheDirectory`
+# Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
+# Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 __apkUpgrade() {
   local usage="_${FUNCNAME[0]}"
   local quietLog upgradeLog result

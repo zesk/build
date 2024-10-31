@@ -20,7 +20,7 @@ testBashPrompt() {
 
   assertExitCode --line "$LINENO" 0 bashPrompt --help || return $?
 
-  [ ! -t 0 ] || consoleInfo "console $(consoleBold)IS a terminal$(consoleInfo) so --skip-terminal test will be skipped"
+  [ ! -t 0 ] || decorate info "console $(decorate bold)IS a terminal$(decorate info) so --skip-terminal test will be skipped"
   [ -t 0 ] || assertNotExitCode --stderr-match "Requires a terminal" --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --colors "::::" || return $?
 
   for leak in "${leaks[@]}"; do

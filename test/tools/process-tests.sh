@@ -21,7 +21,7 @@ slowDaemon() {
   this="${FUNCNAME[0]}"
 
   start=$(beginTiming) || _environment "$this beginTiming failed" || return $?
-  consoleSuccess "Started $this for $timingFactor seconds"
+  decorate success "Started $this for $timingFactor seconds"
   sleep "$timingFactor"
   reportTiming "$start" "$this finished in"
 }

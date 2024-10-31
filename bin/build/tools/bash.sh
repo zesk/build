@@ -35,7 +35,7 @@ bashLibrary() {
     export HOME
     # shellcheck source=/dev/null
     source "$home/$run" || __failEnvironment "$usage" "${run//${HOME-}/~} failed" || return $?
-    consoleInfo "Reloaded $(consoleCode "$run") @ $(consoleInfo "${home//${HOME-}/~}")"
+    decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
   else
     __echo "$home/$run" "$@"
   fi
@@ -111,24 +111,24 @@ bashSanitize() {
   assertEquals "$home" "$(pwd)" || return $?
   undo=(muzzle popd)
 
-  statusMessage consoleSuccess Making shell files executable ...
+  statusMessage decorate success Making shell files executable ...
   __usageEnvironment "$usage" makeShellFilesExecutable || _undo $? "${undo[@]}" || return $?
 
-  statusMessage consoleSuccess Checking assertions ...
+  statusMessage decorate success Checking assertions ...
   _bashSanitizeCheckAssertions "$usage" "${checkAssertions[@]+"${checkAssertions[@]}"}" || _undo $? "${undo[@]}" || return $?
 
   # Operates on specific files
-  statusMessage consoleSuccess Checking syntax ...
+  statusMessage decorate success Checking syntax ...
   _bashSanitizeCheckLint "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
 
-  statusMessage consoleSuccess Checking copyright ...
+  statusMessage decorate success Checking copyright ...
   _bashSanitizeCheckCopyright "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
 
-  statusMessage consoleSuccess Checking debugging ...
+  statusMessage decorate success Checking debugging ...
   _bashSanitizeCheckDebugging "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
   rm -rf "$fileList" || :
   __usageEnvironment "$usage" "${undo[@]}" || return $?
-  statusMessage consoleSuccess Completed ...
+  statusMessage decorate success Completed ...
   printf "\n"
 }
 _bashSanitize() {
@@ -139,7 +139,7 @@ _bashSanitize() {
 _bashSanitizeCheckLint() {
   local usage="$1" && shift
 
-  statusMessage consoleSuccess "Running shellcheck ..." || :
+  statusMessage decorate success "Running shellcheck ..." || :
   __usageEnvironment "$usage" bashLintFiles || return $?
 }
 
@@ -153,7 +153,7 @@ _bashSanitizeCheckAssertions() {
   done < <(find "." -type f -name '.check-assertions' ! -path "*/.*/*")
 
   for directory in "${checkAssertions[@]+"${checkAssertions[@]}"}"; do
-    statusMessage consoleWarning "Checking assertions in $(consoleCode "${directory}") - " || :
+    statusMessage decorate warning "Checking assertions in $(decorate code "${directory}") - " || :
     if ! findUncaughtAssertions "$directory" --list; then
       # When ready - add --interactive here as well
       findUncaughtAssertions "$directory" --exec "$executor" &
@@ -175,12 +175,12 @@ _bashSanitizeCheckCopyright() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
 
   year="$(date +%Y)"
-  statusMessage consoleWarning "Checking $year and $BUILD_COMPANY ..." || :
+  statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :
   matches=$(__usageEnvironment "$usage" mktemp) || return $?
   if fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- - >"$matches"; then
     set +v
     while IFS=":" read -r file pattern; do
-      error="$(consoleError "No pattern found")" pattern="$(consoleValue "$pattern")" file="$(consoleCode "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
+      error="$(decorate error "No pattern found")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
     __failEnvironment "$usage" found debugging || _clean $? "$matches" || return $?
   fi
@@ -200,7 +200,7 @@ _bashSanitizeCheckDebugging() {
   if fileMatches 'set ["]\?-x' -- "${debugPatterns[@]+${debugPatterns[@]}}" -- - >"$matches"; then
     dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
     while IFS=":" read -r file line remain; do
-      file="$(consoleCode "$file")" error="$(consoleError "debugging found")" line="$(consoleValue "$line")" remain="$(consoleCode "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain}"
+      file="$(decorate code "$file")" error="$(decorate error "debugging found")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain}"
     done <"$matches"
     __failEnvironment "$usage" found debugging || return $?
   fi

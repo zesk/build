@@ -210,7 +210,7 @@ Outputs debugging information after build fails:
 
     quietLog="$(buildQuietLog "$me")"
     if ! ./bin/deploy.sh >>"$quietLog"; then
-        consoleError "Deploy failed"
+        decorate error "Deploy failed"
         buildFailed "$quietLog"
     fi
 

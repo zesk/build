@@ -17,7 +17,7 @@ __hookMaintenanceSetValue() {
   local variable=$1 value=$2
   if [ ! -f "$envFile" ]; then
     touch "$envFile"
-    printf "%s %s %s\n" "$(consoleWarning "Created")" "$(consoleCode "$envFile")" "$(consoleWarning "(maintenance - did not exist)")" 1>&2
+    printf "%s %s %s\n" "$(decorate warning "Created")" "$(decorate code "$envFile")" "$(decorate warning "(maintenance - did not exist)")" 1>&2
   fi
   grep -v "$variable" "$envFile" >"$envFile.$$" || :
   printf "%s=%s\n" "$variable" "$value" >>"$envFile.$$" || _environment "writing temp $envFile" || return $?
@@ -63,29 +63,29 @@ __hookMaintenance() {
       --message)
         shift || :
         if [ -z "$messageVariable" ]; then
-          consoleWarning "--message is a no-op with blank BUILD_MAINTENANCE_MESSAGE_VARIABLE"
+          decorate warning "--message is a no-op with blank BUILD_MAINTENANCE_MESSAGE_VARIABLE"
         fi
         message="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
     shift
   done
   if test "$enable"; then
-    messageColor=consoleSuccess
+    messageColor=decorate success
     maintenanceValue=1
-    messageValue=$(consoleCode "[ ON ]")
-    messageSuffix=$(consoleBoldRed "currently in maintenance mode")
+    messageValue=$(decorate code "[ ON ]")
+    messageSuffix=$(decorate bold-red "currently in maintenance mode")
   else
-    messageColor=consoleSuccess
-    messageValue=$(consoleBoldGreen "off")
+    messageColor=decorate success
+    messageValue=$(decorate bold-green "off")
     maintenanceValue=
-    messageSuffix=$(consoleBoldMagenta "Now LIVE")
+    messageSuffix=$(decorate bold-magenta "Now LIVE")
   fi
   __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __failEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
-  __hookMaintenanceSetValue "$messageVariable" "$message" || consoleWarning "Maintenance message not set, continuing with errors"
+  __hookMaintenanceSetValue "$messageVariable" "$message" || decorate warning "Maintenance message not set, continuing with errors"
   printf "%s %s - %s\n" "$("$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }
 _hookMaintenance() {

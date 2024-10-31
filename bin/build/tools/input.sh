@@ -15,7 +15,7 @@ inputConfigurationAdd() {
   export HOME
 
   __usageArgument "$usage" buildEnvironmentLoad HOME || return $?
-  [ -d "$HOME" ] || __failEnvironment "$usage" "HOME is not a directory $(consoleCode "$HOME")" || return $?
+  [ -d "$HOME" ] || __failEnvironment "$usage" "HOME is not a directory $(decorate code "$HOME")" || return $?
   target="$HOME/$target"
   [ -f "$target" ] || __usageEnvironment "$usage" touch "$target" || return $?
   pattern="^$(quoteGrepPattern "\"$keyStroke\":")"

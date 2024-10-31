@@ -36,7 +36,7 @@ testSimpleMarkdownToConsole() {
   # shellcheck disable=SC2016
   testString='`Code` text is *italic* and **bold**'
 
-  expected="$(printf "%s text is %s and %s" "$(consoleCode Code)" "$(consoleCyan italic)" "$(consoleRed bold)")"
+  expected="$(printf "%s text is %s and %s" "$(decorate code Code)" "$(decorate cyan italic)" "$(decorate red bold)")"
 
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
 

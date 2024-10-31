@@ -36,7 +36,7 @@ usageTemplate() {
   local this="${FUNCNAME[0]}"
   local usageString binName options delimiter description exitCode
 
-  [ $# -ge 5 ] || _argument "$(printf -- "%s %s %s" "$(consoleError "$this")" "$(consoleCode "$(printf -- " \"%s\"" "$@")")" "$(consoleError "missing arguments - passed $# need 5")")" || return $?
+  [ $# -ge 5 ] || _argument "$(printf -- "%s %s %s" "$(decorate error "$this")" "$(decorate code "$(printf -- " \"%s\"" "$@")")" "$(decorate error "missing arguments - passed $# need 5")")" || return $?
   binName="$(trimSpace "$1")"
   options="$2"
   delimiter="$3"
@@ -44,19 +44,19 @@ usageTemplate() {
   exitCode="${5-0}"
   isInteger "$exitCode" || _argument "$(printf "%s: exit code is not integer \"%s\"\n%s" "$this" "$exitCode" "$(debuggingStack)")" || return $?
   if [ "$exitCode" -eq 0 ]; then
-    usageString="$(consoleBoldGreen Usage)"
+    usageString="$(decorate bold-green Usage)"
   else
-    usageString="$(consoleBoldRed Usage)"
+    usageString="$(decorate bold-red Usage)"
   fi
   shift 5 || _argument "$this: shift 5" || return $?
   if [ ${#@} -gt 0 ]; then
     if [ "$exitCode" -eq 0 ]; then
-      printf "%s\n\n" "$(consoleSuccess "$@")"
+      printf "%s\n\n" "$(decorate success "$@")"
     elif [ "$exitCode" != "$errorArgument" ]; then
-      printf "%s (-> %s)\n" "$(consoleError "$@")" "$(consoleCode " $exitCode ")"
+      printf "%s (-> %s)\n" "$(decorate error "$@")" "$(decorate code " $exitCode ")"
       return "$exitCode"
     else
-      printf "%s (-> %s)\n\n" "$(consoleError "$@")" "$(consoleCode " $exitCode ")"
+      printf "%s (-> %s)\n\n" "$(decorate error "$@")" "$(decorate code " $exitCode ")"
     fi
   fi
   description=${description:-"No description"}
@@ -65,14 +65,14 @@ usageTemplate() {
   if [ -n "$delimiter" ] && [ -n "$options" ]; then
     printf -- "%s: %s%s\n\n%s\n\n%s\n" \
       "$usageString" \
-      "$(consoleInfo "$binName")" \
+      "$(decorate info "$binName")" \
       "$(printf "%s" "$options" | usageArguments "$delimiter")" \
       "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | wrapLines "    " "$(consoleReset)")" \
       "$description"
   else
     printf "%s: %s\n\n%s\n\n" \
       "$usageString" \
-      "$(consoleInfo "$binName")" \
+      "$(decorate info "$binName")" \
       "$description"
   fi
   if buildDebugEnabled usage; then
@@ -90,8 +90,8 @@ usageTemplate() {
 usageArguments() {
   local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription lastLine
 
-  optionalPrefix=${2-"$(consoleBlue)"}
-  requiredPrefix=${3-"$(consoleRed)"}
+  optionalPrefix=${2-"$(decorate blue)"}
+  requiredPrefix=${3-"$(decorate red)"}
 
   lineTokens=()
   lastLine=
@@ -135,10 +135,10 @@ usageArguments() {
 usageGenerator() {
   local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine
 
-  labelOptionalPrefix=${3-"$(consoleBlue)"}
-  labelRequiredPrefix=${4-"$(consoleRed)"}
+  labelOptionalPrefix=${3-"$(decorate blue)"}
+  labelRequiredPrefix=${4-"$(decorate red)"}
   # shellcheck disable=SC2119
-  valuePrefix=${5-"$(consoleValue)"}
+  valuePrefix=${5-"$(decorate value)"}
   lastLine=
   blankLine=false
 
@@ -181,7 +181,7 @@ usageRequireBinary() {
   local f b
   f="${1-}"
   if [ "$(type -t "$f")" != "function" ]; then
-    consoleError "$f must be a valid function" 1>&2
+    decorate error "$f must be a valid function" 1>&2
     return $errorArgument
   fi
   shift || return $errorArgument
@@ -204,7 +204,7 @@ usageRequireEnvironment() {
   local f e
   f="${1-}"
   if [ "$(type -t "$f")" != "function" ]; then
-    consoleError "$f must be a valid function" 1>&2
+    decorate error "$f must be a valid function" 1>&2
     return $errorArgument
   fi
   shift || return $errorArgument
@@ -240,7 +240,7 @@ __usageArgumentHelper() {
   [ -n "$variableValue" ] || __failArgument "$usageFunction" "$variableName $noun is required" || return $?
 
   # Remaining parameters are the test
-  "$@" "$variableValue" || __failArgument "$usageFunction" "$variableName is not $noun (\"$(consoleCode "$variableValue")$(consoleError '")')" || return $?
+  "$@" "$variableValue" || __failArgument "$usageFunction" "$variableName is not $noun (\"$(decorate code "$variableValue")$(decorate error '")')" || return $?
 
   printf "%s\n" "$variableValue"
 }
@@ -532,7 +532,7 @@ usageArgumentEnvironmentVariable() {
 usageArgumentUnknown() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" "$@" || return $?
+  __failArgument "$usage" "unknown argument: $(decorate value "$argument")" "$@" || return $?
 }
 
 # Throw an missing argument error
@@ -543,5 +543,5 @@ usageArgumentUnknown() {
 usageArgumentMissing() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __failArgument "$usage" "missing argument $(consoleLabel "$argument")" "$@" || return $?
+  __failArgument "$usage" "missing argument $(decorate label "$argument")" "$@" || return $?
 }

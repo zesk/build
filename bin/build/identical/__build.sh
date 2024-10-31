@@ -7,7 +7,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 # Requires: IDENTICAL _return __install
-# Example: __build ../../.. consoleOrange "$@"
+# Example: __build ../../.. functionToCall "$@"
 
 # IDENTICAL __build EOF
 # Load build tools (installing if needed) and run command

@@ -106,7 +106,7 @@ deployApplication() {
         targetPackage="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
     shift || __failArgument "$usage" "shift argument $argument failed" || return $?
@@ -142,7 +142,7 @@ deployApplication() {
       __failArgument "$usage" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
     fi
     applicationId="$newApplicationId"
-    printf "%s %s %s %s\n" "$(consoleInfo "Reverting from")" "$(consoleOrange "$currentApplicationId")" "$(consoleInfo "->")" "$(consoleGreen "$applicationId")"
+    printf "%s %s %s %s\n" "$(decorate info "Reverting from")" "$(decorate orange "$currentApplicationId")" "$(decorate info "->")" "$(decorate green "$applicationId")"
   fi
 
   #
@@ -183,13 +183,13 @@ deployApplication() {
 
   if ! $firstFlag; then
     if [ ! -d "$applicationPath" ]; then
-      consoleWarning "Application path $applicationPath does not exist but not --first" 1>&2
+      decorate warning "Application path $applicationPath does not exist but not --first" 1>&2
     else
       #
       # Old Application
       #
       if hasHook --application "$applicationPath" maintenance; then
-        printf "%s %s\n" "$(consoleWarning "Turning maintenance")" "$(consoleGreen "$(consoleCode " ON ")")"
+        printf "%s %s\n" "$(decorate warning "Turning maintenance")" "$(decorate green "$(decorate code " ON ")")"
         if [ -z "$message" ]; then
           message="Upgrading to $newApplicationId"
         fi
@@ -197,15 +197,15 @@ deployApplication() {
           _unwindDeploy "${unwindArgs[@]}" "Turning maintenance on in $applicationPath failed" || return $?
         fi
       else
-        printf "%s\n" "$(consoleInfo "No maintenance hook")"
+        printf "%s\n" "$(decorate info "No maintenance hook")"
       fi
       if hasHook --application "$applicationPath" deploy-shutdown; then
-        printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-shutdown ")")"
+        printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-shutdown ")")"
         if ! runHook --application "$applicationPath" deploy-shutdown; then
           _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-shutdown failed" || return $?
         fi
       else
-        printf "%s\n" "$(consoleInfo "No deploy-shutdown hook")"
+        printf "%s\n" "$(decorate info "No deploy-shutdown hook")"
       fi
     fi
   fi
@@ -215,7 +215,7 @@ deployApplication() {
   #
   if [ -n "$currentApplicationId" ]; then
     if [ ! -f "$deployHome/$applicationId.previous" ] && [ ! -f "$deployHome/$currentApplicationId.next" ]; then
-      printf "%s %s -> %s\n" "$(consoleInfo "Linking versions:")" "$(consoleOrange "$currentApplicationId")" "$(consoleGreen "$applicationId")"
+      printf "%s %s -> %s\n" "$(decorate info "Linking versions:")" "$(decorate orange "$currentApplicationId")" "$(decorate green "$applicationId")"
       # Linked list forward only
       if ! printf "%s" "$currentApplicationId" >"$deployHome/$applicationId.previous" ||
         ! printf "%s" "$applicationId" >"$deployHome/$currentApplicationId.next"; then
@@ -229,23 +229,23 @@ deployApplication() {
   # Link
   #
   # deployedApplicationPath is the new version of the application source code root
-  printf "%s %s\n" "$(consoleInfo "Setting to version")" "$(consoleCode "$applicationId")"
+  printf "%s %s\n" "$(decorate info "Setting to version")" "$(decorate code "$applicationId")"
   if hasHook --application "$deployedApplicationPath" deploy-start; then
-    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-start ")")"
+    printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-start ")")"
     if ! runHook --application "$deployedApplicationPath" deploy-start; then
       _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-start failed" || return $?
     fi
   else
-    ! $verboseFlag || printf "%s%s\n" "$(clearLine)" "$(consoleInfo "No deploy-start hook")"
+    ! $verboseFlag || printf "%s%s\n" "$(clearLine)" "$(decorate info "No deploy-start hook")"
   fi
 
   if hasHook --application "$deployedApplicationPath" deploy-activate; then
-    printf "%s %s\n" "$(consoleWarning "Running hook")" "$(consoleGreen "$(consoleCode " deploy-activate ")")" || :
+    printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-activate ")")" || :
     if ! runHook --application "$deployedApplicationPath" deploy-activate "$applicationPath"; then
       _unwindDeploy "${unwindArgs[@]}" "runHook deploy-activate failed" || return $?
     fi
   else
-    printf "%s %s -> %s\n" "$(consoleSuccess "Activating application")" "$(consoleCode " $applicationPath ")" "$(consoleGreen "$applicationId")" || :
+    printf "%s %s -> %s\n" "$(decorate success "Activating application")" "$(decorate code " $applicationPath ")" "$(decorate green "$applicationId")" || :
     if ! deployLink "$applicationPath" "$deployedApplicationPath"; then
       _unwindDeploy "${unwindArgs[@]}" "deployLink $applicationPath $deployedApplicationPath failed" || return $?
     fi
@@ -259,9 +259,9 @@ deployApplication() {
     __failEnvironment "$usage" "maintenance off failed" || exitCode=$?
   fi
   if [ $exitCode -eq 0 ]; then
-    consoleSuccess "Completed"
+    decorate success "Completed"
   else
-    printf "%s %s\n" "$(consoleError "Exiting with code")" "$(consoleCode "$exitCode")"
+    printf "%s %s\n" "$(decorate error "Exiting with code")" "$(decorate code "$exitCode")"
   fi
   return "$exitCode"
 }
@@ -272,15 +272,15 @@ _unwindDeploy() {
   shift || :
   shift || :
   if ! runOptionalHook --application "$applicationPath" maintenance off; then
-    consoleError "Unable to enable maintenance - system is unstable" 1>&2
+    decorate error "Unable to enable maintenance - system is unstable" 1>&2
   else
-    consoleSuccess "Maintenance was enabled again"
+    decorate success "Maintenance was enabled again"
   fi
   if [ -d "$deployedApplicationPath" ]; then
-    printf "%s %s\n" "$(consoleError "Deleting")" "$(consoleCode "$deployedApplicationPath")"
-    rm -rf "$deployedApplicationPath" || consoleError "Delete $deployedApplicationPath failed" 1>&2
+    printf "%s %s\n" "$(decorate error "Deleting")" "$(decorate code "$deployedApplicationPath")"
+    rm -rf "$deployedApplicationPath" || decorate error "Delete $deployedApplicationPath failed" 1>&2
   else
-    printf "%s %s %s\n" "$(consoleError "Unwind")" "$(consoleCode "$deployedApplicationPath")" "$(consoleError "does not exist")"
+    printf "%s %s %s\n" "$(decorate error "Unwind")" "$(decorate code "$deployedApplicationPath")" "$(decorate error "does not exist")"
   fi
   __failEnvironment "$usage" "$@"
 }

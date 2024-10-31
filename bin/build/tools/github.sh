@@ -105,7 +105,7 @@ githubRelease() {
         extras+=("$1")
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
   [ ${#extras[@]} -eq 3 ] || __failArgument "$usage" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
@@ -130,7 +130,7 @@ githubRelease() {
   __usageEnvironment "$usage" sshAddKnownHost "$host" || return $?
 
   if git remote | grep -q github; then
-    printf "%s %s %s" "$(consoleInfo Remote)" "$(consoleMagenta github)" "$(consoleInfo exists, not adding again.) " || :
+    printf "%s %s %s" "$(decorate info Remote)" "$(decorate magenta github)" "$(decorate info exists, not adding again.) " || :
   else
     __usageEnvironment "$usage" git remote add github "git@github.com:$repoOwner/$repoName.git" || return $?
   fi
@@ -140,14 +140,14 @@ githubRelease() {
   resultsFile="$(buildCacheDirectory results.json)" || __failEnvironment "$usage" "Unable create cache directory" || return $?
   __usageEnvironment "$usage" requireFileDirectory "$resultsFile" || return $?
 
-  consoleDecoration "$(echoBar)" || :
-  bigText "$releaseName" | wrapLines "$(consoleMagenta)" "$(consoleReset)" || :
-  consoleDecoration "$(echoBar)" || :
-  printf "%s %s (%s) %s\n" "$(consoleGreen Tagging)" "$(consoleCode "$releaseName")" "$(consoleMagenta "$commitish")" "$(consoleGreen "and pushing ... ")" || :
+  decorate decoration "$(echoBar)" || :
+  bigText "$releaseName" | wrapLines "$(decorate magenta)" "$(consoleReset)" || :
+  decorate decoration "$(echoBar)" || :
+  printf "%s %s (%s) %s\n" "$(decorate green Tagging)" "$(decorate code "$releaseName")" "$(decorate magenta "$commitish")" "$(decorate green "and pushing ... ")" || :
 
   start=$(beginTiming)
 
-  statusMessage consoleWarning "Deleting any trace of the $releaseName tag"
+  statusMessage decorate warning "Deleting any trace of the $releaseName tag"
   git tag -d "$releaseName" 2>/dev/null || :
   git push origin ":$releaseName" --quiet 2>/dev/null || :
   git push github ":$releaseName" --quiet 2>/dev/null || :
@@ -164,7 +164,7 @@ githubRelease() {
   JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
   JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')" || __failEnvironment "$usage" "Generating JSON" || return $?
 
-  consoleInfo
+  decorate info
   if ! curl -s -L \
     -X POST \
     -H "Accept: application/vnd.github+json" \
@@ -172,20 +172,20 @@ githubRelease() {
     -H "X-GitHub-Api-Version: 2022-11-28" \
     "https://api.github.com/repos/$repoOwner/$repoName/releases" \
     -d "$JSON" >"$resultsFile"; then
-    consoleError "POST failed to GitHub" 1>&2 || :
-    wrapLines "$(consoleInfo)JSON: $(consoleCode)" "$(consoleReset)" <"$JSON" 1>&2 || :
+    decorate error "POST failed to GitHub" 1>&2 || :
+    wrapLines "$(decorate info)JSON: $(decorate code)" "$(consoleReset)" <"$JSON" 1>&2 || :
     buildFailed "$resultsFile" 1>&2 || return $?
   fi
   url="$(jq .html_url <"$resultsFile")"
   if [ -z "$url" ] || [ "$url" = "null" ]; then
-    consoleError "Results had no html_url" 1>&2 || :
-    consoleError "Access token length ${#accessToken}" 1>&2 || :
-    printf %s "$JSON" | wrapLines "$(consoleInfo)Submitted JSON: $(consoleCode)" "$(consoleReset)" 1>&2 || :
+    decorate error "Results had no html_url" 1>&2 || :
+    decorate error "Access token length ${#accessToken}" 1>&2 || :
+    printf %s "$JSON" | wrapLines "$(decorate info)Submitted JSON: $(decorate code)" "$(consoleReset)" 1>&2 || :
     buildFailed "$resultsFile" 1>&2 || return $?
   fi
-  printf "%s: %s\n" "$(consoleInfo URL)" "$(consoleOrange "$url")" || :
+  printf "%s: %s\n" "$(decorate info URL)" "$(decorate orange "$url")" || :
 
-  consoleSuccess "Release $releaseName completed" || :
+  decorate success "Release $releaseName completed" || :
   rm "$resultsFile" || :
 }
 _githubRelease() {

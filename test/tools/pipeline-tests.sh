@@ -37,7 +37,7 @@ testIsUpToDate() {
 
   testDate=2020-01-01
 
-  consoleInfo "2020: $testDate"
+  decorate info "2020: $testDate"
 
   _uptoDateTest 0 $testDate 10 || return $?
   testDate="$thisYear-01-01"

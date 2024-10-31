@@ -7,19 +7,14 @@
 # Docs: ./docs/_templates/tools/prompt.md
 # Test: ./test/tools/prompt-tests.sh
 
-# shellcheck disable=SC2120
-__consoleBlackWhiteBackground() {
-  __consoleEscape '\033[107;30m' '\033[0m' "$@"
-}
-
 __bashPromptList() {
   local promptCommand
 
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
     if isFunction "$promptCommand"; then
-      printf -- "- %s (%s)\n" "$(consoleCode "$promptCommand")" "$(consoleOrange "function")"
+      printf -- "- %s (%s)\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")"
     else
-      printf -- "- %s (%s)\n" "$(consoleValue "$promptCommand")" "$(consoleBlue "file")"
+      printf -- "- %s (%s)\n" "$(decorate value "$promptCommand")" "$(decorate blue "file")"
     fi
   done
 }
@@ -38,7 +33,7 @@ __bashPromptAdd() {
     __BASH_PROMPT_MODULES=()
   fi
 
-  ! $debug || consoleInfo "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+  ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
   saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -62,39 +57,39 @@ __bashPromptAdd() {
         found=false
         ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found=true
         if $first; then
-          ! $debug || consoleInfo "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+          ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
           if $found; then
             if [ "${__BASH_PROMPT_MODULES[0]-}" != "$argument" ]; then
               return 0
             fi
             __bashPromptRemove "$usage" "$argument" || return $?
-            ! $debug || consoleInfo "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
-            ! $verbose || consoleInfo "Moving bash module to first: $(consoleCode "$argument")"
+            ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+            ! $verbose || decorate info "Moving bash module to first: $(decorate code "$argument")"
           else
-            ! $verbose || consoleInfo "Added bash module: $(consoleCode "$argument")"
+            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
           fi
           __BASH_PROMPT_MODULES=("$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
         else
-          ! $debug || consoleInfo "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+          ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
           if $found; then
             if [ "${__BASH_PROMPT_MODULES[${#__BASH_PROMPT_MODULES[@]} - 1]}" != "$argument" ]; then
               return 0
             fi
             __bashPromptRemove "$usage" "$argument" || return $?
-            ! $debug || consoleInfo "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
-            ! $verbose || consoleInfo "Moving bash module to last: $(consoleCode "$argument")"
+            ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+            ! $verbose || decorate info "Moving bash module to last: $(decorate code "$argument")"
           else
-            ! $verbose || consoleInfo "Added bash module: $(consoleCode "$argument")"
+            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
           fi
           __BASH_PROMPT_MODULES=("${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" "$argument")
         fi
-        ! $debug || consoleInfo "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+        ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
-  ! $debug || consoleInfo "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+  ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
   return 0
 }
 
@@ -119,13 +114,27 @@ __bashPromptRemove() {
 }
 
 #
+# Show current application and path as a badge
+#
+bashPromptModule_ApplicationPath() {
+  local homeIcon="🏠" appIcon="🍎" folderIcon="📂"
+  local home path applicationPath
+  home=$(__environment buildHome) || return $?
+  path=$(__environment pwd) || return $?
+  applicationPath="${path//$home/$homeIcon}"
+  if [ "$applicationPath" != "$path" ]; then
+    iTerm2Badge -i "$(printf "%s %s\n%s %s\n" "$appIcon" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"
+  fi
+}
+
+#
 # Check which bin/build we are running and keep local to current project
-# When changing projects, runs the `project-selected` hook in the new project
+# When changing projects, runs the `project-activate` hook in the new project
 # Also shows the change in Zesk Build version numbers
 #
-# Run-Hook: project-selected
+# Run-Hook: project-activate
 bashPromptModule_binBuild() {
-  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldColor=consoleRed newColor=consoleRed oldVersion newVersion message
+  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldColor=red newColor=red oldVersion newVersion oldMessage newMessage
   home=$(__environment buildHome) || return $?
   gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
   [ "$home" != "$gitHome" ] || return 0
@@ -133,13 +142,20 @@ bashPromptModule_binBuild() {
   oldVersion="$(jq .version "$home/$version")"
   newVersion="$(jq .version "$gitHome/$version")"
   newestVersion="$(printf -- "%s\n" "$oldVersion" "$newVersion" | versionSort | tail -n 1)"
-  [ "$oldVersion" != "$newestVersion" ] || oldColor=consoleBlue
-  [ "$newVersion" != "$newestVersion" ] || newColor=consoleGreen
+  [ "$oldVersion" != "$newestVersion" ] || oldColor=blue
+  [ "$newVersion" != "$newestVersion" ] || newColor=green
+
+  oldMessage="$(runOptionalHook --application "$home" project-deactivate "$gitHome")" || oldMessage="$home: $(decorate error project-deactivate FAILED): $?" || :
+  [ -z "$oldMessage" ] || printf "%s @ %s" "$oldMessage" "$(decorate code "$home")"
   # shellcheck source=/dev/null
-  source "$gitHome/$tools" || __environment "Failed ot load $gitHome/$tools" || return $?
+  source "$gitHome/$tools" || __environment "Failed to load $gitHome/$tools" || return $?
   # buildHome will be changed here
-  message="$(runOptionalHook project-selected "$home")"
-  printf -- "%s %s -> %s @ %s\n" "$message" "$("$oldColor" "$oldVersion")" "$("$newColor" "$newVersion")" "$(consoleCode "$(buildHome)")"
+  newMessage="$(runOptionalHook --application "$home" project-activate "$home")"
+  printf -- "%s %s -> %s @ %s\n" "$newMessage" "$(decorate "$oldColor" "$oldVersion")" "$(decorate "$newColor" "$newVersion")" "$(decorate code "$(buildHome)")"
+  if isFunction pathRemove; then
+    [ ! -d "$home/bin" ] || pathRemove "$home/bin"
+  fi
+  [ ! -d "$gitHome/bin" ] || pathAppend --last "$gitHome/bin" && decorate info "PATH now includes $(consoleFileLink "$gitHome/bin")"
 }
 
 # Usage: {fn} [ --first | --last | module ] [ --colors colorsText ]
@@ -153,7 +169,7 @@ bashPromptModule_binBuild() {
 # Bash prompt creates a prompt and adds return code status display and modules
 # Modules are any binary or executable to run each prompt, and can be added or removed here
 # - `consoleDefaultTitle`
-# Example: bashPrompt --colors "$(consoleBoldCyan):$(consoleBoldMagenta):$(consoleGreen):$(consoleOrange):$(consoleCode)"
+# Example: bashPrompt --colors "$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)"
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
@@ -188,8 +204,8 @@ bashPrompt() {
         shift
         colorsText="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         IFS=":" read -r -a colors <<<"$colorsText" || :
-        [ "${#colors[@]}" -ge 2 ] || __failArgument "$usage" "$argument should be min 2 colors separated by a colon: $(consoleCode "$colorsText")" || return $?
-        [ "${#colors[@]}" -le 5 ] || __failArgument "$usage" "$argument should be max 5 colors separated by a colon: $(consoleCode "$colorsText")" || return $?
+        [ "${#colors[@]}" -ge 2 ] || __failArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+        [ "${#colors[@]}" -le 5 ] || __failArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
         ;;
       --first | --last | --debug)
         addArguments+=("$argument")
@@ -216,7 +232,7 @@ bashPrompt() {
 
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
-    ! $verbose || consoleInfo "Prompt modules reset to empty list."
+    ! $verbose || decorate info "Prompt modules reset to empty list."
   fi
   # IDENTICAL bashPromptAddArguments 3
   if [ ${#addArguments[@]} -gt 0 ]; then
@@ -244,8 +260,8 @@ _bashPrompt() {
 bashPromptColorScheme() {
   local colors
   case "$1" in
-    forest) colors="$(consoleBoldCyan):$(consoleBoldMagenta):$(consoleGreen):$(consoleOrange):$(consoleCode)" ;;
-    *) colors="$(consoleGreen):$(consoleRed):$(consoleMagenta):$(consoleBlue):$(consoleBold)$(__consoleBlackWhiteBackground)" ;;
+    forest) colors="$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)" ;;
+    *) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
   esac
   printf "%s" "$colors"
 }

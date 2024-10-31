@@ -51,7 +51,7 @@ releaseNotes() {
     case "$argument" in
       *)
         if [ -n "$version" ]; then
-          consoleError "Version $version already specified: $argument"
+          decorate error "Version $version already specified: $argument"
         else
           version="$argument"
         fi
@@ -142,7 +142,7 @@ newRelease() {
     case "$argument" in
       --non-interactive)
         isInteractive=false
-        consoleWarning "Non-interactive mode set"
+        decorate warning "Non-interactive mode set"
         ;;
       # IDENTICAL --help 4
       --help)
@@ -201,7 +201,7 @@ __newRelease() {
   else
     while true; do
       if $readLoop; then
-        printf "%s? (%s %s) " "$(consoleInfo "New version")" "$(consoleBoldMagenta "default")" "$(consoleCode "$nextVersion")"
+        printf "%s? (%s %s) " "$(decorate info "New version")" "$(decorate bold-magenta "default")" "$(decorate code "$nextVersion")"
         read -r newVersion || :
         if [ -z "$newVersion" ]; then
           newVersion=$nextVersion
@@ -214,19 +214,19 @@ __newRelease() {
         if ! $readLoop; then
           __failArgument "$usage" "Invalid version $newVersion" || return $?
         fi
-        consoleError "Invalid version $newVersion"
+        decorate error "Invalid version $newVersion"
       fi
     done
   fi
   notes="$(__usageEnvironment "$usage" releaseNotes "$newVersion")" || return $?
   if [ ! -f "$notes" ]; then
     __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
-    consoleSuccess "Version $newVersion ready - release notes: $notes"
+    decorate success "Version $newVersion ready - release notes: $notes"
     if $isInteractive; then
       __usageEnvironment "$usage" runHook version-created "$newVersion" "$notes" || return $?
     fi
   else
-    consoleWarning "Version $newVersion already - release notes: $notes"
+    decorate warning "Version $newVersion already - release notes: $notes"
     if $isInteractive; then
       __usageEnvironment "$usage" runHook version-already "$newVersion" "$notes" || return $?
     fi

@@ -71,7 +71,7 @@ requireFileDirectory() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     name="$(dirname "$1")" || __failEnvironment "$usage" "dirname $argument" || return $?
-    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(consoleCode "$name")\"" || return $?
+    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
     shift || __failArgument "$usage" shift || return $?
   done
 }
@@ -115,7 +115,7 @@ requireDirectory() {
   while [ $# -gt 0 ]; do
     name="$1"
     [ -n "$name" ] || __failArgument "$usage" "blank argument" || return $?
-    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(consoleCode "$name")\"" || return $?
+    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
     printf "%s\n" "$name"
     shift || __failArgument "$usage" shift || return $?
   done
@@ -142,7 +142,7 @@ directoryIsEmpty() {
         return $?
         ;;
       *)
-        [ -d "$argument" ] || __failArgument "$usage" "Not a directory $(consoleCode "$argument")" || return $?
+        [ -d "$argument" ] || __failArgument "$usage" "Not a directory $(decorate code "$argument")" || return $?
         find "$argument" -mindepth 1 -maxdepth 1 | read -r && return 1 || return 0
         ;;
     esac
@@ -225,7 +225,7 @@ __directoryParent() {
         testExpressions+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       *)
-        [ -z "$startingDirectory" ] || __failArgument "$usage" "startingDirectory $(consoleCode "$argument") was already specified $(consoleValue "$startingDirectory") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+        [ -z "$startingDirectory" ] || __failArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
         [ -n "$argument" ] || argument=$(__usageEnvironment "$usage" pwd) || return $?
         startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
         ;;
@@ -243,7 +243,7 @@ __directoryParent() {
     passedExpression=""
     failedExpression=""
     for testExpression in "${testExpressions[@]+"${testExpressions[@]}"}"; do
-      [ "$testExpression" != "${testExpression#-}" ] || __failArgument "$usage" "Invalid expression: $(consoleCode "$testExpression") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+      [ "$testExpression" != "${testExpression#-}" ] || __failArgument "$usage" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
       if ! test "$testExpression" "$directory/$filePattern"; then
         passed=false
         failedExpression="$testExpression"
@@ -256,12 +256,12 @@ __directoryParent() {
       return 0
     fi
     if [ -n "$passedExpression" ]; then
-      bestFailure="$directory/$filePattern ${#testExpressions[@]} passed $(consoleGreen "$passedExpression") failed: $(consoleRed "$failedExpression")" || return $?
+      bestFailure="$directory/$filePattern ${#testExpressions[@]} passed $(decorate green "$passedExpression") failed: $(decorate red "$failedExpression")" || return $?
     fi
     lastDirectory="$directory"
     directory="$(dirname "$directory")"
   done
-  [ -n "$bestFailure" ] || bestFailure="No $(consoleCode "$filePattern") found above $(consoleValue "$argument")"
+  [ -n "$bestFailure" ] || bestFailure="No $(decorate code "$filePattern") found above $(decorate value "$argument")"
   __failEnvironment "$usage" "$bestFailure" || return $?
   return 1
 }

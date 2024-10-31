@@ -11,3 +11,5 @@
 {consoleBrightness}
 {consoleSetTitle}
 {consoleDefaultTitle}
+{consoleLink}
+{consoleFileLink}

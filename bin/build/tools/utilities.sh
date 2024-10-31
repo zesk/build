@@ -61,11 +61,11 @@ incrementor() {
           rm -rf "$persistence" || :
           return 0
           ;;
-        # IDENTICAL --help 4
-        --help)
-          "$usage" 0
-          return $?
-          ;;
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
         *[^-_a-zA-Z0-9]*)
           __failArgument "$usage" "Invalid argument or variable name: $argument" || return $?
           ;;

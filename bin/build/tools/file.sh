@@ -37,7 +37,7 @@ renameFiles() {
   for i in "$@"; do
     if [ -f "$i$old" ]; then
       mv "$i$old" "$i$new"
-      consoleWarning "$verb $i$old -> $i$new"
+      decorate warning "$verb $i$old -> $i$new"
     fi
   done
 }
@@ -106,7 +106,7 @@ listFileModificationTimes() {
   local directory
 
   directory="$1"
-  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(consoleCode "$directory")" || return $?
+  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   if [ "$(uname -s)" = "Darwin" ]; then
     find "$directory" -type f "$@" -exec stat -f '%m %N' {} \;
@@ -125,7 +125,7 @@ _listFileModificationTimes() {
 mostRecentlyModifiedFile() {
   local usage="_${FUNCNAME[0]}"
   directory="$1"
-  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(consoleCode "$directory")" || return $?
+  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
@@ -140,7 +140,7 @@ _mostRecentlyModifiedFile() {
 mostRecentlyModifiedTimestamp() {
   local usage="_${FUNCNAME[0]}"
   directory="$1"
-  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(consoleCode "$directory")" || return $?
+  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
@@ -203,7 +203,7 @@ __gamutFile() {
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument: $(_command "${saved[@]}")" || return $?
-    [ -f "$argument" ] || __failArgument "$usage" "Not a file $(consoleCode "$argument"): $(_command "${saved[@]}")" || return $?
+    [ -f "$argument" ] || __failArgument "$usage" "Not a file $(decorate code "$argument"): $(_command "${saved[@]}")" || return $?
     tempTime=$(modificationTime "$argument") || __failEnvironment "modificationTime $argument: $(_command "${saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
       theFile="$1"

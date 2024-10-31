@@ -211,7 +211,7 @@ testValidateCharacterClass() {
   temp=$(mktemp) || return $?
   __testIsCharacterClass | tee "$temp" || return $?
   if ! diff -q "$temp" "./test/example/isCharacterClass.txt"; then
-    consoleError "Classifications changed:"
+    decorate error "Classifications changed:"
     diff "$temp" "./test/example/isCharacterClass.txt"
     return 1
   fi

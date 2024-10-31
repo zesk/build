@@ -33,10 +33,10 @@ prettierInstall() {
     return 0
   fi
 
-  statusMessage consoleInfo "Installing npm (to get prettier) ... " || :
+  statusMessage decorate info "Installing npm (to get prettier) ... " || :
   __usageEnvironment "$usage" npmInstall "$@" || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  statusMessage consoleInfo "Installing prettier ... " || :
+  statusMessage decorate info "Installing prettier ... " || :
   __usageEnvironmentQuiet "$usage" "$quietLog" npm install -g prettier || return $?
   rm -f "$quietLog" || :
   clearLine || :
@@ -55,7 +55,7 @@ prettierUninstall() {
   if ! whichExists prettier; then
     return 0
   fi
-  statusMessage consoleInfo "Removing prettier ... " || :
+  statusMessage decorate info "Removing prettier ... " || :
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" npm uninstall -g prettier || return $?
   rm -rf "$quietLog" || :

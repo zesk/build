@@ -109,7 +109,7 @@ AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment
 
 Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
 Use this during deployment to grant temporary access to your systems during deployment only.
-Build scripts should have a $(consoleCode --revoke) step afterward, always.
+Build scripts should have a $(decorate code --revoke) step afterward, always.
 services are looked up in /etc/services and match /tcp services only for port selection
 
 - Location: `bin/build/tools/aws.sh`
@@ -213,7 +213,7 @@ Both forms can be used, but the profile should be supplied once and only once.
     eval $(cat "$setFile")
     rm "$setFile"
     else
-    consoleError "Need $profile profile in aws credentials file"`
+    decorate error "Need $profile profile in aws credentials file"`
     exit 1
     fi
 
@@ -266,7 +266,7 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
     eval $(cat "$setFile")
     rm "$setFile"
     else
-    consoleError "Need $profile profile in aws credentials file"`
+    decorate error "Need $profile profile in aws credentials file"`
     exit 1
     fi
 

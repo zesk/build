@@ -131,7 +131,7 @@ exampleFunction() {
   whichExists library-which-should-be-there || __failEnvironment "$usage" "missing thing" || return $?
 
   # DEBUG LINE
-  printf -- "%s:%s\n" "$(consoleCode "${BASH_SOURCE[0]}")" "$(consoleMagenta "$LINENO")" # DEBUG LINE
+  printf -- "%s:%s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" # DEBUG LINE
 
   reportTiming "$start" "Completed in"
 }

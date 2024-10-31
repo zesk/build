@@ -12,7 +12,7 @@ All console functions in the form `decorate style` where `style` is a color name
 Examples:
 
     cat $file | wrapLines "$(decorate green)" "$(decorate reset)"
-    consoleInfo Starting to deploy ...
+    decorate info Starting to deploy ...
 
 ## Color Mode
 
@@ -22,12 +22,11 @@ Zesk Build now supports two color modes for light and dark terminals with relate
 
 This is still in progress but will likely be the new mechanism.
 
-### `decorate` - In progress, attempt to reduce decoration code size
+### `decorate` - Semantics-based
 
-In progress, attempt to reduce decoration code size
-Singular decoration function to allow changing functionality more easily to render elsewhere, for example
+Semantics-based
 
-- Location: `bin/build/tools/decorate.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -45,14 +44,14 @@ Singular decoration function to allow changing functionality more easily to rend
 
 Color commands intended to convey status of messages. Try `colorTest` to see all colors.
 
-- `consoleInfo` - Informational messages
-- `consoleWarning` - Warning messages
-- `consoleSuccess` - Success messages
-- `consoleDecoration` - Lines or decoration text
-- `consoleError` - Error messages
-- `consoleLabel` - Used for label/value pairs
-- `consoleValue` - Used for label/value pairs
-- `consoleCode` - Code output
+- `decorate info` - Informational messages
+- `decorate warning` - Warning messages
+- `decorate success` - Success messages
+- `decorate decoration` - Lines or decoration text
+- `decorate error` - Error messages
+- `decorate label` - Used for label/value pairs
+- `decorate value` - Used for label/value pairs
+- `decorate code` - Code output
 
 ## Color commands
 
@@ -60,30 +59,60 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 
 ### Standard ANSI Colors
 
-- `consoleRed`
-- `consoleGreen`
-- `consoleCyan`
-- `consoleBlue`
-- `consoleOrange`
-- `consoleMagenta`
-- `consoleBlack`
-- `consoleWhite`
+- `decorate red`
+- `decorate green`
+- `decorate cyan`
+- `decorate blue`
+- `decorate orange`
+- `decorate magenta`
+- `decorate black`
+- `decorate white`
 
 ### Text decoration
 
-- `consoleUnderline`
-- `consoleBold`
+- `decorate underline`
+- `decorate bold`
 
 ### Bold Colors
 
-- `consoleBoldRed`
-- `consoleBoldGreen`
-- `consoleBoldCyan`
-- `consoleBoldBlue`
-- `consoleBoldOrange`
-- `consoleBoldMagenta`
-- `consoleBoldBlack`
-- `consoleBoldWhite`
+- `decorate bold-red`
+- `decorate bold-green`
+- `decorate bold-cyan`
+- `decorate bold-blue`
+- `decorate bold-orange`
+- `decorate bold-magenta`
+- `decorate bold-black`
+- `decorate bold-white`
+
+### Reset color to defaults
+
+#############################################################################
+
+  ▄▄      ▗▄▖
+ █▀▀▌     ▝▜▌
+▐▛    ▟█▙  ▐▌   ▟█▙  █▟█▌▗▟██▖
+▐▌   ▐▛ ▜▌ ▐▌  ▐▛ ▜▌ █▘  ▐▙▄▖▘
+▐▙   ▐▌ ▐▌ ▐▌  ▐▌ ▐▌ █    ▀▀█▖
+ █▄▄▌▝█▄█▘ ▐▙▄ ▝█▄█▘ █   ▐▄▄▟▌
+  ▀▀  ▝▀▘   ▀▀  ▝▀▘  ▀    ▀▀▀
+
+Reset the color
+
+This is typically appended after most `consoleAction` calls to reset the state of the console to default color and style.
+
+It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Additional commands
 
@@ -119,7 +148,7 @@ Intended to be run on an interactive console, this clears the current line of an
 
 #### Usage
 
-    clearLine
+    clearLine textToOutput
     
 
 #### Arguments
@@ -208,7 +237,7 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 Exit Code; 1 - Colors are likely not supported by console
 
-- Location: `bin/build/identical/_colors.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Usage
 
@@ -259,7 +288,7 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 
 ### `semanticColorTest` - Output colors
 
-Outputs sample sentences for the `consoleAction` commands to see what they look like.
+Outputs sample sentences for the `action` commands to see what they look like.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -360,7 +389,7 @@ Intended to be run on an interactive console. Should support $(tput cols).
 Return an integer between 0 and 100
 Colors are between 0 and 255
 
-- Location: `bin/build/tools/console.sh`
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 

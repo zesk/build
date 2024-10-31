@@ -130,11 +130,11 @@ crontabApplicationUpdate() {
   __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" >"$newCrontab" || return $?
 
   if [ ! -s "$newCrontab" ]; then
-    consoleWarning "Crontab for $user is EMPTY"
+    decorate warning "Crontab for $user is EMPTY"
   fi
   if $flagDiff; then
-    printf "%s\n" "$(consoleRed "Differences")"
-    crontab -u "$user" -l | diff "$newCrontab" - | wrapLines ">>> $(consoleCode)" "$(consoleReset) <<<"
+    printf "%s\n" "$(decorate red "Differences")"
+    crontab -u "$user" -l | diff "$newCrontab" - | wrapLines ">>> $(decorate code)" "$(consoleReset) <<<"
     return $?
   fi
   #
@@ -145,7 +145,7 @@ crontabApplicationUpdate() {
     rm -f "$newCrontab" || :
     return 0
   fi
-  statusMessage printf "%s %s ...\n" "$(consoleInfo "Updating crontab on ")" "$(consoleValue "$(date)")"
+  statusMessage printf "%s %s ...\n" "$(decorate info "Updating crontab on ")" "$(decorate value "$(date)")"
   crontab -u "$user" - <"$newCrontab" 2>/dev/null
   returnCode=$?
   rm -f "$newCrontab" || :

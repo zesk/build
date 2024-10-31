@@ -102,16 +102,16 @@ dumpPipe() {
   isInteger "$showLines" || _environment "SHOW_LINES is not-integer: $showLines" || showLines=10
 
   name=
-  [ ${#names[@]} -eq 0 ] || name=$(consoleInfo "${names[*]}: ") || :
+  [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ") || :
   nLines=$(($(wc -l <"$item") + 0))
   nBytes=$(($(wc -c <"$item") + 0))
   [ ${#symbol} -eq 0 ] || symbol="$symbol "
   if [ $nBytes -eq 0 ]; then
-    suffix=$(consoleOrange "(empty)")
+    suffix=$(decorate orange "(empty)")
   elif [ "$showLines" -lt "$nLines" ]; then
-    suffix="$(consoleWarning "(showing $showLines $(plural "$showLines" line lines))")"
+    suffix="$(decorate warning "(showing $showLines $(plural "$showLines" line lines))")"
   else
-    suffix="$(consoleSuccess "(shown)")"
+    suffix="$(decorate success "(shown)")"
   fi
   # shellcheck disable=SC2015
   printf "%s%s%s %s, %s %s %s\n" \
@@ -124,7 +124,7 @@ dumpPipe() {
     rm -rf "$item" || :
     return 0
   fi
-  decoration="$(consoleCode "$(echoBar)")"
+  decoration="$(decorate code "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
   printf "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(consoleReset)")" "$decoration"
   rm -rf "$item" || :
@@ -225,7 +225,7 @@ bashLintFiles() {
   ii=()
   interactive=false
   saved=("$@")
-  statusMessage consoleInfo "Checking all shell scripts ..."
+  statusMessage decorate info "Checking all shell scripts ..."
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -262,7 +262,7 @@ bashLintFiles() {
   source=none
   if [ ${#checkedFiles[@]} -gt 0 ]; then
     source="argument"
-    ! $verbose || consoleInfo "Reading item list from arguments ..."
+    ! $verbose || decorate info "Reading item list from arguments ..."
     for argument in "${checkedFiles[@]}"; do
       [ -n "$argument" ] || continue
       if ! _bashLintFilesHelper "$verbose" "$argument" "$source"; then
@@ -271,7 +271,7 @@ bashLintFiles() {
     done
   elif [ $# -eq 0 ]; then
     source="stdin"
-    ! $verbose || consoleInfo "Reading item list from stdin ..."
+    ! $verbose || decorate info "Reading item list from stdin ..."
     while read -r argument; do
       [ -n "$argument" ] || continue
       if ! _bashLintFilesHelper "$verbose" "$argument" "$source"; then
@@ -282,8 +282,8 @@ bashLintFiles() {
   if [ "${#failedFiles[@]}" -gt 0 ]; then
     {
       clearLine
-      _list "$(consoleWarning "Files failed:")" "${failedFiles[@]}"
-      consoleInfo "# ${#failedFiles[@]} $(plural ${#failedFiles[@]} error errors)"
+      _list "$(decorate warning "Files failed:")" "${failedFiles[@]}"
+      decorate info "# ${#failedFiles[@]} $(plural ${#failedFiles[@]} error errors)"
     } 1>&2
     if $interactive; then
       bashLintFilesInteractive "${ii[@]+"${ii[@]}"}" "${failedFiles[@]}"
@@ -294,7 +294,7 @@ bashLintFiles() {
     fi
     __failEnvironment "$usage" "Failed:" "${failedFiles[*]}" || return $?
   fi
-  statusMessage consoleSuccess "All scripts passed validation ($source)"
+  statusMessage decorate success "All scripts passed validation ($source)"
   printf "\n"
 }
 _bashLintFiles() {
@@ -306,12 +306,12 @@ _bashLintFilesHelper() {
   local verbose="$1" file="$2" source="$3" reason vv=()
 
   ! $verbose || vv+=(--verbose)
-  statusMessage consoleInfo "👀 Checking \"$file\" ($source) ..." || :
+  statusMessage decorate info "👀 Checking \"$file\" ($source) ..." || :
   if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
-    ! $verbose || consoleSuccess "bashLint $file passed"
+    ! $verbose || decorate success "bashLint $file passed"
   else
     clearLine
-    ! $verbose || consoleInfo "bashLint $file failed: $reason"
+    ! $verbose || decorate info "bashLint $file failed: $reason"
     printf "%s: %s\n" "$file" "$reason" 1>&2
     return 1
   fi
@@ -352,9 +352,9 @@ bashLintFilesInteractive() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
-  printf "%s\n%s\n%s\n" "$(consoleRed "BEFORE")" \
-    "$(consoleLabel "Queue")" \
-    "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
+  printf "%s\n%s\n%s\n" "$(decorate red "BEFORE")" \
+    "$(decorate label "Queue")" \
+    "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
 
   while [ "$#" -gt 0 ]; do
     if _bashLintInteractiveCheck "$usage" "$@"; then
@@ -362,7 +362,7 @@ bashLintFilesInteractive() {
     else
       countdown=$sleepDelay
       while [ "$countdown" -gt 0 ]; do
-        statusMessage consoleWarning "Refresh in $(consoleValue " $countdown ") $(plural "$countdown" second seconds)"
+        statusMessage decorate warning "Refresh in $(decorate value " $countdown ") $(plural "$countdown" second seconds)"
         countdown=$((countdown - 1))
         sleep 1 || __failEnvironment "$usage" "Interrupt ..." || return $?
       done
@@ -385,19 +385,19 @@ _bashLintInteractiveCheck() {
     scriptPassed=false
   fi
   if $scriptPassed; then
-    bigText "SUCCESS $(basename "$script")" | wrapLines "$(consoleGreen)" "$(consoleReset)"
-    boxedHeading "$script now passes" | wrapLines "$(consoleBoldGreen)" "$(consoleReset)"
-    consoleOrange "$(echoBar "*")"
+    bigText "SUCCESS $(basename "$script")" | wrapLines "$(decorate green)" "$(consoleReset)"
+    boxedHeading "$script now passes" | wrapLines "$(decorate bold-green)" "$(consoleReset)"
+    decorate orange "$(echoBar "*")"
     return 0
   fi
 
   shift 2
-  bigText "FAIL $(basename "$script")" | wrapLines "$(consoleSubtle bashLint)  $(consoleBoldRed)" "$(consoleReset)"
-  printf "%s\n%s\n%s\n" "$(consoleRed "$failedReason")" \
-    "$(consoleLabel "Queue")" \
-    "$(consoleSubtle "$(printf -- "- %s\n" "$@")")"
-  consoleBlue "$(echoBar "+-")"
-  consoleInfo "$# $(plural $# item files) remain"
+  bigText "FAIL $(basename "$script")" | wrapLines "$(decorate subtle bashLint)  $(decorate bold-red)" "$(consoleReset)"
+  printf "%s\n%s\n%s\n" "$(decorate red "$failedReason")" \
+    "$(decorate label "Queue")" \
+    "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
+  decorate blue "$(echoBar "+-")"
+  decorate info "$# $(plural $# item files) remain"
   return 1
 }
 
@@ -435,17 +435,17 @@ bashLint() {
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --verbose)
-        consoleWarning "Verbose on"
+        decorate warning "Verbose on"
         exec 3>&1
         ;;
       *)
-        [ -f "$argument" ] || __failArgument "$usage" "$(printf "%s: %s PWD: %s" "Not a item" "$(consoleCode "$argument")" "$(pwd)")" || return $?
+        [ -f "$argument" ] || __failArgument "$usage" "$(printf "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
         # shellcheck disable=SC2210
         __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
         __usageEnvironment "$usage" shellcheck "$argument" 1>&3 || return $?
         if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
-          __failEnvironment "$usage" "$argument: pcregrep found }\\n#: $(consoleCode "$found")" || return $?
+          __failEnvironment "$usage" "$argument: pcregrep found }\\n#: $(decorate code "$found")" || return $?
         fi
         ;;
     esac
@@ -490,11 +490,11 @@ validateFileContents() {
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --)
-        shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+        shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
         break
         ;;
       --exec)
-        shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+        shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
         binary="$1"
         isCallable "$binary" || __failArgument "$usage" "--exec $binary Not callable" || return $?
         ;;
@@ -506,7 +506,7 @@ validateFileContents() {
         fileArgs+=("$1")
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
 
   textMatches=()
@@ -515,14 +515,14 @@ validateFileContents() {
     [ -n "$argument" ] || __failArgument "$usage" "Zero size text match passed" || return $?
     case "$argument" in
       --)
-        shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+        shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
         break
         ;;
       *)
         textMatches+=("$1")
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
 
   [ "${#textMatches[@]}" -gt 0 ] || __failArgument "$usage" "No text match arguments" || return $?
@@ -532,7 +532,7 @@ validateFileContents() {
   total=0
   total="${#fileArgs[@]}"
   # shellcheck disable=SC2059
-  statusMessage consoleInfo "Searching $total $(plural "$total" item files) for text: $(printf " $(consoleReset)\"$(consoleCode "%s")\"" "${textMatches[@]}")"
+  statusMessage decorate info "Searching $total $(plural "$total" item files) for text: $(printf " $(consoleReset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
   if [ "${#fileArgs[@]}" -gt 0 ]; then
@@ -545,28 +545,28 @@ validateFileContents() {
     for text in "${textMatches[@]}"; do
       if ! grep -q "$text" "$item"; then
         failedReasons+=("$item missing \"$text\"")
-        statusMessage consoleError "Searching $item ... NOT FOUND"
+        statusMessage decorate error "Searching $item ... NOT FOUND"
         failedFiles+=("$item")
       else
-        statusMessage consoleSuccess "Searching $item ... found"
+        statusMessage decorate success "Searching $item ... found"
       fi
     done
   done < <("${fileGenerator[@]}")
-  statusMessage consoleInfo "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
+  statusMessage decorate info "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
     clearLine
-    consoleError "The following scripts failed:" 1>&2
+    decorate error "The following scripts failed:" 1>&2
     for item in "${failedReasons[@]}"; do
-      echo "    $(consoleMagenta "$item")$(consoleInfo ", ")" 1>&2
+      echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
-    consoleError "done." 1>&2
+    decorate error "done." 1>&2
     if [ -n "$binary" ]; then
       "$binary" "${failedFiles[@]}"
     fi
     __failEnvironment "$usage" "$this failed" || return $?
   else
-    statusMessage consoleSuccess "All scripts passed"
+    statusMessage decorate success "All scripts passed"
   fi
 }
 _validateFileContents() {
@@ -631,7 +631,7 @@ validateFileExtensionContents() {
   find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
   total=$(($(wc -l <"$foundFiles") + 0))
   # shellcheck disable=SC2059
-  statusMessage consoleInfo "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf " $(consoleReset)\"$(consoleCode "%s")\"" "${textMatches[@]}")"
+  statusMessage decorate info "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf " $(consoleReset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
   while IFS= read -r item; do
@@ -639,25 +639,25 @@ validateFileExtensionContents() {
     for text in "${textMatches[@]}"; do
       if ! grep -q "$text" "$item"; then
         failedReasons+=("$item missing \"$text\"")
-        statusMessage consoleError "Searching $item ... NOT FOUND"
+        statusMessage decorate error "Searching $item ... NOT FOUND"
       else
-        statusMessage consoleSuccess "Searching $item ... found"
+        statusMessage decorate success "Searching $item ... found"
       fi
     done
   done <"$foundFiles"
-  statusMessage consoleInfo "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
+  statusMessage decorate info "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
   rm "$foundFiles"
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
     clearLine
-    consoleError "The following scripts failed:" 1>&2
+    decorate error "The following scripts failed:" 1>&2
     for item in "${failedReasons[@]}"; do
-      echo "    $(consoleMagenta "$item")$(consoleInfo ", ")" 1>&2
+      echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
-    consoleError "done." 1>&2
+    decorate error "done." 1>&2
     __failEnvironment "$usage" "$this failed" || return $?
   else
-    statusMessage consoleSuccess "All scripts passed"
+    statusMessage decorate success "All scripts passed"
   fi
 }
 
@@ -694,7 +694,7 @@ findUncaughtAssertions() {
         directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleCode "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
 
   if [ -z "$directory" ]; then
@@ -720,7 +720,7 @@ findUncaughtAssertions() {
   } >"$tempFile"
 
   if [ ! -s "$tempFile" ]; then
-    consoleSuccess "All files AOK."
+    decorate success "All files AOK."
   else
     if [ -n "$binary" ] || test $listFlag; then
       problemFile=
@@ -731,7 +731,7 @@ findUncaughtAssertions() {
         if [ "$problemFile" != "$lastProblemFile" ]; then
           # IDENTICAL findUncaughtAssertions-loop 3
           if test $listFlag && [ -n "$lastProblemFile" ]; then
-            printf "%s (Lines %s)\n" "$(consoleCode "$lastProblemFile")" "$(IFS=, consoleMagenta "${problemLines[*]}")"
+            printf "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
           fi
           problemFiles+=("$problemFile")
           lastProblemFile=$problemFile
@@ -741,7 +741,7 @@ findUncaughtAssertions() {
       done < <(cut -d : -f 1,2 <"$tempFile" | sort -u)
       # IDENTICAL findUncaughtAssertions-loop 3
       if test $listFlag && [ -n "$lastProblemFile" ]; then
-        printf "%s (Lines %s)\n" "$(consoleCode "$lastProblemFile")" "$(IFS=, consoleMagenta "${problemLines[*]}")"
+        printf "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
       fi
       if [ ${#problemFiles[@]} -gt 0 ] && [ -n "$binary" ]; then
         "$binary" "${problemFiles[@]}"

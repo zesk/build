@@ -117,7 +117,7 @@ aptKeyAdd() {
     host=$(urlParseItem host "$url") || __failArgument "$usage" "Unable to get host from $url" || return $?
     title="${title:-"$name"}"
 
-    statusMessage consoleInfo "Fetching $title key ... "
+    statusMessage decorate info "Fetching $title key ... "
     keyFile="$ring/$name.gpg"
     __usageEnvironment "$usage" curl -fsSL "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
     __usageEnvironment "$usage" chmod a+r "$keyFile" || return $?
@@ -128,7 +128,7 @@ aptKeyAdd() {
   [ -n "$repoUrl" ] || repoUrl="https://$host/"
 
   signFileText="$(joinArguments "," "${signFiles[@]}")"
-  statusMessage consoleInfo "Adding repository and updating sources ... "
+  statusMessage decorate info "Adding repository and updating sources ... "
 
   [ -n "$listName" ] || listName="${names[0]}"
   sourcesPath=$(_usageAptSourcesPath "$usage") || return $?
@@ -139,10 +139,10 @@ aptKeyAdd() {
   done
   __usageEnvironment "$usage" chmod a+r "$listTarget" || return $?
   if ! $skipUpdate; then
-    statusMessage consoleSuccess "Updating sources ... "
+    statusMessage decorate success "Updating sources ... "
     __usageEnvironment "$usage" packageUpdate --force || return $?
   else
-    statusMessage consoleSuccess "Skipped update ... "
+    statusMessage decorate success "Skipped update ... "
   fi
   statusMessage reportTiming "$start" "Added $title to sources in"
   clearLine || :
@@ -202,18 +202,18 @@ aptKeyRemove() {
   for name in "${names[@]}"; do
     for file in "$ring/$name.gpg" "$sourcesPath/$name.list"; do
       if [ -f "$file" ]; then
-        statusMessage consoleWarning "Removing $(consoleCode "$file") ... "
+        statusMessage decorate warning "Removing $(decorate code "$file") ... "
         __usageEnvironment "$usage" rm -f "$file" || return $?
       else
-        statusMessage consoleSuccess "Already deleted $(consoleCode "$file") ... "
+        statusMessage decorate success "Already deleted $(decorate code "$file") ... "
       fi
     done
   done
   if ! $skipUpdate; then
-    statusMessage consoleSuccess "Updating apt sources ... "
+    statusMessage decorate success "Updating apt sources ... "
     __usageEnvironment "$usage" packageUpdate --force || return $?
   else
-    statusMessage consoleSuccess "Skipped update ... "
+    statusMessage decorate success "Skipped update ... "
   fi
   statusMessage reportTiming "$start" "Removed ${names[*]} from sources in "
 }

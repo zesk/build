@@ -26,9 +26,9 @@ dumpDockerTestFile() {
 
   if [ -f "$proc1File" ]; then
     bigText $proc1File
-    wrapLines "$(consoleMagenta)" "$(consoleReset)" <"$proc1File"
+    wrapLines "$(decorate magenta)" "$(consoleReset)" <"$proc1File"
   else
-    consoleWarning "Missing $proc1File"
+    decorate warning "Missing $proc1File"
   fi
 }
 
@@ -265,7 +265,7 @@ dockerLocalContainer() {
         shift
         envPair=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         if [ "${envPair#*=}" = "$envPair" ]; then
-          consoleWarning "$argument does not look like a variable: $(consoleError "$envPair")" 1>&2
+          decorate warning "$argument does not look like a variable: $(decorate error "$envPair")" 1>&2
         fi
         envFiles+=("$argument" "$envPair")
         ;;
@@ -278,7 +278,7 @@ dockerLocalContainer() {
         envFiles+=("$argument" "$tempEnv")
         ;;
       --platform)
-        shift || __failArgument "$usage" "missing $(consoleLabel "$argument") argument" || return $?
+        shift || __failArgument "$usage" "missing $(decorate label "$argument") argument" || return $?
         platform="$1"
         ;;
       *)

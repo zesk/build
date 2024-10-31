@@ -55,7 +55,7 @@ _integer() {
 # <-- END of IDENTICAL _return
 
 __addNoteTo() {
-  statusMessage consoleInfo "Adding note to $1"
+  statusMessage decorate info "Adding note to $1"
   cp "$1" bin/build
   printf "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
   git add "bin/build/$1"
@@ -78,20 +78,20 @@ __updateMarkdown() {
     case "$argument" in
       --skip-commit)
         flagSkipCommit=1
-        statusMessage consoleWarning "Skipping commit ..."
+        statusMessage decorate warning "Skipping commit ..."
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(consoleValue "$argument")" || return $?
+        __failArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
   __addNoteTo README.md
   __addNoteTo LICENSE.md
 
   buildMarker=bin/build/build.json
 
-  statusMessage consoleInfo "Generating build.json"
+  statusMessage decorate info "Generating build.json"
   printf "%s" "{}" | jq --arg version "$(runHook version-current)" \
     --arg id "$(runHook application-id)" \
     '. + {version: $version, id: $id}' >"$buildMarker"
@@ -107,12 +107,12 @@ __updateMarkdown() {
   if ! test $flagSkipCommit; then
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
-        statusMessage consoleInfo "Committing build.json"
+        statusMessage decorate info "Committing build.json"
         __usageEnvironment "$usage" git commit -m "Updating build.json" "$buildMarker" || return $?
         __usageEnvironment "$usage" git push origin || return $?
       fi
     else
-      statusMessage consoleWarning "Skipping update during commit hook" || :
+      statusMessage decorate warning "Skipping update during commit hook" || :
     fi
   fi
   clearLine || :

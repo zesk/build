@@ -12,7 +12,7 @@ All console functions in the form `decorate style` where `style` is a color name
 Examples:
 
     cat $file | wrapLines "$(decorate green)" "$(decorate reset)"
-    consoleInfo Starting to deploy ...
+    decorate info Starting to deploy ...
 
 ## Color Mode
 
@@ -30,14 +30,14 @@ This is still in progress but will likely be the new mechanism.
 
 Color commands intended to convey status of messages. Try `colorTest` to see all colors.
 
-- `consoleInfo` - Informational messages
-- `consoleWarning` - Warning messages
-- `consoleSuccess` - Success messages
-- `consoleDecoration` - Lines or decoration text
-- `consoleError` - Error messages
-- `consoleLabel` - Used for label/value pairs
-- `consoleValue` - Used for label/value pairs
-- `consoleCode` - Code output
+- `decorate info` - Informational messages
+- `decorate warning` - Warning messages
+- `decorate success` - Success messages
+- `decorate decoration` - Lines or decoration text
+- `decorate error` - Error messages
+- `decorate label` - Used for label/value pairs
+- `decorate value` - Used for label/value pairs
+- `decorate code` - Code output
 
 ## Color commands
 
@@ -45,30 +45,34 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 
 ### Standard ANSI Colors
 
-- `consoleRed`
-- `consoleGreen`
-- `consoleCyan`
-- `consoleBlue`
-- `consoleOrange`
-- `consoleMagenta`
-- `consoleBlack`
-- `consoleWhite`
+- `decorate red`
+- `decorate green`
+- `decorate cyan`
+- `decorate blue`
+- `decorate orange`
+- `decorate magenta`
+- `decorate black`
+- `decorate white`
 
 ### Text decoration
 
-- `consoleUnderline`
-- `consoleBold`
+- `decorate underline`
+- `decorate bold`
 
 ### Bold Colors
 
-- `consoleBoldRed`
-- `consoleBoldGreen`
-- `consoleBoldCyan`
-- `consoleBoldBlue`
-- `consoleBoldOrange`
-- `consoleBoldMagenta`
-- `consoleBoldBlack`
-- `consoleBoldWhite`
+- `decorate bold-red`
+- `decorate bold-green`
+- `decorate bold-cyan`
+- `decorate bold-blue`
+- `decorate bold-orange`
+- `decorate bold-magenta`
+- `decorate bold-black`
+- `decorate bold-white`
+
+### Reset color to defaults
+
+{consoleReset}
 
 ## Additional commands
 

@@ -45,7 +45,7 @@ testBuildEnvironmentLoadAll() {
   while read -r loadIt; do
     export "${loadIt?}"
     buildEnvironmentLoad "$loadIt" || _environment "buildEnvironmentLoad $loadIt failed" return $?
-    # statusMessage consoleInfo Loaded "$loadIt=${!loadIt}"
+    # statusMessage decorate info Loaded "$loadIt=${!loadIt}"
     if inArray "$loadIt" "${nonBlankEnvs[@]}"; then
       assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
     fi
@@ -134,7 +134,7 @@ testInstallBinBuild() {
 
   rm -rf bin/build || return $?
 
-  consoleSuccess Success
+  decorate success Success
 
   # --------------------------------------------------------------------------------
   #
@@ -222,7 +222,7 @@ testInstallBinBuild() {
 
   rm -rf "$testDir" || :
 
-  consoleSuccess Success
+  decorate success Success
 }
 _testInstallBinBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

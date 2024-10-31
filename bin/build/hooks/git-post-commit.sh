@@ -77,7 +77,7 @@ __gitPushHelper() {
   local tempFile
 
   tempFile=$(mktemp) || __failEnvironment "$usage" "__gitPushHelper mktemp" || return $?
-  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(consoleCode)" "$(consoleReset)"; then
+  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(decorate code)" "$(consoleReset)"; then
     if ! grep -q 'up-to-date' "$tempFile"; then
       dumpPipe "git push" <"$tempFile" || :
       __environment rm -rf "$tempFile" || :

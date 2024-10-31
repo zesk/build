@@ -12,10 +12,10 @@ testNewestAndOldest() {
   __environment cd "$place" || return $?
 
   date >"a"
-  consoleInfo "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
+  decorate info "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
   sleep "$waitSeconds"
   date >"b"
-  consoleInfo "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
+  decorate info "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
   sleep "$waitSeconds"
   date >"c"
 
@@ -48,11 +48,11 @@ testMemoryRelated() {
   local rss vsz
 
   if ! rss=$(processMemoryUsage $$); then
-    consoleError processMemoryUsage $$ failed
+    decorate error processMemoryUsage $$ failed
     return 1
   fi
   if ! vsz=$(processVirtualMemoryAllocation $$); then
-    consoleError processVirtualMemoryAllocation $$ failed
+    decorate error processVirtualMemoryAllocation $$ failed
     return 1
   fi
 

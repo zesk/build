@@ -71,7 +71,7 @@ __tools() {
 # Example: - Check for a known artifact (build sha) in the server somehow
 # Example: - etc.
 __hookDeployConfirm() {
-  ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced with live smoke tests"
+  ! buildDebugEnabled || decorate success "${BASH_SOURCE[0]} is a noop and should be replaced with live smoke tests"
 }
 
 __tools ../.. __hookDeployConfirm

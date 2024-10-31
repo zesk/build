@@ -56,7 +56,7 @@ iTerm2Badge() {
   if isiTerm2; then
     printf "\e]1337;SetBadgeFormat=%s\a" "$(printf "%s" "${message[*]}" | base64)"
   elif $wrongTerminalFails; then
-    __failEnvironment "$usage" "Terminal does not support badges: $(consoleCode "$LC_TERMINAL")" || return $?
+    __failEnvironment "$usage" "Terminal does not support badges: $(decorate code "$LC_TERMINAL")" || return $?
   fi
 }
 _iTerm2Badge() {

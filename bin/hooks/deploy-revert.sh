@@ -65,7 +65,7 @@ _integer() {
 #
 # Exit code: 0 - This SHOULD exit successfully always
 __hookDeployRevert() {
-  ! buildDebugEnabled || consoleSuccess "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
+  ! buildDebugEnabled || decorate success "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
 __hookDeployRevert "$@"

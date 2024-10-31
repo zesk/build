@@ -41,3 +41,10 @@ testColorBrightness() {
     assertNotExitCode --stderr-ok 0 colorBrightness "$r" "$g" "$b" || return $?
   done
 }
+
+testConsoleFileLink() {
+  bigText consoleFileLink
+  __environment consoleFileLink "${BASH_SOURCE[0]}" || return $?
+  assertExitCode 0 consoleLink https://example.com/ Hello || return $?
+  assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
+}

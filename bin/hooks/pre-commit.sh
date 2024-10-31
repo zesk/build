@@ -59,17 +59,17 @@ __hookPreCommit() {
   # gitPreCommitSetup is already called
   local fileCopies nonOriginalWithEOF nonOriginal original
 
-  gitPreCommitListExtension @ | wrapLines "- $(consoleValue)" "$(consoleReset)"
+  gitPreCommitListExtension @ | wrapLines "- $(decorate value)" "$(consoleReset)"
   gitPreCommitHeader sh md json
 
-  statusMessage consoleSuccess Updating help files ...
+  statusMessage decorate success Updating help files ...
   __usageEnvironment "$usage" ./bin/update-md.sh || return $?
 
-  statusMessage consoleSuccess Updating _sugar.sh
+  statusMessage decorate success Updating _sugar.sh
   original="bin/build/identical/_sugar.sh"
   nonOriginal=bin/build/tools/_sugar.sh
 
-  statusMessage consoleSuccess Making shell files exeutable ...
+  statusMessage decorate success Making shell files exeutable ...
   __usageEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
@@ -79,7 +79,7 @@ __hookPreCommit() {
     # Can not be trusted to not edit the right one
     if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
       __usageEnvironment "$usage" cp "${fileCopies[@]}" || _clean "$nonOriginalWithEOF" || return $?
-      consoleWarning "Someone edited non-original file $nonOriginal"
+      decorate warning "Someone edited non-original file $nonOriginal"
       touch "${fileCopies[0]}" # make newer
     fi
     rm -f "$nonOriginalWithEOF" || :

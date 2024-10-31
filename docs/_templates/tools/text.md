@@ -67,6 +67,7 @@
 {cannon}
 {joinArguments}
 {listAppend}
+{listRemove}
 {listCleanDuplicates}
 
 # Characters

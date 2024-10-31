@@ -209,6 +209,38 @@ __deprecatedCleanup() {
   __deprecatedCannon 'whichAptUninstall' "packageWhichUninstall" ! -path '*/apt.sh'
   __deprecatedCannon 'aptNeedRestartFlag' "packageNeedRestartFlag" ! -path '*/apt.sh'
 
+  # v0.15.1
+  __deprecatedCannon 'console''Code' "decorate code" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Error' "decorate error" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Orange' "decorate orange" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldOrange' "decorate bold-orange" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Blue' "decorate blue" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldBlue' "decorate bold-blue" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Red' "decorate red" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldRed' "decorate bold-red" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Green' "decorate green" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldGreen' "decorate bold-green" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Cyan' "decorate cyan" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldCyan' "decorate bold-cyan" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Yellow' "decorate yellow" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Magenta' "decorate magenta" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Black' "decorate black" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldBlack' "decorate bold-black" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldWhite' "decorate bold-white" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''White' "decorate white" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''BoldMagenta' "decorate bold-magenta" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Underline' "decorate underline" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Bold' "decorate bold" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''NoBold' "decorate no-bold" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''NoUnderline' "decorate no-underline" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Info' "decorate info" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Warning' "decorate warning" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Success' "decorate success" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Decoration' "decorate decoration" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Subtle' "decorate subtle" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Label' "decorate label" ! -path '*/colors.sh'
+  __deprecatedCannon 'console''Value' "decorate value" ! -path '*/colors.sh'
+
   # END OF CANNONS
 
   clearLine

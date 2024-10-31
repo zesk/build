@@ -63,7 +63,7 @@ __buildDocumentationBuild() {
   local here="${BASH_SOURCE[0]%/*}" home
 
   __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
-  lineFill . "$(consoleInfo "${APPLICATION_NAME} documentation started on $(consoleValue "$(date +"%F %T")")") "
+  lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
   home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
 
   example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" mapEnvironment <"$home/docs/_templates/coding.md" >"$home/docs/coding.md"

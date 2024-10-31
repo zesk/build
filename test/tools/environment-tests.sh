@@ -16,7 +16,7 @@ testDotEnvConfigure() {
 
   __environment mkdir -p "$tempDir" || return $?
   __environment cd "$tempDir" || return $?
-  consoleInfo "$(pwd)"
+  decorate info "$(pwd)"
   assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
 
   tempEnv="$tempDir/.env"
@@ -45,7 +45,7 @@ testDotEnvConfigure() {
 
   __environment cd .. || return $?
   __environment rm -rf "$tempDir" || return $?
-  consoleSuccess environmentFileLoad .env --optional .env.local works AOK
+  decorate success environmentFileLoad .env --optional .env.local works AOK
 
   unset TESTENVWORKS TESTENVLOCALWORKS
 }
@@ -108,10 +108,10 @@ testEnvironmentFileMake() {
     fi
     for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DSN; do
       if ! grep -q "$v" .env; then
-        _environment "$(printf -- "%s %s\n%s" "environmentFileApplicationMake > .env file does not contain" "$(consoleCode "$v")" "$(wrapLines "$(consoleCode)    " "$(consoleReset)" <.env)")" || return $?
+        _environment "$(printf -- "%s %s\n%s" "environmentFileApplicationMake > .env file does not contain" "$(decorate code "$v")" "$(wrapLines "$(decorate code)    " "$(consoleReset)" <.env)")" || return $?
       fi
     done
-    consoleGreen application-environment.sh works AOK
+    decorate green application-environment.sh works AOK
     rm .env
   )
 }
@@ -121,11 +121,11 @@ testEnvironmentVariables() {
   e=$(mktemp)
   export BUILD_TEST_UNIQUE=1
   if ! environmentVariables >"$e"; then
-    consoleError environmentVariables failed
+    decorate error environmentVariables failed
     return 1
   fi
   assertFileContains --line "$LINENO" "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
-  wrapLines "environmentVariables: $(consoleCode)" "$(consoleReset)" <"$e"
+  wrapLines "environmentVariables: $(decorate code)" "$(consoleReset)" <"$e"
   rm "$e"
 
   unset BUILD_TEST_UNIQUE

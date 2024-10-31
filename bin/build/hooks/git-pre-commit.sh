@@ -88,12 +88,12 @@ __hookGitPreCommit() {
   clearLine
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 
-  consoleInfo "$(lineFill '*' "$APPLICATION_NAME $(consoleMagenta pre-commit) $(consoleDecoration)")"
+  decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta pre-commit) $(decorate decoration)")"
   gitPreCommitSetup || :
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
   for extension in "${extensions[@]+${extensions[@]}}"; do
-    statusMessage consoleInfo "Processing $(consoleCode "$extension") ..."
+    statusMessage decorate info "Processing $(decorate code "$extension") ..."
     if gitPreCommitHasExtension "$extension"; then
       __usageEnvironment "$usage" runOptionalHook "pre-commit-$extension" || return $?
     fi

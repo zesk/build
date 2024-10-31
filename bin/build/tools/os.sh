@@ -125,6 +125,19 @@ manPathConfigure() {
 }
 
 #
+# Usage: {fn} path ...
+# Argument: path - Directory. Required. The path to be removed from the `MANPATH` environment
+#
+manPathRemove() {
+  local tempPath
+  export MANPATH
+
+  __environment buildEnvironmentLoad MANPATH || return $?
+  tempPath="$(listAppend "$MANPATH" ':' "$@")" || _environment listRemove "$MANPATH" ':' "$@" || return $?
+  MANPATH="$tempPath"
+}
+
+#
 # Cleans the MANPATH and removes non-directory entries and duplicates
 #
 # Maintains ordering.
@@ -142,6 +155,23 @@ manPathCleanDuplicates() {
   MANPATH="$newPath"
 }
 _manPathCleanDuplicates() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn} path ...
+# Argument: path - the path to be removed from the `PATH` environment
+pathRemove() {
+  local usage="_${FUNCNAME[0]}"
+  local tempPath
+  export PATH
+
+  __usageEnvironment "$usage" buildEnvironmentLoad PATH || return $?
+  tempPath="$(__usageEnvironment "$usage" listRemove "$PATH" ':' "$@")" || return $?
+  PATH="$tempPath"
+}
+_pathRemove() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -365,7 +395,7 @@ extensionLists() {
   done
   [ -n "$directory" ] || __failArgument "$usage" "No directory supplied" || return $?
 
-  ! $cleanFlag || statusMessage consoleInfo "Cleaning ..." || :
+  ! $cleanFlag || statusMessage decorate info "Cleaning ..." || :
   ! $cleanFlag || __usageEnvironment "$usage" find "$directory" -type f -delete || return $? && clearLine
 
   if [ ${#names[@]} -gt 0 ]; then

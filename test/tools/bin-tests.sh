@@ -33,7 +33,7 @@ __testInstallInstallBuild() {
   marker=$(randomString)
   echo " # changed $marker" >>"$testBinary"
   if ! grep -q "$marker" "$testBinary"; then
-    consoleError "binary $testBinary does not contain marker?"
+    decorate error "binary $testBinary does not contain marker?"
     return 1
   fi
   assertFileContains --line "$LINENO" "$testBinary" '../../..' || return $?
@@ -47,11 +47,11 @@ __testInstallInstallBuild() {
   if [ ! -d "$topDir/bin/build" ]; then
     find "$topDir" -type f
     find "$topDir" -type d
-    consoleError "binary $testBinary failed to do the job ($topDir/bin/build)"
+    decorate error "binary $testBinary failed to do the job ($topDir/bin/build)"
     return 1
   fi
   if grep -q "$marker" "$testBinary"; then
-    consoleError "binary $testBinary did not update itself as it should have ($marker found)"
+    decorate error "binary $testBinary did not update itself as it should have ($marker found)"
     dumpPipe --tail "$testBinary last 20" <"$testBinary"
     return 1
   fi
@@ -60,7 +60,7 @@ __testInstallInstallBuild() {
 
   assertExitCode --line "$LINENO" --stdout-match "already installed" 0 "$testBinary" || return $?
 
-  consoleSuccess "install-bin-build.sh update was tested successfully"
+  decorate success "install-bin-build.sh update was tested successfully"
   rm -rf "$topDir"
 }
 
@@ -173,7 +173,7 @@ __doesScriptInstall() {
 
   __testSection "INSTALL $binary"
   shift
-  ! whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "is already installed" || return $?
+  ! whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "is already installed" || return $?
   __environment "$@" || return $?
-  whichExists "$binary" || _environment "binary" "$(consoleCode "$binary")" "was not installed by" "$@" || return $?
+  whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "was not installed by" "$@" || return $?
 }

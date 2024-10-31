@@ -65,10 +65,10 @@ __buildDeploy() {
 
   start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
 
-  statusMessage consoleInfo "Fetching deep copy of repository ..." || :
+  statusMessage decorate info "Fetching deep copy of repository ..." || :
   __usageEnvironment "$usage" git fetch --unshallow || return $?
 
-  statusMessage consoleInfo "Collecting application version and ID ..." || :
+  statusMessage decorate info "Collecting application version and ID ..." || :
   currentVersion="$(runHook version-current)" || __failEnvironment "$usage" "runHook version-current" || return $?
   appId=$(runHook application-id) || __failEnvironment "$usage" "runHook application-id" || return $?
 
@@ -78,12 +78,12 @@ __buildDeploy() {
   notes=$(releaseNotes) || __failEnvironment "$usage" "releaseNotes" || return $?
   [ -f "$notes" ] || __failEnvironment "$usage" "$notes does not exist" || return $?
 
-  bigText "$currentVersion" | wrapLines "    $(consoleGreen "Zesk BUILD    🛠️️ ") $(consoleMagenta)" "$(consoleGreen " ⚒️ ")" || :
-  consoleInfo "Deploying a new release ... " || :
+  bigText "$currentVersion" | wrapLines "    $(decorate green "Zesk BUILD    🛠️️ ") $(decorate magenta)" "$(decorate green " ⚒️ ")" || :
+  decorate info "Deploying a new release ... " || :
 
   if ! githubRelease "$notes" "$currentVersion" "$appId"; then
-    consoleWarning "Deleting tagged version ... " || :
-    gitTagDelete "$currentVersion" || consoleError "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
+    decorate warning "Deleting tagged version ... " || :
+    gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
     __failEnvironment "$usage" "githubRelease" || return $?
   fi
   reportTiming "$start" "Release completed in" || :

@@ -16,10 +16,10 @@ __resultText() {
   text="$*"
   if "$passed"; then
     # shellcheck disable=SC2015
-    [ -z "$text" ] && consoleBlue "(blank)" || consoleCode "$text"
+    [ -z "$text" ] && decorate blue "(blank)" || decorate code "$text"
   else
     # shellcheck disable=SC2015
-    [ -z "$text" ] && consoleBoldRed "(blank)" || consoleError "$text"
+    [ -z "$text" ] && decorate bold-red "(blank)" || decorate error "$text"
   fi
 }
 
@@ -36,14 +36,14 @@ _assertFailure() {
   local function="${1-None}"
   incrementor assert-failure >/dev/null
   shift || :
-  statusMessage printf -- "%s: %s %s " "$(_symbolFail)" "$(consoleError "$function")" "$(consoleInfo "$@")" 1>&2
+  statusMessage printf -- "%s: %s %s " "$(_symbolFail)" "$(decorate error "$function")" "$(decorate info "$@")" 1>&2
   return "$(_code assert)"
 }
 _assertSuccess() {
   local function="${1-None}"
   incrementor assert-success >/dev/null
   shift || :
-  statusMessage printf -- "%s: %s %s " "$(_symbolSuccess)" "$(consoleSuccess "$function")" "$(consoleInfo "$@")"
+  statusMessage printf -- "%s: %s %s " "$(_symbolSuccess)" "$(decorate success "$function")" "$(decorate info "$@")"
 }
 
 # Core condition assertion handler
@@ -90,7 +90,7 @@ _assertConditionHelper() {
       --exit)
         shift
         expectedExitCode=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")
-        pairs+=("Exit" "$(consoleBoldMagenta " $expectedExitCode ")")
+        pairs+=("Exit" "$(decorate bold-magenta " $expectedExitCode ")")
         ;;
       --display)
         shift
@@ -99,7 +99,7 @@ _assertConditionHelper() {
       --success)
         shift
         success="$(usageArgumentBoolean "$usage" "$argument" "${1-}")" || return $?
-        pairs+=("should" "$(_choose "$success" "succeed" "$(consoleWarning "fail")")")
+        pairs+=("should" "$(_choose "$success" "succeed" "$(decorate warning "fail")")")
         ;;
       --debug)
         debugFlag=true
@@ -107,7 +107,7 @@ _assertConditionHelper() {
       --line)
         shift
         lineNumber="${1-}"
-        [ -z "$lineNumber" ] || linePrefix="$(consoleBoldMagenta "Line ${1-}: ")"
+        [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line ${1-}: ")"
         ;;
       --test)
         shift
@@ -200,11 +200,11 @@ _assertConditionHelper() {
   fi
   result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
   # shellcheck disable=SC2059
-  message="$(printf "$(consoleLabel %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
+  message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
   message="$(
     printf -- "%s%s ➡️ %s -> (%s)" \
-      "$linePrefix" "$(consoleCode "$this")" \
+      "$linePrefix" "$(decorate code "$this")" \
       "$result" \
       "$message"
   )"
@@ -212,15 +212,15 @@ _assertConditionHelper() {
     message="$message -> [$exitCode $(_choose "$success" "=" "!=") $expectedExitCode] $(__resultText "$testPassed" "$(_choose "$testPassed" correct incorrect)")"
   fi
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
-    message="$(printf -- "%s - %s\n%s\n" "$message" "$(consoleError "produced stderr")" "$(dumpPipe --tail stderr <"$errorFile")")"
+    message="$(printf -- "%s - %s\n%s\n" "$message" "$(decorate error "produced stderr")" "$(dumpPipe --tail stderr <"$errorFile")")"
     _assertFailure "$this" "$displayName $message" || return $?
   fi
   if $errorsOk && [ ! -s "$errorFile" ]; then
     clearLine
-    printf "%s – %s\n" "$message" "$(consoleWarning "--stderr-ok used but is NOT necessary")"
+    printf "%s – %s\n" "$message" "$(decorate warning "--stderr-ok used but is NOT necessary")"
   fi
-  stderrTitle="$this $(consoleBoldRed stderr)"
-  stdoutTitle="$this $(consoleLabel stdout)"
+  stderrTitle="$this $(decorate bold-red stderr)"
+  stdoutTitle="$this $(decorate label stdout)"
   if [ ${#stderrContains[@]} -gt 0 ]; then
     __assertFileContainsThis "$this" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrContains[@]}" || testPassed=false
   fi
@@ -291,7 +291,7 @@ __assertFileContainsHelper() {
         shift
         lineNumber="${1-}"
         if [ -n "$lineNumber" ]; then
-          linePrefix="$(consoleBoldMagenta "Line $lineNumber: ")"
+          linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
         fi
         ;;
       *)
@@ -321,9 +321,9 @@ __assertFileContainsHelper() {
     fi
     if [ "$found" = "$success" ]; then
       # shellcheck disable=SC2059
-      _assertSuccess "$this" "$linePrefix$displayName $verb strings: ($(printf -- "\"$(consoleCode "%s")\" " "${args[@]+${args[@]}}"))" || return $?
+      _assertSuccess "$this" "$linePrefix$displayName $verb strings: ($(printf -- "\"$(decorate code "%s")\" " "${args[@]+${args[@]}}"))" || return $?
     else
-      message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb string:" "$(consoleCode "$expected")" "$(dumpPipe --tail "$displayName" <"$file")")"
+      message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb string:" "$(decorate code "$expected")" "$(dumpPipe --tail "$displayName" <"$file")")"
       _assertFailure "$this" "$message" || return $?
     fi
     shift
@@ -390,7 +390,7 @@ ___assertNumericFormat() {
   local leftValue="$1" rightValue="$2" cmp
   cmp="${!#}"
   shift 2
-  printf "[%s %s] %s %s\n" "$(consoleCode "$leftValue")" "$(__resultText "$testPassed" "$cmp $rightValue")" "$(_choose "$success" "(true)" "(false)")" "$*"
+  printf "[%s %s] %s %s\n" "$(decorate code "$leftValue")" "$(__resultText "$testPassed" "$cmp $rightValue")" "$(_choose "$success" "(true)" "(false)")" "$*"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -421,7 +421,7 @@ ___assertContainsFormat() {
   local needle haystack
 
   shift 2
-  needle="$(consoleCode "${1-}")" && shift
+  needle="$(decorate code "${1-}")" && shift
   haystack=$(__resultText "$testPassed" "$*")
   printf -- "%s %s %s\n" "$needle" "$(_choose "$testPassed" "contains" "does not contain")" "$haystack"
 }
@@ -489,7 +489,7 @@ ___assertFileExists() {
 ___assertFileExistsFormat() {
   local testPassed="${1-}" success="${2-}"
   shift 2
-  printf -- "%s %s wd: \"%s" "$(__resultText "$testPassed" "$*")" "$(_choose "$testPassed" "is a file" "is not a file")" "$(consoleValue "$(pwd)")"
+  printf -- "%s %s wd: \"%s" "$(__resultText "$testPassed" "$*")" "$(_choose "$testPassed" "is a file" "is not a file")" "$(decorate value "$(pwd)")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -541,7 +541,7 @@ ___assertOutputEquals() {
   isCallable "$binary" || _environment "$binary is not callable: $*" || return $?
   if output=$(plumber "$binary" "$@" 2>"$stderr"); then
     if [ -s "$stderr" ]; then
-      dumpPipe "$(consoleError Produced stderr): $binary" "$@" <"$stderr" 1>&2
+      dumpPipe "$(decorate error Produced stderr): $binary" "$@" <"$stderr" 1>&2
       _clean 1 "$stderr" || return $?
     fi
     [ "$output" = "$expected" ] || exitCode=1
@@ -556,9 +556,9 @@ ___assertOutputEqualsFormat() {
   local testPassed="${1-}" success="${2-}" verb expected="$3" binary="$4"
   shift 4 || :
 
-  message="$(consoleCode "$binary")$(printf " \"%s\"" "$@")"
+  message="$(decorate code "$binary")$(printf " \"%s\"" "$@")"
   verb=$(_choose "$success" "matches" "does not match")
-  printf -- "%s %s %s %s" "$message" "$(consoleCode "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultText "$testPassed" "$expected")"
+  printf -- "%s %s %s %s" "$message" "$(decorate code "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultText "$testPassed" "$expected")"
 }
 
 # Usage: {fn} thisName arguments
@@ -604,7 +604,7 @@ ___assertExitCodeFormat() {
   local testPassed="${1-}" success="${2-}"
   shift 2
   # shellcheck disable=SC2059
-  command="$(printf "\"$(consoleCode %s)\" " "$@")"
+  command="$(printf "\"$(decorate code %s)\" " "$@")"
   printf "%s => %s" "${command% }" "$(__resultText "$testPassed" "$(_choose "$testPassed" "correctly" "incorrectly")")"
 }
 
@@ -653,7 +653,7 @@ ___assertOutputContainsFormat() {
   local contains="${3-}" binary="${4-}" verb
   shift 3
   # shellcheck disable=SC2059
-  command="$(printf "\"$(consoleCode %s)\" " "$@")"
+  command="$(printf "\"$(decorate code %s)\" " "$@")"
   verb=$(_choose "$success" "contains" "does not contain")
-  printf "%s => %s \"%s\" %s" "${command% }" "$(consoleValue "$verb")" "$contains" "$(__resultText "$testPassed" "$(_choose "$testPassed" "correctly" "incorrectly")")"
+  printf "%s => %s \"%s\" %s" "${command% }" "$(decorate value "$verb")" "$contains" "$(__resultText "$testPassed" "$(_choose "$testPassed" "correctly" "incorrectly")")"
 }

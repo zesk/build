@@ -110,7 +110,7 @@ urlParse() {
 # Usage: urlParseItem component url0 [ url1 ... ]
 # Argument: url0 - String. URL. Required. A Uniform Resource Locator used to specify a database connection
 # Argument: component - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
-# Example:     consoleInfo "Connecting as $(urlParseItem user "$url")"
+# Example:     decorate info "Connecting as $(urlParseItem user "$url")"
 #
 urlParseItem() {
   local component parsed
@@ -127,7 +127,7 @@ urlParseItem() {
       return $errorArgument
     fi
     if ! eval "$parsed"; then
-      consoleError "Failed to eval $parsed" 1>&2
+      decorate error "Failed to eval $parsed" 1>&2
       return $errorArgument
     fi
     printf "%s\n" "${!component-}"

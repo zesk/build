@@ -30,16 +30,18 @@
 # shellcheck disable=SC2120
 awsInstall() {
   local usage="_${FUNCNAME[0]}"
-  local start url
-
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  __usageEnvironment "$usage" packageInstall unzip curl "$@" || return $?
 
   if whichExists aws; then
     return 0
   fi
 
-  statusMessage consoleInfo "Installing aws-cli ... " || :
+  local start
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  __usageEnvironment "$usage" packageWhichInstall unzip unzip || return $?
+  __usageEnvironment "$usage" packageWhichInstall curl curl "$@" || return $?
+
+  local url
+  statusMessage decorate info "Installing aws-cli ... " || :
   case "${HOSTTYPE-}" in
     arm64 | aarch64)
       url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
@@ -139,13 +141,13 @@ awsCredentialsFile() {
   fi
   if [ ! -d "$home" ]; then
     # Argument is validated above MUST be environment
-    ! "$verbose" || _environment "HOME environment \"$(consoleValue "$home")\" directory not found" || return $?
+    ! "$verbose" || _environment "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
     return 1
   fi
   credentials="$HOME/$credentials"
   if [ ! -f "$credentials" ]; then
     if ! $createFlag; then
-      ! $verbose || __failEnvironment "$usage" "No credentials file ($(consoleValue "$credentials")) found" || return $?
+      ! $verbose || __failEnvironment "$usage" "No credentials file ($(decorate value "$credentials")) found" || return $?
       return 1
     fi
     credentialsPath="${credentials%/*}"
@@ -232,7 +234,7 @@ _awsHasEnvironment() {
 # Example:     eval $(cat "$setFile")
 # Example:     rm "$setFile"
 # Example:     else
-# Example:     consoleError "Need $profile profile in aws credentials file"`
+# Example:     decorate error "Need $profile profile in aws credentials file"`
 # Example:     exit 1
 # Example:     fi
 awsEnvironmentFromCredentials() {
@@ -294,7 +296,7 @@ __awsCredentialsExtractProfile() {
 # Example:     eval $(cat "$setFile")
 # Example:     rm "$setFile"
 # Example:     else
-# Example:     consoleError "Need $profile profile in aws credentials file"`
+# Example:     decorate error "Need $profile profile in aws credentials file"`
 # Example:     exit 1
 # Example:     fi
 awsCredentialsHasProfile() {
@@ -308,7 +310,7 @@ awsCredentialsHasProfile() {
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
   [ "${#foundValues[@]}" -gt 0 ] || return 1
   if [ "${#foundValues[@]}" -lt 2 ]; then
-    __failEnvironment "$usage" "${#foundValues[@]} minimum 2 values found in $(consoleValue "$credentials")" || return $?
+    __failEnvironment "$usage" "${#foundValues[@]} minimum 2 values found in $(decorate value "$credentials")" || return $?
   fi
   inArray AWS_ACCESS_KEY_ID "${foundValues[@]}" && inArray AWS_SECRET_ACCESS_KEY "${foundValues[@]}"
 }
@@ -368,7 +370,7 @@ awsCredentialsFromEnvironment() {
   awsHasEnvironment || __failEnvironment "$usage" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
   credentials="$(__usageEnvironment "$usage" awsCredentialsFile --create)" || return $?
   if awsCredentialsHasProfile "$profileName"; then
-    $forceFlag || __failEnvironment "$usage" "Profile $(consoleValue "$profileName") exists in $(consoleCode "$credentials")" || return $?
+    $forceFlag || __failEnvironment "$usage" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
     _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" || return $?
   fi
   lines=(
@@ -474,7 +476,7 @@ awsSecurityGroupIPModify() {
         __failArgument "unknown argument: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$argument")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
   [ -n "$mode" ] || __failArgument "$usage" "--add, --remove, or --register is required" || return $?
 
@@ -514,10 +516,10 @@ awsSecurityGroupIPModify() {
       # Register: No IP found, add it
       mode="--add"
     elif [ "$mode" = "--register" ] && [ "$foundIP" = "$ip" ]; then
-      __awwSGOutput "$(consoleSuccess "IP already registered:")" "$foundIP" "$group" "$port"
+      __awwSGOutput "$(decorate success "IP already registered:")" "$foundIP" "$group" "$port"
       return 0
     else
-      __awwSGOutput "$(consoleInfo "Removing old IP:")" "$foundIP" "$group" "$port"
+      __awwSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
       if ! aws --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" >/dev/null; then
         __failEnvironment "$usage" "revoke-security-group-ingress FAILED" || return $?
       fi
@@ -525,14 +527,14 @@ awsSecurityGroupIPModify() {
   fi
   if [ "$mode" = "--add" ]; then
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
-    __awwSGOutput "$(consoleInfo "$verb new IP:")" "$ip" "$group" "$port"
+    __awwSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
     if ! aws --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         rm -f "$tempErrorFile" || :
-        printf "%s %s\n" "$(consoleYellow "duplicate")" "$(reportTiming "$start" "found in")"
+        printf "%s %s\n" "$(decorate yellow "duplicate")" "$(reportTiming "$start" "found in")"
         return 0
       else
-        wrapLines "$(consoleError "ERROR : : : : ") $(consoleCode)" "$(consoleBlue ": : : : ERROR")$(consoleReset)" <"$tempErrorFile" 1>&2
+        wrapLines "$(decorate error "ERROR : : : : ") $(decorate code)" "$(decorate blue ": : : : ERROR")$(consoleReset)" <"$tempErrorFile" 1>&2
         rm -f "$tempErrorFile" || :
         __failEnvironment "$usage" "Failed to authorize-security-group-ingress" || return $?
       fi
@@ -547,7 +549,7 @@ _awsSecurityGroupIPModify() {
 # Helper for awsSecurityGroupIPModify
 __awwSGOutput() {
   local title="$1" ip="$2" group="$3" port="$4"
-  printf "%s %s %s %s %s %s\n" "$title" "$(consoleRed "$foundIP")" "$(consoleLabel "in group-id:")" "$(consoleValue "$group")" "$(consoleLabel "port:")" "$(consoleValue "$port")"
+  printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$foundIP")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
@@ -562,7 +564,7 @@ __awwSGOutput() {
 #
 # Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
 # Use this during deployment to grant temporary access to your systems during deployment only.
-# Build scripts should have a $(consoleCode --revoke) step afterward, always.
+# Build scripts should have a $(decorate code --revoke) step afterward, always.
 # services are looked up in /etc/services and match /tcp services only for port selection
 #
 # If no `/etc/services` matches the default values are supported within the script: `mysql`,`postgres`,`ssh`,`http`,`https`
@@ -647,7 +649,7 @@ awsIPAccess() {
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    ! $verboseFlag || statusMessage consoleInfo "Need AWS Environment: $awsProfile" || :
+    ! $verboseFlag || statusMessage decorate info "Need AWS Environment: $awsProfile" || :
     if awsCredentialsHasProfile "$awsProfile"; then
       __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$awsProfile")" || return $?
     else
@@ -661,9 +663,9 @@ awsIPAccess() {
   if $verboseFlag; then
     clearLine
     if $optionRevoke; then
-      bigText "Closing ..." | wrapLines "$(consoleMagenta)" "$(consoleReset)"
+      bigText "Closing ..." | wrapLines "$(decorate magenta)" "$(consoleReset)"
     else
-      bigText "Opening ..." | wrapLines "$(consoleBlue)" "$(consoleReset)"
+      bigText "Opening ..." | wrapLines "$(decorate blue)" "$(consoleReset)"
     fi
     consoleNameValue 40 ID "$developerId" || :
     consoleNameValue 40 IP "$currentIP" || :
@@ -673,7 +675,7 @@ awsIPAccess() {
   fi
   for service in "${services[@]}"; do
     if ! serviceToPort "$service" >/dev/null; then
-      __failArgument "$usage" "Invalid service $(consoleCode "$service")" || return $?
+      __failArgument "$usage" "Invalid service $(decorate code "$service")" || return $?
     fi
   done
   for securityGroupId in "${securityGroups[@]}"; do

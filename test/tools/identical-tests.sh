@@ -92,34 +92,34 @@ testIdenticalChecks() {
   identicalError=$(_code identical)
   identicalCheckArgs=(--cd "test/example" --extension 'txt')
 
-  clearLine && consoleInfo "same file match"
+  clearLine && decorate info "same file match"
   assertExitCode --line "$LINENO" --stdout-match Verified 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL' || return $?
 
-  clearLine && consoleInfo "same file mismatch"
+  clearLine && decorate info "same file mismatch"
   identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL'
   echo "Exit code: $?"
   assertExitCode --dump --line "$LINENO" --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
 
-  clearLine && consoleInfo "overlap failure"
+  clearLine && decorate info "overlap failure"
   assertExitCode --line "$LINENO" --stderr-match 'overlap' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
 
-  clearLine && consoleInfo "bad number failure"
+  clearLine && decorate info "bad number failure"
   assertExitCode --line "$LINENO" --stderr-match 'invalid count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
 
-  clearLine && consoleInfo "single instance failure"
+  clearLine && decorate info "single instance failure"
   assertExitCode --line "$LINENO" --stderr-match 'Single instance of token found:' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
   assertExitCode --line "$LINENO" --stderr-match 'Single instance of token found:' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
 
-  clearLine && consoleInfo "$(pwd) passing 3 files"
+  clearLine && decorate info "$(pwd) passing 3 files"
   assertExitCode --line "$LINENO" --dump 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?
 
-  clearLine && consoleInfo "slash slash"
+  clearLine && decorate info "slash slash"
   assertExitCode --line "$LINENO" --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical ' || return $?
 
-  clearLine && consoleInfo "slash slash prefix mismatch is OK"
+  clearLine && decorate info "slash slash prefix mismatch is OK"
   assertExitCode --line "$LINENO" 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// IDENTICAL' || return $?
 
-  clearLine && consoleInfo "case match"
+  clearLine && decorate info "case match"
   assertExitCode --line "$LINENO" 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// Identical' || return $?
 
   assertNotExitCode --dump --line "$LINENO" --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?

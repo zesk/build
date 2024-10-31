@@ -15,7 +15,7 @@ if [ -z "${BUILD_CACHE-}" ]; then
     if [ ! -d "$useDir" ]; then
       # Should be application home
       if ! useDir="$(pwd -P 2>/dev/null)"; then
-        consoleError "Unable to pwd" 1>&2
+        decorate error "Unable to pwd" 1>&2
         return 1
       fi
     fi

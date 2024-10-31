@@ -31,7 +31,7 @@ testHooks() {
   for h in misspelled-deployed-cleanup not-rude-confirm; do
     assertNotExitCode 0 hasHook $h || return $?
   done
-  consoleSuccess testHooks OK
+  decorate success testHooks OK
 }
 
 testEnvironmentVariables() {
@@ -41,7 +41,7 @@ testEnvironmentVariables() {
   assertOutputContains HOME environmentVariables || return $?
   assertOutputContains LANG environmentVariables || return $?
   assertOutputContains PWD environmentVariables || return $?
-  consoleSuccess testEnvironmentVariables OK || return $?
+  decorate success testEnvironmentVariables OK || return $?
 }
 
 testDates() {
@@ -85,5 +85,5 @@ testMapPrefixSuffix() {
   itemIndex=$((itemIndex + 1))
   assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world bin/build/map.sh AME LACE)" "#$itemIndex failed" || return $?
   itemIndex=$((itemIndex + 1))
-  consoleSuccess testMapPrefixSuffix OK
+  decorate success testMapPrefixSuffix OK
 }

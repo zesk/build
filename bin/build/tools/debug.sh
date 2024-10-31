@@ -223,9 +223,9 @@ plumber() {
     declare -p >"$__after"
     __pattern="$(quoteGrepPattern "^($(joinArguments '|' "${__ignore[@]}"))=")"
     __changed="$(diff "$__before" "$__after" | grep 'declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 3 | grep -v -e "$__pattern")" || :
-    __command=$(consoleCode "$(_command "$@")")
+    __command=$(decorate code "$(_command "$@")")
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
-      consoleWarning "$__command set $(consoleValue "COLUMNS, LINES")" 1>&2
+      decorate warning "$__command set $(decorate value "COLUMNS, LINES")" 1>&2
       unset COLUMNS LINES
       __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $__changed" || return $?
     fi
@@ -313,7 +313,7 @@ housekeeper() {
     else
       __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' || :)"
     fi
-    __command=$(consoleCode "$(_command "$@")")
+    __command=$(decorate code "$(_command "$@")")
     if [ -n "$__changed" ]; then
       printf "%s\n" "$__changed" | dumpPipe "$__command modified files" 1>&2
       __result=$(_code leak)
@@ -376,12 +376,12 @@ outputTrigger() {
   lineText="$lineCount $(plural "$lineCount" line lines)"
   if [ ! -s "$error" ]; then
     rm -rf "$error" || :
-    ! $verbose || consoleInfo "No output in $(consoleCode "$name") $(consoleValue "$lineText")" || :
+    ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$lineText")" || :
     return 0
   fi
   message=$(dumpFile "$error") || message="dumpFile $error failed"
   rm -rf "$error" || :
-  _environment "stderr found in $(consoleCode "$name") $(consoleValue "$lineText"): " "$@" "$message" || return $?
+  _environment "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
 }
 _outputTrigger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -395,9 +395,9 @@ _bashDebugWatch() {
   if [ "${#BASH_DEBUG_WATCH[@]}" -gt 0 ]; then
     for __item in "${BASH_DEBUG_WATCH[@]}"; do
       if ! __value="$(eval "printf \"%s\n\" \"$__item\"" 2>/dev/null)"; then
-        __value="$(consoleRed "unbound")"
+        __value="$(decorate red "unbound")"
       else
-        __value="\"$(consoleCode "$__value")\""
+        __value="\"$(decorate code "$__value")\""
       fi
       printf -- "WATCH %s: %s\n" "$__item" "$__value"
     done
@@ -409,7 +409,7 @@ __bashDebugWhere() {
   export BUILD_HOME
   __where="$(realPath "${BASH_SOURCE[index]}")"
   __where="${__where#"$BUILD_HOME"}"
-  printf "@ %s:%s\n" "$(consoleValue "$__where")" "$(consoleBoldBlue "${BASH_LINENO[index + 1]}")"
+  printf "@ %s:%s\n" "$(decorate value "$__where")" "$(decorate bold-blue "${BASH_LINENO[index + 1]}")"
 }
 
 # Internal trap to capture DEBUG events and allow control
@@ -427,15 +427,15 @@ _bashDebugTrap() {
   # Restore Debugger FDs
   exec 0>&20 1>&21 2>&22
 
-  printf "%s %s %s %s %s %s\n" "$(consoleCode "${FUNCNAME[4]-}")" "➡" "$(consoleCode "${FUNCNAME[3]}")" "➡" "$(consoleCode "${FUNCNAME[2]}")" "$(__bashDebugWhere 2)"
+  printf "%s %s %s %s %s %s\n" "$(decorate code "${FUNCNAME[4]-}")" "➡" "$(decorate code "${FUNCNAME[3]}")" "➡" "$(decorate code "${FUNCNAME[2]}")" "$(__bashDebugWhere 2)"
 
   _bashDebugWatch
-  printf -- "%s %s\n" "$(consoleGreen ">")" "$(consoleCode "$BASH_COMMAND")"
+  printf -- "%s %s\n" "$(decorate green ">")" "$(decorate code "$BASH_COMMAND")"
   while read -r -e -p "bashDebug> " __command; do
     [ -n "$__command" ] || break
     case "$__command" in
       "\s")
-        consoleWarning "Skipping $BASH_COMMAND"
+        decorate warning "Skipping $BASH_COMMAND"
         # Restore Application FDs
         exec 0>&30 1>&31 2>&32
         return 1
@@ -449,7 +449,7 @@ _bashDebugTrap() {
         __found=false
         for __value in "${BASH_DEBUG_WATCH[@]+"${BASH_DEBUG_WATCH[@]}"}"; do
           if [ "$__value" = "$__item" ]; then
-            consoleBoldOrange "Removed $__item from watch list"
+            decorate bold-orange "Removed $__item from watch list"
             __found=true
           else
             __list+=("$__value")
@@ -457,14 +457,14 @@ _bashDebugTrap() {
         done
         if ! $__found; then
           # shellcheck disable=SC2059
-          printf -- "%s\n%s" "$(consoleError "No $__item found in watch list:")" "$(printf -- "- $(consoleCode %s)\n" "${__list[@]+"${__list[@]}"}")"
+          printf -- "%s\n%s" "$(decorate error "No $__item found in watch list:")" "$(printf -- "- $(decorate code %s)\n" "${__list[@]+"${__list[@]}"}")"
         fi
         BASH_DEBUG_WATCH=("${__list[@]+"${__list[@]}"}")
         _bashDebugWatch
         ;;
       "\w "*)
         __item="${__command:3}"
-        consoleBoldOrange "Watching $__item"
+        decorate bold-orange "Watching $__item"
         BASH_DEBUG_WATCH+=("$__item")
         _bashDebugWatch
         ;;
@@ -475,12 +475,12 @@ _bashDebugTrap() {
         return 0
         ;;
       *)
-        printf "%s \"%s\"\n" "$(consoleWarning "Evaluating")" "$(consoleCode "$__command")" >/dev/stdout
+        printf "%s \"%s\"\n" "$(decorate warning "Evaluating")" "$(decorate code "$__command")" >/dev/stdout
         # Restore Application FDs
         exec 0>&30 1>&31 2>&32
         set +eu
         set +o pipefail
-        eval "$__command" || printf "%s\n" "$(consoleError "EXIT $?")" 1>&2
+        eval "$__command" || printf "%s\n" "$(decorate error "EXIT $?")" 1>&2
         # Save Application FDs (may have changed)
         exec 30>&0 31>&1 32>&2
         # Restore Debugger FDs

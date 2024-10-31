@@ -111,12 +111,12 @@ hostTTFB() {
 }
 
 _watchFile() {
-  consoleInfo "Watching $1"
+  decorate info "Watching $1"
   while IFS='' read -r line; do
     if [ "${line}" != "${line#--}" ]; then
       clearLine
       line=$(trimSpace "${line##.*--}")
-      statusMessage consoleGreen "$line"
+      statusMessage decorate green "$line"
     fi
   done
 }
@@ -147,7 +147,7 @@ websiteScrape() {
     __usageEnvironment "$usage" wget "${aa[@]}" "$@" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!
   ) || _clean $? "$logFile" || return $?
-  statusMessage consoleSuccess "Launched scraping process $(consoleCode "$pid") ($progressFile)"
+  statusMessage decorate success "Launched scraping process $(decorate code "$pid") ($progressFile)"
   _watchFile "$progressFile"
 }
 _websiteScrape() {

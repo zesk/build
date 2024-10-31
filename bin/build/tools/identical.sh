@@ -34,7 +34,7 @@ __identicalLineParse() {
       count="$line0"
     elif [ "$line0" != "$count" ] || [ "$line1" != "$count" ]; then
       if [ "$line0" -ge "$line1" ]; then
-        _environment "$(consoleCode "$file:$lineNumber") - line numbers out of order: $(consoelValue "$line0 $line1")" || return $?
+        _environment "$(decorate code "$file:$lineNumber") - line numbers out of order: $(consoelValue "$line0 $line1")" || return $?
       fi
       count=$((line1 - line0))
     fi

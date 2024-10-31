@@ -44,7 +44,7 @@ testDeployRemoteFinish() {
   id=abcdef
   tempDirectory=$(mktemp -d) || __failEnvironment mktemp || return $?
 
-  printf "%s %s\n" "$(consoleSuccess "testDeployRemoteFinish:")" "$(consoleCode "$tempDirectory")"
+  printf "%s %s\n" "$(decorate success "testDeployRemoteFinish:")" "$(decorate code "$tempDirectory")"
 
   __environment mkdir -p "$tempDirectory/app" || return $?
   __environment mkdir -p "$tempDirectory/deploy" || return $?
@@ -124,7 +124,7 @@ testDeployRemoteFinish() {
   matches=(--stdout-match "reverted")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--revert" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertEquals --line "$LINENO" "$tempDirectory/deploy/$oldId/app" "$(readlink "$tempDirectory/app")" || return $?
-  printf "%s %s\n" "$(consoleBoldMagenta "APP points to")" "$(consoleCode)"
+  printf "%s %s\n" "$(decorate bold-magenta "APP points to")" "$(decorate code)"
 
   find "$tempDirectory" -type d -or -type l -or -name '*.env' | dumpPipe "$id Reverted to $oldId"
 

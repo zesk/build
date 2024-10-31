@@ -211,10 +211,10 @@ deployLink() {
           # No checking - allows pre-linking
           currentApplicationHome="$argument"
           if [ ! -d "$currentApplicationHome" ]; then
-            consoleWarning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
+            decorate warning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
           fi
         else
-          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+          __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         fi
         ;;
     esac
@@ -261,7 +261,7 @@ deployMigrateDirectoryToLink() {
         elif [ -z "$applicationPath" ]; then
           applicationPath="$(usageArgumentDirectory "$usage" "applicationPath" "$1")" || return $?
         else
-          __failArgument "$usage" "unknown argument $(consoleValue "$argument")" || return $?
+          __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         fi
         shift || __failArgument "$usage" "shift after $argument failed" || return $?
         ;;
@@ -269,7 +269,7 @@ deployMigrateDirectoryToLink() {
   done
   appVersion=$(deployApplicationVersion "$applicationPath") || __failEnvironment "$usage" "No application deployment version" || return $?
   if [ -L "$applicationPath" ]; then
-    printf "%s %s %s\n" "$(consoleCode "$applicationPath")" "$(consoleSuccess "is already a link to")" "$(consoleRed "$appVersion")"
+    printf "%s %s %s\n" "$(decorate code "$applicationPath")" "$(decorate success "is already a link to")" "$(decorate red "$appVersion")"
     return 0
   fi
   deployHasVersion "$deployHome" "$appVersion" || __failEnvironment "$usage" "Application version $appVersion not found in $deployHome" || return $?
@@ -280,7 +280,7 @@ deployMigrateDirectoryToLink() {
   # Create a temporary link to ensure it works
   if ! deployLink "$tempAppLink" "$deployHome/$appVersion/app"; then
     if ! runOptionalHook maintenance off; then
-      consoleError "Maintenance off FAILED, system may be unstable" 1>&2
+      decorate error "Maintenance off FAILED, system may be unstable" 1>&2
     fi
     __failEnvironment "$usage" "deployLink failed" || return $?
   fi
@@ -291,17 +291,17 @@ deployMigrateDirectoryToLink() {
   if ! __environment mv -f "$tempAppLink" "$applicationPath"; then
     # Like really? Like really? Something is likely F U B A R
     if ! __environment mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
-      consoleError "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
+      decorate error "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
     else
-      consoleSuccess "Successfully recovered application to $applicationPath - stable"
+      decorate success "Successfully recovered application to $applicationPath - stable"
     fi
     __failEnvironment "$usage" "Unable to move live link $tempAppLink -> $applicationPath" || return $?
   fi
   if ! runOptionalHook --application "$applicationPath" maintenance off; then
-    consoleError "Maintenance ON FAILED, system may be unstable" 1>&2
+    decorate error "Maintenance ON FAILED, system may be unstable" 1>&2
   fi
   {
-    consoleSuccess "Successfully migrated:"
+    decorate success "Successfully migrated:"
     consoleNameValue 20 "Link:" "$applicationPath"
     consoleNameValue 20 "Installed:" "$deployHome/$appVersion/app"
     # Move directory, then re-link

@@ -38,7 +38,7 @@ testPHPBuild() {
   assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
   here=$(pwd) || _environment pwd || return $?
 
-  consoleInfo "Test build directory is: $testPath" || :
+  decorate info "Test build directory is: $testPath" || :
 
   __environment cd "$testPath" || return $?
   assertFileDoesNotExist --line "$LINENO" "./app.tar.gz" || return $?
@@ -49,14 +49,14 @@ testPHPBuild() {
   assertFileExists --line "$LINENO" "$testPath/bin/install-bin-build.sh" || return $?
   assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
 
-  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
+  decorate info "${BASH_SOURCE[0]}:$LINENO"
   # OLD INSTALLER IS BROKEN
   assertExitCode --dump 0 "$testPath/bin/install-bin-build.sh" --mock "$home/bin/build" || return $?
-  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
+  decorate info "${BASH_SOURCE[0]}:$LINENO"
   assertDirectoryExists --line "$LINENO" "$testPath/bin/build" || return $?
-  consoleInfo "${BASH_SOURCE[0]}:$LINENO"
+  decorate info "${BASH_SOURCE[0]}:$LINENO"
 
-  consoleWarning "Building PHP app" || :
+  decorate warning "Building PHP app" || :
 
   assertEquals --line "$LINENO" "${BUILD_TARGET}" "app.tar.gz" || return $?
 
@@ -83,7 +83,7 @@ testPHPBuild() {
   mkdir ./compare-alternate || return $?
   cd ./compare-app || return $?
 
-  consoleInfo "Extracting app.tar.gz ... "
+  decorate info "Extracting app.tar.gz ... "
   tar xf ../app.tar.gz || return $?
   # Vendor has random numbers in the classnames
   rm -rf ./vendor || return $?
@@ -91,7 +91,7 @@ testPHPBuild() {
 
   cd ./compare-alternate || return $?
 
-  consoleInfo "Extracting alternate.tar.gz ... "
+  decorate info "Extracting alternate.tar.gz ... "
   tar xf ../alternate.tar.gz || return $?
   rm -rf ./vendor || return $?
   cd .. || return $?
@@ -100,14 +100,14 @@ testPHPBuild() {
 
   manifest=$(mktemp) || return $?
 
-  consoleInfo "Extracting app.tar.gz manifest ... "
+  decorate info "Extracting app.tar.gz manifest ... "
   tar tf app.tar.gz >"$manifest.complete" || return $?
   grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
   assertFileContains --line "$LINENO" "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
   assertFileDoesNotContain --line "$LINENO" "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
   assertFileContains --line "$LINENO" "$manifest.complete" vendor/zesk vendor/composer || return $?
 
-  consoleSuccess Passed.
+  decorate success Passed.
 
   unset APP_THING BUILD_TARGET BUILD_TIMESTAMP
 }

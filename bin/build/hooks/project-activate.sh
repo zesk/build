@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Hook: project-selected
+# Hook: project-activate
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -11,7 +11,7 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 #
-# The `project-selected` hook runs when this project is activated in the console (and another project was previously active)
+# The `project-activate` hook runs when this project is activated in the console (and another project was previously active)
 # Use the time now to overwrite environment variables which MUST change here or MUST be active here to work, etc.
 # See: bashPromptModule_binBuild
 # Argument: oldHomeDirectory - The old home directory of the project
@@ -29,7 +29,7 @@ __hookProjectSelected() {
   name=$(__usageEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
-  printf -- "%s %s %s %s\n" "$symbol" "$(consoleSubtle "$oldName")" "➜" "$(consoleInfo "$name")"
+  printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$oldName")" "➜" "$(decorate info "$name")"
 }
 ___hookProjectSelected() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

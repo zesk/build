@@ -8,7 +8,7 @@
 #
 _testBuildDebugEnabledStart() {
   local quietLog="$1"
-  consoleInfo "Suppressing stderr"
+  decorate info "Suppressing stderr"
   exec 4>&2
   exec 2>"$quietLog"
 
@@ -26,7 +26,7 @@ _testBuildDebugEnabledExit() {
     rm -rf "$log" || :
   fi
   exec 2>&4
-  consoleInfo "Restored stderr at line $line"
+  decorate info "Restored stderr at line $line"
   return "$code"
 }
 
@@ -127,7 +127,7 @@ testPlumber() {
   assertEquals --line "$LINENO" 108 "$leakCode" || return $?
   assertExitCode --line "$LINENO" 0 plumber || return $?
   assertExitCode --line "$LINENO" 0 plumber plumber echo true || return $?
-  assertExitCode --line "$LINENO" 0 plumber plumber consoleWarning Hello || return $?
+  assertExitCode --line "$LINENO" 0 plumber plumber decorate warning Hello || return $?
   # Run as a subshell so no leaks
   assertExitCode --line "$LINENO" 0 plumber statusMessage __leakyPipe Cool || return $?
   # Run directly within plumber so catches leaks
@@ -154,13 +154,13 @@ testHousekeeper() {
 
   testDir=$(__environment mktemp -d) || return $?
 
-  statusMessage consoleInfo Copying "${BUILD_HOME-"(blank)"}" to test location
+  statusMessage decorate info Copying "${BUILD_HOME-"(blank)"}" to test location
   __environment cp -r "$BUILD_HOME" "$testDir" || return $?
   __environment cd "$testDir" || return $?
 
   assertEquals --line "$LINENO" 108 "$leakCode" || return $?
 
-  statusMessage consoleInfo Housekeeper tests
+  statusMessage decorate info Housekeeper tests
   assertNotExitCode --stderr-match "is not directory" --line "$LINENO" 0 housekeeper --path NOT-A-DIR || return $?
   assertNotExitCode --stderr-match "not callable" --line "$LINENO" 0 housekeeper "$testDir" "NotABinary" || return $?
 

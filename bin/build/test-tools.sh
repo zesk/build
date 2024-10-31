@@ -76,7 +76,7 @@ testSuite() {
         testPaths+=("$(usageArgumentDirectory "$usage" "$__ARGUMENT" "${1-}")") || return $?
         ;;
       --coverage)
-        consoleWarning "Will collect coverage statistics ..."
+        decorate warning "Will collect coverage statistics ..."
         runner=(bashCoverage)
         ;;
       --no-stats)
@@ -88,7 +88,7 @@ testSuite() {
       -1 | --one)
         shift
         checkTests+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        printf "%s %s\n" "$(consoleWarning "Adding one suite:")" "$(consoleBoldRed "$1")"
+        printf "%s %s\n" "$(decorate warning "Adding one suite:")" "$(decorate bold-red "$1")"
         ;;
       -h | --help)
         "$usage" 0
@@ -103,7 +103,7 @@ testSuite() {
         failExecutors+=("$(usageArgumentCallable "$usage" "failExecutor" "${1-}")") || return $?
         ;;
       --clean)
-        statusMessage consoleWarning "Cleaning tests and exiting ... "
+        statusMessage decorate warning "Cleaning tests and exiting ... "
         cleanExit=true
         __testCleanup || return $?
         statusMessage reportTiming "$start" "Cleaned in"
@@ -117,14 +117,14 @@ testSuite() {
         matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(consoleLabel "$__ARGUMENT")" || return $?
+    shift || __failArgument "$usage" "shift argument $(decorate label "$__ARGUMENT")" || return $?
   done
 
   [ "${#testPaths[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one --tests directory" || return $?
 
   if $verboseMode; then
     hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
-    printf "%s started on %s (%s)\n" "$(consoleBoldRed "${usage#_}")" "$(consoleValue "$startString")" "$(consoleCode "$mode")"
+    printf "%s started on %s (%s)\n" "$(decorate bold-red "${usage#_}")" "$(decorate value "$startString")" "$(decorate code "$mode")"
   fi
 
   allTests=()
@@ -170,16 +170,16 @@ testSuite() {
         if isCallable "$foundTest"; then
           foundTests+=("$foundTest")
         else
-          consoleError "Invalid test $foundTest is not callable" 1>&2
+          decorate error "Invalid test $foundTest is not callable" 1>&2
         fi
       fi
     done < <(sort -u "$testFunctions")
     testCount="${#foundTests[@]}"
     if [ "$testCount" -gt 0 ]; then
-      ! $verboseMode || statusMessage consoleSuccess "$item: Loaded $testCount $(plural "$testCount" test tests)"
+      ! $verboseMode || statusMessage decorate success "$item: Loaded $testCount $(plural "$testCount" test tests)"
       tests+=("#$item" "${foundTests[@]+"${foundTests[@]}"}")
     else
-      consoleError "No tests found in $item" 1>&2
+      decorate error "No tests found in $item" 1>&2
       dumpPipe testFunctions <"$testFunctions" 1>&2
     fi
   done
@@ -194,9 +194,9 @@ testSuite() {
         if [ "$item" = "$startTest" ]; then
           startTest=
           clearLine
-          consoleWarning "Continuing at test $(consoleCode "$item") ..."
+          decorate warning "Continuing at test $(decorate code "$item") ..."
         else
-          statusMessage consoleWarning "Skipping $(consoleCode "$item") ..."
+          statusMessage decorate warning "Skipping $(decorate code "$item") ..."
           continue
         fi
       fi
@@ -204,7 +204,7 @@ testSuite() {
         if ! __testMatches "$item" "${matchTests[@]}"; then
           continue
         fi
-        statusMessage consoleSuccess "Matched $(consoleValue "$item")"
+        statusMessage decorate success "Matched $(decorate value "$item")"
       fi
     fi
     filteredTests+=("$item")
@@ -249,12 +249,12 @@ testSuite() {
       ! $doStats || printf "%d %s\n" $(($(date +%s) - testStart)) "$item" >>"$statsFile"
       __usageEnvironment "$usage" runOptionalHook bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
     done
-    bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(consoleSuccess)    " "$(consoleReset)"
+    bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(consoleReset)"
     if $continueFlag; then
       printf "%s\n" "PASSED" >"$continueFile"
     fi
   else
-    __failEnvironment "$usage" "No tests match: $(consoleValue "${matchTests[*]}")"
+    __failEnvironment "$usage" "No tests match: $(decorate value "${matchTests[*]}")"
   fi
   [ -z "$statsFile" ] || __testStats "$statsFile"
   reportTiming "$allTestStart" "Completed in"
@@ -314,10 +314,10 @@ __testSuiteExecutor() {
   line=$(__testGetLine "$item" <"$file") || :
   [ -z "$line" ] || line=":$line"
 
-  statusMessage consoleError "Test $item failed in $file" || :
+  statusMessage decorate error "Test $item failed in $file" || :
   while [ $# -gt 0 ]; do
     read -r -a executorArgs < <(printf "%s\n" "$1")
-    statusMessage consoleInfo "Running" "${executorArgs[@]}" "$file$line"
+    statusMessage decorate info "Running" "${executorArgs[@]}" "$file$line"
     "${executorArgs[@]}" "$file$line"
     shift
   done
@@ -360,10 +360,10 @@ __testSection() {
 }
 
 __testHeading() {
-  consoleCode "$(consoleOrange "$(echoBar '*')")"
-  printf "%s" "$(consoleCode)$(clearLine)"
-  bigText "$@" | wrapLines --fill " " "$(consoleCode)    " "$(consoleReset)"
-  consoleCode "$(consoleOrange "$(echoBar '=')")"
+  decorate code "$(decorate orange "$(echoBar '*')")"
+  printf "%s" "$(decorate code)$(clearLine)"
+  bigText "$@" | wrapLines --fill " " "$(decorate code)    " "$(consoleReset)"
+  decorate code "$(decorate orange "$(echoBar '=')")"
 }
 
 __testDebugTermDisplay() {
@@ -403,7 +403,7 @@ __testLoad() {
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then
       for __test in "${tests[@]}"; do
-        [ "$__test" = "${__test#"test"}" ] || consoleError "$1 - no longer need tests+=(\"$__test\")" 1>&2
+        [ "$__test" = "${__test#"test"}" ] || decorate error "$1 - no longer need tests+=(\"$__test\")" 1>&2
       done
       __tests+=("${tests[@]}")
     fi
@@ -412,7 +412,7 @@ __testLoad() {
     while read -r __test; do
       ! inArray "$__test" "${__tests[@]+"${__tests[@]}"}" || {
         clearLine
-        consoleError "$1 - Duplicated: $(consoleCode "$__test")"
+        decorate error "$1 - Duplicated: $(decorate code "$__test")"
       } 1>&2
       __tests+=("$__test")
     done <"$__testFunctions"
@@ -461,7 +461,7 @@ __testRun() {
     shift
     # Test
     __testSection "$__test" || :
-    printf "%s %s ...\n" "$(consoleInfo "Running")" "$(consoleCode "$__test")"
+    printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
 
     printf "%s\n" "Running $__test" >>"$quietLog"
     resultCode=0
@@ -481,11 +481,11 @@ __testRun() {
 
     if [ "$resultCode" = "$(_code leak)" ]; then
       resultCode=0
-      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleWarning "passed with leaks")"
+      printf "%s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")"
     elif [ "$resultCode" -eq 0 ]; then
-      printf "%s %s ...\n" "$(consoleCode "$__test")" "$(consoleGreen "passed")"
+      printf "%s %s ...\n" "$(decorate code "$__test")" "$(decorate green "passed")"
     else
-      printf "[%d] %s %s\n" "$resultCode" "$(consoleCode "$__test")" "$(consoleError "FAILED")" 1>&2
+      printf "[%d] %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" 1>&2
       buildFailed "$quietLog" || :
       resultReason="test $__test failed"
       stickyCode=$errorTest
@@ -497,7 +497,7 @@ __testRun() {
     stickyCode=$errorTest
   fi
   if [ "$stickyCode" -ne 0 ]; then
-    printf "%s %s\n" "$(consoleLabel "Reason:")" "$(consoleMagenta "$resultReason")"
+    printf "%s %s\n" "$(decorate label "Reason:")" "$(decorate magenta "$resultReason")"
   fi
   return "$stickyCode"
 }
@@ -527,11 +527,11 @@ __testFailed() {
 
   errorCode="$(_code test)"
   export IFS
-  printf "%s: %s - %s %s (%s)\n" "$(consoleError "Exit")" "$(consoleBoldRed "$errorCode")" "$(consoleError "Failed running")" "$(consoleInfo "$item")" "$(consoleMagenta "$sectionName")"
+  printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")"
   for name in IFS HOME LINES COLUMNS OSTYPE PPID PID PWD TERM; do
-    printf "%s=%s\n" "$(consoleLabel "$name")" "$(consoleValue "${!name-}")"
+    printf "%s=%s\n" "$(decorate label "$name")" "$(decorate value "${!name-}")"
   done
-  consoleInfo "$(consoleMagenta "$sectionName") $(consoleCode "$item") failed on $(consoleValue "$(date +"%F %T")")"
+  decorate info "$(decorate magenta "$sectionName") $(decorate code "$item") failed on $(decorate value "$(date +"%F %T")")"
   export globalTestFailure="$*"
   return "$errorCode"
 }

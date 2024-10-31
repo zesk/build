@@ -43,20 +43,20 @@ _testDeployApplicationSetup() {
 }
 
 _deployShowFiles() {
-  find "$1" ! -path '*/bin/build/*' | wrapLines "$(consoleCode "DEPLOY root files:    ")$(consoleMagenta)" "$(consoleReset)"
+  find "$1" ! -path '*/bin/build/*' | wrapLines "$(decorate code "DEPLOY root files:    ")$(decorate magenta)" "$(consoleReset)"
   return $errorEnvironment
 }
 
 _testAssertDeploymentLinkages() {
   local d="$1"
 
-  consoleInfo _testAssertDeploymentLinkages deployPreviousVersion tests
+  decorate info _testAssertDeploymentLinkages deployPreviousVersion tests
   assertEquals "O66" "$(deployPreviousVersion "$d/DEPLOY" "1a")" deployPreviousVersion "$d/DEPLOY" "1a" || return $?
   assertEquals "1a" "$(deployPreviousVersion "$d/DEPLOY" "2b")" deployPreviousVersion "$d/DEPLOY" "2b" || return $?
   assertEquals "2b" "$(deployPreviousVersion "$d/DEPLOY" "3c")" deployPreviousVersion "$d/DEPLOY" "3c" || return $?
   assertEquals "3c" "$(deployPreviousVersion "$d/DEPLOY" "4d")" deployPreviousVersion "$d/DEPLOY" "4d" || return $?
 
-  consoleInfo _testAssertDeploymentLinkages deployNextVersion tests
+  decorate info _testAssertDeploymentLinkages deployNextVersion tests
   assertEquals "2b" "$(deployNextVersion "$d/DEPLOY" "1a")" deployNextVersion "$d/DEPLOY" "1a" || return $?
   assertEquals "3c" "$(deployNextVersion "$d/DEPLOY" "2b")" deployNextVersion "$d/DEPLOY" "2b" || return $?
   assertEquals "4d" "$(deployNextVersion "$d/DEPLOY" "3c")" deployNextVersion "$d/DEPLOY" "3c" || return $?
@@ -66,7 +66,7 @@ _testAssertDeploymentLinkages() {
 _waitForDeath() {
   while kill -0 "$1" 2>/dev/null; do
     sleep 1
-    consoleInfo "Waiting for death of $1"
+    decorate info "Waiting for death of $1"
   done
 }
 export PHP_SERVER_PID
@@ -85,26 +85,26 @@ _simplePHPServer() {
     shift || :
   fi
   if [ -z "${PHP_SERVER_ROOT-}" ]; then
-    consoleError "PHP_SERVER_ROOT is blank" 1>&2
+    decorate error "PHP_SERVER_ROOT is blank" 1>&2
     return $errorEnvironment
   fi
   if [ ! -d "${PHP_SERVER_ROOT-}" ]; then
-    consoleError "PHP_SERVER_ROOT is not a directory" 1>&2
+    decorate error "PHP_SERVER_ROOT is not a directory" 1>&2
     return $errorEnvironment
   fi
   decoration="$(echoBar ':.')"
   printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
-    "$(consoleMagenta "$decoration")" "$(consoleBlue "$decoration")" \
-    "$(consoleSuccess "Starting PHP Server")" \
-    "$(consoleCyan "$decoration")" \
+    "$(decorate magenta "$decoration")" "$(decorate blue "$decoration")" \
+    "$(decorate success "Starting PHP Server")" \
+    "$(decorate cyan "$decoration")" \
     "$(consoleNameValue 40 "Server Root" "$PHP_SERVER_ROOT")" \
     "$(consoleNameValue 40 "Server Host" "$PHP_SERVER_HOST:$PHP_SERVER_PORT")" \
-    "$(consoleBlue "$decoration")" "$(consoleMagenta "$decoration")"
+    "$(decorate blue "$decoration")" "$(decorate magenta "$decoration")"
 
   php -S "$PHP_SERVER_HOST:$PHP_SERVER_PORT" -t "$PHP_SERVER_ROOT" &
   export PHP_SERVER_PID
   PHP_SERVER_PID=$!
-  consoleInfo "Running PHP server $PHP_SERVER_PID"
+  decorate info "Running PHP server $PHP_SERVER_PID"
 }
 
 _simplePHPRequest() {
@@ -121,18 +121,18 @@ _warmupServer() {
   local start delta value
 
   start=$(beginTiming)
-  statusMessage consoleInfo "Warming server ... "
+  statusMessage decorate info "Warming server ... "
   while ! value="$(_simplePHPRequest)" || [ -z "$value" ]; do
     sleep 1
     delta=$(($(beginTiming) - start))
     if [ "$delta" -gt 5 ]; then
-      consoleError "_warmupServer failed"
+      decorate error "_warmupServer failed"
       return "$errorEnvironment"
     fi
-    printf "%s" "$(consoleGreen .)"
+    printf "%s" "$(decorate green .)"
   done
   clearLine
-  printf "%s %s\n" "$(consoleInfo "Server warmed up with value:")" "$(consoleCode "$value")"
+  printf "%s %s\n" "$(decorate info "Server warmed up with value:")" "$(decorate code "$value")"
 }
 
 errorTimeout=20
@@ -141,27 +141,27 @@ _waitForValueTimeout() {
   local start delta value
 
   start=$(beginTiming)
-  statusMessage consoleInfo "Waiting for value $1 ... "
+  statusMessage decorate info "Waiting for value $1 ... "
   while true; do
     if ! value="$(_simplePHPRequest)"; then
       _environment "request failed" || return $?
     fi
     clearLine
     if [ -z "$value" ] || [ "$value" != "$1" ]; then
-      printf "%s %s %s %s\n" "$(consoleCode "Waiting for")" "$(consoleCode "$1")" "$(consoleInfo ", received")" "$(consoleRed "$value")"
+      printf "%s %s %s %s\n" "$(decorate code "Waiting for")" "$(decorate code "$1")" "$(decorate info ", received")" "$(decorate red "$value")"
       sleep 1
       delta=$(($(beginTiming) - start))
       if [ "$delta" -gt 1 ]; then
         printf "Timeout\n"
         return "$errorTimeout"
       fi
-      printf "%s" "$(consoleGreen .)"
+      printf "%s" "$(decorate green .)"
     else
       break
     fi
   done
   clearLine
-  printf "%s %s\n" "$(consoleInfo "Server found value:")" "$(consoleCode "$value")"
+  printf "%s %s\n" "$(decorate info "Server found value:")" "$(decorate code "$value")"
 }
 
 _waitForValue() {
@@ -169,16 +169,16 @@ _waitForValue() {
   _waitForValueTimeout "$@"
   exitCode=$?
   if [ "$exitCode" = "0" ]; then
-    consoleSuccess "*** Found it first round ***"
+    decorate success "*** Found it first round ***"
   elif [ "$exitCode" = "$errorTimeout" ]; then
-    consoleWarning "Timed out ... restarting server and trying again"
+    decorate warning "Timed out ... restarting server and trying again"
     _simplePHPServer --kill
     _waitForValueTimeout "$@"
     exitCode=$?
     if [ "$exitCode" = "0" ]; then
-      consoleSuccess "*** Restarting server worked! ***"
+      decorate success "*** Restarting server worked! ***"
     fi
-    consoleWarning "_waitForValueTimeout failed exitCode=$exitCode"
+    decorate warning "_waitForValueTimeout failed exitCode=$exitCode"
   fi
   return $exitCode
 }
@@ -188,23 +188,23 @@ testDeployApplication() {
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
   if ! packageWhich curl curl; then
-    consoleError "Failed to install curl" 1>&2
+    decorate error "Failed to install curl" 1>&2
     return $errorEnvironment
   fi
   if ! phpInstall; then
-    consoleError "Failed to install phpInstall" 1>&2
+    decorate error "Failed to install phpInstall" 1>&2
     return $errorEnvironment
   fi
 
   set -eou pipefail
 
   if ! home=$(pwd -P 2>/dev/null); then
-    consoleError "Unable to pwd" 1>&2
+    decorate error "Unable to pwd" 1>&2
     return $errorEnvironment
   fi
 
   if ! d="$(_testDeployApplicationSetup "$home")"; then
-    consoleError _testDeployApplicationSetup failed
+    decorate error _testDeployApplicationSetup failed
     return "$errorEnvironment"
   fi
   consoleNameValue 20 "Deploy Root" "$d"
@@ -213,18 +213,18 @@ testDeployApplication() {
   PHP_SERVER_ROOT="$d/live-app/public"
 
   if ! _simplePHPServer; then
-    consoleError _simplePHPServer failed
+    decorate error _simplePHPServer failed
     buildFailed "$quietLog" || return $?
   fi
   consoleNameValue 20 "PHP Process" "$PHP_SERVER_PID"
 
-  consoleInfo _simplePHPServer started "$PHP_SERVER_PID"
+  decorate info _simplePHPServer started "$PHP_SERVER_PID"
   # shellcheck disable=SC2064
   trap "kill ${PHP_SERVER_PID-}" INT TERM
   startingValue=start
 
   if ! _waitForValueTimeout "$startingValue"; then
-    consoleError "Unable to find starting value $startingValue"
+    decorate error "Unable to find starting value $startingValue"
     return $errorEnvironment
   fi
 
@@ -232,7 +232,7 @@ testDeployApplication() {
   assertEquals "$startingValue" "$(_simplePHPRequest)" "initial state of PHP server" || return $?
 
   for t in 1a 2b 3c 4d; do
-    consoleInfo deployHasVersion $t test 1
+    decorate info deployHasVersion $t test 1
     assertExitCode 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
 
@@ -291,12 +291,12 @@ testDeployApplication() {
     # ________________________________________________________________________________________________________________________________
     __testSection deployApplication "$t"
     if ! deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --id "$t" --home "$d/DEPLOY"; then
-      consoleError "Deployment of $t failed"
+      decorate error "Deployment of $t failed"
       _deployShowFiles "$d" || return $?
     fi
 
     #    if ! _simplePHPServer --kill "$d/live-app"; then
-    #      consoleError _simplePHPServer restart failed
+    #      decorate error _simplePHPServer restart failed
     #      buildFailed "$quietLog"
     #      return "$errorEnvironment"
     #    fi
@@ -325,17 +325,17 @@ testDeployApplication() {
   done
 
   for t in 1a 2b 3c 4d; do
-    consoleInfo deployHasVersion $t test 2
+    decorate info deployHasVersion $t test 2
     assertExitCode 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
   for t in null "" 3g 999999 $'\n'; do
-    consoleInfo deployHasVersion "$t" BAD test
+    decorate info deployHasVersion "$t" BAD test
     assertNotExitCode --stderr-ok 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
 
   _testAssertDeploymentLinkages "$d" || return $?
 
-  consoleInfo deployRevertApplication tests
+  decorate info deployRevertApplication tests
 
   t=4d
   for t in 4d 3c 2b; do
@@ -403,7 +403,7 @@ testDeployApplication() {
 
   unset PHP_SERVER_ROOT
   unset PHP_SERVER_PID
-  # consoleError "reset PHP_SERVER_ROOT PHP_SERVER_PID"
+  # decorate error "reset PHP_SERVER_ROOT PHP_SERVER_PID"
 
   export PHP_SERVER_ROOT
   export PHP_SERVER_PID
@@ -445,7 +445,7 @@ testDeployPackageName() {
   export BUILD_TARGET
   BUILD_TARGET="$saveTarget"
   if [ "$saveTarget" = "NONE" ]; then
-    consoleError "unset BUILD_TARGET"
+    decorate error "unset BUILD_TARGET"
     unset BUILD_TARGET
   fi
 }

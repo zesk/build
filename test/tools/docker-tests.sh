@@ -34,7 +34,7 @@ testDockerEnvToBash() {
   out=$(mktemp) || _environment "mktemp" || return $?
   err="$out.err"
 
-  consoleInfo "PWD is $(pwd)"
+  decorate info "PWD is $(pwd)"
   if dockerEnvToBash ./test/example/test.env >"$out" 2>"$err"; then
     _environment "dockerEnvToBash SHOULD fail" || return $?
   fi
@@ -58,9 +58,9 @@ testDockerEnvToBashPipe() {
   out=$(mktemp) || _environment "mktemp" || return $?
   err="$out.err"
 
-  consoleInfo "PWD is $(pwd)"
+  decorate info "PWD is $(pwd)"
   if dockerEnvToBash <./test/example/test.env >"$out" 2>"$err"; then
-    consoleError "dockerEnvToBash SHOULD fail"
+    decorate error "dockerEnvToBash SHOULD fail"
     return $errorEnvironment
   fi
 

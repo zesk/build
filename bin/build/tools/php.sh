@@ -132,7 +132,7 @@ phpBuild() {
         shift
         deployment=$(usageArgumentString "$usage" "deployment" "${1-}") || return $?
         DEPLOYMENT="$deployment"
-        consoleWarning "DEPLOYMENT set to $deployment"
+        decorate warning "DEPLOYMENT set to $deployment"
         ;;
       --no-tag | --skip-tag)
         tagDeploymentFlag=
@@ -164,7 +164,7 @@ phpBuild() {
   done
 
   [ -n "$targetName" ] || __failArgument "$usage" "--name argument blank" || return $?
-  [ $# -gt 0 ] || __failArgument "$usage" "Need to supply a list of files for application $(consoleCode "$targetName")" || return $?
+  [ $# -gt 0 ] || __failArgument "$usage" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
   missingFile=()
   for tarFile in "$@"; do
     if [ ! -f "$tarFile" ] && [ ! -d "$tarFile" ]; then
@@ -197,7 +197,7 @@ phpBuild() {
   _phpBuildBanner Build PHP || :
 
   _phpEchoBar || :
-  consoleInfo "Installing build tools ..." || :
+  decorate info "Installing build tools ..." || :
 
   # Ensure we're up to date
   packageInstall || __failEnvironment "$usage" "Failed to install operating system basics" || return $?
@@ -210,11 +210,11 @@ phpBuild() {
   phpInstall git || __failEnvironment "$usage" "Failed to install php" || return $?
 
   if test "$tagDeploymentFlag"; then
-    consoleInfo "Tagging $deployment deployment with $versionSuffix ..."
+    decorate info "Tagging $deployment deployment with $versionSuffix ..."
     __usageEnvironment "$usage" gitTagVersion --suffix "$versionSuffix" || return $?
   else
     clearLine || :
-    consoleInfo "No tagging of deployment $deployment" || :
+    decorate info "No tagging of deployment $deployment" || :
   fi
 
   #==========================================================================================
@@ -255,7 +255,7 @@ phpBuild() {
   # Build vendor
   #
   if [ -d ./vendor ] || test $optClean; then
-    statusMessage consoleWarning "vendor directory should not exist before composer, deleting"
+    statusMessage decorate warning "vendor directory should not exist before composer, deleting"
     __usageEnvironment "$usage" rm -rf ./vendor || return $?
   fi
 
@@ -273,7 +273,7 @@ phpBuild() {
 
   __usageEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || return $?
 
-  reportTiming "$initTime" "PHP built $(consoleCode "$targetName") in"
+  reportTiming "$initTime" "PHP built $(decorate code "$targetName") in"
 }
 _phpBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?
@@ -281,10 +281,10 @@ _phpBuild() {
 _phpBuildBanner() {
   local label="$1"
   shift
-  labeledBigText --top --prefix "$(consoleBlue PHP) $(consoleMagenta). . . . $(consoleReset)$(consoleBoldOrange) " --suffix "$(consoleReset)" --tween " $(consoleReset)$(consoleGreen)" "$label: " "$@"
+  labeledBigText --top --prefix "$(decorate blue PHP) $(decorate magenta). . . . $(consoleReset)$(decorate bold-orange) " --suffix "$(consoleReset)" --tween " $(consoleReset)$(decorate green)" "$label: " "$@"
 }
 _phpEchoBar() {
-  consoleBoldBlue "$(echoBar '.-+^`^+-')" || :
+  decorate bold-blue "$(echoBar '.-+^`^+-')" || :
 }
 
 #
@@ -326,7 +326,7 @@ phpComposer() {
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --docker)
-        consoleWarning "Requiring docker composer"
+        decorate warning "Requiring docker composer"
         forceDocker=true
         ;;
       # IDENTICAL --help 4
@@ -338,7 +338,7 @@ phpComposer() {
         [ "$composerDirectory" = "." ] || __failArgument "$usage" "Unknown argument $1" || return $?
         [ -d "$argument" ] || __failArgument "$usage" "Directory does not exist: $argument" || return $?
         composerDirectory="$argument"
-        consoleInfo "Using composer directory: $composerDirectory"
+        decorate info "Using composer directory: $composerDirectory"
         ;;
     esac
     shift
@@ -352,7 +352,7 @@ phpComposer() {
   bigText "Install vendor" >>"$quietLog"
 
   if $forceDocker; then
-    statusMessage consoleInfo "Pulling composer ... "
+    statusMessage decorate info "Pulling composer ... "
     __usageEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
     composerBin+=("-v" "$composerDirectory:/app")
@@ -360,10 +360,10 @@ phpComposer() {
     composerBin+=("$dockerImage")
   else
     __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall composer composer || return $?
-    statusMessage consoleSuccess "Installed composer ... " || :
+    statusMessage decorate success "Installed composer ... " || :
     composerBin=(composer)
   fi
-  statusMessage consoleInfo "Validating ... "
+  statusMessage decorate info "Validating ... "
 
   savedWorking="$(pwd)"
   cd "$composerDirectory" || return $?
@@ -373,7 +373,7 @@ phpComposer() {
     buildFailed "$quietLog" 1>&2 || _environment "${composerBin[@]}" validate failed || return $?
   fi
 
-  statusMessage consoleInfo "Application packages ... " || :
+  statusMessage decorate info "Application packages ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   if ! "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1; then
     cd "$savedWorking" || :
@@ -415,7 +415,7 @@ phpTest() {
   __usageEnvironment "$usage" dockerComposeInstall || return $?
   __usageEnvironment "$usage" phpComposer || return $?
 
-  consoleInfo "Building test container" || :
+  decorate info "Building test container" || :
 
   start=$(beginTiming) || :
   __usageEnvironment "$usage" _phpTestSetup || return $?
@@ -426,7 +426,7 @@ phpTest() {
   __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose -f "./docker-compose.yml" build || return $?
   reportTiming "$start" "Built in" || :
 
-  consoleInfo "Bringing up containers ..."
+  decorate info "Bringing up containers ..."
 
   start=$(beginTiming)
   # shellcheck disable=SC2094
@@ -437,11 +437,11 @@ phpTest() {
   success=true
   if ! runHook test-runner; then
     success=false
-    _phpTestResult Failed "$(consoleOrange)" "❌" "🔥" 13 2
+    _phpTestResult Failed "$(decorate orange)" "❌" "🔥" 13 2
   else
-    _phpTestResult "  Success " "$(consoleGreen)" "☘️ " "💙" 18 4
+    _phpTestResult "  Success " "$(decorate green)" "☘️ " "💙" 18 4
   fi
-  consoleInfo "Bringing down containers ..." || :
+  decorate info "Bringing down containers ..." || :
   start=$(beginTiming) || :
   if ! docker-compose down 2>/dev/null; then
     _phpTestCleanupFailed "docker-compose DOWN failed" || return $?
@@ -450,7 +450,7 @@ phpTest() {
   _phpTestCleanup || :
   reportTiming "$start" "Down in" || :
   if ! runOptionalHook test-cleanup; then
-    consoleError "test-cleanup ALSO failed"
+    decorate error "test-cleanup ALSO failed"
     success=false
   fi
   buildDebugStop || :

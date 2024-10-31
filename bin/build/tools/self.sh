@@ -118,7 +118,7 @@ installInstallBinary() {
       urlValid "$url" || __failEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
     fi
     if ! curl -s -o - "$url" >"$temp"; then
-      __failEnvironment "$usage" "Unable to download $(consoleCode "$url")" || _clean $? "$temp" || return $?
+      __failEnvironment "$usage" "Unable to download $(decorate code "$url")" || _clean $? "$temp" || return $?
     fi
   fi
   if _installInstallBinaryCanCustomize "$temp"; then
@@ -141,7 +141,7 @@ installInstallBinary() {
   __usageEnvironment "$usage" chmod +x "$target" || exitCode=$?
   [ "$exitCode" -ne 0 ] && return "$exitCode"
   # Life is good
-  statusMessage printf -- "%s %s (%s=\"%s\")\n" "$(consoleSuccess "$verb")" "$(consoleCode "$target")" "$(consoleLabel relTop)" "$(consoleValue "$relTop")"
+  statusMessage printf -- "%s %s (%s=\"%s\")\n" "$(decorate success "$verb")" "$(decorate code "$target")" "$(decorate label relTop)" "$(decorate value "$relTop")"
   clearLine || :
   return 0
 }
@@ -216,9 +216,9 @@ _installInstallBinaryDiffer() {
   if [ -x "$target" ]; then
     diffLines="$(__usageEnvironment "$usage" _installInstallBinaryDifferFilter -c "$@")" || return $?
     [ "$diffLines" -gt 0 ] || return 0
-    consoleMagenta "--- Changes: $diffLines ---"
+    decorate magenta "--- Changes: $diffLines ---"
     _installInstallBinaryDifferFilter "$@" || :
-    consoleMagenta "--- End of changes ---"
+    decorate magenta "--- End of changes ---"
   fi
 }
 
@@ -445,7 +445,7 @@ buildEnvironmentContext() {
   codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
   home=$(__usageEnvironment "$usage" gitFindHome "$start") || return $?
   if [ "$codeHome" != "$home" ]; then
-    consoleWarning "Build home is $(consoleCode "$codeHome") - running locally at $(consoleCode "$home")"
+    decorate warning "Build home is $(decorate code "$codeHome") - running locally at $(decorate code "$home")"
     [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
     __usageEnvironment "$usage" "$home/bin/build/tools.sh" "$@" || return $?
     return $?
