@@ -395,7 +395,7 @@ simpleMarkdownToConsole() {
 # Argument: redValue - Integer. Optional. Red RGB value (0-255)
 # Argument: greenValue - Integer. Optional. Red RGB value (0-255)
 # Argument: blueValue - Integer. Optional. Red RGB value (0-255)
-# stdin:
+# stdin: 3 integer values [ Optional ]
 colorBrightness() {
   local usage="_${FUNCNAME[0]}"
   local r g b
