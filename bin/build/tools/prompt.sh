@@ -134,28 +134,50 @@ bashPromptModule_ApplicationPath() {
 #
 # Run-Hook: project-activate
 bashPromptModule_binBuild() {
-  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldColor=red newColor=red oldVersion newVersion oldMessage newMessage
+  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion oldMessage newMessage buildMessage currentVersion showHome showGitHome
+  export HOME
+
+  __environment buildEnvironmentLoad HOME || return $?
   home=$(__environment buildHome) || return $?
+  showHome="${home//$HOME/~}"
   gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
   [ "$home" != "$gitHome" ] || return 0
+  showGitHome="${gitHome//$HOME/~}"
   [ -x "$gitHome/$tools" ] || return 0
-  oldVersion="$(jq .version "$home/$version")"
-  newVersion="$(jq .version "$gitHome/$version")"
+  local oldVersion newVersion newestVersion
+  oldVersion="$(jq -r .version "$home/$version")"
+  newVersion="$(jq -r .version "$gitHome/$version")"
   newestVersion="$(printf -- "%s\n" "$oldVersion" "$newVersion" | versionSort | tail -n 1)"
-  [ "$oldVersion" != "$newestVersion" ] || oldColor=blue
-  [ "$newVersion" != "$newestVersion" ] || newColor=green
+  if [ "$oldVersion" != "$newVersion" ]; then
+    if [ "$oldVersion" = "$newestVersion" ]; then
+      buildMessage="$(printf -- "build %s -> %s " "$(decorate green "$oldVersion")" "$(decorate yellow "$newVersion")")"
+    else
+      buildMessage="$(printf -- "build %s -> %s " "$(decorate blue "$oldVersion")" "$(decorate green "$newVersion")")"
+    fi
+  fi
 
   oldMessage="$(runOptionalHook --application "$home" project-deactivate "$gitHome")" || oldMessage="$home: $(decorate error project-deactivate FAILED): $?" || :
   [ -z "$oldMessage" ] || printf "%s @ %s" "$oldMessage" "$(decorate code "$home")"
   # shellcheck source=/dev/null
-  source "$gitHome/$tools" || __environment "Failed to load $gitHome/$tools" || return $?
+  source "$gitHome/$tools" || __environment "Failed to load $showGitHome/$tools" || return $?
   # buildHome will be changed here
+
   newMessage="$(runOptionalHook --application "$home" project-activate "$home")"
-  printf -- "%s %s -> %s @ %s\n" "$newMessage" "$(decorate "$oldColor" "$oldVersion")" "$(decorate "$newColor" "$newVersion")" "$(decorate code "$(buildHome)")"
-  if isFunction pathRemove; then
-    [ ! -d "$home/bin" ] || pathRemove "$home/bin"
+  currentVersion="$(runOptionalHook --application "$gitHome" version-current)"
+
+  pathSuffix=
+  if [ -d "$gitHome/bin" ]; then
+    __environment pathConfigure --last "$gitHome/bin" || return $?
+    pathSuffix="$pathSuffix +$(decorate cyan "$showGitHome/bin")"
   fi
-  [ ! -d "$gitHome/bin" ] || pathAppend --last "$gitHome/bin" && decorate info "PATH now includes $(consoleFileLink "$gitHome/bin")"
+  if isFunction pathRemove; then
+    if [ -d "$home/bin" ]; then
+      pathRemove "$home/bin"
+      pathSuffix="$pathSuffix -$(decorate magenta "$showHome/bin")"
+    fi
+  fi
+  [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
+  printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(consoleFileLink "$(buildHome)")")" "$pathSuffix"
 }
 
 # Usage: {fn} [ --first | --last | module ] [ --colors colorsText ]
