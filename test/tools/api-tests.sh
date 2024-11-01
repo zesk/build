@@ -47,7 +47,7 @@ testEnvironmentVariables() {
 testDates() {
   local t y ty tm td yy ym yd
   assertEquals --line "$LINENO" "$(timestampToDate 1697666075 %F)" "2023-10-18" || return $?
-  assertEquals --line "$LINENO" "$(todayDate)" "$(date +%F)" || return $?
+  assertEquals --line "$LINENO" "$(todayDate)" "$(date -u +%F)" || return $?
 
   t="$(todayDate)" || _environment todayDate failed || return $?
   y="$(yesterdayDate)" || _environment yesterdayDate failed || return $?
