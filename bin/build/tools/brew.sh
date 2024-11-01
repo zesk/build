@@ -21,12 +21,12 @@ brewInstall() {
 
 # Install apt packages
 __brewInstall() {
-  brew install "@"
+  brew install "$@"
 }
 
 # Uninstall apt packages
 __brewUninstall() {
-  brew uninstall "@"
+  brew uninstall "$@"
 }
 
 #
