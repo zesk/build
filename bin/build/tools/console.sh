@@ -90,11 +90,9 @@ _consoleGetColor() {
 # Usage: {fn} [ --background | --foreground ]
 #
 consoleBrightness() {
-  local color
-  if ! color=$(consoleGetColor "$@" 2>/dev/null); then
+  if ! colorBrightness < <(consoleGetColor "$@") 2>/dev/null; then
     return 1
   fi
-  printf "%s" "$color" | colorBrightness
 }
 
 #
