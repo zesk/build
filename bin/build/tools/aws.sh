@@ -675,13 +675,17 @@ awsIPAccess() {
     consoleNameValue 40 AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
   fi
   for service in "${services[@]}"; do
-    if ! serviceToPort "$service" >/dev/null; then
+    if ! isPositiveInteger "$service" && ! serviceToPort "$service" >/dev/null; then
       __failArgument "$usage" "Invalid service $(decorate code "$service")" || return $?
     fi
   done
   for securityGroupId in "${securityGroups[@]}"; do
     for service in "${services[@]}"; do
-      port=$(serviceToPort "$service") || __failEnvironment "$usage" "serviceToPort $service failed 2nd round?" || return $?
+      if isPositiveInteger "$service"; then
+        port="$service"
+      else
+        port=$(serviceToPort "$service") || __failEnvironment "$usage" "serviceToPort $service failed 2nd round?" || return $?
+      fi
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
       if $optionRevoke; then
         __usageEnvironment "$usage" awsSecurityGroupIPModify --remove "${sgArgs[@]}" || return $?

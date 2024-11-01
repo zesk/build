@@ -37,7 +37,7 @@ testAWSIPAccess() {
   if ! awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
-  if ! awsIPAccess --revoke --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
+  if ! awsIPAccess --revoke --services 22,3306 --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
   reportTiming "$start" "Succeeded in"
