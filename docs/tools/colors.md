@@ -388,7 +388,6 @@ Intended to be run on an interactive console. Should support $(tput cols).
 
 Return an integer between 0 and 100
 Colors are between 0 and 255
-stdin:
 
 - Location: `bin/build/tools/colors.sh`
 
