@@ -374,7 +374,8 @@ awsCredentialsFromEnvironment() {
     _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" || return $?
   fi
   lines=(
-    "# Added profile $profileName ($(date))"
+    ""
+    "# ${FUNCNAME[0]} Added profile $profileName ($(date))"
     "[$profileName]"
     "aws_access_key_id = $AWS_ACCESS_KEY_ID"
     "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
