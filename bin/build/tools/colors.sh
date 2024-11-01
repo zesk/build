@@ -391,8 +391,11 @@ simpleMarkdownToConsole() {
 # Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11
 # Return an integer between 0 and 100
 # Colors are between 0 and 255
-# Usage: {fn}
-# shellcheck disable=SC2120
+# Usage: {fn} r g b
+# Argument: redValue - Integer. Optional. Red RGB value (0-255)
+# Argument: greenValue - Integer. Optional. Red RGB value (0-255)
+# Argument: blueValue - Integer. Optional. Red RGB value (0-255)
+# stdin:
 colorBrightness() {
   local usage="_${FUNCNAME[0]}"
   local r g b
