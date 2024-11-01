@@ -1,8 +1,15 @@
 # prompt Tools
 
+The prompt supports a few things:
+
+- `user@host ~/path` prefix
+- Exit status of previous command is displayed
+- Manage a queue of functions to run on each shell command
+
 Tools to work with the shell prompt `PS1`
 
 - `bashPromptModule_binBuild` is a module for `bashPrompt` which sets the Zesk Build home depending on your current directory
+- `bashPromptModule_ApplicationPath` is a module for `bashPrompt` which displays the current application/path as a badge in iTerm
 - `consoleDefaultTitle` can be used as a module to set the current title
 
 Examples:
@@ -62,11 +69,32 @@ Options are:
 - `1` - Environment error
 - `2` - Argument error
 
+## Bash Prompt Modules
+
+To enable:
+
+    bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
+
 ### `bashPromptModule_binBuild` - Check which bin/build we are running and keep local to
 
 Check which bin/build we are running and keep local to current project
-When changing projects, runs the `project-selected` hook in the new project
+When changing projects, runs the `project-activate` hook in the new project
 Also shows the change in Zesk Build version numbers
+
+- Location: `bin/build/tools/prompt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `bashPromptModule_ApplicationPath` - Show current application and path as a badge
+
+Show current application and path as a badge
 
 - Location: `bin/build/tools/prompt.sh`
 

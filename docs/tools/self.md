@@ -26,6 +26,32 @@ Prints the build home directory (usually same as the application root)
 
 BUILD_HOME
 BUILD_HOME
+### `buildEnvironmentGet` - Load and print one or more environment settings
+
+Load and print one or more environment settings
+
+
+If BOTH files exist, both are sourced, so application environments should anticipate values
+created by build's default.
+
+Modifies local environment. Not usually run within a subshell.
+
+- Location: `bin/build/tools/self.sh`
+
+#### Arguments
+
+- `envName` - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+$envName
+BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
 ### `buildEnvironmentLoad` - Load one or more environment settings from the environment file
 
 Load one or more environment settings from the environment file path.

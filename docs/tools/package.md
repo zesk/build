@@ -226,3 +226,18 @@ INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `packageDefaultManager` - Determine the default manager
+
+Determine the default manager
+
+- Location: `bin/build/tools/package.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

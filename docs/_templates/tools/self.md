@@ -7,6 +7,7 @@ Easier access to `BUILD_HOME`, list of all functions, cache directory, known env
 <hr />
 
 {buildHome}
+{buildEnvironmentGet}
 {buildEnvironmentLoad}
 {buildEnvironmentContext}
 {buildFunctions}
