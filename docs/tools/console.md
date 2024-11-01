@@ -169,7 +169,7 @@ Output a local file link to the console
 
 ## DEPRECATED - do not use
 
-Use  instead.
+Use - [function ]() - []() instead.
 
 #### Arguments
 

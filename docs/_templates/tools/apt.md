@@ -13,14 +13,3 @@
 {aptKeyAdd}
 {aptKeyRemove}
 {aptKeyRingDirectory}
-
-## Deprecated October 2024
-
-See (package)[./package.md] functions for replacements.
-
-{packageUpdate}
-{packageInstall}
-{packageUninstall}
-{packageNeedRestartFlag}
-{packageWhichUninstall}
-{packageWhich}
