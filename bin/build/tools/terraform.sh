@@ -39,7 +39,7 @@ terraformInstall() {
   local usage="_${FUNCNAME[0]}" binary="terraform"
 
   ! whichExists "$binary" || return 0
-  if isAptInstalled; then
+  if aptIsInstalled; then
     __usageEnvironment "$usage" packageInstall gnupg software-properties-common curl figlet
     __usageEnvironment "$usage" aptKeyAddHashicorp || return $?
   fi
