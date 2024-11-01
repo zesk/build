@@ -9,18 +9,18 @@
 
 testAPITools() {
   assertEquals --line "$LINENO" "$(plural 0 singular plural)" "plural" || return $?
-  assertEquals --line "$LINENO"  "$(plural 1 singular plural)" "singular" || return $?
-  assertEquals --line "$LINENO"  "$(plural 2 singular plural)" "plural" || return $?
-  assertEquals --line "$LINENO"  "$(plural -1 singular plural)" "plural" || return $?
-  assertExitCode --line "$LINENO"  --stderr-ok 1 plural X singular plural || return $?
+  assertEquals --line "$LINENO" "$(plural 1 singular plural)" "singular" || return $?
+  assertEquals --line "$LINENO" "$(plural 2 singular plural)" "plural" || return $?
+  assertEquals --line "$LINENO" "$(plural -1 singular plural)" "plural" || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 1 plural X singular plural || return $?
 
-  assertEquals --line "$LINENO"  "$(alignRight 20 012345)" "              012345" || return $?
-  assertEquals --line "$LINENO"  "$(alignRight 5 012345)" "012345" || return $?
-  assertEquals --line "$LINENO"  "$(alignRight 0 012345)" "012345" || return $?
+  assertEquals --line "$LINENO" "$(alignRight 20 012345)" "              012345" || return $?
+  assertEquals --line "$LINENO" "$(alignRight 5 012345)" "012345" || return $?
+  assertEquals --line "$LINENO" "$(alignRight 0 012345)" "012345" || return $?
 
-  assertEquals --line "$LINENO"  "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
-  assertEquals --line "$LINENO"  "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
-  assertEquals --line "$LINENO"  "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
+  assertEquals --line "$LINENO" "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
+  assertEquals --line "$LINENO" "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
+  assertEquals --line "$LINENO" "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
 }
 
 testHooks() {
@@ -57,6 +57,16 @@ testDates() {
   IFS="-" read -r ty tm td <<<"$t"
   IFS="-" read -r yy ym yd <<<"$y"
 
+  # Convert to integer
+  td=$((td + 0))
+  tm=$((tm + 0))
+  assertExitCode --line "$LINENO" 0 isInteger "$ty" || return $?
+  assertExitCode --line "$LINENO" 0 isInteger "$tm" || return $?
+  assertExitCode --line "$LINENO" 0 isInteger "$td" || return $?
+  assertExitCode --line "$LINENO" 0 isInteger "$yy" || return $?
+  assertExitCode --line "$LINENO" 0 isInteger "$ym" || return $?
+  assertExitCode --line "$LINENO" 0 isInteger "$yd" || return $?
+
   # today 2024-01-01
   # yesterday 2023-12-31
   # Shell is AOK with `[ "02" -ge "01" ]` as integers
@@ -64,8 +74,12 @@ testDates() {
   if [ "$td" != 1 ]; then
     if [ "$tm" != 1 ]; then
       assertGreaterThanOrEqual --line "$LINENO" "$tm" "$ym" || return $?
+    else
+      assertGreaterThanOrEqual --line "$LINENO" "$ym" "$tm" || return $?
     fi
     assertGreaterThanOrEqual --line "$LINENO" "$td" "$yd" || return $?
+  else
+    assertGreaterThanOrEqual --line "$LINENO" "$yd" "$td" || return $?
   fi
 }
 
