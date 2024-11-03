@@ -413,33 +413,28 @@ _awsCredentialsRemoveSection() {
 #
 awsSecurityGroupIPModify() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local group port description start region ip foundIP mode verb tempErrorFile
+  local start group="" port="" description="" region ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile
   local json
-
-  __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
 
   start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
 
-  group=
-  port=
-  description=
+  export AWS_REGION
+  __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
   region="${AWS_REGION-}"
-  ip=
 
-  mode=--add
-  verb="Adding (default)"
-
-  saved=("$@")
-  nArguments=$#
+  local profileArgs=() saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
+        ;;
+      --profile)
+        shift
+        profileArgs=(--profile "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       --group)
         shift
@@ -505,7 +500,7 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    aws ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
+    aws "${profileArgs[@]+"${profileArgs[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
     foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     rm -f "$tempErrorFile" || :
 
@@ -521,7 +516,7 @@ awsSecurityGroupIPModify() {
       return 0
     else
       __awwSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      if ! aws --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" >/dev/null; then
+      if ! aws "${profileArgs[@]+"${profileArgs[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" >/dev/null; then
         __failEnvironment "$usage" "revoke-security-group-ingress FAILED" || return $?
       fi
     fi
@@ -529,7 +524,7 @@ awsSecurityGroupIPModify() {
   if [ "$mode" = "--add" ]; then
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awwSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
-    if ! aws --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
+    if ! aws "${profileArgs[@]+"${profileArgs[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         rm -f "$tempErrorFile" || :
         printf "%s %s\n" "$(decorate yellow "duplicate")" "$(reportTiming "$start" "found in")"
@@ -688,9 +683,9 @@ awsIPAccess() {
       fi
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
       if $optionRevoke; then
-        __usageEnvironment "$usage" awsSecurityGroupIPModify --remove "${sgArgs[@]}" || return $?
+        __usageEnvironment "$usage" awsSecurityGroupIPModify --profile "$awsProfile" --remove "${sgArgs[@]}" || return $?
       else
-        __usageEnvironment "$usage" awsSecurityGroupIPModify --register "${sgArgs[@]}" || return $?
+        __usageEnvironment "$usage" awsSecurityGroupIPModify --profile "$awsProfile" --register "${sgArgs[@]}" || return $?
       fi
     done
   done
