@@ -42,7 +42,7 @@ _arguments() {
   stateFile=$(__usageEnvironment "$usageArguments" mktemp) || return $?
   spec=$(__usageEnvironment "$usageArguments" _usageArgumentsSpecification "$source" "$this") || return $?
   __usageEnvironment "$usageArguments" _usageArgumentsSpecificationDefaults "$spec" >"$stateFile" || return $?
-  IFS=$'\n' read -d '' -r -a required <"$(__usageArgumentsSpecification__required "$spec")"
+  IFS=$'\n' read -d '' -r -a required <"$(__usageArgumentsSpecification__required "$spec")" || :
 
   # Rest is calling function argument usage
   clean=("$stateFile")

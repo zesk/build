@@ -63,7 +63,7 @@ __deprecatedIgnore() {
 # Usage
 __deprecatedFind() {
   local ignoreStuff
-  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore)
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
   while [ "$#" -gt 0 ]; do
     if find . -type f -name '*.sh' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
       return 0
@@ -77,7 +77,7 @@ __deprecatedFind() {
 __deprecatedCannon() {
   local from="$1" to="$2" ignoreStuff
   shift 2
-  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore)
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
   statusMessage printf "%s %s \n" "$(consoleWarning "$from")" "$(consoleSuccess "$to")"
   cannon "$from" "$to" "${ignoreStuff[@]}" "$@" || :
 }

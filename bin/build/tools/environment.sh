@@ -281,7 +281,7 @@ environmentFileLoad() {
         secureList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       --secure-defaults)
-        read -d "" -r -a secureList < <(environmentSecureVariables)
+        read -d "" -r -a secureList < <(environmentSecureVariables) || :
         ;;
       --ignore)
         shift

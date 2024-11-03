@@ -363,7 +363,7 @@ packageInstall() {
   __usageEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
   __usageEnvironment "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
 
-  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager")
+  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   if "$forceFlag"; then
     actualPackages=("${packages[@]}")
   else
@@ -442,7 +442,7 @@ packageUninstall() {
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}") || return $?
-  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager")
+  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   for package in "${packages[@]}"; do
     if inArray "$package" "${standardPackages[@]}"; then
       __failEnvironment "$usage" "Unable to remove standard package $(decorate code "$package")" || return $?

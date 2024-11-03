@@ -285,7 +285,7 @@ buildHome() {
 
 # Parent: buildHome
 _buildEnvironmentPath() {
-  local paths home
+  local paths=() home
 
   export BUILD_ENVIRONMENT_PATH BUILD_HOME
   if [ -z "$BUILD_HOME" ]; then
@@ -294,7 +294,7 @@ _buildEnvironmentPath() {
     home="$BUILD_HOME"
   fi
   printf "%s\n" "$home/bin/build/env" "$home/bin/env"
-  IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_PATH-}"
+  IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_PATH-}" || :
   printf "%s\n" "${paths[@]+"${paths[@]}"}"
 }
 
@@ -319,7 +319,7 @@ buildEnvironmentLoad() {
   while [ $# -gt 0 ]; do
     env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
     found=false
-    read -d '' -r -a paths < <(_buildEnvironmentPath)
+    IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
     for path in "${paths[@]}"; do
       [ -d "$path" ] || continue
       file="$path/$env.sh"

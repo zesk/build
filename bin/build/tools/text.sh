@@ -729,7 +729,7 @@ isCharacterClass() {
   local usage
 
   usage="_${FUNCNAME[0]}"
-  IFS=$'\n' read -r -d '' -a classes < <(characterClasses)
+  IFS=$'\n' read -r -d '' -a classes < <(characterClasses) || :
   inArray "$class" "${classes[@]}" || __failArgument "$usage" "Invalid class: $class" || return $?
   shift
   while [ $# -gt 0 ]; do

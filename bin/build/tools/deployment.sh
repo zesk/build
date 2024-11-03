@@ -592,7 +592,7 @@ deployToRemote() {
         ;;
       *)
         # Breaks a single argument "A B C" into three arguments "A" "B" "C" by space
-        IFS=' ' read -r -a userHosts <<<"$1"
+        IFS=' ' read -r -a userHosts <<<"$1" || :
         ;;
     esac
     shift || :

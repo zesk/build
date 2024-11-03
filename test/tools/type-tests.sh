@@ -21,7 +21,7 @@ _testLineLabel() {
   printf "%s %s " "$(decorate info "$1")" "$(decorate code "$2")"
 }
 validateMissingItems() {
-  while IF='' read -r testLine; do
+  while IFS='' read -r testLine; do
     if ! assertNotExitCode 0 isCallable "$testLine"; then
       _testLineLabel validateMissingItems "$testLine"
       return 1
@@ -33,7 +33,7 @@ validateMissingItems() {
   done
 }
 validateFunction() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertExitCode 0 isFunction "$testLine"; then
       _testLineLabel isFunction "$testLine"
       return 1
@@ -41,7 +41,7 @@ validateFunction() {
   done
 }
 validateNotFunction() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isFunction "$testLine"; then
       _testLineLabel "NOT isFunction" "$testLine"
       return 1
@@ -49,7 +49,7 @@ validateNotFunction() {
   done
 }
 validateExecutable() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     _testLineLabel "isExecutable" "$testLine"
     if ! assertExitCode 0 isExecutable "$testLine"; then
       return 1
@@ -57,7 +57,7 @@ validateExecutable() {
   done
 }
 validateNotExecutable() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isExecutable "$testLine"; then
       _testLineLabel "NOT isExecutable" "$testLine"
       return 1
@@ -65,7 +65,7 @@ validateNotExecutable() {
   done
 }
 validateCallable() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertExitCode 0 isCallable "$testLine"; then
       _testLineLabel "isCallable" "$testLine"
       return 1
@@ -73,7 +73,7 @@ validateCallable() {
   done
 }
 validateNotCallable() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isCallable "$testLine"; then
       _testLineLabel "NOT isCallable" "$testLine"
       return 1
@@ -214,7 +214,7 @@ EOF
 }
 
 validateSignedInteger() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertExitCode 0 isInteger "$testLine"; then
       _testLineLabel "isInteger" "$testLine"
       return 1
@@ -222,7 +222,7 @@ validateSignedInteger() {
   done
 }
 validateNotSignedInteger() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isInteger "$testLine"; then
       _testLineLabel "NOT isInteger" "$testLine"
       return 1
@@ -230,7 +230,7 @@ validateNotSignedInteger() {
   done
 }
 validateUnsignedInteger() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertExitCode 0 isUnsignedInteger "$testLine"; then
       _testLineLabel "isUnsignedInteger" "$testLine"
       return 1
@@ -238,7 +238,7 @@ validateUnsignedInteger() {
   done
 }
 validateNotUnsignedInteger() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isUnsignedInteger "$testLine"; then
       _testLineLabel "NOT isUnsignedInteger" "$testLine"
       return 1
@@ -246,7 +246,7 @@ validateNotUnsignedInteger() {
   done
 }
 validateUnsignedNumber() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertExitCode 0 isUnsignedNumber "$testLine"; then
       _testLineLabel "isUnsignedNumber" "$testLine"
       return 1
@@ -254,7 +254,7 @@ validateUnsignedNumber() {
   done
 }
 validateNotUnsignedNumber() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isUnsignedNumber "$testLine"; then
       _testLineLabel "NOT isUnsignedNumber" "$testLine"
       return 1
@@ -262,7 +262,7 @@ validateNotUnsignedNumber() {
   done
 }
 validateSignedNumber() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     if ! assertExitCode 0 isNumber "$testLine"; then
       _testLineLabel "isNumber" "$testLine"
       return 1
@@ -270,7 +270,7 @@ validateSignedNumber() {
   done
 }
 validateNotSignedNumber() {
-  while IF="" read -r testLine; do
+  while IFS="" read -r testLine; do
     _testLineLabel "NOT isNumber" "$testLine"
     if ! assertNotExitCode 0 isNumber "$testLine"; then
       return 1

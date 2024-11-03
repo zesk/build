@@ -316,7 +316,7 @@ __testSuiteExecutor() {
 
   statusMessage decorate error "Test $item failed in $file" || :
   while [ $# -gt 0 ]; do
-    read -r -a executorArgs < <(printf "%s\n" "$1")
+    read -r -a executorArgs < <(printf "%s\n" "$1") || :
     statusMessage decorate info "Running" "${executorArgs[@]}" "$file$line"
     "${executorArgs[@]}" "$file$line"
     shift

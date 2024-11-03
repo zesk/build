@@ -371,7 +371,7 @@ __bashCoverageMatch() {
     code=$(cat "$file")
     remain="${remain//"$code"/}"
   done < <(find "$directory" -type f)
-  IFS=' ' read -r -a tokens <<<"$remain"
+  IFS=' ' read -r -a tokens <<<"$remain" || :
   [ "${#tokens[@]}" -gt 0 ] || return 0
   __bashCoverageCanIgnore "${tokens[@]}"
 }

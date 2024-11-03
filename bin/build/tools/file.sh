@@ -294,7 +294,7 @@ simplifyPath() {
     path="$1"
     path="${path#"./"}"
     path="${path//\/\.\///}"
-    read -r -a elements <<<"$path"
+    read -r -a elements <<<"$path" || :
     result=()
     for segment in "${elements[@]}"; do
       if [ "$segment" = ".." ]; then

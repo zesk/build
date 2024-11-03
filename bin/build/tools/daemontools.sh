@@ -416,7 +416,7 @@ daemontoolsManager() {
         ;;
       --action)
         shift
-        IFS="," read -r -a currentActions <<<"$1"
+        IFS="," read -r -a currentActions <<<"$1" || :
         [ ${#currentActions[@]} -gt 0 ] || __failArgument "$usage" "$argument No actions specified"
         for action in "${currentActions[@]}"; do
           case "$action" in start | restart | stop) ;; *) __failArgument "$usage" "Invalid action $action" || return $? ;; esac
@@ -470,7 +470,7 @@ daemontoolsManager() {
       fi
       fileAction="$(head -1 "$file")"
       case "$fileAction" in start | stop | restart) ;; *) fileAction="restart" ;; esac
-      IFS=" " read -r -a currentActions <<<"$action"
+      IFS=" " read -r -a currentActions <<<"$action" || :
       svcBinFlags=
       for action in "${currentActions[@]}"; do
         if [ "$action" = "$fileAction" ]; then

@@ -65,7 +65,7 @@ consoleGetColor() {
     # remove escape chars
     result="${result#*;}"
     result="${result#rgb:}"
-    IFS='/' read -r -a colors < <(printf "%s\\n" "$result" | sed 's/[^a-f0-9/]//g')
+    IFS='/' read -r -a colors < <(printf "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
   fi
   if ! "$noTTY" && ! stty "$sttyOld"; then
     __failEnvironment "$usage" "stty reset to \"$sttyOld\" failed" || return $?

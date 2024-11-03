@@ -87,7 +87,7 @@ makeShellFilesExecutable() {
         ;;
       --find)
         shift
-        IFS=' ' read -r -a tempArgs <<<"${1-}"
+        IFS=' ' read -r -a tempArgs <<<"${1-}" || :
         findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
         ;;
       *)

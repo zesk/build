@@ -84,7 +84,7 @@ __hookGitPreCommit() {
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
   __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
-  read -r -a extensions < <(printf "%s" "$BUILD_PRECOMMIT_EXTENSIONS")
+  read -r -a extensions < <(printf "%s" "$BUILD_PRECOMMIT_EXTENSIONS") || :
   clearLine
   __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
 

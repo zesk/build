@@ -14,7 +14,7 @@ isVersion() {
   local part parts
   [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
-    IFS=. read -r -a parts < <(printf "%s\n" "$1")
+    IFS=. read -r -a parts < <(printf "%s\n" "$1") || :
     for part in "${parts[@]}"; do
       _integer "$part" || return 1
     done

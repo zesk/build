@@ -301,7 +301,7 @@ __bashPromptGeneratePS1() {
   local colors reset
   export BUILD_PROMPT_COLORS
   reset="$(consoleReset)"
-  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}"
+  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   printf "%s@%s %s %s " \
     "\[${colors[2]-}\]\u\[${reset}\]" \
     "\[${colors[3]-}\]\h" \
@@ -312,7 +312,7 @@ __bashPromptCommand() {
   __PREVIOUS_RESULT=$?
   local colors promptCommand
   export BUILD_PROMPT_COLORS
-  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}"
+  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   if [ "$__PREVIOUS_RESULT" -eq 0 ]; then
     __PREVIOUS_PREFIX="${colors[0]-}"
     __PREVIOUS_SYMBOL=">"

@@ -18,13 +18,13 @@ testPackageAPI() {
   assertExitCode --line "$LINENO" 0 packageWhichUninstall "$ourTestBinary" "$ourTestPackage" || return $?
   local installed
 
-  IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList)
+  IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList) || :
   assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?
   assertNotExitCode --line "$LINENO" 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
 
   assertExitCode --dump --line "$LINENO" 0 packageWhich --force "$ourTestBinary" "$ourTestPackage" || return $?
 
-  IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList)
+  IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList) || :
   assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?
   assertExitCode --line "$LINENO" 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
 
