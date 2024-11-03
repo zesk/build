@@ -500,7 +500,7 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    aws "${profileArgs[@]+"${profileArgs[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
+    __echo aws "${profileArgs[@]+"${profileArgs[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
     foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     rm -f "$tempErrorFile" || :
 
@@ -524,7 +524,7 @@ awsSecurityGroupIPModify() {
   if [ "$mode" = "--add" ]; then
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awwSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
-    if ! aws "${profileArgs[@]+"${profileArgs[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
+    if ! __echo aws "${profileArgs[@]+"${profileArgs[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         rm -f "$tempErrorFile" || :
         printf "%s %s\n" "$(decorate yellow "duplicate")" "$(reportTiming "$start" "found in")"
