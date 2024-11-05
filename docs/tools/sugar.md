@@ -92,11 +92,11 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__failArgument` - IDENTICAL _tinySugar EOF
+### `__failArgument` - IDENTICAL _tinySugar 43
 
-IDENTICAL _tinySugar EOF
+IDENTICAL _tinySugar 43
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

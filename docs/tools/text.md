@@ -43,7 +43,7 @@ Returns true if all `characters` are of `className`
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/map.sh`
 
 #### Usage
 
@@ -72,7 +72,7 @@ needSlash='$.*/[\]^'
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/map.sh`
 
 #### Usage
 
@@ -906,7 +906,7 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 #### See Also
 
-- [Source {fn}]({sourceLink})
+{SEE:cannon.sh}
 #### Arguments
 
 - `separator` - Required. String. Single character to join elements.

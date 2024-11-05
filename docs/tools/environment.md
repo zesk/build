@@ -13,7 +13,7 @@ Output a list of environment variables and ignore function definitions
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
-- Location: `bin/build/tools/environment.sh`
+- Location: `bin/build/map.sh`
 
 #### Arguments
 
