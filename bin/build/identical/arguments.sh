@@ -34,16 +34,14 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # This function serves as a sample for all other templates.
 __documentTemplateFunction() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
   local start
 
   # IDENTICAL startBeginTiming 1
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  saved=("$@")
-  nArguments=$#
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4

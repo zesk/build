@@ -551,7 +551,7 @@ __awwSGOutput() {
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
 # Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
 # Argument: --profile awsProfile - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
-# Argument: --services service0,service1,... - List. Required. List of services to add or remove (maps to ports)
+# Argument: --services service0,service1,... - List. Required. List of services to add or remove (service names or port numbers)
 # Argument: --id developerId - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
 # Argument: --group securityGroup - String. Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
 # Argument: --ip ip - Optional. IP. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
@@ -564,6 +564,7 @@ __awwSGOutput() {
 # services are looked up in /etc/services and match /tcp services only for port selection
 #
 # If no `/etc/services` matches the default values are supported within the script: `mysql`,`postgres`,`ssh`,`http`,`https`
+# You can also simply supply a list of port numbers, and mix and match: `--services ssh,http,3306,12345` is valid
 #
 # Environment: AWS_REGION - Where to update the security group
 # Environment: DEVELOPER_ID - Developer used to register rules in Amazon
@@ -572,20 +573,14 @@ __awwSGOutput() {
 #
 awsIPAccess() {
   local usage="_${FUNCNAME[0]}"
-  local argument service services optionRevoke awsProfile developerId currentIP securityGroups securityGroupId
-  local sgArgs port verboseFlag=false
+
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
 
-  services=()
-  optionRevoke=false
-  awsProfile=
-  currentIP=
-  developerId=
-  securityGroups=()
+  local services=() optionRevoke=false pp=() currentIP="" developerId="" securityGroups=() verboseFlag=false awsProfile
 
   while [ $# -gt 0 ]; do
-    argument="$1"
+    local argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -598,9 +593,10 @@ awsIPAccess() {
         IFS=', ' read -r -a services <<<"$1" || :
         ;;
       --profile)
-        [ -z "$awsProfile" ] || __failArgument "$usage" "$argument already specified: $awsProfile"
+        [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
         shift || __failArgument "$usage" "missing $argument argument" || return $?
-        awsProfile="$1"
+        awsProfile="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+        pp=("$argument" "$awsProfile")
         ;;
       --revoke)
         optionRevoke=true
@@ -631,7 +627,6 @@ awsIPAccess() {
   [ -n "$developerId" ] || __failArgument "$usage" "Empty --id or DEVELOPER_ID environment" || return $?
 
   [ "${#services[@]}" -gt 0 ] || __failArgument "$usage" "Supply one or more services" || return $?
-  awsProfile=${awsProfile:=default}
 
   [ ${#securityGroups[@]} -gt 0 ] || __failArgument "$usage" "One or more --group is required" || return $?
   if [ -z "$currentIP" ]; then
@@ -641,11 +636,11 @@ awsIPAccess() {
   fi
   currentIP="$currentIP/32"
 
-  # shellcheck disable=SC2119
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    ! $verboseFlag || statusMessage decorate info "Need AWS Environment: $awsProfile" || :
+    awsProfile=${awsProfile:=default}
+    ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $awsProfile" || :
     if awsCredentialsHasProfile "$awsProfile"; then
       __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$awsProfile")" || return $?
     else
@@ -653,8 +648,9 @@ awsIPAccess() {
     fi
   fi
 
-  usageRequireEnvironment "$usage" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
-  usageRequireBinary "$usage" aws || return $?
+  if [ ${#pp[@]} -eq 0 ]; then
+    usageRequireEnvironment "$usage" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
+  fi
 
   if $verboseFlag; then
     clearLine
@@ -663,17 +659,26 @@ awsIPAccess() {
     else
       bigText "Opening ..." | wrapLines "$(decorate blue)" "$(consoleReset)"
     fi
-    consoleNameValue 40 ID "$developerId" || :
-    consoleNameValue 40 IP "$currentIP" || :
-    consoleNameValue 40 "Security Groups" "${securityGroups[@]}" || :
-    consoleNameValue 40 Region "$AWS_REGION" || :
-    consoleNameValue 40 AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
+    local width=40
+
+    consoleNameValue "$width" ID "$developerId" || :
+    consoleNameValue "$width" IP "$currentIP" || :
+    consoleNameValue "$width" "Security Groups" "${securityGroups[@]}" || :
+    consoleNameValue "$width" Region "$AWS_REGION" || :
+    if [ ${#pp[@]} -eq 0 ]; then
+      consoleNameValue "$width" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
+    else
+      consoleNameValue "$width" Profile "${pp[1]}" || :
+    fi
   fi
+  local service
   for service in "${services[@]}"; do
     if ! isPositiveInteger "$service" && ! serviceToPort "$service" >/dev/null; then
       __failArgument "$usage" "Invalid service $(decorate code "$service")" || return $?
     fi
   done
+
+  local securityGroupId sgArgs port
   for securityGroupId in "${securityGroups[@]}"; do
     for service in "${services[@]}"; do
       if isPositiveInteger "$service"; then
@@ -683,9 +688,9 @@ awsIPAccess() {
       fi
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
       if $optionRevoke; then
-        __usageEnvironment "$usage" awsSecurityGroupIPModify --profile "$awsProfile" --remove "${sgArgs[@]}" || return $?
+        __usageEnvironment "$usage" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" --remove "${sgArgs[@]}" || return $?
       else
-        __usageEnvironment "$usage" awsSecurityGroupIPModify --profile "$awsProfile" --register "${sgArgs[@]}" || return $?
+        __usageEnvironment "$usage" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" --register "${sgArgs[@]}" || return $?
       fi
     done
   done

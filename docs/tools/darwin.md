@@ -6,9 +6,24 @@ Tools to work with Darwin, Mac OS X's version of UNIX.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `isDarwin` - Are we on Mac OS X?
+
+Are we on Mac OS X?
+
+- Location: `bin/build/tools/darwin.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `darwinDialog` - Display a dialog using `osascript` with the choices provided. Typically
 
-Display a dialog using `osascript` with the choices provided. Typically this is found in Darwin, Mac OS X's operating system.
+Display a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.
 Outputs the selected button text upon exit.
 
 - Location: `bin/build/tools/darwin.sh`

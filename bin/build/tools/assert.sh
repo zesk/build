@@ -66,7 +66,7 @@ _assertEquals() {
 # Argument: expected - Required. Expected string.
 # Argument: actual - Required. Actual string.
 # Argument: message - Message to output if the assertion fails. Optional.
-# Example:     assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
+# Example:     assertNotEquals "$(uname -s)" "FreeBSD" "Not compatible with FreeBSD"
 # Example:     Single quote break-s
 # Reviewed: 2023-11-12
 #

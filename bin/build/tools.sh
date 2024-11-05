@@ -43,7 +43,7 @@ __toolsMain() {
 
   [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
-
+  toolsFiles+=("platform/$(uname -s)")
   for toolFile in "${toolsFiles[@]}"; do
     # shellcheck source=/dev/null
     source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?

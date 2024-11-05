@@ -14,7 +14,7 @@
 # Environment: HOME
 # stdout: the home directory
 _home() {
-  local user="${1-}" home userDatabase=/etc/passwd
+  local user="${1-}" userDatabase="/etc/passwd" home
   set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?
   [ -d "$home" ] || _return 1 "User $user home \"$home\" is not a directory" || return $?
   printf -- "%s\n" "$home"

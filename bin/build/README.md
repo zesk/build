@@ -17,7 +17,7 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-- copy `bin/build/install-bin-build.sh` into your project (changing last line as needed).
+- copy `bin/build/install-bin-build.sh` into your project (changing last line as needed) or use `installInstallBuild` to install it.
 - run it before you need this code (will be installed at `bin/build`)
 - installation pulls from `github.com` using `curl`
 
@@ -43,7 +43,7 @@ To install it in the operating system:
 Defaults:
 
 - `./` - Application root
-- `./bin/build` - Zesk Build installation location (may *not* be changed)
+- `./bin/build/` - Zesk Build installation location (may *not* be changed)
 - `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` on the end)
 - `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end)
 - `./docs/release/v1.0.0.md` - Release notes (override by adding `BUILD_RELEASE_NOTES` environment)
@@ -59,18 +59,17 @@ Binaries are:
 - `cannon.sh` - `cannon` - replace strings in many files. Destructive! Warning! Danger!
 - `chmod-sh.sh` - `makeShellFilesExecutable` - Makes `.sh` files `+x`
 - `deprecated.sh` - Run this on your code to update it to the latest. May break it, so use source control.
-- `identical-check.sh` - `identicalCheck` with some automatic configuration for your project
-- `local-container.sh` - `dockerLocalContainer`
-- `bitbucket-container.sh` - `bitbucketContainer`
-- `map.sh` - `mapEnvironment`
-- `new-release.sh` - `newRelease`
-- `release-notes.sh` - `releaseNotes`
-- `version-last.sh` - `gitVersionLast`
-- `version-list.sh` - `gitVersionList`
-
-A single binary can be used to load and run commands:
-
-- `tools.sh` - loads or runs tools
+- `identical-check.sh` - `identicalCheck` wrapper
+- `identical-repair.sh` - `identicalRepair` with some automatic configuration for your project
+- `local-container.sh` - `dockerLocalContainer` wrapper
+- `bitbucket-container.sh` - `bitbucketContainer` wrapper
+- `map.sh` - `mapEnvironment` wrapper
+- `need-bash.sh` - For Docker image installs which lack bash (usually running `sh`). This script enables install of `bash` to run `tools.sh` properly.
+- `new-release.sh` - `newRelease` wrapper
+- `release-notes.sh` - `releaseNotes` wrapper
+- `test-tools.sh` - Tools for `testSuite`
+- `version-last.sh` - `gitVersionLast` wrapper
+- `version-list.sh` - `gitVersionList` wrapper
 
 ## Sample usages
 
@@ -113,6 +112,7 @@ Main issues between platforms are differences between BSD, GNU or POSIX standard
 - Darwin (Mac OS X)
 - Ubuntu 22
 - debian:latest
+- alpine:latest
 - BitBucket Pipelines
 
 Tested bash versions:
@@ -125,7 +125,7 @@ If you test on another OS or need support on a specific platform, report an issu
 
 ## Known issues and workarounds
 
-- On Mac OS X the Docker environment thinks non-executable files are executable, notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how permissions are translated, I assume. Workaround falls
+- [On Mac OS X the Docker environment thinks non-executable files are executable](https://github.com/docker/for-mac/issues/5509), notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how permissions are translated, I assume. Workaround falls
   back to `ls` which is slow but works. See `isExecutable`. Added 2024-01.
 
 ## Copyright &copy; 2024 Market Acumen, Inc

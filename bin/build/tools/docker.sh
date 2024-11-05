@@ -17,6 +17,19 @@
 #..▝▀▝▘.▝▀▘..▝▀▀.▝▘.▀▘.▝▀▀..▀...
 #...............................
 
+# Fetch the default platform for docker
+# Outputs one of: `linux/arm64`, `linux/mips64`, `linux/amd64`
+dockerPlatformDefault() {
+  local os=linux chip
+  case "$(uname -m)" in
+    *arm*) chip=arm64 ;;
+    *mips*) chip=mips64 ;;
+    *x86* | *amd*) chip=amd64 ;;
+    *) chip=default ;;
+  esac
+  printf "%s/%s" "$os" "$chip"
+}
+
 #
 # Debugging, dumps the proc1file which is used to figure out if we
 # are insideDocker or not; use this to confirm platform implementation
@@ -287,6 +300,8 @@ dockerLocalContainer() {
     esac
     shift || :
   done
+  [ -n "$platform" ] || platform=$(dockerPlatformDefault)
+
   if [ -z "$localPath" ]; then
     localPath=$(__usageEnvironment "$usage" pwd) || return $?
   fi

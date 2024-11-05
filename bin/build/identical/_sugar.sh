@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Syntactic Sugar makes coding fun
+#
 # EDIT THIS FILE
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
@@ -103,8 +105,7 @@ _choose() {
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 _clean() {
-  local exitCode="${1-}"
-  shift
+  local exitCode="${1-}" && shift
   _integer "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
   while [ $# -gt 0 ]; do
     [ ! -f "$1" ] || __environment rm "$1" || return $?

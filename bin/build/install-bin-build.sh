@@ -72,7 +72,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
-# IDENTICAL _installRemotePackage 257
+# IDENTICAL _installRemotePackage 248
 
 # Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
 # fn: {base}
@@ -106,26 +106,15 @@ __installPackageConfiguration() {
 # Exit Code: 2 - Argument error
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
   local relative="${1-}" packagePath="${2-}" packageInstallerName="${3-}"
-  local argument start ignoreFile tarArgs
-  local forceFlag installFlag localPath message installArgs
-  local myBinary myPath osName url urlFunction checkFunction applicationHome installPath headers
 
   shift 3
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
-  installArgs=()
-  url=
-  localPath=
-  forceFlag=false
-  urlFunction=
-  checkFunction=
-  headers=()
-  nArguments=$#
+  local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" headers=() nArguments=$#
+  local nArguments="$#"
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$1"
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
     [ -n "$argument" ] || __failArgument "$usage" "blank argument #$argumentIndex: $argument" || return $?
     case "$argument" in
       --debug)
@@ -196,12 +185,13 @@ _installRemotePackage() {
     __failArgument "$usage" "--local or --url|--url-function is required" || return $?
   fi
 
+  local installFlag=false message
+  local myBinary myPath applicationHome installPath
   # Move to starting point
   myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
   applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
   installPath="$applicationHome/$packagePath"
-  installFlag=false
   if [ ! -d "$installPath" ]; then
     if $forceFlag; then
       printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "directory does not exist")"
@@ -213,6 +203,7 @@ _installRemotePackage() {
   fi
   binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
   if $installFlag; then
+    local start
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
@@ -257,7 +248,7 @@ __installRemotePackageDebug() {
 # Install the package directory
 __installRemotePackageDirectory() {
   local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
-  local start tarArgs
+  local start tarArgs osName
   local target="$applicationHome/.$$.package.tar.gz"
 
   shift 5
@@ -323,7 +314,7 @@ __installRemotePackageLocal() {
   } >"$myBinary.$$"
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
   "$myBinary.$$" --replace >"$log" 2>&1 &
-  pid=$!
+  local pid=$!
   if ! _integer "$pid"; then
     _environment "Unable to run $myBinary.$$" || return $?
   fi
@@ -356,7 +347,7 @@ whichExists() {
   done
 }
 
-# IDENTICAL _colors 101
+# IDENTICAL _colors 105
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -407,6 +398,10 @@ __decorate() {
 }
 
 # Singular decoration function
+# Usage: decorate style [ text ... ]
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info success warning error subtle label value decoration
+# Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
+# stdout: Decorated text
 decorate() {
   local text="" what="${1-}" && shift
   local lp dp

@@ -97,7 +97,7 @@ __updateAvailable() {
   home="$(__usageEnvironment "$usage" buildHome)" || return $?
 
   managers=(apk debian ubuntu)
-  if [ "$(uname -s)" = "Darwin" ] && whichExists brew; then
+  if isDarwin && whichExists brew; then
     managers+=(brew)
     allKnown=true
   else

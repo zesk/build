@@ -6,4 +6,5 @@ Tools to work with Darwin, Mac OS X's version of UNIX.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+{isDarwin}
 {darwinDialog}

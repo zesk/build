@@ -87,7 +87,7 @@ If this fails it will output an error and exit.
 
 #### Examples
 
-    assertNotEquals "$(uname -s)" "Darwin" "Not compatible with Darwin"
+    assertNotEquals "$(uname -s)" "FreeBSD" "Not compatible with FreeBSD"
     Single quote break-s
 
 #### Exit codes

@@ -22,7 +22,7 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 Run `command ...` (with any arguments) and then `_return` if it fails.
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/_sugar.sh`
 
 #### Arguments
 
@@ -92,11 +92,11 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__failArgument` - IDENTICAL _tinySugar 43
+### `__failArgument` - IDENTICAL _tinySugar EOF
 
-IDENTICAL _tinySugar 43
+IDENTICAL _tinySugar EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 

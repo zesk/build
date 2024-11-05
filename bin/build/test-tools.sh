@@ -22,6 +22,10 @@ export globalTestFailure=
 # Argument: --clean - Optional. Delete test artifact files and exit. (No tests run)
 # Argument: --continue - Optional. Flag. Continue from last successful test.
 # Argument: -c - Optional. Flag. Continue from last successful test.
+# Argument: --verbose - Optional. Flag. Be verbose.
+# Argument: --coverage - Optional. Flag. Feature in progress - generate a coverage file for tests.
+# Argument: --no-stats - Optional. Flag. Do not generate a test.stats file showing test timings when completed.
+# Argument: --list - Optional. Flag. List all test names (which match if applicable).
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files.
 # Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.

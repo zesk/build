@@ -6,6 +6,11 @@
 # Test: o ./test/tools/darwin-tests.sh
 #
 
+# Are we on Mac OS X?
+isDarwin() {
+  [ "$(uname -s)" = "Darwin" ]
+}
+
 # Usage: {fn} [ --help ] [ --choice choiceText ] [ --ok ] [ --cancel ] [ --default buttonIndex ] message ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -14,7 +19,7 @@
 # Argument: --cancel - Optional. Flag. Adds "Cancel" as an option.
 # Argument: --default buttonIndex - Required. Integer. The button (0-based index) to make the default button choice.
 # Argument: message ... - Required. String. The message to display in the dialog.
-# Display a dialog using `osascript` with the choices provided. Typically this is found in Darwin, Mac OS X's operating system.
+# Display a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.
 # Outputs the selected button text upon exit.
 darwinDialog() {
   local usage="_${FUNCNAME[0]}"

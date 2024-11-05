@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# When you only need a little bit of syntactic sugar
+#
 # EDIT THIS FILE
 #
 # Copyright &copy; 2024 Market Acumen, Inc.

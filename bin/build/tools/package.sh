@@ -487,16 +487,9 @@ _packageDebugging() {
 }
 
 # Determine the default manager
+# See: platform
 packageManagerDefault() {
-  if apkIsInstalled; then
-    printf "%s\n" "apk"
-  elif aptIsInstalled; then
-    printf "%s\n" "apt"
-  elif [ "$(uname -s)" = "Darwin" ]; then
-    printf "%s\n" "brew"
-  else
-    _environment "Not able to detect package manager $(_packageDebugging)" || return $?
-  fi
+  __packageManagerDefault
 }
 
 # List installed packages on this system using package manager

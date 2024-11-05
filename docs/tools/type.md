@@ -157,7 +157,7 @@ If no arguments are passed, returns exit code 1.
 Test if all arguments are executable binaries
 If no arguments are passed, returns exit code 1.
 
-- Location: `bin/build/tools/type.sh`
+- Location: `bin/build/tools/platform/_isExecutable.sh`
 
 #### Arguments
 

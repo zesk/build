@@ -6,7 +6,7 @@
 # Install bash and then run it
 # Install a simple profile
 # Some containers do not have bash installed by default
-#
+# Usage: {fn} installationCommand ... -- runCommand ...
 __needBash() {
   export LC_TERMINAL
   export TERM

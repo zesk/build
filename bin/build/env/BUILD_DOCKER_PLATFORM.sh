@@ -13,18 +13,9 @@
 # linux/mips64,
 # linux/arm/v7,
 # linux/arm/v6
+# See: dockerPlatformDefault
 export BUILD_DOCKER_PLATFORM
-_BUILD_DOCKER_PLATFORM() {
-  local os=linux chip
-  case "$(uname -m)" in
-    *arm*) chip=arm64 ;;
-    *mips*) chip=mips64 ;;
-    *x86* | *amd*) chip=amd64 ;;
-    *) chip=default ;;
-  esac
-  printf "%s/%s" "$os" "$chip"
-}
-BUILD_DOCKER_PLATFORM=${BUILD_DOCKER_PLATFORM:-"$(_BUILD_DOCKER_PLATFORM)"}
+BUILD_DOCKER_PLATFORM=${BUILD_DOCKER_PLATFORM-}
 
 # ~/marketruler/devops 👉 docker buildx ls
 # NAME/NODE       DRIVER/ENDPOINT STATUS  BUILDKIT             PLATFORMS

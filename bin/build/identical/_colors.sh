@@ -57,6 +57,10 @@ __decorate() {
 }
 
 # Singular decoration function
+# Usage: decorate style [ text ... ]
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info success warning error subtle label value decoration
+# Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
+# stdout: Decorated text
 decorate() {
   local text="" what="${1-}" && shift
   local lp dp

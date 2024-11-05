@@ -108,11 +108,8 @@ listFileModificationTimes() {
   directory="$1"
   [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
-  if [ "$(uname -s)" = "Darwin" ]; then
-    find "$directory" -type f "$@" -exec stat -f '%m %N' {} \;
-  else
-    find "$directory" -type f "$@" -exec stat --format='%Y %n' {} \;
-  fi
+  # See: platform
+  __listFileModificationTimes "$directory" "$@"
 }
 _listFileModificationTimes() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
