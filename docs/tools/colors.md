@@ -26,7 +26,7 @@ This is still in progress but will likely be the new mechanism.
 
 Semantics-based
 
-- Location: `bin/build/identical/_colors.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -237,7 +237,7 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 Exit Code; 1 - Colors are likely not supported by console
 
-- Location: `bin/build/identical/_colors.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Usage
 

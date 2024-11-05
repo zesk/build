@@ -904,9 +904,6 @@ This can break your files so use with caution. Blank searchText is not allowed.
 - `1` - mktemp failed
 - `2` - Arguments are identical
 
-#### See Also
-
-{SEE:cannon.sh}
 #### Arguments
 
 - `separator` - Required. String. Single character to join elements.
