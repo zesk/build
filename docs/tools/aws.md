@@ -116,7 +116,7 @@ services are looked up in /etc/services and match /tcp services only for port se
 
 #### Arguments
 
-- `--profile awsProfile` - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
+- `--profile profileName` - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
 --services service0,service1,- `...` - List. Required. List of services to add or remove (service names or port numbers)
 - `--id developerId` - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
 - `--group securityGroup` - String. Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
@@ -160,6 +160,21 @@ AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 
 - `0` - All regions are valid AWS region
 - `1` - One or more regions are NOT a valid AWS region
+### `awsProfilesList` - List AWS profiles available in the credentials file
+
+List AWS profiles available in the credentials file
+
+- Location: `bin/build/tools/aws.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `awsCredentialsFile` - Get the path to the AWS credentials file
 
 Get the credentials file path, optionally outputting errors
@@ -190,6 +205,43 @@ If not found, returns with exit code 1.
 
 - `1` - If `$HOME` is not a directory or credentials file does not exist
 - `0` - If credentials file is found and output to stdout
+### `awsCredentialsAdd` - Write an AWS profile to the AWS credentials file
+
+Write the credentials to the AWS credentials file.
+
+If the AWS credentials file is not found, it is created
+
+- Location: `bin/build/tools/aws.sh`
+
+#### Arguments
+
+- `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
+- `--force` - Flag. Optional. Write the credentials file even if the profile already exists
+- `id` - The AWS_ACCESS_KEY_ID to write
+- `key` - The AWS_SECRET_ACCESS_KEY to write
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `awsCredentialsRemove` - Remove credentials from the AWS credentials file
+
+Remove credentials from the AWS credentials file
+
+If the AWS credentials file is not found, succeeds.
+
+- Location: `bin/build/tools/aws.sh`
+
+#### Arguments
+
+- `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `awsEnvironmentFromCredentials` - Get credentials and output environment variables for AWS authentication
 
 Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
@@ -224,7 +276,7 @@ Both forms can be used, but the profile should be supplied once and only once.
 - `2` - Argument error
 ### `awsCredentialsFromEnvironment` - Write an AWS profile to the AWS credentials file
 
-Write the credentials supplied from the AWS credentials file.
+Write the credentials to the AWS credentials file.
 
 If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
 If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.

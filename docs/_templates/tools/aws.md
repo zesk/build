@@ -20,7 +20,10 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 {awsIPAccess}
 {awsSecurityGroupIPModify}
 {awsRegionValid}
+{awsProfilesList}
 {awsCredentialsFile}
+{awsCredentialsAdd}
+{awsCredentialsRemove}
 {awsEnvironmentFromCredentials}
 {awsCredentialsFromEnvironment}
 {awsCredentialsHasProfile}
