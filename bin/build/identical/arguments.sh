@@ -39,7 +39,7 @@ __documentTemplateFunction() {
   # IDENTICAL startBeginTiming 1
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  local saved=("$@") nArguments=$#
+  local saved=("$@") nArguments=$# region="" profileName="" pp=()
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -48,6 +48,70 @@ __documentTemplateFunction() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      # IDENTICAL profileNameArgumentHandlerCase 6
+      --profile)
+        shift
+        [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
+        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+        pp=("$argument" "$profileName")
+        ;;
+      # IDENTICAL regionArgumentHandler 5
+      --region)
+        shift
+        [ -z "$region" ] || __failArgument "$usage" "$argument already specified: $region"
+        region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  # IDENTICAL profileNameArgumentValidation 6
+  if [ -z "$profileName" ]; then
+    export AWS_PROFILE
+    __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
+    profileName="${AWS_PROFILE-}"
+    [ -n "$profileName" ] || profileName="default"
+  fi
+
+  # IDENTICAL regionArgumentValidation 6
+  if [ -z "$region" ]; then
+    export AWS_REGION
+    __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
+    region="${AWS_REGION-}"
+  fi
+  awsRegionValid "$region" || __failArgument "$usage" "--region $region is not a valid region" || return $?
+
+  reportTiming "$start" "Completed in"
+}
+___documentTemplateFunction() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__documentTemplateFunction2() {
+  local usage="_${FUNCNAME[0]}"
+
+  local saved=("$@") nArguments=$# region="" profileName=""
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      # IDENTICAL profileNameArgumentHandler 5
+      --profile)
+        shift
+        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
+        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         # IDENTICAL argumentUnknown 1
@@ -60,7 +124,7 @@ __documentTemplateFunction() {
 
   reportTiming "$start" "Completed in"
 }
-___documentTemplateFunction() {
+___documentTemplateFunction2() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
