@@ -107,7 +107,7 @@ __documentTemplateFunction2() {
         "$usage" 0
         return $?
         ;;
-      # IDENTICAL profileNameArgumentHandler 5
+      # IDENTICAL --profileHandler 5
       --profile)
         shift
         [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?

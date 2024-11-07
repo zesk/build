@@ -266,12 +266,11 @@ awsEnvironmentFromCredentials() {
         "$usage" 0
         return $?
         ;;
-      # IDENTICAL profileNameArgumentHandlerCase 6
+      # IDENTICAL --profileHandler 5
       --profile)
         shift
-        [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
-        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        pp=("$argument" "$profileName")
+        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
+        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         [ -z "$profileName" ] || __failArgument "$usage" "profileName already supplied" || return $?
@@ -364,12 +363,11 @@ awsCredentialsAdd() {
       --force)
         forceFlag=true
         ;;
-      # IDENTICAL profileNameArgumentHandlerCase 6
+      # IDENTICAL --profileHandler 5
       --profile)
         shift
-        [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
-        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        pp=("$argument" "$profileName")
+        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
+        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         if [ -z "$key" ]; then
@@ -377,8 +375,8 @@ awsCredentialsAdd() {
         elif [ -z "$secret" ]; then
           secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -436,19 +434,18 @@ awsCredentialsRemove() {
         "$usage" 0
         return $?
         ;;
-      # IDENTICAL profileNameArgumentHandlerCase 6
+      # IDENTICAL --profileHandler 5
       --profile)
         shift
-        [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
-        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        pp=("$argument" "$profileName")
+        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
+        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         if [ -z "$profileName" ]; then
           profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -767,13 +764,13 @@ awsIPAccess() {
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    # IDENTICAL profileNameArgumentValidation 6
-    if [ -z "$profileName" ]; then
-      export AWS_PROFILE
-      __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-      profileName="${AWS_PROFILE-}"
-      [ -n "$profileName" ] || profileName="default"
-    fi
+  # IDENTICAL profileNameArgumentValidation 6
+  if [ -z "$profileName" ]; then
+    export AWS_PROFILE
+    __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
+    profileName="${AWS_PROFILE-}"
+    [ -n "$profileName" ] || profileName="default"
+  fi
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
     if awsCredentialsHasProfile "$profileName"; then
       __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
