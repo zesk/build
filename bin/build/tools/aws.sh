@@ -99,18 +99,12 @@ _awsInstall() {
 # shellcheck disable=SC2120
 awsCredentialsFile() {
   local usage="_${FUNCNAME[0]}"
-  local credentialsPath credentials=.aws/credentials
-  local verbose
-  local argument nArguments argumentIndex home createFlag
 
   usageRequireBinary "$usage" mkdir chmod touch || return $?
 
-  home=
-  verbose=false
-  createFlag=false
-  nArguments=$#
+  local home="" verbose=false createFlag=false nArguments=$# checkFlag=true
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -120,6 +114,9 @@ awsCredentialsFile() {
         ;;
       --create)
         createFlag=true
+        ;;
+      --path)
+        checkFlag=false
         ;;
       --home)
         shift
@@ -144,8 +141,8 @@ awsCredentialsFile() {
     ! "$verbose" || _environment "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
     return 1
   fi
-  credentials="$HOME/$credentials"
-  if [ ! -f "$credentials" ]; then
+  local credentialsPath credentials="$HOME/.aws/credentials"
+  if $checkFlag && [ ! -f "$credentials" ]; then
     if ! $createFlag; then
       ! $verbose || __failEnvironment "$usage" "No credentials file ($(decorate value "$credentials")) found" || return $?
       return 1
@@ -218,6 +215,21 @@ _awsHasEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# List AWS profiles available in the credentials file
+# See: awsCredentialsFile
+awsProfilesList() {
+  local usage="_${FUNCNAME[0]}"
+  local file
+
+  file=$(__usageEnvironment "$usage" awsCredentialsFile --path) || return $?
+  [ -f "$file" ] || return 0
+  grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :
+}
+_awsProfilesList() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
 #
@@ -254,8 +266,10 @@ awsEnvironmentFromCredentials() {
         "$usage" 0
         return $?
         ;;
+      # IDENTICAL profileNameArgumentHandler 5
       --profile)
         shift
+        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
         profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
@@ -319,30 +333,26 @@ _awsCredentialsHasProfile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Write the credentials supplied from the AWS credentials file.
+# Write the credentials to the AWS credentials file.
 #
-# If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
-# If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+# If the AWS credentials file is not found, it is created
 #
 # Summary: Write an AWS profile to the AWS credentials file
-# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ]
+# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ] id secret
 # Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
 # Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists
-awsCredentialsFromEnvironment() {
+# Argument: id - The AWS_ACCESS_KEY_ID to write
+# Argument: key - The AWS_SECRET_ACCESS_KEY to write
+awsCredentialsAdd() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
 
-  local credentials profileName forceFlag lines
   export AWS_PROFILE
 
-  __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
+  __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
 
-  forceFlag=false
-  saved=("$@")
-  nArguments=$#
-  profileName="${AWS_PROFILE-}"
+  local forceFlag=false saved=("$@") nArguments=$# profileName="${AWS_PROFILE-}" key="" secret=""
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -353,34 +363,123 @@ awsCredentialsFromEnvironment() {
       --force)
         forceFlag=true
         ;;
+      # IDENTICAL profileNameArgumentHandler 5
       --profile)
         shift
+        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
         profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        if [ -z "$key" ]; then
+          key=$(usageArgumentString "$usage" "key" "$1") || return $?
+        elif [ -z "$secret" ]; then
+          secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
+        else
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        fi
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
-  [ -n "$profileName" ] || profileName=default
+  # IDENTICAL profileNameArgumentValidation 2
+  [ -n "$profileName" ] || profileName="${AWS_PROFILE-}"
+  [ -n "$profileName" ] || profileName="default"
 
-  awsHasEnvironment || __failEnvironment "$usage" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
+  local credentials
   credentials="$(__usageEnvironment "$usage" awsCredentialsFile --create)" || return $?
   if awsCredentialsHasProfile "$profileName"; then
     $forceFlag || __failEnvironment "$usage" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
     _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" || return $?
   fi
-  lines=(
+  local lines=(
     ""
     "# ${FUNCNAME[0]} Added profile $profileName ($(date))"
     "[$profileName]"
-    "aws_access_key_id = $AWS_ACCESS_KEY_ID"
-    "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY"
+    "aws_access_key_id = $key"
+    "aws_secret_access_key = $secret"
   )
   printf -- "%s\n" "${lines[@]}" >>"$credentials" || return $?
+}
+_awsCredentialsAdd() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Remove credentials from the AWS credentials file
+#
+# If the AWS credentials file is not found, succeeds.
+#
+# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ] [ profileName ]
+# Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
+awsCredentialsRemove() {
+  local usage="_${FUNCNAME[0]}"
+
+  export AWS_PROFILE
+
+  __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
+
+  local forceFlag=false saved=("$@") nArguments=$# profileName="" key="" secret=""
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      # IDENTICAL profileNameArgumentHandler 5
+      --profile)
+        shift
+        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
+        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        if [ -z "$profileName" ]; then
+          profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+        else
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  # IDENTICAL profileNameArgumentValidation 2
+  [ -n "$profileName" ] || profileName="${AWS_PROFILE-}"
+  [ -n "$profileName" ] || profileName="default"
+
+  local credentials
+  credentials="$(__usageEnvironment "$usage" awsCredentialsFile --path)" || return $?
+  [ -f "$credentials" ] || return 0
+  if awsCredentialsHasProfile "$profileName"; then
+    _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" || return $?
+  fi
+}
+_awsCredentialsRemove() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Write the credentials to the AWS credentials file.
+#
+# If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+# If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+#
+# Summary: Write an AWS profile to the AWS credentials file
+# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ]
+# Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
+# Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists
+awsCredentialsFromEnvironment() {
+  local usage="_${FUNCNAME[0]}"
+
+  export AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
+  __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
+  awsHasEnvironment || __failEnvironment "$usage" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
+  __usageEnvironment "$usage" awsCredentialsAdd "$@" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 }
 _awsCredentialsFromEnvironment() {
   # IDENTICAL usageDocument 1
@@ -422,7 +521,7 @@ awsSecurityGroupIPModify() {
   __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
   region="${AWS_REGION-}"
 
-  local profileArgs=() saved=("$@") nArguments=$#
+  local pp=() saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -432,9 +531,12 @@ awsSecurityGroupIPModify() {
         "$usage" 0
         return $?
         ;;
+      # IDENTICAL profileNameArgumentHandlerCase 6
       --profile)
         shift
-        profileArgs=(--profile "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
+        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+        pp=("$argument" "$profileName")
         ;;
       --group)
         shift
@@ -474,6 +576,10 @@ awsSecurityGroupIPModify() {
     esac
     shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
+  # IDENTICAL profileNameArgumentValidation 2
+  [ -n "$profileName" ] || profileName="${AWS_PROFILE-}"
+  [ -n "$profileName" ] || profileName="default"
+
   [ -n "$mode" ] || __failArgument "$usage" "--add, --remove, or --register is required" || return $?
 
   for argument in group description region; do
@@ -500,7 +606,7 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    __echo aws "${profileArgs[@]+"${profileArgs[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
+    __echo aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
     foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     rm -f "$tempErrorFile" || :
 
@@ -516,7 +622,7 @@ awsSecurityGroupIPModify() {
       return 0
     else
       __awwSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      if ! aws "${profileArgs[@]+"${profileArgs[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" >/dev/null; then
+      if ! aws "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" >/dev/null; then
         __failEnvironment "$usage" "revoke-security-group-ingress FAILED" || return $?
       fi
     fi
@@ -524,7 +630,7 @@ awsSecurityGroupIPModify() {
   if [ "$mode" = "--add" ]; then
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awwSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
-    if ! __echo aws "${profileArgs[@]+"${profileArgs[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
+    if ! __echo aws "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         rm -f "$tempErrorFile" || :
         printf "%s %s\n" "$(decorate yellow "duplicate")" "$(reportTiming "$start" "found in")"
@@ -549,8 +655,8 @@ __awwSGOutput() {
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
-# Usage: {fn} --services service0,service1,... [ --profile awsProfile ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
-# Argument: --profile awsProfile - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
+# Usage: {fn} --services service0,service1,... [ --profile profileName ] [ --id developerId ] [ --group securityGroup ] [ --ip ip ] [ --revoke ] [ --debug ] [ --help ]
+# Argument: --profile profileName - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
 # Argument: --services service0,service1,... - List. Required. List of services to add or remove (service names or port numbers)
 # Argument: --id developerId - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
 # Argument: --group securityGroup - String. Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
@@ -577,7 +683,7 @@ awsIPAccess() {
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
 
-  local services=() optionRevoke=false pp=() currentIP="" developerId="" securityGroups=() verboseFlag=false awsProfile
+  local services=() optionRevoke=false pp=() currentIP="" developerId="" securityGroups=() verboseFlag=false profileName
 
   while [ $# -gt 0 ]; do
     local argument="$1"
@@ -592,11 +698,12 @@ awsIPAccess() {
         shift || __failArgument "$usage" "missing $argument argument" || return $?
         IFS=', ' read -r -a services <<<"$1" || :
         ;;
+      # IDENTICAL profileNameArgumentHandlerCase 6
       --profile)
+        shift
         [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        awsProfile="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        pp=("$argument" "$awsProfile")
+        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+        pp=("$argument" "$profileName")
         ;;
       --revoke)
         optionRevoke=true
@@ -639,12 +746,12 @@ awsIPAccess() {
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    awsProfile=${awsProfile:=default}
-    ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $awsProfile" || :
-    if awsCredentialsHasProfile "$awsProfile"; then
-      __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$awsProfile")" || return $?
+    profileName=${profileName:=default}
+    ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
+    if awsCredentialsHasProfile "$profileName"; then
+      __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
     else
-      __failEnvironment "$usage" "No AWS credentials available: $awsProfile" || return $?
+      __failEnvironment "$usage" "No AWS credentials available: $profileName" || return $?
     fi
   fi
 

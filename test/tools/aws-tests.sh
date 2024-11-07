@@ -332,3 +332,58 @@ testAwsEnvironmentFromCredentials() {
   fi
 
 }
+
+testAWSProfiles() {
+  local list firstName='test-aws' secondName='never-gonna-let-you-down'
+  export HOME
+  local savedHome
+
+  savedHome=$HOME
+  HOME=$(__environment mktemp -d) || return $?
+
+  list=$(__environment mktemp) || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
+
+  __environment awsProfilesList >"$list" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
+  # Exists
+  assertNotExitCode --stderr-match 'exists in' --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$firstName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
+
+  __environment awsProfilesList >"$list" || return $?
+  assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$secondName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
+
+  __environment awsProfilesList >"$list" || return $?
+  assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
+  assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
+
+  __environment awsProfilesList >"$list" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
+  assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
+  decorate info removed first name
+
+  __environment awsProfilesList >"$list" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
+  assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --profile "$secondName" || return $?
+  decorate info removed second name
+
+  dumpPipe "awsProfiles saved" <"$list"
+  dumpPipe "credentials" <"$(awsCredentialsFile)"
+  __environment awsProfilesList >"$list" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
+
+  HOME="$savedHome"
+}
