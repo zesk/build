@@ -31,7 +31,7 @@ _assertTiming() {
   if [ -f "$timingFile" ]; then
     stamp="$(head -n 1 <"$timingFile")"
     if isUnsignedInteger "$stamp"; then
-      stamp=$((stamp - now))
+      stamp=$((now - stamp))
       decorate value "$(printf -- "%d %s\n" "$stamp" "$(plural "$stamp" second seconds)")"
     else
       decorate error "Timestamp saved was invalid: $stamp"
@@ -55,14 +55,14 @@ _assertFailure() {
   local function="${1-None}"
   incrementor assert-failure >/dev/null
   shift || :
-  statusMessage printf -- "%s: %s %s [%s]" "$(_symbolFail)" "$(decorate error "$function")" "$(decorate info "$@")" "$(_assertTiming)" 1>&2 || return $?
+  statusMessage printf -- "%s: %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$(decorate info "$@")" "$(_assertTiming)" 1>&2 || return $?
   return "$(_code assert)"
 }
 _assertSuccess() {
   local function="${1-None}"
   incrementor assert-success >/dev/null
   shift || :
-  statusMessage printf -- "%s: %s %s [%s]" "$(_symbolSuccess)" "$(decorate success "$function")" "$(decorate info "$@")" "$(_assertTiming)" || return $?
+  statusMessage printf -- "%s: %s %s [%s] " "$(_symbolSuccess)" "$(decorate success "$function")" "$(decorate info "$@")" "$(_assertTiming)" || return $?
 }
 
 # Core condition assertion handler
