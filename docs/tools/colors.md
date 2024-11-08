@@ -26,7 +26,7 @@ This is still in progress but will likely be the new mechanism.
 
 Semantics-based
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Arguments
 
@@ -157,7 +157,6 @@ Intended to be run on an interactive console, this clears the current line of an
 
 #### Examples
 
-    statusMessage decorate info Loading...; bin/load.sh >>"$loadLogFile";
     clearLine
 
 #### Exit codes
@@ -208,7 +207,7 @@ Intended to be run on an interactive console. Should support $(tput cols).
 ### `consoleNameValue` - Output a name value pair
 
 Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
-right-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
+right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
 
 
 
@@ -237,7 +236,7 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 Exit Code; 1 - Colors are likely not supported by console
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_colors.sh`
 
 #### Usage
 
