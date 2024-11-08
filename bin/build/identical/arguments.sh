@@ -71,11 +71,9 @@ __documentTemplateFunction() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
-  # IDENTICAL profileNameArgumentValidation 6
+  # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    export AWS_PROFILE
-    __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-    profileName="${AWS_PROFILE-}"
+    profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 

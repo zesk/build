@@ -371,15 +371,15 @@ awsCredentialsAdd() {
         elif [ -z "$secret" ]; then
           secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
-  # IDENTICAL profileNameArgumentValidation 6
+  # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
     profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
@@ -438,19 +438,17 @@ awsCredentialsRemove() {
         if [ -z "$profileName" ]; then
           profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
-  # IDENTICAL profileNameArgumentValidation 6
+  # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    export AWS_PROFILE
-    __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-    profileName="${AWS_PROFILE-}"
+    profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
@@ -751,13 +749,11 @@ awsIPAccess() {
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    # IDENTICAL profileNameArgumentValidation 6
-    if [ -z "$profileName" ]; then
-      export AWS_PROFILE
-      __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-      profileName="${AWS_PROFILE-}"
-      [ -n "$profileName" ] || profileName="default"
-    fi
+  # IDENTICAL profileNameArgumentValidation 4
+  if [ -z "$profileName" ]; then
+    profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
+    [ -n "$profileName" ] || profileName="default"
+  fi
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
     if awsCredentialsHasProfile "$profileName"; then
       # __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?

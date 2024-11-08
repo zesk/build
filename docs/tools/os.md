@@ -58,11 +58,11 @@ Backup when `/etc/services` does not exist.
 
 ## Execution
 
-### `whichExists` - IDENTICAL whichExists EOF
+### `whichExists` - IDENTICAL whichExists 11
 
-IDENTICAL whichExists EOF
+IDENTICAL whichExists 11
 
-- Location: `bin/build/identical/whichExists.sh`
+- Location: `bin/build/tools/os.sh`
 
 #### Arguments
 
