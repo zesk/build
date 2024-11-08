@@ -279,7 +279,7 @@ Use - [function ]() - []() instead.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleCode` - Deprecated use `decorate` now
+### `decorate code` - Deprecated use `decorate` now
 
 Deprecated use `decorate` now
 

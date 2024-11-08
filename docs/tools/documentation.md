@@ -119,7 +119,7 @@ The process:
 
 #### Arguments
 
-- `--env envFile` - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
+- `--env-file envFile` - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
 - `cacheDirectory` - Required. Cache directory where the indexes live.
 - `documentTemplate` - Required. The document template containing functions to define
 - `functionTemplate` - Required. The template for individual functions defined in the `documentTemplate`.
@@ -142,7 +142,7 @@ Template is output to stdout.
 
 #### Arguments
 
-- `--env envFile` - Optional. File. One (or more) environment files used during map of `functionTemplate`
+- `--env-file envFile` - Optional. File. One (or more) environment files used during map of `functionTemplate`
 - `cacheDirectory` - Required. Cache directory where the indexes live.
 - `functionName` - Required. The function name to document.
 - `functionTemplate` - Required. The template for individual functions.

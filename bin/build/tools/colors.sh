@@ -306,7 +306,6 @@ consoleNameValue() {
 # Summary: Clear a line in the console
 # Usage: clearLine textToOutput
 # Environment: Intended to be run on an interactive console. Should support `tput cols`.
-# Example:     statusMessage consoleInfo Loading...; bin/load.sh >>"$loadLogFile";
 # Example:     clearLine
 #
 clearLine() {
@@ -334,7 +333,7 @@ _clearLine() {
 # Usage: statusMessage command ...
 # Argument: command - Required. Commands which output a message.
 # Environment: Intended to be run on an interactive console. Should support $(tput cols).
-# Example:     statusMessage consoleInfo "Loading ..."
+# Example:     statusMessage decorate info "Loading ..."
 # Example:     bin/load.sh >>"$loadLogFile"
 # Example:     clearLine
 #

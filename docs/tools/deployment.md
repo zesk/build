@@ -15,6 +15,7 @@ Not possible to deploy to different paths on different hosts, currently. Hosts a
 
 #### Arguments
 
+- `--env-file envFile - Optional. File. Environment file to load` - can handle any format.
 - `--debug` - Optional. Flag. Enable debugging.
 - `--first` - Optional. Flag. When it is the first deployment, use this flag.
 - `--home deployPath` - Required. Directory. Path where the deployments database is on remote system. Uses

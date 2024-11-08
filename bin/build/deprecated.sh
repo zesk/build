@@ -241,8 +241,10 @@ __deprecatedCleanup() {
   __deprecatedCannon 'console''Label' "decorate label" ! -path '*/colors.sh'
   __deprecatedCannon 'console''Value' "decorate value" ! -path '*/colors.sh'
 
-  # END OF CANNONS
+  # v0.17.0
+  deprecatedToken+=(' --env ')
 
+  # END OF CANNONS
   clearLine
   # Do all deprecations
   for deprecatedToken in "${deprecatedTokens[@]}"; do
