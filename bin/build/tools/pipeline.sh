@@ -27,8 +27,8 @@
 #
 beginTiming() {
   local start
-  start=$(date +%s 2>/dev/null) || _environment date || return $?
-  printf %d "$((start + 0))"
+  start=$(date "+%s" 2>/dev/null) || _environment date "+%s%3N" || return $?
+  printf "%d" "$((start + 0))"
 }
 
 # Outputs the timing in magenta optionally prefixed by a message in green
@@ -54,7 +54,7 @@ reportTiming() {
   if [ $# -gt 0 ]; then
     prefix="$(decorate green "$@") "
   fi
-  delta=$(($(date +%s) - start))
+  delta=$(($(beginTiming) - start))
   printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$delta $(plural $delta second seconds)")"
 }
 _reportTiming() {

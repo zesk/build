@@ -235,6 +235,7 @@ testSuite() {
     return 0
   fi
 
+  local runTime
   if [ ${#filteredTests[@]} -gt 0 ]; then
     testTracing=options
     sectionName=
@@ -256,7 +257,8 @@ testSuite() {
       testStart=$(__environment date +%s) || return $?
       __usageEnvironment "$usage" runOptionalHook bash-test-start "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
-      ! $doStats || printf "%d %s\n" $(($(date +%s) - testStart)) "$item" >>"$statsFile"
+      runTime=$(($(date +%s) - testStart))
+      ! $doStats || printf "%d %s\n" "$runTime" "$item" >>"$statsFile"
       __usageEnvironment "$usage" runOptionalHook bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(consoleReset)"
@@ -450,7 +452,7 @@ __testRun() {
   local usage="_${FUNCNAME[0]}"
   local quietLog="$1"
   local tests testName __testDirectory resultCode stickyCode resultReason
-  local __test __tests tests
+  local __test __tests tests __testStart
   local __beforeFunctions errorTest
 
   export testTracing
@@ -476,6 +478,7 @@ __testRun() {
     printf "%s\n" "Running $__test" >>"$quietLog"
     resultCode=0
     testTracing="$__test"
+    __testStart=$(beginTiming)
     if plumber "$__test" "$quietLog"; then
       printf "%s\n" "SUCCESS $__test" >>"$quietLog"
     else
@@ -488,14 +491,15 @@ __testRun() {
     # documentation-tests.sh change this apparently
     # Instead of preventing this usage, just work around it
     __usageEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
-
+    local timingText
+    timingText="$(reportTiming "$__testStart")"
     if [ "$resultCode" = "$(_code leak)" ]; then
       resultCode=0
-      printf "%s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")"
+      printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
     elif [ "$resultCode" -eq 0 ]; then
-      printf "%s %s ...\n" "$(decorate code "$__test")" "$(decorate green "passed")"
+      printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
     else
-      printf "[%d] %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" 1>&2
+      printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
       buildFailed "$quietLog" || :
       resultReason="test $__test failed"
       stickyCode=$errorTest
