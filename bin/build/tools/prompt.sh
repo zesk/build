@@ -322,7 +322,6 @@ __bashPromptCommand() {
     __PREVIOUS_PREFIX="${colors[0]-}"
     __PREVIOUS_SYMBOL=">"
   else
-    # Space here is required here for the X only for some reason
     __PREVIOUS_PREFIX="${colors[1]-}"
     __PREVIOUS_SYMBOL="§"
   fi
