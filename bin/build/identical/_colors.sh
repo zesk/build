@@ -107,7 +107,7 @@ decorate() {
       __usageArgument "_${FUNCNAME[0]}" "Unknown decoration name: $what" || return $?
       ;;
   esac
-  __decorate "$text" "$lp" "${dp-$lp}" "\033[0m" "$@"
+  __decorate "$text" "$lp" "${dp:-$lp}" "\033[0m" "$@"
 }
 _decorate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
