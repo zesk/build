@@ -303,7 +303,7 @@ bashPromptColorScheme() {
 __bashPromptGeneratePS1() {
   local colors reset label="${1-}"
   export BUILD_PROMPT_COLORS
-  [ -z "$label" ] || label="$label•"
+  [ -z "$label" ] || label="$label "
   reset="$(consoleReset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   printf "%s%s@%s %s %s " \
