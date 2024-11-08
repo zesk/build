@@ -15,8 +15,9 @@
 bashLibraryHome() {
   local usage="_${FUNCNAME[0]}"
   local home run startDirectory="${2-}"
-  run=$(usageArgumetnString "$usage" "libraryRelativePath" "${1-}") || return $?
-  [ -z "$startDirectory" ] || startDirectory=$(__usageEnvironment "$usage" pwd) || return $?
+  run=$(usageArgumentString "$usage" "libraryRelativePath" "${1-}") || return $?
+  [ -n "$startDirectory" ] || startDirectory=$(__usageEnvironment "$usage" pwd) || return $?
+  startDirectory=$(usageArgumentDirectory "$usage" "startDirectory" "$startDirectory") || return $?
   home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
   printf "%s\n" "$home"
 }
@@ -29,16 +30,43 @@ _bashLibraryHome() {
 # Usage: {fn} libraryRelativePath [ command ... ]
 bashLibrary() {
   local usage="_${FUNCNAME[0]}"
-  local home run="${1-}" && shift
+
+  local home run="" verboseFlag=false
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      *)
+        run="$argument"
+        shift
+        break
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  [ -n "$run" ] || __failArgument "$usage" "Missing libraryRelativePath" || return $?
   home=$(bashLibraryHome "$run") || return $?
   if [ $# -eq 0 ]; then
     export HOME
     # shellcheck source=/dev/null
     source "$home/$run" || __failEnvironment "$usage" "${run//${HOME-}/~} failed" || return $?
-    decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
+    ! $verboseFlag || decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
   else
+    ! $verboseFlag || decorate info "Running $(consoleFileLink "$home/$run")" "$(decorate code "$@")"
     __echo "$home/$run" "$@"
   fi
+  return 0
 }
 _bashLibrary() {
   # IDENTICAL usageDocument 1

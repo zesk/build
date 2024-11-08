@@ -354,15 +354,40 @@ _buildEnvironmentLoad() {
 Build() {
   local usage="_${FUNCNAME[0]}"
   local run="bin/build/tools.sh"
-  local home
 
+  local saved=("$@") nArguments=$#
+  local vv=() verboseFlag=false
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --verbose)
+        vv+=("$argument")
+        verboseFlag=true
+        ;;
+      *)
+        break
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  local home
   if ! home=$(bashLibraryHome "$run" 2>/dev/null); then
     home=$(__usageEnvironment "$usage" buildHome) || return $?
-    __echo "$home/$run" "$@" || return $?
+    ! $verboseFlag || decorate info "Running $(consoleFileLink "$home/$run")" "$(decorate code "$@")"
+    __usageEnvironment "$usage" "$home/$run" "$@" || return $?
   else
-    bashLibrary "$run" "$@"
+    __usageEnvironment "$usage" bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@"
   fi
+  return 0
 }
+
 _Build() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

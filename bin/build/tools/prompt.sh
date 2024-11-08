@@ -194,19 +194,21 @@ bashPromptModule_binBuild() {
 # Example: bashPrompt --colors "$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)"
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local skipTerminal=false addArguments=() colorsText="" colors resetFlag=false verbose=false
 
-  saved=("$@")
-  nArguments=$#
+  local saved=("$@") nArguments=$#
+  local label="" addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
+        ;;
+      --label)
+        shift
+        label="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --list)
         # IDENTICAL bashPromptAddArguments 3
@@ -225,6 +227,7 @@ bashPrompt() {
       --colors)
         shift
         colorsText="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        local colors
         IFS=":" read -r -a colors <<<"$colorsText" || :
         [ "${#colors[@]}" -ge 2 ] || __failArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
         [ "${#colors[@]}" -le 5 ] || __failArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
@@ -267,7 +270,7 @@ bashPrompt() {
   [ -n "${BUILD_PROMPT_COLORS-}" ] || BUILD_PROMPT_COLORS="$(bashPromptColorScheme default)"
 
   PROMPT_COMMAND=__bashPromptCommand
-  PS1="$(__bashPromptGeneratePS1)"
+  PS1="$(__bashPromptGeneratePS1 "$label")"
 }
 _bashPrompt() {
   # IDENTICAL usageDocument 1
@@ -298,11 +301,13 @@ bashPromptColorScheme() {
 # - exit status ">" or "X"
 # - " "
 __bashPromptGeneratePS1() {
-  local colors reset
+  local colors reset label="${1-}"
   export BUILD_PROMPT_COLORS
+  [ -z "$label" ] || label="$label•"
   reset="$(consoleReset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
-  printf "%s@%s %s %s " \
+  printf "%s%s@%s %s %s " \
+    "$label" \
     "\[${colors[2]-}\]\u\[${reset}\]" \
     "\[${colors[3]-}\]\h" \
     "\[${colors[4]-}\]\w\[${reset}\]" \
