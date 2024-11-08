@@ -58,6 +58,8 @@ testDates() {
   IFS="-" read -r yy ym yd <<<"$y"
 
   # Convert to integer
+  td=${td#0}
+  tm=${tm#0}
   td=$((td + 0))
   tm=$((tm + 0))
   assertExitCode --line "$LINENO" 0 isInteger "$ty" || return $?
@@ -69,7 +71,7 @@ testDates() {
 
   # today 2024-01-01
   # yesterday 2023-12-31
-  # Shell is AOK with `[ "02" -ge "01" ]` as integers
+  # Shell is NOT AOK with `[ "02" -ge "01" ]` as integers - converts to OCTAL
   assertGreaterThanOrEqual --line "$LINENO" "$ty" "$yy" || return $?
   if [ "$td" != 1 ]; then
     if [ "$tm" != 1 ]; then
