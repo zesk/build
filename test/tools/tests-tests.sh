@@ -8,22 +8,21 @@
 #
 
 testWrapperShellScripts() {
-  local quietLog
   local findArgs=(! -path '*/vendor/*' ! -path "*/.*/*")
   local thisYear
 
-  quietLog=$1
-  shift
   export BUILD_COMPANY
 
   buildEnvironmentLoad BUILD_COMPANY || return $?
   if ! thisYear=$(date +%Y); then
     return 1
   fi
-  if ! find . -name '*.sh' "${findArgs[@]}" | bashLintFiles >>"$quietLog"; then
+  home=$(__environment buildHome) || return $?
+  # Part of commit check - keep it quick
+  if ! find "$home/bin/build" -name '*.sh' "${findArgs[@]}" -exec "shellcheck" '{}' ';'; then
     return 1
   fi
-  if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}" >>"$quietLog"; then
+  if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}"; then
     unset BUILD_COMPANY
     return 1
   fi

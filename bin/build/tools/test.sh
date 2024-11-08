@@ -236,10 +236,6 @@ bashLintFiles() {
         "$usage" 0
         return $?
         ;;
-      --delay)
-        shift || __failArgument "$usage" "$argument missing argument" || return $?
-        sleepDelay="$1"
-        ;;
       --verbose)
         verbose=true
         ;;
@@ -250,7 +246,6 @@ bashLintFiles() {
         ;;
       --interactive)
         interactive=true
-        ii+=("$argument")
         ;;
       *)
         checkedFiles+=("$(usageArgumentFile "$usage" "checkFile" "$argument")") || return $?

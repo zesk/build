@@ -192,7 +192,7 @@ testDeployApplication() {
     return $errorEnvironment
   fi
   if ! phpInstall; then
-    decorate error "Failed to install phpInstall" 1>&2
+    decorate error "Failed to install php" 1>&2
     return $errorEnvironment
   fi
 
