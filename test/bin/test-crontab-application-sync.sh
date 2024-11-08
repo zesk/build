@@ -176,7 +176,7 @@ testCrontabApplicationSync() {
   cp "$tempDir"/app1/user.crontab "$tempDir/app3/and/it/is/really/deep/user.crontab"
 
   results=$(mktemp)
-  __usageEnvironment "$usage" crontabApplicationUpdate --user user --show "$tempDir" --env "$testEnv" >>"$results" || return $?
+  __usageEnvironment "$usage" crontabApplicationUpdate --user user --show "$tempDir" --env-file "$testEnv" >>"$results" || return $?
 
   if test $showFlag; then
     cat "$results"

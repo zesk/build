@@ -364,7 +364,7 @@ documentationBuild() {
   fi
   clearLine || :
 
-  __usageEnvironment "$usage" documentationTemplateDirectoryCompile --env "$envFile" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "$envFile" || return $?
+  __usageEnvironment "$usage" documentationTemplateDirectoryCompile --env-file "$envFile" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "$envFile" || return $?
 
   #
   # {SEE:foo} gets linked in final documentation where it exists (rewrites file currently)

@@ -28,6 +28,7 @@ export globalTestFailure=
 # Argument: --list - Optional. Flag. List all test names (which match if applicable).
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files.
+# Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
 # Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.
 # Hook: bash-test-start
 # Hook: bash-test-pass
@@ -74,6 +75,11 @@ testSuite() {
         ;;
       --verbose)
         verboseMode=true
+        ;;
+      --env-file)
+        shift
+        muzzle usageArgumentLoadEnvironmentFile "$usage" "envFile" "${1-}" || return $?
+        decorate info "Loaded environment file $(decorate code "$1")"
         ;;
       --tests)
         shift

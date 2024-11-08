@@ -14,8 +14,8 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# DOC TEMPLATE: --env 1
-# Argument: --env envFile - Optional. File. Environment file to load - can handle any format.
+# DOC TEMPLATE: --env-file 1
+# Argument: --env-file envFile - Optional. File. Environment file to load - can handle any format.
 # DOC TEMPLATE: assert-common 14
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.

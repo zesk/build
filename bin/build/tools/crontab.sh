@@ -56,38 +56,36 @@ __crontabGenerate() {
 #
 # Any files not found are skipped. Note that environment values are not carried between applications.
 #
-# Usage: {fn} [ --env environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
-# Argument: --env environment - Top-level environment file to pass variables into the user `crontab` template
+# Usage: {fn} [ --env-file environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
+# Argument: --env-file environmentFile - Top-level environment file to pass variables into the user `crontab` template
 # Argument: --show - Show the crontab instead of installing it
 # Argument: --user user - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.
 # Argument: --mapper envMapper - Optional. Binary. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
-# Example:     {fn} --env /etc/myCoolApp.conf --user www-data /var/www/applications
+# Example:     {fn} --env-file /etc/myCoolApp.conf --user www-data /var/www/applications
 # Example:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 # See: whoami
 crontabApplicationUpdate() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments
-  local rootEnv appPath user flagShow flagDiff environmentMapper newCrontab returnCode
 
   __usageEnvironment "$usage" packageWhich crontab cron || return $?
-  rootEnv=
-  appPath=
+
+  local rootEnv="" appPath="" user
   user=$(whoami) || __failEnvironment "$usage" whoami || return $?
   [ -n "$user" ] || __failEnvironment "$usage" "whoami user is blank" || return $?
-  flagShow=false
-  flagDiff=false
-  environmentMapper=
-  nArguments=$#
+
+  local environmentMapper="" flagDiff=false flagShow=false
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "$argument" >/dev/null || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
         ;;
-      --env)
+      # --env DEPRECATED 2024-11 TODO
+      --env | --env-file)
         [ -z "$rootEnv" ] || __failArgument "$usage" "$argument already" || return $?
         shift
         rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1")
@@ -126,6 +124,7 @@ crontabApplicationUpdate() {
     __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper"
     return 0
   fi
+  local newCrontab returnCode
   newCrontab=$(mktemp)
   __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" >"$newCrontab" || return $?
 

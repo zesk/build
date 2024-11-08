@@ -14,6 +14,8 @@ deployedHostArtifact="./.deployed-hosts"
 
 # Deploy to a host
 #
+# DOC TEMPLATE: --env-file 1
+# Argument: --env-file envFile - Optional. File. Environment file to load - can handle any format.
 # Argument: --debug - Optional. Flag. Enable debugging.
 # Argument: --first - Optional. Flag. When it is the first deployment, use this flag.
 # Argument: --home deployPath - Required. Directory. Path where the deployments database is on remote system. Uses
@@ -58,7 +60,7 @@ deployBuildEnvironment() {
         "$usage" 0
         return $?
         ;;
-      --env)
+      --env-file)
         shift
         envFiles+=("$(usageArgumentFile "$usage" "envFile" "${1-}")") || return $?
         ;;
@@ -107,7 +109,8 @@ deployBuildEnvironment() {
   fi
 
   for envFile in "${envFiles[@]+${envFiles[@]}}"; do
-    envFilesLoaded+=("$(usageArgumentLoadEnvironmentFile "$usage" "envFile" "$envFile")") 2>&1
+    muzzle usageArgumentLoadEnvironmentFile "$usage" "envFile" "$envFile" || return $?
+    envFilesLoaded+=("$envFile")
   done
 
   buildEnvironmentLoad APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET || :

@@ -80,8 +80,8 @@ _usageDocument() {
 
 # Summary: Convert a template file to a documentation file using templates
 #
-# Usage: {fn} [ --env envFile ] cacheDirectory documentTemplate functionTemplate templateFile targetFile
-# Argument: --env envFile - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
+# Usage: {fn} [ --env-file envFile ] cacheDirectory documentTemplate functionTemplate templateFile targetFile
+# Argument: --env-file envFile - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: documentTemplate - Required. The document template containing functions to define
 # Argument: functionTemplate - Required. The template for individual functions defined in the `documentTemplate`.
@@ -129,7 +129,8 @@ documentationTemplateCompile() {
         "$usage" 0
         return $?
         ;;
-      --env)
+      # DEPRECATED: --env is deprecated 2024-11 TODO
+      --env | --env-file)
         shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         envFiles+=("$envFile")
@@ -277,11 +278,11 @@ _documentationTemplateCompile() {
 # Exit Code: 0 - If success
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
-# Argument: --env envFile - Optional. File. One (or more) environment files used during map of `functionTemplate`
+# Argument: --env-file envFile - Optional. File. One (or more) environment files used during map of `functionTemplate`
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: functionName - Required. The function name to document.
 # Argument: functionTemplate - Required. The template for individual functions.
-# Usage: {fn} [ --env envFile ] cacheDirectory functionName functionTemplate
+# Usage: {fn} [ --env-file envFile ] cacheDirectory functionName functionTemplate
 documentationTemplateFunctionCompile() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex saved
@@ -301,7 +302,8 @@ documentationTemplateFunctionCompile() {
         "$usage" 0
         return $?
         ;;
-      --env)
+      # DEPRECATED 2024-11 --env TODO
+      --env | --env-file)
         shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         envFiles+=("$envFile")
@@ -381,7 +383,7 @@ documentationTemplateDirectoryCompile() {
       --force)
         passArgs+=("$argument")
         ;;
-      --env)
+      --env-file)
         passArgs+=("$argument")
         shift || __failArgument "$usage" "missing $argument argument" || return $?
         passArgs+=("$1")
