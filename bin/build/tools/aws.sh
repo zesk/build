@@ -346,11 +346,7 @@ _awsCredentialsHasProfile() {
 awsCredentialsAdd() {
   local usage="_${FUNCNAME[0]}"
 
-  export AWS_PROFILE
-
-  __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-
-  local forceFlag=false saved=("$@") nArguments=$# profileName="${AWS_PROFILE-}" key="" secret=""
+  local forceFlag=false saved=("$@") nArguments=$# profileName="" key="" secret=""
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -375,8 +371,8 @@ awsCredentialsAdd() {
         elif [ -z "$secret" ]; then
           secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -385,9 +381,7 @@ awsCredentialsAdd() {
   done
   # IDENTICAL profileNameArgumentValidation 6
   if [ -z "$profileName" ]; then
-    export AWS_PROFILE
-    __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-    profileName="${AWS_PROFILE-}"
+    profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
@@ -444,8 +438,8 @@ awsCredentialsRemove() {
         if [ -z "$profileName" ]; then
           profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -581,13 +575,6 @@ awsSecurityGroupIPModify() {
     esac
     shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
-  # IDENTICAL profileNameArgumentValidation 6
-  if [ -z "$profileName" ]; then
-    export AWS_PROFILE
-    __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-    profileName="${AWS_PROFILE-}"
-    [ -n "$profileName" ] || profileName="default"
-  fi
 
   # IDENTICAL regionArgumentValidation 6
   if [ -z "$region" ]; then
@@ -623,7 +610,7 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
+    __echo aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
     foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     rm -f "$tempErrorFile" || :
 
@@ -648,7 +635,7 @@ awsSecurityGroupIPModify() {
     local json
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awwSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
-    if ! aws "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
+    if ! __echo aws "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         rm -f "$tempErrorFile" || :
         printf "%s %s\n" "$(decorate yellow "duplicate")" "$(reportTiming "$start" "found in")"
@@ -701,7 +688,7 @@ awsIPAccess() {
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
 
-  local services=() optionRevoke=false pp=() currentIP="" developerId="" securityGroups=() verboseFlag=false profileName
+  local services=() optionRevoke=false currentIP="" developerId="" securityGroups=() verboseFlag=false profileName="" pp=()
 
   while [ $# -gt 0 ]; do
     local argument="$1"
@@ -764,16 +751,17 @@ awsIPAccess() {
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-  # IDENTICAL profileNameArgumentValidation 6
-  if [ -z "$profileName" ]; then
-    export AWS_PROFILE
-    __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
-    profileName="${AWS_PROFILE-}"
-    [ -n "$profileName" ] || profileName="default"
-  fi
+    # IDENTICAL profileNameArgumentValidation 6
+    if [ -z "$profileName" ]; then
+      export AWS_PROFILE
+      __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
+      profileName="${AWS_PROFILE-}"
+      [ -n "$profileName" ] || profileName="default"
+    fi
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
     if awsCredentialsHasProfile "$profileName"; then
-      __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
+      # __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
+      pp=("--profile" "$profileName")
     else
       __failEnvironment "$usage" "No AWS credentials available: $profileName" || return $?
     fi

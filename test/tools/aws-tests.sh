@@ -15,10 +15,11 @@ _testAWSIPAccessUsage() {
 testAWSIPAccess() {
   local quietLog=$1 id key start
 
-  local oldHome
+  local oldHome oldAWSProfile
 
-  export HOME
+  export HOME AWS_PROFILE
 
+  oldAWSProfile=${AWS_PROFILE-unset}
   oldHome=$HOME
 
   HOME=$(__environment mktemp -d) || return $?
@@ -65,26 +66,17 @@ testAWSIPAccess() {
   } >"$HOME/.aws/credentials"
 
   __testSection "CLI IP and file system credentials"
-  start=$(beginTiming)
+  echo "AWS_CONFIG_FILE: ${AWS_CONFIG_FILE-}"
+  echo "AWS_SHARED_CREDENTIALS_FILE: ${AWS_SHARED_CREDENTIALS_FILE-}"
+  echo "AWS_PROFILE: ${AWS_PROFILE-}"
   # Work using environment variables
-  if ! __echo awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  if ! __echo awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  reportTiming "$start" "Succeeded in"
+  assertExitCode --line "$LINENO" 0 awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode --line "$LINENO" 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   __testSection "Generated IP and file system credentials"
-  start=$(beginTiming)
   # Work using environment variables
-  if ! __echo awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  if ! __echo awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  reportTiming "$start" "Succeeded in"
+  assertExitCode --line "$LINENO" 0 awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode --line "$LINENO" 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   rm "$HOME/.aws/credentials"
   rmdir "$HOME/.aws"
@@ -93,6 +85,11 @@ testAWSIPAccess() {
   export AWS_ACCESS_KEY_ID=$id
   export AWS_SECRET_ACCESS_KEY=$key
 
+  if [ "$oldAWSProfile" = "unset" ]; then
+    unset AWS_PROFILE
+  else
+    AWS_PROFILE="$oldAWSProfile"
+  fi
   HOME="$oldHome"
 }
 

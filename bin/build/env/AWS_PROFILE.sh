@@ -2,4 +2,7 @@
 # Default profile for Amazon Web Services
 # Copyright &copy; 2024 Market Acumen, Inc.
 export AWS_PROFILE
-AWS_PROFILE=${AWS_PROFILE-}
+# Do not set to blank to avoid errors
+#
+#     The config profile () could not be found
+#
