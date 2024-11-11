@@ -53,15 +53,15 @@ bigText() {
   local usage="_${FUNCNAME[0]}"
   local fonts binary index=0
 
-  __usageEnvironment "$usage" packageUpdate || return $?
-  __usageEnvironment "$usage" packageInstall || return $?
+  __usageEnvironment "$usage" muzzle packageUpdate || return $?
+  __usageEnvironment "$usage" muzzle packageInstall || return $?
   binary=$(__usageEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
   case "$binary" in
     figlet) fonts=("standard" "big") ;;
     toilet) fonts=("smblock" "smmono12") ;;
     *) __failEnvironment "$usage" "Unknown binary $binary" || return $? ;;
   esac
-  if ! packageWhich "$binary" "$binary" >/dev/null; then
+  if ! muzzle packageWhich "$binary" "$binary"; then
     decorate green "BIG TEXT: $*"
     return 0
   fi

@@ -96,16 +96,55 @@ testDockerEnvFromBash() {
 }
 
 testAnyEnvToDockerEnv() {
-  local testEnv
+  local testEnv home
 
   testEnv=$(__environment mktemp) || return $?
+  home=$(__environment buildHome) || return $?
 
-  assertExitCode --line "$LINENO" 0 anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
+  dumpPipe "Result - should be blank" <"$testEnv.result"
   assertExitCode --line "$LINENO" 0 isEmptyFile "$testEnv.result" || return $?
+
+  __environment cp "$home/test/example/bash.env" "$testEnv" || return $?
+
+  # mode 1
+  __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
+  # as a pipe
+  __environment anyEnvToDockerEnv >"$testEnv.result2" <"$testEnv" || return $?
+  assertExitCode --dump --line "$LINENO" 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
   printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
   assertExitCode --line "$LINENO" --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
 
-  rm -rf "$testEnv" "$testEnv.result"
+  rm -rf "$testEnv" "$testEnv.result" "$testEnv.result2"
+}
+
+testAnyEnvToBashEnv() {
+  local testEnv
+
+  testEnv=$(__environment mktemp) || return $?
+  home=$(__environment buildHome) || return $?
+
+  __environment anyEnvToBashEnv "$testEnv" >"$testEnv.result" || return $?
+  assertExitCode --line "$LINENO" 0 isEmptyFile "$testEnv.result" || return $?
+
+  echo "$LINENO:${BASH_SOURCE[0]}"
+  __environment cp "$home/test/example/docker.env" "$testEnv" || return $?
+  echo "$LINENO:${BASH_SOURCE[0]}"
+
+  __environment anyEnvToBashEnv "$testEnv" >"$testEnv.result" || return $?
+  echo "$LINENO:${BASH_SOURCE[0]}"
+
+  anyEnvToBashEnv >"$testEnv.result2" <"$testEnv" || return $?
+  echo "$LINENO:${BASH_SOURCE[0]}"
+  __echo diff -w "$testEnv.result2" "$testEnv.result" || :
+  assertExitCode --line "$LINENO" 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
+  echo "$LINENO:${BASH_SOURCE[0]}"
+
+  printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
+  echo "$LINENO:${BASH_SOURCE[0]}"
+  assertExitCode --line "$LINENO" --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
+  echo "$LINENO:${BASH_SOURCE[0]}"
+
+  rm -rf "$testEnv" "$testEnv.result" "$testEnv.result2" || :
 }

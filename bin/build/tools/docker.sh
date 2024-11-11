@@ -85,6 +85,40 @@ checkDockerEnvFile() {
 }
 
 #
+# Takes any environment file and makes it bash-compatible
+#
+# Outputs the compatible env to stdout
+#
+# Usage: {fn} filename [ ... ]
+# Argument: filename - Optional. File. One or more files to convert.
+# stdin: environment file
+# stdout: bash-compatible environment statements
+__anyEnvToFunctionEnv() {
+  local usage="$1" pass="$2" function="$3" && shift 3
+
+  if [ $# -gt 0 ]; then
+    local file
+    for file in "$@"; do
+      local convert="$function"
+      if checkDockerEnvFile "$file" 2>/dev/null; then
+        ! $pass || convert="cat"
+        __usageEnvironment "$usage" "$convert" "$file" || return $?
+      else
+        $pass || convert="cat"
+        __usageEnvironment "$usage" "$convert" "$file" || return $?
+      fi
+    done
+  else
+    local temp
+    temp=$(__usageEnvironment "$usage" mktemp) || return $?
+    __usageEnvironment "$usage" muzzle tee "$temp" || return $?
+    __usageEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$pass" "$function" "$temp" || _clean $? "$temp" || return $?
+    __usageEnvironment "$usage" rm "$temp" || return $?
+    return 0
+  fi
+}
+
+#
 # Takes any environment file and makes it docker-compatible
 #
 # Outputs the compatible env to stdout
@@ -92,19 +126,7 @@ checkDockerEnvFile() {
 # Argument: envFile - Required. File. One or more files to convert.
 #
 anyEnvToDockerEnv() {
-  local usage="_${FUNCNAME[0]}"
-  local f
-  while [ $# -gt 0 ]; do
-    f=$(usageArgumentFile "$usage" envFile "$1")
-    if ! checkDockerEnvFile "$f" 2>/dev/null; then
-      if ! dockerEnvFromBashEnv "$f"; then
-        __failEnvironment "$usage" "dockerEnvFromBashEnv $f" || return $?
-      fi
-    else
-      __usageEnvironment "$usage" cat "$f" || return $?
-    fi
-    shift
-  done
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" true dockerEnvFromBashEnv "$@" || return $?
 }
 _anyEnvToDockerEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -116,18 +138,11 @@ _anyEnvToDockerEnv() {
 # Outputs the compatible env to stdout
 #
 # Usage: {fn} filename [ ... ]
-# Argument: filename - Required. File. One or more files to convert.
-#
+# Argument: filename - Optional. File. One or more files to convert.
+# stdin: environment file
+# stdout: bash-compatible environment statements
 anyEnvToBashEnv() {
-  local usage="_${FUNCNAME[0]}"
-  local f
-  for f in "$@"; do
-    if checkDockerEnvFile "$f" 2>/dev/null; then
-      __usageEnvironment "$usage" dockerEnvToBash "$f"
-    else
-      __usageEnvironment "$usage" cat "$f" || return $?
-    fi
-  done
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" false dockerEnvToBash "$@" || return $?
 }
 _anyEnvToBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -202,13 +217,18 @@ _dockerEnvToBashPipe() {
 #
 dockerEnvFromBashEnv() {
   local usage="_${FUNCNAME[0]}"
-  local file envLine
+  local file envLine tempFile
+
+  tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
   for file in "$@"; do
     [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
-    (
-      env -i bash -c "set -a && source $file 2>/dev/null && env" | grep -E -v '^(PWD|_|SHLVL)='
-    ) || __failArgument "$usage" "$file is not a valid bash file" || return $?
+    env -i bash -c "set -a && source $file && declare -px" >"$tempFile" || __failArgument "$usage" "$file is not a valid bash file" || return $?
   done
+  while IFS='' read -r envLine; do
+    local name=${envLine%%=*} value=${envLine#*=}
+    printf "%s=%s\n" "$name" "$(unquote "\"" "$value")"
+  done < <(removeFields 2 <"$tempFile" | grep -E -v '^(OLDPWD|PWD|_|SHLVL)\b' || :)
+  __usageEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 _dockerEnvFromBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -317,7 +337,7 @@ dockerLocalContainer() {
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
     __failEnvironment "$usage" "$failedWhy" || return $?
   fi
-  __echo __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __usageEnvironment "$usage" __echo docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }
