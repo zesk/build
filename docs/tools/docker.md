@@ -110,7 +110,7 @@ Outputs the compatible env to stdout
 
 #### Arguments
 
-- `filename` - Required. File. One or more files to convert.
+- `filename` - Optional. File. One or more files to convert.
 
 #### Exit codes
 
