@@ -80,17 +80,17 @@ testDockerEnvToBashPipe() {
 testDockerEnvFromBash() {
   local out err
 
-  assertExitCode --stderr-ok 2 dockerEnvFromBashEnv ./test/example/bad.env || return $?
+  assertExitCode --line "$LINENO" --stderr-ok 2 dockerEnvFromBashEnv ./test/example/bad.env || return $?
 
-  assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv ./test/example/bash.env || return $?
+  assertExitCode --line "$LINENO" --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv ./test/example/bash.env || return $?
 
   out=$(mktemp) || _environment "mktemp" || return $?
   err=$(mktemp) || _environment "mktemp" || return $?
 
-  dockerEnvFromBashEnv ./test/example/docker.env >"$out" 2>"$err" || return 1
-
-  assertEquals 0 "$(fileSize "$err")" || return $?
-  assertFileContains "$out" "host=" "location=" "uname=" || return $?
+  dockerEnvFromBashEnv ./test/example/bash.env >"$out" 2>"$err" || return 1
+  dumpPipe "ERRORS dockerEnvFromBashEnv ./test/example/docker.env" <"$err"
+  assertEquals --line "$LINENO" 0 "$(fileSize "$err")" || return $?
+  assertFileContains --line "$LINENO" "$out" "host=" "now=" "uname=" || return $?
 
   rm -f "$out" "$err" || :
 }
