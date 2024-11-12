@@ -80,3 +80,30 @@ testUrlValid() {
     assertExitCode --line "$LINENO" 0 urlValid "$url" || return $?
   done
 }
+
+testUrlFilter() {
+  local home output
+
+  home=$(__environment buildHome) || return $?
+  output=$(__environment mktemp) || return $?
+  urlFilter "$home/test/example/urlFilter.source.html" | dumpPipe "urlFilter Results"
+  urlFilter "$home/test/example/urlFilter.source.html" >"$output"
+  assertExitCode --line "$LINENO" 0 diff "$output" "$home/test/example/urlFilter.output.txt" || return $?
+}
+
+testUrlOpen() {
+  local url
+  export BUILD_URL_BINARY
+
+  url="https://www.example.com/"
+  BUILD_URL_BINARY="echo"
+  assertEquals --line "$LINENO" "$(urlOpen "$url")" "$url" || return $?
+  assertEquals --line "$LINENO" "$(urlOpen --ignore '*bad*url*' "$url")" "$url" || return $?
+  assertEquals --line "$LINENO" "1" "$(urlOpen "$url" "$url" | wc -l | trimSpace)" || return $?
+  assertEquals --line "$LINENO" "2" "$(urlOpen --wait "$url" "$url" | wc -l | trimSpace)" || return $?
+
+  assertNotExitCode --stderr-match 'Invalid URL' --stderr-match 'bad-url' --line "$LINENO" 0 urlOpen "bad-url" || return $?
+  assertExitCode --line "$LINENO" 0 urlOpen --ignore "bad-url" || return $?
+
+  unset BUILD_URL_BINARY
+}

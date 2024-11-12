@@ -1,0 +1,10 @@
+http://www.w3.org/TR/xhtml11/DTD/xhtml1.dtd
+http://www.w3.org/1999/xhtml
+https://help.example.com/
+https://conversion.example.com/login.php
+https://support.example.com/
+https://help.example.com/
+https://help.example.com/wiki/Category:Glossary
+https://www.example.com/first-on-line
+https://www.example.com/second-on-line
+http://www.example.com/third-on-line

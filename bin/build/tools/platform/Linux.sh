@@ -26,3 +26,7 @@ __packageManagerDefault() {
 __xargsSedInPlaceReplace() {
   xargs sed --in-place "$@"
 }
+
+__urlBinary() {
+  printf "%s\n" "open" "xdg-open" "kde-open"
+}

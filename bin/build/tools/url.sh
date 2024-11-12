@@ -19,9 +19,6 @@
 #------------------------------------------------------------------------------
 #
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
 #
@@ -105,7 +102,7 @@ urlParse() {
 }
 
 #
-# Gets the component of the URL from a given database URL.
+# Gets the component of one or more URLs
 # Summary: Get a database URL component directly
 # Usage: urlParseItem component url0 [ url1 ... ]
 # Argument: url0 - String. URL. Required. A Uniform Resource Locator used to specify a database connection
@@ -113,26 +110,45 @@ urlParse() {
 # Example:     decorate info "Connecting as $(urlParseItem user "$url")"
 #
 urlParseItem() {
-  local component parsed
-  # shellcheck disable=SC2034
-  local url path name scheme user password host port error
-  if [ $# -lt 2 ]; then
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$errorArgument" "Need at least one url"
-    return $errorArgument
-  fi
-  component="$1"
-  shift
+  [ $# -ge 2 ] || __failArgument "$usage" "Need at least one URL" || return $?
+
+  local usage="_${FUNCNAME[0]}"
+  local component="" url
+
+  # IDENTICAL startBeginTiming 1
+
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    if ! parsed=$(urlParse "$1"); then
-      return $errorArgument
-    fi
-    if ! eval "$parsed"; then
-      decorate error "Failed to eval $parsed" 1>&2
-      return $errorArgument
-    fi
-    printf "%s\n" "${!component-}"
-    shift
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$component" ]; then
+          component=$(usageArgumentString "$usage" "component" "$1") || return $?
+        else
+          url="$1"
+          # subshell hides variable scope
+          (
+            local url path name scheme user password host port error=""
+            eval "$(urlParse "$url")" || __failArgument "$usage" "Unable to parse $url" || return $?
+            [ -z "$error" ] || __failArgument "$usage" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
+            printf "%s\n" "${!component-}"
+          ) || return $?
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
+}
+_urlParseItem() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -144,4 +160,237 @@ urlValid() {
     urlParse "$1" >/dev/null || return 1
     shift
   done
+}
+
+# Open URLs which appear in a stream but continue to output the stream
+urlOpener() {
+  local usage="_${FUNCNAME[0]}"
+
+  local binary=""
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --exec)
+        shift
+        binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  [ -n "$binary" ] || binary="urlOpen"
+
+  tee | urlFilter | "$binary"
+}
+_urlOpener() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Open URLs which appear in a stream
+# Usage: {fn} [ file ]
+# Usage: {fn} [ --show-file ] [ --file name ] [ file ]
+# Argument: --show-file - Boolean. Optional. Show the file name in the output (suffix with `: `)
+# Argument: --file name - String. Optional. The file name to display - can be any text.
+# Argument: file - File. Optional. A file to read and output URLs found.
+# stdin: acts as a filter, outputs found URLs, one per line
+# stdout: line:URL
+# Takes a text file and outputs any `https://` or `http://` URLs found within.
+urlFilter() {
+  local usage="_${FUNCNAME[0]}"
+
+  local files=() file="" aa=() showFile=false debugFlag=false
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --show-file)
+        aa=("$argument")
+        showFile=true
+        ;;
+      --debug)
+        debugFlag=true
+        ;;
+      --file)
+        shift
+        file="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  if [ "${#files[@]}" -gt 0 ]; then
+    for file in "${files[@]}"; do
+      # shellcheck disable=SC2094
+      urlFilter "${aa[@]+"${aa[@]}"}" --file "$file" <"$file"
+    done
+    return 0
+  fi
+
+  local line minPrefix foundPrefix url match prefix="" lineNumber=0
+  if $showFile && [ -n "$file" ]; then
+    prefix="$file: "
+  fi
+  while IFS="" read -r line; do
+    lineNumber=$((lineNumber + 1))
+    minPrefix=""
+    for match in 'https://*' 'http://*'; do
+      # We WANT this to match as a pattern: SC2295
+      # shellcheck disable=SC2295
+      foundPrefix="${line%%$match}"
+      if [ "$foundPrefix" != "$line" ]; then
+        if [ -z "$minPrefix" ]; then
+          minPrefix="$foundPrefix"
+        elif [ "${#minPrefix}" -gt "${#foundPrefix}" ]; then
+          minPrefix="$foundPrefix"
+        fi
+      fi
+    done
+    [ -n "$minPrefix" ] || continue
+    line="${line:${#minPrefix}}"
+    local find="\""''
+    line="${line//$find/ }"
+    ! $debugFlag || printf -- "%s [%s] %s\n" "MATCH LINE CLEAN:" "$(decorate value "$lineNumber")" "$(decorate code "$line")"
+    while IFS=" " read -d " " -r url; do
+      url=${url%\"*}
+      url=${url%\'*}
+      ! urlValid "$url" || printf "%s%s\n" "$prefix" "$url"
+    done <<<"$line"
+  done
+}
+_urlFilter() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Open a URL using the operating system
+# Usage {fn} [ --help ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --ignore - Optional. Flag. Ignore any invalid URLs found.
+# Argument: --wait - Optional. Flag. Display this help.
+# Argument: --url url - Optional. URL. URL to download.
+urlOpen() {
+  local usage="_${FUNCNAME[0]}"
+
+  local urls=() waitFlag=false ignoreFlag=false
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --ignore)
+        ignoreFlag=true
+        ;;
+      --wait)
+        waitFlag=true
+        ;;
+      *)
+        urls+=("$(usageArgumentString "$usage" "url" "$1")") || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  local url exitCode
+  if [ ${#urls[@]} -eq 0 ]; then
+    # stdin mode
+    while IFS=' ' read -d$'\n' -r url; do
+      exitCode=0
+      __urlOpenInnerLoop "$usage" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
+      if [ "$exitCode" != 0 ]; then
+        if [ "$exitCode" != 120 ]; then
+          return $exitCode
+        fi
+        urls+=("$url")
+      fi
+    done
+  else
+    # cli mode
+    set - "${urls[@]}"
+    urls=()
+    while [ $# -gt 0 ]; do
+      url="$1"
+      exitCode=0
+      __urlOpenInnerLoop "$usage" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
+      if [ "$exitCode" != 0 ]; then
+        if [ "$exitCode" != 120 ]; then
+          return $exitCode
+        fi
+        urls+=("$url")
+      fi
+      shift
+    done
+  fi
+  $waitFlag || [ "${#urls[@]}" -eq 0 ] || __usageEnvironment "$usage" __urlOpen "${urls[@]}" || return $?
+  return 0
+}
+_urlOpen() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__urlOpenInnerLoop() {
+  local usage="$1" url="$2" ignoreFlag="$3" waitFlag="$4"
+  if ! urlValid "$url"; then
+    if ! $ignoreFlag; then
+      __failEnvironment "$usage" "Invalid URL: $(decorate error "$url")" || return $?
+    fi
+    return 0
+  fi
+  if $waitFlag; then
+    __usageEnvironment "$usage" __urlOpen "$url" || return $?
+  else
+    return 120
+  fi
+}
+
+__urlOpen() {
+  local usage="${FUNCNAME[0]#_}" binary
+
+  binary=$(__usageEnvironment "$usage" buildEnvironmentGet BUILD_URL_BINARY)
+  if [ -z "$binary" ]; then
+    while IFS='' read -d$'\n' -r binary; do
+      if whichExists "$binary"; then
+        break
+      fi
+    done < <(__usageEnvironment "$usage" __urlBinary)
+    if [ -z "$binary" ]; then
+      printf "%s %s\n" "OPEN: " "$(consoleLink "$url")"
+      return 0
+    fi
+  else
+    binary=$(usageArgumentExecutable "$usage" "BUILD_URL_BINARY" "$binary") || return $?
+  fi
+  [ $# -gt 0 ] || __usageArgument "$usage" "Require at least one URL" || return $?
+  __environment "$binary" "$@" || return $?
 }

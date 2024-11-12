@@ -18,3 +18,7 @@ __packageManagerDefault() {
 __xargsSedInPlaceReplace() {
   xargs sed -i '' "$@"
 }
+
+__urlBinary() {
+  printf "%s\n" "open"
+}

@@ -393,17 +393,11 @@ _gitFindHome() {
 # Example: ... are all equivalent.
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local updateReleaseNotes appendLast argument start notes comment home
 
-  appendLast=false
-  updateReleaseNotes=true
-  comment=
-  home=
-  saved=("$@")
-  nArguments=$#
+  local appendLast=false updateReleaseNotes=true comment="" home="" openLinks=""
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -421,6 +415,9 @@ gitCommit() {
       --last)
         appendLast=true
         ;;
+      --open-links)
+        openLinks=true
+        ;;
       *)
         comment="$*"
         break
@@ -429,11 +426,17 @@ gitCommit() {
     shift
   done
 
+  if ! _boolean "$openLinks"; then
+    openLinks=$(__usageEnvironment "$usage" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
+  fi
+  _boolean "$openLinks" || openLinks=false
+
   if [ "$comment" = "last" ]; then
     appendLast=true
     comment=
   fi
 
+  local start
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
@@ -443,16 +446,19 @@ gitCommit() {
   __usageEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __failEnvironment "$usage" "No changes to commit" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then
+    local notes
     statusMessage decorate info "Updating release notes ..."
     notes="$(releaseNotes)" || __failEnvironment "$usage" "No releaseNotes?" || return $?
     __usageEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
   fi
+  outputHandler="cat"
+  ! $openLinks || outputHandler="urlOpener"
   if $appendLast || [ -z "$comment" ]; then
-    statusMessage decorate info "Using last commit message ($appendLast, \"$comment\") ..."
-    __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a || return $?
+    statusMessage decorate info "Using last commit message ..."
+    __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a | "$outputHandler" || return $?
   else
     statusMessage decorate info "Using commit comment \"$comment\" ..."
-    __usageEnvironment "$usage" git commit -a -m "$comment" || return $?
+    __usageEnvironment "$usage" git commit -a -m "$comment" | "$outputHandler" || return $?
   fi
   __usageEnvironment "$usage" cd "$start" || return $?
   return 0
