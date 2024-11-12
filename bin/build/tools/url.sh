@@ -163,6 +163,8 @@ urlValid() {
 }
 
 # Open URLs which appear in a stream but continue to output the stream
+# stdin: text
+# stdout: text
 urlOpener() {
   local usage="_${FUNCNAME[0]}"
 
@@ -205,7 +207,7 @@ _urlOpener() {
 # Argument: --show-file - Boolean. Optional. Show the file name in the output (suffix with `: `)
 # Argument: --file name - String. Optional. The file name to display - can be any text.
 # Argument: file - File. Optional. A file to read and output URLs found.
-# stdin: acts as a filter, outputs found URLs, one per line
+# stdin: text
 # stdout: line:URL
 # Takes a text file and outputs any `https://` or `http://` URLs found within.
 urlFilter() {
@@ -292,6 +294,8 @@ _urlFilter() {
 # Argument: --ignore - Optional. Flag. Ignore any invalid URLs found.
 # Argument: --wait - Optional. Flag. Display this help.
 # Argument: --url url - Optional. URL. URL to download.
+# stdin: line:URL
+# stdout: none
 urlOpen() {
   local usage="_${FUNCNAME[0]}"
 

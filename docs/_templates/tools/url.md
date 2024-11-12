@@ -7,3 +7,6 @@
 {urlParse}
 {urlParseItem}
 {urlValid}
+{urlOpen}
+{urlOpener}
+{urlFilter}
