@@ -97,7 +97,6 @@ __hookGitPreCommit() {
     if gitPreCommitHasExtension "$extension"; then
       __usageEnvironment "$usage" runOptionalHook "pre-commit-$extension" || return $?
     fi
-    clearLine
   done
 
   gitPreCommitCleanup || :
