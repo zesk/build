@@ -10,7 +10,7 @@
 __bashPromptList() {
   local promptCommand
 
-  for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
+  for promptCommand in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
     if isFunction "$promptCommand"; then
       printf -- "- %s (%s)\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")"
     else
@@ -33,7 +33,7 @@ __bashPromptAdd() {
     __BASH_PROMPT_MODULES=()
   fi
 
-  ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
+  ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")"
   saved=("$@")
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -110,7 +110,7 @@ __bashPromptRemove() {
     fi
   done
   $found || __failEnvironment "$usage" "$module was not found in $(_list modules: "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
-  __BASH_PROMPT_MODULES=("${modules[@]}")
+  __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }
 
 #
