@@ -648,10 +648,15 @@ bashDocumentation_Extract() {
     __dumpNameValue "description" "${desc[@]}"
     printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
     if ! inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
-      __dumpNameValue "summary" "$(trimWords 10 "${desc[0]}")"
+      local summary
+      summary="$(trimWords 10 "${desc[0]}")"
+      [ -n "$summary" ] || summary="undocumented"
+      __dumpNameValue "summary" "$summary"
     fi
   elif inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpAliasedValue description summary
+  else
+    __dumpNameValue "summary" "undocumented"
   fi
   if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "exit_code" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
