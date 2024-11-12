@@ -656,6 +656,7 @@ bashDocumentation_Extract() {
   elif inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpAliasedValue description summary
   else
+    __dumpNameValue "description" "No documentation for \`$fn\`."
     __dumpNameValue "summary" "undocumented"
   fi
   if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then

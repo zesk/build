@@ -70,7 +70,7 @@ _documentationTemplateUpdateUnlinked() {
     __usageEnvironment "$usage" rm -f "$template.$$" || return $?
   else
     __usageEnvironment "$usage" mv -f "$template.$$" "$template" || return $?
-    statusMessage decorate info "Updated $template with $total unlinked $(plural "$total" function functions)"
+    statusMessage decorate info "Updated $(consoleFileLink "$template") with $total unlinked $(plural "$total" function functions)"
   fi
 }
 __documentationTemplateUpdateUnlinked() {

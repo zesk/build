@@ -7,5 +7,7 @@
 # 3 - Host
 # 4 - Path
 # Copyright &copy; 2024 Market Acumen, Inc.
+# Category: Bash Prompt
+# See: bashPrompt
 export BUILD_PROMPT_COLORS
 BUILD_PROMPT_COLORS="${BUILD_PROMPT_COLORS-}"

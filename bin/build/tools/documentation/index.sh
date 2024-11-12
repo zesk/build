@@ -212,7 +212,7 @@ documentationIndex_Generate() {
     pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$shellFile" | while read -r functionName; do
       lineNumber="${functionName%%:*}"
       functionName="${functionName#*:}"
-      statusMessage decorate info "$(printf "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$shellFile")" "$(decorate red "$lineNumber")")"
+      statusMessage decorate info "$(printf "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$(consoleFileLink "$shellFile")")" "$(decorate red "$lineNumber")")"
       if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
         clearLine

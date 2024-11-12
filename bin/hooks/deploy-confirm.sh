@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Run during bin/build/pipeline/php-deploy.sh
+# Run during deployApplication
 #
 # Run in the pipeline, used to check smoke test on remote systems: did our deployment work?
 #

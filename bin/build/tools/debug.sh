@@ -23,6 +23,7 @@ buildDebugEnabled() {
   # __environment buildEnvironmentLoad BUILD_DEBUG || return $?
   debugString="${BUILD_DEBUG-}"
   if [ -n "$debugString" ] && [ "$debugString" != "false" ]; then
+    [ "$debugString" != "true" ] || return 0
     [ $# -gt 0 ] || return 0
     debugString=",$debugString,"
     while [ $# -gt 0 ]; do

@@ -2,6 +2,7 @@
 # Location for the build system cache directory
 # Defaults to `$HOME/.build` and if `$HOME` is not a directory then `./.build`
 # Copyright &copy; 2024 Market Acumen, Inc.
+# Category: Build
 export BUILD_CACHE
 if [ -z "${BUILD_CACHE-}" ]; then
   _BUILD_CACHE_DEFAULT() {

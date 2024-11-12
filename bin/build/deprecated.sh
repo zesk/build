@@ -160,7 +160,7 @@ __deprecatedCleanup() {
   __deprecatedCannon "application""EnvironmentVariables" environmentApplicationVariables
   __deprecatedCannon "application""Environment" environmentApplicationLoad
 
-  __deprecatedCannon "path""Append" listAppend
+  # __deprecatedCannon "path""Append" listAppend
 
   # __deprecatedCannon "dot""EnvConfigure" 'environmentFileLoad .env --optional .env.local' ! -path '*/environment.sh'
   # deprecatedTokens+=("dotEnv""Configure")

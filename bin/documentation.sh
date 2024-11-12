@@ -68,6 +68,8 @@ __buildDocumentationBuild() {
 
   example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" mapEnvironment <"$home/docs/_templates/coding.md" >"$home/docs/coding.md"
 
+  documentationTemplateUpdate "$home/docs" "$home/docs/_templates/_parts" || return $?
+
   __usageEnvironment "$usage" __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@" || return $?
 
 }
