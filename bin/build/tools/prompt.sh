@@ -253,7 +253,7 @@ bashPrompt() {
 
   $skipTerminal || [ -t 0 ] || __failEnvironment "$usage" "Requires a terminal" || return $?
 
-  export PROMPT_COMMAND PS1 __PREVIOUS_RESULT __PREVIOUS_PREFIX __PREVIOUS_SYMBOL __BASH_PROMPT_MODULES __BASH_PROMPT_LABEL BUILD_PROMPT_COLORS
+  export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
 
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
@@ -270,12 +270,12 @@ bashPrompt() {
   [ -n "${BUILD_PROMPT_COLORS-}" ] || BUILD_PROMPT_COLORS="$(bashPromptColorScheme default)"
 
   PROMPT_COMMAND=__bashPromptCommand
-  if [ "$label" = $'\0' ]; then
-    label=${__BASH_PROMPT_LABEL-}
-  else
-    __BASH_PROMPT_LABEL="$label"
+  isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
+  if [ "$label" != $'\0' ]; then
+    label="$label "
+    __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "$label")
   fi
-  PS1="$(__bashPromptGeneratePS1 "$label")"
+  PS1="$(__bashPromptGeneratePS1)"
 }
 _bashPrompt() {
   # IDENTICAL usageDocument 1
@@ -306,24 +306,23 @@ bashPromptColorScheme() {
 # - exit status ">" or "X"
 # - " "
 __bashPromptGeneratePS1() {
-  local colors reset label="${1-}"
+  local colors reset
   export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
-  [ -z "$label" ] || label="$label "
   reset="$(consoleReset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   printf "%s%s@%s %s %s " \
-    "$label" \
+    "\${__BASH_PROMPT_PREVIOUS[1]-}" \
     "\[${colors[2]-}\]\u\[${reset}\]" \
     "\[${colors[3]-}\]\h" \
     "\[${colors[4]-}\]\w\[${reset}\]" \
-    "\[\${__BASH_PROMPT_PREVIOUS[1]-}\]\${__BASH_PROMPT_PREVIOUS[2]-}\[${reset}\]"
+    "\[\${__BASH_PROMPT_PREVIOUS[2]-}\]\${__BASH_PROMPT_PREVIOUS[3]-}\[${reset}\]"
 }
 __bashPromptCommand() {
-  __BASH_PROMPT_PREVIOUS=("$?")
+  __BASH_PROMPT_PREVIOUS=("$?" "${__BASH_PROMPT_PREVIOUS[1]-}")
   local colors promptCommand
   export BUILD_PROMPT_COLORS
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
-  if [ "$__PREVIOUS_RESULT" -eq 0 ]; then
+  if [ "${__BASH_PROMPT_PREVIOUS[0]}" -eq 0 ]; then
     __BASH_PROMPT_PREVIOUS+=("${colors[0]-}")
     __BASH_PROMPT_PREVIOUS+=(">")
   else
