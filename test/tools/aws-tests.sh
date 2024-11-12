@@ -332,13 +332,16 @@ testAwsEnvironmentFromCredentials() {
 
 testAWSProfiles() {
   local list firstName='test-aws' secondName='never-gonna-let-you-down'
-  export HOME
-  local savedHome
+  export HOME AWS_PROFILE
+  local savedHome savedAWS_PROFILE
 
+  savedAWS_PROFILE=${AWS_PROFILE-none}
   savedHome=$HOME
   HOME=$(__environment mktemp -d) || return $?
 
   list=$(__environment mktemp) || return $?
+
+  AWS_PROFILE=
 
   assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
 
@@ -383,4 +386,9 @@ testAWSProfiles() {
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
 
   HOME="$savedHome"
+  if [ "$savedAWS_PROFILE" != "none" ]; then
+    AWS_PROFILE=$savedAWS_PROFILE
+  else
+    unset AWS_PROFILE
+  fi
 }
