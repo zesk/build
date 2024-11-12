@@ -115,8 +115,6 @@ urlParseItem() {
   local usage="_${FUNCNAME[0]}"
   local component="" url
 
-  # IDENTICAL startBeginTiming 1
-
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
@@ -236,7 +234,6 @@ urlFilter() {
         file="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
         files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
         ;;
     esac

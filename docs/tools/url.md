@@ -39,7 +39,7 @@ Does little to no validation of any characters so best used for well-formed inpu
 - `1` - If parsing fails
 ### `urlParseItem` - Get a database URL component directly
 
-Gets the component of the URL from a given database URL.
+Gets the component of one or more URLs
 
 - Location: `bin/build/tools/url.sh`
 
@@ -71,6 +71,57 @@ Checks a URL is valid
 #### Arguments
 
 - `url ...` - String. URL. Required. A Uniform Resource Locator
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `urlOpen` - Open a URL using the operating system
+
+Open a URL using the operating system
+Usage urlOpen [ --help ]
+
+- Location: `bin/build/tools/url.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `--ignore` - Optional. Flag. Ignore any invalid URLs found.
+- `--wait` - Optional. Flag. Display this help.
+- `--url url` - Optional. URL. URL to download.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `urlOpener` - Open URLs which appear in a stream but continue to
+
+Open URLs which appear in a stream but continue to output the stream
+
+- Location: `bin/build/tools/url.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `urlFilter` - Open URLs which appear in a stream
+
+Open URLs which appear in a stream
+
+- Location: `bin/build/tools/url.sh`
+
+#### Arguments
+
+- `--show-file` - Boolean. Optional. Show the file name in the output (suffix with `: `)
+- `--file name - String. Optional. The file name to display` - can be any text.
+- `file` - File. Optional. A file to read and output URLs found.
 
 #### Exit codes
 

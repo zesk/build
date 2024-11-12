@@ -252,19 +252,7 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `ipLookup` - Get the current IP address of the host
 
-Get the current IP address of the host
-
-- Location: `bin/build/tools/pipeline.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `1` - Returns
 ### `isUpToDate` - Test whether the key needs to be updated
 
 For security one should update keys every N days
