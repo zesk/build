@@ -3,7 +3,7 @@
 [⬅ Return to top](index.md)
 
 - `BUILD_CACHE` - Directory. Location for the build cache files. Defaults to `$HOME/.build`, then `$(buildHome)/.build`.
-- `BUILD_VERSION_SUFFIX` - String. Default suffix used in `git-tag-version.sh`. Default is `rc` if not specified.
+- `BUILD_VERSION_SUFFIX` - Default suffix used in `gitTagVersion`
 - `BUILD_MAXIMUM_TAGS_PER_VERSION` - Integer. Default 1000. Affects `git-tag-version.sh`
 
 - `BUILD_DEBUG` - Enable debugging globally in the build scripts. Set to a comma (`,`) delimited list string to enable specific debugging, or `true` for ALL debugging, `false` (or blank) for NO debugging.
@@ -46,10 +46,9 @@ Tools: `awsIPAccess`
 
 # Development
 
-- `BUILD_VERSION_CREATED_EDITOR` is used in `bin/build/hooks/version-created.sh` to open the new file automatically
 - `EDITOR` is used as a default value for `BUILD_VERSION_CREATED_EDITOR` (used to open files)
 
 # Generated
 
 - `APPLICATION_ID` - Code checksum representing the unique version of the application code (git commit SHA or equivalent)
-- `APPLICATION_TAG` - Tag of deployed code (may differ from version, if not supplied same as `APPLICATION_ID`)
+- `APPLICATION_TAG` - Tag of deployed code (longer version, if not supplied same as `APPLICATION_ID`)

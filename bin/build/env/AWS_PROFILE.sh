@@ -3,7 +3,4 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 # Category: Amazon Web Services
 export AWS_PROFILE
-# Do not set to blank to avoid errors
-#
-#     The config profile () could not be found
-#
+AWS_PROFILE=${AWS_PROFILE-}

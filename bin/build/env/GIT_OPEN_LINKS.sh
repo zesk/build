@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # See: gitCommit
-# Boolean value: true or false to open links from git remotes
+# Type: Boolean
+# Open links from git remotes in `gitCommit`
+# See: gitCommit
 # Copyright &copy; 2024 Market Acumen, Inc.
 # Category: Development
 export GIT_OPEN_LINKS

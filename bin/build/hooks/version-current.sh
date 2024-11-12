@@ -17,9 +17,6 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #
 # Defaults to the last version numerically found in `docs/release` directory.
 #
-# Environment: BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
-# Environment: EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
-#
 __hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
   local usage

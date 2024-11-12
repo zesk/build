@@ -196,7 +196,10 @@ __deprecatedCleanup() {
 
   # v0.14.3
   home=$(__environment buildHome) || return $?
-  for file in "$home/"*.sh; do
+  for file in "$home/bin/build/pipeline/"*.sh; do
+    deprecatedToken+=("${file#"$home"}")
+  done
+  for file in "$home/bin/build/install/"*.sh; do
     deprecatedToken+=("${file#"$home"}")
   done
 

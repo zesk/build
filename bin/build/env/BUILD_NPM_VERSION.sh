@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Version of NPM to install (default) in `npmInstall`
+# Version of npm to install using native `npm` binary.
+# See: npmInstall
+# Type: String
 # Copyright &copy; 2024 Market Acumen, Inc.
 # Category: Installation
 export BUILD_NPM_VERSION
