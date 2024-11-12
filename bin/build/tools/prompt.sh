@@ -196,7 +196,7 @@ bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
   local saved=("$@") nArguments=$#
-  local label="" addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
+  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -253,7 +253,7 @@ bashPrompt() {
 
   $skipTerminal || [ -t 0 ] || __failEnvironment "$usage" "Requires a terminal" || return $?
 
-  export PROMPT_COMMAND PS1 __PREVIOUS_RESULT __PREVIOUS_PREFIX __PREVIOUS_SYMBOL __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
+  export PROMPT_COMMAND PS1 __PREVIOUS_RESULT __PREVIOUS_PREFIX __PREVIOUS_SYMBOL __BASH_PROMPT_MODULES __BASH_PROMPT_LABEL BUILD_PROMPT_COLORS
 
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
@@ -270,6 +270,11 @@ bashPrompt() {
   [ -n "${BUILD_PROMPT_COLORS-}" ] || BUILD_PROMPT_COLORS="$(bashPromptColorScheme default)"
 
   PROMPT_COMMAND=__bashPromptCommand
+  if [ "$label" = $'\0' ]; then
+    label=${__BASH_PROMPT_LABEL-}
+  else
+    __BASH_PROMPT_LABEL="$label"
+  fi
   PS1="$(__bashPromptGeneratePS1 "$label")"
 }
 _bashPrompt() {
@@ -302,7 +307,7 @@ bashPromptColorScheme() {
 # - " "
 __bashPromptGeneratePS1() {
   local colors reset label="${1-}"
-  export BUILD_PROMPT_COLORS
+  export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
   [ -z "$label" ] || label="$label "
   reset="$(consoleReset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
@@ -311,19 +316,19 @@ __bashPromptGeneratePS1() {
     "\[${colors[2]-}\]\u\[${reset}\]" \
     "\[${colors[3]-}\]\h" \
     "\[${colors[4]-}\]\w\[${reset}\]" \
-    "\[\$__PREVIOUS_PREFIX\]\$__PREVIOUS_SYMBOL\[${reset}\]"
+    "\[\${__BASH_PROMPT_PREVIOUS[1]-}\]\${__BASH_PROMPT_PREVIOUS[2]-}\[${reset}\]"
 }
 __bashPromptCommand() {
-  __PREVIOUS_RESULT=$?
+  __BASH_PROMPT_PREVIOUS=("$?")
   local colors promptCommand
   export BUILD_PROMPT_COLORS
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   if [ "$__PREVIOUS_RESULT" -eq 0 ]; then
-    __PREVIOUS_PREFIX="${colors[0]-}"
-    __PREVIOUS_SYMBOL=">"
+    __BASH_PROMPT_PREVIOUS+=("${colors[0]-}")
+    __BASH_PROMPT_PREVIOUS+=(">")
   else
-    __PREVIOUS_PREFIX="${colors[1]-}"
-    __PREVIOUS_SYMBOL="§"
+    __BASH_PROMPT_PREVIOUS+=("${colors[1]-}")
+    __BASH_PROMPT_PREVIOUS+=("§")
   fi
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
     if isFunction "$promptCommand"; then
