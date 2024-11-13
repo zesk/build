@@ -266,6 +266,12 @@ Any other command entered in the debugger is evaluated immediately.
 - `1` - Environment error
 - `2` - Argument error
 
+### `bashDebuggerDisable` - undocumented
+
+No documentation for `bashDebuggerDisable`.
+
+- Location: `bin/build/tools/debug.sh`
+
 #### Arguments
 
 - No arguments.
@@ -275,6 +281,12 @@ Any other command entered in the debugger is evaluated immediately.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `bashDebuggerEnable` - undocumented
+
+No documentation for `bashDebuggerEnable`.
+
+- Location: `bin/build/tools/debug.sh`
+
 #### Arguments
 
 - No arguments.

@@ -122,14 +122,32 @@ Usage:
 - [`usageArgumentDirectory`](./tools/usage.md#usageArgumentDirectory) - Argument must be a valid directory
 - [`usageArgumentFile`](./tools/usage.md#usageArgumentFile) - Argument must be a valid file
 - [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file which may or may not exist in a directory which exists
+- [`usageArgumentDirectory`](./tools/usage.md#usageArgumentDirectory) - Argument must be a directory
+- [`usageArgumentRealDirectory`](./tools/usage.md#usageArgumentRealDirectory) - Argument must be a directory and converted to the real path
+- [`usageArgumentFile`](./tools/usage.md#usageArgumentFile) - Argument must be a valid file
+- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file path which is a directory that exists
+- [`usageArgumentInteger`](./tools/usage.md#usageArgumentInteger) - Argument must be an integer
+- [`usageArgumentPositiveInteger`](./tools/usage.md#usageArgumentPositiveInteger) - Argument must be a positive integer (1 or greater)
+- [`usageArgumentUnsignedInteger`](./tools/usage.md#usageArgumentUnsignedInteger) - Argument must be an unsigned integer (0 or greater)
+- [`usageArgumentLoadEnvironmentFile`](./tools/usage.md#usageArgumentLoadEnvironmentFile) - Argument must be an environment file which is also loaded immediately.
+- [`usageArgumentMissing`](./tools/usage.md#usageArgumentMissing) - Fails with an argument is missing error
+- [`usageArgumentString`](./tools/usage.md#usageArgumentString) - Argument must be a non-blank string
+- [`usageArgumentEmptyString`](./tools/usage.md#usageArgumentEmptyString) - Argument may be anything
+- [`usageArgumentBoolean`](./tools/usage.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or `false`)
+- [`usageArgumentEnvironmentVariable`](./tools/usage.md#usageArgumentEnvironmentVariable) - Argument must be a valid environment variable name
+- [`usageArgumentURL`](./tools/usage.md#usageArgumentURL) - Argument must be a valid URL
+- [`usageArgumentUnknown`](./tools/usage.md#usageArgumentUnknown) - Fails with an unknown argument error
+- [`usageArgumentCallable`](./tools/usage.md#usageArgumentCallable) - Argument must be callable (a function or executable)
+- [`usageArgumentFunction`](./tools/usage.md#usageArgumentFunction) - Argument must be a function
+- [`usageArgumentExecutable`](./tools/usage.md#usageArgumentExecutable) - Argument must be a binary which can be executed
 
-### See 
+### See
 
+- [Usage functions](./tools/usage.md)
 - [`_argument`](./tools/sugar.md#_argument)
 - [`__argument`](./tools/sugar.md#__argument)
 - [`__failArgument`](./tools/sugar.md#__failArgument)
 - [`__usageArgument`](./tools/sugar.md#__usageArgument)
-
 
 Code:
 
@@ -137,7 +155,7 @@ Code:
 
 ## Appendix - `simpleBashFunction`
 
-A simple example to show some patterns:
+A simple example to show some standard patterns:
 
     #!/usr/bin/env bash
     #

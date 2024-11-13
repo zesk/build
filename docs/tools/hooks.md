@@ -87,11 +87,6 @@ BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do no
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Environment
-
-BUILD_VERSION_CREATED_EDITOR - Define editor to use to edit release notes
-EDITOR - Default if `BUILD_VERSION_CREATED_EDITOR` is not defined
 ### `__hookVersionLive` - Fetch the current live version of the software
 
 Fetch the current live version of the software

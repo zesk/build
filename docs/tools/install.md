@@ -298,6 +298,12 @@ When this tool succeeds the `php` binary is no longer available in the local ope
 
 - `1` - If uninstallation fails
 - `0` - If uninstallation succeeds
+### `prettierUninstall` - undocumented
+
+No documentation for `prettierUninstall`.
+
+- Location: `bin/build/tools/prettier.sh`
+
 #### Arguments
 
 - No arguments.

@@ -5,6 +5,7 @@ Pipeline, build, and operations tools which are useful across a variety of proje
 - Abstracted bash scripts which work on all Unix-style operating system
 - Build and deployment tools for pipelines and software platforms and languages
 - Operational scripts for managing live production systems (system setup, services, cron, permissions separations)
+- Operating system differences are supported
 
 This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries, as of 2024 there are no dependencies on Bash 4.
 
@@ -13,7 +14,7 @@ This toolkit makes the following assumptions:
 - Binaries from this project installed at `./bin/build/` (required)
 - Files containing bash code end with `.sh` (assumed)
 - Release notes are located in a dedicated subdirectory (can be configured per-project), files are named `v1.0.0.md` which match version names (`v1.0.0`) (required)
-- A central `$HOME/.build` directory is created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used. (configurable)
+- A central `$HOME/.build` directory may be created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used. (configurable)
 
 To use in your pipeline:
 
@@ -45,7 +46,7 @@ Defaults:
 - `./` - Application root
 - `./bin/build/` - Zesk Build installation location (may *not* be changed)
 - `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` on the end)
-- `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end)
+- `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end if you use `buildEnvironmentLoad`)
 - `./docs/release/v1.0.0.md` - Release notes (override by adding `BUILD_RELEASE_NOTES` environment)
 
 ## Other binaries
@@ -103,7 +104,9 @@ Scripts are written by loading an `.env` file and then run commands directly in 
 
     bin/build/bitbucket-container.sh --env .env.MYTESTENV bin/test.sh
 
-`.env` appears to have various machinations such that it's difficult at best to have a single format which works in your projects. The solution is simple: detect whether a `.env` is formatted to support **Docker** or not and convert it appropriately on-the-fly as needed; Zesk Build supports this detection and conversion.
+`.env` appears to have various machinations such that it's difficult at best to have a single format which works in your projects. 
+
+The solution is simple: detect whether a `.env` is formatted to support **Docker** or not and convert it appropriately on-the-fly as needed; Zesk Build supports this detection and conversion.
 
 ## Tested operating systems
 
@@ -132,4 +135,4 @@ If you test on another OS or need support on a specific platform, report an issu
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 
-Reviewed: 2024-08-19
+Reviewed: 2024-11-13

@@ -358,6 +358,12 @@ When running within your hook, pass additional arguments so they can be preserve
 #### Environment
 
 BUILD-HOME - The default application home directory used for `.git` and build hooks.
+### `gitInstallHooks` - undocumented
+
+No documentation for `gitInstallHooks`.
+
+- Location: `bin/build/tools/git.sh`
+
 #### Arguments
 
 - No arguments.

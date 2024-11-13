@@ -6,6 +6,12 @@ Typically used to output text to the console using pretty colors and ANSI art.
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `repeat` - undocumented
+
+No documentation for `repeat`.
+
+- Location: `bin/build/tools/decoration.sh`
+
 #### Usage
 
     repeat count string [ ... ]
