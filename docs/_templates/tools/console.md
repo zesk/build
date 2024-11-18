@@ -13,3 +13,4 @@
 {consoleDefaultTitle}
 {consoleLink}
 {consoleFileLink}
+{consoleLinksSupported}

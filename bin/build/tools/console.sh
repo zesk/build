@@ -146,11 +146,26 @@ consoleLink() {
   printf -- "${OSC8}%s${ST}%s${OSC8}${ST}" "$link" "$text"
 }
 
+# Are console links (likely) supported?
+# Unfortunately there's no way to test for this feature currently
+consoleLinksSupported() {
+  local usage="_${FUNCNAME[0]}"
+  export HOSTNAME
+  [ -n "${HOSTNAME-}" ] || return 1
+  hasConsoleAnimation || return 1
+  ! isBitBucketPipeline || return 1
+  ! isiTerm2 || return 0
+}
+_consoleLinksSupported() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Output a local file link to the console
 # Usage: file [ text ]
 consoleFileLink() {
   export HOSTNAME HOME
-  if [ -z "${HOSTNAME-}" ]; then
+  if ! consoleLinksSupported; then
     printf "%s\n" "$(decoratePath "$1")"
   else
     local path="$1"
