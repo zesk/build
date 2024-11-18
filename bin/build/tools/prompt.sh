@@ -117,13 +117,12 @@ __bashPromptRemove() {
 # Show current application and path as a badge
 #
 bashPromptModule_ApplicationPath() {
-  local homeIcon="🏠" appIcon="🍎" folderIcon="📂"
-  local home path applicationPath
-  home=$(__environment buildHome) || return $?
+  local folderIcon="📂"
+  local path applicationPath
   path=$(__environment pwd) || return $?
-  applicationPath="${path//$home/$homeIcon}"
+  applicationPath=$(decoratePath "$path")
   if [ "$applicationPath" != "$path" ]; then
-    iTerm2Badge -i "$(printf "%s %s\n%s %s\n" "$appIcon" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"
+    iTerm2Badge -i "$(printf "%s\n%s %s\n" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"
   fi
 }
 
