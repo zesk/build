@@ -138,7 +138,7 @@ identicalCheck() {
   rootDir=$(__usageEnvironment "$usage" realPath "$rootDir") || return $?
   __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || _clean $? "$searchFileList" || return $?
   if [ ! -s "$searchFileList" ]; then
-    __failEnvironment "$usage" "No files found in $rootDir with${extensionText}" || _clean $? "$searchFileList" || return $?
+    __failEnvironment "$usage" "No files found in $(consoleFileLink "$rootDir") with${extensionText}" || _clean $? "$searchFileList" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || return $?
   prefixIndex=0
@@ -152,7 +152,7 @@ identicalCheck() {
       [ -d "$tempDirectory/$prefixIndex" ] || mkdir "$tempDirectory/$prefixIndex"
       totalLines=$(($(wc -l <"$searchFile") + 0))
       while read -r identicalLine; do
-        statusMessage decorate info "#$((prefixIndex + 1)): Processing $searchFile:$(decorate code "$identicalLine") ... "
+        statusMessage decorate info "#$((prefixIndex + 1)): Processing $(consoleFileLink "$searchFile"):$(decorate code "$identicalLine") ... "
         # DEBUG # decorate bold-red "$identicalLine" # DEBUG
         if ! parsed=$(__identicalLineParse "$searchFile" "$prefix" "$identicalLine"); then
           badFiles+=("$searchFile")
@@ -171,8 +171,8 @@ identicalCheck() {
           tokenFileName=$(tail -1 "$tokenFile")
           if [ ! -f "$countFile" ]; then
             printf "%s%s: %s\n" "$(clearLine)" "$(decorate info "$token")" "$(decorate error "Token counts do not match:")" 1>&2
-            printf "    %s has %s specified\n" "$(decorate code "$tokenFileName")" "$(decorate success "$tokenLineCount")" 1>&2
-            printf "    %s has %s specified\n" "$(decorate code "$searchFile")" "$(decorate error "$count")" 1>&2
+            printf "    %s has %s specified\n" "$(decorate code "$(consoleFileLink "$tokenFileName")")" "$(decorate success "$tokenLineCount")" 1>&2
+            printf "    %s has %s specified\n" "$(decorate code "$(consoleFileLink "$searchFile")")" "$(decorate error "$count")" 1>&2
             isBadFile=true
             touch "$countFile.compare" || :
             touch "$tempDirectory/$prefixIndex/$tokenLineCount@$token.match.compare" || :
@@ -193,7 +193,7 @@ identicalCheck() {
               badFiles+=("$searchFile")
               {
                 clearLine
-                printf "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$searchFile")" "$(decorate code)" || :
+                printf "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(consoleFileLink "$searchFile")")" "$(decorate code)" || :
                 grep -e "$quotedPrefix" "$compareFile" | wrapLines "$(decorate code)    " "$(consoleReset)" || :
                 consoleReset || :
               } 1>&2
@@ -202,11 +202,11 @@ identicalCheck() {
               countFile="$countFile.mapped"
             fi
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$tokenFileName")" "$(decorate warning "$searchFile")" "$(decorate code)" 1>&2
+              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(consoleFileLink "$tokenFileName")")" "$(decorate warning "$(consoleFileLink "$searchFile")")" "$(decorate code)" 1>&2
               diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(consoleReset)" || : 1>&2
               isBadFile=true
             else
-              statusMessage decorate success "Verified $searchFile, lines $lineNumber-$((lineNumber + tokenLineCount))"
+              statusMessage decorate success "Verified $(consoleFileLink "$searchFile"), lines $lineNumber-$((lineNumber + tokenLineCount))"
             fi
             if $mapFile; then
               rm -rf "$countFile" || return $?
@@ -214,7 +214,7 @@ identicalCheck() {
           fi
           if $isBadFile; then
             if [ ${#repairSources[@]} -gt 0 ]; then
-              statusMessage decorate warning "Repairing $token in $(decorate code "$searchFile") from \"$(decorate value "$tokenFileName")\""
+              statusMessage decorate warning "Repairing $token in $(decorate code "$(consoleFileLink "$searchFile")") from \"$(decorate value "$(consoleFileLink "$tokenFileName")")\""
               if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
                 badFiles+=("$tokenFileName")
                 badFiles+=("$searchFile")
@@ -234,7 +234,7 @@ identicalCheck() {
           if [ "$token" = "" ]; then
             dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
           fi
-          statusMessage decorate info "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(decorate code "$token")" "$(decorate value "$searchFile")")"
+          statusMessage decorate info "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(decorate code "$token")" "$(decorate value "$(consoleFileLink "$searchFile")")")"
         fi
       done < <(grep -n -e "$quotedPrefix" <"$searchFile" || :)
     done <"$searchFileList"
@@ -263,10 +263,10 @@ identicalCheck() {
         tokenFile="$tokenFile/$token"
         tokenFile="$(tail -n 1 "$tokenFile")"
         if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
-          printf "%s: %s in %s\n" "$(decorate success "Single instance of token ok:")" "$(decorate code "$token")" "$(decorate info "$tokenFile")"
+          printf "%s: %s in %s\n" "$(decorate success "Single instance of token ok:")" "$(decorate code "$token")" "$(decorate info "$(consoleFileLink "$tokenFile")")"
           foundSingles+=("$token")
         else
-          printf "%s: %s in %s\n" "$(decorate warning "Single instance of token found:")" "$(decorate error "$token")" "$(decorate info "$tokenFile")" >>"$resultsFile"
+          printf "%s: %s in %s\n" "$(decorate warning "Single instance of token found:")" "$(decorate error "$token")" "$(decorate info "$(consoleFileLink "$tokenFile")")" >>"$resultsFile"
           if [ -n "$binary" ]; then
             "$binary" "$tokenFile"
           fi
@@ -278,7 +278,7 @@ identicalCheck() {
       if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
         while read -r tokenFile; do
           tokenFile="$(tail -n 1 "$tokenFile")"
-          printf "%s: %s %s\n" "$(decorate warning "Multiple instance of --single token found:")" "$(decorate error "$token")" "$(decorate info "$tokenFile")"
+          printf "%s: %s %s\n" "$(decorate warning "Multiple instance of --single token found:")" "$(decorate error "$token")" "$(decorate info "$(consoleFileLink "$tokenFile")")"
         done < <(find "$tempDirectory" -name "$token" -type f)
       fi
     done
@@ -368,8 +368,8 @@ identicalCheckShell() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
 
   aa=()
-  aa+=(--prefix '# ''IDENTICAL' )
-  aa+=(--prefix '# ''DOC TEMPLATE:' )
+  aa+=(--prefix '# ''IDENTICAL')
+  aa+=(--prefix '# ''DOC TEMPLATE:')
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"

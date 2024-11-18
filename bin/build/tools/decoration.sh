@@ -495,13 +495,11 @@ _boxedHeading() {
 
 # Replace an absolute path prefix with an icon if it matches HOME or BUILD_HOME
 decoratePath() {
-  local home
-  export HOME
-  home=$(buildHome) || home="\\\\"
+  export HOME BUILD_HOME
   while [ $# -gt 0 ]; do
     local display="$1"
-    [ -z "$home" ] || display=${display//$home/🍎}
-    display=${display//$HOME/🏠}
+    display=${display//${BUILD_HOME-}/🍎}
+    display=${display//${HOME-}/🏠}
     printf "%s\n" "$display"
     shift
   done

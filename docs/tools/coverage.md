@@ -25,6 +25,12 @@ Covert resulting files using `bashCoverageReport`
 
 ## Reporting - work in progress
 
+### `bashCoverageReport` - undocumented
+
+No documentation for `bashCoverageReport`.
+
+- Location: `bin/build/tools/coverage.sh`
+
 #### Arguments
 
 - No arguments.

@@ -96,6 +96,12 @@ Output the number of columns in the terminal. Default is 60 if not able to be de
 
 COLUMNS - May be defined after calling this
 LINES - May be defined after calling this
+### `consoleBrightness` - undocumented
+
+No documentation for `consoleBrightness`.
+
+- Location: `bin/build/tools/console.sh`
+
 #### Arguments
 
 - No arguments.
@@ -120,6 +126,12 @@ Set the title of the window for the console
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleDefaultTitle` - undocumented
+
+No documentation for `consoleDefaultTitle`.
+
+- Location: `bin/build/tools/console.sh`
+
 #### Arguments
 
 - No arguments.

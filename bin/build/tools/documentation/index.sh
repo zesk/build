@@ -206,7 +206,7 @@ documentationIndex_Generate() {
     if [ ! -d "$fileCacheMarker" ]; then
       __usageEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
     elif isNewestFile "$fileCacheMarker/.marker" "$shellFile"; then
-      statusMessage decorate info "$shellFile is already cached"
+      statusMessage decorate info "$(consoleFileLink "$shellFile") is already cached"
       continue
     fi
     pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$shellFile" | while read -r functionName; do
@@ -229,7 +229,7 @@ documentationIndex_Generate() {
     return $?
   fi
   clearLine
-  printf "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$codePath")" "$(reportTiming "$start" in)"
+  printf "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(consoleFileLink "$codePath")")" "$(reportTiming "$start" in)"
 }
 _documentationIndex_Generate() {
   # IDENTICAL usageDocument 1

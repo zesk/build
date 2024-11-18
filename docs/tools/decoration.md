@@ -290,3 +290,18 @@ Output a line and fill columns with a character
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `decoratePath` - Replace an absolute path prefix with an icon if it
+
+Replace an absolute path prefix with an icon if it matches HOME or BUILD_HOME
+
+- Location: `bin/build/tools/decoration.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
