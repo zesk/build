@@ -149,14 +149,14 @@ consoleLink() {
 # Output a local file link to the console
 # Usage: file [ text ]
 consoleFileLink() {
-  export HOSTNAME
+  export HOSTNAME HOME
   if [ -z "${HOSTNAME-}" ]; then
-    printf "%s\n" "$1"
+    printf "%s\n" "$(decoratePath "$1")"
   else
     local path="$1"
     if [ "${path:0:1}" != "/" ]; then
       path="$(pwd)/$(simplifyPath "$path")"
     fi
-    consoleLink "file://$HOSTNAME$path" "${2-$1}"
+    consoleLink "file://$HOSTNAME$path" "$(decoratePath "${2-$1}")"
   fi
 }

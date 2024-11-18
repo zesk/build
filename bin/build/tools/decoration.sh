@@ -492,3 +492,17 @@ boxedHeading() {
 _boxedHeading() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Replace an absolute path prefix with an icon if it matches HOME or BUILD_HOME
+decoratePath() {
+  local home
+  export HOME
+  home=$(buildHome) || home="\\\\"
+  while [ $# -gt 0 ]; do
+    local display="$1"
+    [ -z "$home" ] || display=${display//$home/🍎}
+    display=${display//$HOME/🏠}
+    printf "%s\n" "$display"
+    shift
+  done
+}
