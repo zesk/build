@@ -30,3 +30,12 @@ __xargsSedInPlaceReplace() {
 __urlBinary() {
   printf "%s\n" "open" "xdg-open" "kde-open"
 }
+
+# Usage: {fn} date format
+__dateToFormat() {
+  date -u --date="$1 00:00:00" "+$2" 2>/dev/null
+}
+
+__timestampToDate() {
+  date -u -d "@$1" "+$2"
+}

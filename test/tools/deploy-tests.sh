@@ -6,13 +6,10 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-errorEnvironment=1
 
 _testDeployApplicationSetup() {
   local home="$1" ts
-  if ! d=$(mktemp -d); then
-    return $errorEnvironment
-  fi
+  d=$(__environment mktemp -d) || return $?
 
   cd "$d" || exit
   # OLD METHOD
@@ -43,8 +40,9 @@ _testDeployApplicationSetup() {
 }
 
 _deployShowFiles() {
-  find "$1" ! -path '*/bin/build/*' | wrapLines "$(decorate code "DEPLOY root files:    ")$(decorate magenta)" "$(consoleReset)"
-  return $errorEnvironment
+  local message
+  message=$(find "$1" ! -path '*/bin/build/*' | wrapLines "$(decorate code "DEPLOY root files:    ")$(decorate magenta)" "$(consoleReset)")
+  _environment "$message" || return $?
 }
 
 _testAssertDeploymentLinkages() {
@@ -85,12 +83,10 @@ _simplePHPServer() {
     shift || :
   fi
   if [ -z "${PHP_SERVER_ROOT-}" ]; then
-    decorate error "PHP_SERVER_ROOT is blank" 1>&2
-    return $errorEnvironment
+    _environment "PHP_SERVER_ROOT is blank" || return $?
   fi
   if [ ! -d "${PHP_SERVER_ROOT-}" ]; then
-    decorate error "PHP_SERVER_ROOT is not a directory" 1>&2
-    return $errorEnvironment
+    _environment "PHP_SERVER_ROOT is not a directory" || return $?
   fi
   decoration="$(echoBar ':.')"
   printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
@@ -126,8 +122,7 @@ _warmupServer() {
     sleep 1
     delta=$(($(beginTiming) - start))
     if [ "$delta" -gt 5 ]; then
-      decorate error "_warmupServer failed"
-      return "$errorEnvironment"
+      _environment "_warmupServer failed" || return $?
     fi
     printf "%s" "$(decorate green .)"
   done
@@ -188,24 +183,20 @@ testDeployApplication() {
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
   if ! packageWhich curl curl; then
-    decorate error "Failed to install curl" 1>&2
-    return $errorEnvironment
+    _environment "Failed to install curl" || return $?
   fi
   if ! phpInstall; then
-    decorate error "Failed to install php" 1>&2
-    return $errorEnvironment
+    _environment "Failed to install php" || return $?
   fi
 
   set -eou pipefail
 
   if ! home=$(pwd -P 2>/dev/null); then
-    decorate error "Unable to pwd" 1>&2
-    return $errorEnvironment
+    _environment "Unable to pwd" || return $?
   fi
 
   if ! d="$(_testDeployApplicationSetup "$home")"; then
-    decorate error _testDeployApplicationSetup failed
-    return "$errorEnvironment"
+    _environment _testDeployApplicationSetup failed || return $?
   fi
   consoleNameValue 20 "Deploy Root" "$d"
 
@@ -224,8 +215,7 @@ testDeployApplication() {
   startingValue=start
 
   if ! _waitForValueTimeout "$startingValue"; then
-    decorate error "Unable to find starting value $startingValue"
-    return $errorEnvironment
+    _environment "Unable to find starting value $startingValue" || return $?
   fi
 
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
@@ -297,8 +287,7 @@ testDeployApplication() {
 
     #    if ! _simplePHPServer --kill "$d/live-app"; then
     #      decorate error _simplePHPServer restart failed
-    #      buildFailed "$quietLog"
-    #      return "$errorEnvironment"
+    #      buildFailed "$quietLog" || return $?
     #    fi
     #
     consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"

@@ -7,13 +7,14 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 sedReplacePattern() {
+  local usage="_${FUNCNAME[0]}"
   if [ $# -eq 0 ]; then
-    decorate error "${FUNCNAME[0]} find replace - no find" 1>&2
-    return "$errorArgument"
+    __failArgument "$usage" "find replace - no find" || return $?
   fi
-  printf "s/%s/%s/g\n" "$(quoteSedPattern "$1")" "$(quoteSedPattern "${2-}")"
+  printf "s/%s/%s/g\n" "$(quoteSedPattern "$1")" "$(quoteSedReplacement "${2-}")"
+}
+_sedReplacePattern() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

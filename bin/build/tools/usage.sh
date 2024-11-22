@@ -5,12 +5,6 @@
 # Depends: colors.sh
 # Docs: o ./docs/_templates/tools/usage.md
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
-# IDENTICAL errorEnvironment 1
-errorEnvironment=1
-
 ###############################################################################
 #
 # ▐▌ ▐▌▗▟██▖ ▟██▖ ▟█▟▌ ▟█▙
@@ -52,7 +46,7 @@ usageTemplate() {
   if [ ${#@} -gt 0 ]; then
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"
-    elif [ "$exitCode" != "$errorArgument" ]; then
+    elif [ "$exitCode" != "$(_code argument)" ]; then
       printf "%s (-> %s)\n" "$(decorate error "$@")" "$(decorate code " $exitCode ")"
       return "$exitCode"
     else
@@ -169,31 +163,30 @@ usageGenerator() {
 
 #
 # Summary: Check that one or more binaries are installed
-# Usage: {fn} usageFunction binary0 [ ... ]
+# Usage: {fn} usage binary0 [ ... ]
 # Argument: usageFunction - Required. `bash` function already defined to output usage
 # Argument: binary0 - Required. Binary which must have a `which` path.
 # Exit Codes: 1 - If any binary0 are not available within the current path
 # Requires the binaries to be found via `which`
 #
-# Runs `usageFunction` on failure
+# Runs `usage` on failure
 #
 usageRequireBinary() {
-  local f b
-  f="${1-}"
-  if [ "$(type -t "$f")" != "function" ]; then
-    decorate error "$f must be a valid function" 1>&2
-    return $errorArgument
+  local usage="${1-}"
+  if [ "$(type -t "$usage")" != "function" ]; then
+    _argument "$(decorate code "$usage") must be a valid function" || return $?
   fi
-  shift || return $errorArgument
-  for b in "$@"; do
-    if [ -z "$(which "$b" || :)" ]; then
-      "$f" "$errorEnvironment" "$b is not available in path, not found: $PATH"
+  shift
+  local binary
+  for binary in "$@"; do
+    if [ -z "$(which "$binary" || :)" ]; then
+      __failEnvironment "$usage" "$binary is not available in path, not found: $(decorate code "$PATH")"
     fi
   done
 }
 
 #
-# Usage: {fn} usageFunction [ env0 ... ]
+# Usage: {fn} usage [ env0 ... ]
 # Requires environment variables to be set and non-blank
 # Argument: usageFunction - Required. `bash` function already defined to output usage
 # Argument: env0 - Optional. String. One or more environment variables which should be set and non-empty.
@@ -201,17 +194,16 @@ usageRequireBinary() {
 # Deprecated: 2024-01-01
 #
 usageRequireEnvironment() {
-  local f e
-  f="${1-}"
-  if [ "$(type -t "$f")" != "function" ]; then
-    decorate error "$f must be a valid function" 1>&2
-    return $errorArgument
+  local usage
+  usage="${1-}"
+  if [ "$(type -t "$usage")" != "function" ]; then
+    _argument "$(decorate code "$usage") must be a valid function" || return $?
   fi
-  shift || return $errorArgument
-  for e in "$@"; do
-    if [ -z "${!e-}" ]; then
-      "$f" 1 "Required $e not set"
-      return 1
+  shift
+  local environmentVariable
+  for environmentVariable in "$@"; do
+    if [ -z "${!environmentVariable-}" ]; then
+      __failEnvironment "$usage" "Environment variable $(decorate code "$environmentVariable") is required" || return $?
     fi
   done
 }
@@ -393,9 +385,7 @@ usageArgumentLoadEnvironmentFile() {
   local envFile bashEnv usageFunction returnCode
 
   usageFunction="$1"
-  if ! envFile=$(usageArgumentFile "$@"); then
-    return "$errorArgument"
-  fi
+  envFile=$(usageArgumentFile "$@") || return $?
   bashEnv=$(__usageEnvironment "$usageFunction" mktemp) || return $?
   __usageEnvironment "$usageFunction" anyEnvToBashEnv "$envFile" >"$bashEnv" || _clean $? "$bashEnv" || return $?
   set -a

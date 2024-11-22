@@ -7,9 +7,6 @@
 # o ./docs/_templates/tools/date.md
 #
 
-# IDENTICAL errorArgument 1
-errorArgument=2
-
 #
 # Converts a date (`YYYY-MM-DD`) to another format.
 # Summary: Platform agnostic date conversion
@@ -23,14 +20,17 @@ errorArgument=2
 # Exit Code: 0 - if parsing succeeds
 
 dateToFormat() {
-  if [ $# -eq 0 ]; then
-    return $errorArgument
+  local usage="_${FUNCNAME[0]}"
+  local format="${2-"%Y-%m-%d"}"
+  if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+    __failArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
   fi
-  if date --version 2>/dev/null 1>&2; then
-    date -u --date="$1 00:00:00" "+$2" 2>/dev/null
-  else
-    date -u -jf '%F %T' "$1 00:00:00" "+$2" 2>/dev/null
-  fi
+  __dateToFormat "$1" "$format"
+  #  if date --version 2>/dev/null 1>&2; then
+  #    date -u --date="$1 00:00:00" "+$format" 2>/dev/null
+  #  else
+  #    date -u -jf '%F %T' "$1 00:00:00" "+$format" 2>/dev/null
+  #  fi
 }
 
 #
@@ -54,22 +54,21 @@ dateToTimestamp() {
 # timestampToDate 1681966800 %F
 #
 # Usage: timestampToDate integerTimestamp format
-
 # Argument: integerTimestamp - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
 # Argument: format - How to output the date (e.g. `%F` - no `+` is required)
-
 # Environment: Compatible with BSD and GNU date.
-
 # Exit codes: If parsing fails, non-zero exit code.
-
 # Example:     dateField=$(timestampToDate $init %Y)
-
 timestampToDate() {
-  if date --version 2>/dev/null 1>&2; then
-    date -u -d "@$1" "+$2"
-  else
-    date -u -r "$1" "+$2"
+  local usage="_${FUNCNAME[0]}"
+  if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+    __failArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
+  __timestampToDate "$@"
+}
+_timestampToDate() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Returns yesterday's date, in YYYY-MM-DD format. (same as `%F`)

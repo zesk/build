@@ -6,7 +6,6 @@
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
-# errorEnvironment=1
 
 testSysvInitScript() {
   sysvInitScriptUninstall install-bin-build.sh || :

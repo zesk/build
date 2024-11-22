@@ -14,23 +14,34 @@
 # Argument: moduleName - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
 # Exit Code: 1 - Debugging is not enabled (for any module)
 # Exit Code: 0 - Debugging is enabled
-# Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. BUILD_DEBUG may be a comma-separated list of modules to target debugging.
-#
+# Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. `BUILD_DEBUG` may be a comma-separated list of modules to target debugging.
+# Example:     BUILD_DEBUG=false # All debugging disabled
+# Example:     BUILD_DEBUG= # All debugging disabled
+# Example:     BUILD_DEBUG=usage,documentation # Debug usage and documentation calls
 buildDebugEnabled() {
-  local debugString
-  export BUILD_DEBUG
   # NOTE: This allows runtime changing of this value
-  # __environment buildEnvironmentLoad BUILD_DEBUG || return $?
+  export BUILD_DEBUG
+
+  # DO NOT buildEnvironmentLoad BUILD_DEBUG - infinite loops
+  local debugString
   debugString="${BUILD_DEBUG-}"
-  if [ -n "$debugString" ] && [ "$debugString" != "false" ]; then
-    [ "$debugString" != "true" ] || return 0
-    [ $# -gt 0 ] || return 0
-    debugString=",$debugString,"
-    while [ $# -gt 0 ]; do
-      [ "${debugString/,$1,/}" = "${debugString}" ] || return 0
-      shift
-    done
+  # BUILD_DEBUG=false - All debugging disabled
+  # BUILD_DEBUG= - All debugging disabled
+  if [ -z "$debugString" ] || [ "$debugString" = "false" ]; then
+    return 1
   fi
+  # BUILD_DEBUG is non-blank and does not equal `false`
+  # `true` means debugging ALWAYS enabled
+  # No test means debugging enabled (as long as something is enabled)
+  if [ "$debugString" = "true" ] || [ $# -eq 0 ]; then return 0; fi
+  # Convert to list
+  debugString=",$debugString,"
+  while [ $# -gt 0 ]; do
+    # If any token found in the list, debugging is enabled
+    if [ "${debugString/,$1,/}" = "${debugString}" ]; then return 0; fi
+    shift
+  done
+  # Debugging is not enabled
   return 1
 }
 

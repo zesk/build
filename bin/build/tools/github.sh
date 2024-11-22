@@ -10,30 +10,28 @@
 # Test: contextOpen ./test/bin/github-tests.sh
 #
 
-errorEnvironment=1
-
-errorArgument=2
-
 #
 # Get the latest release version
 #
 # Usage: {fn} projectName [ ... ]
 #
 githubLatestRelease() {
-  if [ $# -eq 0 ]; then
-    _githubLatestRelease "$errorArgument" "projectName required" || return $?
-  fi
+  local usage="_${FUNCNAME[0]}"
+
+  [ $# -gt 0 ] || __failArgument "$usage" "projectName required" || return $?
+
   if ! packageWhich curl curl; then
-    _githubLatestRelease "$errorArgument" "curl is a required dependency" || return $?
+    __failEnvironment "$usage" "curl is a required dependency" || return $?
   fi
   while [ $# -gt 0 ]; do
     if ! curl -o - -s "https://api.github.com/repos/$1/releases/latest" | jq -r .name; then
-      _githubLatestRelease "$errorEnvironment" "API call failed for $1" || return $?
+      __failEnvironment "$usage" "API call failed for $1" || return $?
     fi
-    shift || _githubLatestRelease "$errorArgument" "shift failed" || return $?
+    shift
   done
 }
 _githubLatestRelease() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

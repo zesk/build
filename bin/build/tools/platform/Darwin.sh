@@ -22,3 +22,12 @@ __xargsSedInPlaceReplace() {
 __urlBinary() {
   printf "%s\n" "open"
 }
+
+# Usage: {fn} date format
+__dateToFormat() {
+  date -u -jf '%F %T' "$1 00:00:00" "+$2" 2>/dev/null
+}
+
+__timestampToDate() {
+    date -u -r "$1" "+$2"
+}

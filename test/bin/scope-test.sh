@@ -5,7 +5,6 @@
 # Not sure how scopes work in Bash so here's one way to figure it out
 #
 set -eou pipefail
-errorEnvironment=1
 
 width=50
 savedValue=$(mktemp)
@@ -13,7 +12,7 @@ savedValue=$(mktemp)
 _loadTools() {
   # shellcheck source=/dev/null
   if ! . "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
-    return $errorEnvironment
+    return 1
   fi
 }
 _subprocessClearValue() {
@@ -29,7 +28,7 @@ _subprocessSavedValue() {
 
 _fail() {
   printf "\n%s\n" "$(decorate error "$@")" 1>&2
-  exit "$errorEnvironment"
+  exit "1"
 }
 _loadTools || _fail "_loadTools"
 

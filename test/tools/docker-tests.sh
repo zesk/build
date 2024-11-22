@@ -7,7 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-errorEnvironment=1
 
 testCheckDockerEnvFile() {
   local out
@@ -60,8 +59,7 @@ testDockerEnvToBashPipe() {
 
   decorate info "PWD is $(pwd)"
   if dockerEnvToBash <./test/example/test.env >"$out" 2>"$err"; then
-    decorate error "dockerEnvToBash SHOULD fail"
-    return $errorEnvironment
+    _environment "dockerEnvToBash SHOULD fail" || return $?
   fi
 
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
