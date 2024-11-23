@@ -194,8 +194,8 @@ urlOpener() {
 
   local line
   while read -r line; do
-    printf "%s\n" "$line"
-    printf "%s\n" "$line" | urlFilter | "$binary" || :
+    printf -- "--> %s\n" "$line"
+    printf -- "%s\n" "$line" | urlFilter | wrapLines "URL:" ":LRU"
   done
 }
 _urlOpener() {
