@@ -279,6 +279,7 @@ urlFilter() {
     url=$(trimSpace "$line")
     url=${url%\"*}
     url=${url%\'*}
+    url=${url%$'\e'*}
     if urlValid "$url"; then
       printf "%s%s\n" "$prefix" "$url"
     elif $debugFlag; then
