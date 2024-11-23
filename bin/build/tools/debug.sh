@@ -32,13 +32,13 @@ buildDebugEnabled() {
   fi
   # BUILD_DEBUG is non-blank and does not equal `false`
   # `true` means debugging ALWAYS enabled
-  # No test means debugging enabled (as long as something is enabled)
+  # No arguments (no test) means debugging enabled (as long as something is enabled)
   if [ "$debugString" = "true" ] || [ $# -eq 0 ]; then return 0; fi
   # Convert to list
   debugString=",$debugString,"
   while [ $# -gt 0 ]; do
     # If any token found in the list, debugging is enabled
-    if [ "${debugString/,$1,/}" = "${debugString}" ]; then return 0; fi
+    if [ "${debugString/,$1,/}" != "${debugString}" ]; then return 0; fi
     shift
   done
   # Debugging is not enabled
