@@ -276,11 +276,14 @@ urlFilter() {
     local find="\""''
     line="${line//$find/ }"
     ! $debugFlag || printf -- "%s [%s] %s\n" "MATCH LINE CLEAN:" "$(decorate value "$lineNumber")" "$(decorate code "$line")"
-    while IFS=" " read -d " " -r url; do
-      url=${url%\"*}
-      url=${url%\'*}
-      ! urlValid "$url" || printf "%s%s\n" "$prefix" "$url"
-    done <<<"$line"
+    url=$(trimSpace "$line")
+    url=${url%\"*}
+    url=${url%\'*}
+    if urlValid "$url"; then
+      printf "%s%s\n" "$prefix" "$url"
+    elif $debugFlag; then
+      printf -- "%s [%s] %s\n" "! urlValid:" "$(decorate value "$lineNumber")" "$(decorate code "$url")"
+    fi
   done
 }
 _urlFilter() {
