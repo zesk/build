@@ -203,6 +203,41 @@ _urlOpener() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Usage: {fn} url prefix lineNumber debugFlag
+_urlExtract() {
+  local match foundPrefix minPrefix="" url="${1-}" prefix="$2" lineNumber="$3" debugFlag="${4-false}"
+  for match in 'https://*' 'http://*'; do
+    # We WANT this to match as a pattern: SC2295
+    # shellcheck disable=SC2295
+    foundPrefix="${line%%$match}"
+    if [ "$foundPrefix" != "$line" ]; then
+      if [ -z "$minPrefix" ]; then
+        minPrefix="$foundPrefix"
+      elif [ "${#minPrefix}" -gt "${#foundPrefix}" ]; then
+        minPrefix="$foundPrefix"
+      fi
+    fi
+  done
+  if [ -z "$minPrefix" ]; then
+    return 1
+  fi
+  line="${line:${#minPrefix}}"
+  local find="[\"']"
+  line="${line//$find/ }"
+  ! $debugFlag || printf -- "%s [%s] %s\n" "MATCH LINE CLEAN:" "$(decorate value "$lineNumber")" "$(decorate code "$line")"
+  until [ -z "$line" ]; do
+    IFS=" " read -r url remain <<<"$line" || :
+    url=${url%\"*}
+    url=${url%\'*}
+    if [ "$url" != "${url#http}" ] && urlValid "$url"; then
+      printf "%s%s\n" "$prefix" "$url"
+    elif $debugFlag; then
+      printf -- "%s [%s] %s\n" "! urlValid:" "$(decorate value "$lineNumber")" "$(decorate code "$url")"
+    fi
+    line="$remain"
+  done
+}
+
 # Open URLs which appear in a stream
 # Usage: {fn} [ file ]
 # Usage: {fn} [ --show-file ] [ --file name ] [ file ]
@@ -253,39 +288,13 @@ urlFilter() {
     return 0
   fi
 
-  local line minPrefix foundPrefix url match prefix="" lineNumber=0
+  local line minPrefix foundPrefix remain url match prefix="" lineNumber=0
   if $showFile && [ -n "$file" ]; then
     prefix="$file: "
   fi
   stripAnsi | while IFS="" read -r line; do
     lineNumber=$((lineNumber + 1))
-    minPrefix=""
-    for match in 'https://*' 'http://*'; do
-      # We WANT this to match as a pattern: SC2295
-      # shellcheck disable=SC2295
-      foundPrefix="${line%%$match}"
-      if [ "$foundPrefix" != "$line" ]; then
-        if [ -z "$minPrefix" ]; then
-          minPrefix="$foundPrefix"
-        elif [ "${#minPrefix}" -gt "${#foundPrefix}" ]; then
-          minPrefix="$foundPrefix"
-        fi
-      fi
-    done
-    [ -n "$minPrefix" ] || continue
-    line="${line:${#minPrefix}}"
-    local find="\""''
-    line="${line//$find/ }"
-    ! $debugFlag || printf -- "%s [%s] %s\n" "MATCH LINE CLEAN:" "$(decorate value "$lineNumber")" "$(decorate code "$line")"
-    url=$(trimSpace "$line")
-    url=${url%\"*}
-    url=${url%\'*}
-    url=${url%$'\e'*}
-    if urlValid "$url"; then
-      printf "%s%s\n" "$prefix" "$url"
-    elif $debugFlag; then
-      printf -- "%s [%s] %s\n" "! urlValid:" "$(decorate value "$lineNumber")" "$(decorate code "$url")"
-    fi
+    _urlExtract "$line" "$prefix" "$lineNumber" "$debugFlag" || :
   done
 }
 _urlFilter() {
