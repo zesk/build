@@ -455,10 +455,10 @@ gitCommit() {
   ! $openLinks || outputHandler="urlOpener"
   if $appendLast || [ -z "$comment" ]; then
     statusMessage decorate info "Using last commit message ... ($(decorate subtle "$outputHandler"))"
-    __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a | "$outputHandler" || return $?
+    __usageEnvironment "$usage" git commit --reuse-message=HEAD --reset-author -a 2>&1 | "$outputHandler" || return $?
   else
     statusMessage decorate info "Using commit comment \"$comment\" ... ($(decorate subtle "$outputHandler"))"
-    __usageEnvironment "$usage" git commit -a -m "$comment" | "$outputHandler" || return $?
+    __usageEnvironment "$usage" git commit -a -m "$comment" 2>&1 | "$outputHandler" || return $?
   fi
   __usageEnvironment "$usage" cd "$start" || return $?
   return 0

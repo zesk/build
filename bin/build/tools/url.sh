@@ -192,7 +192,11 @@ urlOpener() {
 
   [ -n "$binary" ] || binary="urlOpen"
 
-  wrapLines "urlOpener:" ":urlOpener" | tee | urlFilter | "$binary"
+  local line
+  while read -r line; do
+    printf "%s\n" "$line"
+    printf "%s\n" "$line" | urlFilter | "$binary" || :
+  done
 }
 _urlOpener() {
   # IDENTICAL usageDocument 1
