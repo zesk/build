@@ -192,7 +192,7 @@ urlOpener() {
 
   [ -n "$binary" ] || binary="urlOpen"
 
-  tee | urlFilter | "$binary"
+  wrapLines "urlOpener:" ":urlOpener" | tee | urlFilter | "$binary"
 }
 _urlOpener() {
   # IDENTICAL usageDocument 1
