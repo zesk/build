@@ -288,7 +288,7 @@ urlFilter() {
     return 0
   fi
 
-  local line minPrefix foundPrefix remain url match prefix="" lineNumber=0
+  local line prefix="" lineNumber=0
   if $showFile && [ -n "$file" ]; then
     prefix="$file: "
   fi
