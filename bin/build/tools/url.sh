@@ -160,7 +160,7 @@ urlValid() {
   done
 }
 
-# Open URLs which appear in a stream but continue to output the stream
+# Open URLs which appear in a stream (but continue to output the stream)
 # stdin: text
 # stdout: text
 urlOpener() {
@@ -194,8 +194,8 @@ urlOpener() {
 
   local line
   while read -r line; do
-    printf -- "--> %s\n" "$line"
-    printf -- "%s\n" "$line" | urlFilter | wrapLines "URL:" ":LRU"
+    printf -- "%s\n" "$line"
+    printf -- "%s\n" "$line" | urlFilter | "$binary"
   done
 }
 _urlOpener() {
