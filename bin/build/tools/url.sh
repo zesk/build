@@ -212,6 +212,7 @@ _urlOpener() {
 # stdin: text
 # stdout: line:URL
 # Takes a text file and outputs any `https://` or `http://` URLs found within.
+# URLs are explicitly trimmed at quote, whitespace and escape boundaries.
 urlFilter() {
   local usage="_${FUNCNAME[0]}"
 
@@ -256,7 +257,7 @@ urlFilter() {
   if $showFile && [ -n "$file" ]; then
     prefix="$file: "
   fi
-  while IFS="" read -r line; do
+  stripAnsi | while IFS="" read -r line; do
     lineNumber=$((lineNumber + 1))
     minPrefix=""
     for match in 'https://*' 'http://*'; do
