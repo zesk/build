@@ -72,7 +72,7 @@ This document lists functionality which was removed, why, and when.
 
 ## Release v0.11.4
 
-deprecatedTokens+=(`ops.sh` `__ops`)
+- `op``s.sh` `__``ops` deprecated
 
 ## Release v0.11.6
 

@@ -103,7 +103,7 @@ _confirmYesNo() {
 _copyFileEscalated() {
   consoleReset
   printf "\n%s -> %s: %s\n\n" "$(decorate green "$1")" "$(decorate red "$3")" "$(decorate bold-red "$4")"
-  if confirmYesNo yes "$(printf "%s: %s\n(%s/%s - default %s)? " \
+  if confirmYesNo --yes "$(printf "%s: %s\n(%s/%s - default %s)? " \
     "$(decorate bold Copy privileged file to)" \
     "$(decorate code "$3")" \
     "$(decorate red Yes)" \

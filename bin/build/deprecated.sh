@@ -266,7 +266,7 @@ __deprecatedCleanup() {
   # Do all deprecations
   for deprecatedToken in "${deprecatedTokens[@]}"; do
     statusMessage consoleWarning "$deprecatedToken "
-    if find . -type f ! -path "*/.*/*" "${deprecatedIgnoreStuff[@]}" ! -path "*/$this" ! -path './docs/release/*' -print0 | xargs -0 grep -l -e "$deprecatedToken"; then
+    if find . -type f ! -path "*/.*/*" "${deprecatedIgnoreStuff[@]}" ! -path "*/$this" ! -path './docs/release/*' ! -name 'deprecated.md' -print0 | xargs -0 grep -l -e "$deprecatedToken"; then
       clearLine || :
       consoleError "DEPRECATED token \"$deprecatedToken\" found" || :
       exitCode=1
