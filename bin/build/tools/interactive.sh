@@ -34,10 +34,37 @@ pause() {
 # Read user input and return 0 if the user says yes
 # Exit Code: 0 - Yes
 # Exit Code: 1 - No
-# Usage: {fn} [ defaultValue ]
-# Argument: defaultValue - Value to return if no value given by user
+# Usage: {fn} [ --default defaultValue ] [ --yes ] [ --no ]
+# Argument: defaultValue - Boolean. Optional. Value to return if no value given by user
+# Argument: --yes - Boolean. Optional. Short for `--default yes`
+# Argument: --no - Boolean. Optional. Short for `--default no`
 confirmYesNo() {
   local default yes
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --yes) default=yes ;;
+      --no) default=no ;;
+      --default)
+        shift
+        default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
 
   default="${1-}"
   shift
@@ -55,6 +82,10 @@ confirmYesNo() {
     fi
     printf "%s" "$*"
   done
+}
+_confirmYesNo() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ####################################################################################################

@@ -254,6 +254,12 @@ __deprecatedCleanup() {
 
   # v0.17.6
   __deprecatedCannon '_integer ' "isPositiveInteger "
+  __deprecatedCannon 'confirmYesNo yes' "confirmYesNo --yes"
+  __deprecatedCannon 'confirmYesNo true' "confirmYesNo --yes"
+  __deprecatedCannon 'confirmYesNo no' "confirmYesNo --no"
+  __deprecatedCannon 'confirmYesNo false' "confirmYesNo --no"
+
+  # See: docs/_templates/deprecated.md
 
   # END OF CANNONS
   clearLine

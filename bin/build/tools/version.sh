@@ -131,27 +131,28 @@ _nextMinorVersion() {
 newRelease() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
-  local isInteractive newVersion
 
-  isInteractive=true
-  newVersion=
-  nArguments=$#
+  local isInteractive=true newVersion=""
+
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
-      --non-interactive)
-        isInteractive=false
-        decorate warning "Non-interactive mode set"
-        ;;
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
         ;;
+      --non-interactive)
+        isInteractive=false
+        decorate warning "Non-interactive mode set"
+        ;;
       *)
         [ -z "$newVersion" ] || __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
-        newVersion="$argument"
+        newVersion="${argument#v}"
+        isVersion "$newVersion" || __failArgument "$usage" "$argument is not a version" || return $?
+        newVersion="v$newVersion"
         ;;
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
@@ -179,12 +180,31 @@ __newRelease() {
   else
     liveVersion=$currentVersion
   fi
-
+  notes="$(__usageEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
   nextVersion=$(nextMinorVersion "$liveVersion")
   consoleNameValue $width "Current:" "$currentVersion"
+
+  if [ -n "$newVersion" ] && [ "$currentVersion" != "$newVersion" ]; then
+    set -v
+    lastVersion="$(printf "%s\n" "$currentVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
+    if [ "$newVersion" != "$lastVersion" ]; then
+      __failArgument "$usage" "$(decorate error "$newVersion") is not last $(decorate code "$lastVersion")" || return $?
+    fi
+    ! $isInteractive || confirmYesNo "Change version to $(decorate code "$newVersion")?" || return $?
+    if [ -f "$notes" ]; then
+      local newNotes
+      newNotes=$(__usageEnvironment "$usage" releaseNotes "$newVersion") || return $?
+      if [ -f "$newNotes" ]; then
+        __failEnvironment "$usage" "$(decorate file "$notes") and $(decorate file "$newNotes") both exist - can not re-version" || return $?
+      fi
+      __usageEnvironment "$usage" sed "s/$(quoteSedSearch "$currentVersion")/$(quoteSedReplacement "$newVersion")" <"$notes" >"$notes.fixed" || _clean $? "$notes.fixed" || return $?
+      __usageEnvironment "$usage" git mv "$notes" "$newNotes" || _clean $? "$notes.fixed" || return $?
+      __usageEnvironment "$usage" mv -f "$notes.fixed" "$newNotes" || _clean $? "$notes.fixed" || return $?
+    fi
+    currentVersion="$newVersion"
+  fi
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
-    notes="$(releaseNotes)"
     consoleNameValue $width "Ready to deploy:" "$currentVersion"
     consoleNameValue $width "Release notes:" "$notes"
     if $isInteractive; then

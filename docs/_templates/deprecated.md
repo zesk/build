@@ -157,5 +157,6 @@ Single decoration function:
 ## Release v0.17.0
 
 - `--env` is changed for most functions which use it; changed to `--env-file` to match other applications.
+- `confirmYesNo defaultValue` changed to `confirmYesNo --yes` or `confirmYesNo --no` respectively - uses better argument parser
 
 - [⬅ Return to top](index.md)
