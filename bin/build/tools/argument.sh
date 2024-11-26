@@ -218,7 +218,7 @@ _usageArgumentsSpecificationParseLine() {
   local argumentRemainder=false
 
   [ -d "$argumentDirectory" ] || _argument "$argumentDirectory is not a directory" || return $?
-  _integer "$argumentId" || _argument "$argumentId is not an integer" || return $?
+  isUnsignedInteger "$argumentId" || _argument "$argumentId is not an integer" || return $?
   shift 2
 
   argumentName=
@@ -377,7 +377,7 @@ _usageArgumentName() {
   if [ -z "$argumentNamed" ]; then
     _environment "No current argument" || return $?
   fi
-  if _integer "$argumentNamed"; then
+  if isUnsignedInteger "$argumentNamed"; then
     environmentValueRead "$specification/#--$argumentNamed" argumentName not-named
   fi
   return 0

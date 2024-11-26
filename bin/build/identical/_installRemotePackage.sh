@@ -253,7 +253,7 @@ __installRemotePackageLocal() {
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
   "$myBinary.$$" --replace >"$log" 2>&1 &
   local pid=$!
-  if ! _integer "$pid"; then
+  if ! isUnsignedInteger "$pid"; then
     _environment "Unable to run $myBinary.$$" || return $?
   fi
   wait "$pid" || _environment "$(dumpPipe "install log failed: $pid" <"$log")" || _clean $? "$log" || return $?

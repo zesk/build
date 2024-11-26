@@ -24,6 +24,7 @@
 {gitBranchExistsRemote}
 {gitBranchExistsLocal}
 {gitBranchify}
+{gitBranchMergeCurrent}
 
 ## git Development
 

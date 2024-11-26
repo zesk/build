@@ -16,22 +16,27 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 19
+# IDENTICAL _return 24
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
 _return() {
   local r="${1-:1}" && shift
-  _integer "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
-# Is this an unsigned integer?
-# Usage: {fn} value
-# Exit Code: 0 - if value is an unsigned integer
-# Exit Code: 1 - if value is not an unsigned integer
-_integer() {
+# Test if an argument is an unsigned integer
+# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+# Credits: F. Hauri - Give Up GitHub (isnum_Case)
+# Original: is_uint
+# Usage: {fn} argument ...
+# Exit Code: 0 - if it is an unsigned integer
+# Exit Code: 1 - if it is not an unsigned integer
+#
+isUnsignedInteger() {
+  [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
 }
 
@@ -132,7 +137,7 @@ _choose() {
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 _clean() {
   local exitCode="${1-}" && shift
-  _integer "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
   while [ $# -gt 0 ]; do
     [ ! -f "$1" ] || __environment rm "$1" || return $?
     [ ! -d "$1" ] || __environment rm -rf "$1" || return $?

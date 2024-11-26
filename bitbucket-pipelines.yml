@@ -38,9 +38,11 @@ pipelines:
           name: Build, Test, and Deploy
           services:
             - docker
+          artifacts:
+            - test.stats
           script:
-            - bin/build.sh
             - bin/test.sh
+            - bin/build.sh
             - bin/deploy.sh
     deploy:
       - step:
@@ -58,6 +60,7 @@ pipelines:
           deployment: test
           name: Just Test
           artifacts:
+            - test.stats
             - .last-run-test
           services:
             - docker
@@ -70,6 +73,7 @@ pipelines:
           deployment: coverage
           name: Coverage stats
           artifacts:
+            - test.stats
             - coverage.stats.gz
           services:
             - docker

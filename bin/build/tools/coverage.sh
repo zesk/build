@@ -275,7 +275,7 @@ __bashCoverageReportConvertFiles() {
         notCoverableLines=$((notCoverableLines + 1))
       fi
       index=$((index + 1))
-      statusMessage decorate info "Processing $(decorate code "$(consoleFileLink "$file")"):$index"
+      statusMessage decorate info "Processing $(decorate code "$(decorate file "$file")"):$index"
       if [ $((index & 1)) ]; then
         lineClasses+=(odd "row-1")
       else

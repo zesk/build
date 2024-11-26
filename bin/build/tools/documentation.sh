@@ -416,7 +416,8 @@ documentationTemplateDirectoryCompile() {
   fileCount=0
   templateFile=
   while read -r templateFile; do
-    base="$(basename "$templateFile")" || __failEnvironment "$usage" "basename $templateFile" || return $?
+    base="${templateFile#"$templateDirectory/"}"
+    [ "$base" != "$templateFile" ] || __failEnvironment "$usage" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
     targetFile="$targetDirectory/$base"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       decorate error "Failed to generate $targetFile" 1>&2

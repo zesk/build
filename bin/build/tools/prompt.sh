@@ -176,7 +176,7 @@ bashPromptModule_binBuild() {
     fi
   fi
   [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
-  printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(consoleFileLink "$(buildHome)")")" "$pathSuffix"
+  printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")" "$pathSuffix"
 }
 
 # Usage: {fn} [ --first | --last | module ] [ --colors colorsText ]

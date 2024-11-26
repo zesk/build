@@ -310,7 +310,7 @@ __testGetLine() {
   local line
 
   line=$(grep -n "$1() {" | cut -d : -f 1)
-  if _integer "$line"; then
+  if isPositiveInteger "$line"; then
     printf "%d\n" "$line"
   fi
   return 1

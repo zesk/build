@@ -198,13 +198,13 @@ documentationIndex_Generate() {
     if [ ! -d "$fileCacheMarker" ]; then
       __failEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
     elif isNewestFile "$fileCacheMarker/.marker" "$shellFile"; then
-      statusMessage decorate info "$(consoleFileLink "$shellFile") is already cached"
+      statusMessage decorate info "$(decorate file "$shellFile") is already cached"
       continue
     fi
     pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$shellFile" | while read -r functionName; do
       lineNumber="${functionName%%:*}"
       functionName="${functionName#*:}"
-      statusMessage decorate info "$(printf "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$(consoleFileLink "$shellFile")")" "$(decorate red "$lineNumber")")"
+      statusMessage decorate info "$(printf "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$(decorate file "$shellFile")")" "$(decorate red "$lineNumber")")"
       if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
         clearLine
@@ -220,7 +220,7 @@ documentationIndex_Generate() {
     return $?
   fi
   clearLine
-  printf "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(consoleFileLink "$codePath")")" "$(reportTiming "$start" in)"
+  printf "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"
 }
 _documentationIndex_Generate() {
   # IDENTICAL usageDocument 1
@@ -360,7 +360,7 @@ documentationIndex_FunctionIterator() {
             return $?
           fi
           if ! functionIndexPath="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
-            __failArgument "$usage" "Unable to generate index at path $(consoleFileLink "$cacheDirectory")" || return $?
+            __failArgument "$usage" "Unable to generate index at path $(decorate file "$cacheDirectory")" || return $?
           fi
         else
           __failArgument "$usage" "Unknown argument $1" || return $?

@@ -106,7 +106,7 @@ _choose() {
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 _clean() {
   local exitCode="${1-}" && shift
-  _integer "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
   while [ $# -gt 0 ]; do
     [ ! -f "$1" ] || __environment rm "$1" || return $?
     [ ! -d "$1" ] || __environment rm -rf "$1" || return $?

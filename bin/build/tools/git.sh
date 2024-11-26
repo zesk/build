@@ -958,3 +958,59 @@ _gitBranchify() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Merge the current branch with another, push to remote, and then return to the original branch.
+# Argument: branch - String. Required. Branch to merge the current branch with.
+# Argument: --skip-ip - Boolean. Optional. Do not add the IP address to the comment.
+# Argument: --comment - String. Optional. Comment for merge commit.
+gitBranchMergeCurrent() {
+  local usage="_${FUNCNAME[0]}"
+
+  local targetBranch="" comment="" addIP=true
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --skip-ip)
+        addIP=false
+        ;;
+      --comment)
+        shift
+        comment=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        targetBranch="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  [ -n "$targetBranch" ] || __failArgument "$usage" "branch required" || return $?
+  if [ -z "$comment" ]; then
+    comment="${FUNCNAME[0]} by $(whoami) on $(hostname)"
+  fi
+  if $addIP; then
+    comment="$comment @ $(ipLookup || printf "%s" "$? <- ipLookup failed")" 2>/dev/null
+  fi
+  local currentBranch
+  currentBranch=$(__usageEnvironment "$usage" gitCurrentBranch) || return $?
+  if [ "$currentBranch" = "$targetBranch" ]; then
+    __failEnvironment "$usage" "Already on $(decorate code "$targetBranch") branch" || return $?
+  fi
+  __usageEnvironment "$usage" git checkout "$targetBranch" || return $?
+  __usageEnvironment "$usage" git merge -m "$comment" "$branch" || _undo $? git checkout --force "$branch" || return $?
+  __usageEnvironment "$usage" git push || _undo $? git checkout --force "$branch" || return $?
+  __usageEnvironment "$usage" git checkout "$branch" || return $?
+}
+_gitUpdateBranch() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

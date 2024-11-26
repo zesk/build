@@ -6,6 +6,9 @@
 if ! insideDocker; then
   # shellcheck source=/dev/null
   source "${BASH_SOURCE[0]%/*}/_isExecutable.sh"
+else
+  # shellcheck source=/dev/null
+  source "${BASH_SOURCE[0]%/*}/_isExecutable.docker.sh"
 fi
 
 __listFileModificationTimes() {

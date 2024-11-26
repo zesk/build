@@ -20,7 +20,7 @@ Alternately, these can be used within an `if` or other compound statement but th
 
 Quick guide:
 
-- `_integer value` - Returns 0 if value passed is an integer, otherwise returns 1.
+- `isPositiveInteger value` - Returns 0 if value passed is an integer, otherwise returns 1.
 - `_boolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
 - `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
 
@@ -52,7 +52,7 @@ Is this an unsigned integer?
 
 #### Usage
 
-    _integer value
+    isPositiveInteger value
     
 
 #### Exit codes

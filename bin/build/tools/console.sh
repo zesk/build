@@ -175,3 +175,23 @@ consoleFileLink() {
     consoleLink "file://$HOSTNAME$path" "$(decoratePath "${2-$1}")"
   fi
 }
+
+# decorate extension for `file`
+# Usage: decorate file fileName [ text ]
+# Argument: fileName - Required. File path to output.
+# Argument: text - Optional. Text to output linked to file.
+__decorateExtensionFile() {
+  consoleFileLink "$@"
+}
+
+# decorate extension for `link`
+# Usage: decorate link url [ text ]
+# Argument: url - Required. Link to output to the console.
+# Argument: text - Optional. Text to output linked to `url`.
+__decorateExtensionLink() {
+  if ! consoleLinksSupported; then
+    printf "%s\n" "$1"
+  else
+    consoleLink "$@"
+  fi
+}

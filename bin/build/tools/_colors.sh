@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL _colors 105
+# IDENTICAL _colors 124
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -60,53 +60,72 @@ __decorate() {
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
 decorate() {
-  local text="" what="${1-}" && shift
-  local lp dp
-  case "$what" in
-    reset) lp='' ;;
-      # styles
-    underline) lp='\033[4m' ;;
-    no-underline) lp='\033[24m' ;;
-    bold) lp='\033[1m' ;;
-    no-bold) lp='\033[21m' ;;
-      # colors
-    black) lp='\033[109;7m' ;;
-    black-contrast) lp='\033[107;30m' ;;
-    blue) lp='\033[94m' ;;
-    cyan) lp='\033[36m' ;;
-    green) lp='\033[92m' ;;
-    magenta) lp='\033[35m' ;;
-    orange) lp='\033[33m' ;;
-    red) lp='\033[31m' ;;
-    white) lp='\033[48;5;0;37m' ;;
-    yellow) lp='\033[48;5;16;38;5;11m' ;;
-      # bold-colors
-    bold-black) lp='\033[1;109;7m' ;;
-    bold-black-contrast) lp='\033[1;107;30m' ;;
-    bold-blue) lp='\033[1;94m' ;;
-    bold-cyan) lp='\033[1;36m' ;;
-    bold-green) lp='\033[92m' ;;
-    bold-magenta) lp='\033[1;35m' ;;
-    bold-orange) lp='\033[1;33m' ;;
-    bold-red) lp='\033[1;31m' ;;
-    bold-white) lp='\033[1;48;5;0;37m' ;;
-    bold-yellow) lp='\033[1;48;5;16;38;5;11m' ;;
-      # semantic-colors
-    code) lp='\033[1;97;44m' ;;
-    info) lp='\033[38;5;20m' && dp='\033[1;33m' && text="Info" ;;
-    success) lp='\033[42;30m' && dp='\033[0;32m' && text="SUCCESS" ;;
-    warning) lp='\033[1;93;41m' && text="Warning" ;;
-    error) lp='\033[1;91m' && text="ERROR" ;;
-    subtle) lp='\033[1;38;5;252m' && dp='\033[1;38;5;240m' ;;
-    label) lp='\033[34;103m' && dp='\033[1;96m' ;;
-    value) lp='\033[1;40;97m' && dp='\033[1;97m' ;;
-    decoration) lp='\033[45;97m' && dp='\033[45;30m' ;;
-    *)
-      __usageArgument "_${FUNCNAME[0]}" "Unknown decoration name: $what" || return $?
-      ;;
-  esac
-  __decorate "$text" "$lp" "${dp:-$lp}" "\033[0m" "$@"
+  local usage="_${FUNCNAME[0]}" text="" what="${1-}" && shift
+  local lp dp style
+  if ! style=$(_caseStyles "$what"); then
+    local extend
+    extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
+    isFunction "$extend" || __failArgument "$usage" "Unknown decoration name: $what ($extend)" || return $?
+    __usageEnvironment "$usage" "$extend" "$@" || return $?
+    return $?
+  fi
+  read -r lp dp text <<<"$style" || :
+  local p='\033['
+  __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" "$@"
 }
 _decorate() {
+  # DO NOT PUT IDENTICAL usageDocument here
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Enables timing
+# Usage: {fn} style
+# Exit Code: 1 - not found
+# Exit Code: 0 - found
+# stdout: 1, 2, or 3 tokens + newline: lightColor darkColor text
+_caseStyles() {
+  case "$1" in
+    reset) lp='' ;;
+      # styles
+    underline) lp='4' ;;
+    no-underline) lp='24' ;;
+    bold) lp='1' ;;
+    no-bold) lp='21' ;;
+      # colors
+    black) lp='109;7' ;;
+    black-contrast) lp='107;30' ;;
+    blue) lp='94' ;;
+    cyan) lp='36' ;;
+    green) lp='92' ;;
+    magenta) lp='35' ;;
+    orange) lp='33' ;;
+    red) lp='31' ;;
+    white) lp='48;5;0;37' ;;
+    yellow) lp='48;5;16;38;5;11' ;;
+      # bold-colors
+    bold-black) lp='1;109;7' ;;
+    bold-black-contrast) lp='1;107;30' ;;
+    bold-blue) lp='1;94' ;;
+    bold-cyan) lp='1;36' ;;
+    bold-green) lp='92' ;;
+    bold-magenta) lp='1;35' ;;
+    bold-orange) lp='1;33' ;;
+    bold-red) lp='1;31' ;;
+    bold-white) lp='1;48;5;0;37' ;;
+    bold-yellow) lp='1;48;5;16;38;5;11' ;;
+      # semantic-colors
+    code) lp='1;97;44' ;;
+    info) lp='38;5;20' && dp='1;33' && text="Info" ;;
+    success) lp='42;30' && dp='0;32' && text="SUCCESS" ;;
+    warning) lp='1;93;41' && text="Warning" ;;
+    error) lp='1;91' && text="ERROR" ;;
+    subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;
+    label) lp='34;103' && dp='1;96' ;;
+    value) lp='1;40;97' && dp='1;97' ;;
+    decoration) lp='45;97' && dp='45;30' ;;
+    *)
+      return 1
+      ;;
+  esac
+  printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
 }

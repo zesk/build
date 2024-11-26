@@ -16,7 +16,7 @@ isVersion() {
   while [ $# -gt 0 ]; do
     IFS=. read -r -a parts < <(printf "%s\n" "$1") || :
     for part in "${parts[@]}"; do
-      _integer "$part" || return 1
+      isUnsignedInteger "$part" || return 1
     done
     shift
   done

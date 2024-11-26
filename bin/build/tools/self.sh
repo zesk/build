@@ -380,7 +380,7 @@ Build() {
   local home
   if ! home=$(bashLibraryHome "$run" 2>/dev/null); then
     home=$(__usageEnvironment "$usage" buildHome) || return $?
-    ! $verboseFlag || decorate info "Running $(consoleFileLink "$home/$run")" "$(decorate code "$@")"
+    ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate code "$@")"
     __usageEnvironment "$usage" "$home/$run" "$@" || return $?
   else
     __usageEnvironment "$usage" bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@"

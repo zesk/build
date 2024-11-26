@@ -403,3 +403,21 @@ testPositiveIntegers() {
   assertExitCode --line "$LINENO" 0 isPositiveInteger 1 || return $?
   assertExitCode --line "$LINENO" 0 isPositiveInteger 1 || return $?
 }
+
+testIsArray() {
+  local argument=""
+
+  assertNotExitCode 0 isArray argument || return $?
+  argument=234
+  assertNotExitCode 0 isArray argument || return $?
+  argument=
+  assertNotExitCode 0 isArray argument || return $?
+
+  local arrayArgument=()
+  assertExitCode 0 isArray arrayArgument || return $?
+
+  arrayArgument+=(1)
+  assertExitCode 0 isArray arrayArgument || return $?
+
+  muzzle printf "%s\n" "$argument" "${arrayArgument[@]}" || return $?
+}
