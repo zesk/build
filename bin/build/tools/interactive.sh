@@ -58,17 +58,15 @@ confirmYesNo() {
         default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        message="$*"
+        break
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
-  default="${1-}"
-  shift
-  printf "%s" "$*"
+  statusMessage printf "%s" "$message"
   while read -r yes; do
     if parseBoolean "$yes"; then
       return 0
@@ -80,7 +78,7 @@ confirmYesNo() {
       parseBoolean "$default"
       return $?
     fi
-    printf "%s" "$*"
+    statusMessage printf "%s" "$message"
   done
 }
 _confirmYesNo() {

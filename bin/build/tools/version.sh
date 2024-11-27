@@ -108,7 +108,7 @@ _nextMinorVersion() {
 
 #
 # Argument: --non-interactive - Optional. If new version is needed, use default version
-# Argument: versionName - Optional. Set the new version name to this.
+# Argument: versionName - Optional. Set the new version name to this - must be after live version in version order
 # Summary: Generate a new release notes and bump the version
 # Hook: version-current
 # Hook: version-live
@@ -162,7 +162,7 @@ newRelease() {
 }
 __newRelease() {
   local usage="$1" isInteractive="$2" newVersion="$3"
-  local newVersion readLoop currentVersion liveVersion nextVersion notes isInteractive
+  local newVersion readLoop=false currentVersion liveVersion nextVersion notes isInteractive
   local versionOrdering
   local width=40
 
@@ -185,23 +185,30 @@ __newRelease() {
   consoleNameValue $width "Current:" "$currentVersion"
 
   if [ -n "$newVersion" ] && [ "$currentVersion" != "$newVersion" ]; then
-    set -v
-    lastVersion="$(printf "%s\n" "$currentVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
+    consoleNameValue "$width" "New:" "$(decorate bold-green "$newVersion")"
+    local checkVersion="$liveVersion"
+    [ -n "$checkVersion" ] || checkVersion="$lastVersion"
+    lastVersion="$(printf "%s\n" "$liveVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
     if [ "$newVersion" != "$lastVersion" ]; then
-      __failArgument "$usage" "$(decorate error "$newVersion") is not last $(decorate code "$lastVersion")" || return $?
+      __failArgument "$usage" "$(decorate error "$newVersion") is before live $(decorate code "$liveVersion")" || return $?
     fi
-    ! $isInteractive || confirmYesNo "Change version to $(decorate code "$newVersion")?" || return $?
+    ! $isInteractive || confirmYesNo --yes "Change version to $(decorate code "$newVersion")? " || return $?
     if [ -f "$notes" ]; then
       local newNotes
       newNotes=$(__usageEnvironment "$usage" releaseNotes "$newVersion") || return $?
       if [ -f "$newNotes" ]; then
         __failEnvironment "$usage" "$(decorate file "$notes") and $(decorate file "$newNotes") both exist - can not re-version" || return $?
       fi
-      __usageEnvironment "$usage" sed "s/$(quoteSedSearch "$currentVersion")/$(quoteSedReplacement "$newVersion")" <"$notes" >"$notes.fixed" || _clean $? "$notes.fixed" || return $?
+      __usageEnvironment "$usage" sed "s/$(quoteSedPattern "$currentVersion")/$(quoteSedReplacement "$newVersion")/g" <"$notes" >"$notes.fixed" || _clean $? "$notes.fixed" || return $?
       __usageEnvironment "$usage" git mv "$notes" "$newNotes" || _clean $? "$notes.fixed" || return $?
       __usageEnvironment "$usage" mv -f "$notes.fixed" "$newNotes" || _clean $? "$notes.fixed" || return $?
     fi
     currentVersion="$newVersion"
+    notes="$(__usageEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
+    nextVersion=$(nextMinorVersion "$liveVersion")
+    if $isInteractive; then
+      __usageEnvironment "$usage" runHook version-created "$currentVersion" "$notes" || return $?
+    fi
   fi
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
@@ -221,7 +228,9 @@ __newRelease() {
   else
     while true; do
       if $readLoop; then
-        printf "%s? (%s %s) " "$(decorate info "New version")" "$(decorate bold-magenta "default")" "$(decorate code "$nextVersion")"
+        local message
+        message="$(printf "%s? (%s %s) " "$(decorate info "New version")" "$(decorate bold-magenta "default")" "$(decorate code "$nextVersion")")"
+        printf "%s" "$message"
         read -r newVersion || :
         if [ -z "$newVersion" ]; then
           newVersion=$nextVersion
