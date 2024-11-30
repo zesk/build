@@ -77,7 +77,7 @@ __documentTemplateFunction() {
     [ -n "$profileName" ] || profileName="default"
   fi
 
-  # IDENTICAL regionArgumentValidation 6
+  # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
     __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
