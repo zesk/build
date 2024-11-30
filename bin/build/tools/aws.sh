@@ -574,11 +574,12 @@ awsSecurityGroupIPModify() {
     shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
 
-  # IDENTICAL regionArgumentValidation 6
+  # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
     __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
+    [ -n "$region" ] || __failArgument "$usage" "AWS_REGION or --region is required" || return $?
   fi
   awsRegionValid "$region" || __failArgument "$usage" "--region $region is not a valid region" || return $?
 
