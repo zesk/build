@@ -14,7 +14,7 @@ This toolkit makes the following assumptions:
 
 To use in your pipeline:
 
-- copy `./bin/build/install-bin-build.sh` into your project (changing `relTop` if needed) manually
+- copy `./bin/build/install-bin-build.sh` into your project (changing the `../..` path if needed) manually
 - run it before you need your `./bin/build` directory
 
 ## Zesk Build Functionality
