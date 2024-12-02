@@ -100,7 +100,7 @@ _undo() {
 # Argument: command - Required. Callable. Thing to muzzle.
 # Argument: ... - Optional. Arguments. Additional arguments.
 # Example:     {fn} pushd
-# Examepl:     __usageEnvironment "$usage" phpBuild || _undo $? {fn} popd || return $?
+# Example:     __usageEnvironment "$usage" phpBuild || _undo $? {fn} popd || return $?
 muzzle() {
   "$@" >/dev/null
 }

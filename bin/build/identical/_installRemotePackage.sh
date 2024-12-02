@@ -203,10 +203,10 @@ __installRemotePackageDirectory() {
   else
     tarArgs=(--include="*$packagePath/*")
   fi
-  __usageEnvironment "$usage" muzzle pushd "$(dirname "$target")" || return $?
+  __usageEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
   __usageEnvironment "$usage" rm -rf "$packagePath" || return $?
   __usageEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
-  __usageEnvironment "$usage" muzzle popd || return $?
+  __usageEnvironment "$usage" popd >/dev/null || return $?
   rm -f "$target" || :
 }
 
