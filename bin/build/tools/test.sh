@@ -301,7 +301,7 @@ _bashLintFilesHelper() {
   local verbose="$1" file="$2" source="$3" reason vv=()
 
   ! $verbose || vv+=(--verbose)
-  statusMessage decorate info "👀 Checking \"$file\" ($source) ..." || :
+  ! $verbose || statusMessage decorate info "👀 Checking \"$file\" ($source) ..." || :
   if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
     ! $verbose || decorate success "bashLint $file passed"
   else
@@ -416,15 +416,14 @@ _bashLintInteractiveCheck() {
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 bashLint() {
-  local this usage argument found
+  local usage="_${FUNCNAME[0]}"
 
-  this=${FUNCNAME[0]}
-  usage="_$this"
   __usageEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
   __usageEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
   # Open 3 to pipe to nowhere
   exec 3>/dev/null
+  local argument
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
@@ -439,6 +438,7 @@ bashLint() {
         __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
         __usageEnvironment "$usage" shellcheck "$argument" 1>&3 || return $?
+        local found
         if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
           __failEnvironment "$usage" "$argument: pcregrep found }\\n#: $(decorate code "$found")" || return $?
         fi
