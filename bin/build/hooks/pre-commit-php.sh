@@ -37,16 +37,21 @@ __hookPreCommitPHP() {
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension php)
   if [ ! -x "$home/vendor/bin/php-cs-fixer" ]; then
     clearLine
-    _environment "No php-cs-fixer found" || return $?
+    __failEnvironment "$usage" "No php-cs-fixer found" || return $?
+  fi
+  if [ ! -f "$home/.php-cs-fixer.php" ]; then
+    clearLine
+    __failEnvironment "$usage" "No .php-cs-fixer.php found" || return $?
   fi
   statusMessage decorate success "Fixing PHP"
   fixResults=$(mktemp)
-  "$home/vendor/bin/php-cs-fixer" fix "${changed[@]}" >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
+
+  "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
     clearLine
     grep -A 100 'not fixed' "$fixResults" | wrapLines "$(decorate error)" "$(consoleReset)"
     rm -f "$fixResults"
-    _environment "PHP files failed" || return $?
+    __failEnvironment "$usage" "PHP files failed" || return $?
   fi
   clearLine
   decorate success "PHP fixer ran"
