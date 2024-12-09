@@ -7,7 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-
 testCheckDockerEnvFile() {
   local out
 
@@ -118,7 +117,7 @@ testAnyEnvToDockerEnv() {
 }
 
 testAnyEnvToBashEnv() {
-  local testEnv
+  local testEnv home
 
   testEnv=$(__environment mktemp) || return $?
   home=$(__environment buildHome) || return $?
@@ -145,4 +144,14 @@ testAnyEnvToBashEnv() {
   echo "$LINENO:${BASH_SOURCE[0]}"
 
   rm -rf "$testEnv" "$testEnv.result" "$testEnv.result2" || :
+}
+
+testDotEnvCommentHandling() {
+  local testEnv home tab=$'\t'
+
+  testEnv=$(__environment mktemp) || return $?
+  home=$(__environment buildHome) || return $?
+
+  __environment printf "%s\n" "# COMMENT=yes" "     # COMMENT_LEADING_SPACES=yes" "${tab}${tab}${tab}#${tab}COMMENT_LEADING_TABS=yes" "${tab} #${tab} COMMENT_LEADING_BOTH=yes" "BAZ=FIZ" "FIZZ=BUZZ" >"$testEnv" || return $?
+  assertExitCode --stdout-match "COMMENT=yes" --stdout-match "COMMENT_LEADING_SPACES=yes" --stdout-match "COMMENT_LEADING_TABS=yes" --stdout-match "BAZ=\"FIZ\"" 0 dockerEnvToBash <"$testEnv" || return $?
 }

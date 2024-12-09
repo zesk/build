@@ -185,25 +185,25 @@ _dockerEnvToBashPipe() {
   result=0
   index=0
   while IFS="" read -r envLine; do
-    name="${envLine%%=*}"
-    value="${envLine#*=}"
-    if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
-      if [ -z "$(printf "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
-        printf "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
-      else
-        _argument "Invalid name at line $index: $name" || result=$?
-      fi
-    else
-      case "$envLine" in
-        [#]* | "")
-          # Comment line
-          printf "%s\n" "$envLine"
-          ;;
-        *)
+    case "$envLine" in
+      [[:space:]]*[#]* | [#]* | "")
+        # Comment line
+        printf "%s\n" "$envLine"
+        ;;
+      *)
+        name="${envLine%%=*}"
+        value="${envLine#*=}"
+        if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
+          if [ -z "$(printf "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
+            printf "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
+          else
+            _argument "Invalid name at line $index: $name" || result=$?
+          fi
+        else
           _argument "Invalid line $index: $envLine" || result=$?
-          ;;
-      esac
-    fi
+        fi
+        ;;
+    esac
     index=$((index + 1))
   done
   return $result
