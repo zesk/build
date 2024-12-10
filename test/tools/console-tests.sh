@@ -48,3 +48,21 @@ testConsoleFileLink() {
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
 }
+
+testStatusMessageLast() {
+  local phrase mocked=false
+
+  phrase="Hello, world."
+  if ! hasConsoleAnimation; then
+    statusMessage decorate warning "Mocking console animation"
+    __mockConsoleAnimation true
+    mocked=true
+  fi
+  assertEquals --line "$LINENO" 0 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals --line "$LINENO" 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+
+  if $mocked; then
+    statusMessage decorate warning "Ending mocked console animation"
+    __mockConsoleAnimation false
+  fi
+}

@@ -714,9 +714,7 @@ findUncaughtAssertions() {
     find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
   } >"$tempFile"
 
-  if [ ! -s "$tempFile" ]; then
-    decorate success "All files AOK."
-  else
+  if [ -s "$tempFile" ]; then
     if [ -n "$binary" ] || test $listFlag; then
       problemFile=
       lastProblemFile=

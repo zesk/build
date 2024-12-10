@@ -122,6 +122,19 @@ hasConsoleAnimation() {
   [ -z "${CI-}" ]
 }
 
+# Fake a value for testing
+__mockConsoleAnimation() {
+  _boolean "$1" || _argument "Requires true or false" || return $?
+  export __MOCKED_CI
+  if "$1"; then
+    __MOCKED_CI="${CI-}"
+    CI=""
+  else
+    CI="${__MOCKED_CI-}"
+    unset __MOCKED_CI
+  fi
+}
+
 # Usage: {fn} prefix suffix [ text ]
 # Argument: prefix - Required. String.
 # Argument: suffix - Required. String.
@@ -310,9 +323,9 @@ consoleNameValue() {
 #
 clearLine() {
   if hasConsoleAnimation; then
-    printf "\r%s\r%s" "$(repeat "$(consoleColumns)" " ")" "$*"
+    printf -- "\r%s\r%s" "$(repeat "$(consoleColumns)" " ")" "$*"
   else
-    printf "%s\n" "$*"
+    printf -- "%s\n" "$*"
   fi
 }
 
@@ -324,21 +337,53 @@ _clearLine() {
 }
 
 #
-# Output a status line using a colorAction
+# Output a status line
 #
 # This is intended for messages on a line which are then overwritten using clearLine
 #
 # Summary: Output a status message with no newline
-# Clears the line and outputs a message using a color command. Meant to show status but not use up an output line for it.
+# Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
 # Usage: statusMessage command ...
 # Argument: command - Required. Commands which output a message.
+# Argument: --last - Optional. Flag. Last message to be output, so output a newline as well at the end.
 # Environment: Intended to be run on an interactive console. Should support $(tput cols).
 # Example:     statusMessage decorate info "Loading ..."
 # Example:     bin/load.sh >>"$loadLogFile"
 # Example:     clearLine
 #
 statusMessage() {
-  clearLine "$("$@")"
+  local usage="_${FUNCNAME[0]}"
+  local lastMessage=""
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --last)
+        lastMessage=$'\n'
+        ;;
+      -*)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+      *)
+        break
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  clearLine "$("$@")${lastMessage}"
+}
+_statusMessage() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

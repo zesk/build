@@ -186,6 +186,8 @@ _bashSanitizeCheckAssertions() {
       # When ready - add --interactive here as well
       findUncaughtAssertions "$directory" --exec "$executor" &
       __failEnvironment "$usage" findUncaughtAssertions || return $?
+    else
+      printf "%s\n" "All files AOK"
     fi
   done
 }
