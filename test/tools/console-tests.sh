@@ -50,19 +50,29 @@ testConsoleFileLink() {
 }
 
 testStatusMessageLast() {
-  local phrase mocked=false
+  local phrase
 
   phrase="Hello, world."
-  if ! hasConsoleAnimation; then
-    statusMessage decorate warning "Mocking console animation"
-    __mockConsoleAnimation true
-    mocked=true
-  fi
+
+  statusMessage decorate warning "Mocking console animation (true)"
+  __mockConsoleAnimation true
+
+  assertEquals --line "$LINENO" 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
   assertEquals --line "$LINENO" 0 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
   assertEquals --line "$LINENO" 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
 
-  if $mocked; then
-    statusMessage decorate warning "Ending mocked console animation"
-    __mockConsoleAnimation false
-  fi
+  statusMessage decorate warning "Ending mocked console animation"
+  __mockConsoleAnimation --end
+
+  statusMessage decorate warning "Mocking console animation (false)"
+  __mockConsoleAnimation false
+
+  assertEquals --line "$LINENO" 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals --line "$LINENO" 1 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals --line "$LINENO" 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+
+  __mockConsoleAnimation --end
+
+  statusMessage decorate warning "Ending mocked console animation"
+  __mockConsoleAnimation --end
 }

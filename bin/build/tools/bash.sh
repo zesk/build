@@ -181,14 +181,13 @@ _bashSanitizeCheckAssertions() {
   done < <(find "." -type f -name '.check-assertions' ! -path "*/.*/*")
 
   for directory in "${checkAssertions[@]+"${checkAssertions[@]}"}"; do
-    statusMessage --first decorate warning "Checking assertions in $(decorate code "${directory}") -"
-    echo -n findUncaughtAssertions
+    statusMessage --first decorate warning "Checking assertions in $(decorate code "${directory}") ... "
     if ! findUncaughtAssertions "$directory" --list; then
       # When ready - add --interactive here as well
       findUncaughtAssertions "$directory" --exec "$executor" &
       __failEnvironment "$usage" findUncaughtAssertions "$directory" --list || return $?
     else
-      statusMessage --last decorate success "... All files AOK"
+      statusMessage --last decorate success "all files AOK"
     fi
   done
 }

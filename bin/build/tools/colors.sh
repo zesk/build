@@ -123,15 +123,24 @@ hasConsoleAnimation() {
 }
 
 # Fake a value for testing
+# Usage: {fn} [ --end | true | false ]
+# Argument: --end - Flag. Optional. Resets the value for console animation to the saved value.
+# Argument: true | false - Boolean. Force the value of hasConsoleAnimation to this value temporarily. Saves the original value.
 __mockConsoleAnimation() {
-  _boolean "$1" || _argument "Requires true or false" || return $?
-  export __MOCKED_CI
-  if "$1"; then
-    __MOCKED_CI="${CI-}"
-    CI=""
-  else
+  if [ "$1" = "--end" ]; then
+    export __MOCKED_CI
     CI="${__MOCKED_CI-}"
     unset __MOCKED_CI
+    return 0
+  fi
+
+  _boolean "$1" || _argument "Requires true or false" || return $?
+  export __MOCKED_CI
+  __MOCKED_CI="${CI-}"
+  if "$1"; then
+    CI=""
+  else
+    CI="testCI"
   fi
 }
 
@@ -367,6 +376,7 @@ statusMessage() {
         ;;
       --first)
         if ! hasConsoleAnimation; then
+          shift
           __usageEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
           return 0
         fi
