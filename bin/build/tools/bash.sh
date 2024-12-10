@@ -182,6 +182,7 @@ _bashSanitizeCheckAssertions() {
 
   for directory in "${checkAssertions[@]+"${checkAssertions[@]}"}"; do
     statusMessage printf "%s" "$(decorate warning "Checking assertions in $(decorate code "${directory}") - ...")"
+    echo -n findUncaughtAssertions
     if ! findUncaughtAssertions "$directory" --list; then
       # When ready - add --interactive here as well
       findUncaughtAssertions "$directory" --exec "$executor" &
