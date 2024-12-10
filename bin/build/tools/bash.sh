@@ -187,7 +187,7 @@ _bashSanitizeCheckAssertions() {
       findUncaughtAssertions "$directory" --exec "$executor" &
       __failEnvironment "$usage" findUncaughtAssertions "$directory" --list || return $?
     else
-      statusMessage --last decorate success "all files AOK"
+      decorate success "all files passed"
     fi
   done
 }
