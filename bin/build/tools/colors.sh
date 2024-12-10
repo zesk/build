@@ -365,8 +365,16 @@ statusMessage() {
         "$usage" 0
         return $?
         ;;
+      --first)
+        if ! hasConsoleAnimation; then
+          __usageEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
+          return 0
+        fi
+        ;;
       --last)
-        lastMessage=$'\n'
+        if hasConsoleAnimation; then
+          lastMessage=$'\n'
+        fi
         ;;
       -*)
         # IDENTICAL argumentUnknown 1
