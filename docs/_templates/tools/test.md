@@ -13,3 +13,7 @@
 
 {testTools}
 {testSuite}
+
+## Mocking help
+
+{__mockConsoleAnimation}
