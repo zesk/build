@@ -134,7 +134,7 @@ __mockConsoleAnimation() {
     return 0
   fi
 
-  _boolean "$1" || _argument "Requires true or false" || return $?
+  isBoolean "$1" || _argument "Requires true or false" || return $?
   export __MOCKED_CI
   __MOCKED_CI="${CI-}"
   if "$1"; then

@@ -21,7 +21,7 @@ Alternately, these can be used within an `if` or other compound statement but th
 Quick guide:
 
 - `isPositiveInteger value` - Returns 0 if value passed is an integer, otherwise returns 1.
-- `_boolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
+- `isBoolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
 - `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
 
 Error codes:
@@ -59,7 +59,7 @@ Is this an unsigned integer?
 
 - `0` - if value is an unsigned integer
 - `1` - if value is not an unsigned integer 
-### `_boolean` - Boolean test
+### `isBoolean` - Boolean test
 
 Boolean test
 Returns 0 if `value` is boolean `false` or `true`.
@@ -67,7 +67,7 @@ Is this a boolean? (`true` or `false`)
 
 #### Usage
 
-    _boolean value
+    isBoolean value
     
 
 #### Exit codes

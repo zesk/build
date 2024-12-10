@@ -83,6 +83,7 @@ __deprecatedCannon() {
   local from="$1" to="$2" ignoreStuff
   shift 2
   read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
+  ignoreStuff+=(! -path '*/docs/release/*')
   statusMessage printf "%s %s \n" "$(consoleWarning "$from")" "$(consoleSuccess "$to")"
   cannon "$from" "$to" "${ignoreStuff[@]}" "$@" || :
 }
@@ -258,6 +259,9 @@ __deprecatedCleanup() {
   __deprecatedCannon 'confirmYesNo true' "confirmYesNo --yes"
   __deprecatedCannon 'confirmYesNo no' "confirmYesNo --no"
   __deprecatedCannon 'confirmYesNo false' "confirmYesNo --no"
+
+  # v0.18.5
+  __deprecatedCannon '_''boolean' "isBoolean"
 
   # See: docs/_templates/deprecated.md
 

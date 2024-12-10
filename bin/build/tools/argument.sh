@@ -425,7 +425,7 @@ _usageArgumentType() {
   environmentValueWrite argumentNamed "$argumentNamed" >>"$stateFile"
   if [ -z "$argumentRepeatName" ]; then
     argumentRepeat="$(environmentValueRead "$argumentSpec" argumentRepeat false)"
-    _boolean "$argumentRepeat" || __failEnvironment "$usage" "$argumentSpec non-boolean argumentRepeat" || return $?
+    isBoolean "$argumentRepeat" || __failEnvironment "$usage" "$argumentSpec non-boolean argumentRepeat" || return $?
     if $argumentRepeat; then
       {
         __usageEnvironment "$usage" environmentValueWrite argumentRepeatName "$argumentNamed"

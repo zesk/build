@@ -426,10 +426,10 @@ gitCommit() {
     shift
   done
 
-  if ! _boolean "$openLinks"; then
+  if ! isBoolean "$openLinks"; then
     openLinks=$(__usageEnvironment "$usage" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
   fi
-  _boolean "$openLinks" || openLinks=false
+  isBoolean "$openLinks" || openLinks=false
 
   if [ "$comment" = "last" ]; then
     appendLast=true

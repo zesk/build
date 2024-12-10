@@ -120,7 +120,7 @@ _code() {
 # Is this a boolean? (`true` or `false`)
 # Exit Code: 0 - if value is a boolean
 # Exit Code: 1 - if value is not a boolean
-_boolean() {
+isBoolean() {
   case "${1-}" in true | false) ;; *) return 1 ;; esac
 }
 
@@ -128,7 +128,7 @@ _boolean() {
 # Usage: {fn} testValue trueChoice falseChoice
 _choose() {
   local testValue="${1-}" && shift
-  _boolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
+  isBoolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 

@@ -27,14 +27,14 @@ _wasRun() {
 }
 
 testBoolean() {
-  assertExitCode 0 _boolean true || return $?
-  assertExitCode 0 _boolean false || return $?
-  assertNotExitCode 0 _boolean True || return $?
-  assertNotExitCode 0 _boolean False || return $?
-  assertNotExitCode 0 _boolean 0 || return $?
-  assertNotExitCode 0 _boolean 1 || return $?
-  assertNotExitCode 0 _boolean yes || return $?
-  assertNotExitCode 0 _boolean no || return $?
+  assertExitCode 0 isBoolean true || return $?
+  assertExitCode 0 isBoolean false || return $?
+  assertNotExitCode 0 isBoolean True || return $?
+  assertNotExitCode 0 isBoolean False || return $?
+  assertNotExitCode 0 isBoolean 0 || return $?
+  assertNotExitCode 0 isBoolean 1 || return $?
+  assertNotExitCode 0 isBoolean yes || return $?
+  assertNotExitCode 0 isBoolean no || return $?
 }
 
 testChoose() {

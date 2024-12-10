@@ -159,4 +159,16 @@ Single decoration function:
 - `--env` is changed for most functions which use it; changed to `--env-file` to match other applications.
 - `confirmYesNo defaultValue` changed to `confirmYesNo --yes` or `confirmYesNo --no` respectively - uses better argument parser
 
-- [⬅ Return to top](index.md)
+## v0.17.6
+
+- `_integer` -> `isPositiveInteger`  (more natural naming, short enough)
+- `confirmYesNo --yes` -> `confirmYesNo --yes` (support flags properly)
+- `confirmYesNo --yes` -> `confirmYesNo --yes`
+- `confirmYesNo --no` -> `confirmYesNo --no`
+- `confirmYesNo --no` -> `confirmYesNo --no`
+
+## v0.18.5
+
+- `isBoolean` -> `isBoolean` (more natural naming, short enough)
+
+[⬅ Return to top](index.md)

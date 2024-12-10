@@ -21,7 +21,7 @@ Alternately, these can be used within an `if` or other compound statement but th
 Quick guide:
 
 - `isPositiveInteger value` - Returns 0 if value passed is an integer, otherwise returns 1.
-- `_boolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
+- `isBoolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
 - `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
 
 Error codes:
@@ -45,7 +45,7 @@ Run-related:
 
 ## Sugar utilties
 
-{_integer} {_boolean}
+{_integer} {isBoolean}
 
 {_code}
 

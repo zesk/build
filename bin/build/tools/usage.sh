@@ -438,7 +438,7 @@ usageArgumentEmptyString() {
 usageArgumentBoolean() {
   local usage="$1" argument="$2"
   shift 2 || :
-  _boolean "${1-}" || __failArgument "$usage" "$argument not boolean: \"${1-}\"" || return $?
+  isBoolean "${1-}" || __failArgument "$usage" "$argument not boolean: \"${1-}\"" || return $?
   printf "%s\n" "$1"
 }
 
