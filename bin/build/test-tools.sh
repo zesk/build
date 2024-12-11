@@ -601,6 +601,7 @@ _textExit() {
   exit "$@"
 }
 
+
 # TODO: https://github.com/Perl-Toolchain-Gang/Test-Harness/blob/master/reference/Test-Harness-2.64/lib/Test/Harness/TAP.pod#php
 # Argument: --tap - Optional. Flag. TAP output instead of console output.
 #

@@ -31,6 +31,36 @@ testTools() {
   __environment "$@" || return $?
 }
 _testTools() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Fake a value for testing
+# Usage: {fn} globalName saveGlobalName [ --end | true | false ]
+# Argument: --end - Flag. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
+# Argument: value - EmptyString. Required. Force the value of `globalName` to this value temporarily. Saves the original value in global `saveGlobalName`.
+__mockValue() {
+  local usage="_${FUNCNAME[0]}"
+  local me="$usage ${1-} ${2-}" global="${1-}" saveGlobal="${2-}" value="${3-}"
+  [ $# -eq 3 ] || IFS=';' __failArgument "$usage" "$me requires 3 and only 3 arguments: [$#]: $*" || return $?
+  if [ "$value" = "--end" ]; then
+    # shellcheck disable=SC2163
+    export "$saveGlobal"
+    if [ "${!saveGlobal-"$me"}" = "$me" ]; then
+      unset "$global"
+    else
+      export "$global"="${!saveGlobal-}"
+    fi
+    unset "$saveGlobal"
+    return 0
+  fi
+  # shellcheck disable=SC2163
+  export "$saveGlobal"
+  declare "$saveGlobal"="${!global-"$me"}"
+  export "$global"="$value"
+}
+___mockValue() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

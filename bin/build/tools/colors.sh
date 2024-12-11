@@ -122,26 +122,22 @@ hasConsoleAnimation() {
   [ -z "${CI-}" ]
 }
 
-# Fake a value for testing
-# Usage: {fn} [ --end | true | false ]
+# Fake `hasConsoleAnimation` for testing
+# Usage: {fn} --end | true | false
 # Argument: --end - Flag. Optional. Resets the value for console animation to the saved value.
 # Argument: true | false - Boolean. Force the value of hasConsoleAnimation to this value temporarily. Saves the original value.
+# Developer Note: Keep this here to keep it close to the definition it modifies
 __mockConsoleAnimation() {
-  if [ "$1" = "--end" ]; then
-    export __MOCKED_CI
-    CI="${__MOCKED_CI-}"
-    unset __MOCKED_CI
+  local usage="_${FUNCNAME[0]}" flag="${1-}"
+
+  shift || __usageArgument "$usage" "Missing argument" || return $?
+  if [ "$flag" = "--end" ]; then
+    __mockValue CI __MOCKED_CI "$flag" "$@"
     return 0
   fi
 
-  isBoolean "$1" || _argument "Requires true or false" || return $?
-  export __MOCKED_CI
-  __MOCKED_CI="${CI-}"
-  if "$1"; then
-    CI=""
-  else
-    CI="testCI"
-  fi
+  isBoolean "$flag" || _argument "Requires true or false" || return $?
+  __mockValue CI __MOCKED_CI "$(_choose "$flag" "" "testCI")" "$@"
 }
 
 # Usage: {fn} prefix suffix [ text ]

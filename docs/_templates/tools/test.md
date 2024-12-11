@@ -16,4 +16,5 @@
 
 ## Mocking help
 
+{__mockValue}
 {__mockConsoleAnimation}
