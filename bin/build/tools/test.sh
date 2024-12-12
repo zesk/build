@@ -55,8 +55,7 @@ __mockValue() {
     return 0
   fi
   # shellcheck disable=SC2163
-  export "$saveGlobal"
-  declare "$saveGlobal"="${!global-"$me"}"
+  export "$saveGlobal"="${!global-"$me"}"
   export "$global"="$value"
 }
 ___mockValue() {

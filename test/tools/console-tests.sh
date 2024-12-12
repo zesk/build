@@ -72,7 +72,5 @@ testStatusMessageLast() {
   assertEquals --line "$LINENO" 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
 
   __mockConsoleAnimation --end
-
   statusMessage decorate warning "Ending mocked console animation"
-  __mockConsoleAnimation --end
 }
