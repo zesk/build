@@ -2,17 +2,16 @@
 
 Pipeline, build, and operations tools which are useful across a variety of projects.
 
-- Abstracted bash scripts which work on all Unix-style operating system
-- Build and deployment tools for pipelines and software platforms and languages
-- Operational scripts for managing live production systems (system setup, services, cron, permissions separations)
-- Operating system differences are supported
+- Abstracted bash commands which work on all Unix-style operating systems
+- Build, deployment and management tools for pipelines and production systems (system setup, services, cron, permissions separations)
+- Operating system differences are supported automatically
 
 This code toolkit depends largely on `bash` and a conscientious decision has been made to not depend on any other language libraries, as of 2024 there are no dependencies on Bash 4.
 
 This toolkit makes the following assumptions:
 
 - Binaries from this project installed at `./bin/build/` (required)
-- Files containing bash code end with `.sh` (assumed)
+- Files containing bash code end with `.sh`
 - Release notes are located in a dedicated subdirectory (can be configured per-project), files are named `v1.0.0.md` which match version names (`v1.0.0`) (required)
 - A central `$HOME/.build` directory may be created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used. (configurable)
 
@@ -31,23 +30,23 @@ To install it in the operating system:
 
 - `bin/build/tools.sh` - The only include required for all build tools functions, also can be used as `tools.sh identicalCheck ...`
 
-## Zesk Build Project structure
-
-- `bin/build/env/*.sh` - Any external environment variable is referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files.
-- `bin/build/tools/*.sh` - Build tools function implementations.
-- `bin/build/pipeline/*.sh` - Tools or steps for deployment
-- `bin/build/install/*.sh` - Install dependencies in the pipeline (most of these exist as functions)
-- `bin/build/hooks/*.sh` - All default hooks are here.
-
 ## Your project structure
 
-Defaults:
+Zesk Build makes the following assumptions about your project structure:
 
-- `./` - Application root
+- `./` - Application root (same as `buildHome`)
 - `./bin/build/` - Zesk Build installation location (may *not* be changed)
 - `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` on the end)
 - `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end if you use `buildEnvironmentLoad`)
 - `./docs/release/v1.0.0.md` - Release notes (override by adding `BUILD_RELEASE_NOTES` environment)
+
+## Zesk Build Project structure
+
+Internally Zesk Build
+
+- `bin/build/env/*.sh` - Any external environment variable is referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files.
+- `bin/build/tools/*.sh` - Build tools function implementations and template files (`.md` files)
+- `bin/build/hooks/*.sh` - All default hooks are here - if your application does not implement them - these are used.
 
 ## Other binaries
 
@@ -88,7 +87,7 @@ To load all functions:
     decorate orange "The code is working."
     bigText "Hooray."
 
-For more complex (and more robust error handling) see `__install` and `__tools` identical code in `bin/build/identical`.
+For more complex (and more robust error handling) see `__install` and `__tools` code in `bin/build/identical`.
 
 ## Artifacts: Build Directory and `.deploy`
 
@@ -104,7 +103,7 @@ Scripts are written by loading an `.env` file and then run commands directly in 
 
     bin/build/bitbucket-container.sh --env .env.MYTESTENV bin/test.sh
 
-`.env` appears to have various machinations such that it's difficult at best to have a single format which works in your projects. 
+`.env` appears to have various machinations such that it's difficult at best to have a single format which works in your projects.
 
 The solution is simple: detect whether a `.env` is formatted to support **Docker** or not and convert it appropriately on-the-fly as needed; Zesk Build supports this detection and conversion.
 
@@ -128,8 +127,8 @@ If you test on another OS or need support on a specific platform, report an issu
 
 ## Known issues and workarounds
 
-- [On Mac OS X the Docker environment thinks non-executable files are executable](https://github.com/docker/for-mac/issues/5509), notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how permissions are translated, I assume. Workaround falls
-  back to `ls` which is slow but works. See `isExecutable`. Added 2024-01.
+- [On Mac OS X the Docker environment thinks non-executable files are executable](https://github.com/docker/for-mac/issues/5509), notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how
+  permissions are translated, I assume. Workaround falls back to `ls` which is slow but works. See `isExecutable`. Added 2024-01.
 
 ## Copyright &copy; 2024 Market Acumen, Inc
 
