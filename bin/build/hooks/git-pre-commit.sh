@@ -84,21 +84,19 @@ isUnsignedInteger() {
 # fn: {base}
 __hookGitPreCommit() {
   local usage="_${FUNCNAME[0]}" hookName="post-commit" start
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  statusMessage decorate info "installing git $hookName hook"
 
-  statusMessage decorate info "installing git $hookName hook"
-  __usageEnvironment "$usage" gitInstallHook "$hookName" || return $?
-  statusMessage decorate info "running git $hookName hook"
-  __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
   __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
+  statusMessage --first printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info " ... installing ")"
+  __usageEnvironment "$usage" gitInstallHook "$hookName" || return $?
+  statusMessage --first decorate info "... running "
+  __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
+
   decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta pre-commit) $(decorate decoration)")"
   gitPreCommitSetup || :
-  statusMessage decorate info "running git pre-commit hook"
-  __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
   local extension extensions=()
   read -r -a extensions < <(printf "%s" "${BUILD_PRECOMMIT_EXTENSIONS-}") || :
