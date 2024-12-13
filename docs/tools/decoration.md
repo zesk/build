@@ -84,7 +84,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Examples
 
-    cat "$file" | wrapLines "$(decorate code)" "$(consoleReset)"
+    cat "$file" | wrapLines "$(decorate code)" "$(decorate reset)"
     cat "$errors" | wrapLines "    ERROR: [" "]"
 
 #### Exit codes

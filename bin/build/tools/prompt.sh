@@ -307,7 +307,7 @@ bashPromptColorScheme() {
 __bashPromptGeneratePS1() {
   local colors reset
   export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
-  reset="$(consoleReset)"
+  reset="$(decorate reset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   printf "%s%s@%s %s %s " \
     "\${__BASH_PROMPT_PREVIOUS[1]-}" \

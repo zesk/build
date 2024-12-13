@@ -171,4 +171,8 @@ Single decoration function:
 
 - `isBoolean` -> `isBoolean` (more natural naming, short enough)
 
+# v0.18.6
+
+- `decorate reset` -> `decorate reset`
+
 [⬅ Return to top](index.md)

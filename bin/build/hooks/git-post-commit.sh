@@ -82,7 +82,7 @@ __gitPushHelper() {
   local tempFile
 
   tempFile=$(mktemp) || __failEnvironment "$usage" "__gitPushHelper mktemp" || return $?
-  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(decorate code)" "$(consoleReset)"; then
+  if ! __usageEnvironment "$usage" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(decorate code)" "$(decorate reset)"; then
     if ! grep -q 'up-to-date' "$tempFile"; then
       dumpPipe "git push" <"$tempFile" || :
       __environment rm -rf "$tempFile" || :
@@ -100,13 +100,16 @@ __gitPushHelper() {
 #
 # fn: {base}
 __hookGitPostCommit() {
-  local usage="_${FUNCNAME[0]}"
-  clearLine
-  __usageEnvironment "$usage" gitInstallHook post-commit || return $?
-  __usageEnvironment "$usage" runOptionalHook post-commit || return $?
+  local usage="_${FUNCNAME[0]}" hookName="post-commit" start
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  statusMessage decorate info "installing git $hookName hook"
+  __usageEnvironment "$usage" gitInstallHook "$hookName" || return $?
+  statusMessage decorate info "running git $hookName hook"
+  __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
   __gitPushHelper "$usage" || return $?
   # __usageEnvironment "$usage" gitMainly || return $?
   __gitPushHelper "$usage" || return $?
+  statusMessage --last reportTiming "$start" "$hookName hook completed in"
 }
 ___hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

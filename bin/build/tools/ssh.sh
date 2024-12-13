@@ -74,7 +74,7 @@ sshAddKnownHost() {
           ! $verbose || decorate success "Added $remoteHost to $sshKnown"
         else
           exitCode=$?
-          printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code)$exitCode" "$(wrapLines ">> $(decorate code)" "$(consoleReset) <<" <"$output")" 1>&2
+          printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code)$exitCode" "$(wrapLines ">> $(decorate code)" "$(decorate reset) <<" <"$output")" 1>&2
         fi
         ;;
     esac

@@ -261,7 +261,7 @@ testSuite() {
       ! $doStats || printf "%d %s\n" "$runTime" "$item" >>"$statsFile"
       __usageEnvironment "$usage" runOptionalHook bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
     done
-    bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(consoleReset)"
+    bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(decorate reset)"
     if $continueFlag; then
       printf "%s\n" "PASSED" >"$continueFile"
     fi
@@ -374,7 +374,7 @@ __testSection() {
 __testHeading() {
   decorate code "$(decorate orange "$(echoBar '*')")"
   printf "%s" "$(decorate code)$(clearLine)"
-  bigText "$@" | wrapLines --fill " " "$(decorate code)    " "$(consoleReset)"
+  bigText "$@" | wrapLines --fill " " "$(decorate code)    " "$(decorate reset)"
   decorate code "$(decorate orange "$(echoBar '=')")"
 }
 

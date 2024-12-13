@@ -72,7 +72,7 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 
 ### Reset color to defaults
 
-{consoleReset}
+{decorate reset}
 
 ## Additional commands
 

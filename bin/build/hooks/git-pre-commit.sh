@@ -83,20 +83,25 @@ isUnsignedInteger() {
 # 2. Checks all shell files for errors
 # fn: {base}
 __hookGitPreCommit() {
-  local usage="_${FUNCNAME[0]}"
-  local extension extensions
+  local usage="_${FUNCNAME[0]}" hookName="post-commit" start
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  statusMessage decorate info "installing git $hookName hook"
+
+  statusMessage decorate info "installing git $hookName hook"
+  __usageEnvironment "$usage" gitInstallHook "$hookName" || return $?
+  statusMessage decorate info "running git $hookName hook"
+  __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
   __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
-  read -r -a extensions < <(printf "%s" "$BUILD_PRECOMMIT_EXTENSIONS") || :
-  clearLine
-  __usageEnvironment "$usage" gitInstallHook pre-commit || return $?
-
   decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta pre-commit) $(decorate decoration)")"
   gitPreCommitSetup || :
+  statusMessage decorate info "running git pre-commit hook"
   __usageEnvironment "$usage" runOptionalHook pre-commit || return $?
 
+  local extension extensions=()
+  read -r -a extensions < <(printf "%s" "${BUILD_PRECOMMIT_EXTENSIONS-}") || :
   for extension in "${extensions[@]+${extensions[@]}}"; do
     statusMessage decorate info "Processing $(decorate code "$extension") ..."
     if gitPreCommitHasExtension "$extension"; then
@@ -105,7 +110,7 @@ __hookGitPreCommit() {
   done
 
   gitPreCommitCleanup || :
-  clearLine || :
+  statusMessage --last reportTiming "$start" "$hookName hook completed in"
 }
 ___hookGitPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

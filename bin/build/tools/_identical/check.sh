@@ -198,8 +198,8 @@ identicalCheck() {
               {
                 clearLine
                 printf "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")" "$(decorate code)" || :
-                grep -e "$quotedPrefix" "$compareFile" | wrapLines "$(decorate code)    " "$(consoleReset)" || :
-                consoleReset || :
+                grep -e "$quotedPrefix" "$compareFile" | wrapLines "$(decorate code)    " "$(decorate reset)" || :
+                decorate reset || :
               } 1>&2
             elif $mapFile; then
               _identicalMapAttributesFilter "$usage" "$searchFile" <"$countFile" >"$countFile.mapped" || return $?
@@ -207,7 +207,7 @@ identicalCheck() {
             fi
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
               printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
-              diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(consoleReset)" || : 1>&2
+              diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
               isBadFile=true
             else
               statusMessage decorate success "Verified $(decorate file "$searchFile"), lines $lineNumber-$((lineNumber + tokenLineCount))"

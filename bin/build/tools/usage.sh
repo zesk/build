@@ -61,7 +61,7 @@ usageTemplate() {
       "$usageString" \
       "$(decorate info "$binName")" \
       "$(printf "%s" "$options" | usageArguments "$delimiter")" \
-      "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | wrapLines "    " "$(consoleReset)")" \
+      "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | wrapLines "    " "$(decorate reset)")" \
       "$description"
   else
     printf "%s: %s\n\n%s\n\n" \

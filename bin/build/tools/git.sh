@@ -112,8 +112,7 @@ gitTagAgain() {
     __usageArgument "$usage" git tag "$1" || return $?
     __usageArgument "$usage" git push --tags || return $?
   done
-  statusMessage decorate info "All tags completed" "$(decorate orange "${a[@]}")"
-  clearLine
+  statusMessage --last decorate info "All tags completed" "$(decorate orange "${a[@]}")"
 }
 
 #
@@ -471,16 +470,16 @@ __gitCommitReleaseNotesUpdate() {
   displayNotes="${notes#"$home"/}"
   pattern="$(quoteGrepPattern "$comment")"
   __usageEnvironment "$usage" clearLine || return $?
-  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate value "$displayNotes") $(decorate decoration)")" "$(consoleReset)" || return $?
+  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate value "$displayNotes") $(decorate decoration)")" "$(decorate reset)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
     __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(decorate info "Adding comment")" "$(decorate code "$displayNotes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
-    __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(consoleReset)" || return $?
+    __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
   else
     __usageEnvironment "$usage" clearLine || return $?
     __usageEnvironment "$usage" printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
-    __usageEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(consoleReset)" || return $?
+    __usageEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
   fi
 }
 _gitCommit() {

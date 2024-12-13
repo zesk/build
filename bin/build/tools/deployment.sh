@@ -165,7 +165,7 @@ deployBuildEnvironment() {
     printf "\n%s %s\b" ___deployBuildEnvironment "$(printf "\"%s\" " "${deployArgs[@]}")"
   else
     ___deployBuildEnvironment "${deployArgs[@]}" || return $?
-    printf "\n%s\n" "$(bigText --bigger Success)" | wrapLines --fill " " "$(decorate success)    " "$(consoleReset)"
+    printf "\n%s\n" "$(bigText --bigger Success)" | wrapLines --fill " " "$(decorate success)    " "$(decorate reset)"
   fi
 }
 
@@ -426,7 +426,7 @@ __deployRevertApplication() {
 }
 
 _deploySuccessful() {
-  bigText Deployed AOK | wrapLines "$(decorate green)" "$(consoleReset)"
+  bigText Deployed AOK | wrapLines "$(decorate green)" "$(decorate reset)"
   echo
   decorate warning "No $deployedHostArtifact file found ..."
   decorate success "Nothing deployed or clean exit."
@@ -685,7 +685,7 @@ deployToRemote() {
     fi
 
     verb="Deploy"
-    bigText "$verb" | wrapLines "$(decorate green)" "$(consoleReset)"
+    bigText "$verb" | wrapLines "$(decorate green)" "$(decorate reset)"
 
     {
       consoleNameValue $nameWidth "Current IP:" "$currentIP"
@@ -702,7 +702,7 @@ deployToRemote() {
     printf "" >"$deployedHostArtifact"
     __usageEnvironment "$usage" __deployUploadPackage "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
 
-    # wrapLines "COMMANDS: $(decorate code)" "$(consoleReset)" <"$temporaryCommandsFile"
+    # wrapLines "COMMANDS: $(decorate code)" "$(decorate reset)" <"$temporaryCommandsFile"
     for userHost in "${userHosts[@]}"; do
       start=$(beginTiming) || :
 
@@ -710,9 +710,9 @@ deployToRemote() {
       printf "%s %s: %s\n%s\n" "$(decorate info "Deploying the code to")" "$(decorate green "$userHost")" "$(decorate red "$applicationPath")" "$(decorate info "$host output BEGIN :::")"
       if buildDebugEnabled; then
         decorate info "DEBUG: Commands file is:"
-        wrapLines "$(decorate code)" "$(consoleReset)" <"$temporaryCommandsFile"
+        wrapLines "$(decorate code)" "$(decorate reset)" <"$temporaryCommandsFile"
       fi
-      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | wrapLines "$(decorate orange "$userHost"): $(decorate bold-blue)" "$(consoleReset)"; then
+      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | wrapLines "$(decorate orange "$userHost"): $(decorate bold-blue)" "$(decorate reset)"; then
         __failEnvironment "$usage" "Unable to deploy to $host" || return $?
       fi
       decorate info "::: END $host output"
@@ -730,7 +730,7 @@ deployToRemote() {
     rm -rf "$temporaryCommandsFile" || :
     return 0
   fi
-  bigText "$verb" | wrapLines "$color" "$(consoleReset)"
+  bigText "$verb" | wrapLines "$color" "$(decorate reset)"
   if [ ! -f "$deployedHostArtifact" ]; then
     if test $revertFlag; then
       _deploySuccessful

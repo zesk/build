@@ -495,7 +495,7 @@ daemontoolsManager() {
     done
     # Does this work?
     if ! sleep "$intervalSeconds"; then
-      printf "%s%s%s\n" "$(clearLine)" "$(consoleReset)" "$(decorate warning "Interrupt")"
+      printf "%s%s%s\n" "$(clearLine)" "$(decorate reset)" "$(decorate warning "Interrupt")"
       break
     fi
     if [ "$chirpSeconds" -gt 0 ]; then

@@ -25,22 +25,22 @@ __hookPreCommitPHP() {
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
 
-  printf "\n"
-  __usageEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(decorate bold-blue)" "$(consoleReset)"
+  statusMessage --first "Processing PHP files ... "
+  __usageEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(decorate bold-blue)" "$(decorate reset)"
 
   if [ ! -d "$home/vendor" ]; then
-    decorate info "PHP commit - no vendor directory - no fixer"
+    statusMessage --last decorate warning "PHP commit - no vendor directory - no fixer"
     return $?
   fi
 
   changed=()
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension php)
   if [ ! -x "$home/vendor/bin/php-cs-fixer" ]; then
-    clearLine
+    statusMessage --last decorate error "Missing binary"
     __failEnvironment "$usage" "No php-cs-fixer found" || return $?
   fi
   if [ ! -f "$home/.php-cs-fixer.php" ]; then
-    clearLine
+    statusMessage --last decorate error "Missing configuration"
     __failEnvironment "$usage" "No .php-cs-fixer.php found" || return $?
   fi
   statusMessage decorate success "Fixing PHP"
@@ -48,13 +48,12 @@ __hookPreCommitPHP() {
 
   "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || __failEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
-    clearLine
-    grep -A 100 'not fixed' "$fixResults" | wrapLines "$(decorate error)" "$(consoleReset)"
+    statusMessage --last decorate error "some files not fixed"
+    grep -A 100 'not fixed' "$fixResults" | wrapLines "$(decorate error)" "$(decorate reset)"
     rm -f "$fixResults"
     __failEnvironment "$usage" "PHP files failed" || return $?
   fi
-  clearLine
-  decorate success "PHP fixer ran"
+  statusMessage --last decorate success "PHP fixer ran"
   rm -f "$fixResults" || :
 
 }

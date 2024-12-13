@@ -133,7 +133,7 @@ crontabApplicationUpdate() {
   fi
   if $flagDiff; then
     printf "%s\n" "$(decorate red "Differences")"
-    crontab -u "$user" -l | diff "$newCrontab" - | wrapLines ">>> $(decorate code)" "$(consoleReset) <<<"
+    crontab -u "$user" -l | diff "$newCrontab" - | wrapLines ">>> $(decorate code)" "$(decorate reset) <<<"
     return $?
   fi
   #

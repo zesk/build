@@ -309,7 +309,7 @@ _lineFill() {
 # Exit Code: 0
 # Argument: `prefix` - Prefix each line with this text
 # Argument: `suffix` - Prefix each line with this text
-# Example:     cat "$file" | wrapLines "$(decorate code)" "$(consoleReset)"
+# Example:     cat "$file" | wrapLines "$(decorate code)" "$(decorate reset)"
 # Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
 #
 wrapLines() {

@@ -84,10 +84,10 @@ buildFailed() {
 
   shift
   clearLine || :
-  failBar="$(consoleReset)$(decorate magenta "$(repeat 80 "❌")")"
+  failBar="$(decorate reset)$(decorate magenta "$(repeat 80 "❌")")"
   # shellcheck disable=SC2094
   printf -- "\n%s\n%s\n%s\n\n" \
-    "$(printf -- "\n%s\n\n" "$(bigText "Failed" | wrapLines "" "    ")" | wrapLines --fill "*" "$(decorate error)" "$(consoleReset)")" \
+    "$(printf -- "\n%s\n\n" "$(bigText "Failed" | wrapLines "" "    ")" | wrapLines --fill "*" "$(decorate error)" "$(decorate reset)")" \
     "$failBar" \
     "$(dumpPipe --tail "$(basename "$quietLog")" "$@" --lines "$showLines" <"$quietLog")"
   _environment "Build failed:" "$@" || return $?
@@ -215,12 +215,12 @@ isUpToDate() {
       1) timeText="Yesterday" ;;
       *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
     esac
-    labeledBigText --prefix "$(consoleReset)" --top --tween "$(decorate red)" "$label" "EXPIRED $timeText"
+    labeledBigText --prefix "$(decorate reset)" --top --tween "$(decorate red)" "$label" "EXPIRED $timeText"
     return 1
   fi
   daysAgo=$((-daysAgo))
   if [ $daysAgo -lt 14 ]; then
-    labeledBigText --prefix "$(consoleReset)" --top --tween "$(decorate orange)" "${name}expires on $(decorate code "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+    labeledBigText --prefix "$(decorate reset)" --top --tween "$(decorate orange)" "${name}expires on $(decorate code "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
   elif [ $daysAgo -lt 30 ]; then
     # decorate info "keyDate $keyDate"
     # decorate info "accessKeyTimestamp $accessKeyTimestamp"

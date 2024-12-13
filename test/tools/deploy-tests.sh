@@ -41,7 +41,7 @@ _testDeployApplicationSetup() {
 
 _deployShowFiles() {
   local message
-  message=$(find "$1" ! -path '*/bin/build/*' | wrapLines "$(decorate code "DEPLOY root files:    ")$(decorate magenta)" "$(consoleReset)")
+  message=$(find "$1" ! -path '*/bin/build/*' | wrapLines "$(decorate code "DEPLOY root files:    ")$(decorate magenta)" "$(decorate reset)")
   _environment "$message" || return $?
 }
 

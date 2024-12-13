@@ -100,7 +100,7 @@ __updateMarkdown() {
   printf "%s" "{}" | jq --arg version "$(runHook version-current)" \
     --arg id "$(runHook application-id)" \
     '. + {version: $version, id: $id}' >"$buildMarker"
-  git add "$buildMarker" || :
+  __usageEnvironment "$usage" git add "$buildMarker" || return $?
 
   #
   # Disable this to see what environment shows up in commit hooks for GIT*=
@@ -112,15 +112,14 @@ __updateMarkdown() {
   if ! test $flagSkipCommit; then
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
-        statusMessage decorate info "Committing build.json"
+        statusMessage --last decorate info "Committing build.json"
         __usageEnvironment "$usage" git commit -m "Updating build.json" "$buildMarker" || return $?
         __usageEnvironment "$usage" git push origin || return $?
       fi
     else
-      statusMessage decorate warning "Skipping update during commit hook" || :
+      statusMessage --last decorate warning "Skipping update during commit hook" || :
     fi
   fi
-  clearLine || :
 }
 _updateMarkdown() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

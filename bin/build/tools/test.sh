@@ -155,7 +155,7 @@ dumpPipe() {
   fi
   decoration="$(decorate code "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
-  printf "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(consoleReset)")" "$decoration"
+  printf "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset)")" "$decoration"
   rm -rf "$item" || :
 }
 _dumpPipe() {
@@ -409,14 +409,14 @@ _bashLintInteractiveCheck() {
     scriptPassed=false
   fi
   if $scriptPassed; then
-    bigText "SUCCESS $(basename "$script")" | wrapLines "$(decorate green)" "$(consoleReset)"
-    boxedHeading "$script now passes" | wrapLines "$(decorate bold-green)" "$(consoleReset)"
+    bigText "SUCCESS $(basename "$script")" | wrapLines "$(decorate green)" "$(decorate reset)"
+    boxedHeading "$script now passes" | wrapLines "$(decorate bold-green)" "$(decorate reset)"
     decorate orange "$(echoBar "*")"
     return 0
   fi
 
   shift 2
-  bigText "FAIL $(basename "$script")" | wrapLines "$(decorate subtle bashLint)  $(decorate bold-red)" "$(consoleReset)"
+  bigText "FAIL $(basename "$script")" | wrapLines "$(decorate subtle bashLint)  $(decorate bold-red)" "$(decorate reset)"
   printf "%s\n%s\n%s\n" "$(decorate red "$failedReason")" \
     "$(decorate label "Queue")" \
     "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
@@ -556,7 +556,7 @@ validateFileContents() {
   total=0
   total="${#fileArgs[@]}"
   # shellcheck disable=SC2059
-  statusMessage decorate info "Searching $total $(plural "$total" item files) for text: $(printf " $(consoleReset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
+  statusMessage decorate info "Searching $total $(plural "$total" item files) for text: $(printf " $(decorate reset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
   if [ "${#fileArgs[@]}" -gt 0 ]; then
@@ -655,7 +655,7 @@ validateFileExtensionContents() {
   find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
   total=$(($(wc -l <"$foundFiles") + 0))
   # shellcheck disable=SC2059
-  statusMessage decorate info "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf " $(consoleReset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
+  statusMessage decorate info "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf " $(decorate reset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
   while IFS= read -r item; do

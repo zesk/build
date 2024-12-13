@@ -640,7 +640,7 @@ awsSecurityGroupIPModify() {
         printf "%s %s\n" "$(decorate yellow "duplicate")" "$(reportTiming "$start" "found in")"
         return 0
       else
-        wrapLines "$(decorate error "ERROR : : : : ") $(decorate code)" "$(decorate blue ": : : : ERROR")$(consoleReset)" <"$tempErrorFile" 1>&2
+        wrapLines "$(decorate error "ERROR : : : : ") $(decorate code)" "$(decorate blue ": : : : ERROR")$(decorate reset)" <"$tempErrorFile" 1>&2
         rm -f "$tempErrorFile" || :
         __failEnvironment "$usage" "Failed to authorize-security-group-ingress" || return $?
       fi
@@ -771,9 +771,9 @@ awsIPAccess() {
   if $verboseFlag; then
     clearLine
     if $optionRevoke; then
-      bigText "Closing ..." | wrapLines "$(decorate magenta)" "$(consoleReset)"
+      bigText "Closing ..." | wrapLines "$(decorate magenta)" "$(decorate reset)"
     else
-      bigText "Opening ..." | wrapLines "$(decorate blue)" "$(consoleReset)"
+      bigText "Opening ..." | wrapLines "$(decorate blue)" "$(decorate reset)"
     fi
     local width=40
 

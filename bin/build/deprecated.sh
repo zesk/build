@@ -263,6 +263,9 @@ __deprecatedCleanup() {
   # v0.18.5
   __deprecatedCannon '_''boolean' "isBoolean"
 
+  # v0.18.6
+  __deprecatedCannon 'console''Reset' "decorate reset" ! -path '*/colors.sh'
+
   # See: docs/_templates/deprecated.md
 
   # END OF CANNONS

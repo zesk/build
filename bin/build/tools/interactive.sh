@@ -99,7 +99,7 @@ _confirmYesNo() {
 # Usage: _copyFileEscalated displaySource source destination verb
 #
 _copyFileEscalated() {
-  consoleReset
+  decorate reset
   printf "\n%s -> %s: %s\n\n" "$(decorate green "$1")" "$(decorate red "$3")" "$(decorate bold-red "$4")"
   if confirmYesNo --yes "$(printf "%s: %s\n(%s/%s - default %s)? " \
     "$(decorate bold Copy privileged file to)" \
@@ -120,7 +120,7 @@ _copyFileEscalated() {
 #
 _copyFileRegular() {
   local displaySource="$1" source="$2" destination="$3" verb="$4"
-  consoleReset || _copyFilePrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
+  decorate reset || _copyFilePrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
   __execute cp "$source" "$destination" || return $?
 }
 
@@ -135,7 +135,7 @@ _copyFilePrompt() {
 # Argument: verb - Descriptive verb of what's up
 _copyFileShow() {
   _copyFilePrompt "$@"
-  wrapLines "$(decorate code)" "$(consoleReset)"
+  wrapLines "$(decorate code)" "$(decorate reset)"
 }
 
 #
@@ -218,7 +218,7 @@ copyFile() {
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
             prefix="$(decorate subtle "$(basename "$source")"): "
             _copyFilePrompt "$source" "$destination" "Changes" || :
-            diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(decorate code)" "$(consoleReset)" || :
+            diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(decorate code)" "$(decorate reset)" || :
             verb="File changed${verb}"
           else
             return 0

@@ -281,7 +281,7 @@ _phpBuild() {
 _phpBuildBanner() {
   local label="$1"
   shift
-  labeledBigText --top --prefix "$(decorate blue PHP) $(decorate magenta). . . . $(consoleReset)$(decorate bold-orange) " --suffix "$(consoleReset)" --tween " $(consoleReset)$(decorate green)" "$label: " "$@"
+  labeledBigText --top --prefix "$(decorate blue PHP) $(decorate magenta). . . . $(decorate reset)$(decorate bold-orange) " --suffix "$(decorate reset)" --tween " $(decorate reset)$(decorate green)" "$label: " "$@"
 }
 _phpEchoBar() {
   decorate bold-blue "$(echoBar '.-+^`^+-')" || :
@@ -483,6 +483,6 @@ _phpTestResult() {
   local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"
   local gap="    "
   repeat "$thick" "$(printf "%s" "$(repeat "$width" "$top")")"$'\n'
-  bigText "$message" | wrapLines "$top$gap$color" "$(consoleReset)$gap$bottom"
+  bigText "$message" | wrapLines "$top$gap$color" "$(decorate reset)$gap$bottom"
   repeat "$thick" "$(printf "%s" "$(repeat "$width" "$bottom")")"$'\n'
 }
