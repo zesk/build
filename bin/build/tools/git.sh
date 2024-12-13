@@ -753,7 +753,7 @@ gitInstallHook() {
           else
             ! $verbose || consoleNameValue 5 "Installing" "${relFromTo[1]}" || :
           fi
-          printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
+          statusMessage --last printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
           __usageEnvironment "$usage" cp -f "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
           return 3
