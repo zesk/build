@@ -72,14 +72,15 @@ __addNoteTo() {
 #
 __updateAvailable() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local home manager managers target generator forceFlag=false ageInSeconds allManagerLists allKnown=false
   local packageLists
 
-  saved=("$@")
-  nArguments=$#
+  local start
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+
+  local forceFlag=false
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -99,9 +100,10 @@ __updateAvailable() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
+  local home
   home="$(__usageEnvironment "$usage" buildHome)" || return $?
 
-  managers=(apk debian ubuntu)
+  local managers=(apk debian ubuntu) allKnown=false
   if isDarwin && whichExists brew; then
     managers+=(brew)
     allKnown=true
@@ -113,13 +115,15 @@ __updateAvailable() {
 
   __usageEnvironment muzzle pushd "$home/etc/packages" || return $?
 
-  allManagerLists=()
+  local target ageInSeconds allManagerLists
+  local allManagerLists=() manager generator
   for manager in "${managers[@]}"; do
     allManagerLists+=("$manager")
     statusMessage decorate info "Generating $manager list ..."
     generator="__${manager}Generator"
     isFunction "$generator" || __failEnvironment "$usage" "$generator is not a function" || return $?
     if [ -f "$manager" ] && ! $forceFlag; then
+      local ageInSeconds
       ageInSeconds=$(__usageEnvironment "$usage" modificationSeconds "$manager") || return $?
       if [ "$ageInSeconds" -lt 3600 ]; then
         statusMessage decorate warning "Skipping generated $manager ($((ageInSeconds / 60)) minutes old ..."
@@ -141,7 +145,7 @@ __updateAvailable() {
 
   __usageEnvironment muzzle popd || return $?
 
-  clearLine
+  statusMessage --last reportTiming "$start" "completed in"
 }
 ___updateAvailable() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

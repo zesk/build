@@ -114,9 +114,8 @@ _watchFile() {
   decorate info "Watching $1"
   while IFS='' read -r line; do
     if [ "${line}" != "${line#--}" ]; then
-      clearLine
       line=$(trimSpace "${line##.*--}")
-      statusMessage decorate green "$line"
+      statusMessage --last decorate green "$line"
     fi
   done
 }

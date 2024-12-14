@@ -27,40 +27,55 @@
 #
 prettierInstall() {
   local usage="_${FUNCNAME[0]}"
-  local quietLog
+  local quietLog start
 
   if whichExists prettier; then
     return 0
   fi
 
-  statusMessage decorate info "Installing npm (to get prettier) ... " || :
-  __usageEnvironment "$usage" npmInstall "$@" || return $?
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  statusMessage decorate info "Installing npm (to get prettier) ... " || return $?
+  local home
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  __usageEnvironment "$usage" nodePackageManagerInstall "$@" || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  statusMessage decorate info "Installing prettier ... " || :
-  __usageEnvironmentQuiet "$usage" "$quietLog" npm install -g prettier || return $?
-  rm -f "$quietLog" || :
-  clearLine || :
+  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
+  statusMessage decorate info "Installing prettier ... " ||
+    __usageEnvironmentQuiet "$usage" "$quietLog" nodePackageManager install -g prettier || _undo $? muzzle popd || return $?
+  __usageEnvironment "$usage" muzzle popd || return $?
+  __usageEnvironment "$usage" rm -rf "$quietLog" || return $?
+  statusMessage reportTiming "$start" "Installed prettier in" || return $?
 }
 _prettierInstall() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Uninstall the `prettier` binary using `NODE_PACKAGE_MANAGER`
+# Environment: NODE_PACKAGE_MANAGER
 prettierUninstall() {
-  local usage="_${FUNCNAME[0]}"
-  local quietLog
-
   if ! whichExists npm; then
     return 0
   fi
   if ! whichExists prettier; then
     return 0
   fi
-  statusMessage decorate info "Removing prettier ... " || :
+  local usage="_${FUNCNAME[0]}"
+
+  local quietLog start
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  local home
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  # TODO: Should statusMessage fail everything? No effect on outcome.
+  statusMessage --first decorate info "Removing prettier ... " || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" npm uninstall -g prettier || return $?
-  rm -rf "$quietLog" || :
-  clearLine || :
+  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" nodePackageManager uninstall -g prettier || _undo $? muzzle popd || return $?
+  __usageEnvironment "$usage" muzzle popd || return $?
+  __usageEnvironment "$usage" rm -rf "$quietLog" || return $?
+  statusMessage --last reportTiming "$start" "removed in" || return $?
 }
 _prettierUninstall() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

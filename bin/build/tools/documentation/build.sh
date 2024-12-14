@@ -185,8 +185,7 @@ documentationBuild() {
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r documentationTemplate; do
     __usageEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$documentationTemplate" "$targetPath${documentationTemplate#"$templatePath"}" || return $?
   done
-  clearLine || :
-  reportTiming "$start" "Indexes completed in" || :
+  statusMessage --last reportTiming "$start" "Indexes completed in" || :
 
   #
   # Build docs
@@ -204,7 +203,6 @@ documentationBuild() {
   else
     ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
-  clearLine || :
 
   __usageEnvironment "$usage" documentationTemplateDirectoryCompile --env-file "$envFile" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "$envFile" || return $?
 

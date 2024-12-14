@@ -59,3 +59,7 @@ testGitCommitFailures() {
   assertNotExitCode --line "$LINENO" --stderr-match "$tempDirectory" 0 gitCommit --home "$tempDirectory" last || return $?
   rm -rf "$tempDirectory" || :
 }
+
+testGitInstallation() {
+  __doesScriptInstallUninstall git gitInstall gitUninstall || return $?
+}

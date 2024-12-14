@@ -207,7 +207,7 @@ documentationIndex_Generate() {
       statusMessage decorate info "$(printf "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$(decorate file "$shellFile")")" "$(decorate red "$lineNumber")")"
       if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
-        clearLine
+        statusMessage --last decorate error bashDocumentation_Extract "$shellFile" "$functionName"
         __failEnvironment "$usage" "Documentation failed for $functionName" || return $?
       fi
       printf "%s\n%s\n" "$shellFile" "$lineNumber" >"$functionIndex/$functionName"
@@ -219,8 +219,7 @@ documentationIndex_Generate() {
   done; then
     return $?
   fi
-  clearLine
-  printf "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"
+  statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"
 }
 _documentationIndex_Generate() {
   # IDENTICAL usageDocument 1
@@ -478,7 +477,6 @@ documentationIndex_LinkDocumentationPaths() {
   fi
   total="$(trimSpace "$(wc -l <"$documentTokensFile")")"
   rm "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-  clearLine || :
   statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" "for" "$(decorate code "$documentationPath")" "in" "$(reportTiming "$start")")"
 }
 _documentationIndex_LinkDocumentationPaths() {

@@ -126,22 +126,23 @@ _daemontoolsInstallServiceRun() {
 
 # Wait for supervise directory to appear
 _daemontoolsSuperviseWait() {
-  local usage="$1"
-  local start elapsed
+  local usage="$1" && shift
+  local total=10 stayQuietFor=5
 
   shift
-  clearLine
-  start=$(date +%s)
+  local start
+  start=$(__usageEnvironment "$usage" date +%s)
   while [ ! -d "$1/supervise" ]; do
     sleep 1 || __failEnvironment "$usage" "interrupted" || return $?
-    elapsed=$(($(date +%s) - start))
-    if [ $elapsed -gt 5 ]; then
-      statusMessage decorate info "Waiting for $1/supervise ($elapsed) ..."
-    elif [ $elapsed -gt 10 ]; then
-      __failEnvironment "$usage" "supervise is not running - $target/supervise never found" || return $?
+    local elapsed
+    elapsed=$(($(__usageEnvironment "$usage" date +%s) - start)) || return $?
+    if [ $elapsed -gt "$stayQuietFor" ]; then
+      statusMessage decorate info "Waiting for $(decorate file "$1/supervise") ($elapsed) ..."
+    elif [ $elapsed -gt "$total" ]; then
+      __failEnvironment "$usage" "supervise is not running - $target/supervise never found after $total seconds" || return $?
     fi
   done
-  clearLine
+  statusmessage --last decorate info "Supervise waiting completed" || return $?
 }
 
 #
@@ -279,7 +280,6 @@ daemontoolsTerminate() {
     esac
     shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
-  clearLine
   statusMessage decorate warning "Shutting down services ..."
   while read -r service; do
     service="${service%/}"
@@ -293,8 +293,7 @@ daemontoolsTerminate() {
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   if [ ${#processIds[@]} -eq 0 ]; then
-    clearLine
-    decorate warning "daemontools is not running"
+    statusMessage --last decorate warning "daemontools is not running"
   else
     statusMessage decorate warning "Shutting down processes ..."
     printf "\n%s\n\n" "$(_list "processIds" "${processIds[@]}")"
@@ -303,7 +302,7 @@ daemontoolsTerminate() {
     if [ -n "$remaining" ]; then
       _environment "daemontools processes still exist: $remaining" || return $?
     fi
-    decorate success "Terminated daemontools"
+    statusMessage --last decorate success "Terminated daemontools"
   fi
 }
 _daemontoolsTerminate() {
@@ -495,7 +494,7 @@ daemontoolsManager() {
     done
     # Does this work?
     if ! sleep "$intervalSeconds"; then
-      printf "%s%s%s\n" "$(clearLine)" "$(decorate reset)" "$(decorate warning "Interrupt")"
+      statusMessage --last printf -- "%s\n%s%s\n" "$(decorate reset)" "$(decorate warning "Interrupt")"
       break
     fi
     if [ "$chirpSeconds" -gt 0 ]; then

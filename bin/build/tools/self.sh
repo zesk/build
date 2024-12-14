@@ -141,8 +141,7 @@ installInstallBinary() {
   __usageEnvironment "$usage" chmod +x "$target" || exitCode=$?
   [ "$exitCode" -ne 0 ] && return "$exitCode"
   # Life is good
-  statusMessage printf -- "%s %s (%s=\"%s\")\n" "$(decorate success "$verb")" "$(decorate code "$target")" "$(decorate label relTop)" "$(decorate value "$relTop")"
-  clearLine || :
+  statusMessage --last printf -- "%s %s (%s=\"%s\")" "$(decorate success "$verb")" "$(decorate code "$target")" "$(decorate label relTop)" "$(decorate value "$relTop")"
   return 0
 }
 _installInstallBinary() {

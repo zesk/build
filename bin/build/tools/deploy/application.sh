@@ -236,7 +236,7 @@ deployApplication() {
       _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-start failed" || return $?
     fi
   else
-    ! $verboseFlag || printf "%s%s\n" "$(clearLine)" "$(decorate info "No deploy-start hook")"
+    ! $verboseFlag || statusMessage --last decorate info "No deploy-start hook"
   fi
 
   if hasHook --application "$deployedApplicationPath" deploy-activate; then

@@ -124,9 +124,8 @@ __packageUpFunction() {
   fi
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" "$packageFunction" "$@" || return $?
-  statusMessage reportTiming "$start" "$verb in"
+  statusMessage --last reportTiming "$start" "$verb in"
   date +%s >"$name" || :
-  clearLine || :
 }
 
 # Upgrade packages lists and sources
@@ -453,8 +452,7 @@ packageUninstall() {
 
   statusMessage decorate info "Uninstalling ${packages[*]} ... "
   __usageEnvironmentQuiet "$usage" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
-  statusMessage reportTiming "$start" "Uninstallation of $* completed in" || :
-  clearLine
+  statusMessage --last reportTiming "$start" "Uninstallation of $* completed in" || :
 }
 _packageUninstall() {
   # IDENTICAL usageDocument 1

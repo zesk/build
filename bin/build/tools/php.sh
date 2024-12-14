@@ -197,12 +197,11 @@ phpBuild() {
   _phpBuildBanner Build PHP || :
 
   _phpEchoBar || :
-  decorate info "Installing build tools ..." || :
+  statusMessage --first decorate info "Installing build tools ..." || :
 
   # Ensure we're up to date
   packageInstall || __failEnvironment "$usage" "Failed to install operating system basics" || return $?
 
-  clearLine || :
   # Ensure we're up to date
   gitInstall || __failEnvironment "$usage" "Failed to install git" || return $?
 
@@ -210,11 +209,10 @@ phpBuild() {
   phpInstall git || __failEnvironment "$usage" "Failed to install php" || return $?
 
   if test "$tagDeploymentFlag"; then
-    decorate info "Tagging $deployment deployment with $versionSuffix ..."
+    statusMessage decorate info "Tagging $deployment deployment with $versionSuffix ..."
     __usageEnvironment "$usage" gitTagVersion --suffix "$versionSuffix" || return $?
   else
-    clearLine || :
-    decorate info "No tagging of deployment $deployment" || :
+    statusMessage decorate info "No tagging of deployment $deployment" || :
   fi
 
   #==========================================================================================
@@ -259,7 +257,7 @@ phpBuild() {
     __usageEnvironment "$usage" rm -rf ./vendor || return $?
   fi
 
-  clearLine || :
+  statusMessage decorate info "Running PHP composer ..."
   # shellcheck disable=SC2119
   __usageEnvironment "$usage" phpComposer "${composerArgs[@]+${composerArgs[@]}}" || return $?
 
@@ -273,7 +271,7 @@ phpBuild() {
 
   __usageEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || return $?
 
-  reportTiming "$initTime" "PHP built $(decorate code "$targetName") in"
+  statusMessage --last reportTiming "$initTime" "PHP built $(decorate code "$targetName") in"
 }
 _phpBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?

@@ -44,8 +44,7 @@ sysvInitScriptInstall() {
         __usageEnvironment "$usage" chmod +x "$target" || return $?
         statusMessage decorate warning "rc.d defaults $(decorate code "$baseName") ..."
         __usageEnvironment "$usage" update-rc.d "$baseName" defaults || return $?
-        clearLine
-        printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "installed successfully")"
+        statusMessage --last printf -- "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "installed successfully")"
         ;;
     esac
     shift

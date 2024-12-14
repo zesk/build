@@ -396,7 +396,7 @@ extensionLists() {
   [ -n "$directory" ] || __failArgument "$usage" "No directory supplied" || return $?
 
   ! $cleanFlag || statusMessage decorate info "Cleaning ..." || :
-  ! $cleanFlag || __usageEnvironment "$usage" find "$directory" -type f -delete || return $? && clearLine
+  ! $cleanFlag || __usageEnvironment "$usage" find "$directory" -type f -delete || return $?
 
   if [ ${#names[@]} -gt 0 ]; then
     for name in "${names[@]}"; do

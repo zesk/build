@@ -426,8 +426,7 @@ documentationTemplateDirectoryCompile() {
     fi
     fileCount=$((fileCount + 1))
   done < <(find "$templateDirectory" -type f -name '*.md' ! -path "*/.*/*" ! -name '_*')
-  clearLine || :
-  reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(decorate info "$targetDirectory") "
+  statusMessage --last reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(decorate info "$targetDirectory") "
   return $exitCode
 }
 _documentationTemplateDirectoryCompile() {

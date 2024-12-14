@@ -117,11 +117,10 @@ documentationIndex_SeeLinker() {
       return "1"
     fi
   done; then
-    clearLine
-    decorate warning "No matching see directives found" || :
+    statusMessage --last decorate warning "No matching see directives found" || :
   fi
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
-  reportTiming "$start" "$(clearLine)See completed in" || :
+  statusMessage --last reportTiming "$start" "See completed in" || :
 }
 _documentationIndex_SeeLinker() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

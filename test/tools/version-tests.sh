@@ -23,6 +23,11 @@ ___testIsVersionData() {
 EOF
 }
 
+testNewRelease() {
+  assertExitCode --line "$LINENO" 0 newRelease --non-interactive || return $?
+}
+
+
 testIsVersion() {
   ___testIsVersionData | while read -r exitCode versionSample; do
     assertExitCode --line "$LINENO" "$exitCode" isVersion "$versionSample" || return $?

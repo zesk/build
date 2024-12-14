@@ -5,6 +5,45 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+testPHPInstallation() {
+  __doesScriptInstallUninstall php phpInstall phpUninstall || return $?
+}
+
+_testComposerTempDirectory() {
+  export BITBUCKET_CLONE_DIR
+  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
+  buildEnvironmentLoad BITBUCKET_CLONE_DIR || return $?
+  if [ -z "$BITBUCKET_CLONE_DIR" ]; then
+    mktemp -d
+  else
+    [ -d "$BITBUCKET_CLONE_DIR" ] || _environment "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
+    mktemp -d --tmpdir="$BITBUCKET_CLONE_DIR"
+  fi
+}
+
+#
+# Side-effect: installs scripts
+#
+testPHPComposerInstallation() {
+  local d oldDir
+
+  oldDir="${BITBUCKET_CLONE_DIR-NONE}"
+
+  # requires docker
+  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
+
+  d=$(__environment _testComposerTempDirectory) || return $?
+  __environment cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/" || return $?
+  __environment phpComposer "$d" || return $?
+  [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
+
+  export BITBUCKET_CLONE_DIR
+  BITBUCKET_CLONE_DIR="$oldDir"
+  [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
+}
+
+
+
 #
 # Usage: {fn} [ --show ] [ --verbose ] [ --keep ]
 # Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.

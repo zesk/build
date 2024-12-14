@@ -26,3 +26,13 @@ __doesScriptInstallUninstall() {
     ! whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "exists after uninstalling" || return $?
   fi
 }
+
+__doesScriptInstall() {
+  local binary="${1-}"
+
+  __testSection "INSTALL $binary"
+  shift
+  ! whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "is already installed" || return $?
+  __environment "$@" || return $?
+  whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "was not installed by" "$@" || return $?
+}

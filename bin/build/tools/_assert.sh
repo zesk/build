@@ -235,8 +235,7 @@ _assertConditionHelper() {
     _assertFailure "$this" "$displayName $message" || return $?
   fi
   if $errorsOk && [ ! -s "$errorFile" ]; then
-    clearLine
-    printf "%s – %s\n" "$message" "$(decorate warning "--stderr-ok used but is NOT necessary")"
+    statusMessage --last printf "%s – %s" "$message" "$(decorate warning "--stderr-ok used but is NOT necessary")"
   fi
   stderrTitle="$this $(decorate bold-red stderr)"
   stdoutTitle="$this $(decorate label stdout)"

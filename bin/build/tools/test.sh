@@ -143,8 +143,7 @@ dumpPipe() {
     suffix="$(decorate success "(shown)")"
   fi
   # shellcheck disable=SC2015
-  printf "%s%s%s %s, %s %s %s\n" \
-    "$(clearLine)" \
+  statusMessage --last printf -- "%s%s %s, %s %s %s" \
     "$name" \
     "$nLines" "$(plural "$nLines" line lines)" \
     "$nBytes" "$(plural "$nBytes" byte bytes)" \
@@ -155,7 +154,7 @@ dumpPipe() {
   fi
   decoration="$(decorate code "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
-  printf "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset)")" "$decoration"
+  printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset)")" "$decoration"
   rm -rf "$item" || :
 }
 _dumpPipe() {
@@ -245,7 +244,6 @@ bashLintFiles() {
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
 
-  clearLine || :
   failedReasons=()
   failedFiles=()
   checkedFiles=()
@@ -254,7 +252,7 @@ bashLintFiles() {
   ii=()
   interactive=false
   saved=("$@")
-  statusMessage decorate info "Checking all shell scripts ..."
+  statusMessage --first decorate info "Checking all shell scripts ..."
   nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
@@ -305,8 +303,7 @@ bashLintFiles() {
   fi
   if [ "${#failedFiles[@]}" -gt 0 ]; then
     {
-      clearLine
-      _list "$(decorate warning "Files failed:")" "${failedFiles[@]}"
+      statusMessage --last _list "$(decorate warning "Files failed:")" "${failedFiles[@]}"
       decorate info "# ${#failedFiles[@]} $(plural ${#failedFiles[@]} error errors)"
     } 1>&2
     if $interactive; then
@@ -332,10 +329,9 @@ _bashLintFilesHelper() {
   ! $verbose || vv+=(--verbose)
   ! $verbose || statusMessage decorate info "👀 Checking \"$file\" ($source) ..." || :
   if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
-    ! $verbose || decorate success "bashLint $file passed"
+    ! $verbose || statusMessage --last decorate success "bashLint $file passed"
   else
-    clearLine
-    ! $verbose || decorate info "bashLint $file failed: $reason"
+    ! $verbose || statusMessage --last decorate info "bashLint $file failed: $reason"
     printf "%s: %s\n" "$file" "$reason" 1>&2
     return 1
   fi
@@ -579,8 +575,7 @@ validateFileContents() {
   statusMessage decorate info "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
-    clearLine
-    decorate error "The following scripts failed:" 1>&2
+    statusMessage --last decorate error "The following scripts failed:" 1>&2
     for item in "${failedReasons[@]}"; do
       echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
@@ -673,8 +668,7 @@ validateFileExtensionContents() {
   rm "$foundFiles"
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
-    clearLine
-    decorate error "The following scripts failed:" 1>&2
+    statusMessage --last decorate error "The following scripts failed:" 1>&2
     for item in "${failedReasons[@]}"; do
       echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done

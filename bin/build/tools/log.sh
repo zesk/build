@@ -98,23 +98,27 @@ _rotateLog() {
 # For all log files in logPath with extension `.log`, rotate them safely
 rotateLogs() {
   local argument logPath count index dryRunArgs
-  local usage
+  local usage="_${FUNCNAME[0]}"
 
-  usage="_${FUNCNAME[0]}"
-
-  logPath=
-  count=
-  dryRunArgs=()
+  local logPath="" count="" dryRunArgs=()
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
-      --dry-run) dryRunArgs=(--dry-run) ;;
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --dry-run)
+        dryRunArgs=(--dry-run)
+        ;;
       *)
         if [ -z "$logPath" ]; then
-          logPath="$argument"
+          logPath="$(usageArgumentDirectory "$usage" logPath "$logPath") || return $?"
         elif [ -z "$count" ]; then
-          count="$argument"
+          count="$(usageArgumentPositiveInteger "$usage" "count" "$argument")" || return $?
         else
           __failArgument "$usage" "$this Unknown argument $argument" || return $?
         fi
@@ -122,17 +126,15 @@ rotateLogs() {
     esac
     shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
-  logPath=$(usageArgumentDirectory _rotateLogs logPath "$logPath") || return $?
+  [ -z "$logPath" ] || __failArgument "$usage" "missing logPath" || return $?
+  [ -z "$count" ] || __failArgument "$usage" "missing count" || return $?
 
-  __usageArgument "$usage" isInteger "$count" || return $?
-  [ "$count" -gt 0 ] || __failArgument "$usage" "$this count $count must be a positive integer greater than zero" || return $?
-
-  statusMessage decorate info "Rotating log files in path $logPath"
+  statusMessage decorate info "Rotating log files in path $(decorate file "$logPath")"
   find "$logPath" -type f -name '*.log' ! -path "*/.*/*" | while IFS= read -r logFile; do
     statusMessage decorate info "Rotating log file $logFile" || :
-    rotateLog "${dryRunArgs[@]+${dryRunArgs[@]}}" "$logFile" "$count" || return $?
+    __usageEnvironment "$usage" rotateLog "${dryRunArgs[@]+${dryRunArgs[@]}}" "$logFile" "$count" || return $?
   done
-  clearLine
+  statusMessage --last decorate info "Rotated log files in path $(decorate file "$logPath")"
 }
 _rotateLogs() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

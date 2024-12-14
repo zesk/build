@@ -22,3 +22,7 @@ testMariaDump() {
 
   unset MARIADB_BINARY_DUMP
 }
+
+testMariaDBInstallation() {
+  __doesScriptInstallUninstall mariadb mariadbInstall mariadbUninstall || return $?
+}

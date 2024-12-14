@@ -71,9 +71,7 @@ _pipInstall() {
   statusMessage decorate info "Installing $name ... "
   __usageEnvironmentQuiet "$usage" "$quietLog" pip install "$name" "$@" || return $?
   whichExists "$name" || __failEnvironment "$usage" "$name not found after install" || return $?
-  statusMessage reportTiming "$start" "Installed $name in"
-  clearLine || :
-
+  statusMessage --last reportTiming "$start" "Installed $name in"
 }
 
 # Utility to install python dependencies via pip
@@ -94,8 +92,7 @@ _pipUninstall() {
   statusMessage decorate info "Removing $name ... "
   __usageEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
   ! whichExists "$name" || __failEnvironment "$usage" "$name was still found after uninstall" || return $?
-  statusMessage reportTiming "$start" "Uninstalled $name in"
-  clearLine || :
+  statusMessage --last reportTiming "$start" "Uninstalled $name in"
 }
 
 # Install `docker-compose`
@@ -142,8 +139,7 @@ dockerComposeUninstall() {
   statusMessage decorate info "Removing $name ... "
   __usageEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
   ! whichExists "$name" || __failEnvironment "$usage" "$name was still found after uninstall" || return $?
-  statusMessage reportTiming "$start" "Uninstalled $name in"
-  clearLine || :
+  statusMessage --last reportTiming "$start" "Uninstalled $name in"
 }
 _dockerComposeUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

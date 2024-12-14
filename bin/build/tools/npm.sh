@@ -9,9 +9,8 @@
 #
 
 #
-# Usage: {fn} npmVersion
+# Usage: {fn} version
 # Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
-# Summary: Install NPM in the build environment
 # Install NPM in the build environment
 # If this fails it will output the installation log.
 # When this tool succeeds the `npm` binary is available in the local operating system.
@@ -23,7 +22,7 @@
 npmInstall() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments
-  local npm_version quietLog
+  local version quietLog
 
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -36,7 +35,7 @@ npmInstall() {
         ;;
       --version)
         shift
-        npm_version=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        version=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
         usageArgumentUnknown "$usage" "$argument" || return $?
@@ -50,11 +49,11 @@ npmInstall() {
   fi
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
-  npm_version="${1-${BUILD_NPM_VERSION:-latest}}"
-  quietLog=$(buildQuietLog npmInstall) || __failEnvironment "buildQuietLog $usage"
+  version="${1-${BUILD_NPM_VERSION:-latest}}"
+  quietLog=$(buildQuietLog "${usage#_}") || __failEnvironment "buildQuietLog $usage"
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" npm i -g "npm@$npm_version" --force 2>&1
+  __usageEnvironmentQuiet "$usage" "$quietLog" npm i -g "npm@$version" --force 2>&1
 }
 _npmInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

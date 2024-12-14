@@ -83,10 +83,9 @@ buildFailed() {
   local quietLog="${1-}" showLines=50 failBar
 
   shift
-  clearLine || :
   failBar="$(decorate reset)$(decorate magenta "$(repeat 80 "❌")")"
   # shellcheck disable=SC2094
-  printf -- "\n%s\n%s\n%s\n\n" \
+  statusMessage --last printf -- "\n%s\n%s\n%s\n" \
     "$(printf -- "\n%s\n\n" "$(bigText "Failed" | wrapLines "" "    ")" | wrapLines --fill "*" "$(decorate error)" "$(decorate reset)")" \
     "$failBar" \
     "$(dumpPipe --tail "$(basename "$quietLog")" "$@" --lines "$showLines" <"$quietLog")"

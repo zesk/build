@@ -371,8 +371,8 @@ awsCredentialsAdd() {
         elif [ -z "$secret" ]; then
           secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -438,8 +438,8 @@ awsCredentialsRemove() {
         if [ -z "$profileName" ]; then
           profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -750,11 +750,11 @@ awsIPAccess() {
   __usageEnvironment "$usage" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-  # IDENTICAL profileNameArgumentValidation 4
-  if [ -z "$profileName" ]; then
-    profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
-    [ -n "$profileName" ] || profileName="default"
-  fi
+    # IDENTICAL profileNameArgumentValidation 4
+    if [ -z "$profileName" ]; then
+      profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
+      [ -n "$profileName" ] || profileName="default"
+    fi
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
     if awsCredentialsHasProfile "$profileName"; then
       # __usageEnvironment "$usage" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
@@ -769,7 +769,6 @@ awsIPAccess() {
   fi
 
   if $verboseFlag; then
-    clearLine
     if $optionRevoke; then
       bigText "Closing ..." | wrapLines "$(decorate magenta)" "$(decorate reset)"
     else

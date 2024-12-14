@@ -174,16 +174,16 @@ identicalCheck() {
           tokenLineCount=$(head -1 "$tokenFile")
           tokenFileName=$(tail -1 "$tokenFile")
           if [ ! -f "$countFile" ]; then
-            printf "%s%s: %s\n" "$(clearLine)" "$(decorate info "$token")" "$(decorate error "Token counts do not match:")" 1>&2
-            printf "    %s has %s specified\n" "$(decorate code "$(decorate file "$tokenFileName")")" "$(decorate success "$tokenLineCount")" 1>&2
-            printf "    %s has %s specified\n" "$(decorate code "$(decorate file "$searchFile")")" "$(decorate error "$count")" 1>&2
+            statusMessage printf -- "%s: %s\n" "$(decorate info "$token")" "$(decorate error "Token counts do not match:")" 1>&2
+            printf -- "    %s has %s specified\n" "$(decorate code "$(decorate file "$tokenFileName")")" "$(decorate success "$tokenLineCount")" 1>&2
+            printf -- "    %s has %s specified\n" "$(decorate code "$(decorate file "$searchFile")")" "$(decorate error "$count")" 1>&2
             isBadFile=true
             touch "$countFile.compare" || :
             touch "$tempDirectory/$prefixIndex/$tokenLineCount@$token.match.compare" || :
           elif ! isUnsignedInteger "$count"; then
             __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
             badFiles+=("$searchFile")
-            printf "%s\n" "$(decorate code "$searchFile:$lineNumber") - not integers: $(decorate value "$identicalLine")"
+            printf -- "%s\n" "$(decorate code "$searchFile:$lineNumber") - not integers: $(decorate value "$identicalLine")"
           else
             compareFile="${countFile}.compare"
             # statusMessage decorate info "compareFile $compareFile"
@@ -196,17 +196,16 @@ identicalCheck() {
               dumpPipe compareFile <"$compareFile"
               badFiles+=("$searchFile")
               {
-                clearLine
-                printf "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")" "$(decorate code)" || :
+                statusMessage --last printf "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")" "$(decorate code)" || :
                 grep -e "$quotedPrefix" "$compareFile" | wrapLines "$(decorate code)    " "$(decorate reset)" || :
-                decorate reset || :
+                statusMessage --first decorate reset
               } 1>&2
             elif $mapFile; then
               _identicalMapAttributesFilter "$usage" "$searchFile" <"$countFile" >"$countFile.mapped" || return $?
               countFile="$countFile.mapped"
             fi
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-              printf "%s%s: %s\n< %s\n> %s%s\n" "$(clearLine)" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
+              statusMessage --last -- printf "%s%s: %s\n< %s\n> %s%s\n" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
               diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
               isBadFile=true
             else
@@ -222,7 +221,7 @@ identicalCheck() {
               if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
                 badFiles+=("$tokenFileName")
                 badFiles+=("$searchFile")
-                decorate error "$(clearLine)Unable to repair $(decorate value "$token") in $(decorate code "$searchFile")" 1>&2
+                statusMessage --last decorate error "Unable to repair $(decorate value "$token") in $(decorate code "$searchFile")" 1>&2
               else
                 isBadFile=false
                 statusMessage decorate success "Repaired $(decorate value "$token") in $(decorate code "$searchFile")"
@@ -249,9 +248,9 @@ identicalCheck() {
     exitCode=$failureCode
     if [ -n "$binary" ]; then
       "$binary" "${badFiles[@]}"
+      statusMessage --last printf -- "%s %s %s %s" "$(decorate success "Sent")" "${#badFiles[@]} $(plural ${#badFiles[@]} file files)" "$(decorate success "to")" "$(decorate code "$binary")" || return $?
     fi
   fi
-  clearLine
 
   #
   # Singles checks
@@ -267,10 +266,10 @@ identicalCheck() {
         tokenFile="$tokenFile/$token"
         tokenFile="$(tail -n 1 "$tokenFile")"
         if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
-          printf "%s: %s in %s\n" "$(decorate success "Single instance of token ok:")" "$(decorate code "$token")" "$(decorate info "$(decorate file "$tokenFile")")"
+          statusMessage printf -- "%s: %s in %s\n" "$(decorate success "Single instance of token ok:")" "$(decorate code "$token")" "$(decorate info "$(decorate file "$tokenFile")")"
           foundSingles+=("$token")
         else
-          printf "%s: %s in %s\n" "$(decorate warning "Single instance of token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")" >>"$resultsFile"
+          statusMessage printf -- "%s: %s in %s\n" "$(decorate warning "Single instance of token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")" >>"$resultsFile"
           if [ -n "$binary" ]; then
             "$binary" "$tokenFile"
           fi
@@ -294,7 +293,7 @@ identicalCheck() {
   fi
   cat "$resultsFile" 1>&2 || :
   rm -rf "$resultsFile" || :
-  clearLine || :
+  statusMessage --first printf -- "%s" ""
   return "$exitCode"
 }
 _identicalCheck() {

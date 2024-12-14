@@ -7,15 +7,6 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
-
-testVersionLive() {
-  assertExitCode --line "$LINENO" 0 runHook version-live || return $?
-}
-
-testNewRelease() {
-  assertExitCode --line "$LINENO" 0 newRelease --non-interactive || return $?
-}
-
 __testInstallInstallBuild() {
   local topDir targetDir marker testBinary
   export BUILD_HOME
@@ -89,71 +80,6 @@ testMapPortability() {
   unset DUDE WILD
 }
 
-_testComposerTempDirectory() {
-  export BITBUCKET_CLONE_DIR
-  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
-  buildEnvironmentLoad BITBUCKET_CLONE_DIR || return $?
-  if [ -z "$BITBUCKET_CLONE_DIR" ]; then
-    mktemp -d
-  else
-    [ -d "$BITBUCKET_CLONE_DIR" ] || _environment "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
-    mktemp -d --tmpdir="$BITBUCKET_CLONE_DIR"
-  fi
-}
-
-#
-# Side-effect: installs scripts
-#
-testPHPComposerInstallation() {
-  local d oldDir
-
-  oldDir="${BITBUCKET_CLONE_DIR-NONE}"
-
-  # requires docker
-  # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
-
-  d=$(__environment _testComposerTempDirectory) || return $?
-  __environment cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/" || return $?
-  __environment phpComposer "$d" || return $?
-  [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
-
-  export BITBUCKET_CLONE_DIR
-  BITBUCKET_CLONE_DIR="$oldDir"
-  [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
-}
-
-testGitInstallation() {
-  __doesScriptInstallUninstall git gitInstall gitUninstall || return $?
-}
-
-testPythonInstallation() {
-  __doesScriptInstallUninstall python pythonInstall pythonUninstall || return $?
-}
-
-testMariaDBInstallation() {
-  __doesScriptInstallUninstall mariadb mariadbInstall mariadbUninstall || return $?
-}
-
-testPHPInstallation() {
-  __doesScriptInstallUninstall php phpInstall phpUninstall || return $?
-}
-
-#
-# Side-effect: installs and uninstalls scripts
-#
-testNodeInstallations() {
-  # npm 18 installed in this image
-  if ! whichExists npm; then
-    # Part of core install in some systems, so no uninstall
-    __doesScriptInstall npm npmInstall || return $?
-  fi
-  if ! whichExists docker-compose; then
-    # Part of core install in some systems, so no uninstall
-    __doesScriptInstall docker-compose dockerComposeInstall || return $?
-  fi
-  __doesScriptInstallUninstall prettier prettierInstall prettierUninstall || return $?
-}
-
 testAdditionalBins() {
   local binTest
   local aa
@@ -166,14 +92,4 @@ testAdditionalBins() {
     fi
     assertExitCode "${aa[@]+"${aa[@]}"}" --line "$LINENO" 0 "$binTest" "$(pwd)" || return $?
   done
-}
-
-__doesScriptInstall() {
-  local binary="${1-}"
-
-  __testSection "INSTALL $binary"
-  shift
-  ! whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "is already installed" || return $?
-  __environment "$@" || return $?
-  whichExists "$binary" || _environment "binary" "$(decorate code "$binary")" "was not installed by" "$@" || return $?
 }

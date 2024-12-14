@@ -469,16 +469,14 @@ __gitCommitReleaseNotesUpdate() {
   home=$(__usageEnvironment "$usage" buildHome)
   displayNotes="${notes#"$home"/}"
   pattern="$(quoteGrepPattern "$comment")"
-  __usageEnvironment "$usage" clearLine || return $?
-  __usageEnvironment "$usage" printf "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate value "$displayNotes") $(decorate decoration)")" "$(decorate reset)" || return $?
+  __usageEnvironment "$usage" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate value "$displayNotes") $(decorate decoration)")" "$(decorate reset)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __usageEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
     __usageEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(decorate info "Adding comment")" "$(decorate code "$displayNotes")" "$(boxedHeading "$comment")" || return $?
     __usageEnvironment "$usage" git add "$notes" || return $?
     __usageEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
   else
-    __usageEnvironment "$usage" clearLine || return $?
-    __usageEnvironment "$usage" printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
+    __usageEnvironment "$usage" statusMessage printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
     __usageEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
   fi
 }
@@ -799,7 +797,7 @@ gitPreCommitHeader() {
   directory=$(__gitPreCommitCache true) || return $?
 
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
-  printf "%s%s: %s\n" "$(clearLine)" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
+  statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
     color="warning"

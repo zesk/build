@@ -145,11 +145,11 @@ crontabApplicationUpdate() {
     return 0
   fi
   statusMessage printf "%s %s ...\n" "$(decorate info "Updating crontab on ")" "$(decorate value "$(date)")"
-  crontab -u "$user" - <"$newCrontab" 2>/dev/null
-  returnCode=$?
-  rm -f "$newCrontab" || :
-  [ $returnCode -eq 0 ] || _environment "crontab -u \"$user\"" || return $returnCode
-  clearLine
+  returnCode=0
+  __usageEnvironment "$usage" crontab -u "$user" - <"$newCrontab" 2>/dev/null || returnCode=$?
+  __usageEnvironment "$usage" rm -f "$newCrontab" || return $?
+  [ $returnCode -eq 0 ] || return "$returnCode"
+  statusMessage --last printf -- "%s %s on %s\n" "$(decorate info "Updated crontab of ")" "$(decoreate code "$user")" "$(decorate value "$(date)")"
   return 0
 }
 _crontabApplicationUpdate() {

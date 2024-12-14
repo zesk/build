@@ -128,7 +128,7 @@ aptKeyAdd() {
   [ -n "$repoUrl" ] || repoUrl="https://$host/"
 
   signFileText="$(joinArguments "," "${signFiles[@]}")"
-  statusMessage decorate info "Adding repository and updating sources ... "
+  statusMessage decorate info "Configuring repository ... "
 
   [ -n "$listName" ] || listName="${names[0]}"
   sourcesPath=$(_usageAptSourcesPath "$usage") || return $?
@@ -139,13 +139,12 @@ aptKeyAdd() {
   done
   __usageEnvironment "$usage" chmod a+r "$listTarget" || return $?
   if ! $skipUpdate; then
-    statusMessage decorate success "Updating sources ... "
+    statusMessage --first decorate success "updating ... "
     __usageEnvironment "$usage" packageUpdate --force || return $?
   else
-    statusMessage decorate success "Skipped update ... "
+    statusMessage --first decorate success "skipped ... "
   fi
-  statusMessage reportTiming "$start" "Added $title to sources in"
-  clearLine || :
+  statusMessage --last reportTiming "$start" "Added $title to sources in"
 }
 _aptKeyAdd() {
   # IDENTICAL usageDocument 1

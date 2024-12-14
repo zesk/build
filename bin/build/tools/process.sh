@@ -142,7 +142,7 @@ processWait() {
     sleep 1 || __failEnvironment "$usage" "sleep interrupted" || return $?
   done
   if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
-    clearLine
+    statusMessage --last decorate warning "$elapsed $(plural "$elapsed" second seconds) elapsed (threshold is $(decorate code "$STATUS_THRESHOLD"))"
   fi
 }
 _processWait() {

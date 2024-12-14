@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 151
+# IDENTICAL _sugar 150
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
@@ -21,11 +21,10 @@
 # Argument: title - Optional. String.
 # Argument: item - Optional. String. One or more items to list.
 _format() {
-  local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}"
+  local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}" n=/dev/null
   sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
-  exec 2>/dev/null
   # shellcheck disable=SC2015
-  shift && shift && shift && shift || :
+  shift 2>"$n" && shift 2>"$n" && shift 2>"$n" && shift 2>"$n" || :
   if [ $# -eq 0 ]; then
     printf -- "%s\n" "$title"
   else

@@ -330,8 +330,7 @@ __bashCoverageReportConvertFiles() {
       grep -A 32767 -m 1 "$magic" <"$targetFile.$$" | grep -v "$magic"
     } >"$targetFile"
     __usageEnvironment "$usage" rm -rf "$targetFile.$$" || return $?
-    clearLine
-    printf "%s %s\n" "$(decorate info "Wrote")" "$(decorate code "$targetFile")"
+    statusMessage --last printf -- "%s %s\n" "$(decorate info "Wrote")" "$(decorate code "$targetFile")"
   done <"$reportCache/files"
 }
 

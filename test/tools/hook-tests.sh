@@ -13,6 +13,11 @@ _hookTestFailed() {
   return 1
 }
 
+testVersionLive() {
+  assertExitCode --line "$LINENO" 0 runHook version-live || return $?
+}
+
+
 testHookSystem() {
   local testDir here randomApp randomDefault path
   local hook exitCode f
