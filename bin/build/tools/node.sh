@@ -91,6 +91,8 @@ _nodeUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# No-Arguments: Output the node package manager
+# Argument: * - Required. Argument. Passed to the node package manager
 nodePackageManager() {
   local usage="_${FUNCNAME[0]}"
 
@@ -98,7 +100,12 @@ nodePackageManager() {
   [ -n "$manager" ] || __failEnvironment "$usage" "NODE_PACKAGE_MANAGER is blank" || return $?
   nodePackageManagerValid "$manager" || __failEnvironment "$usage" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(_list nodePackageManagerValid)" || return $?
 
-  printf "%s\n" "$manager"
+  if [ $# -eq 0 ]; then
+    printf "%s\n" "$manager"
+  else
+    isExecutable "$manager" || __failEnvironment "$usage" "$(decorate code "$manager") is not an executable" || return $?
+    __usageEnvironment "$usage" "$manager" "$@" || return $?
+  fi
 }
 _nodePackageManager() {
   # IDENTICAL usageDocument 1
@@ -115,7 +122,7 @@ nodePackageManagerInstall() {
     return 0
   fi
   local method="${manager}Install"
-  isFuntion "$method" || __failEnvironment "$usage" "No installer for $manager exists ($method)" || return $?
+  isFunction "$method" || __failEnvironment "$usage" "No installer for $manager exists ($method)" || return $?
   __usageEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerInstall() {
@@ -133,7 +140,7 @@ nodePackageManagerUninstall() {
     return 0
   fi
   local method="${manager}Uninstall"
-  isFuntion "$method" || __failEnvironment "$usage" "No uninstaller method for $manager exists ($method)" || return $?
+  isFunction "$method" || __failEnvironment "$usage" "No uninstaller method for $manager exists ($method)" || return $?
   __usageEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerUninstall() {
@@ -142,12 +149,12 @@ _nodePackageManagerUninstall() {
 }
 
 nodePackageManagerValid() {
-  local valid=("npm" "yarn" "npx")
+  local valid=("npm" "yarn")
   if [ $# -eq 0 ]; then
     printf -- "%s\n" "${valid[@]}"
     return 0
   fi
   while [ $# -gt 0 ]; do
-    isFuntion "${1}Install" || return 1
+    isFunction "${1}Install" || return 1
   done
 }
