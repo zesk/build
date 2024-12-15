@@ -99,13 +99,25 @@ A top-level `.deploy` directory is created for build steps and contains metadata
 
 ## Run tests in docker
 
-Scripts are written by loading an `.env` file and then run commands directly in a test container:
+Scripts are written by loading an environment values file and then run commands directly in a test container:
 
     bin/build/bitbucket-container.sh --env-file .env.MYTESTENV bin/test.sh
 
-`.env` appears to have various machinations such that it's difficult at best to have a single format which works in your projects.
+## Environment files
 
-The solution is simple: detect whether a `.env` is formatted to support **Docker** or not and convert it appropriately on-the-fly as needed; Zesk Build supports this detection and conversion.
+Environment values files can adhere to the **Docker** format (no quotes) or be bash-compatible (`source` compatible) but not both, unfortunately; as the Docker format is incompatible with `bash` and vice-versa regarding values with spaces in them.
+
+### Docker-compatible
+
+    NAME=Zesk Build
+    ITEMS=(1 2 3 4)
+
+### Bash-compatible
+Given that your project may use one or both, it's best to support any implementation when possible.
+
+> **Note:** `.env` files appear to have different implementations such that it's difficult at best to have a single format which works in your projects.
+>
+> We _detect_ whether an environment values file is formatted to support **Docker** or not and _convert it_ appropriately on-the-fly as needed. See: `anyEnvToDockerEnv` and `anyEnvToBashEnv`
 
 ## Tested operating systems
 

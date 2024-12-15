@@ -222,12 +222,12 @@ dockerEnvFromBashEnv() {
   tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
   for file in "$@"; do
     [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
-    env -i bash -c "set -a && source $file && declare -px" >"$tempFile" || __failArgument "$usage" "$file is not a valid bash file" || return $?
+    env -i bash -c "set -a; source \"$file\"; declare -px; declare -pa" >"$tempFile" || __failArgument "$usage" "$file is not a valid bash file" || return $?
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}
     printf -- "%s=%s\n" "$name" "$(unquote "\"" "$value")"
-  done < <(removeFields 2 <"$tempFile" | grep -E -v '^(OLDPWD|PWD|_|SHLVL)\b' || :)
+  done < <(removeFields 2 <"$tempFile" | grep -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)' || :)
   __usageEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 _dockerEnvFromBashEnv() {
