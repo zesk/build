@@ -487,7 +487,7 @@ _gitCommit() {
 # Usage: gitMainly
 # Exit Code: 1 - Already in main, staging, or HEAD, or git merge failed
 # Exit Code: 0 - git merge succeeded
-# Merge `staging` and `main` branches of a Git repository into the current branch.
+# Merge `staging` and `main` branches of a git repository into the current branch.
 #
 # Will merge `origin/staging` and `origin/main` after doing a `--pull` for both of them
 #
