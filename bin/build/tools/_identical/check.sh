@@ -196,7 +196,7 @@ identicalCheck() {
               dumpPipe compareFile <"$compareFile"
               badFiles+=("$searchFile")
               {
-                statusMessage --last printf "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")" "$(decorate code)" || :
+                statusMessage --last printf -- "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")" "$(decorate code)" || :
                 grep -e "$quotedPrefix" "$compareFile" | wrapLines "$(decorate code)    " "$(decorate reset)" || :
                 statusMessage --first decorate reset
               } 1>&2
@@ -205,7 +205,7 @@ identicalCheck() {
               countFile="$countFile.mapped"
             fi
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-              statusMessage --last -- printf "%s%s: %s\n< %s\n> %s%s\n" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
+              statusMessage --last -- printf -- "%s%s: %s\n< %s\n> %s%s\n" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
               diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
               isBadFile=true
             else
@@ -232,12 +232,12 @@ identicalCheck() {
             fi
           fi
         else
-          printf "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
+          printf -- "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
           __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
           if [ "$token" = "" ]; then
             dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
           fi
-          statusMessage decorate info "$(printf "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(decorate code "$token")" "$(decorate value "$(decorate file "$searchFile")")")"
+          statusMessage decorate info "$(printf -- "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(decorate code "$token")" "$(decorate value "$(decorate file "$searchFile")")")"
         fi
       done < <(grep -n -e "$quotedPrefix" <"$searchFile" || :)
     done <"$searchFileList"
@@ -281,7 +281,7 @@ identicalCheck() {
       if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
         while read -r tokenFile; do
           tokenFile="$(tail -n 1 "$tokenFile")"
-          printf "%s: %s %s\n" "$(decorate warning "Multiple instance of --single token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")"
+          printf -- "%s: %s %s\n" "$(decorate warning "Multiple instance of --single token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")"
         done < <(find "$tempDirectory" -name "$token" -type f)
       fi
     done

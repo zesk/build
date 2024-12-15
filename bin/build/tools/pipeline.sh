@@ -121,19 +121,30 @@ versionSort() {
   sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
 }
 _versionSort() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Get the current IP address of the host
-# Exit Code: 1 - Returns
+# Get the current IP address of a host
 ipLookup() {
-  # Courtesy of Market Ruler, LLC thanks
-  local default="https://www.conversionruler.com/showip/?json"
+  local usage="_${FUNCNAME[0]}"
+
+  local url jqFilter
   if ! packageWhich curl curl; then
-    return 1
+    __failEnvironment "$usage" "Requires curl to operate" || return $?
   fi
-  curl -s "${IP_URL:-$default}"
+  url=$(__usageEnvironment "$usage" buildEnvironmentGet IP_URL) || return $?
+  [ -n "$url" ] || __failEnvironment "$usage" "$(decorate value "IP_URL") is required for $(decorate code "${usage#_}")" || return $?
+  jqFilter=$(__usageEnvironment "$usage" buildEnvironmentGet IP_URL_FILTER) || return $?
+  urlValid "$url" || __failEnvironment "$usage" "URL $(decorate error "$url") is not a valid URL" || return $?
+  local pp=(cat)
+  [ -z "$jqFilter" ] || pp=(jq "$jqFilter")
+  __usageEnvironment "$usage" curl -s "$url" | "${pp[@]}" || return $?
+}
+_ipLookup() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # For security one should update keys every N days

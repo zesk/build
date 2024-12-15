@@ -11,7 +11,7 @@
 
 # URL of latest release
 __installBinBuildLatest() {
-  printf "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
+  printf -- "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
 }
 
 __installBinBuildURL() {
@@ -19,17 +19,17 @@ __installBinBuildURL() {
 
   latestVersion=$(__usageEnvironment "$usage" mktemp) || return $?
   if ! curl -s "$(__installBinBuildLatest)" >"$latestVersion"; then
-    message="$(printf "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$latestVersion")")"
+    message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$latestVersion")")"
     rm -f "$latestVersion" || :
     __failEnvironment "$usage" "$message" || return $?
   fi
   if ! url=$(jq -r .tarball_url <"$latestVersion"); then
-    message="$(printf "%s\n%s\n" "Unable to fetch .tarball_url JSON:" "$(cat "$latestVersion")")"
+    message="$(printf -- "%s\n%s\n" "Unable to fetch .tarball_url JSON:" "$(cat "$latestVersion")")"
     rm -f "$latestVersion" || :
     __failEnvironment "$usage" "$message" || return $?
   fi
   [ "${url#https://}" != "$url" ] || __failArgument "$usage" "URL must begin with https://" || return $?
-  printf "%s\n" "$url"
+  printf -- "%s\n" "$url"
 }
 
 # Check the install directory after installation and output the version

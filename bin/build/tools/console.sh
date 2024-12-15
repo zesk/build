@@ -49,13 +49,13 @@ consoleGetColor() {
   colors=()
   if ! sttyOld=$(stty -g 2>/dev/null); then
     noTTY=true
-    printf "\e]%d;?\e\\" "${xtermCode}" || :
+    printf -- "\e]%d;?\e\\" "${xtermCode}" || :
     sleep "$timingTweak" || :
     read -t 2 -r result
     exitCode=$?
   else
     __usageEnvironment "$usage" stty raw -echo min 0 time 0 || return $?
-    printf "\e]%d;?\e\\" "${xtermCode}" >/dev/tty || :
+    printf -- "\e]%d;?\e\\" "${xtermCode}" >/dev/tty || :
     sleep "$timingTweak" || :
     read -t 2 -r result </dev/tty
     exitCode=$?
@@ -65,7 +65,7 @@ consoleGetColor() {
     # remove escape chars
     result="${result#*;}"
     result="${result#rgb:}"
-    IFS='/' read -r -a colors < <(printf "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
+    IFS='/' read -r -a colors < <(printf -- "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
   fi
   if ! "$noTTY" && ! stty "$sttyOld"; then
     __failEnvironment "$usage" "stty reset to \"$sttyOld\" failed" || return $?
@@ -74,11 +74,11 @@ consoleGetColor() {
     for color in "${colors[@]+${colors[@]}}"; do
       case "$color" in
         [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])
-          printf "%d " $(((0x$color + 0) / 256))
+          printf -- "%d " $(((0x$color + 0) / 256))
           ;;
       esac
     done
-    printf "\n"
+    printf -- "\n"
   fi
 
 }
@@ -111,14 +111,14 @@ consoleConfigureColorMode() {
   elif isBitBucketPipeline; then
     colorMode=dark
   fi
-  printf "%s\n" "$colorMode"
+  printf -- "%s\n" "$colorMode"
 }
 
 # Set the title of the window for the console
 consoleSetTitle() {
   local usage="_${FUNCNAME[0]}"
   [ -t 0 ] || __failEnvironment "$usage" "stdin is not a terminal" || return $?
-  printf "\e%s\007" "]0;$*"
+  printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {
   # IDENTICAL usageDocument 1
@@ -166,7 +166,7 @@ _consoleLinksSupported() {
 consoleFileLink() {
   export HOSTNAME HOME
   if ! consoleLinksSupported; then
-    printf "%s\n" "$(decoratePath "$1")"
+    printf -- "%s\n" "$(decoratePath "$1")"
   else
     local path="$1"
     if [ "${path:0:1}" != "/" ]; then
@@ -190,7 +190,7 @@ __decorateExtensionFile() {
 # Argument: text - Optional. Text to output linked to `url`.
 __decorateExtensionLink() {
   if ! consoleLinksSupported; then
-    printf "%s\n" "$1"
+    printf -- "%s\n" "$1"
   else
     consoleLink "$@"
   fi

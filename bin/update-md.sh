@@ -41,7 +41,7 @@ __tools() {
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -62,7 +62,7 @@ isUnsignedInteger() {
 __addNoteTo() {
   statusMessage decorate info "Adding note to $1"
   cp "$1" bin/build
-  printf "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
+  printf -- "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
   git add "bin/build/$1"
 }
 
@@ -97,7 +97,7 @@ __updateMarkdown() {
   buildMarker=bin/build/build.json
 
   statusMessage decorate info "Generating build.json"
-  printf "%s" "{}" | jq --arg version "$(runHook version-current)" \
+  printf -- "%s" "{}" | jq --arg version "$(runHook version-current)" \
     --arg id "$(runHook application-id)" \
     '. + {version: $version, id: $id}' >"$buildMarker"
   __usageEnvironment "$usage" git add "$buildMarker" || return $?

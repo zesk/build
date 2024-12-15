@@ -9,6 +9,6 @@
 
 testYarnInstallation() {
   assertExitCode 0 nodeUninstall || return $?
-  __doesScriptInstall yarn yarnInstall || return $?
+  __checkFunctionInstallsBinary yarn yarnInstall || return $?
   assertExitCode 0 whichExists node || return $?
 }

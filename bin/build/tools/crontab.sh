@@ -149,7 +149,7 @@ crontabApplicationUpdate() {
   __usageEnvironment "$usage" crontab -u "$user" - <"$newCrontab" 2>/dev/null || returnCode=$?
   __usageEnvironment "$usage" rm -f "$newCrontab" || return $?
   [ $returnCode -eq 0 ] || return "$returnCode"
-  statusMessage --last printf -- "%s %s on %s\n" "$(decorate info "Updated crontab of ")" "$(decoreate code "$user")" "$(decorate value "$(date)")"
+  statusMessage --last printf -- "%s %s on %s\n" "$(decorate info "Updated crontab of ")" "$(decorate code "$user")" "$(decorate value "$(date)")"
   return 0
 }
 _crontabApplicationUpdate() {

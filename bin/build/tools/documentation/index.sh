@@ -74,22 +74,22 @@ documentationIndex_Lookup() {
   fi
   sourceFile="$(head -n 1 "$indexRoot/$1")"
   lineNumber="$(tail -n 1 "$indexRoot/$1")"
-  resultFile="$(printf "%s/%s/%s\n" "$cacheDirectory/code" "${sourceFile##./}" "$1")"
+  resultFile="$(printf -- "%s/%s/%s\n" "$cacheDirectory/code" "${sourceFile##./}" "$1")"
   if [ ! -f "$resultFile" ]; then
     __failEnvironment "$usage" "Index is corrupt, file $(decorate error "$resultFile") is not found. regenerate" || return $?
   fi
   case $mode in
     combined)
-      printf "%s:%d\n" "$sourceFile" "$lineNumber"
+      printf -- "%s:%d\n" "$sourceFile" "$lineNumber"
       ;;
     settings)
-      printf "%s\n" "$resultFile"
+      printf -- "%s\n" "$resultFile"
       ;;
     source)
-      printf "%s\n" "$sourceFile"
+      printf -- "%s\n" "$sourceFile"
       ;;
     line)
-      printf "%d\n" "$lineNumber"
+      printf -- "%d\n" "$lineNumber"
       ;;
   esac
   return 0
@@ -110,7 +110,7 @@ _documentationIndex_GeneratePath() {
   if [ ! -d "$cacheDirectory" ]; then
     __failEnvironment "$usage" "$cacheDirectory is not a directory" || return $?
   fi
-  printf "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
+  printf -- "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
 }
 __documentationIndex_GeneratePath() {
   # IDENTICAL usageDocument 1
@@ -192,7 +192,7 @@ documentationIndex_Generate() {
   if ! find "$codePath" -type f -name '*.sh' | while read -r shellFile; do
     fileIndex="$cacheDirectory/files/$(basename "$shellFile")"
     if [ ! -f "$fileIndex" ] || ! grep -q "$shellFile" "$fileIndex"; then
-      printf "%s\n" "$shellFile" >>"$fileIndex"
+      printf -- "%s\n" "$shellFile" >>"$fileIndex"
     fi
     fileCacheMarker="$cacheDirectory/code/${shellFile#/}"
     if [ ! -d "$fileCacheMarker" ]; then
@@ -204,7 +204,7 @@ documentationIndex_Generate() {
     pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$shellFile" | while read -r functionName; do
       lineNumber="${functionName%%:*}"
       functionName="${functionName#*:}"
-      statusMessage decorate info "$(printf "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$(decorate file "$shellFile")")" "$(decorate red "$lineNumber")")"
+      statusMessage decorate info "$(printf -- "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$(decorate file "$shellFile")")" "$(decorate red "$lineNumber")")"
       if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
         statusMessage --last decorate error bashDocumentation_Extract "$shellFile" "$functionName"

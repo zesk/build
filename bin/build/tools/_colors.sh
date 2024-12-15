@@ -64,7 +64,7 @@ decorate() {
   local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
-    extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
+    extend="__decorateExtension$(printf -- "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
     isFunction "$extend" || __failArgument "$usage" "Unknown decoration name: $what ($extend)" || return $?
     __usageEnvironment "$usage" "$extend" "$@" || return $?
     return $?
@@ -127,5 +127,5 @@ _caseStyles() {
       return 1
       ;;
   esac
-  printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
+  printf -- "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
 }

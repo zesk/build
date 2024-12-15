@@ -6,7 +6,7 @@
 #
 
 testPHPInstallation() {
-  __doesScriptInstallUninstall php phpInstall phpUninstall || return $?
+  __checkFunctionInstallsAndUninstallsBinary php phpInstall phpUninstall || return $?
 }
 
 _testComposerTempDirectory() {

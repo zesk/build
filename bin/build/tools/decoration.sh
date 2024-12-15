@@ -143,7 +143,7 @@ labeledBigText() {
       *)
         [ "$argument" = "${argument#-}" ] || __failArgument "$usage" "Unknown argument #$argumentIndex: $argument" || return $?
         label="$argument"
-        plainLabel="$(printf "%s\n" "$label" | stripAnsi)" || __failArgument "$usage" "Unable to clean label" || return $?
+        plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __failArgument "$usage" "Unable to clean label" || return $?
         shift
         break
         ;;
@@ -151,17 +151,17 @@ labeledBigText() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
   banner="$(bigText "$@")"
-  nLines=$(printf "%s\n" "$banner" | wc -l)
-  plainLabel="$(printf "%s\n" "$label" | stripAnsi)"
+  nLines=$(printf -- "%s\n" "$banner" | wc -l)
+  plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)"
   tweenNonLabel="$(repeat "$((${#plainLabel}))" " ")$tweenNonLabel"
   if $isBottom; then
-    printf "%s%s\n""%s%s%s\n" \
-      "$(printf "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | head -n "$((nLines - 1))")" "$lineSuffix" \
-      "$linePrefix$label$tweenLabel" "$(printf "%s\n" "$banner" | tail -n 1)" "$lineSuffix"
+    printf -- "%s%s\n""%s%s%s\n" \
+      "$(printf -- "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | head -n "$((nLines - 1))")" "$lineSuffix" \
+      "$linePrefix$label$tweenLabel" "$(printf -- "%s\n" "$banner" | tail -n 1)" "$lineSuffix"
   else
-    printf "%s%s%s\n""%s%s\n" \
-      "$linePrefix$label$tweenLabel" "$(printf "%s\n" "$banner" | head -n 1)" "$lineSuffix" \
-      "$(printf "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | tail -n "$((nLines - 1))")" "$lineSuffix"
+    printf -- "%s%s%s\n""%s%s\n" \
+      "$linePrefix$label$tweenLabel" "$(printf -- "%s\n" "$banner" | head -n 1)" "$lineSuffix" \
+      "$(printf -- "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | tail -n "$((nLines - 1))")" "$lineSuffix"
   fi
 }
 _labeledBigText() {
@@ -205,7 +205,7 @@ repeat() {
           curPow=0
           while [ "$count" -gt 0 ] && [ $curPow -lt ${#powers[@]} ]; do
             if [ $((count & (2 ** curPow))) -ne 0 ]; then
-              printf "%s" "${powers[$curPow]}"
+              printf -- "%s" "${powers[$curPow]}"
               count=$((count - (2 ** curPow)))
             fi
             curPow=$((curPow + 1))
@@ -270,7 +270,7 @@ echoBar() {
   count=$((width / ${#barText}))
   count=$((count + delta))
   [ $count -gt 0 ] || __failArgument "$usage" "count $count (delta $delta) less than zero?" || return $?
-  printf "%s\n" "$(repeat "$count" "$barText")"
+  printf -- "%s\n" "$(repeat "$count" "$barText")"
 }
 _echoBar() {
   # IDENTICAL usageDocument 1

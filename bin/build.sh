@@ -42,7 +42,7 @@ __tools() {
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -68,8 +68,8 @@ __buildBuild() {
   local width=25
   export BUILD_COLORS
 
-  printf "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
-  printf "tput colors %s" "$(tput colors 2>&1 || :)"
+  printf -- "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
+  printf -- "tput colors %s" "$(tput colors 2>&1 || :)"
   if hasColors; then
     decorate success "Has colors"
   else
@@ -84,7 +84,7 @@ __buildBuild() {
   fi
 
   if gitRepositoryChanged; then
-    printf "%s\n" "CHANGES:" || :
+    printf -- "%s\n" "CHANGES:" || :
     gitShowChanges | wrapLines "$(decorate code)    " "$(decorate reset)"
     git commit -m "Build version $(runHook version-current)" -a || :
     git push origin || :

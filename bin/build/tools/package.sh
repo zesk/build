@@ -397,22 +397,62 @@ _packageInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Is a package installed?
+# Usage: {fn} [ package ... ]
+# Argument: package - String. Required. One or more packages to check if they are installed
+# Exit Code: 1 - If any packages are not installed
+# Exit Code: 0 - All packages are installed
+packageIsInstalled() {
+  local usage="_${FUNCNAME[0]}"
+  local packages=()
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        packages+=("$argument")
+        ;;
+    esac
+    shift || usageArgumentMissing "$usage" "$argument" || return $?
+  done
+  [ "${#packages[@]}" -gt 0 ] || __failArgument "$usage" "Requires at least one package" || return $?
+  local installed
+  installed=$(__usageEnvironment "$usage" mktemp) || return $?
+  __usageEnvironment "$usage" packageInstalledList >"$installed" || return $?
+  local package
+  for package in "${packages[@]}"; do
+    if ! grep -q -e "^$(quoteGrepPattern "$package")$" "$installed"; then
+      __usageEnvironment "$usage" rm -rf "$installed" || return $?
+      return 1
+    fi
+  done
+  __usageEnvironment "$usage" rm -rf "$installed" || return $?
+}
+_packageIsInstalled() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Removes packages using the current package manager.
 #
 # Usage: {fn} [ package ... ]
 # Example:     {fn} shellcheck
 # Summary: Removes packages using package manager
-# Argument: package - One or more packages to uninstall
+# Argument: package - String. Required. One or more packages to uninstall
 packageUninstall() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
   local package installed standardPackages=()
   local start packages=() uninstallFunction quietLog manager=""
 
-  saved=("$@")
-  nArguments=$#
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4

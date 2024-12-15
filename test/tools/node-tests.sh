@@ -8,5 +8,5 @@
 #
 
 testNodeInstallation() {
-  __doesScriptInstallUninstall node nodeInstall nodeUninstall || return $?
+  __checkFunctionInstallsAndUninstallsPackage nodejs nodeInstall nodeUninstall || return $?
 }

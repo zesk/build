@@ -57,6 +57,8 @@ testEnvironmentFileLoad() {
 
   set -eou pipefail
 
+  assertExitCode --stderr-match "Requires at least one environmentFile" --stderr-match "Safely load an environment file" --line "$LINENO" 2 environmentFileLoad || return $?
+
   tempDir="$(__environment buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
 
   __environment mkdir -p "$tempDir" || return $?

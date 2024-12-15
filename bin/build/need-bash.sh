@@ -23,16 +23,16 @@ __needBash() {
     shift
   done
   if [ -z "$(which bash)" ]; then
-    ! $verboseFlag || printf "%s" "Installing bash ..."
+    ! $verboseFlag || printf -- "%s" "Installing bash ..."
     if ! ${install# } >/dev/null; then
-      printf "\n%s\n" "Failed installing bash, exiting." 1>&2
+      printf -- "\n%s\n" "Failed installing bash, exiting." 1>&2
       return 1
     fi
-    ! $verboseFlag || printf "\r                  \r"
+    ! $verboseFlag || printf -- "\r                  \r"
   fi
   if [ ! -f "$HOME/.bashrc" ]; then
     here=$(dirname "$0")
-    printf "%s\n" "#!/usr/bin/env bash" "source $here/tools.sh" "bashPrompt consoleDefaultTitle" "cd \$HOME/build" "iTerm2Badge -i \"$title\"" >"$HOME/.bashrc"
+    printf -- "%s\n" "#!/usr/bin/env bash" "source $here/tools.sh" "bashPrompt consoleDefaultTitle" "cd \$HOME/build" "iTerm2Badge -i \"$title\"" >"$HOME/.bashrc"
     chmod +x "$HOME/.bashrc"
   fi
   exec bash "$@"

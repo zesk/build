@@ -6,5 +6,5 @@
 #
 
 testPythonInstallation() {
-  __doesScriptInstallUninstall python pythonInstall pythonUninstall || return $?
+  __checkFunctionInstallsAndUninstallsBinary python pythonInstall pythonUninstall || return $?
 }

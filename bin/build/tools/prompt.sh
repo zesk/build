@@ -122,7 +122,7 @@ bashPromptModule_ApplicationPath() {
   path=$(__environment pwd) || return $?
   applicationPath=$(decoratePath "$path")
   if [ "$applicationPath" != "$path" ]; then
-    iTerm2Badge -i "$(printf "%s\n%s %s\n" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"
+    iTerm2Badge -i "$(printf -- "%s\n%s %s\n" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"
   fi
 }
 
@@ -156,7 +156,7 @@ bashPromptModule_binBuild() {
   fi
 
   oldMessage="$(runOptionalHook --application "$home" project-deactivate "$gitHome")" || oldMessage="$home: $(decorate error project-deactivate FAILED): $?" || :
-  [ -z "$oldMessage" ] || printf "%s @ %s" "$oldMessage" "$(decorate code "$home")"
+  [ -z "$oldMessage" ] || printf -- "%s @ %s" "$oldMessage" "$(decorate code "$home")"
   # shellcheck source=/dev/null
   source "$gitHome/$tools" || __environment "Failed to load $showGitHome/$tools" || return $?
   # buildHome will be changed here
@@ -292,7 +292,7 @@ bashPromptColorScheme() {
     forest) colors="$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)" ;;
     *) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
   esac
-  printf "%s" "$colors"
+  printf -- "%s" "$colors"
 }
 
 # Prompt is the following literal tokens concatenated:
@@ -309,7 +309,7 @@ __bashPromptGeneratePS1() {
   export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
   reset="$(decorate reset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
-  printf "%s%s@%s %s %s " \
+  printf -- "%s%s@%s %s %s " \
     "\${__BASH_PROMPT_PREVIOUS[1]-}" \
     "\[${colors[2]-}\]\u\[${reset}\]" \
     "\[${colors[3]-}\]\h" \

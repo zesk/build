@@ -24,7 +24,7 @@
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -207,7 +207,7 @@ quoteSedPattern() {
   local value
   value=$(printf -- "%s\n" "${1-}" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
-  printf "%s\n" "$value"
+  printf -- "%s\n" "$value"
 }
 
 # Summary: Quote sed replacement strings for shell use
@@ -220,7 +220,7 @@ quoteSedReplacement() {
   local value separator="${2-/}"
   value=$(printf -- "%s\n" "${1-}" | sed 's~\([\&'"$separator"']\)~\\\1~g')
   value="${value//$'\n'/\\n}"
-  printf "%s\n" "$value"
+  printf -- "%s\n" "$value"
 }
 
 # IDENTICAL environmentVariables 12
@@ -303,7 +303,7 @@ _mapEnvironmentGenerateSedFile() {
     case "$1" in
       *[%{}]* | LD_*) ;; # skips
       *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
+        printf -- "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
         ;;
     esac
     shift

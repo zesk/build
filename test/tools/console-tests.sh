@@ -43,10 +43,16 @@ testColorBrightness() {
 }
 
 testConsoleFileLink() {
+  __mockValue BITBUCKET_WORKSPACE BACKUP_BITBUCKET_WORKSPACE "${BITBUCKET_WORKSPACE-}"
+  __mockValue CI BACKUP_CI "${CI-}"
+
   bigText consoleFileLink
   __environment consoleFileLink "${BASH_SOURCE[0]}" || return $?
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
+
+  __mockValue BITBUCKET_WORKSPACE BACKUP_BITBUCKET_WORKSPACE --end
+  __mockValue CI BACKUP_CI --end
 }
 
 testStatusMessageLast() {

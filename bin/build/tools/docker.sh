@@ -27,7 +27,7 @@ dockerPlatformDefault() {
     *x86* | *amd*) chip=amd64 ;;
     *) chip=default ;;
   esac
-  printf "%s/%s" "$os" "$chip"
+  printf -- "%s/%s" "$os" "$chip"
 }
 
 #
@@ -188,14 +188,14 @@ _dockerEnvToBashPipe() {
     case "$envLine" in
       [[:space:]]*[#]* | [#]* | "")
         # Comment line
-        printf "%s\n" "$envLine"
+        printf -- "%s\n" "$envLine"
         ;;
       *)
         name="${envLine%%=*}"
         value="${envLine#*=}"
         if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
-          if [ -z "$(printf "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
-            printf "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
+          if [ -z "$(printf -- "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
+            printf -- "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
           else
             _argument "Invalid name at line $index: $name" || result=$?
           fi
@@ -226,7 +226,7 @@ dockerEnvFromBashEnv() {
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}
-    printf "%s=%s\n" "$name" "$(unquote "\"" "$value")"
+    printf -- "%s=%s\n" "$name" "$(unquote "\"" "$value")"
   done < <(removeFields 2 <"$tempFile" | grep -E -v '^(OLDPWD|PWD|_|SHLVL)\b' || :)
   __usageEnvironment "$usage" rm -rf "$tempFile" || return $?
 }

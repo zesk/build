@@ -134,7 +134,7 @@ __bashCoverageMarker() {
   export BUILD_HOME
   local source=${BASH_SOURCE[1]} home="${BUILD_HOME%/}/" command="${BASH_COMMAND//$'\n'/\n}"
   source="${source#"$home"}"
-  printf "%s:%d %s\n" "$source" "${BASH_LINENO[0]}" "$command" >>"$1"
+  printf -- "%s:%d %s\n" "$source" "${BASH_LINENO[0]}" "$command" >>"$1"
   # debuggingStack >>"$1.stack" || return $?
 }
 ___bashCoverageMarker() {
@@ -195,12 +195,12 @@ __bashCoverageReportProcessStats() {
     file="${fileLine%:*}"
     line="${fileLine##*:}"
     dataPath=$(__usageEnvironment "$usage" requireDirectory "$reportCache/$file/$line/") || return $?
-    commandFile="$(printf "%s\n" "$command" | shaPipe)"
-    printf "%s\n" "$command" >"$dataPath/$commandFile" || __failEnvironment "$usage" "Writing $commandFile" || return $?
+    commandFile="$(printf -- "%s\n" "$command" | shaPipe)"
+    printf -- "%s\n" "$command" >"$dataPath/$commandFile" || __failEnvironment "$usage" "Writing $commandFile" || return $?
     targetFile="$reportBase/$file.html"
     requireFileDirectory "$targetFile" || return $?
     [ -f "$targetFile" ] || __usageEnvironment "$usage" touch "$targetFile" || return $?
-    __usageEnvironment "$usage" printf "%s\n" "$file" >>"$reportCache/all"
+    __usageEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all"
     index=$((index + 1))
     statusMessage decorate info "Line $index/$totalLines ..."
   done
@@ -216,7 +216,7 @@ __bashCoverageReportTemplate() {
   home=$(__environment buildHome) || return $?
   path="$home/bin/build/tools/coverage/$1"
   [ -f "$path" ] || _environment "${FUNCNAME[0]} $path not found" || return $?
-  printf "%s\n" "$path"
+  printf -- "%s\n" "$path"
 }
 
 #
@@ -306,7 +306,7 @@ __bashCoverageReportConvertFiles() {
         fi
         content=$(line_classes="${lineClasses[*]}" content="$content" index="$index" extra="$extra" mapEnvironment "${lineTemplateVariables[@]}" <"$lineTemplate")
         content=$(wrapLines "        " "" <<<"$content")
-        printf "%s\n" "$content" | tee "$dataPath/$index.cached" >>"$lineContentFile"
+        printf -- "%s\n" "$content" | tee "$dataPath/$index.cached" >>"$lineContentFile"
       else
         cat "$dataPath/$index.cached" >>"$lineContentFile"
       fi
@@ -338,7 +338,7 @@ __bashCoverageReportConvertFiles() {
 __bashCoveragePartialLine() {
   local line="$1" template="$3" codes=() code index replace
 
-  IFS=$'\n' read -d '' -r -a codes < <(printf "%s\n" "$2") || :
+  IFS=$'\n' read -d '' -r -a codes < <(printf -- "%s\n" "$2") || :
   if [ "${#codes[@]}" -eq 0 ]; then
     line="$(__htmlCode "$line")<em class=\"error\">NO CODES: \"$2\"<em>"
   else
@@ -357,7 +357,7 @@ __bashCoveragePartialLine() {
       index=$((index + 1))
     done
   fi
-  printf "%s\n" "$line"
+  printf -- "%s\n" "$line"
 }
 __htmlCode() {
   printf "%s\n" "$@" | sed -e 's/&/'$'\2''/g' -e 's/"/\&quot;/g' -e 's/ /\&nbsp;/g' -e 's/'$'\2''/\&amp;/g'

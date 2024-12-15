@@ -246,7 +246,7 @@ gitRemoteHosts() {
   local remoteUrl host
   while read -r remoteUrl; do
     host=$(urlParseItem host "$remoteUrl") || host=$(urlParseItem host "git://$remoteUrl") || __failArgument "$usage" "Unable to extract host from \"$remoteUrl\"" || return $?
-    printf "%s\n" "$host"
+    printf -- "%s\n" "$host"
   done < <(git remote -v | awk '{ print $2 }')
 }
 _gitRemoteHosts() {
@@ -316,7 +316,7 @@ gitTagVersion() {
     decorate error "Version $currentVersion up to date, nothing to do." 1>&2
     return 17
   fi
-  printf "%s %s\n%s %s\n" \
+  printf -- "%s %s\n%s %s\n" \
     "$(decorate label "Previous version is: ")" "$(decorate value "$previousVersion")" \
     "$(decorate label " Release version is: ")" "$(decorate value "$currentVersion")"
 
@@ -534,7 +534,7 @@ gitMainly() {
       for updateOther in staging main; do
         ! $verboseFlag || decorate info git checkout "$updateOther"
         if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
-          printf "%s %s\n" "$(decorate error "Unable to checkout branch")" "$(decorate code "$updateOther")" 1>&2
+          printf -- "%s %s\n" "$(decorate error "Unable to checkout branch")" "$(decorate code "$updateOther")" 1>&2
           returnCode=1
           __environment git status -s || :
           break
@@ -552,16 +552,16 @@ gitMainly() {
       fi
       ! $verboseFlag || decorate info git checkout "$branch"
       if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
-        printf "%s %s\n" "$(decorate error "Unable to switch BACK to branch")" "$(decorate code "$updateOther")" 1>&2
+        printf -- "%s %s\n" "$(decorate error "Unable to switch BACK to branch")" "$(decorate code "$updateOther")" 1>&2
         rm -rf "$errorLog"
         return 1
       fi
       ! $verboseFlag || decorate info git merge -m
       __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
       if grep -q 'Already' "$errorLog"; then
-        printf "%s %s\n" "$(decorate info "Already up to date")" "$(decorate code "$branch")"
+        printf -- "%s %s\n" "$(decorate info "Already up to date")" "$(decorate code "$branch")"
       else
-        printf "%s %s\n" "$(decorate info "Merged staging and main into branch")" "$(decorate code "$branch")"
+        printf -- "%s %s\n" "$(decorate info "Merged staging and main into branch")" "$(decorate code "$branch")"
       fi
       rm -rf "$errorLog"
       ;;
@@ -621,7 +621,7 @@ _gitHasAnyRefs() {
 # GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
 # GIT_PREFIX=
 gitHookTypes() {
-  printf "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
+  printf -- "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
 }
 
 #

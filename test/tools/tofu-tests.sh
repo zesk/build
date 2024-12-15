@@ -8,5 +8,5 @@
 #
 
 testInstallOpenTofu() {
-  __doesScriptInstallUninstall tofu tofuInstall tofuUninstall || return $?
+  __checkFunctionInstallsAndUninstallsBinary tofu tofuInstall tofuUninstall || return $?
 }

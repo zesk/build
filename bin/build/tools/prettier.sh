@@ -34,7 +34,7 @@ prettierInstall() {
   fi
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  statusMessage decorate info "Installing npm (to get prettier) ... " || return $?
+  statusMessage decorate info "Installing node package manager (to get prettier) ... " || return $?
   local home
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   __usageEnvironment "$usage" nodePackageManagerInstall "$@" || return $?

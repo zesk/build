@@ -41,7 +41,7 @@ __tools() {
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -62,7 +62,7 @@ isUnsignedInteger() {
 __deprecatedIgnore() {
   local this="${BASH_SOURCE[0]##*/}"
   local ignoreStuff=(! -path "*/$this" ! -path '*/docs/release/*.md')
-  printf "%s\n" "${ignoreStuff[@]}"
+  printf -- "%s\n" "${ignoreStuff[@]}"
 }
 
 # Usage

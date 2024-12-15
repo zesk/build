@@ -8,5 +8,5 @@
 #
 
 testInstallTerraform() {
-  __doesScriptInstallUninstall terraform terraformInstall terraformUninstall || return $?
+  __checkFunctionInstallsAndUninstallsBinary terraform terraformInstall terraformUninstall || return $?
 }

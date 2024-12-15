@@ -21,7 +21,7 @@ if [ -z "${BUILD_CACHE-}" ]; then
         return 1
       fi
     fi
-    printf "%s/%s\n" "${useDir%%/}" ".build"
+    printf -- "%s/%s\n" "${useDir%%/}" ".build"
   }
   BUILD_CACHE="${BUILD_CACHE:-"$(_BUILD_CACHE_DEFAULT)"}"
   unset _BUILD_CACHE_DEFAULT || :

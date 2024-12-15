@@ -236,7 +236,6 @@ _dotEnvConfigure() {
 # Safely load an environment file (no code execution)
 # Usage: {fn} [ --required | --optional ] [ --ignore name ] environmentFile ...
 # Argument: environmentFile - Required. Environment file to load.
-# Argument: environmentFile - Required. Environment file to load.
 # Argument: --require - Flag. Optional. All subsequent environment files on the command line will be required.
 # Argument: --optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
 # Argument: --verbose - Flag. Optional. Output errors with variables in files.
@@ -311,6 +310,7 @@ environmentFileLoad() {
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
+  [ 0 -lt "${#ff[@]}" ] || __failArgument "$usage" "Requires at least one environmentFile" || return $?
   ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
   for environmentFile in "${ff[@]}"; do
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"

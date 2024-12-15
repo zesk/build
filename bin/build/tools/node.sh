@@ -27,7 +27,7 @@ nodeInstall() {
     shift || usageArgumentMissing "$usage" "$argument" || return $?
   done
 
-  if whichExists node; then
+  if packageIsInstalled nodejs; then
     __nodeInstall_corepackEnable "$usage" || return $?
     return 0
   fi
@@ -46,20 +46,22 @@ _nodeInstall() {
 __nodeInstall_corepackEnable() {
   local usage="$1"
   if ! whichExists corepack; then
+    statusMessage decorate warning "No corepack - installing using npm" || return $?
     __usageEnvironment "$usage" npmInstall || return $?
     __usageEnvironment "$usage" npm install -g corepack || return $?
     whichExists corepack || __failEnvironment "$usage" "corepack not found after global installation - failing: PATH=$PATH" || return $?
   fi
   local home
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  __usageEnvironment "$usage" corepack enable --install-directory "$home" || return $?
+  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
+  __usageEnvironment "$usage" corepack enable || _undo $? muzzle popd || return $?
+  __usageEnvironment "$usage" muzzle popd || return $?
 }
 
 # Uninstall nodejs
 nodeUninstall() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments
-  local quietLog
 
   nArguments=$#
   while [ $# -gt 0 ]; do
@@ -77,14 +79,17 @@ nodeUninstall() {
     shift || usageArgumentMissing "$usage" "$argument" || return $?
   done
 
-  if ! whichExists node; then
+  if ! packageIsInstalled nodejs; then
     return 0
   fi
-
+  local start name quietLog
+  name=$(decorate code node)
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}") || return $?
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
-  statusMessage --first decorate info "Uninstalling nodejs ... " || return $?
+  statusMessage --first decorate info "Uninstalling $name ... " || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" packageUninstall nodejs || return $?
+  statusMessage reportTiming "$start" "Uninstalled $name in" || return $?
 }
 _nodeUninstall() {
   # IDENTICAL usageDocument 1
@@ -156,5 +161,6 @@ nodePackageManagerValid() {
   fi
   while [ $# -gt 0 ]; do
     isFunction "${1}Install" || return 1
+    shift
   done
 }

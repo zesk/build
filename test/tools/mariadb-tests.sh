@@ -24,5 +24,5 @@ testMariaDump() {
 }
 
 testMariaDBInstallation() {
-  __doesScriptInstallUninstall mariadb mariadbInstall mariadbUninstall || return $?
+  __checkFunctionInstallsAndUninstallsBinary mariadb mariadbInstall mariadbUninstall || return $?
 }

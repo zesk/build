@@ -61,5 +61,5 @@ testGitCommitFailures() {
 }
 
 testGitInstallation() {
-  __doesScriptInstallUninstall git gitInstall gitUninstall || return $?
+  __checkFunctionInstallsAndUninstallsBinary git gitInstall gitUninstall || return $?
 }

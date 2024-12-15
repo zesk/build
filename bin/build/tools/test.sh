@@ -316,7 +316,7 @@ bashLintFiles() {
     __failEnvironment "$usage" "Failed:" "${failedFiles[*]}" || return $?
   fi
   statusMessage decorate success "All scripts passed validation ($source)"
-  printf "\n"
+  printf -- "\n"
 }
 _bashLintFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -332,7 +332,7 @@ _bashLintFilesHelper() {
     ! $verbose || statusMessage --last decorate success "bashLint $file passed"
   else
     ! $verbose || statusMessage --last decorate info "bashLint $file failed: $reason"
-    printf "%s: %s\n" "$file" "$reason" 1>&2
+    printf -- "%s: %s\n" "$file" "$reason" 1>&2
     return 1
   fi
 }
@@ -372,7 +372,7 @@ bashLintFilesInteractive() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
-  printf "%s\n%s\n%s\n" "$(decorate red "BEFORE")" \
+  printf -- "%s\n%s\n%s\n" "$(decorate red "BEFORE")" \
     "$(decorate label "Queue")" \
     "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
 
@@ -413,7 +413,7 @@ _bashLintInteractiveCheck() {
 
   shift 2
   bigText "FAIL $(basename "$script")" | wrapLines "$(decorate subtle bashLint)  $(decorate bold-red)" "$(decorate reset)"
-  printf "%s\n%s\n%s\n" "$(decorate red "$failedReason")" \
+  printf -- "%s\n%s\n%s\n" "$(decorate red "$failedReason")" \
     "$(decorate label "Queue")" \
     "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
   decorate blue "$(echoBar "+-")"
@@ -458,7 +458,7 @@ bashLint() {
         exec 3>&1
         ;;
       *)
-        [ -f "$argument" ] || __failArgument "$usage" "$(printf "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
+        [ -f "$argument" ] || __failArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
         # shellcheck disable=SC2210
         __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
@@ -552,7 +552,7 @@ validateFileContents() {
   total=0
   total="${#fileArgs[@]}"
   # shellcheck disable=SC2059
-  statusMessage decorate info "Searching $total $(plural "$total" item files) for text: $(printf " $(decorate reset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
+  statusMessage decorate info "Searching $total $(plural "$total" item files) for text: $(printf -- " $(decorate reset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
   if [ "${#fileArgs[@]}" -gt 0 ]; then
@@ -650,7 +650,7 @@ validateFileExtensionContents() {
   find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
   total=$(($(wc -l <"$foundFiles") + 0))
   # shellcheck disable=SC2059
-  statusMessage decorate info "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf " $(decorate reset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
+  statusMessage decorate info "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf -- " $(decorate reset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
   while IFS= read -r item; do
@@ -747,7 +747,7 @@ findUncaughtAssertions() {
         if [ "$problemFile" != "$lastProblemFile" ]; then
           # IDENTICAL findUncaughtAssertions-loop 3
           if test $listFlag && [ -n "$lastProblemFile" ]; then
-            printf "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
+            printf -- "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
           fi
           problemFiles+=("$problemFile")
           lastProblemFile=$problemFile
@@ -757,7 +757,7 @@ findUncaughtAssertions() {
       done < <(cut -d : -f 1,2 <"$tempFile" | sort -u)
       # IDENTICAL findUncaughtAssertions-loop 3
       if test $listFlag && [ -n "$lastProblemFile" ]; then
-        printf "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
+        printf -- "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
       fi
       if [ ${#problemFiles[@]} -gt 0 ] && [ -n "$binary" ]; then
         "$binary" "${problemFiles[@]}"

@@ -36,23 +36,20 @@ daemontoolsInstall() {
 # Argument: serviceFile - Required. Binary. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
 # Argument: serviceName - Optional. String. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
 # Argument: --log logPath - Optional. Path. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
+# Argument: --escalate - Optional. Flag. Only if the source file is owned by a non-root user.
 #
 daemontoolsInstallService() {
-  local this usage serviceHome serviceName source target logPath logTarget appUser serviceFile binaryPath
+  local usage="_${FUNCNAME[0]}"
+  local source target logTarget appUser binaryPath
   local start elapsed here
   local argument nArguments argumentIndex
 
   here="$(dirname "${BASH_SOURCE[0]}")"
-  this="${FUNCNAME[0]}"
-  usage="_$this"
 
   __usageEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-  serviceHome="${DAEMONTOOLS_HOME}"
-  serviceName=
-  serviceFile=
 
-  logPath=
-  nArguments=$#
+  local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logPath=""
+  local nArguments=$#
   while [ $# -gt 0 ]; do
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
@@ -65,6 +62,9 @@ daemontoolsInstallService() {
       --home)
         shift
         serviceHome="${1-}"
+        ;;
+      --escalate)
+        extras+=("$argument")
         ;;
       --log)
         shift
@@ -97,9 +97,9 @@ daemontoolsInstallService() {
   target="$serviceHome/$serviceName"
   logTarget="$serviceHome/$serviceName/log"
 
-  LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" || return $?
+  LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
   if [ -d "$logPath" ]; then
-    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" || return $?
+    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
   fi
 
   _daemontoolsSuperviseWait "$usage" "$target" || return $?
@@ -116,10 +116,11 @@ _daemontoolsInstallService() {
 # Copy run file to a service target
 _daemontoolsInstallServiceRun() {
   local usage="$1" source="$2" target="$3" args
+  shift 3 || __failArgument "$usage" "Missing arguments" || return $?
   __usageEnvironment "$usage" requireDirectory "$target" || return $?
   args=(--map "$source" "$target/run")
   if copyFileWouldChange "${args[@]}"; then
-    __usageEnvironment "$usage" copyFile "${args[@]}" || return $?
+    __usageEnvironment "$usage" copyFile "$@" "${args[@]}" || return $?
     __usageEnvironment "$usage" chmod 700 "$target" "$target/run" || return $?
   fi
 }
@@ -129,7 +130,6 @@ _daemontoolsSuperviseWait() {
   local usage="$1" && shift
   local total=10 stayQuietFor=5
 
-  shift
   local start
   start=$(__usageEnvironment "$usage" date +%s)
   while [ ! -d "$1/supervise" ]; do
@@ -142,7 +142,7 @@ _daemontoolsSuperviseWait() {
       __failEnvironment "$usage" "supervise is not running - $target/supervise never found after $total seconds" || return $?
     fi
   done
-  statusmessage --last decorate info "Supervise waiting completed" || return $?
+  statusMessage --last decorate info "Supervise waiting completed" || return $?
 }
 
 #

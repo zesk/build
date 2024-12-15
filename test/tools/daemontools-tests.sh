@@ -22,19 +22,26 @@ testDaemontools() {
     assertExitCode --line "$LINENO" --leak DAEMONTOOLS_HOME 0 daemontoolsRemoveService lemon || return $?
   fi
 
+  echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
   assertExitCode --line "$LINENO" 0 daemontoolsIsRunning || return $?
+  echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
 
   logPath=$(__environment buildCacheDirectory "${FUNCNAME[0]}") || return $?
   decorate info "logPath is $logPath"
   __environment requireDirectory "$logPath" >/dev/null || return $?
+  echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
 
+  daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" || return $?
   assertExitCode --leak DAEMONTOOLS_HOME --line "$LINENO" 0 daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" || return $?
+  echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
 
   assertFileExists --line "$LINENO" "/etc/service/lemon/run" || return $?
   assertFileExists --line "$LINENO" "/etc/service/lemon/log/run" || return $?
+  echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
 
   assertDirectoryExists --line "$LINENO" "/etc/service/lemon/supervise" || return $?
   assertDirectoryExists --line "$LINENO" "/etc/service/lemon/log/supervise" || return $?
+  echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
 
   waitFor=5
   start=$(date +%s)

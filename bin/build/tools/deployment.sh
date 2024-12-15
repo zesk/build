@@ -497,41 +497,23 @@ _deploySuccessful() {
 # Environment: BUILD_DEBUG
 deployToRemote() {
   local usage="_${FUNCNAME[0]}"
-  local nameWidth=50
-  local initTime start deployArgs exitCode
-  local makeDirectory commandSuffix color
-  local deployFlag revertFlag debuggingFlag cleanupFlag
-  local userHosts applicationId deployHome applicationPath buildTarget remoteArgs firstFlags
-  local showCommands addSSHHosts verb temporaryCommandsFile commonArguments
-  local argument currentIP deployArg
+  local initTime
 
   __usageEnvironment "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
-  initTime=$(beginTiming)
+  initTime=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   [ -d "$HOME" ] || __failEnvironment "$usage" "No HOME defined or not a directory: $HOME" || return $?
 
   # DEBUGGING # decorate warning "ARGS: $*"
-  exitCode=0
-  deployFlag=
-  revertFlag=
-  debuggingFlag=
-  cleanupFlag=
-  userHosts=()
-  applicationId=
-  deployHome=
-  applicationPath=
-  buildTarget=
-  remoteArgs=()
-  firstFlags=()
-  showCommands=false
-  addSSHHosts=true
+  local deployFlag=false revertFlag=false debuggingFlag=false cleanupFlag=false userHosts=() applicationId="" deployHome="" applicationPath="" buildTarget="" remoteArgs=() firstFlags=() addSSHHosts=true showCommands=false currentIP=""
+
   while [ $# -gt 0 ]; do
-    argument="$1"
+    local argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --target)
-        shift || :
+        shift
         [ -z "$buildTarget" ] || __failArgument "$usage" "$argument supplied twice" || return $?
         buildTarget="$1"
         ;;
@@ -542,7 +524,7 @@ deployToRemote() {
         addSSHHosts=true
         ;;
       --home)
-        shift || :
+        shift
         [ -z "$deployHome" ] || __failArgument "$usage" "$argument supplied twice" || return $?
         deployHome="$1"
         ;;
@@ -550,12 +532,16 @@ deployToRemote() {
         firstFlags+=("$argument")
         ;;
       --application)
-        shift || :
+        shift
         [ -z "$applicationPath" ] || __failArgument "$usage" "$argument supplied twice" || return $?
         applicationPath="$1"
         ;;
+      --ip)
+        shift
+        currentIP=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
       --id)
-        shift || :
+        shift
         [ -z "$applicationId" ] || __failArgument "$usage" "$argument supplied twice" || return $?
         applicationId="$1"
         ;;
@@ -572,17 +558,17 @@ deployToRemote() {
         remoteArgs+=("$1")
         ;;
       --revert)
-        if test "$revertFlag"; then
+        if "$revertFlag"; then
           __failArgument "$usage" "--revert specified twice" || return $?
         fi
-        revertFlag=1
+        revertFlag=true
         remoteArgs+=("$1")
         ;;
       --cleanup)
-        if test "$cleanupFlag"; then
+        if "$cleanupFlag"; then
           __failArgument "$usage" "--cleanup specified twice" || return $?
         fi
-        cleanupFlag=1
+        cleanupFlag=true
         remoteArgs+=("$1")
         ;;
       --debug)
@@ -634,9 +620,8 @@ deployToRemote() {
   #
   # Current IP
   #
-  if ! currentIP=$(ipLookup) || [ -z "$currentIP" ]; then
-    __failEnvironment "$usage" "Unable to determine IP address: $currentIP" || return $?
-  fi
+  currentIP=$(__usageEnvironment "$usage" ipLookup) || __failEnvironment "$usage" "Unable to determine IP address" || return $?
+  [ -n "$currentIP" ] || __failEnvironment "$usage" "IP address lookup blank" || return $?
 
   if $addSSHHosts; then
     # sshAddKnownHost
@@ -646,13 +631,15 @@ deployToRemote() {
     done
   fi
 
+  local verb color deployArg temporaryCommandsFile commonArguments
+
   temporaryCommandsFile=$(mktemp) || __failEnvironment "$usage" "mktemp failed" || return $?
   commonArguments=("${firstFlags[@]+${firstFlags[@]}}" "--target" "$buildTarget" "--home" "$deployHome" "--id" "$applicationId" "--application" "$applicationPath")
-  if test $revertFlag; then
+  if $revertFlag; then
     verb=Revert
     color="$(decorate orange)"
     deployArg=--revert
-  elif test $cleanupFlag; then
+  elif $cleanupFlag; then
     # Clean up deployed target
     applicationPath="$deployHome/$applicationId/app"
     verb="Clean up"
@@ -665,7 +652,7 @@ deployToRemote() {
     #  ▌ ▌▌  ▌  ▌  ▌ ▌ ▌
     #  ▀▀ ▀▀▘▘  ▀▀▘▝▀  ▘
     #
-    commandSuffix=''
+    local commandSuffix=""
     if
       ! __deployCommandsFile "$deployHome/$applicationId/app" \
         "printf '%s' \"Sweeping stage for $applicationId\" && rm -rf \"$deployHome/$applicationId/app.$$\"$commandSuffix" \
@@ -687,6 +674,7 @@ deployToRemote() {
     verb="Deploy"
     bigText "$verb" | wrapLines "$(decorate green)" "$(decorate reset)"
 
+    local nameWidth=50
     {
       consoleNameValue $nameWidth "Current IP:" "$currentIP"
       consoleNameValue $nameWidth "Deploy Home:" "$deployHome"
@@ -704,6 +692,7 @@ deployToRemote() {
 
     # wrapLines "COMMANDS: $(decorate code)" "$(decorate reset)" <"$temporaryCommandsFile"
     for userHost in "${userHosts[@]}"; do
+      local start
       start=$(beginTiming) || :
 
       host="${userHost##*@}"
@@ -717,10 +706,10 @@ deployToRemote() {
       fi
       decorate info "::: END $host output"
       printf "%s\n" "$host" >>"$deployedHostArtifact" || __failEnvironment "$usage" "Unable to write $host to $deployedHostArtifact" || return $?
-      reportTiming "$start" "Deployed to $(decorate green "$userHost")" || :
+      statusMessage reportTiming "$start" "Deployed to $(decorate green "$userHost")" || :
     done
 
-    reportTiming "$initTime" "Deploy completed in" || :
+    statusMessage --last reportTiming "$initTime" "Deploy completed in" || :
     return 0
   fi
 
@@ -736,8 +725,7 @@ deployToRemote() {
       _deploySuccessful
       return 0
     else
-      decorate error "$deployedHostArtifact file NOT found ... no remotes changed"
-      return 99
+      __failEnvironment "$usage" "$(decorate file "$deployedHostArtifact") file NOT found ... no remotes changed" || return $?
     fi
   fi
   #
@@ -746,6 +734,8 @@ deployToRemote() {
   #  ▌ ▖▐ ▛▀ ▞▀▌▌ ▌▌ ▌▙▄▘ ▌ ▌▌   ▌  ▛▀ ▐▐ ▛▀ ▌  ▐ ▖
   #  ▝▀  ▘▝▀▘▝▀▘▘ ▘▝▀▘▌   ▝▀ ▘   ▘  ▝▀▘ ▘ ▝▀▘▘   ▀
   #
+  local exitCode
+  exitCode=0
   for userHost in "${userHosts[@]}"; do
     start=$(beginTiming)
     host="${userHost##*@}"
@@ -758,10 +748,10 @@ deployToRemote() {
     else
       printf "%s %s\n" "$(decorate code "$host")" "$(decorate success "no artifact, so no $verb")"
     fi
-    reportTiming "$start"
+    reportTiming "$start" "$verb $(decorate value "$host") in"
   done
   buildDebugStop deployment || :
-  reportTiming "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
+  statusMessage --last reportTiming "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
   return "$exitCode"
 }
 _deployToRemote() {
@@ -794,9 +784,9 @@ __deployCommandsFile() {
     shift || :
   done
   # shellcheck disable=SC2016
-  printf "cd \"%s\" || exit \$?\n" "$appHome"
+  printf -- "cd \"%s\" || exit \$?\n" "$appHome"
   # return $? is here for findUncaughtAssertions line
-  printf "%s/bin/build/tools.sh __environment deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
+  printf -- "%s/bin/build/tools.sh __environment deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
 }
 
 __deploySSHOptions() {
@@ -827,10 +817,10 @@ __deployUploadPackage() {
     start=$(beginTiming) || :
     printf "%s: %s\n" "$(decorate green "$userHost")" "$(decorate info "Setting up")"
     __usageEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(for makeDirectory in "$applicationPath" "$remotePath"; do
-      printf 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
+      printf -- 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
     done) || return $?
     printf "%s: %s %s\n" "$(decorate green "$userHost")" "$(decorate info "Uploading to")" "$(decorate red "$remotePath/$buildTarget")"
-    if ! printf '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
+    if ! printf -- '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
       __failEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
     fi
     reportTiming "$start" "Deployment setup completed on $(decorate green "$userHost") in " || :
