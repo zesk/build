@@ -62,9 +62,15 @@ _testAssertDeploymentLinkages() {
 }
 
 _waitForDeath() {
+  local start delta wait=5
+  decorate info "Waiting for death of process $1 for $wait seconds"
+  start=$(date +%s)
   while kill -0 "$1" 2>/dev/null; do
-    sleep 1
-    decorate info "Waiting for death of $1"
+    sleep 0.1s
+    delta=$(($(date +%s) - start))
+    if [ "$delta" -ge "$wait" ]; then
+      _environment "${FUNCNAME[0]} failed after $wait seconds" || return $?
+    fi
   done
 }
 export PHP_SERVER_PID
@@ -143,14 +149,8 @@ _waitForValueTimeout() {
     fi
     clearLine
     if [ -z "$value" ] || [ "$value" != "$1" ]; then
-      printf "%s %s %s %s\n" "$(decorate code "Waiting for")" "$(decorate code "$1")" "$(decorate info ", received")" "$(decorate red "$value")"
-      sleep 1
-      delta=$(($(beginTiming) - start))
-      if [ "$delta" -gt 1 ]; then
-        printf "Timeout\n"
-        return "$errorTimeout"
-      fi
-      printf "%s" "$(decorate green .)"
+      printf "%s %s %s %s\n" "$(decorate code "Request for")" "$(decorate code "$1")" "$(decorate info ", received")" "$(decorate red "$value")"
+      return "$errorTimeout"
     else
       break
     fi
@@ -161,6 +161,8 @@ _waitForValueTimeout() {
 
 _waitForValue() {
   local exitCode
+
+  _simplePHPServer --kill
   _waitForValueTimeout "$@"
   exitCode=$?
   if [ "$exitCode" = "0" ]; then
