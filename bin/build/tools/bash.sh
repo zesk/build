@@ -136,13 +136,13 @@ bashSanitize() {
 
   # CHANGE DIRECTORY HERE
   __usageEnvironment "$usage" muzzle pushd "$home" || return $?
-  assertEquals "$home" "$(pwd)" || return $?
+  [ "$home" = "$(pwd)" ] || __failEnvironment "$usage" "Unable to cd to $home" || return $?
   undo=(muzzle popd)
 
   statusMessage decorate success Making shell files executable ...
   __usageEnvironment "$usage" makeShellFilesExecutable || _undo $? "${undo[@]}" || return $?
 
-  statusMessage decorate success Checking assertions ...
+  statusMessage --last decorate success Checking assertions ...
   _bashSanitizeCheckAssertions "$usage" "${checkAssertions[@]+"${checkAssertions[@]}"}" || _undo $? "${undo[@]}" || return $?
 
   # Operates on specific files

@@ -73,7 +73,14 @@ __buildDocumentationBuild() {
 
   example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" mapEnvironment <"$home/docs/_templates/coding.md" >"$home/docs/coding.md"
 
-  [ "${1-}" = "--clean" ] || documentationTemplateUpdate "$home/docs" "$home/docs/_templates/_parts" || return $?
+  if [ "${1-}" != "--clean" ]; then
+    local newestParts newestDocs
+    newestParts=$(directoryNewestFile "$home/docs/_templates/_parts")
+    newestDocs=$(directoryNewestFile "$home/docs")
+    if isNewestFile "$newestParts" "$newestDocs"; then
+      documentationTemplateUpdate "$home/docs" "$home/docs/_templates/_parts" || return $?
+    fi
+  fi
 
   __usageEnvironment "$usage" __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@" || return $?
 

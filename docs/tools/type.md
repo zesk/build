@@ -90,7 +90,7 @@ Thanks to [F. Hauri - Give Up GitHub (isuint_Case)](https://stackoverflow.com/qu
 
 Test if an argument is an unsigned integer
 
-- Location: `bin/build/tools/type.sh`
+- Location: `bin/documentation.sh`
 
 #### Arguments
 
@@ -108,7 +108,7 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 
 Test if an argument is a positive integer (non-zero)
 
-- Location: `bin/build/tools/type.sh`
+- Location: `bin/build/identical/_type.sh`
 
 #### Arguments
 
@@ -137,12 +137,12 @@ Test if an argument is a floating point number
 #### Credits
 
 Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash).
-### `isFunction` - Test if all arguments are bash functions
+### `isFunction` - Test if argument are bash functions
 
-Test if all arguments are bash functions
+Test if argument are bash functions
 If no arguments are passed, returns exit code 1.
 
-- Location: `bin/build/tools/type.sh`
+- Location: `bin/build/identical/_type.sh`
 
 #### Arguments
 
@@ -150,8 +150,8 @@ If no arguments are passed, returns exit code 1.
 
 #### Exit codes
 
-- `0` - All arguments are bash functions
-- `1` - One or or more arguments are not a bash function
+- `0` - argument is bash function
+- `1` - argument is not a bash function
 ### `isExecutable` - Test if all arguments are executable binaries
 
 Test if all arguments are executable binaries
@@ -198,6 +198,12 @@ Succeeds when all arguments are "true"-ish
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `isArray` - undocumented
+
+No documentation for `isArray`.
+
+- Location: `bin/build/tools/type.sh`
+
 #### Arguments
 
 - `variableName` - Required. String. Variable to check is an array.

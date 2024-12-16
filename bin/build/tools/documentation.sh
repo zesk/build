@@ -11,13 +11,16 @@
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
-# Usage: usageDocument functionDefinitionFile functionName exitCode [ ... ]
-# Argument: functionDefinitionFile - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
-# Argument: functionName - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Summary: Universal error handler for functions
+# Usage: usageDocument functionDefinitionFile functionName exitCode [ message ... ]
+# Argument: functionDefinitionFile - Required. File. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
+# Argument: functionName - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Argument: exitCode - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Argument: message - Optional. String. A message.
 #
 # Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
 #
-# Simplifies documentation and has it in one place for shell and online.
+# Simplifies documentation and keeps it with the code.
 #
 usageDocument() {
   local usage="_${FUNCNAME[0]}"

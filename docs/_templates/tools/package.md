@@ -18,6 +18,7 @@
 
 ## Package lists
 
+{packageIsInstalled}
 {packageInstalledList}
 {packageAvailableList}
 

@@ -180,23 +180,19 @@ documentationIndex_Generate() {
   fi
   functionIndex="$cacheDirectory/index"
   if [ ! -d "$functionIndex" ]; then
-    if ! mkdir -p "$functionIndex"; then
-      __failEnvironment "$usage" "Unable to create $functionIndex" || return $?
-    fi
+    __usageEnvironment "$usage" mkdir -p "$functionIndex" || return $?
   fi
   if [ ! -d "$cacheDirectory/files" ]; then
-    if ! mkdir -p "$cacheDirectory/files"; then
-      __failEnvironment "$usage" "Unable to create files index" || return $?
-    fi
+    __usageEnvironment "$usage" mkdir -p "$cacheDirectory/files" || return $?
   fi
-  if ! find "$codePath" -type f -name '*.sh' | while read -r shellFile; do
+  if ! find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' | while read -r shellFile; do
     fileIndex="$cacheDirectory/files/$(basename "$shellFile")"
     if [ ! -f "$fileIndex" ] || ! grep -q "$shellFile" "$fileIndex"; then
       printf -- "%s\n" "$shellFile" >>"$fileIndex"
     fi
     fileCacheMarker="$cacheDirectory/code/${shellFile#/}"
     if [ ! -d "$fileCacheMarker" ]; then
-      __failEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
+      __usageEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
     elif isNewestFile "$fileCacheMarker/.marker" "$shellFile"; then
       statusMessage decorate info "$(decorate file "$shellFile") is already cached"
       continue
@@ -217,7 +213,7 @@ documentationIndex_Generate() {
     count=$((count - 1))
     statusMessage decorate success "Generated $count functions for $shellFile "
   done; then
-    return $?
+    __failEnvironment "$usage" "No shell files found in $(decorate file "$codePath")" || return $?
   fi
   statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"
 }
@@ -345,12 +341,11 @@ _documentationIndex_UnlinkedIteratorUsage() {
 # See: documentationIndex_LinkDocumentationPaths
 #
 documentationIndex_FunctionIterator() {
-  local cacheDirectory functionIndexPath
-  local functionName settingsFile
+  local usage="_${FUNCNAME[0]}"
 
-  cacheDirectory=
+  local cacheDirectory="" functionIndexPath=""
   while [ $# -gt 0 ]; do
-    case $1 in
+    case "$1" in
       *)
         if [ -z "$cacheDirectory" ]; then
           cacheDirectory="$1"
@@ -372,6 +367,7 @@ documentationIndex_FunctionIterator() {
     __failArgument "$usage" "cacheDirectory required" || return $?
     return $?
   fi
+  local functionName settingsFile
   find "$functionIndexPath/index" -type f -print | sort | while read -r functionName; do
     functionName=$(basename "$functionName")
     if ! settingsFile="$(documentationIndex_Lookup --settings "$cacheDirectory" "$functionName")"; then
@@ -455,8 +451,10 @@ documentationIndex_LinkDocumentationPaths() {
     __failEnvironment "$usage" "listTokens failed" || return $?
   fi
   checkFiles=("$documentTemplate")
+  __usageEnvironment "$usage" touch "$modifiedCountFile" || return $?
   while read -r token; do
     if ! settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$token"); then
+      decorate warning "No settings for $token" 1>&2
       continue
     fi
     if ! grep -q "'documentationPath'" "$settingsFile"; then
@@ -472,7 +470,7 @@ documentationIndex_LinkDocumentationPaths() {
     fi
     checkFiles+=("$settingsFile")
   done <"$documentTokensFile"
-  if ! processed=$(fileSize "$modifiedCountFile" 2>/dev/null); then
+  if ! processed=$(__usageEnvironment "$usage" fileSize "$modifiedCountFile"); then
     processed=0
   fi
   total="$(trimSpace "$(wc -l <"$documentTokensFile")")"

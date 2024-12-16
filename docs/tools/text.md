@@ -29,6 +29,12 @@ Returns true if all `characters` are of `className`
 
 ## Filters
 
+### `sedReplacePattern` - undocumented
+
+No documentation for `sedReplacePattern`.
+
+- Location: `bin/build/tools/sed.sh`
+
 #### Arguments
 
 - No arguments.
@@ -43,7 +49,7 @@ Returns true if all `characters` are of `className`
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -72,7 +78,7 @@ needSlash='$.*/[\]^'
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -635,6 +641,12 @@ Check if one string is a substring of another set of strings (case-insensitive)
 
 - `0` - If element is a substring of any haystack
 - `1` - If element is NOT found as a substring of any haystack
+### `substringFound` - undocumented
+
+No documentation for `substringFound`.
+
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `haystack` - Required. String. String to search.
@@ -904,6 +916,15 @@ This can break your files so use with caution. Blank searchText is not allowed.
 - `1` - mktemp failed
 - `2` - Arguments are identical
 
+#### See Also
+
+- [Source {fn}]({sourceLink})
+### `joinArguments` - undocumented
+
+No documentation for `joinArguments`.
+
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `separator` - Required. String. Single character to join elements.
@@ -914,6 +935,12 @@ This can break your files so use with caution. Blank searchText is not allowed.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `listAppend` - undocumented
+
+No documentation for `listAppend`.
+
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `listValue` - Required. Path value to modify.
@@ -927,6 +954,12 @@ This can break your files so use with caution. Blank searchText is not allowed.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `listRemove` - undocumented
+
+No documentation for `listRemove`.
+
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `listValue` - Required. List value to modify.
@@ -1036,6 +1069,12 @@ Does this character match one or more character classes?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `stringValidate` - undocumented
+
+No documentation for `stringValidate`.
+
+- Location: `bin/build/tools/text.sh`
+
 #### Arguments
 
 - `text` - Text to validate

@@ -13,7 +13,7 @@ Output a list of environment variables and ignore function definitions
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/environmentVariables.sh`
 
 #### Arguments
 
@@ -49,6 +49,12 @@ First letter MUST NOT be a digit
 
 ## Variable lists
 
+### `environmentSecureVariables` - undocumented
+
+No documentation for `environmentSecureVariables`.
+
+- Location: `bin/build/tools/environment.sh`
+
 #### Arguments
 
 - No arguments.
@@ -58,6 +64,12 @@ First letter MUST NOT be a digit
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `environmentApplicationVariables` - undocumented
+
+No documentation for `environmentApplicationVariables`.
+
+- Location: `bin/build/tools/environment.sh`
+
 #### Arguments
 
 - No arguments.
@@ -78,7 +90,6 @@ Safely load an environment file (no code execution)
 
 #### Arguments
 
-- `environmentFile` - Required. Environment file to load.
 - `environmentFile` - Required. Environment file to load.
 - `--require` - Flag. Optional. All subsequent environment files on the command line will be required.
 - `--optional` - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)

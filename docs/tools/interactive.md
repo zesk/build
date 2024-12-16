@@ -36,7 +36,9 @@ Read user input and return 0 if the user says yes
 
 #### Arguments
 
-- `defaultValue` - Value to return if no value given by user
+- `defaultValue` - Boolean. Optional. Value to return if no value given by user
+- `--yes` - Boolean. Optional. Short for `--default yes`
+- `--no` - Boolean. Optional. Short for `--default no`
 
 #### Exit codes
 
@@ -59,6 +61,12 @@ Pause for user input
 
 ## Copy files
 
+### `copyFileWouldChange` - undocumented
+
+No documentation for `copyFileWouldChange`.
+
+- Location: `bin/build/tools/interactive.sh`
+
 #### Arguments
 
 - `--map` - Flag. Optional. Map environment values into file before copying.
@@ -68,7 +76,13 @@ Pause for user input
 #### Exit codes
 
 - `0` - Something would change
-- `1` - Nothing would change #### Arguments
+- `1` - Nothing would change ### `copyFile` - undocumented
+
+No documentation for `copyFile`.
+
+- Location: `bin/build/tools/interactive.sh`
+
+#### Arguments
 
 - `--map` - Flag. Optional. Map environment values into file before copying.
 - `--escalate` - Flag. Optional. The file is a privilege escalation and needs visual confirmation.

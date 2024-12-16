@@ -136,6 +136,12 @@ Appends any passed in arguments as path segments.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `buildQuietLog` - undocumented
+
+No documentation for `buildQuietLog`.
+
+- Location: `bin/build/tools/self.sh`
+
 #### Arguments
 
 - `name` - The log file name

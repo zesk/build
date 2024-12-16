@@ -100,7 +100,7 @@ makeShellFilesExecutable() {
   (
     for path in "${paths[@]}"; do
       __usageEnvironment "$usage" cd "$path" || return $?
-      find "." -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -print0 | xargs -0 chmod -v +x
+      find "." -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -exec chmod -v +x {} \;
     done
   ) || return $?
 }

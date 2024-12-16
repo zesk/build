@@ -60,7 +60,6 @@ Extension parsing is done by removing the final dot from the filename:
 - `--help` - Optional. Flag. This help.
 - `--clean` - Optional. Flag. Clean directory of all files first.
 - `directory` - Required. Directory. Directory to create extension lists.
-- `directory` - Required. Directory. Directory to create extension lists.
 - `file0` - Optional. List of files to add to the extension list.
 
 #### Exit codes

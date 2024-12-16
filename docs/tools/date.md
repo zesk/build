@@ -4,6 +4,12 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `dateToFormat` - undocumented
+
+No documentation for `dateToFormat`.
+
+- Location: `bin/build/tools/date.sh`
+
 #### Arguments
 
 - No arguments.
@@ -40,15 +46,35 @@ Converts a date to an integer timestamp
 #### Environment
 
 Compatible with BSD and GNU date.
+### `timestampToDate` - timestampToDate 1681966800 %F
+
+timestampToDate 1681966800 %F
+
+- Location: `bin/build/tools/date.sh`
+
+#### Usage
+
+    timestampToDate integerTimestamp format
+    
+
 #### Arguments
 
-- No arguments.
+- `integerTimestamp` - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
+- `format` - How to output the date (e.g. `%F` - no `+` is required)
+
+#### Examples
+
+    dateField=$(timestampToDate $init %Y)
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+Compatible with BSD and GNU date.
 ### `todayDate` - Today's date
 
 Returns the current date, in YYYY-MM-DD format. (same as `%F`)
@@ -72,6 +98,12 @@ Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 #### Environment
 
 Compatible with BSD and GNU date.
+### `yesterdayDate` - undocumented
+
+No documentation for `yesterdayDate`.
+
+- Location: `bin/build/tools/date.sh`
+
 #### Arguments
 
 - No arguments.
@@ -81,6 +113,12 @@ Compatible with BSD and GNU date.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `tomorrowDate` - undocumented
+
+No documentation for `tomorrowDate`.
+
+- Location: `bin/build/tools/date.sh`
+
 #### Arguments
 
 - No arguments.

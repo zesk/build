@@ -289,11 +289,11 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath 10
+### `realPath` - IDENTICAL _realPath EOF
 
-IDENTICAL _realPath 10
+IDENTICAL _realPath EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/realPath.sh`
 
 #### Usage
 
@@ -324,6 +324,12 @@ Renames a link forcing replacement, and works on different versions of `mv` whic
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `simplifyPath` - undocumented
+
+No documentation for `simplifyPath`.
+
+- Location: `bin/build/tools/file.sh`
+
 #### Usage
 
     simplifyPath path

@@ -25,6 +25,9 @@
 {mostRecentlyModifiedFile}
 {mostRecentlyModifiedTimestamp}
 
+{directoryNewestFile}
+{directoryOldestFile}
+
 ### Owner Group Size Type
 
 {fileOwner}

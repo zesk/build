@@ -53,6 +53,12 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `__usageEnvironment` - undocumented
+
+No documentation for `__usageEnvironment`.
+
+- Location: `bin/build/identical/_tinySugar.sh`
+
 #### Arguments
 
 - No arguments.
@@ -77,29 +83,11 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Arguments
+### `__usageArgument` - undocumented
 
-- No arguments.
+No documentation for `__usageArgument`.
 
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `__failArgument` - IDENTICAL _tinySugar 43
-
-IDENTICAL _tinySugar 43
-
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
@@ -110,6 +98,42 @@ IDENTICAL _tinySugar 43
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `__failEnvironment` - undocumented
+
+No documentation for `__failEnvironment`.
+
+- Location: `bin/build/identical/_tinySugar.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `__failArgument` - IDENTICAL _tinySugar EOF
+
+IDENTICAL _tinySugar EOF
+
+- Location: `bin/build/identical/_tinySugar.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `_undo` - undocumented
+
+No documentation for `_undo`.
+
+- Location: `bin/build/tools/sugar.sh`
+
 #### Arguments
 
 - `exitCode` - Required. Integer. Exit code to return.
@@ -134,6 +158,7 @@ Suppress stdout without piping. Handy when you just want a behavior not the outp
 #### Examples
 
     muzzle pushd
+    __usageEnvironment "$usage" phpBuild || _undo $? muzzle popd || return $?
 
 #### Exit codes
 

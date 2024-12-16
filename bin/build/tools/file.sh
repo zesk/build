@@ -564,3 +564,67 @@ _isEmptyFile() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Usage: {fn} directory
+_directoryGamutFile() {
+  local gamutModified="" remain comparer="$1" gamut="" directory="${2-.}"
+  while read -r modified file; do
+    isPositiveInteger "$modified" || __failEnvironment "$usage" "stat -lt output a non-integer: \"$modified\" \"$file\"" || return $?
+    # shellcheck disable=SC1073 disable=SC1072 disable=SC1009
+    if [ -z "$gamutModified" ] || [ "$modified" "$comparer" "$gamutModified" ]; then
+      gamutModified="$modified"
+      gamut="$file"
+    fi
+  done < <(find "$directory" -type f ! -path "*/.*/*" -exec stat -lt '%s' {} \+ | removeFields 5)
+  [ -n "$gamut" ] || return 1
+  printf "%s\n" "$gamut"
+}
+_directoryGamutFileWrapper() {
+  local usage="$1" comparator="$2" && shift 2
+  local directory=""
+
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+        if ! _directoryGamutFile "$comparator" "$directory"; then
+          __failEnvironment "$usage" "No files in $(decorate file "$directory")" || return $?
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  [ -n "$directory" ] || __failArgument "$usage" "directory is required" || return $?
+}
+
+# Find the oldest file in a directory
+# Argument: directory - Directory. Required. Directory to search for the oldest file.
+directoryOldestFile() {
+  _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-lt" "$@"
+}
+_directoryOldestFile() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Find the newest file in a directory
+# Argument: directory - Directory. Required. Directory to search for the newest file.
+directoryNewestFile() {
+  _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-gt" "$@"
+}
+_directoryNewestFile() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

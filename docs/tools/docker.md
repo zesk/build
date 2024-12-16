@@ -134,3 +134,18 @@ Outputs the compatible env to stdout
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `dockerPlatformDefault` - Fetch the default platform for docker
+
+Fetch the default platform for docker
+
+- Location: `bin/build/tools/docker.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

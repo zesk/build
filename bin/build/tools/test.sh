@@ -729,7 +729,7 @@ findUncaughtAssertions() {
   # test/tools/os-tests.sh:110:_assertBetterType() {
 
   problemFiles=()
-  tempFile=$(mktemp) || __failEnvironment "$usage" "mktemp failed" || return $?
+  tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
   suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
     find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :

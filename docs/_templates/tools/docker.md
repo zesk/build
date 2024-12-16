@@ -12,3 +12,4 @@
 {dockerEnvToBash}
 {anyEnvToBashEnv}
 {anyEnvToDockerEnv}
+{dockerPlatformDefault}

@@ -29,6 +29,12 @@ Is build debugging enabled?
 
 - `moduleName` - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
 
+#### Examples
+
+    BUILD_DEBUG=false # All debugging disabled
+    BUILD_DEBUG= # All debugging disabled
+    BUILD_DEBUG=usage,documentation # Debug usage and documentation calls
+
 #### Exit codes
 
 - `1` - Debugging is not enabled (for any module)
@@ -36,7 +42,7 @@ Is build debugging enabled?
 
 #### Environment
 
-BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. BUILD_DEBUG may be a comma-separated list of modules to target debugging.
+BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. `BUILD_DEBUG` may be a comma-separated list of modules to target debugging.
 ### `buildDebugStart` - Start build debugging if it is enabled.
 
 Start build debugging if it is enabled.

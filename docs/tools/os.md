@@ -58,11 +58,11 @@ Backup when `/etc/services` does not exist.
 
 ## Execution
 
-### `whichExists` - IDENTICAL whichExists 11
+### `whichExists` - IDENTICAL whichExists EOF
 
-IDENTICAL whichExists 11
+IDENTICAL whichExists EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/whichExists.sh`
 
 #### Arguments
 
@@ -110,6 +110,12 @@ Works from the current directory
 
 ## Modify PATH or MANPATH
 
+### `pathConfigure` - undocumented
+
+No documentation for `pathConfigure`.
+
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list
@@ -121,6 +127,12 @@ Works from the current directory
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `pathRemove` - undocumented
+
+No documentation for `pathRemove`.
+
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `path` - the path to be removed from the `PATH` environment
@@ -155,6 +167,12 @@ Maintains ordering.
 
 ## Modify MANPATH
 
+### `manPathConfigure` - undocumented
+
+No documentation for `manPathConfigure`.
+
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list
@@ -166,6 +184,12 @@ Maintains ordering.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `manPathRemove` - undocumented
+
+No documentation for `manPathRemove`.
+
+- Location: `bin/build/tools/os.sh`
+
 #### Arguments
 
 - `path` - Directory. Required. The path to be removed from the `MANPATH` environment

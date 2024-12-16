@@ -14,7 +14,7 @@ Given that bash is not an ideal template language, caching is mandatory.
 
 Uses a cache at `buildCacheDirectory`
 
-- Location: `bin/build/tools/documentation/template.sh`
+- Location: `bin/build/tools/documentation/build.sh`
 
 #### Arguments
 
@@ -440,23 +440,25 @@ Generates a temporary file which is removed
 
 ## Usage Utilities
 
-### `usageDocument` - Generates console usage output for a script using documentation tools
+### `usageDocument` - Universal error handler for functions
 
 Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
 
-Simplifies documentation and has it in one place for shell and online.
+Simplifies documentation and keeps it with the code.
 
 - Location: `bin/build/tools/documentation.sh`
 
 #### Usage
 
-    usageDocument functionDefinitionFile functionName exitCode [ ... ]
+    usageDocument functionDefinitionFile functionName exitCode [ message ... ]
     
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
-- `functionName` - Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+- `functionDefinitionFile` - Required. File. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
+- `functionName` - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+- `exitCode` - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+- `message` - Optional. String. A message.
 
 #### Exit codes
 

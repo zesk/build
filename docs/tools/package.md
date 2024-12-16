@@ -134,7 +134,7 @@ Removes packages using the current package manager.
 
 #### Arguments
 
-- `package` - One or more packages to uninstall
+- `package` - String. Required. One or more packages to uninstall
 
 #### Examples
 
@@ -148,6 +148,20 @@ Removes packages using the current package manager.
 
 ## Package lists
 
+### `packageIsInstalled` - Is a package installed?
+
+Is a package installed?
+
+- Location: `bin/build/tools/package.sh`
+
+#### Arguments
+
+- `package` - String. Required. One or more packages to check if they are installed
+
+#### Exit codes
+
+- `1` - If any packages are not installed
+- `0` - All packages are installed
 ### `packageInstalledList` - List installed packages on this system using package manager
 
 List installed packages on this system using package manager
@@ -226,18 +240,4 @@ INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `packageDefaultManager` - Determine the default manager
 
-Determine the default manager
-
-- Location: `bin/build/tools/package.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error

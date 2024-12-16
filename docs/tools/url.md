@@ -96,9 +96,9 @@ Usage urlOpen [ --help ]
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `urlOpener` - Open URLs which appear in a stream but continue to
+### `urlOpener` - Open URLs which appear in a stream (but continue to
 
-Open URLs which appear in a stream but continue to output the stream
+Open URLs which appear in a stream (but continue to output the stream)
 
 - Location: `bin/build/tools/url.sh`
 
@@ -114,6 +114,7 @@ Open URLs which appear in a stream but continue to output the stream
 ### `urlFilter` - Open URLs which appear in a stream
 
 Open URLs which appear in a stream
+URLs are explicitly trimmed at quote, whitespace and escape boundaries.
 
 - Location: `bin/build/tools/url.sh`
 

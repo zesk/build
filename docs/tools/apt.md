@@ -19,6 +19,12 @@ Is apt-get installed?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `aptNonInteractive` - undocumented
+
+No documentation for `aptNonInteractive`.
+
+- Location: `bin/build/tools/apt.sh`
+
 #### Arguments
 
 - No arguments.

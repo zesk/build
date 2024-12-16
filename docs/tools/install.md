@@ -157,6 +157,7 @@ When this tool succeeds the `npm` binary is available in the local operating sys
 
 #### Environment
 
+BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
 - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 ### `phpInstall` - Install `php`
 
@@ -176,31 +177,7 @@ When this tool succeeds the `php` binary is available in the local operating sys
 
 - `1` - If installation fails
 - `0` - If installation succeeds
-### `prettierInstall` - Install prettier in the build environment
 
-Install prettier in the build environment
-If this fails it will output the installation log.
-When this tool succeeds the `prettier` binary is available in the local operating system.
-
-- Location: `bin/build/tools/prettier.sh`
-
-#### Usage
-
-    prettierInstall [ npmVersion ]
-    
-
-#### Arguments
-
-- `npmVersion` - Optional. String. npm version to install.
-
-#### Exit codes
-
-- `1` - If installation of prettier or npm fails
-- `0` - If npm is already installed or installed without error
-
-#### Environment
-
-- `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 ### `pythonInstall` - Install `python`
 
 Install `python`
@@ -298,21 +275,7 @@ When this tool succeeds the `php` binary is no longer available in the local ope
 
 - `1` - If uninstallation fails
 - `0` - If uninstallation succeeds
-### `prettierUninstall` - undocumented
 
-No documentation for `prettierUninstall`.
-
-- Location: `bin/build/tools/prettier.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `pythonUninstall` - Uninstall python
 
 Uninstall python

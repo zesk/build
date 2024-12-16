@@ -136,6 +136,12 @@ AWS_REGION - Where to update the security group
 DEVELOPER_ID - Developer used to register rules in Amazon
 AWS_ACCESS_KEY_ID - Amazon IAM ID
 AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
+### `awsSecurityGroupIPModify` - undocumented
+
+No documentation for `awsSecurityGroupIPModify`.
+
+- Location: `bin/build/tools/aws.sh`
+
 #### Arguments
 
 - `--remove - Optional. Flag. Remove instead of add` - only `group`, and `description` required.
@@ -152,6 +158,12 @@ AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `awsRegionValid` - undocumented
+
+No documentation for `awsRegionValid`.
+
+- Location: `bin/build/tools/aws.sh`
+
 #### Arguments
 
 - `region ...` - String. Required. The AWS Region to validate.

@@ -357,9 +357,12 @@ _environmentFileLoad() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# List environment variables related to security
 environmentSecureVariables() {
   printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
 }
+
+# List environment variables related to application deployments
 environmentApplicationVariables() {
   printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
 }

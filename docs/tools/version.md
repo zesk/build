@@ -57,7 +57,7 @@ also added to `git` the first time.
 #### Arguments
 
 - `--non-interactive` - Optional. If new version is needed, use default version
-- `versionName` - Optional. Set the new version name to this.
+- `versionName - Optional. Set the new version name to this` - must be after live version in version order
 
 #### Exit codes
 

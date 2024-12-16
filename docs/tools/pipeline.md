@@ -252,7 +252,21 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `ipLookup` - Get the current IP address of a host
 
+Get the current IP address of a host
+
+- Location: `bin/build/tools/pipeline.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `isUpToDate` - Test whether the key needs to be updated
 
 For security one should update keys every N days
@@ -316,6 +330,12 @@ APPLICATION_VERSION - reserved and set to `runHook version-current` if not set a
 APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 APPLICATION_TAG - reserved and set to `runHook application-id`
 APPLICATION_ID - reserved and set to `runHook application-tag`
+### `environmentFileShow` - undocumented
+
+No documentation for `environmentFileShow`.
+
+- Location: `bin/build/tools/environment.sh`
+
 #### Arguments
 
 - No arguments.
