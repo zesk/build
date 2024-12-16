@@ -222,7 +222,7 @@ dockerEnvFromBashEnv() {
   tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
   for file in "$@"; do
     [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
-    env -i bash -c "set -a; source \"$file\"; declare -px; declare -pa" >"$tempFile" || __failArgument "$usage" "$file is not a valid bash file" || return $?
+    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __failArgument "$usage" "$file is not a valid bash file" || return $?
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}
