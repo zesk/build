@@ -554,7 +554,7 @@ deployToRemote() {
         if "$deployFlag"; then
           __failArgument "$usage" "--deploy arg passed twice" || return $?
         fi
-        deployFlag=1
+        deployFlag=true
         remoteArgs+=("$1")
         ;;
       --revert)
