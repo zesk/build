@@ -797,8 +797,8 @@ gitPreCommitHeader() {
   local directory total color
 
   directory=$(__usageEnvironment "$usage" __gitPreCommitCache true) || return $?
-
-  total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
+  [ -f "$directory/@" ] || __failEnvironment "$usage" "$directory/@ missing" || return $?
+  total=$(($(__usageEnvironment "$usage" wc -l <"$directory/@") + 0)) || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
