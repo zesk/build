@@ -75,7 +75,7 @@ testFileMatches() {
 
   __environment find "$home/test/matches" -type f >"$matchFiles" || return $?
 
-  dumpPipe "match file list" <"$matchFiles"
+  # dumpPipe "match file list" <"$matchFiles"
   # zulu simple
   pattern="zulu"
   ex=()

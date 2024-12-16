@@ -75,7 +75,7 @@ testBuildDebugEnabled() {
   # Does change it (on)
   BUILD_DEBUG=1
   assertExitCode --stderr-ok 0 buildDebugStop || return $?
-  assertNotExitCode --stderr-ok --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertNotExitCode --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
   # Disable anyway
 
   __buildDebugDisable

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 #
-# daemontools-tests.sh
-#
-# daemontools tests
+# self-tests.sh
 #
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
@@ -21,7 +19,6 @@ testBuildEnvironmentLoadAll() {
     BUILD_DOCKER_BITBUCKET_PATH
     BUILD_DOCKER_IMAGE
     BUILD_DOCKER_PATH
-    BUILD_DOCKER_PLATFORM
     BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN
     BUILD_HOME
     BUILD_INSTALL_URL
@@ -43,13 +40,15 @@ testBuildEnvironmentLoadAll() {
   home=$(__environment buildHome) || return $?
 
   while read -r loadIt; do
-    export "${loadIt?}"
-    buildEnvironmentLoad "$loadIt" || _environment "buildEnvironmentLoad $loadIt failed" return $?
-    # statusMessage decorate info Loaded "$loadIt=${!loadIt}"
-    if inArray "$loadIt" "${nonBlankEnvs[@]}"; then
-      assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
-    fi
-  done < <(find "$home" -type f -name '*.sh' -path '*/env/*' -exec basename {} + | cut -d . -f 1) || return $?
+    (
+      export "${loadIt?}"
+      buildEnvironmentLoad "$loadIt" || _environment "buildEnvironmentLoad $loadIt failed" return $?
+      # statusMessage decorate info Loaded "$loadIt=${!loadIt}"
+      if inArray "$loadIt" "${nonBlankEnvs[@]}"; then
+        assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
+      fi
+    ) || return $?
+  done < <(find "$home" -type f -name '*.sh' -path '*/env/*' -exec basename {} \; | cut -d . -f 1) || return $?
 }
 
 testBuildFunctions() {

@@ -22,7 +22,7 @@ testPackageAPI() {
   assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?
   assertNotExitCode --line "$LINENO" 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
 
-  assertExitCode --dump --line "$LINENO" 0 packageWhich --force "$ourTestBinary" "$ourTestPackage" || return $?
+  assertExitCode --line "$LINENO" 0 packageWhich --force "$ourTestBinary" "$ourTestPackage" || return $?
 
   IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList) || :
   assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?

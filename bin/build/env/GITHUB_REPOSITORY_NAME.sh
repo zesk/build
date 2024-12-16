@@ -3,5 +3,5 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 # Category: Development
 # Repository name for release
-export GITHUB_ACCESS_TOKEN
-GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN-}
+export GITHUB_REPOSITORY_NAME
+GITHUB_REPOSITORY_NAME=${GITHUB_REPOSITORY_NAME-}

@@ -177,7 +177,7 @@ testEnvironmentValueWriteArray() {
     assertGreaterThan --line "$LINENO" ${#testArray[@]} 1 || return $?
     environmentValueWrite "STRING$index" "${testArray[@]}" >>"$envFile"
     environmentValueWriteArray "ARRAY$index" "${testArray[@]}" >>"$envFile"
-    dumpPipe envFile <"$envFile"
+    # dumpPipe envFile <"$envFile"
     restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(__environment environmentValueReadArray "$envFile" "ARRAY$index" || return $?)
     assertEquals --line "$LINENO" "${#testArray[*]}" "${#restoredValue[*]}" || return $?
     assertEquals --line "$LINENO" "${testArray[*]}" "${restoredValue[*]}" || return $?

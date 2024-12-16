@@ -261,7 +261,7 @@ testAwsEnvironmentFromCredentials() {
 
   assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --force || return $?
 
-  dumpPipe credentials post --force <"$credFile"
+  # dumpPipe credentials post --force <"$credFile"
 
   assertFileContains --line "$LINENO" "$credFile" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "Removed profile default" "$year" || return $?
   assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
@@ -273,7 +273,7 @@ testAwsEnvironmentFromCredentials() {
 
   assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --profile hello-world || return $?
 
-  dumpPipe credentials post hello-world <"$credFile"
+  # dumpPipe credentials post hello-world <"$credFile"
 
   assertFileContains --line "$LINENO" "$credFile" "[default]" "[hello-world]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 
@@ -284,7 +284,7 @@ testAwsEnvironmentFromCredentials() {
 
   assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --profile hello-world --force || return $?
 
-  dumpPipe credentials post hello-world 2 <"$credFile"
+  # dumpPipe credentials post hello-world 2 <"$credFile"
 
   assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
   assertEquals --line "$LINENO" --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?

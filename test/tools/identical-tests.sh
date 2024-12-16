@@ -62,7 +62,7 @@ testIdenticalRepair() {
     assertFileExists "$expectedTarget" || return $?
     __environment cp "$target" "$output" || return $?
     assertExitCode 0 identicalRepair --prefix '# ''IDENTICAL' --token "$token" "$source" "$output" || return $?
-    assertExitCode --dump 0 diff "$output" "$expectedTarget" || return $?
+    assertExitCode 0 diff "$output" "$expectedTarget" || return $?
     assertFileDoesNotContain "$output" EOF || return $?
     rm "$output" || :
   done
@@ -75,7 +75,7 @@ testIdenticalRepair() {
     assertFileExists "$expectedTarget" || return $?
     __environment cp "$target" "$output" || return $?
     assertExitCode 0 identicalRepair --prefix '# ''SAME-SAME' --token "$token" "$source" "$output" || return $?
-    assertExitCode --dump 0 diff "$output" "$(dirname $target)/$token-$(basename $target)" || return $?
+    assertExitCode 0 diff "$output" "$(dirname $target)/$token-$(basename $target)" || return $?
     rm "$output" || :
   done
 }

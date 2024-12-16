@@ -40,7 +40,7 @@ testBoolean() {
 testChoose() {
   local errors here
 
-  assertEquals "2" "$(_choose falseish A B || printf "%d" $?)"
+  assertEquals "2" "$(_choose falseish A B 2>/dev/null || printf "%d" $?)"
   errors="$(_choose falseish A B 2>&1 || :)" || : && here="${BASH_SOURCE[0]}:$LINENO"
   assertExitCode 0 isSubstring "$here" "$errors" || return $?
 

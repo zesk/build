@@ -14,6 +14,8 @@ __resultText() {
   local passed="$1" text
   shift
   text="$*"
+  # Hide newlines
+  text=${text//$'\n'/"␤"}
   if "$passed"; then
     # shellcheck disable=SC2015
     [ -z "$text" ] && decorate blue "(blank)" || decorate code "$text"

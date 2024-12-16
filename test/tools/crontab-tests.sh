@@ -21,7 +21,7 @@ crontabApplicationUpdateTest() {
   assertExitCode 0 crontabApplicationUpdate --user root --env-file "$envFile" "$emptyPath" || return $?
   assertExitCode 0 crontabApplicationUpdate --user root --env-file "$envFile" "$emptyPath" --show || return $?
   printf "* * * * * echo {APP} {APPLICATION_NAME} {APPLICATION_PATH}\n" >>"$emptyPath/hello/root.crontab"
-  assertExitCode --stdout-match "test hello" --stdout-match "$emptyPath/hello" --dump 0 crontabApplicationUpdate --user root --env-file "$envFile" "$emptyPath" --show || return $?
+  assertExitCode --stdout-match "test hello" --stdout-match "$emptyPath/hello" 0 crontabApplicationUpdate --user root --env-file "$envFile" "$emptyPath" --show || return $?
 
   rm -rf "$emptyPath" || :
 }

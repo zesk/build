@@ -65,7 +65,6 @@ testPHPBuild() {
   testPath="$here/.test.PHPBuild.$testPath/$appName"
   __environment mkdir -p "$(dirname "$testPath")" || return $?
   __environment cp -r ./test/example/simple-php "$testPath" || return $?
-  echo "PWD: $(pwd)"
 
   buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
@@ -88,12 +87,9 @@ testPHPBuild() {
   assertFileExists --line "$LINENO" "$testPath/bin/install-bin-build.sh" || return $?
   assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
 
-  decorate info "${BASH_SOURCE[0]}:$LINENO"
   # OLD INSTALLER IS BROKEN
   assertExitCode --dump 0 "$testPath/bin/install-bin-build.sh" --mock "$home/bin/build" || return $?
-  decorate info "${BASH_SOURCE[0]}:$LINENO"
   assertDirectoryExists --line "$LINENO" "$testPath/bin/build" || return $?
-  decorate info "${BASH_SOURCE[0]}:$LINENO"
 
   decorate warning "Building PHP app" || :
 
