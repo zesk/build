@@ -83,19 +83,19 @@ isUnsignedInteger() {
 # 2. Checks all shell files for errors
 # fn: {base}
 __hookGitPreCommit() {
-  local usage="_${FUNCNAME[0]}" hookName="post-commit" start
+  local usage="_${FUNCNAME[0]}" hookName="pre-commit" start
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
   __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
-  statusMessage printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info " ... installing ")"
+  statusMessage --first printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info "Installing")"
   __usageEnvironment "$usage" gitInstallHook "$hookName" || return $?
-  statusMessage --first decorate info "... running "
+  statusMessage printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info "Running")"
   __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
 
-  decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta pre-commit) $(decorate decoration)")"
+  statusMessage --last decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta "$hookName") $(decorate decoration)")"
   gitPreCommitSetup || :
 
   local extension extensions=()
