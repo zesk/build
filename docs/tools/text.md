@@ -584,7 +584,6 @@ Ensures blank lines are singular
 
 ## Finding or Calculating
 
- 
 ### `inArray` - Check if an element exists in an array
 
 Check if an element exists in an array

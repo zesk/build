@@ -27,5 +27,3 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 {awsEnvironmentFromCredentials}
 {awsCredentialsFromEnvironment}
 {awsCredentialsHasProfile}
-{awsCloudFrontCertificate}
-{awsGetIdentity}

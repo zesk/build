@@ -218,7 +218,23 @@ Needs internet access and creates a directory `./bin/build`
 
 # Package Installation
 
+#### Arguments
 
+- `--local localPackageDirectory` - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
+- `--url url` - Optional. URL. URL of a tar.gz. file. Download source code from here.
+- `--user headerText` - Optional. String. Add `username:password` to remote request.
+- `--header headerText` - Optional. String. Add one or more headers to the remote request.
+- `--url-function urlFunction` - Optional. Function. Function to return the URL to download.
+- `--check-function checkFunction` - Optional. Function. Function to check the installation and output the version number or package name.
+- `--debug` - Optional. Flag. Debugging is on.
+- `--force` - Optional. Flag. Force installation even if file is up to date.
+- `--diff` - Optional. Flag. Show differences between old and new file.
+- `--replace` - Optional. Flag. Replace an old version of this script with this one and delete this one. Internal only, do not use.
+
+#### Exit codes
+
+- `1` - Environment error
+- `2` - Argument error
 ### `installInstallBinary` - Installs an installer the first time in a new project,
 
 Installs an installer the first time in a new project, and modifies it to work in the application path.

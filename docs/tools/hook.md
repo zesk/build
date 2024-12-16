@@ -39,7 +39,26 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 - `Any` - The hook exit code is returned if it is run
 - `1` - is returned if the hook is not found
+### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
 
+Identical to `runHook` but returns exit code zero if the hook does not exist.
+
+- Location: `bin/build/tools/hook.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Examples
+
+    if ! runOptionalHook test-cleanup >>"$quietLog"; then
+        buildFailed "$quietLog"
+    fi
+
+#### Exit codes
+
+- `Any` - The hook exit code is returned if it is run
+- `0` - is returned if the hook is not found
 ### `whichHook` - Find the path to a hook binary file
 
 Does a hook exist in the local project?

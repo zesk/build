@@ -28,5 +28,5 @@ Easier access to `BUILD_HOME`, list of all functions, cache directory, known env
 
 # Package Installation
 
-{installRemotePackage}
+{_installRemotePackage}
 {installInstallBinary}

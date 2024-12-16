@@ -16,7 +16,6 @@ Install software as `root` or superuser.
 {mariadbInstall}
 {npmInstall}
 {phpInstall}
-{prettierInstall}
 {pythonInstall}
 {terraformInstall}
 
@@ -24,6 +23,5 @@ Install software as `root` or superuser.
 {mariadbUninstall}
 {npmUninstall}
 {phpUninstall}
-{prettierUninstall}
 {pythonUninstall}
 {terraformUninstall}

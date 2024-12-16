@@ -4,17 +4,26 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+> Environment variables: `NODE_PACKAGE_MANAGER`
+
 {nodeInstall}
+{nodeUninstall}
+
+## node Package Manager Utilities
+
 {nodePackageManagerInstall}
 {nodePackageManagerUninstall}
 {nodePackageManagerValid}
 {nodePackageManager}
-{nodeUninstall}
 
 ## node Package Manager `yarn`
+
+> Environment variables: `BUILD_YARN_VERSION`
 
 {yarnInstall}
 
 ## node Package Manager `npm`
+
+> Environment variables: `BUILD_NPM_VERSION`
 
 {npmInstall}

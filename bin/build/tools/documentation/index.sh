@@ -454,7 +454,7 @@ documentationIndex_LinkDocumentationPaths() {
   __usageEnvironment "$usage" touch "$modifiedCountFile" || return $?
   while read -r token; do
     if ! settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$token"); then
-      decorate warning "No settings for $token" 1>&2
+      statusMessage --last decorate error "Function $(decorate code "$token") $(decorate error "not defined")" 1>&2
       continue
     fi
     if ! grep -q "'documentationPath'" "$settingsFile"; then

@@ -339,5 +339,3 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-

@@ -252,7 +252,7 @@ testAwsEnvironmentFromCredentials() {
   assertFileContains --line "$LINENO" "$credFile" "[default]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
   assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
 
-  assertNotExitCode --dump --line "$LINENO" --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment || return $?
 
   firstId=$AWS_ACCESS_KEY_ID
   firstKey=$AWS_SECRET_ACCESS_KEY

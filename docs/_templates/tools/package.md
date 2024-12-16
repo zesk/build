@@ -27,4 +27,3 @@
 {packageManagerValid}
 {packageManagerDefault}
 {packageNeedRestartFlag}
-{packageDefaultManager}

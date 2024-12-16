@@ -4,6 +4,8 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+> Environment variables: `NODE_PACKAGE_MANAGER`
+
 ### `nodeInstall` - Install nodejs
 
 Install nodejs
@@ -19,6 +21,24 @@ Install nodejs
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `nodeUninstall` - Uninstall nodejs
+
+Uninstall nodejs
+
+- Location: `bin/build/tools/node.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## node Package Manager Utilities
+
 ### `nodePackageManagerInstall` - Installs the selected package manager for node
 
 Installs the selected package manager for node
@@ -80,23 +100,10 @@ No documentation for `nodePackageManager`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `nodeUninstall` - Uninstall nodejs
-
-Uninstall nodejs
-
-- Location: `bin/build/tools/node.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 
 ## node Package Manager `yarn`
+
+> Environment variables: `BUILD_YARN_VERSION`
 
 ### `yarnInstall` - Install yarn in the build environment
 
@@ -120,6 +127,8 @@ When this tool succeeds the `yarn` binary is available in the local operating sy
 - `BUILD_YARN_VERSION` - String. Default to `latest`.
 
 ## node Package Manager `npm`
+
+> Environment variables: `BUILD_NPM_VERSION`
 
 ### `npmInstall` - Install NPM in the build environment
 

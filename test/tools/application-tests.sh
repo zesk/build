@@ -16,7 +16,7 @@ testApplicationHome() {
 
   decorate info "New Home is $HOME"
   assertFileDoesNotExist --line "$LINENO" "$HOME/.applicationHome" || return $?
-  assertExitCode --dump --stdout-match "Application home set" --line "$LINENO" 0 applicationHome "$HOME" || return $?
+  assertExitCode --stdout-match "Application home set" --line "$LINENO" 0 applicationHome "$HOME" || return $?
   assertFileContains --line "$LINENO" "$HOME/.applicationHome" "$HOME" || return $?
   __environment rm -rf "$HOME" || return $?
 

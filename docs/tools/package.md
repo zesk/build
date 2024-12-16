@@ -240,4 +240,3 @@ INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-

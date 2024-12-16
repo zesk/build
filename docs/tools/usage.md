@@ -312,7 +312,6 @@ Validates a value is an integer
 
 - `2` - Argument error
 - `0` - Success
-
 ### `usageArgumentPositiveInteger` - Validates a value is an unsigned integer and greater than
 
 Validates a value is an unsigned integer and greater than zero (NOT zero)
