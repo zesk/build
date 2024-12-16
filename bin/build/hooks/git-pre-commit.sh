@@ -92,7 +92,7 @@ __hookGitPreCommit() {
 
   statusMessage --first printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info "Installing")"
   __usageEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
-  statusMessage printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info "Running")"
+  statusMessage --last printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info "Running")"
 
   __usageEnvironment "$usage" gitPreCommitSetup || return $?
   __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
