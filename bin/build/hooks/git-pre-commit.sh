@@ -109,7 +109,7 @@ __hookGitPreCommit() {
   done
 
   gitPreCommitCleanup || :
-  statusMessage --last reportTiming "$start" "$hookName hook completed in"
+  statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(reportTiming "$start" "completed in")"
 }
 ___hookGitPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
