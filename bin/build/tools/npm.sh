@@ -53,7 +53,7 @@ npmInstall() {
   quietLog=$(buildQuietLog "${usage#_}") || __failEnvironment "buildQuietLog $usage"
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" npm i -g "npm@$version" --force 2>&1
+  __usageEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1
 }
 _npmInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -66,3 +66,106 @@ _npmInstall() {
 npmUninstall() {
   packageWhichUninstall npm npm "$@"
 }
+
+__nodePackageManagerArguments_npm() {
+  local usage="$1" action
+
+  action=$(usageArgumentString "$usage" "action" "${2-}") || return $?
+  shift 2
+
+  local globalFlag=false
+  while [ $# -gt 0 ]; do
+    local argument
+    argument="$(usageArgumentString "$usage" "argument" "$1")" || return $?
+    case "$argument" in
+      --global)
+        globalFlag=true
+        ;;
+    esac
+    shift
+  done
+
+  case "$action" in
+    run)
+      ! $globalFlag || __failArgument "$usage" "--global makes no sense with run" || return $?
+      printf "%s\n" "run"
+      ;;
+    install | update | uninstall)
+      if $globalFlag; then
+        printf "%s\n" "$action" "-g"
+      else
+        printf "%s\n" "$action"
+      fi
+      ;;
+    *)
+      __usageArgument "$usage" "Unknown action: $action" || return $?
+      ;;
+  esac
+}
+
+#- access
+#- adduser
+#- audit
+#- bugs
+#- cache
+#- ci
+#- completion
+#- config
+#- dedupe
+#- deprecate
+#- diff
+#- dist-tag
+#- docs
+#- doctor
+#- edit
+#- exec
+#- explain
+#- explore
+#- find-dupes
+#- fund
+#- get
+#- help
+#- help-search
+#- hook
+#- init
+#- install
+#- install-ci-test
+#- install-test
+#- link
+#- ll
+#- login
+#- logout
+#- ls
+#- org
+#- outdated
+#- owner
+#- pack
+#- ping
+#- pkg
+#- prefix
+#- profile
+#- prune
+#- publish
+#- query
+#- rebuild
+#- repo
+#- restart
+#- root
+#- run-script
+#- search
+#- set
+#- shrinkwrap
+#- star
+#- stars
+#- start
+#- stop
+#- team
+#- test,
+#- token
+#- uninstall
+#- unpublish
+#- unstar
+#- update
+#- version
+#- view
+#- whoami

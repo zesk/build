@@ -492,7 +492,7 @@ packageUninstall() {
 
   statusMessage decorate info "Uninstalling ${packages[*]} ... "
   __usageEnvironmentQuiet "$usage" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
-  statusMessage --last reportTiming "$start" "Uninstallation of $* completed in" || :
+  statusMessage --last reportTiming "$start" "Uninstallation of ${packages[*]} completed in" || :
 }
 _packageUninstall() {
   # IDENTICAL usageDocument 1

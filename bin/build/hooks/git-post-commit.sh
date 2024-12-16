@@ -47,7 +47,7 @@ __tools() {
 __where() {
   local source="${BASH_SOURCE[0]}"
   local here="${source%/*}/"
-  [ "${here%%.git/*}" != "$here" ] || printf -- "%s" "../"
+  [ "${here%%.git/*}" != "$here" ] || printf "%s" "../"
   printf "%s" "../.."
 }
 

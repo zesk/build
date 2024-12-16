@@ -18,5 +18,4 @@ testNPMInstallations() {
     # Part of core install in some systems, so no uninstall
     __checkFunctionInstallsBinary docker-compose dockerComposeInstall || return $?
   fi
-  __checkFunctionInstallsAndUninstallsBinary prettier prettierInstall prettierUninstall || return $?
 }

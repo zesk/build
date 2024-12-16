@@ -43,7 +43,6 @@ Once included, all functions here are available for use:
 - [Operating System](./os.md)
 - [PHP](./php.md)
 - [Pipeline](./pipeline.md)
-- [Prettier](./prettier.md)
 - [Process](./process.md)
 - [Self](./self.md)
 - [SSH](./ssh.md)

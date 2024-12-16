@@ -97,6 +97,7 @@ _nodeUninstall() {
 }
 
 # No-Arguments: Output the node package manager
+# Argument: action - Optional. Action to perform: install run update uninstall
 # Argument: * - Required. Argument. Passed to the node package manager
 nodePackageManager() {
   local usage="_${FUNCNAME[0]}"
@@ -109,7 +110,46 @@ nodePackageManager() {
     printf "%s\n" "$manager"
   else
     isExecutable "$manager" || __failEnvironment "$usage" "$(decorate code "$manager") is not an executable" || return $?
-    __usageEnvironment "$usage" "$manager" "$@" || return $?
+    local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
+    isFunction "$managerArgumentFormatter" || __failEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
+
+    local arguments=() flags=() action="" debugFlag=false
+    local saved=("$@") nArguments=$#
+    while [ $# -gt 0 ]; do
+      local argument argumentIndex=$((nArguments - $# + 1))
+      argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+      case "$argument" in
+        # IDENTICAL --help 4
+        --help)
+          "$usage" 0
+          return $?
+          ;;
+        --debug)
+          debugFlag=true
+          ;;
+        --global)
+          flags+=("$argument")
+          ;;
+        install | run | update | uninstall)
+          [ -z "$action" ] || __failArgument "$usage" "Only a single action allowed: $argument (already: $action)"
+          action="$argument"
+          ;;
+        -*)
+          __failArgument "$usage" "unknown flag #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          ;;
+        *)
+          [ -n "$action" ] || __failArgument "$usage" "Requires an action" || return $?
+          packages+=("$argument")
+          ;;
+      esac
+      # IDENTICAL argument-esac-shift 1
+      shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    done
+    local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
+    isFunction "$managerArgumentFormatter" || __failEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
+    IFS=$'\n' read -r -d "" -a arguments < <("$managerArgumentFormatter" "$usage" "$action" "${flags[@]+"${flags[@]}"}") || :
+    ! $debugFlag || _command "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || :
+    __usageEnvironment "$usage" "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || return $?
   fi
 }
 _nodePackageManager() {

@@ -71,3 +71,91 @@ _yarnInstall() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+__nodePackageManagerArguments_yarn() {
+  local usage="$1" action
+
+  action=$(usageArgumentString "$usage" "action" "${2-}") || return $?
+  shift 2
+
+  local globalFlag=false
+  while [ $# -gt 0 ]; do
+    local argument
+    argument="$(usageArgumentString "$usage" "argument" "$1")" || return $?
+    case "$argument" in
+      --global)
+        globalFlag=true
+        ;;
+    esac
+    shift
+  done
+
+  case "$action" in
+    run)
+      ! $globalFlag || __failArgument "$usage" "--global makes no sense with run" || return $?
+      printf "%s\n" "run"
+      ;;
+    update)
+      printf "%s\n" "install"
+      ;;
+    uninstall)
+      if $globalFlag; then
+        printf "%s\n" "global" "remove"
+      else
+        printf "%s\n" "remove"
+      fi
+      ;;
+    install)
+      if $globalFlag; then
+        printf "%s\n" "global" "add"
+      else
+        printf "%s\n" "add"
+      fi
+      ;;
+    *)
+      __usageArgument "$usage" "Unknown action: $action" || return $?
+      ;;
+  esac
+}
+
+#    - access
+#    - add
+#    - audit
+#    - autoclean
+#    - bin
+#    - cache
+#    - check
+#    - config
+#    - create
+#    - exec
+#    - generate-lock-entry / generateLockEntry
+#    - global
+#    - help
+#    - import
+#    - info
+#    - init
+#    - install
+#    - licenses
+#    - link
+#    - list
+#    - login
+#    - logout
+#    - node
+#    - outdated
+#    - owner
+#    - pack
+#    - policies
+#    - publish
+#    - remove
+#    - run
+#    - tag
+#    - team
+#    - unlink
+#    - unplug
+#    - upgrade
+#    - upgrade-interactive / upgradeInteractive
+#    - version
+#    - versions
+#    - why
+#    - workspace
+#    - workspaces
