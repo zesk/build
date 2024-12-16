@@ -781,12 +781,13 @@ gitPreCommitSetup() {
   local usage="_${FUNCNAME[0]}"
   local directory total=0
 
-  directory=$(__gitPreCommitCache true) || return $?
+  directory=$(__usageEnvironment "$usage" __gitPreCommitCache true) || return $?
   __usageEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __usageEnvironment "$usage" extensionLists --clean "$directory" || return $?
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   [ $total -ne 0 ]
 }
 _gitPreCommitSetup() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -795,7 +796,7 @@ gitPreCommitHeader() {
   local usage="_${FUNCNAME[0]}" width=5
   local directory total color
 
-  directory=$(__gitPreCommitCache true) || return $?
+  directory=$(__usageEnvironment "$usage" __gitPreCommitCache true) || return $?
 
   total=$(($(wc -l <"$directory/@") + 0)) || __failEnvironment "$usage" "wc -l" || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
@@ -811,33 +812,51 @@ gitPreCommitHeader() {
     shift
   done
 }
+_gitPreCommitHeader() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Does this commit have the following file extensions?
 gitPreCommitHasExtension() {
   local directory
-  directory=$(__gitPreCommitCache true) || return $?
+  directory=$(__usageEnvironment "$usage" __gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || return 1
     shift
   done
 }
+_gitPreCommitHasExtension() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # List the file(s) of an extension
 gitPreCommitListExtension() {
+  local usage="_${FUNCNAME[0]}"
   local directory
-  directory=$(__gitPreCommitCache true) || return $?
+  directory=$(__usageEnvironment "$usage" __gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
-    [ -f "$directory/$1" ] || _environment "No files with extension $1" || return $?
-    cat "$directory/$1" || return $?
+    [ -f "$directory/$1" ] || __failEnvironment "$usage" "No files with extension $1" || return $?
+    __usageEnvironment "$usage" cat "$directory/$1" || return $?
     shift
   done
+}
+_gitPreCommitListExtension() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Clean up after our pre-commit (deletes cache directory)
 gitPreCommitCleanup() {
+  local usage="_${FUNCNAME[0]}"
   local directory
-  directory=$(__gitPreCommitCache) || return $?
-  [ ! -d "$directory" ] || __environment rm -rf "$directory" || return $?
+  directory=$(__usageEnvironment "$usage" __gitPreCommitCache) || return $?
+  [ ! -d "$directory" ] || __usageEnvironment "$usage" rm -rf "$directory" || return $?
+}
+_gitPreCommitCleanup() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Does a branch exist locally or remotely?

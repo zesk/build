@@ -353,7 +353,6 @@ __extensionListsLog() {
 # Argument: --help - Optional. Flag. This help.
 # Argument: --clean - Optional. Flag. Clean directory of all files first.
 # Argument: directory - Required. Directory. Directory to create extension lists.
-# Argument: directory - Required. Directory. Directory to create extension lists.
 # Argument: file0 - Optional. List of files to add to the extension list.
 # Input: Takes a list of files, one per line
 # Generates a directory containing files with `extension` as the file names.
@@ -366,14 +365,12 @@ __extensionListsLog() {
 #
 extensionLists() {
   local usage="_${FUNCNAME[0]}"
-  local argument directory name names extension cleanFlag
 
-  names=()
-  directory=
-  cleanFlag=false
+  local names=() directory="" cleanFlag=false
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -395,9 +392,9 @@ extensionLists() {
   done
   [ -n "$directory" ] || __failArgument "$usage" "No directory supplied" || return $?
 
-  ! $cleanFlag || statusMessage decorate info "Cleaning ..." || :
   ! $cleanFlag || __usageEnvironment "$usage" find "$directory" -type f -delete || return $?
 
+  local name
   if [ ${#names[@]} -gt 0 ]; then
     for name in "${names[@]}"; do
       __usageEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
