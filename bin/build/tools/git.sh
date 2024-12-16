@@ -667,7 +667,8 @@ gitInstallHooks() {
         home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         ;;
       *)
-        if inArray "$argument" "${types[@]}"; then
+        hook="$argument"
+        if inArray "$hook" "${types[@]}"; then
           __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
           ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
           didOne=true
