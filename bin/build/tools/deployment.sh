@@ -406,7 +406,7 @@ _deployRevertApplication() {
   done
 
   if ! previousChecksum=$(deployPreviousVersion "$deployHome" "$applicationId") || [ -z "$previousChecksum" ]; then
-    if ! test "$firstDeployment"; then
+    if ! "$firstDeployment"; then
       __failEnvironment "$usage" "Unable to get previous checksum for $versionName" || return $?
     fi
   else
@@ -551,7 +551,7 @@ deployToRemote() {
         return $?
         ;;
       --deploy)
-        if test "$deployFlag"; then
+        if "$deployFlag"; then
           __failArgument "$usage" "--deploy arg passed twice" || return $?
         fi
         deployFlag=1
@@ -594,13 +594,13 @@ deployToRemote() {
   fi
 
   # Flag semantics
-  if test "$revertFlag" && test "$cleanupFlag"; then
+  if "$revertFlag" && "$cleanupFlag"; then
     __failArgument "$usage" "--revert and --cleanup are mutually exclusive" || return $?
   fi
-  if test "$revertFlag" && test "$deployFlag"; then
+  if "$revertFlag" && "$deployFlag"; then
     __failArgument "$usage" "--revert and --deploy are mutually exclusive" || return $?
   fi
-  if test "$deployFlag" && test "$cleanupFlag"; then
+  if "$deployFlag" && "$cleanupFlag"; then
     __failArgument "$usage" "--deploy and --cleanup are mutually exclusive" || return $?
   fi
   # Values are supplied (required)
@@ -721,7 +721,7 @@ deployToRemote() {
   fi
   bigText "$verb" | wrapLines "$color" "$(decorate reset)"
   if [ ! -f "$deployedHostArtifact" ]; then
-    if test $revertFlag; then
+    if $revertFlag; then
       _deploySuccessful
       return 0
     else
