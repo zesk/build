@@ -18,7 +18,7 @@ testUrlParse() {
     decorate error "Failed to parse $u"
     return 1
   fi
-  echo "$parsed"
+  # echo "$parsed"
 
   eval "$parsed" || return $?
 
@@ -82,13 +82,13 @@ testUrlValid() {
 }
 
 testUrlFilter() {
-  local home output
+  local home output source
 
   home=$(__environment buildHome) || return $?
   output=$(__environment mktemp) || return $?
-  urlFilter "$home/test/example/urlFilter.source.html" | dumpPipe "urlFilter Results"
-  urlFilter "$home/test/example/urlFilter.source.html" >"$output"
-  assertExitCode --line "$LINENO" 0 diff "$output" "$home/test/example/urlFilter.output.txt" || return $?
+  source="$home/test/example/urlFilter.source.html"
+  urlFilter "$source" >"$output" || _environment "urlFilter $source failed" || return $?
+  assertExitCode --line "$LINENO" 0 diff "$output" "$home/test/example/urlFilter.output.txt" || _undo $? dumpPipe "urlFilter $source" <"$output" || _undo $? rm -rf "$output" || return $?
 }
 
 testUrlOpen() {

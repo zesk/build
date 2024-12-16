@@ -27,7 +27,6 @@ testNewRelease() {
   assertExitCode --line "$LINENO" 0 newRelease --non-interactive || return $?
 }
 
-
 testIsVersion() {
   ___testIsVersionData | while read -r exitCode versionSample; do
     assertExitCode --line "$LINENO" "$exitCode" isVersion "$versionSample" || return $?
@@ -40,7 +39,8 @@ testReleaseNotesSimple() {
 }
 
 testVersionNext() {
-  assertEquals --line "$LINENO" "" "$(nextMinorVersion "A" || :)" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match isInteger 0 nextMinorVerision A || return $?
+  assertEquals --line "$LINENO" "" "$(nextMinorVersion "A" 2>/dev/null || :)" || return $?
   assertExitCode --stderr-match isInteger --line "$LINENO" 2 nextMinorVersion "A" || return $?
 
   assertEquals --line "$LINENO" "1" "$(nextMinorVersion "0")" || return $?

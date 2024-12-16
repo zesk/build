@@ -50,8 +50,8 @@ validateNotFunction() {
 }
 validateExecutable() {
   while IFS="" read -r testLine; do
-    _testLineLabel "isExecutable" "$testLine"
     if ! assertExitCode 0 isExecutable "$testLine"; then
+      _testLineLabel "isExecutable" "$testLine"
       return 1
     fi
   done
@@ -271,8 +271,8 @@ validateSignedNumber() {
 }
 validateNotSignedNumber() {
   while IFS="" read -r testLine; do
-    _testLineLabel "NOT isNumber" "$testLine"
     if ! assertNotExitCode 0 isNumber "$testLine"; then
+      _testLineLabel "NOT isNumber" "$testLine"
       return 1
     fi
   done
@@ -297,16 +297,18 @@ testUnsignedIntegerSamples() {
   # unsigned Integer
   #
 
-  decorate info "unsignedIntegerSamples"
   # Unsigned integers are just unsigned
-  decorate info validateUnsignedInteger
+  statusMessage decorate info validateUnsignedInteger
   unsignedIntegerSamples | validateUnsignedInteger || return $?
-  decorate info validateSignedInteger
+
+  statusMessage decorate info validateSignedInteger
   unsignedIntegerSamples | validateSignedInteger || return $?
+
   # Unsigned integers are both signed and unsigned numbers
-  decorate info validateUnsignedNumber
+  statusMessage decorate info validateUnsignedNumber
   unsignedIntegerSamples | validateUnsignedNumber || return $?
-  decorate info validateSignedNumber
+
+  statusMessage decorate info validateSignedNumber
   unsignedIntegerSamples | validateSignedNumber || return $?
 }
 
@@ -315,28 +317,31 @@ testSignedNumberSamples() {
   #
   # signed Number
   #
-  decorate code validateSignedNumber
+  statusMessage decorate code validateSignedNumber
   signedNumberSamples | validateSignedNumber || return $?
-  decorate code validateNotUnsignedNumber
+  statusMessage decorate code validateNotUnsignedNumber
   signedNumberSamples | validateNotUnsignedNumber || return $?
   # signed numbers are not integers, ever
-  decorate code validateNotSignedInteger
+  statusMessage decorate code validateNotSignedInteger
   signedNumberSamples | validateNotSignedInteger || return $?
-  decorate code validateNotUnsignedInteger
+  statusMessage decorate code validateNotUnsignedInteger
   signedNumberSamples | validateNotUnsignedInteger || return $?
 }
 
 testUnsignedNumberSamples() {
 
   # Number are neither signed nor unsigned
-  decorate code validateUnsignedNumber
+  statusMessage decorate code validateUnsignedNumber
   unsignedNumberSamples | validateUnsignedNumber || return $?
-  decorate code validateSignedNumber
+
+  statusMessage decorate code validateSignedNumber
   unsignedNumberSamples | validateSignedNumber || return $?
   # unsigned numbers are not integers, ever
-  decorate code validateNotSignedInteger
+
+  statusMessage decorate code validateNotSignedInteger
   unsignedNumberSamples | validateNotSignedInteger || return $?
-  decorate code validateNotUnsignedInteger
+
+  statusMessage decorate code validateNotUnsignedInteger
   unsignedNumberSamples | validateNotUnsignedInteger || return $?
 }
 
@@ -344,13 +349,16 @@ testBadNumericSamples() {
   #
   # Nothing is good
   #
-  decorate code validateNotSignedInteger
+  statusMessage decorate code validateNotSignedInteger
   badNumericSamples | validateNotSignedInteger || return $?
-  decorate code validateNotUnsignedInteger
+
+  statusMessage decorate code validateNotUnsignedInteger
   badNumericSamples | validateNotUnsignedInteger || return $?
-  decorate code validateNotSignedNumber
+
+  statusMessage decorate code validateNotSignedNumber
   badNumericSamples | validateNotSignedNumber || return $?
-  decorate code validateNotUnsignedNumber
+
+  statusMessage decorate code validateNotUnsignedNumber
   badNumericSamples | validateNotUnsignedNumber || return $?
 }
 
