@@ -90,9 +90,9 @@ __hookGitPreCommit() {
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
   __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
-  statusMessage --first printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info "Installing")"
+  statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
   __usageEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
-  statusMessage --last printf -- "%s %s" "$(decorate code "[$hookName]")" "$(decorate info "Running")"
+  statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
 
   __usageEnvironment "$usage" gitPreCommitSetup || return $?
   __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
