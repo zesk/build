@@ -740,7 +740,7 @@ gitInstallHook() {
           fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __failEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
           relFromTo=()
           for item in "${fromTo[@]}"; do
-            relFromTo+=(".${item#"$home"}")
+            relFromTo+=("./${item#"$home"}")
           done
           if [ -f "${fromTo[1]}" ]; then
             if diff -q "${fromTo[@]}" >/dev/null; then
