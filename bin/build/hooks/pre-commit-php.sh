@@ -25,7 +25,7 @@ __hookPreCommitPHP() {
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
 
-  statusMessage --first decorate info "Processing PHP files ... "
+  statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".php")" "$(decorate label "PHP Hypertext Processor")"
   __usageEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(decorate bold-blue)" "$(decorate reset)"
 
   if [ ! -d "$home/vendor" ]; then
