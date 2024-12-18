@@ -122,12 +122,14 @@ testAnyEnvToBashEnv() {
   testEnv=$(__environment mktemp) || return $?
   home=$(__environment buildHome) || return $?
 
+  __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
   __environment anyEnvToBashEnv "$testEnv" >"$testEnv.result" || return $?
   assertExitCode --line "$LINENO" 0 isEmptyFile "$testEnv.result" || return $?
 
   __environment cp "$home/test/example/docker.env" "$testEnv" || return $?
 
   __environment anyEnvToBashEnv "$testEnv" >"$testEnv.result" || return $?
+  __environment anyEnvToBashEnv >"$testEnv.result2" <"$testEnv" || return $?
 
   assertExitCode --line "$LINENO" 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
