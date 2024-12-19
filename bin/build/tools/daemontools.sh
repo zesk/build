@@ -136,10 +136,10 @@ _daemontoolsSuperviseWait() {
     sleep 1 || __failEnvironment "$usage" "interrupted" || return $?
     local elapsed
     elapsed=$(($(__usageEnvironment "$usage" date +%s) - start)) || return $?
-    if [ $elapsed -gt "$stayQuietFor" ]; then
-      statusMessage decorate info "Waiting for $(decorate file "$1/supervise") ($elapsed) ..."
-    elif [ $elapsed -gt "$total" ]; then
+    if [ $elapsed -gt "$total" ]; then
       __failEnvironment "$usage" "supervise is not running - $target/supervise never found after $total seconds" || return $?
+    elif [ $elapsed -gt "$stayQuietFor" ]; then
+      statusMessage decorate info "Waiting for $(decorate file "$1/supervise") ($elapsed) ..."
     fi
   done
   statusMessage --last decorate info "Supervise waiting completed" || return $?
