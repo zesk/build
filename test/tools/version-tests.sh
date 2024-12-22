@@ -39,7 +39,7 @@ testReleaseNotesSimple() {
 }
 
 testVersionNext() {
-  assertNotExitCode --line "$LINENO" --stderr-match isInteger 0 nextMinorVerision A || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match isInteger 0 nextMinorVersion A || return $?
   assertEquals --line "$LINENO" "" "$(nextMinorVersion "A" 2>/dev/null || :)" || return $?
   assertExitCode --stderr-match isInteger --line "$LINENO" 2 nextMinorVersion "A" || return $?
 
