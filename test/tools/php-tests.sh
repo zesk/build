@@ -106,12 +106,12 @@ testPHPBuild() {
 
   # Add an environment
   printf "\n"
-  bin/build.sh APP_THING || return $?
+  __environment bin/build.sh APP_THING || return $?
   assertFileExists --line "$LINENO" "$testPath/app.tar.gz" || return $?
 
   BUILD_TARGET=alternate.tar.gz
   printf "\n"
-  bin/build.sh || return $?
+  __environment bin/build.sh || return $?
   assertFileExists --line "$LINENO" "$testPath/$BUILD_TARGET" || return $?
 
   mkdir ./compare-app || return $?

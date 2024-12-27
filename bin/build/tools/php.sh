@@ -351,7 +351,7 @@ phpComposer() {
         [ "$composerDirectory" = "." ] || __failArgument "$usage" "Unknown argument $1" || return $?
         [ -d "$argument" ] || __failArgument "$usage" "Directory does not exist: $argument" || return $?
         composerDirectory="$argument"
-        decorate info "Using composer directory: $composerDirectory"
+        statusMessage decorate info "Composer directory: $(decorate file "$composerDirectory")"
         ;;
     esac
     shift
