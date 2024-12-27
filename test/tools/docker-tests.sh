@@ -108,7 +108,7 @@ testAnyEnvToDockerEnv() {
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
   # as a pipe
   __environment anyEnvToDockerEnv >"$testEnv.result2" <"$testEnv" || return $?
-  assertExitCode --line "$LINENO" 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
+  assertExitCode --dump --line "$LINENO" 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
   printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
   assertExitCode --line "$LINENO" --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
