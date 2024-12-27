@@ -29,6 +29,9 @@ testDotEnvConfigure() {
   assertExitCode --leak TESTENVWORKS --line "$LINENO" 0 environmentFileLoad .env --optional .env.local "$tempDir" || return $?
   environmentFileLoad .env --optional .env.local "$tempDir" || return $?
 
+  # Support no files
+  assertExitCode --line "$LINENO" 0 environmentFileLoad --optional .env.local.Never .env.whatever.local || return $?
+
   assertEquals --line "$LINENO" "$magic" "${TESTENVWORKS-}" || return $?
 
   assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?

@@ -250,7 +250,7 @@ environmentFileLoad() {
   local argument nArguments argumentIndex saved
 
   local ff=() environmentFile environmentLine name value required=true ignoreList=() secureList=() toExport=() line=1
-  local verboseMode=false debugMode=false
+  local verboseMode=false debugMode=false hasOne=false
 
   set -eou pipefail
 
@@ -268,12 +268,12 @@ environmentFileLoad() {
         ;;
       --verbose)
         verboseMode=true
-        ! $verboseMode || printf -- "VERBOSE MODE on (Arguments: %s)\n" "$(_command "${usage#_}" "${saved[@]}")"
+        ! $debugMode || printf -- "VERBOSE MODE on (Arguments: %s)\n" "$(_command "${usage#_}" "${saved[@]}")"
         ;;
       --debug)
         debugMode=true
         verboseMode=true
-        decorate info "Debug mode enabled"
+        statusMessage decorate info "Debug mode enabled"
         ;;
       --secure)
         shift
@@ -295,11 +295,12 @@ environmentFileLoad() {
         ! $debugMode || printf -- "Current: %s\n" "$argument"
         ;;
       *)
+        hasOne=true
         if $required; then
           ! $debugMode || printf -- "Loading required file: %s\n" "$argument"
           ff+=("$(usageArgumentFile "$usage" "environmentFile" "$argument")") || return $?
         else
-          ! $debugMode || printf -- "Loading optional file: %s\n" "$argument"
+          ! $verboseMode || statusMessage decorate info "Loading optional file: $(decoreate file "$argument")"
           environmentFile=$(usageArgumentFileDirectory "$usage" "environmentFile" "$argument") || return $?
           if [ -f "$environmentFile" ]; then
             ff+=("$environmentFile")
@@ -310,13 +311,13 @@ environmentFileLoad() {
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
-  [ 0 -lt "${#ff[@]}" ] || __failArgument "$usage" "Requires at least one environmentFile" || return $?
+  $hasOne || __failArgument "$usage" "Requires at least one environmentFile" || return $?
   ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
   for environmentFile in "${ff[@]}"; do
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
     line=1
     while read -r environmentLine; do
-      ! $verboseMode || printf "%s:%d: %s" "$environmentFile" "$line" "$(decorate code "$environmentLine")"
+      ! $debugMode || printf "%s:%d: %s " "$environmentFile" "$line" "$(decorate code "$environmentLine")"
       name="${environmentLine%%=*}"
       # Skip comments
       if [ -z "$name" ] || [ "$name" != "${name###}" ]; then
@@ -331,14 +332,14 @@ environmentFileLoad() {
       [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(decorate bold-red "$name")" || return $?
       # Ignore stuff as a feature
       if [ "${#ignoreList[@]}" -gt 0 ] && inArray "$name" "${ignoreList[@]}"; then
-        ! $verboseMode || decorate warning "$(decorate code "$name") is ignored ($environmentFile:$line)"
+        ! $debugMode || decorate warning "$(decorate code "$name") is ignored ($environmentFile:$line)"
         continue
       fi
       # Load and unquote value
       value="$(__unquote "${environmentLine#*=}")"
       # SECURITY CHECK
       toExport+=("$name=$value")
-      ! $verboseMode || printf "toExport: %s=%s\n" "$name" "$value"
+      ! $debugMode || printf "toExport: %s=%s\n" "$name" "$value"
       line=$((line + 1))
     done < <(environmentLines <"$environmentFile") || :
   done
