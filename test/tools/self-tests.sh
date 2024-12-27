@@ -48,7 +48,7 @@ testBuildEnvironmentLoadAll() {
         assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
       fi
     ) || return $?
-  done < <(find "$home" -type f -name '*.sh' -path '*/env/*' -exec basename {} \; | cut -d . -f 1) || return $?
+  done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' -exec basename {} \; | cut -d . -f 1) || return $?
 }
 
 testBuildFunctions() {

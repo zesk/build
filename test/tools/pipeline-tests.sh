@@ -22,7 +22,7 @@ testIsUpToDate() {
 
   decorate info "2020: $testDate"
 
-  assertNotExitCode --stderr-ok --line "$LINENO" 0 isUpToDate $testDate 10 || return $?
+  assertNotExitCode --line "$LINENO" 0 isUpToDate $testDate 10 || return $?
   testDate="$thisYear-01-01"
 
   __testSection "ThisYear-01-01: $testDate"
@@ -57,7 +57,7 @@ testIsUpToDate() {
   __testSection "yesterdayDate: $testDate"
 
   expirationDays=0
-  assertNotExitCode --stderr-ok --line "$LINENO" 0 isUpToDate "$testDate" "$expirationDays" || return $?
+  assertNotExitCode --line "$LINENO" 0 isUpToDate "$testDate" "$expirationDays" || return $?
   expirationDays=1
   assertExitCode --line "$LINENO" 0 isUpToDate "$testDate" "$expirationDays" || return $?
   expirationDays=2
