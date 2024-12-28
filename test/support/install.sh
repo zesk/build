@@ -32,15 +32,19 @@ __checkFunctionInstallsAndUninstalls() {
   local checkFunction="$1" noun="$2" thing="$3" installer="$4" uninstaller="$5"
   local uninstalledAlready=false
 
-  if "$checkFunction" "$thing"; then
-    __checkFunctionUninstalls "already installed" "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
-    uninstalledAlready=true
+  if ! __testFunctionWasTested "$installer" "$uninstaller"; then
+    if "$checkFunction" "$thing"; then
+      __checkFunctionUninstalls "already installed" "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
+      uninstalledAlready=true
+    else
+      printf "%s\n" "$(decorate label "$noun") $(decorate value "$thing") $(decorate info "is not installed - installing")"
+    fi
+    __checkFunctionInstalls "$checkFunction" "$noun" "$thing" "$installer" || return $?
+    if ! $uninstalledAlready; then
+      __checkFunctionUninstalls "just installed" "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
+    fi
   else
-    printf "%s\n" "$(decorate label "$noun") $(decorate value "$thing") $(decorate info "is not installed - installing")"
-  fi
-  __checkFunctionInstalls "$checkFunction" "$noun" "$thing" "$installer" || return $?
-  if ! $uninstalledAlready; then
-    __checkFunctionUninstalls "just installed" "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
+    statusMessage decorate success "Skipping $(decorate code "$installer") and $(decorate code "$uninstaller") - already tested"
   fi
 }
 

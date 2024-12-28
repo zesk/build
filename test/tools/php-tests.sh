@@ -29,6 +29,9 @@ testPHPComposerInstallation() {
 
   oldDir="${BITBUCKET_CLONE_DIR-NONE}"
 
+  if __testFunctionWasTested --verbose phpComposer; then
+    return 0
+  fi
   # requires docker
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
 
@@ -42,8 +45,6 @@ testPHPComposerInstallation() {
   [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
 }
 
-
-
 #
 # Usage: {fn} [ --show ] [ --verbose ] [ --keep ]
 # Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.
@@ -52,6 +53,10 @@ testPHPComposerInstallation() {
 #
 testPHPBuild() {
   local here testPath manifest appName home
+
+  if __testFunctionWasTested --verbose phpBuild; then
+    return 0
+  fi
 
   home=$(__environment buildHome) || return $?
   here=$(__environment pwd) || return $?

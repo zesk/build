@@ -44,6 +44,28 @@ _assertTiming() {
   printf -- "%d\n" "$now" >"$timingFile"
 }
 
+__assertedFunctions() {
+  local usage="_${FUNCNAME[0]}"
+  local logFile
+
+  logFile=$(__usageEnvironment "$usage" buildCacheDirectory "$usage") || return $?
+  __usageEnvironment "$usage" requireFileDirectory "$logFile" || return $?
+  if [ $# -eq 0 ]; then
+    __usageEnvironment "$usage" touch "$logFile" || return $?
+    if [ -f "$logFile.dirty" ]; then
+      __usageEnvironment "$usage" sort -u "$logFile" -o "$logFile" || return $?
+      __usageEnvironment "$usage" rm -f "$logFile.dirty" || return $?
+    fi
+    printf -- "%s\n" "$logFile"
+    return 0
+  fi
+  __usageEnvironment "$usage" printf -- "%s\n" "$@" >>"$logFile" || return $?
+  __usageEnvironment "$usage" touch "$logFile.dirty" || return $?
+}
+___assertedFunctions() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Decorations
 #
@@ -618,6 +640,7 @@ ___assertExitCodeTest() {
   local binary="${1-}"
 
   isCallable "$binary" || _argument "$binary is not callable: $*" || return $?
+  ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
   "$@"
 }
 ___assertExitCodeFormat() {
@@ -656,6 +679,7 @@ ___assertOutputContainsTest() {
   isCallable "$binary" || _argument "$binary is not callable: $*" || return $?
   captureOut=$(__environment mktemp) || return $?
   exitCode=1
+  ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
   if "$@" >"$captureOut"; then
     if grep -q -e "$(quoteGrepPattern "$contains")" <"$captureOut"; then
       exitCode=0

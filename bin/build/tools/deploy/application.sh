@@ -159,7 +159,7 @@ deployApplication() {
   # `_unwindDeploy` after this guarantees this and always exits non-zero
   #
   deployedApplicationPath="$deployHome/$applicationId/app"
-  unwindArgs=("$applicationPath" "$deployedApplicationPath")
+  unwindArgs=("$usage" "$applicationPath" "$deployedApplicationPath")
 
   if [ -d "$deployedApplicationPath" ]; then
     if ! rm -rf "$deployedApplicationPath"; then
@@ -247,7 +247,7 @@ deployApplication() {
   else
     printf "%s %s -> %s\n" "$(decorate success "Activating application")" "$(decorate code " $applicationPath ")" "$(decorate green "$applicationId")" || :
     if ! deployLink "$applicationPath" "$deployedApplicationPath"; then
-      _unwindDeploy "${unwindArgs[@]}" "deployLink $applicationPath $deployedApplicationPath failed" || return $?
+       _unwindDeploy "${unwindArgs[@]}" "deployLink $applicationPath $deployedApplicationPath failed" || return $?
     fi
   fi
   # STOP _unwindDeploy
@@ -266,11 +266,9 @@ deployApplication() {
   return "$exitCode"
 }
 _unwindDeploy() {
-  local applicationPath="$1" deployedApplicationPath="${2-}"
-  local usage="_deployApplication"
+  local usage="$1" && shift
+  local applicationPath="$1" deployedApplicationPath="${2-}" && shift 2
 
-  shift || :
-  shift || :
   if ! runOptionalHook --application "$applicationPath" maintenance off; then
     decorate error "Unable to enable maintenance - system is unstable" 1>&2
   else
@@ -282,7 +280,7 @@ _unwindDeploy() {
   else
     printf "%s %s %s\n" "$(decorate error "Unwind")" "$(decorate code "$deployedApplicationPath")" "$(decorate error "does not exist")"
   fi
-  __failEnvironment "$usage" "$@"
+  __failEnvironment "$usage" "$@" || return $?
 }
 _deployApplication() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

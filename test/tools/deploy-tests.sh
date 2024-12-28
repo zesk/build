@@ -183,15 +183,13 @@ _waitForValue() {
 testDeployApplication() {
   local d quietLog migrateVersion startingValue firstArgs home lastOne t
 
+  set -eou pipefail
+
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
   if ! packageWhich curl curl; then
     _environment "Failed to install curl" || return $?
   fi
-  if ! phpInstall; then
-    _environment "Failed to install php" || return $?
-  fi
-
-  set -eou pipefail
+  assertExitCode --line "$LINENO" 0 phpInstall || return $?
 
   if ! home=$(pwd -P 2>/dev/null); then
     _environment "Unable to pwd" || return $?
@@ -235,7 +233,7 @@ testDeployApplication() {
   # ________________________________________________________________________________________________________________________________
   __testSection deployApplication fails on top of a directory
   t=1a
-  assertNotExitCode --stderr-match "should be a link" 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --home "$d/DEPLOY" --id "$t" || return $?
+  assertNotExitCode --line "$LINENO" --dump --stderr-match "should be a link" 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --home "$d/DEPLOY" --id "$t" || return $?
   _waitForValue "$startingValue" || return $?
 
   #
@@ -245,7 +243,7 @@ testDeployApplication() {
   # ________________________________________________________________________________________________________________________________
   __testSection deployMigrateDirectoryToLink fails on with no version in the application
 
-  assertNotExitCode --stderr-match "deployment version" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "deployment version" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
   _waitForValue "$startingValue" || return $?
 
   migrateVersion="O66"
@@ -255,7 +253,7 @@ testDeployApplication() {
   # ________________________________________________________________________________________________________________________________
   __testSection deployMigrateDirectoryToLink fails on with no version in the DEPLOYMENT directory
 
-  assertNotExitCode --stderr-match "not found in" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "not found in" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
   _waitForValue "$startingValue" || return $?
 
   mkdir -p "$d/DEPLOY/$migrateVersion"
@@ -271,8 +269,8 @@ testDeployApplication() {
   fi
   _waitForValue "$startingValue" || return $?
 
-  assertExitCode 0 test -d "$d/DEPLOY/O66/app" || return $?
-  assertExitCode 0 test -L "$d/live-app" || return $?
+  assertExitCode --line "$LINENO" 0 test -d "$d/DEPLOY/O66/app" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$d/live-app" || return $?
 
   #
   # Now that it's a link we have to restart our server
@@ -300,16 +298,16 @@ testDeployApplication() {
     _deployShowFiles "$d" || :
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     if [ -n "$lastOne" ]; then
-      assertFileExists "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
-      assertFileExists "$d/DEPLOY/$lastOne.next" || _deployShowFiles "$d" || return $?
+      assertFileExists --line "$LINENO" "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+      assertFileExists --line "$LINENO" "$d/DEPLOY/$lastOne.next" || _deployShowFiles "$d" || return $?
     else
       # First one links back to bad version
       if [ "$t" = "1a" ]; then
-        assertFileExists "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+        assertFileExists --line "$LINENO" "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
       else
-        assertFileDoesNotExist "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+        assertFileDoesNotExist --line "$LINENO" "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
       fi
-      assertFileDoesNotExist "$d/DEPLOY/$t.next" || _deployShowFiles "$d" || return $?
+      assertFileDoesNotExist --line "$LINENO" "$d/DEPLOY/$t.next" || _deployShowFiles "$d" || return $?
     fi
     lastOne="$t"
     firstArgs=()
@@ -317,11 +315,11 @@ testDeployApplication() {
 
   for t in 1a 2b 3c 4d; do
     decorate info deployHasVersion $t test 2
-    assertExitCode 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
+    assertExitCode --line "$LINENO" 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
   for t in null "" 3g 999999 $'\n'; do
     decorate info deployHasVersion "$t" BAD test
-    assertNotExitCode --stderr-ok 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
+    assertNotExitCode --line "$LINENO" --stderr-ok 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
 
   _testAssertDeploymentLinkages "$d" || return $?
@@ -333,21 +331,21 @@ testDeployApplication() {
     consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
     _waitForValue "$t" || return $?
 
-    assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
+    assertEquals --line "$LINENO" "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
     # ________________________________________________________________________________________________________________________________
     __testSection "deployApplication --revert $t"
-    assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
+    assertEquals --line "$LINENO" "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     deployApplication --revert --home "$d/DEPLOY" --id "$t" --application "$d/live-app" || return $?
     _testAssertDeploymentLinkages "$d" || return $?
   done
 
   t=1a
-  assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
+  assertEquals --line "$LINENO" "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
 
   consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
   _waitForValue "$t" || return $?
 
-  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
+  assertEquals --line "$LINENO" "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
 
   # ________________________________________________________________________________________________________________________________
   __testSection No previous version
@@ -367,22 +365,22 @@ testDeployApplication() {
 
   # ________________________________________________________________________________________________________________________________
   __testSection deployApplication fail bad version
-  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
   # ________________________________________________________________________________________________________________________________
   t=1a
   __testSection deployApplication fail incorrect target $t
-  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" --target ap.tar.gz || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" --target ap.tar.gz || return $?
 
   __testSection deployApplication fail missing or blank arguments $t
-  assertNotExitCode --stderr-ok 0 deployApplication --home "" --id "$t" --application "$d/live-app" || return $?
-  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "" --application "$d/live-app" || return $?
-  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "" || return $?
-  assertNotExitCode --stderr-ok 0 deployApplication --id "$t" --application "$d/live-app" || return $?
-  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --application "$d/live-app" || return $?
-  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "" --id "$t" --application "$d/live-app" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "" --application "$d/live-app" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --id "$t" --application "$d/live-app" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --application "$d/live-app" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
@@ -391,6 +389,8 @@ testDeployApplication() {
   kill -TERM "$PHP_SERVER_PID" || :
   PHP_SERVER_PID=
   _waitForDeath "$PHP_SERVER_PID"
+
+  assertExitCode --line "$LINENO" 0 phpUninstall || return $?
 
   unset PHP_SERVER_ROOT
   unset PHP_SERVER_PID

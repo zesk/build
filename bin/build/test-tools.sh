@@ -277,18 +277,42 @@ _testSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__testFunctionWasTested() {
+  local assertedFunctions verboseMode=false
+
+  assertedFunctions=$(__environment __assertedFunctions) || return $?
+  local saved=()
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--verbose" ]; then
+      verboseMode=true
+      shift
+    fi
+    local argument
+    argument="$(usageArgumentFunction "$usage" function "$1")" || return $?
+    if ! muzzle grep -q -e "^$(quoteGrepPattern "$argument")\$" "$assertedFunctions"; then
+      return 1
+    fi
+    saved+=("$argument")
+    shift
+  done
+  ! $verboseMode || statusMessage decorate info "$(plural "${#saved[@]}" "Function" "Functions") were tested: $(decorate code "${saved[@]}")"
+}
+
 __testStats() {
   local statsFile="$1" targetFile zeroTests
   targetFile="$(buildHome)/test.stats"
   sort -rn <"$statsFile" >"$targetFile"
   rm -rf "$statsFile" || :
   boxedHeading "Slowest tests"
-  head -n 20 <"$targetFile"
+  head -n 50 <"$targetFile"
   boxedHeading "Fastest tests"
   grep -v -e '^0 ' "$targetFile" | tail -n 20
   boxedHeading "Zero-second tests"
   IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $2 }')
   printf "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
+  boxedHeading "Functions asserted"
+  cat "$(__assertedFunctions)"
+  wc -l "$(__assertedFunctions)"
   printf "\n"
 }
 
@@ -600,7 +624,6 @@ _textExit() {
   fi
   exit "$@"
 }
-
 
 # TODO: https://github.com/Perl-Toolchain-Gang/Test-Harness/blob/master/reference/Test-Harness-2.64/lib/Test/Harness/TAP.pod#php
 # Argument: --tap - Optional. Flag. TAP output instead of console output.
