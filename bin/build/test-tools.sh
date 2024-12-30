@@ -309,11 +309,13 @@ __testStats() {
   grep -v -e '^0 ' "$targetFile" | tail -n 20
   boxedHeading "Zero-second tests"
   IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $2 }')
-  printf "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
+  printf -- "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
+  printf -- "\n"
   boxedHeading "Functions asserted"
   cat "$(__assertedFunctions)"
-  wc -l "$(__assertedFunctions)"
-  printf "\n"
+  lines=$(($(wc -l <"$(__assertedFunctions)") + 0))
+  decorate info "$lines $(plural "$lines" "function" "functions")"
+  printf -- "\n"
 }
 
 __testLookup() {

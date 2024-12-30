@@ -391,9 +391,9 @@ renameLink() {
         ;;
       *)
         if [ -z "$from" ]; then
-          from=$(usageArgumentFile "$usage" "from" "$1") || return $?
+          from=$(usageArgumentLink "$usage" "from $(betterType "$1")" "$1") || return $?
         elif [ -z "$to" ]; then
-          to=$(usageArgumentFileDirectory "$usage" "to" "$1") || return $?
+          to=$(usageArgumentString "$usage" "to $(betterType "$1")" "$1") || return $?
         else
           __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
         fi
@@ -402,8 +402,8 @@ renameLink() {
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
-  [ -z "$from" ] || __failArgument "$usage" "Need a \"from\" argument" || return $?
-  [ -z "$to" ] || __failArgument "$usage" "Need a \"to\" argument" || return $?
+  [ -n "$from" ] || __failArgument "$usage" "Need a \"from\" argument" || return $?
+  [ -n "$to" ] || __failArgument "$usage" "Need a \"to\" argument" || return $?
   __renameLink "$from" "$to"
 }
 _renameLink() {

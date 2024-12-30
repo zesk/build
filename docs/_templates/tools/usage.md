@@ -23,6 +23,7 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 ## Argument check: File System
 
 {usageArgumentFile}
+{usageArgumentLink}
 {usageArgumentFileDirectory}
 {usageArgumentDirectory}
 {usageArgumentRealDirectory}

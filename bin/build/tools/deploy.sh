@@ -179,15 +179,13 @@ _deployMove() {
 # Exit code: 2 - Argument error
 #
 deployLink() {
-  local applicationLinkPath currentApplicationHome newApplicationLinkPath argument
   local usage
 
-  usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
 
-  applicationLinkPath=
-  currentApplicationHome=
+  local applicationLinkPath="" currentApplicationHome=""
   while [ $# -gt 0 ]; do
-    argument="$1"
+    local argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # IDENTICAL --help 4
@@ -205,7 +203,7 @@ deployLink() {
               __failArgument "$usage" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
             fi
           else
-            usageArgumentFileDirectory "$usage" applicationLinkPath "$applicationLinkPath" >/dev/null || return $?
+            applicationLinkPath=$(usageArgumentFileDirectory "$usage" applicationLinkPath "$applicationLinkPath") || return $?
           fi
         elif [ -z "$currentApplicationHome" ]; then
           # No checking - allows pre-linking
@@ -220,9 +218,13 @@ deployLink() {
     esac
     shift || :
   done
+  if [ -z "$applicationLinkPath" ]; then
+    __usageArgument "$usage" "Missing applicationLinkPath" || return $?
+  fi
   if [ -z "$currentApplicationHome" ]; then
     currentApplicationHome="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "pwd failed" || return $?
   fi
+  local newApplicationLinkPath
   newApplicationLinkPath="$applicationLinkPath.READY.$$"
   if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! renameLink "$newApplicationLinkPath" "$applicationLinkPath"; then
     rm -rf "$newApplicationLinkPath" 2>/dev/null

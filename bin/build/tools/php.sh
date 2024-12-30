@@ -55,12 +55,11 @@ phpLog() {
 # In addition, a `.env` is added to deployments
 #
 _deploymentGenerateValue() {
-  local usage="$1" home="$2" variableName=$3 hook="$4"
-
-  if [ -z "${!e}" ]; then
+  local usage="$1" home="$2" variableName="$3" hook="$4"
+  if [ -z "${!variableName}" ]; then
     __usageEnvironment "$usage" runHook --application "$home" "$hook" | __usageEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
   else
-    __usageEnvironment "$usage" printf %s "${!e}" | __usageEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
+    __usageEnvironment "$usage" printf %s "${!variableName}" | __usageEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
   fi
 }
 
@@ -392,9 +391,8 @@ _phpComposer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# fn: {base}
-# Usage: {fn} deployment
-# Argument: deployment - Required. String. `production` or `develop`
+# Argument: --env-file envFile - Optional. File. Environment file to load.
+# Argument: --home homeDirectory - Optional. Directory. Directory for application home.
 # Test a docker-based PHP application during build
 #
 # Hook: test-setup - Move or copy files prior to docker-compose build to build test container"
@@ -435,6 +433,12 @@ phpTest() {
 
   [ -n "$home" ] || home=$(__usageEnvironment "$usage" buildHome) || return $?
 
+  [ -f "$home/docker-compose.yml" ] || __usageEnvironment "$usage" "Requires $(decorate code "$home/docker-compose.yml")" || return $?
+
+  local dca=()
+
+  dca+=("-f" "$home/docker-compose.yml")
+
   statusMessage decorate info "Testing PHP in $(decorate file "$home")" || :
 
   local init quietLog
@@ -442,7 +446,7 @@ phpTest() {
   init=$(__usageEnvironment "$usage" beginTiming) || return $?
   quietLog="$(__usageEnvironment "$usage" buildQuietLog "$usage")" || return $?
 
-  buildDebugStart "${FUNCNAME[0]}" || return $?
+  buildDebugStart "${FUNCNAME[0]}" || :
 
   __usageEnvironment "$usage" dockerComposeInstall || return $?
   __usageEnvironment "$usage" phpComposer "$home" || return $?
@@ -458,13 +462,13 @@ phpTest() {
   __usageEnvironment "$usage" runOptionalHook test-setup || _undo "$?" "${undo[@]}" || return $?
 
   export DOCKER_BUILDKIT=0
-  __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose -f "./docker-compose.yml" build || _undo "$?" "${undo[@]}" || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" build || _undo "$?" "${undo[@]}" || return $?
   statusMessage reportTiming "$start" "Built in" || :
 
   statusMessage decorate info "Bringing up containers ..." || _undo "$?" "${undo[@]}" || return $?
 
   start=$(__usageEnvironment "$usage" beginTiming) || _undo "$?" "${undo[@]}" || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose up -d || _undo "$?" "${undo[@]}" || return $?
+  __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" up -d || _undo "$?" "${undo[@]}" || return $?
   statusMessage reportTiming "$start" "Up in" || :
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
@@ -477,7 +481,7 @@ phpTest() {
   fi
   decorate info "Bringing down containers ..." || :
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  __usageEnvironment "$usage" docker-compose down || _phpTestCleanup "$usage" || __failEnvironment "$usage" "docker-compose down" || return $?
+  __usageEnvironment "$usage" docker-compose "${dca[@]}" down || _phpTestCleanup "$usage" || __failEnvironment "$usage" "docker-compose down" || return $?
 
   # Reset test environment ASAP
   _phpTestCleanup "$usage" || return $?
@@ -486,7 +490,7 @@ phpTest() {
     reason="test-cleanup ALSO failed"
   fi
   [ -z "$reason" ] || __failEnvironment "$usage" "$reason" || return $?
-  buildDebugStop "${FUNCNAME[0]}" || return $?
+  buildDebugStop "${FUNCNAME[0]}" || :
   statusMessage reportTiming "$init" "PHP Test completed in" || return $?
 }
 _phpTest() {
