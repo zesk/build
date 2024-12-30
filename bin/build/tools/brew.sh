@@ -7,6 +7,7 @@
 # Test: ./test/tools/apk-tests.sh
 #
 
+# Install Homebrew
 brewInstall() {
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
@@ -19,12 +20,12 @@ brewInstall() {
 #    ▌  ▝▀▘▝▀ ▘ ▘▝▀▘▗▄▘▝▀▘▝▘▀▀ ▘ ▘
 #
 
-# Install apt packages
+# Install brew packages
 __brewInstall() {
   brew install "$@"
 }
 
-# Uninstall apt packages
+# Uninstall brew packages
 __brewUninstall() {
   brew uninstall "$@"
 }

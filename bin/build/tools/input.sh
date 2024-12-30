@@ -5,6 +5,7 @@
 # Docs:  ./docs/_templates/tools/input.md
 # Test: ./test/tools/input-tests.sh
 
+# Add configuration to `~/.inputrc` for a key binding
 # Usage: {fn} keyStroke action
 # Argument: keyStroke - Required. String.
 # Argument: action - Required. String.

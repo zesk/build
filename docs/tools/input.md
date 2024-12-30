@@ -2,6 +2,12 @@
 
 Add keyboard shortcuts to your shell.
 
+### `inputConfigurationAdd` - undocumented
+
+No documentation for `inputConfigurationAdd`.
+
+- Location: `bin/build/tools/input.sh`
+
 #### Arguments
 
 - `keyStroke` - Required. String.

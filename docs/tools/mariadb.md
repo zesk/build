@@ -6,6 +6,12 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `mariadbDump` - undocumented
+
+No documentation for `mariadbDump`.
+
+- Location: `bin/build/tools/mariadb.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.

@@ -41,15 +41,21 @@ Get the size of a remote URL
 
     curl
      
-### `hostIPList` - undocumented
+### `hostIPList` - List IPv4 Addresses associated with this system using `ifconfig`
 
-No documentation for `hostIPList`.
+List IPv4 Addresses associated with this system using `ifconfig`
 
 - Location: `bin/build/tools/web.sh`
 
 #### Arguments
 
-- No arguments.
+- `--install` - Flag. Optional. Install any packages required to get `ifconfig` installed first.
+- `--help` - Flag. Optional. This help.
+
+#### Sample Output
+
+    lines:IPv4
+    
 
 #### Exit codes
 

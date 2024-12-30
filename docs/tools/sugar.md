@@ -84,15 +84,16 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__usageArgument` - undocumented
+### `__usageArgument` - Run `command`, upon failure run `usage` with an argument error
 
-No documentation for `__usageArgument`.
+Run `command`, upon failure run `usage` with an argument error
 
 - Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
-- No arguments.
+- `usage` - Required. String. Failure command
+- `command` - Required. Command to run.
 
 #### Exit codes
 

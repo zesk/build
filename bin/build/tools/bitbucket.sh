@@ -70,13 +70,13 @@ _bitbucketContainer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Are we currently in the BitBucket pipeline?
 # Usage: {fn}
 # Exit Code: 0 - is BitBucket pipeline
 # Exit Code: 1 - Not a BitBucket pipeline
 #
 isBitBucketPipeline() {
-  export BUILD_DEBUG
+  export BUILD_DEBUG BITBUCKET_WORKSPACE CI
   if ! buildEnvironmentLoad BITBUCKET_WORKSPACE CI; then
     return 1
   fi

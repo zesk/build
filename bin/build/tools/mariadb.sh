@@ -8,6 +8,7 @@
 # Docs: ./docs/_templates/tools/mariadb.md
 # Test: ./test/tools/mariadb-tests.sh
 
+# Dump a MariaDB database to raw SQL
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --echo - Optional. Flag. Show the command.
