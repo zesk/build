@@ -420,10 +420,10 @@ _buildEnvironmentGet() {
 }
 
 #
-#
+# Generate the path for a quiet log in the build cache directory, creating it if necessary.
 # Usage: {fn} name
-# Argument: name - The log file name
-# Argument: --no-create - Optional. Do not require creation of the directory where the log file will appear.
+# Argument: name - String. Required. The log file name to create. Trims leading `_` if present.
+# Argument: --no-create - Flag. Optional. Do not require creation of the directory where the log file will appear.
 #
 buildQuietLog() {
   local usage="_${FUNCNAME[0]}"
@@ -445,13 +445,15 @@ buildQuietLog() {
         flagMake=false
         ;;
       *)
-        logFile="$(buildCacheDirectory "$1.log")" || __failEnvironment "$usage" buildCacheDirectory "$argument.log" || return $?
+        logFile="$(__usageEnvironment "$usage" buildCacheDirectory "${1#_}.log")" || return $?
         ! "$flagMake" || __usageEnvironment "$usage" requireFileDirectory "$logFile" || return $?
-        printf "%s\n" "$logFile"
+        __usageEnvironment "$usage" -- printf "%s\n" "$logFile" || return $?
+        return 0
         ;;
     esac
     shift || :
   done
+  __failArgument "$usage" "No arguments" || return $?
 }
 _buildQuietLog() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -7,7 +7,6 @@
 # o ./docs/_templates/tools/date.md
 #
 
-#
 # Converts a date (`YYYY-MM-DD`) to another format.
 # Summary: Platform agnostic date conversion
 # Usage: dateToFormat date format
@@ -18,7 +17,6 @@
 # Environment: Compatible with BSD and GNU date.
 # Exit Code: 1 - if parsing fails
 # Exit Code: 0 - if parsing succeeds
-
 dateToFormat() {
   local usage="_${FUNCNAME[0]}"
   local format="${2-"%Y-%m-%d"}"
@@ -76,7 +74,6 @@ _timestampToDate() {
 # Usage: {fn}#
 # Summary: Yesterday's date
 # Example:     rotated="$log.$({fn})"
-
 yesterdayDate() {
   timestampToDate "$(($(date -u +%s) - 86400))" %F
 }
@@ -87,7 +84,6 @@ yesterdayDate() {
 #
 # Summary: Tomorrow's date
 # Example:     rotated="$log.$({fn})"
-
 tomorrowDate() {
   timestampToDate "$(($(date -u +%s) + 86400))" %F
 }

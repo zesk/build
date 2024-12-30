@@ -330,21 +330,22 @@ APPLICATION_VERSION - reserved and set to `runHook version-current` if not set a
 APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 APPLICATION_TAG - reserved and set to `runHook application-id`
 APPLICATION_ID - reserved and set to `runHook application-tag`
-### `environmentFileShow` - undocumented
+### `environmentFileShow` - Display and validate application variables.
 
-No documentation for `environmentFileShow`.
+Display and validate application variables.
 
 - Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 
-- No arguments.
+- `environmentName` - EnvironmentVariable. Optional. A required environment variable name
+- `--` - Separator. Optional. Separates requires from optional environment variables
+- `optionalEnvironmentName` - EnvironmentVariable. Optional. An optional environment variable name.
 
 #### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `1` - If any required application variables are blank, the function fails with an environment error
+- `0` - All required application variables are non-blank
 ### `environmentApplicationLoad` - Loads application environment variables, set them to their default values
 
 Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.

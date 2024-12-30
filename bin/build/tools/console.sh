@@ -7,13 +7,14 @@
 # Docs: o ./docs/_templates/tools/console.md
 # Test: o ./test/tools/console-tests.sh
 
-#
-# Get the RGB color of the terminal (usually for background colors)
+# Summary: Get the console foreground or background color
+# Gets the RGB console color using an `xterm` escape sequence supported by some terminals. (usually for background colors)
 #
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 # Credit: https://stackoverflow.com/questions/16914418/how-to-manipulate-hexadecimal-value-in-bash
-# Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 #
+# Argument: --foreground - Optional. Flag. Get the console text color.
+# Argument: --background - Optional. Flag. Get the console background color.
 consoleGetColor() {
   local usage="_${FUNCNAME[0]}"
   local argument
@@ -88,7 +89,13 @@ _consoleGetColor() {
 
 #
 # Usage: {fn} [ --background | --foreground ]
-#
+# Argument: --foreground - Optional. Flag. Get the console text color.
+# Argument: --background - Optional. Flag. Get the console background color.
+# Fetch the brightness of the console using `consoleGetColor`
+# See: consoleGetColor
+# Output: Integer. between 0 and 100.
+# Exit Code: 0 - Success
+# Exit Code: 1 - A problem occurred with `consoleGetColor`
 consoleBrightness() {
   if ! colorBrightness < <(consoleGetColor "$@") 2>/dev/null; then
     return 1
@@ -126,6 +133,7 @@ _consoleSetTitle() {
 }
 
 # Set the title of the window for the console to "user@hostname: pwd"
+# Argument: None
 consoleDefaultTitle() {
   local usage="_${FUNCNAME[0]}"
   [ -t 0 ] || __failEnvironment "$usage" "stdin is not a terminal" || return $?

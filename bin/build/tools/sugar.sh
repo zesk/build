@@ -83,9 +83,11 @@ _deprecated() {
   printf -- "$(date "+%F %T"),%s\n" "$@" >>"$(dirname "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")/.deprecated"
 }
 
+# Run a function and preserve exit code
+# Returns `exitCode`
 # Usage: {fn} exitCode undoFunction ...
 # Argument: exitCode - Required. Integer. Exit code to return.
-# Argument: undoFunction - Required. Command to run to undo something. Returns `exitCode`
+# Argument: undoFunction - Required. Command to run to undo something. Return status is ignored.
 _undo() {
   local exitCode="${1-}"
   shift

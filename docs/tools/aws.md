@@ -136,9 +136,9 @@ AWS_REGION - Where to update the security group
 DEVELOPER_ID - Developer used to register rules in Amazon
 AWS_ACCESS_KEY_ID - Amazon IAM ID
 AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
-### `awsSecurityGroupIPModify` - undocumented
+### `awsSecurityGroupIPModify` - Modify an EC2 Security Group
 
-No documentation for `awsSecurityGroupIPModify`.
+Modify an EC2 Security Group and add or remove an IP/port combination to the group.
 
 - Location: `bin/build/tools/aws.sh`
 
@@ -158,9 +158,10 @@ No documentation for `awsSecurityGroupIPModify`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `awsRegionValid` - undocumented
+### `awsRegionValid` - Check an AWS region code for validity
 
-No documentation for `awsRegionValid`.
+Checks an AWS region identifier for validity as of September 2024.
+Note that passing no parameters returns success.
 
 - Location: `bin/build/tools/aws.sh`
 

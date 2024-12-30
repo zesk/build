@@ -328,21 +328,29 @@ Finds `.git` directory above or at `startingDirectory`
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `gitHookTypes` - GIT_AUTHOR_DATE=@1702851863 +0000
+### `gitHookTypes` - List current valid git hook types
 
-GIT_AUTHOR_DATE=@1702851863 +0000
-GIT_AUTHOR_EMAIL=kent@example.com
-GIT_AUTHOR_NAME=root
-GIT_EDITOR=:
-GIT_EXEC_PATH=/usr/lib/git-core
-GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
-GIT_PREFIX=
+List current valid git hook types
+Hook types:
+- pre-commit
+- pre-push
+- pre-merge-commit
+- pre-rebase
+- pre-receive
+- update
+- post-update
+- post-commit
 
 - Location: `bin/build/tools/git.sh`
 
 #### Arguments
 
 - No arguments.
+
+#### Sample Output
+
+    lines:gitHookType
+    
 
 #### Exit codes
 
@@ -375,15 +383,29 @@ When running within your hook, pass additional arguments so they can be preserve
 #### Environment
 
 BUILD-HOME - The default application home directory used for `.git` and build hooks.
-### `gitInstallHooks` - undocumented
+### `gitInstallHooks` - Install one or more git hooks from Zesk Build hooks.
 
-No documentation for `gitInstallHooks`.
+Install one or more git hooks from Zesk Build hooks.
+Zesk Build hooks are named `git-hookName.sh` in `bin/hooks/` so `git-pre-commit.sh` will be installed as the `pre-commit` hook for git.
+
+Hook types:
+- pre-commit
+- pre-push
+- pre-merge-commit
+- pre-rebase
+- pre-receive
+- update
+- post-update
+- post-commit
 
 - Location: `bin/build/tools/git.sh`
 
 #### Arguments
 
-- No arguments.
+- `--copy` - Flag. Optional. Copy the hook but do not execute it.
+- `--verbose` - Flag. Optional. Be verbose about what is done.
+- `--application home` - Directory. Optional. Set the application home directory to this prior to looking for hooks.
+- `hookName` - String. Optional. A hook or hook names to install. See `gitHookTypes`
 
 #### Exit codes
 

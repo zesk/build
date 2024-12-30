@@ -4,15 +4,16 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `consoleGetColor` - Get the RGB color of the terminal (usually for background
+### `consoleGetColor` - Get the console foreground or background color
 
-Get the RGB color of the terminal (usually for background colors)
+Gets the RGB console color using an `xterm` escape sequence supported by some terminals. (usually for background colors)
 
 - Location: `bin/build/tools/console.sh`
 
 #### Arguments
 
-- No arguments.
+- `--foreground` - Optional. Flag. Get the console text color.
+- `--background` - Optional. Flag. Get the console background color.
 
 #### Exit codes
 
@@ -96,21 +97,26 @@ Output the number of columns in the terminal. Default is 60 if not able to be de
 
 COLUMNS - May be defined after calling this
 LINES - May be defined after calling this
-### `consoleBrightness` - undocumented
+### `consoleBrightness` - Fetch the brightness of the console using `consoleGetColor`
 
-No documentation for `consoleBrightness`.
+Fetch the brightness of the console using `consoleGetColor`
 
 - Location: `bin/build/tools/console.sh`
 
 #### Arguments
 
-- No arguments.
+- `--foreground` - Optional. Flag. Get the console text color.
+- `--background` - Optional. Flag. Get the console background color.
+
+#### Sample Output
+
+    Integer. between 0 and 100.
+    
 
 #### Exit codes
 
 - `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `1` - A problem occurred with `consoleGetColor`
 ### `consoleSetTitle` - Set the title of the window for the console
 
 Set the title of the window for the console
@@ -134,7 +140,7 @@ No documentation for `consoleDefaultTitle`.
 
 #### Arguments
 
-- No arguments.
+- None
 
 #### Exit codes
 

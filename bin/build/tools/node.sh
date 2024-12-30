@@ -96,9 +96,12 @@ _nodeUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# No-Arguments: Output the node package manager
+# Run an action using the current node package manager
+# Provides an abstraction to libraries to support any node package manager.
+# Optionally will output the current node package manager when no arguments are passed.
 # Argument: action - Optional. Action to perform: install run update uninstall
-# Argument: * - Required. Argument. Passed to the node package manager
+# Argument: * - Required. Argument. Passed to the node package manager. Required when action is provided.
+# No-Argument: Outputs the current node package manager code name
 nodePackageManager() {
   local usage="_${FUNCNAME[0]}"
 
@@ -193,6 +196,7 @@ _nodePackageManagerUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Is the passed node package manager name valid?
 nodePackageManagerValid() {
   local valid=("npm" "yarn")
   if [ $# -eq 0 ]; then

@@ -96,6 +96,7 @@ isTrue() {
   return 0
 }
 
+# Is a variable declared as an array?
 # Usage: {fn} variableName
 # Argument: variableName - Required. String. Variable to check is an array.
 isArray() {

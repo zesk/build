@@ -69,9 +69,9 @@ Installs the selected package manager for node
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `nodePackageManagerValid` - undocumented
+### `nodePackageManagerValid` - Is the passed node package manager name valid?
 
-No documentation for `nodePackageManagerValid`.
+Is the passed node package manager name valid?
 
 - Location: `bin/build/tools/node.sh`
 
@@ -84,16 +84,18 @@ No documentation for `nodePackageManagerValid`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `nodePackageManager` - undocumented
+### `nodePackageManager` - Run an action using the current node package manager
 
-No documentation for `nodePackageManager`.
+Run an action using the current node package manager
+Provides an abstraction to libraries to support any node package manager.
+Optionally will output the current node package manager when no arguments are passed.
 
 - Location: `bin/build/tools/node.sh`
 
 #### Arguments
 
 - `action` - Optional. Action to perform: install run update uninstall
-- *- `` - Required. Argument. Passed to the node package manager
+- *- `` - Required. Argument. Passed to the node package manager. Required when action is provided.
 
 #### Exit codes
 

@@ -29,9 +29,9 @@ Returns true if all `characters` are of `className`
 
 ## Filters
 
-### `sedReplacePattern` - undocumented
+### `sedReplacePattern` - Quote a sed command for search and replace
 
-No documentation for `sedReplacePattern`.
+Quote a sed command for search and replace
 
 - Location: `bin/build/tools/sed.sh`
 
@@ -640,9 +640,9 @@ Check if one string is a substring of another set of strings (case-insensitive)
 
 - `0` - If element is a substring of any haystack
 - `1` - If element is NOT found as a substring of any haystack
-### `substringFound` - undocumented
+### `substringFound` - Find whether a substring exists in one or more strings
 
-No documentation for `substringFound`.
+Does needle exist as a substring of haystack?
 
 - Location: `bin/build/tools/text.sh`
 
@@ -918,9 +918,9 @@ This can break your files so use with caution. Blank searchText is not allowed.
 #### See Also
 
 - [Source {fn}]({sourceLink})
-### `joinArguments` - undocumented
+### `joinArguments` - Output arguments joined by a character
 
-No documentation for `joinArguments`.
+Output arguments joined by a character
 
 - Location: `bin/build/tools/text.sh`
 
@@ -929,14 +929,19 @@ No documentation for `joinArguments`.
 - `separator` - Required. String. Single character to join elements.
 - `text0` - Optional. String. One or more strings to join
 
+#### Sample Output
+
+    text
+    
+
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `listAppend` - undocumented
+### `listAppend` - Add an item to the beginning or end of a
 
-No documentation for `listAppend`.
+Add an item to the beginning or end of a text-delimited list
 
 - Location: `bin/build/tools/text.sh`
 
@@ -953,9 +958,9 @@ No documentation for `listAppend`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `listRemove` - undocumented
+### `listRemove` - Remove one or more items from a text-delimited list
 
-No documentation for `listRemove`.
+Remove one or more items from a text-delimited list
 
 - Location: `bin/build/tools/text.sh`
 
@@ -1068,9 +1073,9 @@ Does this character match one or more character classes?
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `stringValidate` - undocumented
+### `stringValidate` - Ensure that every character in a text string passes all
 
-No documentation for `stringValidate`.
+Ensure that every character in a text string passes all character class tests
 
 - Location: `bin/build/tools/text.sh`
 

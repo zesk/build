@@ -14,6 +14,16 @@ __installBinBuildLatest() {
   printf -- "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
 }
 
+# Installs Zesk Build from GitHub
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
+# Argument: --user headerText - Optional. String. Add `username:password` to remote request.
+# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
+# Argument: --debug - Optional. Flag. Debugging is on.
+# Argument: --force - Optional. Flag. Force installation even if file is up to date.
+# Argument: --diff - Optional. Flag. Show differences between old and new file.
+# Argument: --replace - Optional. Flag. Replace an old version of this script with this one and delete this one. Internal only, do not use.
+# Exit Code: 1 - Environment error
+# Exit Code: 2 - Argument error
 __installBinBuildURL() {
   local usage="$1" latestVersion
 

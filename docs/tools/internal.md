@@ -4,9 +4,9 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `__buildDocumentationBuild` - undocumented
+### `__buildDocumentationBuild` - Build the build documentation
 
-No documentation for `__buildDocumentationBuild`.
+Build the build documentation
 
 - Location: `bin/documentation.sh`
 
@@ -19,9 +19,9 @@ No documentation for `__buildDocumentationBuild`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__buildTestSuite` - undocumented
+### `__buildTestSuite` - Test Zesk Build
 
-No documentation for `__buildTestSuite`.
+Test Zesk Build
 
 - Location: `bin/test.sh`
 

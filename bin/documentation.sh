@@ -63,6 +63,8 @@ __buildDocumentationBuildDirectory() {
   documentationBuild --source "$home/bin" --template "$home/docs/_templates/$subPath" --unlinked-template "$home/docs/_templates/tools/todo.md" --unlinked-target "$home/docs/tools/todo.md" --target "$home/docs/$subPath" --function-template "$template" --page-template "$home/docs/_templates/__main.md" --see-prefix "./docs" "$@" || return $?
 }
 
+# Build the build documentation
+# See: documentationBuild
 __buildDocumentationBuild() {
   local usage="_${FUNCNAME[0]}"
   local here="${BASH_SOURCE[0]%/*}" home

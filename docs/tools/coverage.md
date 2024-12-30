@@ -25,9 +25,9 @@ Covert resulting files using `bashCoverageReport`
 
 ## Reporting - work in progress
 
-### `bashCoverageReport` - undocumented
+### `bashCoverageReport` - Generate a coverage report using the coverage statistics file
 
-No documentation for `bashCoverageReport`.
+Generate a coverage report using the coverage statistics file
 
 - Location: `bin/build/tools/coverage.sh`
 

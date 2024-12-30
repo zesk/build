@@ -29,5 +29,9 @@ __dateToFormat() {
 }
 
 __timestampToDate() {
-    date -u -r "$1" "+$2"
+  date -u -r "$1" "+$2"
+}
+
+__renameLink() {
+  mv -fh "$@"
 }

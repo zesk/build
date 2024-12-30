@@ -558,7 +558,8 @@ _assertOutputDoesNotContain() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: assertFileContains fileName string0 [ ... ]
+# Assert a file contains one or more strings
+# Usage: {fn} fileName string0 [ ... ]
 #
 # DOC TEMPLATE: assert-common 14
 # Argument: --help - Optional. Flag. Display this help.
@@ -593,8 +594,8 @@ _assertFileContains() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: assertFileDoesNotContain fileName string0 [ ... ]
+# Assert a file does not contains any occurrence of one or more strings
+# Usage: {fn} fileName string0 [ ... ]
 #
 # DOC TEMPLATE: assert-common 14
 # Argument: --help - Optional. Flag. Display this help.
@@ -626,7 +627,7 @@ _assertFileDoesNotContain() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Assert a file has an expected size in bytes
 # Usage: {fn} expectedSize [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 14
@@ -659,7 +660,7 @@ _assertFileSize() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Assert a file does NOT have an expected size in bytes
 # Usage: {fn} expectedSize [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 14
@@ -692,7 +693,7 @@ _assertNotFileSize() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Assert a file is empty (zero sized)
 # Usage: {fn} [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 14
@@ -724,7 +725,7 @@ _assertZeroFileSize() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Assert a file is non-empty (non-zero sized)
 # Usage: {fn} [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 14

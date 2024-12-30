@@ -223,6 +223,37 @@ List the most recently modified timestamp in a directory
 - `1` - Environment error
 - `2` - Argument error
 
+### `directoryNewestFile` - Find the newest file in a directory
+
+Find the newest file in a directory
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- `directory` - Directory. Required. Directory to search for the newest file.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `directoryOldestFile` - Find the oldest file in a directory
+
+Find the oldest file in a directory
+
+- Location: `bin/build/tools/file.sh`
+
+#### Arguments
+
+- `directory` - Directory. Required. Directory to search for the oldest file.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
 ### Owner Group Size Type
 
 ### `fileOwner` - Outputs the file owner for each file passed on the
@@ -324,16 +355,12 @@ Renames a link forcing replacement, and works on different versions of `mv` whic
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `simplifyPath` - undocumented
+### `simplifyPath` - Normalizes segments of `/./` and `/../` in a path without
 
-No documentation for `simplifyPath`.
+Normalizes segments of `/./` and `/../` in a path without using `realPath`
+Removes dot and dot-dot paths from a path correctly
 
 - Location: `bin/build/tools/file.sh`
-
-#### Usage
-
-    simplifyPath path
-    
 
 #### Arguments
 

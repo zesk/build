@@ -58,7 +58,7 @@ _bashCoverage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Generate a coverage report using the coverage statistics file
 # Usage: {fn} [ --help ] [ --cache cacheDirectory ] [ --target targetDirectory ] [ statsFile ]
 # stdin: Accepts a stats file
 bashCoverageReport() {

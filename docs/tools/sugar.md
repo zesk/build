@@ -53,15 +53,16 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__usageEnvironment` - undocumented
+### `__usageEnvironment` - Run `command`, upon failure run `usage` with an environment error
 
-No documentation for `__usageEnvironment`.
+Run `command`, upon failure run `usage` with an environment error
 
 - Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
-- No arguments.
+- `usage` - Required. String. Failure command
+- `command` - Required. Command to run.
 
 #### Exit codes
 
@@ -98,9 +99,9 @@ No documentation for `__usageArgument`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__failEnvironment` - undocumented
+### `__failEnvironment` - Run `usage` with an environment error
 
-No documentation for `__failEnvironment`.
+Run `usage` with an environment error
 
 - Location: `bin/build/identical/_tinySugar.sh`
 
@@ -116,6 +117,7 @@ No documentation for `__failEnvironment`.
 ### `__failArgument` - IDENTICAL _tinySugar EOF
 
 IDENTICAL _tinySugar EOF
+Run `usage` with an argument error
 
 - Location: `bin/build/identical/_tinySugar.sh`
 
@@ -128,16 +130,17 @@ IDENTICAL _tinySugar EOF
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `_undo` - undocumented
+### `_undo` - Run a function and preserve exit code
 
-No documentation for `_undo`.
+Run a function and preserve exit code
+Returns `exitCode`
 
 - Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
 - `exitCode` - Required. Integer. Exit code to return.
-- `undoFunction` - Required. Command to run to undo something. Returns `exitCode`
+- `undoFunction` - Required. Command to run to undo something. Return status is ignored.
 
 #### Exit codes
 

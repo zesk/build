@@ -42,3 +42,8 @@ __dateToFormat() {
 __timestampToDate() {
   date -u -d "@$1" "+$2"
 }
+
+__renameLink() {
+  # gnu version supports -T
+  mv -fT "$@"
+}

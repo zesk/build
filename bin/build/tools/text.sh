@@ -260,6 +260,8 @@ inArray() {
 # Argument: haystack - Required. String. String to search.
 # Argument: needle - Optional. String. One or more strings to find as a substring of `haystack`.
 # Exit Code: 0 - IFF ANY needle matches as a substring of haystack
+# Summary: Find whether a substring exists in one or more strings
+# Does needle exist as a substring of haystack?
 substringFound() {
   local haystack="${1-}"
   shift
@@ -806,11 +808,11 @@ _characterFromInteger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Ensure that every character in a text string passes all character class tests
 # Usage: {fn} text class0 [ ... ]
 # Argument: text - Text to validate
 # Argument: class0 - One ore more character classes that the characters in string should match
-#
+# Note: This is slow.
 stringValidate() {
   local usage="_${FUNCNAME[0]}"
   local text character
@@ -1058,6 +1060,8 @@ _removeFields() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Output arguments joined by a character
+# Output: text
 # Usage: {fn} separator text0 arg1 ...
 # Argument: separator - Required. String. Single character to join elements.
 # Argument: text0 - Optional. String. One or more strings to join
@@ -1067,12 +1071,11 @@ joinArguments() {
   printf "%s" "$*"
 }
 
-#
+# Remove one or more items from a text-delimited list
 # Usage: {fn} listValue separator item ...
 # Argument: listValue - Required. List value to modify.
 # Argument: separator - Required. Separator string for item values (typically `:`)
 # Argument: item - the item to be removed from the `listValue`
-#
 listRemove() {
   local usage="_${FUNCNAME[0]}"
   local argument listValue="${1-}" separator="${2-}"
@@ -1106,7 +1109,7 @@ _listRemove() {
 # Argument: --first - Optional. Place any items after this flag first in the list
 # Argument: --last - Optional. Place any items after this flag last in the list. Default.
 # Argument: item - the path to be added to the `listValue`
-#
+# Add an item to the beginning or end of a text-delimited list
 listAppend() {
   local usage="_${FUNCNAME[0]}"
   local argument listValue="${1-}" separator="${2-}"

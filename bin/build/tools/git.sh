@@ -607,60 +607,64 @@ _gitHasAnyRefs() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# ----------------------------------------------------------------------------------------------------
-# ----------------------------------------------------------------------------------------------------
-# ----------------------------------------------------------------------------------------------------
-#
-# Various git environment samples from codebase
-
-# GIT_AUTHOR_DATE=@1702851863 +0000
-# GIT_AUTHOR_EMAIL=kent@example.com
-# GIT_AUTHOR_NAME=root
-# GIT_EDITOR=:
-# GIT_EXEC_PATH=/usr/lib/git-core
-# GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
-# GIT_PREFIX=
+# List current valid git hook types
+# Output: lines:gitHookType
+# Hook types:
+# - pre-commit
+# - pre-push
+# - pre-merge-commit
+# - pre-rebase
+# - pre-receive
+# - update
+# - post-update
+# - post-commit
 gitHookTypes() {
   printf -- "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
 }
 
+# Install one or more git hooks from Zesk Build hooks.
+# Zesk Build hooks are named `git-hookName.sh` in `bin/hooks/` so `git-pre-commit.sh` will be installed as the `pre-commit` hook for git.
 #
-# HomeBrew
-#
-# GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
-# GIT_AUTHOR_DATE=@1702851303 -0500
-# GIT_AUTHOR_EMAIL=kent@example.com
-# GIT_AUTHOR_NAME=Kent Davidson
-# GIT_EDITOR=:
-# GIT_EXEC_PATH=/usr/local/Cellar/git/2.28.0/libexec/git-core
-# GIT_INDEX_FILE=/Users/kent/marketacumen/build/.git/index.lock
-# GIT_PREFIX=
-# GIT_REFLOG_ACTION=pull
-
+# Argument: --copy - Flag. Optional. Copy the hook but do not execute it.
+# Argument: --verbose - Flag. Optional. Be verbose about what is done.
+# Argument: --application home - Directory. Optional. Set the application home directory to this prior to looking for hooks.
+# Argument: hookName - String. Optional. A hook or hook names to install. See `gitHookTypes`
+# Hook types:
+# - pre-commit
+# - pre-push
+# - pre-merge-commit
+# - pre-rebase
+# - pre-receive
+# - update
+# - post-update
+# - post-commit
+# See: gitHookTypes
 gitInstallHooks() {
   local hook
   local argument
   local usage="_${FUNCNAME[0]}"
-  local types didOne home
+  local types home
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  verbose=false
-  didOne=false
+
+  local verbose=false hookNames=()
+
   read -r -a types < <(gitHookTypes) || :
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --copy)
         execute=false
         ;;
       --verbose)
         verbose=true
-        ;;
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
         ;;
       --application)
         shift || __failArgument "$usage" "missing $argument argument" || return $?
@@ -669,9 +673,7 @@ gitInstallHooks() {
       *)
         hook="$argument"
         if inArray "$hook" "${types[@]}"; then
-          __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
-          ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
-          didOne=true
+          hookNames+=("$hook")
         else
           __failArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
         fi
@@ -679,14 +681,15 @@ gitInstallHooks() {
     esac
     shift || :
   done
-  if ! $didOne; then
-    for hook in pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit; do
-      if hasHook --application "$home" "git-$hook"; then
-        __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
-        ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
-      fi
-    done
+  if [ ${#hookNames[@]} -eq 0 ]; then
+    hookNames=("${types[@]}")
   fi
+  for hook in "${hookNames[@]}"; do
+    if hasHook --application "$home" "git-$hook"; then
+      __usageEnvironment "$usage" gitInstallHook --application "$home" --copy "$hook" || return $?
+      ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
+    fi
+  done
 }
 _gitInstallHooks() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -1033,3 +1036,32 @@ _gitUpdateBranch() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+#
+# Various git environment samples from codebase
+
+# GIT_AUTHOR_DATE=@1702851863 +0000
+# GIT_AUTHOR_EMAIL=dude@example.com
+# GIT_AUTHOR_NAME=root
+# GIT_EDITOR=:
+# GIT_EXEC_PATH=/usr/lib/git-core
+# GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
+# GIT_PREFIX=
+
+
+#
+# HomeBrew
+#
+# GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+# GIT_AUTHOR_DATE=@1702851303 -0500
+# GIT_AUTHOR_EMAIL=dude@example.com
+# GIT_AUTHOR_NAME=The Dude
+# GIT_EDITOR=:
+# GIT_EXEC_PATH=/usr/local/Cellar/git/2.28.0/libexec/git-core
+# GIT_INDEX_FILE=/Users/dude/marketacumen/build/.git/index.lock
+# GIT_PREFIX=
+# GIT_REFLOG_ACTION=pull

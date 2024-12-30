@@ -90,7 +90,7 @@ Thanks to [F. Hauri - Give Up GitHub (isuint_Case)](https://stackoverflow.com/qu
 
 Test if an argument is an unsigned integer
 
-- Location: `bin/documentation.sh`
+- Location: `bin/update-available.sh`
 
 #### Arguments
 
@@ -198,9 +198,9 @@ Succeeds when all arguments are "true"-ish
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `isArray` - undocumented
+### `isArray` - Is a variable declared as an array?
 
-No documentation for `isArray`.
+Is a variable declared as an array?
 
 - Location: `bin/build/tools/type.sh`
 

@@ -406,19 +406,21 @@ environmentApplicationLoad() {
   printf -- "%s\n" "${variables[@]}"
 }
 
+# Display and validate application variables.
+# Exit Code: 1 - If any required application variables are blank, the function fails with an environment error
+# Exit Code: 0 - All required application variables are non-blank
+# Argument: environmentName - EnvironmentVariable. Optional. A required environment variable name
+# Argument: -- - Separator. Optional. Separates requires from optional environment variables
+# Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name.
 environmentFileShow() {
   local usage="_${FUNCNAME[0]}"
   local missing name buildEnvironment
   local width=40
-  local variables=() checked=()
+  local variables=()
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationLoad) || :
   for name in "${variables[@]+"${variables[@]}"}"; do
-    if environmentVariableNameValid "$name"; then
-      checked+=("$name")
-    else
-      decorate warning "Invalid environment value $(decorate code "$name")" 1>&2
-    fi
+    environmentVariableNameValid "$name" || __usageArgument "$usage" "Invalid environment name $(decorate code "$name")" 1>&2
   done
   export "${variables[@]}"
 
@@ -436,6 +438,7 @@ environmentFileShow() {
     shift
   done
   buildEnvironment=("$@")
+  environmentVariableNameValid "$@" || __usageArgument "$usage" "Invalid variable name" || return $?
 
   printf -- "%s %s %s %s%s\n" "$(decorate info "Application")" "$(decorate magenta "$APPLICATION_VERSION")" "$(decorate info "on")" "$(decorate bold-red "$APPLICATION_BUILD_DATE")" "$(decorate info "...")"
   if buildDebugEnabled; then
@@ -453,14 +456,10 @@ environmentFileShow() {
     fi
   done
   for name in "${buildEnvironment[@]+"${buildEnvironment[@]}"}"; do
-    if environmentVariableNameValid "$name"; then
-      if [ -z "${!name:-}" ]; then
-        consoleNameValue "$width" "$name" "** Blank **"
-      else
-        consoleNameValue "$width" "$name" "${!name}"
-      fi
+    if [ -z "${!name:-}" ]; then
+      consoleNameValue "$width" "$name" "** Blank **"
     else
-      decorate warning "Invalid build environment value $(decorate code "$name")" 1>&2
+      consoleNameValue "$width" "$name" "${!name}"
     fi
   done
   [ ${#missing[@]} -eq 0 ] || __usageEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?

@@ -80,9 +80,9 @@ Check files to ensure `eval`s in code have been checked
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `findUncaughtAssertions` - undocumented
+### `findUncaughtAssertions` - Search bash files for assertions which do not terminate a
 
-No documentation for `findUncaughtAssertions`.
+Search bash files for assertions which do not terminate a function and are likely an error
 
 - Location: `bin/build/tools/test.sh`
 

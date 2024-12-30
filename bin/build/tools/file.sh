@@ -283,8 +283,10 @@ realPath() {
   fi
 }
 
-# Usage: simplifyPath path
+# Usage: {fn} path ...
 # Argument: path ... - Required. File. One or more paths to simplify
+# Normalizes segments of `/./` and `/../` in a path without using `realPath`
+# Removes dot and dot-dot paths from a path correctly
 simplifyPath() {
   local path elements segment dot=0 result IFS="/"
   while [ $# -gt 0 ]; do
@@ -307,13 +309,11 @@ simplifyPath() {
   done
 }
 
-#
 # Outputs value of virtual memory allocated for a process, value is in kilobytes
 # Usage: {fn} file
 # Argument: file - Required. File to get size of.
 # Exit Code: 0 - Success
 # Exit Code: 1 - Environment error
-#
 fileSize() {
   local size opts
   local usage="_${FUNCNAME[0]}"
@@ -335,14 +335,12 @@ _fileSize() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Usage: {fn} [ thing ]
 # Better type handling of shell objects
 #
 # Outputs one of `type` output or enhancements:
 # - `builtin`. `function`, `alias`, `file`
 # - `link-directory`, `link-file`, `directory`, `integer`, `unknown`
-#
 betterType() {
   local t
   while [ $# -gt 0 ]; do
@@ -376,14 +374,41 @@ betterType() {
 # Usage: {fn} from to
 #
 # Renames a link forcing replacement, and works on different versions of `mv` which differs between systems.
-#
+# See: mv
 renameLink() {
-  if mv --version >/dev/null 2>&1; then
-    # gnu version supports -T
-    mv -fT "$@"
-  else
-    mv -fh "$@"
-  fi
+  local usage="_${FUNCNAME[0]}"
+  local from="" to=""
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$from" ]; then
+          from=$(usageArgumentFile "$usage" "from" "$1") || return $?
+        elif [ -z "$to" ]; then
+          to=$(usageArgumentFileDirectory "$usage" "to" "$1") || return $?
+        else
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+  [ -z "$from" ] || __failArgument "$usage" "Need a \"from\" argument" || return $?
+  [ -z "$to" ] || __failArgument "$usage" "Need a \"to\" argument" || return $?
+  __renameLink "$from" "$to"
+}
+_renameLink() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

@@ -109,7 +109,8 @@ _makeShellFilesExecutable() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Modify the MANPATH environment variable to add a path.
+# See: manPathRemove
 # Usage: {fn} [ --first | --last | path ] ...
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
@@ -124,16 +125,15 @@ manPathConfigure() {
   MANPATH="$tempPath"
 }
 
-#
+# Remove a path from the MANPATH environment variable
 # Usage: {fn} path ...
 # Argument: path - Directory. Required. The path to be removed from the `MANPATH` environment
-#
 manPathRemove() {
   local tempPath
   export MANPATH
 
   __environment buildEnvironmentLoad MANPATH || return $?
-  tempPath="$(listAppend "$MANPATH" ':' "$@")" || _environment listRemove "$MANPATH" ':' "$@" || return $?
+  tempPath="$(__usageEnvironment "$usage" listRemove "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
 
@@ -143,7 +143,7 @@ manPathRemove() {
 # Maintains ordering.
 #
 # Usage: manPathCleanDuplicates
-#
+# No-Arguments: default
 manPathCleanDuplicates() {
   local usage="_${FUNCNAME[0]}" newPath
   export MANPATH
@@ -159,9 +159,9 @@ _manPathCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Remove a path from the PATH environment variable
 # Usage: {fn} path ...
-# Argument: path - the path to be removed from the `PATH` environment
+# Argument: path - Requires. String. The path to be removed from the `PATH` environment.
 pathRemove() {
   local usage="_${FUNCNAME[0]}"
   local tempPath
@@ -176,7 +176,7 @@ _pathRemove() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Modify the PATH environment variable to add a path.
 # Usage: {fn} [ --first | --last | path ] ...
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.

@@ -7,6 +7,7 @@
 # Copyright &copy; 2024 Market Acumen, Inc.
 #
 
+# Quote a sed command for search and replace
 sedReplacePattern() {
   local usage="_${FUNCNAME[0]}"
   if [ $# -eq 0 ]; then

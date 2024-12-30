@@ -61,9 +61,10 @@ Pause for user input
 
 ## Copy files
 
-### `copyFileWouldChange` - undocumented
+### `copyFileWouldChange` - Check whether copying a file would change it
 
-No documentation for `copyFileWouldChange`.
+Check whether copying a file would change it
+This function does not modify the source or destination.
 
 - Location: `bin/build/tools/interactive.sh`
 
@@ -76,16 +77,18 @@ No documentation for `copyFileWouldChange`.
 #### Exit codes
 
 - `0` - Something would change
-- `1` - Nothing would change ### `copyFile` - undocumented
+- `1` - Nothing would change ### `copyFile` - Copy file from source to destination
 
-No documentation for `copyFile`.
+Copy file from source to destination
+
+Supports mapping the file using the current environment, or escalated privileges.
 
 - Location: `bin/build/tools/interactive.sh`
 
 #### Arguments
 
 - `--map` - Flag. Optional. Map environment values into file before copying.
-- `--escalate` - Flag. Optional. The file is a privilege escalation and needs visual confirmation.
+- `--escalate` - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges.
 - `source` - File. Required. Source path
 - `destination` - File. Required. Destination path
 

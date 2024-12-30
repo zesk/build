@@ -156,9 +156,12 @@ _copyFileShowNew() {
 ####################################################################################################
 ####################################################################################################
 
+# Copy file from source to destination
+#
+# Supports mapping the file using the current environment, or escalated privileges.
 # Usage: {fn} [ --map ] [ --escalate ] source destination
 # Argument: --map - Flag. Optional. Map environment values into file before copying.
-# Argument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation.
+# Argument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges.
 # Argument: source - File. Required. Source path
 # Argument: destination - File. Required. Destination path
 # Exit Code: 0 - Success
@@ -249,6 +252,8 @@ _copyFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Check whether copying a file would change it
+# This function does not modify the source or destination.
 # Usage: {fn} [ --map ] source destination
 # Argument: --map - Flag. Optional. Map environment values into file before copying.
 # Argument: source - File. Required. Source path

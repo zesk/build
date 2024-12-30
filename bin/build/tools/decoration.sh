@@ -177,6 +177,7 @@ _labeledBigText() {
 # Example:     echo Hello world
 # Example:     echo $(repeat 80 -)
 # Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
+# Repeat a string
 repeat() {
   local usage="_${FUNCNAME[0]}"
   local argument

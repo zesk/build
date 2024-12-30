@@ -502,6 +502,10 @@ _bashDebugTrap() {
   done
 }
 
+# Enables the debugger immediately
+# See: bashDebug
+# See: bashDebuggerDisable
+# Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively.
 bashDebuggerEnable() {
   export BASH_DEBUG_WATCH
   BASH_DEBUG_WATCH=()
@@ -512,6 +516,10 @@ bashDebuggerEnable() {
   trap _bashDebugTrap DEBUG
 }
 
+# Disables the debugger immediately
+# See: bashDebug
+# See: bashDebuggerEnable
+# Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 bashDebuggerDisable() {
   trap - DEBUG
   shopt -u extdebug

@@ -35,6 +35,8 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
+# Test Zesk Build
+# See: testSuite
 __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
   local here="${BASH_SOURCE[0]%/*}"

@@ -136,16 +136,16 @@ Appends any passed in arguments as path segments.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `buildQuietLog` - undocumented
+### `buildQuietLog` - Generate the path for a quiet log in the build
 
-No documentation for `buildQuietLog`.
+Generate the path for a quiet log in the build cache directory, creating it if necessary.
 
 - Location: `bin/build/tools/self.sh`
 
 #### Arguments
 
-- `name` - The log file name
-- `--no-create` - Optional. Do not require creation of the directory where the log file will appear.
+- `name` - String. Required. The log file name to create. Trims leading `_` if present.
+- `--no-create` - Flag. Optional. Do not require creation of the directory where the log file will appear.
 
 #### Exit codes
 

@@ -755,10 +755,11 @@ None
 
 File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed 2023-11-12.
 
-#### Usage
+### `assertFileContains` - Assert a file contains one or more strings
 
-    assertFileContains fileName string0 [ ... ]
-    
+Assert a file contains one or more strings
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Arguments
 
@@ -800,10 +801,11 @@ If the file does not exist, this will fail.
 #### Review Status
 
 File `bin/build/tools/assert.sh`, function `assertFileContains` was reviewed 2023-11-12.
-#### Usage
+### `assertFileDoesNotContain` - Assert a file does not contains any occurrence of one
 
-    assertFileDoesNotContain fileName string0 [ ... ]
-    
+Assert a file does not contains any occurrence of one or more strings
+
+- Location: `bin/build/tools/assert.sh`
 
 #### Arguments
 
@@ -840,6 +842,12 @@ If the file does not exist, this will fail.
 
 ## FileSize
 
+### `assertFileSize` - Assert a file has an expected size in bytes
+
+Assert a file has an expected size in bytes
+
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -872,6 +880,12 @@ If the file does not exist, this will fail.
 #### Environment
 
 If the file does not exist, this will fail.
+### `assertNotFileSize` - Assert a file does NOT have an expected size in
+
+Assert a file does NOT have an expected size in bytes
+
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -905,6 +919,12 @@ If the file does not exist, this will fail.
 
 If the file does not exist, this will fail.
 
+### `assertZeroFileSize` - Assert a file is empty (zero sized)
+
+Assert a file is empty (zero sized)
+
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -936,6 +956,12 @@ If the file does not exist, this will fail.
 #### Environment
 
 If the file does not exist, this will fail.
+### `assertNotZeroFileSize` - Assert a file is non-empty (non-zero sized)
+
+Assert a file is non-empty (non-zero sized)
+
+- Location: `bin/build/tools/assert.sh`
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.

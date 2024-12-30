@@ -816,6 +816,7 @@ _awsIPAccess() {
 
 # Summary: Check an AWS region code for validity
 # Checks an AWS region identifier for validity as of September 2024.
+# Note that passing no parameters returns success.
 # Usage: {fn} region
 # Argument: region ... - String. Required. The AWS Region to validate.
 # Exit Code: 0 - All regions are valid AWS region

@@ -110,9 +110,9 @@ Works from the current directory
 
 ## Modify PATH or MANPATH
 
-### `pathConfigure` - undocumented
+### `pathConfigure` - Modify the PATH environment variable to add a path.
 
-No documentation for `pathConfigure`.
+Modify the PATH environment variable to add a path.
 
 - Location: `bin/build/tools/os.sh`
 
@@ -127,15 +127,15 @@ No documentation for `pathConfigure`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `pathRemove` - undocumented
+### `pathRemove` - Remove a path from the PATH environment variable
 
-No documentation for `pathRemove`.
+Remove a path from the PATH environment variable
 
 - Location: `bin/build/tools/os.sh`
 
 #### Arguments
 
-- `path` - the path to be removed from the `PATH` environment
+- `path` - Requires. String. The path to be removed from the `PATH` environment.
 
 #### Exit codes
 
@@ -167,9 +167,9 @@ Maintains ordering.
 
 ## Modify MANPATH
 
-### `manPathConfigure` - undocumented
+### `manPathConfigure` - Modify the MANPATH environment variable to add a path.
 
-No documentation for `manPathConfigure`.
+Modify the MANPATH environment variable to add a path.
 
 - Location: `bin/build/tools/os.sh`
 
@@ -184,9 +184,9 @@ No documentation for `manPathConfigure`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `manPathRemove` - undocumented
+### `manPathRemove` - Remove a path from the MANPATH environment variable
 
-No documentation for `manPathRemove`.
+Remove a path from the MANPATH environment variable
 
 - Location: `bin/build/tools/os.sh`
 

@@ -247,6 +247,7 @@ A simple example to show some standard patterns:
       # IDENTICAL startBeginTiming 1
       start=$(__usageEnvironment "$usage" beginTiming) || return $?
     
+      # IDENTICAL argument-case-header 5
       local saved=("$@") nArguments=$#
       while [ $# -gt 0 ]; do
         local argument argumentIndex=$((nArguments - $# + 1))

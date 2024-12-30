@@ -681,7 +681,7 @@ validateFileExtensionContents() {
 
 #
 # Usage: {fn} [ --exec binary ] [ directory ]
-#
+# Search bash files for assertions which do not terminate a function and are likely an error
 findUncaughtAssertions() {
   local argument listFlag binary directory problemFiles lastProblemFile problemLine problemLines
   local usage
