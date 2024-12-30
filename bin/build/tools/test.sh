@@ -41,8 +41,9 @@ _testTools() {
 # Argument: value - EmptyString. Required. Force the value of `globalName` to this value temporarily. Saves the original value in global `saveGlobalName`.
 __mockValue() {
   local usage="_${FUNCNAME[0]}"
-  local me="$usage ${1-} ${2-}" global="${1-}" saveGlobal="${2-}" value="${3-}"
-  [ $# -eq 3 ] || IFS=';' __failArgument "$usage" "$me requires 3 and only 3 arguments: [$#]: $*" || return $?
+  local me="$usage ${1-} ${2-}" global="${1-}"
+  local saveGlobal="${2:-"__MOCK_${global}"}" value="${3-}"
+  [ $# -le 3 ] || IFS=';' __failArgument "$usage" "$me requires no more than 3 arguments: [$#]: $*" || return $?
   if [ "$value" = "--end" ]; then
     # shellcheck disable=SC2163
     export "$saveGlobal"

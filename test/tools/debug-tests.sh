@@ -31,13 +31,13 @@ _testBuildDebugEnabledExit() {
 }
 
 testBuildDebugEnabled() {
-  local saveDebug quietLog
+  local quietLog
 
   quietLog=$(mktemp)
 
   export BUILD_DEBUG
 
-  saveDebug="${BUILD_DEBUG-}"
+  __mockValue BUILD_DEBUG
 
   assertExitCode --skip-plumber --line "$LINENO" 1 buildDebugEnabled || return $?
   assertNotExitCode --line "$LINENO" 0 buildDebugEnabled || return $?
@@ -80,9 +80,8 @@ testBuildDebugEnabled() {
 
   __buildDebugDisable
 
-  BUILD_DEBUG=$saveDebug
+  __mockValue BUILD_DEBUG "" --end
 
-  unset BUILD_DEBUG
   _testBuildDebugEnabledExit 0 "$quietLog" "$LINENO"
 }
 
