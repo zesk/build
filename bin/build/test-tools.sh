@@ -42,7 +42,7 @@ testSuite() {
   local listFlag=false runner=() testPaths=() messyOption="" checkTests=() continueFlag=false matchTests=() failExecutors=() doStats=true showFlag=false
 
   startString="$(__usageEnvironment "$usage" date +"%F %T")" || return $?
-  export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM
+  export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM BUILD_DEBUG
 
   export cleanExit=
   export testTracing
@@ -56,7 +56,8 @@ testSuite() {
   __usageEnvironment "$usage" printf "%s started on %s\n" "${usage#_}" "$startString" >"$quietLog" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)
-
+  BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
+  BUILD_DEBUG="${BUILD_DEBUG#,}"
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME BUILD_COLORS || return $?
 
   mode="$BUILD_COLORS_MODE"

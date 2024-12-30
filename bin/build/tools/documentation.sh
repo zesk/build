@@ -34,7 +34,7 @@ usageDocument() {
   functionDefinitionFile="$1"
   functionName="$2"
   exitCode="${3-NONE}"
-  shift 3 || :
+  shift 3 || _argument "Missing arguments" || return $?
 
   if [ ! -f "$functionDefinitionFile" ]; then
     tryFile="$home/$functionDefinitionFile"
@@ -50,6 +50,18 @@ usageDocument() {
     exitCode=1
   fi
   __argument isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
+  if buildDebugEnabled "fast-usage"; then
+    local color="error" verb="Failed"
+    if [ "$exitCode" -eq 0 ]; then
+      color="success"
+      verb="Success"
+    else
+      exec 1>&2
+    fi
+    statusMessage --last decorate "$color" "[$exitCode]" "$verb" "$@"
+    return "$exitCode"
+  fi
+
   variablesFile=$(__environment mktemp) || return $?
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm "$variablesFile"; then
