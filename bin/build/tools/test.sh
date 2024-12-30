@@ -496,23 +496,27 @@ _bashLint() {
 # Exit Code: 2 - Arguments error (missing extension or text)
 #
 validateFileContents() {
-  local this usage argument
-  local fileArgs total item fileGenerator
+  local usage="_${FUNCNAME[0]}"
 
-  local textMatches text binary
-  local failedReasons failedFiles
+  local fileArgs=() verboseMode=false binary=""
 
-  this=${FUNCNAME[0]}
-  usage="_$this"
-
-  fileArgs=()
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --)
         shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
         break
+        ;;
+      --verbose)
+        verboseMode=true
         ;;
       --exec)
         shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
@@ -527,12 +531,13 @@ validateFileContents() {
         fileArgs+=("$1")
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
-  textMatches=()
+  local textMatches=()
   while [ $# -gt 0 ]; do
-    argument="$1"
+    local argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "Zero size text match passed" || return $?
     case "$argument" in
       --)
@@ -548,28 +553,27 @@ validateFileContents() {
 
   [ "${#textMatches[@]}" -gt 0 ] || __failArgument "$usage" "No text match arguments" || return $?
 
-  failedReasons=()
-  failedFiles=()
-  total=0
-  total="${#fileArgs[@]}"
+  local failedReasons=() failedFiles=() total="${#fileArgs[@]}"
+
   # shellcheck disable=SC2059
   statusMessage decorate info "Searching $total $(plural "$total" item files) for text: $(printf -- " $(decorate reset)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
-  total=0
+  local fileGenerator
   if [ "${#fileArgs[@]}" -gt 0 ]; then
     fileGenerator=("printf" "%s\n" "${fileArgs[@]}")
   else
     fileGenerator=("cat")
   fi
+  total=0
   while read -r item; do
     total=$((total + 1))
     for text in "${textMatches[@]}"; do
       if ! grep -q "$text" "$item"; then
         failedReasons+=("$item missing \"$text\"")
-        statusMessage decorate error "Searching $item ... NOT FOUND"
+        statusMessage decorate error "Searching $item ... $(decorate code "$text") NOT FOUND"
         failedFiles+=("$item")
       else
-        statusMessage decorate success "Searching $item ... found"
+        ! $verboseMode || statusMessage decorate success "Searching $item ... $(decorate code "$text") found"
       fi
     done
   done < <("${fileGenerator[@]}")
@@ -577,6 +581,7 @@ validateFileContents() {
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then
     statusMessage --last decorate error "The following scripts failed:" 1>&2
+    local item
     for item in "${failedReasons[@]}"; do
       echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
