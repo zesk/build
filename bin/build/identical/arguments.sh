@@ -39,7 +39,8 @@ __documentTemplateFunction() {
   # IDENTICAL startBeginTiming 1
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  local saved=("$@") nArguments=$# region="" profileName="" pp=()
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -96,10 +97,10 @@ ___documentTemplateFunction() {
 __documentTemplateFunction2() {
   local usage="_${FUNCNAME[0]}"
 
-  local saved=("$@") nArguments=$# region="" profileName=""
+  # IDENTICAL argument-case-header-blank 4
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
     case "$argument" in
       # IDENTICAL --help 4
       --help)

@@ -11,6 +11,7 @@
 #
 
 # IDENTICAL _tinySugar EOF
+
 # Run `usage` with an argument error
 # Usage: {fn} usage ...
 __failArgument() {

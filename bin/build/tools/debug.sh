@@ -199,7 +199,7 @@ plumber() {
   local argument nArguments argumentIndex
   local __before __after __changed __ignore __pattern __command
   local __result=0
-  local __ignore=(OLDPWD _ resultCode LINENO PWD BASH_COMMAND BASH_ARGC BASH_ARGV)
+  local __ignore=(OLDPWD _ resultCode LINENO PWD BASH_COMMAND BASH_ARGC BASH_ARGV BUILD_DEBUG)
 
   # BASH_COMMAND for DEBUG
   nArguments=$#
