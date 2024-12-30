@@ -154,6 +154,24 @@ Upon success, outputs the file name
 
 - `2` - Argument error
 - `0` - Success
+### `usageArgumentLink` - Validates a value is not blank and is a link
+
+Validates a value is not blank and is a link
+Upon success, outputs the file name
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Path to a link file.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `link`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
 ### `usageArgumentFileDirectory` - Validates a value is not blank and is a file
 
 Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.

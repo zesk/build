@@ -123,9 +123,16 @@ Outputs the path to the PHP log file
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `phpTest` - Test a docker-based PHP application during build
+
+Test a docker-based PHP application during build
+
+- Location: `bin/build/tools/php.sh`
+
 #### Arguments
 
-- `deployment` - Required. String. `production` or `develop`
+- `--env-file envFile` - Optional. File. Environment file to load.
+- `--home homeDirectory` - Optional. Directory. Directory for application home.
 
 #### Exit codes
 

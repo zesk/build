@@ -330,6 +330,26 @@ A simple example to show some standard patterns:
     __hookGitPostCommit() {
       local usage="_${FUNCNAME[0]}"
     
+      # IDENTICAL argument-case-header-blank 4
+      local saved=("$@") nArguments=$#
+      while [ $# -gt 0 ]; do
+        local argument="$1" argumentIndex=$((nArguments - $# + 1))
+        case "$argument" in
+          # IDENTICAL --help 4
+          --help)
+            "$usage" 0
+            return $?
+            ;;
+          *)
+            # IDENTICAL argumentUnknown 1
+            __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+            ;;
+        esac
+        # IDENTICAL argument-esac-shift 1
+        shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+      done
+    
+      reportTiming "$start" "Completed in"
       __usageEnvironment "$usage" gitInstallHook post-commit || return $?
     
       __usageEnvironment "$usage" gitMainly || return $?
