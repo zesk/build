@@ -25,7 +25,10 @@ __failEnvironment() {
   shift && "$usage" 1 "$@" || return $?
 }
 
-# Usage: {fn} usage command
+# Run `command`, upon failure run `usage` with an argument error
+# Usage: {fn} usage command ...
+# Argument: usage - Required. String. Failure command
+# Argument: command - Required. Command to run.
 __usageArgument() {
   local usage="${1-}"
   shift && "$@" || __failArgument "$usage" "$@" || return $?
