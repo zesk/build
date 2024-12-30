@@ -824,6 +824,7 @@ _gitPreCommitHeader() {
 
 # Does this commit have the following file extensions?
 gitPreCommitHasExtension() {
+  local usage="_${FUNCNAME[0]}"
   local directory
   directory=$(__usageEnvironment "$usage" __gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
@@ -1037,7 +1038,6 @@ _gitUpdateBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
@@ -1051,7 +1051,6 @@ _gitUpdateBranch() {
 # GIT_EXEC_PATH=/usr/lib/git-core
 # GIT_INDEX_FILE=/opt/atlassian/bitbucketci/agent/build/.git/index.lock
 # GIT_PREFIX=
-
 
 #
 # HomeBrew
