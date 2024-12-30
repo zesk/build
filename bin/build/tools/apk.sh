@@ -53,7 +53,7 @@ __apkUpgrade() {
   local usage="_${FUNCNAME[0]}"
   local quietLog upgradeLog result
 
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}") || return $?
+  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   upgradeLog=$(__usageEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
   __usageEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog"
   if ! muzzle packageNeedRestartFlag; then

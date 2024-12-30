@@ -480,7 +480,7 @@ packageUninstall() {
   [ 0 -lt "${#packages[@]}" ] || __failArgument "$usage" "Requires at least one package to uninstall" || return $?
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}") || return $?
+  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   for package in "${packages[@]}"; do
     if inArray "$package" "${standardPackages[@]}"; then

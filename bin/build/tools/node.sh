@@ -32,7 +32,7 @@ nodeInstall() {
     return 0
   fi
 
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}") || return $?
+  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   statusMessage --first decorate info "Installing nodejs ... " || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall nodejs || return $?
@@ -85,7 +85,7 @@ nodeUninstall() {
   local start name quietLog
   name=$(decorate code node)
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}") || return $?
+  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   statusMessage --first decorate info "Uninstalling $name ... " || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" packageUninstall nodejs || return $?

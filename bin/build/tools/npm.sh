@@ -50,7 +50,7 @@ npmInstall() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
   version="${1-${BUILD_NPM_VERSION:-latest}}"
-  quietLog=$(buildQuietLog "${usage#_}") || __failEnvironment "buildQuietLog $usage"
+  quietLog=$(buildQuietLog "$usage") || __failEnvironment "buildQuietLog $usage"
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || return $?
   __usageEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1

@@ -52,7 +52,7 @@ testSuite() {
 
   allTestStart=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  quietLog="$(__usageEnvironment "$usage" buildQuietLog "${usage#_}")" || return $?
+  quietLog="$(__usageEnvironment "$usage" buildQuietLog "$usage")" || return $?
   __usageEnvironment "$usage" printf "%s started on %s\n" "${usage#_}" "$startString" >"$quietLog" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)

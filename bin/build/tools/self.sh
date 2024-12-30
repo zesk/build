@@ -447,7 +447,7 @@ buildQuietLog() {
       *)
         logFile="$(__usageEnvironment "$usage" buildCacheDirectory "${1#_}.log")" || return $?
         ! "$flagMake" || __usageEnvironment "$usage" requireFileDirectory "$logFile" || return $?
-        __usageEnvironment "$usage" -- printf "%s\n" "$logFile" || return $?
+        __usageEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
         return 0
         ;;
     esac

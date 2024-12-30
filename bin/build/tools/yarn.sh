@@ -55,7 +55,7 @@ yarnInstall() {
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 
   version="${1-${BUILD_YARN_VERSION:-stable}}"
-  quietLog=$(buildQuietLog "${usage#_}") || __failEnvironment "buildQuietLog $usage"
+  quietLog=$(buildQuietLog "$usage") || __failEnvironment "buildQuietLog $usage"
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage --first decorate info "Installing node ... " || return $?
