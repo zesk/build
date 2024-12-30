@@ -508,8 +508,8 @@ _awsCredentialsRemoveSection() {
 # Argument: --port port - Required for `--add` only. Integer. service port
 # Argument: --description description - Required. String. Description to identify this record.
 # Argument: --ip ip - Required for `--add` only. String. IP Address to add or remove.
-#
-#
+# Modify an EC2 Security Group and add or remove an IP/port combination to the group.
+# Summary: Modify an EC2 Security Group
 awsSecurityGroupIPModify() {
   local usage="_${FUNCNAME[0]}"
   local start
@@ -814,7 +814,8 @@ _awsIPAccess() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Summary: Check an AWS region code for validity
+# Checks an AWS region identifier for validity as of September 2024.
 # Usage: {fn} region
 # Argument: region ... - String. Required. The AWS Region to validate.
 # Exit Code: 0 - All regions are valid AWS region

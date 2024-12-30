@@ -44,7 +44,7 @@ Zesk Build makes the following assumptions about your project structure:
 
 Internally Zesk Build is organized:
 
-- `bin/build/env/*.sh` - Any external environment variable is referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files.
+- `bin/build/env/*.sh` - All external environment variables are referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files. 
 - `bin/build/tools/*.sh` - Build tools function implementations and template files (`.md` files)
 - `bin/build/hooks/*.sh` - All default hooks are here - if your application does not implement them - these are used.
 
@@ -113,6 +113,10 @@ Environment values files can adhere to the **Docker** format (no quotes) or be b
     ITEMS=(1 2 3 4)
 
 ### Bash-compatible
+
+    NAME="Zesk Build"
+    export ITEMS=(1 2 3 4)
+
 Given that your project may use one or both, it's best to support any implementation when possible.
 
 > **Note:** `.env` files appear to have different implementations such that it's difficult at best to have a single format which works in your projects.

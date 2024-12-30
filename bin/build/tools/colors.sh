@@ -117,7 +117,7 @@ _consoleColorMode() {
 # Exit Code; 1 - Does not support console animation
 #
 hasConsoleAnimation() {
-  # Important: This can *not* use loadBuildEnvironment
+  # Important: This can *not* use buildEnvironmentLoad - leads to infinite loops
   export CI
   [ -z "${CI-}" ]
 }
@@ -136,7 +136,7 @@ __mockConsoleAnimation() {
     return 0
   fi
 
-  isBoolean "$flag" || _argument "Requires true or false" || return $?
+  isBoolean "$flag" || __failArgument "$usage" "Requires true or false (or --end)" || return $?
   __mockValue CI __MOCKED_CI "$(_choose "$flag" "" "testCI")" "$@"
 }
 

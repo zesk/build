@@ -68,6 +68,10 @@ _urlContentLength() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# List IPv4 Addresses associated with this system using `ifconfig`
+# Output: lines:IPv4
+# Argument: --install - Flag. Optional. Install any packages required to get `ifconfig` installed first.
+# Argument: --help - Flag. Optional. This help.
 hostIPList() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex

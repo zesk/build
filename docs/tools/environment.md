@@ -49,9 +49,9 @@ First letter MUST NOT be a digit
 
 ## Variable lists
 
-### `environmentSecureVariables` - undocumented
+### `environmentSecureVariables` - List environment variables related to security
 
-No documentation for `environmentSecureVariables`.
+List environment variables related to security
 
 - Location: `bin/build/tools/environment.sh`
 
@@ -64,9 +64,9 @@ No documentation for `environmentSecureVariables`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `environmentApplicationVariables` - undocumented
+### `environmentApplicationVariables` - List environment variables related to application deployments
 
-No documentation for `environmentApplicationVariables`.
+List environment variables related to application deployments
 
 - Location: `bin/build/tools/environment.sh`
 
