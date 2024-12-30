@@ -461,7 +461,7 @@ phpTest() {
   undo+=(muzzle popd)
   __usageEnvironment "$usage" runOptionalHook test-setup || _undo "$?" "${undo[@]}" || return $?
 
-  export DOCKER_BUILDKIT=0
+  export DOCKER_BUILDKIT=1
   __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" build || _undo "$?" "${undo[@]}" || return $?
   statusMessage reportTiming "$start" "Built in" || :
 
