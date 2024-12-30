@@ -734,7 +734,6 @@ awsIPAccess() {
     shift || __failArgument "$usage" "shift failed" || return $?
   done
 
-  buildDebugStart || :
   [ -n "$developerId" ] || __failArgument "$usage" "Empty --id or DEVELOPER_ID environment" || return $?
 
   [ "${#services[@]}" -gt 0 ] || __failArgument "$usage" "Supply one or more services" || return $?
