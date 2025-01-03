@@ -77,6 +77,9 @@ __buildIdenticalRepair() {
   home=$(__environment buildHome) || return $?
   __environment cd "$home" || return $?
   aa=()
+  if [ "$(buildEnvironmentGet APPLICATION_NAME)" != "build.zesk.com" ]; then
+    aa+=(--exclude '*/bin/build/*')
+  fi
   while read -r item; do
     aa+=(--singles "$item")
   done < <(find . -name 'singles.txt' -path '*/identical/*' ! -path "*/.*/*")
