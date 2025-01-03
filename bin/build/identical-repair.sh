@@ -77,7 +77,7 @@ __buildIdenticalRepair() {
   home=$(__environment buildHome) || return $?
   __environment cd "$home" || return $?
   aa=()
-  if [ "$(buildEnvironmentGet APPLICATION_NAME)" != "build.zesk.com" ]; then
+  if [ "$(buildEnvironmentGet APPLICATION_CODE)" != "build.zesk.com" ]; then
     aa+=(--exclude '*/bin/build/*')
   fi
   while read -r item; do

@@ -2,40 +2,40 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
-{aptNeedRestartFlag}
-{aptUninstall}
-{consoleBlackBackground}
-{consoleBlack}
-{consoleBlue}
-{consoleBoldBlack}
-{consoleBoldBlue}
-{consoleBoldCyan}
-{consoleBoldGreen}
-{consoleBoldMagenta}
-{consoleBoldOrange}
-{consoleBoldRed}
-{consoleBoldWhite}
-{consoleBold}
-{consoleCode}
-{consoleCyan}
-{consoleDecoration}
-{consoleError}
-{consoleGreen}
-{consoleInfo}
-{consoleLabel}
-{consoleMagenta}
-{consoleNoBold}
-{consoleNoUnderline}
-{consoleOrange}
-{consoleRed}
-{consoleReset}
-{consoleSubtle}
-{consoleSuccess}
-{consoleUnderline}
-{consoleValue}
-{consoleWarning}
-{consoleWhite}
-{consoleYellow}
+{packageNeedRestartFlag}
+{packageUninstall}
+{decorate blackBackground}
+{decorate black}
+{decorate blue}
+{decorate bold-black}
+{decorate bold-blue}
+{decorate bold-cyan}
+{decorate bold-green}
+{decorate bold-magenta}
+{decorate bold-orange}
+{decorate bold-red}
+{decorate bold-white}
+{decorate bold}
+{decorate code}
+{decorate cyan}
+{decorate decoration}
+{decorate error}
+{decorate green}
+{decorate info}
+{decorate label}
+{decorate magenta}
+{decorate no-bold}
+{decorate no-underline}
+{decorate orange}
+{decorate red}
+{decorate reset}
+{decorate subtle}
+{decorate success}
+{decorate underline}
+{decorate value}
+{decorate warning}
+{decorate white}
+{decorate yellow}
 {exampleFunction}
-{whichAptUninstall}
-{whichApt}
+{packageWhichUninstall}
+{packageWhich}

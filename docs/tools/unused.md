@@ -2,7 +2,7 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
-### `aptNeedRestartFlag` - DEPRECATED
+### `packageNeedRestartFlag` - DEPRECATED
 
 DEPRECATED
 
@@ -17,7 +17,7 @@ DEPRECATED
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `aptUninstall` - Uninstall apt packages
+### `packageUninstall` - Uninstall apt packages
 
 Uninstall apt packages
 
@@ -32,24 +32,9 @@ Uninstall apt packages
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleBlackBackground` - undocumented
+### `decorate blackBackground` - undocumented
 
-No documentation for `consoleBlackBackground`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleBlack` - undocumented
-
-No documentation for `consoleBlack`.
+No documentation for `decorate blackBackground`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -62,24 +47,9 @@ No documentation for `consoleBlack`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleBlue` - undocumented
+### `decorate black` - undocumented
 
-No documentation for `consoleBlue`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleBoldBlack` - undocumented
-
-No documentation for `consoleBoldBlack`.
+No documentation for `decorate black`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -92,24 +62,9 @@ No documentation for `consoleBoldBlack`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleBoldBlue` - undocumented
+### `decorate blue` - undocumented
 
-No documentation for `consoleBoldBlue`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleBoldCyan` - undocumented
-
-No documentation for `consoleBoldCyan`.
+No documentation for `decorate blue`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -122,24 +77,9 @@ No documentation for `consoleBoldCyan`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleBoldGreen` - undocumented
+### `decorate bold-black` - undocumented
 
-No documentation for `consoleBoldGreen`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleBoldMagenta` - undocumented
-
-No documentation for `consoleBoldMagenta`.
+No documentation for `decorate bold-black`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -152,24 +92,9 @@ No documentation for `consoleBoldMagenta`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleBoldOrange` - undocumented
+### `decorate bold-blue` - undocumented
 
-No documentation for `consoleBoldOrange`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleBoldRed` - undocumented
-
-No documentation for `consoleBoldRed`.
+No documentation for `decorate bold-blue`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -182,24 +107,9 @@ No documentation for `consoleBoldRed`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleBoldWhite` - undocumented
+### `decorate bold-cyan` - undocumented
 
-No documentation for `consoleBoldWhite`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleBold` - undocumented
-
-No documentation for `consoleBold`.
+No documentation for `decorate bold-cyan`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -212,7 +122,97 @@ No documentation for `consoleBold`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleCode` - Deprecated use `decorate` now
+### `decorate bold-green` - undocumented
+
+No documentation for `decorate bold-green`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate bold-magenta` - undocumented
+
+No documentation for `decorate bold-magenta`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate bold-orange` - undocumented
+
+No documentation for `decorate bold-orange`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate bold-red` - undocumented
+
+No documentation for `decorate bold-red`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate bold-white` - undocumented
+
+No documentation for `decorate bold-white`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate bold` - undocumented
+
+No documentation for `decorate bold`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate code` - Deprecated use `decorate` now
 
 Deprecated use `decorate` now
 
@@ -227,24 +227,9 @@ Deprecated use `decorate` now
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleCyan` - undocumented
+### `decorate cyan` - undocumented
 
-No documentation for `consoleCyan`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleDecoration` - undocumented
-
-No documentation for `consoleDecoration`.
+No documentation for `decorate cyan`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -257,24 +242,9 @@ No documentation for `consoleDecoration`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleError` - undocumented
+### `decorate decoration` - undocumented
 
-No documentation for `consoleError`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleGreen` - undocumented
-
-No documentation for `consoleGreen`.
+No documentation for `decorate decoration`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -287,24 +257,9 @@ No documentation for `consoleGreen`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleInfo` - undocumented
+### `decorate error` - undocumented
 
-No documentation for `consoleInfo`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleLabel` - undocumented
-
-No documentation for `consoleLabel`.
+No documentation for `decorate error`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -317,24 +272,9 @@ No documentation for `consoleLabel`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleMagenta` - undocumented
+### `decorate green` - undocumented
 
-No documentation for `consoleMagenta`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleNoBold` - undocumented
-
-No documentation for `consoleNoBold`.
+No documentation for `decorate green`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -347,24 +287,9 @@ No documentation for `consoleNoBold`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleNoUnderline` - undocumented
+### `decorate info` - undocumented
 
-No documentation for `consoleNoUnderline`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleOrange` - undocumented
-
-No documentation for `consoleOrange`.
+No documentation for `decorate info`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -377,9 +302,84 @@ No documentation for `consoleOrange`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleRed` - undocumented
+### `decorate label` - undocumented
 
-No documentation for `consoleRed`.
+No documentation for `decorate label`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate magenta` - undocumented
+
+No documentation for `decorate magenta`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate no-bold` - undocumented
+
+No documentation for `decorate no-bold`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate no-underline` - undocumented
+
+No documentation for `decorate no-underline`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate orange` - undocumented
+
+No documentation for `decorate orange`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate red` - undocumented
+
+No documentation for `decorate red`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -419,24 +419,9 @@ It does *not* take the optional `-n` argument ever, and outputs the reset escape
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleSubtle` - undocumented
+### `decorate subtle` - undocumented
 
-No documentation for `consoleSubtle`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleSuccess` - undocumented
-
-No documentation for `consoleSuccess`.
+No documentation for `decorate subtle`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -449,24 +434,9 @@ No documentation for `consoleSuccess`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleUnderline` - undocumented
+### `decorate success` - undocumented
 
-No documentation for `consoleUnderline`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleValue` - undocumented
-
-No documentation for `consoleValue`.
+No documentation for `decorate success`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -479,24 +449,9 @@ No documentation for `consoleValue`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleWarning` - undocumented
+### `decorate underline` - undocumented
 
-No documentation for `consoleWarning`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `consoleWhite` - undocumented
-
-No documentation for `consoleWhite`.
+No documentation for `decorate underline`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -509,9 +464,54 @@ No documentation for `consoleWhite`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleYellow` - undocumented
+### `decorate value` - undocumented
 
-No documentation for `consoleYellow`.
+No documentation for `decorate value`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate warning` - undocumented
+
+No documentation for `decorate warning`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate white` - undocumented
+
+No documentation for `decorate white`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate yellow` - undocumented
+
+No documentation for `decorate yellow`.
 
 - Location: `bin/build/tools/colors.sh`
 
@@ -548,7 +548,7 @@ This is a sample function with example code and patterns used in Zesk Build.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `whichAptUninstall` - DEPRECATED
+### `packageWhichUninstall` - DEPRECATED
 
 DEPRECATED
 
@@ -563,7 +563,7 @@ DEPRECATED
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `whichApt` - DEPRECATED
+### `packageWhich` - DEPRECATED
 
 DEPRECATED
 
