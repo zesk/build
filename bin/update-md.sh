@@ -75,14 +75,14 @@ __updateMarkdown() {
   local flagSkipCommit buildMarker
   local argument
 
-  flagSkipCommit=
+  local flagSkipCommit=false
   while [ $# -gt 0 ]; do
     argument="$1"
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --skip-commit)
-        flagSkipCommit=1
+        flagSkipCommit=true
         statusMessage decorate warning "Skipping commit ..."
         ;;
       *)
@@ -109,7 +109,7 @@ __updateMarkdown() {
   #
 
   # Do this as long as we are not in the hook
-  if ! test $flagSkipCommit; then
+  if ! $flagSkipCommit; then
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
         statusMessage --last decorate info "Committing build.json"

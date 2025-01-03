@@ -68,7 +68,7 @@ __hookPreCommit() {
   gitPreCommitHeader sh md json
 
   statusMessage decorate success Updating help files ...
-  __usageEnvironment "$usage" ./bin/update-md.sh || return $?
+  __usageEnvironment "$usage" ./bin/update-md.sh --skip-commit || return $?
 
   statusMessage decorate success Updating _sugar.sh
   original="bin/build/identical/_sugar.sh"
