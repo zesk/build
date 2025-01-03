@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Utility to check source code for identical sections which MUST match to succeed.
 #

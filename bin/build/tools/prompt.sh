@@ -2,7 +2,7 @@
 #
 # Bash Prompt Tools
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: ./docs/_templates/tools/prompt.md
 # Test: ./test/tools/prompt-tests.sh

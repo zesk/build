@@ -4,7 +4,7 @@
 #
 # Assert utilities
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: contextOpen ./docs/_templates/tools/assert.md
 # Test: contextOpen ./test/tools/assert-tests.sh

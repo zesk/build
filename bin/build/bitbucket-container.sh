@@ -2,7 +2,7 @@
 #
 # Bitbucket local container to test pipeline-related things
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 
 # fn: {base}

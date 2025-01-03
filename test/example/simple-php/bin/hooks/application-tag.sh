@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 bins=(md5sum md5)
 for bin in "${bins[@]}"; do

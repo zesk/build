@@ -6,7 +6,7 @@
 # Usage: . ./bin/build/tools.sh
 # Depends: -
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # documentTemplate: ./docs/_templates/__function.md
 #

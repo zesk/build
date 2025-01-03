@@ -2,7 +2,7 @@
 #
 # Simple service
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 odd() {
   [ "$1" -eq $(($(($1 / 2)) * 2)) ]

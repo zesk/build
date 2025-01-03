@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # bin: head grep
 # Docs: contextOpen ./docs/_templates/tools/docker.md

@@ -2,7 +2,7 @@
 #
 # Part of build system integration with git
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 
 # DOES NOT USE zesk-build-hook-header because this may be installed as a git hook as well so

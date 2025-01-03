@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: ./docs/_templates/tools/package.md
 # Test: ./test/tools/package-tests.sh

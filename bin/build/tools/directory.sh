@@ -2,7 +2,7 @@
 #
 # Directory Functions
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: o ./docs/_templates/tools/directory.md
 # Test: o ./test/tools/directory-tests.sh

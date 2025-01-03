@@ -2,7 +2,7 @@
 # Type: Directory.
 # Location for the build system cache files. Defaults to `$HOME/.build` and if `$HOME` is not a directory then `$(buildHome)/.build`
 # Cache MAY be deleted at any time. If you need your files to be preserved, store them elsewhere.
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Build
 export BUILD_CACHE
 if [ -z "${BUILD_CACHE-}" ]; then

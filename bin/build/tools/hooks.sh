@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: ./docs/_templates/tools/hooks.md
 # Test: ./test/tools/hooks-tests.sh

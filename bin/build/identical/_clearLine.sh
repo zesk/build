@@ -4,7 +4,7 @@
 #
 # Original of _clearLine
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 
 # IDENTICAL _clearLine EOF
 # Simple blank line generator for scripts

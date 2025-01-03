@@ -2,7 +2,7 @@
 #
 # git tools, lame attempts have been made to have each function start with `git`.
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 # bin: git
 #
 # Docs: ./docs/_templates/tools/git.md

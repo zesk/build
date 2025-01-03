@@ -2,7 +2,7 @@
 #
 # Example code and patterns
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: ./docs/_templates/tools/example.md
 # Test: ./test/tools/example-tests.sh

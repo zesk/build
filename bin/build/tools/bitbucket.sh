@@ -2,7 +2,7 @@
 #
 # Tools specifically for BitBucket pipelines
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Depends: -
 # bin: grep awk

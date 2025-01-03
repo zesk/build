@@ -6,7 +6,7 @@
 #
 # Copy this into your project to install the build system during development and in pipelines
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 
 # URL of latest release

@@ -146,7 +146,7 @@ If you test on another OS or need support on a specific platform, [report an iss
 - [On Mac OS X the Docker environment thinks non-executable files are executable](https://github.com/docker/for-mac/issues/5509), notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how
   permissions are translated, I assume. Workaround falls back to `ls` which is slow but works. See `isExecutable`. Added 2024-01.
 
-## Copyright &copy; 2024 Market Acumen, Inc
+## Copyright &copy; 2025 Market Acumen, Inc
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 

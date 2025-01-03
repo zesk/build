@@ -6,7 +6,7 @@
 # documentation from code. Note that bash makes a terrible template engine, but
 # having no language dependencies outweighs the negatives.
 #
-# Copyright: Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
@@ -536,22 +536,47 @@ __dumpNameValue() {
 }
 
 #
+# Export value appending existing value
+#
+# Usage: __dumpNameValueAppend name [ value0 value1 ... ]
+# Argument: `name` - Shell value to output
+# Argument: `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
+#
+__dumpNameValueAppend() {
+  local varName="$1"
+  shift
+  __dumpNameValuePrefixLocal "" "APPEND_$varName" "$@"
+  # shellcheck disable=SC2016
+  printf -- '%s="${%s}${APPEND_%s}"; unset APPEND_%s;\n' "$varName" "$varName" "$varName" "$varName"
+}
+
+#
+# Usage: __dumpNameValuePrefix prefix name [ value0 value1 ... ]
+# Argument: `prefix` - Literal string value to prefix each text line with
+# Argument: `name` - Shell value to output
+# Argument: `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
+#
+__dumpNameValuePrefixLocal() {
+  local prefix="${1}" varName="${2}"
+  printf -- "IFS='' read -r -d '' '%s' <<'%s' || :\n" "$varName" "EOF" # Single quote means no interpolation
+  shift 2
+  while [ $# -gt 0 ]; do
+    printf -- "%s%s\n" "$prefix" "$1"
+    shift
+  done
+  printf -- "%s\n" "EOF"
+}
+
+#
 # Usage: __dumpNameValuePrefix prefix name [ value0 value1 ... ]
 # Argument: `prefix` - Literal string value to prefix each text line with
 # Argument: `name` - Shell value to output
 # Argument: `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
 #
 __dumpNameValuePrefix() {
-  local prefix=$1 varName=$2
-  printf "export '%s'; " "$varName"
-  printf "IFS='' read -r -d '' '%s' <<'%s' || :\n" "$varName" "EOF" # Single quote means no interpolation
-  shift
-  shift
-  while [ $# -gt 0 ]; do
-    printf "%s%s\n" "$prefix" "$1"
-    shift
-  done
-  printf "%s\n" "EOF"
+  local varName="${2}"
+  printf -- "export '%s'; " "$varName"
+  __dumpNameValuePrefixLocal "$@"
 }
 
 # This basically just does `a=${b}` in the output
@@ -562,7 +587,7 @@ __dumpNameValuePrefix() {
 # Argument: `alias` - The shell variable to assign to `variable`
 #
 __dumpAliasedValue() {
-  printf 'export "%s"="%s%s%s"\n' "$1" '$\{' "$2" '}'
+  printf -- 'export "%s"="%s%s%s"\n' "$1" '$\{' "$2" '}'
 }
 
 #
@@ -596,7 +621,7 @@ __dumpAliasedValue() {
 bashDocumentation_Extract() {
   local usage="_${FUNCNAME[0]}"
   local maxLines=1000 definitionFile="$1" fn="$2" definitionFile
-  local home line name value desc tempDoc foundNames docMap lastName values base
+  local home tempDoc docMap base
 
   [ -f "$definitionFile" ] || __failArgument "$usage" "$definitionFile is not a file" || return $?
   [ -n "$fn" ] || __failArgument "function name is blank" || return $?
@@ -619,12 +644,10 @@ bashDocumentation_Extract() {
   grep -m 1 -B $maxLines "$fn() {" "$definitionFile" |
     reverseFileLines | grep -B $maxLines -m 1 -E '^\s*$' |
     reverseFileLines | grep -E '^#' | cut -c 3- >"$tempDoc"
-  desc=()
-  lastName=
-  values=()
-  foundNames=()
+
+  local desc=() lastName="" values=() foundNames=() lastName="" desc=() dumper line
   while IFS= read -r line; do
-    name="${line%%:*}"
+    local name="${line%%:*}" value
     if [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
       # no colon or ends with colon *or* starts with :
       # strip starting colon (end colon STAYS)
@@ -641,11 +664,15 @@ bashDocumentation_Extract() {
           desc+=("$value")
         fi
         continue
-      elif ! inArray "$name" "${foundNames[@]+${foundNames[@]}}"; then
-        foundNames+=("$name")
       fi
       if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
-        __dumpNameValue "$lastName" "${values[@]}" | tee -a "$docMap"
+        if ! inArray "$lastName" "${foundNames[@]+${foundNames[@]}}"; then
+          foundNames+=("$lastName")
+          dumper=__dumpNameValue
+        else
+          dumper=__dumpNameValueAppend
+        fi
+        "$dumper" "$lastName" "${values[@]}" | tee -a "$docMap"
         values=()
       fi
       if inArray "$name" fn; then
@@ -655,10 +682,16 @@ bashDocumentation_Extract() {
       lastName="$name"
     fi
   done <"$tempDoc"
-  printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
   if [ "${#values[@]}" -gt 0 ]; then
-    __dumpNameValue "$lastName" "${values[@]}" | tee -a "$docMap"
+    if ! inArray "$lastName" "${foundNames[@]+${foundNames[@]}}"; then
+      foundNames+=("$lastName")
+      dumper=__dumpNameValue
+    else
+      dumper=__dumpNameValueAppend
+    fi
+    "$dumper" "$lastName" "${values[@]}" | tee -a "$docMap"
   fi
+  printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
   if [ "${#desc[@]}" -gt 0 ]; then
     __dumpNameValue "description" "${desc[@]}"
     printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"

@@ -4,7 +4,7 @@
 #
 # Do any post-release steps you want (update your website etc.)
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 
 # IDENTICAL __source 17

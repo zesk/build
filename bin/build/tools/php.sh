@@ -4,7 +4,7 @@
 #
 # Tags
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Test: o test/tools/php-tools.sh
 # Docs: o docs/_templates/tools/php.md
@@ -416,7 +416,7 @@ phpTest() {
       --env-file)
         shift
         muzzle usageArgumentLoadEnvironmentFile "$usage" "$argument" "${1-}" || return $?
-        statusMessage decorate info "Loaded $(decorate file "$1")" || return $?
+        statusMessage decorate info "Loaded $argument $(decorate file "$1") (wd: $(pwd))" || return $?
         ;;
       --home)
         shift

@@ -2,7 +2,7 @@
 #
 # Run during bin/build/new-release.sh when a new version was already created
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 
 # IDENTICAL zesk-build-hook-header 3

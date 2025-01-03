@@ -54,4 +54,4 @@ File `{applicationFile}`, function `{fn}` was reviewed {reviewed}.
 
 [⬅ Return to top](index.md)
 
-Copyright &copy; 2024 [{vendor}](https://marketacumen.com/?crcat=code&crsource=zesk/build&crcampaign=docs&crkeyword={title})
+Copyright &copy; 2025 [{vendor}](https://marketacumen.com/?crcat=code&crsource=zesk/build&crcampaign=docs&crkeyword={title})

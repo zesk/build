@@ -4,7 +4,7 @@
 #
 # github tools
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: contextOpen ./docs/_templates/tools/github.md
 # Test: contextOpen ./test/bin/github-tests.sh

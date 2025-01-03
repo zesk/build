@@ -2,7 +2,7 @@
 #
 # Argument
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # WIP 2024-07-15
 # Idea is to have a central argument manager

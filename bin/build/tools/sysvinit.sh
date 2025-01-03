@@ -2,7 +2,7 @@
 #
 # systemd Support
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: o ./docs/_templates/ops/sysvinit.md
 # Test: o ./test/ops/sysvinit-tests.sh

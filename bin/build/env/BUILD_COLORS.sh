@@ -3,6 +3,6 @@
 # See: decorate
 # Type: Boolean
 # Values: true|false|""
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Console
 export BUILD_COLORS="${BUILD_COLORS-}"

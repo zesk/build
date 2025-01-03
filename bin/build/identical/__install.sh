@@ -4,7 +4,7 @@
 #
 # Original of __install
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Requires: IDENTICAL _return
 # Does NOT require IDENTICAL __execute as `tools.sh` supplies that as well

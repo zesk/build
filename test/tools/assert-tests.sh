@@ -4,7 +4,7 @@
 #
 # Assertion testing
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 testOutputEquals() {
   assertExitCode --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "a" || return $?

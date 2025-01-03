@@ -2,7 +2,7 @@
 /**
  * Simple application header
  *
- * Copyright &copy; 2024 Market Acumen, Inc.
+ * Copyright &copy; 2025 Market Acumen, Inc.
  */
 date_default_timezone_set('UTC');
 

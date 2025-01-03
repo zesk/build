@@ -2,7 +2,7 @@
 #
 # File Functions
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: o ./docs/_templates/tools/file.md
 # Test: o ./test/tools/file-tests.sh
@@ -29,17 +29,24 @@
 # Example:     {fn} ".$$.backup" "" restoring etc/app.json etc/config.json
 #
 renameFiles() {
-  local old=$1 new=$2 verb=$3
+  local usage="_${FUNCNAME[0]}"
 
-  shift
-  shift
-  shift
+  local old new verb
+
+  old=$(usageArgumentEmptyString "$usage" "oldSuffix" "${1-}") && shift || return $?
+  new=$(usageArgumentEmptyString "$usage" "newSuffix" "${1-}") && shift || return $?
+  verb="${1-}" && shift || :
+
   for i in "$@"; do
     if [ -f "$i$old" ]; then
-      mv "$i$old" "$i$new"
-      decorate warning "$verb $i$old -> $i$new"
+      __usageEnvironment "$usage" mv "$i$old" "$i$new" || return $?
+      __usageEnvironment "$usage" statusMessage --last decorate info "$verb $(decorate file "$i$old") -> $(decorate file "$i$new")" || return $?
     fi
   done
+}
+_renameFiles() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fetch the modification time of a file as a timestamp

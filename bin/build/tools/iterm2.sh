@@ -9,7 +9,7 @@
 #
 # URL: https://iterm2.com/
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: ./docs/_templates/tools/iterm2.md
 # Test: ./test/tools/iterm2-tests.sh

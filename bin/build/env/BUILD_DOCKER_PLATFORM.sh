@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # See: dockerLocalContainer
 # Category: Docker
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 # > docker buildx ls
 # linux/arm64,
 # linux/amd64,

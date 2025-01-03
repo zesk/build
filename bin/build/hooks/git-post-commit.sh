@@ -5,7 +5,7 @@
 # This file name MUST be prefixed with `git-` and suffixed with `.sh` and the remainder should
 # be the `git` `.git/hook/` name.
 #
-# Copyright &copy; 2024 Market Acumen, Inc.
+# Copyright &copy; 2025 Market Acumen, Inc.
 #
 
 # DOES NOT USE zesk-build-hook-header because this may be installed as a git hook as well so

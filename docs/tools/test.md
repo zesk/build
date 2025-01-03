@@ -29,7 +29,7 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 #### Examples
 
-    validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2024'
+    validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2025'
 
 #### Exit codes
 
