@@ -205,7 +205,7 @@ identicalCheck() {
               countFile="$countFile.mapped"
             fi
             if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-              statusMessage --last -- printf -- "%s%s: %s\n< %s\n> %s%s\n" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
+              statusMessage --last printf -- "%s%s: %s\n< %s\n> %s%s\n" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
               diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
               isBadFile=true
             else
@@ -303,10 +303,10 @@ _identicalCheck() {
 # Usage: {fn} usage repairSource ... -- directory findArgs ...
 # stdout: list of files
 __identicalCheckGenerateSearchFiles() {
-  local usage="$1" searchFileList ignorePatterns repairSources directory directories filter IFS
+  local usage="$1" searchFileList  directory directories filter IFS
 
   shift # usage
-  repairSources=()
+  local repairSources=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
       shift
@@ -316,14 +316,18 @@ __identicalCheckGenerateSearchFiles() {
     shift # repairSource
   done
   directory=$(usageArgumentDirectory "$usage" "directory" "${1-%/}") || return $?
-  directories=("${repairSources[@]+"${repairSources[@]}"}" "$directory") && shift
+  directories=("${repairSources[@]+"${repairSources[@]}"}" -- "$directory") && shift
 
   searchFileList=$(__usageEnvironment "$usage" mktemp) || return $?
-  ignorePatterns=()
+  local ignorePatterns=() startExclude=false
   for directory in "${directories[@]}"; do
     directory="${directory%/}"
+    if [ "$directory" = "--" ]; then
+      startExclude=true
+      continue
+    fi
     filter=("cat")
-    if [ "${#ignorePatterns[@]}" -gt 0 ]; then
+    if $startExclude && [ "${#ignorePatterns[@]}" -gt 0 ]; then
       filter=("grep" "-v" "${ignorePatterns[@]}")
     fi
     if ! find "$directory" "$@" | "${filter[@]}" >>"$searchFileList"; then

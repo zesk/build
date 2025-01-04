@@ -708,7 +708,6 @@ _gitInstallHooks() {
 # Exit code: 0 - the file was not updated
 # Exit code: 1 - Environment error
 # Exit code: 2 - Argument error
-# Exit code: 3 - `--copy` - the file was changed
 # Environment: BUILD-HOME - The default application home directory used for `.git` and build hooks.
 gitInstallHook() {
   local argument fromTo relFromTo item home execute verbose
@@ -760,7 +759,7 @@ gitInstallHook() {
           statusMessage --last printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
           __usageEnvironment "$usage" cp -f "${fromTo[@]}" || return $?
           ! $execute || __usageEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
-          return 3
+          return 0
         else
           __failArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
         fi
