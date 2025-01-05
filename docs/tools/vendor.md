@@ -81,9 +81,9 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 - `0` - within the Visual Studio Code terminal
 - `1` - not within the Visual Studio Code terminal AFAIK
-### `brewInstall` - undocumented
+### `brewInstall` - Install Homebrew
 
-No documentation for `brewInstall`.
+Install Homebrew
 
 - Location: `bin/build/tools/brew.sh`
 
@@ -96,9 +96,9 @@ No documentation for `brewInstall`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `isBitBucketPipeline` - undocumented
+### `isBitBucketPipeline` - Are we currently in the BitBucket pipeline?
 
-No documentation for `isBitBucketPipeline`.
+Are we currently in the BitBucket pipeline?
 
 - Location: `bin/build/tools/bitbucket.sh`
 

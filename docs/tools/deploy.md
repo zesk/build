@@ -181,6 +181,8 @@ in order to activate it.
 
 #### Arguments
 
+- `applicationLinkPath` - Path. Required. Path where the link is created.
+- `applicationPath` - Path. Optional. Path where the link will point to. If not supplied uses current working directory.
 - `applicationLinkPath` - This is the target for the current application
 
 #### Exit codes

@@ -6,9 +6,9 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `mariadbDump` - undocumented
+### `mariadbDump` - Dump a MariaDB database to raw SQL
 
-No documentation for `mariadbDump`.
+Dump a MariaDB database to raw SQL
 
 - Location: `bin/build/tools/mariadb.sh`
 

@@ -2,9 +2,9 @@
 
 Add keyboard shortcuts to your shell.
 
-### `inputConfigurationAdd` - undocumented
+### `inputConfigurationAdd` - Add configuration to `~/.inputrc` for a key binding
 
-No documentation for `inputConfigurationAdd`.
+Add configuration to `~/.inputrc` for a key binding
 
 - Location: `bin/build/tools/input.sh`
 

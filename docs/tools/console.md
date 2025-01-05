@@ -64,6 +64,7 @@ Output the number of columns in the terminal. Default is 80 if not able to be de
 
 #### Environment
 
+Uses the `tput cols` tool to find the value if `TERM` is non-blank.
 COLUMNS - May be defined after calling this
 LINES - May be defined after calling this
 ### `consoleRows` - Row count in current console
@@ -95,6 +96,7 @@ Output the number of columns in the terminal. Default is 60 if not able to be de
 
 #### Environment
 
+Uses the `tput lines` tool to find the value if `TERM` is non-blank.
 COLUMNS - May be defined after calling this
 LINES - May be defined after calling this
 ### `consoleBrightness` - Fetch the brightness of the console using `consoleGetColor`

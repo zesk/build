@@ -316,6 +316,21 @@ consoleNameValue() {
   shift 2 && printf "%s %s\n" "$(decorate label "$(alignLeft "$characterWidth" "$name")")" "$(decorate value "$@")"
 }
 
+# Will replace `consoleNameValue` with `decorate pair 80 foo bar`
+__decorateExtensionPair() {
+  local width name
+
+  if isUnsignedInteger "${1-}"; then
+    width="$1" && shift
+  fi
+  if [ -z "$width" ]; then
+    width=$(buildEnvironmentGet BUILD_PAIR_WIDTH)
+  fi
+  name="${1-}"
+  [ -n "$name" ] || return 0
+  printf "%s %s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate value "$@")"
+}
+
 #
 # Clears current line of text in the console
 #

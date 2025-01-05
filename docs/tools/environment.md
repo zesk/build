@@ -145,17 +145,15 @@ Bash outputs on different versions:
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `environmentValueRead` - Read one or more values values safely from a environment
+### `environmentValueRead` - undocumented
 
-Read one or more values values safely from a environment file
+No documentation for `environmentValueRead`.
 
 - Location: `bin/build/tools/environment.sh`
 
 #### Arguments
 
-- `stateFile` - Required. File. File to access, must exist.
-- `name` - Required. String. Name to read.
-- `default` - Optional. String. Value to return if value not found.
+- No arguments.
 
 #### Exit codes
 

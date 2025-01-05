@@ -126,6 +126,7 @@ When this tool succeeds the `yarn` binary is available in the local operating sy
 
 #### Environment
 
+BUILD_YARN_VERSION - Read-only. Default version. If not specified, uses `latest`.
 - `BUILD_YARN_VERSION` - String. Default to `latest`.
 
 ## node Package Manager `npm`

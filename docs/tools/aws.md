@@ -78,6 +78,7 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 #### Environment
 
+AWS_ACCESS_KEY_DATE - Variable used to test
 AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 ### `awsHasEnvironment` - Test whether the AWS environment variables are set or not
 

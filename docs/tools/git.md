@@ -378,7 +378,6 @@ When running within your hook, pass additional arguments so they can be preserve
 - `0` - the file was not updated
 - `1` - Environment error
 - `2` - Argument error
-- `3 - --copy` - the file was changed
 
 #### Environment
 

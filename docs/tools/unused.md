@@ -2,528 +2,72 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
-### `packageNeedRestartFlag` - DEPRECATED
+### `packageNeedRestartFlag` - INTERNAL - has `packageUpdate` set the `restart` flag at some
 
-DEPRECATED
+INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 
-- Location: `bin/build/tools/apt.sh`
+- Location: `bin/build/tools/package.sh`
 
 #### Arguments
 
-- No arguments.
+- `value` - Set the restart flag to this value (blank to remove)
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `packageUninstall` - Uninstall apt packages
+### `packageUninstall` - Removes packages using package manager
 
-Uninstall apt packages
+Removes packages using the current package manager.
 
-- Location: `bin/build/tools/apt.sh`
+- Location: `bin/build/tools/package.sh`
 
 #### Arguments
 
-- No arguments.
+- `package` - String. Required. One or more packages to uninstall
+
+#### Examples
+
+    packageUninstall shellcheck
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `decorate blackBackground` - undocumented
 
-No documentation for `decorate blackBackground`.
 
-- Location: `bin/build/tools/colors.sh`
 
-#### Arguments
 
-- No arguments.
 
-#### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate black` - undocumented
 
-No documentation for `decorate black`.
 
-- Location: `bin/build/tools/colors.sh`
 
-#### Arguments
 
-- No arguments.
 
-#### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate blue` - undocumented
 
-No documentation for `decorate blue`.
 
-- Location: `bin/build/tools/colors.sh`
 
-#### Arguments
 
-- No arguments.
 
-#### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-black` - undocumented
 
-No documentation for `decorate bold-black`.
 
-- Location: `bin/build/tools/colors.sh`
 
-#### Arguments
 
-- No arguments.
 
-#### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-blue` - undocumented
 
-No documentation for `decorate bold-blue`.
 
-- Location: `bin/build/tools/colors.sh`
 
-#### Arguments
 
-- No arguments.
 
-#### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-cyan` - undocumented
 
-No documentation for `decorate bold-cyan`.
 
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-green` - undocumented
-
-No documentation for `decorate bold-green`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-magenta` - undocumented
-
-No documentation for `decorate bold-magenta`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-orange` - undocumented
-
-No documentation for `decorate bold-orange`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-red` - undocumented
-
-No documentation for `decorate bold-red`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold-white` - undocumented
-
-No documentation for `decorate bold-white`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate bold` - undocumented
-
-No documentation for `decorate bold`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate code` - Deprecated use `decorate` now
-
-Deprecated use `decorate` now
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate cyan` - undocumented
-
-No documentation for `decorate cyan`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate decoration` - undocumented
-
-No documentation for `decorate decoration`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate error` - undocumented
-
-No documentation for `decorate error`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate green` - undocumented
-
-No documentation for `decorate green`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate info` - undocumented
-
-No documentation for `decorate info`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate label` - undocumented
-
-No documentation for `decorate label`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate magenta` - undocumented
-
-No documentation for `decorate magenta`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate no-bold` - undocumented
-
-No documentation for `decorate no-bold`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate no-underline` - undocumented
-
-No documentation for `decorate no-underline`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate orange` - undocumented
-
-No documentation for `decorate orange`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate red` - undocumented
-
-No documentation for `decorate red`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#############################################################################
-
-  ▄▄      ▗▄▖
- █▀▀▌     ▝▜▌
-▐▛    ▟█▙  ▐▌   ▟█▙  █▟█▌▗▟██▖
-▐▌   ▐▛ ▜▌ ▐▌  ▐▛ ▜▌ █▘  ▐▙▄▖▘
-▐▙   ▐▌ ▐▌ ▐▌  ▐▌ ▐▌ █    ▀▀█▖
- █▄▄▌▝█▄█▘ ▐▙▄ ▝█▄█▘ █   ▐▄▄▟▌
-  ▀▀  ▝▀▘   ▀▀  ▝▀▘  ▀    ▀▀▀
-
-Reset the color
-
-This is typically appended after most `consoleAction` calls to reset the state of the console to default color and style.
-
-It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate subtle` - undocumented
-
-No documentation for `decorate subtle`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate success` - undocumented
-
-No documentation for `decorate success`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate underline` - undocumented
-
-No documentation for `decorate underline`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate value` - undocumented
-
-No documentation for `decorate value`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate warning` - undocumented
-
-No documentation for `decorate warning`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate white` - undocumented
-
-No documentation for `decorate white`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `decorate yellow` - undocumented
-
-No documentation for `decorate yellow`.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `exampleFunction` - This is a sample function with example code and patterns
 
 This is a sample function with example code and patterns used in Zesk Build.
@@ -548,33 +92,61 @@ This is a sample function with example code and patterns used in Zesk Build.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `packageWhichUninstall` - DEPRECATED
+### `packageWhichUninstall` - Install tools using `apt-get` if they are not found
 
-DEPRECATED
+Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
+The assumption here is that `packageUninstall` will install the desired `binary`.
 
-- Location: `bin/build/tools/apt.sh`
+Confirms that `binary` is installed after installation succeeds.
+
+- Location: `bin/build/tools/package.sh`
 
 #### Arguments
 
-- No arguments.
+- `--manager packageManager` - Optional. String. Package manager to use. (apk, apt, brew)
+- `binary` - Required. String. The binary to look for.
+- `packageInstallPackage` - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
+
+#### Examples
+
+    packageWhichUninstall shellcheck shellcheck
+    packageWhichUninstall mariadb mariadb-client
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `packageWhich` - DEPRECATED
 
-DEPRECATED
+#### Environment
 
-- Location: `bin/build/tools/apt.sh`
+Technically this will uninstall the binary and any related files as a package.
+### `packageWhich` - Install tools using `apt-get` if they are not found
+
+Installs an apt package if a binary does not exist in the which path.
+The assumption here is that `packageInstallPackage` will install the desired `binary`.
+
+Confirms that `binary` is installed after installation succeeds.
+
+- Location: `bin/build/tools/package.sh`
 
 #### Arguments
 
-- No arguments.
+- `--manager packageManager` - Optional. String. Package manager to use. (apk, apt, brew)
+- `binary` - Required. String. The binary to look for
+- `packageName ...` - Required. String. The package name to install if the binary is not found in the `$PATH`.
+
+#### Examples
+
+    packageWhich shellcheck shellcheck
+    packageWhich mariadb mariadb-client
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+Technically this will install the binary and any related files as a package.

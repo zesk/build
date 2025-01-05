@@ -170,6 +170,20 @@ Assert `leftValue > rightValue`
 
 #### Arguments
 
+- `--help` - Optional. Flag. Display this help.
+- `--line lineNumber` - Optional. Integer. Line number of calling function.
+- `--debug` - Optional. Flag. Debugging
+- `--display` - Optional. String. Display name for the condition.
+- `--success` - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+- `--stderr-match` - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+- `--stdout-no-match` - Optional. String. One or more strings which must match stderr.
+- `--stdout-match` - Optional. String. One or more strings which must match stdout.
+- `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
+- `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
+- `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `leftValue` - Value to compare on the left hand side of the comparison
 - `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
@@ -195,6 +209,20 @@ Assert `leftValue >= rightValue`
 
 #### Arguments
 
+- `--help` - Optional. Flag. Display this help.
+- `--line lineNumber` - Optional. Integer. Line number of calling function.
+- `--debug` - Optional. Flag. Debugging
+- `--display` - Optional. String. Display name for the condition.
+- `--success` - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+- `--stderr-match` - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+- `--stdout-no-match` - Optional. String. One or more strings which must match stderr.
+- `--stdout-match` - Optional. String. One or more strings which must match stdout.
+- `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
+- `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
+- `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `leftValue` - Value to compare on the left hand side of the comparison
 - `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
@@ -221,6 +249,20 @@ Assert `leftValue < rightValue`
 
 #### Arguments
 
+- `--help` - Optional. Flag. Display this help.
+- `--line lineNumber` - Optional. Integer. Line number of calling function.
+- `--debug` - Optional. Flag. Debugging
+- `--display` - Optional. String. Display name for the condition.
+- `--success` - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+- `--stderr-match` - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+- `--stdout-no-match` - Optional. String. One or more strings which must match stderr.
+- `--stdout-match` - Optional. String. One or more strings which must match stdout.
+- `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
+- `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
+- `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 - `leftValue` - Value to compare on the left hand side of the comparison
 - `rightValue` - Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
@@ -293,6 +335,9 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
+- `expectedExitCode` - A numeric exit code expected from the command
+- `command` - The command to run
+- `arguments` - Any arguments to pass to the command to run
 - `--help` - Optional. Flag. Display this help.
 - `--line lineNumber` - Optional. Integer. Line number of calling function.
 - `--debug` - Optional. Flag. Debugging
@@ -331,6 +376,9 @@ If this fails it will output an error and exit.
 
 #### Arguments
 
+- `expectedExitCode` - A numeric exit code not expected from the command
+- `command` - The command to run
+- `arguments` - Any arguments to pass to the command to run
 - `--help` - Optional. Flag. Display this help.
 - `--line lineNumber` - Optional. Integer. Line number of calling function.
 - `--debug` - Optional. Flag. Debugging

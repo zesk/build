@@ -167,6 +167,7 @@ Outputs a nice colorful message showing the number of seconds elapsed as well as
 
 #### Usage
 
+    reportTiming "$startTime" outputText...
     reportTiming start [ message ... ]
     
 
