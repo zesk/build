@@ -60,7 +60,11 @@ testEnvironmentFileLoad() {
 
   set -eou pipefail
 
+  __mockValue BUILD_DEBUG
+
   assertExitCode --stderr-match "Requires at least one environmentFile" --stderr-match "Safely load an environment file" --line "$LINENO" 2 environmentFileLoad || return $?
+
+  __mockValue BUILD_DEBUG "" --end
 
   tempDir="$(__environment buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
 
@@ -226,6 +230,8 @@ testEnvironmentNameValid() {
 }
 
 testEnvironmentValueReadDefault() {
+  local envFile
+
   envFile=$(__environment mktemp) || return $?
 
   __environment environmentValueWrite Greeting Hello >>"$envFile" || return $?
@@ -243,4 +249,5 @@ testEnvironmentValueReadDefault() {
   assertExitCode --line "$LINENO" 0 environmentValueRead "$envFile" TARGET "" || return $?
   assertExitCode --line "$LINENO" --stdout-match "Paris" 0 environmentValueRead "$envFile" TARGET "Paris" || return $?
 
+  __environment rm -rf "$envFile" || return $?
 }
