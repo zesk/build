@@ -224,3 +224,23 @@ testEnvironmentNameValid() {
     assertExitCode --line "$LINENO" 0 environmentVariableNameValid "$testValue" || return $?
   done < <(__testEnvironmentNameValidPassValues)
 }
+
+testEnvironmentValueReadDefault() {
+  envFile=$(__environment mktemp) || return $?
+
+  __environment environmentValueWrite Greeting Hello >>"$envFile" || return $?
+  __environment environmentValueWrite Target World >>"$envFile" || return $?
+
+  assertExitCode --line "$LINENO" --stdout-match Hello 0 environmentValueRead "$envFile" Greeting || return $?
+
+  assertExitCode --line "$LINENO" 1 environmentValueRead "$envFile" Salutation || return $?
+  assertExitCode --line "$LINENO" 0 environmentValueRead "$envFile" Salutation "" || return $?
+  assertExitCode --line "$LINENO" --stdout-match "Bonjour" 0 environmentValueRead "$envFile" Salutation "Bonjour" || return $?
+
+  assertExitCode --line "$LINENO" --stdout-match World 0 environmentValueRead "$envFile" Target || return $?
+
+  assertExitCode --line "$LINENO" --stderr-ok 1 environmentValueRead "$envFile" TARGET || return $?
+  assertExitCode --line "$LINENO" 0 environmentValueRead "$envFile" TARGET "" || return $?
+  assertExitCode --line "$LINENO" --stdout-match "Paris" 0 environmentValueRead "$envFile" TARGET "Paris" || return $?
+
+}

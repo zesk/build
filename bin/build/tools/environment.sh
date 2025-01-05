@@ -66,21 +66,15 @@ __environmentValueWrite() {
   printf "%s=%s\n" "$1" "$(__environmentValueClean "$2")" || return $?
 }
 
-#
-# Read one or more values values safely from a environment file
-# Usage: {fn} stateFile
-# Argument: stateFile - Required. File. File to access, must exist.
-# Argument: name - Required. String. Name to read.
-# Argument: default - Optional. String. Value to return if value not found.
+
 environmentValueRead() {
   local usage="_${FUNCNAME[0]}"
-  local stateFile name default="${3-}" value
+  local stateFile name default="${3---}" value
   stateFile=$(usageArgumentFile "$usage" "stateFile" "${1-}") || return $?
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
   [ $# -le 3 ] || __failArgument "$usage" "Extra arguments: $#" || return $?
-  value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)"
-  if [ -z "$value" ]; then
-    if [ -z "$default" ]; then
+  if ! value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)" || [ -z "$value" ]; then
+    if [ $# -le 2 ]; then
       return 1
     fi
     printf -- "%s\n" "$default"
