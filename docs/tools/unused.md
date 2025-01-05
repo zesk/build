@@ -2,72 +2,498 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
-### `packageNeedRestartFlag` - INTERNAL - has `packageUpdate` set the `restart` flag at some
+### `consoleBlackBackground` - undocumented
 
-INTERNAL - has `packageUpdate` set the `restart` flag at some point?
+No documentation for `consoleBlackBackground`.
 
-- Location: `bin/build/tools/package.sh`
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
-- `value` - Set the restart flag to this value (blank to remove)
+- No arguments.
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `packageUninstall` - Removes packages using package manager
+### `consoleBlack` - undocumented
 
-Removes packages using the current package manager.
+No documentation for `consoleBlack`.
 
-- Location: `bin/build/tools/package.sh`
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
-- `package` - String. Required. One or more packages to uninstall
-
-#### Examples
-
-    packageUninstall shellcheck
+- No arguments.
 
 #### Exit codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `consoleBlue` - undocumented
 
+No documentation for `consoleBlue`.
 
+- Location: `bin/build/tools/colors.sh`
 
+#### Arguments
 
+- No arguments.
 
+#### Exit codes
 
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldBlack` - undocumented
 
+No documentation for `consoleBoldBlack`.
 
+- Location: `bin/build/tools/colors.sh`
 
+#### Arguments
 
+- No arguments.
 
+#### Exit codes
 
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldBlue` - undocumented
 
+No documentation for `consoleBoldBlue`.
 
+- Location: `bin/build/tools/colors.sh`
 
+#### Arguments
 
+- No arguments.
 
+#### Exit codes
 
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldCyan` - undocumented
 
+No documentation for `consoleBoldCyan`.
 
+- Location: `bin/build/tools/colors.sh`
 
+#### Arguments
 
+- No arguments.
 
+#### Exit codes
 
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldGreen` - undocumented
 
+No documentation for `consoleBoldGreen`.
 
+- Location: `bin/build/tools/colors.sh`
 
+#### Arguments
 
+- No arguments.
 
+#### Exit codes
 
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldMagenta` - undocumented
 
+No documentation for `consoleBoldMagenta`.
 
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldOrange` - undocumented
+
+No documentation for `consoleBoldOrange`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldRed` - undocumented
+
+No documentation for `consoleBoldRed`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBoldWhite` - undocumented
+
+No documentation for `consoleBoldWhite`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBold` - undocumented
+
+No documentation for `consoleBold`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleCode` - Deprecated use `decorate` now
+
+Deprecated use `decorate` now
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleCyan` - undocumented
+
+No documentation for `consoleCyan`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleDecoration` - undocumented
+
+No documentation for `consoleDecoration`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleError` - undocumented
+
+No documentation for `consoleError`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleGreen` - undocumented
+
+No documentation for `consoleGreen`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleInfo` - undocumented
+
+No documentation for `consoleInfo`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleLabel` - undocumented
+
+No documentation for `consoleLabel`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleMagenta` - undocumented
+
+No documentation for `consoleMagenta`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleNoBold` - undocumented
+
+No documentation for `consoleNoBold`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleNoUnderline` - undocumented
+
+No documentation for `consoleNoUnderline`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleOrange` - undocumented
+
+No documentation for `consoleOrange`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleRed` - undocumented
+
+No documentation for `consoleRed`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#############################################################################
+
+  ▄▄      ▗▄▖
+ █▀▀▌     ▝▜▌
+▐▛    ▟█▙  ▐▌   ▟█▙  █▟█▌▗▟██▖
+▐▌   ▐▛ ▜▌ ▐▌  ▐▛ ▜▌ █▘  ▐▙▄▖▘
+▐▙   ▐▌ ▐▌ ▐▌  ▐▌ ▐▌ █    ▀▀█▖
+ █▄▄▌▝█▄█▘ ▐▙▄ ▝█▄█▘ █   ▐▄▄▟▌
+  ▀▀  ▝▀▘   ▀▀  ▝▀▘  ▀    ▀▀▀
+
+Reset the color
+
+This is typically appended after most `consoleAction` calls to reset the state of the console to default color and style.
+
+It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleSubtle` - undocumented
+
+No documentation for `consoleSubtle`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleSuccess` - undocumented
+
+No documentation for `consoleSuccess`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleUnderline` - undocumented
+
+No documentation for `consoleUnderline`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleValue` - undocumented
+
+No documentation for `consoleValue`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleWarning` - undocumented
+
+No documentation for `consoleWarning`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleWhite` - undocumented
+
+No documentation for `consoleWhite`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleYellow` - undocumented
+
+No documentation for `consoleYellow`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `exampleFunction` - This is a sample function with example code and patterns
 
 This is a sample function with example code and patterns used in Zesk Build.
@@ -92,61 +518,3 @@ This is a sample function with example code and patterns used in Zesk Build.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `packageWhichUninstall` - Install tools using `apt-get` if they are not found
-
-Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
-The assumption here is that `packageUninstall` will install the desired `binary`.
-
-Confirms that `binary` is installed after installation succeeds.
-
-- Location: `bin/build/tools/package.sh`
-
-#### Arguments
-
-- `--manager packageManager` - Optional. String. Package manager to use. (apk, apt, brew)
-- `binary` - Required. String. The binary to look for.
-- `packageInstallPackage` - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
-
-#### Examples
-
-    packageWhichUninstall shellcheck shellcheck
-    packageWhichUninstall mariadb mariadb-client
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-Technically this will uninstall the binary and any related files as a package.
-### `packageWhich` - Install tools using `apt-get` if they are not found
-
-Installs an apt package if a binary does not exist in the which path.
-The assumption here is that `packageInstallPackage` will install the desired `binary`.
-
-Confirms that `binary` is installed after installation succeeds.
-
-- Location: `bin/build/tools/package.sh`
-
-#### Arguments
-
-- `--manager packageManager` - Optional. String. Package manager to use. (apk, apt, brew)
-- `binary` - Required. String. The binary to look for
-- `packageName ...` - Required. String. The package name to install if the binary is not found in the `$PATH`.
-
-#### Examples
-
-    packageWhich shellcheck shellcheck
-    packageWhich mariadb mariadb-client
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-Technically this will install the binary and any related files as a package.
