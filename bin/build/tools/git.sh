@@ -270,23 +270,29 @@ _gitRemoteHosts() {
 # Environment: BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is `rc`.
 # Environment: BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.
 gitTagVersion() {
-  local versionSuffix start currentVersion previousVersion releaseNotes
-  local argument tagPrefix index tryVersion maximumTagsPerVersion
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
+  local maximumTagsPerVersion
 
   __usageEnvironment "$usage" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
 
   maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
-  init=$(beginTiming) || __failEnvironment beginTiming || return $?
+  local init start versionSuffix
 
-  start=$(beginTiming) || __failEnvironment beginTiming || return $?
-  versionSuffix=
+  init=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$init
+  versionSuffix=""
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --suffix)
         shift || __failArgument "$usage" "missing $argument argument" || return $?
         versionSuffix="${1-}"
@@ -300,10 +306,17 @@ gitTagVersion() {
   done
 
   statusMessage decorate info "Pulling tags from origin "
-  git pull --tags origin >/dev/null || __failEnvironment "$usage" "Pulling tags failed" || return $?
-  reportTiming "$start" || :
+  __usageEnvironment "$usage" git pull --tags origin >/dev/null || return $?
+  statusMessage reportTiming "$start" "Pulled tags in"
 
-  currentVersion=$(runHook version-current) || __failEnvironment "$usage" "runHook version-current" || return $?
+  statusMessage decorate info "Pulling tags from origin "
+  __usageEnvironment "$usage" git pull --tags origin >/dev/null || return $?
+  statusMessage reportTiming "$start" "Pulled tags in"
+
+  local currentVersion previousVersion releaseNotes
+  local tagPrefix index tryVersion
+
+  currentVersion=$(__usageEnvironment "$usage" runHook version-current) || return $?
   if ! previousVersion=$(gitVersionLast "$currentVersion"); then
     previousVersion="none"
   fi
@@ -327,37 +340,32 @@ gitTagVersion() {
     return 18
   fi
 
+  local tagFile clean=()
+
+  tagFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  clean=("$tagFile")
   # rc is for release candidate
   versionSuffix=${versionSuffix:-${BUILD_VERSION_SUFFIX:-rc}}
   tagPrefix="${currentVersion}${versionSuffix}"
+  __usageEnvironment "$usage" git show-ref --tags | removeFields 1 | __usageEnvironment "$usage" muzzle tee -a "$tagFile" || _clean $? "${clean[@]}" || return $?
   index=0
   while true; do
     tryVersion="$tagPrefix$index"
-    if ! git show-ref --tags "$tryVersion" --quiet; then
+    if ! grep -q "$tryVersion" "$tagFile"; then
       break
     fi
     index=$((index + 1))
-    if [ $index -gt "$maximumTagsPerVersion" ]; then
-      decorate error "Tag version exceeded maximum of $maximumTagsPerVersion" 1>&2
-      return 19
-    fi
+    [ $index -lt "$maximumTagsPerVersion" ] || __failEnvironment "$usage" "Tag version exceeded maximum of $maximumTagsPerVersion" || _clean $? "${clean[@]}" || return $?
   done
+  __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
-  decorate info "Tagging version $tryVersion and pushing ... " || :
-  if ! git tag "$tryVersion"; then
-    decorate error "Failed to tag $tryVersion"
-    return 20
-  fi
-  if ! git push --tags --quiet; then
-    decorate error "git push --tags failed"
-    return 21
-  fi
-  if ! git fetch -q; then
-    decorate error "git fetch failed"
-    return 22
-  fi
-
-  reportTiming "$init" "Tagged version completed in" || :
+  statusMessage decorate info "Tagging version $(decorate code "$tryVersion") ... " || return $?
+  __usageEnvironment "$usage" git tag "$tryVersion" || return $?
+  statusMessage decorate info "Pushing version $(decorate code "$tryVersion") ... " || return $?
+  __usageEnvironment "$usage" git push --tags --quiet || return $?
+  statusMessage decorate info "Fetching version $(decorate code "$tryVersion") ... " || return $?
+  __usageEnvironment "$usage" git fetch -q || return $?
+  statusMessage --last reportTiming "$init" "Tagged version completed in" || return $?
 }
 _gitTagVersion() {
   # IDENTICAL usageDocument 1
