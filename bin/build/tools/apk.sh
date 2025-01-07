@@ -30,7 +30,10 @@ _apkIsInstalled() {
 # Argument: --help - Optional. Flag. Display this help.
 isAlpine() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || "$usage" 0 && return $?
+  if [ $# -gt 0 ]; then
+    "$usage" 0
+    return $?
+  fi
   [ -f /etc/alpine-release ]
 }
 _isAlpine() {

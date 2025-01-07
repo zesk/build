@@ -25,11 +25,11 @@ testAPITools() {
 
 testHooks() {
   local h
-  for h in deploy-cleanup deploy-confirm application-environment version-created version-live; do
-    assertExitCode 0 hasHook $h || return $?
+  for h in deploy-cleanup deploy-confirm version-created version-live; do
+    assertExitCode 0 hasHook "$h" || return $?
   done
-  for h in misspelled-deployed-cleanup not-rude-confirm; do
-    assertNotExitCode 0 hasHook $h || return $?
+  for h in application-environment misspelled-deployed-cleanup not-rude-confirm; do
+    assertNotExitCode 0 hasHook "$h" || return $?
   done
   decorate success testHooks OK
 }

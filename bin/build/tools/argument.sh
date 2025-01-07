@@ -38,9 +38,7 @@ _arguments() {
   local argument nArguments argumentIndex
   local stateFile checkFunction value clean required flags=() noneFlag=false
 
-  export ARGUMENTS
-
-  ARGUMENTS=""
+  ARGUMENTS="${ARGUMENTS-}"
   shift || __failArgument "$usageArguments" "Missing this" || return $?
   shift || __failArgument "$usageArguments" "Missing source" || return $?
   if [ "${1-}" = "--none" ]; then
