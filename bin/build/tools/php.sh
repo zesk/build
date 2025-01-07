@@ -87,26 +87,15 @@ _deploymentToSuffix() {
 #
 # `{fn}` generates the `.build.env` file, which contains the current environment and:
 #
-# - DEPLOYMENT
 # - BUILD_TARGET
 # - BUILD_START_TIMESTAMP
 # - APPLICATION_TAG
 # - APPLICATION_ID
 #
-# `DEPLOYMENT` is mapped to suffixes when `--suffix` not specified as follows:
-#
-# - `rc` - production
-# - `d` - develop
-# - `s` - staging
-# - `t` - test
-#
-# Usage: {fn} [ --name tarFileName ] [ --deployment deployment ] [ --suffix versionSuffix ] [ --debug ] [ ENV_VAR1 ... ] -- file1 [ file2 ... ]
+# Usage: {fn} [ --name tarFileName ] [ --suffix versionSuffix ] [ --debug ] [ ENV_VAR1 ... ] -- file1 [ file2 ... ]
 # Argument: --skip-tag | --no-tag - Optional. Flag. Do not tag the release.
-# Argument: --tag - Optional. Flag. Tag the release with the appropriate build tag (suffix + index)
 # Argument: --name tarFileName - String. Optional. Set BUILD_TARGET via command line (wins)
 # Argument: --composer arg - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
-# Argument: --deployment deployment - Set DEPLOYMENT via command line (wins)
-# Argument: --suffix versionSuffix - Set tag suffix via command line (wins, default inferred from deployment)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ENV_VAR1 - Optional. Environment variables to build into the deployed .env file
@@ -115,14 +104,12 @@ _deploymentToSuffix() {
 # See: BUILD_TARGET.sh
 phpBuild() {
   local usage="_${FUNCNAME[0]}"
-  local validDeployments=("production" "staging" "test")
 
-  local environments=(BUILD_TIMESTAMP DEPLOYMENT APPLICATION_BUILD_DATE APPLICATION_ID APPLICATION_TAG APPLICATION_VERSION)
+  local environments=(BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_ID APPLICATION_TAG APPLICATION_VERSION)
   local optionals=(BUILD_DEBUG)
 
-  export DEPLOYMENT
 
-  local targetName tagDeploymentFlag=false deployment="${DEPLOYMENT:-}" optClean=false versionSuffix="" composerArgs=() home=""
+  local targetName  optClean=false versionSuffix="" composerArgs=() home=""
 
   targetName="$(__usageEnvironment "$usage" deployPackageName)" || return $?
 
@@ -136,21 +123,12 @@ phpBuild() {
         "$usage" 0
         return $?
         ;;
-      --deployment)
-        shift
-        deployment=$(usageArgumentString "$usage" "deployment" "${1-}") || return $?
-        DEPLOYMENT="$deployment"
-        decorate warning "DEPLOYMENT set to $deployment"
-        ;;
-      --tag)
-        tagDeploymentFlag=true
-        ;;
-      --no-tag | --skip-tag)
-        tagDeploymentFlag=false
+      --tag | --no-tag | --skip-tag)
+        statusMesssage decorate subtle "$argument is deprecated"
         ;;
       --composer)
         shift
-        composerArgs+=("$(usageArgumentString "$usage" "deployment" "${1-}")") || return $?
+        composerArgs+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       --name)
         shift
@@ -181,8 +159,6 @@ phpBuild() {
   [ -n "$home" ] || home=$(__usageEnvironment "$usage" buildHome) || return $?
   [ -n "$targetName" ] || __failArgument "$usage" "--name argument blank" || return $?
   [ $# -gt 0 ] || __failArgument "$usage" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
-
-  inArray "$deployment" "${validDeployments[@]}" || IFS="," __failArgument "$usage" "--deployment (or DEPLOYMENT) must be ${validDeployments[*]}" || return $?
 
   usageRequireBinary "$usage" tar || return $?
   __usageEnvironment "$usage" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
@@ -215,34 +191,21 @@ phpBuild() {
   # shellcheck disable=SC2119
   __usageEnvironment "$usage" phpInstall || return $?
 
-  if "$tagDeploymentFlag"; then
-    # Tag via Git and add SUFFIX: rc0, d23 etc.
-    # Sets the DEFAULT - can override with command line argument --suffix
-    if [ -z "$versionSuffix" ]; then
-      versionSuffix=$(_deploymentToSuffix "$usage" "$deployment") || return $?
-      [ -n "$versionSuffix" ] || __failArgument "$usage" "No version --suffix defined - usually unknown DEPLOYMENT: $deployment" || return $?
-    fi
-    __usageEnvironment "$usage" gitInstall || return $?
-
-    statusMessage decorate info "Tagging $deployment deployment with $versionSuffix ..."
-    __usageEnvironment "$usage" gitTagVersion --suffix "$versionSuffix" || return $?
-  else
-    statusMessage decorate info "No tagging of deployment $deployment" || :
-  fi
-
   #==========================================================================================
   #
   # Generate .env
   #
   local dotEnv="$home/.env"
+  local clean=()
 
+  clean+=("$dotEnv")
   if hasHook application-environment; then
-    __usageEnvironment "$usage" runHook --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _undo $? "${undo[@]}" || return $?
+    __usageEnvironment "$usage" runHook --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _clean $? "${clean[@]}" || return $?
   else
-    __usageEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _undo $? "${undo[@]}" || return $?
+    __usageEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _clean $? "${clean[@]}" || return $?
   fi
   if ! grep -q APPLICATION "$dotEnv"; then
-    buildFailed "$dotEnv" || __failEnvironment "$usage" "$dotEnv file seems to be invalid:" || _undo $? "${undo[@]}" || return $?
+    buildFailed "$dotEnv" || __failEnvironment "$usage" "$dotEnv file seems to be invalid:" || _clean $? "${clean[@]}" || return $?
   fi
   local environment
   for environment in "${environments[@]}" "${optionals[@]}"; do
@@ -255,15 +218,17 @@ phpBuild() {
 
   environmentFileShow "${environments[@]}" -- "${optionals[@]}" || :
 
-  [ ! -d "$home/.deploy" ] || __usageEnvironment "$usage" rm -rf "$home/.deploy" || return $?
+  [ ! -d "$home/.deploy" ] || __usageEnvironment "$usage" rm -rf "$home/.deploy" || _clean $? "${clean[@]}" || return $?
 
-  __usageEnvironment "$usage" mkdir -p "$home/.deploy" || return $?
+  __usageEnvironment "$usage" mkdir -p "$home/.deploy" || _clean $? "${clean[@]}" || return $?
+  clean+=("$home/.deploy")
 
-  APPLICATION_ID=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_ID application-id) || return $?
-  APPLICATION_TAG=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_TAG application-tag) || return $?
+  APPLICATION_ID=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_ID application-id) || _clean $? "${clean[@]}" || return $?
+  APPLICATION_TAG=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_TAG application-tag) || _clean $? "${clean[@]}" || return $?
 
   # Save clean build environment to .build.env for other steps
-  __usageEnvironment "$usage" declare -px >"$home/.build.env" || return $?
+  __usageEnvironment "$usage" declare -px >"$home/.build.env" || _clean $? "${clean[@]}" || return $?
+  clean+=("$home/.build.env")
 
   #==========================================================================================
   #
@@ -271,24 +236,25 @@ phpBuild() {
   #
   if [ -d "$home/vendor" ] || $optClean; then
     statusMessage decorate warning "vendor directory should not exist before composer, deleting"
-    __usageEnvironment "$usage" rm -rf "$home/vendor" || return $?
+    __usageEnvironment "$usage" rm -rf "$home/vendor" || _clean $? "${clean[@]}" || return $?
+    clean+=("$home/vendor")
   fi
 
   statusMessage decorate info "Running PHP composer ..."
   # shellcheck disable=SC2119
-  __usageEnvironment "$usage" phpComposer "$home" "${composerArgs[@]+${composerArgs[@]}}" || return $?
+  __usageEnvironment "$usage" phpComposer "$home" "${composerArgs[@]+${composerArgs[@]}}" || _clean $? "${clean[@]}" || return $?
 
-  [ -d "$home/vendor" ] || __failEnvironment "$usage" "Composer step did not create the vendor directory" || return $?
+  [ -d "$home/vendor" ] || __failEnvironment "$usage" "Composer step did not create the vendor directory" || _clean $? "${clean[@]}" || return $?
 
-  _phpEchoBar || :
-  _phpBuildBanner "Application ID" "$APPLICATION_ID" || :
-  _phpEchoBar || :
-  _phpBuildBanner "Application Tag" "$APPLICATION_TAG" || :
-  _phpEchoBar || :
+  _phpEchoBar
+  _phpBuildBanner "Application ID" "$APPLICATION_ID"
+  _phpEchoBar
+  _phpBuildBanner "Application Tag" "$APPLICATION_TAG"
+  _phpEchoBar
 
-  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
-  __usageEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || _undo $? muzzle popd || return $?
-  __usageEnvironment "$usage" muzzle popd || return $?
+  __usageEnvironment "$usage" muzzle pushd "$home" || _clean $? "${clean[@]}" || return $?
+  __usageEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || _undo $? muzzle popd || _clean $? "${clean[@]}" || return $?
+  __usageEnvironment "$usage" muzzle popd || _clean $? "${clean[@]}" || return $?
 
   statusMessage --last reportTiming "$initTime" "PHP built $(decorate code "$targetName") in"
 }

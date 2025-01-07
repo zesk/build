@@ -8,7 +8,7 @@
 #
 
 testBashBasics() {
-  # Bizarro logic precedence
+  # Bizarre logic precedence
 
   # first section
   assertEquals --line "$LINENO" hitTheOr "$(false && true || printf hitTheOr)" || return $?

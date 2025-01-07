@@ -27,13 +27,14 @@ __resultText() {
 
 # Save and report the timing since the last call
 _assertTiming() {
-  local timingFile stamp now
+  local timingFile stamp _now
   timingFile=$(__environment buildCacheDirectory ".${FUNCNAME[0]}") || return $?
-  now=$(date +%s)
+
+  _now="$(date +%s)"
   if [ -f "$timingFile" ]; then
     stamp="$(head -n 1 <"$timingFile")"
     if isUnsignedInteger "$stamp"; then
-      stamp=$((now - stamp))
+      stamp=$((_now - stamp))
       decorate value "$(printf -- "%d %s\n" "$stamp" "$(plural "$stamp" second seconds)")"
     else
       decorate error "Timestamp saved was invalid: $stamp"
@@ -41,7 +42,7 @@ _assertTiming() {
   else
     decorate info "First test"
   fi
-  printf -- "%d\n" "$now" >"$timingFile"
+  printf -- "%d\n" "$_now" >"$timingFile"
 }
 
 __assertedFunctions() {
@@ -110,7 +111,6 @@ _assertSuccess() {
 _assertConditionHelper() {
   local this="$1" && shift
   local usage="_$this"
-  local argument nArguments argumentIndex saved
   local pairs=() debugFlag=false
   local success=true file="" lineNumber="" linePrefix="" displayName="" tester="" formatter="__resultFormatter"
   local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
@@ -119,10 +119,10 @@ _assertConditionHelper() {
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
   set -eou pipefail
-  saved=("$@")
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
+    local argument argumentIndex=$((nArguments - $# + 1))
     argument="$1"
     case "$argument" in
       # IDENTICAL --help 4

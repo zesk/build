@@ -25,9 +25,10 @@
 # - URL
 #
 # And uses the associated `usageArgument` function for validation.
-# Usage: {fn} this source [ arguments ... ]
+# Usage: {fn} this source [ --none ] [ arguments ... ]
 # Argument: this - Required. Function. Function to collect arguments for. Assume usage function is "_$this".
 # Argument: source - Required. File. File of the function to collect the specification.
+# Argument: --none - Flag. Optional. If specified, state file is deleted prior to return regardless of handling.
 # Argument: arguments - Optional. String. One or more arguments to parse.
 # Output is a temporary `stateFile` on line 1
 _arguments() {
@@ -35,10 +36,17 @@ _arguments() {
   local source="${1-}" this="${2-}"
   local usage="_$this"
   local argument nArguments argumentIndex
-  local stateFile checkFunction value clean required flags=()
+  local stateFile checkFunction value clean required flags=() noneFlag=false
 
+  export ARGUMENTS
+
+  ARGUMENTS=""
   shift || __failArgument "$usageArguments" "Missing this" || return $?
   shift || __failArgument "$usageArguments" "Missing source" || return $?
+  if [ "${1-}" = "--none" ]; then
+    shift
+    noneFlag=true
+  fi
   stateFile=$(__usageEnvironment "$usageArguments" mktemp) || return $?
   spec=$(__usageEnvironment "$usageArguments" _usageArgumentsSpecification "$source" "$this") || return $?
   __usageEnvironment "$usageArguments" _usageArgumentsSpecificationDefaults "$spec" >"$stateFile" || return $?
@@ -86,14 +94,19 @@ _arguments() {
 
   if inArray "help" "${flags[@]+"${flags[@]}"}"; then
     # Have to do this as this is run in subprocess - what to do?
-    "$usage" 0 1>&2
+    "$usage" 0
     rm -rf "${clean[@]}" || :
     return "$(_code exit)"
+  fi
+  if $noneFlag; then
+    __usageEnvironment "$usageArguments" rm -rf "$stateFile" || return $?
+    unset ARGUMENTS || return $?
+    return 0
   fi
   if [ "${#flags[@]}" -gt 0 ]; then
     __usageEnvironment "$usage" environmentValueWrite "_flags" "${flags[@]}" >>"$stateFile" || return $?
   fi
-  printf "%s\n" "$stateFile"
+  ARGUMENTS="$stateFile" || return $?
 }
 __arguments() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -140,7 +140,10 @@ bashSanitize() {
   undo=(muzzle popd)
 
   statusMessage decorate success Making shell files executable ...
-  __usageEnvironment "$usage" makeShellFilesExecutable || _undo $? "${undo[@]}" || return $?
+  local shellFile
+  while read -r shellFile; do
+    statusMessage decorate info "+x $(decorate file "$shellFile")"
+  done < <(__usageEnvironment "$usage" makeShellFilesExecutable) || _undo $? "${undo[@]}" || return $?
 
   statusMessage --last decorate success Checking assertions ...
   _bashSanitizeCheckAssertions "$usage" "${checkAssertions[@]+"${checkAssertions[@]}"}" || _undo $? "${undo[@]}" || return $?

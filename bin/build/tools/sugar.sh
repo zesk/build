@@ -92,7 +92,7 @@ _undo() {
   local exitCode="${1-}"
   shift
   isPositiveInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
-  isCallable "$1" || _argument "_undo $1 is not callable: $*" || return "$exitCode"
+  isCallable "${1-}" || _argument "_undo \"${1-}\" is not callable: $*" || return "$exitCode"
   __execute "$@" || :
   return "$exitCode"
 }

@@ -59,7 +59,7 @@ bigText() {
   case "$binary" in
     figlet) fonts=("standard" "big") ;;
     toilet) fonts=("smblock" "smmono12") ;;
-    *) __failEnvironment "$usage" "Unknown binary $binary" || return $? ;;
+    *) __failEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $? ;;
   esac
   if ! muzzle packageWhich "$binary" "$binary"; then
     decorate green "BIG TEXT: $*"

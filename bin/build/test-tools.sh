@@ -447,7 +447,7 @@ __testLoad() {
       __tests+=("${tests[@]}")
     fi
     # diff outputs ("-" and "+") prefixes or ("< " and "> ")
-    declare -pF | awk '{ print $3 }' | grep -e '^test' | diff "$__beforeFunctions" - | grep 'test' | cut -c 2- | trimSpace >"$__testFunctions" || :
+    declare -pF | awk '{ print $3 }' | grep -e '^test' | sort | diff -U 0 "$__beforeFunctions" - | grep 'test' | cut -c 2- | trimSpace >"$__testFunctions" || :
     while read -r __test; do
       ! inArray "$__test" "${__tests[@]+"${__tests[@]}"}" || {
         clearLine

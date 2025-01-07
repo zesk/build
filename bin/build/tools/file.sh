@@ -80,14 +80,13 @@ _modificationTime() {
 #
 modificationSeconds() {
   local usage="_${FUNCNAME[0]}"
-  local nArguments argument
-  local now
+  local now_
 
-  now="$(date +%s)"
-  nArguments=$#
+  now_="$(__usageEnvironment "$usage" date +%s)" || return $?
+  local nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentFile "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
-    __usageEnvironment "$usage" printf "%d\n" "$((now - $(modificationTime "$argument")))" || return $?
+    local argument="$(usageArgumentFile "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    __usageEnvironment "$usage" printf "%d\n" "$((now_ - $(modificationTime "$argument")))" || return $?
     shift
   done
 }

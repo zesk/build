@@ -6,17 +6,16 @@ To add automatic usage for a function, the pattern to use is:
 
     # Lay an egg
     layAnEgg() {
+        local usage="_${FUNCNAME[0]}"
         ...
-        if [ -z "$hay" ]; then
-          _layAnEgg 1 "No hay" || return $?
-        fi 
+        [ -n "$hay" ] || __failEnvioronment "$usage" "No hay" || return $?
         ...
     }
     _layAnEgg() {
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
-The default display is:
+Usually you have to add your own `--help` :
 
     No hay
     

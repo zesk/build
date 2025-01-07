@@ -35,7 +35,20 @@ __needBash() {
     printf -- "%s\n" "#!/usr/bin/env bash" "source $here/tools.sh" "bashPrompt consoleDefaultTitle" "cd \$HOME/build" "iTerm2Badge -i \"$title\"" >"$HOME/.bashrc"
     chmod +x "$HOME/.bashrc"
   fi
-  exec bash "$@"
+  if [ $# -gt 0 ]; then
+    cc="\"$1\""
+    shift
+    # quote remaining arguments as bash does not have a way to do this on the command line which TBH is surprising
+    # you can do stdin (bash -s) but argument parsing is not supported so you have to quote anyway there or
+    # have who calls this to then quote properly for being within double quotes and that sucks so ...
+    while [ $# -gt 0 ]; do
+      cc="${cc} \"$(printf "%s\n" "$1" | sed 's/"/\\"/g')\""
+      shift
+    done
+    exec bash -c "$cc"
+  else
+    exec bash
+  fi
 }
 
 __needBash "$@"

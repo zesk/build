@@ -80,35 +80,34 @@ dumpBinary() {
 # Dump a pipe with a title and stats
 # Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
 # Argument: --tail - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
+# Argument: --head - Optional. Flag. Show the head of the file when not enough can be shown. (default)
+# Argument: --lines - Optional. UnsignedInteger. Number of lines to show.
+# Argument: --vanish file - Optional. UnsignedInteger. Number of lines to show.
 # Argument: name - Optional. String. The item name or title of this output.
 # stdin: text
 # stdout: formatted text for debugging
 dumpPipe() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local name names item nLines nBytes decoration symbol
-  local item width suffix
-  local endBinary
-  local showLines
 
-  export BUILD_DEBUG_LINES
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
-  showLines="${BUILD_DEBUG_LINES:-100}"
+  local showLines="" endBinary="head" names=() symbol="🐞" vanishFiles=()
 
-  item=$(__usageEnvironment "$usage" mktemp) || return $?
-  __usageEnvironment "$usage" cat >"$item" || return $?
-
-  endBinary="head"
-  names=()
-  symbol="🐞"
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
+        ;;
+      --head)
+        endBinary="head"
+        ;;
+      --vanish)
+        shift
+        vanishFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
         ;;
       --tail)
         endBinary="tail"
@@ -129,9 +128,28 @@ dumpPipe() {
     shift || __failArgument "$usage" shift || return $?
   done
 
-  isInteger "$showLines" || _environment "SHOW_LINES is not-integer: $showLines" || showLines=10
+  if [ -z "$showLines" ]; then
+    export BUILD_DEBUG_LINES
+    __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
+    showLines="${BUILD_DEBUG_LINES:-100}"
+    isUnsignedInteger "$showLines" || _environment "BUILD_DEBUG_LINES is not an unsigned integer: $showLines" || showLines=10
+  fi
 
-  name=
+  local item
+  if [ "${#vanishFiles[@]}" -gt 0 ]; then
+    for item in "${vanishFiles[@]}"; do
+      local name
+      name=$(decorate file "$(basename "$item")" "$item")
+      # Recursion - only when --vanish is a parameter
+      __usageEnvironment "$usage" dumpPipe "--${endBinary}" --lines "$showLines" "${names[@]}" "$name" <"$item" || return $?
+      __usageEnvironment "$usage" rm -rf "$item" || return $?
+    done
+    return 0
+  fi
+  item=$(__usageEnvironment "$usage" mktemp) || return $?
+  __usageEnvironment "$usage" cat >"$item" || return $?
+
+  local name="" nLines nBytes
   [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ") || :
   nLines=$(($(wc -l <"$item") + 0))
   nBytes=$(($(wc -c <"$item") + 0))
@@ -153,6 +171,8 @@ dumpPipe() {
     rm -rf "$item" || :
     return 0
   fi
+
+  local decoration width
   decoration="$(decorate code "$(echoBar)")"
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
   printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset)")" "$decoration"

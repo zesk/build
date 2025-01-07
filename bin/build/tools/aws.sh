@@ -35,6 +35,11 @@ awsInstall() {
     return 0
   fi
 
+  if isAlpine; then
+    packageInstall aws-cli "$@" || return $?
+    return 0
+  fi
+
   local start
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   __usageEnvironment "$usage" packageWhich unzip unzip || return $?

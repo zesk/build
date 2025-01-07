@@ -362,6 +362,8 @@ packageInstall() {
   __usageEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
   __usageEnvironment "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
 
+  # Loads BUILD_TEXT_BINARY
+  muzzle _packageStandardPackages "$manager" || __failEnvironment "$usage" "Unable to fetch standard packages" || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   if "$forceFlag"; then
     actualPackages=("${packages[@]}")

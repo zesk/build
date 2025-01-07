@@ -234,7 +234,7 @@ plumber() {
   if "$@"; then
     declare -p >"$__after"
     __pattern="$(quoteGrepPattern "^($(joinArguments '|' "${__ignore[@]}"))=")"
-    __changed="$(diff "$__before" "$__after" | grep 'declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 3 | grep -v -e "$__pattern")" || :
+    __changed="$(diff "$__before" "$__after" | grep -e '^declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern")" || :
     __command=$(decorate code "$(_command "$@")")
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
       decorate warning "$__command set $(decorate value "COLUMNS, LINES")" 1>&2

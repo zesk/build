@@ -8,16 +8,48 @@
 # Test: ./test/tools/apk-tests.sh
 #
 
-# Is this an Alpine system?
+# Is this an Alpine system and is apk installed?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Exit Code: 0 - System is an alpine system and apk is installed
+# Exit Code: 1 - System is not an alpine system or apk is not installed
 apkIsInstalled() {
-  [ -f /etc/alpine-release ] && whichExists apk
+  local usage="_${FUNCNAME[0]}"
+
+  _arguments "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" --none "$@" || return "$(_argumentReturn $?)"
+  isAlpine && whichExists apk
+}
+_apkIsInstalled() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Is this an Alpine system?
+# Argument: --help
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+isAlpine() {
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || "$usage" 0 && return $?
+  [ -f /etc/alpine-release ]
+}
+_isAlpine() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || isAlpine --help
 }
 
 # Open an Alpine container shell
 alpineContainer() {
+  local usage="_${FUNCNAME[0]}"
+
   export LC_TERMINAL TERM
-  __environment buildEnvironmentLoad LC_TERMINAL TERM || return $?
-  dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@"
+  __usageEnvironment "$usage" buildEnvironmentLoad LC_TERMINAL TERM || return $?
+  __usageEnvironment "$usage" dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
+}
+_alpineContainer() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -100,7 +132,7 @@ __apkStandardPackages() {
   # no toilet
   printf "%s\n" figlet curl pcre2 pcre psutils readline jq
   export BUILD_TEXT_BINARY
-  BUILD_TEXT_BINARY="figlet"
+  BUILD_TEXT_BINARY="${BUILD_TEXT_BINARY:-"figlet"}"
 }
 
 # Usage: {fn}
