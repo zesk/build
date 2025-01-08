@@ -339,8 +339,9 @@ dockerLocalContainer() {
   fi
   local tt=()
   [ ! -t 0 ] || tt=(-it)
-  __usageEnvironment "$usage" docker run -q "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --quiet "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
+  [ $exitCode -eq 0 ] || docker run --help 1>&2
   return $exitCode
 }
 _dockerLocalContainer() {
