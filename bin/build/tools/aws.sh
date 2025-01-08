@@ -614,9 +614,9 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    __echo aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || __failEnvironment "$usage" "aws ec2 describe-security-groups failed" || return $?
+    __usageEnvironment "$usage" aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || return $?
     foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
-    rm -f "$tempErrorFile" || :
+    __usageEnvironment "$usage" rm -f "$tempErrorFile" || return $?
 
     if [ -z "$foundIP" ]; then
       # Remove: If no IP found in security group, if we are Removing (NOT adding), we are done
@@ -630,12 +630,10 @@ awsSecurityGroupIPModify() {
       return 0
     else
       __awwSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      if ! aws "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" >/dev/null; then
-        __failEnvironment "$usage" "revoke-security-group-ingress FAILED" || return $?
-      fi
+      __usageEnvironment "$usage" aws "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" || return $?
     fi
   fi
-  if [ "$mode" = "--add" ]; then
+  if [ "$mode" != "--remove" ]; then
     local json
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awwSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
