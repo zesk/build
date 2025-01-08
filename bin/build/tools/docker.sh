@@ -339,11 +339,55 @@ dockerLocalContainer() {
   fi
   local tt=()
   [ ! -t 0 ] || tt=(-it)
-  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --quiet "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  if [ -z "$(dockerImages --filter "$imageName")" ]; then
+    statusMessage decorate info "Pulling $(decorate code "$imageName") ... "
+    __usageEnvironment "$usage" muzzle docker pull "$imageName" || return $?
+  fi
+  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   [ $exitCode -eq 0 ] || docker run --help 1>&2
   return $exitCode
 }
 _dockerLocalContainer() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# List docker images which are currently pulled
+# Argument: --filter reference - Optional. Filter list by reference provided.
+dockerImages() {
+  local usage="_${FUNCNAME[0]}"
+
+  local filter=()
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --filter)
+        shift
+        [ 0 -eq "${#filter[@]}" ] || __failArgument "$usage" "--filter passed twice: (${saved[*]})" || return $?
+        filter+=("--filter" "reference=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  usageRequireBinary "$usage" docker || return $?
+  __usageEnvironment "$usage" packageWhich jq jq || return $?
+  docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
+}
+_dockerImages() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
