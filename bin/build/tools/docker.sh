@@ -330,14 +330,14 @@ dockerLocalContainer() {
     failedWhy="imageName is empty"
   elif [ -z "$imageApplicationPath" ]; then
     failedWhy="imageApplicationPath is empty"
-  elif insideDocker; then
-    failedWhy="Already inside docker"
+  elif ! whichExists docker; then
+    failedWhy="docker does not exist in path"
   fi
   if [ -n "$failedWhy" ]; then
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
     __failEnvironment "$usage" "$failedWhy" || return $?
   fi
-  __usageEnvironment "$usage" __echo docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" -it "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }
