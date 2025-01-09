@@ -77,29 +77,18 @@ Files are specified from the application root directory.
 
 `phpBuild` generates the `.build.env` file, which contains the current environment and:
 
-- DEPLOYMENT
 - BUILD_TARGET
 - BUILD_START_TIMESTAMP
 - APPLICATION_TAG
 - APPLICATION_ID
-
-`DEPLOYMENT` is mapped to suffixes when `--suffix` not specified as follows:
-
-- `rc` - production
-- `d` - develop
-- `s` - staging
-- `t` - test
 
 - Location: `bin/build/tools/php.sh`
 
 #### Arguments
 
 --skip-tag |- ` --no-tag` - Optional. Flag. Do not tag the release.
-- `--tag` - Optional. Flag. Tag the release with the appropriate build tag (suffix + index)
 - `--name tarFileName` - String. Optional. Set BUILD_TARGET via command line (wins)
 - `--composer arg` - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)
-- `--deployment deployment` - Set DEPLOYMENT via command line (wins)
-- `--suffix versionSuffix` - Set tag suffix via command line (wins, default inferred from deployment)
 - `--help` - Optional. Flag. Display this help.
 - `ENV_VAR1` - Optional. Environment variables to build into the deployed .env file
 - `--` - Required. Separates environment variables to file list

@@ -48,6 +48,7 @@ Output is a temporary `stateFile` on line 1
 
 - `this` - Required. Function. Function to collect arguments for. Assume usage function is "_$this".
 - `source` - Required. File. File of the function to collect the specification.
+- `--none` - Flag. Optional. If specified, state file is deleted prior to return regardless of handling.
 - `arguments` - Optional. String. One or more arguments to parse.
 
 #### Exit codes

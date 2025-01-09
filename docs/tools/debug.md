@@ -143,6 +143,9 @@ Dump a pipe with a title and stats
 
 - `--symbol symbol` - Optional. String. Symbol to place before each line. (Blank is ok).
 - `--tail` - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
+- `--head` - Optional. Flag. Show the head of the file when not enough can be shown. (default)
+- `--lines` - Optional. UnsignedInteger. Number of lines to show.
+- `--vanish file` - Optional. UnsignedInteger. Number of lines to show.
 - `name` - Optional. String. The item name or title of this output.
 
 #### Exit codes
