@@ -50,6 +50,9 @@ __hookPreCommitPHP() {
   statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".php")" "$(decorate label "PHP Hypertext Processor")"
   __usageEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(decorate bold-blue)" "$(decorate reset)"
 
+  local home
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+
   local mode
 
   mode=$(_choose "$readOnly" 0440 0640)
@@ -58,9 +61,6 @@ __hookPreCommitPHP() {
   mode=$(_choose "$readOnly" 0550 0750)
   statusMessage decorate info ".php bin mode -> $(decorate code "$mode")"
   __usageEnvironment "$usage" find "$home" -type f -name '*.php' -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
-
-  local home
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
 
   if [ ! -d "$home/vendor" ]; then
     statusMessage --last decorate warning "PHP commit - no vendor directory - no fixer"
