@@ -108,8 +108,7 @@ phpBuild() {
   local environments=(BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_ID APPLICATION_TAG APPLICATION_VERSION)
   local optionals=(BUILD_DEBUG)
 
-
-  local targetName  optClean=false versionSuffix="" composerArgs=() home=""
+  local targetName optClean=false versionSuffix="" composerArgs=() home=""
 
   targetName="$(__usageEnvironment "$usage" deployPackageName)" || return $?
 
@@ -124,7 +123,7 @@ phpBuild() {
         return $?
         ;;
       --tag | --no-tag | --skip-tag)
-        statusMesssage decorate subtle "$argument is deprecated"
+        statusMessage decorate subtle "$argument is deprecated"
         ;;
       --composer)
         shift
