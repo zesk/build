@@ -105,5 +105,7 @@ ___brewAvailableList() {
 # See: _packageStandardPackages
 # package.sh: true
 __brewStandardPackages() {
-  printf "%s\n" toilet figlet curl pcre2 pcre psutils readline unzip
+  printf "%s\n" toilet curl pcre2 pcre psutils readline unzip
+  export BUILD_TEXT_BINARY
+  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
 }

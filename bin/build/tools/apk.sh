@@ -135,7 +135,7 @@ __apkStandardPackages() {
   # no toilet
   printf "%s\n" figlet curl pcre2 pcre psutils readline jq
   export BUILD_TEXT_BINARY
-  BUILD_TEXT_BINARY="${BUILD_TEXT_BINARY:-"figlet"}"
+  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="figlet"
 }
 
 # Usage: {fn}

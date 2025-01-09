@@ -58,46 +58,46 @@ aptKeyAdd() {
     argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --name)
-        shift
-        names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --skip)
-        skipUpdate=true
-        ;;
-      --title)
-        shift
-        title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --source)
-        shift
-        sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --repository-url)
-        shift
-        repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --list)
-        shift
-        listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --release)
-        shift
-        releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --url)
-        shift
-        remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
-        ;;
+    # IDENTICAL --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --name)
+      shift
+      names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --skip)
+      skipUpdate=true
+      ;;
+    --title)
+      shift
+      title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --source)
+      shift
+      sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --repository-url)
+      shift
+      repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --list)
+      shift
+      listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --release)
+      shift
+      releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --url)
+      shift
+      remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      # IDENTICAL argumentUnknown 1
+      __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+      ;;
     esac
     # IDENTICAL argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
@@ -178,17 +178,17 @@ aptKeyRemove() {
   while [ $# -gt 0 ]; do
     argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --skip)
-        skipUpdate=true
-        ;;
-      *)
-        names+=("$argument")
-        ;;
+    # IDENTICAL --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --skip)
+      skipUpdate=true
+      ;;
+    *)
+      names+=("$argument")
+      ;;
     esac
     shift || __failArgument "$usage" "missing argument #$((nArguments - $# + 1)): $argument" || return $?
   done
@@ -321,7 +321,7 @@ ___aptAvailableList() {
 __aptStandardPackages() {
   printf "%s\n" apt-utils toilet toilet-fonts jq pcregrep
   export BUILD_TEXT_BINARY
-  BUILD_TEXT_BINARY="toilet"
+  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
 }
 
 #
