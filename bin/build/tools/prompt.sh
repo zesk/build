@@ -184,6 +184,7 @@ bashPromptModule_binBuild() {
 # Argument: --list - Flag. Optional. List the current modules.
 # Argument: --first - Flag. Optional. Add all subsequent modules first to the list.
 # Argument: --last - Flag. Optional. Add all subsequent modules last to the list.
+# Argument: --force - Flag. Optional. If PROMPT_COMMAND is already set, overwrite it.
 # Argument: module - String. Optional. Module to enable or disable. To disable, specify `-module`
 # Argument: --colors colorsText - String. Optional. Set the prompt colors
 # Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to standard in.
@@ -191,11 +192,12 @@ bashPromptModule_binBuild() {
 # Modules are any binary or executable to run each prompt, and can be added or removed here
 # - `consoleDefaultTitle`
 # Example: bashPrompt --colors "$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)"
+# Environment: PROMPT_COMMAND
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
   local saved=("$@") nArguments=$#
-  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
+  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false forceFlag=false
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -219,6 +221,9 @@ bashPrompt() {
         ;;
       --skip-terminal)
         skipTerminal=true
+        ;;
+      --force)
+        forceFlag=true
         ;;
       --reset)
         resetFlag=true
@@ -254,6 +259,9 @@ bashPrompt() {
 
   export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
 
+  if [ -n "${PROMPT_COMMAND-}" ] && [ "$PROMPT_COMMAND" != "__bashPromptCommand" ]; then
+    $forceFlag || __failEnvironment "$usage" "PROMPT_COMMAND is already set to: $(decorate code "$PROMPT_COMMAND"), use --force to ignore" || return $?
+  fi
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
     ! $verbose || decorate info "Prompt modules reset to empty list."
