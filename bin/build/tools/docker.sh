@@ -340,7 +340,6 @@ dockerLocalContainer() {
   local tt=()
   [ ! -t 0 ] || tt=(-it)
   if [ -z "$(dockerImages --filter "$imageName")" ]; then
-    statusMessage decorate info "Pulling $(decorate code "$imageName") ... "
     __usageEnvironment "$usage" muzzle docker pull "$imageName" || return $?
   fi
   __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
