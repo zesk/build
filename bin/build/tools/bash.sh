@@ -63,7 +63,7 @@ bashLibrary() {
     source "$home/$run" || __failEnvironment "$usage" "${run//${HOME-}/~} failed" || return $?
     ! $verboseFlag || decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
   else
-    ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate code "$@")"
+    ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
     __echo "$home/$run" "$@"
   fi
   return 0

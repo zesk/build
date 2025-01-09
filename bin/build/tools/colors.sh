@@ -544,125 +544,15 @@ _toggleCharacterToColor() {
   done
 }
 
-#
-# Deprecated use `decorate` now
-#
-consoleCode() {
-  decorate code "$@"
-}
+# Usage: decorate each decoration argument1 argument2 ...
+# Runs the following command on each subsequent argument to allow for formatting with spaces
+__decorateExtensionEach() {
+  local code="$1" formatted=()
 
-consoleError() {
-  decorate error "$@"
-}
-
-consoleOrange() {
-  decorate orange "$@"
-}
-
-consoleBoldOrange() {
-  decorate bold-orange "$@"
-}
-
-consoleBlue() {
-  decorate blue "$@"
-}
-
-consoleBoldBlue() {
-  decorate bold-blue "$@"
-}
-
-consoleRed() {
-  decorate red "$@"
-}
-
-consoleBoldRed() {
-  decorate bold-red "$@"
-}
-
-consoleGreen() {
-  decorate green "$@"
-}
-
-consoleBoldGreen() {
-  decorate bold-green "$@"
-}
-
-consoleCyan() {
-  decorate cyan "$@"
-}
-
-consoleBoldCyan() {
-  decorate bold-cyan "$@"
-}
-
-consoleYellow() {
-  decorate yellow "$@"
-}
-
-consoleMagenta() {
-  decorate magenta "$@"
-}
-
-consoleBlack() {
-  decorate black "$@"
-}
-
-consoleBoldBlack() {
-  decorate bold-black "$@"
-}
-
-consoleBoldWhite() {
-  decorate bold-white "$@"
-}
-
-consoleWhite() {
-  decorate white "$@"
-}
-
-consoleBoldMagenta() {
-  decorate bold-magenta "$@"
-}
-
-consoleUnderline() {
-  decorate underline "$@"
-}
-
-consoleBold() {
-  decorate bold "$@"
-}
-
-consoleNoBold() {
-  decorate no-bold "$@"
-}
-
-consoleNoUnderline() {
-  decorate no-underline "$@"
-}
-
-consoleInfo() {
-  decorate info "$@"
-}
-
-consoleWarning() {
-  decorate warning "$@"
-}
-
-consoleSuccess() {
-  decorate success "$@"
-}
-
-consoleDecoration() {
-  decorate decoration "$@"
-}
-
-consoleSubtle() {
-  decorate subtle "$@"
-}
-
-consoleLabel() {
-  decorate label "$@"
-}
-
-consoleValue() {
-  decorate value "$@"
+  shift || return 0
+  while [ $# -gt 0 ]; do
+    formatted+=("$(decorate "$code" "$1")")
+    shift
+  done
+  IFS=" " printf "%s\n" "${formatted[*]-}"
 }

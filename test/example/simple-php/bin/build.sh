@@ -71,7 +71,7 @@ isUnsignedInteger() {
 __buildSampleApplication() {
   clearLine || return $?
   __environment muzzle pushd "$(buildHome)" || return $?
-  __environment phpBuild --deployment staging --skip-tag "$@" -- simple.application.php public src docs || return $?
+  __environment phpBuild "$@" -- simple.application.php public src docs || return $?
 }
 
 __build .. bin __buildSampleApplication "$@"

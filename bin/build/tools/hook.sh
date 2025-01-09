@@ -47,8 +47,8 @@ _runHookWrapper() {
             return 0
           fi
         fi
-        if buildDebugEnabled; then
-          decorate success "Running hook $binary $*"
+        if buildDebugEnabled hook; then
+          statusMessage decorate success "Running hook $(decorate code "$binary") $*"
         fi
         "$hook" "$@"
         return $?
