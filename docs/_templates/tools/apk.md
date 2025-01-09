@@ -8,3 +8,4 @@
 
 {apkIsInstalled}
 {alpineContainer}
+{isAlpine}

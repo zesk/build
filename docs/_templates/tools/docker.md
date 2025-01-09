@@ -13,3 +13,4 @@
 {anyEnvToBashEnv}
 {anyEnvToDockerEnv}
 {dockerPlatformDefault}
+{dockerImages}

@@ -149,3 +149,18 @@ Fetch the default platform for docker
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `dockerImages` - List docker images which are currently pulled
+
+List docker images which are currently pulled
+
+- Location: `bin/build/tools/docker.sh`
+
+#### Arguments
+
+- `--filter reference` - Optional. Filter list by reference provided.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

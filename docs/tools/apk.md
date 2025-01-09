@@ -35,3 +35,23 @@ Open an Alpine container shell
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `isAlpine` - Is this an Alpine system?
+
+Is this an Alpine system?
+
+- Location: `bin/build/tools/apk.sh`
+
+[92mUsage[0m: [1;33misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
+
+    [94m--prefix  [1;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[m
+    [94m--suffix  [1;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[m
+    [94m--token   [1;97mOptional. String. Classes permitted in a token[m
+    [94mtext      [1;97mOptional. String. Text to search for mapping tokens.[m
+
+Check if text contains mappable tokens
+If any text passed contains a token which can be mapped, succeed.
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
