@@ -157,6 +157,13 @@ _usageArgumentsSpecification() {
   cacheFile="$functionCache/documentation"
   argumentDirectory=$(__usageEnvironment "$usage" requireDirectory "$functionCache/parsed") || return $?
   __usageEnvironment "$usage" touch "$functionCache/.magic" || return $?
+  if [ ! -f "$functionDefinitionFile" ] && ! isAbsolutePath "$functionDefinitionFile"; then
+    local home
+    home=$(__usageEnvironment "$usage" buildHome) || return $?
+    if [ -f "$home/$functionDefinitionFile" ]; then
+      functionDefinitionFile="$home/$functionDefinitionFile"
+    fi
+  fi
   [ -f "$functionDefinitionFile" ] || __failArgument "$usage" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(newestFile "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then

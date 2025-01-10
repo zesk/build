@@ -50,6 +50,10 @@ bashPrompt --colors "$(decorate bold-cyan):$(decorate bold-magenta):$(decorate g
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+PROMPT_COMMAND
 ### `bashPromptColorScheme` - Color schemes for prompts
 
 Color schemes for prompts

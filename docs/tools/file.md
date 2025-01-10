@@ -320,11 +320,11 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath EOF
+### `realPath` - IDENTICAL _realPath 10
 
-IDENTICAL _realPath EOF
+IDENTICAL _realPath 10
 
-- Location: `bin/build/identical/realPath.sh`
+- Location: `bin/build/tools/file.sh`
 
 #### Usage
 
