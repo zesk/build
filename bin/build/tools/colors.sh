@@ -429,7 +429,9 @@ consoleColumns() {
   if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
     printf %d 80
   else
-    tput cols
+    if ! tput cols 2>/dev/null; then
+      printf %d 80
+    fi
   fi
 }
 
@@ -447,7 +449,9 @@ consoleRows() {
   if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
     printf %d 60
   else
-    tput lines
+    if ! tput lines 2>/dev/null; then
+      printf %d 60
+    fi
   fi
 }
 
