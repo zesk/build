@@ -270,11 +270,19 @@ bashPrompt() {
   [ -n "${BUILD_PROMPT_COLORS-}" ] || BUILD_PROMPT_COLORS="$(bashPromptColorScheme default)"
 
   if [ -n "${PROMPT_COMMAND-}" ]; then
-    if [ "${PROMPT_COMMAND#__bashPromptCommand.*}" = "$PROMPT_COMMAND" ]; then
-      PROMPT_COMMAND="$PROMPT_COMMAND; __bashPromptCommand"
-    fi
+    local commands=() command updated=() thisCommand="__bashPromptCommand"
+    IFS=";" read -r -a commands <<<"${PROMPT_COMMAND}"
+    updated=("$thisCommand")
+    for command in "${commands[@]}"; do
+      command=$(trimSpace "$command")
+      if [ "$command" = "$thisCommand" ]; then
+        continue
+      fi
+      updated+=("$command")
+    done
+    PROMPT_COMMAND="$(joinArguments ";" "${updated[@]}")"
   else
-    PROMPT_COMMAND=__bashPromptCommand
+    PROMPT_COMMAND="$thisCommand"
   fi
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
   if [ "$label" != $'\0' ]; then
