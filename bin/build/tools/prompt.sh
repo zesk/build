@@ -184,7 +184,6 @@ bashPromptModule_binBuild() {
 # Argument: --list - Flag. Optional. List the current modules.
 # Argument: --first - Flag. Optional. Add all subsequent modules first to the list.
 # Argument: --last - Flag. Optional. Add all subsequent modules last to the list.
-# Argument: --force - Flag. Optional. If PROMPT_COMMAND is already set, overwrite it.
 # Argument: module - String. Optional. Module to enable or disable. To disable, specify `-module`
 # Argument: --colors colorsText - String. Optional. Set the prompt colors
 # Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to standard in.
@@ -197,7 +196,7 @@ bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
   local saved=("$@") nArguments=$#
-  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false forceFlag=false
+  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
@@ -221,9 +220,6 @@ bashPrompt() {
         ;;
       --skip-terminal)
         skipTerminal=true
-        ;;
-      --force)
-        forceFlag=true
         ;;
       --reset)
         resetFlag=true
@@ -259,9 +255,6 @@ bashPrompt() {
 
   export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
 
-  if [ -n "${PROMPT_COMMAND-}" ] && [ "$PROMPT_COMMAND" != "__bashPromptCommand" ]; then
-    $forceFlag || __failEnvironment "$usage" "PROMPT_COMMAND is already set to: $(decorate code "$PROMPT_COMMAND"), use --force to ignore" || return $?
-  fi
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
     ! $verbose || decorate info "Prompt modules reset to empty list."
@@ -276,7 +269,13 @@ bashPrompt() {
   [ -z "$colorsText" ] || BUILD_PROMPT_COLORS="${colorsText}"
   [ -n "${BUILD_PROMPT_COLORS-}" ] || BUILD_PROMPT_COLORS="$(bashPromptColorScheme default)"
 
-  PROMPT_COMMAND=__bashPromptCommand
+  if [ -n "${PROMPT_COMMAND-}" ]; then
+    if [ "${PROMPT_COMMAND#__bashPromptCommand.*}" = "$PROMPT_COMMAND" ]; then
+      PROMPT_COMMAND="$PROMPT_COMMAND; __bashPromptCommand"
+    fi
+  else
+    PROMPT_COMMAND=__bashPromptCommand
+  fi
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
   if [ "$label" != $'\0' ]; then
     label="$label "
