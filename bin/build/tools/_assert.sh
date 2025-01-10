@@ -123,7 +123,7 @@ _assertConditionHelper() {
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$1"
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
