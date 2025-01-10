@@ -119,11 +119,10 @@ _assertConditionHelper() {
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
   set -eou pipefail
-  # IDENTICAL argument-case-header 5
+  # IDENTICAL argument-case-header-blank 4
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
     case "$argument" in
       # IDENTICAL --help 4
       --help)
