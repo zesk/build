@@ -687,8 +687,7 @@ linkCreate() {
       *)
         if [ -z "$target" ]; then
           target=$(usageArgumentExists "$usage" "target" "$argument") || return $?
-          path=$(__usageEnvironment "$usage" realPath "$target") || return $?
-          path=$(__usageEnvironment "$usage" dirname "$path") || return $?
+          path=$(__usageEnvironment "$usage" dirname "$target") || return $?
         elif [ -z "$linkName" ]; then
           linkName=$(usageArgumentString "$usage" "linkName" "$argument") || return $?
         else
@@ -708,12 +707,12 @@ linkCreate() {
 
   [ -e "$path/$target" ] || __failEnvironment "$usage" "$path/$target must be a file or directory" || return $?
 
-  local link="$path/$linkName" source="$path/$target" undo=()
+  local link="$path/$linkName" source="$path/$target" clean=()
   if [ ! -L "$link" ]; then
     if [ -e "$link" ]; then
       __failEnvironment "$usage" "$(decorate file "$link") exists and was not a link $(decorate code "$(betterType "$link")")" || :
       __usageEnvironment "$usage" mv "$link" "$link.createLink.$$.backup" || return $?
-      undo+=(rm -rf "$link.$$.backup")
+      clean+=("$link.$$.backup")
     fi
   else
     local actual
@@ -722,10 +721,10 @@ linkCreate() {
       return 0
     fi
     __usageEnvironment "$usage" mv "$link" "$link.createLink.$$.badLink" || return $?
-    undo+=(rm -rf "$link.$$.badLink")
+    clean+=("$link.$$.badLink")
   fi
   __usageEnvironment "$usage" ln -s "$source" "$link" || return $?
-  $backupFlag || _undo 0 "${undo[@]}" || return $?
+  $backupFlag || __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _linkCreate() {
   # IDENTICAL usageDocument 1
