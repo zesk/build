@@ -220,7 +220,7 @@ testLinkCreate() {
   assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.ALT" || return $?
   assertExitCode --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/tools.sh" "$target.FINAL" || return $?
   assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.FINAL" || return $?
-  assertNotExitCode --stderr-match "Can not link to another link" --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/tools.FINAL" "$target.NoLinkyLinks" || return $?
+  assertNotExitCode --stderr-match "Can not link to another link" --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/$target.FINAL" "$target.NoLinkyLinks" || return $?
   assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.FINAL" || return $?
   assertEquals --line "$LINENO" "$((0 + $(find "$home/bin/build" -name "wacky.*" | wc -l)))" "3" || return $?
   __environment rm -rf "$home/bin/build/$target*" || return $?
