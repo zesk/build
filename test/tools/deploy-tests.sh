@@ -107,6 +107,11 @@ _simplePHPServer() {
   export PHP_SERVER_PID
   PHP_SERVER_PID=$!
   decorate info "Running PHP server $PHP_SERVER_PID"
+  printf "%d\n" "$PHP_SERVER_PID" >"$PHP_SERVER_ROOT/.pid"
+}
+
+_isSimplePHPServerRunning() {
+  [ -f "$PHP_SERVER_ROOT/.pid" ] && kill -0 "$(cat "$PHP_SERVER_ROOT/.pid")" || return 1
 }
 
 _simplePHPRequest() {
@@ -202,11 +207,19 @@ testDeployApplication() {
 
   export PHP_SERVER_ROOT
   PHP_SERVER_ROOT="$d/live-app/public"
+  local start elapsed maxWaitTime=15
 
+  start=$(beginTiming)
   if ! _simplePHPServer; then
     decorate error _simplePHPServer failed
     buildFailed "$quietLog" || return $?
   fi
+  while ! _isSimplePHPServerRunning; do
+    elapsed=$(($(beginTiming) - start))
+    if [ "$elapsed" -gt "$maxWaitTime" ]; then
+      __environment "Simple PHP Server not running after $maxWaitTime seconds, failing" || return $?
+    fi
+  done
   consoleNameValue 20 "PHP Process" "$PHP_SERVER_PID"
 
   decorate info _simplePHPServer started "$PHP_SERVER_PID"
