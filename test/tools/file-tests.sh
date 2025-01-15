@@ -205,3 +205,21 @@ testFileMatches() {
   assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
   assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 }
+
+testLinkCreate() {
+  local home target
+
+  home=$(__environment buildHome) || return $?
+
+  target="wacky.$$"
+  assertFileDoesNotExist --line "$LINENO" "$home/bin/build/$target" || return $?
+  assertExitCode --line "$LINENO" 0 linkCreate --help || return $?
+  assertExitCode --line "$LINENO" 0 linkCreate "$home/bin/build/tools.sh" "$target" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target" || return $?
+  assertExitCode --line "$LINENO" 0 "$home/bin/build/$target" linkCreate "$home/bin/build/tools.sh" "$target.ALT" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.ALT" || return $?
+  assertExitCode --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/tools.sh" "$target.FINAL" || return $?
+  assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.FINAL" || return $?
+  assertEquals --line "$LINENO" "$((0 + $(find "$home/bin/build" -name "wacky.*" | wc -l)))" "3" || return $?
+  __environment rm -rf "$home/bin/build/$target*" || return $?
+}

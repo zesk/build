@@ -659,3 +659,75 @@ _directoryNewestFile() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+
+# Create a link
+#
+# Argument: target - Exists. File. Source file name or path.
+# Argument: linkName - String. Required. Link short name, created next to `target`.
+linkCreate() {
+  local usage="_${FUNCNAME[0]}"
+
+  local target="" path="" linkName="" backupFlag=true
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --no-backup)
+        backupFlag=false
+        ;;
+      *)
+        if [ -z "$target" ]; then
+          target=$(usageArgumentExists "$usage" "target" "$argument") || return $?
+          path=$(__usageEnvironment "$usage" realPath "$target") || return $?
+          path=$(__usageEnvironment "$usage" dirname "$path") || return $?
+        elif [ -z "$linkName" ]; then
+          linkName=$(usageArgumentString "$usage" "linkName" "$argument") || return $?
+        else
+          # IDENTICAL argumentUnknown 1
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  [ -n "$target" ] || __failArgument "$usage" "Missing target" || return $?
+  [ -n "$linkName" ] || __failArgument "$usage" "Missing linkName" || return $?
+
+  target=$(__usageEnvironment "$usage" basename "$target") || return $?
+
+  [ -e "$path/$target" ] || __failEnvironment "$usage" "$path/$target must be a file or directory" || return $?
+
+  local link="$path/$linkName" source="$path/$target" undo=()
+  if [ ! -L "$link" ]; then
+    if [ -e "$link" ]; then
+      __failEnvironment "$usage" "$(decorate file "$link") exists and was not a link $(decorate code "$(betterType "$link")")" || :
+      __usageEnvironment "$usage" mv "$link" "$link.createLink.$$.backup" || return $?
+      undo+=(rm -rf "$link.$$.backup")
+    fi
+  else
+    local actual
+    actual=$(__usageEnvironment "$usage" readlink "$link") || return $?
+    if [ "$actual" = "$source" ]; then
+      return 0
+    fi
+    __usageEnvironment "$usage" mv "$link" "$link.createLink.$$.badLink" || return $?
+    undo+=(rm -rf "$link.$$.badLink")
+  fi
+  __usageEnvironment "$usage" ln -s "$source" "$link" || return $?
+  $backupFlag || _undo 0 "${undo[@]}" || return $?
+}
+_linkCreate() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

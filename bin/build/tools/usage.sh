@@ -311,6 +311,26 @@ usageArgumentFile() {
   __usageArgumentHelper "file" "${args[@]}" test -f
 }
 
+# Validates a value is not blank and exists in the file system
+# Upon success, outputs the file name
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file or directory`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentExists() {
+  local usage="$1" args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    return $?
+  fi
+  __usageArgumentHelper "file or directory" "${args[@]}" test -e
+}
+
 # Validates a value is not blank and is a link
 # Upon success, outputs the file name
 # Usage: {fn} usageFunction variableName variableValue [ noun ]

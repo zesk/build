@@ -37,12 +37,48 @@ phpUninstall() {
   packageWhichUninstall php php-common php-cli "$@"
 }
 
+# Tail the PHP log
+# See: tail
+phpTailLog() {
+  local usage="_${FUNCNAME[0]}"
+  local logFile
+  logFile=$(__usageEnvironment "$usage" phpLog) || return $?
+  [ -n "$logFile" ] || __failEnvironment "$usage" "PHP log file is blank" || return $?
+  if [ ! -f "$logFile" ]; then
+    statusMessage -- printf "%s %s" "$(decorate file "$logFile")" "$(decorate warning "does not exist - creating")" 1>&2
+    __usageEnvironment "$usage" touch "$logFile" || return $?
+  elif isEmptyFile "$logFile"; then
+    statusMessage -- printf "%s %s" "$(decorate file "$logFile")" "$(decorate warning "is empty")" 1>&2
+  fi
+  tail "$@" "$logFile"
+}
+
 #
 # Usage: {fn}
 # Outputs the path to the PHP log file
 #
 phpLog() {
-  php -r "echo ini_get('error_log');" 2>/dev/null || _environment "php not installed" || return $?
+  local usage="_${FUNCNAME[0]}"
+  whichExists php || __failEnvironment "$usage" "php not installed" || return $?
+  php -r "echo ini_get('error_log');" 2>/dev/null || __failEnvironment "$usage" "php installation issue" || return $?
+}
+_phpLog() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Usage: {fn}
+# Outputs the path to the PHP ini file
+#
+phpIniFile() {
+  local usage="_${FUNCNAME[0]}"
+  whichExists php || __failEnvironment "$usage" "php not installed" || return $?
+  php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || __failEnvironment "$usage" "php installation issue" || return $?
+}
+_phpIniFile() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

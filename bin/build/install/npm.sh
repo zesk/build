@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# php.sh
+# npm.sh
 #
 # Depends: apt
 #
