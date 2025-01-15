@@ -229,7 +229,7 @@ Needs internet access and creates a directory `./bin/build`
 - `--debug` - Optional. Flag. Debugging is on.
 - `--force` - Optional. Flag. Force installation even if file is up to date.
 - `--diff` - Optional. Flag. Show differences between old and new file.
-- `--replace` - Optional. Flag. Replace an old version of this script with this one and delete this one. Internal only, do not use.
+- `--replace fie` - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use.
 
 #### Exit codes
 

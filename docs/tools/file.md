@@ -324,7 +324,7 @@ Outputs one of `type` output or enhancements:
 
 IDENTICAL _realPath 10
 
-- Location: `bin/build/tools/file.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Usage
 
