@@ -701,13 +701,14 @@ linkCreate() {
   done
 
   [ -n "$target" ] || __failArgument "$usage" "Missing target" || return $?
+  [ -L "$target" ] || __failArgument "$usage" "Can not link to another link ($(decoreate file "$target") is a link)" || return $?
   [ -n "$linkName" ] || __failArgument "$usage" "Missing linkName" || return $?
 
   target=$(__usageEnvironment "$usage" basename "$target") || return $?
 
   [ -e "$path/$target" ] || __failEnvironment "$usage" "$path/$target must be a file or directory" || return $?
 
-  local link="$path/$linkName" source="$path/$target" clean=()
+  local link="$path/$linkName"
   if [ ! -L "$link" ]; then
     if [ -e "$link" ]; then
       __failEnvironment "$usage" "$(decorate file "$link") exists and was not a link $(decorate code "$(betterType "$link")")" || :
@@ -717,13 +718,15 @@ linkCreate() {
   else
     local actual
     actual=$(__usageEnvironment "$usage" readlink "$link") || return $?
-    if [ "$actual" = "$source" ]; then
+    if [ "$actual" = "$target" ]; then
       return 0
     fi
     __usageEnvironment "$usage" mv "$link" "$link.createLink.$$.badLink" || return $?
     clean+=("$link.$$.badLink")
   fi
-  __usageEnvironment "$usage" ln -s "$source" "$link" || return $?
+  __usageEnvironment "$usage" muzzle pushd "$path" || return $?
+  __usageEnvironment "$usage" ln -s "$target" "$linkName" || return $?
+  __usageEnvironment "$usage" muzzle popd "$path" || return $?
   $backupFlag || __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _linkCreate() {
