@@ -701,7 +701,7 @@ linkCreate() {
   done
 
   [ -n "$target" ] || __failArgument "$usage" "Missing target" || return $?
-  [ -L "$target" ] || __failArgument "$usage" "Can not link to another link ($(decoreate file "$target") is a link)" || return $?
+  [ -L "$target" ] || __failArgument "$usage" "Can not link to another link ($(decorate file "$target") is a link)" || return $?
   [ -n "$linkName" ] || __failArgument "$usage" "Missing linkName" || return $?
 
   target=$(__usageEnvironment "$usage" basename "$target") || return $?

@@ -294,7 +294,7 @@ environmentFileLoad() {
           ! $debugMode || printf -- "Loading required file: %s\n" "$argument"
           ff+=("$(usageArgumentFile "$usage" "environmentFile" "$argument")") || return $?
         else
-          ! $verboseMode || statusMessage decorate info "Loading optional file: $(decoreate file "$argument")"
+          ! $verboseMode || statusMessage decorate info "Loading optional file: $(decorate file "$argument")"
           environmentFile=$(usageArgumentFileDirectory "$usage" "environmentFile" "$argument") || return $?
           if [ -f "$environmentFile" ]; then
             ff+=("$environmentFile")
