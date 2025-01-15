@@ -7,7 +7,7 @@
 #
 # bin/build/bitbucket-container.sh --env .env.PRODUCTION
 #
-image: atlassian/default-image
+image: atlassian/default-image:4
 
 pipelines:
   branches:
