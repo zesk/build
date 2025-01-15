@@ -660,7 +660,6 @@ _directoryNewestFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Create a link
 #
 # Argument: target - Exists. File. Source file name or path.
@@ -701,8 +700,9 @@ linkCreate() {
   done
 
   [ -n "$target" ] || __failArgument "$usage" "Missing target" || return $?
-  [ -L "$target" ] || __failArgument "$usage" "Can not link to another link ($(decorate file "$target") is a link)" || return $?
   [ -n "$linkName" ] || __failArgument "$usage" "Missing linkName" || return $?
+
+  [ ! -L "$target" ] || __failArgument "$usage" "Can not link to another link ($(decorate file "$target") is a link)" || return $?
 
   target=$(__usageEnvironment "$usage" basename "$target") || return $?
 
@@ -725,8 +725,8 @@ linkCreate() {
     clean+=("$link.$$.badLink")
   fi
   __usageEnvironment "$usage" muzzle pushd "$path" || return $?
-  __usageEnvironment "$usage" ln -s "$target" "$linkName" || return $?
-  __usageEnvironment "$usage" muzzle popd "$path" || return $?
+  __usageEnvironment "$usage" ln -s "$target" "$linkName" || _undo $? muzzle popd || return $?
+  __usageEnvironment "$usage" muzzle popd || return $?
   $backupFlag || __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _linkCreate() {
