@@ -2,9 +2,9 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
-### `consoleBlackBackground` - undocumented
+### `decorate blackBackground` - undocumented
 
-No documentation for `consoleBlackBackground`.
+No documentation for `decorate blackBackground`.
 
 - Location: `bin/build/tools/colors.sh`
 

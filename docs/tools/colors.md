@@ -182,7 +182,7 @@ Intended to be run on an interactive console. Should support $(tput cols).
 ### `consoleNameValue` - Output a name value pair
 
 Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
-right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
+right-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
 
 
 

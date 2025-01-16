@@ -84,7 +84,7 @@ __deprecatedCannon() {
   shift 2
   read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
   ignoreStuff+=(! -path '*/docs/release/*')
-  statusMessage printf "%s %s \n" "$(consoleWarning "$from")" "$(consoleSuccess "$to")"
+  statusMessage printf "%s %s \n" "$(decorate warning "$from")" "$(decorate success "$to")"
   cannon "$from" "$to" "${ignoreStuff[@]}" "$@" || :
 }
 
@@ -272,16 +272,16 @@ __deprecatedCleanup() {
   clearLine
   # Do all deprecations
   for deprecatedToken in "${deprecatedTokens[@]}"; do
-    statusMessage consoleWarning "$deprecatedToken "
+    statusMessage decorate warning "$deprecatedToken "
     if find . -type f ! -path "*/.*/*" "${deprecatedIgnoreStuff[@]}" ! -path "*/$this" ! -path './docs/release/*' ! -name 'deprecated.md' -print0 | xargs -0 grep -l -e "$deprecatedToken"; then
       clearLine || :
-      consoleError "DEPRECATED token \"$deprecatedToken\" found" || :
+      decorate error "DEPRECATED token \"$deprecatedToken\" found" || :
       exitCode=1
     fi
   done
   clearLine || :
-  [ "$exitCode" -ne 0 ] || consoleSuccess "All deprecated tokens were not found"
-  consoleSuccess "Completed deprecated script for Build $(consoleCode "$(jq -r .version "$(dirname "${BASH_SOURCE[0]}")/build.json")")"
+  [ "$exitCode" -ne 0 ] || decorate success "All deprecated tokens were not found"
+  decorate success "Completed deprecated script for Build $(decorate code "$(jq -r .version "$(dirname "${BASH_SOURCE[0]}")/build.json")")"
 
   return "$exitCode"
 }
