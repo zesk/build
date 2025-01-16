@@ -1,6 +1,6 @@
 # MIT License
 
-## Copyright &copy; 2025, Market Acumen, Inc
+## Copyright &copy; 2023-2025, Market Acumen, Inc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
