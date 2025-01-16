@@ -11,7 +11,7 @@ testIsUpToDate() {
   local thisYear thisMonth expirationDays start testDate
 
   start=$(beginTiming)
-  __testSection "isUpToDate testing"
+  __testSection "isUpToDate testing: BUILD_DEBUG=$BUILD_DEBUG"
   thisYear=$(($(date +%Y) + 0))
   thisMonth="$(date +%m)"
   assertExitCode --line "$LINENO" --stderr-match "missing keyDate" 2 isUpToDate || return $?

@@ -195,8 +195,14 @@ testEnvironmentValueWriteArray() {
 }
 
 __testEnvironmentNameValidPassValues() {
-  environmentVariables
   cat <<'EOF'
+AWS_SECRET_ACCESS_KEY
+BUILD_HOME
+CI
+KUBERNETES_PORT
+PWD
+__CFBundleIdentifier
+cleanExit
 ABC_DEF
 ____FOOOBAR1231
 _112312312312

@@ -2,3 +2,58 @@
 
 - Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling)
 - Move `docs` to something not Bash-based perhaps
+- Work on 30-minute build or make it faster somehow
+
+## Slowest tests 2025
+
+- 76 seconds - `testDeployApplication`
+- 73 seconds - `testDeployToRemote`
+- 69 seconds - `testPHPBuild`
+- 69 seconds - `testDeployRemoteFinish`
+- 55 seconds - `testDeployBuildEnvironment`
+- 52 seconds - `testAWSIPAccess`
+- 47 seconds - `testHookSystem`
+- 39 seconds - `testAdditionalBins`
+- 35 seconds - `testIsUpToDate` - **Not sure why slow**
+- ADDRESSED: 35 seconds - `testEnvironmentNameValid`
+- 34 seconds - `testServiceToPort`
+- 34 seconds - `testPackageAPI`
+- 33 seconds - `testServiceToPortStandard`
+- 33 seconds - `testInstallTerraform`
+- 32 seconds - `testUsageArgumentFunctions`
+- 31 seconds - `testWrapperShellScripts`
+- 31 seconds - `testLogFileRotate1`
+- 31 seconds - `testLogFileRotate`
+- 29 seconds - `testIdenticalCheckAndRepairMap`
+- 28 seconds - `testBashPrompt`
+- 27 seconds - `testSugar`
+- 26 seconds - `testInstallOpenTofu`
+- 25 seconds - `testGitVersionList`
+- 24 seconds - `testHooksWhichSeemBenign`
+- 24 seconds - `testDaemontools`
+- 24 seconds - `testBadNumericSamples`
+- 23 seconds - `testGitInstallation`
+- 22 seconds - `testIdenticalChecks`
+- 21 seconds - `testFileMatches`
+- 20 seconds - `testRepeat2`
+- 18 seconds - `testValidateCharacterClass`
+- 18 seconds - `testRunCount`
+- 18 seconds - `testPythonInstallation`
+- 18 seconds - `testAwsEnvironmentFromCredentials`
+- 16 seconds - `testProcessWait`
+- 16 seconds - `testIterm2`
+- 15 seconds - `testEnvironmentFileLoad`
+- 15 seconds - `testBuildEnvironmentLoadAll`
+- 14 seconds - `testVersionNext`
+- 14 seconds - `testInstallBinBuild`
+- 14 seconds - `testBuildEnvironmentGet`
+- 12 seconds - `testNodeInstallation`
+- 12 seconds - `testAWSExpiration`
+- 11 seconds - `testUnsignedNumberSamples`
+- 11 seconds - `testUnsignedIntegerSamples`
+- 11 seconds - `testUnderscoreUnderscoreBuild`
+- 11 seconds - `testTestSuite`
+- 11 seconds - `testSignedNumberSamples`
+- 11 seconds - `testMariaDBInstallation`
+- 11 seconds - `testLinkCreate`
+-  seconds -  ``
