@@ -29,6 +29,7 @@ slowDaemon() {
 testProcessWait() {
   local background timingFactor
 
+  printf "%s %s\n"  "$(decorate info "Uptime")" "$(decorate code "$(uptime)")"
   slowDaemon &
   disown
   background=$!

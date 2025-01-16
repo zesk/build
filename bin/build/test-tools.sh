@@ -38,10 +38,11 @@ testSuite() {
   local quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
   # Avoid conflict with __argument
   local __ARGUMENT start mode
-  local statsFile allTestStart testStart testPaths runner startString continueFile verboseMode=false
+  local statsFile allTestStart testStart testPaths runner startString continueFile verboseMode=false load
   local listFlag=false runner=() testPaths=() messyOption="" checkTests=() continueFlag=false matchTests=() failExecutors=() doStats=true showFlag=false
 
   startString="$(__usageEnvironment "$usage" date +"%F %T")" || return $?
+  load=$(decorate code "$(uptime | awk -F : '{ print $4 }' | trimSpace)")
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM BUILD_DEBUG
 
   export cleanExit=
@@ -53,7 +54,7 @@ testSuite() {
   allTestStart=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   quietLog="$(__usageEnvironment "$usage" buildQuietLog "$usage")" || return $?
-  __usageEnvironment "$usage" printf "%s started on %s\n" "${usage#_}" "$startString" >"$quietLog" || return $?
+  __usageEnvironment "$usage" printf -- "%s started on %s (%s)\n" "${usage#_}" "$startString" "$load" | tee "$quietLog" || return $?
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)
   BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
