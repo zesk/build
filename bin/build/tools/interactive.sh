@@ -26,64 +26,8 @@
 # Pause for user input
 pause() {
   local prompt="${1-"PAUSE > "}"
-  printf "%s" "$prompt"
-  read -r prompt
-}
-
-#
-# Read user input and return 0 if the user says yes
-# Exit Code: 0 - Yes
-# Exit Code: 1 - No
-# Usage: {fn} [ --default defaultValue ] [ --yes ] [ --no ]
-# Argument: defaultValue - Boolean. Optional. Value to return if no value given by user
-# Argument: --yes - Boolean. Optional. Short for `--default yes`
-# Argument: --no - Boolean. Optional. Short for `--default no`
-confirmYesNo() {
-  local default yes
-
-  local saved=("$@") nArguments=$#
-  while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
-    case "$argument" in
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --yes) default=yes ;;
-      --no) default=no ;;
-      --default)
-        shift
-        default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        message="$*"
-        break
-        ;;
-    esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
-  done
-
-  statusMessage printf "%s" "$message"
-  while read -r yes; do
-    if parseBoolean "$yes"; then
-      return 0
-    fi
-    if [ $? -eq 1 ]; then
-      _environment || return $?
-    fi
-    if [ -n "$default" ]; then
-      parseBoolean "$default"
-      return $?
-    fi
-    statusMessage printf "%s" "$message"
-  done
-}
-_confirmYesNo() {
-  # IDENTICAL usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  statusMessage printf -- "%s" "$prompt"
+  read -n 1 -s -r prompt
 }
 
 ####################################################################################################
@@ -405,5 +349,261 @@ interactiveManager() {
   fi
 }
 _interactiveManager() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} usage approvedFile verb confirmYesNoArguments ...
+__interactiveApproved() {
+  local usage="$1" approvedFile="$2" verb="$3" approved displayFile
+
+  shift 3 || __usageArgument "$usage" "shift 3" || return $?
+  displayFile=$(decorate file "$sourcePath")
+  if [ ! -f "$approvedFile" ]; then
+    if confirmYesNo --timeout 30 --attempts 10 --info "$@" "$verb $(decorate file "$sourcePath")?"; then
+      approved=true
+      statusMessage --last printf "%s [%s] %s" "$(decorate success "Approved")" "$(decorate file "$displayFile")" "$(decorate subtle "(will not ask in the future)")"
+    else
+      approved=false
+    fi
+    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" >"$approvedFile" || __failEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
+  fi
+  approved=$(head -n 1 "$approvedFile")
+  isBoolean "$approved" && "$approved"
+}
+
+# Maybe move this to its own thing if needed later
+# Usage: {fn} timeout attempts extras message
+__interactiveCountdownReadBoolean() {
+  local usage="$1" && shift
+  local timeout="" rr=() extras icon="⏳" attempts
+
+  if [ "$1" != "" ]; then
+    rr=(-t 1)
+    timeout=$(usageArgumentPositiveInteger "$usage" "timeout" "${1-}") || return $?
+  fi
+  shift
+
+  attempts=$(usageArgumentInteger "$usage" "attempts" "${1-}") || return $?
+  shift
+
+  extras="${1-}" && shift
+
+  local value start now elapsed=0 message="$*" counter=1 exitCode=0 prefix="" timingSuffix=""
+  start=$(__environment beginTiming) || return $?
+  width="$timeout"
+  width="${#width}"
+
+  # IDENTICAL __interactiveCountdownReadBooleanStatus 3
+  [ "$attempts" -le 1 ] || prefix="$(decorate value "[🧪$counter/$attempts]") "
+  [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
+  statusMessage printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix"
+
+  exitCode=2
+  while [ "$exitCode" -ge 2 ]; do
+    while ! read -n 1 -s -r "${rr[@]+"${rr[@]}"}" value; do
+      if [ -z "$timeout" ]; then
+        return 2
+      fi
+      now=$(__environment beginTiming) || return $?
+      elapsed=$((now - start))
+      if [ "$elapsed" -gt "$timeout" ]; then
+        return 10
+      fi
+      # IDENTICAL __interactiveCountdownReadBooleanStatus 3
+      [ "$attempts" -le 1 ] || prefix="$(decorate value "[🧪$counter/$attempts]") "
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
+      statusMessage printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix"
+    done
+    exitCode=0
+    parseBoolean "$value" || exitCode=$?
+    [ "$exitCode" -ge 2 ] || break
+    counter=$((counter + 1))
+    if [ "$attempts" -gt 0 ]; then
+      if [ $counter -gt "$attempts" ]; then
+        return 11
+      fi
+      # IDENTICAL __interactiveCountdownReadBooleanStatus 3
+      [ "$attempts" -le 1 ] || prefix="$(decorate value "[🧪$counter/$attempts]") "
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
+      statusMessage printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix"
+    fi
+  done
+  return "$exitCode"
+}
+
+__confirmYesNo() {
+  local prefix="${2-}" exitCode=0
+
+  [ -z "$prefix" ] || prefix="$(decorate error "$prefix") "
+
+  parseBoolean "${1-}" || exitCode=$?
+  case "$exitCode" in
+    0) statusMessage printf -- "%s%s" "$prefix" "$(decorate success "Yes")" ;;
+    1) statusMessage printf -- "%s%s" "$prefix" "$(decorate warning "[ ** NO ** ]")" ;;
+    *) return 2 ;;
+  esac
+  return "$exitCode"
+}
+
+# Read user input and return 0 if the user says yes, or non-zero if they say no
+# Exit Code: 0 - Yes
+# Exit Code: 1 - No
+# Usage: {fn} [ --default defaultValue ] [ --yes ] [ --no ]
+# Argument: --default defaultValue - Boolean. Optional. Value to return if no value given by user
+# Argument: --attempts attempts - PositiveInteger. Optional. User can give us a bad response this many times before we return the default.
+# Argument: --timeout seconds - PositiveInteger. Optional. Wait this long before choosing the default. If no default, default is --no.
+# Argument: --yes - Boolean. Optional. Short for `--default yes`
+# Argument: --no - Boolean. Optional. Short for `--default no`
+# Example: Will time out after 10 seconds, regardless (user must make valid input in that time):
+# Example:
+# Example:     confirmYesNo --timeout 10 "Stop the timer!"
+# Example:
+# Example: Will time out after 10 seconds, regardless (user must make valid input in that time):
+# Example:
+# Example:     confirmYesNo --timeout 10 "Stop the timer!"
+# Example:
+confirmYesNo() {
+  local usage="_${FUNCNAME[0]}"
+  local default="no" message="" timeout="" extras="" attempts=-1
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --info)
+        extras=" $(decorate subtle "Type Y or N") "
+        ;;
+      --attempts)
+        shift
+        attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --timeout)
+        shift
+        timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --yes) default=yes ;;
+      --no) default=no ;;
+      --default)
+        shift
+        default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        parseBoolean "$default" || [ $? -ne 2 ] || __failArgument "$usage" "Can not parse $(decorate code "$1") as a boolean" || return $?
+        ;;
+      *)
+        message="$*"
+        break
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  local exitCode=0
+
+  while __interactiveCountdownReadBoolean "$usage" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
+    case "$exitCode" in
+      0 | 1)
+        __confirmYesNo "$((exitCode - 1))"
+        return $exitCode
+        ;;
+      2 | 10)
+        reason="TIMEOUT"
+        break
+        ;;
+      11)
+        reason="ATTEMPTS"
+        break
+        ;;
+      *)
+        reason="UNKNOWN: $exitCode"
+        break
+        ;;
+    esac
+    exitCode=0
+  done
+  __confirmYesNo "$default" "$reason"
+}
+_confirmYesNo() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} [ directoryOrFile ... ]
+# Argument: directoryOrFile - Required. Exists. Directory or file to `source` `.sh` files found.
+# Argument: --info - Optional. Flag. Show user what they should do (press a key).
+# Argument: --no-info - Optional. Flag. Hide user info (what they should do ... press a key)
+# Argument: --verbose - Optional. Flag. Show what is done as status messages.
+# Argument: --prefix - Optional. String. Display this text before each status messages.
+# Security: Loads bash files
+# Loads files or a directory of `.sh` files using `source` to make the code available.
+# Has security implications. Use with caution and ensure your directory is protected.
+interactiveBashSource() {
+  local usage="_${FUNCNAME[0]}"
+
+  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30)
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --info)
+        aa=(--info)
+        ;;
+      --no-info)
+        aa=()
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      --prefix)
+        # shift here never fails as [ #$ -gt 0 ]
+        shift
+        prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        local sourcePath="$argument" verb="" approved=false
+        displayPath="$(decorate file "$sourcePath")"
+        if [ -f "$sourcePath" ]; then
+          verb="file"
+          if __interactiveApproved "$usage" "$(dirname "$sourcePath")/.approved.$(basename "$sourcePath")" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+            __usageEnvironment "$usage" source "$sourcePath" || return $?
+            approved=true
+          fi
+        elif [ -d "$sourcePath" ]; then
+          verb="path"
+          if __interactiveApproved "$usage" "$sourcePath/.approved" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+            __usageEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
+            approved=true
+          fi
+        else
+          __failEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")"
+        fi
+        if $verboseFlag; then
+          if $approved; then
+            statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
+          else
+            statusMessage decorate subtle "Skipping $verb $(decorate file "$sourcePath")" || :
+          fi
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+}
+_interactiveBashSource() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

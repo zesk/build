@@ -384,15 +384,15 @@ environmentApplicationLoad() {
   done
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
-    APPLICATION_VERSION="$(__environment runHook "$hook")" || return $?
+    APPLICATION_VERSION="$(__environment hookRun "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_ID-}" ]; then
     hook=application-id
-    APPLICATION_ID="$(__environment runHook "$hook")" || return $?
+    APPLICATION_ID="$(__environment hookRun "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_TAG-}" ]; then
     hook=application-tag
-    APPLICATION_TAG="$(__environment runHook "$hook")" || return $?
+    APPLICATION_TAG="$(__environment hookRun "$hook")" || return $?
     if [ -z "${APPLICATION_TAG-}" ]; then
       APPLICATION_TAG=$APPLICATION_ID
     fi
@@ -470,10 +470,10 @@ _environmentFileShow() {
 #
 # Create environment file `.env` for build.
 #
-# Environment: APPLICATION_VERSION - reserved and set to `runHook version-current` if not set already
+# Environment: APPLICATION_VERSION - reserved and set to `hookRun version-current` if not set already
 # Environment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
-# Environment: APPLICATION_TAG - reserved and set to `runHook application-id`
-# Environment: APPLICATION_ID - reserved and set to `runHook application-tag`
+# Environment: APPLICATION_TAG - reserved and set to `hookRun application-id`
+# Environment: APPLICATION_ID - reserved and set to `hookRun application-tag`
 #
 environmentFileApplicationMake() {
   local usage="_${FUNCNAME[0]}"

@@ -65,7 +65,7 @@ __releaseNotes() {
   local usage="$1" version="${2-}"
 
   if [ -z "$version" ]; then
-    version=$(__usageEnvironment "$usage" runHook version-current) || return $?
+    version=$(__usageEnvironment "$usage" hookRun version-current) || return $?
     [ -n "$version" ] || __failEnvironment "$usage" "version-current hook returned blank" || return $?
   fi
   export BUILD_RELEASE_NOTES
@@ -171,10 +171,10 @@ __newRelease() {
     readLoop=true
   fi
   hasHook version-current || __failEnvironment "$usage" "Requires hook version-current" || return $?
-  currentVersion=$(__usageEnvironment "$usage" runHook version-current) || return $?
+  currentVersion=$(__usageEnvironment "$usage" hookRun version-current) || return $?
   [ -n "$currentVersion" ] || __failEnvironment "$usage" "version-current hook returned empty string" || return $?
   if hasHook version-live; then
-    liveVersion=$(__usageEnvironment "$usage" runHook version-live) || return $?
+    liveVersion=$(__usageEnvironment "$usage" hookRun version-live) || return $?
     [ -n "$currentVersion" ] || __failEnvironment "$usage" "version-live hook returned empty string" || return $?
     consoleNameValue $width "Live:" "$liveVersion"
   else
@@ -207,7 +207,7 @@ __newRelease() {
     notes="$(__usageEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
     nextVersion=$(nextMinorVersion "$liveVersion")
     if $isInteractive; then
-      __usageEnvironment "$usage" runHook version-created "$currentVersion" "$notes" || return $?
+      __usageEnvironment "$usage" hookRun version-created "$currentVersion" "$notes" || return $?
     fi
   fi
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
@@ -215,7 +215,7 @@ __newRelease() {
     consoleNameValue $width "Ready to deploy:" "$currentVersion"
     consoleNameValue $width "Release notes:" "$notes"
     if $isInteractive; then
-      __usageEnvironment "$usage" runHook version-already "$currentVersion" "$notes" || return $?
+      __usageEnvironment "$usage" hookRun version-already "$currentVersion" "$notes" || return $?
     fi
     return 0
   fi
@@ -252,12 +252,12 @@ __newRelease() {
     __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
     decorate success "Version $newVersion ready - release notes: $notes"
     if $isInteractive; then
-      __usageEnvironment "$usage" runHook version-created "$newVersion" "$notes" || return $?
+      __usageEnvironment "$usage" hookRun version-created "$newVersion" "$notes" || return $?
     fi
   else
     decorate warning "Version $newVersion already - release notes: $notes"
     if $isInteractive; then
-      __usageEnvironment "$usage" runHook version-already "$newVersion" "$notes" || return $?
+      __usageEnvironment "$usage" hookRun version-already "$newVersion" "$notes" || return $?
     fi
   fi
   git add "$notes"

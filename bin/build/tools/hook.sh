@@ -8,55 +8,144 @@
 # Test: o ./test/tools/hook-tests.sh
 
 #
-# Actual implementation of `runHook` and `runOptionalHook`
-# See: runHook
+# Actual implementation of `hookRun` and `hookRunOptional`
+# See: hookRun
 #
-_runHookWrapper() {
-  local usageFunction binary hook whichArgs applicationHome requireHook
-  local argument
+__hookRunner() {
+  local usage="${1-}" && shift
 
-  usageFunction="$1"
-  shift || :
+  local requireHook=false sourceHook=false
 
-  requireHook=false
-  whichArgs=()
+  # Parse internal flags first (this is so users can not accidentally use these, only us)
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
       --require)
         requireHook=true
         ;;
+      --source)
+        sourceHook=true
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  # Parse user flags first (this is so users can not accidentally use these, only us)
+
+  local applicationHome="" whichArgs=()
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --application)
         shift || :
-        applicationHome=$(usageArgumentDirectory "$usageFunction" applicationHome "${1-}") || return $?
+        applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
         whichArgs=(--application "$applicationHome")
         ;;
       *)
-        binary="$argument"
-        shift || :
+        local hook binary="$argument"
+        shift
         if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
           if $requireHook; then
-            # runHook
-            __failArgument "$usageFunction" "Hook not found $(decorate code "$binary")" || return $?
+            # hookRun
+            __failArgument "$usage" "Hook not found $(decorate code "$binary")" || return $?
           else
             if buildDebugEnabled; then
               printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
             fi
-            # runOptionalHook
+            # hookRunOptional
             return 0
           fi
         fi
         if buildDebugEnabled hook; then
           statusMessage decorate success "Running hook $(decorate code "$binary") $*"
         fi
-        "$hook" "$@"
-        return $?
+        if "$sourceHook"; then
+          set --
+          __usageEnvironment "$usage" source "$hook" || return $?
+        else
+          __usageEnvironment "$usage" "$hook" "$@" || return $?
+        fi
+        return 0
         ;;
     esac
-    shift || __failArgument "$usageFunction" "No more arguments" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
-  __failArgument "$usageFunction" "hookName required" || return $?
+  __failArgument "$usage" "No hook name passed (Arguments: $(_command "${saved[@]}"))" || return $?
+}
+
+# Run a hook in the project located at `./bin/hooks/`
+#
+# See (Hooks documentation)[../hooks/index.md] for standard hooks.
+#
+# Summary: Run a project hook
+# Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
+# So the hook for `version-current` would be a file at:
+#
+#     bin/hooks/version-current.sh
+#
+# Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
+#
+# Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
+#
+# Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
+# Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
+# Argument: hookName - String. Required. Hook name to run.
+# Argument: arguments - Optional. Arguments are passed to `hookName`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Exit code: Any - The hook exit code is returned if it is run
+# Exit code: 1 - is returned if the hook is not found
+# Example:     version="$({fn} version-current)"
+# See: hooks.md hookRunOptional hookRun hookSource hookSourceOptional
+# Test: testHookSystem
+# Environment: BUILD_HOOK_PATH
+hookRun() {
+  __hookRunner "_${FUNCNAME[0]}" --require -- "$@"
+}
+_hookRun() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Identical to `hookRun` but returns exit code zero if the hook does not exist.
+#
+# Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
+# Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
+# Argument: hookName - String. Required. Hook name to run.
+# Argument: arguments - Optional. Arguments are passed to `hookName`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Exit code: Any - The hook exit code is returned if it is run
+# Exit code: 1 - is returned if the hook is not found
+# Example:     version="$({fn} version-current)"
+# See: hooks.md hookRunOptional hookRun
+# Test: testHookSystem
+# Environment: BUILD_HOOK_PATH
+hookRunOptional() {
+  __hookRunner "_${FUNCNAME[0]}" -- "$@"
+}
+_hookRunOptional() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run a hook in the project located at `./bin/hooks/`
@@ -80,17 +169,19 @@ _runHookWrapper() {
 # Exit code: Any - The hook exit code is returned if it is run
 # Exit code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
-# See: hooks.md runOptionalHook
+# See: hooks.md hookRunOptional
 # Test: testHookSystem
-runHook() {
-  _runHookWrapper "_${FUNCNAME[0]}" --require "$@"
+# Environment: BUILD_HOOK_PATH
+hookSource() {
+  __hookRunner "_${FUNCNAME[0]}" --source --require -- "$@"
 }
-_runHook() {
+_hookSource() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Identical to `runHook` but returns exit code zero if the hook does not exist.
+# Identical to `hookRun` but returns exit code zero if the hook does not exist.
 #
 # Usage: {fn} hookName [ arguments ... ]
 # Exit code: Any - The hook exit code is returned if it is run
@@ -99,11 +190,12 @@ _runHook() {
 # Example:         buildFailed "$quietLog"
 # Example:     fi
 # Test: testHookSystem
-# See: hooks.md runHook
-runOptionalHook() {
-  _runHookWrapper "_${FUNCNAME[0]}" "$@"
+# See: hooks.md hookRun
+hookSourceOptional() {
+  __hookRunner "_${FUNCNAME[0]}" --source -- "$@"
 }
-_runOptionalHook() {
+_hookSourceOptional() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -117,6 +209,7 @@ _runOptionalHook() {
 # Argument: hookName0 - one or more hook names which must exist
 # Exit Code: 0 - If all hooks exist
 # Test: testHookSystem
+# Environment: BUILD_HOOK_PATH
 hasHook() {
   local usage="_${FUNCNAME[0]}"
   local argument

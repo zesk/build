@@ -50,7 +50,7 @@ This tools does not install the `composer` binary into the local environment.
 
 #### Examples
 
-    bin/build/pipeline/composer.sh ./app/
+    phpComposer ./app/
 
 #### Exit codes
 

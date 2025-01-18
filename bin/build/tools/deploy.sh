@@ -277,11 +277,11 @@ deployMigrateDirectoryToLink() {
   deployHasVersion "$deployHome" "$appVersion" || __failEnvironment "$usage" "Application version $appVersion not found in $deployHome" || return $?
 
   [ ! -d "$deployHome/$appVersion/app" ] || __failEnvironment "$usage" "Old app directory $deployHome/$appVersion/app exists, stopping" || return $?
-  runOptionalHook --application "$applicationPath" maintenance on || __failEnvironment "$usage" "Unable to enable maintenance" || return $?
+  hookRunOptional --application "$applicationPath" maintenance on || __failEnvironment "$usage" "Unable to enable maintenance" || return $?
   tempAppLink="$applicationPath.$$.${FUNCNAME[0]}"
   # Create a temporary link to ensure it works
   if ! deployLink "$tempAppLink" "$deployHome/$appVersion/app"; then
-    if ! runOptionalHook maintenance off; then
+    if ! hookRunOptional maintenance off; then
       decorate error "Maintenance off FAILED, system may be unstable" 1>&2
     fi
     __failEnvironment "$usage" "deployLink failed" || return $?
@@ -299,7 +299,7 @@ deployMigrateDirectoryToLink() {
     fi
     __failEnvironment "$usage" "Unable to move live link $tempAppLink -> $applicationPath" || return $?
   fi
-  if ! runOptionalHook --application "$applicationPath" maintenance off; then
+  if ! hookRunOptional --application "$applicationPath" maintenance off; then
     decorate error "Maintenance ON FAILED, system may be unstable" 1>&2
   fi
   {

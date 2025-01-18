@@ -95,7 +95,7 @@ __hookGitPreCommit() {
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
 
   __usageEnvironment "$usage" gitPreCommitSetup || return $?
-  __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
+  __usageEnvironment "$usage" hookRunOptional "$hookName" || return $?
 
   statusMessage --last decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta "$hookName") $(decorate decoration)")"
 
@@ -104,7 +104,7 @@ __hookGitPreCommit() {
   for extension in "${extensions[@]+${extensions[@]}}"; do
     statusMessage decorate info "Processing $(decorate code "$extension") ..."
     if gitPreCommitHasExtension "$extension"; then
-      __usageEnvironment "$usage" runOptionalHook "pre-commit-$extension" || return $?
+      __usageEnvironment "$usage" hookRunOptional "pre-commit-$extension" || return $?
     fi
   done
 

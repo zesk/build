@@ -257,11 +257,11 @@ testSuite() {
         sectionNameHeading="$sectionName"
       fi
       testStart=$(__environment date +%s) || return $?
-      __usageEnvironment "$usage" runOptionalHook bash-test-start "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
+      __usageEnvironment "$usage" hookRunOptional bash-test-start "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
       runTime=$(($(date +%s) - testStart))
       ! $doStats || printf "%d %s\n" "$runTime" "$item" >>"$statsFile"
-      __usageEnvironment "$usage" runOptionalHook bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
+      __usageEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(decorate reset)"
     if $continueFlag; then
@@ -565,7 +565,7 @@ __testMatches() {
 __testFailed() {
   local errorCode name sectionName="$1" item="$2"
 
-  __usageEnvironment "$usage" runOptionalHook bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
+  __usageEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
 
   errorCode="$(_code test)"
   export IFS

@@ -245,10 +245,10 @@ Create environment file `.env` for build.
 
 #### Environment
 
-APPLICATION_VERSION - reserved and set to `runHook version-current` if not set already
+APPLICATION_VERSION - reserved and set to `hookRun version-current` if not set already
 APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
-APPLICATION_TAG - reserved and set to `runHook application-id`
-APPLICATION_ID - reserved and set to `runHook application-tag`
+APPLICATION_TAG - reserved and set to `hookRun application-id`
+APPLICATION_ID - reserved and set to `hookRun application-tag`
 ### `environmentFileApplicationVerify` - Check application environment is populated correctly.
 
 Check application environment is populated correctly.

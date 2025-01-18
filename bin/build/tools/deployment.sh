@@ -180,7 +180,7 @@ ___deployBuildEnvironment() {
     statusMessage decorate error "Deployment failed, reverting ..." || :
     "$fail" "$@" || return $?
   fi
-  if hasHook deploy-confirm && ! runHook deploy-confirm; then
+  if hasHook deploy-confirm && ! hookRun deploy-confirm; then
     statusMessage decorate warning "Deployment confirmation failed, reverting" || :
     "$fail" "$@" || return $?
   fi
@@ -317,7 +317,7 @@ deployRemoteFinish() {
     __usageEnvironment "$usage" cd "$applicationPath" || return $?
     decorate info "Cleaning up ... "
     if hasHook --application "$applicationPath" deploy-cleanup; then
-      __usageEnvironment "$usage" runHook deploy-cleanup || return $?
+      __usageEnvironment "$usage" hookRun deploy-cleanup || return $?
     else
       printf "No %s hook in %s\n" "$(decorate info "deploy-cleanup")" "$(decorate code "$applicationPath")"
     fi
@@ -415,7 +415,7 @@ _deployRevertApplication() {
       __failEnvironment "$usage" "Undo deployment to $previousChecksum failed $applicationPath - system is unstable" || return $?
     fi
   fi
-  if ! runOptionalHook deploy-revert "$deployHome" "$applicationId"; then
+  if ! hookRunOptional deploy-revert "$deployHome" "$applicationId"; then
     printf "%s %s\n" "$(decorate code "deploy-revert")" "$(decorate error "hook failed, continuing anyway")"
   fi
   decorate success "Application successfully reverted to version $(decorate code "$applicationId")" || :

@@ -264,23 +264,7 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 
 ## Hook documentation
 
-### `__hookApplicationEnvironment` - Hook is run to generate the application environment file
 
-Hook is run to generate the application environment file
-Outputs environment settings, one per line to be put into an environment file
-See `environmentFileApplicationMake` for usage and arguments.
-
-- Location: `bin/build/hooks/application-environment.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 #### Arguments
 
 - No arguments.
@@ -331,7 +315,7 @@ BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable
 - `0` - This SHOULD exit successfully always 
 #### Usage
 
-    runHook deploy-activate applicationPath
+    hookRun deploy-activate applicationPath
     
 
 #### Arguments

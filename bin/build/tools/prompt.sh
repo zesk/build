@@ -155,14 +155,14 @@ bashPromptModule_binBuild() {
     fi
   fi
 
-  oldMessage="$(runOptionalHook --application "$home" project-deactivate "$gitHome")" || oldMessage="$home: $(decorate error project-deactivate FAILED): $?" || :
+  oldMessage="$(hookRunOptional --application "$home" project-deactivate "$gitHome")" || oldMessage="$home: $(decorate error project-deactivate FAILED): $?" || :
   [ -z "$oldMessage" ] || printf -- "%s @ %s" "$oldMessage" "$(decorate code "$home")"
   # shellcheck source=/dev/null
   source "$gitHome/$tools" || __environment "Failed to load $showGitHome/$tools" || return $?
   # buildHome will be changed here
 
-  newMessage="$(runOptionalHook --application "$home" project-activate "$home")"
-  currentVersion="$(runOptionalHook --application "$gitHome" version-current)"
+  newMessage="$(hookRunOptional --application "$home" project-activate "$home")"
+  currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
 
   pathSuffix=
   if [ -d "$gitHome/bin" ]; then

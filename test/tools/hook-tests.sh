@@ -14,7 +14,7 @@ _hookTestFailed() {
 }
 
 testVersionLive() {
-  assertExitCode --line "$LINENO" 0 runHook version-live || return $?
+  assertExitCode --line "$LINENO" 0 hookRun version-live || return $?
 }
 
 
@@ -99,38 +99,38 @@ testHookSystem() {
   assertNotExitCode 0 hasHook test3 || _hookTestFailed "$testDir" || return $?
 
   # Exit codes
-  decorate info "runHook test0"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook test0 || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook test1"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook test1 || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook noExtension"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook noExtension || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook nonZero"
-  assertExitCode 99 runHook nonZero || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook nonZeroNoExt"
-  assertExitCode 99 runHook nonZeroNoExt || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook nonX"
-  assertExitCode --line "$LINENO" --stderr-ok 2 runHook nonX || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook nonXNoExt"
-  assertExitCode --line "$LINENO" --stderr-ok 2 runHook nonXNoExt || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook test2"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 runHook test2 || _hookTestFailed "$testDir" || return $?
-  decorate info "runHook test3"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" --stderr-ok 2 runHook test3 || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun test0"
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun test0 || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun test1"
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun test1 || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun noExtension"
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun noExtension || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun nonZero"
+  assertExitCode 99 hookRun nonZero || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun nonZeroNoExt"
+  assertExitCode 99 hookRun nonZeroNoExt || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun nonX"
+  assertExitCode --line "$LINENO" --stderr-ok 2 hookRun nonX || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun nonXNoExt"
+  assertExitCode --line "$LINENO" --stderr-ok 2 hookRun nonXNoExt || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun test2"
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun test2 || _hookTestFailed "$testDir" || return $?
+  decorate info "hookRun test3"
+  assertExitCode --leak BUILD_DEBUG --line "$LINENO" --stderr-ok 2 hookRun test3 || _hookTestFailed "$testDir" || return $?
 
   for hook in result reflect; do
     for exitCode in $(seq 0 7 245); do
-      decorate info "runHook $hook $exitCode"
-      assertExitCode --leak BUILD_DEBUG --line "$LINENO" "$exitCode" runHook $hook "$exitCode" || _hookTestFailed "$testDir" || return $?
+      decorate info "hookRun $hook $exitCode"
+      assertExitCode --leak BUILD_DEBUG --line "$LINENO" "$exitCode" hookRun $hook "$exitCode" || _hookTestFailed "$testDir" || return $?
     done
   done
 
-  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" runHook test0 || return $?
-  assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test0 || return $?
-  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" runHook test1 || return $?
-  assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test1 || return $?
-  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomDefault" runHook test2 || return $?
-  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" runHook test2 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" hookRun test0 || return $?
+  assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun test0 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" hookRun test1 || return $?
+  assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun test1 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomDefault" hookRun test2 || return $?
+  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun test2 || return $?
 
   unset BUILD_DEBUG
 }
@@ -144,7 +144,7 @@ testHooksWhichSeemBenign() {
 
   assertExitCode 0 gitPreCommitHeader || return $?
   for hook in application-environment application-id application-tag pre-commit-php pre-commit-sh version-current; do
-    APPLICATION_ID=abc APPLICATION_TAG=def assertExitCode 0 runHook "$hook" || return $?
+    APPLICATION_ID=abc APPLICATION_TAG=def assertExitCode 0 hookRun "$hook" || return $?
   done
   assertExitCode 0 gitPreCommitCleanup || return $?
 }

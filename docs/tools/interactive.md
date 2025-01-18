@@ -28,22 +28,21 @@ Not ready for prime time yet - written not tested.
 
 ## User prompts
 
-### `confirmYesNo` - Read user input and return 0 if the user says
+### `confirmYesNo` - undocumented
 
-Read user input and return 0 if the user says yes
+No documentation for `confirmYesNo`.
 
 - Location: `bin/build/tools/interactive.sh`
 
 #### Arguments
 
-- `defaultValue` - Boolean. Optional. Value to return if no value given by user
-- `--yes` - Boolean. Optional. Short for `--default yes`
-- `--no` - Boolean. Optional. Short for `--default no`
+- No arguments.
 
 #### Exit codes
 
-- `0` - Yes
-- `1` - No ### `pause` - Pause for user input
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error ### `pause` - Pause for user input
 
 Pause for user input
 

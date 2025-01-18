@@ -97,8 +97,8 @@ __updateMarkdown() {
   buildMarker=bin/build/build.json
 
   statusMessage decorate info "Generating build.json"
-  printf -- "%s" "{}" | jq --arg version "$(runHook version-current)" \
-    --arg id "$(runHook application-id)" \
+  printf -- "%s" "{}" | jq --arg version "$(hookRun version-current)" \
+    --arg id "$(hookRun application-id)" \
     '. + {version: $version, id: $id}' >"$buildMarker"
   __usageEnvironment "$usage" git add "$buildMarker" || return $?
 

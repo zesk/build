@@ -106,7 +106,7 @@ __hookGitPostCommit() {
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
   __usageEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
-  __usageEnvironment "$usage" runOptionalHook "$hookName" || return $?
+  __usageEnvironment "$usage" hookRunOptional "$hookName" || return $?
   __gitPushHelper "$usage" || return $?
   # __usageEnvironment "$usage" gitMainly && __gitPushHelper "$usage" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(reportTiming "$start" "completed in")"

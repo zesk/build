@@ -74,8 +74,8 @@ __buildDeploy() {
   __usageEnvironment "$usage" git fetch --unshallow || return $?
 
   statusMessage decorate info "Collecting application version and ID ..." || :
-  currentVersion="$(runHook version-current)" || __failEnvironment "$usage" "runHook version-current" || return $?
-  appId=$(runHook application-id) || __failEnvironment "$usage" "runHook application-id" || return $?
+  currentVersion="$(hookRun version-current)" || __failEnvironment "$usage" "hookRun version-current" || return $?
+  appId=$(hookRun application-id) || __failEnvironment "$usage" "hookRun application-id" || return $?
 
   [ -n "$currentVersion" ] || __failEnvironment "$usage" "Blank version-current" || return $?
   [ -n "$appId" ] || __failEnvironment "$usage" "No application ID (blank?)" || return $?

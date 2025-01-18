@@ -51,7 +51,7 @@ _hookContextWrapper() {
       return 0
     fi
   fi
-  __usageEnvironment "$usage" runHook --application "$application" "$hookName" "$@" || return $?
+  __usageEnvironment "$usage" hookRun --application "$application" "$hookName" "$@" || return $?
 }
 
 # Application current version

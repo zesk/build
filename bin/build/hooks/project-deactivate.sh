@@ -11,12 +11,11 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 #
-# The `project-activate` hook runs when this project is activated in the console (and another project was previously active)
+# The `project-deactivate` hook runs when this project is activated in the console (and another project was previously active)
 # Use the time now to overwrite environment variables which MUST change here or MUST be active here to work, etc.
-# This is NOT like other hooks in that it is run as `hookSource`
 # See: bashPromptModule_binBuild
 # Argument: otherHomeDirectory - The old home directory of the project
-__hookProjectActivate() {
+__hookProjectDeactivate() {
   local usage="_${FUNCNAME[0]}" home otherName="" otherHome tools="bin/build/tools.sh"
   local symbol="🍎"
 
@@ -30,27 +29,29 @@ __hookProjectActivate() {
   name=$(__usageEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
-  statusMessage --last printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$otherName")" "➜" "$(decorate info "$name")"
+  statusMessage printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$name")" "➜" "$(decorate success "$otherName")"
 }
-___hookProjectActivate() {
+___hookProjectDeactivate() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__hookProjectActivateContext() {
+__hookProjectDeactivateContext() {
   local usage="_${FUNCNAME[0]}" home
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  bashSourceInteractive --vebose --prefix "Activate" "$home/bin/developer.sh" "$home/bin/developer/" || return $?
+  bashSourceInteractive --vebose --prefix "Deactivate" "$home/bin/developer-undo.sh" "$home/bin/developer-undo/" || return $?
 }
-___hookProjectActivateContext() {
+___hookProjectDeactivateContext() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # shellcheck source=/dev/null
 if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
   # Only require when running as a shell command
-  __hookProjectActivate "$@"
+  __hookProjectDeactivate "$@"
 else
-  __hookProjectActivate
-  __hookProjectActivateContext
+  __hookProjectDeactivate
+  __hookProjectDeactivateContext
 fi

@@ -45,10 +45,10 @@ phpTailLog() {
   logFile=$(__usageEnvironment "$usage" phpLog) || return $?
   [ -n "$logFile" ] || __failEnvironment "$usage" "PHP log file is blank" || return $?
   if [ ! -f "$logFile" ]; then
-    statusMessage -- printf "%s %s" "$(decorate file "$logFile")" "$(decorate warning "does not exist - creating")" 1>&2
+    statusMessage printf -- "%s %s" "$(decorate file "$logFile")" "$(decorate warning "does not exist - creating")" 1>&2
     __usageEnvironment "$usage" touch "$logFile" || return $?
   elif isEmptyFile "$logFile"; then
-    statusMessage -- printf "%s %s" "$(decorate file "$logFile")" "$(decorate warning "is empty")" 1>&2
+    statusMessage printf -- "%s %s" "$(decorate file "$logFile")" "$(decorate warning "is empty")" 1>&2
   fi
   tail "$@" "$logFile"
 }
@@ -93,7 +93,7 @@ _phpIniFile() {
 _deploymentGenerateValue() {
   local usage="$1" home="$2" variableName="$3" hook="$4"
   if [ -z "${!variableName}" ]; then
-    __usageEnvironment "$usage" runHook --application "$home" "$hook" | __usageEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
+    __usageEnvironment "$usage" hookRun --application "$home" "$hook" | __usageEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
   else
     __usageEnvironment "$usage" printf %s "${!variableName}" | __usageEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
   fi
@@ -235,7 +235,7 @@ phpBuild() {
 
   clean+=("$dotEnv")
   if hasHook application-environment; then
-    __usageEnvironment "$usage" runHook --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _clean $? "${clean[@]}" || return $?
+    __usageEnvironment "$usage" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _clean $? "${clean[@]}" || return $?
   else
     __usageEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _clean $? "${clean[@]}" || return $?
   fi
@@ -321,7 +321,7 @@ _phpEchoBar() {
 # Argument: installDirectory - You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
 # Argument: --help - This help
 #
-# Example:     bin/build/pipeline/composer.sh ./app/
+# Example:     phpComposer ./app/
 # Local Cache: This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.
 #
 # Environment: BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
@@ -460,7 +460,7 @@ phpTest() {
 
   __usageEnvironment "$usage" muzzle pushd "$home" || return $?
   undo+=(muzzle popd)
-  __usageEnvironment "$usage" runOptionalHook test-setup || _undo "$?" "${undo[@]}" || return $?
+  __usageEnvironment "$usage" hookRunOptional test-setup || _undo "$?" "${undo[@]}" || return $?
 
   __usageEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" build || _undo "$?" "${undo[@]}" || return $?
   statusMessage reportTiming "$start" "Built in" || :
@@ -473,7 +473,7 @@ phpTest() {
 
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   local reason=""
-  if ! runHook test-runner; then
+  if ! hookRun test-runner; then
     reason="test-runner hook failed"
     _phpTestResult Failed "$(decorate orange)" "❌" "🔥" 13 2
   else
@@ -486,7 +486,7 @@ phpTest() {
   # Reset test environment ASAP
   _phpTestCleanup "$usage" || return $?
   statusMessage reportTiming "$start" "Down in" || :
-  if ! runOptionalHook test-cleanup; then
+  if ! hookRunOptional test-cleanup; then
     reason="test-cleanup ALSO failed"
   fi
   [ -z "$reason" ] || __failEnvironment "$usage" "$reason" || return $?

@@ -10,8 +10,8 @@
 
 ## Hooks
 
-{runHook}
-{runOptionalHook}
+{hookRun}
+{hookRunOptional}
 {hasHook}
 {whichHook}
 

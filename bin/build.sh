@@ -86,7 +86,7 @@ __buildBuild() {
   if gitRepositoryChanged; then
     printf -- "%s\n" "CHANGES:" || :
     gitShowChanges | wrapLines "$(decorate code)    " "$(decorate reset)"
-    git commit -m "Build version $(runHook version-current)" -a || :
+    git commit -m "Build version $(hookRun version-current)" -a || :
     git push origin || :
   fi
   ./bin/build/identical-repair.sh || _environment "Identical repair failed" || return $?

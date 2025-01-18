@@ -316,7 +316,7 @@ gitTagVersion() {
   local currentVersion previousVersion releaseNotes
   local tagPrefix index tryVersion
 
-  currentVersion=$(__usageEnvironment "$usage" runHook version-current) || return $?
+  currentVersion=$(__usageEnvironment "$usage" hookRun version-current) || return $?
   if ! previousVersion=$(gitVersionLast "$currentVersion"); then
     previousVersion="none"
   fi

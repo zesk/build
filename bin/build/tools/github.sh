@@ -133,7 +133,7 @@ githubRelease() {
     __usageEnvironment "$usage" git remote add github "git@github.com:$repoOwner/$repoName.git" || return $?
   fi
 
-  __usageEnvironment "$usage" runOptionalHook github-release-before || return $?
+  __usageEnvironment "$usage" hookRunOptional github-release-before || return $?
 
   resultsFile="$(buildCacheDirectory results.json)" || __failEnvironment "$usage" "Unable create cache directory" || return $?
   __usageEnvironment "$usage" requireFileDirectory "$resultsFile" || return $?

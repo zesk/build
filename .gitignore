@@ -21,3 +21,4 @@
 # For now - too big
 /etc/packages/
 /.idea/*/
+/bin/.approved.*

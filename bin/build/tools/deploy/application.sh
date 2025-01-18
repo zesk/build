@@ -193,7 +193,7 @@ deployApplication() {
         if [ -z "$message" ]; then
           message="Upgrading to $newApplicationId"
         fi
-        if ! runHook --application "$applicationPath" maintenance --message "$message" on; then
+        if ! hookRun --application "$applicationPath" maintenance --message "$message" on; then
           _unwindDeploy "${unwindArgs[@]}" "Turning maintenance on in $applicationPath failed" || return $?
         fi
       else
@@ -201,7 +201,7 @@ deployApplication() {
       fi
       if hasHook --application "$applicationPath" deploy-shutdown; then
         printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-shutdown ")")"
-        if ! runHook --application "$applicationPath" deploy-shutdown; then
+        if ! hookRun --application "$applicationPath" deploy-shutdown; then
           _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-shutdown failed" || return $?
         fi
       else
@@ -232,7 +232,7 @@ deployApplication() {
   printf "%s %s\n" "$(decorate info "Setting to version")" "$(decorate code "$applicationId")"
   if hasHook --application "$deployedApplicationPath" deploy-start; then
     printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-start ")")"
-    if ! runHook --application "$deployedApplicationPath" deploy-start; then
+    if ! hookRun --application "$deployedApplicationPath" deploy-start; then
       _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-start failed" || return $?
     fi
   else
@@ -241,8 +241,8 @@ deployApplication() {
 
   if hasHook --application "$deployedApplicationPath" deploy-activate; then
     printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-activate ")")" || :
-    if ! runHook --application "$deployedApplicationPath" deploy-activate "$applicationPath"; then
-      _unwindDeploy "${unwindArgs[@]}" "runHook deploy-activate failed" || return $?
+    if ! hookRun --application "$deployedApplicationPath" deploy-activate "$applicationPath"; then
+      _unwindDeploy "${unwindArgs[@]}" "hookRun deploy-activate failed" || return $?
     fi
   else
     printf "%s %s -> %s\n" "$(decorate success "Activating application")" "$(decorate code " $applicationPath ")" "$(decorate green "$applicationId")" || :
@@ -252,10 +252,10 @@ deployApplication() {
   fi
   # STOP _unwindDeploy
 
-  if ! runOptionalHook --application "$applicationPath" deploy-finish; then
+  if ! hookRunOptional --application "$applicationPath" deploy-finish; then
     __failEnvironment "$usage" "Deploy finish failed" || exitCode=$?
   fi
-  if ! runOptionalHook --application "$applicationPath" maintenance off; then
+  if ! hookRunOptional --application "$applicationPath" maintenance off; then
     __failEnvironment "$usage" "maintenance off failed" || exitCode=$?
   fi
   if [ $exitCode -eq 0 ]; then
@@ -269,7 +269,7 @@ _unwindDeploy() {
   local usage="$1" && shift
   local applicationPath="$1" deployedApplicationPath="${2-}" && shift 2
 
-  if ! runOptionalHook --application "$applicationPath" maintenance off; then
+  if ! hookRunOptional --application "$applicationPath" maintenance off; then
     decorate error "Unable to enable maintenance - system is unstable" 1>&2
   else
     decorate success "Maintenance was enabled again"

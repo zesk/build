@@ -19,12 +19,9 @@ To use in your pipeline:
 
 ## Zesk Build Functionality
 
-- `./bin/build/*.sh` - [Build scripts and tools](./bin/index.md) - Handy scripts universally useful everywhere.
+- `./bin/build/*.sh` - [Build scripts and tools](./tools/bin.md) - Handy scripts universally useful everywhere.
 - `./bin/build/tools/*.sh` - [Build Bash Functions](./tools/index.md) - Lots of handy functions
-- `./bin/build/pipeline/*.sh` - [Pipeline tools](./pipeline/index.md) - Do work related to building and deploying software.
-- `./bin/build/ops/*.sh` - [Operations tools](./ops/index.md) - Do work related to building and deploying software.
-- `./bin/build/install/*.sh` - Install dependencies in the pipeline - most of these exist as functions
-- `./bin/hooks/*.sh` - [Build Hooks](./hooks/index.md) - Hooks are a way to customize default behaviors in build scripts.
+- `./bin/hooks/*.sh` - [Build Hooks](./tools/hooks.md) - Hooks are a way to customize default behaviors in build scripts.
 
 ## Usage and arguments
 

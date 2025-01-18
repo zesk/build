@@ -8,8 +8,8 @@ Hooks are called to enable custom actions at specific times which can be overwri
 
 # Hook Running
 
-{runHook}
-{runOptionalHook}
+{hookRun}
+{hookRunOptional}
 {whichHook}
 
 See [Defined Hooks](hooks.md)

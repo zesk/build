@@ -8,7 +8,7 @@ Hooks are called to enable custom actions at specific times which can be overwri
 
 # Hook Running
 
-### `runHook` - Run a project hook
+### `hookRun` - Run a project hook
 
 Run a hook in the project located at `./bin/hooks/`
 
@@ -30,35 +30,45 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 - `--application applicationHome` - Path. Optional. Directory of alternate application home.
 - `hookName` - String. Required. Hook name to run.
 - `arguments` - Optional. Arguments are passed to `hookName`.
+- `--help` - Optional. Flag. Display this help.
 
 #### Examples
 
-    version="$(runHook version-current)"
+    version="$(hookRun version-current)"
 
 #### Exit codes
 
 - `Any` - The hook exit code is returned if it is run
 - `1` - is returned if the hook is not found
-### `runOptionalHook` - Identical to `runHook` but returns exit code zero if the
 
-Identical to `runHook` but returns exit code zero if the hook does not exist.
+#### Environment
+
+BUILD_HOOK_PATH
+### `hookRunOptional` - Identical to `hookRun` but returns exit code zero if the
+
+Identical to `hookRun` but returns exit code zero if the hook does not exist.
 
 - Location: `bin/build/tools/hook.sh`
 
 #### Arguments
 
-- No arguments.
+- `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- `hookName` - String. Required. Hook name to run.
+- `arguments` - Optional. Arguments are passed to `hookName`.
+- `--help` - Optional. Flag. Display this help.
 
 #### Examples
 
-    if ! runOptionalHook test-cleanup >>"$quietLog"; then
-        buildFailed "$quietLog"
-    fi
+    version="$(hookRunOptional version-current)"
 
 #### Exit codes
 
 - `Any` - The hook exit code is returned if it is run
-- `0` - is returned if the hook is not found
+- `1` - is returned if the hook is not found
+
+#### Environment
+
+BUILD_HOOK_PATH
 ### `whichHook` - Find the path to a hook binary file
 
 Does a hook exist in the local project?
