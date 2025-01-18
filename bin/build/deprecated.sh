@@ -5,90 +5,119 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+set -eou pipefail
+
 # Clean up deprecated code automatically. This can be dangerous (uses `cannon`) so use it on
 # a clean build checkout and examine changes manually each time.
 #
-# Does various checks for deprecated code and updates code.
+# - Replaces deprecated code in shell and other files
+# - Finds tokens which are no longer in use and reports on the files found
+# - Does common misspellings and replaces them
+#
 # Usage: {fn}
 # fn: {base}
 # Exit Code: 0 - All cleaned up
 # Exit Code: 1 - If fails or validation fails
 #
+# There are three flags to control the three processes, you can set them using arguments (all three cleanups are by default enabled)
 #
+# Argument: --no-cannon - Optional. Flag. Do not do the cannon to replace tokens in code.
+# Argument: --just-cannon - Optional. Flag. Just do the cannon to replace tokens in code. (Sets all other flags to false)
+# Argument: --cannon - Optional. Flag. Do the cannon  to replace tokens in code. (other flags remain unchanged)
+# Argument: --no-tokens - Optional. Flag. Report on deprecated tokens found in the code.
+# Argument: --just-tokens - Optional. Flag. Just report on deprecated tokens found in the code. (Sets all other flags to false)
+# Argument: --tokens - Optional. Flag. Report on deprecated tokens found in the code. (other flags remain unchanged)
+# Argument: --no-spelling - Optional. Flag. Search for common (wink) misspellings and fix them.
+# Argument: --just-spelling - Optional. Flag. Just search for common (wink) misspellings and fix them. (Sets all other flags to false)
+# Argument: --spelling - Optional. Flag. Search for common (wink) misspellings and fix them. (other flags remain unchanged)
 # MOST RECENT STUFF at the top as it will likely have more hits
 # See: docs/_templates/deprecated.md
 __deprecatedCleanup() {
-  local start deprecatedTokens file
+  local usage="_${FUNCNAME[0]}" exitCode=0
+  local doCannon=true doTokens=true doSpelling=true
 
-  set -eou pipefail
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --cannon)
+        doCannon=true
+        ;;
+      --no-cannon)
+        doCannon=false
+        ;;
+      --just-cannon)
+        doCannon="true"
+        doSpelling=false
+        doTokens=false
+        ;;
+      --tokens)
+        doTokens=true
+        ;;
+      --no-tokens)
+        doTokens=false
+        ;;
+      --just-tokens)
+        doCannon=false
+        doTokens="true"
+        doSpelling=false
+        ;;
+      --spelling)
+        doSpelling=true
+        ;;
+      --no-spelling)
+        doSpelling=false
+        ;;
+      --just-spelling)
+        doCannon=false
+        doTokens=false
+        doSpelling="true"
+        ;;
+      *)
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
 
   start=$(__environment beginTiming) || return $?
 
+  # END OF CANNONS
+  if $doCannon; then
+    __deprecatedCannonsByVersion || exitCode=$?
+  fi
+  if $doTokens; then
+    __deprecatedTokensByVersion || exitCode=$?
+  fi
+  if $doSpelling; then
+    __misspellingCannon || exitCode=$?
+  fi
+  statusMessage --last reportTiming "$start" "Deprecated process took"
+  return "$exitCode"
+}
+___deprecatedCleanup() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# --tokens
+#
+__deprecatedTokensByVersion() {
+  local deprecatedTokens=()
   deprecatedTokens=()
 
-  __deprecatedCannon release-check-version.sh git-tag-version.sh
-
-  # v0.21.0
-  deprecatedTokens+=('bin/build/install/' 'bin/build/pipeline')
-  __deprecatedCannon 'run''OptionalHook' "hookRunOptional"
-  __deprecatedCannon 'run''Hook' "hookRun"
-
-  # v0.18.6
-  __deprecatedCannon 'console''Reset' "decorate reset" ! -path '*/colors.sh'
-
-  # v0.18.5
-  __deprecatedCannon '_''boolean' "isBoolean"
-
-  # v0.17.6
-  __deprecatedCannon '_integer ' "isPositiveInteger "
-  __deprecatedCannon 'confirmYesNo yes' "confirmYesNo --yes"
-  __deprecatedCannon 'confirmYesNo true' "confirmYesNo --yes"
-  __deprecatedCannon 'confirmYesNo no' "confirmYesNo --no"
-  __deprecatedCannon 'confirmYesNo false' "confirmYesNo --no"
-
   # v0.17.0
-  deprecatedToken+=(' --env ')
-
-  # v0.15.1
-  __deprecatedCannon 'console''Code' "decorate code" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Error' "decorate error" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Orange' "decorate orange" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldOrange' "decorate bold-orange" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Blue' "decorate blue" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldBlue' "decorate bold-blue" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Red' "decorate red" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldRed' "decorate bold-red" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Green' "decorate green" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldGreen' "decorate bold-green" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Cyan' "decorate cyan" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldCyan' "decorate bold-cyan" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Yellow' "decorate yellow" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Magenta' "decorate magenta" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Black' "decorate black" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldBlack' "decorate bold-black" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldWhite' "decorate bold-white" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''White' "decorate white" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''BoldMagenta' "decorate bold-magenta" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Underline' "decorate underline" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Bold' "decorate bold" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''NoBold' "decorate no-bold" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''NoUnderline' "decorate no-underline" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Info' "decorate info" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Warning' "decorate warning" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Success' "decorate success" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Decoration' "decorate decoration" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Subtle' "decorate subtle" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Label' "decorate label" ! -path '*/colors.sh'
-  __deprecatedCannon 'console''Value' "decorate value" ! -path '*/colors.sh'
-
-  # v0.14.6
-  __deprecatedCannon 'aptListInstalled' "aptInstalledList"
-  __deprecatedCannon 'aptInstall' "packageInstall" ! -path '*/apt.sh'
-  __deprecatedCannon 'aptUninstall' "packageUninstall" ! -path '*/apt.sh'
-  __deprecatedCannon 'aptUpdateOnce' "packageUpdate" ! -path '*/apt.sh'
-  __deprecatedCannon 'whichApt' "packageWhich" ! -path '*/apt.sh'
-  __deprecatedCannon 'whichAptUninstall' "packageWhichUninstall" ! -path '*/apt.sh'
-  __deprecatedCannon 'aptNeedRestartFlag' "packageNeedRestartFlag" ! -path '*/apt.sh'
+  # deprecatedToken+=(' --env ')
 
   # v0.14.3
   home=$(__environment buildHome) || return $?
@@ -98,101 +127,61 @@ __deprecatedCleanup() {
   for file in "$home/bin/build/install/"*.sh; do
     deprecatedToken+=("${file#"$home"}")
   done
-
-  # v0.12.2
-  __deprecatedCannon 'awsSecurityGroupIP''Register' "awsSecurityGroupIPModify --register"
-
-  # v0.11.14
-  __deprecatedCannon 'create''TarFile' "tarCreate"
-
-  # v0.11.10
-  __deprecatedCannon '__''return' "__execute"
-
-  # v0.11.9
-  __deprecatedCannon 'aws''ValidRegion' "awsRegionValid"
-
-  # v0.11.8
-  __deprecatedCannon 'aws-cli''.sh' "aws.sh"
   deprecatedToken+=('__''try')
-
-  # v0.11.6
-  __deprecatedCannon 'gitPre''CommitShellFiles' bashSanitize
-  __deprecatedCannon 'validate''ShellScripts' bashLintFiles
-  __deprecatedCannon 'validate''ShellScript' bashLint
-
   # v0.11.4
   deprecatedTokens+=("ops"".sh" "__""ops")
-
-  # v0.11.2
-  __deprecatedCannon '_''environment''Output' outputTrigger
-
-  # v0.11.1
-  # Replace only if usageArgumentRequired has not been replaced yet as
-  # usageArgumentRequired -> usageArgumentString
-  # usageArgumentString -> usageArgumentEmptyString
-  # usageArgumentString is still in use with a different semantic
-  if __deprecatedFind usageArgumentRequired; then
-    __deprecatedCannon 'usageArgumentRequired' usageArgumentREMOVETHISRequired
-    __deprecatedCannon 'usageArgumentString' usageArgumentEmptyString
-    __deprecatedCannon 'usageArgumentREMOVETHISRequired' usageArgumentRequired
-  fi
-  __deprecatedCannon 'usageArgumentRequired' usageArgumentString
   deprecatedTokens+=(crontab-application-sync.sh)
-  __deprecatedCannon "show""Environment" environmentFileShow
-  __deprecatedCannon "make""Environment" environmentFileApplicationMake
-  __deprecatedCannon "application""EnvironmentVariables" environmentApplicationVariables
-  __deprecatedCannon "application""Environment" environmentApplicationLoad
-
-  # v0.10.4
-  __deprecatedCannon 'crontabApplication''Sync' crontabApplicationUpdate
-  __deprecatedCannon 'usageMissing''Argument' usageArgumentMissing
-  __deprecatedCannon 'usageUnknown''Argument' usageArgumentUnknown
-
-  # v0.10.0
-  __deprecatedCannon 'prefix''Lines' wrapLines
-  __deprecatedCannon 'trimSpace''Pipe' 'trimSpace'
-
-  # Release v0.8.4
-  __deprecatedCannon 'copyFile''ChangedQuiet' 'copyFile'
-
-  # Release v0.7.13
-  __deprecatedCannon 'env''map.sh' 'map.sh'
-  __deprecatedCannon 'mapCopyFileChanged' 'copyFileChanged --map'
-  __deprecatedCannon 'escalateMapCopyFileChanged' 'copyFileChanged --map --escalate'
-  __deprecatedCannon 'escalateCopyFileChanged' 'copyFileChanged --escalate'
-  __deprecatedCannon 'yesNo ' 'parseBoolean '
-
   # v0.7.10
   deprecatedToken+=('bin/build/pipeline')
-
-  # v0.7.9
-  __deprecatedCannon 'needAWS''Environment' 'awsHasEnvironment'
-  __deprecatedCannon 'isAWSKey''UpToDate ' 'awsIsKeyUpToDate'
-
   # v0.7.0
-  __deprecatedCannon 'APPLICATION_CHECKSUM' 'APPLICATION_ID'
-  __deprecatedCannon 'application-checksum' 'application-id'
   deprecatedTokens+=(dockerPHPExtensions usageWrapper usageWhich "[^_]usageEnvironment")
-
-  # v0.6.1
-  __deprecatedCannon 'usageWhich ' 'usageRequireBinary usage '
-
-  # v0.6.0
-  __deprecatedCannon markdownListify markdown_FormatList
-
-  # v0.3.12
-  __deprecatedCannon 'failed "' 'buildFailed "' -name '*.sh' || :
-  # END OF CANNONS
-  statusMessage --last reportTiming "$start" "Deprecated replacement took"
-
   __deprecatedTokens "${deprecatedToken[@]}"
-
-  ____misspellingCannon
 }
 
+#
+# --cannons
+#
+__deprecatedCannonsByVersion() {
+  local start home exitCode=0 version="No version yet"
+
+  set -eou pipefail
+
+  home=$(__environment buildHome) || return $?
+  start=$(__environment beginTiming) || return $?
+
+  while read -r line; do
+    local IFS tokens=() trimmed
+    trimmed=$(__environment trimSpace "$line") || return $?
+    [ -n "$trimmed" ] || continue
+    if [ "${trimmed:0:1}" = "#" ]; then
+      version="$(__environment trimSpace "${trimmed:1}")" || return $?
+      continue
+    fi
+    IFS="|" read -r -a tokens <<<"$line" || :
+    if [ "${#tokens[@]}" -le 1 ]; then
+      decorate error "Bad line: $line" || :
+      exitCode=1
+      continue
+    fi
+    statusMessage printf -- "%s: %s -> %s" "$(decorate bold-magenta "$version")" "$(decorate code "${tokens[0]}")" "$(decorate code "${tokens[1]}")"
+    __deprecatedCannon "${tokens[@]}" || exitCode=$? && printf -- "\n"
+  done <"$home/bin/build/deprecated.txt"
+  statusMessage --last reportTiming "$start" "Deprecated cannon took"
+  return "$exitCode"
+}
+
+#
+# --spelling
+#
 # Fingers don't always hit the keys right
-____misspellingCannon() {
-  __deprecatedCannon 'decoreate' 'decorate'
+__misspellingCannon() {
+  local start exitCode=0
+  start=$(__environment beginTiming) || return $?
+  # START OF MISSPELLING CANNON
+  __deprecatedCannon 'decoreate' 'decorate' || exitCode=$?
+  # END OF MISSPELLING CANNON
+  statusMessage --last reportTiming "$start" "Deprecated cannon took"
+  return "$exitCode"
 }
 
 # IDENTICAL __source 17

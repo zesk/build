@@ -72,7 +72,7 @@ This document lists functionality which was removed, why, and when.
 
 ## Release v0.11.4
 
-- `op``s.sh` `__``ops` deprecated
+deprecatedTokens+=(`ops.sh` `__ops`)
 
 ## Release v0.11.6
 
@@ -157,9 +157,22 @@ Single decoration function:
 ## Release v0.17.0
 
 - `--env` is changed for most functions which use it; changed to `--env-file` to match other applications.
+- `confirmYesNo defaultValue` changed to `confirmYesNo --yes` or `confirmYesNo --no` respectively - uses better argument parser
 
-## Release v0.17.6
+## v0.17.6
 
-- `_integer` -> `isPositiveInteger` (duplicated unnecessarily)
+- `_integer` -> `isPositiveInteger`  (more natural naming, short enough)
+- `confirmYesNo --yes` -> `confirmYesNo --yes` (support flags properly)
+- `confirmYesNo --yes` -> `confirmYesNo --yes`
+- `confirmYesNo --no` -> `confirmYesNo --no`
+- `confirmYesNo --no` -> `confirmYesNo --no`
 
-- [⬅ Return to top](index.md)
+## v0.18.5
+
+- `isBoolean` -> `isBoolean` (more natural naming, short enough)
+
+# v0.18.6
+
+- `decorate reset` -> `decorate reset`
+
+[⬅ Return to top](index.md)

@@ -4,21 +4,38 @@
 
 So, as we've been coding here it's starting to make sense to follow various patterns in our `bash` coding.
 
+## Use the `example.sh` and `IDENTICAL` tags
+
+Our `example.sh` code is kept up to date and is literally copied regularly for new functions and the `IDENTICAL` functionality helps to keep code synchronized. Use these patterns here in your code as they have been adapted over time.
+
+## `local` stays local
+
+Upon first using `bash` it made sense to put `local` a the top of a function to have them in one place. Unfortunately this leads to moving declarations far away from usages at times and so we have shifted to doing `local` declarations at the scope needed as well as as near to its initial usage as possible. This leads to easier refactorings and better
+readability all around.
+
 ## Avoid depending on `set -eou pipefail`
 
 Again, this is good for testing scripts but should be avoided in production as it does not work as a good method to catch errors; code should catch errors itself using the `|| return $?` structures you see everywhere.
 
 In short - good for debugging but scripts internally should NOT depend on this behavior unless they set it and unset it.
 
-## Clean up after ourselves
+## Do not leave `set -x` around in code
 
-Use `_clean` and `_undo` to back out of functions.
+So much so there is a `pre-commit` filter set up to avoid doing this. (For `.sh` files)
 
 ## Avoid exit like the plague
 
 `exit` in bash functions is not recommended largely because it can exit the shell or another program inadvertently when `exit` is called incorrectly or a file is `source`d when it should be run as a subprocess.
 
 The use of `return` to pass exit status is always preferred; and when `exit` is required the addition of a function to wrap it (see above) can avoid `exit` again.
+
+## Clean up after ourselves, `||` statements to fail are more succinct
+
+Use `_clean` and `_undo` to back out of functions. If you create temp files, create them as close as possible to needing them and make sure to delete them on return.
+
+Commands typically are:
+
+    condition || action || _undo $? command ... || _clean $? fileToDelete directoryToDelete || return $?
 
 ## Standard usage and error handling with underscore usage function
 

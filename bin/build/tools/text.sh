@@ -976,7 +976,6 @@ _characterClassReport() {
 cannon() {
   local usage="_${FUNCNAME[0]}"
   local argument nArguments argumentIndex
-  local searchQuoted replaceQuoted cannonLog count
   local search="" directory="." replace=""
 
   saved=("$@")
@@ -1006,24 +1005,32 @@ cannon() {
     esac
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
+
+  local searchQuoted replaceQuoted cannonLog
+
   searchQuoted=$(quoteSedPattern "$search")
   replaceQuoted=$(quoteSedPattern "$replace")
   [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(__usageEnvironment "$usage" mktemp) || return $?
   if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
-    printf "%s\n" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
+    statusMessage --first printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
     rm "$cannonLog" || :
     return 0
   fi
-  xargs -0 grep -l "$search" <"$cannonLog" >"$cannonLog.found"
+  xargs -0 grep -l "$search" <"$cannonLog" >"$cannonLog.found" || :
+
+  local exitCode=0 count
+
   count="$(($(wc -l <"$cannonLog.found") + 0))"
   if [ "$count" -eq 0 ]; then
-    decorate info "Modified (NO) files"
+    statusMessage --first decorate info "Modified (NO) files"
   else
-    __usageEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || return $?
-    decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
+    __usageEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || _clean $? "$cannonLog" || return $?
+    statusMessage --first decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
+    exitCode=1
   fi
-  rm -f "$cannonLog" "$cannonLog.found" || :
+  __usageEnvironment "$usage" rm -f "$cannonLog" "$cannonLog.found" || return $?
+  return "$exitCode"
 }
 _cannon() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

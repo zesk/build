@@ -3,6 +3,7 @@
 - Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling)
 - Move `docs` to something not Bash-based perhaps
 - Work on 30-minute build or make it faster somehow
+- Start writing some tutorials on how to get it set up and working (video?)
 
 ## Slowest tests 2025
 
@@ -56,4 +57,3 @@
 - 11 seconds - `testSignedNumberSamples`
 - 11 seconds - `testMariaDBInstallation`
 - 11 seconds - `testLinkCreate`
--  seconds -  ``

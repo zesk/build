@@ -57,7 +57,7 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 
 Run `command`, upon failure run `usage` with an environment error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
@@ -88,7 +88,7 @@ Run `usage` with an environment error
 
 Run `command`, upon failure run `usage` with an argument error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
@@ -104,7 +104,7 @@ Run `command`, upon failure run `usage` with an argument error
 
 Run `usage` with an environment error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
@@ -119,7 +119,7 @@ Run `usage` with an environment error
 
 Run `usage` with an argument error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
@@ -134,13 +134,23 @@ Run `usage` with an argument error
 
 Run a function and preserve exit code
 Returns `exitCode`
+As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 
 - Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
 - `exitCode` - Required. Integer. Exit code to return.
-- `undoFunction` - Required. Command to run to undo something. Return status is ignored.
+- `undoFunction` - Optional. Command to run to undo something. Return status is ignored.
+- `--` - Flag. Optional. Used to delimit multiple commands.
+
+#### Examples
+
+local undo thing
+thing=$(__usageEnvironment "$usage" createLargeResource) || return $?
+undo+=(-- deleteLargeResource "$thing")
+thing=$(__usageEnvironment "$usage" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+undo+=(-- deleteMassiveResource "$thing")
 
 #### Exit codes
 

@@ -3,10 +3,6 @@
 #
 # Copyright &copy; 2025 Market Acumen Inc.
 #
-# Test run:
-#
-# bin/build/bitbucket-container.sh --env .env.PRODUCTION
-#
 image: atlassian/default-image:4
 
 pipelines:

@@ -2,7 +2,9 @@
 
 Hooks are ways to change default behaviors in scripts, or just do something at a certain time.
 
-All hooks should be in your project root located at `bin/hooks`. If build has a default behavior for your hook, it's located at `bin/build/hooks`.
+All hooks should be in your project root located at `bin/hooks`. (This also can be overwritten or added to.) 
+
+If build has a default behavior for your hook, it's located at `bin/build/hooks`.
 
 Most hooks are optional unless specified.
 
@@ -15,7 +17,7 @@ Most hooks are optional unless specified.
 
 ## [Application Hooks](hooks/application.md)
 
-- `make-env` - Create the environment file. Generally calls `bin/build/pipeline/make-env.sh` with your desired environment. Currently used in `php-build.sh`.
+- `application-environment` - Create the environment file. Default calls `environmentFileApplicationMake` with your desired environment. Currently used in `phpBuild`
 - `application-tag` - The current tagged version of the software (e.g `v1.0.0rc71`)
 - `application-id` - Returns a string checksum of the current application source code (unique checksum for code state)
 
@@ -41,7 +43,7 @@ Most hooks are optional unless specified.
 - `github-release-after` - Run after [`github-release`](hooks/github-release.md) release the release to GitHub.
 
 ## [Testing Hooks](hooks/test.md)
- 
+
 - `test-setup` - Move or copy files prior to docker-compose build to build test container
 - `test-runner` - Run unit and any other tests inside the container (Required for test scripts)
 - `test-cleanup` - Reverse of `test-setup` hook actions

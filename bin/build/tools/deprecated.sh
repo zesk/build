@@ -2,29 +2,46 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# You should stop using these. Soon. Now.
+# Graveyard for code
+#
+# You should stop using these. Soon. Now. Yesterday.
 #
 # This file should be ignored by the other deprecated.sh
 #
 
+# Not keeping this around will break old scripts, so don't be a ...
 # Deprecated: 2025-01-15
 runHook() {
   hookRun "$@"
 }
 
+# Not keeping this around will break old scripts, so don't be a ...
 # Deprecated: 2025-01-15
 runHookOptional() {
   hookRunOptional "$@"
 }
 
-__deprecatedIgnore() {
-  printf -- "%s\n" "!" -name 'deprecated.sh' "!" -name 'deprecated.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
+# Deprecated: 2024
+consoleReset() {
+  if hasColors; then
+    printf "\e[0m"
+  fi
 }
 
-# Usage
+# Deprecated: 2024
+consoleBlackBackground() {
+  __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
+}
+
+# list of ignore flags for `find`
+__deprecatedIgnore() {
+  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" -name 'deprecated.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
+}
+
+# Find files which match a token
 __deprecatedFind() {
-  local ignoreStuff
-  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
+  local ignoreStuff=()
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || [ "${#ignoreStuff[@]}" -gt 0 ] || _environment "__deprecatedIgnore empty?" || return $?
   while [ "$#" -gt 0 ]; do
     if find . -type f -name '*.sh' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
       return 0
@@ -36,11 +53,12 @@ __deprecatedFind() {
 
 # Usage: {fn} search replace [ additionalCannonArgs ]
 __deprecatedCannon() {
-  local from="$1" to="$2" ignoreStuff
+  local from="$1" to="$2" ignoreStuff=()
   shift 2
-  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || [ "${#ignoreStuff[@]}" -gt 0 ] || _environment "__deprecatedIgnore empty?" || return $?
   statusMessage printf "%s %s \n" "$(decorate warning "$from")" "$(decorate success "$to")"
-  cannon "$from" "$to" "${ignoreStuff[@]}" "$@"
+  # ignore should go at the end so it has priority over previous entries
+  cannon "$from" "$to" "$@" "${ignoreStuff[@]}"
 }
 
 __deprecatedTokens() {

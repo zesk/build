@@ -87,13 +87,32 @@ _deprecated() {
 # Returns `exitCode`
 # Usage: {fn} exitCode undoFunction ...
 # Argument: exitCode - Required. Integer. Exit code to return.
-# Argument: undoFunction - Required. Command to run to undo something. Return status is ignored.
+# Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
+# Argument: -- - Flag. Optional. Used to delimit multiple commands.
+# As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
+# Example: local undo thing
+# Example: thing=$(__usageEnvironment "$usage" createLargeResource) || return $?
+# Example: undo+=(-- deleteLargeResource "$thing")
+# Example: thing=$(__usageEnvironment "$usage" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+# Example: undo+=(-- deleteMassiveResource "$thing")
+#
 _undo() {
-  local exitCode="${1-}"
+  local exitCode="${1-}" args=()
   shift
   isPositiveInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
-  isCallable "${1-}" || _argument "_undo \"${1-}\" is not callable: $*" || return "$exitCode"
-  __execute "$@" || :
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --)
+        [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+        args=()
+        ;;
+      *)
+        isCallable "${1-}" || _argument "_undo \"${1-}\" is not callable: $*" || return "$exitCode"
+        args+=("$1")
+        ;;
+    esac
+    shift
+  done
   return "$exitCode"
 }
 

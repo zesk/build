@@ -83,6 +83,15 @@ __buildDocumentationBuild() {
       documentationTemplateUpdate "$home/docs" "$home/docs/_templates/_parts" || return $?
     fi
   fi
+  # This was more complex before fix it later
+  for f in "$home/docs/_templates/"*.md; do
+    local name target
+    name=$(basename "$f") target="$home/docs/$name"
+    [ "${name#_}" = "$name" ] || continue
+    if isNewestFile "$f" "$target"; then
+      cp "$f" "$target"
+    fi
+  done
 
   __usageEnvironment "$usage" __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@" || return $?
 

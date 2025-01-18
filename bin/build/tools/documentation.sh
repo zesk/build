@@ -144,8 +144,7 @@ documentationTemplateCompile() {
         "$usage" 0
         return $?
         ;;
-      # DEPRECATED: --env is deprecated 2024-11 TODO
-      --env | --env-file)
+      --env-file)
         shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         envFiles+=("$envFile")
@@ -317,8 +316,7 @@ documentationTemplateFunctionCompile() {
         "$usage" 0
         return $?
         ;;
-      # DEPRECATED 2024-11 --env TODO
-      --env | --env-file)
+      --env-file)
         shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         envFiles+=("$envFile")

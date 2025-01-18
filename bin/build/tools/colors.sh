@@ -17,17 +17,6 @@
 #  █▄▄▌▝█▄█▘ ▐▙▄ ▝█▄█▘ █   ▐▄▄▟▌
 #   ▀▀  ▝▀▘   ▀▀  ▝▀▘  ▀    ▀▀▀
 #
-# Reset the color
-#
-# This is typically appended after most `consoleAction` calls to reset the state of the console to default color and style.
-#
-# It does *not* take the optional `-n` argument ever, and outputs the reset escape sequence to standard out.
-#
-consoleReset() {
-  if hasColors; then
-    printf "\e[0m"
-  fi
-}
 
 # This modifies text containing escape sequences to best make text look correct
 __wrapColor() {
@@ -254,8 +243,7 @@ colorTest() {
     subtle
   )
   for i in "${colors[@]}"; do
-    consoleReset
-    decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
+    printf -- "%s%s\n" "$(decorate reset)" "$(decorate "$i" "$i: The quick brown fox jumped over the lazy dog.")"
   done
 }
 
@@ -290,20 +278,16 @@ semanticColorTest() {
     subtle
   )
   for i in "${colors[@]}"; do
-    consoleReset
+    decorate reset
     decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
   done
-}
-
-consoleBlackBackground() {
-  __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
 }
 
 #
 # Summary: Output a name value pair
 #
 # Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
-# right-aligned to the `characterWidth` given and colored using `consoleLabel`; the value colored using `consoleValue`.
+# right-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
 #
 # Usage: consoleNameValue characterWidth name [ value ... ]
 # Argument: characterWidth - Required. Number of characters to format the value for spacing
@@ -501,7 +485,7 @@ _colorBrightness() {
 # Usage: toggleCharacterToColor character colorOn [ colorOff ]
 # Argument: character - The character to map to color start/stop
 # Argument: colorOn - Color on escape sequence
-# Argument: colorOff - Color off escape sequence defaults to "$(consoleReset)"
+# Argument: colorOff - Color off escape sequence defaults to "$(decorate reset)"
 #
 _toggleCharacterToColor() {
   local sequence line code reset lastItem lastLine=
@@ -509,7 +493,7 @@ _toggleCharacterToColor() {
   # TODO is quoteSedPattern correct for BASH // replacement?
   sequence="$(quoteSedPattern "$1")"
   code="$2"
-  reset="${3-$(consoleReset)}"
+  reset="${3-$(decorate reset)}"
   while true; do
     if ! IFS= read -r line; then
       lastLine=1

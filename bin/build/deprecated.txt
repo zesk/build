@@ -1,0 +1,128 @@
+# v0.21.0
+runOptionalHook|hookRunOptional|-name|*.sh|-or|-name|*.md
+runHook|hookRun|-name|*.sh|-or|-name|*.md
+
+# v0.18.6
+consoleReset|decorate reset
+
+# v0.18.5
+_boolean|isBoolean|-name|*.sh|-or|-name|*.md
+
+# v0.17.6
+_integer  |isPositiveInteger |-name|*.sh|-or|-name|*.md
+confirmYesNo yes|confirmYesNo --yes|
+confirmYesNo true|confirmYesNo --yes|
+confirmYesNo no|confirmYesNo --no|
+confirmYesNo false|confirmYesNo --no|
+
+# v0.15.1
+consoleCode|decorate code
+consoleError|decorate error
+consoleOrange|decorate orange
+consoleBoldOrange|decorate bold-orange
+consoleBlue|decorate blue
+consoleBoldBlue|decorate bold-blue
+consoleRed|decorate red
+consoleBoldRed|decorate bold-red
+consoleGreen|decorate green
+consoleBoldGreen|decorate bold-green
+consoleCyan|decorate cyan
+consoleBoldCyan|decorate bold-cyan
+consoleYellow|decorate yellow
+consoleMagenta|decorate magenta
+consoleBlack|decorate black
+consoleBoldBlack|decorate bold-black
+consoleBoldWhite|decorate bold-white
+consoleWhite|decorate white
+consoleBoldMagenta|decorate bold-magenta
+consoleUnderline|decorate underline
+consoleBold|decorate bold
+consoleNoBold|decorate no-bold
+consoleNoUnderline|decorate no-underline
+consoleInfo|decorate info
+consoleWarning|decorate warning
+consoleSuccess|decorate success
+consoleDecoration|decorate decoration
+consoleSubtle|decorate subtle
+consoleLabel|decorate label
+consoleValue|decorate value
+
+# v0.14.6
+aptListInstalled|aptInstalledList
+aptInstall|packageInstall|!|-path|*/apt.sh
+aptUninstall|packageUninstall|!|-path|*/apt.sh
+aptUpdateOnce|packageUpdate|!|-path|*/apt.sh
+whichApt|packageWhich|!|-path|*/apt.sh
+whichAptUninstall|packageWhichUninstall|!|-path|*/apt.sh
+aptNeedRestartFlag|packageNeedRestartFlag|!|-path|*/apt.sh
+
+# v0.12.2
+awsSecurityGroupIPRegister|awsSecurityGroupIPModify --register|
+
+# v0.11.14
+createTarFile|tarCreate
+
+# v0.11.10
+__return|__execute
+
+# v0.11.9
+awsValidRegion|awsRegionValid
+
+# v0.11.8
+aws-cli.sh|aws.sh
+
+# v0.11.6
+gitPreCommitShellFiles|bashSanitize
+validateShellScripts|bashLintFiles
+validateShellScript|bashLint
+
+# v0.11.2
+_environmentOutput|outputTrigger
+
+# v0.11.1
+# if usageArgumentRequired is found then do this:
+#usageArgumentRequired|usageArgumentREMOVETHISRequired
+#usageArgumentString|usageArgumentEmptyString
+#usageArgumentREMOVETHISRequired|usageArgumentRequired
+#usageArgumentRequired|usageArgumentString
+showEnvironment|environmentFileShow
+makeEnvironment|environmentFileApplicationMake
+applicationEnvironmentVariables|environmentApplicationVariables
+applicationEnvironment|environmentApplicationLoad
+
+# v0.10.4
+crontabApplicationSync|crontabApplicationUpdate
+usageMissingArgument|usageArgumentMissing
+usageUnknownArgument|usageArgumentUnknown
+
+# v0.10.0
+prefixLines|wrapLines
+trimSpacePipe|trimSpace
+
+# Release v0.8.4
+copyFileChangedQuiet|copyFile
+
+# Release v0.7.13
+envmap.sh|map.sh
+mapCopyFileChanged|copyFileChanged --map
+escalateMapCopyFileChanged|copyFileChanged --map --escalate|
+escalateCopyFileChanged|copyFileChanged --escalate|
+yesNo | parseBoolean |
+
+# v0.7.9
+needAWSEnvironment|awsHasEnvironment
+isAWSKeyUpToDate |awsIsKeyUpToDate |
+
+# v0.7.0
+APPLICATION_CHECKSUM|APPLICATION_ID
+application-checksum|application-id
+
+# v0.6.1
+usageWhich |usageRequireBinary usage |
+
+# v0.6.0
+markdownListify|markdown_FormatList
+
+# v0.3.12 and before
+failed "|' 'buildFailed "|-name|*.sh
+release-check-version.sh|git-tag-version.sh
