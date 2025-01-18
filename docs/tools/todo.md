@@ -47,9 +47,9 @@ No documentation for `consoleBlackBackground`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `consoleReset` - undocumented
+### `decorate reset` - undocumented
 
-No documentation for `consoleReset`.
+No documentation for `decorate reset`.
 
 - Location: `bin/build/tools/deprecated.sh`
 
@@ -167,7 +167,7 @@ Tail the PHP log
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `runHookOptional` - Not keeping this around will break old scripts, so don't
+### `hookRunOptional` - Not keeping this around will break old scripts, so don't
 
 Not keeping this around will break old scripts, so don't be a ...
 
@@ -182,7 +182,7 @@ Not keeping this around will break old scripts, so don't be a ...
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `runHook` - Not keeping this around will break old scripts, so don't
+### `hookRun` - Not keeping this around will break old scripts, so don't
 
 Not keeping this around will break old scripts, so don't be a ...
 
