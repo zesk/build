@@ -323,36 +323,3 @@ __aptStandardPackages() {
   export BUILD_TEXT_BINARY
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
 }
-
-#
-#   ____                                _           _
-#  |  _ \  ___ _ __  _ __ ___  ___ __ _| |_ ___  __| |
-#  | | | |/ _ \ '_ \| '__/ _ \/ __/ _` | __/ _ \/ _` |
-#  | |_| |  __/ |_) | | |  __/ (_| (_| | ||  __/ (_| |
-#  |____/ \___| .__/|_|  \___|\___\__,_|\__\___|\__,_|
-#             |_|
-#
-
-# DEPRECATED
-# See: packageUninstall
-aptUninstall() {
-  packageUninstall --manager apt "$@"
-}
-
-# DEPRECATED
-# See: packageWhich
-whichApt() {
-  packageWhich --manager apt "$@"
-}
-
-# DEPRECATED
-# See: packageWhichUninstall
-whichAptUninstall() {
-  packageWhichUninstall --manager apt "$@"
-}
-
-# DEPRECATED
-# See: packageNeedRestartFlag
-aptNeedRestartFlag() {
-  packageNeedRestartFlag "$@"
-}

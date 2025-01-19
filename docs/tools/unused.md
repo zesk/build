@@ -26,3 +26,93 @@ This is a sample function with example code and patterns used in Zesk Build.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `aptNeedRestartFlag` - DEPRECATED
+
+DEPRECATED
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `aptUninstall` - DEPRECATED
+
+DEPRECATED
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleBlackBackground` - undocumented
+
+No documentation for `consoleBlackBackground`.
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `consoleReset` - undocumented
+
+No documentation for `consoleReset`.
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `whichAptUninstall` - DEPRECATED
+
+DEPRECATED
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `whichApt` - DEPRECATED
+
+DEPRECATED
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

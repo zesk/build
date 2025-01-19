@@ -9,3 +9,5 @@
 {phpBuild}
 {phpLog}
 {phpTest}
+{phpIniFile}
+{phpTailLog}

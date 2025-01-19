@@ -134,3 +134,33 @@ Test a docker-based PHP application during build
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `phpIniFile` - Outputs the path to the PHP ini file
+
+Outputs the path to the PHP ini file
+
+- Location: `bin/build/tools/php.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `phpTailLog` - Tail the PHP log
+
+Tail the PHP log
+
+- Location: `bin/build/tools/php.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

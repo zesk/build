@@ -264,7 +264,26 @@ Converts strings to shell escaped strings
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `replaceFirstPattern` - Replaces the first and only the first occurrence of a
 
+Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
+
+- Location: `bin/build/tools/text.sh`
+
+#### Usage
+
+    replaceFirstPattern pattern replacement
+    
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `removeFields` - Remove fields from left to right from a text file
 
 Remove fields from left to right from a text file as a pipe

@@ -9,7 +9,11 @@ Hooks are called to enable custom actions at specific times which can be overwri
 # Hook Running
 
 {hookRun}
+{hookSource}
+
 {hookRunOptional}
+{hookSourceOptional}
+
 {whichHook}
 
 See [Defined Hooks](hooks.md)

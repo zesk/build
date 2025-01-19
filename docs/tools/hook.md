@@ -44,6 +44,42 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 #### Environment
 
 BUILD_HOOK_PATH
+### `hookSource` - Run a project hook
+
+Run a hook in the project located at `./bin/hooks/`
+
+See (Hooks documentation)[../hooks/index.md] for standard hooks.
+
+Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
+So the hook for `version-current` would be a file at:
+
+    bin/hooks/version-current.sh
+
+Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
+
+Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
+
+- Location: `bin/build/tools/hook.sh`
+
+#### Arguments
+
+- `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- `hookName` - String. Required. Hook name to run.
+- `arguments` - Optional. Arguments are passed to `hookName`.
+
+#### Examples
+
+    version="$(hookSource version-current)"
+
+#### Exit codes
+
+- `Any` - The hook exit code is returned if it is run
+- `1` - is returned if the hook is not found
+
+#### Environment
+
+BUILD_HOOK_PATH
+
 ### `hookRunOptional` - Identical to `hookRun` but returns exit code zero if the
 
 Identical to `hookRun` but returns exit code zero if the hook does not exist.
@@ -69,6 +105,27 @@ Identical to `hookRun` but returns exit code zero if the hook does not exist.
 #### Environment
 
 BUILD_HOOK_PATH
+### `hookSourceOptional` - Identical to `hookRun` but returns exit code zero if the
+
+Identical to `hookRun` but returns exit code zero if the hook does not exist.
+
+- Location: `bin/build/tools/hook.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Examples
+
+    if ! hookSourceOptional test-cleanup >>"$quietLog"; then
+        buildFailed "$quietLog"
+    fi
+
+#### Exit codes
+
+- `Any` - The hook exit code is returned if it is run
+- `0` - is returned if the hook is not found
+
 ### `whichHook` - Find the path to a hook binary file
 
 Does a hook exist in the local project?

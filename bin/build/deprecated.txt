@@ -80,11 +80,6 @@ validateShellScript|bashLint
 _environmentOutput|outputTrigger
 
 # v0.11.1
-# if usageArgumentRequired is found then do this:
-#usageArgumentRequired|usageArgumentREMOVETHISRequired
-#usageArgumentString|usageArgumentEmptyString
-#usageArgumentREMOVETHISRequired|usageArgumentRequired
-#usageArgumentRequired|usageArgumentString
 showEnvironment|environmentFileShow
 makeEnvironment|environmentFileApplicationMake
 applicationEnvironmentVariables|environmentApplicationVariables

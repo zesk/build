@@ -1013,7 +1013,7 @@ cannon() {
   [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(__usageEnvironment "$usage" mktemp) || return $?
   if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
-    statusMessage --first printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
+    printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
     rm "$cannonLog" || :
     return 0
   fi
@@ -1023,10 +1023,10 @@ cannon() {
 
   count="$(($(wc -l <"$cannonLog.found") + 0))"
   if [ "$count" -eq 0 ]; then
-    statusMessage --first decorate info "Modified (NO) files"
+    printf "%s" "$(decorate info "Modified (NO) files")"
   else
     __usageEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || _clean $? "$cannonLog" || return $?
-    statusMessage --first decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
+    printf "%s" "$(decorate success "Modified $(decorate code "$count $(plural "$count" file files)")")"
     exitCode=1
   fi
   __usageEnvironment "$usage" rm -f "$cannonLog" "$cannonLog.found" || return $?

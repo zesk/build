@@ -110,6 +110,58 @@ ___deprecatedCleanup() {
 }
 
 #
+#  ▛▀▖                  ▐       ▌ ▞▀▖               ▐
+#  ▌ ▌▞▀▖▛▀▖▙▀▖▞▀▖▞▀▖▝▀▖▜▀ ▞▀▖▞▀▌ ▚▄ ▌ ▌▛▀▖▛▀▖▞▀▖▙▀▖▜▀
+#  ▌ ▌▛▀ ▙▄▘▌  ▛▀ ▌ ▖▞▀▌▐ ▖▛▀ ▌ ▌ ▖ ▌▌ ▌▙▄▘▙▄▘▌ ▌▌  ▐ ▖
+#  ▀▀ ▝▀▘▌  ▘  ▝▀▘▝▀ ▝▀▘ ▀ ▝▀▘▝▀▘ ▝▀ ▝▀▘▌  ▌  ▝▀ ▘   ▀
+#
+
+# list of ignore flags for `find`
+__deprecatedIgnore() {
+  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" -name 'deprecated.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
+}
+
+# Find files which match a token
+__deprecatedFind() {
+  local ignoreStuff=()
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || [ "${#ignoreStuff[@]}" -gt 0 ] || _environment "__deprecatedIgnore empty?" || return $?
+  while [ "$#" -gt 0 ]; do
+    if find . -type f -name '*.sh' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
+      return 0
+    fi
+    shift
+  done
+  return 1
+}
+
+# Usage: {fn} search replace [ additionalCannonArgs ]
+__deprecatedCannon() {
+  local from="$1" to="$2" ignoreStuff=()
+  shift 2
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || [ "${#ignoreStuff[@]}" -gt 0 ] || _environment "__deprecatedIgnore empty?" || return $?
+  # ignore should go at the end so it has priority over previous entries
+  cannon "$from" "$to" "$@" "${ignoreStuff[@]}"
+}
+
+__deprecatedTokens() {
+  local ignoreStuff exitCode=0 start results
+  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
+  results=$(__environment mktemp) || return $?
+  start=$(__environment beginTiming) || return $?
+  for deprecatedToken in "$@"; do
+    statusMessage decorate info "Looking for deprecated token $(decorate code "$deprecatedToken") ..."
+    if find . -type f "${ignoreStuff[@]+"${ignoreStuff[@]}"}" -print0 | xargs -0 grep -l -e "$deprecatedToken" >"$results"; then
+      statusMessage --last decorate error "DEPRECATED token $(decorate code "$deprecatedToken") found"
+      wrapLines "$(decorate code)" "$(decorate reset)" <"$results" || _clean $? "$results" || return $?
+      exitCode=1
+    fi
+  done
+  __environment rm -rf "$results" || return $?
+  statusMessage --last reportTiming "$start" "Deprecated token scan took"
+  return "$exitCode"
+}
+
+#
 # --tokens
 #
 __deprecatedTokensByVersion() {
@@ -163,8 +215,11 @@ __deprecatedCannonsByVersion() {
       exitCode=1
       continue
     fi
-    statusMessage printf -- "%s: %s -> %s" "$(decorate bold-magenta "$version")" "$(decorate code "${tokens[0]}")" "$(decorate code "${tokens[1]}")"
-    __deprecatedCannon "${tokens[@]}" || exitCode=$? && printf -- "\n"
+    statusMessage printf -- "%s: %s -> %s %s" "$(decorate bold-magenta "$version")" "$(decorate code "${tokens[0]}")" "$(decorate code "${tokens[1]}")"
+    if ! __deprecatedCannon "${tokens[@]}"; then
+      exitCode=1
+      printf -- "\n"
+    fi
   done <"$home/bin/build/deprecated.txt"
   statusMessage --last reportTiming "$start" "Deprecated cannon took"
   return "$exitCode"

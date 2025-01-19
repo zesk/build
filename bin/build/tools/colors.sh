@@ -410,13 +410,9 @@ _statusMessage() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
-  if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
-    printf %d 80
-  else
-    if ! tput cols 2>/dev/null; then
-      printf %d 80
-    fi
-  fi
+  local _ columns
+  read -r _ columns < <(stty size 2>/dev/null) || :
+  isInteger "$columns" && printf "%d" "$columns" || printf "%d" 120
 }
 
 #
@@ -430,13 +426,9 @@ consoleColumns() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
-  if [ -z "${TERM:-}" ] || [ "${TERM:-}" = "dumb" ]; then
-    printf %d 60
-  else
-    if ! tput lines 2>/dev/null; then
-      printf %d 60
-    fi
-  fi
+  local rows _
+  read -r rows _ < <(stty size 2>/dev/null) || :
+  isInteger "$rows" && printf "%d" "$rows" || printf "%d" 80
 }
 
 #

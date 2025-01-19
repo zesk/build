@@ -96,6 +96,29 @@ Supports mapping the file using the current environment, or escalated privileges
 - `0` - Success
 - `1` - Failed
 
+## Load bash files but get approval first
+
+### `interactiveBashSource` - Loads files or a directory of `.sh` files using `source`
+
+Loads files or a directory of `.sh` files using `source` to make the code available.
+Has security implications. Use with caution and ensure your directory is protected.
+
+- Location: `bin/build/tools/interactive.sh`
+
+#### Arguments
+
+- `directoryOrFile` - Required. Exists. Directory or file to `source` `.sh` files found.
+- `--info` - Optional. Flag. Show user what they should do (press a key).
+- `--no-info` - Optional. Flag. Hide user info (what they should do ... press a key)
+- `--verbose` - Optional. Flag. Show what is done as status messages.
+- `--prefix` - Optional. String. Display this text before each status messages.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
 ## Examples
 
 Example:

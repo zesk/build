@@ -16,6 +16,10 @@
 
 {copyFileWouldChange} {copyFile}
 
+## Load bash files but get approval first
+
+{interactiveBashSource}
+
 ## Examples
 
 Example:
