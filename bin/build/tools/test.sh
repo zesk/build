@@ -36,7 +36,9 @@ _testTools() {
 }
 
 # Fake a value for testing
-# Usage: {fn} globalName saveGlobalName [ --end | true | false ]
+# Usage: {fn} globalName [ saveGlobalName ] [ --end | value ]
+# Argument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value.
+# Argument: saveGlobalName - EnvironmentVariable. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
 # Argument: --end - Flag. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
 # Argument: value - EmptyString. Required. Force the value of `globalName` to this value temporarily. Saves the original value in global `saveGlobalName`.
 __mockValue() {
@@ -72,7 +74,7 @@ ___mockValue() {
 dumpBinary() {
   local usage="_${FUNCNAME[0]}"
 
-  local symbol="🔅" vanishFiles=() showBytes="" endBinary=tail
+  local symbol="🔅" vanishFiles=() showBytes="" endBinary=tail names=()
 
   # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#

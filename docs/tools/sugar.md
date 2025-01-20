@@ -57,7 +57,7 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 
 Run `command`, upon failure run `usage` with an environment error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -88,7 +88,7 @@ Run `usage` with an environment error
 
 Run `command`, upon failure run `usage` with an argument error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -104,7 +104,7 @@ Run `command`, upon failure run `usage` with an argument error
 
 Run `usage` with an environment error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -119,7 +119,7 @@ Run `usage` with an environment error
 
 Run `usage` with an argument error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
