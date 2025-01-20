@@ -18,30 +18,6 @@
 #             |_|
 #
 
-# DEPRECATED
-# See: packageUninstall
-aptUninstall() {
-  packageUninstall --manager apt "$@"
-}
-
-# DEPRECATED
-# See: packageWhich
-whichApt() {
-  packageWhich --manager apt "$@"
-}
-
-# DEPRECATED
-# See: packageWhichUninstall
-whichAptUninstall() {
-  packageWhichUninstall --manager apt "$@"
-}
-
-# DEPRECATED
-# See: packageNeedRestartFlag
-aptNeedRestartFlag() {
-  packageNeedRestartFlag "$@"
-}
-
 # Not keeping this around will break old scripts, so don't be a ...
 # Deprecated: 2025-01-15
 runHook() {
@@ -52,16 +28,4 @@ runHook() {
 # Deprecated: 2025-01-15
 runHookOptional() {
   hookRunOptional "$@"
-}
-
-# Deprecated: 2024
-consoleReset() {
-  if hasColors; then
-    printf "\e[0m"
-  fi
-}
-
-# Deprecated: 2024
-consoleBlackBackground() {
-  __consoleEscape '\033[48;5;0m' '\033[0m' "$@"
 }

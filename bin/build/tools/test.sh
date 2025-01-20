@@ -75,7 +75,7 @@ dumpBinary() {
   local symbol="🔅" vanishFiles=() showBytes="" endBinary=tail
 
   # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$# names=()
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
