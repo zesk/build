@@ -70,11 +70,103 @@ ___mockValue() {
 # stdin: binary
 # stdout: formatted output set to ideal `consoleColumns`
 dumpBinary() {
+  local usage="_${FUNCNAME[0]}"
+
+  local symbol="🔅" vanishFiles=() showBytes="" endBinary=tail
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$# names=()
+  while [ $# -gt 0 ]; do
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --vanish)
+        shift
+        vanishFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --head)
+        endBinary="head"
+        ;;
+      --tail)
+        endBinary="tail"
+        ;;
+      --symbol)
+        shift
+        symbol="$1"
+        ;;
+      --bytes)
+        shift
+        # Allow BLANK
+        if [ -n "$1" ]; then
+          showBytes=$(usageArgumentUnsignedInteger "$usage" "bytes" "$1") || return $?
+        fi
+        ;;
+      *)
+        names+=("$argument")
+        break
+        ;;
+    esac
+    shift || __failArgument "$usage" shift || return $?
+  done
+
   local columns
   # Is this installed by default?
-  __environment muzzle packageWhich xxd xxd || return $?
-  columns=$(consoleColumns) || columns=120
-  xxd -c "$((columns / 4))"
+  __usageEnvironment "$usage" muzzle packageWhich xxd xxd || return $?
+  columns=$(__usageEnvironment "$usage" consoleColumns) || return $?
+
+  local item
+  if [ "${#vanishFiles[@]}" -gt 0 ]; then
+    for item in "${vanishFiles[@]}"; do
+      local name
+      name=$(decorate file "$(basename "$item")" "$item")
+      # Recursion - only when --vanish is a parameter
+      __usageEnvironment "$usage" dumpBinary --size "$showBytes" "${names[@]}" "$name" <"$item" || return $?
+      __usageEnvironment "$usage" rm -rf "$item" || return $?
+    done
+    return 0
+  fi
+  item=$(__usageEnvironment "$usage" mktemp) || return $?
+  __usageEnvironment "$usage" cat >"$item" || return $?
+
+  local name="" nLines nBytes
+  [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ")
+  nLines=$(($(wc -l <"$item") + 0))
+  nBytes=$(($(wc -c <"$item") + 0))
+  [ ${#symbol} -eq 0 ] || symbol="$symbol "
+  if [ $nBytes -eq 0 ]; then
+    suffix=$(decorate orange "(empty)")
+  elif [ -n "$showBytes" ] && [ "$showBytes" -lt "$nBytes" ]; then
+    suffix="$(decorate warning "(showing $showBytes $(plural "$showBytes" byte bytes))")"
+  else
+    suffix="$(decorate success "(shown)")"
+  fi
+  # shellcheck disable=SC2015
+  statusMessage --last printf -- "%s%s %s, %s %s %s" \
+    "$name" \
+    "$nLines" "$(plural "$nLines" line lines)" \
+    "$nBytes" "$(plural "$nBytes" byte bytes)" \
+    "$suffix"
+  if [ $nBytes -eq 0 ]; then
+    __usageEnvironment "$usage" rm -rf "$item" || return $?
+    return 0
+  fi
+
+  local endPreprocess=(cat)
+  if [ -n "$showBytes" ]; then
+    endPreprocess=("$endBinary" --bytes="$showBytes")
+  fi
+  __usageEnvironment "$usage" "${endPreprocess[@]}" <"$item" | __usageEnvironment "$usage" xxd -c "$((columns / 4))" | wrapLines "$symbol $(decorate code)" "$(decorate reset)" || _clean $? "$item" || return $?
+  __usageEnvironment "$usage" rm -rf "$item" || return $?
+  return 0
+}
+_dumpBinary() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Dump a pipe with a title and stats
@@ -179,6 +271,7 @@ dumpPipe() {
   rm -rf "$item" || :
 }
 _dumpPipe() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -236,6 +329,7 @@ __dumpFile() {
   _dumpFile "$exitCode" "$@"
 }
 _dumpFile() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -340,6 +434,7 @@ bashLintFiles() {
   printf -- "\n"
 }
 _bashLintFiles() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -494,6 +589,7 @@ bashLint() {
   done
 }
 _bashLint() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -615,6 +711,7 @@ validateFileContents() {
   fi
 }
 _validateFileContents() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -796,5 +893,6 @@ findUncaughtAssertions() {
   [ ${#problemFiles[@]} -eq 0 ]
 }
 _findUncaughtAssertions() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

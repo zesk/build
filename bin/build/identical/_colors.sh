@@ -163,7 +163,7 @@ _decorate() {
 # stdout: 1, 2, or 3 tokens + newline: lightColor darkColor text
 _caseStyles() {
   case "$1" in
-    reset) lp='' ;;
+    reset) lp='0' ;;
       # styles
     underline) lp='4' ;;
     no-underline) lp='24' ;;

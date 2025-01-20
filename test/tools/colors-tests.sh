@@ -21,6 +21,21 @@ testSemanticColorTest() {
   unset BUILD_COLORS_MODE
 }
 
+testDecorateBasics() {
+  local color
+
+  for color in red yellow green blue; do
+    actual="$(decorate "$color")Bird, bird. bird is the word.$(decorate reset)"
+    expected="$(decorate "$color" "Bird, bird. bird is the word.")"
+
+    if ! assertEquals --line "$LINENO" "$expected" "$actual"; then
+      dumpBinary "Expected" <<<"$expected"
+      dumpBinary "Actual" <<<"$actual"
+      return 1
+    fi
+  done
+}
+
 testSimpleMarkdownToConsole() {
   local saveBC actual expected testString
   local this=${FUNCNAME[0]}
@@ -40,7 +55,11 @@ testSimpleMarkdownToConsole() {
 
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
 
-  assertEquals --line "$LINENO" "$expected" "$actual" "$this:$LINENO" || return $?
+  if ! assertEquals --line "$LINENO" "$expected" "$actual" "$this:$LINENO"; then
+    printf "%s\n" "$expected" | dumpBinary "Expected"
+    printf "%s\n" "$actual" | dumpBinary "Actual"
+    return 1
+  fi
 
   BUILD_COLORS=false
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
