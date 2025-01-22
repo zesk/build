@@ -137,8 +137,8 @@ identicalCheck() {
   [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
-  resultsFile=$(__usageEnvironment "$usage" mktemp) || return $?
-  searchFileList=$(__usageEnvironment "$usage" mktemp) || return $?
+  resultsFile=$(fileTemporaryName "$usage") || return $?
+  searchFileList=$(fileTemporaryName "$usage") || return $?
   rootDir=$(__usageEnvironment "$usage" realPath "$rootDir") || return $?
   __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || _clean $? "$searchFileList" || return $?
   if [ ! -s "$searchFileList" ]; then
@@ -318,7 +318,7 @@ __identicalCheckGenerateSearchFiles() {
   directory=$(usageArgumentDirectory "$usage" "directory" "${1-%/}") || return $?
   directories=("${repairSources[@]+"${repairSources[@]}"}" -- "$directory") && shift
 
-  searchFileList=$(__usageEnvironment "$usage" mktemp) || return $?
+  searchFileList=$(fileTemporaryName "$usage") || return $?
   local ignorePatterns=() startExclude=false
   for directory in "${directories[@]}"; do
     directory="${directory%/}"

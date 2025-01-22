@@ -87,7 +87,7 @@ __bashPromptAdd() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
   return 0
@@ -195,11 +195,13 @@ bashPromptModule_binBuild() {
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
-  local saved=("$@") nArguments=$#
   local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -248,7 +250,7 @@ bashPrompt() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   $skipTerminal || [ -t 0 ] || __failEnvironment "$usage" "Requires a terminal" || return $?
@@ -304,7 +306,8 @@ _bashPrompt() {
 # - default
 bashPromptColorScheme() {
   local colors
-  case "$1" in
+  __help "$usage" "$@" || return 0
+  case "${1-}" in
     forest) colors="$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)" ;;
     *) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
   esac
@@ -332,6 +335,8 @@ __bashPromptGeneratePS1() {
     "\[${colors[4]-}\]\w\[${reset}\]" \
     "\[\${__BASH_PROMPT_PREVIOUS[2]-}\]\${__BASH_PROMPT_PREVIOUS[3]-}\[${reset}\]"
 }
+
+# This is the main command running each command prompt
 __bashPromptCommand() {
   __BASH_PROMPT_PREVIOUS=("$?" "${__BASH_PROMPT_PREVIOUS[1]-}")
   local colors promptCommand

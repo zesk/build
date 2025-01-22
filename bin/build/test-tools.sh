@@ -169,7 +169,7 @@ testSuite() {
     startTest="$([ ! -f "$continueFile" ] || cat "$continueFile")"
   fi
   __environment requireFileDirectory "$quietLog" || return $?
-  testFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
+  testFunctions=$(fileTemporaryName "$usage") || return $?
   tests=()
   __bashCoverageStart "$home/test.stats"
   for item in "${checkTests[@]}"; do
@@ -426,7 +426,7 @@ __testLoad() {
 
   export DEBUGGING_TEST_LOAD
 
-  __beforeFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
+  __beforeFunctions=$(fileTemporaryName "$usage") || return $?
   __testFunctions="$__beforeFunctions.after"
   __errors="$__beforeFunctions.error"
   __testFunctions="$__beforeFunctions.after"

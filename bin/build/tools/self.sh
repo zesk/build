@@ -20,16 +20,16 @@
 # Usage: {fn} [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]
 installInstallBinary() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local exitCode=0
   local path="" applicationHome="" temp relTop home
   local installBinName="" source="" target url="" urlFunction="" postFunction="" showDiffFlag=false source verb localFlag=false
 
-  saved=("$@")
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -69,11 +69,12 @@ installInstallBinary() {
           applicationHome=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         else
           # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   [ -n "$installBinName" ] || __failArgument "$usage" "--bin is required" || return $?
@@ -265,6 +266,7 @@ buildCacheDirectory() {
   printf "%s\n" "${suffix%/}"
 }
 _buildCacheDirectory() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -273,13 +275,19 @@ _buildCacheDirectory() {
 # Prints the build home directory (usually same as the application root)
 # Environment: BUILD_HOME
 buildHome() {
+  local usage="_${FUNCNAME[0]}"
   export BUILD_HOME
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   if [ -z "${BUILD_HOME-}" ]; then
     # shellcheck source=/dev/null
-    source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || _environment "BUILD_HOME.sh failed" || return $?
-    [ -n "${BUILD_HOME-}" ] || _environment "BUILD_HOME STILL blank" || return $?
+    source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || __failEnvironment "$usage" "BUILD_HOME.sh failed" || return $?
+    [ -n "${BUILD_HOME-}" ] || __failEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
   fi
   printf "%s\n" "${BUILD_HOME-}"
+}
+_buildHome() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Parent: buildHome
@@ -313,26 +321,40 @@ _buildEnvironmentPath() {
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
-  local env paths=() path file="" found
 
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
-    found=false
-    IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
-    for path in "${paths[@]}"; do
-      [ -d "$path" ] || continue
-      file="$path/$env.sh"
-      if [ -x "$file" ]; then
-        export "${env?}" || __failEnvironment "$usage" "export $env failed" || return $?
-        found=true
-        set -a || :
-        # shellcheck source=/dev/null
-        source "$file" || __failEnvironment "$usage" source "$file" || return $?
-        set +a || :
-      fi
-    done
-    $found || __failEnvironment "$usage" "Missing $env" || return $?
-    shift
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        local env found=false paths=() path file=""
+
+        env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
+        IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
+        for path in "${paths[@]}"; do
+          [ -d "$path" ] || continue
+          file="$path/$env.sh"
+          if [ -x "$file" ]; then
+            export "${env?}" || __failEnvironment "$usage" "export $env failed" || return $?
+            found=true
+            set -a || :
+            # shellcheck source=/dev/null
+            source "$file" || __failEnvironment "$usage" source "$file" || return $?
+            set +a || :
+          fi
+        done
+        $found || __failEnvironment "$usage" "Missing $env" || return $?
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 }
 _buildEnvironmentLoad() {
@@ -352,13 +374,14 @@ _buildEnvironmentLoad() {
 # Example:
 Build() {
   local usage="_${FUNCNAME[0]}"
-  local run="bin/build/tools.sh"
 
+  local run="bin/build/tools.sh" vv=() verboseFlag=false
+
+  # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
-  local vv=() verboseFlag=false
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -374,7 +397,7 @@ Build() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   local home
   if ! home=$(bashLibraryHome "$run" 2>/dev/null); then
@@ -386,7 +409,6 @@ Build() {
   fi
   return 0
 }
-
 _Build() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -407,11 +429,26 @@ _Build() {
 #
 buildEnvironmentGet() {
   local usage="_${FUNCNAME[0]}"
-  local env
 
-  for env in "$@"; do
-    __usageEnvironment "$usage" buildEnvironmentLoad "$env" || return $?
-    printf "%s\n" "${!env-}"
+  [ $# -gt 0 ] || __failArgument "$usage" "Requires at least one environment variable" || return $?
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        __usageEnvironment "$usage" buildEnvironmentLoad "$argument" || return $?
+        printf "%s\n" "${!argument-}"
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 }
 _buildEnvironmentGet() {
@@ -427,14 +464,14 @@ _buildEnvironmentGet() {
 #
 buildQuietLog() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local logFile flagMake=true
 
-  saved=("$@")
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -456,16 +493,19 @@ buildQuietLog() {
   __failArgument "$usage" "No arguments" || return $?
 }
 _buildQuietLog() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Run a command and ensure the build tools context matches the current project
 # Usage: {fn} arguments ...
 # Argument: arguments ... - Required. Command to run in new context.
 # Avoid infinite loops here, call down.
 buildEnvironmentContext() {
   local usage="_${FUNCNAME[0]}"
+
+  [ $# -eq 0 ] || __help "$usage" "$@" || return 0
+
   local start codeHome home
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
@@ -479,5 +519,6 @@ buildEnvironmentContext() {
   __environment "$@" || return $?
 }
 _buildEnvironmentContext() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

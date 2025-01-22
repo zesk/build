@@ -8,6 +8,27 @@
 # Idea is to have a central argument manager
 # Which uses the comments to specify the arguments automatically
 
+# Usage: {fn} [ --only ] usageFunction arguments
+# Simple help argument handler
+# Easy --help handler for any function useful when it's the only option.
+# Argument: --only - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+# Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     __help "$usage" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+__help() {
+  local usage="${1-}" && shift
+  if [ "$usage" = "--only" ]; then
+    usage="${1-}" && shift
+    [ "${1-}" = "--help" ] && [ "$#" -eq 1 ] || __failArgument "$usage" "Only argument allowed is \`--help\`" || return $?
+  fi
+  if inArray "--help" "$@"; then
+    "$usage" 0
+    return 1
+  fi
+  return 0
+}
+
 # Generic argument parsing using Bash comments.
 #
 # Argument formatting (in comments) is as follows:
@@ -107,6 +128,7 @@ _arguments() {
   ARGUMENTS="$stateFile" || return $?
 }
 __arguments() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

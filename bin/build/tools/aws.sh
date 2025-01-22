@@ -283,7 +283,7 @@ awsEnvironmentFromCredentials() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   [ -n "$profileName" ] || profileName="default"
 
@@ -376,13 +376,13 @@ awsCredentialsAdd() {
         elif [ -z "$secret" ]; then
           secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -443,13 +443,13 @@ awsCredentialsRemove() {
         if [ -z "$profileName" ]; then
           profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -495,7 +495,7 @@ _awsCredentialsRemoveSection() {
   local usage="$1" credentials="$2" profileName=$3
   local pattern="\[\s*$profileName\s*\]" temp lines total
   total=$((0 + $(__usageEnvironment "$usage" wc -l <"$credentials"))) || return $?
-  temp=$(__usageEnvironment "$usage" mktemp) || return $?
+  temp=$(fileTemporaryName "$usage") || return $?
   lines=$((0 + $(grep -m 1 -B 32767 "$credentials" -e "$pattern" | grep -v -e "$pattern" | __usageEnvironment "$usage" tee "$temp" | wc -l))) || _clean $? "$temp" || return $?
   printf -- "# Removed profile %s (%s)\n" "$profileName" "$(date)" >>"$temp"
   __usageEnvironment "$usage" grep -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' >>"$temp" || _clean $? "$temp" || return $?

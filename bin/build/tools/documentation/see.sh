@@ -63,7 +63,7 @@ documentationIndex_SeeLinker() {
   for arg in cacheDirectory documentationDirectory seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
     [ -n "${!arg}" ] || __failArgument "$usage" "$arg is required" || return $?
   done
-  seeVariablesFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  seeVariablesFile=$(fileTemporaryName "$usage") || return $?
   linkPatternFile="$seeVariablesFile.linkPatterns"
   variablesSedFile="$seeVariablesFile.variablesSedFile"
   if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 pcregrep -l "$seePattern" | while read -r matchingFile; do

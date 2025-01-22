@@ -26,13 +26,13 @@
 # Argument: text - Optional. String. Text to search for mapping tokens.
 isMappable() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
   local prefix='{' suffix='}' tokenClasses='[-_A-Za-z0-9:]'
 
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -57,7 +57,8 @@ isMappable() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   return 1
 }
@@ -75,6 +76,7 @@ _isMappable() {
 # See: lowercase
 #
 parseBoolean() {
+  __help "_${FUNCNAME[0]}" "$@" || return 0
   case "$(lowercase "$1")" in
     y | yes | 1 | true)
       return 0
@@ -84,6 +86,10 @@ parseBoolean() {
       ;;
   esac
   return 2
+}
+_parseBoolean() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -882,11 +888,11 @@ characterClassReport() {
         ;;
       *)
         # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   classList=()
   for arg in $(characterClasses); do
@@ -1011,7 +1017,7 @@ cannon() {
   searchQuoted=$(quoteSedPattern "$search")
   replaceQuoted=$(quoteSedPattern "$replace")
   [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
-  cannonLog=$(__usageEnvironment "$usage" mktemp) || return $?
+  cannonLog=$(fileTemporaryName "$usage") || return $?
   if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
     printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
     rm "$cannonLog" || :
@@ -1216,6 +1222,9 @@ listCleanDuplicates() {
 _listCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# IDENTICAL mapEnvironment2 1
+# one
 
 # IDENTICAL mapEnvironment 71
 

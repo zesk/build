@@ -87,7 +87,7 @@ testDockerEnvFromBash() {
   dockerEnvFromBashEnv ./test/example/bash.env >"$out" 2>"$err" || return 1
   dumpPipe "ERRORS dockerEnvFromBashEnv ./test/example/docker.env" <"$err"
   assertEquals --line "$LINENO" 0 "$(fileSize "$err")" || return $?
-  assertFileContains --line "$LINENO" "$out" "host=" "now=" "uname=" || return $?
+  assertFileContains --line "$LINENO" "$out" "host=" "today=" "uname=" || return $?
 
   rm -f "$out" "$err" || :
 }

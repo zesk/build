@@ -285,8 +285,8 @@ gitTagVersion() {
   # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -342,7 +342,7 @@ gitTagVersion() {
 
   local tagFile clean=()
 
-  tagFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  tagFile=$(fileTemporaryName "$usage") || return $?
   clean=("$tagFile")
   # rc is for release candidate
   versionSuffix=${versionSuffix:-${BUILD_VERSION_SUFFIX:-rc}}
@@ -1020,7 +1020,7 @@ gitBranchMergeCurrent() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   [ -n "$targetBranch" ] || __failArgument "$usage" "branch required" || return $?

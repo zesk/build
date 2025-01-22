@@ -35,28 +35,24 @@ _processSignal() {
 # Argument: --require - Flag. Optional. Require all processes to be alive upon first invocation.
 #
 processWait() {
-  local usage this argument
-  local start elapsed lastSignal sinceLastSignal now
-  local timeout signalTimeout
-  local signals signal sendSignals
-  local processId processIds aliveIds
-  local requireFlag verboseFlag signals signal
-  local STATUS_THRESHOLD=10
-  local processTemp
+  local usage="_${FUNCNAME[0]}"
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
+  local processIds=() requireFlag=false verboseFlag=false timeout=-1 signalTimeout=1 signals=()
 
-  processIds=()
-  requireFlag=false
-  verboseFlag=false
-  timeout=-1
-  signalTimeout=1
-  signals=()
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --require)
         requireFlag=true
         ;;
@@ -85,17 +81,27 @@ processWait() {
         processIds+=("$processId")
         ;;
     esac
-    shift || __failArgument "$usage" "shift failed after $argument"
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
+
+  local elapsed lastSignal sinceLastSignal now
+  local timeout signalTimeout
+  local signals signal
+  local processId processIds aliveIds
+  local requireFlag verboseFlag signals signal
+  local STATUS_THRESHOLD=10
+  local processTemp
+
   if [ 0 -eq ${#processIds[@]} ]; then
     __failArgument "$usage" "Requires at least one processId" || return $?
   fi
 
+  local start sendSignals sendSignals=("${signals[@]+"${signals[@]}"}") lastSignal=0 elapsed=0 processTemp
+
   start=$(date +%s) || __failEnvironment "$usage" "date failed" || return $?
-  sendSignals=("${signals[@]+"${signals[@]}"}")
-  lastSignal=0
-  elapsed=0
-  processTemp=$(mktemp)
+
+  processTemp=$(fileTemporaryName "$usage") || return $?
   while [ ${#processIds[@]} -gt 0 ]; do
     __environment _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
     # Reset aliveIds, load them from _processSignal
@@ -137,7 +143,7 @@ processWait() {
       __failEnvironment "$usage" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
     fi
     if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
-      statusMessage decorate info "$this ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
+      statusMessage decorate info "${usage#_} ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
     fi
     sleep 1 || __failEnvironment "$usage" "sleep interrupted" || return $?
   done

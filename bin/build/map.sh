@@ -237,6 +237,8 @@ environmentVariables() {
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
 
+
+
 # IDENTICAL mapEnvironment 71
 
 # Summary: Convert tokens in files to environment variable values

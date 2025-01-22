@@ -46,39 +46,42 @@ incrementor() {
   persistence="$(__usageEnvironment "$usage" requireDirectory "$cacheDirectory")" || return $?
   name=""
   value=""
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    if isInteger "$argument"; then
-      if [ -n "$name" ]; then
-        __incrementor "$persistence/$name" "$value"
-        name=
-      fi
-      value="$argument"
-    else
-      case "$argument" in
-        --reset)
-          rm -rf "$persistence" || :
-          return 0
-          ;;
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
         ;;
-        *[^-_a-zA-Z0-9]*)
-          __failArgument "$usage" "Invalid argument or variable name: $argument" || return $?
-          ;;
-        *)
+      --reset)
+        rm -rf "$persistence" || :
+        return 0
+        ;;
+      *[^-_a-zA-Z0-9]*)
+        __failArgument "$usage" "Invalid argument or variable name: $argument" || return $?
+        ;;
+      *)
+        if isInteger "$argument"; then
+          if [ -n "$name" ]; then
+            __incrementor "$persistence/$name" "$value"
+            name=
+          fi
+          value="$argument"
+        else
           if [ -n "$name" ]; then
             __incrementor "$persistence/$name" "$value"
           fi
           name="$argument"
           [ -n "$name" ] || name=default
-          ;;
-      esac
-    fi
-    shift || __failArgument "shift $argument failed" || return $?
+        fi
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   [ -n "$name" ] || name=default
   __incrementor "$persistence/$name" "$value"
@@ -108,15 +111,14 @@ __incrementor() {
 # Usage: {fn} [ --mode mode ] namedPipe [ --writer line | readerExecutable ... ]
 pipeRunner() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local binary
 
-  namedPipe=
-  mode="0700"
-  nArguments=$#
+  local binary="" namedPipe="" mode="0700"
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)

@@ -53,7 +53,7 @@ _documentationTemplateUpdateUnlinked() {
   muzzle usageArgumentFile "$usage" "pageTemplate" "${5-}" || return $?
   todoTemplate=$(__usageEnvironment "$usage" documentationTemplate "${6-todo}") || return $?
 
-  unlinkedFunctions=$(__usageEnvironment "$usage" mktemp) || return $?
+  unlinkedFunctions=$(fileTemporaryName "$usage") || return $?
   clean+=("$unlinkedFunctions")
   documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __failEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || _clean $? "${clean[@]}" || return $?
   total=$(wc -l <"$unlinkedFunctions" | trimSpace)

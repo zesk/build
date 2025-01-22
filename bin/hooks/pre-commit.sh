@@ -78,7 +78,7 @@ __hookPreCommit() {
   __usageEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
-    nonOriginalWithEOF=$(__usageEnvironment "$usage" mktemp) || return $?
+    nonOriginalWithEOF=$(fileTemporaryName "$usage") || return $?
     __usageEnvironment "$usage" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
     fileCopies=("$nonOriginalWithEOF" "$original")
     # Can not be trusted to not edit the right one

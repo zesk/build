@@ -40,11 +40,11 @@ __packageListFunction() {
         ;;
       *)
         # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
@@ -97,7 +97,7 @@ __packageUpFunction() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
@@ -195,7 +195,7 @@ packageWhich() {
         ;;
       -*)
         # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         ;;
       *)
         if [ -z "$binary" ]; then
@@ -206,7 +206,7 @@ packageWhich() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
@@ -277,7 +277,7 @@ packageWhichUninstall() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
@@ -425,7 +425,7 @@ packageIsInstalled() {
   done
   [ "${#packages[@]}" -gt 0 ] || __failArgument "$usage" "Requires at least one package" || return $?
   local installed
-  installed=$(__usageEnvironment "$usage" mktemp) || return $?
+  installed=$(fileTemporaryName "$usage") || return $?
   __usageEnvironment "$usage" packageInstalledList >"$installed" || return $?
   local package
   for package in "${packages[@]}"; do

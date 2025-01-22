@@ -16,6 +16,27 @@
 #------------------------------------------------------------------------------
 #
 
+# Summary: Create a temporary file (or directory) or fail using usageFunction
+# Utility function to replace this common code
+#
+#     variable=$(__usageEnvironment "$usage" mktemp) || return $?
+#
+# with
+#
+#     variable=$(fileTemporaryName "$usage") || return $?
+#
+# DOC TEMPLATE: assert-common 14
+# Argument: --help - Optional. Flag. Display this help.
+fileTemporaryName() {
+  local usage="$1" && shift
+  __help "_${FUNCNAME[0]}" "$@" || return 0
+  __usageEnvironment "$usage" mktemp "$@" || return $?
+}
+_fileTemporaryName() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Usage: usageTemplate binName options delimiter description exitCode message ...
 #
@@ -172,17 +193,19 @@ usageGenerator() {
 # Runs `usage` on failure
 #
 usageRequireBinary() {
-  local usage="${1-}"
+  # IDENTICAL usageFunctionHeader 4
+  local usage="_${FUNCNAME[0]}" usageFunction="${1-}" && shift
   if [ "$(type -t "$usage")" != "function" ]; then
-    _argument "$(decorate code "$usage") must be a valid function" || return $?
+    __usageArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
   fi
-  shift
   local binary
   for binary in "$@"; do
-    if [ -z "$(which "$binary" || :)" ]; then
-      __failEnvironment "$usage" "$binary is not available in path, not found: $(decorate code "$PATH")"
-    fi
+    whichExists "$binary" || __failEnvironment "$usage" "$binary is not available in path, not found: $(decorate code "$PATH")"
   done
+}
+_usageRequireBinary() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -194,18 +217,21 @@ usageRequireBinary() {
 # Deprecated: 2024-01-01
 #
 usageRequireEnvironment() {
-  local usage
-  usage="${1-}"
+  # IDENTICAL usageFunctionHeader 4
+  local usage="_${FUNCNAME[0]}" usageFunction="${1-}" && shift
   if [ "$(type -t "$usage")" != "function" ]; then
-    _argument "$(decorate code "$usage") must be a valid function" || return $?
+    __usageArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
   fi
-  shift
   local environmentVariable
   for environmentVariable in "$@"; do
     if [ -z "${!environmentVariable-}" ]; then
-      __failEnvironment "$usage" "Environment variable $(decorate code "$environmentVariable") is required" || return $?
+      __failEnvironment "$usageFunction" "Environment variable $(decorate code "$environmentVariable") is required" || return $?
     fi
   done
+}
+_usageRequireEnvironment() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Arguments: defaultNoun - Required. String. Default noun if user noun is empty

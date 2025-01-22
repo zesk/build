@@ -40,15 +40,19 @@ isVersion() {
 # shellcheck disable=SC2120
 releaseNotes() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local version home releasePath
 
-  version=
-  nArguments=$#
+  local version=""
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       *)
         if [ -n "$version" ]; then
           decorate error "Version $version already specified: $argument"
@@ -62,7 +66,7 @@ releaseNotes() {
   buildEnvironmentContext __releaseNotes "$usage" "$version"
 }
 __releaseNotes() {
-  local usage="$1" version="${2-}"
+  local usage="$1" version="${2-}" home releasePath
 
   if [ -z "$version" ]; then
     version=$(__usageEnvironment "$usage" hookRun version-current) || return $?
@@ -87,19 +91,38 @@ _releaseNotes() {
 # Argument: lastVersion - Required. String. Version to calculate the next minor version.
 nextMinorVersion() {
   local usage="_${FUNCNAME[0]}"
-  local last prefix
 
-  last="${1##*.}"
-  __usageArgument "$usage" isInteger "$last" || return $?
-  prefix="${1%.*}"
-  prefix="${prefix#v*}"
-  if [ "$prefix" != "${1-}" ]; then
-    prefix="$prefix."
-  else
-    prefix=
-  fi
-  last=$((last + 1))
-  printf "%s%s" "$prefix" "$last"
+  [ $# -gt 0 ] || __failArgument "$usage" "lastVersion required" || return $?
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        local last prefix
+
+        last="${1##*.}"
+        __usageArgument "$usage" isInteger "$last" || return $?
+        prefix="${1%.*}"
+        prefix="${prefix#v*}"
+        if [ "$prefix" != "${1-}" ]; then
+          prefix="$prefix."
+        else
+          prefix=
+        fi
+        last=$((last + 1))
+        printf "%s%s" "$prefix" "$last"
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+  done
 }
 _nextMinorVersion() {
   # IDENTICAL usageDocument 1
@@ -130,14 +153,14 @@ _nextMinorVersion() {
 #
 newRelease() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
 
   local isInteractive=true newVersion=""
 
+  # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)

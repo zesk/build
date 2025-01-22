@@ -19,12 +19,12 @@
 # stdout: The desired file
 tarExtractPattern() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local pattern
 
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -32,7 +32,7 @@ tarExtractPattern() {
         return $?
         ;;
       *)
-        pattern="$argument"
+        local pattern="$argument"
         shift || __failArgument "No pattern supplied" || return $?
         # -h means follow symlinks
         if tar --version | grep -q GNU; then
@@ -53,6 +53,7 @@ tarExtractPattern() {
   done
 }
 _tarExtractPattern() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -67,14 +68,16 @@ _tarExtractPattern() {
 #
 tarCreate() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local target
+
+  local target=""
 
   [ $# -gt 0 ] || __failArgument "$usage" "Need target and files" || return $?
-  target=
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -103,5 +106,6 @@ tarCreate() {
   done
 }
 _tarCreate() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

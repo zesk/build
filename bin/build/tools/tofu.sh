@@ -26,6 +26,7 @@ aptKeyAddOpenTofu() {
     --release any
     --source deb-src
   )
+  __help "$usage" "$@" || return 0
   __usageEnvironment "$usage" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
@@ -42,6 +43,7 @@ _aptKeyAddOpenTofu() {
 #
 aptKeyRemoveOpenTofu() {
   local usage="_${FUNCNAME[0]}"
+  __help "$usage" "$@" || return 0
   __usageEnvironment "$usage" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
@@ -58,6 +60,7 @@ _aptKeyRemoveOpenTofu() {
 tofuInstall() {
   local usage="_${FUNCNAME[0]}" binary="tofu"
 
+  __help "$usage" "$@" || return 0
   ! whichExists "$binary" || return 0
   __usageEnvironment "$usage" packageInstall apt-transport-https ca-certificates curl gnupg
   __usageEnvironment "$usage" aptKeyAddOpenTofu || return $?
@@ -78,6 +81,7 @@ _tofuInstall() {
 tofuUninstall() {
   local usage="_${FUNCNAME[0]}"
 
+  __help "$usage" "$@" || return 0
   __usageEnvironment "$usage" packageWhichUninstall tofu tofu "$@" || return $?
   __usageEnvironment "$usage" aptKeyRemoveOpenTofu || return $?
   __usageEnvironment "$usage" packageUpdate --force || return $?

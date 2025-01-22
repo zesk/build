@@ -32,16 +32,9 @@
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
 sshAddKnownHost() {
-  local remoteHost output sshKnown verbose exitCode verboseArgs
+  local usage="_${FUNCNAME[0]}"
 
-  local usage
-
-  usage="_${FUNCNAME[0]}"
-
-  sshKnown=.ssh/known_hosts
-  exitCode=0
-  verbose=false
-  verboseArgs=()
+  local sshKnown=".ssh/known_hosts" exitCode=0 verbose=false verboseArgs=()
 
   __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
   [ -d "$HOME" ] || __failEnvironment "$usage" "HOME directory does not exist: $HOME" || return $?
@@ -52,20 +45,27 @@ sshAddKnownHost() {
 
   chmod 700 "$HOME/.ssh" && chmod 600 "$sshKnown" || __failEnvironment "$usage" "Failed to set mode on .ssh correctly" || return $?
 
-  output=$(mktemp)
+  local output
+  output=$(fileTemporaryName "$usage") || return $?
+
   buildDebugStart ssh || :
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    case "$1" in
-      --verbose)
-        verbose=true
-        verboseArgs=("-v")
-        ;;
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
         ;;
+      --verbose)
+        verbose=true
+        verboseArgs=("-v")
+        ;;
       *)
+        local remoteHost
         remoteHost="$1"
         if grep -q "$remoteHost" "$sshKnown"; then
           ! $verbose || decorate info "Host $remoteHost already known"
@@ -78,7 +78,8 @@ sshAddKnownHost() {
         fi
         ;;
     esac
-    shift
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   buildDebugStop ssh || :
   rm "$output" 2>/dev/null || :
@@ -116,10 +117,17 @@ sshSetup() {
   keyType=ed25519
   keyBits=2048
 
-  while [ $# != 0 ]; do
-    arg="$1"
-    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
-    case "$arg" in
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --type)
         shift || __failArgument "$usage" "missing $arg" || return $?
         case "$1" in
@@ -136,11 +144,6 @@ sshSetup() {
         minBits=512
         [ "$(("$1" + 0))" -ge "$minBits" ] || __failArgument "$usage" "Key bits is too small $minBits: $1 -> $(("$1" + 0))" || return $?
         ;;
-      # IDENTICAL --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
       --force)
         flagForce=1
         ;;
@@ -148,7 +151,8 @@ sshSetup() {
         servers+=("$arg")
         ;;
     esac
-    shift
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   [ -d "$sshHomePath" ] || mkdir -p .ssh/ || __failEnvironment "$usage" "Can not create $sshHomePath" || return $?

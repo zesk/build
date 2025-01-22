@@ -164,8 +164,8 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
@@ -242,7 +242,7 @@ documentationTemplateCompile() {
     done <"$documentTokensFile"
     if $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
       message="Generated"
-      compiledFunctionEnv=$(__usageEnvironment "$usage" mktemp) || return $?
+      compiledFunctionEnv=$(fileTemporaryName "$usage") || return $?
       # subshell to hide environment tokens
       while read -r tokenName; do
         compiledFunctionTarget="$compiledTemplateCache/$tokenName"
@@ -330,8 +330,8 @@ documentationTemplateFunctionCompile() {
         elif [ -z "$functionTemplate" ]; then
           functionTemplate=$1
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
@@ -411,8 +411,8 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
@@ -466,7 +466,7 @@ bashDocumentFunction() {
   local envFile file=$1 fn=$2 template=$3 home exitCode
 
   [ -f "$template" ] || __failArgument "$usage" "$template is not a file" || return $?
-  envFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  envFile=$(fileTemporaryName "$usage") || return $?
   __usageEnvironment "$usage" printf "%s\n%s\n" "#!/usr/bin/env bash" "%s\n" "set -eou pipefail" >>"$envFile" || return $?
   if ! bashDocumentation_Extract "$file" "$fn" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
@@ -626,8 +626,8 @@ bashDocumentation_Extract() {
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
   base="$(__usageEnvironment "$usage" basename "$definitionFile")" || return $?
-  tempDoc=$(__usageEnvironment "$usage" mktemp) || return $?
-  docMap=$(__usageEnvironment "$usage" mktemp) || return $?
+  tempDoc=$(fileTemporaryName "$usage") || return $?
+  docMap=$(fileTemporaryName "$usage") || return $?
 
   __dumpNameValue "applicationHome" "$home" | tee -a "$docMap"
   __dumpNameValue "applicationFile" "${definitionFile#"${home%/}"/}" | tee -a "$docMap"

@@ -31,6 +31,8 @@
 #
 # Does little to no validation of any characters so best used for well-formed input.
 #
+# Now works on multiple URLs, output is separated by a blank line for new entries
+#
 # Exit Code: 0 - If parsing succeeds
 # Exit Code: 1 - If parsing fails
 # Summary: Simple Database URL Parsing
@@ -38,67 +40,77 @@
 # Argument: url - a Uniform Resource Locator used to specify a database connection
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
 # Example:     echo $name
-#
 urlParse() {
-  local v u="${1-}"
+  local usage="_${FUNCNAME[0]}"
 
-  # parts
-  local url path name scheme user password host port error
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        local u="${1-}"
 
-  # u is scheme://user:pass@host:port/path...
-  url="$u"
-  scheme="${u%%://*}"
-  user=
-  password=
-  host=
-  port=
-  path=
-  name=
-  if [ "$scheme" != "$url" ] && [ -n "$scheme" ]; then
-    # Have a scheme
-    u="${u#*://}"
-    # u is user:pass@host:port/path...
-    # path
-    name="${u#*/}"
-    if [ "$name" != "$u" ]; then
-      path="/$name"
-    else
-      path="/"
-      name=
-    fi
-    u="${u%%/*}"
-    # u now possibly: user:pass@host:port
-    host="${u##*@}"
-    if [ "$host" = "$u" ]; then
-      user=
-      password=
-    else
-      user="${u%@*}"
-      password="${user#*:}"
-      if [ "$password" = "$user" ]; then
-        password=
-      else
-        user="${user%%:*}"
-      fi
-    fi
-    port="${host##*:}"
-    if [ "$port" = "$host" ]; then
-      port=
-    else
-      host="${host%:*}"
-    fi
-    error=
-  else
-    error="no-scheme"
-    scheme=
-  fi
+        # parts
+        local url="$u" path="" name="" user="" password="" host="" port="" error=""
+        local scheme="${u%%://*}"
 
-  for v in url path name scheme user password host port error; do
-    printf "%s=%s\n" "$v" "$(quoteBashString "${!v}")"
+        if [ "$scheme" != "$url" ] && [ -n "$scheme" ]; then
+          # Have a scheme
+          u="${u#*://}"
+          # u is user:pass@host:port/path...
+          # path
+          name="${u#*/}"
+          if [ "$name" != "$u" ]; then
+            path="/$name"
+          else
+            path="/"
+            name=""
+          fi
+          u="${u%%/*}"
+          # u now possibly: user:pass@host:port
+          host="${u##*@}"
+          if [ "$host" = "$u" ]; then
+            user=""
+            password=""
+          else
+            user="${u%@*}"
+            password="${user#*:}"
+            if [ "$password" = "$user" ]; then
+              password=""
+            else
+              user="${user%%:*}"
+            fi
+          fi
+          port="${host##*:}"
+          if [ "$port" = "$host" ]; then
+            port=""
+          else
+            host="${host%:*}"
+          fi
+          error=""
+        else
+          error="no-scheme"
+          scheme=""
+        fi
+        for v in url path name scheme user password host port error; do
+          printf "%s=%s\n" "$v" "$(quoteBashString "${!v}")"
+        done
+        printf -- "\n"
+        : "$path" # usage warning
+        # Exit code 1 if failed
+        [ -z "$error" ]
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
-  : "$path" # usage warning
-  # Exit code 1 if failed
-  [ -z "$error" ]
 }
 
 #
@@ -110,15 +122,17 @@ urlParse() {
 # Example:     decorate info "Connecting as $(urlParseItem user "$url")"
 #
 urlParseItem() {
+  local usage="_${FUNCNAME[0]}"
+
   [ $# -ge 2 ] || __failArgument "$usage" "Need at least one URL" || return $?
 
-  local usage="_${FUNCNAME[0]}"
-  local component="" url
+  local component="" url=""
 
+  # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -141,7 +155,7 @@ urlParseItem() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 }
 _urlParseItem() {
@@ -154,9 +168,25 @@ _urlParseItem() {
 # Usage: {fn} url ...
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator
 urlValid() {
+  [ $# -gt 0 ] || return 1
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    urlParse "$1" >/dev/null || return 1
-    shift
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        urlParse "$1" >/dev/null || return 1
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 }
 
@@ -167,10 +197,12 @@ urlOpener() {
   local usage="_${FUNCNAME[0]}"
 
   local binary=""
+
+  # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -183,11 +215,11 @@ urlOpener() {
         ;;
       *)
         # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   [ -n "$binary" ] || binary="urlOpen"
@@ -252,10 +284,12 @@ urlFilter() {
   local usage="_${FUNCNAME[0]}"
 
   local files=() file="" aa=() showFile=false debugFlag=false
+
+  # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -278,7 +312,7 @@ urlFilter() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   if [ "${#files[@]}" -gt 0 ]; then
     for file in "${files[@]}"; do
@@ -316,10 +350,11 @@ urlOpen() {
 
   local urls=() waitFlag=false ignoreFlag=false
 
+  # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -337,7 +372,7 @@ urlOpen() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   local url exitCode
@@ -390,6 +425,62 @@ __urlOpenInnerLoop() {
     __usageEnvironment "$usage" __urlOpen "$url" || return $?
   else
     return 120
+  fi
+}
+
+# IDENTICAL __fetch 54
+# Usage: {fn} usage { --header header ] url
+# Argument: url - Required. URL. URL to fetch to stdout
+__fetch() {
+  local usage="$1" && shift
+
+  local wgetArgs=() curlArgs=() headers
+
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "Argument #$argumentIndex is blank" || return $?
+    case "$argument" in
+      --header)
+        shift
+        local name value
+        name="${1%%:}"
+        value="${1#*:}"
+        if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
+          __usageArgument "$usage" "Invalid $argument $1 passed" || return $?
+        fi
+        headers+=("$1")
+        curlArgs+=("--header" "$1")
+        wgetArgs+=("--header=$1")
+        ;;
+      --agent)
+        shift
+        local agent="$1"
+        [ -n "$agent" ] || __failArgument "$usage" "$argument must be non-blank" || return $?
+        wgetArgs+=("--user-agent=$1")
+        curlArgs+=("--user-agent" "$1")
+        ;;
+      *)
+        if [ -z "$url" ]; then
+          url="$1"
+        elif [ -z "$target" ]; then
+          target="$1"
+          shift
+          break
+        else
+          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        fi
+        ;;
+    esac
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+  done
+
+  if whichExists wget; then
+    wget --no-verbose --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}"
+  elif whichExists curl; then
+    curl -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}"
+  else
+    __usageEnvironment "$usage" "wget or curl required, please install one" || return $?
   fi
 }
 

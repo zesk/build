@@ -46,7 +46,7 @@ bashCoverage() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
@@ -95,7 +95,7 @@ bashCoverageReport() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   [ -n "$target" ] || target="$home/test-coverage"
@@ -176,7 +176,7 @@ __bashCoverageEnd() {
 __bashCoverageReportFile() {
   local usage="$1" reportCache="$2" target="$3" tempFile lineCount
 
-  tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  tempFile=$(fileTemporaryName "$usage") || return $?
   sort -u >"$tempFile"
   lineCount=$(($(wc -l <"$tempFile") + 0))
   __bashCoverageReportProcessStats "$usage" "$reportCache" "$target" "$lineCount" <"$tempFile" || _clean $? "$tempFile" || return $?
@@ -241,7 +241,7 @@ __bashCoverageReportConvertFiles() {
   fileTemplate=$(__bashCoverageReportTemplate "file.html") || return $?
   lineTemplate=$(__bashCoverageReportTemplate "line.html") || return $?
 
-  lineContentFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  lineContentFile=$(fileTemporaryName "$usage") || return $?
   while read -r file; do
     statusMessage decorate info "Generating $(decorate code "$file")"
     if isAbsolutePath "$file"; then

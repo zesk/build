@@ -11,14 +11,14 @@
 # Argument: file - Required. File. File to compare.
 urlMatchesLocalFileSize() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
 
   local url file remoteSize localSize
 
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -55,13 +55,27 @@ urlContentLength() {
   local url remoteSize
   local tempFile
 
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    url=$(usageArgumentURL "$usage" "url" "$1")
-    tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
-    __usageEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
-    remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __failEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
-    printf "%d\n" $((remoteSize + 0))
-    shift
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        url=$(usageArgumentURL "$usage" "url" "$1")
+        tempFile=$(fileTemporaryName "$usage") || return $?
+        __usageEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
+        remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __failEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
+        printf "%d\n" $((remoteSize + 0))
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 }
 _urlContentLength() {
@@ -74,24 +88,24 @@ _urlContentLength() {
 # Argument: --help - Flag. Optional. This help.
 hostIPList() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
 
   export OSTYPE
 
   __usageEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
 
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
-      --install)
-        __usageEnvironment "$usage" packageWhich ifconfig net-tools || return $?
-        ;;
       # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
+        ;;
+      --install)
+        __usageEnvironment "$usage" packageWhich ifconfig net-tools || return $?
         ;;
       *)
         __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
@@ -111,6 +125,7 @@ _hostIPList() {
 
 # Fetch Time to First Byte and other stats
 hostTTFB() {
+  __help "_${FUNCNAME[0]}" "$@" || return 0
   curl -L -s -o /dev/null -w "connect=%{time_connect}\n""ttfb: %{time_starttransfer}\n""total: %{time_total} \n" "$@"
 }
 
@@ -129,10 +144,30 @@ _watchFile() {
 # Untested: true
 # Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
 # SIte is stored in a directory called `host` for the URL requested
-#
+# This is not final yet and may not work properly.
 websiteScrape() {
   local usage="_${FUNCNAME[0]}"
   local logFile pid progressFile aa
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    case "$argument" in
+      # IDENTICAL --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        url=$(usageArgumentURL "$usage" "url" "$1") || return $?
+        break
+        ;;
+    esac
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+  done
 
   logFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.log") || return $?
   progressFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
@@ -147,7 +182,7 @@ websiteScrape() {
   aa+=(-r --level=5 -t 10 --random-wait --force-directories --html-extension)
   aa+=(--no-parent --convert-links --backup-converted --page-requisites)
   pid=$(
-    __usageEnvironment "$usage" wget "${aa[@]}" "$@" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
+    __usageEnvironment "$usage" wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!
   ) || _clean $? "$logFile" || return $?
   statusMessage decorate success "Launched scraping process $(decorate code "$pid") ($progressFile)"

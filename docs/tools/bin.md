@@ -59,15 +59,10 @@ Installs Zesk Build from GitHub
 
 #### Arguments
 
-- `--local localPackageDirectory` - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
-- `--user headerText` - Optional. String. Add `username:password` to remote request.
-- `--header headerText` - Optional. String. Add one or more headers to the remote request.
-- `--debug` - Optional. Flag. Debugging is on.
-- `--force` - Optional. Flag. Force installation even if file is up to date.
-- `--diff` - Optional. Flag. Show differences between old and new file.
-- `--replace` - Optional. Flag. Replace an old version of this script with this one and delete this one. Internal only, do not use.
+- No arguments.
 
 #### Exit codes
 
+- `0` - Success
 - `1` - Environment error
 - `2` - Argument error

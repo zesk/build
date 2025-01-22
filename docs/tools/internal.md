@@ -23,7 +23,7 @@ Build the build documentation
 
 Test Zesk Build
 
-- Location: `bin/test.sh`
+- Location: `bin/build/sample.test.sh`
 
 #### Arguments
 

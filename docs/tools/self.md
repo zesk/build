@@ -218,12 +218,40 @@ Needs internet access and creates a directory `./bin/build`
 
 # Package Installation
 
+### `_installRemotePackage` - Installs a remote package system in a local project directory
+
+Installs a remote package system in a local project directory if not installed. Also
+will overwrite the installation binary with the latest version after installation.
+
+URL can be determined programmatically using `urlFunction`.
+`versionFunction` can be used to avoid upgrades when versions have not changed.
+
+Calling signature for `version-function`:
+
+   versionFunction usageFunction applicationHome installPath
+   usageFunction - Function. Required. Function to call when an error occurs.
+   installPath - Required. Required. Path to the application home where target will be installed, or is installed.
+
+Calling signature for `url-function`:
+
+   urlFunction usageFunction
+   usageFunction - Function. Required. Function to call when an error occurs.
+
+Calling signature for `check-function`:
+
+   checkFunction usageFunction installPath
+
+If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
+
+- Location: `bin/build/identical/_installRemotePackage.sh`
+
 #### Arguments
 
-- `--local localPackageDirectory` - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
+- `--local localPackageDirectory` - Optional. Directory. Directory of an existing installation to mock behavior for testing.
 - `--url url` - Optional. URL. URL of a tar.gz. file. Download source code from here.
 - `--user headerText` - Optional. String. Add `username:password` to remote request.
 - `--header headerText` - Optional. String. Add one or more headers to the remote request.
+- `--version-function urlFunction` - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
 - `--url-function urlFunction` - Optional. Function. Function to return the URL to download.
 - `--check-function checkFunction` - Optional. Function. Function to check the installation and output the version number or package name.
 - `--debug` - Optional. Flag. Debugging is on.

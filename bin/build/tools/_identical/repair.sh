@@ -83,7 +83,7 @@ identicalRepair() {
   if ! isUnsignedInteger "$count"; then
     __failEnvironment "$usage" "$(decorate code "$source") not an integer: \"$(decorate value "$identicalLine")\"" || return $?
   fi
-  sourceText=$(__usageEnvironment "$usage" mktemp) || return $?
+  sourceText=$(fileTemporaryName "$usage") || return $?
 
   # Include header but map EOF to count on the first line
   __usageEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || return $?
@@ -92,7 +92,7 @@ identicalRepair() {
     _identicalMapAttributesFile "$usage" "$sourceText" "$destination" || return $?
   fi
   if ! $stdout; then
-    targetFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    targetFile=$(fileTemporaryName "$usage") || return $?
     exec 3>"$targetFile"
   else
     exec 3>&1

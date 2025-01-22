@@ -12,14 +12,15 @@
 # Argument: binary - Required. String. Binary to install at startup.
 sysvInitScriptInstall() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local initHome baseName target
+
+  local initHome
 
   initHome=$(__sysvInitScriptInitHome "$usage") || return $?
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -27,6 +28,7 @@ sysvInitScriptInstall() {
         return $?
         ;;
       *)
+        local baseName target
         baseName=$(__usageArgument "$usage" basename "$argument") || return $?
         target="$initHome/$baseName"
         [ -x "$argument" ] || __failArgument "$usage" "Not executable: $argument" || return $?
@@ -51,6 +53,7 @@ sysvInitScriptInstall() {
   done
 }
 _sysvInitScriptInstall() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -59,14 +62,16 @@ _sysvInitScriptInstall() {
 # Argument: binary - Required. String. Basename of installed
 sysvInitScriptUninstall() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local initHome baseName target
+
+  local initHome
 
   initHome=$(__sysvInitScriptInitHome "$usage") || return $?
-  nArguments=$#
+
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -74,6 +79,7 @@ sysvInitScriptUninstall() {
         return $?
         ;;
       *)
+        local baseName target
         baseName=$(__usageArgument "$usage" basename "$argument") || return $?
         target="$initHome/$baseName"
         if [ -f "$target" ]; then
@@ -89,6 +95,7 @@ sysvInitScriptUninstall() {
   done
 }
 _sysvInitScriptUninstall() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -110,7 +110,7 @@ __anyEnvToFunctionEnv() {
     done
   else
     local temp
-    temp=$(__usageEnvironment "$usage" mktemp) || return $?
+    temp=$(fileTemporaryName "$usage") || return $?
     __usageEnvironment "$usage" muzzle tee "$temp" || return $?
     __usageEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$pass" "$function" "$temp" || _clean $? "$temp" || return $?
     __usageEnvironment "$usage" rm "$temp" || return $?
@@ -219,7 +219,7 @@ dockerEnvFromBashEnv() {
   local usage="_${FUNCNAME[0]}"
   local file envLine tempFile
 
-  tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  tempFile=$(fileTemporaryName "$usage") || return $?
   for file in "$@"; do
     [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
     env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __failArgument "$usage" "$file is not a valid bash file" || return $?
@@ -305,7 +305,7 @@ dockerLocalContainer() {
       --env-file)
         shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
-        tempEnv=$(__usageEnvironment "$usage" mktemp) || return $?
+        tempEnv=$(fileTemporaryName "$usage") || return $?
         __usageArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
         tempEnvs+=("$tempEnv")
         envFiles+=("$argument" "$tempEnv")
@@ -360,8 +360,8 @@ dockerImages() {
   # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -375,11 +375,11 @@ dockerImages() {
         ;;
       *)
         # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   usageRequireBinary "$usage" docker || return $?

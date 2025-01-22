@@ -208,11 +208,11 @@ _assertConditionHelper() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   [ -n "$tester" ] || __failArgument "$usage" "--test required ($*)" || return $?
 
-  outputFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  outputFile=$(fileTemporaryName "$usage") || return $?
   errorFile="$outputFile.err"
   outputFile="$outputFile.out"
 

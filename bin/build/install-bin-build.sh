@@ -14,32 +14,79 @@ __installBinBuildLatest() {
   printf -- "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
 }
 
-# Installs Zesk Build from GitHub
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
-# Argument: --user headerText - Optional. String. Add `username:password` to remote request.
-# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
-# Argument: --debug - Optional. Flag. Debugging is on.
-# Argument: --force - Optional. Flag. Force installation even if file is up to date.
-# Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Argument: --replace - Optional. Flag. Replace an old version of this script with this one and delete this one. Internal only, do not use.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
-__installBinBuildURL() {
-  local usage="$1" latestVersion
+# Download remote JSON as a temporary file (delete it)
+__installBinBuildJSON() {
+  local usage="$1" jsonFile message
 
-  latestVersion=$(__usageEnvironment "$usage" mktemp) || return $?
-  if ! curl -s "$(__installBinBuildLatest)" >"$latestVersion"; then
-    message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$latestVersion")")"
-    rm -f "$latestVersion" || :
+  whichExists jq || __failEnvironment "$usage" "Requires jq to install" || return $?
+  jsonFile=$(fileTemporaryName "$usage") || return $?
+  if ! curl -s "$(__installBinBuildLatest)" >"$jsonFile" 2>&1; then
+    message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$jsonFile")")"
+    rm -rf "$jsonFile" || :
     __failEnvironment "$usage" "$message" || return $?
   fi
-  if ! url=$(jq -r .tarball_url <"$latestVersion"); then
-    message="$(printf -- "%s\n%s\n" "Unable to fetch .tarball_url JSON:" "$(cat "$latestVersion")")"
-    rm -f "$latestVersion" || :
+  printf "%s\n" "$jsonFile"
+}
+
+__installJSONField() {
+  local usage="$1" selector="$2" jsonFile="$3" value message
+  if ! value=$(jq -r "$selector" <"$jsonFile"); then
+    message="$(printf -- "%s\n%s\n" "Unable to fetch selector from JSON:" "$(cat "$jsonFile")")"
+    rm -f "$jsonFile" || :
     __failEnvironment "$usage" "$message" || return $?
   fi
-  [ "${url#https://}" != "$url" ] || __failArgument "$usage" "URL must begin with https://" || return $?
+  printf -- "%s\n" "$value"
+}
+
+__githubInstallationURL() {
+  local usage="$1" jsonFile="$2"
+  url=$(__installJSONField "$usage" .tarball_url "$jsonFile") || return $?
   printf -- "%s\n" "$url"
+}
+
+# Installs Zesk Build from GitHub
+__installBinBuildURL() {
+  local usage="$1" jsonFile
+
+  export ___TEMP_BIN_BUILD_URL
+  if [ -n "${___TEMP_BIN_BUILD_URL-}" ]; then
+    printf "%s\n" "$___TEMP_BIN_BUILD_URL"
+    return 0
+  fi
+  jsonFile=$(__installBinBuildJSON "$usage") || return $?
+  url=$(__githubInstallationURL "$usage" "$jsonFile") || return $?
+  rm -rf "$jsonFile" || :
+  [ "${url#https://}" != "$url" ] || __failArgument "$usage" "URL must begin with https://" || return $?
+  ___TEMP_BIN_BUILD_URL="$url"
+  printf -- "%s\n" "$url"
+}
+
+# Checks Zesk Build version on GitHub
+__installBinBuildVersion() {
+  local usage="$1" installPath="$2" packagePath="$3" jsonFile version url
+
+  export ___TEMP_BIN_BUILD_URL
+
+  jsonFile=$(__installBinBuildJSON "$usage") || return $?
+
+  # Version comparison
+  version=$(__installJSONField "$usage" .tag_name "$jsonFile") || return $?
+  [ -n "$version" ] || __failEnvironment "$usage" "Fetched version was blank" || return $?
+  if [ -d "$packagePath" ] && [ -f "$packagePath/build.json" ]; then
+    myVersion=$(jq .version <"$packagePath/build.json")
+    if [ "$myVersion" = "$version" ]; then
+      printf -- "%s 👌 " "$(decorate info "$version")"
+      return 0
+    fi
+    printf -- "%s ☝️ %s " "$(decorate error "$myVersion")" "$(decorate success "$version")"
+  fi
+
+  # URL caching
+  url=$(__githubInstallationURL "$usage" "$jsonFile") || return $?
+  [ "${url#https://}" != "$url" ] || __failArgument "$usage" "URL must begin with https://" || return $?
+  ___TEMP_BIN_BUILD_URL="$url"
+
+  return 1
 }
 
 # Check the install directory after installation and output the version
@@ -82,14 +129,20 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
-# IDENTICAL _installRemotePackage 250
+# IDENTICAL _installRemotePackage 271
 
-# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
-# fn: {base}
 # Installs a remote package system in a local project directory if not installed. Also
 # will overwrite the installation binary with the latest version after installation.
 #
 # URL can be determined programmatically using `urlFunction`.
+# `versionFunction` can be used to avoid upgrades when versions have not changed.
+#
+# Calling signature for `version-function`:
+#
+#    versionFunction usageFunction applicationHome installPath
+#    usageFunction - Function. Required. Function to call when an error occurs.
+#    applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+#    installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 #
 # Calling signature for `url-function`:
 #
@@ -102,10 +155,11 @@ __installPackageConfiguration() {
 #
 # If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 #
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing.
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
 # Argument: --user headerText - Optional. String. Add `username:password` to remote request.
 # Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
+# Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name.
 # Argument: --debug - Optional. Flag. Debugging is on.
@@ -165,6 +219,12 @@ _installRemotePackage() {
         [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
         url="$1"
         ;;
+      --version-function)
+        shift
+        [ -z "$versionFunction" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        versionFunction="$1"
+        ;;
       --url-function)
         shift
         [ -z "$urlFunction" ] || __failArgument "$usage" "$argument already" || return $?
@@ -184,6 +244,21 @@ _installRemotePackage() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
+  local installFlag=false message
+  local myBinary myPath applicationHome installPath
+  # Move to starting point
+  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
+  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
+  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
+  installPath="$applicationHome/$packagePath"
+
+  if ! $forceFlag && [ -n "$versionFunction" ]; then
+    if "$versionFunction" "$usage" "$applicationHome" "$installPath"; then
+      decorate info "Versions match, no upgrade required."
+      return 0
+    fi
+  fi
+
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
       url=$(__usageEnvironment "$usage" "$urlFunction" "$usage") || return $?
@@ -196,13 +271,6 @@ _installRemotePackage() {
     __failArgument "$usage" "--local or --url|--url-function is required" || return $?
   fi
 
-  local installFlag=false message
-  local myBinary myPath applicationHome installPath
-  # Move to starting point
-  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
-  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
-  installPath="$applicationHome/$packagePath"
   if [ ! -d "$installPath" ]; then
     if $forceFlag; then
       printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "directory does not exist")"
@@ -218,7 +286,7 @@ _installRemotePackage() {
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
-    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
@@ -227,7 +295,7 @@ _installRemotePackage() {
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
     rm -f "$messageFile" || :
   else
-    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
@@ -267,7 +335,7 @@ __installRemotePackageDirectory() {
     __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __usageEnvironment "$usage" curl -L -s "$url" -o "$target" "$@" || return $?
+  __usageEnvironment "$usage" __fetch "$usage" "$url" "$target" || return $?
   [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
@@ -389,7 +457,7 @@ isFunction() {
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
 }
 
-# IDENTICAL _colors 124
+# IDENTICAL _colors 137
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -513,6 +581,19 @@ _caseStyles() {
       ;;
   esac
   printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
+}
+
+# Usage: decorate each decoration argument1 argument2 ...
+# Runs the following command on each subsequent argument to allow for formatting with spaces
+__decorateExtensionEach() {
+  local code="$1" formatted=()
+
+  shift || return 0
+  while [ $# -gt 0 ]; do
+    formatted+=("$(decorate "$code" "$1")")
+    shift
+  done
+  IFS=" " printf "%s\n" "${formatted[*]-}"
 }
 
 # IDENTICAL _return 24

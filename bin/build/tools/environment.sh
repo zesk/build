@@ -213,7 +213,7 @@ dotEnvConfigure() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   if [ -z "$where" ]; then
@@ -303,7 +303,7 @@ environmentFileLoad() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   $hasOne || __failArgument "$usage" "Requires at least one environmentFile" || return $?
   ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
@@ -480,7 +480,7 @@ environmentFileApplicationMake() {
   local variables=()
   local variableNames name
 
-  variableNames=$(__usageEnvironment "$usage" mktemp) || return $?
+  variableNames=$(fileTemporaryName "$usage") || return $?
   environmentApplicationLoad >"$variableNames" || __failEnvironment "$usage" "environmentApplicationLoad" || return $?
   environmentFileApplicationVerify "$@" || __failArgument "$usage" "Verify failed" || return $?
   IFS=$'\n' read -d '' -r -a variables <"$variableNames" || :

@@ -15,7 +15,12 @@
 # Exit Code: 0 - All good to install terraform
 #
 aptKeyAddHashicorp() {
+  __help "_${FUNCNAME[0]}" "$@" || return 0
   __environment aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
+}
+_aptKeyAddHashicorp() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -26,7 +31,12 @@ aptKeyAddHashicorp() {
 # Exit Code: 0 - All good to install terraform
 #
 aptKeyRemoveHashicorp() {
+  __help "_${FUNCNAME[0]}" "$@" || return 0
   __environment aptKeyRemove hashicorp "$@" || return $?
+}
+_aptKeyRemoveHashicorp() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -38,6 +48,7 @@ aptKeyRemoveHashicorp() {
 terraformInstall() {
   local usage="_${FUNCNAME[0]}" binary="terraform"
 
+  __help "$usage" "$@" || return 0
   ! whichExists "$binary" || return 0
   if aptIsInstalled; then
     __usageEnvironment "$usage" packageInstall gnupg software-properties-common curl figlet
@@ -47,6 +58,7 @@ terraformInstall() {
   whichExists "$binary" || __failEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -59,10 +71,12 @@ _terraformInstall() {
 terraformUninstall() {
   local usage="_${FUNCNAME[0]}"
 
+  __help "$usage" "$@" || return 0
   __usageEnvironment "$usage" packageWhichUninstall terraform terraform "$@" || return $?
   __usageEnvironment "$usage" aptKeyRemoveHashicorp || return $?
   __usageEnvironment "$usage" packageUpdate --force || return $?
 }
 _terraformUninstall() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

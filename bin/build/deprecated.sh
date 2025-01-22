@@ -39,8 +39,8 @@ __deprecatedCleanup() {
   # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -82,11 +82,11 @@ __deprecatedCleanup() {
         ;;
       *)
         # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   start=$(__environment beginTiming) || return $?
@@ -95,11 +95,11 @@ __deprecatedCleanup() {
   if $doCannon; then
     __deprecatedCannonsByVersion || exitCode=$?
   fi
-  if $doTokens; then
-    __deprecatedTokensByVersion || exitCode=$?
-  fi
   if $doSpelling; then
     __misspellingCannon || exitCode=$?
+  fi
+  if $doTokens; then
+    __deprecatedTokensByVersion || exitCode=$?
   fi
   statusMessage --last reportTiming "$start" "Deprecated process took"
   return "$exitCode"
@@ -118,7 +118,7 @@ ___deprecatedCleanup() {
 
 # list of ignore flags for `find`
 __deprecatedIgnore() {
-  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" -name 'deprecated.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
+  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" -name 'deprecated.md' ! -name 'unused.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
 }
 
 # Find files which match a token
@@ -235,7 +235,7 @@ __misspellingCannon() {
   # START OF MISSPELLING CANNON
   __deprecatedCannon 'decoreate' 'decorate' || exitCode=$?
   # END OF MISSPELLING CANNON
-  statusMessage --last reportTiming "$start" "Deprecated cannon took"
+  statusMessage --last reportTiming "$start" "Misspelling cannon took"
   return "$exitCode"
 }
 

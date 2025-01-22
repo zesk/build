@@ -10,7 +10,7 @@ __doEvalCheck() {
   local usage="$1" && shift
   local file firstLine checkLine checkLineFailed failed tempResults
 
-  tempResults=$(__usageEnvironment "$usage" mktemp) || return $?
+  tempResults=$(fileTemporaryName "$usage") || return $?
   while [ $# -gt 0 ]; do
     file=$(usageArgumentFile "$usage" "file" "$1") || return $?
     shift
@@ -58,6 +58,8 @@ __doEvalCheck() {
 
 # Check files to ensure `eval`s in code have been checked
 evalCheck() {
+  local usage="_${FUNCNAME[0]}"
+
   local fileName
   if [ $# -gt 0 ]; then
     __doEvalCheck "$usage" "$@" || return $?

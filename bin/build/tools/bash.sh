@@ -53,7 +53,7 @@ bashLibrary() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   [ -n "$run" ] || __failArgument "$usage" "Missing libraryRelativePath" || return $?
   home=$(bashLibraryHome "$run") || return $?
@@ -127,7 +127,7 @@ bashSanitize() {
     shift || :
   done
 
-  fileList=$(__usageEnvironment "$usage" mktemp) || return $?
+  fileList=$(fileTemporaryName "$usage") || return $?
   if [ "$#" -eq 0 ]; then
     __usageEnvironment "$usage" cat >"$fileList" || return $?
   else
@@ -209,7 +209,7 @@ _bashSanitizeCheckCopyright() {
 
   year="$(date +%Y)"
   statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :
-  matches=$(__usageEnvironment "$usage" mktemp) || return $?
+  matches=$(fileTemporaryName "$usage") || return $?
   if fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- - >"$matches"; then
     set +v
     while IFS=":" read -r file pattern; do
@@ -229,7 +229,7 @@ _bashSanitizeCheckDebugging() {
       debugPatterns+=("$line")
     done <"$file"
   done < <(find "." -type f -name '.debugging' ! -path "*/.*/*")
-  matches=$(__usageEnvironment "$usage" mktemp) || return $?
+  matches=$(fileTemporaryName "$usage") || return $?
   if fileMatches 'set ["]\?-x' -- "${debugPatterns[@]+${debugPatterns[@]}}" -- - >"$matches"; then
     dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
     while IFS=":" read -r file line remain; do

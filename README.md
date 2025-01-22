@@ -8,6 +8,11 @@ Pipeline, build, and operations tools useful for any project.
 
 This code toolkit depends solely on `bash` and a few other binaries (`jq`, `curl`) and a conscientious decision has been made to not depend on any other language libraries, as of 2024 support for Bash 3 and 4 remains stable.
 
+Depends on: 
+
+- `curl` or `wget` - Remote installation
+- `jq` - Parsing JSON files
+
 This toolkit assumes:
 
 - Binaries from this project installed at `./bin/build/` (required)

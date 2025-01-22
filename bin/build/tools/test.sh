@@ -79,8 +79,8 @@ dumpBinary() {
   # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -132,7 +132,7 @@ dumpBinary() {
     done
     return 0
   fi
-  item=$(__usageEnvironment "$usage" mktemp) || return $?
+  item=$(fileTemporaryName "$usage") || return $?
   __usageEnvironment "$usage" cat >"$item" || return $?
 
   local name="" nLines nBytes
@@ -188,8 +188,8 @@ dumpPipe() {
   # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -240,7 +240,7 @@ dumpPipe() {
     done
     return 0
   fi
-  item=$(__usageEnvironment "$usage" mktemp) || return $?
+  item=$(fileTemporaryName "$usage") || return $?
   __usageEnvironment "$usage" cat >"$item" || return $?
 
   local name="" nLines nBytes
@@ -284,14 +284,13 @@ _dumpPipe() {
 # stdout: formatted text (optional)
 dumpFile() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local nLines nBytes tempFile item files dumpArgs showLines
+  local files=() dumpArgs=()
 
-  files=()
-  dumpArgs=()
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -352,28 +351,14 @@ _dumpFile() {
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 bashLintFiles() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
 
-  local failedFiles failedReason failedReasons binary interactive sleepDelay
-  local verbose checkedFiles ii source
+  local verbose=false failedReasons=() failedFiles=() checkedFiles=() binary="" sleepDelay=7 ii=() interactive=false
 
-  verbose=false
-
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
-
-  failedReasons=()
-  failedFiles=()
-  checkedFiles=()
-  binary=
-  sleepDelay=7
-  ii=()
-  interactive=false
-  saved=("$@")
-  statusMessage --first decorate info "Checking all shell scripts ..."
-  nArguments=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -398,7 +383,10 @@ bashLintFiles() {
     shift || __failArgument "$usage" "shift after $argument failed" || return $?
   done
 
-  source=none
+  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
+  statusMessage --first decorate info "Checking all shell scripts ..."
+
+  local source=none
   if [ ${#checkedFiles[@]} -gt 0 ]; then
     source="argument"
     ! $verbose || decorate info "Reading item list from arguments ..."
@@ -621,8 +609,8 @@ validateFileContents() {
   # IDENTICAL argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
     case "$argument" in
       # IDENTICAL --help 4
       --help)
@@ -650,7 +638,7 @@ validateFileContents() {
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
 
   local textMatches=()
@@ -854,7 +842,7 @@ findUncaughtAssertions() {
   # test/tools/os-tests.sh:110:_assertBetterType() {
 
   problemFiles=()
-  tempFile=$(__usageEnvironment "$usage" mktemp) || return $?
+  tempFile=$(fileTemporaryName "$usage") || return $?
   suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
     find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :

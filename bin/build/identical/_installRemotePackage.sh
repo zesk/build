@@ -12,12 +12,18 @@
 
 # IDENTICAL _installRemotePackage EOF
 
-# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
-# fn: {base}
 # Installs a remote package system in a local project directory if not installed. Also
 # will overwrite the installation binary with the latest version after installation.
 #
 # URL can be determined programmatically using `urlFunction`.
+# `versionFunction` can be used to avoid upgrades when versions have not changed.
+#
+# Calling signature for `version-function`:
+#
+#    versionFunction usageFunction applicationHome installPath
+#    usageFunction - Function. Required. Function to call when an error occurs.
+#    applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+#    installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 #
 # Calling signature for `url-function`:
 #
@@ -30,10 +36,11 @@
 #
 # If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 #
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing.
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
 # Argument: --user headerText - Optional. String. Add `username:password` to remote request.
 # Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
+# Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name.
 # Argument: --debug - Optional. Flag. Debugging is on.
@@ -93,6 +100,12 @@ _installRemotePackage() {
         [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
         url="$1"
         ;;
+      --version-function)
+        shift
+        [ -z "$versionFunction" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        versionFunction="$1"
+        ;;
       --url-function)
         shift
         [ -z "$urlFunction" ] || __failArgument "$usage" "$argument already" || return $?
@@ -112,6 +125,21 @@ _installRemotePackage() {
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
   done
 
+  local installFlag=false message
+  local myBinary myPath applicationHome installPath
+  # Move to starting point
+  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
+  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
+  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
+  installPath="$applicationHome/$packagePath"
+
+  if ! $forceFlag && [ -n "$versionFunction" ]; then
+    if "$versionFunction" "$usage" "$applicationHome" "$installPath"; then
+      decorate info "Versions match, no upgrade required."
+      return 0
+    fi
+  fi
+
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
       url=$(__usageEnvironment "$usage" "$urlFunction" "$usage") || return $?
@@ -124,13 +152,6 @@ _installRemotePackage() {
     __failArgument "$usage" "--local or --url|--url-function is required" || return $?
   fi
 
-  local installFlag=false message
-  local myBinary myPath applicationHome installPath
-  # Move to starting point
-  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
-  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
-  installPath="$applicationHome/$packagePath"
   if [ ! -d "$installPath" ]; then
     if $forceFlag; then
       printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "directory does not exist")"
@@ -146,7 +167,7 @@ _installRemotePackage() {
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
-    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
@@ -155,7 +176,7 @@ _installRemotePackage() {
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
     rm -f "$messageFile" || :
   else
-    messageFile=$(__usageEnvironment "$usage" mktemp) || return $?
+    messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
@@ -195,7 +216,7 @@ __installRemotePackageDirectory() {
     __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __usageEnvironment "$usage" curl -L -s "$url" -o "$target" "$@" || return $?
+  __usageEnvironment "$usage" __fetch "$usage" "$url" "$target" || return $?
   [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}

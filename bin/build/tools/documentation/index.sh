@@ -160,8 +160,8 @@ documentationIndex_Generate() {
         elif [ -z "$cacheDirectory" ]; then
           cacheDirectory="$(__usageEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
@@ -428,20 +428,20 @@ documentationIndex_LinkDocumentationPaths() {
         elif [ -z "$documentationPath" ]; then
           documentationPath="$1"
         else
-          # IDENTICAL argumentUnknown 1
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # IDENTICAL argumentUnknown 1
+        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
         fi
         ;;
     esac
     # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
   done
   [ -n "$cacheDirectory" ] || __failArgument "$usage" "cacheDirectory required" || return $?
   [ -n "$documentTemplate" ] || __failArgument "$usage" "documentTemplate required" || return $?
   [ -n "$documentationPath" ] || __failArgument "$usage" "documentationPath required" || return $?
 
   local documentTemplate
-  if ! documentTokensFile=$(__usageEnvironment "$usage" mktemp) || ! modifiedCountFile=$(__usageEnvironment "$usage" mktemp); then
+  if ! documentTokensFile=$(fileTemporaryName "$usage") || ! modifiedCountFile=$(fileTemporaryName "$usage"); then
     rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
     __failEnvironment "$usage" "mktemp failed" || return $?
   fi
