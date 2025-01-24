@@ -188,7 +188,7 @@ deployLink() {
     local argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -252,7 +252,7 @@ deployMigrateDirectoryToLink() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?

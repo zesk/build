@@ -43,13 +43,17 @@ environmentValueWriteArray() {
 
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
   shift
-  value=("$@")
-  result="$(__environmentValueClean "$(declare -pa value)")" || return $?
-  if [ "${result:0:1}" = "'" ]; then
-    result="$(unquote \' "$result")"
-    printf "%s=%s\n" "$name" "${result//"$replace"/$search}"
+  if [ $# -eq 0 ]; then
+    printf "%s=%s\n" "$name" "''"
   else
-    printf "%s=%s\n" "$name" "$result"
+    value=("$@")
+    result="$(__environmentValueClean "$(declare -pa value)")" || return $?
+    if [ "${result:0:1}" = "'" ]; then
+      result="$(unquote \' "$result")"
+      printf "%s=%s\n" "$name" "${result//"$replace"/$search}"
+    else
+      printf "%s=%s\n" "$name" "$result"
+    fi
   fi
 }
 _environmentValueWriteArray() {
@@ -66,7 +70,11 @@ __environmentValueWrite() {
   printf "%s=%s\n" "$1" "$(__environmentValueClean "$2")" || return $?
 }
 
-
+# Argument: stateFile - EnvironmentFile. Required. File to read a value from.
+# Argument: name - EnvironmentVariable. Required. Variable to read.
+# Argument: default - EmptyString. Optional. Default value of the environment variable if it does not exist.
+# Exit Code: 1 - If value is not found and no default argument is supplied (2 arguments)
+# Exit Code: 0 - If value
 environmentValueRead() {
   local usage="_${FUNCNAME[0]}"
   local stateFile name default="${3---}" value
@@ -85,7 +93,7 @@ environmentValueRead() {
   fi
 }
 _environmentValueRead() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -97,13 +105,21 @@ environmentValueConvertArray() {
   local value prefix='([0]="' suffix='")'
 
   value=$(__unquote "${1-}")
-  [ "${value#"$prefix"}" != "$value" ] || __failArgument "$usage" "Not an array value (prefix: \"${value:0:4}\")" || return $?
-  [ "${value%"$suffix"}" != "$value" ] || __failArgument "$usage" "Not an array value (suffix)" || return $?
-  declare -a "value=$value"
+  [ "$value" != "()" ] || return 0 # Empty array
+  if [ "${value#*=}" != "$value" ]; then
+    [ "${value#"$prefix"}" != "$value" ] || __failArgument "$usage" "Not an array value (prefix: \"${value:0:4}\")" || return $?
+    [ "${value%"$suffix"}" != "$value" ] || __failArgument "$usage" "Not an array value (suffix)" || return $?
+    declare -a "value=$value"
+  else
+    local n=$((${#value} - 1))
+    if [ "${value:0:1}${value:0:1}${value:$n:1}" = "()" ]; then
+      IFS=" " read -r -d'' -a value <<<"${value:1:$((n - 1))}"
+    fi
+  fi
   printf -- "%s\n" "${value[@]+"${value[@]}"}"
 }
 _environmentValueConvertArray() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -153,7 +169,7 @@ environmentValueReadArray() {
   environmentValueConvertArray "$value" || return $?
 }
 _environmentValueReadArray() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -191,16 +207,16 @@ environmentLines() {
 # See: environmentFileLoad
 dotEnvConfigure() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local aa=() where=""
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -212,8 +228,8 @@ dotEnvConfigure() {
         where=$(usageArgumentDirectory "$usage" "where" "$1") || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if [ -z "$where" ]; then
@@ -223,7 +239,7 @@ dotEnvConfigure() {
   __usageEnvironment "$usage" environmentFileLoad "${aa[@]}" "$@" || return $?
 }
 _dotEnvConfigure() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -241,28 +257,26 @@ _dotEnvConfigure() {
 # Exit code: 0 - if files are loaded successfully
 environmentFileLoad() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
 
   local ff=() environmentFile environmentLine name value required=true ignoreList=() secureList=() toExport=() line=1
   local verboseMode=false debugMode=false hasOne=false
 
   set -eou pipefail
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    ! $debugMode || printf -- "%d: %d %s\n" "$argumentIndex" ${#ff[@]} "$(decorate bold-red "ARGS: $#" "$@")"
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
         ;;
       --verbose)
         verboseMode=true
-        ! $debugMode || printf -- "VERBOSE MODE on (Arguments: %s)\n" "$(_command "${usage#_}" "${saved[@]}")"
+        ! $debugMode || printf -- "VERBOSE MODE on (Call: %s)\n" "$(decorate each code "${usage#_}" "${__saved[@]}")"
         ;;
       --debug)
         debugMode=true
@@ -302,8 +316,8 @@ environmentFileLoad() {
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   $hasOne || __failArgument "$usage" "Requires at least one environmentFile" || return $?
   ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
@@ -348,7 +362,7 @@ environmentFileLoad() {
   fi
 }
 _environmentFileLoad() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -491,7 +505,7 @@ environmentFileApplicationMake() {
   done
 }
 _environmentFileApplicationMake() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -521,11 +535,11 @@ environmentFileApplicationVerify() {
   [ ${#missing[@]} -eq 0 ] || __failEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
 }
 _environmentFileApplicationVerify() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL environmentVariables 12
+# IDENTICAL environmentVariables 11
 
 #
 # Output a list of environment variables and ignore function definitions
@@ -533,8 +547,7 @@ _environmentFileApplicationVerify() {
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Usage: {fn}
-#
+# Requires: declare grep cut
 environmentVariables() {
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }

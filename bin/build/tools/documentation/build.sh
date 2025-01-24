@@ -142,7 +142,7 @@ documentationBuild() {
       --verbose)
         verbose=true
         ;;
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -219,6 +219,6 @@ documentationBuild() {
   reportTiming "$start" "Completed in" || :
 }
 _documentationBuild() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

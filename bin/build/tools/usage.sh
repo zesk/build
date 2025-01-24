@@ -27,19 +27,19 @@
 #
 # DOC TEMPLATE: assert-common 14
 # Argument: --help - Optional. Flag. Display this help.
-fileTemporaryName() {
-  local usage="$1" && shift
-  __help "_${FUNCNAME[0]}" "$@" || return 0
-  __usageEnvironment "$usage" mktemp "$@" || return $?
-}
-_fileTemporaryName() {
-  # IDENTICAL usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Usage: usageTemplate binName options delimiter description exitCode message ...
-#
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --debug - Optional. Flag. Debugging
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
+# Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # Output usage messages to console
 #
 # Should look into an actual file template, probably
@@ -204,7 +204,7 @@ usageRequireBinary() {
   done
 }
 _usageRequireBinary() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -230,7 +230,7 @@ usageRequireEnvironment() {
   done
 }
 _usageRequireEnvironment() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

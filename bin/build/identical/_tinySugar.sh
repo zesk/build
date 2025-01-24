@@ -30,6 +30,7 @@ __failEnvironment() {
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
+# Requires: __failArgument
 __usageArgument() {
   local usage="${1-}"
   shift && "$@" || __failArgument "$usage" "$@" || return $?
@@ -39,6 +40,7 @@ __usageArgument() {
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
+# Requires: __failEnvironment
 __usageEnvironment() {
   local usage="${1-}"
   shift && "$@" || __failEnvironment "$usage" "$@" || return $?
@@ -48,6 +50,7 @@ __usageEnvironment() {
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
+# Requires: _return
 _argument() {
   _return 2 "$@" || return $?
 }
@@ -56,6 +59,7 @@ _argument() {
 # Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
+# Requires: _return
 _environment() {
   _return 1 "$@" || return $?
 }
@@ -63,6 +67,7 @@ _environment() {
 # Usage: {fn} exitCode item ...
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: rm
 _clean() {
   local r="${1-}" && shift && rm -rf "$@"
   return "$r"

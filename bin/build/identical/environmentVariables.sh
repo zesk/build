@@ -13,8 +13,7 @@
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Usage: {fn}
-#
+# Requires: declare grep cut
 environmentVariables() {
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }

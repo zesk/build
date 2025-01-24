@@ -35,3 +35,4 @@
 ## Miscellaneous
 
 {JSON}
+{loadAverage}

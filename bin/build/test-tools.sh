@@ -33,6 +33,10 @@ export globalTestFailure=
 # Hook: bash-test-start
 # Hook: bash-test-pass
 # Hook: bash-test-fail
+# Requires: head tee printf trap
+# Requires: decorate loadAverage consoleConfigureColorMode
+# Requires: buildEnvironmentLoad usageArgumentString __usageEnvironment
+# Requires: bashCoverage TODO
 testSuite() {
   local usage="_${FUNCNAME[0]}"
   local quietLog allTests checkTests item startTest matchTests foundTests tests filteredTests failExecutors sectionName sectionFile sectionNameHeading
@@ -42,7 +46,7 @@ testSuite() {
   local listFlag=false runner=() testPaths=() messyOption="" checkTests=() continueFlag=false matchTests=() failExecutors=() doStats=true showFlag=false
 
   startString="$(__usageEnvironment "$usage" date +"%F %T")" || return $?
-  load=$(decorate code "$(uptime | awk -F : '{ print $4 }' | trimSpace)")
+  load=$(decorate code "$(loadAverage | head -n 1)")
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM BUILD_DEBUG
 
   export cleanExit=
@@ -66,7 +70,7 @@ testSuite() {
 
   testTracing=initialization
   trap '__testCleanupMess' EXIT QUIT TERM
-  trap '__testInterrupt' INT
+  bashDebugInterruptFile
 
   printf "%s\n" "$testTracing" >>"$quietLog"
   while [ $# -gt 0 ]; do
@@ -283,7 +287,7 @@ __testFunctionWasTested() {
   local assertedFunctions verboseMode=false
 
   assertedFunctions=$(__environment __assertedFunctions) || return $?
-  local saved=()
+  local __fns=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--verbose" ]; then
       verboseMode=true
@@ -294,10 +298,10 @@ __testFunctionWasTested() {
     if ! muzzle grep -q -e "^$(quoteGrepPattern "$argument")\$" "$assertedFunctions"; then
       return 1
     fi
-    saved+=("$argument")
+    __fns+=("$argument")
     shift
   done
-  ! $verboseMode || statusMessage decorate info "$(plural "${#saved[@]}" "Function" "Functions") were tested: $(decorate code "${saved[@]}")"
+  ! $verboseMode || statusMessage decorate info "$(plural "${#__fns[@]}" "Function" "Functions") were tested: $(decorate code "${__fns[@]}")"
 }
 
 __testStats() {
@@ -614,13 +618,7 @@ __testCleanupMess() {
   fi
   __testCleanup
 }
-__testInterrupt() {
-  export BUILD_HOME
 
-  trap - INT EXIT QUIT TERM
-  debuggingStack >"$BUILD_HOME/.interrupt" || :
-  exit 99
-}
 _textExit() {
   export cleanExit
   if [ "${1-}" = 0 ]; then

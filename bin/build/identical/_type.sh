@@ -8,10 +8,8 @@
 #
 # Docs: o ./docs/_templates/tools/type.md
 # Test: o ./test/tools/type-tests.sh
-#
-# Depends: _return.sh
-# Depends: isUnsignedInteger
-# -- CUT BELOW HERE --
+
+# ------------------------------- CUT BELOW HERE -------------------------------
 
 # IDENTICAL _type EOF
 
@@ -21,12 +19,22 @@
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
-#
+# Requires: __usageArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
-  isUnsignedInteger "$1" || return 1
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
+  ! isUnsignedInteger "$1" || return 0
+  if [ "$1" = "--help" ]; then
+    "$usage" 0
+    return 0
+  fi
   # Find pesky "0" or "+0"
   [ "$1" -gt 0 ] || return 1
+}
+_isPositiveInteger() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -36,9 +44,16 @@ isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - argument is bash function
 # Exit code: 1 - argument is not a bash function
+# Requires: __usageArgument isUnsignedInteger usageDocument type
 isFunction() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
+}
+_isFunction() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

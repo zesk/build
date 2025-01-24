@@ -28,13 +28,13 @@ isMappable() {
   local usage="_${FUNCNAME[0]}"
   local prefix='{' suffix='}' tokenClasses='[-_A-Za-z0-9:]'
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -57,13 +57,13 @@ isMappable() {
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   return 1
 }
 _isMappable() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -88,7 +88,7 @@ parseBoolean() {
   return 2
 }
 _parseBoolean() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -607,17 +607,15 @@ _cachedShaPipe() {
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 mapValue() {
   local usage="_${FUNCNAME[0]}"
-  local mapFile searchToken environmentValue searchFilters replaceFilters filter prefix='{' suffix='}'
 
-  mapFile=
-  nArguments=$#
-  searchFilters=()
-  replaceFilters=()
+  local searchFilters=() replaceFilters=() mapFile="" prefix='{' suffix='}'
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -644,15 +642,18 @@ mapValue() {
           shift
           break
         else
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$mapFile" ] || __failArgument "$usage" "mapFile required" || return $?
   (
-    local value environment
+    local value environment searchToken environmentValue filter
+
     value="$*"
     while read -r environment; do
       environmentValue=$(__usageEnvironment "$usage" environmentValueRead "$mapFile" "$environment") || return $?
@@ -865,17 +866,17 @@ _characterToInteger() {
 # Argument: --char - Optional. Flag. Show characters and then class for that character.
 characterClassReport() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local arg character classList indexList outer matched total classOuter=false outerList innerList nouns outerText width=5
   local savedLimit
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -887,12 +888,12 @@ characterClassReport() {
         classOuter=false
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   classList=()
   for arg in $(characterClasses); do
@@ -957,7 +958,7 @@ characterClassReport() {
   __usageEnvironment "$usage" ulimit -n "$savedLimit" || return $?
 }
 _characterClassReport() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -981,16 +982,16 @@ _characterClassReport() {
 # Exit Code: 2 - Arguments are identical
 cannon() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
+
   local search="" directory="." replace=""
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -1009,7 +1010,8 @@ cannon() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local searchQuoted replaceQuoted cannonLog
@@ -1048,20 +1050,26 @@ _cannon() {
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 removeFields() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
   local fieldCount="" fields=()
 
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       *)
-        [ -z "$fieldCount" ] || __failArgument "$usage" "Only one fieldCount should be provided argument #$argumentIndex: $argument" || return $?
+        [ -z "$fieldCount" ] || __failArgument "$usage" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
         fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   fieldCount=${fieldCount:-1}
   #  awk '{for(i=0;i<'"${fieldCount:-1}"';i++){sub($1 FS,"")}}1'
@@ -1111,7 +1119,7 @@ listRemove() {
   printf "%s\n" "$listValue"
 }
 _listRemove() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1156,7 +1164,7 @@ listAppend() {
   printf "%s\n" "$listValue"
 }
 _listAppend() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1169,15 +1177,16 @@ _listAppend() {
 #
 listCleanDuplicates() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
+
   local item items removed=() separator="" removedFlag=false IFS
 
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -1197,7 +1206,8 @@ listCleanDuplicates() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   newItems=()
@@ -1223,10 +1233,7 @@ _listCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment2 1
-# one
-
-# IDENTICAL mapEnvironment 71
+# IDENTICAL mapEnvironment 68
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -1234,19 +1241,16 @@ _listCleanDuplicates() {
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
 # Usage: {fn} [ environmentName ... ]
-# TODO: Do this like mapValue
+# TODO: Do this like `mapValue`
 # See: mapValue
 # Argument: environmentName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
+# Requires: _argument read environmentVariables __environment sed _environment cat rm
 mapEnvironment() {
-  local __arg
-  local __prefix __suffix __sedFile __ee __e
-
-  __prefix='{'
-  __suffix='}'
+  local __arg __sedFile __prefix='{' __suffix='}'
 
   while [ $# -gt 0 ]; do
     __arg="$1"
@@ -1269,21 +1273,21 @@ mapEnvironment() {
     shift || _argument "shift failed after $__arg" || return $?
   done
 
-  __ee=("$@")
+  local __ee=("$@") __e
   if [ $# -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
   __sedFile=$(__environment mktemp) || return $?
   if __environment _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile"; then
     if ! sed -f "$__sedFile"; then
-      cat "$__sedFile" 1>&2
-      _environment "sed failed" || return $?
+      _environment "sed failed" || ! cat "$__sedFile" 1>&2 || ! rm -f "$__sedFile" || return $?
     fi
   fi
   rm -f "$__sedFile" || :
 }
 
 # Helper function
+# Requires: printf quoteSedPattern quoteSedReplacement
 _mapEnvironmentGenerateSedFile() {
   local __prefix="${1-}" __suffix="${2-}"
 
@@ -1299,7 +1303,7 @@ _mapEnvironmentGenerateSedFile() {
   done
 }
 
-# IDENTICAL quoteSedPattern 27
+# IDENTICAL quoteSedPattern 29
 
 # Summary: Quote sed search strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
@@ -1308,11 +1312,12 @@ _mapEnvironmentGenerateSedFile() {
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 # needSlash='$.*/[\]^'
+# Requires: printf sed
 quoteSedPattern() {
   local value
   value=$(printf -- "%s\n" "${1-}" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
-  printf "%s\n" "$value"
+  printf -- "%s\n" "$value"
 }
 
 # Summary: Quote sed replacement strings for shell use
@@ -1321,11 +1326,12 @@ quoteSedPattern() {
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
 # needSlash='$.*/[\]^'
+# Requires: printf sed
 quoteSedReplacement() {
   local value separator="${2-/}"
   value=$(printf -- "%s\n" "${1-}" | sed 's~\([\&'"$separator"']\)~\\\1~g')
   value="${value//$'\n'/\\n}"
-  printf "%s\n" "$value"
+  printf -- "%s\n" "$value"
 }
 
 # Usage: {fn} printfArguments

@@ -1,6 +1,14 @@
 # v0.21.0
 runOptionalHook|hookRunOptional|-name|*.sh|-or|-name|*.md
 runHook|hookRun|-name|*.sh|-or|-name|*.md
+bin/build/install/apt.sh|aptInstall
+bin/build/install/aws.sh|awsInstall
+bin/build/install/docker-compose.sh|dockerComposeInstall
+bin/build/install/git.sh|gitInstall
+bin/build/install/mariadb-client.sh|mariadbInstall
+bin/build/install/npm.sh|npmInstall
+bin/build/install/php-cli.sh|phpInstall
+bin/build/install/terraform.sh|terraformInstall
 
 # v0.18.6
 consoleReset|decorate reset

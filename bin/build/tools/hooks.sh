@@ -15,18 +15,18 @@
 # Argument: arguments ... - String. Optional. Arguments to `hookName`'s hook.
 _hookContextWrapper() {
   local usage="$1" hookName="$2"
-  local argument nArguments argumentIndex saved
-  local application start
+
+  local application=""
 
   shift 2 || :
-  application=
-  saved=("$@")
-  nArguments=$#
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -42,12 +42,14 @@ _hookContextWrapper() {
     shift
   done
 
+  local start
+
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$application" ]; then
     application=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
     application="${application%/}"
     if [ "${start#"$application"}" = "$start" ]; then
-      buildEnvironmentContext hookVersionCurrent --application "$application" "${saved[@]}" || return $?
+      buildEnvironmentContext hookVersionCurrent --application "$application" "${__saved[@]}" || return $?
       return 0
     fi
   fi

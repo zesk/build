@@ -105,14 +105,14 @@ _awsInstall() {
 awsCredentialsFile() {
   local usage="_${FUNCNAME[0]}"
 
-  usageRequireBinary "$usage" mkdir chmod touch || return $?
+  local home="" verbose=false createFlag=false checkFlag=true
 
-  local home="" verbose=false createFlag=false nArguments=$# checkFlag=true
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -131,11 +131,16 @@ awsCredentialsFile() {
         verbose=true
         ;;
       *)
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
+
+  usageRequireBinary "$usage" mkdir chmod touch || return $?
+
   if [ -z "$home" ]; then
     export HOME
     __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
@@ -216,7 +221,7 @@ awsHasEnvironment() {
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
 }
 _awsHasEnvironment() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -231,7 +236,7 @@ awsProfilesList() {
   grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :
 }
 _awsProfilesList() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -256,17 +261,16 @@ _awsProfilesList() {
 # Example:     fi
 awsEnvironmentFromCredentials() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
 
   local credentials profileName="" name value
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -282,8 +286,8 @@ awsEnvironmentFromCredentials() {
         profileName="$1"
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$profileName" ] || profileName="default"
 
@@ -293,7 +297,7 @@ awsEnvironmentFromCredentials() {
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
 }
 _awsEnvironmentFromCredentials() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -334,7 +338,7 @@ awsCredentialsHasProfile() {
   inArray AWS_ACCESS_KEY_ID "${foundValues[@]}" && inArray AWS_SECRET_ACCESS_KEY "${foundValues[@]}"
 }
 _awsCredentialsHasProfile() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -351,12 +355,15 @@ _awsCredentialsHasProfile() {
 awsCredentialsAdd() {
   local usage="_${FUNCNAME[0]}"
 
-  local forceFlag=false saved=("$@") nArguments=$# profileName="" key="" secret=""
+  local forceFlag=false profileName="" key="" secret=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -376,13 +383,13 @@ awsCredentialsAdd() {
         elif [ -z "$secret" ]; then
           secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -406,7 +413,7 @@ awsCredentialsAdd() {
   printf -- "%s\n" "${lines[@]}" >>"$credentials" || return $?
 }
 _awsCredentialsAdd() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -423,12 +430,15 @@ awsCredentialsRemove() {
 
   __usageEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
 
-  local forceFlag=false saved=("$@") nArguments=$# profileName="" key="" secret=""
+  local forceFlag=false profileName="" key="" secret=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -443,13 +453,13 @@ awsCredentialsRemove() {
         if [ -z "$profileName" ]; then
           profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -465,7 +475,7 @@ awsCredentialsRemove() {
   fi
 }
 _awsCredentialsRemove() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -487,7 +497,7 @@ awsCredentialsFromEnvironment() {
   __usageEnvironment "$usage" awsCredentialsAdd "$@" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 }
 _awsCredentialsFromEnvironment() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -521,12 +531,15 @@ awsSecurityGroupIPModify() {
 
   start=$(__usageEnvironment "$usage" beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
 
-  local pp=() saved=("$@") nArguments=$# profileName="" group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile region=""
+  local pp=() profileName="" group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile region=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -592,13 +605,13 @@ awsSecurityGroupIPModify() {
 
   for argument in group description region; do
     if [ -z "${!argument}" ]; then
-      __failArgument "$usage" "--$argument is required (${saved[*]})" || return $?
+      __failArgument "$usage" "--$argument is required ($(decorate each code "${__saved[@]}"))" || return $?
     fi
   done
 
   if [ "$mode" != "--remove" ]; then
     for argument in ip port; do
-      [ -n "${!argument}" ] || __failArgument "$usage" "--$argument is required for $mode (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+      [ -n "${!argument}" ] || __failArgument "$usage" "--$argument is required for $mode (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
     done
   fi
 
@@ -696,7 +709,7 @@ awsIPAccess() {
     local argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?

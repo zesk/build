@@ -17,7 +17,7 @@
 #
 documentationIndex_SeeLinker() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
+
   local cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
   local start linkPattern linkPatternFile
   local matchingFile matchingToken cleanToken
@@ -31,11 +31,14 @@ documentationIndex_SeeLinker() {
   seeFunctionLink=
   seeFileTemplate=
   seeFileLink=
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -58,7 +61,8 @@ documentationIndex_SeeLinker() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   for arg in cacheDirectory documentationDirectory seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
     [ -n "${!arg}" ] || __failArgument "$usage" "$arg is required" || return $?

@@ -42,13 +42,13 @@ releaseNotes() {
   local usage="_${FUNCNAME[0]}"
 
   local version=""
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -61,7 +61,8 @@ releaseNotes() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   buildEnvironmentContext __releaseNotes "$usage" "$version"
 }
@@ -81,7 +82,7 @@ __releaseNotes() {
   printf "%s/%s.md\n" "${releasePath%/}" "$version"
 }
 _releaseNotes() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -93,13 +94,13 @@ nextMinorVersion() {
   local usage="_${FUNCNAME[0]}"
 
   [ $# -gt 0 ] || __failArgument "$usage" "lastVersion required" || return $?
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -120,12 +121,12 @@ nextMinorVersion() {
         printf "%s%s" "$prefix" "$last"
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _nextMinorVersion() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -156,13 +157,13 @@ newRelease() {
 
   local isInteractive=true newVersion=""
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -172,13 +173,17 @@ newRelease() {
         decorate warning "Non-interactive mode set"
         ;;
       *)
-        [ -z "$newVersion" ] || __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        if [ -n "$newVersion" ]; then
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        fi
         newVersion="${argument#v}"
         isVersion "$newVersion" || __failArgument "$usage" "$argument is not a version" || return $?
         newVersion="v$newVersion"
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   buildEnvironmentContext __newRelease "$usage" "$isInteractive" "$newVersion"
@@ -286,7 +291,7 @@ __newRelease() {
   git add "$notes"
 }
 _newRelease() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

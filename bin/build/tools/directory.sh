@@ -20,7 +20,7 @@ isAbsolutePath() {
   done
 }
 _isAbsolutePath() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -51,7 +51,7 @@ directoryClobber() {
   __usageEnvironment "$usage" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -76,7 +76,7 @@ requireFileDirectory() {
   done
 }
 _requireFileDirectory() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -98,7 +98,7 @@ fileDirectoryExists() {
   done
 }
 _fileDirectoryExists() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -121,7 +121,7 @@ requireDirectory() {
   done
 }
 _requireDirectory() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -136,7 +136,7 @@ directoryIsEmpty() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -149,7 +149,7 @@ directoryIsEmpty() {
   done
 }
 _directoryIsEmpty() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -187,7 +187,7 @@ directoryParent() {
   __directoryParent "_${FUNCNAME[0]}" "$@"
 }
 _directoryParent() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -200,17 +200,17 @@ _directoryParent() {
 # Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
 __directoryParent() {
   local usage="${1-}" && shift
-  local argument nArguments argumentIndex saved
+
   local testExpression directory lastDirectory="" passed passedExpression failedExpression
   local startingDirectory="" filePattern="" testExpressions=() bestFailure=""
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$1"
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -225,13 +225,13 @@ __directoryParent() {
         testExpressions+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       *)
-        [ -z "$startingDirectory" ] || __failArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+        [ -z "$startingDirectory" ] || __failArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
         [ -n "$argument" ] || argument=$(__usageEnvironment "$usage" pwd) || return $?
         startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # Default is directory test
@@ -243,7 +243,7 @@ __directoryParent() {
     passedExpression=""
     failedExpression=""
     for testExpression in "${testExpressions[@]+"${testExpressions[@]}"}"; do
-      [ "$testExpression" != "${testExpression#-}" ] || __failArgument "$usage" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+      [ "$testExpression" != "${testExpression#-}" ] || __failArgument "$usage" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
       if ! test "$testExpression" "$directory/$filePattern"; then
         passed=false
         failedExpression="$testExpression"

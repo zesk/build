@@ -25,7 +25,7 @@ __bashPromptList() {
 # Argument: module - Callable. Required. The module to add
 __bashPromptAdd() {
   local usage="$1" && shift
-  local argument nArguments argumentIndex saved
+
   local first=false debug=false verbose=false found
 
   export __BASH_PROMPT_MODULES
@@ -34,11 +34,11 @@ __bashPromptAdd() {
   fi
 
   ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")"
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       --verbose)
         verbose=true
@@ -86,8 +86,8 @@ __bashPromptAdd() {
         ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
   return 0
@@ -197,13 +197,13 @@ bashPrompt() {
 
   local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -249,8 +249,8 @@ bashPrompt() {
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   $skipTerminal || [ -t 0 ] || __failEnvironment "$usage" "Requires a terminal" || return $?
@@ -295,7 +295,7 @@ bashPrompt() {
   PS1="$(__bashPromptGeneratePS1)"
 }
 _bashPrompt() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

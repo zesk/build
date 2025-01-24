@@ -95,7 +95,7 @@ documentationIndex_Lookup() {
   return 0
 }
 _documentationIndex_Lookup() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -113,7 +113,7 @@ _documentationIndex_GeneratePath() {
   printf -- "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
 }
 __documentationIndex_GeneratePath() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -132,19 +132,19 @@ __documentationIndex_GeneratePath() {
 # See: documentationIndex_Lookup
 documentationIndex_Generate() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local codePath cacheDirectory
   local start shellFile functionName lineNumber fileCacheMarker functionIndex fileIndex
 
   codePath=
   cacheDirectory=
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -160,12 +160,13 @@ documentationIndex_Generate() {
         elif [ -z "$cacheDirectory" ]; then
           cacheDirectory="$(__usageEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   if [ -z "$codePath" ]; then
     __failArgument "$usage" "codePath required" || return $?
@@ -218,7 +219,7 @@ documentationIndex_Generate() {
   statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"
 }
 _documentationIndex_Generate() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -406,12 +407,13 @@ documentationIndex_LinkDocumentationPaths() {
 
   start=$(beginTiming) || __usageEnvironment "$usage" "beginTiming failed" || return $?
   local cacheDirectory="" documentTemplate="" documentationPath=""
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -428,13 +430,13 @@ documentationIndex_LinkDocumentationPaths() {
         elif [ -z "$documentationPath" ]; then
           documentationPath="$1"
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$cacheDirectory" ] || __failArgument "$usage" "cacheDirectory required" || return $?
   [ -n "$documentTemplate" ] || __failArgument "$usage" "documentTemplate required" || return $?
@@ -478,6 +480,6 @@ documentationIndex_LinkDocumentationPaths() {
   statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" "for" "$(decorate code "$documentationPath")" "in" "$(reportTiming "$start")")"
 }
 _documentationIndex_LinkDocumentationPaths() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

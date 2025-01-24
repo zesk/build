@@ -6,9 +6,6 @@
 
 All console functions in the form `decorate style` where `style` is a color name or a semantic meaning behave similarly:
 
-- With no arguments output the color escape codes with no newline to standard out
-- With arguments wrap the arguments with color escape code to color and reset the console state afterwards
-
 Examples:
 
     cat $file | wrapLines "$(decorate green)" "$(decorate reset)"
@@ -18,19 +15,17 @@ Examples:
 
 Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use `consoleColorMode`.
 
-## New color command
-
-This is still in progress but will likely be the new mechanism.
+## Decorate command
 
 {decorate}
-
-# Old method (pre October 2024)
+{decorations}
 
 ## Semantic color commands
 
 Color commands intended to convey status of messages. Try `colorTest` to see all colors.
 
 - `decorate info` - Informational messages
+- `decorate notice` - Notice messages
 - `decorate warning` - Warning messages
 - `decorate success` - Success messages
 - `decorate decoration` - Lines or decoration text
@@ -70,34 +65,27 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 - `decorate bold-black`
 - `decorate bold-white`
 
-### Reset color to defaults
+### Extensions
 
-{decorate reset}
+- `decorate pair name value`
+- `decorate pair 40 name value`
+- `decorate each code item1 item2`
 
 ## Additional commands
 
 {consoleColorMode}
 
 {clearLine}
-
 {statusMessage}
-
-{consoleNameValue}
 
 {hasColors}
-
 {hasConsoleAnimation}
-
-{colorTest}
-
-{semanticColorTest}
-
-{allColorTest}
-
 {simpleMarkdownToConsole}
+{colorBrightness}
 
-{statusMessage}
+## Color tests
 
 {colorComboTest}
-
-{colorBrightness}
+{allColorTest}
+{colorTest}
+{semanticColorTest}

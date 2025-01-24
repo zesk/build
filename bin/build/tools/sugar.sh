@@ -4,8 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Depends: isInteger isFunction isCallable
-#
+
 # Docs: contextOpen ./docs/_templates/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
@@ -15,7 +14,7 @@
 # Argument: ... - Any arguments are passed to binary
 # Run binary and output failed command upon error
 # Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
-# Requires-IDENTICAL: _return
+# Requires: _return
 __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
@@ -25,13 +24,18 @@ __execute() {
 # Argument: code - Required. Integer. Exit code to return
 # Argument: usage - Required. String. Failure command, passed remaining arguments and error code.
 # Argument: command - Required. String. Command to run.
+# Requires: isInteger _argument isFunction isCallable
 __usage() {
-  local code="${1-0}" usage="$2" command="${3?}"
-  isInteger "$code" || _argument "${FUNCNAME[0]} Not integer $code $usage $command" || return $?
-  isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  isCallable "$command" || _argument "${FUNCNAME[0]} \"$command\" is not callable" || return $?
-  shift 3 || :
-  "$command" "$@" || "$usage" "$code" "$(_command "$command" "$@")" || return $?
+  local __usage="_${FUNCNAME[0]}" code="${1-0}" usage="${2-}" command="${3?}"
+  isInteger "$code" || __usageArgument "$__usage" "Not integer: $code $usage $command" || return $?
+  isFunction "$usage" || __usageArgument "$__usage" "Not a function $(decorate code "$usage"): $(debuggingStack)" || return $?
+  isCallable "$command" || __usageArgument "$__usage" "Not callable $(decorate code "$command")" || return $?
+  shift 3
+  "$command" "$@" || "$usage" "$code" "$(decorate each code "$command" "$@")" || return $?
+}
+___usage() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run `command`, upon failure run `usage` with an environment error

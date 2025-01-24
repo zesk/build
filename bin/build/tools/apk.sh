@@ -20,7 +20,7 @@ apkIsInstalled() {
   isAlpine && whichExists apk
 }
 _apkIsInstalled() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -37,7 +37,7 @@ isAlpine() {
   [ -f /etc/alpine-release ]
 }
 _isAlpine() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   ! false || isAlpine --help
 }
@@ -51,7 +51,7 @@ alpineContainer() {
   __usageEnvironment "$usage" dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
 }
 _alpineContainer() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -103,7 +103,7 @@ __apkUpgrade() {
   printf "%s\n" "$result"
 }
 ___apkUpgrade() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -123,7 +123,7 @@ __apkInstalledList() {
   apk list -I -q
 }
 ___apkInstalledList() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -147,6 +147,6 @@ __apkAvailableList() {
   apk list -a -q
 }
 ___apkAvailableList() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

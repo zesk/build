@@ -24,7 +24,7 @@ runCount() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -51,13 +51,16 @@ _runCount() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# IDENTICAL reverseFileLines 12
+
+# Reverses a pipe's input lines to output using an awk trick.
 #
-# Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
+# Not recommended on big files.
 #
 # Summary: Reverse output lines
 # Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
 # Credits: Eric Pement
-#
+# Depends: awk
 reverseFileLines() {
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
@@ -71,16 +74,16 @@ reverseFileLines() {
 # fn: chmod-sh.sh
 makeShellFilesExecutable() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local path findArgs=() tempArgs paths=()
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -94,7 +97,8 @@ makeShellFilesExecutable() {
         paths+=("$(usageArgumentDirectory "$usage" "directory" "$1")") || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ "${#paths[@]}" -gt 0 ] || paths+=("$(__usageEnvironment "$usage" pwd)") || return $?
   (
@@ -105,7 +109,7 @@ makeShellFilesExecutable() {
   ) || return $?
 }
 _makeShellFilesExecutable() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -155,7 +159,7 @@ manPathCleanDuplicates() {
   MANPATH="$newPath"
 }
 _manPathCleanDuplicates() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -172,7 +176,7 @@ pathRemove() {
   PATH="$tempPath"
 }
 _pathRemove() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -191,7 +195,7 @@ pathConfigure() {
   PATH="$tempPath"
 }
 _pathConfigure() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -217,7 +221,7 @@ pathCleanDuplicates() {
   PATH="$newPath"
 }
 _pathCleanDuplicates() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -226,9 +230,9 @@ _pathCleanDuplicates() {
 # Argument: binary - Required. String. Binary to find in the system `PATH`.
 # Exit code: 0 - If all values are found
 whichExists() {
-  local nArguments=$# && [ $# -gt 0 ] || _argument "no arguments" || return $?
+  local __count=$# && [ $# -gt 0 ] || _argument "no arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ -n "${1-}" ] || _argument "blank argument #$((nArguments - $# + 1))" || return $?
+    [ -n "${1-}" ] || _argument "blank argument #$((__count - $# + 1))" || return $?
     which "$1" >/dev/null || return 1
     shift
   done
@@ -367,12 +371,13 @@ extensionLists() {
   local usage="_${FUNCNAME[0]}"
 
   local names=() directory="" cleanFlag=false
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -388,7 +393,8 @@ extensionLists() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$directory" ] || __failArgument "$usage" "No directory supplied" || return $?
 
@@ -407,5 +413,30 @@ extensionLists() {
   fi
 }
 _extensionLists() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Get the load average using uptime
+# Requires: uptime
+# Uptime output: 0:00  up 30 days,  6:02, 19 users, load averages: 15.01 12.66 11.64
+# Uptime output: 05:01:06 up 8 days,  4:03,  0 users,  load average: 3.87, 3.09, 2.71
+# stdout: lines:Number
+loadAverage() {
+  local usage="_${FUNCNAME[0]}"
+  local text
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  text=$(__usageEnvironment "$usage" uptime) || return $?
+  text="${text##*average}"
+  text="${text##*:}"
+  text="${text# }"
+  text="${text//,/ }"
+  text="${text//  / }"
+  local averages=()
+  read -r -a averages <<<"$text" || :
+  printf "%s\n" "${averages[@]}"
+}
+_loadAverage() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

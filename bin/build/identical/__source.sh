@@ -5,8 +5,6 @@
 # Original of __source
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
-#
-# Requires: IDENTICAL _return
 
 # IDENTICAL __source EOF
 # Usage: {fn} source relativeHome  [ command ... ] ]
@@ -14,6 +12,8 @@
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+# Requires: _return
+# Security: source
 __source() {
   local me="${BASH_SOURCE[0]}" e=253
   local here="${me%/*}" a=()

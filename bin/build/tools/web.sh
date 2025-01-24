@@ -14,13 +14,13 @@ urlMatchesLocalFileSize() {
 
   local url file remoteSize localSize
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -31,11 +31,13 @@ urlMatchesLocalFileSize() {
         elif [ -z "$file" ]; then
           file="$(usageArgumentFile "$usage" "file" "$1")" || return $?
         else
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   localSize=$(__usageEnvironment "$usage" fileSize "$file") || return $?
@@ -55,13 +57,13 @@ urlContentLength() {
   local url remoteSize
   local tempFile
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -74,8 +76,8 @@ urlContentLength() {
         printf "%d\n" $((remoteSize + 0))
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _urlContentLength() {
@@ -93,13 +95,13 @@ hostIPList() {
 
   __usageEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -108,10 +110,12 @@ hostIPList() {
         __usageEnvironment "$usage" packageWhich ifconfig net-tools || return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   case "$(lowercase "$OSTYPE")" in
     linux) ifconfig | grep 'inet addr:' | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
@@ -149,13 +153,13 @@ websiteScrape() {
   local usage="_${FUNCNAME[0]}"
   local logFile pid progressFile aa
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -165,8 +169,8 @@ websiteScrape() {
         break
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   logFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.log") || return $?

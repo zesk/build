@@ -1,11 +1,11 @@
 
 .coverage em {
-    background-color: rgba(255,0,0,0.5);
+    background-color: rgba(255, 0, 0, 0.5);
     color: black;
 }
 
 .coverage strong {
-    background-color: rgba(0,255,0,0.5);
+    background-color: rgba(0, 255, 0, 0.5);
     color: black;
 }
 
@@ -36,13 +36,16 @@
     width: 100%;
     padding: 1px 5px;
 }
+
 .coverage .line.not-coverable {
     background-color: #EEE;
     color: #AAA;
 }
+
 .coverage .covered {
-    background-color: rgba(85,0,3,0.48);
+    background-color: rgba(85, 0, 3, 0.48);
 }
+
 .coverage .covered {
-    background-color: rgba(255,0,0,0.3);
+    background-color: rgba(255, 0, 0, 0.3);
 }

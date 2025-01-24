@@ -11,6 +11,10 @@
 # Docs: o ./docs/_templates/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
+usageDocument() {
+  usageDocumentComplex "$@"
+}
+
 # Summary: Universal error handler for functions
 # Usage: usageDocument functionDefinitionFile functionName exitCode [ message ... ]
 # Argument: functionDefinitionFile - Required. File. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
@@ -22,34 +26,33 @@
 #
 # Simplifies documentation and keeps it with the code.
 #
-usageDocument() {
+usageDocumentComplex() {
   local usage="_${FUNCNAME[0]}"
-  local bashDebug=false
-  local tryFile functionDefinitionFile functionName exitCode variablesFile home
+
+  local functionDefinitionFile="$1" functionName="$2" exitCode="${3-NONE}" home
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
 
-  [ $# -ge 2 ] || _argument "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
+  [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
-  functionDefinitionFile="$1"
-  functionName="$2"
-  exitCode="${3-NONE}"
-  shift 3 || _argument "Missing arguments" || return $?
+  shift 3 || __failArgument "$usage" "Missing arguments" || return $?
 
   if [ ! -f "$functionDefinitionFile" ]; then
-    tryFile="$home/$functionDefinitionFile"
+    local tryFile="$home/$functionDefinitionFile"
     if [ ! -f "$tryFile" ]; then
       export PWD
-      _argument "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
+      __usageArgument "$usage" "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
     fi
     functionDefinitionFile="$tryFile"
   fi
-  [ -n "$functionName" ] || _argument "functionName is blank" || return $?
+  [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
+
   if [ "$exitCode" = "NONE" ]; then
     decorate error "NO EXIT CODE" 1>&2
     exitCode=1
   fi
-  __argument isInteger "$exitCode" || _argument "$(debuggingStack)" || return $?
+  __usageArgument "$usage" isInteger "$exitCode" || __usageArgument "$usage" "$(debuggingStack)" || return $?
+
   if buildDebugEnabled "fast-usage"; then
     local color="error" verb="Failed"
     if [ "$exitCode" -eq 0 ]; then
@@ -62,34 +65,37 @@ usageDocument() {
     return "$exitCode"
   fi
 
-  variablesFile=$(__environment mktemp) || return $?
+  local variablesFile
+  variablesFile=$(mktemp) || _environemnt "mktemp fail" || return $?
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
-    if ! rm "$variablesFile"; then
-      _environment "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
+    if ! rm -f "$variablesFile"; then
+      __failEnvironment "$usage" "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
     fi
-    _argument "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
+    __failArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
   fi
   (
     set -a
-    description=""
-    argument=""
+    local description="" argument=""
 
     # shellcheck source=/dev/null
     source "$variablesFile"
     [ "$exitCode" -eq 0 ] || exec 1>&2
+    local bashDebug=false
     if isBashDebug; then
       bashDebug=true
       # Hides a lot of unnecessary tracing
       __buildDebugDisable
     fi
+    bashRecursionDebug
     usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$@"
     if $bashDebug; then
       __buildDebugEnable
     fi
+    bashRecursionDebug --end
   )
   return "$exitCode"
 }
-_usageDocument() {
+_usageDocumentComplex() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -120,7 +126,7 @@ _usageDocument() {
 #
 documentationTemplateCompile() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local cacheDirectory="" documentTemplate="" functionTemplate="" targetFile=""
   local start mappedDocumentTemplate checkFiles forceFlag
   local compiledFunctionTarget tokenNames message
@@ -133,13 +139,13 @@ documentationTemplateCompile() {
   forceFlag=false
   envFiles=()
   envFileArgs=()
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -164,12 +170,13 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # Validate arguments
@@ -299,19 +306,16 @@ _documentationTemplateCompile() {
 # Usage: {fn} [ --env-file envFile ] cacheDirectory functionName functionTemplate
 documentationTemplateFunctionCompile() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local start cacheDirectory="" functionName="" functionTemplate="" envFiles=()
-  local start functionName functionTemplate targetFile checkFiles forceFlag
 
-  start=$(__usageEnvironment "$usage" beginTiming) || __failArgument "$usage" beginTiming || return $?
+  local cacheDirectory="" functionName="" functionTemplate="" envFiles=()
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -330,13 +334,16 @@ documentationTemplateFunctionCompile() {
         elif [ -z "$functionTemplate" ]; then
           functionTemplate=$1
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
+
+  local settingsFile
 
   # Validate arguments
   cacheDirectory=$(usageArgumentDirectory "$usage" cacheDirectory "$cacheDirectory") || return $?
@@ -372,23 +379,17 @@ _documentationTemplateFunctionCompile() {
 # Exit Code: 2 - Argument error
 #
 documentationTemplateDirectoryCompile() {
-  local usage argument
-  local start templateDirectory functionTemplate targetDirectory cacheDirectory passArgs
-  local base targetFile templateFile
-  local documentTokensFile
+  local usage="_${FUNCNAME[0]}"
 
-  usage="_${FUNCNAME[0]}"
-  cacheDirectory=
-  templateDirectory=
-  functionTemplate=
-  targetDirectory=
-  passArgs=()
-  nArguments=$#
+  local cacheDirectory="" templateDirectory="" functionTemplate="" targetDirectory="" passArgs=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -411,27 +412,30 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+
+  local cacheDirectory templateDirectory functionTemplate targetDirectory
+
   cacheDirectory=$(usageArgumentDirectory "$usage" "cacheDirectory" "$cacheDirectory") || return $?
   templateDirectory=$(usageArgumentDirectory "$usage" "templateDirectory" "$templateDirectory") || return $?
   functionTemplate=$(usageArgumentFile "$usage" "functionTemplate" "$functionTemplate") || return $?
   targetDirectory=$(usageArgumentDirectory "$usage" "targetDirectory" "$targetDirectory") || return $?
 
-  exitCode=0
-  fileCount=0
-  templateFile=
+  local exitCode=0 fileCount=0 templateFile=""
   while read -r templateFile; do
-    base="${templateFile#"$templateDirectory/"}"
+    local base="${templateFile#"$templateDirectory/"}"
     [ "$base" != "$templateFile" ] || __failEnvironment "$usage" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
-    targetFile="$targetDirectory/$base"
+    local targetFile="$targetDirectory/$base"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       decorate error "Failed to generate $targetFile" 1>&2
       exitCode=1
@@ -588,6 +592,20 @@ __dumpAliasedValue() {
   printf -- 'export "%s"="%s%s%s"\n' "$1" '$\{' "$2" '}'
 }
 
+# IDENTICAL bashFunctionComment 12
+# Extract a bash comment from a file
+# Argument: source - File. Required. File where the function is defined.
+# Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
+# Notes: Keep this free of any extraneous dependencies
+# Requires: grep cut reverseFileLines
+bashFunctionComment() {
+  local source="${1-}" functionName="${2-}"
+  local maxLines=1000
+  grep -m 1 -B $maxLines "$functionName() {" "$source" |
+    reverseFileLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
+    reverseFileLines | grep -E '^#' | cut -c 3-
+}
+
 #
 # Uses `bashDocumentation_FindFunctionDefinitions` to locate bash function, then
 # extracts the comments preceding the function definition and converts it
@@ -717,7 +735,7 @@ bashDocumentation_Extract() {
   printf "# DocMap: %s\n" "$docMap"
 }
 _bashDocumentation_Extract() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

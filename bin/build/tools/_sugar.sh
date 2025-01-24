@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 150
+# IDENTICAL _sugar 164
 
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
@@ -20,6 +20,7 @@
 # Argument: suffix - Optional. String.
 # Argument: title - Optional. String.
 # Argument: item - Optional. String. One or more items to list.
+# Requires: printf
 _format() {
   local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}" n=/dev/null
   sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
@@ -34,12 +35,14 @@ _format() {
 
 # Output a titled list
 # Usage: {fn} title [ items ... ]
+# Requires: _format
 _list() {
   _format "\n" "- " "\n" "$@"
 }
 
 # Output a command, quoting individual arguments
 # Usage: {fn} command [ argument ... ]
+# Requires: _format
 _command() {
   _format "" " \"" "\"" "$@"
 }
@@ -74,9 +77,11 @@ _command() {
 # - 254 - unknown
 #
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
+# Requires: usageDocument printf
 _code() {
   local k && while [ $# -gt 0 ]; do
     case "$1" in
+      --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;;
       environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; test) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
     esac && shift && printf -- "%d\n" "$k"
   done
@@ -88,12 +93,14 @@ _code() {
 # Is this a boolean? (`true` or `false`)
 # Exit Code: 0 - if value is a boolean
 # Exit Code: 1 - if value is not a boolean
+# Requires: usageDocument printf
 isBoolean() {
   case "${1-}" in true | false) ;; *) return 1 ;; esac
 }
 
 # Boolean selector
 # Usage: {fn} testValue trueChoice falseChoice
+# Requires: isBoolean _argument printf
 _choose() {
   local testValue="${1-}" && shift
   isBoolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
@@ -103,6 +110,7 @@ _choose() {
 # Usage: {fn} exitCode item ...
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: isUnsignedInteger _argument __environment
 _clean() {
   local exitCode="${1-}" && shift
   isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
@@ -118,6 +126,7 @@ _clean() {
 # Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
+# Requires: _return
 _environment() {
   _return 1 "$@" || return $?
 }
@@ -126,6 +135,7 @@ _environment() {
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
+# Requires: _return
 _argument() {
   _return 2 "$@" || return $?
 }
@@ -133,6 +143,7 @@ _argument() {
 # Run `command ...` (with any arguments) and then `_return` if it fails.
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
+# Requires: _return _command
 __execute() {
   "$@" || _return $? "$(_command "$@")" || return $?
 }
@@ -141,6 +152,7 @@ __execute() {
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: Any
+# Requires: printf _command __execute
 __echo() {
   printf -- "➡️ %s\n" "$(_command "$@")" && __execute "$@" || return $?
 }
@@ -150,6 +162,7 @@ __echo() {
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: 0 - Success
 # Exit Code: 1 - Failed
+# Requires: _environment
 __environment() {
   "$@" || _environment "$@" || return $?
 }
@@ -159,6 +172,7 @@ __environment() {
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: 0 - Success
 # Exit Code: 2 - Failed
+# Requires: _argument
 __argument() {
   "$@" || _argument "$@" || return $?
 }

@@ -32,7 +32,7 @@ __hookProjectDeactivate() {
   statusMessage printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$name")" "➜" "$(decorate success "$otherName")"
 }
 ___hookProjectDeactivate() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -43,7 +43,7 @@ __hookProjectDeactivateContext() {
   bashSourceInteractive --vebose --prefix "Deactivate" "$home/bin/developer-undo.sh" "$home/bin/developer-undo/" || return $?
 }
 ___hookProjectDeactivateContext() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

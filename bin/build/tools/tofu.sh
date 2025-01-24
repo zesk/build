@@ -30,7 +30,7 @@ aptKeyAddOpenTofu() {
   __usageEnvironment "$usage" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -47,7 +47,7 @@ aptKeyRemoveOpenTofu() {
   __usageEnvironment "$usage" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -68,7 +68,7 @@ tofuInstall() {
   whichExists "$binary" || __failEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -87,6 +87,6 @@ tofuUninstall() {
   __usageEnvironment "$usage" packageUpdate --force || return $?
 }
 _tofuUninstall() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -45,7 +45,7 @@ renameFiles() {
   done
 }
 _renameFiles() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -83,9 +83,9 @@ modificationSeconds() {
   local now_
 
   now_="$(__usageEnvironment "$usage" date +%s)" || return $?
-  local nArguments=$#
+  local __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$(usageArgumentFile "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    local argument="$(usageArgumentFile "$usage" "argument #$((__count - $# + 1))" "${1-}")" || return $?
     __usageEnvironment "$usage" printf "%d\n" "$((now_ - $(modificationTime "$argument")))" || return $?
     shift
   done
@@ -199,20 +199,19 @@ __gamutFile() {
 
   shift 2 || _argument "${FUNCNAME[0]} used incorrectly" || return $?
 
-  local argument saved
-  local tempTime gamutTime theFile=""
+  local gamutTime="" theFile=""
 
-  saved=("$@")
+  local __saved=("$@")
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument: $(_command "${saved[@]}")" || return $?
-    [ -f "$argument" ] || __failArgument "$usage" "Not a file $(decorate code "$argument"): $(_command "${saved[@]}")" || return $?
-    tempTime=$(modificationTime "$argument") || __failEnvironment "modificationTime $argument: $(_command "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1)) tempTime
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -f "$argument" ] || __failArgument "$usage" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    tempTime=$(modificationTime "$argument") || __failEnvironment "#$__index/$__count: modificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
       theFile="$1"
       gamutTime="$tempTime"
     fi
-    shift || :
+    shift
   done
   printf "%s" "$theFile"
 }
@@ -277,9 +276,10 @@ _modifiedDays() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _realPath 10
+# IDENTICAL _realPath 11
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
+# Requires: whichExists realpath
 realPath() {
   # realpath is not present always
   if whichExists realpath; then
@@ -383,14 +383,16 @@ betterType() {
 # See: mv
 renameLink() {
   local usage="_${FUNCNAME[0]}"
+
   local from="" to=""
 
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -401,19 +403,20 @@ renameLink() {
         elif [ -z "$to" ]; then
           to=$(usageArgumentString "$usage" "to $(betterType "$1")" "$1") || return $?
         else
-          __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$from" ] || __failArgument "$usage" "Need a \"from\" argument" || return $?
   [ -n "$to" ] || __failArgument "$usage" "Need a \"to\" argument" || return $?
   __renameLink "$from" "$to"
 }
 _renameLink() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -480,7 +483,7 @@ fileNotMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" false "$@"
 }
 _fileNotMatches() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -498,23 +501,23 @@ fileMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" true "$@"
 }
 _fileMatches() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _fileMatchesHelper() {
   local usage="$1" success="$2" && shift 2
-  local argument nArguments argumentIndex saved
+
   local file patterns=() found=false exceptions=() clean fileList foundLines
 
   [ $# -gt 0 ] || return 0
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -571,14 +574,14 @@ _fileMatchesHelper() {
 # Exit code: 1 - if any files passed in are non-empty files
 isEmptyFile() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  saved=("$@")
-  nArguments=$#
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -588,11 +591,12 @@ isEmptyFile() {
         [ ! -s "$argument" ] || return 1
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _isEmptyFile() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -617,12 +621,13 @@ _directoryGamutFileWrapper() {
   # IDENTICAL startBeginTiming 1
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -634,8 +639,8 @@ _directoryGamutFileWrapper() {
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$directory" ] || __failArgument "$usage" "directory is required" || return $?
 }
@@ -646,7 +651,7 @@ directoryOldestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-lt" "$@"
 }
 _directoryOldestFile() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -656,7 +661,7 @@ directoryNewestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-gt" "$@"
 }
 _directoryNewestFile() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -669,13 +674,13 @@ linkCreate() {
 
   local target="" path="" linkName="" backupFlag=true
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -690,13 +695,13 @@ linkCreate() {
         elif [ -z "$linkName" ]; then
           linkName=$(usageArgumentString "$usage" "linkName" "$argument") || return $?
         else
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ -n "$target" ] || __failArgument "$usage" "Missing target" || return $?
@@ -730,6 +735,26 @@ linkCreate() {
   $backupFlag || __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _linkCreate() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# IDENTICAL fileTemporaryName 18
+# Generate a temporary file name using mktemp, and fail using a function
+# Argument: usage - Function. Required. Function to call if mktemp fails
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
+# Requires: __help __usageEnvironment mktemp usageDocument
+fileTemporaryName() {
+  local usage="_${FUNCNAME[0]}"
+  __help "$usage" "$@" || return 0
+  usage="$1" && shift
+  __usageEnvironment "$usage" mktemp "$@" || return $?
+}
+_fileTemporaryName() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# <-- END of IDENTICAL fileTemporaryName

@@ -54,7 +54,7 @@ Pattern:
         fi
     }
     _functionName() {
-      # IDENTICAL usageDocument 1
+      # _IDENTICAL_ usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -64,7 +64,7 @@ Typically, any defined function `deployApplication` has a mirror underscore-pref
         ...
     }
     _deployApplication() {
-      # IDENTICAL usageDocument 1
+      # _IDENTICAL_ usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 

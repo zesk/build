@@ -119,12 +119,12 @@ _assertConditionHelper() {
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
   set -eou pipefail
-  # IDENTICAL argument-case-header-blank 4
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header-blank 4
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -207,8 +207,8 @@ _assertConditionHelper() {
         break
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$tester" ] || __failArgument "$usage" "--test required ($*)" || return $?
 
@@ -323,7 +323,7 @@ __assertFileContainsHelper() {
         shift
         displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -343,7 +343,8 @@ __assertFileContainsHelper() {
         fi
         ;;
     esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   displayName="${displayName:-"$file"}"

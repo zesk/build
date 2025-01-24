@@ -14,25 +14,18 @@
 # Argument: --stdout - Optional. Flag. Output changed file to `stdout`
 identicalRepair() {
   local usage="_${FUNCNAME[0]}"
-  local argument arguments
-  local source destination token stdout prefix
-  local identicalLine grepPattern parsed
-  local currentLineNumber count lineNumber targetFile sourceText totalLines isEOF
-  local fileMap
 
   # shellcheck disable=SC2059
   arguments="$(printf "\"$(decorate code %s)\" " "$@")"
-  source=
-  destination=
-  token=
-  prefix=
-  stdout=false
-  fileMap=true
+
+  local source="" destination="" token="" prefix="" stdout=false fileMap=true
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -63,7 +56,8 @@ identicalRepair() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ -n "$prefix" ] || __failArgument "$usage" "missing --prefix" || return $?
@@ -71,7 +65,10 @@ identicalRepair() {
   [ -n "$source" ] || __failArgument "$usage" "missing source" || return $?
   [ -n "$destination" ] || __failArgument "$usage" "missing destination" || return $?
 
-  grepPattern="$(quoteGrepPattern "$prefix $token")"
+  local grepPattern identicalLine totalLines parsed count
+  local lineNumber token count
+
+  grepPattern="^[[:space:]]*$(quoteGrepPattern "$prefix $token")"
   identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || __failArgument "$usage" "\"$prefix $token\" not found in source $(decorate code "$source")" || return $?
   [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || __failArgument "$usage" "\"$prefix $token\" not found in destination $(decorate code "$destination")" || return $?
   # totalLines is *source* lines
@@ -83,6 +80,8 @@ identicalRepair() {
   if ! isUnsignedInteger "$count"; then
     __failEnvironment "$usage" "$(decorate code "$source") not an integer: \"$(decorate value "$identicalLine")\"" || return $?
   fi
+
+  local sourceText
   sourceText=$(fileTemporaryName "$usage") || return $?
 
   # Include header but map EOF to count on the first line
@@ -92,16 +91,17 @@ identicalRepair() {
     _identicalMapAttributesFile "$usage" "$sourceText" "$destination" || return $?
   fi
   if ! $stdout; then
+    local targetFile
     targetFile=$(fileTemporaryName "$usage") || return $?
     exec 3>"$targetFile"
   else
     exec 3>&1
   fi
-  currentLineNumber=0
+  local currentLineNumber=0
   # totalLines is *$destination* lines
   totalLines=$(wc -l <"$destination")
   while read -r identicalLine; do
-    isEOF=false
+    local isEOF=false
     parsed=$(__usageArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || return $?
     IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
     if [ "$count" = "EOF" ]; then
@@ -133,32 +133,4 @@ identicalRepair() {
 }
 _identicalRepair() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Usage: {fn}
-__identicalCheckRepair() {
-  local prefix="$1" token="$2" fileA="$3" fileB="$4"
-  local checkPath
-
-  statusMessage decorate info "realPath $fileA"
-  fileA=$(realPath "$fileA") || _argument "realPath fileA $fileA" || return $?
-  statusMessage decorate info "realPath $fileB"
-  fileB=$(realPath "$fileB") || _argument "realPath fileB $fileB" || return $?
-  statusMessage decorate info "Shifting ..."
-  shift && shift && shift && shift
-  while [ $# -gt 0 ]; do
-    checkPath="$1"
-    statusMessage decorate info "Checking path $checkPath ..."
-    if [ "${fileA#"$checkPath"}" != "$fileA" ]; then
-      statusMessage decorate info Repairing "$fileB" with "$fileA"
-      identicalRepair --prefix "$prefix" --token "$token" "$fileA" "$fileB" || return $?
-      return $?
-    elif [ "${fileB#"$checkPath"}" != "$fileB" ]; then
-      statusMessage decorate info Repairing "$fileA" with "$fileB"
-      identicalRepair --prefix "$prefix" --token "$token" "$fileB" "$fileA" || return $?
-      return $?
-    fi
-    shift
-  done
-  _environment "No repair found between $fileA and $fileB" || return $?
 }

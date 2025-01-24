@@ -29,7 +29,7 @@
 #
 isUnsignedNumber() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
-    case ${1#+} in '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
+  case ${1#+} in '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
 #
@@ -105,7 +105,7 @@ isArray() {
   [ "${declareText#declare -a}" != "$declareText" ]
 }
 
-# IDENTICAL _type 28
+# IDENTICAL _type 41
 
 #
 # Test if an argument is a positive integer (non-zero)
@@ -113,12 +113,22 @@ isArray() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
-#
+# Requires: __usageArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
-  isUnsignedInteger "$1" || return 1
-  # Find pesky "0" or "+0"
-  [ "$1" -gt 0 ] || return 1
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
+  if isUnsignedInteger "$1"; then
+    # Find pesky "0" or "+0"
+    [ "$1" -gt 0 ] || return 1
+    return 0
+  fi
+  [ "$1" = "--help" ] && "$usage" 0 || return 1
+}
+_isPositiveInteger() {
+  debuggingStack
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -128,9 +138,16 @@ isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - argument is bash function
 # Exit code: 1 - argument is not a bash function
+# Requires: __usageArgument isUnsignedInteger usageDocument type
 isFunction() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
+}
+_isFunction() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

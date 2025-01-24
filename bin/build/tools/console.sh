@@ -30,7 +30,7 @@ consoleGetColor() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -128,7 +128,7 @@ consoleSetTitle() {
   printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -140,7 +140,7 @@ consoleDefaultTitle() {
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
 _consoleDefaultTitle() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -165,7 +165,7 @@ consoleLinksSupported() {
   ! isiTerm2 || return 0
 }
 _consoleLinksSupported() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

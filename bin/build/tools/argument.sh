@@ -8,27 +8,6 @@
 # Idea is to have a central argument manager
 # Which uses the comments to specify the arguments automatically
 
-# Usage: {fn} [ --only ] usageFunction arguments
-# Simple help argument handler
-# Easy --help handler for any function useful when it's the only option.
-# Argument: --only - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
-# Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     __help "$usage" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-__help() {
-  local usage="${1-}" && shift
-  if [ "$usage" = "--only" ]; then
-    usage="${1-}" && shift
-    [ "${1-}" = "--help" ] && [ "$#" -eq 1 ] || __failArgument "$usage" "Only argument allowed is \`--help\`" || return $?
-  fi
-  if inArray "--help" "$@"; then
-    "$usage" 0
-    return 1
-  fi
-  return 0
-}
-
 # Generic argument parsing using Bash comments.
 #
 # Argument formatting (in comments) is as follows:
@@ -56,7 +35,7 @@ _arguments() {
   local usageArguments="_${FUNCNAME[0]}"
   local source="${1-}" this="${2-}"
   local usage="_$this"
-  local argument nArguments argumentIndex
+
   local stateFile checkFunction value clean required flags=() noneFlag=false
 
   ARGUMENTS="${ARGUMENTS-}"
@@ -73,14 +52,13 @@ _arguments() {
 
   # Rest is calling function argument usage
   clean=("$stateFile")
-  nArguments=$#
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$1"
-    type="$(_usageArgumentType "$spec" "$stateFile" "$argumentIndex" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    type="$(_usageArgumentType "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
     case "$type" in
       Flag)
-        argumentName="$(_usageArgumentName "$spec" "$stateFile" "$argumentIndex" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+        argumentName="$(_usageArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
         __usageEnvironment "$usage" environmentValueWrite "$argumentName" "true" >>"$stateFile" || _clean "$?" "${clean[@]}" || return $?
         if ! inArray "$argumentName" "${flags[@]+"${flags[@]}"}"; then
           flags+=("$argumentName")
@@ -92,22 +70,22 @@ _arguments() {
       *)
         if _usageArgumentTypeValid "${type#!}"; then
           type="${type#!}"
-          argumentName="$(_usageArgumentName "$spec" "$stateFile" "$argumentIndex" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+          argumentName="$(_usageArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
         elif _usageArgumentTypeValid "$type"; then
-          argumentName="$(_usageArgumentName "$spec" "$stateFile" "$argumentIndex" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+          argumentName="$(_usageArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
           shift
           argument="${1-}"
         else
           find "$spec" -type f 1>&2
           dumpPipe stateFile <"$stateFile" 1>&2
-          __failArgument "$usage" "unhandled argument type \"$type\" #$argumentIndex: $argument" || _clean "$?" "${clean[@]}" || return $?
+          __failArgument "$usage" "unhandled argument type \"$type\" #$__index: $argument" || _clean "$?" "${clean[@]}" || return $?
         fi
         checkFunction="usageArgument${type}"
         value="$("$checkFunction" "$usage" "$argumentName" "$argument")" || _clean "$?" || return $?
         __usageEnvironment "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || _clean "$?" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || _clean "$?" "${clean[@]}" || return $?
+    shift || __failArgument "$usage" "missing argument #$__index: $argument" || _clean "$?" "${clean[@]}" || return $?
   done
   stateFile=$(_usageArgumentsRemainder "$usage" "$spec" "$stateFile" "$@") || _clean "$?" "${clean[@]}" || return $?
 
@@ -128,7 +106,7 @@ _arguments() {
   ARGUMENTS="$stateFile" || return $?
 }
 __arguments() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -217,7 +195,7 @@ _usageArgumentsSpecification() {
   printf "%s\n" "$functionCache"
 }
 __usageArgumentsSpecification() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -243,7 +221,7 @@ _usageArgumentsSpecificationDefaults() {
   fi
 }
 __usageArgumentsSpecificationDefaults() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -476,6 +454,7 @@ _usageArgumentType() {
   return 0
 }
 __usageArgumentType() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -501,4 +480,36 @@ _usageArgumentsRemainder() {
     fi
   fi
   printf "%s\n" "$stateFile" "$@"
+}
+
+# IDENTICAL __help 30
+# Usage: {fn} [ --only ] usageFunction arguments
+# Simple help argument handler.
+#
+# Easy `--help` handler for any function useful when it's the only option.
+#
+# Useful for utilities which single argument types, single arguments, and no arguments (except for `--help`)
+#
+# Oddly one of the few functions we can not offer the `--help` flag for.
+#
+# Argument: --only - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+# Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     __help "$usage" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+# Depends: __failArgument
+__help() {
+  local usage="${1-}" && shift
+  if [ "$usage" = "--only" ]; then
+    usage="${1-}" && shift
+    [ "$#" -eq 1 ] && [ "$1" = "--help" ] || __failArgument "$usage" "Only argument allowed is \`--help\`" || return $?
+  fi
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--help" ]; then
+      "$usage" 0
+      return 1
+    fi
+    shift
+  done
+  return 0
 }

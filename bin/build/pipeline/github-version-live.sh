@@ -2,8 +2,6 @@
 #
 # github-version-live.sh
 #
-# Depends: apt.sh
-#
 # Get the live version from the GitHub API
 #
 # See: githubLatestRelease

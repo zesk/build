@@ -8,6 +8,7 @@
 
 # IDENTICAL _clearLine EOF
 # Simple blank line generator for scripts
+# Requires: read stty printf seq sed
 _clearLine() {
   local width
   read -d' ' -r width < <(stty size) || width=80 && printf "\r%s\r" "$(seq -s' ' "$((width + 1))" | sed 's/[0-9]//g')"

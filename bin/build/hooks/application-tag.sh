@@ -2,8 +2,6 @@
 #
 # Fetch the version tag for the application
 #
-# Depends: git
-#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
@@ -26,7 +24,7 @@ __hookApplicationTag() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?

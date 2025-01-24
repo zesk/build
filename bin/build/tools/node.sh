@@ -8,29 +8,33 @@
 # Install nodejs
 nodeInstall() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments
-  local quietLog
 
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
         ;;
       *)
-        usageArgumentUnknown "$usage" "$argument" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if packageIsInstalled nodejs; then
     __nodeInstall_corepackEnable "$usage" || return $?
     return 0
   fi
+
+  local quietLog
 
   quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
   __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
@@ -39,7 +43,7 @@ nodeInstall() {
   __nodeInstall_corepackEnable "$usage" || return $?
 }
 _nodeInstall() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -61,22 +65,25 @@ __nodeInstall_corepackEnable() {
 # Uninstall nodejs
 nodeUninstall() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments
 
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
         ;;
       *)
-        usageArgumentUnknown "$usage" "$argument" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    shift || usageArgumentMissing "$usage" "$argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if ! packageIsInstalled nodejs; then
@@ -92,7 +99,7 @@ nodeUninstall() {
   statusMessage reportTiming "$start" "Uninstalled $name in" || return $?
 }
 _nodeUninstall() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -117,12 +124,14 @@ nodePackageManager() {
     isFunction "$managerArgumentFormatter" || __failEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
 
     local arguments=() flags=() action="" debugFlag=false
-    local saved=("$@") nArguments=$#
+
+    # _IDENTICAL_ argument-case-header 5
+    local __saved=("$@") __count=$#
     while [ $# -gt 0 ]; do
-      local argument argumentIndex=$((nArguments - $# + 1))
-      argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+      local argument="$1" __index=$((__count - $# + 1))
+      [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
       case "$argument" in
-        # IDENTICAL --help 4
+        # _IDENTICAL_ --help 4
         --help)
           "$usage" 0
           return $?
@@ -138,15 +147,16 @@ nodePackageManager() {
           action="$argument"
           ;;
         -*)
-          __failArgument "$usage" "unknown flag #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
           ;;
         *)
           [ -n "$action" ] || __failArgument "$usage" "Requires an action" || return $?
           packages+=("$argument")
           ;;
       esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+      # _IDENTICAL_ argument-esac-shift 1
+      shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
     done
     local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
     isFunction "$managerArgumentFormatter" || __failEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
@@ -156,7 +166,7 @@ nodePackageManager() {
   fi
 }
 _nodePackageManager() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -174,7 +184,7 @@ nodePackageManagerInstall() {
   __usageEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerInstall() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -192,7 +202,7 @@ nodePackageManagerUninstall() {
   __usageEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerUninstall() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

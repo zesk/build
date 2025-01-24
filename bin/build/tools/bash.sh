@@ -22,7 +22,7 @@ bashLibraryHome() {
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -33,12 +33,13 @@ bashLibrary() {
 
   local home run="" verboseFlag=false
 
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -52,8 +53,8 @@ bashLibrary() {
         break
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$run" ] || __failArgument "$usage" "Missing libraryRelativePath" || return $?
   home=$(bashLibraryHome "$run") || return $?
@@ -69,7 +70,7 @@ bashLibrary() {
   return 0
 }
 _bashLibrary() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -91,19 +92,18 @@ _bashLibrary() {
 # See: buildHome
 bashSanitize() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved fileList
-  local executor home directory checkAssertions item debugPatterns undo=()
+
+  local home checkAssertions=() executor=contextOpen
 
   home=$(__usageEnvironment "$usage" buildHome) || return $?
-  checkAssertions=()
-  saved=("$@")
-  nArguments=$#
-  executor=contextOpen
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -127,6 +127,8 @@ bashSanitize() {
     shift || :
   done
 
+  local fileList
+
   fileList=$(fileTemporaryName "$usage") || return $?
   if [ "$#" -eq 0 ]; then
     __usageEnvironment "$usage" cat >"$fileList" || return $?
@@ -134,12 +136,15 @@ bashSanitize() {
     __usageEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || return $?
   fi
 
+  local undo=()
+
   # CHANGE DIRECTORY HERE
   __usageEnvironment "$usage" muzzle pushd "$home" || return $?
   [ "$home" = "$(pwd)" ] || __failEnvironment "$usage" "Unable to cd to $home" || return $?
   undo=(muzzle popd)
 
   statusMessage decorate success Making shell files executable ...
+
   local shellFile
   while read -r shellFile; do
     statusMessage decorate info "+x $(decorate file "$shellFile")"
@@ -163,7 +168,7 @@ bashSanitize() {
   printf "\n"
 }
 _bashSanitize() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -246,27 +251,26 @@ _bashSanitizeCheckDebugging() {
 # Has security implications. Use with caution and ensure your directory is protected.
 bashSourcePath() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local path tool
 
   [ $# -gt 0 ] || __failArgument "$usage" "Requires a directory" || return $?
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
         ;;
       *)
+        local path
         path=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
         # shellcheck disable=SC2015
         while read -r tool; do
-          tool="${tool#./}"
+          local tool="${tool#./}"
           [ -f "$path/$tool" ] || __failEnvironment "$usage" "$path/$tool is not a bash source file" || return $?
           [ -x "$path/$tool" ] || __failEnvironment "$usage" "$path/$tool is not executable" || return $?
           # shellcheck source=/dev/null
@@ -274,12 +278,68 @@ bashSourcePath() {
         done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" || :)
         ;;
     esac
-    shift
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _bashSourcePath() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Usage: {fn} script
+# Checks a bash script to ensure all dependencies are met, outputs a list of unmet dependencies
+# Scans a bash script for lines which look like:
 #
+# Depends: token1 token2
+#
+# Each dependency token is:
+#
+# - a bash function which MUST be defined
+# - a shell script (executable) which must be present
+#
+# If all dependencies are met, exit status of 0.
+# If any dependencies are not met, exit status of 1 and a list of unmet dependencies are listed
+#
+# Argument: --require - Flag. Optional. Requires at least one or more dependencies to be listed and met to pass
+bashCheckDepends() {
+  local usage="_${FUNCNAME[0]}"
+
+  local requireFlag=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --require)
+        requireFlag=true
+        ;;
+      *)
+        files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+  done
+
+  ! $requireFlag || [ "${#files[@]}" -gt 0 ] || __failArgument "$usage" "No files supplied but at least one is required" || return $?
+
+  local file
+
+  # dependencies=$(fileTemporaryName "$usage")
+  while read -r matchLine; do
+    echo "$matchLine"
+    #| tee "$dependencies"
+  done < <(grep -e '[:space:]*#[:space:]*Depends:[:space:]*' "${files[@]}" | trimSpace)
+}
+_bashCheckDepends() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

@@ -2,8 +2,6 @@
 #
 # Fetch an ID which represents the current application build/code state which is unique
 #
-# Depends: git
-#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 

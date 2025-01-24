@@ -282,13 +282,13 @@ gitTagVersion() {
   start=$init
   versionSuffix=""
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -368,7 +368,7 @@ gitTagVersion() {
   statusMessage --last reportTiming "$init" "Tagged version completed in" || return $?
 }
 _gitTagVersion() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -379,7 +379,7 @@ gitFindHome() {
   __directoryParent "_${FUNCNAME[0]}" --pattern ".git" "$@"
 }
 _gitFindHome() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -402,12 +402,13 @@ gitCommit() {
   local usage="_${FUNCNAME[0]}"
 
   local appendLast=false updateReleaseNotes=true comment="" home="" openLinks=""
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -430,7 +431,8 @@ gitCommit() {
         break
         ;;
     esac
-    shift
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if ! isBoolean "$openLinks"; then
@@ -447,7 +449,7 @@ gitCommit() {
   start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
     home=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
-    buildEnvironmentContext gitCommit --home "$home" "${saved[@]}" || return $?
+    buildEnvironmentContext gitCommit --home "$home" "${__saved[@]}" || return $?
     return 0
   fi
   __usageEnvironment "$usage" cd "$home" || return $?
@@ -513,7 +515,7 @@ gitMainly() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -658,12 +660,13 @@ gitInstallHooks() {
   local verbose=false hookNames=()
 
   read -r -a types < <(gitHookTypes) || :
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -687,7 +690,8 @@ gitInstallHooks() {
         fi
         ;;
     esac
-    shift || :
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   if [ ${#hookNames[@]} -eq 0 ]; then
     hookNames=("${types[@]}")
@@ -736,7 +740,7 @@ gitInstallHook() {
       --verbose)
         verbose=true
         ;;
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -799,7 +803,7 @@ gitPreCommitSetup() {
   [ $total -ne 0 ]
 }
 _gitPreCommitSetup() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -825,7 +829,7 @@ gitPreCommitHeader() {
   done
 }
 _gitPreCommitHeader() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -840,7 +844,7 @@ gitPreCommitHasExtension() {
   done
 }
 _gitPreCommitHasExtension() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -856,7 +860,7 @@ gitPreCommitListExtension() {
   done
 }
 _gitPreCommitListExtension() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -868,7 +872,7 @@ gitPreCommitCleanup() {
   [ ! -d "$directory" ] || __usageEnvironment "$usage" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -889,7 +893,7 @@ gitBranchExists() {
   done
 }
 _gitBranchExists() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -910,7 +914,7 @@ gitBranchExistsLocal() {
   done
 }
 _gitBranchExistsLocal() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -936,7 +940,7 @@ gitBranchExistsRemote() {
   done
 }
 _gitBranchExistsRemote() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -985,7 +989,7 @@ gitBranchify() {
 
 }
 _gitBranchify() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -998,12 +1002,13 @@ gitBranchMergeCurrent() {
 
   local targetBranch="" comment="" addIP=true
 
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -1019,8 +1024,8 @@ gitBranchMergeCurrent() {
         targetBranch="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ -n "$targetBranch" ] || __failArgument "$usage" "branch required" || return $?
@@ -1041,7 +1046,7 @@ gitBranchMergeCurrent() {
   __usageEnvironment "$usage" git checkout "$branch" || return $?
 }
 _gitUpdateBranch() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

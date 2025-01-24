@@ -72,7 +72,7 @@ bigText() {
   "$binary" -f "${fonts[index]}" "$@"
 }
 _bigText() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -102,21 +102,16 @@ _bigText() {
 # Example:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
 labeledBigText() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex
-  local label banner linePrefix lineSuffix tweenLabel tweenNonLabel nLines plainLabel isBottom
 
-  label=
-  isBottom=true
-  linePrefix=
-  lineSuffix=
-  tweenLabel=
-  tweenNonLabel=
-  nArguments=$#
+  local plainLabel="" label="" isBottom=true linePrefix="" lineSuffix="" tweenLabel="" tweenNonLabel=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="${1-}"
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -141,15 +136,21 @@ labeledBigText() {
         tweenNonLabel="${1-}"
         ;;
       *)
-        [ "$argument" = "${argument#-}" ] || __failArgument "$usage" "Unknown argument #$argumentIndex: $argument" || return $?
+        if [ "$argument" != "${argument#-}" ]; then
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        fi
         label="$argument"
         plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __failArgument "$usage" "Unable to clean label" || return $?
         shift
         break
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
+
+  local banner nLines
   banner="$(bigText "$@")"
   nLines=$(printf -- "%s\n" "$banner" | wc -l)
   plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)"
@@ -165,7 +166,7 @@ labeledBigText() {
   fi
 }
 _labeledBigText() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -188,7 +189,7 @@ repeat() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -234,24 +235,24 @@ _repeat() {
 # Example:     decorate magenta $(echoBar +-)
 echoBar() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local barText="" width count delta=""
 
   width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header-blank 4
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$1"
+    local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
         ;;
       *)
         if [ $# -gt 2 ]; then
-          __failArgument "$usage" "unknown argument #3: $3 (Arguments: $(_command "${saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         barText="$argument"
         shift
@@ -263,7 +264,8 @@ echoBar() {
         fi
         ;;
     esac
-    shift
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$barText" ] || barText="="
   [ -n "$delta" ] || delta=0
@@ -274,7 +276,7 @@ echoBar() {
   printf -- "%s\n" "$(repeat "$count" "$barText")"
 }
 _echoBar() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -297,7 +299,7 @@ lineFill() {
   fi
 }
 _lineFill() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -324,7 +326,7 @@ wrapLines() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -438,18 +440,18 @@ alignLeft() {
 #
 boxedHeading() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local bar spaces text=() textString emptyBar nLines shrink width
 
   nLines=1
   shrink=0
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?

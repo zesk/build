@@ -10,6 +10,8 @@
 # IDENTICAL __installCheck EOF
 # Check the directory after installation and output the version
 # Usage: {fn} name versionFile usageFunction installPath
+# Requires: dirname
+# Requires: decorate printf __failEnvironment read jq
 __installCheck() {
   local name="$1" version="$2" usage="$3" installPath="$4"
   local versionFile="$installPath/$version"

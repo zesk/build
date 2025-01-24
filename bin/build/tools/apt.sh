@@ -40,7 +40,7 @@ aptSourcesDirectory() {
 #
 aptKeyAdd() {
   local usage="_${FUNCNAME[0]}"
-  local argument argumentIndex nArguments saved
+
   local names=() title="" remoteUrls=() skipUpdate=false listName="" releaseName="" repoUrl=""
   local name url host index IFS file listTarget
   local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
@@ -52,55 +52,55 @@ aptKeyAdd() {
   # apt-key is deprecated for good reasons
   # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-    # IDENTICAL --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --name)
-      shift
-      names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-      ;;
-    --skip)
-      skipUpdate=true
-      ;;
-    --title)
-      shift
-      title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-      ;;
-    --source)
-      shift
-      sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-      ;;
-    --repository-url)
-      shift
-      repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
-      ;;
-    --list)
-      shift
-      listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-      ;;
-    --release)
-      shift
-      releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-      ;;
-    --url)
-      shift
-      remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
-      ;;
-    *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
-      ;;
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --name)
+        shift
+        names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --skip)
+        skipUpdate=true
+        ;;
+      --title)
+        shift
+        title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --source)
+        shift
+        sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --repository-url)
+        shift
+        repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --list)
+        shift
+        listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --release)
+        shift
+        releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --url)
+        shift
+        remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ "${#names[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one --name" || return $?
@@ -147,7 +147,7 @@ aptKeyAdd() {
   statusMessage --last reportTiming "$start" "Added $title to sources in"
 }
 _aptKeyAdd() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -161,40 +161,41 @@ _aptKeyAdd() {
 #
 aptKeyRemove() {
   local usage="_${FUNCNAME[0]}"
-  local ring
-  local argument nArguments file
-  local name start
-  local sourcesPath
-  local names skipUpdate
 
-  ring=$(__usageEnvironment "$usage" aptKeyRingDirectory) || return $?
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
-  ring=$(_usageAptKeyRings "$usage") || return $?
+  local names=() skipUpdate=false
 
-  names=()
-  skipUpdate=false
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$(usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "${1-}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-    # IDENTICAL --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --skip)
-      skipUpdate=true
-      ;;
-    *)
-      names+=("$argument")
-      ;;
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --skip)
+        skipUpdate=true
+        ;;
+      *)
+        names+=("$argument")
+        ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$((nArguments - $# + 1)): $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ -d "$ring" ] || __failEnvironment "$usage" "Unable to remove key as $ring is not a directory" || return $?
   [ "${#names[@]}" -gt 0 ] || __failArgument "$usage" "No keyNames supplied" || return $?
+
+  local start ring sourcesPath
+
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+
+  ring=$(_usageAptKeyRings "$usage") || return $?
+  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
+
+  [ -d "$ring" ] || __failEnvironment "$usage" "Unable to remove key as $ring is not a directory" || return $?
 
   _usageAptPermissions "$usage" "$sourcesPath" || return $?
 
@@ -217,7 +218,7 @@ aptKeyRemove() {
   statusMessage reportTiming "$start" "Removed ${names[*]} from sources in "
 }
 _aptKeyRemove() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -298,7 +299,7 @@ __aptInstalledList() {
   dpkg --get-selections | grep -v deinstall | awk '{ print $1 }'
 }
 ___aptInstalledList() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -310,7 +311,7 @@ __aptAvailableList() {
   apt-cache pkgnames
 }
 ___aptAvailableList() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

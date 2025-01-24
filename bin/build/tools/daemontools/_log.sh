@@ -5,15 +5,16 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 24
+# IDENTICAL _return 25
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
+# Requires: isUnsignedInteger printf
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -23,7 +24,7 @@ _return() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
-#
+# Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
@@ -37,18 +38,19 @@ isUnsignedInteger() {
 # Argument: ... - Any arguments are passed to binary
 # Run binary and output failed command upon error
 # Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
-# Requires-IDENTICAL: _return
+# Requires: _return
 __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL _home 12
+# IDENTICAL _home 13
 # Usage: {fn} user
 # Summary: Quick user database look up
 # Look user up, output user home
 # Environment: APPLICATION_USER
 # Environment: HOME
 # stdout: the home directory
+# Requires: grep cut _return printf /etc/passwd
 _home() {
   local user="${1-}" userDatabase="/etc/passwd" home
   set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?

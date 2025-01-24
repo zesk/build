@@ -6,8 +6,6 @@
 #
 # See: bin/build/install-bin-build.sh
 #
-# Requires IDENTICAL: _realPath whichExists _colors _tinySugar _return
-#
 # Copyright &copy; 2025 Market Acumen, Inc.
 
 # IDENTICAL _installRemotePackage EOF
@@ -39,7 +37,7 @@
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing.
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
 # Argument: --user headerText - Optional. String. Add `username:password` to remote request.
-# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
+# Argument: --header headerText - Optional. String. Add one or more fetchArguments to the remote request.
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name.
@@ -49,18 +47,27 @@
 # Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use.
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
+# Requires: cp rm cat printf
+# Requires: realPath whichExists _return fileTemporaryName
+# Requires: __usageArgument __failArgument
+# Requires: __usageEnvironment decorate
+# Requires: usageArgumentString
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
+
   local relative="${1-}" packagePath="${2-}" packageInstallerName="${3-}"
 
   shift 3
+
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
-  local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" headers=() nArguments=$#
-  local nArguments="$#"
+  local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" fetchArguments=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument #$argumentIndex: $argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       --debug)
         __installRemotePackageDebug "$argument"
@@ -71,7 +78,7 @@ _installRemotePackage() {
       --replace)
         shift
         newName="$1"
-        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate boldOrange "$newName")"
+        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
         __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
@@ -82,17 +89,13 @@ _installRemotePackage() {
       --mock | --local)
         [ -z "$localPath" ] || __failArgument "$usage" "$argument already" || return $?
         shift
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$argumentIndex" || return $?
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$__index" || return $?
         localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
         [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
-      --user)
+      --user | --header | --password)
         shift
-        headers+=("--user" "$(usageArgumentString "$usage" "$argument" "${1-}")")
-        ;;
-      --header)
-        shift
-        headers+=("-H" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+        fetchArguments+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
         ;;
       --url)
         shift
@@ -119,10 +122,10 @@ _installRemotePackage() {
         checkFunction="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        __failArgument "$usage" "unknown argument #$__index: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    shift || __failArgument "$usage" "missing argument #$__index: $argument" || return $?
   done
 
   local installFlag=false message
@@ -165,7 +168,7 @@ _installRemotePackage() {
   if $installFlag; then
     local start
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
-    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
+    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
@@ -174,7 +177,7 @@ _installRemotePackage() {
       __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
-    rm -f "$messageFile" || :
+    __usageEnvironment "$usage" rm -f "$messageFile" || return $?
   else
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
@@ -193,6 +196,7 @@ _installRemotePackage() {
 
 # Error handler for _installRemotePackage
 # Usage: {fn} exitCode [ message ... ]
+# Requires: printf decorate
 __installRemotePackage() {
   local exitCode="$1"
   shift || :
@@ -201,11 +205,15 @@ __installRemotePackage() {
 }
 
 # Debug is enabled, show why
+# Requires: decorate
+# Debugging: OK
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }
 
 # Install the package directory
+# Requires: uname pushd popd rm tar
+# Requires: __usageEnvironment __failEnvironment
 __installRemotePackageDirectory() {
   local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
@@ -233,6 +241,8 @@ __installRemotePackageDirectory() {
 }
 
 # Install the build directory from a copy
+# Requires: rm mv cp mkdir
+# Requires: _undo __usageEnvironment __failEnvironment
 __installRemotePackageDirectoryLocal() {
   local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
@@ -252,12 +262,14 @@ __installRemotePackageDirectoryLocal() {
 }
 
 # Check .gitignore is correct
+# Requires: grep printf
+# Requires: decorate
 __installRemotePackageGitCheck() {
   local applicationHome="$1" pattern="${2%/}"
   pattern="/${pattern#/}/"
   local ignoreFile="$1/.gitignore"
   if [ -f "$ignoreFile" ] && ! grep -q -e "^$pattern" "$ignoreFile"; then
-    printf "%s %s %s %s:\n\n    %s\n" "$(decorate code "$ignoreFile")" \
+    printf -- "%s %s %s %s:\n\n    %s\n" "$(decorate code "$ignoreFile")" \
       "does not ignore" \
       "$(decorate code "$pattern")" \
       "$(decorate error "recommend adding it")" \
@@ -266,6 +278,8 @@ __installRemotePackageGitCheck() {
 }
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
+# Requires: grep printf chmod wait
+# Requires: _environment isUnsignedInteger dumpPipe _clean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   local log="$myBinary.$$.log"

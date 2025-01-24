@@ -2,8 +2,6 @@
 #
 # Maintenance hook for an application
 #
-# Depends: git
-#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 

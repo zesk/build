@@ -38,7 +38,7 @@ myCoolScript() {
     argument="$1"
     [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -60,7 +60,7 @@ myCoolScript() {
   printf "%s -> %s\n" "$(basename "$fileArg")" "$directoryArg"
 }
 _myCoolScript() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

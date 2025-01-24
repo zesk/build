@@ -5,12 +5,14 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL __source 17
+# IDENTICAL __source 19
 # Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+# Requires: _return
+# Security: source
 __source() {
   local me="${BASH_SOURCE[0]}" e=253
   local here="${me%/*}" a=()
@@ -24,24 +26,26 @@ __source() {
   "${a[@]}" || return $?
 }
 
-# IDENTICAL __tools 7
+# IDENTICAL __tools 8
 # Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+# Requires: __source _return
 __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL _return 24
+# IDENTICAL _return 25
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
+# Requires: isUnsignedInteger printf
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -51,7 +55,7 @@ _return() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
-#
+# Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
@@ -70,12 +74,11 @@ isUnsignedInteger() {
 # See `identicalCheckShell` for additional arguments and usage.
 # See: identicalCheckShell
 __buildIdenticalRepair() {
-  local item
-  local aa
-  local home
+  local usage="_${FUNCNAME[0]}"
+  local item aa home
 
-  home=$(__environment buildHome) || return $?
-  __environment cd "$home" || return $?
+  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  __usageEnvironment "$usage" muzzle cd "$home" || return $?
   aa=()
   while read -r item; do
     aa+=(--singles "$item")
@@ -83,7 +86,11 @@ __buildIdenticalRepair() {
   while read -r item; do
     aa+=(--repair "$item")
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
-  __environment identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
+  __usageEnvironment "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
+}
+___buildIdenticalRepair() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __tools ../.. __buildIdenticalRepair "$@"

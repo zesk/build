@@ -13,7 +13,7 @@
 # Argument: ... - Any arguments are passed to binary
 # Run binary and output failed command upon error
 # Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
-# Requires-IDENTICAL: _return
+# Requires: _return
 __execute() {
   "$@" || _return "$?" "$@" || return $?
 }

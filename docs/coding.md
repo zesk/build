@@ -54,7 +54,7 @@ Pattern:
         fi
     }
     _functionName() {
-      # IDENTICAL usageDocument 1
+      # _IDENTICAL_ usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -64,7 +64,7 @@ Typically, any defined function `deployApplication` has a mirror underscore-pref
         ...
     }
     _deployApplication() {
-      # IDENTICAL usageDocument 1
+      # _IDENTICAL_ usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -264,13 +264,13 @@ A simple example to show some standard patterns:
       # IDENTICAL startBeginTiming 1
       start=$(__usageEnvironment "$usage" beginTiming) || return $?
     
-      # IDENTICAL argument-case-header 5
+      # _IDENTICAL_ argument-case-header 5
       local saved=("$@") nArguments=$#
       while [ $# -gt 0 ]; do
         local argument argumentIndex=$((nArguments - $# + 1))
         argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
         case "$argument" in
-          # IDENTICAL --help 4
+          # _IDENTICAL_ --help 4
           --help)
             "$usage" 0
             return $?
@@ -292,11 +292,11 @@ A simple example to show some standard patterns:
             target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
             ;;
           *)
-            # IDENTICAL argumentUnknown 1
+            # _IDENTICAL_ argumentUnknown 1
             __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
             ;;
         esac
-        # IDENTICAL argument-esac-shift 1
+        # _IDENTICAL_ argument-esac-shift 1
         shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
       done
     
@@ -318,7 +318,7 @@ A simple example to show some standard patterns:
       reportTiming "$start" "Completed in"
     }
     _exampleFunction() {
-      # IDENTICAL usageDocument 1
+      # _IDENTICAL_ usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
     
@@ -347,22 +347,22 @@ A simple example to show some standard patterns:
     __hookGitPostCommit() {
       local usage="_${FUNCNAME[0]}"
     
-      # IDENTICAL argument-case-header-blank 4
+      # _IDENTICAL_ argument-case-header-blank 4
       local saved=("$@") nArguments=$#
       while [ $# -gt 0 ]; do
         local argument="$1" argumentIndex=$((nArguments - $# + 1))
         case "$argument" in
-          # IDENTICAL --help 4
+          # _IDENTICAL_ --help 4
           --help)
             "$usage" 0
             return $?
             ;;
           *)
-            # IDENTICAL argumentUnknown 1
+            # _IDENTICAL_ argumentUnknown 1
             __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
             ;;
         esac
-        # IDENTICAL argument-esac-shift 1
+        # _IDENTICAL_ argument-esac-shift 1
         shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
       done
     
@@ -373,7 +373,7 @@ A simple example to show some standard patterns:
       __usageEnvironment "$usage" git push origin || return $?
     }
     ___hookGitPostCommit() {
-      # IDENTICAL usageDocument 1
+      # _IDENTICAL_ usageDocument 1
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
     

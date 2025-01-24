@@ -49,39 +49,18 @@
 # This is best used as a pre-commit check, for example. Wink!
 identicalCheck() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
-  local usage me
-  local rootDir findArgs prefixes exitCode tempDirectory resultsFile prefixIndex prefix quotedPrefix
-  local totalLines lineNumber token count parsed tokenFile countFile searchFile
-  local identicalLine binary matchFile repairSources isBadFile
-  local tokenLineCount tokenFileName compareFile badFiles singles foundSingles
-  local excludes searchFileList debug extensionText
-  local failureCode mapFile ignoreSingles
 
-  failureCode="$(_code identical)"
-  me="$(basename "${BASH_SOURCE[0]}")"
+  local mapFile=true debug=false rootDir="."
+  local repairSources=() excludes=() prefixes=() singles=() binary="" ignoreSingles=false
+  local findArgs=() extensionText="" skipFiles=()
 
-  binary=
-  rootDir=.
-  singles=()
-  findArgs=()
-  badFiles=()
-  prefixes=()
-  excludes=()
-  repairSources=()
-  debug=false
-  extensionText=
-  mapFile=true
-  ignoreSingles=false
-
-  saved=("$@")
-  nArguments=$#
-
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -109,6 +88,10 @@ identicalCheck() {
         shift
         binary=$(usageArgumentCallable "$usage" "$argument" "$1") || return $?
         ;;
+      --skip)
+        shift
+        skipFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+        ;;
       --single)
         shift
         singles+=("$1")
@@ -126,174 +109,89 @@ identicalCheck() {
         excludes+=(! -path "$1")
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ ${#findArgs[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one --extension" || return $?
   [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
-  tempDirectory="$(mktemp -d -t "$me.XXXXXXXX")" || __failEnvironment "$usage" "mktemp -d -t" || return $?
+  local start failureCode exitCode=0 clean=()
+
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  failureCode="$(_code identical)"
+
+  local tempDirectory resultsFile searchFileList
+
+  tempDirectory="$(fileTemporaryName "$usage" -d -t "${usage#_}.XXXXXXXX")" || return $?
   resultsFile=$(fileTemporaryName "$usage") || return $?
   searchFileList=$(fileTemporaryName "$usage") || return $?
-  rootDir=$(__usageEnvironment "$usage" realPath "$rootDir") || return $?
-  __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || _clean $? "$searchFileList" || return $?
+  clean+=("$tempDirectory" "$searchFileList")
+
+  __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || _clean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
-    __failEnvironment "$usage" "No files found in $(decorate file "$rootDir") with${extensionText}" || _clean $? "$searchFileList" || return $?
+    __failEnvironment "$usage" "No files found in $(decorate file "$rootDir") with${extensionText}" || _clean $? "${clean[@]}" || return $?
   fi
-  ! $debug || dumpPipe "searchFileList" <"$searchFileList" || return $?
-  prefixIndex=0
+  ! $debug || dumpPipe "searchFileList" <"$searchFileList" || _clean $? "${clean[@]}" || return $?
+
+  local variable stateFile
+  stateFile=$(fileTemporaryName "$usage") || _clean $? "${clean[@]}" || return $?
+  for variable in tempDirectory resultsFile rootDir failureCode; do
+    __usageEnvironment "$usage" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+  done
+  for variable in repairSources prefixes skipFiles; do
+    __usageEnvironment "$usage" environmentValueWriteArray "$variable" "${!variable[@]+"${!variable[@]}"}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+  done
+  __usageEnvironment "$usage" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+
+  local prefix prefixIndex=0
   for prefix in "${prefixes[@]}"; do
-    quotedPrefix=$(quoteGrepPattern "$prefix")
     while IFS= read -r searchFile; do
-      if [ "$(basename "$searchFile")" = "$me" ]; then
-        # We are exceptional ;)
+      searchFile=$(__usageEnvironment "$usage" realPath "$searchFile") || _clean $? "${clean[@]}" || return $?
+      if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
+        statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || _clean $? "${clean[@]}" || return $?
         continue
       fi
-      [ -d "$tempDirectory/$prefixIndex" ] || mkdir "$tempDirectory/$prefixIndex"
-      totalLines=$(($(wc -l <"$searchFile") + 0))
-      while read -r identicalLine; do
-        statusMessage decorate info "#$((prefixIndex + 1)): Processing $(decorate file "$searchFile"):$(decorate code "$identicalLine") ... "
-        # DEBUG # decorate bold-red "$identicalLine" # DEBUG
-        if ! parsed=$(__identicalLineParse "$searchFile" "$prefix" "$identicalLine"); then
-          badFiles+=("$searchFile")
-          continue
-        fi
-        IFS=' ' read -r lineNumber token count <<<"$(printf -- "%s\n" "$parsed")" || :
-        if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count"; then
-          badFiles+=("$searchFile")
-          continue
-        fi
-        tokenFile="$tempDirectory/$prefixIndex/$token"
-        countFile="$tempDirectory/$prefixIndex/$count@$token.match"
-        isBadFile=false
-        if [ -f "$tokenFile" ]; then
-          tokenLineCount=$(head -1 "$tokenFile")
-          tokenFileName=$(tail -1 "$tokenFile")
-          if [ ! -f "$countFile" ]; then
-            statusMessage printf -- "%s: %s\n" "$(decorate info "$token")" "$(decorate error "Token counts do not match:")" 1>&2
-            printf -- "    %s has %s specified\n" "$(decorate code "$(decorate file "$tokenFileName")")" "$(decorate success "$tokenLineCount")" 1>&2
-            printf -- "    %s has %s specified\n" "$(decorate code "$(decorate file "$searchFile")")" "$(decorate error "$count")" 1>&2
-            isBadFile=true
-            touch "$countFile.compare" || :
-            touch "$tempDirectory/$prefixIndex/$tokenLineCount@$token.match.compare" || :
-          elif ! isUnsignedInteger "$count"; then
-            __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
-            badFiles+=("$searchFile")
-            printf -- "%s\n" "$(decorate code "$searchFile:$lineNumber") - not integers: $(decorate value "$identicalLine")"
-          else
-            compareFile="${countFile}.compare"
-            # statusMessage decorate info "compareFile $compareFile"
-            # Extract our section of the file. Matching is done, use line numbers and math to extract exact section
-            # 10 lines in file, line 1 means: tail -n 10
-            # 10 lines in file, line 9 means: tail -n 2
-            # 10 lines in file, line 10 means: tail -n 1
-            __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
-            if [ "$(grep -c -e "$quotedPrefix" "$compareFile")" -gt 0 ]; then
-              dumpPipe compareFile <"$compareFile"
-              badFiles+=("$searchFile")
-              {
-                statusMessage --last printf -- "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")" "$(decorate code)" || :
-                grep -e "$quotedPrefix" "$compareFile" | wrapLines "$(decorate code)    " "$(decorate reset)" || :
-                statusMessage --first decorate reset
-              } 1>&2
-            elif $mapFile; then
-              _identicalMapAttributesFilter "$usage" "$searchFile" <"$countFile" >"$countFile.mapped" || return $?
-              countFile="$countFile.mapped"
-            fi
-            if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-              statusMessage --last printf -- "%s%s: %s\n< %s\n> %s%s\n" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
-              diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
-              isBadFile=true
-            else
-              statusMessage decorate success "Verified $(decorate file "$searchFile"), lines $lineNumber-$((lineNumber + tokenLineCount))"
-            fi
-            if $mapFile; then
-              rm -rf "$countFile" || return $?
-            fi
-          fi
-          if $isBadFile; then
-            if [ ${#repairSources[@]} -gt 0 ]; then
-              statusMessage decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\""
-              if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
-                badFiles+=("$tokenFileName")
-                badFiles+=("$searchFile")
-                statusMessage --last decorate error "Unable to repair $(decorate value "$token") in $(decorate code "$searchFile")" 1>&2
-              else
-                isBadFile=false
-                statusMessage decorate success "Repaired $(decorate value "$token") in $(decorate code "$searchFile")"
-              fi
-            else
-              badFiles+=("$tokenFileName")
-              badFiles+=("$searchFile")
-            fi
-          fi
-        else
-          printf -- "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
-          __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
-          if [ "$token" = "" ]; then
-            dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
-          fi
-          statusMessage decorate info "$(printf -- "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(decorate code "$token")" "$(decorate value "$(decorate file "$searchFile")")")"
-        fi
-      done < <(grep -n -e "$quotedPrefix" <"$searchFile" || :)
+      if ! _identicalCheckInsideLoop "$usage" "$stateFile" "$prefixIndex" "$prefix" "$searchFile"; then
+        exitCode="$failureCode"
+      fi
     done <"$searchFileList"
     prefixIndex=$((prefixIndex + 1))
   done
-  exitCode=0
-  if [ ${#badFiles[@]} -gt 0 ]; then
-    exitCode=$failureCode
-    if [ -n "$binary" ]; then
-      "$binary" "${badFiles[@]}"
-      statusMessage --last printf -- "%s %s %s %s" "$(decorate success "Sent")" "${#badFiles[@]} $(plural ${#badFiles[@]} file files)" "$(decorate success "to")" "$(decorate code "$binary")" || return $?
+
+  if [ "$exitCode" -ne 0 ]; then
+    local badFiles=() item
+    while read -r item; do badFiles+=("$item"); done < <(__usageEnvironment "$usage" environmentValueReadArray "$stateFile" "badFiles") || return $?
+
+    if [ ${#badFiles[@]} -gt 0 ]; then
+      exitCode=$failureCode
+      if [ -n "$binary" ]; then
+        __environment "$binary" "${badFiles[@]}" || :
+        statusMessage --last printf -- "%s %s %s %s" "$(decorate success "Sent")" "${#badFiles[@]} $(plural ${#badFiles[@]} file files)" "$(decorate success "to")" "$(decorate code "$binary")"
+      fi
     fi
   fi
-
   #
   # Singles checks
   #
   if ! $ignoreSingles; then
-    foundSingles=()
-    while read -r matchFile; do
-      if [ ! -f "$matchFile.compare" ]; then
-        tokenFile="$(dirname "$matchFile")"
-        token="$(basename "$matchFile")"
-        token="${token%%.match}"
-        token="${token#*@}"
-        tokenFile="$tokenFile/$token"
-        tokenFile="$(tail -n 1 "$tokenFile")"
-        if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
-          statusMessage printf -- "%s: %s in %s\n" "$(decorate success "Single instance of token ok:")" "$(decorate code "$token")" "$(decorate info "$(decorate file "$tokenFile")")"
-          foundSingles+=("$token")
-        else
-          statusMessage printf -- "%s: %s in %s\n" "$(decorate warning "Single instance of token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")" >>"$resultsFile"
-          if [ -n "$binary" ]; then
-            "$binary" "$tokenFile"
-          fi
-          exitCode=$failureCode
-        fi
-      fi
-    done < <(find "$tempDirectory" -type f -name '*.match' || :)
-    for token in "${singles[@]+"${singles[@]}"}"; do
-      if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
-        while read -r tokenFile; do
-          tokenFile="$(tail -n 1 "$tokenFile")"
-          printf -- "%s: %s %s\n" "$(decorate warning "Multiple instance of --single token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")"
-        done < <(find "$tempDirectory" -name "$token" -type f)
-      fi
-    done
+    _identicalCheckSinglesChecker "$usage" "$stateFile" || exitCode=$?
   fi
+
+  __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
   rm -rf "$tempDirectory" || :
   if [ $(($(wc -l <"$resultsFile") + 0)) -ne 0 ]; then
     exitCode=$failureCode
   fi
   cat "$resultsFile" 1>&2 || :
-  rm -rf "$resultsFile" || :
-  statusMessage --first printf -- "%s" ""
+  rm -rf "$resultsFile" "$searchFileList" || :
+  statusMessage --last reportTiming "$start" "Completed in"
   return "$exitCode"
 }
 _identicalCheck() {
@@ -303,7 +201,7 @@ _identicalCheck() {
 # Usage: {fn} usage repairSource ... -- directory findArgs ...
 # stdout: list of files
 __identicalCheckGenerateSearchFiles() {
-  local usage="$1" searchFileList  directory directories filter IFS
+  local usage="$1" searchFileList directory directories filter IFS
 
   shift # usage
   local repairSources=()
@@ -360,6 +258,18 @@ __identicalCheckMatchFile() {
 #
 # Identical check for shell files
 #
+# Looks for up to three tokens in code:
+#
+# - `# IDENTICAL tokenName 1`
+# - `# _IDENTICAL_ tokenName 1`, and
+# - `# DOC TEMPLATE: tokenName 1`
+#
+# This allows for overlapping identical sections within templates with the intent:
+#
+# - `IDENTICAL` - used in most cases
+# - `_IDENTICAL_` - used in templates which must be included in OTHER templates
+# - `DOC TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator
+#
 # Usage: {fn} [ --repair repairSource ] [ --help ] [ --interactive ] [ --check checkDirectory ] ...
 # Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
 # Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
@@ -371,12 +281,11 @@ identicalCheckShell() {
   local usage="_${FUNCNAME[0]}"
   local argument single singleFile aa
 
-  export BUILD_HOME
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
-
   aa=()
+  # Ordering here matters so declare from inside scope to outside scope
+  #  aa+=(--prefix '# ''DOC TEMPLATE:')
+  #  aa+=(--prefix '# ''_IDENTICAL_')
   aa+=(--prefix '# ''IDENTICAL')
-  aa+=(--prefix '# ''DOC TEMPLATE:')
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -400,7 +309,7 @@ identicalCheckShell() {
         shift
         aa+=("$argument" "${1-}")
         ;;
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -411,7 +320,7 @@ identicalCheckShell() {
     esac
     shift || :
   done
-  __usageEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" --prefix '# ''IDENTICAL' --extension sh "$@" || return $?
+  __usageEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

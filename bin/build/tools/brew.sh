@@ -62,7 +62,7 @@ __brewUpgrade() {
   printf "%s\n" "$result"
 }
 ___brewUpgrade() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -83,7 +83,7 @@ __brewInstalledList() {
   brew list -1 | grep -v '^[^A-Za-z]'
 }
 ___brewInstalledList() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -96,7 +96,7 @@ __brewAvailableList() {
   brew search --formula '/.*/'
 }
 ___brewAvailableList() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -2,8 +2,6 @@
 #
 # markdown_removeUnfinishedSections.sh - List versions
 #
-# Depends: git
-#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 

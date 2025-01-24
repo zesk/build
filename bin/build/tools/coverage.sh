@@ -14,7 +14,7 @@
 # See: bashCoverageReport
 bashCoverage() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local start home target="" verbose=false
 
   # local binPath actualBash
@@ -23,13 +23,13 @@ bashCoverage() {
   # IDENTICAL startBeginTiming 1
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -45,8 +45,8 @@ bashCoverage() {
         break
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
@@ -54,7 +54,7 @@ bashCoverage() {
   ! $verbose || reportTiming "$start" "Coverage completed in"
 }
 _bashCoverage() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -63,7 +63,6 @@ _bashCoverage() {
 # stdin: Accepts a stats file
 bashCoverageReport() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
 
   local reportCache target file line dataPath commandFile files=() home
 
@@ -71,13 +70,13 @@ bashCoverageReport() {
   start=$(__usageEnvironment "$usage" beginTiming) || return $?
   home=$(__usageEnvironment "$usage" buildHome) || return $?
 
-  saved=("$@")
-  nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -94,8 +93,8 @@ bashCoverageReport() {
         files+=("$(usageArgumentFile "$usage" "coverageFile" "$1")") || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ -n "$target" ] || target="$home/test-coverage"
@@ -123,7 +122,7 @@ bashCoverageReport() {
   __bashCoverageReportConvertFiles "$usage" "$reportCache" "$target" || return $?
 }
 _bashCoverageReport() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

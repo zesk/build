@@ -15,10 +15,11 @@
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
+# Requires: isUnsignedInteger printf _return
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -28,7 +29,7 @@ _return() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
-#
+# Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac

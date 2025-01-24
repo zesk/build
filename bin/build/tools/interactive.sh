@@ -112,21 +112,20 @@ _copyFileShowNew() {
 # Exit Code: 1 - Failed
 copyFile() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments
-  local source destination this
-  local mapFlag copyFunction actualSource verb prefix owner mode
-  local exitCode
 
-  this=${FUNCNAME[0]}
-  mapFlag=false
-  copyFunction=_copyFileRegular
-  owner=
-  mode=
-  nArguments=$#
+  local mapFlag=false copyFunction="_copyFileRegular" owner="" mode="" source="" destination=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    usageArgumentString "$usage" "argument #$((nArguments - $# + 1))" "$argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --map)
         mapFlag=true
         ;;
@@ -144,8 +143,9 @@ copyFile() {
         mode="$1"
         ;;
       *)
+        local source destination actualSource verb prefix
         source="$1"
-        [ -f "$source" ] || __failEnvironment "$usage" "$this: source \"$source\" does not exist" || return $?
+        [ -f "$source" ] || __failEnvironment "$usage" "source \"$source\" does not exist" || return $?
         shift
         destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
         shift
@@ -188,9 +188,10 @@ copyFile() {
         return $exitCode
         ;;
     esac
-    shift || _argument "$this: shift failed" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  _argument "$this: Missing source" || return $?
+  __failArgument "$usage" "Missing source" || return $?
 }
 _copyFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -260,19 +261,16 @@ copyFileWouldChange() {
 # Not ready for prime time yet - written not tested.
 interactiveManager() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved triedRepair
-  local verificationCallable="" repairFunction="" sleepDelay=15 binary="" didClear=false files=() file
-  local rowsAllowed output index nextMessage
 
-  didClear=false
-  verificationCallable=
-  saved=("$@")
-  nArguments=$#
+  local binary="" repairFunction"" verificationCallable="" files=() sleepDelay=15
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -297,7 +295,8 @@ interactiveManager() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ -n "$verificationCallable" ] || __failArgument "$usage" "No verificationCallable" || return $?
@@ -309,10 +308,16 @@ interactiveManager() {
 
   [ "${#files[@]}" -gt 0 ] || __failArgument "$usage" "No files supplied" || return $?
 
+  # Validation complete
+
+  local rowsAllowed output index=1 didClear=false triedRepair
+
   rowsAllowed=$(__usageEnvironment "$usage" consoleRows) || return $?
   rowsAllowed=$((rowsAllowed - 4))
   output=$(fileTemporaryName "$usage") || return $?
   index=1
+
+  local file nextMessage=""
   for file in "${files[@]}"; do
     triedRepair=false
     while ! "$verificationCallable" "$file" >"$output" 2>&1; do
@@ -466,12 +471,13 @@ confirmYesNo() {
   local usage="_${FUNCNAME[0]}"
   local default="no" message="" timeout="" extras="" attempts=-1
 
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -499,8 +505,8 @@ confirmYesNo() {
         break
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local exitCode=0
@@ -529,7 +535,7 @@ confirmYesNo() {
   __confirmYesNo "$default" "$reason"
 }
 _confirmYesNo() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -547,13 +553,13 @@ interactiveBashSource() {
 
   local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30)
 
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -577,7 +583,7 @@ interactiveBashSource() {
         displayPath="$(decorate file "$sourcePath")"
         if [ -f "$sourcePath" ]; then
           verb="file"
-          if __interactiveApproved "$usage" "$(dirname "$sourcePath")/.approved.$(basename "$sourcePath")" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+          if __interactiveApproved "$usage" "$sourcePath.approved" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
             __usageEnvironment "$usage" source "$sourcePath" || return $?
             approved=true
           fi
@@ -599,11 +605,11 @@ interactiveBashSource() {
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _interactiveBashSource() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

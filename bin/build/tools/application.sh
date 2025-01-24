@@ -40,17 +40,18 @@ __applicationHomeGo() {
 #
 applicationHome() {
   local usage="_${FUNCNAME[0]}"
-  local argument nArguments argumentIndex saved
+
   local here="" home="" buildTools="bin/build/tools.sh"
 
   export HOME
-  saved=("$@")
-  nArguments=$#
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -65,16 +66,16 @@ applicationHome() {
         here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$here" ] || here=$(__usageEnvironment "$usage" pwd) || return $?
   home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
   printf "%s\n" "$home" >"$(__applicationHomeFile)"
-  __applicationHomeGo "$usage" "${saved[0]-} Application home set to" || return $?
+  __applicationHomeGo "$usage" "${__saved[0]-} Application home set to" || return $?
 }
 _applicationHome() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -91,6 +92,6 @@ applicationHomeAliases() {
   alias "$setAlias"=applicationHome || __failEnvironment "$usage" "alias $setAlias failed" || return $?
 }
 _applicationHomeAliases() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -6,10 +6,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Requires: _type
-# Depends: isPositiveInteger
-# Depends: isFunction
-# Depends: _sugar
 
 #
 # EDIT THIS FILE - EDIT THIS FILE - EDIT THIS FILE - EDIT THIS FILE
@@ -82,7 +78,7 @@ decoration 45;97 45;30
 EOF
 }
 
-# IDENTICAL _colors EOF
+# IDENTICAL decorate EOF
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -90,9 +86,13 @@ EOF
 # Exit Code: 0 - Console or output supports colors
 # Exit Code; 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
+# Requires: isPositiveInteger tput
 hasColors() {
+  local usage="_${FUNCNAME[0]}"
   local termColors
   export BUILD_COLORS TERM
+
+  [ "${1-}" != "--help" ] || ! "$usage" 0 || return 0
   # Values allowed for this global are true and false
   # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
   BUILD_COLORS="${BUILD_COLORS-}"
@@ -112,12 +112,17 @@ hasColors() {
   fi
   [ "${BUILD_COLORS-}" = "true" ]
 }
+_hasColors() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || hasColors --help
+}
 
 #
 # Semantics-based
 #
 # Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
-#
+# Requires: hasColors printf
 __decorate() {
   local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
   export BUILD_COLORS_MODE BUILD_COLORS
@@ -132,18 +137,37 @@ __decorate() {
   if [ -n "$prefix" ]; then printf -- "%s: %s\n" "$prefix" "$*"; else printf -- "%s\n" "$*"; fi
 }
 
+# Output a list of build-in decoration styles, one per line
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+decorations() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  printf "%s\n" reset \
+    underline no-underline bold no-bold \
+    black black-contrast blue cyan green magenta orange red white yellow \
+    bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow \
+    code info notice success warning error subtle label value decoration
+}
+_decorations() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Singular decoration function
 # Usage: decorate style [ text ... ]
-# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info success warning error subtle label value decoration
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
+# Requires: isFunction _argument awk __usageEnvironment usageDocument
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}" && shift
+  local usage="_${FUNCNAME[0]}" text="" what="${1-}"
+  shift || __usageArgument "$usage" "Requires at least one argument" || return $?
   local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
     extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
-    isFunction "$extend" || __failArgument "$usage" "Unknown decoration name: $what ($extend)" || return $?
+    # When this next line calls `__usageArgument` it results in an infinite loop
+    isFunction "$extend" || _argument "Unknown decoration name: $what ($extend)" || return $?
     __usageEnvironment "$usage" "$extend" "$@" || return $?
     return $?
   fi
@@ -152,7 +176,7 @@ decorate() {
   __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" "$@"
 }
 _decorate() {
-  # DO NOT PUT IDENTICAL usageDocument here
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -161,6 +185,7 @@ _decorate() {
 # Exit Code: 1 - not found
 # Exit Code: 0 - found
 # stdout: 1, 2, or 3 tokens + newline: lightColor darkColor text
+# Requires: printf
 _caseStyles() {
   case "$1" in
     reset) lp='0' ;;
@@ -210,6 +235,7 @@ _caseStyles() {
 
 # Usage: decorate each decoration argument1 argument2 ...
 # Runs the following command on each subsequent argument to allow for formatting with spaces
+# Requires: decorate printf
 __decorateExtensionEach() {
   local code="$1" formatted=()
 
@@ -218,5 +244,5 @@ __decorateExtensionEach() {
     formatted+=("$(decorate "$code" "$1")")
     shift
   done
-  IFS=" " printf "%s\n" "${formatted[*]-}"
+  IFS=" " printf -- "%s\n" "${formatted[*]-}"
 }

@@ -121,7 +121,7 @@ versionSort() {
   sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
 }
 _versionSort() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -143,7 +143,7 @@ ipLookup() {
   __usageEnvironment "$usage" curl -s "$url" | "${pp[@]}" || return $?
 }
 _ipLookup() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

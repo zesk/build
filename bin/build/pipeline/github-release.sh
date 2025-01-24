@@ -2,8 +2,6 @@
 #
 # github-release.sh
 #
-# Depends: apt
-#
 # Release something on GitHub
 #
 # Copyright &copy; 2025 Market Acumen, Inc.

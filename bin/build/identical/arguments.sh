@@ -31,21 +31,17 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# This function serves as a sample for all other templates.
+# This function serves as a sample for all other templates. DOES NOT NEED TO MAKE SENSE. Do not add a Requires: to this function.
 __documentTemplateFunction() {
   local usage="_${FUNCNAME[0]}"
-  local start
 
-  # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-
-  # IDENTICAL argument-case-header 5
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$argumentIndex/$nArguments: $(decorate each code "${saved[@]}")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -64,13 +60,18 @@ __documentTemplateFunction() {
         region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
+
+  local start
+
+  # IDENTICAL startBeginTiming 1
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -90,19 +91,19 @@ __documentTemplateFunction() {
   reportTiming "$start" "Completed in"
 }
 ___documentTemplateFunction() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __documentTemplateFunction2() {
   local usage="_${FUNCNAME[0]}"
 
-  # IDENTICAL argument-case-header-blank 4
-  local saved=("$@") nArguments=$#
+  # _IDENTICAL_ argument-case-header-blank 4
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
+    local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -114,17 +115,18 @@ __documentTemplateFunction2() {
         profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
-        # IDENTICAL argumentUnknown 1
-        __failArgument "$usage" "unknown #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$argumentIndex/$nArguments: $argument $(decorate each code "${saved[@]}")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   reportTiming "$start" "Completed in"
 }
 ___documentTemplateFunction2() {
+  # Source IDENTICAL usageDocument HERE
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

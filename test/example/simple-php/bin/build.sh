@@ -5,18 +5,20 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL __build 9
+# IDENTICAL __build 11
 # Load build tools (installing if needed) and run command
 # Usage: {fn} [ relativeHome installerPath [ command ... ] ]
 # Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary.
 # Argument: relativeHome - Required. Directory. Path to application home.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+# Requires: __install
+# Example:     __build ../../.. functionToCall "$@"
 __build() {
   local relative="${1:-".."}" installerPath="${2:-"bin"}" && shift && shift
   __install "$installerPath/install-bin-build.sh" "bin/build/tools.sh" "$relative" "$@" || return $?
 }
 
-# IDENTICAL __install 24
+# IDENTICAL __install 25
 # Load build tools (installing if needed) and run command
 # Usage: {fn} [ relativeHome installer source [ command ... ] ]
 # Argument: installer - Required. File. Installation binary.
@@ -24,6 +26,7 @@ __build() {
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
+# Requires: _return __execute
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 arguments=()
@@ -42,15 +45,16 @@ __install() {
   __execute "${arguments[@]}" || return $?
 }
 
-# IDENTICAL _return 24
+# IDENTICAL _return 25
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
+# Requires: isUnsignedInteger printf
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -60,7 +64,7 @@ _return() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
-#
+# Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac

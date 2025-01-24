@@ -13,6 +13,7 @@
 # Environment: APPLICATION_USER
 # Environment: HOME
 # stdout: the home directory
+# Requires: grep cut _return printf /etc/passwd
 _home() {
   local user="${1-}" userDatabase="/etc/passwd" home
   set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?

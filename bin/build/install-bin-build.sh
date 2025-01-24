@@ -94,9 +94,11 @@ __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
-# IDENTICAL __installCheck 12
+# IDENTICAL __installCheck 14
 # Check the directory after installation and output the version
 # Usage: {fn} name versionFile usageFunction installPath
+# Requires: dirname
+# Requires: decorate printf __failEnvironment read jq
 __installCheck() {
   local name="$1" version="$2" usage="$3" installPath="$4"
   local versionFile="$installPath/$version"
@@ -129,7 +131,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck "$@"
 }
 
-# IDENTICAL _installRemotePackage 271
+# IDENTICAL _installRemotePackage 287
 
 # Installs a remote package system in a local project directory if not installed. Also
 # will overwrite the installation binary with the latest version after installation.
@@ -158,7 +160,7 @@ __installPackageConfiguration() {
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing.
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
 # Argument: --user headerText - Optional. String. Add `username:password` to remote request.
-# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
+# Argument: --header headerText - Optional. String. Add one or more fetchArguments to the remote request.
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name.
@@ -168,18 +170,27 @@ __installPackageConfiguration() {
 # Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use.
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
+# Requires: cp rm cat printf
+# Requires: realPath whichExists _return fileTemporaryName
+# Requires: __usageArgument __failArgument
+# Requires: __usageEnvironment decorate
+# Requires: usageArgumentString
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
+
   local relative="${1-}" packagePath="${2-}" packageInstallerName="${3-}"
 
   shift 3
+
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
-  local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" headers=() nArguments=$#
-  local nArguments="$#"
+  local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" fetchArguments=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" argumentIndex=$((nArguments - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument #$argumentIndex: $argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       --debug)
         __installRemotePackageDebug "$argument"
@@ -190,7 +201,7 @@ _installRemotePackage() {
       --replace)
         shift
         newName="$1"
-        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate boldOrange "$newName")"
+        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
         __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
@@ -201,17 +212,13 @@ _installRemotePackage() {
       --mock | --local)
         [ -z "$localPath" ] || __failArgument "$usage" "$argument already" || return $?
         shift
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$argumentIndex" || return $?
+        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$__index" || return $?
         localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
         [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
-      --user)
+      --user | --header | --password)
         shift
-        headers+=("--user" "$(usageArgumentString "$usage" "$argument" "${1-}")")
-        ;;
-      --header)
-        shift
-        headers+=("-H" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+        fetchArguments+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
         ;;
       --url)
         shift
@@ -238,10 +245,10 @@ _installRemotePackage() {
         checkFunction="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument #$argumentIndex: $argument" || return $?
+        __failArgument "$usage" "unknown argument #$__index: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument" || return $?
+    shift || __failArgument "$usage" "missing argument #$__index: $argument" || return $?
   done
 
   local installFlag=false message
@@ -284,7 +291,7 @@ _installRemotePackage() {
   if $installFlag; then
     local start
     start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
-    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${headers[@]+"${headers[@]}"}" || return $?
+    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
     [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
@@ -293,7 +300,7 @@ _installRemotePackage() {
       __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
-    rm -f "$messageFile" || :
+    __usageEnvironment "$usage" rm -f "$messageFile" || return $?
   else
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
@@ -312,6 +319,7 @@ _installRemotePackage() {
 
 # Error handler for _installRemotePackage
 # Usage: {fn} exitCode [ message ... ]
+# Requires: printf decorate
 __installRemotePackage() {
   local exitCode="$1"
   shift || :
@@ -320,11 +328,15 @@ __installRemotePackage() {
 }
 
 # Debug is enabled, show why
+# Requires: decorate
+# Debugging: OK
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }
 
 # Install the package directory
+# Requires: uname pushd popd rm tar
+# Requires: __usageEnvironment __failEnvironment
 __installRemotePackageDirectory() {
   local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
@@ -352,6 +364,8 @@ __installRemotePackageDirectory() {
 }
 
 # Install the build directory from a copy
+# Requires: rm mv cp mkdir
+# Requires: _undo __usageEnvironment __failEnvironment
 __installRemotePackageDirectoryLocal() {
   local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
@@ -371,12 +385,14 @@ __installRemotePackageDirectoryLocal() {
 }
 
 # Check .gitignore is correct
+# Requires: grep printf
+# Requires: decorate
 __installRemotePackageGitCheck() {
   local applicationHome="$1" pattern="${2%/}"
   pattern="/${pattern#/}/"
   local ignoreFile="$1/.gitignore"
   if [ -f "$ignoreFile" ] && ! grep -q -e "^$pattern" "$ignoreFile"; then
-    printf "%s %s %s %s:\n\n    %s\n" "$(decorate code "$ignoreFile")" \
+    printf -- "%s %s %s %s:\n\n    %s\n" "$(decorate code "$ignoreFile")" \
       "does not ignore" \
       "$(decorate code "$pattern")" \
       "$(decorate error "recommend adding it")" \
@@ -385,6 +401,8 @@ __installRemotePackageGitCheck() {
 }
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
+# Requires: grep printf chmod wait
+# Requires: _environment isUnsignedInteger dumpPipe _clean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   local log="$myBinary.$$.log"
@@ -402,9 +420,10 @@ __installRemotePackageLocal() {
   _clean 0 "$log" || return $?
 }
 
-# IDENTICAL _realPath 10
+# IDENTICAL _realPath 11
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
+# Requires: whichExists realpath
 realPath() {
   # realpath is not present always
   if whichExists realpath; then
@@ -414,20 +433,40 @@ realPath() {
   fi
 }
 
+# IDENTICAL fileTemporaryName 18
+# Generate a temporary file name using mktemp, and fail using a function
+# Argument: usage - Function. Required. Function to call if mktemp fails
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
+# Requires: __help __usageEnvironment mktemp usageDocument
+fileTemporaryName() {
+  local usage="_${FUNCNAME[0]}"
+  __help "$usage" "$@" || return 0
+  usage="$1" && shift
+  __usageEnvironment "$usage" mktemp "$@" || return $?
+}
+_fileTemporaryName() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# <-- END of IDENTICAL fileTemporaryName
+
 # IDENTICAL whichExists 11
 # Usage: {fn} binary ...
 # Argument: binary - Required. String. Binary to find in the system `PATH`.
 # Exit code: 0 - If all values are found
 whichExists() {
-  local nArguments=$# && [ $# -gt 0 ] || _argument "no arguments" || return $?
+  local __count=$# && [ $# -gt 0 ] || _argument "no arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ -n "${1-}" ] || _argument "blank argument #$((nArguments - $# + 1))" || return $?
+    [ -n "${1-}" ] || _argument "blank argument #$((__count - $# + 1))" || return $?
     which "$1" >/dev/null || return 1
     shift
   done
 }
 
-# IDENTICAL _type 28
+# IDENTICAL _type 41
 
 #
 # Test if an argument is a positive integer (non-zero)
@@ -435,12 +474,18 @@ whichExists() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
-#
+# Requires: __usageArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
-  isUnsignedInteger "$1" || return 1
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
+  isUnsignedInteger "$1" || [ "$1" != "--help" ] || ! "$usage" 0 || return 0
   # Find pesky "0" or "+0"
   [ "$1" -gt 0 ] || return 1
+}
+_isPositiveInteger() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -450,14 +495,21 @@ isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - argument is bash function
 # Exit code: 1 - argument is not a bash function
+# Requires: __usageArgument isUnsignedInteger usageDocument type
 isFunction() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
 }
+_isFunction() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# IDENTICAL _colors 137
+# IDENTICAL decorate 150
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -465,9 +517,13 @@ isFunction() {
 # Exit Code: 0 - Console or output supports colors
 # Exit Code; 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
+# Requires: isPositiveInteger tput
 hasColors() {
+  local usage="_${FUNCNAME[0]}"
   local termColors
   export BUILD_COLORS TERM
+
+  [ "${1-}" != "--help" ] || ! "$usage" 0 || return 0
   # Values allowed for this global are true and false
   # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
   BUILD_COLORS="${BUILD_COLORS-}"
@@ -487,12 +543,17 @@ hasColors() {
   fi
   [ "${BUILD_COLORS-}" = "true" ]
 }
+_hasColors() {
+  ! false || hasColors --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Semantics-based
 #
 # Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
-#
+# Requires: hasColors printf
 __decorate() {
   local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
   export BUILD_COLORS_MODE BUILD_COLORS
@@ -509,16 +570,18 @@ __decorate() {
 
 # Singular decoration function
 # Usage: decorate style [ text ... ]
-# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info success warning error subtle label value decoration
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
+# Depends: isFunction _argument awk __usageEnvironment usageDocument
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" && shift
   local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
     extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
-    isFunction "$extend" || __failArgument "$usage" "Unknown decoration name: $what ($extend)" || return $?
+    # When this next line calls `__usageArgument` it results in an infinite loop
+    isFunction "$extend" || _argument "Unknown decoration name: $what ($extend)" || return $?
     __usageEnvironment "$usage" "$extend" "$@" || return $?
     return $?
   fi
@@ -527,7 +590,7 @@ decorate() {
   __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" "$@"
 }
 _decorate() {
-  # DO NOT PUT IDENTICAL usageDocument here
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -536,6 +599,7 @@ _decorate() {
 # Exit Code: 1 - not found
 # Exit Code: 0 - found
 # stdout: 1, 2, or 3 tokens + newline: lightColor darkColor text
+# Requires: printf
 _caseStyles() {
   case "$1" in
     reset) lp='0' ;;
@@ -585,6 +649,7 @@ _caseStyles() {
 
 # Usage: decorate each decoration argument1 argument2 ...
 # Runs the following command on each subsequent argument to allow for formatting with spaces
+# Requires: decorate printf
 __decorateExtensionEach() {
   local code="$1" formatted=()
 
@@ -593,18 +658,19 @@ __decorateExtensionEach() {
     formatted+=("$(decorate "$code" "$1")")
     shift
   done
-  IFS=" " printf "%s\n" "${formatted[*]-}"
+  IFS=" " printf -- "%s\n" "${formatted[*]-}"
 }
 
-# IDENTICAL _return 24
+# IDENTICAL _return 25
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
+# Requires: isUnsignedInteger printf
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
 
 # Test if an argument is an unsigned integer
@@ -614,7 +680,7 @@ _return() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
-#
+# Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
   case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
@@ -622,7 +688,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 56
+# IDENTICAL _tinySugar 61
 
 # Run `usage` with an argument error
 # Usage: {fn} usage ...
@@ -642,6 +708,7 @@ __failEnvironment() {
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
+# Requires: __failArgument
 __usageArgument() {
   local usage="${1-}"
   shift && "$@" || __failArgument "$usage" "$@" || return $?
@@ -651,6 +718,7 @@ __usageArgument() {
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
+# Requires: __failEnvironment
 __usageEnvironment() {
   local usage="${1-}"
   shift && "$@" || __failEnvironment "$usage" "$@" || return $?
@@ -660,6 +728,7 @@ __usageEnvironment() {
 # Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
+# Requires: _return
 _argument() {
   _return 2 "$@" || return $?
 }
@@ -668,6 +737,7 @@ _argument() {
 # Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
+# Requires: _return
 _environment() {
   _return 1 "$@" || return $?
 }
@@ -675,6 +745,7 @@ _environment() {
 # Usage: {fn} exitCode item ...
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: rm
 _clean() {
   local r="${1-}" && shift && rm -rf "$@"
   return "$r"
