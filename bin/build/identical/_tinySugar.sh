@@ -14,14 +14,14 @@
 
 # Run `usage` with an argument error
 # Usage: {fn} usage ...
-__failArgument() {
+__throwArgument() {
   local usage="${1-}"
   shift && "$usage" 2 "$@" || return $?
 }
 
 # Run `usage` with an environment error
 # Usage: {fn} usage ...
-__failEnvironment() {
+__throwEnvironment() {
   local usage="${1-}"
   shift && "$usage" 1 "$@" || return $?
 }
@@ -30,20 +30,20 @@ __failEnvironment() {
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __failArgument
-__usageArgument() {
+# Requires: __throwArgument
+__catchArgument() {
   local usage="${1-}"
-  shift && "$@" || __failArgument "$usage" "$@" || return $?
+  shift && "$@" || __throwArgument "$usage" "$@" || return $?
 }
 
 # Run `command`, upon failure run `usage` with an environment error
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __failEnvironment
-__usageEnvironment() {
+# Requires: __throwEnvironment
+__catchEnvironment() {
   local usage="${1-}"
-  shift && "$@" || __failEnvironment "$usage" "$@" || return $?
+  shift && "$@" || __throwEnvironment "$usage" "$@" || return $?
 }
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.

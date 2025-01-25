@@ -40,17 +40,17 @@ documentationBuild() {
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
-  __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
-  __usageEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
-  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  start=$(beginTiming) || __throwEnvironment "$usage" beginTiming || return $?
 
-  cacheDirectory="$(__usageEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
-  cacheDirectory=$(__usageEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
-  seeFunction=$(__usageEnvironment "$usage" documentationTemplate seeFunction) || return $?
-  seeFile=$(__usageEnvironment "$usage" documentationTemplate seeFile) || return $?
+  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
+  cacheDirectory=$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
+  seeFunction=$(__catchEnvironment "$usage" documentationTemplate seeFunction) || return $?
+  seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
   seePrefix="./docs"
 
   company=${BUILD_COMPANY-}
@@ -68,7 +68,7 @@ documentationBuild() {
   # Default option settings
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --git)
         _buildDocumentation_MergeWithDocsBranch
@@ -87,17 +87,17 @@ documentationBuild() {
         applicationName=$(usageArgumentString "$usage" "$argument" "${1-}")
         ;;
       --template)
-        [ -z "$templatePath" ] || __failArgument "$usage" "$argument already supplied" || return $?
+        [ -z "$templatePath" ] || __throwArgument "$usage" "$argument already supplied" || return $?
         shift
         templatePath=$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")
         ;;
       --page-template)
-        [ -z "$pageTemplate" ] || __failArgument "$usage" "$argument already supplied" || return $?
+        [ -z "$pageTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
         shift
         pageTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
         ;;
       --function-template)
-        [ -z "$functionTemplate" ] || __failArgument "$usage" "$argument already supplied" || return $?
+        [ -z "$functionTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
         shift
         functionTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
         ;;
@@ -131,7 +131,7 @@ documentationBuild() {
         seePrefix="${1-}"
         ;;
       --unlinked-update)
-        [ -z "$actionFlag" ] || __failArgument "$usage" "$argument and $actionFlag are mutually exclusive" || return $?
+        [ -z "$actionFlag" ] || __throwArgument "$usage" "$argument and $actionFlag are mutually exclusive" || return $?
         actionFlag="$argument"
         ;;
       --force)
@@ -148,27 +148,27 @@ documentationBuild() {
         return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
     shift
   done
 
   if $cleanFlag; then
-    __usageEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
+    __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
     reportTiming "$start" "Emptied documentation cache in" || :
     return 0
   fi
-  cacheDirectory=$(requireDirectory "$cacheDirectory") || __failEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
+  cacheDirectory=$(requireDirectory "$cacheDirectory") || __throwEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
-  [ -n "$functionTemplate" ] || __failArgument "$usage" "--function-template required" || return $?
-  [ -n "$pageTemplate" ] || __failArgument "$usage" "--page-template required" || return $?
-  [ -n "$targetPath" ] || __failArgument "$usage" "--target required" || return $?
-  [ 0 -lt "${#sourcePaths[@]}" ] || __failArgument "$usage" "--source required" || return $?
+  [ -n "$functionTemplate" ] || __throwArgument "$usage" "--function-template required" || return $?
+  [ -n "$pageTemplate" ] || __throwArgument "$usage" "--page-template required" || return $?
+  [ -n "$targetPath" ] || __throwArgument "$usage" "--target required" || return $?
+  [ 0 -lt "${#sourcePaths[@]}" ] || __throwArgument "$usage" "--source required" || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
-      [ -n "${!argument-}" ] || __failArgument "$usage" "$argument is required for $actionFlag" || return $?
+      [ -n "${!argument-}" ] || __throwArgument "$usage" "$argument is required for $actionFlag" || return $?
     done
   fi
 
@@ -176,14 +176,14 @@ documentationBuild() {
   # Generate or update indexes
   #
   for sourcePath in "${sourcePaths[@]}"; do
-    __usageEnvironment "$usage" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
+    __catchEnvironment "$usage" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
   done
 
   #
   # Update indexes with function -> documentationPath
   #
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r documentationTemplate; do
-    __usageEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$documentationTemplate" "$targetPath${documentationTemplate#"$templatePath"}" || return $?
+    __catchEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$documentationTemplate" "$targetPath${documentationTemplate#"$templatePath"}" || return $?
   done
   statusMessage --last reportTiming "$start" "Indexes completed in" || :
 
@@ -192,10 +192,10 @@ documentationBuild() {
   #
 
   if [ -n "$unlinkedTemplate" ]; then
-    [ -n "$unlinkedTarget" ] || __failArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
+    [ -n "$unlinkedTarget" ] || __throwArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
     envFile=$(_buildDocumentationGenerateEnvironment "$company" "$companyLink" "$applicationName") || return $?
-    __usageEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
+    __catchEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     if [ "$actionFlag" = "--unlinked-update" ]; then
       printf "\n"
       return 0
@@ -204,17 +204,17 @@ documentationBuild() {
     ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
 
-  __usageEnvironment "$usage" documentationTemplateDirectoryCompile --env-file "$envFile" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "$envFile" || return $?
+  __catchEnvironment "$usage" documentationTemplateDirectoryCompile --env-file "$envFile" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "$envFile" || return $?
 
   #
   # {SEE:foo} gets linked in final documentation where it exists (rewrites file currently)
   #
   (
-    __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
+    __catchEnvironment "$usage" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    __usageEnvironment "$usage" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    __catchEnvironment "$usage" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
   reportTiming "$start" "Completed in" || :
 }

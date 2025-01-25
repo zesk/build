@@ -73,7 +73,7 @@ __buildDocumentationBuild() {
   local usage="_${FUNCNAME[0]}"
   local here="${BASH_SOURCE[0]%/*}" home
 
-  __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
   lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
   home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
 
@@ -97,7 +97,7 @@ __buildDocumentationBuild() {
     fi
   done
 
-  __usageEnvironment "$usage" __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@" || return $?
+  __catchEnvironment "$usage" __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@" || return $?
 
 }
 ___buildDocumentationBuild() {

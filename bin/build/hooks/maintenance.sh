@@ -40,17 +40,17 @@ __hookMaintenance() {
 
   export BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE
 
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
 
   variable=${BUILD_MAINTENANCE_VARIABLE-}
   messageVariable=${BUILD_MAINTENANCE_MESSAGE_VARIABLE-}
 
-  [ -n "$variable" ] || __failEnvironment "$usage" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
+  [ -n "$variable" ] || __throwEnvironment "$usage" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
   message=
   enable=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$(lowercase "$argument")" in
       on | 1 | true | enable)
         enable=true
@@ -66,7 +66,7 @@ __hookMaintenance() {
         message="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
     shift
@@ -82,7 +82,7 @@ __hookMaintenance() {
     maintenanceValue=
     messageSuffix=$(decorate bold-magenta "NOW LIVE!")
   fi
-  __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __failEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
+  __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __throwEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
   __hookMaintenanceSetValue "$messageVariable" "$message" || decorate warning "Maintenance message not set, continuing with errors"
   printf "%s %s - %s\n" "$(decorate "$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }

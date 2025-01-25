@@ -10,14 +10,14 @@
 _identicalMapAttributesFilter() {
   local usage="${1-}" file="${2-}" base home full dir extension
 
-  home=$(__usageEnvironment "$usage" buildHome)
+  home=$(__catchEnvironment "$usage" buildHome)
   home="${home%/}/"
   full=$(realPath "$file")
   base=$(basename "$full")
   file="${file#"$home"}"
   extension="${base##*.}"
   dir=$(dirname -- "$file")
-  __usageEnvironment "$usage" sed \
+  __catchEnvironment "$usage" sed \
     -e 's/__EXTENSION__/'"$(quoteSedReplacement "$extension")"'/g' \
     -e 's/__DIRECTORY__/'"$(quoteSedReplacement "$dir")"'/g' \
     -e 's/__FILE__/'"$(quoteSedReplacement "$file")"'/g' \
@@ -34,5 +34,5 @@ _identicalMapAttributesFile() {
   shift
   temp="$file.$$"
   _identicalMapAttributesFilter "$usage" "${1-}" <"$file" >"$temp" || _clean $? "$temp" || return $?
-  __usageEnvironment "$usage" mv -f "$temp" "$file" || _clean "$?" "$temp" || return $?
+  __catchEnvironment "$usage" mv -f "$temp" "$file" || _clean "$?" "$temp" || return $?
 }

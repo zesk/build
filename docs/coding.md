@@ -50,7 +50,7 @@ Pattern:
         local usage="_${FUNCNAME[0]}"
        ...
         if ! trySomething; then
-            __failEnvironment "$usage" "Error message why" || return $?
+            __throwEnvironment "$usage" "Error message why" || return $?
         fi
     }
     _functionName() {
@@ -103,15 +103,15 @@ Code:
 
 Usage:
 
-    tempFile=(__usageEnvironment "$usage" mktemp) || return $?
-    __failEnvironment "$usage" "No deployment application directory exists" || return $?
+    tempFile=(__catchEnvironment "$usage" mktemp) || return $?
+    __throwEnvironment "$usage" "No deployment application directory exists" || return $?
 
 See:
 
 - [`_environment`](./tools/sugar.md#_environment)
 - [`__environment`](./tools/sugar.md#__environment)
-- [`__failEnvironment`](./tools/sugar.md#__failEnvironment)
-- [`__usageEnvironment`](./tools/sugar.md#__usageEnvironment)
+- [`__throwEnvironment`](./tools/sugar.md#__throwEnvironment)
+- [`__catchEnvironment`](./tools/sugar.md#__catchEnvironment)
 
 ### Argument errors (Exit Code `2`)
 
@@ -131,8 +131,8 @@ Code:
 
 Usage:
 
-    __usageArgument "$usage" isInteger "$argument" || return $?
-    __failArgument "$usage" "No deployment application directory exists" || return $?
+    __catchArgument "$usage" isInteger "$argument" || return $?
+    __throwArgument "$usage" "No deployment application directory exists" || return $?
 
 ### Argument utilities
 
@@ -163,8 +163,8 @@ Usage:
 - [Usage functions](./tools/usage.md)
 - [`_argument`](./tools/sugar.md#_argument)
 - [`__argument`](./tools/sugar.md#__argument)
-- [`__failArgument`](./tools/sugar.md#__failArgument)
-- [`__usageArgument`](./tools/sugar.md#__usageArgument)
+- [`__throwArgument`](./tools/sugar.md#__throwArgument)
+- [`__catchArgument`](./tools/sugar.md#__catchArgument)
 
 Code:
 
@@ -262,7 +262,7 @@ A simple example to show some standard patterns:
       local name="" easyFlag=false width=50 target="" start
     
       # IDENTICAL startBeginTiming 1
-      start=$(__usageEnvironment "$usage" beginTiming) || return $?
+      start=$(__catchEnvironment "$usage" beginTiming) || return $?
     
       # _IDENTICAL_ argument-case-header 5
       local saved=("$@") nArguments=$#
@@ -293,24 +293,24 @@ A simple example to show some standard patterns:
             ;;
           *)
             # _IDENTICAL_ argumentUnknown 1
-            __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+            __throwArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
             ;;
         esac
         # _IDENTICAL_ argument-esac-shift 1
-        shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+        shift || __throwArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
       done
     
       # Load MANPATH environment
       export MANPATH
-      __usageEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+      __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
     
-      ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "$width" "$name: Easy mode enabled" || return $?
-      ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "path" "$path" || return $?
-      ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "target" "$target" || return $?
+      ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "$width" "$name: Easy mode enabled" || return $?
+      ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "path" "$path" || return $?
+      ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "target" "$target" || return $?
     
       # Trouble debugging
     
-      whichExists library-which-should-be-there || __failEnvironment "$usage" "missing thing" || return $?
+      whichExists library-which-should-be-there || __throwEnvironment "$usage" "missing thing" || return $?
     
       # DEBUG LINE
       printf -- "%s:%s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" # DEBUG LINE
@@ -359,18 +359,18 @@ A simple example to show some standard patterns:
             ;;
           *)
             # _IDENTICAL_ argumentUnknown 1
-            __failArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+            __throwArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
             ;;
         esac
         # _IDENTICAL_ argument-esac-shift 1
-        shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+        shift || __throwArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
       done
     
       reportTiming "$start" "Completed in"
-      __usageEnvironment "$usage" gitInstallHook post-commit || return $?
+      __catchEnvironment "$usage" gitInstallHook post-commit || return $?
     
-      __usageEnvironment "$usage" gitMainly || return $?
-      __usageEnvironment "$usage" git push origin || return $?
+      __catchEnvironment "$usage" gitMainly || return $?
+      __catchEnvironment "$usage" git push origin || return $?
     }
     ___hookGitPostCommit() {
       # _IDENTICAL_ usageDocument 1

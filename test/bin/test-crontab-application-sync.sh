@@ -116,7 +116,7 @@ testCrontabApplicationSync() {
   showFlag=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       -v | --verbose)
         verboseFlag=1
@@ -130,11 +130,11 @@ testCrontabApplicationSync() {
         showFlag=1
         ;;
       *)
-        [ -d "$argument" ] || __failArgument "$usage" "No arguments" || return $?
+        [ -d "$argument" ] || __throwArgument "$usage" "No arguments" || return $?
         decorate info "Home is $argument"
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
+    shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
   testEnv=$(mktemp)
@@ -185,7 +185,7 @@ testCrontabApplicationSync() {
   cp "$tempDir"/app1/user.crontab "$tempDir/app3/and/it/is/really/deep/user.crontab"
 
   results=$(mktemp)
-  __usageEnvironment "$usage" crontabApplicationUpdate --user user --show "$tempDir" --env-file "$testEnv" >>"$results" || return $?
+  __catchEnvironment "$usage" crontabApplicationUpdate --user user --show "$tempDir" --env-file "$testEnv" >>"$results" || return $?
 
   if test $showFlag; then
     cat "$results"
@@ -217,7 +217,7 @@ testCrontabApplicationSync() {
       fi
       printBasics "$tempDir" "$testEnv"
     fi
-    __failEnvironment "$usage" "Failed" || return $?
+    __throwEnvironment "$usage" "Failed" || return $?
   else
     rm -rf "$tempDir"
     rm "$testEnv"

@@ -27,7 +27,7 @@ aptKeyAddOpenTofu() {
     --source deb-src
   )
   __help "$usage" "$@" || return 0
-  __usageEnvironment "$usage" aptKeyAdd "${args[@]}" || return $?
+  __catchEnvironment "$usage" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
   # _IDENTICAL_ usageDocument 1
@@ -44,7 +44,7 @@ _aptKeyAddOpenTofu() {
 aptKeyRemoveOpenTofu() {
   local usage="_${FUNCNAME[0]}"
   __help "$usage" "$@" || return 0
-  __usageEnvironment "$usage" aptKeyRemove opentofu "$@" || return $?
+  __catchEnvironment "$usage" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
   # _IDENTICAL_ usageDocument 1
@@ -62,10 +62,10 @@ tofuInstall() {
 
   __help "$usage" "$@" || return 0
   ! whichExists "$binary" || return 0
-  __usageEnvironment "$usage" packageInstall apt-transport-https ca-certificates curl gnupg
-  __usageEnvironment "$usage" aptKeyAddOpenTofu || return $?
-  __usageEnvironment "$usage" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || __failEnvironment "$usage" "No $binary binary found - installation failed" || return $?
+  __catchEnvironment "$usage" packageInstall apt-transport-https ca-certificates curl gnupg
+  __catchEnvironment "$usage" aptKeyAddOpenTofu || return $?
+  __catchEnvironment "$usage" packageInstall "$binary" "$@" || return $?
+  whichExists "$binary" || __throwEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
   # _IDENTICAL_ usageDocument 1
@@ -82,9 +82,9 @@ tofuUninstall() {
   local usage="_${FUNCNAME[0]}"
 
   __help "$usage" "$@" || return 0
-  __usageEnvironment "$usage" packageWhichUninstall tofu tofu "$@" || return $?
-  __usageEnvironment "$usage" aptKeyRemoveOpenTofu || return $?
-  __usageEnvironment "$usage" packageUpdate --force || return $?
+  __catchEnvironment "$usage" packageWhichUninstall tofu tofu "$@" || return $?
+  __catchEnvironment "$usage" aptKeyRemoveOpenTofu || return $?
+  __catchEnvironment "$usage" packageUpdate --force || return $?
 }
 _tofuUninstall() {
   # _IDENTICAL_ usageDocument 1

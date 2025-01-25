@@ -19,7 +19,7 @@
 # Summary: Create a temporary file (or directory) or fail using usageFunction
 # Utility function to replace this common code
 #
-#     variable=$(__usageEnvironment "$usage" mktemp) || return $?
+#     variable=$(__catchEnvironment "$usage" mktemp) || return $?
 #
 # with
 #
@@ -196,11 +196,11 @@ usageRequireBinary() {
   # IDENTICAL usageFunctionHeader 4
   local usage="_${FUNCNAME[0]}" usageFunction="${1-}" && shift
   if [ "$(type -t "$usage")" != "function" ]; then
-    __usageArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
+    __catchArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
   fi
   local binary
   for binary in "$@"; do
-    whichExists "$binary" || __failEnvironment "$usage" "$binary is not available in path, not found: $(decorate code "$PATH")"
+    whichExists "$binary" || __throwEnvironment "$usage" "$binary is not available in path, not found: $(decorate code "$PATH")"
   done
 }
 _usageRequireBinary() {
@@ -220,12 +220,12 @@ usageRequireEnvironment() {
   # IDENTICAL usageFunctionHeader 4
   local usage="_${FUNCNAME[0]}" usageFunction="${1-}" && shift
   if [ "$(type -t "$usage")" != "function" ]; then
-    __usageArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
+    __catchArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
   fi
   local environmentVariable
   for environmentVariable in "$@"; do
     if [ -z "${!environmentVariable-}" ]; then
-      __failEnvironment "$usageFunction" "Environment variable $(decorate code "$environmentVariable") is required" || return $?
+      __throwEnvironment "$usageFunction" "Environment variable $(decorate code "$environmentVariable") is required" || return $?
     fi
   done
 }
@@ -242,7 +242,7 @@ _usageRequireEnvironment() {
 # Arguments: testCommand ... - Required. Callable. Test command to run on value.
 # Utility function to handle all usage
 #
-__usageArgumentHelper() {
+__catchArgumentHelper() {
   local defaultNoun usageFunction variableName variableValue noun
 
   defaultNoun="${1-}"
@@ -255,10 +255,10 @@ __usageArgumentHelper() {
   shift || :
   noun="${1:-"$defaultNoun"}"
   shift || :
-  [ -n "$variableValue" ] || __failArgument "$usageFunction" "$variableName $noun is required" || return $?
+  [ -n "$variableValue" ] || __throwArgument "$usageFunction" "$variableName $noun is required" || return $?
 
   # Remaining parameters are the test
-  "$@" "$variableValue" || __failArgument "$usageFunction" "$variableName is not $noun (\"$(decorate code "$variableValue")$(decorate error '")')" || return $?
+  "$@" "$variableValue" || __throwArgument "$usageFunction" "$variableName is not $noun (\"$(decorate code "$variableValue")$(decorate error '")')" || return $?
 
   printf "%s\n" "$variableValue"
 }
@@ -275,8 +275,8 @@ usageArgumentInteger() {
   local args usage="$1"
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __failArgument "$usage" "Need 4 arguments" || return $?
-  __usageArgumentHelper integer "${args[@]}" isInteger
+  [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "Need 4 arguments" || return $?
+  __catchArgumentHelper integer "${args[@]}" isInteger
 }
 
 # Validates a value is an unsigned integer
@@ -292,10 +292,10 @@ usageArgumentUnsignedInteger() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
+  __catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
 }
 
 # Validates a value is an unsigned integer and greater than zero (NOT zero)
@@ -311,10 +311,10 @@ usageArgumentPositiveInteger() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __usageArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
+  __catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
 }
 
 # Validates a value is not blank and is a file.
@@ -331,10 +331,10 @@ usageArgumentFile() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "file" "${args[@]}" test -f
+  __catchArgumentHelper "file" "${args[@]}" test -f
 }
 
 # Validates a value is not blank and exists in the file system
@@ -351,10 +351,10 @@ usageArgumentExists() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "file or directory" "${args[@]}" test -e
+  __catchArgumentHelper "file or directory" "${args[@]}" test -e
 }
 
 # Validates a value is not blank and is a link
@@ -371,10 +371,10 @@ usageArgumentLink() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "link" "${args[@]}" test -L
+  __catchArgumentHelper "link" "${args[@]}" test -L
 }
 
 # Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
@@ -390,10 +390,10 @@ usageArgumentDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  directory="$(__usageArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   printf "%s\n" "${directory%/}"
 }
 
@@ -410,11 +410,11 @@ usageArgumentRealDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
-  args[2]=$(realPath "${args[2]}") || __failArgument "$usage" "realPath" "${args[2]}" || return $?
-  directory="$(__usageArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  args[2]=$(realPath "${args[2]}") || __throwArgument "$usage" "realPath" "${args[2]}" || return $?
+  directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   printf "%s\n" "${directory%/}"
 }
 
@@ -431,10 +431,10 @@ usageArgumentFileDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
     return $?
   fi
-  __usageArgumentHelper "file" "${args[@]}" fileDirectoryExists
+  __catchArgumentHelper "file" "${args[@]}" fileDirectoryExists
 }
 
 # Validates a value is not blank and is an environment file which is loaded immediately.
@@ -452,8 +452,8 @@ usageArgumentLoadEnvironmentFile() {
 
   usageFunction="$1"
   envFile=$(usageArgumentFile "$@") || return $?
-  bashEnv=$(__usageEnvironment "$usageFunction" mktemp) || return $?
-  __usageEnvironment "$usageFunction" anyEnvToBashEnv "$envFile" >"$bashEnv" || _clean $? "$bashEnv" || return $?
+  bashEnv=$(__catchEnvironment "$usageFunction" mktemp) || return $?
+  __catchEnvironment "$usageFunction" anyEnvToBashEnv "$envFile" >"$bashEnv" || _clean $? "$bashEnv" || return $?
   set -a
   # shellcheck source=/dev/null
   source "$bashEnv"
@@ -477,7 +477,7 @@ usageArgumentLoadEnvironmentFile() {
 usageArgumentString() {
   local usage="$1" argument="$2"
   shift 2 || :
-  [ -n "${1-}" ] || __failArgument "$usage" "blank" "$argument" || return $?
+  [ -n "${1-}" ] || __throwArgument "$usage" "blank" "$argument" || return $?
   printf "%s\n" "$1"
 }
 
@@ -504,7 +504,7 @@ usageArgumentEmptyString() {
 usageArgumentBoolean() {
   local usage="$1" argument="$2"
   shift 2 || :
-  isBoolean "${1-}" || __failArgument "$usage" "$argument not boolean: \"${1-}\"" || return $?
+  isBoolean "${1-}" || __throwArgument "$usage" "$argument not boolean: \"${1-}\"" || return $?
   printf "%s\n" "$1"
 }
 
@@ -518,7 +518,7 @@ usageArgumentBoolean() {
 usageArgumentURL() {
   local usage="$1" argument="$2"
   shift 2 || :
-  urlValid "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not a valid URL" || return $?
+  urlValid "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a valid URL" || return $?
   printf "%s\n" "$1"
 }
 
@@ -532,7 +532,7 @@ usageArgumentURL() {
 usageArgumentCallable() {
   local usage="$1" argument="$2"
   shift 2 || :
-  isCallable "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not callable" || return $?
+  isCallable "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not callable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -546,7 +546,7 @@ usageArgumentCallable() {
 usageArgumentExecutable() {
   local usage="$1" argument="$2"
   shift 2 || :
-  isExecutable "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not executable" || return $?
+  isExecutable "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not executable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -560,7 +560,7 @@ usageArgumentExecutable() {
 usageArgumentFunction() {
   local usage="$1" argument="$2"
   shift 2 || :
-  isFunction "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not a function" || return $?
+  isFunction "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a function" || return $?
   printf "%s\n" "$1"
 }
 
@@ -576,7 +576,7 @@ usageArgumentFunction() {
 usageArgumentEnvironmentVariable() {
   local usage="$1" argument="$2"
   shift 2 || :
-  environmentVariableNameValid "${1-}" || __failArgument "$usage" "$argument \"${1-}\" is not a valid environment variable name" || return $?
+  environmentVariableNameValid "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a valid environment variable name" || return $?
   printf "%s\n" "$1"
 }
 
@@ -588,7 +588,7 @@ usageArgumentEnvironmentVariable() {
 usageArgumentUnknown() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __failArgument "$usage" "unknown argument: $(decorate value "$argument")" "$@" || return $?
+  __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" "$@" || return $?
 }
 
 # Throw an missing argument error
@@ -599,5 +599,5 @@ usageArgumentUnknown() {
 usageArgumentMissing() {
   local usage="$1" argument="$2"
   shift 2 || :
-  __failArgument "$usage" "missing argument $(decorate label "$argument")" "$@" || return $?
+  __throwArgument "$usage" "missing argument $(decorate label "$argument")" "$@" || return $?
 }

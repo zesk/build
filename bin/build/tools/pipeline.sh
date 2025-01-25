@@ -48,7 +48,7 @@ reportTiming() {
   local usage="_${FUNCNAME[0]}"
 
   start="${1-}"
-  __usageArgument "$usage" isInteger "$start" || return $?
+  __catchArgument "$usage" isInteger "$start" || return $?
   shift
   prefix=
   if [ $# -gt 0 ]; then
@@ -113,9 +113,9 @@ versionSort() {
   if [ $# -gt 0 ]; then
     if [ "$1" = "-r" ]; then
       r=r
-      shift || __failArgument "$usage" "shift failed" || return $?
+      shift || __throwArgument "$usage" "shift failed" || return $?
     else
-      __failArgument "$usage" "Unknown argument: $1" || return $?
+      __throwArgument "$usage" "Unknown argument: $1" || return $?
     fi
   fi
   sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
@@ -132,15 +132,15 @@ ipLookup() {
 
   local url jqFilter
   if ! packageWhich curl curl; then
-    __failEnvironment "$usage" "Requires curl to operate" || return $?
+    __throwEnvironment "$usage" "Requires curl to operate" || return $?
   fi
-  url=$(__usageEnvironment "$usage" buildEnvironmentGet IP_URL) || return $?
-  [ -n "$url" ] || __failEnvironment "$usage" "$(decorate value "IP_URL") is required for $(decorate code "${usage#_}")" || return $?
-  jqFilter=$(__usageEnvironment "$usage" buildEnvironmentGet IP_URL_FILTER) || return $?
-  urlValid "$url" || __failEnvironment "$usage" "URL $(decorate error "$url") is not a valid URL" || return $?
+  url=$(__catchEnvironment "$usage" buildEnvironmentGet IP_URL) || return $?
+  [ -n "$url" ] || __throwEnvironment "$usage" "$(decorate value "IP_URL") is required for $(decorate code "${usage#_}")" || return $?
+  jqFilter=$(__catchEnvironment "$usage" buildEnvironmentGet IP_URL_FILTER) || return $?
+  urlValid "$url" || __throwEnvironment "$usage" "URL $(decorate error "$url") is not a valid URL" || return $?
   local pp=(cat)
   [ -z "$jqFilter" ] || pp=(jq "$jqFilter")
-  __usageEnvironment "$usage" curl -s "$url" | "${pp[@]}" || return $?
+  __catchEnvironment "$usage" curl -s "$url" | "${pp[@]}" || return $?
 }
 _ipLookup() {
   # _IDENTICAL_ usageDocument 1
@@ -183,7 +183,7 @@ isUpToDate() {
   keyDate=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --name)
         shift || :
@@ -195,23 +195,23 @@ isUpToDate() {
         elif [ -n "$upToDateDays" ]; then
           upToDateDays="$argument"
         else
-          __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+          __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "shift $argument" || return $?
+    shift || __throwArgument "shift $argument" || return $?
   done
 
   [ -z "$name" ] || name="$name "
-  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __failEnvironment "$usage" "Unable to generate todayDate" || return $?
-  [ -n "$keyDate" ] || __failArgument "$usage" "missing keyDate" || return $?
+  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __throwEnvironment "$usage" "Unable to generate todayDate" || return $?
+  [ -n "$keyDate" ] || __throwArgument "$usage" "missing keyDate" || return $?
 
-  keyTimestamp=$(dateToTimestamp "$keyDate") || __failArgument "$usage" "Invalid date $keyDate" || return $?
-  isInteger "$upToDateDays" || __failArgument "$usage" "upToDateDays is not an integer ($upToDateDays)" || return $?
+  keyTimestamp=$(dateToTimestamp "$keyDate") || __throwArgument "$usage" "Invalid date $keyDate" || return $?
+  isInteger "$upToDateDays" || __throwArgument "$usage" "upToDateDays is not an integer ($upToDateDays)" || return $?
 
   maxDays=366
-  [ "$upToDateDays" -le "$maxDays" ] || __failArgument "$usage" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
-  [ "$upToDateDays" -ge 0 ] || __failArgument "$usage" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
+  [ "$upToDateDays" -le "$maxDays" ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
+  [ "$upToDateDays" -ge 0 ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
 
   accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
   expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))

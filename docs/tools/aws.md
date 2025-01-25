@@ -213,7 +213,7 @@ If not found, returns with exit code 1.
 
 #### Examples
 
-    credentials=$(awsCredentialsFile) || __failEnvironment "$usage" "No credentials file found" || return $?
+    credentials=$(awsCredentialsFile) || __throwEnvironment "$usage" "No credentials file found" || return $?
 
 #### Exit codes
 

@@ -47,7 +47,7 @@ urlParse() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -109,7 +109,7 @@ urlParse() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 
@@ -124,7 +124,7 @@ urlParse() {
 urlParseItem() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -ge 2 ] || __failArgument "$usage" "Need at least one URL" || return $?
+  [ $# -ge 2 ] || __throwArgument "$usage" "Need at least one URL" || return $?
 
   local component="" url=""
 
@@ -132,7 +132,7 @@ urlParseItem() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -147,15 +147,15 @@ urlParseItem() {
           # subshell hides variable scope
           (
             local url path name scheme user password host port error=""
-            eval "$(urlParse "$url")" || __failArgument "$usage" "Unable to parse $url" || return $?
-            [ -z "$error" ] || __failArgument "$usage" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
+            eval "$(urlParse "$url")" || __throwArgument "$usage" "Unable to parse $url" || return $?
+            [ -z "$error" ] || __throwArgument "$usage" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
             printf "%s\n" "${!component-}"
           ) || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _urlParseItem() {
@@ -174,7 +174,7 @@ urlValid() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -186,7 +186,7 @@ urlValid() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 
@@ -202,7 +202,7 @@ urlOpener() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -215,11 +215,11 @@ urlOpener() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ -n "$binary" ] || binary="urlOpen"
@@ -289,7 +289,7 @@ urlFilter() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -312,7 +312,7 @@ urlFilter() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   if [ "${#files[@]}" -gt 0 ]; then
     for file in "${files[@]}"; do
@@ -354,7 +354,7 @@ urlOpen() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -372,7 +372,7 @@ urlOpen() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local url exitCode
@@ -405,7 +405,7 @@ urlOpen() {
       shift
     done
   fi
-  $waitFlag || [ "${#urls[@]}" -eq 0 ] || __usageEnvironment "$usage" __urlOpen "${urls[@]}" || return $?
+  $waitFlag || [ "${#urls[@]}" -eq 0 ] || __catchEnvironment "$usage" __urlOpen "${urls[@]}" || return $?
   return 0
 }
 _urlOpen() {
@@ -417,12 +417,12 @@ __urlOpenInnerLoop() {
   local usage="$1" url="$2" ignoreFlag="$3" waitFlag="$4"
   if ! urlValid "$url"; then
     if ! $ignoreFlag; then
-      __failEnvironment "$usage" "Invalid URL: $(decorate error "$url")" || return $?
+      __throwEnvironment "$usage" "Invalid URL: $(decorate error "$url")" || return $?
     fi
     return 0
   fi
   if $waitFlag; then
-    __usageEnvironment "$usage" __urlOpen "$url" || return $?
+    __catchEnvironment "$usage" __urlOpen "$url" || return $?
   else
     return 120
   fi
@@ -442,8 +442,8 @@ __urlOpenInnerLoop() {
 # Argument: file - Required. FileDirectory. Target file.
 # Requires: _return whichExists printf decorate
 # Requires: usageArgumentExecutable usageArgumentString
-# Requires: __failArgument __usageArgument _command
-# Requires: __failEnvironment __usageEnvironment
+# Requires: __throwArgument __catchArgument _command
+# Requires: __throwEnvironment __catchEnvironment
 __fetch() {
   local usage="$1" && shift
 
@@ -455,7 +455,7 @@ __fetch() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -468,7 +468,7 @@ __fetch() {
         name="${1%%:}"
         value="${1#*:}"
         if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
-          __usageArgument "$usage" "Invalid $argument $1 passed" || return $?
+          __catchArgument "$usage" "Invalid $argument $1 passed" || return $?
         fi
         headers+=("$1")
         curlArgs+=("--header" "$1")
@@ -486,7 +486,7 @@ __fetch() {
         ;;
       --argument-format)
         format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        case "$format" in curl | wget) ;; *) __failArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
+        case "$format" in curl | wget) ;; *) __throwArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
         ;;
       --password)
         shift
@@ -505,7 +505,7 @@ __fetch() {
       --agent)
         shift
         local agent="$1"
-        [ -n "$agent" ] || __failArgument "$usage" "$argument must be non-blank" || return $?
+        [ -n "$agent" ] || __throwArgument "$usage" "$argument must be non-blank" || return $?
         wgetArgs+=("--user-agent=$1")
         curlArgs+=("--user-agent" "$1")
         genericArgs+=("$argument" "$1")
@@ -519,12 +519,12 @@ __fetch() {
           break
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if [ -n "$user" ]; then
@@ -533,7 +533,7 @@ __fetch() {
     genericArgs+=("--user" "$user" "--password" "$password")
   fi
   if [ "$binary" = "curl" ] && $userHasColons; then
-    __failArgument "$usage" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
+    __throwArgument "$usage" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
   fi
   if [ -z "$binary" ]; then
     if $wgetExists; then
@@ -542,25 +542,25 @@ __fetch() {
       binary="curl"
     fi
   fi
-  [ -n "$binary" ] || __failEnvironment "$usage" "wget or curl required" || return $?
+  [ -n "$binary" ] || __throwEnvironment "$usage" "wget or curl required" || return $?
   [ -z "$format" ] || format="$binary"
   case "$format" in
-    wget) __usageEnvironment "$usage" "$binary" --no-verbose --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
-    curl) __usageEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
-    *) __failEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
+    wget) __catchEnvironment "$usage" "$binary" --no-verbose --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
+    curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
+    *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
   esac
 }
 
 __urlOpen() {
   local usage="${FUNCNAME[0]#_}" binary
 
-  binary=$(__usageEnvironment "$usage" buildEnvironmentGet BUILD_URL_BINARY)
+  binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_URL_BINARY)
   if [ -z "$binary" ]; then
     while IFS='' read -d$'\n' -r binary; do
       if whichExists "$binary"; then
         break
       fi
-    done < <(__usageEnvironment "$usage" __urlBinary)
+    done < <(__catchEnvironment "$usage" __urlBinary)
     if [ -z "$binary" ]; then
       printf "%s %s\n" "OPEN: " "$(consoleLink "$url")"
       return 0
@@ -568,6 +568,6 @@ __urlOpen() {
   else
     binary=$(usageArgumentExecutable "$usage" "BUILD_URL_BINARY" "$binary") || return $?
   fi
-  [ $# -gt 0 ] || __usageArgument "$usage" "Require at least one URL" || return $?
+  [ $# -gt 0 ] || __catchArgument "$usage" "Require at least one URL" || return $?
   __environment "$binary" "$@" || return $?
 }

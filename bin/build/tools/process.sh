@@ -40,13 +40,13 @@ processWait() {
   local processIds=() requireFlag=false verboseFlag=false timeout=-1 signalTimeout=1 signals=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -60,19 +60,19 @@ processWait() {
         verboseFlag=true
         ;;
       --signals)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
         IFS=',' read -r -a signals < <(uppercase "$1")
         for signal in "${signals[@]}"; do
           case "$signal" in
             STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
             *)
-              __failArgument "$usage" "Invalid signal $signal" || return $?
+              __throwArgument "$usage" "Invalid signal $signal" || return $?
               ;;
           esac
         done
         ;;
       --timeout)
-        shift || __failArgument "$usage" "missing $argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument" || return $?
         timeout=$(usageArgumentInteger "$usage" "timeout" "$1") || return $?
         signalTimeout=$timeout
         ;;
@@ -82,7 +82,7 @@ processWait() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local elapsed lastSignal sinceLastSignal now
@@ -94,12 +94,12 @@ processWait() {
   local processTemp
 
   if [ 0 -eq ${#processIds[@]} ]; then
-    __failArgument "$usage" "Requires at least one processId" || return $?
+    __throwArgument "$usage" "Requires at least one processId" || return $?
   fi
 
   local start sendSignals sendSignals=("${signals[@]+"${signals[@]}"}") lastSignal=0 elapsed=0 processTemp
 
-  start=$(date +%s) || __failEnvironment "$usage" "date failed" || return $?
+  start=$(date +%s) || __throwEnvironment "$usage" "date failed" || return $?
 
   processTemp=$(fileTemporaryName "$usage") || return $?
   while [ ${#processIds[@]} -gt 0 ]; do
@@ -112,7 +112,7 @@ processWait() {
       # First - check --required - all processes must be running
       # And ensure they match (all processes running) and then clear the requireFlag
       if [ ${#processIds[@]} -ne ${#aliveIds[@]} ]; then
-        __failEnvironment "$usage" "All processes must be alive to start: ${processIds[*]} (Alive: ${aliveIds[*]-none})" || return $?
+        __throwEnvironment "$usage" "All processes must be alive to start: ${processIds[*]} (Alive: ${aliveIds[*]-none})" || return $?
       fi
       # Just the first time
       requireFlag=false
@@ -140,12 +140,12 @@ processWait() {
       sinceLastSignal=0
     fi
     if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ] && [ ${#sendSignals[@]} -eq 0 ]; then
-      __failEnvironment "$usage" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
+      __throwEnvironment "$usage" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
     fi
     if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
       statusMessage decorate info "${usage#_} ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
     fi
-    sleep 1 || __failEnvironment "$usage" "sleep interrupted" || return $?
+    sleep 1 || __throwEnvironment "$usage" "sleep interrupted" || return $?
   done
   if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
     statusMessage --last decorate warning "$elapsed $(plural "$elapsed" second seconds) elapsed (threshold is $(decorate code "$STATUS_THRESHOLD"))"
@@ -169,12 +169,12 @@ processMemoryUsage() {
   local pid
   while [ $# -gt 0 ]; do
     pid="$1"
-    __usageArgument "$usage" isInteger "$pid" || return $?
+    __catchArgument "$usage" isInteger "$pid" || return $?
     # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
-    value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __failEnvironment "$usage" "Failed to get process status for $pid" || return $?
-    isInteger "$value" || __failEnvironment "$usage" "Bad memory value for $pid: $value" || return $?
+    value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __throwEnvironment "$usage" "Failed to get process status for $pid" || return $?
+    isInteger "$value" || __throwEnvironment "$usage" "Bad memory value for $pid: $value" || return $?
     printf %d $((value * 1))
-    shift || __failArgument "$usage" "shift" || return $?
+    shift || __throwArgument "$usage" "shift" || return $?
   done
 }
 _processMemoryUsage() {
@@ -196,11 +196,11 @@ processVirtualMemoryAllocation() {
   local pid value
   while [ $# -gt 0 ]; do
     pid="$1"
-    __usageArgument "$usage" isInteger "$pid" || return $?
+    __catchArgument "$usage" isInteger "$pid" || return $?
     value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
-    isInteger "$value" || __failEnvironment "$usage" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
+    isInteger "$value" || __throwEnvironment "$usage" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
     printf %d $((value * 1))
-    shift || __failArgument "$usage" "shift" || return $?
+    shift || __throwArgument "$usage" "shift" || return $?
   done
 }
 _processVirtualMemoryAllocation() {

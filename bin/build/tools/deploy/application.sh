@@ -66,7 +66,7 @@ deployApplication() {
   requiredArgs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -78,7 +78,7 @@ deployApplication() {
         ;;
       --message)
         shift
-        [ -n "${1-}" ] || __failArgument "blank $argument argument" || return $?
+        [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
         message="$1"
         ;;
       --first)
@@ -93,7 +93,7 @@ deployApplication() {
         ;;
       --id)
         shift
-        [ -n "${1-}" ] || __failArgument "blank $argument argument" || return $?
+        [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
         applicationId="$1"
         ;;
       --application)
@@ -102,16 +102,16 @@ deployApplication() {
         ;;
       --target)
         shift
-        [ -n "${1-}" ] || __failArgument "blank $argument argument" || return $?
+        [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
         targetPackage="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $argument failed" || return $?
+    shift || __throwArgument "$usage" "shift argument $argument failed" || return $?
   done
-  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName)" || __failArgument "$usage" "No package name" || return $?
+  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName)" || __throwArgument "$usage" "No package name" || return $?
   if $revertFlag; then
     requiredArgs+=(applicationId)
   fi
@@ -119,14 +119,14 @@ deployApplication() {
   # Check arguments are non-blank and actually supplied
   requiredArgs+=(deployHome applicationPath)
   for name in "${requiredArgs[@]}"; do
-    [ -n "${!name}" ] || __failArgument "$usage" "$name is required" || return $?
+    [ -n "${!name}" ] || __throwArgument "$usage" "$name is required" || return $?
   done
 
   currentApplicationId=
   if [ -d "$applicationPath" ]; then
     if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
       if ! $firstFlag; then
-        __failEnvironment "$usage" "Can not fetch version from $applicationPath,  need --first" || return $?
+        __throwEnvironment "$usage" "Can not fetch version from $applicationPath,  need --first" || return $?
       fi
       currentApplicationId=
     fi
@@ -136,10 +136,10 @@ deployApplication() {
     #
     # If reverting, check the application ID (if supplied) is correct otherwise fail
     #
-    newApplicationId=$(deployPreviousVersion "$deployHome" "$currentApplicationId") || __failEnvironment "$usage" "--revert can not find previous version of $currentApplicationId ($deployHome)" || return $?
+    newApplicationId=$(deployPreviousVersion "$deployHome" "$currentApplicationId") || __throwEnvironment "$usage" "--revert can not find previous version of $currentApplicationId ($deployHome)" || return $?
 
     if [ -n "$applicationId" ] && [ "$applicationId" != "$currentApplicationId" ]; then
-      __failArgument "$usage" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
+      __throwArgument "$usage" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
     fi
     applicationId="$newApplicationId"
     printf "%s %s %s %s\n" "$(decorate info "Reverting from")" "$(decorate orange "$currentApplicationId")" "$(decorate info "->")" "$(decorate green "$applicationId")"
@@ -149,7 +149,7 @@ deployApplication() {
   # Arguments are all parsed by here
   #
   targetPackageFullPath="$deployHome/$applicationId/$targetPackage"
-  [ -f "$targetPackageFullPath" ] || __failArgument "$usage" "deployApplication: Missing target file $targetPackageFullPath" || return $?
+  [ -f "$targetPackageFullPath" ] || __throwArgument "$usage" "deployApplication: Missing target file $targetPackageFullPath" || return $?
 
   #
   # Generates deployHome/{newVersion}/app and deletes on failure
@@ -253,10 +253,10 @@ deployApplication() {
   # STOP _unwindDeploy
 
   if ! hookRunOptional --application "$applicationPath" deploy-finish; then
-    __failEnvironment "$usage" "Deploy finish failed" || exitCode=$?
+    __throwEnvironment "$usage" "Deploy finish failed" || exitCode=$?
   fi
   if ! hookRunOptional --application "$applicationPath" maintenance off; then
-    __failEnvironment "$usage" "maintenance off failed" || exitCode=$?
+    __throwEnvironment "$usage" "maintenance off failed" || exitCode=$?
   fi
   if [ $exitCode -eq 0 ]; then
     decorate success "Completed"
@@ -280,7 +280,7 @@ _unwindDeploy() {
   else
     printf "%s %s %s\n" "$(decorate error "Unwind")" "$(decorate code "$deployedApplicationPath")" "$(decorate error "does not exist")"
   fi
-  __failEnvironment "$usage" "$@" || return $?
+  __throwEnvironment "$usage" "$@" || return $?
 }
 _deployApplication() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

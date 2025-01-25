@@ -42,7 +42,7 @@ testDeployRemoteFinish() {
   __environment buildEnvironmentLoad BUILD_HOME || return $?
 
   id=abcdef
-  tempDirectory=$(mktemp -d) || __failEnvironment mktemp || return $?
+  tempDirectory=$(mktemp -d) || __throwEnvironment mktemp || return $?
 
   printf "%s %s\n" "$(decorate success "testDeployRemoteFinish:")" "$(decorate code "$tempDirectory")"
 

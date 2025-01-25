@@ -36,14 +36,14 @@ sshAddKnownHost() {
 
   local sshKnown=".ssh/known_hosts" exitCode=0 verbose=false verboseArgs=()
 
-  __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
-  [ -d "$HOME" ] || __failEnvironment "$usage" "HOME directory does not exist: $HOME" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad HOME || return $?
+  [ -d "$HOME" ] || __throwEnvironment "$usage" "HOME directory does not exist: $HOME" || return $?
 
   sshKnown="$HOME/$sshKnown"
-  __usageEnvironment "$usage" requireFileDirectory "$sshKnown" || return $?
-  [ -f "$sshKnown" ] || touch "$sshKnown" || __failEnvironment "$usage" "Unable to create $sshKnown" || return $?
+  __catchEnvironment "$usage" requireFileDirectory "$sshKnown" || return $?
+  [ -f "$sshKnown" ] || touch "$sshKnown" || __throwEnvironment "$usage" "Unable to create $sshKnown" || return $?
 
-  chmod 700 "$HOME/.ssh" && chmod 600 "$sshKnown" || __failEnvironment "$usage" "Failed to set mode on .ssh correctly" || return $?
+  chmod 700 "$HOME/.ssh" && chmod 600 "$sshKnown" || __throwEnvironment "$usage" "Failed to set mode on .ssh correctly" || return $?
 
   local output
   output=$(fileTemporaryName "$usage") || return $?
@@ -53,7 +53,7 @@ sshAddKnownHost() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -79,7 +79,7 @@ sshAddKnownHost() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   buildDebugStop ssh || :
   rm "$output" 2>/dev/null || :
@@ -108,8 +108,8 @@ sshSetup() {
 
   usage="_${FUNCNAME[0]}"
 
-  __usageEnvironment "$usage" buildEnvironmentLoad HOME || return $?
-  [ -d "${HOME-}" ] || __failEnvironment "$usage" "HOME is not defined and is required" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad HOME || return $?
+  [ -d "${HOME-}" ] || __throwEnvironment "$usage" "HOME is not defined and is required" || return $?
 
   sshHomePath="$HOME/.ssh/"
   flagForce=0
@@ -121,7 +121,7 @@ sshSetup() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -129,20 +129,20 @@ sshSetup() {
         return $?
         ;;
       --type)
-        shift || __failArgument "$usage" "missing $arg" || return $?
+        shift || __throwArgument "$usage" "missing $arg" || return $?
         case "$1" in
           ed25519 | rsa | dsa)
             keyType=$1
             ;;
           *)
-            __failArgument "$usage" "Key type $1 is not known: ed25519 | rsa | dsa" || return $?
+            __throwArgument "$usage" "Key type $1 is not known: ed25519 | rsa | dsa" || return $?
             ;;
         esac
         ;;
       --bits)
-        shift || __failArgument "$usage" "missing $arg" || return $?
+        shift || __throwArgument "$usage" "missing $arg" || return $?
         minBits=512
-        [ "$(("$1" + 0))" -ge "$minBits" ] || __failArgument "$usage" "Key bits is too small $minBits: $1 -> $(("$1" + 0))" || return $?
+        [ "$(("$1" + 0))" -ge "$minBits" ] || __throwArgument "$usage" "Key bits is too small $minBits: $1 -> $(("$1" + 0))" || return $?
         ;;
       --force)
         flagForce=1
@@ -152,30 +152,30 @@ sshSetup() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ -d "$sshHomePath" ] || mkdir -p .ssh/ || __failEnvironment "$usage" "Can not create $sshHomePath" || return $?
-  __usageEnvironment "$usage" chmod 700 "$sshHomePath" || return $?
-  __usageEnvironment "$usage" cd "$sshHomePath" || return $?
-  user="$(whoami)" || __failEnvironment "$usage" "whoami failed" || return $?
-  keyName="$user@$(uname -n)" || __failEnvironment "$usage" "uname -n failed" || return $?
+  [ -d "$sshHomePath" ] || mkdir -p .ssh/ || __throwEnvironment "$usage" "Can not create $sshHomePath" || return $?
+  __catchEnvironment "$usage" chmod 700 "$sshHomePath" || return $?
+  __catchEnvironment "$usage" cd "$sshHomePath" || return $?
+  user="$(whoami)" || __throwEnvironment "$usage" "whoami failed" || return $?
+  keyName="$user@$(uname -n)" || __throwEnvironment "$usage" "uname -n failed" || return $?
   if [ $flagForce = 0 ] && [ -f "$keyName" ]; then
     [ ${#servers[@]} -gt 0 ] || _argument "Key $keyName already exists, exiting." || return $?
   else
     statusMessage decorate info "Generating $keyName (keyType $keyType $keyBits keyBits)"
-    __usageEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N "" || return $?
-    __usageEnvironment "$usage" cp "$keyName" id_"$keyType" || return $?
-    __usageEnvironment "$usage" cp "$keyName".pub id_"$keyType".pub || return $?
+    __catchEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N "" || return $?
+    __catchEnvironment "$usage" cp "$keyName" id_"$keyType" || return $?
+    __catchEnvironment "$usage" cp "$keyName".pub id_"$keyType".pub || return $?
   fi
   for s in "${servers[@]}"; do
     echo "Uploading key and modifying authorized_keys with $s"
     echo "(Please enter password twice)"
     if ! printf "cd .ssh\n""put %s\n""quit" "$keyName.pub" | sftp "$s" >/dev/null; then
-      __failEnvironment "$usage" "$s failed to upload key" || return $?
+      __throwEnvironment "$usage" "$s failed to upload key" || return $?
     fi
     if ! printf "cd ~\\n""cd .ssh\n""cat *pub > authorized_keys\n""exit" | ssh -T "$s" >/dev/null; then
-      __failEnvironment "$usage" "$s failed to add to authorized keys" || return $?
+      __throwEnvironment "$usage" "$s failed to add to authorized keys" || return $?
     fi
   done
 }

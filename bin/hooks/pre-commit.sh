@@ -72,22 +72,22 @@ __hookPreCommit() {
   gitPreCommitHeader sh md json
 
   statusMessage decorate success Updating help files ...
-  __usageEnvironment "$usage" ./bin/update-md.sh --skip-commit || return $?
+  __catchEnvironment "$usage" ./bin/update-md.sh --skip-commit || return $?
 
   statusMessage decorate success Updating _sugar.sh
   original="bin/build/identical/_sugar.sh"
   nonOriginal=bin/build/tools/_sugar.sh
 
   statusMessage decorate success Making shell files executable ...
-  __usageEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
+  __catchEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
   if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
     nonOriginalWithEOF=$(fileTemporaryName "$usage") || return $?
-    __usageEnvironment "$usage" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
+    __catchEnvironment "$usage" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
     fileCopies=("$nonOriginalWithEOF" "$original")
     # Can not be trusted to not edit the right one
     if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
-      __usageEnvironment "$usage" cp "${fileCopies[@]}" || _clean "$nonOriginalWithEOF" || return $?
+      __catchEnvironment "$usage" cp "${fileCopies[@]}" || _clean "$nonOriginalWithEOF" || return $?
       decorate warning "Someone edited non-original file $nonOriginal"
       touch "${fileCopies[0]}" # make newer
     fi
@@ -98,7 +98,7 @@ __hookPreCommit() {
     while read -r file; do files+=("$file"); done < <(gitPreCommitListExtension)
     if grep -q '# '"IDENTICAL" "${files[@]}"; then
       if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
-        __failEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
+        __throwEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
       fi
     fi
   fi

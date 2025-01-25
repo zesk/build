@@ -90,17 +90,17 @@ testInstallBinBuild() {
   local testDir testBinBuild section buildHome matches
 
   export BUILD_HOME
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
   buildHome="${BUILD_HOME-}"
   assertDirectoryExists "$BUILD_HOME" || return $?
   section=0
   testDir=$(mktemp -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-  __usageEnvironment "$usage" cd "$testDir" || return $?
+  __catchEnvironment "$usage" cd "$testDir" || return $?
 
-  __usageEnvironment "$usage" mkdir -p bin/pipeline || return $?
-  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  __usageEnvironment "$usage" echo '# this make the file different' >>"$testBinBuild" || return $?
+  __catchEnvironment "$usage" mkdir -p bin/pipeline || return $?
+  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$usage" echo '# this make the file different' >>"$testBinBuild" || return $?
 
   # --------------------------------------------------------------------------------
   #
@@ -138,7 +138,7 @@ testInstallBinBuild() {
   # --------------------------------------------------------------------------------
   #
   clearLine
-  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (missing), missing, different name"
   section=$((section + 1))
   bigText "Section #$section"
@@ -170,7 +170,7 @@ testInstallBinBuild() {
   # assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
 
-  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   clearLine
   boxedHeading "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
@@ -197,7 +197,7 @@ testInstallBinBuild() {
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testBinBuild" || return $?
   assertDirectoryExists --line "$LINENO" bin/build || return $?
 
-  __usageEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (correct), bin/build exists, different name"
   section=$((section + 1))
   bigText "Section #$section"

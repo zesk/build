@@ -39,7 +39,7 @@ __documentTemplateFunction() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -49,44 +49,44 @@ __documentTemplateFunction() {
       # IDENTICAL profileNameArgumentHandlerCase 6
       --profile)
         shift
-        [ ${#pp[@]} -eq 0 ] || __failArgument "$usage" "$argument already specified: ${pp[*]}"
+        [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
         profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         pp=("$argument" "$profileName")
         ;;
       # IDENTICAL regionArgumentHandler 5
       --region)
         shift
-        [ -z "$region" ] || __failArgument "$usage" "$argument already specified: $region"
+        [ -z "$region" ] || __throwArgument "$usage" "$argument already specified: $region"
         region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(__usageEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(__catchEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    __usageEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
+    __catchEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || __failArgument "$usage" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || __throwArgument "$usage" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || __failArgument "$usage" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
 
   reportTiming "$start" "Completed in"
 }
@@ -111,16 +111,16 @@ __documentTemplateFunction2() {
       # IDENTICAL --profileHandler 5
       --profile)
         shift
-        [ -z "$profileName" ] || __failArgument "$usage" "--profile already specified" || return $?
+        [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
         profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   reportTiming "$start" "Completed in"

@@ -19,11 +19,11 @@
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
-# Requires: __usageArgument isUnsignedInteger usageDocument
+# Requires: __catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
   ! isUnsignedInteger "$1" || return 0
   if [ "$1" = "--help" ]; then
     "$usage" 0
@@ -44,11 +44,11 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - argument is bash function
 # Exit code: 1 - argument is not a bash function
-# Requires: __usageArgument isUnsignedInteger usageDocument type
+# Requires: __catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac

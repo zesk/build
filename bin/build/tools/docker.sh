@@ -102,18 +102,18 @@ __anyEnvToFunctionEnv() {
       local convert="$function"
       if checkDockerEnvFile "$file" 2>/dev/null; then
         ! $pass || convert="cat"
-        __usageEnvironment "$usage" "$convert" "$file" || return $?
+        __catchEnvironment "$usage" "$convert" "$file" || return $?
       else
         $pass || convert="cat"
-        __usageEnvironment "$usage" "$convert" "$file" || return $?
+        __catchEnvironment "$usage" "$convert" "$file" || return $?
       fi
     done
   else
     local temp
     temp=$(fileTemporaryName "$usage") || return $?
-    __usageEnvironment "$usage" muzzle tee "$temp" || return $?
-    __usageEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$pass" "$function" "$temp" || _clean $? "$temp" || return $?
-    __usageEnvironment "$usage" rm "$temp" || return $?
+    __catchEnvironment "$usage" muzzle tee "$temp" || return $?
+    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$pass" "$function" "$temp" || _clean $? "$temp" || return $?
+    __catchEnvironment "$usage" rm "$temp" || return $?
     return 0
   fi
 }
@@ -168,8 +168,8 @@ dockerEnvToBash() {
     _dockerEnvToBashPipe
   else
     for file in "$@"; do
-      [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
-      _dockerEnvToBashPipe <"$file" || __failArgument "$usage" "Invalid file: $file" || return $?
+      [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || return $?
+      _dockerEnvToBashPipe <"$file" || __throwArgument "$usage" "Invalid file: $file" || return $?
     done
   fi
 }
@@ -221,14 +221,14 @@ dockerEnvFromBashEnv() {
 
   tempFile=$(fileTemporaryName "$usage") || return $?
   for file in "$@"; do
-    [ -f "$file" ] || __failArgument "$usage" "Not a file $file" || return $?
-    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __failArgument "$usage" "$file is not a valid bash file" || return $?
+    [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || return $?
+    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$usage" "$file is not a valid bash file" || return $?
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}
     printf -- "%s=%s\n" "$name" "$(unquote "\"" "$value")"
   done < <(removeFields 2 <"$tempFile" | grep -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)' || :)
-  __usageEnvironment "$usage" rm -rf "$tempFile" || return $?
+  __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 _dockerEnvFromBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -262,7 +262,7 @@ dockerLocalContainer() {
 
   export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
 
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
 
   platform=${BUILD_DOCKER_PLATFORM}
   imageApplicationPath=${BUILD_DOCKER_PATH}
@@ -274,7 +274,7 @@ dockerLocalContainer() {
   tempEnvs=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -306,12 +306,12 @@ dockerLocalContainer() {
         shift
         envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
         tempEnv=$(fileTemporaryName "$usage") || return $?
-        __usageArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
+        __catchArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
         tempEnvs+=("$tempEnv")
         envFiles+=("$argument" "$tempEnv")
         ;;
       --platform)
-        shift || __failArgument "$usage" "missing $(decorate label "$argument") argument" || return $?
+        shift || __throwArgument "$usage" "missing $(decorate label "$argument") argument" || return $?
         platform="$1"
         ;;
       *)
@@ -323,7 +323,7 @@ dockerLocalContainer() {
   [ -n "$platform" ] || platform=$(dockerPlatformDefault)
 
   if [ -z "$localPath" ]; then
-    localPath=$(__usageEnvironment "$usage" pwd) || return $?
+    localPath=$(__catchEnvironment "$usage" pwd) || return $?
   fi
   failedWhy=
   if [ -z "$imageName" ]; then
@@ -335,14 +335,14 @@ dockerLocalContainer() {
   fi
   if [ -n "$failedWhy" ]; then
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
-    __failEnvironment "$usage" "$failedWhy" || return $?
+    __throwEnvironment "$usage" "$failedWhy" || return $?
   fi
   local tt=()
   [ ! -t 0 ] || tt=(-it)
   if [ -z "$(dockerImages --filter "$imageName")" ]; then
-    __usageEnvironment "$usage" muzzle docker pull "$imageName" || return $?
+    __catchEnvironment "$usage" muzzle docker pull "$imageName" || return $?
   fi
-  __usageEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __catchEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }
@@ -361,7 +361,7 @@ dockerImages() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -370,20 +370,20 @@ dockerImages() {
         ;;
       --filter)
         shift
-        [ 0 -eq "${#filter[@]}" ] || __failArgument "$usage" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+        [ 0 -eq "${#filter[@]}" ] || __throwArgument "$usage" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
         filter+=("--filter" "reference=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   usageRequireBinary "$usage" docker || return $?
-  __usageEnvironment "$usage" packageWhich jq jq || return $?
+  __catchEnvironment "$usage" packageWhich jq jq || return $?
   docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
 }
 _dockerImages() {

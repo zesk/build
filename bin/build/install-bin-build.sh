@@ -18,12 +18,12 @@ __installBinBuildLatest() {
 __installBinBuildJSON() {
   local usage="$1" jsonFile message
 
-  whichExists jq || __failEnvironment "$usage" "Requires jq to install" || return $?
+  whichExists jq || __throwEnvironment "$usage" "Requires jq to install" || return $?
   jsonFile=$(fileTemporaryName "$usage") || return $?
   if ! curl -s "$(__installBinBuildLatest)" >"$jsonFile" 2>&1; then
     message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$jsonFile")")"
     rm -rf "$jsonFile" || :
-    __failEnvironment "$usage" "$message" || return $?
+    __throwEnvironment "$usage" "$message" || return $?
   fi
   printf "%s\n" "$jsonFile"
 }
@@ -33,7 +33,7 @@ __installJSONField() {
   if ! value=$(jq -r "$selector" <"$jsonFile"); then
     message="$(printf -- "%s\n%s\n" "Unable to fetch selector from JSON:" "$(cat "$jsonFile")")"
     rm -f "$jsonFile" || :
-    __failEnvironment "$usage" "$message" || return $?
+    __throwEnvironment "$usage" "$message" || return $?
   fi
   printf -- "%s\n" "$value"
 }
@@ -56,7 +56,7 @@ __installBinBuildURL() {
   jsonFile=$(__installBinBuildJSON "$usage") || return $?
   url=$(__githubInstallationURL "$usage" "$jsonFile") || return $?
   rm -rf "$jsonFile" || :
-  [ "${url#https://}" != "$url" ] || __failArgument "$usage" "URL must begin with https://" || return $?
+  [ "${url#https://}" != "$url" ] || __throwArgument "$usage" "URL must begin with https://" || return $?
   ___TEMP_BIN_BUILD_URL="$url"
   printf -- "%s\n" "$url"
 }
@@ -71,7 +71,7 @@ __installBinBuildVersion() {
 
   # Version comparison
   version=$(__installJSONField "$usage" .tag_name "$jsonFile") || return $?
-  [ -n "$version" ] || __failEnvironment "$usage" "Fetched version was blank" || return $?
+  [ -n "$version" ] || __throwEnvironment "$usage" "Fetched version was blank" || return $?
   if [ -d "$packagePath" ] && [ -f "$packagePath/build.json" ]; then
     myVersion=$(jq .version <"$packagePath/build.json")
     if [ "$myVersion" = "$version" ]; then
@@ -83,7 +83,7 @@ __installBinBuildVersion() {
 
   # URL caching
   url=$(__githubInstallationURL "$usage" "$jsonFile") || return $?
-  [ "${url#https://}" != "$url" ] || __failArgument "$usage" "URL must begin with https://" || return $?
+  [ "${url#https://}" != "$url" ] || __throwArgument "$usage" "URL must begin with https://" || return $?
   ___TEMP_BIN_BUILD_URL="$url"
 
   return 1
@@ -98,15 +98,15 @@ __installBinBuildCheck() {
 # Check the directory after installation and output the version
 # Usage: {fn} name versionFile usageFunction installPath
 # Requires: dirname
-# Requires: decorate printf __failEnvironment read jq
+# Requires: decorate printf __throwEnvironment read jq
 __installCheck() {
   local name="$1" version="$2" usage="$3" installPath="$4"
   local versionFile="$installPath/$version"
   if [ ! -f "$versionFile" ]; then
-    __failEnvironment "$usage" "$(printf "%s: %s\n\n  %s\n  %s\n" "$(decorate error "$name")" "Incorrect version or broken install (can't find $version):" "rm -rf $(dirname "$installPath/$version")" "${BASH_SOURCE[0]}")" || return $?
+    __throwEnvironment "$usage" "$(printf "%s: %s\n\n  %s\n  %s\n" "$(decorate error "$name")" "Incorrect version or broken install (can't find $version):" "rm -rf $(dirname "$installPath/$version")" "${BASH_SOURCE[0]}")" || return $?
   fi
   read -r version id < <(jq -r '(.version + " " + .id)' <"$versionFile" || :) || :
-  [ -n "$version" ] && [ -n "$id" ] || __failEnvironment "$usage" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
+  [ -n "$version" ] && [ -n "$id" ] || __throwEnvironment "$usage" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
@@ -172,8 +172,8 @@ __installPackageConfiguration() {
 # Exit Code: 2 - Argument error
 # Requires: cp rm cat printf
 # Requires: realPath whichExists _return fileTemporaryName
-# Requires: __usageArgument __failArgument
-# Requires: __usageEnvironment decorate
+# Requires: __catchArgument __throwArgument
+# Requires: __catchEnvironment decorate
 # Requires: usageArgumentString
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
@@ -190,7 +190,7 @@ _installRemotePackage() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       --debug)
         __installRemotePackageDebug "$argument"
@@ -202,19 +202,19 @@ _installRemotePackage() {
         shift
         newName="$1"
         decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
-        __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-        __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
         ;;
       --force)
         forceFlag=true
         ;;
       --mock | --local)
-        [ -z "$localPath" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
         shift
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$__index" || return $?
-        localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
-        [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
+        localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
+        [ -x "$localPath/tools.sh" ] || __throwArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
       --user | --header | --password)
         shift
@@ -222,41 +222,41 @@ _installRemotePackage() {
         ;;
       --url)
         shift
-        [ -z "$url" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$url" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         url="$1"
         ;;
       --version-function)
         shift
-        [ -z "$versionFunction" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         versionFunction="$1"
         ;;
       --url-function)
         shift
-        [ -z "$urlFunction" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         urlFunction="$1"
         ;;
       --check-function)
         shift
-        [ -z "$checkFunction" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         checkFunction="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument #$__index: $argument" || return $?
+        __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$__index: $argument" || return $?
+    shift || __throwArgument "$usage" "missing argument #$__index: $argument" || return $?
   done
 
   local installFlag=false message
   local myBinary myPath applicationHome installPath
   # Move to starting point
-  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
-  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
+  myBinary=$(__catchEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
+  myPath="$(__catchEnvironment "$usage" dirname "$myBinary")" || return $?
+  applicationHome=$(__catchEnvironment "$usage" realPath "$myPath/$relative") || return $?
   installPath="$applicationHome/$packagePath"
 
   if ! $forceFlag && [ -n "$versionFunction" ]; then
@@ -268,14 +268,14 @@ _installRemotePackage() {
 
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
-      url=$(__usageEnvironment "$usage" "$urlFunction" "$usage") || return $?
+      url=$(__catchEnvironment "$usage" "$urlFunction" "$usage") || return $?
       if [ -z "$url" ]; then
-        __failArgument "$usage" "$urlFunction failed" || return $?
+        __throwArgument "$usage" "$urlFunction failed" || return $?
       fi
     fi
   fi
   if [ -z "$url" ] && [ -z "$localPath" ]; then
-    __failArgument "$usage" "--local or --url|--url-function is required" || return $?
+    __throwArgument "$usage" "--local or --url|--url-function is required" || return $?
   fi
 
   if [ ! -d "$installPath" ]; then
@@ -290,23 +290,23 @@ _installRemotePackage() {
   binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
   if $installFlag; then
     local start
-    start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
+    start=$(($(__catchEnvironment "$usage" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
-    [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
+    [ -d "$installPath" ] || __throwEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
-    __usageEnvironment "$usage" rm -f "$messageFile" || return $?
+    __catchEnvironment "$usage" rm -f "$messageFile" || return $?
   else
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="$(cat "$messageFile") already installed"
     rm -f "$messageFile" || :
@@ -336,7 +336,7 @@ __installRemotePackageDebug() {
 
 # Install the package directory
 # Requires: uname pushd popd rm tar
-# Requires: __usageEnvironment __failEnvironment
+# Requires: __catchEnvironment __throwEnvironment
 __installRemotePackageDirectory() {
   local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
@@ -347,8 +347,8 @@ __installRemotePackageDirectory() {
     __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __usageEnvironment "$usage" __fetch "$usage" "$url" "$target" || return $?
-  [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
+  __catchEnvironment "$usage" __fetch "$usage" "$url" "$target" || return $?
+  [ -f "$target" ] || __throwEnvironment "$usage" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
   if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
@@ -356,16 +356,16 @@ __installRemotePackageDirectory() {
   else
     tarArgs=(--include="*$packagePath/*")
   fi
-  __usageEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
-  __usageEnvironment "$usage" rm -rf "$packagePath" || return $?
-  __usageEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
-  __usageEnvironment "$usage" popd >/dev/null || return $?
+  __catchEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
+  __catchEnvironment "$usage" rm -rf "$packagePath" || return $?
+  __catchEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
+  __catchEnvironment "$usage" popd >/dev/null || return $?
   rm -f "$target" || :
 }
 
 # Install the build directory from a copy
 # Requires: rm mv cp mkdir
-# Requires: _undo __usageEnvironment __failEnvironment
+# Requires: _undo __catchEnvironment __throwEnvironment
 __installRemotePackageDirectoryLocal() {
   local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
@@ -373,14 +373,14 @@ __installRemotePackageDirectoryLocal() {
   # Clean target regardless
   if [ -d "$installPath" ]; then
     tempPath="$installPath.aboutToDelete.$$"
-    __usageEnvironment "$usage" rm -rf "$tempPath" || return $?
-    __usageEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
-    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$tempPath" "$installPath" || return $?
-    __usageEnvironment "$usage" rm -rf "$tempPath" || :
+    __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
+    __catchEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$tempPath" "$installPath" || return $?
+    __catchEnvironment "$usage" rm -rf "$tempPath" || :
   else
-    tempPath=$(__usageEnvironment "$usage" dirname "$installPath") || return $?
-    [ -d "$tempPath" ] || __usageEnvironment "$usage" mkdir -p "$tempPath" || return $?
-    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
+    tempPath=$(__catchEnvironment "$usage" dirname "$installPath") || return $?
+    [ -d "$tempPath" ] || __catchEnvironment "$usage" mkdir -p "$tempPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
   fi
 }
 
@@ -439,12 +439,12 @@ realPath() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
-# Requires: __help __usageEnvironment mktemp usageDocument
+# Requires: __help __catchEnvironment mktemp usageDocument
 fileTemporaryName() {
   local usage="_${FUNCNAME[0]}"
   __help "$usage" "$@" || return 0
   usage="$1" && shift
-  __usageEnvironment "$usage" mktemp "$@" || return $?
+  __catchEnvironment "$usage" mktemp "$@" || return $?
 }
 _fileTemporaryName() {
   # _IDENTICAL_ usageDocument 1
@@ -474,11 +474,11 @@ whichExists() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
-# Requires: __usageArgument isUnsignedInteger usageDocument
+# Requires: __catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
   isUnsignedInteger "$1" || [ "$1" != "--help" ] || ! "$usage" 0 || return 0
   # Find pesky "0" or "+0"
   [ "$1" -gt 0 ] || return 1
@@ -495,11 +495,11 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - argument is bash function
 # Exit code: 1 - argument is not a bash function
-# Requires: __usageArgument isUnsignedInteger usageDocument type
+# Requires: __catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __usageArgument "$usage" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
@@ -573,16 +573,16 @@ __decorate() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Depends: isFunction _argument awk __usageEnvironment usageDocument
+# Depends: isFunction _argument awk __catchEnvironment usageDocument
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" && shift
   local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
     extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
-    # When this next line calls `__usageArgument` it results in an infinite loop
+    # When this next line calls `__catchArgument` it results in an infinite loop
     isFunction "$extend" || _argument "Unknown decoration name: $what ($extend)" || return $?
-    __usageEnvironment "$usage" "$extend" "$@" || return $?
+    __catchEnvironment "$usage" "$extend" "$@" || return $?
     return $?
   fi
   read -r lp dp text <<<"$style" || :
@@ -692,14 +692,14 @@ isUnsignedInteger() {
 
 # Run `usage` with an argument error
 # Usage: {fn} usage ...
-__failArgument() {
+__throwArgument() {
   local usage="${1-}"
   shift && "$usage" 2 "$@" || return $?
 }
 
 # Run `usage` with an environment error
 # Usage: {fn} usage ...
-__failEnvironment() {
+__throwEnvironment() {
   local usage="${1-}"
   shift && "$usage" 1 "$@" || return $?
 }
@@ -708,20 +708,20 @@ __failEnvironment() {
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __failArgument
-__usageArgument() {
+# Requires: __throwArgument
+__catchArgument() {
   local usage="${1-}"
-  shift && "$@" || __failArgument "$usage" "$@" || return $?
+  shift && "$@" || __throwArgument "$usage" "$@" || return $?
 }
 
 # Run `command`, upon failure run `usage` with an environment error
 # Usage: {fn} usage command ...
 # Argument: usage - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __failEnvironment
-__usageEnvironment() {
+# Requires: __throwEnvironment
+__catchEnvironment() {
   local usage="${1-}"
-  shift && "$@" || __failEnvironment "$usage" "$@" || return $?
+  shift && "$@" || __throwEnvironment "$usage" "$@" || return $?
 }
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.

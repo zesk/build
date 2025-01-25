@@ -151,7 +151,7 @@ debuggingStack() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -166,11 +166,11 @@ debuggingStack() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   sources=()
@@ -202,7 +202,7 @@ _debuggingStack() {
 # Usage: plumber command ...
 # Run command and detect any global or local leaks
 # Requires: declare diff grep
-# Requires: __failArgument decorate usageArgumentString isCallable
+# Requires: __throwArgument decorate usageArgumentString isCallable
 # Requires: fileTemporaryName removeFields
 plumber() {
   local usage="_${FUNCNAME[0]}"
@@ -216,7 +216,7 @@ plumber() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -232,11 +232,11 @@ plumber() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ $# -gt 0 ] || return 0
-  isCallable "${1-}" || __failArgument "$usage" "$1 is not callable" "$@" || return $?
+  isCallable "${1-}" || __throwArgument "$usage" "$1 is not callable" "$@" || return $?
 
   __after=$(fileTemporaryName "$usage") || return $?
   __before="$__after.before"
@@ -292,7 +292,7 @@ housekeeper() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -318,15 +318,15 @@ housekeeper() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if [ "${#watchPaths[@]}" -eq 0 ]; then
-    path=$(__usageEnvironment "$usage" pwd) || return $?
+    path=$(__catchEnvironment "$usage" pwd) || return $?
     watchPaths+=("$path")
   fi
   [ $# -gt 0 ] || return 0
-  isCallable "${1-}" || __failArgument "$usage" "$1 is not callable" "$@" || return $?
+  isCallable "${1-}" || __throwArgument "$usage" "$1 is not callable" "$@" || return $?
 
   __after=$(mktemp) || _environment mktemp || return $?
   __before="$__after.before"
@@ -373,7 +373,7 @@ outputTrigger() {
   verbose=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -384,18 +384,18 @@ outputTrigger() {
         verbose=true
         ;;
       --name)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        [ -n "$1" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
+        [ -n "$1" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
         name="$1"
         ;;
       *)
         break
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $argument" || return $?
+    shift || __throwArgument "$usage" "shift argument $argument" || return $?
   done
 
-  error=$(mktemp) || __failEnvironment "$usage" "mktemp" "$@" || return $?
+  error=$(mktemp) || __throwEnvironment "$usage" "mktemp" "$@" || return $?
   lineCount=0
   while read -r line; do
     printf "%s\n" "$line" >>"$error"
@@ -653,7 +653,7 @@ bashRecursionDebug() {
 bashDebugInterruptFile() {
   local usage="_${FUNCNAME[0]}"
   __help "$usage" --only "$@" || return 0
-  __usageEnvironment "$usage" trap __bashDebugInterruptFile INT || return $?
+  __catchEnvironment "$usage" trap __bashDebugInterruptFile INT || return $?
 }
 _bashDebugInterruptFile() {
   ! false || bashDebugInterruptFile --help

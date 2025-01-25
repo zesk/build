@@ -9,10 +9,10 @@ testUsageFunctions() {
   match=$(randomString)
   assertExitCode --line "$LINENO" --stderr-match "$match" 1 _environment "$match" || return $?
   assertExitCode --line "$LINENO" --stderr-match "$match" 2 _argument "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __failEnvironment _return "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __failArgument _return "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __usageEnvironment _return _return 99 "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __usageArgument _return _return 99 "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __throwEnvironment _return "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __throwArgument _return "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __catchEnvironment _return _return 99 "$match" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __catchArgument _return _return 99 "$match" || return $?
 }
 
 __sampleArgs() {

@@ -23,10 +23,10 @@ __hookPreCommitShell() {
   local usage="_${FUNCNAME[0]}"
 
   statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".sh")" "$(decorate label "Shell files")"
-  __usageEnvironment "$usage" gitPreCommitListExtension sh | wrapLines "- $(decorate bold-magenta)" "$(decorate reset)"
+  __catchEnvironment "$usage" gitPreCommitListExtension sh | wrapLines "- $(decorate bold-magenta)" "$(decorate reset)"
   changed=()
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
-  __usageEnvironment "$usage" bashSanitize "${changed[@]}" || return $?
+  __catchEnvironment "$usage" bashSanitize "${changed[@]}" || return $?
 }
 ___hookPreCommitShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

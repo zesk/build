@@ -79,14 +79,14 @@ __updateAvailable() {
   local packageLists
 
   local start
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   local forceFlag=false
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -98,15 +98,15 @@ __updateAvailable() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local home
-  home="$(__usageEnvironment "$usage" buildHome)" || return $?
+  home="$(__catchEnvironment "$usage" buildHome)" || return $?
 
   local managers=(apk debian ubuntu) allKnown=false
   if isDarwin && whichExists brew; then
@@ -118,7 +118,7 @@ __updateAvailable() {
   fi
   requireDirectory "$home/etc/packages/" || return $?
 
-  __usageEnvironment muzzle pushd "$home/etc/packages" || return $?
+  __catchEnvironment muzzle pushd "$home/etc/packages" || return $?
 
   local target ageInSeconds allManagerLists
   local allManagerLists=() manager generator
@@ -126,10 +126,10 @@ __updateAvailable() {
     allManagerLists+=("$manager")
     statusMessage decorate info "Generating $manager list ..."
     generator="__${manager}Generator"
-    isFunction "$generator" || __failEnvironment "$usage" "$generator is not a function" || return $?
+    isFunction "$generator" || __throwEnvironment "$usage" "$generator is not a function" || return $?
     if [ -f "$manager" ] && ! $forceFlag; then
       local ageInSeconds
-      ageInSeconds=$(__usageEnvironment "$usage" modificationSeconds "$manager") || return $?
+      ageInSeconds=$(__catchEnvironment "$usage" modificationSeconds "$manager") || return $?
       if [ "$ageInSeconds" -lt 3600 ]; then
         statusMessage decorate warning "Skipping generated $manager ($((ageInSeconds / 60)) minutes old ..."
         continue
@@ -148,7 +148,7 @@ __updateAvailable() {
   __commonGenerator "$forceFlag" "_apk-apt" "apk" "debian" "ubuntu" || return $?
   __commonGenerator "$forceFlag" "_debian-ubuntu" "debian" "ubuntu" || return $?
 
-  __usageEnvironment muzzle popd || return $?
+  __catchEnvironment muzzle popd || return $?
 
   statusMessage --last reportTiming "$start" "completed in"
 }
@@ -169,15 +169,15 @@ __commonGenerator() {
 }
 
 __apkGenerator() {
-  __usageEnvironment "$1" alpineContainer --local "$home" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
+  __catchEnvironment "$1" alpineContainer --local "$home" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __debianGenerator() {
-  __usageEnvironment "$1" dockerLocalContainer --local "$home" --image debian:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
+  __catchEnvironment "$1" dockerLocalContainer --local "$home" --image debian:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __ubuntuGenerator() {
-  __usageEnvironment "$1" dockerLocalContainer --local "$home" --image ubuntu:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
+  __catchEnvironment "$1" dockerLocalContainer --local "$home" --image ubuntu:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __brewGenerator() {
-  __usageEnvironment "$1" "$home/bin/build/tools.sh" "packageAvailableList" || return $?
+  __catchEnvironment "$1" "$home/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __tools .. __updateAvailable "$@"

@@ -67,18 +67,18 @@ __crontabGenerate() {
 crontabApplicationUpdate() {
   local usage="_${FUNCNAME[0]}"
 
-  __usageEnvironment "$usage" packageWhich crontab cron || return $?
+  __catchEnvironment "$usage" packageWhich crontab cron || return $?
 
   local rootEnv="" appPath="" user
-  user=$(whoami) || __failEnvironment "$usage" whoami || return $?
-  [ -n "$user" ] || __failEnvironment "$usage" "whoami user is blank" || return $?
+  user=$(whoami) || __throwEnvironment "$usage" whoami || return $?
+  [ -n "$user" ] || __throwEnvironment "$usage" "whoami user is blank" || return $?
 
   local environmentMapper="" flagDiff=false flagShow=false
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -87,12 +87,12 @@ crontabApplicationUpdate() {
         ;;
       # --env DEPRECATED 2024-11 TODO
       --env | --env-file)
-        [ -z "$rootEnv" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -z "$rootEnv" ] || __throwArgument "$usage" "$argument already" || return $?
         shift
         rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1")
         ;;
       --mapper)
-        [ -z "$environmentMapper" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -z "$environmentMapper" ] || __throwArgument "$usage" "$argument already" || return $?
         shift
         environmentMapper=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
@@ -116,10 +116,10 @@ crontabApplicationUpdate() {
   if [ -z "$environmentMapper" ]; then
     environmentMapper=mapEnvironment
   fi
-  isCallable "$environmentMapper" || __failEnvironment "$usage" "$environmentMapper is not callable" || return $?
+  isCallable "$environmentMapper" || __throwEnvironment "$usage" "$environmentMapper is not callable" || return $?
 
-  [ -n "$appPath" ] || __failArgument "$usage" "Need to specify application path" || return $?
-  [ -n "$user" ] || __failArgument "$usage" "Need to specify user" || return $?
+  [ -n "$appPath" ] || __throwArgument "$usage" "Need to specify application path" || return $?
+  [ -n "$user" ] || __throwArgument "$usage" "Need to specify user" || return $?
 
   if $flagShow; then
     __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper"
@@ -147,8 +147,8 @@ crontabApplicationUpdate() {
   fi
   statusMessage printf "%s %s ...\n" "$(decorate info "Updating crontab on ")" "$(decorate value "$(date)")"
   returnCode=0
-  __usageEnvironment "$usage" crontab -u "$user" - <"$newCrontab" 2>/dev/null || returnCode=$?
-  __usageEnvironment "$usage" rm -f "$newCrontab" || return $?
+  __catchEnvironment "$usage" crontab -u "$user" - <"$newCrontab" 2>/dev/null || returnCode=$?
+  __catchEnvironment "$usage" rm -f "$newCrontab" || return $?
   [ $returnCode -eq 0 ] || return "$returnCode"
   statusMessage --last printf -- "%s %s on %s\n" "$(decorate info "Updated crontab of ")" "$(decorate code "$user")" "$(decorate value "$(date)")"
   return 0

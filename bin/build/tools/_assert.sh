@@ -49,19 +49,19 @@ __assertedFunctions() {
   local usage="_${FUNCNAME[0]}"
   local logFile
 
-  logFile=$(__usageEnvironment "$usage" buildCacheDirectory "$usage") || return $?
-  __usageEnvironment "$usage" requireFileDirectory "$logFile" || return $?
+  logFile=$(__catchEnvironment "$usage" buildCacheDirectory "$usage") || return $?
+  __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
   if [ $# -eq 0 ]; then
-    __usageEnvironment "$usage" touch "$logFile" || return $?
+    __catchEnvironment "$usage" touch "$logFile" || return $?
     if [ -f "$logFile.dirty" ]; then
-      __usageEnvironment "$usage" sort -u "$logFile" -o "$logFile" || return $?
-      __usageEnvironment "$usage" rm -f "$logFile.dirty" || return $?
+      __catchEnvironment "$usage" sort -u "$logFile" -o "$logFile" || return $?
+      __catchEnvironment "$usage" rm -f "$logFile.dirty" || return $?
     fi
     printf -- "%s\n" "$logFile"
     return 0
   fi
-  __usageEnvironment "$usage" printf -- "%s\n" "$@" >>"$logFile" || return $?
-  __usageEnvironment "$usage" touch "$logFile.dirty" || return $?
+  __catchEnvironment "$usage" printf -- "%s\n" "$@" >>"$logFile" || return $?
+  __catchEnvironment "$usage" touch "$logFile.dirty" || return $?
 }
 ___assertedFunctions() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -164,24 +164,24 @@ _assertConditionHelper() {
         ;;
       --stderr-match)
         shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
         stderrContains+=("$1")
         errorsOk=true
         ;;
       --stderr-no-match)
         shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
         stderrNotContains+=("$1")
         errorsOk=true
         ;;
       --stdout-match)
         shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
         outputContains+=("$1")
         ;;
       --stdout-no-match)
         shift || :
-        [ -n "${1-}" ] || __failArgument "$usage" "Blank $argument argument" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
         outputNotContains+=("$1")
         ;;
       --dump)
@@ -208,16 +208,16 @@ _assertConditionHelper() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$tester" ] || __failArgument "$usage" "--test required ($*)" || return $?
+  [ -n "$tester" ] || __throwArgument "$usage" "--test required ($*)" || return $?
 
   outputFile=$(fileTemporaryName "$usage") || return $?
   errorFile="$outputFile.err"
   outputFile="$outputFile.out"
 
   if $code1; then
-    [ "$expectedExitCode" -eq 0 ] || __usageArgument "$usage" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
+    [ "$expectedExitCode" -eq 0 ] || __catchArgument "$usage" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
     expectedExitCode="$(usageArgumentUnsignedInteger "$usage" "exitCode" "${1-}")"
     shift
   fi
@@ -344,7 +344,7 @@ __assertFileContainsHelper() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   displayName="${displayName:-"$file"}"

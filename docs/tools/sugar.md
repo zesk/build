@@ -11,10 +11,10 @@ See [Sugar Core](_sugar.md) first.
 This groupings of functions are related to a `usage` function to handle errors:
 
 - `__usage code usageFunction command ...` - Run `command ...`, and if it fails invoke `usageFunction` with `code` and command arguments.
-- `__usageEnvironment usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an environment error.
-- `__usageArgument usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an argument error.
-- `__failEnvironment usageFunction message ...` - Run `usageFunction` with an environment error and `message ...` arguments.
-- `__failArgument usageFunction message ...` - Run `usageFunction` with an argument error and `message ...` arguments.
+- `__catchEnvironment usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an environment error.
+- `__catchArgument usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an argument error.
+- `__throwEnvironment usageFunction message ...` - Run `usageFunction` with an environment error and `message ...` arguments.
+- `__throwArgument usageFunction message ...` - Run `usageFunction` with an argument error and `message ...` arguments.
 
 ## Usage Sugar References
 
@@ -53,7 +53,7 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__usageEnvironment` - Run `command`, upon failure run `usage` with an environment error
+### `__catchEnvironment` - Run `command`, upon failure run `usage` with an environment error
 
 Run `command`, upon failure run `usage` with an environment error
 
@@ -69,7 +69,7 @@ Run `command`, upon failure run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__usageEnvironmentQuiet` - Run `usage` with an environment error
+### `__catchEnvironmentQuiet` - Run `usage` with an environment error
 
 Run `usage` with an environment error
 
@@ -84,7 +84,7 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__usageArgument` - Run `command`, upon failure run `usage` with an argument error
+### `__catchArgument` - Run `command`, upon failure run `usage` with an argument error
 
 Run `command`, upon failure run `usage` with an argument error
 
@@ -100,7 +100,7 @@ Run `command`, upon failure run `usage` with an argument error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__failEnvironment` - Run `usage` with an environment error
+### `__throwEnvironment` - Run `usage` with an environment error
 
 Run `usage` with an environment error
 
@@ -115,7 +115,7 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__failArgument` - Run `usage` with an argument error
+### `__throwArgument` - Run `usage` with an argument error
 
 Run `usage` with an argument error
 
@@ -147,9 +147,9 @@ As a caveat, your command to `undo` can NOT take the argument `--` as a paramete
 #### Examples
 
 local undo thing
-thing=$(__usageEnvironment "$usage" createLargeResource) || return $?
+thing=$(__catchEnvironment "$usage" createLargeResource) || return $?
 undo+=(-- deleteLargeResource "$thing")
-thing=$(__usageEnvironment "$usage" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+thing=$(__catchEnvironment "$usage" createMassiveResource) || _undo $? "${undo[@]}" || return $?
 undo+=(-- deleteMassiveResource "$thing")
 
 #### Exit codes
@@ -171,7 +171,7 @@ Suppress stdout without piping. Handy when you just want a behavior not the outp
 #### Examples
 
     muzzle pushd
-    __usageEnvironment "$usage" phpBuild || _undo $? muzzle popd || return $?
+    __catchEnvironment "$usage" phpBuild || _undo $? muzzle popd || return $?
 
 #### Exit codes
 

@@ -65,12 +65,12 @@ _pipInstall() {
   if whichExists "$name"; then
     return 0
   fi
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  __usageEnvironment "$usage" pythonInstall || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  __catchEnvironment "$usage" pythonInstall || return $?
   statusMessage decorate info "Installing $name ... "
-  __usageEnvironmentQuiet "$usage" "$quietLog" pip install "$name" "$@" || return $?
-  whichExists "$name" || __failEnvironment "$usage" "$name not found after install" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" pip install "$name" "$@" || return $?
+  whichExists "$name" || __throwEnvironment "$usage" "$name not found after install" || return $?
   statusMessage --last reportTiming "$start" "Installed $name in"
 }
 
@@ -86,12 +86,12 @@ _pipUninstall() {
   if ! whichExists "$name"; then
     return 0
   fi
-  packageWhich pip python3-pip || __failEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
+  packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage decorate info "Removing $name ... "
-  __usageEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
-  ! whichExists "$name" || __failEnvironment "$usage" "$name was still found after uninstall" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
+  ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
   statusMessage --last reportTiming "$start" "Uninstalled $name in"
 }
 
@@ -133,12 +133,12 @@ dockerComposeUninstall() {
   if ! whichExists "$name"; then
     return 0
   fi
-  packageWhich pip python3-pip || __failEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
+  packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage decorate info "Removing $name ... "
-  __usageEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
-  ! whichExists "$name" || __failEnvironment "$usage" "$name was still found after uninstall" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
+  ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
   statusMessage --last reportTiming "$start" "Uninstalled $name in"
 }
 _dockerComposeUninstall() {

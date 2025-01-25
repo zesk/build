@@ -38,7 +38,7 @@ __bashPromptAdd() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       --verbose)
         verbose=true
@@ -53,7 +53,7 @@ __bashPromptAdd() {
         first=false
         ;;
       *)
-        isCallable "$argument" || __failArgument "$usage" "$argument must be executable or a function" || return $?
+        isCallable "$argument" || __throwArgument "$usage" "$argument must be executable or a function" || return $?
         found=false
         ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found=true
         if $first; then
@@ -87,7 +87,7 @@ __bashPromptAdd() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
   return 0
@@ -109,7 +109,7 @@ __bashPromptRemove() {
       modules+=("$current")
     fi
   done
-  $found || __failEnvironment "$usage" "$module was not found in $(_list modules: "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
+  $found || __throwEnvironment "$usage" "$module was not found in $(_list modules: "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
   __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }
 
@@ -201,7 +201,7 @@ bashPrompt() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -231,8 +231,8 @@ bashPrompt() {
         colorsText="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         local colors
         IFS=":" read -r -a colors <<<"$colorsText" || :
-        [ "${#colors[@]}" -ge 2 ] || __failArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
-        [ "${#colors[@]}" -le 5 ] || __failArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+        [ "${#colors[@]}" -ge 2 ] || __throwArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+        [ "${#colors[@]}" -le 5 ] || __throwArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
         ;;
       --first | --last | --debug)
         addArguments+=("$argument")
@@ -250,10 +250,10 @@ bashPrompt() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  $skipTerminal || [ -t 0 ] || __failEnvironment "$usage" "Requires a terminal" || return $?
+  $skipTerminal || [ -t 0 ] || __throwEnvironment "$usage" "Requires a terminal" || return $?
 
   export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
 
@@ -266,7 +266,7 @@ bashPrompt() {
     __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
   fi
 
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
 
   [ -z "$colorsText" ] || BUILD_PROMPT_COLORS="${colorsText}"
   [ -n "${BUILD_PROMPT_COLORS-}" ] || BUILD_PROMPT_COLORS="$(bashPromptColorScheme default)"

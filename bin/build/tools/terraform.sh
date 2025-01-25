@@ -51,11 +51,11 @@ terraformInstall() {
   __help "$usage" "$@" || return 0
   ! whichExists "$binary" || return 0
   if aptIsInstalled; then
-    __usageEnvironment "$usage" packageInstall gnupg software-properties-common curl figlet
-    __usageEnvironment "$usage" aptKeyAddHashicorp || return $?
+    __catchEnvironment "$usage" packageInstall gnupg software-properties-common curl figlet
+    __catchEnvironment "$usage" aptKeyAddHashicorp || return $?
   fi
-  __usageEnvironment "$usage" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || __failEnvironment "$usage" "No $binary binary found - installation failed" || return $?
+  __catchEnvironment "$usage" packageInstall "$binary" "$@" || return $?
+  whichExists "$binary" || __throwEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
   # _IDENTICAL_ usageDocument 1
@@ -72,9 +72,9 @@ terraformUninstall() {
   local usage="_${FUNCNAME[0]}"
 
   __help "$usage" "$@" || return 0
-  __usageEnvironment "$usage" packageWhichUninstall terraform terraform "$@" || return $?
-  __usageEnvironment "$usage" aptKeyRemoveHashicorp || return $?
-  __usageEnvironment "$usage" packageUpdate --force || return $?
+  __catchEnvironment "$usage" packageWhichUninstall terraform terraform "$@" || return $?
+  __catchEnvironment "$usage" aptKeyRemoveHashicorp || return $?
+  __catchEnvironment "$usage" packageUpdate --force || return $?
 }
 _terraformUninstall() {
   # _IDENTICAL_ usageDocument 1

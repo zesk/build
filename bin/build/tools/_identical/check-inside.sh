@@ -25,16 +25,16 @@ _identicalCheckInsideLoop() {
 
   # State file
   local tempDirectory repairSources=() item
-  tempDirectory=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
-  mapFile=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" mapFile) || return $?
+  tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
+  mapFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" mapFile) || return $?
   decorate bold-magenta "STATEFILE: $stateFile"
   confirmYesNo "Continue?"
-  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__usageEnvironment "$usage" environmentValueReadArray "$stateFile" "repairSources") || return $?
+  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "repairSources") || return $?
 
   local quotedPrefix
   quotedPrefix="^[[:space:]]*$(quoteGrepPattern "$prefix")"
 
-  __usageEnvironment "$usage" muzzle requireDirectory "$tempDirectory/$prefixIndex" || return $?
+  __catchEnvironment "$usage" muzzle requireDirectory "$tempDirectory/$prefixIndex" || return $?
 
   local totalLines identicalLine badFiles=()
 
@@ -48,7 +48,7 @@ _identicalCheckInsideLoop() {
       continue
     fi
     IFS=' ' read -r lineNumber token count <<<"$(printf -- "%s\n" "$parsed")" || :
-    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __failEnvironment "$usage" "\"$identicalLine\" invalid count: $count"; then
+    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count"; then
       badFiles+=("$searchFile")
       continue
     fi
@@ -67,7 +67,7 @@ _identicalCheckInsideLoop() {
         touch "$countFile.compare" || :
         touch "$tempDirectory/$prefixIndex/$tokenLineCount@$token.match.compare" || :
       elif ! isUnsignedInteger "$count"; then
-        __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
+        __catchEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
         badFiles+=("$searchFile")
         printf -- "%s\n" "$(decorate code "$searchFile:$lineNumber") - not integers: $(decorate value "$identicalLine")"
       else
@@ -77,7 +77,7 @@ _identicalCheckInsideLoop() {
         # 10 lines in file, line 1 means: tail -n 10
         # 10 lines in file, line 9 means: tail -n 2
         # 10 lines in file, line 10 means: tail -n 1
-        __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
+        __catchEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
         if [ "$(grep -c -e "$quotedPrefix" "$compareFile")" -gt 0 ]; then
           dumpPipe compareFile <"$compareFile"
           badFiles+=("$searchFile")
@@ -119,7 +119,7 @@ _identicalCheckInsideLoop() {
       fi
     else
       printf -- "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
-      __usageEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
+      __catchEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
       if [ "$token" = "" ]; then
         dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
       fi
@@ -167,9 +167,9 @@ _identicalCheckSinglesChecker() {
   local tempDirectory singles=() item resultsFile
 
   # Fetch from state file
-  tempDirectory=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
-  resultsFile=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" resultsFile) || return $?
-  while read -r item; do singles+=("$item"); done < <(__usageEnvironment "$usage" environmentValueReadArray "$stateFile" "singles") || return $?
+  tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
+  resultsFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" resultsFile) || return $?
+  while read -r item; do singles+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "singles") || return $?
 
   local tokenFile foundSingles=() matchFile exitCode=0
   while read -r matchFile; do

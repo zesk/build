@@ -32,7 +32,7 @@ isMappable() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -58,7 +58,7 @@ isMappable() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   return 1
 }
@@ -217,7 +217,7 @@ trimSpace() {
       # remove leading whitespace characters
       var="${var#"${var%%[![:space:]]*}"}"
       # remove trailing whitespace characters
-      shift && printf %s "${var%"${var##*[![:space:]]}"}" || __failEnvironment "$usage" "printf failed" || return $?
+      shift && printf %s "${var%"${var##*[![:space:]]}"}" || __throwEnvironment "$usage" "printf failed" || return $?
     done
   else
     awk '{$1=$1};NF'
@@ -317,7 +317,7 @@ isSubstringInsensitive() {
   local element arrayElement
 
   element="$(lowercase "${1-}")"
-  [ -n "$element" ] || __failArgument "$usage" "needle is blank" || return $?
+  [ -n "$element" ] || __throwArgument "$usage" "needle is blank" || return $?
   shift || return 1
   for arrayElement; do
     if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
@@ -521,19 +521,19 @@ shaPipe() {
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
-      [ -f "$1" ] || __failArgument "$usage" "$1 is not a file" || return $?
-      [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+      [ -f "$1" ] || __throwArgument "$usage" "$1 is not a file" || return $?
+      [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
         printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log
       fi
       shasum <"$argument" | cut -f 1 -d ' '
-      shift || __failArgument "$usage" "shift failed" || return $?
+      shift || __throwArgument "$usage" "shift failed" || return $?
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then
       printf "%s: stdin\n" "$(date +"%FT%T")" >shaPipe.log
     fi
-    shasum | cut -f 1 -d ' ' || __failEnvironment "$usage" "shasum" || return $?
+    shasum | cut -f 1 -d ' ' || __throwEnvironment "$usage" "shasum" || return $?
   fi
 }
 _shaPipe() {
@@ -562,7 +562,7 @@ cachedShaPipe() {
 
   local cacheDirectory="${1-}"
 
-  shift || __failArgument "$usage" "Missing cacheDirectory" || return $?
+  shift || __throwArgument "$usage" "Missing cacheDirectory" || return $?
 
   # Special case to skip caching
   if [ -z "$cacheDirectory" ]; then
@@ -571,18 +571,18 @@ cachedShaPipe() {
   fi
   cacheDirectory="${cacheDirectory%/}"
 
-  [ -d "$cacheDirectory" ] || __failArgument "$usage" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
+  [ -d "$cacheDirectory" ] || __throwArgument "$usage" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
-      [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-      [ -f "$argument" ] || __failArgument "$usage" "not a file $(decorate label "$argument")" || return $?
+      [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+      [ -f "$argument" ] || __throwArgument "$usage" "not a file $(decorate label "$argument")" || return $?
       cacheFile="$cacheDirectory/${argument#/}"
       __environment requireFileDirectory "$cacheFile" || return $?
       if [ -f "$cacheFile" ] && isNewestFile "$cacheFile" "$1"; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        shaPipe "$argument" | tee "$cacheFile" || __failEnvironment "$usage" shaPipe "$1" || return $?
+        shaPipe "$argument" | tee "$cacheFile" || __throwEnvironment "$usage" shaPipe "$1" || return $?
       fi
       shift || :
     done
@@ -613,7 +613,7 @@ mapValue() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -643,29 +643,29 @@ mapValue() {
           break
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$mapFile" ] || __failArgument "$usage" "mapFile required" || return $?
+  [ -n "$mapFile" ] || __throwArgument "$usage" "mapFile required" || return $?
   (
     local value environment searchToken environmentValue filter
 
     value="$*"
     while read -r environment; do
-      environmentValue=$(__usageEnvironment "$usage" environmentValueRead "$mapFile" "$environment") || return $?
+      environmentValue=$(__catchEnvironment "$usage" environmentValueRead "$mapFile" "$environment") || return $?
       searchToken="$prefix$environment$suffix"
       if [ ${#searchFilters[@]} -gt 0 ]; then
         for filter in "${searchFilters[@]}"; do
-          searchToken=$(__usageEnvironment "$usage" "$filter" "$searchToken") || return $?
+          searchToken=$(__catchEnvironment "$usage" "$filter" "$searchToken") || return $?
         done
       fi
       if [ ${#replaceFilters[@]} -gt 0 ]; then
         for filter in "${replaceFilters[@]}"; do
-          environmentValue=$(__usageEnvironment "$usage" "$filter" "$environmentValue") || return $?
+          environmentValue=$(__catchEnvironment "$usage" "$filter" "$environmentValue") || return $?
         done
       fi
       value="${value/${searchToken}/${environmentValue}}"
@@ -739,7 +739,7 @@ isCharacterClass() {
 
   usage="_${FUNCNAME[0]}"
   IFS=$'\n' read -r -d '' -a classes < <(characterClasses) || :
-  inArray "$class" "${classes[@]}" || __failArgument "$usage" "Invalid class: $class" || return $?
+  inArray "$class" "${classes[@]}" || __throwArgument "$usage" "Invalid class: $class" || return $?
   shift
   while [ $# -gt 0 ]; do
     character="${1:0:1}"
@@ -749,7 +749,7 @@ isCharacterClass() {
     if ! eval "case $character in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
-    shift || __failArgument "$usage" "shift $character failed" || return $?
+    shift || __throwArgument "$usage" "shift $character failed" || return $?
   done
 }
 _isCharacterClass() {
@@ -770,9 +770,9 @@ isCharacterClasses() {
   usage="_${FUNCNAME[0]}"
 
   character="${1-}"
-  [ "${#character}" -eq 1 ] || __failArgument "$usage" "Non-single character: \"$character\"" || return $?
+  [ "${#character}" -eq 1 ] || __throwArgument "$usage" "Non-single character: \"$character\"" || return $?
   if ! shift || [ $# -eq 0 ]; then
-    __failArgument "$usage" "Need at least one class" || return $?
+    __throwArgument "$usage" "Need at least one class" || return $?
   fi
   while [ "$#" -gt 0 ]; do
     class="$1"
@@ -783,7 +783,7 @@ isCharacterClasses() {
     elif isCharacterClass "$class" "$character"; then
       return 0
     fi
-    shift || __failArgument "$usage" "shift $class failed" || return $?
+    shift || __throwArgument "$usage" "shift $class failed" || return $?
   done
   return 1
 }
@@ -800,15 +800,15 @@ characterFromInteger() {
   local arg
   while [ $# -gt 0 ]; do
     arg="$1"
-    __usageArgument "$usage" isUnsignedInteger "$arg" || return $?
-    [ "$arg" -lt 256 ] || __failArgument "$usage" "Integer out of range: \"$arg\"" || return $?
+    __catchArgument "$usage" isUnsignedInteger "$arg" || return $?
+    [ "$arg" -lt 256 ] || __throwArgument "$usage" "Integer out of range: \"$arg\"" || return $?
     if [ "$arg" -eq 0 ]; then
       printf "%s\n" $'\0'
     else
       # shellcheck disable=SC2059
       printf "\\$(printf '%03o' "$arg")"
     fi
-    shift || __failArgument "$usage" "shift $arg failed" || return $?
+    shift || __throwArgument "$usage" "shift $arg failed" || return $?
   done
 }
 _characterFromInteger() {
@@ -825,8 +825,8 @@ stringValidate() {
   local text character
 
   text="${1-}"
-  shift || __failArgument "$usage" "missing text" || return $?
-  [ $# -gt 0 ] || __failArgument "$usage" "missing class" || return $?
+  shift || __throwArgument "$usage" "missing text" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "missing class" || return $?
   for character in $(printf "%s" "$text" | grep -o .); do
     if ! isCharacterClasses "$character" "$@"; then
       return 1
@@ -848,9 +848,9 @@ characterToInteger() {
   index=0
   while [ $# -gt 0 ]; do
     index=$((index + 1))
-    [ "${#1}" = 1 ] || __failArgument "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    LC_CTYPE=C printf '%d' "'$1" || __failEnvironment "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    shift || __failArgument "$usage" "shift failed" || return $?
+    [ "${#1}" = 1 ] || __throwArgument "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    LC_CTYPE=C printf '%d' "'$1" || __throwEnvironment "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    shift || __throwArgument "$usage" "shift failed" || return $?
   done
 }
 _characterToInteger() {
@@ -874,7 +874,7 @@ characterClassReport() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -889,19 +889,19 @@ characterClassReport() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   classList=()
   for arg in $(characterClasses); do
     classList+=("$arg")
   done
 
-  savedLimit="$(__usageEnvironment "$usage" ulimit -n)" || return $?
-  __usageEnvironment "$usage" ulimit -n 10240 || return $?
+  savedLimit="$(__catchEnvironment "$usage" ulimit -n)" || return $?
+  __catchEnvironment "$usage" ulimit -n 10240 || return $?
   # shellcheck disable=SC2207
   indexList=($(seq 0 127))
 
@@ -955,7 +955,7 @@ characterClassReport() {
     total=$((total + matched))
   done
   printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
-  __usageEnvironment "$usage" ulimit -n "$savedLimit" || return $?
+  __catchEnvironment "$usage" ulimit -n "$savedLimit" || return $?
 }
 _characterClassReport() {
   # _IDENTICAL_ usageDocument 1
@@ -989,7 +989,7 @@ cannon() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -1011,14 +1011,14 @@ cannon() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local searchQuoted replaceQuoted cannonLog
 
   searchQuoted=$(quoteSedPattern "$search")
   replaceQuoted=$(quoteSedPattern "$replace")
-  [ "$searchQuoted" != "$replaceQuoted" ] || __failArgument "$usage" "from = to \"$search\" are identical" || return $?
+  [ "$searchQuoted" != "$replaceQuoted" ] || __throwArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(fileTemporaryName "$usage") || return $?
   if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
     printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
@@ -1033,11 +1033,11 @@ cannon() {
   if [ "$count" -eq 0 ]; then
     printf "%s" "$(decorate info "Modified (NO) files")"
   else
-    __usageEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || _clean $? "$cannonLog" || return $?
+    __catchEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || _clean $? "$cannonLog" || return $?
     printf "%s" "$(decorate success "Modified $(decorate code "$count $(plural "$count" file files)")")"
     exitCode=1
   fi
-  __usageEnvironment "$usage" rm -f "$cannonLog" "$cannonLog.found" || return $?
+  __catchEnvironment "$usage" rm -f "$cannonLog" "$cannonLog.found" || return $?
   return "$exitCode"
 }
 _cannon() {
@@ -1056,7 +1056,7 @@ removeFields() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -1064,12 +1064,12 @@ removeFields() {
         return $?
         ;;
       *)
-        [ -z "$fieldCount" ] || __failArgument "$usage" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
+        [ -z "$fieldCount" ] || __throwArgument "$usage" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
         fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   fieldCount=${fieldCount:-1}
   #  awk '{for(i=0;i<'"${fieldCount:-1}"';i++){sub($1 FS,"")}}1'
@@ -1101,11 +1101,11 @@ listRemove() {
   local usage="_${FUNCNAME[0]}"
   local argument listValue="${1-}" separator="${2-}"
 
-  shift 2 || __failArgument "$usage" "Missing arguments" || return $?
+  shift 2 || __throwArgument "$usage" "Missing arguments" || return $?
   firstFlag=false
   while [ $# -gt 0 ]; do
     local offset next argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     offset="$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")"
     if [ "$offset" -lt 0 ]; then
       shift
@@ -1135,11 +1135,11 @@ listAppend() {
   local usage="_${FUNCNAME[0]}"
   local argument listValue="${1-}" separator="${2-}"
 
-  shift 2 || __failArgument "$usage" "Missing arguments" || return $?
+  shift 2 || __throwArgument "$usage" "Missing arguments" || return $?
   firstFlag=false
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$1" in
       --first)
         firstFlag=true
@@ -1159,7 +1159,7 @@ listAppend() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift $argument" || return $?
+    shift || __throwArgument "$usage" "shift $argument" || return $?
   done
   printf "%s\n" "$listValue"
 }
@@ -1184,7 +1184,7 @@ listCleanDuplicates() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -1207,7 +1207,7 @@ listCleanDuplicates() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   newItems=()

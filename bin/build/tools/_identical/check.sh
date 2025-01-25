@@ -58,7 +58,7 @@ identicalCheck() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -105,25 +105,25 @@ identicalCheck() {
         ;;
       --exclude)
         shift
-        [ -n "$1" ] || __failArgument "$usage" "Empty $(decorate code "$argument") argument" || return $?
+        [ -n "$1" ] || __throwArgument "$usage" "Empty $(decorate code "$argument") argument" || return $?
         excludes+=(! -path "$1")
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ ${#findArgs[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one --extension" || return $?
-  [ ${#prefixes[@]} -gt 0 ] || __failArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
+  [ ${#findArgs[@]} -gt 0 ] || __throwArgument "$usage" "Need to specify at least one --extension" || return $?
+  [ ${#prefixes[@]} -gt 0 ] || __throwArgument "$usage" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   local start failureCode exitCode=0 clean=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
   failureCode="$(_code identical)"
 
   local tempDirectory resultsFile searchFileList
@@ -135,24 +135,24 @@ identicalCheck() {
 
   __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || _clean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
-    __failEnvironment "$usage" "No files found in $(decorate file "$rootDir") with${extensionText}" || _clean $? "${clean[@]}" || return $?
+    __throwEnvironment "$usage" "No files found in $(decorate file "$rootDir") with${extensionText}" || _clean $? "${clean[@]}" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || _clean $? "${clean[@]}" || return $?
 
   local variable stateFile
   stateFile=$(fileTemporaryName "$usage") || _clean $? "${clean[@]}" || return $?
   for variable in tempDirectory resultsFile rootDir failureCode; do
-    __usageEnvironment "$usage" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
   done
   for variable in repairSources prefixes skipFiles; do
-    __usageEnvironment "$usage" environmentValueWriteArray "$variable" "${!variable[@]+"${!variable[@]}"}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" environmentValueWriteArray "$variable" "${!variable[@]+"${!variable[@]}"}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
   done
-  __usageEnvironment "$usage" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
 
   local prefix prefixIndex=0
   for prefix in "${prefixes[@]}"; do
     while IFS= read -r searchFile; do
-      searchFile=$(__usageEnvironment "$usage" realPath "$searchFile") || _clean $? "${clean[@]}" || return $?
+      searchFile=$(__catchEnvironment "$usage" realPath "$searchFile") || _clean $? "${clean[@]}" || return $?
       if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
         statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || _clean $? "${clean[@]}" || return $?
         continue
@@ -166,7 +166,7 @@ identicalCheck() {
 
   if [ "$exitCode" -ne 0 ]; then
     local badFiles=() item
-    while read -r item; do badFiles+=("$item"); done < <(__usageEnvironment "$usage" environmentValueReadArray "$stateFile" "badFiles") || return $?
+    while read -r item; do badFiles+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "badFiles") || return $?
 
     if [ ${#badFiles[@]} -gt 0 ]; then
       exitCode=$failureCode
@@ -183,7 +183,7 @@ identicalCheck() {
     _identicalCheckSinglesChecker "$usage" "$stateFile" || exitCode=$?
   fi
 
-  __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
   rm -rf "$tempDirectory" || :
   if [ $(($(wc -l <"$resultsFile") + 0)) -ne 0 ]; then
@@ -234,8 +234,8 @@ __identicalCheckGenerateSearchFiles() {
     fi
     ignorePatterns+=(-e "$(quoteGrepPattern "$directory/")")
   done
-  __usageEnvironment "$usage" cat "$searchFileList" || _clean "$?" "$searchFileList" || return $?
-  __usageEnvironment "$usage" rm -rf "$searchFileList" || return $?
+  __catchEnvironment "$usage" cat "$searchFileList" || _clean "$?" "$searchFileList" || return $?
+  __catchEnvironment "$usage" rm -rf "$searchFileList" || return $?
 }
 
 # Usage: {fn} searchFile lineNumber totalLines count
@@ -289,7 +289,7 @@ identicalCheckShell() {
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --singles)
         shift
@@ -320,7 +320,7 @@ identicalCheckShell() {
     esac
     shift || :
   done
-  __usageEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" --extension sh "$@" || return $?
+  __catchEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

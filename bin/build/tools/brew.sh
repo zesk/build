@@ -45,18 +45,18 @@ __brewUpgrade() {
   local usage="_${FUNCNAME[0]}"
   local quietLog upgradeLog result
 
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  upgradeLog=$(__usageEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
-  __usageEnvironmentQuiet "$quietLog" packageUpdate || return $?
-  __usageEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __usageEnvironment "$usage" brew upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog"
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  upgradeLog=$(__catchEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
+  __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
+  __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
+  __catchEnvironment "$usage" brew upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog"
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      __usageEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?
+      __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?
     fi
     result=restart
   else
-    __usageEnvironment "$usage" pacakgeNeedRestartFlag "" || return $?
+    __catchEnvironment "$usage" pacakgeNeedRestartFlag "" || return $?
     result=ok
   fi
   printf "%s\n" "$result"
@@ -78,8 +78,8 @@ __brewUpdate() {
 # package.sh: true
 __brewInstalledList() {
   local usage="_${FUNCNAME[0]}"
-  whichExists brew || __failEnvironment "$usage" "brew not installed - can not list" || return $?
-  [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
+  whichExists brew || __throwEnvironment "$usage" "brew not installed - can not list" || return $?
+  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
   brew list -1 | grep -v '^[^A-Za-z]'
 }
 ___brewInstalledList() {
@@ -92,7 +92,7 @@ ___brewInstalledList() {
 # package.sh: true
 __brewAvailableList() {
   local usage="_${FUNCNAME[0]}"
-  whichExists brew || __failEnvironment "$usage" "brew not installed - can not list" || return $?
+  whichExists brew || __throwEnvironment "$usage" "brew not installed - can not list" || return $?
   brew search --formula '/.*/'
 }
 ___brewAvailableList() {

@@ -13,7 +13,7 @@ nodeInstall() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -22,11 +22,11 @@ nodeInstall() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if packageIsInstalled nodejs; then
@@ -36,10 +36,10 @@ nodeInstall() {
 
   local quietLog
 
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   statusMessage --first decorate info "Installing nodejs ... " || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall nodejs || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall nodejs || return $?
   __nodeInstall_corepackEnable "$usage" || return $?
 }
 _nodeInstall() {
@@ -51,15 +51,15 @@ __nodeInstall_corepackEnable() {
   local usage="$1"
   if ! whichExists corepack; then
     statusMessage decorate warning "No corepack - installing using npm" || return $?
-    __usageEnvironment "$usage" npmInstall || return $?
-    __usageEnvironment "$usage" npm install -g corepack || return $?
-    whichExists corepack || __failEnvironment "$usage" "corepack not found after global installation - failing: PATH=$PATH" || return $?
+    __catchEnvironment "$usage" npmInstall || return $?
+    __catchEnvironment "$usage" npm install -g corepack || return $?
+    whichExists corepack || __throwEnvironment "$usage" "corepack not found after global installation - failing: PATH=$PATH" || return $?
   fi
   local home
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
-  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
-  __usageEnvironment "$usage" corepack enable || _undo $? muzzle popd || return $?
-  __usageEnvironment "$usage" muzzle popd || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+  __catchEnvironment "$usage" corepack enable || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" muzzle popd || return $?
 }
 
 # Uninstall nodejs
@@ -70,7 +70,7 @@ nodeUninstall() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -79,11 +79,11 @@ nodeUninstall() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if ! packageIsInstalled nodejs; then
@@ -91,11 +91,11 @@ nodeUninstall() {
   fi
   local start name quietLog
   name=$(decorate code node)
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   statusMessage --first decorate info "Uninstalling $name ... " || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" packageUninstall nodejs || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" packageUninstall nodejs || return $?
   statusMessage reportTiming "$start" "Uninstalled $name in" || return $?
 }
 _nodeUninstall() {
@@ -112,16 +112,16 @@ _nodeUninstall() {
 nodePackageManager() {
   local usage="_${FUNCNAME[0]}"
 
-  manager=$(__usageEnvironment "$usage" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
-  [ -n "$manager" ] || __failEnvironment "$usage" "NODE_PACKAGE_MANAGER is blank" || return $?
-  nodePackageManagerValid "$manager" || __failEnvironment "$usage" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(_list nodePackageManagerValid)" || return $?
+  manager=$(__catchEnvironment "$usage" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
+  [ -n "$manager" ] || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is blank" || return $?
+  nodePackageManagerValid "$manager" || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(_list nodePackageManagerValid)" || return $?
 
   if [ $# -eq 0 ]; then
     printf "%s\n" "$manager"
   else
-    isExecutable "$manager" || __failEnvironment "$usage" "$(decorate code "$manager") is not an executable" || return $?
+    isExecutable "$manager" || __throwEnvironment "$usage" "$(decorate code "$manager") is not an executable" || return $?
     local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
-    isFunction "$managerArgumentFormatter" || __failEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
+    isFunction "$managerArgumentFormatter" || __throwEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
 
     local arguments=() flags=() action="" debugFlag=false
 
@@ -129,7 +129,7 @@ nodePackageManager() {
     local __saved=("$@") __count=$#
     while [ $# -gt 0 ]; do
       local argument="$1" __index=$((__count - $# + 1))
-      [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+      [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
       case "$argument" in
         # _IDENTICAL_ --help 4
         --help)
@@ -143,26 +143,26 @@ nodePackageManager() {
           flags+=("$argument")
           ;;
         install | run | update | uninstall)
-          [ -z "$action" ] || __failArgument "$usage" "Only a single action allowed: $argument (already: $action)"
+          [ -z "$action" ] || __throwArgument "$usage" "Only a single action allowed: $argument (already: $action)"
           action="$argument"
           ;;
         -*)
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
           ;;
         *)
-          [ -n "$action" ] || __failArgument "$usage" "Requires an action" || return $?
+          [ -n "$action" ] || __throwArgument "$usage" "Requires an action" || return $?
           packages+=("$argument")
           ;;
       esac
       # _IDENTICAL_ argument-esac-shift 1
-      shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+      shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
     done
     local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
-    isFunction "$managerArgumentFormatter" || __failEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
+    isFunction "$managerArgumentFormatter" || __throwEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
     IFS=$'\n' read -r -d "" -a arguments < <("$managerArgumentFormatter" "$usage" "$action" "${flags[@]+"${flags[@]}"}") || :
     ! $debugFlag || _command "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || :
-    __usageEnvironment "$usage" "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || return $?
+    __catchEnvironment "$usage" "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || return $?
   fi
 }
 _nodePackageManager() {
@@ -175,13 +175,13 @@ nodePackageManagerInstall() {
   local usage="_${FUNCNAME[0]}"
   local manager
 
-  manager=$(__usageEnvironment "$usage" nodePackageManager) || return $?
+  manager=$(__catchEnvironment "$usage" nodePackageManager) || return $?
   if whichExists "$manager"; then
     return 0
   fi
   local method="${manager}Install"
-  isFunction "$method" || __failEnvironment "$usage" "No installer for $manager exists ($method)" || return $?
-  __usageEnvironment "$usage" "$method" "$@" || return $?
+  isFunction "$method" || __throwEnvironment "$usage" "No installer for $manager exists ($method)" || return $?
+  __catchEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerInstall() {
   # _IDENTICAL_ usageDocument 1
@@ -193,13 +193,13 @@ nodePackageManagerUninstall() {
   local usage="_${FUNCNAME[0]}"
   local manager
 
-  manager=$(__usageEnvironment "$usage" nodePackageManager) || return $?
+  manager=$(__catchEnvironment "$usage" nodePackageManager) || return $?
   if ! whichExists "$manager"; then
     return 0
   fi
   local method="${manager}Uninstall"
-  isFunction "$method" || __failEnvironment "$usage" "No uninstaller method for $manager exists ($method)" || return $?
-  __usageEnvironment "$usage" "$method" "$@" || return $?
+  isFunction "$method" || __throwEnvironment "$usage" "No uninstaller method for $manager exists ($method)" || return $?
+  __catchEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerUninstall() {
   # _IDENTICAL_ usageDocument 1

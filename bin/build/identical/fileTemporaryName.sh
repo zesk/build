@@ -15,12 +15,12 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
-# Requires: __help __usageEnvironment mktemp usageDocument
+# Requires: __help __catchEnvironment mktemp usageDocument
 fileTemporaryName() {
   local usage="_${FUNCNAME[0]}"
   __help "$usage" "$@" || return 0
   usage="$1" && shift
-  __usageEnvironment "$usage" mktemp "$@" || return $?
+  __catchEnvironment "$usage" mktemp "$@" || return $?
 }
 _fileTemporaryName() {
   # _IDENTICAL_ usageDocument 1

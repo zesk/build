@@ -119,7 +119,7 @@ copyFile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -145,16 +145,16 @@ copyFile() {
       *)
         local source destination actualSource verb prefix
         source="$1"
-        [ -f "$source" ] || __failEnvironment "$usage" "source \"$source\" does not exist" || return $?
+        [ -f "$source" ] || __throwEnvironment "$usage" "source \"$source\" does not exist" || return $?
         shift
         destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
         shift
-        [ $# -eq 0 ] || __usageArgument "$usage" "unknown argument $1" || return $?
+        [ $# -eq 0 ] || __catchArgument "$usage" "unknown argument $1" || return $?
         if $mapFlag; then
           actualSource=$(mktemp)
           if ! mapEnvironment <"$source" >"$actualSource"; then
             rm "$actualSource" || :
-            __usageEnvironment "$usage" "Failed to mapEnvironment $source" || return $?
+            __catchEnvironment "$usage" "Failed to mapEnvironment $source" || return $?
           fi
           verb=" (mapped)"
         else
@@ -177,10 +177,10 @@ copyFile() {
         "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
         exitCode=$?
         if [ $exitCode -eq 0 ] && [ -n "$owner" ]; then
-          __usageEnvironment "$usage" chown "$owner" "$destination" || exitCode=$?
+          __catchEnvironment "$usage" chown "$owner" "$destination" || exitCode=$?
         fi
         if [ $exitCode -eq 0 ] && [ -n "$mode" ]; then
-          __usageEnvironment "$usage" chmod "$mode" "$destination" || exitCode=$?
+          __catchEnvironment "$usage" chmod "$mode" "$destination" || exitCode=$?
         fi
         if $mapFlag; then
           rm "$actualSource" || :
@@ -189,9 +189,9 @@ copyFile() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  __failArgument "$usage" "Missing source" || return $?
+  __throwArgument "$usage" "Missing source" || return $?
 }
 _copyFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -268,7 +268,7 @@ interactiveManager() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -296,23 +296,23 @@ interactiveManager() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ -n "$verificationCallable" ] || __failArgument "$usage" "No verificationCallable" || return $?
+  [ -n "$verificationCallable" ] || __throwArgument "$usage" "No verificationCallable" || return $?
 
   if [ "${#files[@]}" -eq 0 ]; then
     while read -r file; do files+=("$(usageArgumentFile "$usage" "fileToCheck (stdin)" "$1")"); done
     [ "${#files[@]}" -gt 0 ] || return 0
   fi
 
-  [ "${#files[@]}" -gt 0 ] || __failArgument "$usage" "No files supplied" || return $?
+  [ "${#files[@]}" -gt 0 ] || __throwArgument "$usage" "No files supplied" || return $?
 
   # Validation complete
 
   local rowsAllowed output index=1 didClear=false triedRepair
 
-  rowsAllowed=$(__usageEnvironment "$usage" consoleRows) || return $?
+  rowsAllowed=$(__catchEnvironment "$usage" consoleRows) || return $?
   rowsAllowed=$((rowsAllowed - 4))
   output=$(fileTemporaryName "$usage") || return $?
   index=1
@@ -344,7 +344,7 @@ interactiveManager() {
       if [ -n "$binary" ]; then
         "$binary" "$file"
       fi
-      sleep "$sleepDelay" || __failEnvironment "$usage" "Interrupt ..." || _clean $? "$output" || return $?
+      sleep "$sleepDelay" || __throwEnvironment "$usage" "Interrupt ..." || _clean $? "$output" || return $?
     done
     index=$((index + 1))
   done
@@ -361,7 +361,7 @@ _interactiveManager() {
 __interactiveApproved() {
   local usage="$1" approvedFile="$2" verb="$3" approved displayFile
 
-  shift 3 || __usageArgument "$usage" "shift 3" || return $?
+  shift 3 || __catchArgument "$usage" "shift 3" || return $?
   displayFile=$(decorate file "$sourcePath")
   if [ ! -f "$approvedFile" ]; then
     if confirmYesNo --timeout 30 --attempts 10 --info "$@" "$verb $(decorate file "$sourcePath")?"; then
@@ -370,7 +370,7 @@ __interactiveApproved() {
     else
       approved=false
     fi
-    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" >"$approvedFile" || __failEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
+    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" >"$approvedFile" || __throwEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
   fi
   approved=$(head -n 1 "$approvedFile")
   isBoolean "$approved" && "$approved"
@@ -475,7 +475,7 @@ confirmYesNo() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -498,7 +498,7 @@ confirmYesNo() {
       --default)
         shift
         default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        parseBoolean "$default" || [ $? -ne 2 ] || __failArgument "$usage" "Can not parse $(decorate code "$1") as a boolean" || return $?
+        parseBoolean "$default" || [ $? -ne 2 ] || __throwArgument "$usage" "Can not parse $(decorate code "$1") as a boolean" || return $?
         ;;
       *)
         message="$*"
@@ -506,7 +506,7 @@ confirmYesNo() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local exitCode=0
@@ -548,7 +548,7 @@ interactiveCountdown() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -570,13 +570,13 @@ interactiveCountdown() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$counter" ] || __failArgument "$usage" "counter is required" || return $?
+  [ -n "$counter" ] || __throwArgument "$usage" "counter is required" || return $?
 
   local start end now
 
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
   end=$((start + counter))
   now=$start
   [ -z "$prefix" ] || prefix="$prefix "
@@ -584,7 +584,7 @@ interactiveCountdown() {
   while [ "$now" -lt "$end" ]; do
     statusMessage printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $counter ")"
     sleep 1
-    now=$(__usageEnvironment "$usage" beginTiming) || return $?
+    now=$(__catchEnvironment "$usage" beginTiming) || return $?
     counter=$((end - now))
   done
   statusMessage printf -- "%s" ""
@@ -615,7 +615,7 @@ interactiveBashSource() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -642,17 +642,17 @@ interactiveBashSource() {
         if [ -f "$sourcePath" ]; then
           verb="file"
           if __interactiveApproved "$usage" "$sourcePath.approved" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
-            __usageEnvironment "$usage" source "$sourcePath" || return $?
+            __catchEnvironment "$usage" source "$sourcePath" || return $?
             approved=true
           fi
         elif [ -d "$sourcePath" ]; then
           verb="path"
           if __interactiveApproved "$usage" "$sourcePath/.approved" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
-            __usageEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
+            __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
             approved=true
           fi
         else
-          __failEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")"
+          __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")"
         fi
         if $verboseFlag; then
           if $approved; then
@@ -664,7 +664,7 @@ interactiveBashSource() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _interactiveBashSource() {

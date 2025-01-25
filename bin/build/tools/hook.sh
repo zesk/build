@@ -22,7 +22,7 @@ __hookRunner() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       --require)
         requireHook=true
@@ -36,11 +36,11 @@ __hookRunner() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # Parse user flags first (this is so users can not accidentally use these, only us)
@@ -50,7 +50,7 @@ __hookRunner() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -68,7 +68,7 @@ __hookRunner() {
         if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
           if $requireHook; then
             # hookRun
-            __failArgument "$usage" "Hook not found $(decorate code "$binary")" || return $?
+            __throwArgument "$usage" "Hook not found $(decorate code "$binary")" || return $?
           else
             if buildDebugEnabled; then
               printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
@@ -82,7 +82,7 @@ __hookRunner() {
         fi
         if "$sourceHook"; then
           set --
-          __usageEnvironment "$usage" source "$hook" || return $?
+          __catchEnvironment "$usage" source "$hook" || return $?
         else
           "$hook" "$@" || return $?
         fi
@@ -90,9 +90,9 @@ __hookRunner() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  __failArgument "$usage" "No hook name passed (Arguments: $(decorate each code "${__saved[@]}"))" || return $?
+  __throwArgument "$usage" "No hook name passed (Arguments: $(decorate each code "${__saved[@]}"))" || return $?
 }
 
 # Run a hook in the project located at `./bin/hooks/`
@@ -218,10 +218,10 @@ hasHook() {
   local binary
   local applicationHome
 
-  applicationHome="$(__usageEnvironment "$usage" buildHome)" || return $?
+  applicationHome="$(__catchEnvironment "$usage" buildHome)" || return $?
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$1" in
       --application)
         shift || :
@@ -261,15 +261,15 @@ whichHook() {
   local applicationHome binary hookPath extension hookPaths=()
 
   export BUILD_HOOK_PATH
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_PATH || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_PATH || return $?
 
   IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_PATH" || :
-  [ ${#hookPaths[@]} -gt 0 ] || __failEnvironment "$usage" "BUILD_HOOK_PATH is blank" || return $?
+  [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_PATH is blank" || return $?
 
-  applicationHome="$(__usageEnvironment "$usage" buildHome)" || return $?
+  applicationHome="$(__catchEnvironment "$usage" buildHome)" || return $?
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --application)
         shift || :
@@ -291,7 +291,7 @@ whichHook() {
     esac
     shift || :
   done
-  __failArgument "$usage" "no arguments" || return $?
+  __throwArgument "$usage" "no arguments" || return $?
 }
 _whichHook() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -25,7 +25,7 @@ mariadbDump() {
 
   export MARIADB_BINARY_DUMP
 
-  __usageEnvironment "$usage" buildEnvironmentLoad MARIADB_BINARY_DUMP || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad MARIADB_BINARY_DUMP || return $?
 
   binary="${MARIADB_BINARY_DUMP-}"
   [ -n "$binary" ] || binary=mariadbdump
@@ -34,7 +34,7 @@ mariadbDump() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -69,13 +69,13 @@ mariadbDump() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  whichExists "$binary" || __usageEnvironment "$usage" "$binary not found in PATH: $PATH" || return $?
+  whichExists "$binary" || __catchEnvironment "$usage" "$binary not found in PATH: $PATH" || return $?
   options+=(--add-drop-table -c)
 
   if $echoFlag; then

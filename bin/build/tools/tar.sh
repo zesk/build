@@ -24,7 +24,7 @@ tarExtractPattern() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -33,7 +33,7 @@ tarExtractPattern() {
         ;;
       *)
         local pattern="$argument"
-        shift || __failArgument "No pattern supplied" || return $?
+        shift || __throwArgument "No pattern supplied" || return $?
         # -h means follow symlinks
         if tar --version | grep -q GNU; then
           # GNU
@@ -71,13 +71,13 @@ tarCreate() {
 
   local target=""
 
-  [ $# -gt 0 ] || __failArgument "$usage" "Need target and files" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "Need target and files" || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -86,7 +86,7 @@ tarCreate() {
         ;;
       *)
         target="$argument"
-        shift || __failArgument "No files supplied" || return $?
+        shift || __throwArgument "No files supplied" || return $?
         # -h means follow symlinks
         if tar --version | grep -q GNU; then
           # GNU

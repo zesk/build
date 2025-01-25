@@ -28,7 +28,7 @@ yarnInstall() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -41,11 +41,11 @@ yarnInstall() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if whichExists yarn; then
@@ -53,21 +53,21 @@ yarnInstall() {
   fi
   local home start
 
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 
   version="${1-${BUILD_YARN_VERSION:-stable}}"
-  quietLog=$(buildQuietLog "$usage") || __failEnvironment "buildQuietLog $usage"
-  __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(buildQuietLog "$usage") || __throwEnvironment "buildQuietLog $usage"
+  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage --first decorate info "Installing node ... " || return $?
-  __usageEnvironment "$usage" nodeInstall || return $?
-  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
-  __usageEnvironment "$usage" yarn set version "$version" || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" nodeInstall || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+  __catchEnvironment "$usage" yarn set version "$version" || _undo $? muzzle popd || return $?
   statusMessage decorate info "Installing yarn ... " || return $?
-  __usageEnvironment "$usage" yarn install || _undo $? muzzle popd || return $?
-  __usageEnvironment "$usage" muzzle popd || return $?
+  __catchEnvironment "$usage" yarn install || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" muzzle popd || return $?
   statusMessage --last reportTiming "$start" "Installed yarn in" || return $?
 }
 _yarnInstall() {
@@ -95,7 +95,7 @@ __nodePackageManagerArguments_yarn() {
 
   case "$action" in
     run)
-      ! $globalFlag || __failArgument "$usage" "--global makes no sense with run" || return $?
+      ! $globalFlag || __throwArgument "$usage" "--global makes no sense with run" || return $?
       printf "%s\n" "run"
       ;;
     update)
@@ -116,7 +116,7 @@ __nodePackageManagerArguments_yarn() {
       fi
       ;;
     *)
-      __usageArgument "$usage" "Unknown action: $action" || return $?
+      __catchArgument "$usage" "Unknown action: $action" || return $?
       ;;
   esac
 }

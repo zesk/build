@@ -83,17 +83,17 @@ __updateMarkdown() {
   while [ $# -gt 0 ]; do
     argument="$1"
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --skip-commit)
         flagSkipCommit=true
         statusMessage decorate warning "Skipping commit ..."
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+        __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
+    shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
   __addNoteTo README.md
   __addNoteTo LICENSE.md
@@ -104,7 +104,7 @@ __updateMarkdown() {
   printf -- "%s" "{}" | jq --arg version "$(hookRun version-current)" \
     --arg id "$(hookRun application-id)" \
     '. + {version: $version, id: $id}' >"$buildMarker"
-  __usageEnvironment "$usage" git add "$buildMarker" || return $?
+  __catchEnvironment "$usage" git add "$buildMarker" || return $?
 
   #
   # Disable this to see what environment shows up in commit hooks for GIT*=
@@ -117,8 +117,8 @@ __updateMarkdown() {
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
         statusMessage --last decorate info "Committing build.json"
-        __usageEnvironment "$usage" git commit -m "Updating build.json" "$buildMarker" || return $?
-        __usageEnvironment "$usage" git push origin || return $?
+        __catchEnvironment "$usage" git commit -m "Updating build.json" "$buildMarker" || return $?
+        __catchEnvironment "$usage" git push origin || return $?
       fi
     else
       statusMessage --last decorate warning "Skipping update during commit hook" || :

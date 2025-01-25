@@ -28,7 +28,7 @@ npmInstall() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -41,23 +41,23 @@ npmInstall() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if whichExists npm; then
     return 0
   fi
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
   version="${1-${BUILD_NPM_VERSION:-latest}}"
-  quietLog=$(buildQuietLog "$usage") || __failEnvironment "buildQuietLog $usage"
-  __usageEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1
+  quietLog=$(buildQuietLog "$usage") || __throwEnvironment "buildQuietLog $usage"
+  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1
 }
 _npmInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -91,7 +91,7 @@ __nodePackageManagerArguments_npm() {
 
   case "$action" in
     run)
-      ! $globalFlag || __failArgument "$usage" "--global makes no sense with run" || return $?
+      ! $globalFlag || __throwArgument "$usage" "--global makes no sense with run" || return $?
       printf "%s\n" "run"
       ;;
     install | update | uninstall)
@@ -102,7 +102,7 @@ __nodePackageManagerArguments_npm() {
       fi
       ;;
     *)
-      __usageArgument "$usage" "Unknown action: $action" || return $?
+      __catchArgument "$usage" "Unknown action: $action" || return $?
       ;;
   esac
 }

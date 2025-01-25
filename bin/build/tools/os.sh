@@ -22,7 +22,7 @@ runCount() {
   total=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -31,19 +31,19 @@ runCount() {
         ;;
       *)
         if [ -z "$total" ]; then
-          isUnsignedInteger "$argument" || __failArgument "$usage" "$argument must be a positive integer" || return $?
+          isUnsignedInteger "$argument" || __throwArgument "$usage" "$argument must be a positive integer" || return $?
           total="$argument"
         else
           index=0
           while [ "$index" -lt "$total" ]; do
             index=$((index + 1))
-            "$@" || __failEnvironment "$usage" "iteration #$index" "$@" return $?
+            "$@" || __throwEnvironment "$usage" "iteration #$index" "$@" return $?
           done
           return 0
         fi
         ;;
     esac
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 
 }
@@ -81,7 +81,7 @@ makeShellFilesExecutable() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -98,12 +98,12 @@ makeShellFilesExecutable() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ "${#paths[@]}" -gt 0 ] || paths+=("$(__usageEnvironment "$usage" pwd)") || return $?
+  [ "${#paths[@]}" -gt 0 ] || paths+=("$(__catchEnvironment "$usage" pwd)") || return $?
   (
     for path in "${paths[@]}"; do
-      __usageEnvironment "$usage" cd "$path" || return $?
+      __catchEnvironment "$usage" cd "$path" || return $?
       find "." -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -exec chmod -v +x {} \;
     done
   ) || return $?
@@ -137,7 +137,7 @@ manPathRemove() {
   export MANPATH
 
   __environment buildEnvironmentLoad MANPATH || return $?
-  tempPath="$(__usageEnvironment "$usage" listRemove "$MANPATH" ':' "$@")" || return $?
+  tempPath="$(__catchEnvironment "$usage" listRemove "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
 
@@ -152,9 +152,9 @@ manPathCleanDuplicates() {
   local usage="_${FUNCNAME[0]}" newPath
   export MANPATH
 
-  __usageEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
 
-  newPath=$(__usageEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
+  newPath=$(__catchEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
 
   MANPATH="$newPath"
 }
@@ -171,8 +171,8 @@ pathRemove() {
   local tempPath
   export PATH
 
-  __usageEnvironment "$usage" buildEnvironmentLoad PATH || return $?
-  tempPath="$(__usageEnvironment "$usage" listRemove "$PATH" ':' "$@")" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad PATH || return $?
+  tempPath="$(__catchEnvironment "$usage" listRemove "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
 _pathRemove() {
@@ -190,8 +190,8 @@ pathConfigure() {
   local tempPath
   export PATH
 
-  __usageEnvironment "$usage" buildEnvironmentLoad PATH || return $?
-  tempPath="$(__usageEnvironment "$usage" listAppend "$PATH" ':' "$@")" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad PATH || return $?
+  tempPath="$(__catchEnvironment "$usage" listAppend "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
 _pathConfigure() {
@@ -216,7 +216,7 @@ pathCleanDuplicates() {
   local usage="_${FUNCNAME[0]}" newPath
   export PATH
 
-  newPath=$(__usageEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
+  newPath=$(__catchEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
 
   PATH="$newPath"
 }
@@ -267,7 +267,7 @@ JSON() {
 serviceToStandardPort() {
   local usage="_${FUNCNAME[0]}"
   local port service
-  [ $# -gt 0 ] || __failArgument "$usage" "No arguments" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "No arguments" || return $?
   while [ $# -gt 0 ]; do
     service="$(trimSpace "${1-}")"
     case "$service" in
@@ -276,10 +276,10 @@ serviceToStandardPort() {
       https) port=443 ;;
       mariadb | mysql) port=3306 ;;
       postgres) port=5432 ;;
-      *) __failEnvironment "$usage" "$service unknown" || return $? ;;
+      *) __throwEnvironment "$usage" "$service unknown" || return $? ;;
     esac
     printf "%d\n" "$port"
-    shift || __failArgument "$usage" shift "$argument" "$@" || return $?
+    shift || __throwArgument "$usage" shift "$argument" "$@" || return $?
   done
 }
 _serviceToStandardPort() {
@@ -302,32 +302,32 @@ serviceToPort() {
   local port servicesFile service
 
   servicesFile=/etc/services
-  [ $# -gt 0 ] || __failArgument "$usage" "Require at least one service" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "Require at least one service" || return $?
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     argument="$(trimSpace "$argument")"
-    [ -n "$argument" ] || __failArgument "$usage" "argument is whitespace" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "argument is whitespace" || return $?
     case "$argument" in
       --services)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
         servicesFile=$(usageArgumentFile "$usage" "servicesFile" "$1") || return $?
         ;;
       *)
         if [ ! -f "$servicesFile" ]; then
-          __usageEnvironment "$usage" serviceToStandardPort "$@" || return $?
+          __catchEnvironment "$usage" serviceToStandardPort "$@" || return $?
         else
           service="$(trimSpace "${1-}")"
           if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
-            isInteger "$port" || __failEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
+            isInteger "$port" || __throwEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
           else
-            port="$(serviceToStandardPort "$service")" || __failEnvironment "$usage" serviceToStandardPort "$service" || return $?
+            port="$(serviceToStandardPort "$service")" || __throwEnvironment "$usage" serviceToStandardPort "$service" || return $?
           fi
           printf "%d\n" "$port"
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $argument" || return $?
+    shift || __throwArgument "$usage" "shift argument $argument" || return $?
   done
 }
 _serviceToPort() {
@@ -375,7 +375,7 @@ extensionLists() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -394,21 +394,21 @@ extensionLists() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$directory" ] || __failArgument "$usage" "No directory supplied" || return $?
+  [ -n "$directory" ] || __throwArgument "$usage" "No directory supplied" || return $?
 
-  ! $cleanFlag || __usageEnvironment "$usage" find "$directory" -type f -delete || return $?
+  ! $cleanFlag || __catchEnvironment "$usage" find "$directory" -type f -delete || return $?
 
   local name
   if [ ${#names[@]} -gt 0 ]; then
     for name in "${names[@]}"; do
-      __usageEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
+      __catchEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
     done
   else
-    __usageEnvironment "$usage" touch "$directory/@" || return $?
+    __catchEnvironment "$usage" touch "$directory/@" || return $?
     while read -r name; do
-      __usageEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
+      __catchEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
     done
   fi
 }
@@ -426,7 +426,7 @@ loadAverage() {
   local usage="_${FUNCNAME[0]}"
   local text
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-  text=$(__usageEnvironment "$usage" uptime) || return $?
+  text=$(__catchEnvironment "$usage" uptime) || return $?
   text="${text##*average}"
   text="${text##*:}"
   text="${text# }"

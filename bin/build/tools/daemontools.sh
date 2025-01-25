@@ -46,14 +46,14 @@ daemontoolsInstallService() {
 
   here="$(dirname "${BASH_SOURCE[0]}")"
 
-  __usageEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
   local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logPath=""
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -77,24 +77,24 @@ daemontoolsInstallService() {
         elif [ -z "$serviceName" ]; then
           serviceName=$(usageArgumentString "$usage" "serviceName" "$1") || return $?
         else
-          __failArgument "$usage" "Extra argument $1" || return $?
+          __throwArgument "$usage" "Extra argument $1" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ -d "$serviceHome" ] || __failEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
-  [ -n "$serviceFile" ] || __failArgument "$usage" "$serviceFile is required" || return $?
+  [ -d "$serviceHome" ] || __throwEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
+  [ -n "$serviceFile" ] || __throwArgument "$usage" "$serviceFile is required" || return $?
   if [ -z "$serviceName" ]; then
     serviceName="$(basename "$serviceFile")"
     serviceName="${serviceName%%.*}"
   fi
-  appUser=$(__usageEnvironment "$usage" fileOwner "$serviceFile") || return $?
-  [ -n "$appUser" ] || __failEnvironment "$usage" "fileOwner $serviceFile returned blank" || return $?
+  appUser=$(__catchEnvironment "$usage" fileOwner "$serviceFile") || return $?
+  [ -n "$appUser" ] || __throwEnvironment "$usage" "fileOwner $serviceFile returned blank" || return $?
 
-  binaryPath=$(realPath "$serviceFile") || __failEnvironment "$usage" "realPath $serviceFile" || return $?
+  binaryPath=$(realPath "$serviceFile") || __throwEnvironment "$usage" "realPath $serviceFile" || return $?
 
   target="$serviceHome/$serviceName"
   logTarget="$serviceHome/$serviceName/log"
@@ -105,10 +105,10 @@ daemontoolsInstallService() {
   fi
 
   _daemontoolsSuperviseWait "$usage" "$target" || return $?
-  __usageEnvironment "$usage" svc -t "$target" || return $?
+  __catchEnvironment "$usage" svc -t "$target" || return $?
   if [ -d "$logPath" ]; then
     _daemontoolsSuperviseWait "$usage" "$logTarget" || return $?
-    __usageEnvironment "$usage" svc -t "$logTarget" || return $?
+    __catchEnvironment "$usage" svc -t "$logTarget" || return $?
   fi
 }
 _daemontoolsInstallService() {
@@ -118,12 +118,12 @@ _daemontoolsInstallService() {
 # Copy run file to a service target
 _daemontoolsInstallServiceRun() {
   local usage="$1" source="$2" target="$3" args
-  shift 3 || __failArgument "$usage" "Missing arguments" || return $?
-  __usageEnvironment "$usage" requireDirectory "$target" || return $?
+  shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
+  __catchEnvironment "$usage" requireDirectory "$target" || return $?
   args=(--map "$source" "$target/run")
   if copyFileWouldChange "${args[@]}"; then
-    __usageEnvironment "$usage" copyFile "$@" "${args[@]}" || return $?
-    __usageEnvironment "$usage" chmod 700 "$target" "$target/run" || return $?
+    __catchEnvironment "$usage" copyFile "$@" "${args[@]}" || return $?
+    __catchEnvironment "$usage" chmod 700 "$target" "$target/run" || return $?
   fi
 }
 
@@ -133,13 +133,13 @@ _daemontoolsSuperviseWait() {
   local total=10 stayQuietFor=5
 
   local start
-  start=$(__usageEnvironment "$usage" date +%s)
+  start=$(__catchEnvironment "$usage" date +%s)
   while [ ! -d "$1/supervise" ]; do
-    sleep 1 || __failEnvironment "$usage" "interrupted" || return $?
+    sleep 1 || __throwEnvironment "$usage" "interrupted" || return $?
     local elapsed
-    elapsed=$(($(__usageEnvironment "$usage" date +%s) - start)) || return $?
+    elapsed=$(($(__catchEnvironment "$usage" date +%s) - start)) || return $?
     if [ $elapsed -gt "$total" ]; then
-      __failEnvironment "$usage" "supervise is not running - $target/supervise never found after $total seconds" || return $?
+      __throwEnvironment "$usage" "supervise is not running - $target/supervise never found after $total seconds" || return $?
     elif [ $elapsed -gt "$stayQuietFor" ]; then
       statusMessage decorate info "Waiting for $(decorate file "$1/supervise") ($elapsed) ..."
     fi
@@ -163,7 +163,7 @@ daemontoolsRemoveService() {
 
   while [ $# -gt 0 ]; do
     arg=$1
-    [ -n "$arg" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$arg" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$arg" in
       --home)
         shift || :
@@ -173,20 +173,20 @@ daemontoolsRemoveService() {
         if [ -z "$serviceName" ]; then
           serviceName="$1"
         else
-          __failArgument "$usage" "Extra argument $1" || return $?
+          __throwArgument "$usage" "Extra argument $1" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "Failed after $arg" || return $?
+    shift || __throwArgument "$usage" "Failed after $arg" || return $?
   done
 
-  [ -d "$serviceHome" ] || __failEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
-  [ -d "$serviceHome/$serviceName" ] || __failEnvironment "$usage" "$serviceHome/$serviceName does not exist" || return $?
+  [ -d "$serviceHome" ] || __throwEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
+  [ -d "$serviceHome/$serviceName" ] || __throwEnvironment "$usage" "$serviceHome/$serviceName does not exist" || return $?
 
-  __usageEnvironment "$usage" pushd "$serviceHome/$serviceName" >/dev/null || return $?
-  __usageEnvironment "$usage" muzzle svc -dx . log 2>&1 || return $?
-  __usageEnvironment "$usage" rm -rf "$serviceHome/$serviceName" || return $?
-  __usageEnvironment "$usage" popd >/dev/null || return $?
+  __catchEnvironment "$usage" pushd "$serviceHome/$serviceName" >/dev/null || return $?
+  __catchEnvironment "$usage" muzzle svc -dx . log 2>&1 || return $?
+  __catchEnvironment "$usage" rm -rf "$serviceHome/$serviceName" || return $?
+  __catchEnvironment "$usage" popd >/dev/null || return $?
 }
 _daemontoolsRemoveService() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -199,7 +199,7 @@ daemontoolsIsRunning() {
   local usage="_$this"
   local processIds processId
 
-  [ "$(id -u 2>/dev/null)" = "0" ] || __failEnvironment "$usage" "Must be root" || return $?
+  [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   [ 0 -ne "${#processIds[@]}" ] || return 1
@@ -230,8 +230,8 @@ daemontoolsExecute() {
 
   this="${FUNCNAME[0]}"
   usage="_$this"
-  [ "$(id -u)" -eq 0 ] || __failEnvironment "$usage" "$this: Must be root" || return $?
-  home="$(daemontoolsHome)" || __failEnvironment "$usage" daemontoolsHome || return $?
+  [ "$(id -u)" -eq 0 ] || __throwEnvironment "$usage" "$this: Must be root" || return $?
+  home="$(daemontoolsHome)" || __throwEnvironment "$usage" daemontoolsHome || return $?
   usageRequireBinary "$usage" svscanboot id svc svstat || return $?
   __environment requireDirectory "$home" >/dev/null || return $?
   __environment chmod 775 "$home" || return $?
@@ -263,24 +263,24 @@ daemontoolsTerminate() {
 
   this="${FUNCNAME[0]}"
   usage="_$this"
-  [ "$(id -u)" -eq 0 ] || __failEnvironment "$usage" "$this: Must be root" || return $?
-  home="$(daemontoolsHome)" || __failEnvironment "$usage" daemontoolsHome || return $?
+  [ "$(id -u)" -eq 0 ] || __throwEnvironment "$usage" "$this: Must be root" || return $?
+  home="$(daemontoolsHome)" || __throwEnvironment "$usage" daemontoolsHome || return $?
   home="${home%/}"
   usageRequireBinary "$usage" svscanboot id svc svstat || return $?
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --timeout)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
         timeout=$(usageArgumentInteger "$usage" "seconds" "$1") || return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+    shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
   statusMessage decorate warning "Shutting down services ..."
   while read -r service; do
@@ -323,7 +323,7 @@ daemontoolsRestart() {
 
   export DAEMONTOOLS_HOME
 
-  __failEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  __throwEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
   statusMessage decorate info "Restarting daemontools ..."
   killLoop=0
   maxLoops=4
@@ -336,7 +336,7 @@ daemontoolsRestart() {
       foundOne=true
     done < <(pgrep svscan -l)
     killLoop=$((killLoop + 1))
-    [ $killLoop -le $maxLoops ] || __failEnvironment "$usage" "Unable to kill svscan processes after $maxLoops attempts" || return $?
+    [ $killLoop -le $maxLoops ] || __throwEnvironment "$usage" "Unable to kill svscan processes after $maxLoops attempts" || return $?
   done
   pkill svscan -t KILL
   svc -dx /etc/service/* /etc/service/*/log
@@ -384,19 +384,19 @@ daemontoolsManager() {
   files=()
   actions=()
 
-  __usageEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
   currentActions=("restart")
   intervalSeconds=10
   chirpSeconds=0
   statFile=
   serviceHome="$DAEMONTOOLS_HOME"
-  svcBin=$(which svc) || __failEnvironment "$usage" "Requires daemontools - svc not found in PATH: $PATH" || return $?
-  statBin=$(which svstat) || __failEnvironment "$usage" "Requires daemontools - svstat not found in PATH: $PATH" || return $?
+  svcBin=$(which svc) || __throwEnvironment "$usage" "Requires daemontools - svc not found in PATH: $PATH" || return $?
+  statBin=$(which svstat) || __throwEnvironment "$usage" "Requires daemontools - svstat not found in PATH: $PATH" || return $?
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --chirp)
         shift
@@ -408,7 +408,7 @@ daemontoolsManager() {
         ;;
       --stat)
         shift
-        [ -z "$statFile" ] || __failArgument "$usage" "$argument must be specified once ($statFile and ${1-})" || return $?
+        [ -z "$statFile" ] || __throwArgument "$usage" "$argument must be specified once ($statFile and ${1-})" || return $?
         statFile=$(usageArgumentFileDirectory "$usage" "statFile" "${1-}") || return $?
         ;;
       --home)
@@ -418,18 +418,18 @@ daemontoolsManager() {
       --action)
         shift
         IFS="," read -r -a currentActions <<<"$1" || :
-        [ ${#currentActions[@]} -gt 0 ] || __failArgument "$usage" "$argument No actions specified"
+        [ ${#currentActions[@]} -gt 0 ] || __throwArgument "$usage" "$argument No actions specified"
         for action in "${currentActions[@]}"; do
-          case "$action" in start | restart | stop) ;; *) __failArgument "$usage" "Invalid action $action" || return $? ;; esac
+          case "$action" in start | restart | stop) ;; *) __throwArgument "$usage" "Invalid action $action" || return $? ;; esac
         done
         ;;
       *)
         if [ -z "$service" ]; then
           service="$1"
-          [ -d "$service" ] || __failEnvironment "$usage" "service must be a service directory that exists: $service" || return $?
+          [ -d "$service" ] || __throwEnvironment "$usage" "service must be a service directory that exists: $service" || return $?
         else
           file="$1"
-          [ -d "$(dirname "$file")" ] || __failEnvironment "$usage" "file must be in a directory that exists: $file" || return $?
+          [ -d "$(dirname "$file")" ] || __throwEnvironment "$usage" "file must be in a directory that exists: $file" || return $?
           services+=("$service")
           files+=("$file")
           actions+=("${currentActions[*]}")
@@ -440,8 +440,8 @@ daemontoolsManager() {
     esac
     shift
   done
-  [ "${#services[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one service and file pair" || return $?
-  start=$(beginTiming) || __failEnvironment "$usage" beginTiming || return $?
+  [ "${#services[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one service and file pair" || return $?
+  start=$(beginTiming) || __throwEnvironment "$usage" beginTiming || return $?
   lastChirp=$start
   secondsNoun=seconds
   if [ "$intervalSeconds" -eq 1 ]; then
@@ -456,7 +456,7 @@ daemontoolsManager() {
   while true; do
     if [ -n "$statFile" ]; then
       statFile=$(usageArgumentFileDirectory "$usage" "statFile" "$statFile") || return $?
-      __usageEnvironment "$usage" "$statBin" "$serviceHome/*" "$serviceHome/*/log" >"$statFile" || return $?
+      __catchEnvironment "$usage" "$statBin" "$serviceHome/*" "$serviceHome/*/log" >"$statFile" || return $?
     fi
     index=0
     while [ $index -lt ${#files[@]} ]; do
@@ -465,7 +465,7 @@ daemontoolsManager() {
       action=${actions[$index]}
       index=$((index + 1))
       directory="$(dirname "$file")"
-      [ -d "$directory" ] || __failEnvironment "$usage" "Parent directory deleted, exiting: $directory" || return $?
+      [ -d "$directory" ] || __throwEnvironment "$usage" "Parent directory deleted, exiting: $directory" || return $?
       if [ ! -f "$file" ]; then
         continue
       fi
@@ -489,7 +489,7 @@ daemontoolsManager() {
         printf "Service %s: %s requested but not permitted: %s\n" "$(basename "$service")" "$fileAction" "${actions[*]}" 1>&2
       else
         if "$svcBin" "$svcBinFlags" "$service" 2>&1 | grep -q warning; then
-          __failEnvironment "$usage" "Unable to control service $service ($svcBinFlags)" || return $?
+          __throwEnvironment "$usage" "Unable to control service $service ($svcBinFlags)" || return $?
         fi
       fi
       rm -f "$file" "$file.svc" 2>/dev/null

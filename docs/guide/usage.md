@@ -39,7 +39,7 @@ An example:
     myFunction() {
         local usage="_${FUNCNAME[0]}"
         local bigFile="$1" savedFile="$2"
-        __usageEnvironment "$usage" curl -L "$bigFile" -o - > "$savedFile" || return $?
+        __catchEnvironment "$usage" curl -L "$bigFile" -o - > "$savedFile" || return $?
             _myFunction 1 "Unable to download $bigFile" || return $?
         fi
         ..

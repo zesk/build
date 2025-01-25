@@ -64,13 +64,13 @@ consoleColorMode() {
 
   export BUILD_COLORS_MODE
 
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -85,14 +85,14 @@ consoleColorMode() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ -n "${BUILD_COLORS_MODE-}" ] || __failArgument "$usage" "Empty BUILD_COLORS_MODE" || return $?
+  [ -n "${BUILD_COLORS_MODE-}" ] || __throwArgument "$usage" "Empty BUILD_COLORS_MODE" || return $?
   printf "%s\n" "${BUILD_COLORS_MODE-}"
 }
 _consoleColorMode() {
@@ -119,13 +119,13 @@ hasConsoleAnimation() {
 __mockConsoleAnimation() {
   local usage="_${FUNCNAME[0]}" flag="${1-}"
 
-  shift || __usageArgument "$usage" "Missing argument" || return $?
+  shift || __catchArgument "$usage" "Missing argument" || return $?
   if [ "$flag" = "--end" ]; then
     __mockValue CI __MOCKED_CI "$flag" "$@"
     return 0
   fi
 
-  isBoolean "$flag" || __failArgument "$usage" "Requires true or false (or --end)" || return $?
+  isBoolean "$flag" || __throwArgument "$usage" "Requires true or false (or --end)" || return $?
   __mockValue CI __MOCKED_CI "$(_choose "$flag" "" "testCI")" "$@"
 }
 
@@ -367,7 +367,7 @@ statusMessage() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -377,7 +377,7 @@ statusMessage() {
       --first)
         if ! hasConsoleAnimation; then
           shift
-          __usageEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
+          __catchEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
           return 0
         fi
         ;;
@@ -388,14 +388,14 @@ statusMessage() {
         ;;
       -*)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
       *)
         break
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   clearLine "$("$@")${lastMessage}"
 }
@@ -464,11 +464,11 @@ colorBrightness() {
   elif [ $# -eq 3 ]; then
     r=$1 g=$2 b=$3
   else
-    __failArgument "$usage" "Requires 3 arguments" || return $?
+    __throwArgument "$usage" "Requires 3 arguments" || return $?
   fi
-  __usageArgument "$usage" isUnsignedInteger "$r" || return $?
-  __usageArgument "$usage" isUnsignedInteger "$g" || return $?
-  __usageArgument "$usage" isUnsignedInteger "$b" || return $?
+  __catchArgument "$usage" isUnsignedInteger "$r" || return $?
+  __catchArgument "$usage" isUnsignedInteger "$g" || return $?
+  __catchArgument "$usage" isUnsignedInteger "$b" || return $?
   printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
 }
 _colorBrightness() {

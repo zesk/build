@@ -22,7 +22,7 @@ __packageListFunction() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -37,28 +37,28 @@ __packageListFunction() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
   local listFunction="__${manager}${functionVerb}List"
-  isFunction "$listFunction" || __failEnvironment "$usage" "$listFunction is not defined" || return $?
+  isFunction "$listFunction" || __throwEnvironment "$usage" "$listFunction is not defined" || return $?
   local beforeFunction
   [ ${#beforeFunctions[@]} -eq 0 ] || for beforeFunction in "${beforeFunctions[@]}"; do
-    __usageEnvironment "$usage" muzzle "$beforeFunction" || return $?
+    __catchEnvironment "$usage" muzzle "$beforeFunction" || return $?
   done
-  __usageEnvironment "$usage" "$listFunction" || return $?
+  __catchEnvironment "$usage" "$listFunction" || return $?
 }
 
 # Usage: {fn} usageFunction functionSuffix [ --help ] [ --manager packageManager ] [ --force ] ...
@@ -77,7 +77,7 @@ __packageUpFunction() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -88,7 +88,7 @@ __packageUpFunction() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       --force)
         forceFlag=true
@@ -98,20 +98,20 @@ __packageUpFunction() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
   local packageFunction="__${manager}${suffix}"
-  isFunction "$packageFunction" || __failEnvironment "$usage" "$packageFunction is not a defined function" || return $?
+  isFunction "$packageFunction" || __throwEnvironment "$usage" "$packageFunction is not a defined function" || return $?
 
   local name quietLog
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
-  name=$(__usageEnvironment "$usage" buildCacheDirectory ".packageUpdate") || return $?
-  __usageEnvironment "$usage" requireFileDirectory "$name" || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
+  name=$(__catchEnvironment "$usage" buildCacheDirectory ".packageUpdate") || return $?
+  __catchEnvironment "$usage" requireFileDirectory "$name" || return $?
 
   if $forceFlag; then
     statusMessage decorate info "Forcing $manager $verb ..."
@@ -123,8 +123,8 @@ __packageUpFunction() {
       return 0
     fi
   fi
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" "$packageFunction" "$@" || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" "$packageFunction" "$@" || return $?
   statusMessage --last reportTiming "$start" "$verb in"
   date +%s >"$name" || :
 }
@@ -179,7 +179,7 @@ packageWhich() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -193,11 +193,11 @@ packageWhich() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       -*)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
       *)
         if [ -z "$binary" ]; then
@@ -208,16 +208,16 @@ packageWhich() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
   if ! $forceFlag; then
-    [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
-    [ 0 -lt "${#packages[@]}" ] || __failArgument "$usage" "Missing packages" || return $?
+    [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
+    [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Missing packages" || return $?
     if whichExists "$binary"; then
       return 0
     fi
@@ -226,7 +226,7 @@ packageWhich() {
   if whichExists "$binary"; then
     return 0
   fi
-  __failEnvironment "$usage" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
+  __throwEnvironment "$usage" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
 _packageWhich() {
   # _IDENTICAL_ usageDocument 1
@@ -256,7 +256,7 @@ packageWhichUninstall() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -267,7 +267,7 @@ packageWhichUninstall() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
 
       *)
@@ -279,21 +279,21 @@ packageWhichUninstall() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
-  [ -n "$binary" ] || __failArgument "$usage" "Missing binary" || return $?
-  [ 0 -lt "${#packages[@]}" ] || __failArgument "$usage" "Missing packages" || return $?
+  [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
+  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Missing packages" || return $?
   if ! whichExists "$binary"; then
     return 0
   fi
-  __usageEnvironment "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
+  __catchEnvironment "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
   if foundPath="$(which "$binary")" && [ -n "$foundPath" ]; then
-    __failEnvironment "$usage" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
+    __throwEnvironment "$usage" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
   fi
 }
 _packageWhichUninstall() {
@@ -327,7 +327,7 @@ packageInstall() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -338,7 +338,7 @@ packageInstall() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       --force)
         forceFlag=true
@@ -350,24 +350,24 @@ packageInstall() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
   local start quietLog installed
 
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
-  installed="$(__usageEnvironment "$usage" mktemp)" || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
-  __usageEnvironment "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
+  installed="$(__catchEnvironment "$usage" mktemp)" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
+  __catchEnvironment "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
 
   local standardPackages=() actualPackages=() package installed installFunction
   # Loads BUILD_TEXT_BINARY
-  muzzle _packageStandardPackages "$manager" || __failEnvironment "$usage" "Unable to fetch standard packages" || return $?
+  muzzle _packageStandardPackages "$manager" || __throwEnvironment "$usage" "Unable to fetch standard packages" || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   if "$forceFlag"; then
     actualPackages=("${packages[@]}")
@@ -394,8 +394,8 @@ packageInstall() {
   fi
   statusMessage decorate info "Installing ${packages[*]+"${packages[*]}"} ... "
   local installFunction="__${manager}Install"
-  isFunction "$installFunction" || __failEnvironment "$usage" "$installFunction is not defined" || return $?
-  __usageEnvironmentQuiet "$usage" "$quietLog" "$installFunction" "${actualPackages[@]}" || return $?
+  isFunction "$installFunction" || __throwEnvironment "$usage" "$installFunction is not defined" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" "$installFunction" "${actualPackages[@]}" || return $?
   reportTiming "$start" OK
 }
 _packageInstall() {
@@ -415,7 +415,7 @@ packageIsInstalled() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -427,20 +427,20 @@ packageIsInstalled() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ "${#packages[@]}" -gt 0 ] || __failArgument "$usage" "Requires at least one package" || return $?
+  [ "${#packages[@]}" -gt 0 ] || __throwArgument "$usage" "Requires at least one package" || return $?
   local installed
   installed=$(fileTemporaryName "$usage") || return $?
-  __usageEnvironment "$usage" packageInstalledList >"$installed" || return $?
+  __catchEnvironment "$usage" packageInstalledList >"$installed" || return $?
   local package
   for package in "${packages[@]}"; do
     if ! grep -q -e "^$(quoteGrepPattern "$package")$" "$installed"; then
-      __usageEnvironment "$usage" rm -rf "$installed" || return $?
+      __catchEnvironment "$usage" rm -rf "$installed" || return $?
       return 1
     fi
   done
-  __usageEnvironment "$usage" rm -rf "$installed" || return $?
+  __catchEnvironment "$usage" rm -rf "$installed" || return $?
 }
 _packageIsInstalled() {
   # _IDENTICAL_ usageDocument 1
@@ -462,7 +462,7 @@ packageUninstall() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -473,38 +473,38 @@ packageUninstall() {
       --manager)
         shift
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __failArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
       *)
         packages+=("$argument")
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __failEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __failEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
-  [ 0 -lt "${#packages[@]}" ] || __failArgument "$usage" "Requires at least one package to uninstall" || return $?
+  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Requires at least one package to uninstall" || return $?
 
   local start quietLog standardPackages=()
 
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   local package
   for package in "${packages[@]}"; do
     if inArray "$package" "${standardPackages[@]}"; then
-      __failEnvironment "$usage" "Unable to remove standard package $(decorate code "$package")" || return $?
+      __throwEnvironment "$usage" "Unable to remove standard package $(decorate code "$package")" || return $?
     fi
   done
   local uninstallFunction="__${manager}Uninstall"
-  isFunction "$uninstallFunction" || __failEnvironment "$usage" "$uninstallFunction is not defined" || return $?
+  isFunction "$uninstallFunction" || __throwEnvironment "$usage" "$uninstallFunction is not defined" || return $?
 
   statusMessage decorate info "Uninstalling ${packages[*]} ... "
-  __usageEnvironmentQuiet "$usage" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
   statusMessage --last reportTiming "$start" "Uninstallation of ${packages[*]} completed in" || :
 }
 _packageUninstall() {
@@ -515,7 +515,7 @@ _packageUninstall() {
 _packageStandardPackages() {
   local manager="$1" packageFunction
   packageFunction="__${1}StandardPackages"
-  isFunction "$packageFunction" || __failEnvironment "$usage" "$packageFunction is not a defined function" || return $?
+  isFunction "$packageFunction" || __throwEnvironment "$usage" "$packageFunction is not a defined function" || return $?
   __environment "$packageFunction" || return $?
 }
 
@@ -568,10 +568,10 @@ packageNeedRestartFlag() {
   local usage="_${FUNCNAME[0]}"
   local quietLog restartFlag
 
-  restartFlag=$(__usageEnvironment "$usage" buildCacheDirectory ".needRestart") || return $?
+  restartFlag=$(__catchEnvironment "$usage" buildCacheDirectory ".needRestart") || return $?
   if [ $# -eq 0 ]; then
     if [ -f "$restartFlag" ]; then
-      __usageEnvironment "$usage" cat "$restartFlag" || return $?
+      __catchEnvironment "$usage" cat "$restartFlag" || return $?
     else
       return 1
     fi
@@ -579,7 +579,7 @@ packageNeedRestartFlag() {
     if [ "$1" = "" ]; then
       rm -f "$restartFlag" || :
     else
-      printf "%s\n" "$@" >"$restartFlag" || __failEnvironment "$usage" "Unable to write $restartFlag" || return $?
+      printf "%s\n" "$@" >"$restartFlag" || __throwEnvironment "$usage" "Unable to write $restartFlag" || return $?
     fi
   fi
 }

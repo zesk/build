@@ -30,7 +30,7 @@
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: __failArgument decorate
+# Requires: __throwArgument decorate
 mapEnvironment2() {
   local usage="_${FUNCNAME[0]}"
 
@@ -40,7 +40,7 @@ mapEnvironment2() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -72,7 +72,7 @@ mapEnvironment2() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # If no environment variables are passed on the command line, then use all of them
@@ -85,18 +85,18 @@ mapEnvironment2() {
     local __filter __value __usage="$usage"
     unset usage
 
-    __value="$(__usageEnvironment "$__usage" cat)" || return $?
+    __value="$(__catchEnvironment "$__usage" cat)" || return $?
     if [ $((${#__replaceFilters[@]} + ${#__searchFilters[@]})) -gt 0 ]; then
       for __e in "${__ee[@]}"; do
         local __search="$__prefix$__e$__suffix" __replace="${!__e-}"
         if [ ${#__searchFilters[@]} -gt 0 ]; then
           for __filter in "${__searchFilters[@]}"; do
-            __search=$(__usageEnvironment "$__usage" "$__filter" "$__search") || return $?
+            __search=$(__catchEnvironment "$__usage" "$__filter" "$__search") || return $?
           done
         fi
         if [ ${#__replaceFilters[@]} -gt 0 ]; then
           for __filter in "${__replace[@]}"; do
-            __replace=$(__usageEnvironment "$__usage" "$__filter" "$__replace") || return $?
+            __replace=$(__catchEnvironment "$__usage" "$__filter" "$__replace") || return $?
           done
         fi
         __value="${__value/$__search/$__replace}"

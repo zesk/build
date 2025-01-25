@@ -23,7 +23,7 @@ documentationTemplateUpdate() {
   while ! identicalCheck "${repairArgs[@]}" --extension md --prefix '<!-- TEMPLATE' --cd "$templatePath"; do
     failCount=$((failCount + 1))
     if [ $failCount -gt 4 ]; then
-      __usageEnvironment "$usage" "identicalCheck --repair failed" || return $?
+      __catchEnvironment "$usage" "identicalCheck --repair failed" || return $?
     fi
   done
 }
@@ -51,11 +51,11 @@ _documentationTemplateUpdateUnlinked() {
   target=$(usageArgumentFileDirectory "$usage" "target" "${4-}") || return $?
   # Not used I guess
   muzzle usageArgumentFile "$usage" "pageTemplate" "${5-}" || return $?
-  todoTemplate=$(__usageEnvironment "$usage" documentationTemplate "${6-todo}") || return $?
+  todoTemplate=$(__catchEnvironment "$usage" documentationTemplate "${6-todo}") || return $?
 
   unlinkedFunctions=$(fileTemporaryName "$usage") || return $?
   clean+=("$unlinkedFunctions")
-  documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __failEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || _clean $? "${clean[@]}" || return $?
+  documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __throwEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || _clean $? "${clean[@]}" || return $?
   total=$(wc -l <"$unlinkedFunctions" | trimSpace)
 
   # Subshell hide globals
@@ -64,13 +64,13 @@ _documentationTemplateUpdateUnlinked() {
     content=$content total=$total mapEnvironment content total <"$todoTemplate" >"$template.$$"
   ) || _clean $? "${clean[@]}" || return $?
 
-  __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
   if [ -f "$template" ] && diff -q "$template" "$template.$$" >/dev/null; then
     statusMessage decorate info "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
-    __usageEnvironment "$usage" rm -f "$template.$$" || return $?
+    __catchEnvironment "$usage" rm -f "$template.$$" || return $?
   else
-    __usageEnvironment "$usage" mv -f "$template.$$" "$template" || return $?
+    __catchEnvironment "$usage" mv -f "$template.$$" "$template" || return $?
     statusMessage decorate info "Updated $(decorate file "$template") with $total unlinked $(plural "$total" function functions)"
   fi
 }
@@ -87,14 +87,14 @@ _buildDocumentation_MergeWithDocsBranch() {
   local this="${FUNCNAME[0]}"
   local usage="_$this"
 
-  branch=$(__usageEnvironment "$usage" gitCurrentBranch) || return $?
+  branch=$(__catchEnvironment "$usage" gitCurrentBranch) || return $?
   if [ "$branch" = "$docsBranch" ]; then
-    __failEnvironment "$usage" "Already on docs branch" || return $?
+    __throwEnvironment "$usage" "Already on docs branch" || return $?
   fi
-  __usageEnvironment "$usage" git checkout "$docsBranch" || return $?
-  __usageEnvironment "$usage" git merge -m "$this" "$branch" || return $?
-  __usageEnvironment "$usage" git push || return $?
-  __usageEnvironment "$usage" git checkout "$branch" || return $?
+  __catchEnvironment "$usage" git checkout "$docsBranch" || return $?
+  __catchEnvironment "$usage" git merge -m "$this" "$branch" || return $?
+  __catchEnvironment "$usage" git push || return $?
+  __catchEnvironment "$usage" git checkout "$branch" || return $?
 }
 __buildDocumentation_MergeWithDocsBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -109,15 +109,15 @@ _buildDocumentation_Recommit() {
 
   usage="_${FUNCNAME[0]}"
 
-  branch=$(gitCurrentBranch) || __failEnvironment "$usage" gitCurrentBranch || return $?
+  branch=$(gitCurrentBranch) || __throwEnvironment "$usage" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
-    __failEnvironment "$usage" "Already on docs branch" || return $?
+    __throwEnvironment "$usage" "Already on docs branch" || return $?
   fi
   if gitRepositoryChanged; then
     statusMessage decorate warning "Committing to branch $branch ..."
-    __usageEnvironment "$usage" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
+    __catchEnvironment "$usage" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
     statusMessage decorate info "Pushing branch $branch ..."
-    __usageEnvironment "$usage" git push || return $?
+    __catchEnvironment "$usage" git push || return $?
     statusMessage decorate success "Documentation committed"
   else
     decorate info "Branch $branch is unchanged"
@@ -130,7 +130,7 @@ __buildDocumentation_Recommit() {
 _buildDocumentationGenerateEnvironment() {
   export APPLICATION_NAME
   buildEnvironmentLoad APPLICATION_NAME || :
-  envFile=$(mktemp) || __failEnvironment "$usage" "mktemp failed" || return $?
+  envFile=$(mktemp) || __throwEnvironment "$usage" "mktemp failed" || return $?
   {
     __dumpNameValue summary "{fn}"
     __dumpNameValue vendor "$1"
@@ -140,7 +140,7 @@ _buildDocumentationGenerateEnvironment() {
     __dumpNameValue BUILD_COMPANY_LINK "$2"
 
     __dumpNameValue year "$(date +%Y)"
-  } >>"$envFile" || __failEnvironment "$usage" "Saving to $envFile failed" || return $?
+  } >>"$envFile" || __throwEnvironment "$usage" "Saving to $envFile failed" || return $?
   printf "%s\n" "$envFile"
 }
 
@@ -158,10 +158,10 @@ documentationUnlinked() {
   local usage="_${FUNCNAME[0]}"
   local cacheDirectory
 
-  cacheDirectory="$(__usageEnvironment "$usage" buildCacheDirectory)" || return $?
-  cacheDirectory=$(__usageEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
+  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory)" || return $?
+  cacheDirectory=$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
 
-  __usageEnvironment "$usage" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
+  __catchEnvironment "$usage" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
 }
 _documentationUnlinked() {
   # _IDENTICAL_ usageDocument 1

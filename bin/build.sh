@@ -84,7 +84,7 @@ __buildBuild() {
   consoleNameValue "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
 
   if ! ./bin/update-md.sh --skip-commit; then
-    __usageEnvironment "$usage" "Can not update the Markdown files" || return $?
+    __catchEnvironment "$usage" "Can not update the Markdown files" || return $?
   fi
 
   if gitRepositoryChanged; then

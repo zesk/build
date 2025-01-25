@@ -21,7 +21,7 @@ dateToFormat() {
   local usage="_${FUNCNAME[0]}"
   local format="${2-"%Y-%m-%d"}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
+    __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
   fi
   __dateToFormat "$1" "$format"
   #  if date --version 2>/dev/null 1>&2; then
@@ -60,7 +60,7 @@ dateToTimestamp() {
 timestampToDate() {
   local usage="_${FUNCNAME[0]}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    __failArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
+    __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
   __timestampToDate "$@"
 }

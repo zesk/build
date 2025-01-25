@@ -47,8 +47,8 @@ alpineContainer() {
   local usage="_${FUNCNAME[0]}"
 
   export LC_TERMINAL TERM
-  __usageEnvironment "$usage" buildEnvironmentLoad LC_TERMINAL TERM || return $?
-  __usageEnvironment "$usage" dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad LC_TERMINAL TERM || return $?
+  __catchEnvironment "$usage" dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
 }
 _alpineContainer() {
   # _IDENTICAL_ usageDocument 1
@@ -88,16 +88,16 @@ __apkUpgrade() {
   local usage="_${FUNCNAME[0]}"
   local quietLog upgradeLog result
 
-  quietLog=$(__usageEnvironment "$usage" buildQuietLog "$usage") || return $?
-  upgradeLog=$(__usageEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
-  __usageEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog"
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  upgradeLog=$(__catchEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
+  __catchEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog"
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      __usageEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?
+      __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?
     fi
     result=restart
   else
-    __usageEnvironment "$usage" pacakgeNeedRestartFlag "" || return $?
+    __catchEnvironment "$usage" pacakgeNeedRestartFlag "" || return $?
     result=ok
   fi
   printf "%s\n" "$result"
@@ -119,7 +119,7 @@ __apkUpdate() {
 # package.sh: true
 __apkInstalledList() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
+  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
   apk list -I -q
 }
 ___apkInstalledList() {
@@ -143,7 +143,7 @@ __apkStandardPackages() {
 # package.sh: true
 __apkAvailableList() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __failArgument "$usage" "Unknown argument $*" || return $?
+  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
   apk list -a -q
 }
 ___apkAvailableList() {

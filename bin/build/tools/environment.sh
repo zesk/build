@@ -17,7 +17,7 @@ environmentValueWrite() {
 
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
   shift
-  [ $# -ge 1 ] || __failArgument "$usage" "value required" || return $?
+  [ $# -ge 1 ] || __throwArgument "$usage" "value required" || return $?
   if [ $# -eq 1 ]; then
     value="${1-}"
     __environmentValueWrite "$name" "$(declare -p value)" || return $?
@@ -80,7 +80,7 @@ environmentValueRead() {
   local stateFile name default="${3---}" value
   stateFile=$(usageArgumentFile "$usage" "stateFile" "${1-}") || return $?
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
-  [ $# -le 3 ] || __failArgument "$usage" "Extra arguments: $#" || return $?
+  [ $# -le 3 ] || __throwArgument "$usage" "Extra arguments: $#" || return $?
   if ! value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)" || [ -z "$value" ]; then
     if [ $# -le 2 ]; then
       return 1
@@ -107,8 +107,8 @@ environmentValueConvertArray() {
   value=$(__unquote "${1-}")
   [ "$value" != "()" ] || return 0 # Empty array
   if [ "${value#*=}" != "$value" ]; then
-    [ "${value#"$prefix"}" != "$value" ] || __failArgument "$usage" "Not an array value (prefix: \"${value:0:4}\")" || return $?
-    [ "${value%"$suffix"}" != "$value" ] || __failArgument "$usage" "Not an array value (suffix)" || return $?
+    [ "${value#"$prefix"}" != "$value" ] || __throwArgument "$usage" "Not an array value (prefix: \"${value:0:4}\")" || return $?
+    [ "${value%"$suffix"}" != "$value" ] || __throwArgument "$usage" "Not an array value (suffix)" || return $?
     declare -a "value=$value"
   else
     local n=$((${#value} - 1))
@@ -165,7 +165,7 @@ environmentValueReadArray() {
   local stateFile="${1-}" name value
 
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
-  value=$(__usageEnvironment "$usage" environmentValueRead "$stateFile" "$name" "") || return $?
+  value=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" "$name" "") || return $?
   environmentValueConvertArray "$value" || return $?
 }
 _environmentValueReadArray() {
@@ -214,7 +214,7 @@ dotEnvConfigure() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -229,14 +229,14 @@ dotEnvConfigure() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if [ -z "$where" ]; then
-    where=$(__usageEnvironment "$usage" pwd) || return $?
+    where=$(__catchEnvironment "$usage" pwd) || return $?
   fi
   aa+=(--require "$where/.env" --optional "$where/.env.local" --require)
-  __usageEnvironment "$usage" environmentFileLoad "${aa[@]}" "$@" || return $?
+  __catchEnvironment "$usage" environmentFileLoad "${aa[@]}" "$@" || return $?
 }
 _dotEnvConfigure() {
   # _IDENTICAL_ usageDocument 1
@@ -267,7 +267,7 @@ environmentFileLoad() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -317,9 +317,9 @@ environmentFileLoad() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  $hasOne || __failArgument "$usage" "Requires at least one environmentFile" || return $?
+  $hasOne || __throwArgument "$usage" "Requires at least one environmentFile" || return $?
   ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
   for environmentFile in "${ff[@]}"; do
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
@@ -337,7 +337,7 @@ environmentFileLoad() {
         continue
       fi
       # Skip insecure variables
-      [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __failEnvironment "$usage" "${environmentFile} contains secure value $(decorate bold-red "$name")" || return $?
+      [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __throwEnvironment "$usage" "${environmentFile} contains secure value $(decorate bold-red "$name")" || return $?
       # Ignore stuff as a feature
       if [ "${#ignoreList[@]}" -gt 0 ] && inArray "$name" "${ignoreList[@]}"; then
         ! $debugMode || decorate warning "$(decorate code "$name") is ignored ($environmentFile:$line)"
@@ -428,7 +428,7 @@ environmentFileShow() {
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationLoad) || :
   for name in "${variables[@]+"${variables[@]}"}"; do
-    environmentVariableNameValid "$name" || __usageArgument "$usage" "Invalid environment name $(decorate code "$name")" 1>&2
+    environmentVariableNameValid "$name" || __catchArgument "$usage" "Invalid environment name $(decorate code "$name")" 1>&2
   done
   export "${variables[@]}"
 
@@ -446,7 +446,7 @@ environmentFileShow() {
     shift
   done
   buildEnvironment=("$@")
-  environmentVariableNameValid "$@" || __usageArgument "$usage" "Invalid variable name" || return $?
+  environmentVariableNameValid "$@" || __catchArgument "$usage" "Invalid variable name" || return $?
 
   printf -- "%s %s %s %s%s\n" "$(decorate info "Application")" "$(decorate magenta "$APPLICATION_VERSION")" "$(decorate info "on")" "$(decorate bold-red "$APPLICATION_BUILD_DATE")" "$(decorate info "...")"
   if buildDebugEnabled; then
@@ -470,7 +470,7 @@ environmentFileShow() {
       consoleNameValue "$width" "$name" "${!name}"
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || __usageEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?
+  [ ${#missing[@]} -eq 0 ] || __catchEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?
 }
 _environmentFileShow() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -495,13 +495,13 @@ environmentFileApplicationMake() {
   local variableNames name
 
   variableNames=$(fileTemporaryName "$usage") || return $?
-  environmentApplicationLoad >"$variableNames" || __failEnvironment "$usage" "environmentApplicationLoad" || return $?
-  environmentFileApplicationVerify "$@" || __failArgument "$usage" "Verify failed" || return $?
+  environmentApplicationLoad >"$variableNames" || __throwEnvironment "$usage" "environmentApplicationLoad" || return $?
+  environmentFileApplicationVerify "$@" || __throwArgument "$usage" "Verify failed" || return $?
   IFS=$'\n' read -d '' -r -a variables <"$variableNames" || :
-  __usageEnvironment "$usage" rm -rf "$variableNames" || return $?
+  __catchEnvironment "$usage" rm -rf "$variableNames" || return $?
   for name in "${variables[@]+"${variables[@]}"}" "$@"; do
     [ "$name" != "--" ] || continue
-    __usageEnvironment "$usage" environmentValueWrite "$name" "${!name-}" || return $?
+    __catchEnvironment "$usage" environmentValueWrite "$name" "${!name-}" || return $?
   done
 }
 _environmentFileApplicationMake() {
@@ -527,12 +527,12 @@ environmentFileApplicationVerify() {
   done
   missing=()
   for name in "${requireEnvironment[@]}"; do
-    environmentVariableNameValid "$name" || __failEnvironment "$usage" "Invalid environment name found: $(decorate code "$name")" || return $?
+    environmentVariableNameValid "$name" || __throwEnvironment "$usage" "Invalid environment name found: $(decorate code "$name")" || return $?
     if [ -z "${!name:-}" ]; then
       missing+=("$name")
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || __failEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
+  [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
 }
 _environmentFileApplicationVerify() {
   # _IDENTICAL_ usageDocument 1

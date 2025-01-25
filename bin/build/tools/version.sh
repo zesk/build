@@ -46,7 +46,7 @@ releaseNotes() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -62,7 +62,7 @@ releaseNotes() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   buildEnvironmentContext __releaseNotes "$usage" "$version"
 }
@@ -70,13 +70,13 @@ __releaseNotes() {
   local usage="$1" version="${2-}" home releasePath
 
   if [ -z "$version" ]; then
-    version=$(__usageEnvironment "$usage" hookRun version-current) || return $?
-    [ -n "$version" ] || __failEnvironment "$usage" "version-current hook returned blank" || return $?
+    version=$(__catchEnvironment "$usage" hookRun version-current) || return $?
+    [ -n "$version" ] || __throwEnvironment "$usage" "version-current hook returned blank" || return $?
   fi
   export BUILD_RELEASE_NOTES
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
-  [ -n "${BUILD_RELEASE_NOTES}" ] || __failEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ -n "${BUILD_RELEASE_NOTES}" ] || __throwEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="${BUILD_RELEASE_NOTES%/}"
   isAbsolutePath "$releasePath" || releasePath=$(simplifyPath "$home/$releasePath")
   printf "%s/%s.md\n" "${releasePath%/}" "$version"
@@ -93,12 +93,12 @@ _releaseNotes() {
 nextMinorVersion() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || __failArgument "$usage" "lastVersion required" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "lastVersion required" || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -109,7 +109,7 @@ nextMinorVersion() {
         local last prefix
 
         last="${1##*.}"
-        __usageArgument "$usage" isInteger "$last" || return $?
+        __catchArgument "$usage" isInteger "$last" || return $?
         prefix="${1%.*}"
         prefix="${prefix#v*}"
         if [ "$prefix" != "${1-}" ]; then
@@ -122,7 +122,7 @@ nextMinorVersion() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _nextMinorVersion() {
@@ -161,7 +161,7 @@ newRelease() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -175,15 +175,15 @@ newRelease() {
       *)
         if [ -n "$newVersion" ]; then
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         newVersion="${argument#v}"
-        isVersion "$newVersion" || __failArgument "$usage" "$argument is not a version" || return $?
+        isVersion "$newVersion" || __throwArgument "$usage" "$argument is not a version" || return $?
         newVersion="v$newVersion"
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   buildEnvironmentContext __newRelease "$usage" "$isInteractive" "$newVersion"
@@ -198,17 +198,17 @@ __newRelease() {
   if [ -z "$newVersion" ]; then
     readLoop=true
   fi
-  hasHook version-current || __failEnvironment "$usage" "Requires hook version-current" || return $?
-  currentVersion=$(__usageEnvironment "$usage" hookRun version-current) || return $?
-  [ -n "$currentVersion" ] || __failEnvironment "$usage" "version-current hook returned empty string" || return $?
+  hasHook version-current || __throwEnvironment "$usage" "Requires hook version-current" || return $?
+  currentVersion=$(__catchEnvironment "$usage" hookRun version-current) || return $?
+  [ -n "$currentVersion" ] || __throwEnvironment "$usage" "version-current hook returned empty string" || return $?
   if hasHook version-live; then
-    liveVersion=$(__usageEnvironment "$usage" hookRun version-live) || return $?
-    [ -n "$currentVersion" ] || __failEnvironment "$usage" "version-live hook returned empty string" || return $?
+    liveVersion=$(__catchEnvironment "$usage" hookRun version-live) || return $?
+    [ -n "$currentVersion" ] || __throwEnvironment "$usage" "version-live hook returned empty string" || return $?
     consoleNameValue $width "Live:" "$liveVersion"
   else
     liveVersion=$currentVersion
   fi
-  notes="$(__usageEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
+  notes="$(__catchEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
   nextVersion=$(nextMinorVersion "$liveVersion")
   consoleNameValue $width "Current:" "$currentVersion"
 
@@ -218,24 +218,24 @@ __newRelease() {
     [ -n "$checkVersion" ] || checkVersion="$lastVersion"
     lastVersion="$(printf "%s\n" "$liveVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
     if [ "$newVersion" != "$lastVersion" ]; then
-      __failArgument "$usage" "$(decorate error "$newVersion") is before live $(decorate code "$liveVersion")" || return $?
+      __throwArgument "$usage" "$(decorate error "$newVersion") is before live $(decorate code "$liveVersion")" || return $?
     fi
     ! $isInteractive || confirmYesNo --yes "Change version to $(decorate code "$newVersion")? " || return $?
     if [ -f "$notes" ]; then
       local newNotes
-      newNotes=$(__usageEnvironment "$usage" releaseNotes "$newVersion") || return $?
+      newNotes=$(__catchEnvironment "$usage" releaseNotes "$newVersion") || return $?
       if [ -f "$newNotes" ]; then
-        __failEnvironment "$usage" "$(decorate file "$notes") and $(decorate file "$newNotes") both exist - can not re-version" || return $?
+        __throwEnvironment "$usage" "$(decorate file "$notes") and $(decorate file "$newNotes") both exist - can not re-version" || return $?
       fi
-      __usageEnvironment "$usage" sed "s/$(quoteSedPattern "$currentVersion")/$(quoteSedReplacement "$newVersion")/g" <"$notes" >"$notes.fixed" || _clean $? "$notes.fixed" || return $?
-      __usageEnvironment "$usage" git mv "$notes" "$newNotes" || _clean $? "$notes.fixed" || return $?
-      __usageEnvironment "$usage" mv -f "$notes.fixed" "$newNotes" || _clean $? "$notes.fixed" || return $?
+      __catchEnvironment "$usage" sed "s/$(quoteSedPattern "$currentVersion")/$(quoteSedReplacement "$newVersion")/g" <"$notes" >"$notes.fixed" || _clean $? "$notes.fixed" || return $?
+      __catchEnvironment "$usage" git mv "$notes" "$newNotes" || _clean $? "$notes.fixed" || return $?
+      __catchEnvironment "$usage" mv -f "$notes.fixed" "$newNotes" || _clean $? "$notes.fixed" || return $?
     fi
     currentVersion="$newVersion"
-    notes="$(__usageEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
+    notes="$(__catchEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
     nextVersion=$(nextMinorVersion "$liveVersion")
     if $isInteractive; then
-      __usageEnvironment "$usage" hookRun version-created "$currentVersion" "$notes" || return $?
+      __catchEnvironment "$usage" hookRun version-created "$currentVersion" "$notes" || return $?
     fi
   fi
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
@@ -243,7 +243,7 @@ __newRelease() {
     consoleNameValue $width "Ready to deploy:" "$currentVersion"
     consoleNameValue $width "Release notes:" "$notes"
     if $isInteractive; then
-      __usageEnvironment "$usage" hookRun version-already "$currentVersion" "$notes" || return $?
+      __catchEnvironment "$usage" hookRun version-already "$currentVersion" "$notes" || return $?
     fi
     return 0
   fi
@@ -251,7 +251,7 @@ __newRelease() {
     if [ -z "$newVersion" ]; then
       newVersion=$nextVersion
     elif ! isVersion "$newVersion"; then
-      __failArgument "$usage" "New version $newVersion is not a valid version tag" || return $?
+      __throwArgument "$usage" "New version $newVersion is not a valid version tag" || return $?
     fi
   else
     while true; do
@@ -269,23 +269,23 @@ __newRelease() {
         break
       else
         if ! $readLoop; then
-          __failArgument "$usage" "Invalid version $newVersion" || return $?
+          __throwArgument "$usage" "Invalid version $newVersion" || return $?
         fi
         decorate error "Invalid version $newVersion"
       fi
     done
   fi
-  notes="$(__usageEnvironment "$usage" releaseNotes "$newVersion")" || return $?
+  notes="$(__catchEnvironment "$usage" releaseNotes "$newVersion")" || return $?
   if [ ! -f "$notes" ]; then
     __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
     decorate success "Version $newVersion ready - release notes: $notes"
     if $isInteractive; then
-      __usageEnvironment "$usage" hookRun version-created "$newVersion" "$notes" || return $?
+      __catchEnvironment "$usage" hookRun version-created "$newVersion" "$notes" || return $?
     fi
   else
     decorate warning "Version $newVersion already - release notes: $notes"
     if $isInteractive; then
-      __usageEnvironment "$usage" hookRun version-already "$newVersion" "$notes" || return $?
+      __catchEnvironment "$usage" hookRun version-already "$newVersion" "$notes" || return $?
     fi
   fi
   git add "$notes"

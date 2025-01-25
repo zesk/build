@@ -35,7 +35,7 @@ darwinDialog() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -71,14 +71,14 @@ darwinDialog() {
   done
   maxChoice=$((${#choices[@]} - 1))
   if [ "$defaultButton" -gt $maxChoice ]; then
-    __failArgument "$usage" "defaultButton $defaultButton is out of range 0 ... $maxChoice" || return $?
+    __throwArgument "$usage" "defaultButton $defaultButton is out of range 0 ... $maxChoice" || return $?
   fi
   messageText="$(escapeDoubleQuotes "$(printf "%s\\\n" "${message[@]}")")"
   # Index is 1-based
   defaultButton=$((defaultButton + 1))
   (
     IFS=','
-    result="$(__usageEnvironment "$usage" osascript -e "display dialog \"$messageText\" buttons { ${choiceText[*]} } default button $defaultButton" | cut -d : -f 2)" || return $?
+    result="$(__catchEnvironment "$usage" osascript -e "display dialog \"$messageText\" buttons { ${choiceText[*]} } default button $defaultButton" | cut -d : -f 2)" || return $?
     printf "%s\n" "$result"
   ) || return $?
 }

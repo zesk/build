@@ -158,17 +158,17 @@ _decorations() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Requires: isFunction _argument awk __usageEnvironment usageDocument
+# Requires: isFunction _argument awk __catchEnvironment usageDocument
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}"
-  shift || __usageArgument "$usage" "Requires at least one argument" || return $?
+  shift || __catchArgument "$usage" "Requires at least one argument" || return $?
   local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
     extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
-    # When this next line calls `__usageArgument` it results in an infinite loop
+    # When this next line calls `__catchArgument` it results in an infinite loop
     isFunction "$extend" || _argument "Unknown decoration name: $what ($extend)" || return $?
-    __usageEnvironment "$usage" "$extend" "$@" || return $?
+    __catchEnvironment "$usage" "$extend" "$@" || return $?
     return $?
   fi
   read -r lp dp text <<<"$style" || :

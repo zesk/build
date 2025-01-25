@@ -26,8 +26,8 @@ __hookProjectDeactivate() {
     otherName=$("$otherHome/$tools" buildEnvironmentGet APPLICATION_NAME)
   fi
   [ -n "$otherName" ] || otherName="${otherHome##*/}"
-  name=$(__usageEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  name=$(__catchEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
   statusMessage printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$name")" "➜" "$(decorate success "$otherName")"
 }
@@ -39,7 +39,7 @@ ___hookProjectDeactivate() {
 __hookProjectDeactivateContext() {
   local usage="_${FUNCNAME[0]}" home
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   bashSourceInteractive --vebose --prefix "Deactivate" "$home/bin/developer-undo.sh" "$home/bin/developer-undo/" || return $?
 }
 ___hookProjectDeactivateContext() {

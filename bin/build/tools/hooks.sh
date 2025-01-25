@@ -24,7 +24,7 @@ _hookContextWrapper() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -44,16 +44,16 @@ _hookContextWrapper() {
 
   local start
 
-  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
+  start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$usage" "Failed to get pwd" || return $?
   if [ -z "$application" ]; then
-    application=$(gitFindHome "$start") || __failEnvironment "$usage" "Unable to find git home" || return $?
+    application=$(gitFindHome "$start") || __throwEnvironment "$usage" "Unable to find git home" || return $?
     application="${application%/}"
     if [ "${start#"$application"}" = "$start" ]; then
       buildEnvironmentContext hookVersionCurrent --application "$application" "${__saved[@]}" || return $?
       return 0
     fi
   fi
-  __usageEnvironment "$usage" hookRun --application "$application" "$hookName" "$@" || return $?
+  __catchEnvironment "$usage" hookRun --application "$application" "$hookName" "$@" || return $?
 }
 
 # Application current version

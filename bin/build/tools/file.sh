@@ -39,8 +39,8 @@ renameFiles() {
 
   for i in "$@"; do
     if [ -f "$i$old" ]; then
-      __usageEnvironment "$usage" mv "$i$old" "$i$new" || return $?
-      __usageEnvironment "$usage" statusMessage --last decorate info "$verb $(decorate file "$i$old") -> $(decorate file "$i$new")" || return $?
+      __catchEnvironment "$usage" mv "$i$old" "$i$new" || return $?
+      __catchEnvironment "$usage" statusMessage --last decorate info "$verb $(decorate file "$i$old") -> $(decorate file "$i$new")" || return $?
     fi
   done
 }
@@ -61,10 +61,10 @@ modificationTime() {
   local argument
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    [ -f "$argument" ] || __failArgument "$usage" "$argument is not a file" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    [ -f "$argument" ] || __throwArgument "$usage" "$argument is not a file" || return $?
     printf "%d\n" "$(date -r "$argument" +%s)"
-    shift || __failArgument "$usage" "shift" || return $?
+    shift || __throwArgument "$usage" "shift" || return $?
   done
 }
 _modificationTime() {
@@ -82,11 +82,11 @@ modificationSeconds() {
   local usage="_${FUNCNAME[0]}"
   local now_
 
-  now_="$(__usageEnvironment "$usage" date +%s)" || return $?
+  now_="$(__catchEnvironment "$usage" date +%s)" || return $?
   local __count=$#
   while [ $# -gt 0 ]; do
     local argument="$(usageArgumentFile "$usage" "argument #$((__count - $# + 1))" "${1-}")" || return $?
-    __usageEnvironment "$usage" printf "%d\n" "$((now_ - $(modificationTime "$argument")))" || return $?
+    __catchEnvironment "$usage" printf "%d\n" "$((now_ - $(modificationTime "$argument")))" || return $?
     shift
   done
 }
@@ -112,7 +112,7 @@ listFileModificationTimes() {
   local directory
 
   directory="$1"
-  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
+  [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   # See: platform
   __listFileModificationTimes "$directory" "$@"
@@ -128,7 +128,7 @@ _listFileModificationTimes() {
 mostRecentlyModifiedFile() {
   local usage="_${FUNCNAME[0]}"
   directory="$1"
-  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
+  [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
@@ -143,7 +143,7 @@ _mostRecentlyModifiedFile() {
 mostRecentlyModifiedTimestamp() {
   local usage="_${FUNCNAME[0]}"
   directory="$1"
-  [ -d "$directory" ] || __failArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
+  [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
@@ -204,9 +204,9 @@ __gamutFile() {
   local __saved=("$@")
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1)) tempTime
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
-    [ -f "$argument" ] || __failArgument "$usage" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
-    tempTime=$(modificationTime "$argument") || __failEnvironment "#$__index/$__count: modificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -f "$argument" ] || __throwArgument "$usage" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    tempTime=$(modificationTime "$argument") || __throwEnvironment "#$__index/$__count: modificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
       theFile="$1"
       gamutTime="$tempTime"
@@ -252,7 +252,7 @@ modifiedSeconds() {
   local usage="_${FUNCNAME[0]}"
   local timestamp
 
-  timestamp=$(modificationTime "$1") || __failArgument "$usage" modificationTime "$1" || return $?
+  timestamp=$(modificationTime "$1") || __throwArgument "$usage" modificationTime "$1" || return $?
   printf %d "$(($(date +%s) - timestamp))"
 }
 _modifiedSeconds() {
@@ -269,7 +269,7 @@ modifiedDays() {
   local usage="_${FUNCNAME[0]}"
   local timestamp
 
-  timestamp=$(modifiedSeconds "$1") || __failArgument "$usage" modifiedSeconds "$1" || return $?
+  timestamp=$(modifiedSeconds "$1") || __throwArgument "$usage" modifiedSeconds "$1" || return $?
   printf %d "$((timestamp / 86400))"
 }
 _modifiedDays() {
@@ -325,16 +325,16 @@ fileSize() {
   local usage="_${FUNCNAME[0]}"
 
   export OSTYPE
-  __usageEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
 
   case "$(lowercase "${OSTYPE}")" in
     *darwin*) opts=("-f" "%z") ;;
     *) opts=('-c%s') ;;
   esac
   while [ $# -gt 0 ]; do
-    size="$(stat "${opts[@]}" "$1")" || __failEnvironment "$usage" "Unable to stat" "${opts[@]}" "$1" || return $?
+    size="$(stat "${opts[@]}" "$1")" || __throwEnvironment "$usage" "Unable to stat" "${opts[@]}" "$1" || return $?
     printf "%s\n" "$size"
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 }
 _fileSize() {
@@ -390,7 +390,7 @@ renameLink() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -404,15 +404,15 @@ renameLink() {
           to=$(usageArgumentString "$usage" "to $(betterType "$1")" "$1") || return $?
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$from" ] || __failArgument "$usage" "Need a \"from\" argument" || return $?
-  [ -n "$to" ] || __failArgument "$usage" "Need a \"to\" argument" || return $?
+  [ -n "$from" ] || __throwArgument "$usage" "Need a \"from\" argument" || return $?
+  [ -n "$to" ] || __throwArgument "$usage" "Need a \"to\" argument" || return $?
   __renameLink "$from" "$to"
 }
 _renameLink() {
@@ -434,7 +434,7 @@ __fileListColumn() {
   while [ $# -gt 0 ]; do
     # shellcheck disable=SC2012
     if ! result="$(ls -ld "$1" | awk '{ print $'"$column"' }')"; then
-      __failEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
+      __throwEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
     fi
     printf "%s\n" "$result"
     shift
@@ -515,7 +515,7 @@ _fileMatchesHelper() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -532,19 +532,19 @@ _fileMatchesHelper() {
     esac
     shift
   done
-  [ "${#patterns[@]}" -gt 0 ] || __usageArgument "$usage" "No patterns" || return $?
-  [ $# -gt 0 ] || __usageArgument "$usage" "no exceptions or files" || return $?
+  [ "${#patterns[@]}" -gt 0 ] || __catchArgument "$usage" "No patterns" || return $?
+  [ $# -gt 0 ] || __catchArgument "$usage" "no exceptions or files" || return $?
   while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
-  [ $# -gt 0 ] || __usageArgument "$usage" "no files" || return $?
+  [ $# -gt 0 ] || __catchArgument "$usage" "no files" || return $?
   fileList=$(fileTemporaryName "$usage") || return $?
   foundLines="$fileList.found"
   clean=("$fileList" "$foundLines")
   if [ "$1" = "-" ]; then
-    __usageEnvironment "$usage" cat >"$fileList" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" cat >"$fileList" || _clean $? "${clean[@]}" || return $?
   fi
   for pattern in "${patterns[@]}"; do
     if [ "$1" != "-" ]; then
-      __usageEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || _clean $? "${clean[@]}" || return $?
+      __catchEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || _clean $? "${clean[@]}" || return $?
     fi
     while read -r file; do
       if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
@@ -579,7 +579,7 @@ isEmptyFile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -592,7 +592,7 @@ isEmptyFile() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _isEmptyFile() {
@@ -604,7 +604,7 @@ _isEmptyFile() {
 _directoryGamutFile() {
   local gamutModified="" remain comparer="$1" gamut="" directory="${2-.}"
   while read -r modified file; do
-    isPositiveInteger "$modified" || __failEnvironment "$usage" "stat -lt output a non-integer: \"$modified\" \"$file\"" || return $?
+    isPositiveInteger "$modified" || __throwEnvironment "$usage" "stat -lt output a non-integer: \"$modified\" \"$file\"" || return $?
     # shellcheck disable=SC1073 disable=SC1072 disable=SC1009
     if [ -z "$gamutModified" ] || [ "$modified" "$comparer" "$gamutModified" ]; then
       gamutModified="$modified"
@@ -619,13 +619,13 @@ _directoryGamutFileWrapper() {
   local directory=""
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -635,14 +635,14 @@ _directoryGamutFileWrapper() {
       *)
         directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
         if ! _directoryGamutFile "$comparator" "$directory"; then
-          __failEnvironment "$usage" "No files in $(decorate file "$directory")" || return $?
+          __throwEnvironment "$usage" "No files in $(decorate file "$directory")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$directory" ] || __failArgument "$usage" "directory is required" || return $?
+  [ -n "$directory" ] || __throwArgument "$usage" "directory is required" || return $?
 }
 
 # Find the oldest file in a directory
@@ -678,7 +678,7 @@ linkCreate() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -691,48 +691,48 @@ linkCreate() {
       *)
         if [ -z "$target" ]; then
           target=$(usageArgumentExists "$usage" "target" "$argument") || return $?
-          path=$(__usageEnvironment "$usage" dirname "$target") || return $?
+          path=$(__catchEnvironment "$usage" dirname "$target") || return $?
         elif [ -z "$linkName" ]; then
           linkName=$(usageArgumentString "$usage" "linkName" "$argument") || return $?
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ -n "$target" ] || __failArgument "$usage" "Missing target" || return $?
-  [ -n "$linkName" ] || __failArgument "$usage" "Missing linkName" || return $?
+  [ -n "$target" ] || __throwArgument "$usage" "Missing target" || return $?
+  [ -n "$linkName" ] || __throwArgument "$usage" "Missing linkName" || return $?
 
-  [ ! -L "$target" ] || __failArgument "$usage" "Can not link to another link ($(decorate file "$target") is a link)" || return $?
+  [ ! -L "$target" ] || __throwArgument "$usage" "Can not link to another link ($(decorate file "$target") is a link)" || return $?
 
-  target=$(__usageEnvironment "$usage" basename "$target") || return $?
+  target=$(__catchEnvironment "$usage" basename "$target") || return $?
 
-  [ -e "$path/$target" ] || __failEnvironment "$usage" "$path/$target must be a file or directory" || return $?
+  [ -e "$path/$target" ] || __throwEnvironment "$usage" "$path/$target must be a file or directory" || return $?
 
   local link="$path/$linkName"
   if [ ! -L "$link" ]; then
     if [ -e "$link" ]; then
-      __failEnvironment "$usage" "$(decorate file "$link") exists and was not a link $(decorate code "$(betterType "$link")")" || :
-      __usageEnvironment "$usage" mv "$link" "$link.createLink.$$.backup" || return $?
+      __throwEnvironment "$usage" "$(decorate file "$link") exists and was not a link $(decorate code "$(betterType "$link")")" || :
+      __catchEnvironment "$usage" mv "$link" "$link.createLink.$$.backup" || return $?
       clean+=("$link.$$.backup")
     fi
   else
     local actual
-    actual=$(__usageEnvironment "$usage" readlink "$link") || return $?
+    actual=$(__catchEnvironment "$usage" readlink "$link") || return $?
     if [ "$actual" = "$target" ]; then
       return 0
     fi
-    __usageEnvironment "$usage" mv "$link" "$link.createLink.$$.badLink" || return $?
+    __catchEnvironment "$usage" mv "$link" "$link.createLink.$$.badLink" || return $?
     clean+=("$link.$$.badLink")
   fi
-  __usageEnvironment "$usage" muzzle pushd "$path" || return $?
-  __usageEnvironment "$usage" ln -s "$target" "$linkName" || _undo $? muzzle popd || return $?
-  __usageEnvironment "$usage" muzzle popd || return $?
-  $backupFlag || __usageEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$usage" muzzle pushd "$path" || return $?
+  __catchEnvironment "$usage" ln -s "$target" "$linkName" || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" muzzle popd || return $?
+  $backupFlag || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _linkCreate() {
   # _IDENTICAL_ usageDocument 1
@@ -745,12 +745,12 @@ _linkCreate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
-# Requires: __help __usageEnvironment mktemp usageDocument
+# Requires: __help __catchEnvironment mktemp usageDocument
 fileTemporaryName() {
   local usage="_${FUNCNAME[0]}"
   __help "$usage" "$@" || return 0
   usage="$1" && shift
-  __usageEnvironment "$usage" mktemp "$@" || return $?
+  __catchEnvironment "$usage" mktemp "$@" || return $?
 }
 _fileTemporaryName() {
   # _IDENTICAL_ usageDocument 1

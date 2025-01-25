@@ -8,7 +8,7 @@
 __applicationHomeFile() {
   local f
   export HOME
-  [ -d "${HOME-}" ] || __failEnvironment "$usage" "HOME needs to be defined to use applicationHome" || return $?
+  [ -d "${HOME-}" ] || __throwEnvironment "$usage" "HOME needs to be defined to use applicationHome" || return $?
   f="${HOME-}/.applicationHome"
   [ -f "$f" ] || touch "$f"
   printf "%s\n" "$f"
@@ -20,10 +20,10 @@ __applicationHomeGo() {
 
   home=$(trimSpace "$(head -n 1 "$(__applicationHomeFile)")") || return $?
   if [ -z "$home" ]; then
-    __failEnvironment "$usage" "No code home set, try $(decorate code "applicationHome")" || return $?
+    __throwEnvironment "$usage" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi
-  [ -d "$home" ] || __failEnvironment "$usage" "Application home directory deleted $(decorate code "$home")" || return $?
-  __usageEnvironment "$usage" cd "$home" || return $?
+  [ -d "$home" ] || __throwEnvironment "$usage" "Application home directory deleted $(decorate code "$home")" || return $?
+  __catchEnvironment "$usage" cd "$home" || return $?
   label="Working in"
   if [ $# -gt 0 ]; then
     label="${*-}"
@@ -49,7 +49,7 @@ applicationHome() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -62,14 +62,14 @@ applicationHome() {
         return 0
         ;;
       *)
-        [ -z "$here" ] || __failArgument "$usage" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
+        [ -z "$here" ] || __throwArgument "$usage" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
         here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$here" ] || here=$(__usageEnvironment "$usage" pwd) || return $?
+  [ -n "$here" ] || here=$(__catchEnvironment "$usage" pwd) || return $?
   home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
   printf "%s\n" "$home" >"$(__applicationHomeFile)"
   __applicationHomeGo "$usage" "${__saved[0]-} Application home set to" || return $?
@@ -87,9 +87,9 @@ applicationHomeAliases() {
   local usage="_${FUNCNAME[0]}"
   local goAlias="${1-g}" setAlias="${2-G}"
   # shellcheck disable=SC2139
-  alias "$goAlias"='applicationHome --go' || __failEnvironment "$usage" "alias $goAlias failed" || return $?
+  alias "$goAlias"='applicationHome --go' || __throwEnvironment "$usage" "alias $goAlias failed" || return $?
   # shellcheck disable=SC2139
-  alias "$setAlias"=applicationHome || __failEnvironment "$usage" "alias $setAlias failed" || return $?
+  alias "$setAlias"=applicationHome || __throwEnvironment "$usage" "alias $setAlias failed" || return $?
 }
 _applicationHomeAliases() {
   # _IDENTICAL_ usageDocument 1

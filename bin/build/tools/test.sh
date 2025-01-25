@@ -19,10 +19,10 @@ testTools() {
   local usage="_${FUNCNAME[0]}"
   local home stateFile binary
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   # shellcheck source=/dev/null
-  source "$home/bin/build/test-tools.sh" || __failEnvironment "$usage" "test-tools.sh" || return $?
-  __usageEnvironment "$usage" isFunction testSuite || return $?
+  source "$home/bin/build/test-tools.sh" || __throwEnvironment "$usage" "test-tools.sh" || return $?
+  __catchEnvironment "$usage" isFunction testSuite || return $?
 
   stateFile=$(_arguments "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" "$@") || return "$(_argumentReturn $?)"
   rm -f "$stateFile" || :
@@ -45,7 +45,7 @@ __mockValue() {
   local usage="_${FUNCNAME[0]}"
   local me="$usage ${1-} ${2-}" global="${1-}"
   local saveGlobal="${2:-"__MOCK_${global}"}" value="${3-}"
-  [ $# -le 3 ] || IFS=';' __failArgument "$usage" "$me requires no more than 3 arguments: [$#]: $*" || return $?
+  [ $# -le 3 ] || IFS=';' __throwArgument "$usage" "$me requires no more than 3 arguments: [$#]: $*" || return $?
   if [ "$value" = "--end" ]; then
     # shellcheck disable=SC2163
     export "$saveGlobal"
@@ -80,7 +80,7 @@ dumpBinary() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -113,13 +113,13 @@ dumpBinary() {
         break
         ;;
     esac
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 
   local columns
   # Is this installed by default?
-  __usageEnvironment "$usage" muzzle packageWhich xxd xxd || return $?
-  columns=$(__usageEnvironment "$usage" consoleColumns) || return $?
+  __catchEnvironment "$usage" muzzle packageWhich xxd xxd || return $?
+  columns=$(__catchEnvironment "$usage" consoleColumns) || return $?
 
   local item
   if [ "${#vanishFiles[@]}" -gt 0 ]; then
@@ -127,13 +127,13 @@ dumpBinary() {
       local name
       name=$(decorate file "$(basename "$item")" "$item")
       # Recursion - only when --vanish is a parameter
-      __usageEnvironment "$usage" dumpBinary --size "$showBytes" "${names[@]}" "$name" <"$item" || return $?
-      __usageEnvironment "$usage" rm -rf "$item" || return $?
+      __catchEnvironment "$usage" dumpBinary --size "$showBytes" "${names[@]}" "$name" <"$item" || return $?
+      __catchEnvironment "$usage" rm -rf "$item" || return $?
     done
     return 0
   fi
   item=$(fileTemporaryName "$usage") || return $?
-  __usageEnvironment "$usage" cat >"$item" || return $?
+  __catchEnvironment "$usage" cat >"$item" || return $?
 
   local name="" nLines nBytes
   [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ")
@@ -154,7 +154,7 @@ dumpBinary() {
     "$nBytes" "$(plural "$nBytes" byte bytes)" \
     "$suffix"
   if [ $nBytes -eq 0 ]; then
-    __usageEnvironment "$usage" rm -rf "$item" || return $?
+    __catchEnvironment "$usage" rm -rf "$item" || return $?
     return 0
   fi
 
@@ -162,8 +162,8 @@ dumpBinary() {
   if [ -n "$showBytes" ]; then
     endPreprocess=("$endBinary" --bytes="$showBytes")
   fi
-  __usageEnvironment "$usage" "${endPreprocess[@]}" <"$item" | __usageEnvironment "$usage" xxd -c "$((columns / 4))" | wrapLines "$symbol $(decorate code)" "$(decorate reset)" || _clean $? "$item" || return $?
-  __usageEnvironment "$usage" rm -rf "$item" || return $?
+  __catchEnvironment "$usage" "${endPreprocess[@]}" <"$item" | __catchEnvironment "$usage" xxd -c "$((columns / 4))" | wrapLines "$symbol $(decorate code)" "$(decorate reset)" || _clean $? "$item" || return $?
+  __catchEnvironment "$usage" rm -rf "$item" || return $?
   return 0
 }
 _dumpBinary() {
@@ -189,7 +189,7 @@ dumpPipe() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -207,11 +207,11 @@ dumpPipe() {
         endBinary="tail"
         ;;
       --symbol)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
         symbol="$1"
         ;;
       --lines)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
         showLines=$(usageArgumentUnsignedInteger "$usage" "showLines" "$1") || return $?
         ;;
       *)
@@ -219,12 +219,12 @@ dumpPipe() {
         break
         ;;
     esac
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 
   if [ -z "$showLines" ]; then
     export BUILD_DEBUG_LINES
-    __usageEnvironment "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
+    __catchEnvironment "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
     showLines="${BUILD_DEBUG_LINES:-100}"
     isUnsignedInteger "$showLines" || _environment "BUILD_DEBUG_LINES is not an unsigned integer: $showLines" || showLines=10
   fi
@@ -235,13 +235,13 @@ dumpPipe() {
       local name
       name=$(decorate file "$(basename "$item")" "$item")
       # Recursion - only when --vanish is a parameter
-      __usageEnvironment "$usage" dumpPipe "--${endBinary}" --lines "$showLines" "${names[@]}" "$name" <"$item" || return $?
-      __usageEnvironment "$usage" rm -rf "$item" || return $?
+      __catchEnvironment "$usage" dumpPipe "--${endBinary}" --lines "$showLines" "${names[@]}" "$name" <"$item" || return $?
+      __catchEnvironment "$usage" rm -rf "$item" || return $?
     done
     return 0
   fi
   item=$(fileTemporaryName "$usage") || return $?
-  __usageEnvironment "$usage" cat >"$item" || return $?
+  __catchEnvironment "$usage" cat >"$item" || return $?
 
   local name="" nLines nBytes
   [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ") || :
@@ -268,7 +268,7 @@ dumpPipe() {
 
   local decoration width
   decoration="$(decorate code "$(echoBar)")"
-  width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
+  width=$(consoleColumns) || __throwEnvironment "$usage" consoleColumns || return $?
   printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset)")" "$decoration"
   rm -rf "$item" || :
 }
@@ -290,7 +290,7 @@ dumpFile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -298,28 +298,28 @@ dumpFile() {
         return $?
         ;;
       --symbol)
-        shift || __failArgument "$usage" "shift $argument" || return $?
+        shift || __throwArgument "$usage" "shift $argument" || return $?
         dumpArgs+=("$argument" "$1")
         ;;
       --lines)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
         dumpArgs+=("--lines" "$1")
         ;;
       *)
-        [ -f "$argument" ] || __failArgument "$usage" "$argument is not a item" || return $?
+        [ -f "$argument" ] || __throwArgument "$usage" "$argument is not a item" || return $?
         files+=("$argument")
-        __failArgument "$usage" "unknown argument: $argument" || return $?
+        __throwArgument "$usage" "unknown argument: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 
   if [ ${#files[@]} -eq 0 ]; then
-    __usageEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "(stdin)" || return $?
+    __catchEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "(stdin)" || return $?
   else
     for tempFile in "${files[@]}"; do
       # shellcheck disable=SC2094
-      __usageEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "$tempFile" <"$tempFile" || return $?
+      __catchEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "$tempFile" <"$tempFile" || return $?
     done
   fi
 }
@@ -358,7 +358,7 @@ bashLintFiles() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -380,10 +380,10 @@ bashLintFiles() {
         checkedFiles+=("$(usageArgumentFile "$usage" "checkFile" "$argument")") || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift after $argument failed" || return $?
+    shift || __throwArgument "$usage" "shift after $argument failed" || return $?
   done
 
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
   statusMessage --first decorate info "Checking all shell scripts ..."
 
   local source=none
@@ -418,7 +418,7 @@ bashLintFiles() {
         "$binary" "${failedFiles[@]}"
       fi
     fi
-    __failEnvironment "$usage" "Failed:" "${failedFiles[*]}" || return $?
+    __throwEnvironment "$usage" "Failed:" "${failedFiles[*]}" || return $?
   fi
   statusMessage decorate success "All scripts passed validation ($source)"
   printf -- "\n"
@@ -457,7 +457,7 @@ bashLintFilesInteractive() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -474,11 +474,11 @@ bashLintFilesInteractive() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   printf -- "%s\n%s\n%s\n" "$(decorate red "BEFORE")" \
@@ -493,7 +493,7 @@ bashLintFilesInteractive() {
       while [ "$countdown" -gt 0 ]; do
         statusMessage decorate warning "Refresh in $(decorate value " $countdown ") $(plural "$countdown" second seconds)"
         countdown=$((countdown - 1))
-        sleep 1 || __failEnvironment "$usage" "Interrupt ..." || return $?
+        sleep 1 || __throwEnvironment "$usage" "Interrupt ..." || return $?
       done
       clear
     fi
@@ -552,33 +552,33 @@ _bashLintInteractiveCheck() {
 bashLint() {
   local usage="_${FUNCNAME[0]}"
 
-  __usageEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
-  __usageEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
+  __catchEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
+  __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
   # Open 3 to pipe to nowhere
   exec 3>/dev/null
   local argument
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --verbose)
         decorate warning "Verbose on"
         exec 3>&1
         ;;
       *)
-        [ -f "$argument" ] || __failArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
+        [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
         # shellcheck disable=SC2210
-        __usageEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
+        __catchEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
         # shellcheck disable=SC2210
-        __usageEnvironment "$usage" shellcheck "$argument" 1>&3 || return $?
+        __catchEnvironment "$usage" shellcheck "$argument" 1>&3 || return $?
         local found
         if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
-          __failEnvironment "$usage" "$argument: pcregrep found }\\n#: $(decorate code "$found")" || return $?
+          __throwEnvironment "$usage" "$argument: pcregrep found }\\n#: $(decorate code "$found")" || return $?
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shifting $argument failed" || return $?
+    shift || __throwArgument "$usage" "shifting $argument failed" || return $?
   done
 }
 _bashLint() {
@@ -613,7 +613,7 @@ validateFileContents() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -621,16 +621,16 @@ validateFileContents() {
         return $?
         ;;
       --)
-        shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+        shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
         break
         ;;
       --verbose)
         verboseMode=true
         ;;
       --exec)
-        shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+        shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
         binary="$1"
-        isCallable "$binary" || __failArgument "$usage" "--exec $binary Not callable" || return $?
+        isCallable "$binary" || __throwArgument "$usage" "--exec $binary Not callable" || return $?
         ;;
       -)
         fileArgs=()
@@ -641,26 +641,26 @@ validateFileContents() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local textMatches=()
   while [ $# -gt 0 ]; do
     local argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "Zero size text match passed" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "Zero size text match passed" || return $?
     case "$argument" in
       --)
-        shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+        shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
         break
         ;;
       *)
         textMatches+=("$1")
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+    shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
 
-  [ "${#textMatches[@]}" -gt 0 ] || __failArgument "$usage" "No text match arguments" || return $?
+  [ "${#textMatches[@]}" -gt 0 ] || __throwArgument "$usage" "No text match arguments" || return $?
 
   local failedReasons=() failedFiles=() total="${#fileArgs[@]}"
 
@@ -698,7 +698,7 @@ validateFileContents() {
     if [ -n "$binary" ]; then
       "$binary" "${failedFiles[@]}"
     fi
-    __failEnvironment "$usage" "$this failed" || return $?
+    __throwEnvironment "$usage" "$this failed" || return $?
   else
     statusMessage decorate success "All scripts passed"
   fi
@@ -756,8 +756,8 @@ validateFileExtensionContents() {
     textMatches+=("$1")
     shift
   done
-  [ "${#extensions[@]}" -gt 0 ] || __failArgument "$usage" "No extension arguments" || return $?
-  [ "${#textMatches[@]}" -gt 0 ] || __failArgument "$usage" "No text match arguments" || return $?
+  [ "${#extensions[@]}" -gt 0 ] || __throwArgument "$usage" "No extension arguments" || return $?
+  [ "${#textMatches[@]}" -gt 0 ] || __throwArgument "$usage" "No text match arguments" || return $?
 
   failedReasons=()
   total=0
@@ -789,7 +789,7 @@ validateFileExtensionContents() {
       echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
     decorate error "done." 1>&2
-    __failEnvironment "$usage" "$this failed" || return $?
+    __throwEnvironment "$usage" "$this failed" || return $?
   else
     statusMessage decorate success "All scripts passed"
   fi
@@ -813,22 +813,22 @@ findUncaughtAssertions() {
   directory=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --exec)
-        shift || __failArgument "$usage" "$argument missing argument" || return $?
-        [ -n "$1" ] || __failArgument "$usage" "$argument argument blank" || return $?
+        shift || __throwArgument "$usage" "$argument missing argument" || return $?
+        [ -n "$1" ] || __throwArgument "$usage" "$argument argument blank" || return $?
         binary="$1"
         ;;
       --list)
         listFlag=true
         ;;
       *)
-        [ -z "$directory" ] || __failArgument "$usage" "$this: Unknown argument" || return $?
+        [ -z "$directory" ] || __throwArgument "$usage" "$this: Unknown argument" || return $?
         directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+    shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
 
   if [ -z "$directory" ]; then
@@ -882,7 +882,7 @@ findUncaughtAssertions() {
       cat "$tempFile"
     fi
   fi
-  __usageEnvironment "$usage" rm "$tempFile" || return $?
+  __catchEnvironment "$usage" rm "$tempFile" || return $?
   [ ${#problemFiles[@]} -eq 0 ]
 }
 _findUncaughtAssertions() {

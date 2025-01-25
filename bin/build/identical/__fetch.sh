@@ -33,8 +33,8 @@
 # Argument: file - Required. FileDirectory. Target file.
 # Requires: _return whichExists printf decorate
 # Requires: usageArgumentExecutable usageArgumentString
-# Requires: __failArgument __usageArgument _command
-# Requires: __failEnvironment __usageEnvironment
+# Requires: __throwArgument __catchArgument _command
+# Requires: __throwEnvironment __catchEnvironment
 __fetch() {
   local usage="$1" && shift
 
@@ -46,7 +46,7 @@ __fetch() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -59,7 +59,7 @@ __fetch() {
         name="${1%%:}"
         value="${1#*:}"
         if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
-          __usageArgument "$usage" "Invalid $argument $1 passed" || return $?
+          __catchArgument "$usage" "Invalid $argument $1 passed" || return $?
         fi
         headers+=("$1")
         curlArgs+=("--header" "$1")
@@ -77,7 +77,7 @@ __fetch() {
         ;;
       --argument-format)
         format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        case "$format" in curl | wget) ;; *) __failArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
+        case "$format" in curl | wget) ;; *) __throwArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
         ;;
       --password)
         shift
@@ -96,7 +96,7 @@ __fetch() {
       --agent)
         shift
         local agent="$1"
-        [ -n "$agent" ] || __failArgument "$usage" "$argument must be non-blank" || return $?
+        [ -n "$agent" ] || __throwArgument "$usage" "$argument must be non-blank" || return $?
         wgetArgs+=("--user-agent=$1")
         curlArgs+=("--user-agent" "$1")
         genericArgs+=("$argument" "$1")
@@ -110,12 +110,12 @@ __fetch() {
           break
         else
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if [ -n "$user" ]; then
@@ -124,7 +124,7 @@ __fetch() {
     genericArgs+=("--user" "$user" "--password" "$password")
   fi
   if [ "$binary" = "curl" ] && $userHasColons; then
-    __failArgument "$usage" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
+    __throwArgument "$usage" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
   fi
   if [ -z "$binary" ]; then
     if $wgetExists; then
@@ -133,11 +133,11 @@ __fetch() {
       binary="curl"
     fi
   fi
-  [ -n "$binary" ] || __failEnvironment "$usage" "wget or curl required" || return $?
+  [ -n "$binary" ] || __throwEnvironment "$usage" "wget or curl required" || return $?
   [ -z "$format" ] || format="$binary"
   case "$format" in
-    wget) __usageEnvironment "$usage" "$binary" --no-verbose --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
-    curl) __usageEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
-    *) __failEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
+    wget) __catchEnvironment "$usage" "$binary" --no-verbose --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
+    curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
+    *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
   esac
 }

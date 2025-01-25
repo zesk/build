@@ -29,7 +29,7 @@ installInstallBinary() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -69,66 +69,66 @@ installInstallBinary() {
           applicationHome=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  [ -n "$installBinName" ] || __failArgument "$usage" "--bin is required" || return $?
-  [ -n "$source" ] || __failArgument "$usage" "--local-path is required" || return $?
+  [ -n "$installBinName" ] || __throwArgument "$usage" "--bin is required" || return $?
+  [ -n "$source" ] || __throwArgument "$usage" "--local-path is required" || return $?
 
   # Validate paths and force realPath
   # default application home is $(pwd)
-  [ -n "$applicationHome" ] || applicationHome="$(__usageEnvironment "$usage" pwd)" || return $?
+  [ -n "$applicationHome" ] || applicationHome="$(__catchEnvironment "$usage" pwd)" || return $?
   # default installation path home is $(pwd)/bin
   [ -n "$path" ] || path="$applicationHome/bin"
-  path=$(__usageEnvironment "$usage" realPath "$path") || return $?
-  applicationHome="$(__usageEnvironment "$usage" realPath "$applicationHome")" || return $?
+  path=$(__catchEnvironment "$usage" realPath "$path") || return $?
+  applicationHome="$(__catchEnvironment "$usage" realPath "$applicationHome")" || return $?
 
   # Custom target binary?
   if [ "${path%.sh}" != "$path" ]; then
     target="$path"
-    path=$(__usageEnvironment "$usage" dirname "$path") || return $?
+    path=$(__catchEnvironment "$usage" dirname "$path") || return $?
   elif [ -d "$path" ]; then
     target="$path/$installBinName"
   else
-    __failEnvironment "$usage" "$path is not a directory" || return $?
+    __throwEnvironment "$usage" "$path is not a directory" || return $?
   fi
 
   # Compute relTop
   relTop="${path#"$applicationHome"}"
   if [ "$relTop" = "$path" ]; then
-    __failArgument "$usage" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
+    __throwArgument "$usage" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
   relTop=$(directoryRelativePath "$relTop")
 
   # Get installation binary
   temp="$path/.downloaded.$$"
   if $localFlag; then
-    home=$(__usageEnvironment "$usage" buildHome) || return $?
-    [ -x "$source" ] || __failEnvironment "$usage" "$source is not executable" || return $?
-    __usageEnvironment "$usage" cp "$source" "$temp" || return $?
+    home=$(__catchEnvironment "$usage" buildHome) || return $?
+    [ -x "$source" ] || __throwEnvironment "$usage" "$source is not executable" || return $?
+    __catchEnvironment "$usage" cp "$source" "$temp" || return $?
   else
     if [ -z "$url" ]; then
-      [ -n "$urlFunction" ] || __usageArgument "$usage" "Need --url or --url-function" || return $?
+      [ -n "$urlFunction" ] || __catchArgument "$usage" "Need --url or --url-function" || return $?
       url=$("$urlFunction" "$usage") || return $?
-      [ -n "$url" ] || __failEnvironment "$urlFunction failed to generate a URL" || return $?
-      urlValid "$url" || __failEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
+      [ -n "$url" ] || __throwEnvironment "$urlFunction failed to generate a URL" || return $?
+      urlValid "$url" || __throwEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
     fi
     if ! curl -s -o - "$url" >"$temp"; then
-      __failEnvironment "$usage" "Unable to download $(decorate code "$url")" || _clean $? "$temp" || return $?
+      __throwEnvironment "$usage" "Unable to download $(decorate code "$url")" || _clean $? "$temp" || return $?
     fi
   fi
   if _installInstallBinaryCanCustomize "$temp"; then
-    __usageEnvironment "$usage" _installInstallBinaryCustomize "$relTop" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
-    __usageEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" _installInstallBinaryCustomize "$relTop" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
   fi
   if [ -n "$postFunction" ]; then
-    __usageEnvironment "$usage" "$postFunction" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
-    __usageEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" "$postFunction" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
   fi
 
   verb=Installed
@@ -136,10 +136,10 @@ installInstallBinary() {
   # Show diffs
   ! $showDiffFlag || _installInstallBinaryDiffer "$usage" "$temp" "$target" || _clean $? "$temp" || return $?
   # Copy to target
-  __usageEnvironment "$usage" cp "$temp" "$target" || _clean $? "$temp" || return $?
+  __catchEnvironment "$usage" cp "$temp" "$target" || _clean $? "$temp" || return $?
   rm -rf "$temp" || :
   # Clean up and make executable
-  __usageEnvironment "$usage" chmod +x "$target" || exitCode=$?
+  __catchEnvironment "$usage" chmod +x "$target" || exitCode=$?
   [ "$exitCode" -ne 0 ] && return "$exitCode"
   # Life is good
   statusMessage --last printf -- "%s %s (%s=\"%s\")" "$(decorate success "$verb")" "$(decorate code "$target")" "$(decorate label relTop)" "$(decorate value "$relTop")"
@@ -169,7 +169,7 @@ installInstallBuild() {
   local home
   local binName="install-bin-build.sh"
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   installInstallBinary "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
@@ -181,9 +181,9 @@ __installInstallBuildRemote() {
   local usage="$1"
   export BUILD_INSTALL_URL
 
-  __usageEnvironment "$usage" packageWhich curl curl || return $?
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
-  urlParse "${BUILD_INSTALL_URL-}" >/dev/null || __failEnvironment "$usage" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
+  __catchEnvironment "$usage" packageWhich curl curl || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
+  urlParse "${BUILD_INSTALL_URL-}" >/dev/null || __throwEnvironment "$usage" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
 
   printf "%s\n" "${BUILD_INSTALL_URL}"
 }
@@ -195,7 +195,7 @@ __installInstallBinaryLegacy() {
   temp=$(__environment mktemp) || return $?
   cat >"$temp"
   if __installInstallBinaryIsLegacy <"$temp"; then
-    __usageEnvironment "$usage" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || _clean $? "$temp" || return $?
+    __catchEnvironment "$usage" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || _clean $? "$temp" || return $?
   else
     __environment cat "$temp" || return $?
   fi
@@ -214,7 +214,7 @@ _installInstallBinaryDiffer() {
   local usage="$1" diffLines
   shift
   if [ -x "$target" ]; then
-    diffLines="$(__usageEnvironment "$usage" _installInstallBinaryDifferFilter -c "$@")" || return $?
+    diffLines="$(__catchEnvironment "$usage" _installInstallBinaryDifferFilter -c "$@")" || return $?
     [ "$diffLines" -gt 0 ] || return 0
     decorate magenta "--- Changes: $diffLines ---"
     _installInstallBinaryDifferFilter "$@" || :
@@ -234,7 +234,7 @@ _installInstallBinaryDifferFilter() {
 buildFunctions() {
   local usage="_${FUNCNAME[0]}"
   local home
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   {
     cat "$home/bin/build/tools/_sugar.sh" "$home/bin/build/tools/sugar.sh" | grep -e '^_.*() {' | cut -d '(' -f 1
     "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_'
@@ -259,7 +259,7 @@ buildCacheDirectory() {
   local usage="_${FUNCNAME[0]}"
   local cache suffix
 
-  cache=$(__usageEnvironment "$usage" buildEnvironmentGet BUILD_CACHE) || return $?
+  cache=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_CACHE) || return $?
   suffix="$(printf "%s/" "$@")"
   suffix="${suffix%/}"
   suffix="$(printf "%s/%s" "${cache%/}" "${suffix%/}")"
@@ -280,8 +280,8 @@ buildHome() {
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   if [ -z "${BUILD_HOME-}" ]; then
     # shellcheck source=/dev/null
-    source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || __failEnvironment "$usage" "BUILD_HOME.sh failed" || return $?
-    [ -n "${BUILD_HOME-}" ] || __failEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
+    source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || __throwEnvironment "$usage" "BUILD_HOME.sh failed" || return $?
+    [ -n "${BUILD_HOME-}" ] || __throwEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
   fi
   printf "%s\n" "${BUILD_HOME-}"
 }
@@ -326,7 +326,7 @@ buildEnvironmentLoad() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -342,19 +342,19 @@ buildEnvironmentLoad() {
           [ -d "$path" ] || continue
           file="$path/$env.sh"
           if [ -x "$file" ]; then
-            export "${env?}" || __failEnvironment "$usage" "export $env failed" || return $?
+            export "${env?}" || __throwEnvironment "$usage" "export $env failed" || return $?
             found=true
             set -a || :
             # shellcheck source=/dev/null
-            source "$file" || __failEnvironment "$usage" source "$file" || return $?
+            source "$file" || __throwEnvironment "$usage" source "$file" || return $?
             set +a || :
           fi
         done
-        $found || __failEnvironment "$usage" "Missing $env" || return $?
+        $found || __throwEnvironment "$usage" "Missing $env" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _buildEnvironmentLoad() {
@@ -381,7 +381,7 @@ Build() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -397,15 +397,15 @@ Build() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   local home
   if ! home=$(bashLibraryHome "$run" 2>/dev/null); then
-    home=$(__usageEnvironment "$usage" buildHome) || return $?
+    home=$(__catchEnvironment "$usage" buildHome) || return $?
     ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
-    __usageEnvironment "$usage" "$home/$run" "$@" || return $?
+    __catchEnvironment "$usage" "$home/$run" "$@" || return $?
   else
-    __usageEnvironment "$usage" bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@"
+    __catchEnvironment "$usage" bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@"
   fi
   return 0
 }
@@ -430,12 +430,12 @@ _Build() {
 buildEnvironmentGet() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || __failArgument "$usage" "Requires at least one environment variable" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one environment variable" || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -443,12 +443,12 @@ buildEnvironmentGet() {
         return $?
         ;;
       *)
-        __usageEnvironment "$usage" buildEnvironmentLoad "$argument" || return $?
+        __catchEnvironment "$usage" buildEnvironmentLoad "$argument" || return $?
         printf "%s\n" "${!argument-}"
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _buildEnvironmentGet() {
@@ -471,7 +471,7 @@ buildQuietLog() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -482,15 +482,15 @@ buildQuietLog() {
         flagMake=false
         ;;
       *)
-        logFile="$(__usageEnvironment "$usage" buildCacheDirectory "${1#_}.log")" || return $?
-        ! "$flagMake" || __usageEnvironment "$usage" requireFileDirectory "$logFile" || return $?
-        __usageEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
+        logFile="$(__catchEnvironment "$usage" buildCacheDirectory "${1#_}.log")" || return $?
+        ! "$flagMake" || __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
+        __catchEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
         return 0
         ;;
     esac
     shift || :
   done
-  __failArgument "$usage" "No arguments" || return $?
+  __throwArgument "$usage" "No arguments" || return $?
 }
 _buildQuietLog() {
   # _IDENTICAL_ usageDocument 1
@@ -507,13 +507,13 @@ buildEnvironmentContext() {
   [ $# -eq 0 ] || __help "$usage" "$@" || return 0
 
   local start codeHome home
-  start="$(pwd -P 2>/dev/null)" || __failEnvironment "$usage" "Failed to get pwd" || return $?
-  codeHome=$(__usageEnvironment "$usage" buildHome) || return $?
-  home=$(__usageEnvironment "$usage" gitFindHome "$start") || return $?
+  start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$usage" "Failed to get pwd" || return $?
+  codeHome=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" gitFindHome "$start") || return $?
   if [ "$codeHome" != "$home" ]; then
     decorate warning "Build home is $(decorate code "$codeHome") - running locally at $(decorate code "$home")"
-    [ -x "$home/bin/build/tools.sh" ] || __failEnvironment "Not executable $home/bin/build/tools.sh" || return $?
-    __usageEnvironment "$usage" "$home/bin/build/tools.sh" "$@" || return $?
+    [ -x "$home/bin/build/tools.sh" ] || __throwEnvironment "Not executable $home/bin/build/tools.sh" || return $?
+    __catchEnvironment "$usage" "$home/bin/build/tools.sh" "$@" || return $?
     return $?
   fi
   __environment "$@" || return $?

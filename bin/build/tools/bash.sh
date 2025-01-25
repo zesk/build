@@ -16,9 +16,9 @@ bashLibraryHome() {
   local usage="_${FUNCNAME[0]}"
   local home run startDirectory="${2-}"
   run=$(usageArgumentString "$usage" "libraryRelativePath" "${1-}") || return $?
-  [ -n "$startDirectory" ] || startDirectory=$(__usageEnvironment "$usage" pwd) || return $?
+  [ -n "$startDirectory" ] || startDirectory=$(__catchEnvironment "$usage" pwd) || return $?
   startDirectory=$(usageArgumentDirectory "$usage" "startDirectory" "$startDirectory") || return $?
-  home=$(__usageEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
+  home=$(__catchEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {
@@ -37,7 +37,7 @@ bashLibrary() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -54,14 +54,14 @@ bashLibrary() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$run" ] || __failArgument "$usage" "Missing libraryRelativePath" || return $?
+  [ -n "$run" ] || __throwArgument "$usage" "Missing libraryRelativePath" || return $?
   home=$(bashLibraryHome "$run") || return $?
   if [ $# -eq 0 ]; then
     export HOME
     # shellcheck source=/dev/null
-    source "$home/$run" || __failEnvironment "$usage" "${run//${HOME-}/~} failed" || return $?
+    source "$home/$run" || __throwEnvironment "$usage" "${run//${HOME-}/~} failed" || return $?
     ! $verboseFlag || decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
   else
     ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
@@ -95,13 +95,13 @@ bashSanitize() {
 
   local home checkAssertions=() executor=contextOpen
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -117,7 +117,7 @@ bashSanitize() {
         home=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
         ;;
       --check)
-        shift || __failArgument "$usage" "shift $argument" || return $?
+        shift || __throwArgument "$usage" "shift $argument" || return $?
         checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
         ;;
       *)
@@ -131,16 +131,16 @@ bashSanitize() {
 
   fileList=$(fileTemporaryName "$usage") || return $?
   if [ "$#" -eq 0 ]; then
-    __usageEnvironment "$usage" cat >"$fileList" || return $?
+    __catchEnvironment "$usage" cat >"$fileList" || return $?
   else
-    __usageEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || return $?
+    __catchEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || return $?
   fi
 
   local undo=()
 
   # CHANGE DIRECTORY HERE
-  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
-  [ "$home" = "$(pwd)" ] || __failEnvironment "$usage" "Unable to cd to $home" || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+  [ "$home" = "$(pwd)" ] || __throwEnvironment "$usage" "Unable to cd to $home" || return $?
   undo=(muzzle popd)
 
   statusMessage decorate success Making shell files executable ...
@@ -148,7 +148,7 @@ bashSanitize() {
   local shellFile
   while read -r shellFile; do
     statusMessage decorate info "+x $(decorate file "$shellFile")"
-  done < <(__usageEnvironment "$usage" makeShellFilesExecutable) || _undo $? "${undo[@]}" || return $?
+  done < <(__catchEnvironment "$usage" makeShellFilesExecutable) || _undo $? "${undo[@]}" || return $?
 
   statusMessage --last decorate success Checking assertions ...
   _bashSanitizeCheckAssertions "$usage" "${checkAssertions[@]+"${checkAssertions[@]}"}" || _undo $? "${undo[@]}" || return $?
@@ -163,7 +163,7 @@ bashSanitize() {
   statusMessage decorate success Checking debugging ...
   _bashSanitizeCheckDebugging "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
   rm -rf "$fileList" || :
-  __usageEnvironment "$usage" "${undo[@]}" || return $?
+  __catchEnvironment "$usage" "${undo[@]}" || return $?
   statusMessage decorate success Completed ...
   printf "\n"
 }
@@ -176,7 +176,7 @@ _bashSanitizeCheckLint() {
   local usage="$1" && shift
 
   statusMessage decorate success "Running shellcheck ..." || :
-  __usageEnvironment "$usage" bashLintFiles || return $?
+  __catchEnvironment "$usage" bashLintFiles || return $?
 }
 
 _bashSanitizeCheckAssertions() {
@@ -185,7 +185,7 @@ _bashSanitizeCheckAssertions() {
 
   checkAssertions=("$@")
   while read -r item; do
-    checkAssertions+=("$(__usageEnvironment "$usage" dirname "${item}")") || return $?
+    checkAssertions+=("$(__catchEnvironment "$usage" dirname "${item}")") || return $?
   done < <(find "." -type f -name '.check-assertions' ! -path "*/.*/*")
 
   for directory in "${checkAssertions[@]+"${checkAssertions[@]}"}"; do
@@ -193,7 +193,7 @@ _bashSanitizeCheckAssertions() {
     if ! findUncaughtAssertions "$directory" --list; then
       # When ready - add --interactive here as well
       findUncaughtAssertions "$directory" --exec "$executor" &
-      __failEnvironment "$usage" findUncaughtAssertions "$directory" --list || return $?
+      __throwEnvironment "$usage" findUncaughtAssertions "$directory" --list || return $?
     else
       decorate success "all files passed"
     fi
@@ -210,7 +210,7 @@ _bashSanitizeCheckCopyright() {
     done <"$file"
   done < <(find . -name ".skip-copyright" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
 
   year="$(date +%Y)"
   statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :
@@ -220,7 +220,7 @@ _bashSanitizeCheckCopyright() {
     while IFS=":" read -r file pattern; do
       error="$(decorate error "No pattern found")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
-    __failEnvironment "$usage" found debugging || _clean $? "$matches" || return $?
+    __throwEnvironment "$usage" found debugging || _clean $? "$matches" || return $?
   fi
   set +v
 }
@@ -240,7 +240,7 @@ _bashSanitizeCheckDebugging() {
     while IFS=":" read -r file line remain; do
       file="$(decorate code "$file")" error="$(decorate error "debugging found")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain}"
     done <"$matches"
-    __failEnvironment "$usage" found debugging || return $?
+    __throwEnvironment "$usage" found debugging || return $?
   fi
 }
 
@@ -252,13 +252,13 @@ _bashSanitizeCheckDebugging() {
 bashSourcePath() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || __failArgument "$usage" "Requires a directory" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "Requires a directory" || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -271,15 +271,15 @@ bashSourcePath() {
         # shellcheck disable=SC2015
         while read -r tool; do
           local tool="${tool#./}"
-          [ -f "$path/$tool" ] || __failEnvironment "$usage" "$path/$tool is not a bash source file" || return $?
-          [ -x "$path/$tool" ] || __failEnvironment "$usage" "$path/$tool is not executable" || return $?
+          [ -f "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not a bash source file" || return $?
+          [ -x "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not executable" || return $?
           # shellcheck source=/dev/null
-          source "$path/$tool" || __failEnvironment "$usage" "source $path/$tool" || return $?
+          source "$path/$tool" || __throwEnvironment "$usage" "source $path/$tool" || return $?
         done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" || :)
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _bashSourcePath() {
@@ -311,7 +311,7 @@ bashCheckDepends() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -326,10 +326,10 @@ bashCheckDepends() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  ! $requireFlag || [ "${#files[@]}" -gt 0 ] || __failArgument "$usage" "No files supplied but at least one is required" || return $?
+  ! $requireFlag || [ "${#files[@]}" -gt 0 ] || __throwArgument "$usage" "No files supplied but at least one is required" || return $?
 
   local file
 

@@ -35,7 +35,7 @@ export globalTestFailure=
 # Hook: bash-test-fail
 # Requires: head tee printf trap
 # Requires: decorate loadAverage consoleConfigureColorMode
-# Requires: buildEnvironmentLoad usageArgumentString __usageEnvironment
+# Requires: buildEnvironmentLoad usageArgumentString __catchEnvironment
 # Requires: bashCoverage TODO
 testSuite() {
   local usage="_${FUNCNAME[0]}"
@@ -45,7 +45,7 @@ testSuite() {
   local statsFile allTestStart testStart testPaths runner startString continueFile verboseMode=false load
   local listFlag=false runner=() testPaths=() messyOption="" checkTests=() continueFlag=false matchTests=() failExecutors=() doStats=true showFlag=false
 
-  startString="$(__usageEnvironment "$usage" date +"%F %T")" || return $?
+  startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
   load=$(decorate value "(Load $(loadAverage | head -n 1))")
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM BUILD_DEBUG
 
@@ -55,15 +55,15 @@ testSuite() {
   cleanExit=false
   FUNCNEST=200
 
-  allTestStart=$(__usageEnvironment "$usage" beginTiming) || return $?
+  allTestStart=$(__catchEnvironment "$usage" beginTiming) || return $?
 
-  quietLog="$(__usageEnvironment "$usage" buildQuietLog "$usage")" || return $?
-  __usageEnvironment "$usage" printf -- "%s started on %s %s\n" "${usage#_}" "$startString" "$load" | tee "$quietLog" || return $?
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  BUILD_COLORS_MODE=$(__usageEnvironment "$usage" consoleConfigureColorMode)
+  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
+  __catchEnvironment "$usage" printf -- "%s started on %s %s\n" "${usage#_}" "$startString" "$load" | tee "$quietLog" || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode)
   BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
   BUILD_DEBUG="${BUILD_DEBUG#,}"
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_HOME BUILD_COLORS || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOME BUILD_COLORS || return $?
 
   mode="$BUILD_COLORS_MODE"
   [ -n "$mode" ] || mode=none
@@ -133,10 +133,10 @@ testSuite() {
         matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate label "$__ARGUMENT")" || return $?
+    shift || __throwArgument "$usage" "shift argument $(decorate label "$__ARGUMENT")" || return $?
   done
 
-  [ "${#testPaths[@]}" -gt 0 ] || __failArgument "$usage" "Need at least one --tests directory" || return $?
+  [ "${#testPaths[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --tests directory" || return $?
 
   if $verboseMode; then
     hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
@@ -154,7 +154,7 @@ testSuite() {
   fi
 
   continueFile="$BUILD_HOME/.last-run-test"
-  $continueFlag || [ ! -f "$continueFile" ] || __usageEnvironment "$usage" rm "$continueFile" || return $?
+  $continueFlag || [ ! -f "$continueFile" ] || __catchEnvironment "$usage" rm "$continueFile" || return $?
 
   if [ ${#checkTests[@]} -eq 0 ]; then
     checkTests=("${allTests[@]}")
@@ -178,7 +178,7 @@ testSuite() {
   __bashCoverageStart "$home/test.stats"
   for item in "${checkTests[@]}"; do
     if ! __testLoad "$item" >"$testFunctions"; then
-      __failEnvironment "$usage" "Can not load $item" || return $?
+      __throwEnvironment "$usage" "Can not load $item" || return $?
     fi
     foundTests=()
     while read -r foundTest; do
@@ -202,7 +202,7 @@ testSuite() {
   __bashCoverageEnd
   ! $doStats || statsFile=$(__environment mktemp) || return $?
   rm -f "$testFunctions" || :
-  [ "${#tests[@]}" -gt 0 ] || __failEnvironment "$usage" "No tests found" || return $?
+  [ "${#tests[@]}" -gt 0 ] || __throwEnvironment "$usage" "No tests found" || return $?
   filteredTests=()
   for item in "${tests[@]}"; do
     if [ "$item" = "${item#\#}" ]; then
@@ -261,18 +261,18 @@ testSuite() {
         sectionNameHeading="$sectionName"
       fi
       testStart=$(__environment date +%s) || return $?
-      __usageEnvironment "$usage" hookRunOptional bash-test-start "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
+      __catchEnvironment "$usage" hookRunOptional bash-test-start "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
       runTime=$(($(date +%s) - testStart))
       ! $doStats || printf "%d %s\n" "$runTime" "$item" >>"$statsFile"
-      __usageEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
+      __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(decorate reset)"
     if $continueFlag; then
       printf "%s\n" "PASSED" >"$continueFile"
     fi
   else
-    __failEnvironment "$usage" "No tests match: $(decorate value "${matchTests[*]}")"
+    __throwEnvironment "$usage" "No tests match: $(decorate value "${matchTests[*]}")"
   fi
   [ -z "$statsFile" ] || __testStats "$statsFile"
   reportTiming "$allTestStart" "Completed in"
@@ -335,7 +335,7 @@ __testLookup() {
     fi
     shift
   done
-  __failArgument "$usage" "No such suite $lookup" || return $?
+  __throwArgument "$usage" "No such suite $lookup" || return $?
 }
 
 __testGetLine() {
@@ -436,14 +436,14 @@ __testLoad() {
   __testFunctions="$__beforeFunctions.after"
   __tests=()
   while [ "$#" -gt 0 ]; do
-    __usageEnvironment "$usage" isExecutable "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    __catchEnvironment "$usage" isExecutable "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
     declare -pF | awk '{ print $3 }' | grep -e '^test' | sort >"$__beforeFunctions"
     tests=()
     set -a
     # shellcheck source=/dev/null
-    source "$1" >"$__errors" 2>&1 || __failEnvironment source "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
-    isEmptyFile "$__errors" || __failEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
+    source "$1" >"$__errors" 2>&1 || __throwEnvironment source "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    isEmptyFile "$__errors" || __throwEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then
       for __test in "${tests[@]}"; do
@@ -522,7 +522,7 @@ __testRun() {
     # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
     # documentation-tests.sh change this apparently
     # Instead of preventing this usage, just work around it
-    __usageEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
+    __catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
     local timingText
     timingText="$(reportTiming "$__testStart")"
     if [ "$resultCode" = "$(_code leak)" ]; then
@@ -569,7 +569,7 @@ __testMatches() {
 __testFailed() {
   local errorCode name sectionName="$1" item="$2"
 
-  __usageEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __failEnvironment "$usage" "... continuing" || :
+  __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
 
   errorCode="$(_code test)"
   export IFS

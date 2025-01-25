@@ -18,7 +18,7 @@ urlMatchesLocalFileSize() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -32,17 +32,17 @@ urlMatchesLocalFileSize() {
           file="$(usageArgumentFile "$usage" "file" "$1")" || return $?
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  localSize=$(__usageEnvironment "$usage" fileSize "$file") || return $?
+  localSize=$(__catchEnvironment "$usage" fileSize "$file") || return $?
   localSize=$((localSize + 0))
-  remoteSize=$(__usageEnvironment "$usage" urlContentLength "$url")
+  remoteSize=$(__catchEnvironment "$usage" urlContentLength "$url")
   [ "$localSize" -eq "$remoteSize" ]
 }
 _urlMatchesLocalFileSize() {
@@ -61,7 +61,7 @@ urlContentLength() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -71,13 +71,13 @@ urlContentLength() {
       *)
         url=$(usageArgumentURL "$usage" "url" "$1")
         tempFile=$(fileTemporaryName "$usage") || return $?
-        __usageEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
-        remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __failEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
+        __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
+        remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
         printf "%d\n" $((remoteSize + 0))
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 }
 _urlContentLength() {
@@ -93,13 +93,13 @@ hostIPList() {
 
   export OSTYPE
 
-  __usageEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -107,20 +107,20 @@ hostIPList() {
         return $?
         ;;
       --install)
-        __usageEnvironment "$usage" packageWhich ifconfig net-tools || return $?
+        __catchEnvironment "$usage" packageWhich ifconfig net-tools || return $?
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   case "$(lowercase "$OSTYPE")" in
     linux) ifconfig | grep 'inet addr:' | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
     linux-gnu | darwin* | freebsd*) ifconfig | grep 'inet ' | trimSpace | cut -f 2 -d ' ' ;;
-    *) __failEnvironment "$usage" "hostIPList Unsupported OSTYPE \"$OSTYPE\"" || return $? ;;
+    *) __throwEnvironment "$usage" "hostIPList Unsupported OSTYPE \"$OSTYPE\"" || return $? ;;
   esac
 }
 _hostIPList() {
@@ -157,7 +157,7 @@ websiteScrape() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -170,13 +170,13 @@ websiteScrape() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
-  logFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.log") || return $?
-  progressFile=$(__usageEnvironment "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
+  logFile=$(__catchEnvironment "$usage" buildQuietLog "$usage.$$.log") || return $?
+  progressFile=$(__catchEnvironment "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
 
-  __usageEnvironment "$usage" packageWhich wget wget || return $?
+  __catchEnvironment "$usage" packageWhich wget wget || return $?
 
   aa=()
   aa+=(-e robots=off)
@@ -186,7 +186,7 @@ websiteScrape() {
   aa+=(-r --level=5 -t 10 --random-wait --force-directories --html-extension)
   aa+=(--no-parent --convert-links --backup-converted --page-requisites)
   pid=$(
-    __usageEnvironment "$usage" wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
+    __catchEnvironment "$usage" wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!
   ) || _clean $? "$logFile" || return $?
   statusMessage decorate success "Launched scraping process $(decorate code "$pid") ($progressFile)"

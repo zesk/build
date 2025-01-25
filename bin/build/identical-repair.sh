@@ -77,8 +77,8 @@ __buildIdenticalRepair() {
   local usage="_${FUNCNAME[0]}"
   local item aa home
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
-  __usageEnvironment "$usage" muzzle cd "$home" || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle cd "$home" || return $?
   aa=()
   while read -r item; do
     aa+=(--singles "$item")
@@ -86,7 +86,7 @@ __buildIdenticalRepair() {
   while read -r item; do
     aa+=(--repair "$item")
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
-  __usageEnvironment "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
+  __catchEnvironment "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }
 ___buildIdenticalRepair() {
   # _IDENTICAL_ usageDocument 1

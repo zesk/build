@@ -27,8 +27,8 @@ __hookProjectActivate() {
     otherName=$("$otherHome/$tools" buildEnvironmentGet APPLICATION_NAME)
   fi
   [ -n "$otherName" ] || otherName="${otherHome##*/}"
-  name=$(__usageEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  name=$(__catchEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
   statusMessage --last printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$otherName")" "➜" "$(decorate info "$name")"
 }
@@ -39,7 +39,7 @@ ___hookProjectActivate() {
 __hookProjectActivateContext() {
   local usage="_${FUNCNAME[0]}" home
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   bashSourceInteractive --vebose --prefix "Activate" "$home/bin/developer.sh" "$home/bin/developer/" || return $?
 }
 ___hookProjectActivateContext() {

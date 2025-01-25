@@ -54,7 +54,7 @@ documentationIndex_Lookup() {
   if [ "$mode" = "file" ]; then
     indexRoot="$cacheDirectory/files"
     if [ ! -d "$indexRoot" ]; then
-      __failEnvironment "$usage" "No index exists" || return $?
+      __throwEnvironment "$usage" "No index exists" || return $?
     fi
     if [ ! -f "$indexRoot/$1" ]; then
       return "$(_code exit)"
@@ -64,7 +64,7 @@ documentationIndex_Lookup() {
   fi
   indexRoot="$cacheDirectory/index"
   if [ ! -d "$indexRoot" ]; then
-    __failEnvironment "$usage" "No index exists" || return $?
+    __throwEnvironment "$usage" "No index exists" || return $?
   fi
   if [ $# -eq 0 ]; then
     _argument "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?
@@ -76,7 +76,7 @@ documentationIndex_Lookup() {
   lineNumber="$(tail -n 1 "$indexRoot/$1")"
   resultFile="$(printf -- "%s/%s/%s\n" "$cacheDirectory/code" "${sourceFile##./}" "$1")"
   if [ ! -f "$resultFile" ]; then
-    __failEnvironment "$usage" "Index is corrupt, file $(decorate error "$resultFile") is not found. regenerate" || return $?
+    __throwEnvironment "$usage" "Index is corrupt, file $(decorate error "$resultFile") is not found. regenerate" || return $?
   fi
   case $mode in
     combined)
@@ -108,7 +108,7 @@ _documentationIndex_GeneratePath() {
   local usage="_${FUNCNAME[0]}"
   cacheDirectory="$1"
   if [ ! -d "$cacheDirectory" ]; then
-    __failEnvironment "$usage" "$cacheDirectory is not a directory" || return $?
+    __throwEnvironment "$usage" "$cacheDirectory is not a directory" || return $?
   fi
   printf -- "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
 }
@@ -142,7 +142,7 @@ documentationIndex_Generate() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -153,27 +153,27 @@ documentationIndex_Generate() {
         if [ -z "$codePath" ]; then
           codePath="$1"
           if [ ! -d "$codePath" ]; then
-            __failEnvironment "$usage" "$codePath is not a directory" || return $?
+            __throwEnvironment "$usage" "$codePath is not a directory" || return $?
           fi
           codePath="${codePath#./}"
           codePath="${codePath%/}"
         elif [ -z "$cacheDirectory" ]; then
-          cacheDirectory="$(__usageEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
+          cacheDirectory="$(__catchEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   if [ -z "$codePath" ]; then
-    __failArgument "$usage" "codePath required" || return $?
+    __throwArgument "$usage" "codePath required" || return $?
     return $?
   fi
   if [ -z "$cacheDirectory" ]; then
-    __failArgument "$usage" "cacheDirectory required"
+    __throwArgument "$usage" "cacheDirectory required"
     return $?
   fi
   if ! start=$(beginTiming); then
@@ -181,10 +181,10 @@ documentationIndex_Generate() {
   fi
   functionIndex="$cacheDirectory/index"
   if [ ! -d "$functionIndex" ]; then
-    __usageEnvironment "$usage" mkdir -p "$functionIndex" || return $?
+    __catchEnvironment "$usage" mkdir -p "$functionIndex" || return $?
   fi
   if [ ! -d "$cacheDirectory/files" ]; then
-    __usageEnvironment "$usage" mkdir -p "$cacheDirectory/files" || return $?
+    __catchEnvironment "$usage" mkdir -p "$cacheDirectory/files" || return $?
   fi
   if ! find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' | while read -r shellFile; do
     fileIndex="$cacheDirectory/files/$(basename "$shellFile")"
@@ -193,7 +193,7 @@ documentationIndex_Generate() {
     fi
     fileCacheMarker="$cacheDirectory/code/${shellFile#/}"
     if [ ! -d "$fileCacheMarker" ]; then
-      __usageEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
+      __catchEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
     elif isNewestFile "$fileCacheMarker/.marker" "$shellFile"; then
       statusMessage decorate info "$(decorate file "$shellFile") is already cached"
       continue
@@ -205,7 +205,7 @@ documentationIndex_Generate() {
       if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
         statusMessage --last decorate error bashDocumentation_Extract "$shellFile" "$functionName"
-        __failEnvironment "$usage" "Documentation failed for $functionName" || return $?
+        __throwEnvironment "$usage" "Documentation failed for $functionName" || return $?
       fi
       printf "%s\n%s\n" "$shellFile" "$lineNumber" >"$functionIndex/$functionName"
     done || :
@@ -214,7 +214,7 @@ documentationIndex_Generate() {
     count=$((count - 1))
     statusMessage decorate success "Generated $count functions for $shellFile "
   done; then
-    __failEnvironment "$usage" "No shell files found in $(decorate file "$codePath")" || return $?
+    __throwEnvironment "$usage" "No shell files found in $(decorate file "$codePath")" || return $?
   fi
   statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"
 }
@@ -351,21 +351,21 @@ documentationIndex_FunctionIterator() {
         if [ -z "$cacheDirectory" ]; then
           cacheDirectory="$1"
           if [ ! -d "$cacheDirectory" ]; then
-            __failArgument "$usage" "cacheDirectory must be a directory"
+            __throwArgument "$usage" "cacheDirectory must be a directory"
             return $?
           fi
           if ! functionIndexPath="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
-            __failArgument "$usage" "Unable to generate index at path $(decorate file "$cacheDirectory")" || return $?
+            __throwArgument "$usage" "Unable to generate index at path $(decorate file "$cacheDirectory")" || return $?
           fi
         else
-          __failArgument "$usage" "Unknown argument $1" || return $?
+          __throwArgument "$usage" "Unknown argument $1" || return $?
         fi
         ;;
     esac
     shift
   done
   if [ -z "$cacheDirectory" ]; then
-    __failArgument "$usage" "cacheDirectory required" || return $?
+    __throwArgument "$usage" "cacheDirectory required" || return $?
     return $?
   fi
   local functionName settingsFile
@@ -405,13 +405,13 @@ documentationIndex_LinkDocumentationPaths() {
   local settingsFile
   local documentTokensFile modifiedCountFile processed total
 
-  start=$(beginTiming) || __usageEnvironment "$usage" "beginTiming failed" || return $?
+  start=$(beginTiming) || __catchEnvironment "$usage" "beginTiming failed" || return $?
   local cacheDirectory="" documentTemplate="" documentationPath=""
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -422,38 +422,38 @@ documentationIndex_LinkDocumentationPaths() {
       *)
         if [ -z "$cacheDirectory" ]; then
           cacheDirectory="$1"
-          [ -d "$cacheDirectory" ] || __failArgument "$usage" "cacheDirectory documentTemplate - $cacheDirectory not a directory" || return $?
+          [ -d "$cacheDirectory" ] || __throwArgument "$usage" "cacheDirectory documentTemplate - $cacheDirectory not a directory" || return $?
           cacheDirectory="${cacheDirectory%%/}"
         elif [ -z "$documentTemplate" ]; then
           documentTemplate="$1"
-          [ -f "$documentTemplate" ] || __failArgument "$usage" "cacheDirectory documentTemplate - $documentTemplate not a file" || return $?
+          [ -f "$documentTemplate" ] || __throwArgument "$usage" "cacheDirectory documentTemplate - $documentTemplate not a file" || return $?
         elif [ -z "$documentationPath" ]; then
           documentationPath="$1"
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  [ -n "$cacheDirectory" ] || __failArgument "$usage" "cacheDirectory required" || return $?
-  [ -n "$documentTemplate" ] || __failArgument "$usage" "documentTemplate required" || return $?
-  [ -n "$documentationPath" ] || __failArgument "$usage" "documentationPath required" || return $?
+  [ -n "$cacheDirectory" ] || __throwArgument "$usage" "cacheDirectory required" || return $?
+  [ -n "$documentTemplate" ] || __throwArgument "$usage" "documentTemplate required" || return $?
+  [ -n "$documentationPath" ] || __throwArgument "$usage" "documentationPath required" || return $?
 
   local documentTemplate
   if ! documentTokensFile=$(fileTemporaryName "$usage") || ! modifiedCountFile=$(fileTemporaryName "$usage"); then
     rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-    __failEnvironment "$usage" "mktemp failed" || return $?
+    __throwEnvironment "$usage" "mktemp failed" || return $?
   fi
   # subshell to hide environment tokens
   if ! listTokens <"$documentTemplate" >"$documentTokensFile"; then
     rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-    __failEnvironment "$usage" "listTokens failed" || return $?
+    __throwEnvironment "$usage" "listTokens failed" || return $?
   fi
   checkFiles=("$documentTemplate")
-  __usageEnvironment "$usage" touch "$modifiedCountFile" || return $?
+  __catchEnvironment "$usage" touch "$modifiedCountFile" || return $?
   while read -r token; do
     if ! settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$token"); then
       statusMessage --last decorate error "Function $(decorate code "$token") $(decorate error "not defined")" 1>&2
@@ -472,7 +472,7 @@ documentationIndex_LinkDocumentationPaths() {
     fi
     checkFiles+=("$settingsFile")
   done <"$documentTokensFile"
-  if ! processed=$(__usageEnvironment "$usage" fileSize "$modifiedCountFile"); then
+  if ! processed=$(__catchEnvironment "$usage" fileSize "$modifiedCountFile"); then
     processed=0
   fi
   total="$(trimSpace "$(wc -l <"$documentTokensFile")")"

@@ -13,7 +13,7 @@
 # Exit Code: 1 - one ore more paths are not absolute paths
 isAbsolutePath() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __failArgument "$usage" "Need at least one argument" || return $?
+  [ $# -gt 0 ] || __throwArgument "$usage" "Need at least one argument" || return $?
   while [ $# -gt 0 ]; do
     [ "$1" != "${1#/}" ] || return 1
     shift || :
@@ -36,19 +36,19 @@ directoryClobber() {
   source=$(usageArgumentDirectory "$usage" source "$1") || return $?
   shift || :
   target="${1-}"
-  targetPath="$(dirname "$target")" || __failArgument "$usage" "dirname $target" || return $?
-  [ -d "$targetPath" ] || __failEnvironment "$usage" "$targetPath is not a directory" || return $?
-  targetName="$(basename "$target")" || __failEnvironment basename "$target" || return $?
+  targetPath="$(dirname "$target")" || __throwArgument "$usage" "dirname $target" || return $?
+  [ -d "$targetPath" ] || __throwEnvironment "$usage" "$targetPath is not a directory" || return $?
+  targetName="$(basename "$target")" || __throwEnvironment basename "$target" || return $?
   sourceStage="$targetPath/.NEW.$$.$targetName"
   targetBackup="$targetPath/.OLD.$$.$targetName"
-  __usageEnvironment "$usage" mv -f "$source" "$sourceStage" || return $?
-  __usageEnvironment "$usage" mv -f "$target" "$targetBackup" || return $?
+  __catchEnvironment "$usage" mv -f "$source" "$sourceStage" || return $?
+  __catchEnvironment "$usage" mv -f "$target" "$targetBackup" || return $?
   if ! mv -f "$sourceStage" "$target"; then
-    mv -f "$targetBackup" "$target" || __failEnvironment "$usage" "Unable to revert $targetBackup -> $target" || return $?
-    mv -f "$sourceStage" "$source" || __failEnvironment "$usage" "Unable to revert $sourceStage -> $source" || return $?
-    __failEnvironment "$usage" "Clobber failed" || return $?
+    mv -f "$targetBackup" "$target" || __throwEnvironment "$usage" "Unable to revert $targetBackup -> $target" || return $?
+    mv -f "$sourceStage" "$source" || __throwEnvironment "$usage" "Unable to revert $sourceStage -> $source" || return $?
+    __throwEnvironment "$usage" "Clobber failed" || return $?
   fi
-  __usageEnvironment "$usage" rm -rf "$targetBackup" || return $?
+  __catchEnvironment "$usage" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
   # _IDENTICAL_ usageDocument 1
@@ -69,10 +69,10 @@ requireFileDirectory() {
   local argument usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    name="$(dirname "$1")" || __failEnvironment "$usage" "dirname $argument" || return $?
-    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
-    shift || __failArgument "$usage" shift || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    name="$(dirname "$1")" || __throwEnvironment "$usage" "dirname $argument" || return $?
+    [ -d "$name" ] || mkdir -p "$name" || __throwEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 }
 _requireFileDirectory() {
@@ -91,10 +91,10 @@ fileDirectoryExists() {
   [ $# -gt 0 ] || _argument "No arguments" || return $?
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
-    path=$(dirname "$argument") || __failEnvironment "$usage" "dirname $argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    path=$(dirname "$argument") || __throwEnvironment "$usage" "dirname $argument" || return $?
     [ -d "$path" ] || return 1
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 }
 _fileDirectoryExists() {
@@ -114,10 +114,10 @@ requireDirectory() {
   local usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     name="$1"
-    [ -n "$name" ] || __failArgument "$usage" "blank argument" || return $?
-    [ -d "$name" ] || mkdir -p "$name" || __failEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
+    [ -n "$name" ] || __throwArgument "$usage" "blank argument" || return $?
+    [ -d "$name" ] || mkdir -p "$name" || __throwEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
     printf "%s\n" "$name"
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
 }
 _requireDirectory() {
@@ -142,7 +142,7 @@ directoryIsEmpty() {
         return $?
         ;;
       *)
-        [ -d "$argument" ] || __failArgument "$usage" "Not a directory $(decorate code "$argument")" || return $?
+        [ -d "$argument" ] || __throwArgument "$usage" "Not a directory $(decorate code "$argument")" || return $?
         find "$argument" -mindepth 1 -maxdepth 1 | read -r && return 1 || return 0
         ;;
     esac
@@ -208,7 +208,7 @@ __directoryParent() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -216,7 +216,7 @@ __directoryParent() {
         return $?
         ;;
       --pattern)
-        [ -z "$filePattern" ] || __failArgument "$usage" "$argument already specified" || return $?
+        [ -z "$filePattern" ] || __throwArgument "$usage" "$argument already specified" || return $?
         shift
         filePattern=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
@@ -225,13 +225,13 @@ __directoryParent() {
         testExpressions+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       *)
-        [ -z "$startingDirectory" ] || __failArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
-        [ -n "$argument" ] || argument=$(__usageEnvironment "$usage" pwd) || return $?
+        [ -z "$startingDirectory" ] || __throwArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
+        [ -n "$argument" ] || argument=$(__catchEnvironment "$usage" pwd) || return $?
         startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # Default is directory test
@@ -243,7 +243,7 @@ __directoryParent() {
     passedExpression=""
     failedExpression=""
     for testExpression in "${testExpressions[@]+"${testExpressions[@]}"}"; do
-      [ "$testExpression" != "${testExpression#-}" ] || __failArgument "$usage" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
+      [ "$testExpression" != "${testExpression#-}" ] || __throwArgument "$usage" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
       if ! test "$testExpression" "$directory/$filePattern"; then
         passed=false
         failedExpression="$testExpression"
@@ -262,6 +262,6 @@ __directoryParent() {
     directory="$(dirname "$directory")"
   done
   [ -n "$bestFailure" ] || bestFailure="No $(decorate code "$filePattern") found above $(decorate value "$argument")"
-  __failEnvironment "$usage" "$bestFailure" || return $?
+  __throwEnvironment "$usage" "$bestFailure" || return $?
   return 1
 }

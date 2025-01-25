@@ -28,7 +28,7 @@ consoleGetColor() {
   xtermCode="11"
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -42,10 +42,10 @@ consoleGetColor() {
         xtermCode="10"
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+        __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
+    shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
   colors=()
   if ! sttyOld=$(stty -g 2>/dev/null); then
@@ -55,7 +55,7 @@ consoleGetColor() {
     read -t 2 -r result
     exitCode=$?
   else
-    __usageEnvironment "$usage" stty raw -echo min 0 time 0 || return $?
+    __catchEnvironment "$usage" stty raw -echo min 0 time 0 || return $?
     printf -- "\e]%d;?\e\\" "${xtermCode}" >/dev/tty || :
     sleep "$timingTweak" || :
     read -t 2 -r result </dev/tty
@@ -69,7 +69,7 @@ consoleGetColor() {
     IFS='/' read -r -a colors < <(printf -- "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
   fi
   if ! "$noTTY" && ! stty "$sttyOld"; then
-    __failEnvironment "$usage" "stty reset to \"$sttyOld\" failed" || return $?
+    __throwEnvironment "$usage" "stty reset to \"$sttyOld\" failed" || return $?
   fi
   if $success; then
     for color in "${colors[@]+${colors[@]}}"; do
@@ -124,7 +124,7 @@ consoleConfigureColorMode() {
 # Set the title of the window for the console
 consoleSetTitle() {
   local usage="_${FUNCNAME[0]}"
-  [ -t 0 ] || __failEnvironment "$usage" "stdin is not a terminal" || return $?
+  [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
   printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {
@@ -136,7 +136,7 @@ _consoleSetTitle() {
 # Argument: None
 consoleDefaultTitle() {
   local usage="_${FUNCNAME[0]}"
-  [ -t 0 ] || __failEnvironment "$usage" "stdin is not a terminal" || return $?
+  [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
 _consoleDefaultTitle() {

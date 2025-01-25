@@ -31,27 +31,27 @@ usageDocumentComplex() {
 
   local functionDefinitionFile="$1" functionName="$2" exitCode="${3-NONE}" home
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
-  [ $# -ge 2 ] || __failArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
+  [ $# -ge 2 ] || __throwArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
-  shift 3 || __failArgument "$usage" "Missing arguments" || return $?
+  shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
 
   if [ ! -f "$functionDefinitionFile" ]; then
     local tryFile="$home/$functionDefinitionFile"
     if [ ! -f "$tryFile" ]; then
       export PWD
-      __usageArgument "$usage" "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
+      __catchArgument "$usage" "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
     fi
     functionDefinitionFile="$tryFile"
   fi
-  [ -n "$functionName" ] || __failArgument "$usage" "functionName is blank" || return $?
+  [ -n "$functionName" ] || __throwArgument "$usage" "functionName is blank" || return $?
 
   if [ "$exitCode" = "NONE" ]; then
     decorate error "NO EXIT CODE" 1>&2
     exitCode=1
   fi
-  __usageArgument "$usage" isInteger "$exitCode" || __usageArgument "$usage" "$(debuggingStack)" || return $?
+  __catchArgument "$usage" isInteger "$exitCode" || __catchArgument "$usage" "$(debuggingStack)" || return $?
 
   if buildDebugEnabled "fast-usage"; then
     local color="error" verb="Failed"
@@ -69,9 +69,9 @@ usageDocumentComplex() {
   variablesFile=$(mktemp) || _environemnt "mktemp fail" || return $?
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     if ! rm -f "$variablesFile"; then
-      __failEnvironment "$usage" "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
+      __throwEnvironment "$usage" "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
     fi
-    __failArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
+    __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
   fi
   (
     set -a
@@ -134,7 +134,7 @@ documentationTemplateCompile() {
   local tokenName documentTokensFile envChecksum envChecksumCache compiledTemplateCache
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   forceFlag=false
   envFiles=()
@@ -143,7 +143,7 @@ documentationTemplateCompile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -171,12 +171,12 @@ documentationTemplateCompile() {
           targetFile=$1
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # Validate arguments
@@ -190,7 +190,7 @@ documentationTemplateCompile() {
   # echo functionTemplate="$functionTemplate"
   # echo targetFile="$targetFile"
 
-  base="$(basename "$targetFile")" || __failArgument "$usage" basename "$targetFile" || return $?
+  base="$(basename "$targetFile")" || __throwArgument "$usage" basename "$targetFile" || return $?
   base="${base%%.md}"
   statusMessage decorate info "Generating $(decorate code "$base") $(decorate info "...")"
 
@@ -211,23 +211,23 @@ documentationTemplateCompile() {
       printf %s 'no-environment'
     fi
   ); then
-    __failEnvironment "$usage" "listTokens failed" || return $?
+    __throwEnvironment "$usage" "listTokens failed" || return $?
   fi
   if ! listTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
-    __failEnvironment "$usage" "listTokens failed" || return $?
+    __throwEnvironment "$usage" "listTokens failed" || return $?
   fi
   #
   # Look at source file for each function
   #
   if ! envChecksumCache=$(requireDirectory "$cacheDirectory/envChecksum"); then
-    __failEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
+    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
   fi
   envChecksumCache="$envChecksumCache/$envChecksum"
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
   if ! compiledTemplateCache=$(requireDirectory "$cacheDirectory/compiledTemplateCache"); then
-    __failEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
+    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
   fi
   # Environment change will affect this template
   # Function template change will affect this template
@@ -254,14 +254,14 @@ documentationTemplateCompile() {
       while read -r tokenName; do
         compiledFunctionTarget="$compiledTemplateCache/$tokenName"
         if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
-          __usageEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || return $?
+          __catchEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || return $?
           continue
         fi
         if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && isNewestFile "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
           statusMessage decorate info "Skip $tokenName and use cache"
         else
-          __usageEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || return $?
-          __usageEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || return $?
+          __catchEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || return $?
+          __catchEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || return $?
         fi
         environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
       done <"$documentTokensFile"
@@ -271,10 +271,10 @@ documentationTemplateCompile() {
       (
         set -a
         #shellcheck source=/dev/null
-        source "$compiledFunctionEnv" || __failEnvironment "$usage" "source $compiledFunctionEnv compiled for $targetFile" || return $?
+        source "$compiledFunctionEnv" || __throwEnvironment "$usage" "source $compiledFunctionEnv compiled for $targetFile" || return $?
         mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
-      ) || __failEnvironment "$usage" "mapEnvironment $tokenName" || return $?
-      __usageEnvironment "$usage" cp "$compiledFunctionEnv" "$envChecksumCache" || return $?
+      ) || __throwEnvironment "$usage" "mapEnvironment $tokenName" || return $?
+      __catchEnvironment "$usage" cp "$compiledFunctionEnv" "$envChecksumCache" || return $?
     else
       message="Cached"
     fi
@@ -313,7 +313,7 @@ documentationTemplateFunctionCompile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -335,12 +335,12 @@ documentationTemplateFunctionCompile() {
           functionTemplate=$1
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local settingsFile
@@ -349,9 +349,9 @@ documentationTemplateFunctionCompile() {
   cacheDirectory=$(usageArgumentDirectory "$usage" cacheDirectory "$cacheDirectory") || return $?
   functionName="$(usageArgumentString "$usage" functionName "$functionName")" || return $?
   functionTemplate="$(usageArgumentFile "$usage" functionTemplate "$functionTemplate")" || return $?
-  settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$functionName") || __failEnvironment "$usage" "Unable to find \"$functionName\" (using index \"$cacheDirectory\")" || return $?
+  settingsFile=$(documentationIndex_Lookup "$cacheDirectory" "$functionName") || __throwEnvironment "$usage" "Unable to find \"$functionName\" (using index \"$cacheDirectory\")" || return $?
 
-  __usageEnvironment "$usage" _bashDocumentation_Template "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
+  __catchEnvironment "$usage" _bashDocumentation_Template "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 _documentationTemplateFunctionCompile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -387,7 +387,7 @@ documentationTemplateDirectoryCompile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -399,7 +399,7 @@ documentationTemplateDirectoryCompile() {
         ;;
       --env-file)
         passArgs+=("$argument")
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
         passArgs+=("$1")
         ;;
       *)
@@ -413,16 +413,16 @@ documentationTemplateDirectoryCompile() {
           targetDirectory="$1"
         else
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   local cacheDirectory templateDirectory functionTemplate targetDirectory
 
@@ -434,7 +434,7 @@ documentationTemplateDirectoryCompile() {
   local exitCode=0 fileCount=0 templateFile=""
   while read -r templateFile; do
     local base="${templateFile#"$templateDirectory/"}"
-    [ "$base" != "$templateFile" ] || __failEnvironment "$usage" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
+    [ "$base" != "$templateFile" ] || __throwEnvironment "$usage" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
     local targetFile="$targetDirectory/$base"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       decorate error "Failed to generate $targetFile" 1>&2
@@ -469,9 +469,9 @@ bashDocumentFunction() {
   local usage="_${FUNCNAME[0]}"
   local envFile file=$1 fn=$2 template=$3 home exitCode
 
-  [ -f "$template" ] || __failArgument "$usage" "$template is not a file" || return $?
+  [ -f "$template" ] || __throwArgument "$usage" "$template is not a file" || return $?
   envFile=$(fileTemporaryName "$usage") || return $?
-  __usageEnvironment "$usage" printf "%s\n%s\n" "#!/usr/bin/env bash" "%s\n" "set -eou pipefail" >>"$envFile" || return $?
+  __catchEnvironment "$usage" printf "%s\n%s\n" "#!/usr/bin/env bash" "%s\n" "set -eou pipefail" >>"$envFile" || return $?
   if ! bashDocumentation_Extract "$file" "$fn" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
@@ -639,11 +639,11 @@ bashDocumentation_Extract() {
   local maxLines=1000 definitionFile="$1" fn="$2" definitionFile
   local home tempDoc docMap base
 
-  [ -f "$definitionFile" ] || __failArgument "$usage" "$definitionFile is not a file" || return $?
-  [ -n "$fn" ] || __failArgument "function name is blank" || return $?
+  [ -f "$definitionFile" ] || __throwArgument "$usage" "$definitionFile is not a file" || return $?
+  [ -n "$fn" ] || __throwArgument "function name is blank" || return $?
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
-  base="$(__usageEnvironment "$usage" basename "$definitionFile")" || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  base="$(__catchEnvironment "$usage" basename "$definitionFile")" || return $?
   tempDoc=$(fileTemporaryName "$usage") || return $?
   docMap=$(fileTemporaryName "$usage") || return $?
 

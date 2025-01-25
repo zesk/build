@@ -19,15 +19,15 @@ bashCoverage() {
 
   # local binPath actualBash
 
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -46,11 +46,11 @@ bashCoverage() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
-  __usageEnvironment "$usage" __bashCoverageWrapper "$target" "$@" || return $?
+  __catchEnvironment "$usage" __bashCoverageWrapper "$target" "$@" || return $?
   ! $verbose || reportTiming "$start" "Coverage completed in"
 }
 _bashCoverage() {
@@ -67,14 +67,14 @@ bashCoverageReport() {
   local reportCache target file line dataPath commandFile files=() home
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -94,15 +94,15 @@ bashCoverageReport() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   [ -n "$target" ] || target="$home/test-coverage"
   if [ -z "$reportCache" ]; then
-    reportCache=$(__usageEnvironment "$usage" buildCacheDirectory ".bashCoverageReport") || return $?
-    reportCache=$(__usageEnvironment "$usage" requireDirectory "$reportCache") || return $?
+    reportCache=$(__catchEnvironment "$usage" buildCacheDirectory ".bashCoverageReport") || return $?
+    reportCache=$(__catchEnvironment "$usage" requireDirectory "$reportCache") || return $?
   fi
-  target=$(__usageEnvironment "$usage" requireDirectory "$target") || return $?
+  target=$(__catchEnvironment "$usage" requireDirectory "$target") || return $?
 
   decorate info "$reportCache"
   decorate info "Report: $target"
@@ -117,7 +117,7 @@ bashCoverageReport() {
   fi
   statusMessage decorate info "Reporting to $(decorate code "$target")"
   for file in coverage.css coverage.js; do
-    __usageEnvironment "$usage" cp "$(__bashCoverageReportTemplate "$file")" "$target/$file" || return $?
+    __catchEnvironment "$usage" cp "$(__bashCoverageReportTemplate "$file")" "$target/$file" || return $?
   done
   __bashCoverageReportConvertFiles "$usage" "$reportCache" "$target" || return $?
 }
@@ -179,7 +179,7 @@ __bashCoverageReportFile() {
   sort -u >"$tempFile"
   lineCount=$(($(wc -l <"$tempFile") + 0))
   __bashCoverageReportProcessStats "$usage" "$reportCache" "$target" "$lineCount" <"$tempFile" || _clean $? "$tempFile" || return $?
-  __usageEnvironment "$usage" rm -rf "$tempFile" || return $?
+  __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 
 #
@@ -193,17 +193,17 @@ __bashCoverageReportProcessStats() {
   while read -r fileLine command; do
     file="${fileLine%:*}"
     line="${fileLine##*:}"
-    dataPath=$(__usageEnvironment "$usage" requireDirectory "$reportCache/$file/$line/") || return $?
+    dataPath=$(__catchEnvironment "$usage" requireDirectory "$reportCache/$file/$line/") || return $?
     commandFile="$(printf -- "%s\n" "$command" | shaPipe)"
-    printf -- "%s\n" "$command" >"$dataPath/$commandFile" || __failEnvironment "$usage" "Writing $commandFile" || return $?
+    printf -- "%s\n" "$command" >"$dataPath/$commandFile" || __throwEnvironment "$usage" "Writing $commandFile" || return $?
     targetFile="$reportBase/$file.html"
     requireFileDirectory "$targetFile" || return $?
-    [ -f "$targetFile" ] || __usageEnvironment "$usage" touch "$targetFile" || return $?
-    __usageEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all"
+    [ -f "$targetFile" ] || __catchEnvironment "$usage" touch "$targetFile" || return $?
+    __catchEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all"
     index=$((index + 1))
     statusMessage decorate info "Line $index/$totalLines ..."
   done
-  __usageEnvironment "$usage" sort -u <"$reportCache/all" >"$reportCache/files" || return $?
+  __catchEnvironment "$usage" sort -u <"$reportCache/all" >"$reportCache/files" || return $?
 }
 
 #
@@ -233,7 +233,7 @@ __bashCoverageReportConvertFiles() {
   local fileTemplateVariables=(content file_classes total name coverage coveredLines notCoveredLines coverableLines notCoverableLines)
   local pageTemplateVariables=(title content head foot body_classes relativeTop)
 
-  home=$(__usageEnvironment "$usage" buildHome)
+  home=$(__catchEnvironment "$usage" buildHome)
   coveredTemplate=$(__bashCoverageReportTemplate "covered.html") || return $?
   notCoveredTemplate=$(__bashCoverageReportTemplate "not-covered.html") || return $?
   pageTemplate=$(__bashCoverageReportTemplate "page.html") || return $?
@@ -328,7 +328,7 @@ __bashCoverageReportConvertFiles() {
       cat "$lineContentFile"
       grep -A 32767 -m 1 "$magic" <"$targetFile.$$" | grep -v "$magic"
     } >"$targetFile"
-    __usageEnvironment "$usage" rm -rf "$targetFile.$$" || return $?
+    __catchEnvironment "$usage" rm -rf "$targetFile.$$" || return $?
     statusMessage --last printf -- "%s %s\n" "$(decorate info "Wrote")" "$(decorate code "$targetFile")"
   done <"$reportCache/files"
 }

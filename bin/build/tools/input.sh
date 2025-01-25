@@ -15,16 +15,16 @@ inputConfigurationAdd() {
   local target=".input""rc" keyStroke="${1-}" action="${2-}" pattern
   export HOME
 
-  __usageArgument "$usage" buildEnvironmentLoad HOME || return $?
-  [ -d "$HOME" ] || __failEnvironment "$usage" "HOME is not a directory $(decorate code "$HOME")" || return $?
+  __catchArgument "$usage" buildEnvironmentLoad HOME || return $?
+  [ -d "$HOME" ] || __throwEnvironment "$usage" "HOME is not a directory $(decorate code "$HOME")" || return $?
   target="$HOME/$target"
-  [ -f "$target" ] || __usageEnvironment "$usage" touch "$target" || return $?
+  [ -f "$target" ] || __catchEnvironment "$usage" touch "$target" || return $?
   pattern="^$(quoteGrepPattern "\"$keyStroke\":")"
   if grep -q -e "$pattern" <"$target"; then
     grep -v "$pattern" >"$target.new" <"$target"
-    __usageEnvironment "$usage" mv -f "$target.new" "$target" || _clean $? "$target.new" || return $?
+    __catchEnvironment "$usage" mv -f "$target.new" "$target" || _clean $? "$target.new" || return $?
   fi
-  __usageEnvironment "$usage" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target"
+  __catchEnvironment "$usage" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target"
 }
 _inputConfigurationAdd() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

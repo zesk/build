@@ -47,7 +47,7 @@ __buildTestSuite() {
 
   testHome="$(__environment realPath "$here/..")" || return $?
   __environment bashSourcePath "$testHome/test/support" || return $?
-  testTools testSuite --tests "$testHome/test/tools" "$@" || __failEnvironment "$usage" "testTools" || return $?
+  testTools testSuite --tests "$testHome/test/tools" "$@" || __throwEnvironment "$usage" "testTools" || return $?
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

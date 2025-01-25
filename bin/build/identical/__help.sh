@@ -24,12 +24,12 @@
 # Example:     __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-# Depends: __failArgument
+# Depends: __throwArgument
 __help() {
   local usage="${1-}" && shift
   if [ "$usage" = "--only" ]; then
     usage="${1-}" && shift
-    [ "$#" -eq 1 ] && [ "$1" = "--help" ] || __failArgument "$usage" "Only argument allowed is \`--help\`" || return $?
+    [ "$#" -eq 1 ] && [ "$1" = "--help" ] || __throwArgument "$usage" "Only argument allowed is \`--help\`" || return $?
   fi
   while [ $# -gt 0 ]; do
     if [ "$1" = "--help" ]; then

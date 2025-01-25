@@ -53,13 +53,13 @@ bigText() {
   local usage="_${FUNCNAME[0]}"
   local fonts binary index=0
 
-  __usageEnvironment "$usage" muzzle packageUpdate || return $?
-  __usageEnvironment "$usage" muzzle packageInstall || return $?
-  binary=$(__usageEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  __catchEnvironment "$usage" muzzle packageUpdate || return $?
+  __catchEnvironment "$usage" muzzle packageInstall || return $?
+  binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
   case "$binary" in
     figlet) fonts=("standard" "big") ;;
     toilet) fonts=("smblock" "smmono12") ;;
-    *) __failEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $? ;;
+    *) __throwEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $? ;;
   esac
   if ! muzzle packageWhich "$binary" "$binary"; then
     decorate green "BIG TEXT: $*"
@@ -109,7 +109,7 @@ labeledBigText() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -138,16 +138,16 @@ labeledBigText() {
       *)
         if [ "$argument" != "${argument#-}" ]; then
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         label="$argument"
-        plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __failArgument "$usage" "Unable to clean label" || return $?
+        plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __throwArgument "$usage" "Unable to clean label" || return $?
         shift
         break
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local banner nLines
@@ -216,9 +216,9 @@ repeat() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" "shift argument $argument" || return $?
+    shift || __throwArgument "$usage" "shift argument $argument" || return $?
   done
-  __failArgument "$usage" "missing repeat string" || return $?
+  __throwArgument "$usage" "missing repeat string" || return $?
 }
 _repeat() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -238,7 +238,7 @@ echoBar() {
 
   local barText="" width count delta=""
 
-  width=$(consoleColumns) || __failEnvironment "$usage" consoleColumns || return $?
+  width=$(consoleColumns) || __throwEnvironment "$usage" consoleColumns || return $?
   # _IDENTICAL_ argument-case-header-blank 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -252,7 +252,7 @@ echoBar() {
       *)
         if [ $# -gt 2 ]; then
           # _IDENTICAL_ argumentUnknown 1
-          __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         barText="$argument"
         shift
@@ -265,14 +265,14 @@ echoBar() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   [ -n "$barText" ] || barText="="
   [ -n "$delta" ] || delta=0
 
   count=$((width / ${#barText}))
   count=$((count + delta))
-  [ $count -gt 0 ] || __failArgument "$usage" "count $count (delta $delta) less than zero?" || return $?
+  [ $count -gt 0 ] || __throwArgument "$usage" "count $count (delta $delta) less than zero?" || return $?
   printf -- "%s\n" "$(repeat "$count" "$barText")"
 }
 _echoBar() {
@@ -285,7 +285,7 @@ lineFill() {
   local usage="_${FUNCNAME[0]}"
   local text cleanText width barText
 
-  width=$(__usageEnvironment "$usage" consoleColumns) || return $?
+  width=$(__catchEnvironment "$usage" consoleColumns) || return $?
   barText="${1:--}"
   shift || :
   text="$*"
@@ -332,14 +332,14 @@ wrapLines() {
         return $?
         ;;
       --fill)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        [ 1 -eq "${#1}" ] || __failArgument "$usage" "Fill character must be single character" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
+        [ 1 -eq "${#1}" ] || __throwArgument "$usage" "Fill character must be single character" || return $?
         fill="$1"
         width="${width:-needed}"
         ;;
       --width)
-        shift || __failArgument "$usage" "missing $argument argument" || return $?
-        isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __failArgument "$usage" "$argument requires positive integer" || return $?
+        shift || __throwArgument "$usage" "missing $argument argument" || return $?
+        isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __throwArgument "$usage" "$argument requires positive integer" || return $?
         width="$1"
         ;;
       *)
@@ -352,16 +352,16 @@ wrapLines() {
         fi
         ;;
     esac
-    shift || __failArgument "$usage" shift || return $?
+    shift || __throwArgument "$usage" shift || return $?
   done
   if ! isUnsignedInteger "$width"; then
-    width=$(consoleColumns) || __failEnvironment "$usage" "consoleColumns" || return $?
+    width=$(consoleColumns) || __throwEnvironment "$usage" "consoleColumns" || return $?
   fi
   if [ -n "$width" ]; then
     strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
-      __failArgument "$usage" "$width is too small to support prefix and suffix characters (${#strippedText})"
+      __throwArgument "$usage" "$width is too small to support prefix and suffix characters (${#strippedText})"
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing
@@ -449,7 +449,7 @@ boxedHeading() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)

@@ -72,20 +72,20 @@ __buildDeploy() {
 
   usage="${FUNCNAME[0]#_}"
 
-  start=$(beginTiming) || __failEnvironment "$usage" "beginTiming" || return $?
+  start=$(beginTiming) || __throwEnvironment "$usage" "beginTiming" || return $?
 
   statusMessage decorate info "Fetching deep copy of repository ..." || :
-  __usageEnvironment "$usage" git fetch --unshallow || return $?
+  __catchEnvironment "$usage" git fetch --unshallow || return $?
 
   statusMessage decorate info "Collecting application version and ID ..." || :
-  currentVersion="$(hookRun version-current)" || __failEnvironment "$usage" "hookRun version-current" || return $?
-  appId=$(hookRun application-id) || __failEnvironment "$usage" "hookRun application-id" || return $?
+  currentVersion="$(hookRun version-current)" || __throwEnvironment "$usage" "hookRun version-current" || return $?
+  appId=$(hookRun application-id) || __throwEnvironment "$usage" "hookRun application-id" || return $?
 
-  [ -n "$currentVersion" ] || __failEnvironment "$usage" "Blank version-current" || return $?
-  [ -n "$appId" ] || __failEnvironment "$usage" "No application ID (blank?)" || return $?
+  [ -n "$currentVersion" ] || __throwEnvironment "$usage" "Blank version-current" || return $?
+  [ -n "$appId" ] || __throwEnvironment "$usage" "No application ID (blank?)" || return $?
 
-  notes=$(releaseNotes) || __failEnvironment "$usage" "releaseNotes" || return $?
-  [ -f "$notes" ] || __failEnvironment "$usage" "$notes does not exist" || return $?
+  notes=$(releaseNotes) || __throwEnvironment "$usage" "releaseNotes" || return $?
+  [ -f "$notes" ] || __throwEnvironment "$usage" "$notes does not exist" || return $?
 
   bigText "$currentVersion" | wrapLines "    $(decorate green "Zesk BUILD    🛠️️ ") $(decorate magenta)" "$(decorate green " ⚒️ ")" || :
   decorate info "Deploying a new release ... " || :
@@ -93,7 +93,7 @@ __buildDeploy() {
   if ! githubRelease "$notes" "$currentVersion" "$appId"; then
     decorate warning "Deleting tagged version ... " || :
     gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
-    __failEnvironment "$usage" "githubRelease" || return $?
+    __throwEnvironment "$usage" "githubRelease" || return $?
   fi
   reportTiming "$start" "Release completed in" || :
 }

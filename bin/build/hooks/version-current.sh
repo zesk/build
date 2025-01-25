@@ -23,8 +23,8 @@ __hookVersionCurrent() {
 
   usage="_${FUNCNAME[0]}"
 
-  __usageEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
-  __usageEnvironment "$usage" cd "${BUILD_RELEASE_NOTES}" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
+  __catchEnvironment "$usage" cd "${BUILD_RELEASE_NOTES}" || return $?
   for f in *.md; do
     f=${f%.md}
     echo "$f"

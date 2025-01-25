@@ -22,7 +22,7 @@ __hookApplicationTag() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __failArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -30,19 +30,19 @@ __hookApplicationTag() {
         return $?
         ;;
       *)
-        __failArgument "$usage" "unknown argument: $argument" || return $?
+        __throwArgument "$usage" "unknown argument: $argument" || return $?
         ;;
     esac
     shift || :
   done
-  home=$(__usageEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   if ! home="$(gitFindHome "$home" 2>/dev/null)" || [ -z "$home" ]; then
     printf "%s\n" "$(date +%F)"
     return 0
   fi
-  __usageEnvironment "$usage" muzzle pushd "$home" || return $?
-  __usageEnvironment "$usage" gitEnsureSafeDirectory "$home" || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+  __catchEnvironment "$usage" gitEnsureSafeDirectory "$home" || return $?
   if ! git for-each-ref --format '%(refname:short)' refs/tags/ | grep -E '^v[0-9\.]+$' | versionSort -r | head -n 1 2>/dev/null; then
     printf %s "v0.0.1"
   fi

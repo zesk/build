@@ -11,7 +11,7 @@
 sedReplacePattern() {
   local usage="_${FUNCNAME[0]}"
   if [ $# -eq 0 ]; then
-    __failArgument "$usage" "find replace - no find" || return $?
+    __throwArgument "$usage" "find replace - no find" || return $?
   fi
   printf "s/%s/%s/g\n" "$(quoteSedPattern "$1")" "$(quoteSedReplacement "${2-}")"
 }

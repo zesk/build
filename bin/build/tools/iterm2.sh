@@ -35,7 +35,7 @@ iTerm2Badge() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -50,13 +50,13 @@ iTerm2Badge() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   if isiTerm2; then
     printf "\e]1337;SetBadgeFormat=%s\a" "$(printf "%s" "${message[*]}" | base64)"
   elif $wrongTerminalFails; then
-    __failEnvironment "$usage" "Terminal does not support badges: $(decorate code "$LC_TERMINAL")" || return $?
+    __throwEnvironment "$usage" "Terminal does not support badges: $(decorate code "$LC_TERMINAL")" || return $?
   fi
 }
 _iTerm2Badge() {
@@ -76,7 +76,7 @@ iTerm2Init() {
   set +ue
   source="${HOME}/.iterm2_shell_integration.bash"
   # shellcheck source=/dev/null
-  [ ! -x "$source" ] || source "$source" || __failEnvironment "source $source failed" || return $?
+  [ ! -x "$source" ] || source "$source" || __throwEnvironment "source $source failed" || return $?
 }
 _iTerm2Init() {
   # _IDENTICAL_ usageDocument 1

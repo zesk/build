@@ -49,8 +49,8 @@
 # Exit Code: 2 - Argument error
 # Requires: cp rm cat printf
 # Requires: realPath whichExists _return fileTemporaryName
-# Requires: __usageArgument __failArgument
-# Requires: __usageEnvironment decorate
+# Requires: __catchArgument __throwArgument
+# Requires: __catchEnvironment decorate
 # Requires: usageArgumentString
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
@@ -67,7 +67,7 @@ _installRemotePackage() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       --debug)
         __installRemotePackageDebug "$argument"
@@ -79,19 +79,19 @@ _installRemotePackage() {
         shift
         newName="$1"
         decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
-        __usageEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-        __usageEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
         return 0
         ;;
       --force)
         forceFlag=true
         ;;
       --mock | --local)
-        [ -z "$localPath" ] || __failArgument "$usage" "$argument already" || return $?
+        [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
         shift
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument #$__index" || return $?
-        localPath="$(__usageArgument "$usage" realPath "${1%/}")" || return $?
-        [ -x "$localPath/tools.sh" ] || __failArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
+        localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
+        [ -x "$localPath/tools.sh" ] || __throwArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
         ;;
       --user | --header | --password)
         shift
@@ -99,41 +99,41 @@ _installRemotePackage() {
         ;;
       --url)
         shift
-        [ -z "$url" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$url" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         url="$1"
         ;;
       --version-function)
         shift
-        [ -z "$versionFunction" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         versionFunction="$1"
         ;;
       --url-function)
         shift
-        [ -z "$urlFunction" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         urlFunction="$1"
         ;;
       --check-function)
         shift
-        [ -z "$checkFunction" ] || __failArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __failArgument "$usage" "$argument blank argument" || return $?
+        [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
         checkFunction="$1"
         ;;
       *)
-        __failArgument "$usage" "unknown argument #$__index: $argument" || return $?
+        __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
         ;;
     esac
-    shift || __failArgument "$usage" "missing argument #$__index: $argument" || return $?
+    shift || __throwArgument "$usage" "missing argument #$__index: $argument" || return $?
   done
 
   local installFlag=false message
   local myBinary myPath applicationHome installPath
   # Move to starting point
-  myBinary=$(__usageEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
-  myPath="$(__usageEnvironment "$usage" dirname "$myBinary")" || return $?
-  applicationHome=$(__usageEnvironment "$usage" realPath "$myPath/$relative") || return $?
+  myBinary=$(__catchEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
+  myPath="$(__catchEnvironment "$usage" dirname "$myBinary")" || return $?
+  applicationHome=$(__catchEnvironment "$usage" realPath "$myPath/$relative") || return $?
   installPath="$applicationHome/$packagePath"
 
   if ! $forceFlag && [ -n "$versionFunction" ]; then
@@ -145,14 +145,14 @@ _installRemotePackage() {
 
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
-      url=$(__usageEnvironment "$usage" "$urlFunction" "$usage") || return $?
+      url=$(__catchEnvironment "$usage" "$urlFunction" "$usage") || return $?
       if [ -z "$url" ]; then
-        __failArgument "$usage" "$urlFunction failed" || return $?
+        __throwArgument "$usage" "$urlFunction failed" || return $?
       fi
     fi
   fi
   if [ -z "$url" ] && [ -z "$localPath" ]; then
-    __failArgument "$usage" "--local or --url|--url-function is required" || return $?
+    __throwArgument "$usage" "--local or --url|--url-function is required" || return $?
   fi
 
   if [ ! -d "$installPath" ]; then
@@ -167,23 +167,23 @@ _installRemotePackage() {
   binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
   if $installFlag; then
     local start
-    start=$(($(__usageEnvironment "$usage" date +%s) + 0)) || return $?
+    start=$(($(__catchEnvironment "$usage" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
-    [ -d "$installPath" ] || __failEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
+    [ -d "$installPath" ] || __throwEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
-    __usageEnvironment "$usage" rm -f "$messageFile" || return $?
+    __catchEnvironment "$usage" rm -f "$messageFile" || return $?
   else
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __usageEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
     fi
     message="$(cat "$messageFile") already installed"
     rm -f "$messageFile" || :
@@ -213,7 +213,7 @@ __installRemotePackageDebug() {
 
 # Install the package directory
 # Requires: uname pushd popd rm tar
-# Requires: __usageEnvironment __failEnvironment
+# Requires: __catchEnvironment __throwEnvironment
 __installRemotePackageDirectory() {
   local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
@@ -224,8 +224,8 @@ __installRemotePackageDirectory() {
     __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __usageEnvironment "$usage" __fetch "$usage" "$url" "$target" || return $?
-  [ -f "$target" ] || __failEnvironment "$usage" "$target does not exist after download from $url" || return $?
+  __catchEnvironment "$usage" __fetch "$usage" "$url" "$target" || return $?
+  [ -f "$target" ] || __throwEnvironment "$usage" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
   if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
@@ -233,16 +233,16 @@ __installRemotePackageDirectory() {
   else
     tarArgs=(--include="*$packagePath/*")
   fi
-  __usageEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
-  __usageEnvironment "$usage" rm -rf "$packagePath" || return $?
-  __usageEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
-  __usageEnvironment "$usage" popd >/dev/null || return $?
+  __catchEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
+  __catchEnvironment "$usage" rm -rf "$packagePath" || return $?
+  __catchEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
+  __catchEnvironment "$usage" popd >/dev/null || return $?
   rm -f "$target" || :
 }
 
 # Install the build directory from a copy
 # Requires: rm mv cp mkdir
-# Requires: _undo __usageEnvironment __failEnvironment
+# Requires: _undo __catchEnvironment __throwEnvironment
 __installRemotePackageDirectoryLocal() {
   local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
@@ -250,14 +250,14 @@ __installRemotePackageDirectoryLocal() {
   # Clean target regardless
   if [ -d "$installPath" ]; then
     tempPath="$installPath.aboutToDelete.$$"
-    __usageEnvironment "$usage" rm -rf "$tempPath" || return $?
-    __usageEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
-    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$tempPath" "$installPath" || return $?
-    __usageEnvironment "$usage" rm -rf "$tempPath" || :
+    __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
+    __catchEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$tempPath" "$installPath" || return $?
+    __catchEnvironment "$usage" rm -rf "$tempPath" || :
   else
-    tempPath=$(__usageEnvironment "$usage" dirname "$installPath") || return $?
-    [ -d "$tempPath" ] || __usageEnvironment "$usage" mkdir -p "$tempPath" || return $?
-    __usageEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
+    tempPath=$(__catchEnvironment "$usage" dirname "$installPath") || return $?
+    [ -d "$tempPath" ] || __catchEnvironment "$usage" mkdir -p "$tempPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
   fi
 }
 

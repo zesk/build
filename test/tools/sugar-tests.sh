@@ -173,8 +173,8 @@ testSugar() {
 testMoreSugar() {
   local usageMock=__testMoreSugarUsage
 
-  assertExitCode --line "$LINENO" --stderr-match whoops "$(_code environment)" __usageEnvironment "$usageMock" _argument "whoops" || return $?
-  assertExitCode --line "$LINENO" --stderr-match a-daisy "$(_code argument)" __usageArgument "$usageMock" _environment "a-daisy" || return $?
+  assertExitCode --line "$LINENO" --stderr-match whoops "$(_code environment)" __catchEnvironment "$usageMock" _argument "whoops" || return $?
+  assertExitCode --line "$LINENO" --stderr-match a-daisy "$(_code argument)" __catchArgument "$usageMock" _environment "a-daisy" || return $?
 }
 __testMoreSugarUsage() {
   return "$1"
@@ -185,13 +185,13 @@ testArgEnvStuff() {
 
   k=$(_code environment)
   assertExitCode --stderr-match foo "$k" _environment "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __failEnvironment _return "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __usageEnvironment "$usage" _return 99 foo || return $?
+  assertExitCode --stderr-match foo "$k" __throwEnvironment _return "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __catchEnvironment "$usage" _return 99 foo || return $?
 
   k=$(_code argument)
   assertExitCode --stderr-match foo "$k" _argument "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __failArgument _return "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __usageArgument "$usage" _return 99 foo || return $?
+  assertExitCode --stderr-match foo "$k" __throwArgument _return "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __catchArgument "$usage" _return 99 foo || return $?
 }
 
 testMuzzle() {

@@ -98,7 +98,7 @@ exampleFunction() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -123,30 +123,30 @@ exampleFunction() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
 
   # Load MANPATH environment
   export MANPATH
-  __usageEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
 
-  ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "$width" "$name: Easy mode enabled" || return $?
-  ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "path" "$path" || return $?
-  ! $easyFlag || __usageEnvironment "$usage" consoleNameValue "target" "$target" || return $?
+  ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "$width" "$name: Easy mode enabled" || return $?
+  ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "path" "$path" || return $?
+  ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "target" "$target" || return $?
 
   # Trouble debugging
 
-  whichExists library-which-should-be-there || __failEnvironment "$usage" "missing thing" || return $?
+  whichExists library-which-should-be-there || __throwEnvironment "$usage" "missing thing" || return $?
 
   # DEBUG LINE
   printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code "$@")" # DEBUG LINE
@@ -194,18 +194,18 @@ __hookGitPostCommit() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   reportTiming "$start" "Completed in"
-  __usageEnvironment "$usage" gitInstallHook post-commit || return $?
+  __catchEnvironment "$usage" gitInstallHook post-commit || return $?
 
-  __usageEnvironment "$usage" gitMainly || return $?
-  __usageEnvironment "$usage" git push origin || return $?
+  __catchEnvironment "$usage" gitMainly || return $?
+  __catchEnvironment "$usage" git push origin || return $?
 }
 ___hookGitPostCommit() {
   # _IDENTICAL_ usageDocument 1

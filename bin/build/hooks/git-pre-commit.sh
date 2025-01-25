@@ -90,17 +90,17 @@ isUnsignedInteger() {
 __hookGitPreCommit() {
   local usage="_${FUNCNAME[0]}" hookName="pre-commit" start
 
-  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
-  __usageEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
-  __usageEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
+  __catchEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
 
-  __usageEnvironment "$usage" gitPreCommitSetup || return $?
-  __usageEnvironment "$usage" hookRunOptional "$hookName" || return $?
+  __catchEnvironment "$usage" gitPreCommitSetup || return $?
+  __catchEnvironment "$usage" hookRunOptional "$hookName" || return $?
 
   statusMessage --last decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta "$hookName") $(decorate decoration)")"
 
@@ -109,7 +109,7 @@ __hookGitPreCommit() {
   for extension in "${extensions[@]+${extensions[@]}}"; do
     statusMessage decorate info "Processing $(decorate code "$extension") ..."
     if gitPreCommitHasExtension "$extension"; then
-      __usageEnvironment "$usage" hookRunOptional "pre-commit-$extension" || return $?
+      __catchEnvironment "$usage" hookRunOptional "pre-commit-$extension" || return $?
     fi
   done
 
