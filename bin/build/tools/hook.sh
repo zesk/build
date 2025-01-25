@@ -84,7 +84,7 @@ __hookRunner() {
           set --
           __usageEnvironment "$usage" source "$hook" || return $?
         else
-          __usageEnvironment "$usage" "$hook" "$@" || return $?
+          "$hook" "$@" || return $?
         fi
         return 0
         ;;

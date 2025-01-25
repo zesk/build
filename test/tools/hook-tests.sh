@@ -17,7 +17,6 @@ testVersionLive() {
   assertExitCode --line "$LINENO" 0 hookRun version-live || return $?
 }
 
-
 testHookSystem() {
   local testDir here randomApp randomDefault path
   local hook exitCode f
@@ -106,7 +105,8 @@ testHookSystem() {
   decorate info "hookRun noExtension"
   assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun noExtension || _hookTestFailed "$testDir" || return $?
   decorate info "hookRun nonZero"
-  assertExitCode 99 hookRun nonZero || _hookTestFailed "$testDir" || return $?
+
+  assertExitCode --line "$LINENO" 99 hookRun nonZero || _hookTestFailed "$testDir" || return $?
   decorate info "hookRun nonZeroNoExt"
   assertExitCode 99 hookRun nonZeroNoExt || _hookTestFailed "$testDir" || return $?
   decorate info "hookRun nonX"
