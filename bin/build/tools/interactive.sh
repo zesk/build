@@ -539,6 +539,64 @@ _confirmYesNo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+interactiveCountdown() {
+  local usage="_${FUNCNAME[0]}"
+
+  local prefix="" counter="" binary=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --prefix)
+        # shift here never fails as [ #$ -gt 0 ]
+        shift
+        prefix="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        if [ -z "$counter" ]; then
+          counter=$(usageArgumentPositiveInteger "$usage" "counter" "$1") || return $?
+        else
+          binary=$(usageArgumentCallable "$usage" "callable" "$1") || return $?
+          break
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+  done
+  [ -n "$counter" ] || __failArgument "$usage" "counter is required" || return $?
+
+  local start end now
+
+  start=$(__usageEnvironment "$usage" beginTiming) || return $?
+  end=$((start + counter))
+  now=$start
+  [ -z "$prefix" ] || prefix="$prefix "
+
+  while [ "$now" -lt "$end" ]; do
+    statusMessage printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $counter ")"
+    sleep 1
+    now=$(__usageEnvironment "$usage" beginTiming) || return $?
+    counter=$((end - now))
+  done
+  statusMessage printf -- "%s" ""
+  if [ -n "$binary" ]; then
+    __catch "$usage" "$@" || return $?
+  fi
+}
+_interactiveCountdown() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Usage: {fn} [ directoryOrFile ... ]
 # Argument: directoryOrFile - Required. Exists. Directory or file to `source` `.sh` files found.
 # Argument: --info - Optional. Flag. Show user what they should do (press a key).

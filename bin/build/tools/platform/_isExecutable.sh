@@ -15,6 +15,7 @@
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - All arguments are executable binaries
 # Exit code: 1 - One or or more arguments are not executable binaries
+# Requires: _argument which
 isExecutable() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
   # Skip illegal options "--" and "-foo"

@@ -9,6 +9,10 @@ bin/build/install/mariadb-client.sh|mariadbInstall
 bin/build/install/npm.sh|npmInstall
 bin/build/install/php-cli.sh|phpInstall
 bin/build/install/terraform.sh|terraformInstall
+__failArgument|__throwArgument
+__failEnvironment|__throwEnvironment
+__usageEnvironment|__catchEnvironment
+__usageArgument|__catchArgument
 
 # v0.18.6
 consoleReset|decorate reset

@@ -19,6 +19,23 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
+# Run a command, fail using a handler
+# Usage: {fn} handler command arguments
+# Argument: handler - Callable. Required. Function to call on error.
+# Argument: command - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Any additional arguments to `command`.
+__catch() {
+  local __count=$# __saved=("$@") handler="$1" command="$2"
+  shift 2 || __failArgument "$__usage" "missing arguments #$__count $(decorate each code "${__saved[@]}")" || return $?
+  isCallable "$handler" || __failArgument "$__usage" "handler not callable $(decorate code "$handler")" || return $?
+  isCallable "$command" || __failArgument "$__usage" "command Not callable $(decorate code "$command")" || return $?
+  "$command" "$@" || "$handler" "$?" "$command" "$@" || return $?
+}
+___catch() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Run `command`, handle failure with `usage` with `code` and `command` as error
 # Usage: {fn} code usage command ...
 # Argument: code - Required. Integer. Exit code to return
@@ -26,10 +43,10 @@ __execute() {
 # Argument: command - Required. String. Command to run.
 # Requires: isInteger _argument isFunction isCallable
 __usage() {
-  local __usage="_${FUNCNAME[0]}" code="${1-0}" usage="${2-}" command="${3?}"
-  isInteger "$code" || __usageArgument "$__usage" "Not integer: $code $usage $command" || return $?
-  isFunction "$usage" || __usageArgument "$__usage" "Not a function $(decorate code "$usage"): $(debuggingStack)" || return $?
-  isCallable "$command" || __usageArgument "$__usage" "Not callable $(decorate code "$command")" || return $?
+  local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" code="${1-0}" usage="${2-}" command="${3?}"
+  isInteger "$code" || __failArgument "$__usage" "Not integer: $code (#$__count $(decorate each code "${__saved[@]}"))" || return $?
+  isFunction "$usage" || __failArgument "$__usage" "Not a function $(decorate code "$usage"): $(debuggingStack)" || return $?
+  isCallable "$command" || __failArgument "$__usage" "Not callable $(decorate code "$command")" || return $?
   shift 3
   "$command" "$@" || "$usage" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
@@ -83,8 +100,9 @@ __usageEnvironmentQuiet() {
 # Argument: function - Required. String. Function which is deprecated.
 # Example:     {fn} "${FUNCNAME[0]}"
 _deprecated() {
+  export BUILD_HOME
   printf "DEPRECATED: %s" "$@" 1>&2
-  printf -- "$(date "+%F %T"),%s\n" "$@" >>"$(dirname "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")/.deprecated"
+  [ ! -d "$BUILD_HOME" ] || printf -- "$(date "+%F %T"),%s\n" "$@" >>"${BUILD_HOME}/.deprecated"
 }
 
 # Run a function and preserve exit code
@@ -101,9 +119,9 @@ _deprecated() {
 # Example: undo+=(-- deleteMassiveResource "$thing")
 #
 _undo() {
-  local exitCode="${1-}" args=()
+  local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
-  isPositiveInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  isPositiveInteger "$exitCode" || __usageArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
       --)
@@ -111,13 +129,17 @@ _undo() {
         args=()
         ;;
       *)
-        isCallable "${1-}" || _argument "_undo \"${1-}\" is not callable: $*" || return "$exitCode"
+        isCallable "${1-}" || __usageArgument "$__usage" "Not callable $(decorate value "$1") (#$__count: $(decorate each code "${__saved[@]}"))" || return "$exitCode"
         args+=("$1")
         ;;
     esac
     shift
   done
   return "$exitCode"
+}
+__undo() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} command ...
