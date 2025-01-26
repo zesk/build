@@ -24,13 +24,15 @@ isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
-  ! isUnsignedInteger "$1" || return 0
+  if isUnsignedInteger "$1"; then
+    [ "$1" -gt 0 ] || return 1
+    return 0
+  fi
   if [ "$1" = "--help" ]; then
     "$usage" 0
     return 0
   fi
-  # Find pesky "0" or "+0"
-  [ "$1" -gt 0 ] || return 1
+  return 1
 }
 _isPositiveInteger() {
   # _IDENTICAL_ usageDocument 1
