@@ -21,7 +21,7 @@
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
-# Requires: isUnsignedInteger printf
+# Requires: isUnsignedInteger printf _return
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
@@ -282,7 +282,7 @@ usageDocument() {
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
-  grep -m 1 -B $maxLines "$functionName() {" "$source" | grep -v -e '( IDENTICAL |_IDENTICAL_|DOC TEMPLATE)' |
+  grep -m 1 -B $maxLines "$functionName() {" "$source" | grep -v -e '( IDENTICAL | _IDENTICAL_ |DOC TEMPLATE:|Internal:)' |
     reverseFileLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
     reverseFileLines | grep -E '^#' | cut -c 3-
 }
@@ -296,7 +296,7 @@ bashFunctionComment() {
 # Summary: Reverse output lines
 # Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
 # Credits: Eric Pement
-# Requires: awk
+# Depends: awk
 reverseFileLines() {
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }

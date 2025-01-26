@@ -49,7 +49,7 @@ Quote a sed command for search and replace
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -78,7 +78,7 @@ needSlash='$.*/[\]^'
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -917,7 +917,7 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 #### See Also
 
-- [Source {fn}]({sourceLink})
+{SEE:cannon.sh}
 ### `joinArguments` - Output arguments joined by a character
 
 Output arguments joined by a character

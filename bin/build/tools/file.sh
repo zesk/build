@@ -281,7 +281,7 @@ _modifiedDays() {
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath
 realPath() {
-  # realpath is not present always
+  [ -e "$1" ] || __argument "Not a file: $1" || return $?
   if whichExists realpath; then
     realpath "$@"
   else

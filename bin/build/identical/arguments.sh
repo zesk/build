@@ -95,36 +95,6 @@ ___documentTemplateFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__documentTemplateFunction2() {
-  local usage="_${FUNCNAME[0]}"
-
-  # _IDENTICAL_ argument-case-header-blank 4
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL --profileHandler 5
-      --profile)
-        shift
-        [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
-        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
-        ;;
-    esac
-    # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
-  done
-
-  reportTiming "$start" "Completed in"
-}
 ___documentTemplateFunction2() {
   # Source IDENTICAL usageDocument HERE
   # IDENTICAL usageDocument 1

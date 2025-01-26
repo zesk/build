@@ -425,7 +425,7 @@ __installRemotePackageLocal() {
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath
 realPath() {
-  # realpath is not present always
+  [ -e "$1" ] || __argument "Not a file: $1" || return $?
   if whichExists realpath; then
     realpath "$@"
   else
@@ -466,7 +466,7 @@ whichExists() {
   done
 }
 
-# IDENTICAL _type 41
+# IDENTICAL _type 45
 
 #
 # Test if an argument is a positive integer (non-zero)
@@ -479,7 +479,11 @@ isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
-  isUnsignedInteger "$1" || [ "$1" != "--help" ] || ! "$usage" 0 || return 0
+  ! isUnsignedInteger "$1" || return 0
+  if [ "$1" = "--help" ]; then
+    "$usage" 0
+    return 0
+  fi
   # Find pesky "0" or "+0"
   [ "$1" -gt 0 ] || return 1
 }
@@ -509,7 +513,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 150
+# IDENTICAL decorate 168
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -544,9 +548,9 @@ hasColors() {
   [ "${BUILD_COLORS-}" = "true" ]
 }
 _hasColors() {
-  ! false || hasColors --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || hasColors --help
 }
 
 #
@@ -568,14 +572,31 @@ __decorate() {
   if [ -n "$prefix" ]; then printf -- "%s: %s\n" "$prefix" "$*"; else printf -- "%s\n" "$*"; fi
 }
 
+# Output a list of build-in decoration styles, one per line
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+decorations() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  printf "%s\n" reset \
+    underline no-underline bold no-bold \
+    black black-contrast blue cyan green magenta orange red white yellow \
+    bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow \
+    code info notice success warning error subtle label value decoration
+}
+_decorations() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Singular decoration function
 # Usage: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Depends: isFunction _argument awk __catchEnvironment usageDocument
+# Requires: isFunction _argument awk __catchEnvironment usageDocument
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}" && shift
+  local usage="_${FUNCNAME[0]}" text="" what="${1-}"
+  shift || __catchArgument "$usage" "Requires at least one argument" || return $?
   local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
@@ -633,7 +654,8 @@ _caseStyles() {
       # semantic-colors
     code) lp='1;97;44' ;;
     info) lp='38;5;20' && dp='1;33' && text="Info" ;;
-    success) lp='42;30' && dp='0;32' && text="SUCCESS" ;;
+    notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
+    success) lp='42;30' && dp='0;32' && text="Success" ;;
     warning) lp='1;93;41' && text="Warning" ;;
     error) lp='1;91' && text="ERROR" ;;
     subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;
@@ -666,7 +688,7 @@ __decorateExtensionEach() {
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
-# Requires: isUnsignedInteger printf
+# Requires: isUnsignedInteger printf _return
 _return() {
   local r="${1-:1}" && shift
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?

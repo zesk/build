@@ -188,12 +188,19 @@ A simple example to show some standard patterns:
     # - use `a || b || c || return $?` format when possible
     # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
     
-    # IDENTICAL __source 17
+    _usageFunction() {
+      # _IDENTICAL_ usageDocument 1
+      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    }
+    
+    # IDENTICAL __source 19
     # Usage: {fn} source relativeHome  [ command ... ] ]
     # Load a source file and run a command
     # Argument: source - Required. File. Path to source relative to application root..
     # Argument: relativeHome - Required. Directory. Path to application root.
     # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+    # Requires: _return
+    # Security: source
     __source() {
       local me="${BASH_SOURCE[0]}" e=253
       local here="${me%/*}" a=()
@@ -207,24 +214,26 @@ A simple example to show some standard patterns:
       "${a[@]}" || return $?
     }
     
-    # IDENTICAL __tools 7
+    # IDENTICAL __tools 8
     # Usage: {fn} [ relativeHome [ command ... ] ]
     # Load build tools and run command
     # Argument: relativeHome - Required. Directory. Path to application root.
     # Argument: command ... - Optional. Callable. A command to run and optional arguments.
+    # Requires: __source _return
     __tools() {
       __source bin/build/tools.sh "$@"
     }
     
-    # IDENTICAL _return 24
+    # IDENTICAL _return 25
     # Usage: {fn} [ exitCode [ message ... ] ]
     # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
     # Argument: message ... - Optional. String. Message to output to stderr.
     # Exit Code: exitCode
+    # Requires: isUnsignedInteger printf _return
     _return() {
       local r="${1-:1}" && shift
       isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-      printf "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+      printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
     }
     
     # Test if an argument is an unsigned integer
@@ -234,7 +243,7 @@ A simple example to show some standard patterns:
     # Usage: {fn} argument ...
     # Exit Code: 0 - if it is an unsigned integer
     # Exit Code: 1 - if it is not an unsigned integer
-    #
+    # Requires: _return
     isUnsignedInteger() {
       [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
       case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
@@ -259,16 +268,13 @@ A simple example to show some standard patterns:
     #
     exampleFunction() {
       local usage="_${FUNCNAME[0]}"
-      local name="" easyFlag=false width=50 target="" start
-    
-      # IDENTICAL startBeginTiming 1
-      start=$(__catchEnvironment "$usage" beginTiming) || return $?
+      local name="" easyFlag=false width=50 target=""
     
       # _IDENTICAL_ argument-case-header 5
-      local saved=("$@") nArguments=$#
+      local __saved=("$@") __count=$#
       while [ $# -gt 0 ]; do
-        local argument argumentIndex=$((nArguments - $# + 1))
-        argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+        local argument="$1" __index=$((__count - $# + 1))
+        [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
         case "$argument" in
           # _IDENTICAL_ --help 4
           --help)
@@ -293,12 +299,18 @@ A simple example to show some standard patterns:
             ;;
           *)
             # _IDENTICAL_ argumentUnknown 1
-            __throwArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+            __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
             ;;
         esac
         # _IDENTICAL_ argument-esac-shift 1
-        shift || __throwArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+        shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
       done
+    
+      local start
+    
+      # IDENTICAL startBeginTiming 1
+      start=$(__catchEnvironment "$usage" beginTiming) || return $?
+    
     
       # Load MANPATH environment
       export MANPATH
@@ -313,8 +325,7 @@ A simple example to show some standard patterns:
       whichExists library-which-should-be-there || __throwEnvironment "$usage" "missing thing" || return $?
     
       # DEBUG LINE
-      printf -- "%s:%s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" # DEBUG LINE
-    
+      printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code "$@")" # DEBUG LINE
       reportTiming "$start" "Completed in"
     }
     _exampleFunction() {
@@ -348,9 +359,9 @@ A simple example to show some standard patterns:
       local usage="_${FUNCNAME[0]}"
     
       # _IDENTICAL_ argument-case-header-blank 4
-      local saved=("$@") nArguments=$#
+      local __saved=("$@") __count=$#
       while [ $# -gt 0 ]; do
-        local argument="$1" argumentIndex=$((nArguments - $# + 1))
+        local argument="$1" __index=$((__count - $# + 1))
         case "$argument" in
           # _IDENTICAL_ --help 4
           --help)
@@ -359,11 +370,11 @@ A simple example to show some standard patterns:
             ;;
           *)
             # _IDENTICAL_ argumentUnknown 1
-            __throwArgument "$usage" "unknown argument #$argumentIndex: $argument (Arguments: $(_command "${saved[@]}"))" || return $?
+            __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
             ;;
         esac
         # _IDENTICAL_ argument-esac-shift 1
-        shift || __throwArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+        shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
       done
     
       reportTiming "$start" "Completed in"

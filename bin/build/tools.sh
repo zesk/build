@@ -37,11 +37,6 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# DEPRECATED 2024-11-29
-_integer() {
-  isUnsignedInteger "$@"
-}
-
 # Load tools and optionally run a command
 __toolsMain() {
   local source="${BASH_SOURCE[0]}" internalError=253

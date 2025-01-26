@@ -27,8 +27,6 @@ _identicalCheckInsideLoop() {
   local tempDirectory repairSources=() item
   tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
   mapFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" mapFile) || return $?
-  decorate bold-magenta "STATEFILE: $stateFile"
-  confirmYesNo "Continue?"
   repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "repairSources") || return $?
 
   local quotedPrefix
@@ -103,7 +101,8 @@ _identicalCheckInsideLoop() {
       fi
       if $isBadFile; then
         if [ ${#repairSources[@]} -gt 0 ]; then
-          statusMessage decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\""
+          statusMessage --last decorate info repairSources "${#repairSources[@]}" "${repairSources[@]+"${repairSources[@]}"}"
+          statusMessage --last decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\""
           if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
             badFiles+=("$tokenFileName")
             badFiles+=("$searchFile")
@@ -135,12 +134,9 @@ __identicalCheckRepair() {
   local prefix="$1" token="$2" fileA="$3" fileB="$4"
   local checkPath
 
-  statusMessage decorate info "realPath $fileA"
   fileA=$(realPath "$fileA") || _argument "realPath fileA $fileA" || return $?
-  statusMessage decorate info "realPath $fileB"
   fileB=$(realPath "$fileB") || _argument "realPath fileB $fileB" || return $?
-  statusMessage decorate info "Shifting ..."
-  shift && shift && shift && shift
+  shift 4 || _argument "Unable to shift 4 in ${FUNCNAME[0]}" || return $?
   while [ $# -gt 0 ]; do
     checkPath="$1"
     statusMessage decorate info "Checking path $checkPath ..."

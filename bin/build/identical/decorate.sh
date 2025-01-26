@@ -219,7 +219,8 @@ _caseStyles() {
       # semantic-colors
     code) lp='1;97;44' ;;
     info) lp='38;5;20' && dp='1;33' && text="Info" ;;
-    success) lp='42;30' && dp='0;32' && text="SUCCESS" ;;
+    notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
+    success) lp='42;30' && dp='0;32' && text="Success" ;;
     warning) lp='1;93;41' && text="Warning" ;;
     error) lp='1;91' && text="ERROR" ;;
     subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;

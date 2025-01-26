@@ -43,7 +43,7 @@ testBashPrompt() {
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
   assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
 
-  # __echo bashPrompt --skip-terminal -__testBashPromptB --list || return $?
+  # bashPrompt --skip-terminal -__testBashPromptB --list || return $?
   # Remove B
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?

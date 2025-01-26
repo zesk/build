@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL decorate 150
+# IDENTICAL decorate 168
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -39,9 +39,9 @@ hasColors() {
   [ "${BUILD_COLORS-}" = "true" ]
 }
 _hasColors() {
-  ! false || hasColors --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || hasColors --help
 }
 
 #
@@ -63,14 +63,31 @@ __decorate() {
   if [ -n "$prefix" ]; then printf -- "%s: %s\n" "$prefix" "$*"; else printf -- "%s\n" "$*"; fi
 }
 
+# Output a list of build-in decoration styles, one per line
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+decorations() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  printf "%s\n" reset \
+    underline no-underline bold no-bold \
+    black black-contrast blue cyan green magenta orange red white yellow \
+    bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow \
+    code info notice success warning error subtle label value decoration
+}
+_decorations() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Singular decoration function
 # Usage: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Depends: isFunction _argument awk __catchEnvironment usageDocument
+# Requires: isFunction _argument awk __catchEnvironment usageDocument
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}" && shift
+  local usage="_${FUNCNAME[0]}" text="" what="${1-}"
+  shift || __catchArgument "$usage" "Requires at least one argument" || return $?
   local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
@@ -128,8 +145,8 @@ _caseStyles() {
       # semantic-colors
     code) lp='1;97;44' ;;
     info) lp='38;5;20' && dp='1;33' && text="Info" ;;
-    notice) lp='46;30' && dp='1;97;44' && text="Notice" ;;
-    success) lp='42;30' && dp='0;32' && text="SUCCESS" ;;
+    notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
+    success) lp='42;30' && dp='0;32' && text="Success" ;;
     warning) lp='1;93;41' && text="Warning" ;;
     error) lp='1;91' && text="ERROR" ;;
     subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;

@@ -126,6 +126,7 @@ identicalCheck() {
   start=$(__catchEnvironment "$usage" beginTiming) || return $?
   failureCode="$(_code identical)"
 
+  rootDir=$(__catchEnvironment "$usage" realPath "$rootDir") || return $?
   local tempDirectory resultsFile searchFileList
 
   tempDirectory="$(fileTemporaryName "$usage" -d -t "${usage#_}.XXXXXXXX")" || return $?
@@ -141,25 +142,36 @@ identicalCheck() {
 
   local variable stateFile
   stateFile=$(fileTemporaryName "$usage") || _clean $? "${clean[@]}" || return $?
-  for variable in tempDirectory resultsFile rootDir failureCode; do
+
+  # Write strings to state
+  for variable in tempDirectory resultsFile rootDir failureCode searchFileList mapFile; do
     __catchEnvironment "$usage" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
   done
-  for variable in repairSources prefixes skipFiles; do
-    __catchEnvironment "$usage" environmentValueWriteArray "$variable" "${!variable[@]+"${!variable[@]}"}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
-  done
+  # Here largely so $mapFile is used
   __catchEnvironment "$usage" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+
+  # Write array values to state
+  __catchEnvironment "$usage" environmentValueWriteArray "repairSources" "${repairSources[@]+"${repairSources[@]}"}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
 
   local prefix prefixIndex=0
   for prefix in "${prefixes[@]}"; do
-    while IFS= read -r searchFile; do
-      searchFile=$(__catchEnvironment "$usage" realPath "$searchFile") || _clean $? "${clean[@]}" || return $?
-      if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
-        statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || _clean $? "${clean[@]}" || return $?
+    local __line=1
+    while read -r searchFile; do
+      [ -f "$searchFile" ] || __throwEnvironment "$usage" "Invalid searchFileList $searchFileList line $__line: $(decorate value "$searchFile")"
+      #      local realFile color="green"
+      realFile=$(__catchEnvironment "$usage" realPath "$searchFile") || _clean $? "${clean[@]}" || return $?
+      #      [ "$realFile" = "$searchFile" ] || color="bold-orange"
+      #      statusMessage --last decorate info "$__line: searchFile: $(decorate code "$searchFile") -> $(decorate "$color" "$realFile")"
+      if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$realFile" "${skipFiles[@]}"; then
+        statusMessage decorate notice "Skipping $(decorate file "$realFile")" || _clean $? "${clean[@]}" || return $?
         continue
       fi
-      if ! _identicalCheckInsideLoop "$usage" "$stateFile" "$prefixIndex" "$prefix" "$searchFile"; then
+      if ! _identicalCheckInsideLoop "$usage" "$stateFile" "$prefixIndex" "$prefix" "$realFile"; then
         exitCode="$failureCode"
       fi
+      __line=$((__line + 1))
     done <"$searchFileList"
     prefixIndex=$((prefixIndex + 1))
   done
@@ -228,7 +240,7 @@ __identicalCheckGenerateSearchFiles() {
     if $startExclude && [ "${#ignorePatterns[@]}" -gt 0 ]; then
       filter=("grep" "-v" "${ignorePatterns[@]}")
     fi
-    if ! find "$directory" "$@" | "${filter[@]}" >>"$searchFileList"; then
+    if ! find "$directory" "$@" | sort | "${filter[@]}" >>"$searchFileList"; then
       # decorate warning "No matching files found in $directory" 1>&2
       : Do nothing for now
     fi

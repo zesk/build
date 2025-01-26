@@ -101,7 +101,7 @@ __catchEnvironmentQuiet() {
 # Example:     {fn} "${FUNCNAME[0]}"
 _deprecated() {
   export BUILD_HOME
-  printf "DEPRECATED: %s" "$@" 1>&2
+  printf "DEPRECATED: %s\n" "$@" 1>&2
   [ ! -d "$BUILD_HOME" ] || printf -- "$(date "+%F %T"),%s\n" "$@" >>"${BUILD_HOME}/.deprecated"
 }
 

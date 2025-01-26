@@ -105,7 +105,7 @@ isArray() {
   [ "${declareText#declare -a}" != "$declareText" ]
 }
 
-# IDENTICAL _type 41
+# IDENTICAL _type 45
 
 #
 # Test if an argument is a positive integer (non-zero)
@@ -118,15 +118,15 @@ isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
-  if isUnsignedInteger "$1"; then
-    # Find pesky "0" or "+0"
-    [ "$1" -gt 0 ] || return 1
+  ! isUnsignedInteger "$1" || return 0
+  if [ "$1" = "--help" ]; then
+    "$usage" 0
     return 0
   fi
-  [ "$1" = "--help" ] && "$usage" 0 || return 1
+  # Find pesky "0" or "+0"
+  [ "$1" -gt 0 ] || return 1
 }
 _isPositiveInteger() {
-  debuggingStack
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

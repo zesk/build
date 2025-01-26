@@ -18,6 +18,12 @@
 #             |_|
 #
 
+# DEPRECATED 2024-11-29
+_integer() {
+  _deprecated "${FUNCNAME[0]}"
+  isUnsignedInteger "$@"
+}
+
 # Not keeping this around will break old scripts, so don't be a ...
 # Deprecated: 2025-01-15
 runHook() {

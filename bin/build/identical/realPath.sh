@@ -8,7 +8,12 @@
 # IDENTICAL _realPath EOF
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
+# Requires: whichExists realpath
 realPath() {
-  # Uses readlink on Darwin
-  __realPath "$@"
+  [ -e "$1" ] || __argument "Not a file: $1" || return $?
+  if whichExists realpath; then
+    realpath "$@"
+  else
+    readlink -f -n "$@"
+  fi
 }
