@@ -21,8 +21,6 @@ testIdenticalEofWithBracket() {
 testIdenticalCheckAndRepairMap() {
   local testPath home name
 
-  bashDebuggerEnable
-
   home=$(__environment buildHome) || return $?
   testPath=$(__environment mktemp -d) || return $?
   decorate info "HOME is $home"

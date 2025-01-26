@@ -169,7 +169,7 @@ _identicalCheckSinglesChecker() {
   while read -r item; do singles+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "singles") || return $?
 
   local tokenFile targetFile matchFile exitCode=0
-  local allSingles=() knownSingles=() knownSinglesReport=() lonelySingles=() lonelySinglesReport lonelySinglesFiles=()
+  local allSingles=() knownSingles=() knownSinglesReport=() lonelySingles=() lonelySinglesReport=() lonelySinglesFiles=()
 
   while read -r matchFile; do
     if [ ! -f "$matchFile.compare" ]; then

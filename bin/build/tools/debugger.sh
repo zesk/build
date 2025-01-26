@@ -17,12 +17,13 @@
 #
 # ## Flow control
 #
-# - `.` or ` `  - Repeat last flow command
+# - `.` or ` ` or Return - Repeat last flow command
+#
 # - `j`         - Skip next command (jump over)
-# - `s` or `n`  - Step to next command (next or step)
-# - `d` or `i`  - Step into next command (follow)
+# - `s` or `n`  - Step to next command (step)
+# - `i` or `d`  - Step into next command (follow)
 # - `q`         - Quit debugger (and continue execution)
-# - `#`         - Enter a command to execute
+# - `!`         - Enter a command to execute
 #
 # ## Watching
 #
@@ -32,11 +33,8 @@
 # ## Utilities
 #
 # `k`         - Display call stack
-# `!`         - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
+# `*`         - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
 # `h` or `?`  - This help
-#
-#
-# Any other command entered in the debugger is evaluated immediately.
 #
 bashDebug() {
   __help "$@" || return 0
@@ -55,9 +53,10 @@ _bashDebug() {
 # Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 bashDebuggerEnable() {
   export __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL __BUILD_BASH_DEBUG_LAST
+
   __BUILD_BASH_DEBUG_WATCH=()
   __BUILD_BASH_STEP_CONTROL=()
-  __BUILD_BASH_DEBUG_LAST="next"
+  __BUILD_BASH_DEBUG_LAST="step"
 
   # Save ORIGINAL FDs for later
   exec 20<&0 21>&1 22>&2
@@ -86,15 +85,12 @@ bashDebuggerDisable() {
 
   # Close ORIGINAL FDs
   exec 20<&- 21>&- 22>&-
-
-  # Close application FDs
-  exec 30<&- 31>&- 32>&-
 }
 
 # Display the watch variables, if any
 _bashDebugWatch() {
   export __BUILD_BASH_DEBUG_WATCH
-  isArray __BUILD_BASH_DEBUG_WATCH || __BUILD_BASH_DEBUG_WATCH=()
+  # isArray __BUILD_BASH_DEBUG_WATCH || __BUILD_BASH_DEBUG_WATCH=()
   [ "${#__BUILD_BASH_DEBUG_WATCH[@]}" -gt 0 ] || return 0
   local __item __index=0
   for __item in "${__BUILD_BASH_DEBUG_WATCH[@]}"; do
@@ -103,7 +99,7 @@ _bashDebugWatch() {
     else
       __value="\"$(decorate code "$__value")\""
     fi
-    printf -- "%.2d: WATCH %s: %s\n" "$__index" "$__item" "$__value"
+    printf -- "%2d: WATCH %s: %s\n" "$__index" "$__item" "$__value"
     __index=$((__index + 1))
   done
 }
@@ -171,7 +167,7 @@ _bashDebugTrap() {
     local __aa=("$__command")
     __return=0
     case "$__command" in
-      "." | " " | $'\n' | $'\r')
+      "." | " " | "" | $'\r')
         __command="${__BUILD_BASH_DEBUG_LAST:0:1}"
         if [ -z "$__command" ]; then
           __error="$(decorate error "No last command")"
@@ -202,6 +198,12 @@ _bashDebugTrap() {
         __return=1
         break
         ;;
+      3)
+        # Debugger was terminated
+        # Restore Application FDs
+        exec 0<&30 1>&31 2>&32
+        return 0
+        ;;
     esac
     if [ -n "$__error" ]; then
       __error="${__error% } "
@@ -226,7 +228,7 @@ __bashDebugExecuteCommand() {
   # Uses calling scope
   __error=""
   case "$__command" in
-    "!")
+    "*")
       statusMessage printf -- ""
       if bashDebugInterruptFile 2>/dev/null; then
         statusMessage --last decorate info "$(decorate file "$HOME/.interrupt") will be created on interrupt"
@@ -273,9 +275,10 @@ __bashDebugExecuteCommand() {
     "q")
       statusMessage --last decorate notice "Debugger control ended."
       bashDebuggerDisable
-      return 0
+      return 3
       ;;
-    "#")
+    "!")
+      statusMessage printf -- ""
       if [ -n "$__arg" ]; then
         __bashDebugCommandEvaluate "$__arg"
       else
@@ -284,7 +287,7 @@ __bashDebugExecuteCommand() {
       return 1
       ;;
     *)
-      __error="[$(decorate error " $__command ")] No such command"
+      __error="[$(decorate error " $__command ")]($(decorate value "$(characterToInteger "$__command")")) No such command"
       return 1
       ;;
   esac
@@ -303,10 +306,25 @@ __bashDebugCommandStep() {
   return 0
 }
 
+__bashDebugCommandWatch() {
+  local __item
+  export __BUILD_BASH_DEBUG_WATCH
+  while read -r -p "$(decorate info "Watch"): " __item; do
+    if [ -z "$__item" ]; then
+      statusMessage printf -- ""
+      break
+    fi
+    decorate bold-orange "Watching $(decorate code "$__item")"
+    __BUILD_BASH_DEBUG_WATCH+=("$__item")
+    _bashDebugWatch
+  done
+}
+
 __bashDebugCommandUnwatch() {
+  export __BUILD_BASH_DEBUG_WATCH
   while read -r -p "$(decorate warning "Unwatch"): " __item; do
     [ -n "$__item" ] || statusMessage printf -- "" && break
-    local __index=0 __list __found
+    local __index=0 __list=() __show=() __found
     __list=()
     __found=false
     for __value in "${__BUILD_BASH_DEBUG_WATCH[@]+"${__BUILD_BASH_DEBUG_WATCH[@]}"}"; do
@@ -314,25 +332,16 @@ __bashDebugCommandUnwatch() {
         decorate bold-orange "Removed $__item from watch list"
         __found=true
       else
-        __list+=("[$(decorate value "$__index")] $(decorate code "$__value")")
+        __show+=("[$(decorate value "$__index")] $(decorate code "$__value")")
+        __list+=("$__value")
       fi
       __index=$((__index + 1))
     done
     if ! $__found; then
       # shellcheck disable=SC2059
-      printf -- "%s\n%s" "$(decorate error "No $__item found in watch list:")" "$(printf -- "- $(decorate code %s)\n" "${__list[@]+"${__list[@]}"}")"
+      printf -- "%s\n%s" "$(decorate error "No $__item found in watch list:")" "$(printf -- "- $(decorate code %s)\n" "${__show[@]+"${__show[@]}"}")"
     fi
     __BUILD_BASH_DEBUG_WATCH=("${__list[@]+"${__list[@]}"}")
-    _bashDebugWatch
-  done
-}
-
-__bashDebugCommandWatch() {
-  local __item
-  while read -r -p "$(decorate info "Watch"): " __item; do
-    [ -n "$__item" ] || statusMessage printf -- "" && break
-    decorate bold-orange "Watching $(decorate code "$__item")"
-    __BUILD_BASH_DEBUG_WATCH+=("$__item")
     _bashDebugWatch
   done
 }
@@ -342,21 +351,28 @@ __bashDebugCommandEvaluate() {
 
   printf "%s \"%s\"\n" "$(decorate warning "Evaluating")" "$(decorate code "$__command")" >/dev/stdout
 
-  # Save Debugger FDs
-  exec 20>&0 21>&1 22>&2
+  # Save debugger FDs for later
+  exec 20<&0 21>&1 22>&2
+
   # Restore Application FDs
-  exec 0>&30 1>&31 2>&32
+  exec 0<&30 1>&31 2>&32
 
   set +eu
   set +o pipefail
+
   eval "$__command" || printf -- "%s\n" "EXIT $(decorate error "[$?]")" 1>&2
 
   set -eou pipefail
 
-  # Save Application FDs (may have changed)
-  exec 30>&0 31>&1 32>&2
-  # Restore Debugger FDs
-  exec 0>&20 1>&21 2>&22
+  # Save Application FDs
+  exec 30<&0 31>&1 32>&2
+  # <& is input copy := so
+  # >& is output copy := so
+  # 30 := 0, 31 := 1, 32 := 2
+  # 30 is a copy of 0, etc.
+
+  # Restore ORIGINAL FDs
+  exec 0<&20 1>&21 2>&22
 
   export __BUILD_BASH_DEBUG_LAST
   __BUILD_BASH_DEBUG_LAST="!$__command"
