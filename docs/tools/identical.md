@@ -71,6 +71,16 @@ This is best used as a pre-commit check, for example. Wink!
 
 Identical check for shell files
 
+Looks for up to three tokens in code:
+
+- `# IDENTICAL tokenName 1`
+- `# _IDENTICAL_ tokenName 1`, and
+
+This allows for overlapping identical sections within templates with the intent:
+
+- `IDENTICAL` - used in most cases
+- `_IDENTICAL_` - used in templates which must be included in OTHER templates
+
 - Location: `bin/build/tools/_identical/check.sh`
 
 #### Arguments

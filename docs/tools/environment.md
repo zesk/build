@@ -13,7 +13,7 @@ Output a list of environment variables and ignore function definitions
 both `set` and `env` output functions and this is an easy way to just output
 exported variables
 
-- Location: `bin/build/tools/environment.sh`
+- Location: `bin/build/identical/environmentVariables.sh`
 
 #### Arguments
 
@@ -153,13 +153,14 @@ No documentation for `environmentValueRead`.
 
 #### Arguments
 
-- No arguments.
+- `stateFile` - EnvironmentFile. Required. File to read a value from.
+- `name` - EnvironmentVariable. Required. Variable to read.
+- `default` - EmptyString. Optional. Default value of the environment variable if it does not exist.
 
 #### Exit codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `1` - If value is not found and no default argument is supplied (2 arguments)
+- `0` - If value
 ### `environmentValueReadArray` - Read an array value from a state file
 
 Read an array value from a state file

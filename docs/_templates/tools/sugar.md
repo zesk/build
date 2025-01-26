@@ -10,16 +10,23 @@ See [Sugar Core](_sugar.md) first.
 
 This groupings of functions are related to a `usage` function to handle errors:
 
-- `__usage code usageFunction command ...` - Run `command ...`, and if it fails invoke `usageFunction` with `code` and command arguments.
-- `__catchEnvironment usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an environment error.
-- `__catchArgument usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an argument error.
-- `__throwEnvironment usageFunction message ...` - Run `usageFunction` with an environment error and `message ...` arguments.
-- `__throwArgument usageFunction message ...` - Run `usageFunction` with an argument error and `message ...` arguments.
+- `__usage code handler command ...` - Run `command ...`, and if it fails invoke `handler` with `code` and command arguments.
+- `__catchEnvironment handler command ...` - Run `command ...` and if it fails invoke `handler` with an environment error.
+- `__catchArgument handler command ...` - Run `command ...` and if it fails invoke `handler` with an argument error.
+- `__throwEnvironment handler message ...` - Run `handler` with an environment error and `message ...` arguments.
+- `__throwArgument handler message ...` - Run `handler` with an argument error and `message ...` arguments.
+
+`handler` argument signature is:
+
+    `handler` `exitCode` `message ...`
+
+This is universally used throughout.
 
 ## Usage Sugar References
 
 {__execute}
-{__usage}
+{__catch}
+{__catchCode}
 {__catchEnvironment}
 {__catchEnvironmentQuiet}
 {__catchArgument}

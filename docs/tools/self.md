@@ -230,7 +230,8 @@ Calling signature for `version-function`:
 
    versionFunction usageFunction applicationHome installPath
    usageFunction - Function. Required. Function to call when an error occurs.
-   installPath - Required. Required. Path to the application home where target will be installed, or is installed.
+   applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+   installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 
 Calling signature for `url-function`:
 
@@ -250,7 +251,7 @@ If `checkFunction` fails, it should output any errors to `stderr` and return a n
 - `--local localPackageDirectory` - Optional. Directory. Directory of an existing installation to mock behavior for testing.
 - `--url url` - Optional. URL. URL of a tar.gz. file. Download source code from here.
 - `--user headerText` - Optional. String. Add `username:password` to remote request.
-- `--header headerText` - Optional. String. Add one or more headers to the remote request.
+- `--header headerText` - Optional. String. Add one or more fetchArguments to the remote request.
 - `--version-function urlFunction` - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
 - `--url-function urlFunction` - Optional. Function. Function to return the URL to download.
 - `--check-function checkFunction` - Optional. Function. Function to check the installation and output the version number or package name.

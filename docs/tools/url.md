@@ -17,6 +17,8 @@ Simplistic URL parsing. Converts a `url` into values which can be parsed or eval
 
 Does little to no validation of any characters so best used for well-formed input.
 
+Now works on multiple URLs, output is separated by a blank line for new entries
+
 - Location: `bin/build/tools/url.sh`
 
 #### Usage

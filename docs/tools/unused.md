@@ -26,9 +26,9 @@ This is a sample function with example code and patterns used in Zesk Build.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `runHookOptional` - Not keeping this around will break old scripts, so don't
+### `runHookOptional` - undocumented
 
-Not keeping this around will break old scripts, so don't be a ...
+No documentation for `runHookOptional`.
 
 - Location: `bin/build/tools/deprecated.sh`
 

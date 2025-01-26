@@ -10,25 +10,15 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 
 ## Usage formatting
 
-### `usageDocument` - Universal error handler for functions
+### `usageDocument` - undocumented
 
-Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
+No documentation for `usageDocument`.
 
-Simplifies documentation and keeps it with the code.
-
-- Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-    usageDocument functionDefinitionFile functionName exitCode [ message ... ]
-    
+- Location: `bin/build/identical/usageDocumentSimple.sh`
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. File. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
-- `functionName` - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-- `exitCode` - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-- `message` - Optional. String. A message.
+- No arguments.
 
 #### Exit codes
 
@@ -72,7 +62,15 @@ use with maximumFieldLength 1 to generate widths
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `usageTemplate` - Output usage messages to console
+### `usageTemplate` - Create a temporary file (or directory) or fail using usageFunction
+
+Utility function to replace this common code
+
+    variable=$(__catchEnvironment "$usage" mktemp) || return $?
+
+with
+
+    variable=$(fileTemporaryName "$usage") || return $?
 
 Output usage messages to console
 
@@ -82,14 +80,22 @@ Do not call usage functions here to avoid recursion
 
 - Location: `bin/build/tools/usage.sh`
 
-#### Usage
-
-    usageTemplate binName options delimiter description exitCode message ...
-    
-
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
+- `--line lineNumber` - Optional. Integer. Line number of calling function.
+- `--debug` - Optional. Flag. Debugging
+- `--display` - Optional. String. Display name for the condition.
+- `--success` - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+- `--stderr-match` - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+- `--stdout-no-match` - Optional. String. One or more strings which must match stderr.
+- `--stdout-match` - Optional. String. One or more strings which must match stdout.
+- `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
+- `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
+- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
+- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
+- `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
+- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 
 #### Exit codes
 

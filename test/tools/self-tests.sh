@@ -57,7 +57,7 @@ testBuildFunctions() {
   fun=$(__environment mktemp) || return $?
   buildFunctions >"$fun" || _environment "buildFunctions failed" || return $?
 
-  assertFileContains "$fun" buildFunctions assertExitCode __environment _argument _environment _command _format __usage housekeeper || return $?
+  assertFileContains "$fun" buildFunctions assertExitCode __environment _argument _environment _command _format __catch housekeeper || return $?
 
   __environment rm -f "$fun" || return $?
 }

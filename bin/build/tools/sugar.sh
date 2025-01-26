@@ -26,9 +26,9 @@ __execute() {
 # Argument: ... - Arguments. Optional. Any additional arguments to `command`.
 __catch() {
   local __count=$# __saved=("$@") handler="$1" command="$2"
-  shift 2 || __throwArgument "$__usage" "missing arguments #$__count $(decorate each code "${__saved[@]}")" || return $?
-  isCallable "$handler" || __throwArgument "$__usage" "handler not callable $(decorate code "$handler")" || return $?
-  isCallable "$command" || __throwArgument "$__usage" "command Not callable $(decorate code "$command")" || return $?
+  shift 2 || __throwArgument "$handler" "missing arguments #$__count $(decorate each code "${__saved[@]}")" || return $?
+  isCallable "$handler" || __throwArgument "$handler" "handler not callable $(decorate code "$handler")" || return $?
+  isCallable "$command" || __throwArgument "$handler" "command Not callable $(decorate code "$command")" || return $?
   "$command" "$@" || "$handler" "$?" "$command" "$@" || return $?
 }
 ___catch() {
@@ -36,63 +36,63 @@ ___catch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run `command`, handle failure with `usage` with `code` and `command` as error
-# Usage: {fn} code usage command ...
+# Run `command`, handle failure with `handler` with `code` and `command` as error
+# Usage: {fn} code handler command ...
 # Argument: code - Required. Integer. Exit code to return
-# Argument: usage - Required. String. Failure command, passed remaining arguments and error code.
+# Argument: handler - Required. String. Failure command, passed remaining arguments and error code.
 # Argument: command - Required. String. Command to run.
 # Requires: isInteger _argument isFunction isCallable
-__usage() {
-  local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" code="${1-0}" usage="${2-}" command="${3?}"
-  isInteger "$code" || __throwArgument "$__usage" "Not integer: $code (#$__count $(decorate each code "${__saved[@]}"))" || return $?
-  isFunction "$usage" || __throwArgument "$__usage" "Not a function $(decorate code "$usage"): $(debuggingStack)" || return $?
-  isCallable "$command" || __throwArgument "$__usage" "Not callable $(decorate code "$command")" || return $?
+__catchCode() {
+  local __count=$# __saved=("$@") handler="_${FUNCNAME[0]}" code="${1-0}" handler="${2-}" command="${3?}"
+  isInteger "$code" || __throwArgument "$handler" "Not integer: $code (#$__count $(decorate each code "${__saved[@]}"))" || return $?
+  isFunction "$handler" || __throwArgument "$handler" "Not a function $(decorate code "$handler"): $(debuggingStack)" || return $?
+  isCallable "$command" || __throwArgument "$handler" "Not callable $(decorate code "$command")" || return $?
   shift 3
-  "$command" "$@" || "$usage" "$code" "$(decorate each code "$command" "$@")" || return $?
+  "$command" "$@" || "$handler" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
-___usage() {
+___catchCode() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run `command`, upon failure run `usage` with an environment error
-# Usage: {fn} usage command ...
-# Argument: usage - Required. String. Failure command
+# Run `command`, upon failure run `handler` with an environment error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __catchEnvironment() {
-  __usage 1 "$@"
+  __catchCode 1 "$@"
 }
 
-# Run `command`, upon failure run `usage` with an argument error
-# Usage: {fn} usage command ...
-# Argument: usage - Required. String. Failure command
+# Run `command`, upon failure run `handler` with an argument error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __catchArgument() {
-  __usage 2 "$@"
+  __catchCode 2 "$@"
 }
 
-# Run `usage` with an environment error
-# Usage: {fn} usage ...
+# Run `handler` with an environment error
+# Usage: {fn} handler ...
 __throwEnvironment() {
-  local usage="${1-}"
-  isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift && "$usage" 1 "$@" || return $?
+  local handler="${1-}"
+  isFunction "$handler" || _argument "${FUNCNAME[0]} \"$handler\" is not handler function $(debuggingStack)" || return $?
+  shift && "$handler" 1 "$@" || return $?
 }
 
-# Run `usage` with an argument error
-# Usage: {fn} usage ...
+# Run `handler` with an argument error
+# Usage: {fn} handler ...
 __throwArgument() {
-  local usage="${1-}"
-  isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift && "$usage" 2 "$@" || return $?
+  local handler="${1-}"
+  isFunction "$handler" || _argument "${FUNCNAME[0]} \"$handler\" is not handler function $(debuggingStack)" || return $?
+  shift && "$handler" 2 "$@" || return $?
 }
 
-# Run `usage` with an environment error
-# Usage: {fn} usage quietLog message ...
+# Run `handler` with an environment error
+# Usage: {fn} handler quietLog message ...
 __catchEnvironmentQuiet() {
-  local usage="${1-}" quietLog="${2-}"
-  isFunction "$usage" || _argument "${FUNCNAME[0]} \"$usage\" is not usage function $(debuggingStack)" || return $?
-  shift 2 && "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$usage" "$@" || return $?
+  local handler="${1-}" quietLog="${2-}"
+  isFunction "$handler" || _argument "${FUNCNAME[0]} \"$handler\" is not handler function $(debuggingStack)" || return $?
+  shift 2 && "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$handler" "$@" || return $?
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`
@@ -113,11 +113,10 @@ _deprecated() {
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 # Example: local undo thing
-# Example: thing=$(__catchEnvironment "$usage" createLargeResource) || return $?
+# Example: thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
 # Example: undo+=(-- deleteLargeResource "$thing")
-# Example: thing=$(__catchEnvironment "$usage" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+# Example: thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
 # Example: undo+=(-- deleteMassiveResource "$thing")
-#
 _undo() {
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
@@ -147,7 +146,7 @@ __undo() {
 # Argument: command - Required. Callable. Thing to muzzle.
 # Argument: ... - Optional. Arguments. Additional arguments.
 # Example:     {fn} pushd
-# Example:     __catchEnvironment "$usage" phpBuild || _undo $? {fn} popd || return $?
+# Example:     __catchEnvironment "$handler" phpBuild || _undo $? {fn} popd || return $?
 muzzle() {
   "$@" >/dev/null
 }

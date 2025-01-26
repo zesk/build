@@ -18,13 +18,13 @@ This groupings of functions are related to a `usage` function to handle errors:
 
 ## Usage Sugar References
 
-### `__execute` - IDENTICAL __execute 9
+### `__execute` - IDENTICAL __execute EOF
 
-IDENTICAL __execute 9
+IDENTICAL __execute EOF
 Run binary and output failed command upon error
 Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/identical/__execute.sh`
 
 #### Arguments
 
@@ -57,7 +57,7 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 
 Run `command`, upon failure run `usage` with an environment error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
@@ -88,7 +88,7 @@ Run `usage` with an environment error
 
 Run `command`, upon failure run `usage` with an argument error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
@@ -104,7 +104,7 @@ Run `command`, upon failure run `usage` with an argument error
 
 Run `usage` with an environment error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
@@ -119,7 +119,7 @@ Run `usage` with an environment error
 
 Run `usage` with an argument error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 

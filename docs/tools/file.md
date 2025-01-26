@@ -320,11 +320,11 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath 10
+### `realPath` - IDENTICAL _realPath EOF
 
-IDENTICAL _realPath 10
+IDENTICAL _realPath EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/realPath.sh`
 
 #### Usage
 
@@ -406,9 +406,11 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 - `2` - Argument error
 ### `reverseFileLines` - Reverse output lines
 
-Reverses a pipe's input lines to output using an awk trick. Do not recommend on big files.
+Reverses a pipe's input lines to output using an awk trick.
 
-- Location: `bin/build/tools/os.sh`
+Not recommended on big files.
+
+- Location: `bin/build/identical/reverseFileLines.sh`
 
 #### Arguments
 
@@ -419,6 +421,11 @@ Reverses a pipe's input lines to output using an awk trick. Do not recommend on 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Depends
+
+    awk
+    
 
 #### Credits
 

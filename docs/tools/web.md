@@ -81,6 +81,7 @@ Fetch Time to First Byte and other stats
 
 Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
 SIte is stored in a directory called `host` for the URL requested
+This is not final yet and may not work properly.
 
 - Location: `bin/build/tools/web.sh`
 

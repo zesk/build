@@ -58,11 +58,11 @@ Backup when `/etc/services` does not exist.
 
 ## Execution
 
-### `whichExists` - IDENTICAL whichExists 11
+### `whichExists` - IDENTICAL whichExists EOF
 
-IDENTICAL whichExists 11
+IDENTICAL whichExists EOF
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/whichExists.sh`
 
 #### Arguments
 
@@ -283,6 +283,21 @@ Format something neatly as JSON
 
     JSON < inputFile > outputFile
     
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `loadAverage` - Get the load average using uptime
+
+Get the load average using uptime
+
+- Location: `bin/build/tools/os.sh`
 
 #### Arguments
 

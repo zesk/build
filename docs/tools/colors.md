@@ -6,9 +6,6 @@
 
 All console functions in the form `decorate style` where `style` is a color name or a semantic meaning behave similarly:
 
-- With no arguments output the color escape codes with no newline to standard out
-- With arguments wrap the arguments with color escape code to color and reset the console state afterwards
-
 Examples:
 
     cat $file | wrapLines "$(decorate green)" "$(decorate reset)"
@@ -18,15 +15,13 @@ Examples:
 
 Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use `consoleColorMode`.
 
-## New color command
-
-This is still in progress but will likely be the new mechanism.
+## Decorate command
 
 ### `decorate` - Semantics-based
 
 Semantics-based
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/decorate.sh`
 
 #### Arguments
 
@@ -37,14 +32,28 @@ Semantics-based
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `decorations` - Output a list of build-in decoration styles, one per line
 
-# Old method (pre October 2024)
+Output a list of build-in decoration styles, one per line
+
+- Location: `bin/build/identical/decorate.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Semantic color commands
 
 Color commands intended to convey status of messages. Try `colorTest` to see all colors.
 
 - `decorate info` - Informational messages
+- `decorate notice` - Notice messages
 - `decorate warning` - Warning messages
 - `decorate success` - Success messages
 - `decorate decoration` - Lines or decoration text
@@ -84,9 +93,11 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 - `decorate bold-black`
 - `decorate bold-white`
 
-### Reset color to defaults
+### Extensions
 
-
+- `decorate pair name value`
+- `decorate pair 40 name value`
+- `decorate each code item1 item2`
 
 ## Additional commands
 
@@ -142,7 +153,6 @@ Intended to be run on an interactive console, this clears the current line of an
 #### Environment
 
 Intended to be run on an interactive console. Should support `tput cols`.
-
 ### `statusMessage` - Output a status message with no newline
 
 Output a status line
@@ -179,39 +189,13 @@ Clears the line and outputs a message using a command. Meant to show status but 
 
 Intended to be run on an interactive console. Should support $(tput cols).
 
-### `consoleNameValue` - Output a name value pair
-
-Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
-right-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
-
-
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-    consoleNameValue characterWidth name [ value ... ]
-    
-
-#### Arguments
-
-- `characterWidth` - Required. Number of characters to format the value for spacing
-- `name` - Required. Name to output
-- `value ...` - Optional. One or more Value to output
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
 ### `hasColors` - Sets the environment variable `BUILD_COLORS` if not set, uses `TERM`
 
 Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 
 Exit Code; 1 - Colors are likely not supported by console
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/decorate.sh`
 
 #### Usage
 
@@ -229,7 +213,6 @@ Exit Code; 1 - Colors are likely not supported by console
 #### Environment
 
 BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
-
 ### `hasConsoleAnimation` - Exit Code; 1 - Does not support console animation
 
 Exit Code; 1 - Does not support console animation
@@ -243,55 +226,6 @@ Exit Code; 1 - Does not support console animation
 #### Exit codes
 
 - `0` - Supports console animation
-
-### `colorTest` - Output colors
-
-Outputs sample sentences for the `consoleAction` commands to see what they look like.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-### `semanticColorTest` - Output colors
-
-Outputs sample sentences for the `action` commands to see what they look like.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-### `allColorTest` - Alternate color output
-
-If you want to explore what colors are available in your terminal, try this.
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
 ### `simpleMarkdownToConsole` - Converts backticks, bold and italic to console colors.
 
 Converts backticks, bold and italic to console colors.
@@ -312,32 +246,18 @@ Converts backticks, bold and italic to console colors.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `colorBrightness` - Return an integer between 0 and 100
 
-### `statusMessage` - Output a status message with no newline
-
-Output a status line
-
-This is intended for messages on a line which are then overwritten using clearLine
-
-Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
+Return an integer between 0 and 100
+Colors are between 0 and 255
 
 - Location: `bin/build/tools/colors.sh`
 
-#### Usage
-
-    statusMessage command ...
-    
-
 #### Arguments
 
-- `command` - Required. Commands which output a message.
-- `--last` - Optional. Flag. Last message to be output, so output a newline as well at the end.
-
-#### Examples
-
-    statusMessage decorate info "Loading ..."
-    bin/load.sh >>"$loadLogFile"
-    clearLine
+- `redValue` - Integer. Optional. Red RGB value (0-255)
+- `greenValue` - Integer. Optional. Red RGB value (0-255)
+- `blueValue` - Integer. Optional. Red RGB value (0-255)
 
 #### Exit codes
 
@@ -345,9 +265,7 @@ Clears the line and outputs a message using a command. Meant to show status but 
 - `1` - Environment error
 - `2` - Argument error
 
-#### Environment
-
-Intended to be run on an interactive console. Should support $(tput cols).
+## Color tests
 
 ### `colorComboTest` - undocumented
 
@@ -364,19 +282,45 @@ No documentation for `colorComboTest`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `allColorTest` - Alternate color output
 
-### `colorBrightness` - Return an integer between 0 and 100
-
-Return an integer between 0 and 100
-Colors are between 0 and 255
+If you want to explore what colors are available in your terminal, try this.
 
 - Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 
-- `redValue` - Integer. Optional. Red RGB value (0-255)
-- `greenValue` - Integer. Optional. Red RGB value (0-255)
-- `blueValue` - Integer. Optional. Red RGB value (0-255)
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `colorTest` - Output colors
+
+Outputs sample sentences for the `consoleAction` commands to see what they look like.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `semanticColorTest` - Output colors
+
+Outputs sample sentences for the `action` commands to see what they look like.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
 
 #### Exit codes
 

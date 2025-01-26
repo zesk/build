@@ -102,7 +102,7 @@ Files are specified from the application root directory.
 
 #### See Also
 
-- [Source {fn}]({sourceLink})
+{SEE:BUILD_TARGET.sh}
 ### `phpLog` - Outputs the path to the PHP log file
 
 Outputs the path to the PHP log file

@@ -440,25 +440,15 @@ Generates a temporary file which is removed
 
 ## Usage Utilities
 
-### `usageDocument` - Universal error handler for functions
+### `usageDocument` - undocumented
 
-Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
+No documentation for `usageDocument`.
 
-Simplifies documentation and keeps it with the code.
-
-- Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-    usageDocument functionDefinitionFile functionName exitCode [ message ... ]
-    
+- Location: `bin/build/identical/usageDocumentSimple.sh`
 
 #### Arguments
 
-- `functionDefinitionFile` - Required. File. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
-- `functionName` - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-- `exitCode` - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-- `message` - Optional. String. A message.
+- No arguments.
 
 #### Exit codes
 

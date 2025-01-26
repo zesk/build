@@ -12,7 +12,7 @@ Open a file in a shell using the program we are using. Supports VSCode and PHPSt
 
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
 
 #### Exit codes
 
@@ -30,14 +30,9 @@ Are we within the JetBrains PHPStorm terminal?
 
 - Location: `bin/build/tools/vendor.sh`
 
-#### Usage
-
-    isPHPStorm
-    
-
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
 
 #### Exit codes
 
@@ -49,14 +44,9 @@ Are we within the JetBrains PyCharm terminal?
 
 - Location: `bin/build/tools/vendor.sh`
 
-#### Usage
-
-    isPyCharm
-    
-
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
 
 #### Exit codes
 
@@ -68,14 +58,9 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 - Location: `bin/build/tools/vendor.sh`
 
-#### Usage
-
-    isVisualStudioCode
-    
-
 #### Arguments
 
-- No arguments.
+- `--help` - Optional. Flag. Display this help.
 
 #### Exit codes
 

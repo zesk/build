@@ -149,6 +149,8 @@ Fake a value for testing
 
 #### Arguments
 
+- `globalName` - EnvironmentVariable. Required. Global to change temporarily to a value.
+- `saveGlobalName` - EnvironmentVariable. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
 - `--end` - Flag. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
 - `value` - EmptyString. Required. Force the value of `globalName` to this value temporarily. Saves the original value in global `saveGlobalName`.
 

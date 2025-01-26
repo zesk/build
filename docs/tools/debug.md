@@ -109,6 +109,11 @@ Useful if you need to temporarily enable or disable it.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Depends
+
+    -
+    
 ### `isErrorExit` - Returns whether the shell has the error exit flag set
 
 Returns whether the shell has the error exit flag set
@@ -256,6 +261,9 @@ Simple debugger to walk through a program
 Debugger accepts the following commands:
 
 `\s` - Skip next bash command
+`\n` - Step over next command (default)
+`\c` - Step into next command
+`\i` - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
 `\h` - This help
 `\q` - Quit debugger (continue execution)
 `\w variable` - Evaluate this expression upon each debugger breakpoint
