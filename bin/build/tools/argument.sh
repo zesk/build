@@ -46,9 +46,9 @@ _arguments() {
     noneFlag=true
   fi
   stateFile=$(__catchEnvironment "$usageArguments" mktemp) || return $?
-  spec=$(__catchEnvironment "$usageArguments" _usageArgumentsSpecification "$source" "$this") || return $?
-  __catchEnvironment "$usageArguments" _usageArgumentsSpecificationDefaults "$spec" >"$stateFile" || return $?
-  IFS=$'\n' read -d '' -r -a required <"$(__catchArgumentsSpecification__required "$spec")" || :
+  spec=$(__catchEnvironment "$usageArguments" _commentArgumentsSpecification "$source" "$this") || return $?
+  __catchEnvironment "$usageArguments" _commentArgumentsSpecificationDefaults "$spec" >"$stateFile" || return $?
+  IFS=$'\n' read -d '' -r -a required <"$(__commentArgumentSpecification__required "$spec")" || :
 
   # Rest is calling function argument usage
   clean=("$stateFile")
@@ -118,7 +118,7 @@ _argumentReturn() {
 }
 
 # Validate spec directory
-__catchArgumentSpecificationMagic() {
+__commentArgumentSpecificationMagic() {
   local usage="${1-}" specificationDirectory="${2-}"
   local magicFile="$specificationDirectory/.magic"
   if test "${3-}"; then
@@ -146,7 +146,7 @@ __catchArgumentSpecificationMagic() {
 # .arguments/functionName/parsed/2
 # .arguments/functionName/.magic
 #
-_usageArgumentsSpecification() {
+_commentArgumentsSpecification() {
   local usage="_${FUNCNAME[0]}"
   local functionDefinitionFile="${1-}" functionName="${2-}"
   local functionCache cacheFile argumentIndex argumentDirectory argumentLine
@@ -168,7 +168,7 @@ _usageArgumentsSpecification() {
   [ -n "$functionName" ] || __throwArgument "$usage" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(newestFile "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
     __catchEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile"
-    for file in "$(__catchArgumentsSpecification__required "$functionCache")" "$(__catchArgumentsSpecification__defaults "$functionCache")"; do
+    for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       __catchEnvironment "$usage" printf "" >"$file" || return $?
     done
   fi
@@ -186,41 +186,41 @@ _usageArgumentsSpecification() {
   if [ ! -f "$argumentDirectory/@" ]; then
     argumentId=1
     while read -r -a argumentLine; do
-      __catchEnvironment "$usage" _usageArgumentsSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
+      __catchEnvironment "$usage" _commentArgumentsSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
       argumentId=$((argumentId + 1))
     done <"$argumentsFile"
     __catchEnvironment "$usage" date >"$argumentDirectory/@" || return $?
-    __catchArgumentSpecificationMagic "$usage" "$functionCache" 1
+    __commentArgumentSpecificationMagic "$usage" "$functionCache" 1
   fi
   printf "%s\n" "$functionCache"
 }
-__catchArgumentsSpecification() {
+__commentArgumentSpecification() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__catchArgumentsSpecification__defaults() {
+__commentArgumentSpecification__defaults() {
   printf "%s/%s\n" "$1" "defaults"
 }
 
-__catchArgumentsSpecification__required() {
+__commentArgumentSpecification__required() {
   printf "%s/%s\n" "$1" "required"
 }
 
 # Argument: specification - Required. String.
-_usageArgumentsSpecificationDefaults() {
+_commentArgumentsSpecificationDefaults() {
   local usage="_${FUNCNAME[0]}"
   local specification="${1-}"
 
-  __catchArgumentSpecificationMagic "$usage" "$specification" || return $?
-  file=$(__catchArgumentsSpecification__defaults "$specification")
+  __commentArgumentSpecificationMagic "$usage" "$specification" || return $?
+  file=$(__commentArgumentSpecification__defaults "$specification")
   if [ -f "$file" ]; then
     cat "$file"
   else
     printf "%s\n" "# No defaults"
   fi
 }
-__catchArgumentsSpecificationDefaults() {
+__commentArgumentSpecificationDefaults() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -228,7 +228,7 @@ __catchArgumentsSpecificationDefaults() {
 # Argument: argumentDirectory - Required. Directory. Directory where the arguments structure is stored.
 # Argument: argumentId - Required. Integer. This argument ID.
 # Output: nothing
-_usageArgumentsSpecificationParseLine() {
+_commentArgumentsSpecificationParseLine() {
   local functionCache="${1-}" argumentId="${2-}"
   local argumentDirectory="${functionCache%/}/parsed"
   local argument file
@@ -313,20 +313,21 @@ _usageArgumentsSpecificationParseLine() {
       environmentValueWrite description "$description"
     } >"$argumentDirectory/$argumentFinder" || _argument "Unable to write $argumentDirectory/$argumentFinder" || return $?
     if $required; then
-      __environment printf "%s\n" "$argumentName" >>"$(__catchArgumentsSpecification__required "$functionCache")" || return $?
+      __environment printf "%s\n" "$argumentName" >>"$(__commentArgumentSpecification__required "$functionCache")" || return $?
     fi
     if inArray "$argumentType" "Boolean" "Flag"; then
       argumentDefault=false
     fi
     if [ -n "$argumentDefault" ]; then
-      __environment environmentValueWrite "$argumentName" "$argumentDefault" >>"$(__catchArgumentsSpecification__defaults "$functionCache")" || return $?
+      __environment environmentValueWrite "$argumentName" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
     fi
   fi
   if $argumentRemainder; then
     printf "%s\n" true >"$functionCache/remainder"
   fi
 }
-__catchArgumentsSpecificationParseLine() {
+__commentArgumentSpecificationParseLine() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -385,7 +386,7 @@ _usageArgumentName() {
   local usage="_${FUNCNAME[0]}"
   local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}" argumentNamed
 
-  __catchArgumentSpecificationMagic "$usage" "$specification" || return $?
+  __commentArgumentSpecificationMagic "$usage" "$specification" || return $?
   specification="$specification/parsed"
   if [ -f "$specification/$argumentValue" ]; then
     environmentValueRead "$specification/$argumentValue" argumentName not-named
@@ -401,6 +402,7 @@ _usageArgumentName() {
   return 0
 }
 __catchArgumentName() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -421,7 +423,7 @@ _usageArgumentType() {
   local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}"
   local argumentNamed argumentRepeat argumentSpec
 
-  __catchArgumentSpecificationMagic "$usage" "$specification" || return $?
+  __commentArgumentSpecificationMagic "$usage" "$specification" || return $?
   specification="$specification/parsed"
   argumentSpec="$specification/$argumentValue"
   if [ -f "$argumentSpec" ]; then
@@ -454,7 +456,7 @@ _usageArgumentType() {
   return 0
 }
 __catchArgumentType() {
-  # _IDENTICAL_ usageDocument 1
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -465,13 +467,13 @@ _usageArgumentsRemainder() {
   local usage="$1" specification="$2" stateFile="$3" name value
 
   shift && shift && shift
-  __catchArgumentSpecificationMagic "$usage" "$specification" || return $?
+  __commentArgumentSpecificationMagic "$usage" "$specification" || return $?
   while read -d '' -r name; do
     value="$(__catchEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")"
     if [ -z "$value" ]; then
       __throwArgument "$usage" "$name is required" || return $?
     fi
-  done <"$(__catchArgumentsSpecification__required "$specification")"
+  done <"$(__commentArgumentSpecification__required "$specification")"
   if [ $# -gt 0 ]; then
     if [ -f "$specification/remainder" ]; then
       __catchEnvironment "$usage" environmentValueWrite _remainder "$@" >>"$stateFile" || return $?
