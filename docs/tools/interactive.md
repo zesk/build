@@ -28,6 +28,22 @@ Not ready for prime time yet - written not tested.
 
 ## User prompts
 
+### `interactiveCountdown` - undocumented
+
+No documentation for `interactiveCountdown`.
+
+- Location: `bin/build/tools/interactive.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
 ### `confirmYesNo` - undocumented
 
 No documentation for `confirmYesNo`.

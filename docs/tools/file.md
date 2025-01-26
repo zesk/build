@@ -374,6 +374,24 @@ Removes dot and dot-dot paths from a path correctly
 
 ## Utilities
 
+### `fileTemporaryName` - IDENTICAL fileTemporaryName EOF
+
+IDENTICAL fileTemporaryName EOF
+Generate a temporary file name using mktemp, and fail using a function
+
+- Location: `bin/build/identical/fileTemporaryName.sh`
+
+#### Arguments
+
+- `usage` - Function. Required. Function to call if mktemp fails
+- `--help` - Optional. Flag. Display this help.
+- `...` - Optional. Arguments. Any additional arguments are passed through to mktemp.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `renameFiles` - Rename a list of files usually to back them up temporarily
 
 Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb

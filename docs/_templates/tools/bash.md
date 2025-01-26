@@ -4,12 +4,28 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+## Loading
+
 {bashLibrary}
 {bashLibraryHome}
+{bashSourcePath}
+
+## Linting
+
 {bashSanitize}
 {bashLintFiles}
 {bashLint}
-{bashSourcePath}
+
+{bashCheckDepends}
+
+## Debug
+
+{bashDebugInterruptFile}
+{bashRecursionDebug}
+
+## Simple comment extraction
+
+{bashFunctionComment}
 
 ## Deprecated
 

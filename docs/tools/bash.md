@@ -4,6 +4,8 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+## Loading
+
 ### `bashLibrary` - Run or source a library
 
 Run or source a library
@@ -35,6 +37,25 @@ Output the home for a library in the parent path
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `bashSourcePath` - Load a directory of `.sh` files using `source` to make
+
+Load a directory of `.sh` files using `source` to make the code available.
+Has security implications. Use with caution and ensure your directory is protected.
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- `directory ...` - Required. Directory. Directory to `source` all `.sh` files found.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Linting
+
 ### `bashSanitize` - Sanitize bash files for code quality.
 
 Sanitize bash files for code quality.
@@ -123,16 +144,91 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
-### `bashSourcePath` - Load a directory of `.sh` files using `source` to make
 
-Load a directory of `.sh` files using `source` to make the code available.
-Has security implications. Use with caution and ensure your directory is protected.
+### `bashCheckDepends` - Checks a bash script to ensure all dependencies are met,
+
+Checks a bash script to ensure all dependencies are met, outputs a list of unmet dependencies
+Scans a bash script for lines which look like:
+
+
+Each dependency token is:
+
+- a bash function which MUST be defined
+- a shell script (executable) which must be present
+
+If all dependencies are met, exit status of 0.
+If any dependencies are not met, exit status of 1 and a list of unmet dependencies are listed
 
 - Location: `bin/build/tools/bash.sh`
 
 #### Arguments
 
-- `directory ...` - Required. Directory. Directory to `source` all `.sh` files found.
+- `--require` - Flag. Optional. Requires at least one or more dependencies to be listed and met to pass
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Depends
+
+    token1 token2
+    
+
+## Debug
+
+### `bashDebugInterruptFile` - Adds a trap to capture the debugging stack on interrupt
+
+Adds a trap to capture the debugging stack on interrupt
+Use this in a bash script which runs forever or runs in an infinite loop to
+determine where the problem or loop exist
+
+- Location: `bin/build/tools/debug.sh`
+
+[92mUsage[0m: [38;5;20misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
+
+    [94m--prefix  [1;40;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
+    [94m--suffix  [1;40;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[0m
+    [94m--token   [1;40;97mOptional. String. Classes permitted in a token[0m
+    [94mtext      [1;40;97mOptional. String. Text to search for mapping tokens.[0m
+
+Check if text contains mappable tokens
+If any text passed contains a token which can be mapped, succeed.
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `bashRecursionDebug` - undocumented
+
+No documentation for `bashRecursionDebug`.
+
+- Location: `bin/build/tools/debug.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Simple comment extraction
+
+### `bashFunctionComment` - IDENTICAL bashFunctionComment 12
+
+IDENTICAL bashFunctionComment 12
+Extract a bash comment from a file
+
+- Location: `bin/build/identical/bashFunctionComment.sh`
+
+#### Arguments
+
+- `source` - File. Required. File where the function is defined.
+- `functionName` - String. Required. The name of the bash function to extract the documentation for.
 
 #### Exit codes
 

@@ -11,6 +11,10 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 ## Usage formatting
 
 {usageDocument}
+
+{usageDocumentComplex}
+{usageDocumentSimple}
+
 {usageArguments}
 {usageGenerator}
 {usageTemplate}
@@ -22,6 +26,7 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 
 ## Argument check: File System
 
+{usageArgumentExists}
 {usageArgumentFile}
 {usageArgumentLink}
 {usageArgumentFileDirectory}

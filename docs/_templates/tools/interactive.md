@@ -10,6 +10,8 @@
 
 ## User prompts
 
+{interactiveCountdown}
+
 {confirmYesNo} {pause}
 
 ## Copy files

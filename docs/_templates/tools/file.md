@@ -43,6 +43,7 @@
 
 ## Utilities
 
+{fileTemporaryName}
 {renameFiles}
 {reverseFileLines}
 

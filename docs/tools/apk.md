@@ -41,12 +41,12 @@ Is this an Alpine system?
 
 - Location: `bin/build/tools/apk.sh`
 
-[92mUsage[0m: [1;33misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
+[92mUsage[0m: [38;5;20misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
 
-    [94m--prefix  [1;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[m
-    [94m--suffix  [1;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[m
-    [94m--token   [1;97mOptional. String. Classes permitted in a token[m
-    [94mtext      [1;97mOptional. String. Text to search for mapping tokens.[m
+    [94m--prefix  [1;40;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
+    [94m--suffix  [1;40;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[0m
+    [94m--token   [1;40;97mOptional. String. Classes permitted in a token[0m
+    [94mtext      [1;40;97mOptional. String. Text to search for mapping tokens.[0m
 
 Check if text contains mappable tokens
 If any text passed contains a token which can be mapped, succeed.

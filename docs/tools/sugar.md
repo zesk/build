@@ -10,21 +10,27 @@ See [Sugar Core](_sugar.md) first.
 
 This groupings of functions are related to a `usage` function to handle errors:
 
-- `__usage code usageFunction command ...` - Run `command ...`, and if it fails invoke `usageFunction` with `code` and command arguments.
-- `__catchEnvironment usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an environment error.
-- `__catchArgument usageFunction command ...` - Run `command ...` and if it fails invoke `usageFunction` with an argument error.
-- `__throwEnvironment usageFunction message ...` - Run `usageFunction` with an environment error and `message ...` arguments.
-- `__throwArgument usageFunction message ...` - Run `usageFunction` with an argument error and `message ...` arguments.
+- `__usage code handler command ...` - Run `command ...`, and if it fails invoke `handler` with `code` and command arguments.
+- `__catchEnvironment handler command ...` - Run `command ...` and if it fails invoke `handler` with an environment error.
+- `__catchArgument handler command ...` - Run `command ...` and if it fails invoke `handler` with an argument error.
+- `__throwEnvironment handler message ...` - Run `handler` with an environment error and `message ...` arguments.
+- `__throwArgument handler message ...` - Run `handler` with an argument error and `message ...` arguments.
+
+`handler` argument signature is:
+
+    `handler` `exitCode` `message ...`
+
+This is universally used throughout.
 
 ## Usage Sugar References
 
-### `__execute` - IDENTICAL __execute EOF
+### `__execute` - IDENTICAL __execute 9
 
-IDENTICAL __execute EOF
+IDENTICAL __execute 9
 Run binary and output failed command upon error
 Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 
-- Location: `bin/build/identical/__execute.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
@@ -36,16 +42,33 @@ Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__usage` - Run `command`, handle failure with `usage` with `code` and `command`
+### `__catch` - Run a command, fail using a handler
 
-Run `command`, handle failure with `usage` with `code` and `command` as error
+Run a command, fail using a handler
+
+- Location: `bin/build/tools/sugar.sh`
+
+#### Arguments
+
+- `handler` - Callable. Required. Function to call on error.
+- `command` - Callable. Required. Command to run.
+- `...` - Arguments. Optional. Any additional arguments to `command`.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `__catchCode` - Run `command`, handle failure with `handler` with `code` and `command`
+
+Run `command`, handle failure with `handler` with `code` and `command` as error
 
 - Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
 - `code` - Required. Integer. Exit code to return
-- `usage` - Required. String. Failure command, passed remaining arguments and error code.
+- `handler` - Required. String. Failure command, passed remaining arguments and error code.
 - `command` - Required. String. Command to run.
 
 #### Exit codes
@@ -53,15 +76,15 @@ Run `command`, handle failure with `usage` with `code` and `command` as error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__catchEnvironment` - Run `command`, upon failure run `usage` with an environment error
+### `__catchEnvironment` - Run `command`, upon failure run `handler` with an environment error
 
-Run `command`, upon failure run `usage` with an environment error
+Run `command`, upon failure run `handler` with an environment error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
-- `usage` - Required. String. Failure command
+- `handler` - Required. String. Failure command
 - `command` - Required. Command to run.
 
 #### Exit codes
@@ -69,9 +92,9 @@ Run `command`, upon failure run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__catchEnvironmentQuiet` - Run `usage` with an environment error
+### `__catchEnvironmentQuiet` - Run `handler` with an environment error
 
-Run `usage` with an environment error
+Run `handler` with an environment error
 
 - Location: `bin/build/tools/sugar.sh`
 
@@ -84,15 +107,15 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__catchArgument` - Run `command`, upon failure run `usage` with an argument error
+### `__catchArgument` - Run `command`, upon failure run `handler` with an argument error
 
-Run `command`, upon failure run `usage` with an argument error
+Run `command`, upon failure run `handler` with an argument error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
-- `usage` - Required. String. Failure command
+- `handler` - Required. String. Failure command
 - `command` - Required. Command to run.
 
 #### Exit codes
@@ -100,11 +123,11 @@ Run `command`, upon failure run `usage` with an argument error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__throwEnvironment` - Run `usage` with an environment error
+### `__throwEnvironment` - Run `handler` with an environment error
 
-Run `usage` with an environment error
+Run `handler` with an environment error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
@@ -115,11 +138,11 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__throwArgument` - Run `usage` with an argument error
+### `__throwArgument` - Run `handler` with an argument error
 
-Run `usage` with an argument error
+Run `handler` with an argument error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
 
@@ -147,9 +170,9 @@ As a caveat, your command to `undo` can NOT take the argument `--` as a paramete
 #### Examples
 
 local undo thing
-thing=$(__catchEnvironment "$usage" createLargeResource) || return $?
+thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
 undo+=(-- deleteLargeResource "$thing")
-thing=$(__catchEnvironment "$usage" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
 undo+=(-- deleteMassiveResource "$thing")
 
 #### Exit codes
@@ -171,7 +194,7 @@ Suppress stdout without piping. Handy when you just want a behavior not the outp
 #### Examples
 
     muzzle pushd
-    __catchEnvironment "$usage" phpBuild || _undo $? muzzle popd || return $?
+    __catchEnvironment "$handler" phpBuild || _undo $? muzzle popd || return $?
 
 #### Exit codes
 

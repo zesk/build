@@ -25,6 +25,48 @@ No documentation for `usageDocument`.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+### `usageDocumentComplex` - Universal error handler for functions
+
+Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
+
+Simplifies documentation and keeps it with the code.
+
+- Location: `bin/build/tools/documentation.sh`
+
+#### Usage
+
+    usageDocument functionDefinitionFile functionName exitCode [ message ... ]
+    
+
+#### Arguments
+
+- `functionDefinitionFile` - Required. File. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
+- `functionName` - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+- `exitCode` - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+- `message` - Optional. String. A message.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `usageDocumentSimple` - Output a simple error message for a function
+
+Output a simple error message for a function
+
+- Location: `bin/build/identical/usageDocumentSimple.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
 #### Usage
 
     usageArguments delimiter
@@ -142,6 +184,24 @@ Requires environment variables to be set and non-blank
 
 ## Argument check: File System
 
+### `usageArgumentExists` - Validates a value is not blank and exists in the
+
+Validates a value is not blank and exists in the file system
+Upon success, outputs the file name
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file or directory`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
 ### `usageArgumentFile` - Validates a value is not blank and is a file.
 
 Validates a value is not blank and is a file.
