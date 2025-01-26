@@ -104,6 +104,61 @@ isBashDebug() {
   return 1
 }
 
+# Place this in code where you suspect an infinite loop occurs
+# It will fail upon a second call; to reset call with `--end`
+# Argument: --end - Flag. Optional. Stop testing for recursion.
+# When called twice, fails on the second invocation and dumps a call stack to stderr.
+# Requires: printf unset  export debuggingStack exit
+# Environment: __BUILD_RECURSION
+bashRecursionDebug() {
+  export __BUILD_RECURSION
+
+  if [ "${__BUILD_RECURSION-}" = "true" ]; then
+    if [ "${1-}" = "--end" ]; then
+      unset __BUILD_RECURSION
+      return 0
+    fi
+    printf "%s%s\n" "RECURSION FAILURE" "$(debuggingStack)" 1>&2
+    exit 91
+  fi
+  if [ "${1-}" = "--end" ]; then
+    printf "%s%s\n" "RECURSION FAILURE (end without start)" "$(debuggingStack)" 1>&2
+    exit 91
+  fi
+
+  __BUILD_RECURSION=true
+}
+
+# Adds a trap to capture the debugging stack on interrupt
+# Use this in a bash script which runs forever or runs in an infinite loop to
+# determine where the problem or loop exists.
+# Requires: trap
+# Argument: --help
+bashDebugInterruptFile() {
+  local usage="_${FUNCNAME[0]}" name="__bashDebugInterruptFile" traps
+  __help "$usage" --only "$@" || return 0
+  traps=$(fileTemporaryName "$usage")
+  trap >"$traps" || _clean "$?" "$traps" || __throwEnvironment "trap failed" || return $?
+  if grep "$name" "$traps" | grep -q " SIGINT"; then
+    __throwEnvironment "$usage" "Already installed" || _clean "$?" "$traps" || return $?
+  fi
+  __catchEnvironment "$usage" rm -rf "$traps" || return $?
+  __catchEnvironment "$usage" trap __bashDebugInterruptFile INT || return $?
+}
+_bashDebugInterruptFile() {
+  ! false || bashDebugInterruptFile --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__bashDebugInterruptFile() {
+  export BUILD_HOME
+
+  trap - INT
+  debuggingStack >"$BUILD_HOME/.interrupt" || :
+  exit 99
+}
+
 #
 # Returns whether the shell has the error exit flag set
 #
@@ -414,257 +469,4 @@ outputTrigger() {
 _outputTrigger() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-_bashDebugHelp() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-_bashDebugWatch() {
-  if [ "${#__BUILD_BASH_DEBUG_WATCH[@]}" -gt 0 ]; then
-    for __item in "${__BUILD_BASH_DEBUG_WATCH[@]}"; do
-      if ! __value="$(eval "printf \"%s\n\" \"$__item\"" 2>/dev/null)"; then
-        __value="$(decorate red "unbound")"
-      else
-        __value="\"$(decorate code "$__value")\""
-      fi
-      printf -- "WATCH %s: %s\n" "$__item" "$__value"
-    done
-  fi
-}
-
-# Usage: {fn} current stepLocations
-__bashDebugStep() {
-  local here="$1" source functionName line && shift
-
-  IFS="|" read -d"" -r source functionName line <<<"$here" || :
-  while [ $# -gt 0 ]; do
-    IFS="|" read -r checkSource checkFunctionName checkLine <<<"$1" || :
-    if [ "$checkSource" = "$source" ] && [ "$checkFunctionName" = "$functionName" ] && [ "$line" -gt "$checkLine" ]; then
-      return 1
-    fi
-    shift
-  done
-}
-
-__bashDebugWhere() {
-  local index="$1" __where
-  export BUILD_HOME
-  __where="$(realPath "${BASH_SOURCE[index]}")"
-  __where="${__where#"$BUILD_HOME"}"
-  printf "@ %s:%s\n" "$(decorate value "$__where")" "$(decorate bold-blue "${BASH_LINENO[index + 1]}")"
-}
-__bashCommandStep() {
-  statusMessage decorate notice "Stepping over ..."
-  local i=0 total=$((${#FUNCNAME[@]} - 1))
-  while [ "$i" -lt "$total" ]; do
-    # Skip this file
-    if [ "$${BASH_SOURCE[i + 1]}" != "$__me" ]; then
-      __BUILD_BASH_STEP_CONTROL+=("${BASH_SOURCE[i + 1]}|${FUNCNAME[i + 1]}|$((BASH_LINENO[i] + 1))")
-    fi
-    i=$((i + 1))
-  done
-  return 0
-}
-
-# Internal trap to capture DEBUG events and allow control
-# See: bashDebug
-_bashDebugTrap() {
-  local __me=${BASH_SOURCE[0]}
-  local __where __command __item __value __list __found __rightArrow="➡" __here __line=${BASH_LINENO[0]}
-
-  export BUILD_HOME __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL
-  case "$BASH_COMMAND" in
-    bashDebuggerDisable | "trap - DEBUG" | '"$@"') return 0 ;;
-    *) ;;
-  esac
-
-  if [ "${#__BUILD_BASH_STEP_CONTROL[@]}" -gt 0 ]; then
-    local callingFile="${BASH_SOURCE[1]}"
-    if [ "$callingFile" = "$__me" ]; then
-      return 0
-    fi
-    if __bashDebugStep "$callingFile|${FUNCNAME[1]}|$((BASH_LINENO[0] + 1))" "${__BUILD_BASH_STEP_CONTROL[@]}"; then
-      return 0
-    fi
-    statusMessage printf -- ""
-    __BUILD_BASH_STEP_CONTROL=()
-  fi
-  # Save Application FDs
-  exec 30>&0 31>&1 32>&2
-  # Restore Debugger FDs
-  exec 0>&20 1>&21 2>&22
-
-  printf "%s%s%s%s%s [%s] %s (%s)\n" "$(decorate code "${FUNCNAME[4]-}")" "$__rightArrow" "$(decorate code "${FUNCNAME[3]}")" "$__rightArrow" "$(decorate code "${FUNCNAME[2]}")" "$(decorate value "${#FUNCNAME[@]}")" "$(__bashDebugWhere 2)" "$__here:$__line"
-
-  _bashDebugWatch
-  printf -- "%s %s\n" "$(decorate green ">")" "$(decorate code "$BASH_COMMAND")"
-  while read -r -e -p "bashDebug> " __command; do
-    [ -n "$__command" ] || __command="\n"
-    case "$__command" in
-      "\i")
-        decorate info "$(decorate file "$HOME/.interrupt") will be created on interrupt"
-        bashDebugInterruptFile
-        ;;
-      "\s")
-        decorate warning "Skipping $BASH_COMMAND"
-        # Restore Application FDs
-        exec 0>&30 1>&31 2>&32
-        return 1
-        ;;
-      "\c")
-        break
-        ;;
-      "\n")
-        __bashCommandStep
-        return 0
-        ;;
-      "?" | "help" | "\?")
-        _bashDebug 0
-        ;;
-      "\u "*)
-        __item="${__command:3}"
-        __list=()
-        __found=false
-        for __value in "${__BUILD_BASH_DEBUG_WATCH[@]+"${__BUILD_BASH_DEBUG_WATCH[@]}"}"; do
-          if [ "$__value" = "$__item" ]; then
-            decorate bold-orange "Removed $__item from watch list"
-            __found=true
-          else
-            __list+=("$__value")
-          fi
-        done
-        if ! $__found; then
-          # shellcheck disable=SC2059
-          printf -- "%s\n%s" "$(decorate error "No $__item found in watch list:")" "$(printf -- "- $(decorate code %s)\n" "${__list[@]+"${__list[@]}"}")"
-        fi
-        __BUILD_BASH_DEBUG_WATCH=("${__list[@]+"${__list[@]}"}")
-        _bashDebugWatch
-        ;;
-      "\w "*)
-        __item="${__command:3}"
-        decorate bold-orange "Watching $__item"
-        __BUILD_BASH_DEBUG_WATCH+=("$__item")
-        _bashDebugWatch
-        ;;
-      "\q")
-        trap - DEBUG
-        # Restore Application FDs
-        exec 0>&30 1>&31 2>&32
-        return 0
-        ;;
-      *)
-        printf "%s \"%s\"\n" "$(decorate warning "Evaluating")" "$(decorate code "$__command")" >/dev/stdout
-        # Restore Application FDs
-        exec 0>&30 1>&31 2>&32
-        set +eu
-        set +o pipefail
-        eval "$__command" || printf "%s\n" "$(decorate error "EXIT $?")" 1>&2
-        # Save Application FDs (may have changed)
-        exec 30>&0 31>&1 32>&2
-        # Restore Debugger FDs
-        exec 0>&20 1>&21 2>&22
-        ;;
-    esac
-  done
-}
-
-# Enables the debugger immediately
-# See: bashDebug
-# See: bashDebuggerDisable
-# Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively.
-bashDebuggerEnable() {
-  export __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL
-  __BUILD_BASH_DEBUG_WATCH=()
-  __BUILD_BASH_STEP_CONTROL=()
-  # Save debugger FDs for later
-  exec 20>&0 21>&1 22>&2
-  set -o functrace
-  shopt -s extdebug
-  trap _bashDebugTrap DEBUG
-}
-
-# Disables the debugger immediately
-# See: bashDebug
-# See: bashDebuggerEnable
-# Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
-bashDebuggerDisable() {
-  trap - DEBUG
-  shopt -u extdebug
-  set +o functrace
-  # Restore debugger FDs
-  exec 0>&20 1>&21 2>&22
-}
-
-# Simple debugger to walk through a program
-#
-# Usage: {fn} commandToDebug ...
-# Argument: commandToDebug - Callable. Required. Command to debug.
-#
-# Debugger accepts the following commands:
-#
-# `\s` - Skip next bash command
-# `\n` - Step over next command (default)
-# `\c` - Step into next command
-# `\i` - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
-# `\h` - This help
-# `\q` - Quit debugger (continue execution)
-# `\w variable` - Evaluate this expression upon each debugger breakpoint
-# `\u variable` - Unwatch a variable
-#
-# Any other command entered in the debugger is evaluated immediately.
-#
-bashDebug() {
-  __help "$@" || return 0
-  bashDebuggerEnable
-  "$@"
-  bashDebuggerDisable
-}
-_bashDebug() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-bashRecursionDebug() {
-  export __BUILD_RECURSION
-
-  if [ "${__BUILD_RECURSION-}" = "true" ]; then
-    if [ "${1-}" = "--end" ]; then
-      unset __BUILD_RECURSION
-      return 0
-    fi
-    printf "%s%s\n" "RECURSION FAILURE" "$(debuggingStack)" 1>&2
-    exit 91
-  fi
-  if [ "${1-}" = "--end" ]; then
-    printf "%s%s\n" "RECURSION FAILURE (end without start)" "$(debuggingStack)" 1>&2
-    exit 91
-  fi
-
-  __BUILD_RECURSION=true
-}
-
-# Adds a trap to capture the debugging stack on interrupt
-# Use this in a bash script which runs forever or runs in an infinite loop to
-# determine where the problem or loop exist
-# Requires: trap
-# Argument: --help
-bashDebugInterruptFile() {
-  local usage="_${FUNCNAME[0]}"
-  __help "$usage" --only "$@" || return 0
-  __catchEnvironment "$usage" trap __bashDebugInterruptFile INT || return $?
-}
-_bashDebugInterruptFile() {
-  ! false || bashDebugInterruptFile --help
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-__bashDebugInterruptFile() {
-  export BUILD_HOME
-
-  trap - INT
-  debuggingStack >"$BUILD_HOME/.interrupt" || :
-  exit 99
 }

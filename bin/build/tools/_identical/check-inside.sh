@@ -117,7 +117,7 @@ _identicalCheckInsideLoop() {
         fi
       fi
     else
-      printf -- "%s\n%s\n" "$count" "$searchFile" >"$tokenFile"
+      printf -- "%s\n%d\n%s\n" "$count" "$lineNumber" "$searchFile" >"$tokenFile"
       __catchEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
       if [ "$token" = "" ]; then
         dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
@@ -160,14 +160,17 @@ _identicalCheckSinglesChecker() {
   # Arguments
   stateFile=$(usageArgumentFile "$usage" stateFile "${1-}") && shift || return $?
 
-  local tempDirectory singles=() item resultsFile
+  local tempDirectory singles=() item resultsFile identicalCode
 
+  identicalCode=$(_code identical)
   # Fetch from state file
   tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
   resultsFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" resultsFile) || return $?
   while read -r item; do singles+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "singles") || return $?
 
-  local tokenFile foundSingles=() matchFile exitCode=0
+  local tokenFile targetFile matchFile exitCode=0
+  local allSingles=() knownSingles=() knownSinglesReport=() lonelySingles=() lonelySinglesReport lonelySinglesFiles=()
+
   while read -r matchFile; do
     if [ ! -f "$matchFile.compare" ]; then
       tokenFile="$(dirname "$matchFile")"
@@ -175,21 +178,36 @@ _identicalCheckSinglesChecker() {
       token="${token%%.match}"
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
-      tokenFile="$(tail -n 1 "$tokenFile")"
+      IFS=$'\n' read -d"" -r lineNumber targetFile < <(tail -n 2 "$tokenFile")
+      allSingles+=("$token")
       if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
-        statusMessage printf -- "%s: %s in %s\n" "$(decorate success "Single instance of token ok:")" "$(decorate code "$token")" "$(decorate info "$(decorate file "$tokenFile")")"
-        foundSingles+=("$token")
+        knownSingles+=("$token")
+        knownSinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate info "$(decorate file "$targetFile")")"):$lineNumber")
       else
-        statusMessage printf -- "%s: %s in %s\n" "$(decorate warning "Single instance of token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")" >>"$resultsFile"
-        if [ -n "$binary" ]; then
-          "$binary" "$tokenFile"
-        fi
-        exitCode=$(_code identical)
+        lonelySingles+=("$token")
+        lonelySinglesFiles+=("$tokenFile")
+        lonelySinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate notice "$(decorate file "$targetFile")")"):$lineNumber")
+        exitCode="$identicalCode"
       fi
     fi
   done < <(find "$tempDirectory" -type f -name '*.match' || :)
+
+  if [ "${#lonelySinglesReport[@]}" -gt 0 ]; then
+    statusMessage --last printf -- "%s:\n%s\n" "$(decorate warning "Single tokens")" "$(printf -- "%s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
+  fi
+  if [ "${#knownSinglesReport[@]}" -gt 0 ]; then
+    statusMessage --last printf -- "%s:\n%s\n" "$(decorate notice "Single tokens (known)")" "$(printf -- "%s\n" "${knownSinglesReport[@]}")" >>"$resultsFile"
+  fi
+  if [ -n "$binary" ] && [ "${#lonelySinglesFiles[@]}" -gt 0 ]; then
+    "$binary" "${lonelySinglesFiles[@]}"
+  fi
+  __catchEnvironment "$usage" environmentValueWriteArray "allSingles" "${allSingles[@]+"${allSingles[@]}"}" >>"$stateFile" || return $?
+  __catchEnvironment "$usage" environmentValueWriteArray "knownSingles" "${knownSingles[@]+"${knownSingles[@]}"}" >>"$stateFile" || return $?
+  __catchEnvironment "$usage" environmentValueWriteArray "lonelySingles" "${lonelySingles[@]+"${lonelySingles[@]}"}" >>"$stateFile" || return $?
+  __catchEnvironment "$usage" environmentValueWriteArray "lonelySinglesFiles" "${lonelySinglesFiles[@]+"${lonelySinglesFiles[@]}"}" >>"$stateFile" || return $?
+
   for token in "${singles[@]+"${singles[@]}"}"; do
-    if ! inArray "$token" "${foundSingles[@]+"${foundSingles[@]}"}"; then
+    if ! inArray "$token" "${knownSingles[@]+"${knownSingles[@]}"}"; then
       while read -r tokenFile; do
         tokenFile="$(tail -n 1 "$tokenFile")"
         printf -- "%s: %s %s\n" "$(decorate warning "Multiple instance of --single token found:")" "$(decorate error "$token")" "$(decorate info "$(decorate file "$tokenFile")")"

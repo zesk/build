@@ -21,8 +21,11 @@ testIdenticalEofWithBracket() {
 testIdenticalCheckAndRepairMap() {
   local testPath home name
 
+  bashDebuggerEnable
+
   home=$(__environment buildHome) || return $?
   testPath=$(__environment mktemp -d) || return $?
+  decorate info "HOME is $home"
   __environment mkdir -p "$testPath/identical" || return $?
   __environment mkdir -p "$testPath/tests" || return $?
   __environment mkdir -p "$testPath/alternate" || return $?
@@ -129,17 +132,17 @@ testIdenticalCheckSingles() {
   local identicalCheckArgs identicalError singles
 
   identicalError=$(_code identical)
-  identicalCheckArgs=(--cd "test/example" --extension 'txt')
+
   #
   # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
   #
-  identicalCheckArgs=(--cd "test/example" --extension 'txt')
+  identicalCheckArgs=(--cd "test/example" --extension 'txt' --prefix '# ''singleIDENTICAL')
 
   singles=()
-  assertExitCode --line "$LINENO" --stderr-match single1 --stderr-match single2 "$identicalError" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
 
   singles=(--single single1)
-  assertExitCode --line "$LINENO" --stderr-no-match single1 --stderr-match single2 "$identicalError" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-no-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
 
   singles=(--single single1 --single single2)
   assertExitCode --line "$LINENO" "0" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
