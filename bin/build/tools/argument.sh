@@ -46,8 +46,8 @@ _arguments() {
     noneFlag=true
   fi
   stateFile=$(__catchEnvironment "$usageArguments" mktemp) || return $?
-  spec=$(__catchEnvironment "$usageArguments" _commentArgumentsSpecification "$source" "$this") || return $?
-  __catchEnvironment "$usageArguments" _commentArgumentsSpecificationDefaults "$spec" >"$stateFile" || return $?
+  spec=$(__catchEnvironment "$usageArguments" _commentArgumentSpecification "$source" "$this") || return $?
+  __catchEnvironment "$usageArguments" _commentArgumentSpecificationDefaults "$spec" >"$stateFile" || return $?
   IFS=$'\n' read -d '' -r -a required <"$(__commentArgumentSpecification__required "$spec")" || :
 
   # Rest is calling function argument usage
@@ -55,10 +55,10 @@ _arguments() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    type="$(_usageArgumentType "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+    type="$(_commentArgumentType "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
     case "$type" in
       Flag)
-        argumentName="$(_usageArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+        argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
         __catchEnvironment "$usage" environmentValueWrite "$argumentName" "true" >>"$stateFile" || _clean "$?" "${clean[@]}" || return $?
         if ! inArray "$argumentName" "${flags[@]+"${flags[@]}"}"; then
           flags+=("$argumentName")
@@ -68,11 +68,11 @@ _arguments() {
         break
         ;;
       *)
-        if _usageArgumentTypeValid "${type#!}"; then
+        if _commentArgumentTypeValid "${type#!}"; then
           type="${type#!}"
-          argumentName="$(_usageArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
-        elif _usageArgumentTypeValid "$type"; then
-          argumentName="$(_usageArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+          argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+        elif _commentArgumentTypeValid "$type"; then
+          argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
           shift
           argument="${1-}"
         else
@@ -87,7 +87,7 @@ _arguments() {
     esac
     shift || __throwArgument "$usage" "missing argument #$__index: $argument" || _clean "$?" "${clean[@]}" || return $?
   done
-  stateFile=$(_usageArgumentsRemainder "$usage" "$spec" "$stateFile" "$@") || _clean "$?" "${clean[@]}" || return $?
+  stateFile=$(_commentArgumentsRemainder "$usage" "$spec" "$stateFile" "$@") || _clean "$?" "${clean[@]}" || return $?
 
   if inArray "help" "${flags[@]+"${flags[@]}"}"; then
     # Have to do this as this is run in subprocess - what to do?
@@ -146,7 +146,7 @@ __commentArgumentSpecificationMagic() {
 # .arguments/functionName/parsed/2
 # .arguments/functionName/.magic
 #
-_commentArgumentsSpecification() {
+_commentArgumentSpecification() {
   local usage="_${FUNCNAME[0]}"
   local functionDefinitionFile="${1-}" functionName="${2-}"
   local functionCache cacheFile argumentIndex argumentDirectory argumentLine
@@ -186,7 +186,7 @@ _commentArgumentsSpecification() {
   if [ ! -f "$argumentDirectory/@" ]; then
     argumentId=1
     while read -r -a argumentLine; do
-      __catchEnvironment "$usage" _commentArgumentsSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
+      __catchEnvironment "$usage" _commentArgumentSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
       argumentId=$((argumentId + 1))
     done <"$argumentsFile"
     __catchEnvironment "$usage" date >"$argumentDirectory/@" || return $?
@@ -208,7 +208,7 @@ __commentArgumentSpecification__required() {
 }
 
 # Argument: specification - Required. String.
-_commentArgumentsSpecificationDefaults() {
+_commentArgumentSpecificationDefaults() {
   local usage="_${FUNCNAME[0]}"
   local specification="${1-}"
 
@@ -228,7 +228,7 @@ __commentArgumentSpecificationDefaults() {
 # Argument: argumentDirectory - Required. Directory. Directory where the arguments structure is stored.
 # Argument: argumentId - Required. Integer. This argument ID.
 # Output: nothing
-_commentArgumentsSpecificationParseLine() {
+_commentArgumentSpecificationParseLine() {
   local functionCache="${1-}" argumentId="${2-}"
   local argumentDirectory="${functionCache%/}/parsed"
   local argument file
@@ -284,12 +284,12 @@ _commentArgumentsSpecificationParseLine() {
   saveRequired="${1%.}"
   shift || :
   required=
-  if required=$(_usageArgumentParseRequired "$saveRequired"); then
+  if required=$(_commentArgumentParseRequired "$saveRequired"); then
     case "$required" in required) required=true ;; *) required=false ;; esac
   fi
   argumentType="${1%.}"
-  if [ -z "$required" ] && ! _usageArgumentTypeValid "$argumentType"; then
-    if _usageArgumentTypeValid "$saveRequired"; then
+  if [ -z "$required" ] && ! _commentArgumentTypeValid "$argumentType"; then
+    if _commentArgumentTypeValid "$saveRequired"; then
       argumentType=$saveRequired
       required=false
     else
@@ -335,7 +335,7 @@ __commentArgumentSpecificationParseLine() {
 # If starts with "req" then prints "required"
 # If starts with "opt" then prints "optional"
 # Otherwise fails with return code 1
-_usageArgumentParseRequired() {
+_commentArgumentParseRequired() {
   local text
   text="$(lowercase "${1-}")"
   if [ "${text#req}" != "$text" ]; then
@@ -348,7 +348,7 @@ _usageArgumentParseRequired() {
 }
 
 # Is the argument type valid?
-_usageArgumentTypeValid() {
+_commentArgumentTypeValid() {
   local type="${1-}"
   case "$type" in
     # File system
@@ -382,7 +382,7 @@ _usageArgumentTypeValid() {
 # Argument: stateFile - Required. File.
 # Argument: argumentIndex - Required. Integer.
 # Argument: argumentValue - Optional. String.
-_usageArgumentName() {
+_commentArgumentName() {
   local usage="_${FUNCNAME[0]}"
   local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}" argumentNamed
 
@@ -401,12 +401,12 @@ _usageArgumentName() {
   fi
   return 0
 }
-__catchArgumentName() {
+___commentArgumentName() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__catchArgumentTypeFromSpec() {
+_commentArgumentTypeFromSpec() {
   local usage="$1" specification="$2" argumentType argumentRepeat="${4-}"
 
   argumentType=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentType undefined)
@@ -418,7 +418,7 @@ __catchArgumentTypeFromSpec() {
 # Argument: stateFile - Required. File.
 # Argument: argumentIndex - Required. Integer.
 # Argument: argumentValue - Optional. String.
-_usageArgumentType() {
+_commentArgumentType() {
   local usage="_${FUNCNAME[0]}"
   local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}"
   local argumentNamed argumentRepeat argumentSpec
@@ -427,7 +427,7 @@ _usageArgumentType() {
   specification="$specification/parsed"
   argumentSpec="$specification/$argumentValue"
   if [ -f "$argumentSpec" ]; then
-    __catchArgumentTypeFromSpec "$usage" "$argumentSpec" "" || return $?
+    _commentArgumentTypeFromSpec "$usage" "$argumentSpec" "" || return $?
     return 0
   fi
   argumentNamed="$(environmentValueRead "$stateFile" argumentNamed "")"
@@ -452,10 +452,10 @@ _usageArgumentType() {
       } >>"$stateFile" || return $?
     fi
   fi
-  __catchArgumentTypeFromSpec "$usage" "$argumentSpec" "!" "$argumentRepeat" || return $?
+  _commentArgumentTypeFromSpec "$usage" "$argumentSpec" "!" "$argumentRepeat" || return $?
   return 0
 }
-__catchArgumentType() {
+__commentArgumentType() {
   # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -463,7 +463,7 @@ __catchArgumentType() {
 # Argument: specification - Required. String.
 # Argument: stateFile - Required. File.
 # Argument: ... - Optional. String. One or more
-_usageArgumentsRemainder() {
+_commentArgumentsRemainder() {
   local usage="$1" specification="$2" stateFile="$3" name value
 
   shift && shift && shift
