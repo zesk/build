@@ -202,8 +202,8 @@ identicalCheck() {
   if [ $(($(wc -l <"$resultsFile") + 0)) -ne 0 ]; then
     exitCode=$failureCode
   fi
-  cat "$resultsFile" 1>&2 || :
-  rm -rf "$resultsFile" "$searchFileList" || :
+  isEmptyFile "$resultsFile" || cat "$resultsFile" 1>&2
+  rm -rf "$resultsFile" "$searchFileList"
   statusMessage --last reportTiming "$start" "Completed in"
   return "$exitCode"
 }

@@ -194,9 +194,8 @@ _identicalCheckSinglesChecker() {
 
   if [ "${#lonelySinglesReport[@]}" -gt 0 ]; then
     statusMessage --last printf -- "%s:\n%s\n" "$(decorate warning "Single tokens")" "$(printf -- "%s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
-  fi
-  if [ "${#knownSinglesReport[@]}" -gt 0 ]; then
-    statusMessage --last printf -- "%s:\n%s\n" "$(decorate notice "Single tokens (known)")" "$(printf -- "%s\n" "${knownSinglesReport[@]}")" >>"$resultsFile"
+  elif [ "${#knownSinglesReport[@]}" -gt 0 ]; then
+    statusMessage --last printf -- "%s:\n%s\n" "$(decorate notice "Single tokens (known)")" "$(printf -- "%s\n" "${knownSinglesReport[@]}")"
   fi
   if [ -n "$binary" ] && [ "${#lonelySinglesFiles[@]}" -gt 0 ]; then
     "$binary" "${lonelySinglesFiles[@]}"

@@ -58,7 +58,7 @@ testSuite() {
   allTestStart=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
-  __catchEnvironment "$usage" printf -- "%s started on %s %s\n" "${usage#_}" "$startString" "$load" | tee "$quietLog" || return $?
+  __catchEnvironment "$usage" printf -- "%s started on %s %s\n" "$(decorate bold-magenta "${usage#_}")" "$startString" "$load" | tee "$quietLog" || return $?
   start=$(__catchEnvironment "$usage" beginTiming) || return $?
   BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode)
   BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
