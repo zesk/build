@@ -276,7 +276,8 @@ _modifiedDays() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _realPath 11
+# IDENTICAL _realPath 12
+
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath
@@ -739,7 +740,8 @@ _linkCreate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileTemporaryName 18
+# IDENTICAL fileTemporaryName 19
+
 # Generate a temporary file name using mktemp, and fail using a function
 # Argument: usage - Function. Required. Function to call if mktemp fails
 # DOC TEMPLATE: --help 1

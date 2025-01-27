@@ -8,9 +8,9 @@
 # One line is nice as this is used nearly everywhere as a common escape from initialization problems.
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
-#
 
 # IDENTICAL _return EOF
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.

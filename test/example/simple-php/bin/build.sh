@@ -5,7 +5,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL __build 11
+# IDENTICAL __build 12
+
 # Load build tools (installing if needed) and run command
 # Usage: {fn} [ relativeHome installerPath [ command ... ] ]
 # Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary.
@@ -18,7 +19,8 @@ __build() {
   __install "$installerPath/install-bin-build.sh" "bin/build/tools.sh" "$relative" "$@" || return $?
 }
 
-# IDENTICAL __install 25
+# IDENTICAL __install 26
+
 # Load build tools (installing if needed) and run command
 # Usage: {fn} [ relativeHome installer source [ command ... ] ]
 # Argument: installer - Required. File. Installation binary.
@@ -45,7 +47,8 @@ __install() {
   __execute "${arguments[@]}" || return $?
 }
 
-# IDENTICAL _return 25
+# IDENTICAL _return 26
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.

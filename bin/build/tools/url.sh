@@ -428,7 +428,8 @@ __urlOpenInnerLoop() {
   fi
 }
 
-# IDENTICAL __fetch 121
+# IDENTICAL __fetch 122
+
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
@@ -518,8 +519,8 @@ __fetch() {
           shift
           break
         else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac

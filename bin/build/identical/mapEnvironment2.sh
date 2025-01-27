@@ -6,10 +6,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# requires IDENTICAL _return
-# requires IDENTICAL _sugar
-# requires IDENTICAL _colors
-#
 
 # Do not put mapEnvironment2 into this file just yet
 

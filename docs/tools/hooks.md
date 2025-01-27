@@ -105,7 +105,15 @@ Fetch the current live version of the software
 
 ## Deployment Hooks
 
+#### Arguments
 
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 #### Arguments
 
 - No arguments.

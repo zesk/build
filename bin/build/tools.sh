@@ -10,7 +10,8 @@
 # documentTemplate: ./docs/_templates/__function.md
 #
 
-# IDENTICAL _return 25
+# IDENTICAL _return 26
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.

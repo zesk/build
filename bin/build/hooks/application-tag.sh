@@ -18,11 +18,13 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #
 __hookApplicationTag() {
   local usage="_${FUNCNAME[0]}"
-  local home argument
+  local home
 
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -30,10 +32,12 @@ __hookApplicationTag() {
         return $?
         ;;
       *)
-        __throwArgument "$usage" "unknown argument: $argument" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    shift || :
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 

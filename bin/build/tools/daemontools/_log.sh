@@ -5,7 +5,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 25
+# IDENTICAL _return 26
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -32,7 +33,8 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL __execute 9
+# IDENTICAL __execute 10
+
 # Usage: {fn} __execute binary [ ... ]
 # Argument: binary - Required. Executable.
 # Argument: ... - Any arguments are passed to binary
@@ -43,7 +45,8 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL _home 13
+# IDENTICAL _home 14
+
 # Usage: {fn} user
 # Summary: Quick user database look up
 # Look user up, output user home

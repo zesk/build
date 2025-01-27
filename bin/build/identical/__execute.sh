@@ -8,6 +8,7 @@
 #
 
 # IDENTICAL __execute EOF
+
 # Usage: {fn} __execute binary [ ... ]
 # Argument: binary - Required. Executable.
 # Argument: ... - Any arguments are passed to binary

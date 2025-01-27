@@ -28,7 +28,7 @@ These hooks interact with `new-release.sh` and deployment tools but are intended
 ## Deployment Hooks
 
 {__hookApplicationEnvironment}
-{__hookApplicationChecksum}
+{__hookApplicationID}
 {__hookApplicationTag}
 {__hookMaintenance}
 

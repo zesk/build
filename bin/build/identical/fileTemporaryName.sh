@@ -10,6 +10,7 @@
 #
 
 # IDENTICAL fileTemporaryName EOF
+
 # Generate a temporary file name using mktemp, and fail using a function
 # Argument: usage - Function. Required. Function to call if mktemp fails
 # DOC TEMPLATE: --help 1

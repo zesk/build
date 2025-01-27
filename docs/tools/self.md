@@ -218,47 +218,21 @@ Needs internet access and creates a directory `./bin/build`
 
 # Package Installation
 
-### `_installRemotePackage` - Installs a remote package system in a local project directory
-
-Installs a remote package system in a local project directory if not installed. Also
-will overwrite the installation binary with the latest version after installation.
-
-URL can be determined programmatically using `urlFunction`.
-`versionFunction` can be used to avoid upgrades when versions have not changed.
-
-Calling signature for `version-function`:
-
-   versionFunction usageFunction applicationHome installPath
-   usageFunction - Function. Required. Function to call when an error occurs.
-   applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
-   installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
-
-Calling signature for `url-function`:
-
-   urlFunction usageFunction
-   usageFunction - Function. Required. Function to call when an error occurs.
-
-Calling signature for `check-function`:
-
-   checkFunction usageFunction installPath
-
-If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
-
-- Location: `bin/build/identical/_installRemotePackage.sh`
-
 #### Arguments
 
-- `--local localPackageDirectory` - Optional. Directory. Directory of an existing installation to mock behavior for testing.
-- `--url url` - Optional. URL. URL of a tar.gz. file. Download source code from here.
+- `--source source` - Optional. String. Source to display for the binary name. INTERNAL.
+- `--name name` - Optional. String. Name to display for the remote package name. INTERNAL.
+- `--local localPackageDirectory` - Optional. Directory. Directory of an existing installation to mock behavior for testing. INTERNAL.
+- `--url url` - Optional. URL. URL of a tar.gz file. Download source code from here.
 - `--user headerText` - Optional. String. Add `username:password` to remote request.
-- `--header headerText` - Optional. String. Add one or more fetchArguments to the remote request.
-- `--version-function urlFunction` - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
-- `--url-function urlFunction` - Optional. Function. Function to return the URL to download.
-- `--check-function checkFunction` - Optional. Function. Function to check the installation and output the version number or package name.
-- `--debug` - Optional. Flag. Debugging is on.
+- `--header headerText` - Optional. String. Add one or more headers to the remote request.
+- `--version-function urlFunction` - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
+- `--url-function urlFunction` - Optional. Function. Function to return the URL to download. INTERNAL.
+- `--check-function checkFunction` - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
+- `--replace fie` - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
+- `--debug` - Optional. Flag. Debugging is on. INTERNAL.
 - `--force` - Optional. Flag. Force installation even if file is up to date.
 - `--diff` - Optional. Flag. Show differences between old and new file.
-- `--replace fie` - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use.
 
 #### Exit codes
 

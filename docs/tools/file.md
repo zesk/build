@@ -320,9 +320,9 @@ Outputs one of `type` output or enhancements:
 
 ## Platform 
 
-### `realPath` - IDENTICAL _realPath EOF
+### `realPath` - undocumented
 
-IDENTICAL _realPath EOF
+No documentation for `realPath`.
 
 - Location: `bin/build/identical/realPath.sh`
 
@@ -374,9 +374,8 @@ Removes dot and dot-dot paths from a path correctly
 
 ## Utilities
 
-### `fileTemporaryName` - IDENTICAL fileTemporaryName EOF
+### `fileTemporaryName` - Generate a temporary file name using mktemp, and fail using
 
-IDENTICAL fileTemporaryName EOF
 Generate a temporary file name using mktemp, and fail using a function
 
 - Location: `bin/build/identical/fileTemporaryName.sh`
@@ -428,7 +427,7 @@ Reverses a pipe's input lines to output using an awk trick.
 
 Not recommended on big files.
 
-- Location: `bin/build/identical/reverseFileLines.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

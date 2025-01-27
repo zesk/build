@@ -8,6 +8,7 @@
 #
 
 # IDENTICAL __installCheck EOF
+
 # Check the directory after installation and output the version
 # Usage: {fn} name versionFile usageFunction installPath
 # Requires: dirname

@@ -20,6 +20,7 @@
 # --private-key-type=type
 
 # IDENTICAL __fetch EOF
+
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'

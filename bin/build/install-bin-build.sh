@@ -94,7 +94,8 @@ __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
-# IDENTICAL __installCheck 14
+# IDENTICAL __installCheck 15
+
 # Check the directory after installation and output the version
 # Usage: {fn} name versionFile usageFunction installPath
 # Requires: dirname
@@ -434,7 +435,8 @@ __installRemotePackageLocal() {
   _clean 0 "$log" || return $?
 }
 
-# IDENTICAL __help 30
+# IDENTICAL __help 31
+
 # Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
 #
@@ -488,7 +490,8 @@ usageDocumentSimple() {
   return "$exitCode"
 }
 
-# IDENTICAL bashFunctionComment 12
+# IDENTICAL bashFunctionComment 13
+
 # Extract a bash comment from a file
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
@@ -516,7 +519,8 @@ reverseFileLines() {
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 
-# IDENTICAL _realPath 11
+# IDENTICAL _realPath 12
+
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath
@@ -529,7 +533,8 @@ realPath() {
   fi
 }
 
-# IDENTICAL fileTemporaryName 18
+# IDENTICAL fileTemporaryName 19
+
 # Generate a temporary file name using mktemp, and fail using a function
 # Argument: usage - Function. Required. Function to call if mktemp fails
 # DOC TEMPLATE: --help 1
@@ -549,7 +554,8 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL whichExists 11
+# IDENTICAL whichExists 12
+
 # Usage: {fn} binary ...
 # Argument: binary - Required. String. Binary to find in the system `PATH`.
 # Exit code: 0 - If all values are found
@@ -562,12 +568,11 @@ whichExists() {
   done
 }
 
-# IDENTICAL _type 47
+# IDENTICAL _type 46
 
-#
+# Usage: {fn} argument ...
 # Test if an argument is a positive integer (non-zero)
 #
-# Usage: {fn} argument ...
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
 # Requires: __catchArgument isUnsignedInteger usageDocument
@@ -781,7 +786,8 @@ __decorateExtensionEach() {
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
 }
 
-# IDENTICAL _return 25
+# IDENTICAL _return 26
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.

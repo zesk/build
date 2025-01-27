@@ -610,7 +610,8 @@ __dumpAliasedValue() {
   printf -- 'export "%s"="%s%s%s"\n' "$1" '$\{' "$2" '}'
 }
 
-# IDENTICAL bashFunctionComment 12
+# IDENTICAL bashFunctionComment 13
+
 # Extract a bash comment from a file
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.

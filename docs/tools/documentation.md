@@ -444,7 +444,7 @@ Generates a temporary file which is removed
 
 No documentation for `usageDocument`.
 
-- Location: `bin/build/identical/usageDocumentSimple.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

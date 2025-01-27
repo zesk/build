@@ -7,6 +7,7 @@
 # Require: IDENTICAL _return
 
 # IDENTICAL _home EOF
+
 # Usage: {fn} user
 # Summary: Quick user database look up
 # Look user up, output user home

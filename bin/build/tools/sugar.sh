@@ -8,7 +8,8 @@
 # Docs: contextOpen ./docs/_templates/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
-# IDENTICAL __execute 9
+# IDENTICAL __execute 10
+
 # Usage: {fn} __execute binary [ ... ]
 # Argument: binary - Required. Executable.
 # Argument: ... - Any arguments are passed to binary

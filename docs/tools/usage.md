@@ -14,7 +14,7 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 
 No documentation for `usageDocument`.
 
-- Location: `bin/build/identical/usageDocumentSimple.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -55,7 +55,7 @@ Simplifies documentation and keeps it with the code.
 
 Output a simple error message for a function
 
-- Location: `bin/build/identical/usageDocumentSimple.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

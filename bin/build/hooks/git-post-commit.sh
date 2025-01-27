@@ -11,7 +11,8 @@
 # DOES NOT USE zesk-build-hook-header because this may be installed as a git hook as well so
 # it determines where it is installed and finds the build directory appropriately
 
-# IDENTICAL __source 19
+# IDENTICAL __source 20
+
 # Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
@@ -32,7 +33,8 @@ __source() {
   "${a[@]}" || return $?
 }
 
-# IDENTICAL __tools 8
+# IDENTICAL __tools 9
+
 # Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
@@ -42,7 +44,8 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL __where 11
+# IDENTICAL __where 12
+
 # Summary: Locates application home depending on whether this is running as a git hook or not
 # Usage: {fn}
 # If current path contains `.git/` then print `../../..` otherwise print `../..`
@@ -55,7 +58,8 @@ __where() {
   printf "%s" "../.."
 }
 
-# IDENTICAL _return 25
+# IDENTICAL _return 26
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.

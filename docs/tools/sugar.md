@@ -24,13 +24,12 @@ This is universally used throughout.
 
 ## Usage Sugar References
 
-### `__execute` - IDENTICAL __execute 9
+### `__execute` - Run binary and output failed command upon error
 
-IDENTICAL __execute 9
 Run binary and output failed command upon error
 Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/identical/__execute.sh`
 
 #### Arguments
 
@@ -76,15 +75,15 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__catchEnvironment` - Run `command`, upon failure run `handler` with an environment error
+### `__catchEnvironment` - Run `command`, upon failure run `usage` with an environment error
 
-Run `command`, upon failure run `handler` with an environment error
+Run `command`, upon failure run `usage` with an environment error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
-- `handler` - Required. String. Failure command
+- `usage` - Required. String. Failure command
 - `command` - Required. Command to run.
 
 #### Exit codes
@@ -107,15 +106,15 @@ Run `handler` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__catchArgument` - Run `command`, upon failure run `handler` with an argument error
+### `__catchArgument` - Run `command`, upon failure run `usage` with an argument error
 
-Run `command`, upon failure run `handler` with an argument error
+Run `command`, upon failure run `usage` with an argument error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
-- `handler` - Required. String. Failure command
+- `usage` - Required. String. Failure command
 - `command` - Required. Command to run.
 
 #### Exit codes
@@ -123,11 +122,11 @@ Run `command`, upon failure run `handler` with an argument error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__throwEnvironment` - Run `handler` with an environment error
+### `__throwEnvironment` - Run `usage` with an environment error
 
-Run `handler` with an environment error
+Run `usage` with an environment error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -138,11 +137,11 @@ Run `handler` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__throwArgument` - Run `handler` with an argument error
+### `__throwArgument` - Run `usage` with an argument error
 
-Run `handler` with an argument error
+Run `usage` with an argument error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

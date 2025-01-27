@@ -258,20 +258,30 @@ Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
 Simple debugger to walk through a program
 
 
-Debugger accepts the following commands:
+Debugger accepts the following keystrokes:
 
-`\s` - Skip next bash command
-`\n` - Step over next command (default)
-`\c` - Step into next command
-`\i` - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
-`\h` - This help
-`\q` - Quit debugger (continue execution)
-`\w variable` - Evaluate this expression upon each debugger breakpoint
-`\u variable` - Unwatch a variable
+### Flow control
 
-Any other command entered in the debugger is evaluated immediately.
+- `.` or ` ` or Return - Repeat last flow command
 
-- Location: `bin/build/tools/debug.sh`
+- `j`         - Skip next command (jump over)
+- `s` or `n`  - Step to next command (step)
+- `i` or `d`  - Step into next command (follow)
+- `q`         - Quit debugger (and continue execution)
+- `!`         - Enter a command to execute
+
+### Watching
+
+- `w`         - Enter a watch expression
+- `u`         - Remove a watch expression
+
+### Utilities
+
+`k`         - Display call stack
+`*`         - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
+`h` or `?`  - This help
+
+- Location: `bin/build/tools/debugger.sh`
 
 #### Arguments
 
@@ -288,7 +298,7 @@ Any other command entered in the debugger is evaluated immediately.
 Disables the debugger immediately
 Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 
-- Location: `bin/build/tools/debug.sh`
+- Location: `bin/build/tools/debugger.sh`
 
 #### Arguments
 
@@ -302,9 +312,9 @@ Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 ### `bashDebuggerEnable` - Enables the debugger immediately
 
 Enables the debugger immediately
-Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively.
+Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 
-- Location: `bin/build/tools/debug.sh`
+- Location: `bin/build/tools/debugger.sh`
 
 #### Arguments
 

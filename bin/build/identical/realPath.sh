@@ -6,6 +6,7 @@
 #
 
 # IDENTICAL _realPath EOF
+
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath

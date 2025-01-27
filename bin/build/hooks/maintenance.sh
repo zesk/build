@@ -33,7 +33,7 @@ __hookMaintenanceSetValue() {
 # Environment: BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 #
 __hookMaintenance() {
-  local argument enable message variable messageVariable messageColor messageValue maintenanceValue
+  local enable message variable messageVariable messageColor messageValue maintenanceValue
   local usage
 
   usage="${FUNCNAME[0]#_}"
@@ -48,10 +48,17 @@ __hookMaintenance() {
   [ -n "$variable" ] || __throwEnvironment "$usage" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
   message=
   enable=false
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    case "$(lowercase "$argument")" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       on | 1 | true | enable)
         enable=true
         ;;
@@ -66,12 +73,14 @@ __hookMaintenance() {
         message="$1"
         ;;
       *)
-        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
-    shift
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  if test "$enable"; then
+  if "$enable"; then
     messageColor=success
     maintenanceValue=1
     messageValue=$(decorate code "[ ON ]")

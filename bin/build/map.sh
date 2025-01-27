@@ -16,7 +16,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 25
+# IDENTICAL _return 26
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
@@ -240,9 +241,8 @@ quoteSedReplacement() {
   printf -- "%s\n" "$value"
 }
 
-# IDENTICAL environmentVariables 11
+# IDENTICAL environmentVariables 10
 
-#
 # Output a list of environment variables and ignore function definitions
 #
 # both `set` and `env` output functions and this is an easy way to just output
@@ -276,7 +276,8 @@ usageDocumentSimple() {
 }
 
 
-# IDENTICAL bashFunctionComment 12
+# IDENTICAL bashFunctionComment 13
+
 # Extract a bash comment from a file
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.

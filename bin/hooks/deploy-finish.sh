@@ -10,7 +10,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL __source 19
+# IDENTICAL __source 20
+
 # Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
@@ -31,7 +32,8 @@ __source() {
   "${a[@]}" || return $?
 }
 
-# IDENTICAL __tools 8
+# IDENTICAL __tools 9
+
 # Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
@@ -41,7 +43,8 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL _return 25
+# IDENTICAL _return 26
+
 # Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.

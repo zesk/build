@@ -7,6 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # IDENTICAL __tools EOF
+
 # Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.

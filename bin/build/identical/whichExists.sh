@@ -6,6 +6,7 @@
 #
 
 # IDENTICAL whichExists EOF
+
 # Usage: {fn} binary ...
 # Argument: binary - Required. String. Binary to find in the system `PATH`.
 # Exit code: 0 - If all values are found

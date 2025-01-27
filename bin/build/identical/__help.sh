@@ -10,6 +10,7 @@
 # Does NOT require IDENTICAL __execute as `tools.sh` supplies that as well
 
 # IDENTICAL __help EOF
+
 # Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
 #

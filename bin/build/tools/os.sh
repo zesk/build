@@ -225,7 +225,8 @@ _pathCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL whichExists 11
+# IDENTICAL whichExists 12
+
 # Usage: {fn} binary ...
 # Argument: binary - Required. String. Binary to find in the system `PATH`.
 # Exit code: 0 - If all values are found

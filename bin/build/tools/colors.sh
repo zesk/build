@@ -336,7 +336,8 @@ clearLine() {
   fi
 }
 
-# IDENTICAL _clearLine 6
+# IDENTICAL _clearLine 7
+
 # Simple blank line generator for scripts
 # Requires: read stty printf seq sed
 _clearLine() {

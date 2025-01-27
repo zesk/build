@@ -13,10 +13,9 @@
 
 # IDENTICAL _type EOF
 
-#
+# Usage: {fn} argument ...
 # Test if an argument is a positive integer (non-zero)
 #
-# Usage: {fn} argument ...
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
 # Requires: __catchArgument isUnsignedInteger usageDocument

@@ -65,7 +65,7 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 ## Hook documentation
 
 {__hookApplicationEnvironment}
-{__hookApplicationChecksum}
+{__hookApplicationID}
 {__hookApplicationTag}
 {__hookMaintenance}
 

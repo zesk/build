@@ -539,9 +539,8 @@ _environmentFileApplicationVerify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL environmentVariables 11
+# IDENTICAL environmentVariables 10
 
-#
 # Output a list of environment variables and ignore function definitions
 #
 # both `set` and `env` output functions and this is an easy way to just output
