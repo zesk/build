@@ -72,6 +72,8 @@ _waitForDeath() {
       _environment "${FUNCNAME[0]} failed after $wait seconds" || return $?
     fi
   done
+  delta=$(($(date +%s) - start))
+  decorate notice "Process $1 terminated after $delta seconds."
 }
 export PHP_SERVER_PID
 export PHP_SERVER_ROOT
@@ -239,7 +241,6 @@ testDeployApplication() {
     assertExitCode 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
 
-  _deployShowFiles "$d" || :
   lastOne=
   firstArgs=(--first)
 
@@ -308,7 +309,7 @@ testDeployApplication() {
 
     assertEquals "$t" "$(_simplePHPRequest)" "PHP application new version $t" || return $?
     clearLine
-    _deployShowFiles "$d" || :
+    # _deployShowFiles "$d" || :
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     if [ -n "$lastOne" ]; then
       assertFileExists --line "$LINENO" "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
