@@ -6,7 +6,7 @@ Pipeline, build, and operations tools useful for any project.
 - Build, deployment and management tools for pipelines and production systems (system setup, services, cron, permissions separations)
 - Operating system differences supported automatically
 
-This code toolkit depends solely on `bash` and a few other binaries (`jq`, `curl`) and a conscientious decision has been made to not depend on any other language libraries, as of 2024 support for Bash 3 and 4 remains stable.
+This code toolkit depends solely on `bash` and a few other binaries (`jq`, `curl`) and a conscientious decision has been made to not depend on any other language libraries, as of 2025 support for Bash 3 and 4 remains stable.
 
 Depends on: 
 
