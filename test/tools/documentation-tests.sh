@@ -40,6 +40,13 @@ testDocumentation() {
   ) || _environment "subshell failed" || return $?
 }
 
+# Running testDocSections ...
+# /tmp/tmp.cyPkWgkK5a: line 2: fg: no job control
+# ✅ : assertFileContains Line 49: /tmp/tmp.nzr2txaaOC contains strings: ("No arguments" ) [5 seconds]
+# /tmp/tmp.wRninBVNxi: line 2: fg: no job control
+# ✅ : assertFileContains Line 52: /tmp/tmp.nzr2txaaOC contains strings: ("#### Arguments" "--help" ) [4 seconds]
+
+
 testDocSections() {
   local doc home
 

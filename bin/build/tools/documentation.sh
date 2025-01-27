@@ -655,7 +655,7 @@ bashFunctionComment() {
 #
 bashDocumentation_Extract() {
   local usage="_${FUNCNAME[0]}"
-  local maxLines=1000 definitionFile="$1" fn="$2" definitionFile
+  local definitionFile="$1" fn="$2" definitionFile
   local home tempDoc docMap base
 
   [ -f "$definitionFile" ] || __throwArgument "$usage" "$definitionFile is not a file" || return $?
@@ -676,9 +676,7 @@ bashDocumentation_Extract() {
   # Search for our function and then capture all of the lines BEFORE it
   # which have a `#` character and then stop capture at the next blank line
   #
-  grep -m 1 -B $maxLines "$fn() {" "$definitionFile" |
-    reverseFileLines | grep -B $maxLines -m 1 -E '^\s*$' |
-    reverseFileLines | grep -E '^#' | cut -c 3- >"$tempDoc"
+  __throwEnvironment "$usage" bashFunctionComment "$definitionFile" "$fn" >"$tempDoc" || return $?
 
   local desc=() lastName="" values=() foundNames=() lastName="" desc=() dumper line
   while IFS= read -r line; do
