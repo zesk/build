@@ -35,6 +35,14 @@ testAlpineContainer() {
     echo "${BASH_SOURCE[0]}:$LINENO"
     dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- || :
     echo "${BASH_SOURCE[0]}:$LINENO"
+    dockerImages --filter alpine:latest
+    echo "${BASH_SOURCE[0]}:$LINENO"
+    docker images --format json
+    echo "${BASH_SOURCE[0]}:$LINENO"
+    docker images --format json --filter "reference=alpine:latest"
+    echo "${BASH_SOURCE[0]}:$LINENO"
+    docker images --format json --filter "reference=alpine:latest" | jq -r '.Repository + ":" + .Tag'
+    echo "${BASH_SOURCE[0]}:$LINENO"
     assertExitCode --stderr-ok --line "$LINENO" 0 alpineContainer echo "FOO=\"foo\"" || return $?
     assertEquals --line "$LINENO" "$(alpineContainer echo "FOO=\"foo\"")" "FOO=\"foo\"" || return $?
   fi
