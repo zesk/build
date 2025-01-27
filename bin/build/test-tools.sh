@@ -79,6 +79,9 @@ testSuite() {
       -l | --show)
         showFlag=true
         ;;
+      --debugger)
+        bashDebuggerEnable
+        ;;
       --verbose)
         verboseMode=true
         ;;

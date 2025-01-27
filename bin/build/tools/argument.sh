@@ -65,6 +65,7 @@ _arguments() {
         fi
         ;;
       -)
+        shift
         break
         ;;
       *)

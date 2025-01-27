@@ -66,19 +66,19 @@ usageDocumentComplex() {
   fi
 
   local variablesFile
-  variablesFile=$(mktemp) || _environemnt "mktemp fail" || return $?
+  variablesFile=$(fileTemporaryName "$usage") || return $?
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
-    if ! rm -f "$variablesFile"; then
-      __throwEnvironment "$usage" "Unable to delete temporary file $variablesFile while extracting \"$functionName\" from \"$functionDefinitionFile\"" || return $?
-    fi
-    __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || return $?
+    dumpPipe "variablesFile" <"$variablesFile"
+    __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || _clean $? "$variablesFile" || return $?
   fi
   (
-    set -a
     local description="" argument=""
 
+    set -a
     # shellcheck source=/dev/null
     source "$variablesFile"
+    set +a
+
     [ "$exitCode" -eq 0 ] || exec 1>&2
     local bashDebug=false
     if isBashDebug; then
@@ -96,9 +96,7 @@ usageDocumentComplex() {
   return "$exitCode"
 }
 _usageDocumentComplex() {
-  bashRecursionDebug
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-  bashRecursionDebug --end
 }
 
 # IDENTICAL usageDocumentSimple 16
@@ -678,7 +676,7 @@ bashDocumentation_Extract() {
   # Search for our function and then capture all of the lines BEFORE it
   # which have a `#` character and then stop capture at the next blank line
   #
-  __throwEnvironment "$usage" bashFunctionComment "$definitionFile" "$fn" >"$tempDoc" || return $?
+  __catchEnvironment "$usage" bashFunctionComment "$definitionFile" "$fn" >"$tempDoc" || return $?
 
   local desc=() lastName="" values=() foundNames=() lastName="" desc=() dumper line
   while IFS= read -r line; do
