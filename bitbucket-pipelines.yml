@@ -9,7 +9,7 @@ pipelines:
   branches:
     docs:
       - step:
-          size: 2x
+          size: 4x
           deployment: documentation
           name: Build documentation
           services:
@@ -19,7 +19,7 @@ pipelines:
             - bin/documentation.sh --commit
     staging:
       - step:
-          size: 2x
+          size: 4x
           deployment: staging
           name: Build and Test
           services:
@@ -29,7 +29,7 @@ pipelines:
             - bin/test.sh
     main:
       - step:
-          size: 2x
+          size: 4x
           deployment: production
           name: Build, Test, and Deploy
           services:
@@ -42,7 +42,7 @@ pipelines:
             - bin/deploy.sh
     deploy:
       - step:
-          size: 2x
+          size: 4x
           deployment: deploy
           name: Just Deploy
           services:
@@ -52,7 +52,7 @@ pipelines:
             - bin/deploy.sh
     test:
       - step:
-          size: 2x
+          size: 4x
           deployment: test
           name: Just Test
           artifacts:
@@ -65,7 +65,7 @@ pipelines:
             - bin/test.sh "${aa[@]+"${aa[@]}"}"
     coverage:
       - step:
-          size: 2x
+          size: 4x
           deployment: coverage
           name: Coverage stats
           artifacts:
