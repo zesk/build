@@ -401,8 +401,6 @@ _gitFindHome() {
 gitCommit() {
   local usage="_${FUNCNAME[0]}"
 
-  bashDebuggerEnable
-
   local appendLast=false updateReleaseNotes=true comment="" home="" openLinks=""
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
