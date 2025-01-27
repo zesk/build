@@ -10,48 +10,46 @@
 
 # IDENTICAL _installRemotePackage EOF
 
-# Installs a remote package system in a local project directory if not installed. Also
-# will overwrite the installation binary with the latest version after installation.
+# Installs {name} in a local project directory if not installed. Also
+# will overwrite {source} with the latest version after installation.
 #
-# URL can be determined programmatically using `urlFunction`.
-# `versionFunction` can be used to avoid upgrades when versions have not changed.
-#
-# Calling signature for `version-function`:
-#
-#    versionFunction usageFunction applicationHome installPath
-#    usageFunction - Function. Required. Function to call when an error occurs.
-#    applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
-#    installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
-#
-# Calling signature for `url-function`:
-#
-#    urlFunction usageFunction
-#    usageFunction - Function. Required. Function to call when an error occurs.
-#
-# Calling signature for `check-function`:
-#
-#    checkFunction usageFunction installPath
-#
-# If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
-#
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing.
-# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
+# INTERNAL: URL can be determined programmatically using `urlFunction`.
+# INTERNAL: `versionFunction` can be used to avoid upgrades when versions have not changed.
+# INTERNAL:
+# INTERNAL: Calling signature for `version-function`:
+# INTERNAL:
+# INTERNAL:    versionFunction usageFunction applicationHome installPath
+# INTERNAL:    usageFunction - Function. Required. Function to call when an error occurs.
+# INTERNAL:    applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+# INTERNAL:    installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# INTERNAL:
+# INTERNAL: Calling signature for `url-function`:
+# INTERNAL:
+# INTERNAL:    urlFunction usageFunction
+# INTERNAL:    usageFunction - Function. Required. Function to call when an error occurs.
+# INTERNAL:
+# INTERNAL: Calling signature for `check-function`:
+# INTERNAL:
+# INTERNAL:    checkFunction usageFunction installPath
+# INTERNAL:
+# INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
+# INTERNAL:
+# Argument: --source source - Optional. String. Source to display for the binary name. INTERNAL.
+# Argument: --name name - Optional. String. Name to display for the remote package name. INTERNAL.
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing. INTERNAL.
+# Argument: --url url - Optional. URL. URL of a tar.gz file. Download source code from here.
 # Argument: --user headerText - Optional. String. Add `username:password` to remote request.
-# Argument: --header headerText - Optional. String. Add one or more fetchArguments to the remote request.
-# Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want.
-# Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download.
-# Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name.
-# Argument: --debug - Optional. Flag. Debugging is on.
+# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
+# Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
+# Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
+# Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
+# Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
+# Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use.
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
-# Requires: cp rm cat printf
-# Requires: realPath whichExists _return fileTemporaryName
-# Requires: __catchArgument __throwArgument
-# Requires: __catchEnvironment decorate
-# Requires: usageArgumentString
+# Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
 
@@ -62,6 +60,7 @@ _installRemotePackage() {
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
   local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" fetchArguments=()
+  local name="${FUNCNAME[1]}"
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -69,6 +68,19 @@ _installRemotePackage() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --source)
+        shift
+        source="$1"
+        ;;
+      --name)
+        shift
+        name="$1"
+        ;;
       --debug)
         __installRemotePackageDebug "$argument"
         ;;
@@ -196,12 +208,14 @@ _installRemotePackage() {
 
 # Error handler for _installRemotePackage
 # Usage: {fn} exitCode [ message ... ]
-# Requires: printf decorate
+# Requires: usageDocumentSimple
 __installRemotePackage() {
-  local exitCode="$1"
-  shift || :
-  printf "%s: %s -> %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate error "$*")" "$(decorate orange "$exitCode")" 1>&2
-  return "$exitCode"
+  local source content
+  source=$(basename "${BASH_SOURCE[0]}")
+  content="$(usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" | grep -v "INTERNAL")"
+  content="${content//\{name\}/$name}"
+  content="${content//\{source\}/$source}"
+  printf -- "%s\n" "$content"
 }
 
 # Debug is enabled, show why

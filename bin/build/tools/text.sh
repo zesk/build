@@ -1180,13 +1180,13 @@ listCleanDuplicates() {
   local IFS
   local item items removed=() separator="" showRemoved=false IFS
 
-  # IDENTICAL argument-case-header 5
+  # _IDENTICAL_ argument-case-header 5
   local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
     local argument argumentIndex=$((nArguments - $# + 1))
     argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
-      # IDENTICAL --help 4
+      # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
@@ -1206,7 +1206,7 @@ listCleanDuplicates() {
         fi
         ;;
     esac
-    # IDENTICAL argument-esac-shift 1
+    # _IDENTICAL_ argument-esac-shift 1
     shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
