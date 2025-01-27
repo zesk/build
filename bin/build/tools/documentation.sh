@@ -96,7 +96,9 @@ usageDocumentComplex() {
   return "$exitCode"
 }
 _usageDocumentComplex() {
+  bashRecursionDebug
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  bashRecursionDebug --end
 }
 
 # IDENTICAL usageDocumentSimple 16
