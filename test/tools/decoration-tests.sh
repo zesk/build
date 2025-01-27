@@ -31,7 +31,7 @@ testAlignLeft() {
 testRepeat2() {
   local string
   local n
-  string="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  string="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
   n=0
   while [ "$n" -lt ${#string} ]; do

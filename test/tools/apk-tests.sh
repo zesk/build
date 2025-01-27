@@ -27,6 +27,7 @@ testIsApkInstalled() {
 
 testAlpineContainer() {
   if whichExists docker; then
+    __echo alpineContainer echo "FOO=\"foo\"" # TODO - parse error: Invalid numeric literal at line 2, column 0 on BitBucket pipelines
     assertExitCode --line "$LINENO" 0 alpineContainer echo "FOO=\"foo\"" || return $?
     assertEquals --line "$LINENO" "$(alpineContainer echo "FOO=\"foo\"")" "FOO=\"foo\"" || return $?
   fi

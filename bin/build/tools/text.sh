@@ -1177,16 +1177,16 @@ _listAppend() {
 #
 listCleanDuplicates() {
   local usage="_${FUNCNAME[0]}"
+  local IFS
+  local item items removed=() separator="" showRemoved=false IFS
 
-  local item items removed=() separator="" removedFlag=false IFS
-
-  # _IDENTICAL_ argument-case-header 5
-  local __saved=("$@") __count=$#
+  # IDENTICAL argument-case-header 5
+  local saved=("$@") nArguments=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    local argument argumentIndex=$((nArguments - $# + 1))
+    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
+      # IDENTICAL --help 4
       --help)
         "$usage" 0
         return $?
@@ -1196,7 +1196,7 @@ listCleanDuplicates() {
         test=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
         ;;
       --removed)
-        removedFlag=true
+        showRemoved=true
         ;;
       *)
         if [ -z "$separator" ]; then
@@ -1206,15 +1206,16 @@ listCleanDuplicates() {
         fi
         ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    # IDENTICAL argument-esac-shift 1
+    shift || __failArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
   done
 
   newItems=()
   while [ $# -gt 0 ]; do
+    local tempPath
     IFS="$separator" read -r -a items < <(printf "%s\n" "$1")
     for item in "${items[@]}"; do
-      if [ -n "$test" ] && "$test" "$item" || ! tempPath=$(listAppend "$tempPath" "$separator" "$item"); then
+      if [ -z "$test" ] || ! "$test" "$item" || ! tempPath=$(listAppend "$tempPath" "$separator" "$item"); then
         removed+=("$item")
       else
         newItems+=("$item")
@@ -1223,7 +1224,7 @@ listCleanDuplicates() {
     shift
   done
   IFS="$separator"
-  if $removedFlag; then
+  if $showRemoved; then
     printf "%s\n" "${removed[*]}"
   else
     printf "%s\n" "${newItems[*]}"

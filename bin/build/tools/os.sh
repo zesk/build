@@ -201,8 +201,8 @@ _pathConfigure() {
 
 # Utility for pathCleanDuplicates to show bad directories
 _pathIsDirectory() {
-  [ -n "${1-}" ] || _environment "blank entry" || return $?
-  [ -d "${1-}" ] || _environment "$1 is not a directory" || return $?
+  [ -n "${1-}" ] || return 1
+  [ -d "${1-}" ] || return 1
 }
 
 #
