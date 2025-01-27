@@ -68,20 +68,7 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 - `1` - if environment is awry
 - `0` - Apt key is installed AOK
-### `aptKeyRemove` - Remove apt keys
 
-Remove apt keys
-
-- Location: `bin/build/tools/apt.sh`
-
-#### Arguments
-
-- `keyName` - Required. String. One or more key names to remove.
-
-#### Exit codes
-
-- `1` - if environment is awry
-- `0` - Apt key is installed AOK
 ### `aptKeyRingDirectory` - Get key ring directory path
 
 Get key ring directory path

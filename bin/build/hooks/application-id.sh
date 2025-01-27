@@ -9,6 +9,7 @@
 # shellcheck source=/dev/null
 set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
+
 # fn: {base}
 # Usage: {fn}
 #
@@ -19,7 +20,6 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #     git rev-parse --short HEAD
 #
 # Example:     885acc3
-#
 __hookApplicationChecksum() {
   local usage="_${FUNCNAME[0]}"
   local home argument
