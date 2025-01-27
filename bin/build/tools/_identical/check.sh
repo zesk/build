@@ -16,8 +16,10 @@
 # Argument: --exclude pattern - Optional. String. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 # Argument: --cd directory - Optional. Directory. Change to this directory before running. Defaults to current directory.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
+# Argument: --skip file - Optional. Directory. Ignore this file for repairs.
 # Argument: --ignore-singles - Optional. Flag. Skip the check to see if single entries exist.
 # Argument: --no-map - Optional. Flag. Do not map __BASE__, __FILE__, __DIR__ tokens.
+# Argument: --debug - Optional. Additional debugging information is output.
 # Argument: --help - Optional. Flag. This help.
 #
 # Exit Code: 2 - Argument error
@@ -315,7 +317,7 @@ identicalCheckShell() {
       --interactive)
         aa+=("$argument")
         ;;
-      --repair | --single | --exec | --prefix | --exclude | --extension)
+      --repair | --single | --exec | --prefix | --exclude | --extension | --skip)
         shift
         aa+=("$argument" "${1-}")
         ;;
