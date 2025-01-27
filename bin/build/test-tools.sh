@@ -45,7 +45,6 @@ testSuite() {
   local statsFile allTestStart testStart testPaths runner startString continueFile verboseMode=false load
   local listFlag=false runner=() testPaths=() messyOption="" checkTests=() continueFlag=false matchTests=() failExecutors=() doStats=true showFlag=false
 
-  startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
   load=$(decorate value "(Load $(loadAverage | head -n 1))")
   export BUILD_COLORS BUILD_COLORS_MODE BUILD_HOME FUNCNEST TERM BUILD_DEBUG
 
@@ -55,6 +54,7 @@ testSuite() {
   cleanExit=false
   FUNCNEST=200
 
+  startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
   allTestStart=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
@@ -258,6 +258,7 @@ testSuite() {
       if [ "$sectionName" != "$sectionNameHeading" ]; then
         clearLine
         __testHeading "$sectionName"
+        reportTiming "$allTestStart" "elapsed"
         sectionNameHeading="$sectionName"
       fi
       testStart=$(__environment date +%s) || return $?
