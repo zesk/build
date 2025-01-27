@@ -58,4 +58,12 @@
 
 ## `set` flags
 
+- TODO
+
+# Bash Problems
+
+- `${!variable}` and `${!variable[@]}` have different semantic meanings
+- No (easy) way to deference an array by another variable name
+- The lack of default (empty) arrays leads to errors when doing `"${__emptyArray[@]}"` with `set -u` (and leads to ugly code like `"${__emptyArray[@]+"${__emptyArray[@]}"}"`)
+
 [Source](https://github.com/zesk/build/docs/bash-cheatsheet.md)
