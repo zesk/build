@@ -193,9 +193,9 @@ _identicalCheckSinglesChecker() {
   done < <(find "$tempDirectory" -type f -name '*.match' || :)
 
   if [ "${#lonelySinglesReport[@]}" -gt 0 ]; then
-    statusMessage --last printf -- "%s:\n%s\n" "$(decorate warning "Single tokens")" "$(printf -- "%s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
+    statusMessage --last printf -- "%s:\n%s" "$(decorate warning "Single $(plural ${#lonelySinglesReport[@]} token tokens)")" "$(printf -- "- %s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
   elif [ "${#knownSinglesReport[@]}" -gt 0 ]; then
-    statusMessage --last printf -- "%s:\n%s\n" "$(decorate notice "Single tokens (known)")" "$(printf -- "%s\n" "${knownSinglesReport[@]}")"
+    statusMessage --last printf -- "%s:\n%s" "$(decorate notice "Single $(plural ${#knownSinglesReport[@]} token tokens) (known)")" "$(printf -- "- %s\n" "${knownSinglesReport[@]}")"
   fi
   if [ -n "$binary" ] && [ "${#lonelySinglesFiles[@]}" -gt 0 ]; then
     "$binary" "${lonelySinglesFiles[@]}"

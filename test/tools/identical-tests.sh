@@ -108,8 +108,8 @@ testIdenticalChecks() {
   assertExitCode --line "$LINENO" --stderr-match 'invalid count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
 
   clearLine && decorate info "single instance failure"
-  assertExitCode --line "$LINENO" --stderr-match 'Single instance of token found:' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
-  assertExitCode --line "$LINENO" --stderr-match 'Single instance of token found:' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
+  assertExitCode --line "$LINENO" --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
 
   clearLine && decorate info "$(pwd) passing 3 files"
   assertExitCode --line "$LINENO" --dump 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?

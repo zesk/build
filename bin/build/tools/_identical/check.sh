@@ -147,7 +147,7 @@ identicalCheck() {
   for variable in tempDirectory resultsFile rootDir failureCode searchFileList mapFile; do
     __catchEnvironment "$usage" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
   done
-  # Here largely so $mapFile is used
+  # Line exists here largely so $mapFile is "used"
   __catchEnvironment "$usage" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || _clean $? "${clean[@]}" || return $?
 
   # Write array values to state
@@ -161,10 +161,7 @@ identicalCheck() {
     local __line=1
     while read -r searchFile; do
       [ -f "$searchFile" ] || __throwEnvironment "$usage" "Invalid searchFileList $searchFileList line $__line: $(decorate value "$searchFile")"
-      #      local realFile color="green"
       realFile=$(__catchEnvironment "$usage" realPath "$searchFile") || _clean $? "${clean[@]}" || return $?
-      #      [ "$realFile" = "$searchFile" ] || color="bold-orange"
-      #      statusMessage --last decorate info "$__line: searchFile: $(decorate code "$searchFile") -> $(decorate "$color" "$realFile")"
       if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$realFile" "${skipFiles[@]}"; then
         statusMessage decorate notice "Skipping $(decorate file "$realFile")" || _clean $? "${clean[@]}" || return $?
         continue

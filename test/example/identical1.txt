@@ -1,7 +1,7 @@
 # aIDENTICAL test0 4
 1: This is a comment. I love comments. This overlaps the next section and fails.
 2:
-3: # aIDENTICAL test1 2
+# aIDENTICAL test1 2
 4: This is a comment. I love comments.
 SAFE TO BE DIFFERENTish
 
