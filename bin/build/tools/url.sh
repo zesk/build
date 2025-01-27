@@ -105,7 +105,7 @@ urlParse() {
         printf -- "\n"
         : "$path" # usage warning
         # Exit code 1 if failed
-        [ -z "$error" ]
+        [ -z "$error" ] || return 1
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -519,8 +519,8 @@ __fetch() {
           shift
           break
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
