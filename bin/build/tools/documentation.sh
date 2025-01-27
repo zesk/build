@@ -96,7 +96,7 @@ usageDocumentComplex() {
   return "$exitCode"
 }
 _usageDocumentComplex() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL usageDocumentSimple 16
