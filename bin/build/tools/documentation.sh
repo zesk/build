@@ -754,8 +754,8 @@ bashDocumentation_Extract() {
   printf "# DocMap: %s\n" "$docMap"
 }
 _bashDocumentation_Extract() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # _IDENTICAL_ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
