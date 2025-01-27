@@ -118,7 +118,7 @@ ___deprecatedCleanup() {
 
 # list of ignore flags for `find`
 __deprecatedIgnore() {
-  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -path '*/tools/deprecated.sh' "!" -name 'deprecated.md' ! -name 'unused.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
+  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" -name 'deprecated.md' ! -name 'unused.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
 }
 
 # Find files which match a token
