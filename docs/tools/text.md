@@ -917,7 +917,7 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 #### See Also
 
-{SEE:cannon.sh}
+- [Source {fn}]({sourceLink})
 ### `joinArguments` - Output arguments joined by a character
 
 Output arguments joined by a character

@@ -162,16 +162,16 @@ _bashDebugTrap() {
 
   _bashDebugWatch
   printf -- "%s %s\n" "$(decorate green ">")" "$(decorate code "$BASH_COMMAND")"
-  local __error="" __return=0
+  local __error="" __exitCode=0
   while read -n 1 -s -r -p "${__error}bashDebug $(decorate code "[$__BUILD_BASH_DEBUG_LAST]")> " __command; do
     local __aa=("$__command")
-    __return=0
+    __exitCode=0
     case "$__command" in
       "." | " " | "" | $'\r')
         __command="${__BUILD_BASH_DEBUG_LAST:0:1}"
         if [ -z "$__command" ]; then
           __error="$(decorate error "No last command")"
-          __return=1
+          __exitCode=1
           __aa=()
         else
           # Repeat last command
@@ -181,12 +181,12 @@ _bashDebugTrap() {
         ;;
     esac
     statusMessage printf -- "Execute: $(decorate code "$__command")"
-    [ "${#__aa[@]}" -eq 0 ] || __bashDebugExecuteCommand "${__aa[@]}" || __return=$?
-    case $__return in
+    [ "${#__aa[@]}" -eq 0 ] || __bashDebugExecuteCommand "${__aa[@]}" || __exitCode=$?
+    case $__exitCode in
       0)
         # Continue code execution
         __error=""
-        __return=0
+        __exitCode=0
         break
         ;;
       1)
@@ -195,7 +195,7 @@ _bashDebugTrap() {
       2)
         # Skip next command
         __error=""
-        __return=1
+        __exitCode=1
         break
         ;;
       3)
@@ -216,7 +216,7 @@ _bashDebugTrap() {
   # Restore Application FDs
   exec 0<&30 1>&31 2>&32
 
-  return $__return
+  return $__exitCode
 }
 
 __bashDebugExecuteCommand() {

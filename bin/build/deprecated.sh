@@ -40,7 +40,7 @@ __deprecatedCleanup() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __failArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -82,11 +82,11 @@ __deprecatedCleanup() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __failArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __failArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   start=$(__environment beginTiming) || return $?
@@ -118,7 +118,7 @@ ___deprecatedCleanup() {
 
 # list of ignore flags for `find`
 __deprecatedIgnore() {
-  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" -name 'deprecated.md' ! -name 'unused.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
+  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -path '*/tools/deprecated.sh' "!" -name 'deprecated.md' ! -name 'unused.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
 }
 
 # Find files which match a token
@@ -186,7 +186,7 @@ __deprecatedTokensByVersion() {
   # v0.7.10
   deprecatedToken+=('bin/build/pipeline')
   # v0.7.0
-  deprecatedTokens+=(dockerPHPExtensions usageWrapper usageWhich "[^_]usageEnvironment")
+  deprecatedTokens+=(dockerPHPExtensions usageWrapper usageRequireBinary usage "[^_]usageEnvironment")
   __deprecatedTokens "${deprecatedToken[@]}"
 }
 
@@ -233,7 +233,7 @@ __misspellingCannon() {
   local start exitCode=0
   start=$(__environment beginTiming) || return $?
   # START OF MISSPELLING CANNON
-  __deprecatedCannon 'decoreate' 'decorate' || exitCode=$?
+  __deprecatedCannon 'decorate' 'decorate' || exitCode=$?
   # END OF MISSPELLING CANNON
   statusMessage --last reportTiming "$start" "Misspelling cannon took"
   return "$exitCode"

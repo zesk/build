@@ -182,7 +182,7 @@ If any dependencies are not met, exit status of 1 and a list of unmet dependenci
 
 Adds a trap to capture the debugging stack on interrupt
 Use this in a bash script which runs forever or runs in an infinite loop to
-determine where the problem or loop exist
+determine where the problem or loop exists.
 
 - Location: `bin/build/tools/debug.sh`
 
@@ -200,15 +200,17 @@ If any text passed contains a token which can be mapped, succeed.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `bashRecursionDebug` - undocumented
+### `bashRecursionDebug` - Place this in code where you suspect an infinite loop
 
-No documentation for `bashRecursionDebug`.
+Place this in code where you suspect an infinite loop occurs
+It will fail upon a second call; to reset call with `--end`
+When called twice, fails on the second invocation and dumps a call stack to stderr.
 
 - Location: `bin/build/tools/debug.sh`
 
 #### Arguments
 
-- No arguments.
+- `--end` - Flag. Optional. Stop testing for recursion.
 
 #### Exit codes
 
@@ -216,11 +218,14 @@ No documentation for `bashRecursionDebug`.
 - `1` - Environment error
 - `2` - Argument error
 
+#### Environment
+
+__BUILD_RECURSION
+
 ## Simple comment extraction
 
-### `bashFunctionComment` - IDENTICAL bashFunctionComment 12
+### `bashFunctionComment` - Extract a bash comment from a file
 
-IDENTICAL bashFunctionComment 12
 Extract a bash comment from a file
 
 - Location: `bin/build/identical/bashFunctionComment.sh`
