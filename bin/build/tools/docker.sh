@@ -256,8 +256,8 @@ _dockerEnvFromBashEnv() {
 dockerLocalContainer() {
   local usage="_${FUNCNAME[0]}"
   local platform imageName imageApplicationPath
-  local envFile envPair envFiles extraArgs
-  local tempEnvs tempEnv exitCode
+  local envFile envPair
+  local tempEnv
   local failedWhy localPath=""
 
   export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
@@ -268,13 +268,13 @@ dockerLocalContainer() {
   imageApplicationPath=${BUILD_DOCKER_PATH}
   imageName=${BUILD_DOCKER_IMAGE}
 
-  exitCode=0
-  envFiles=()
-  extraArgs=()
-  tempEnvs=()
+  local exitCode=0 ee=() extraArgs=() tempEnvs=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -300,7 +300,7 @@ dockerLocalContainer() {
         if [ "${envPair#*=}" = "$envPair" ]; then
           decorate warning "$argument does not look like a variable: $(decorate error "$envPair")" 1>&2
         fi
-        envFiles+=("$argument" "$envPair")
+        ee+=("$argument" "$envPair")
         ;;
       --env-file)
         shift
@@ -308,11 +308,11 @@ dockerLocalContainer() {
         tempEnv=$(fileTemporaryName "$usage") || return $?
         __catchArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
         tempEnvs+=("$tempEnv")
-        envFiles+=("$argument" "$tempEnv")
+        ee+=("$argument" "$tempEnv")
         ;;
       --platform)
-        shift || __throwArgument "$usage" "missing $(decorate label "$argument") argument" || return $?
-        platform="$1"
+        shift
+        platform=$(usageArgumentString "$usage" "$argument" "$1") || return $?
         ;;
       *)
         extraArgs+=("$1")
@@ -342,7 +342,7 @@ dockerLocalContainer() {
   if [ -z "$(dockerImages --filter "$imageName")" ]; then
     __catchEnvironment "$usage" muzzle docker pull "$imageName" || return $?
   fi
-  __catchEnvironment "$usage" docker run "${envFiles[@]+"${envFiles[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __catchEnvironment "$usage" docker run "${ee[@]+"${ee[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }
