@@ -70,7 +70,7 @@ _iTerm2Badge() {
 iTerm2Init() {
   local usage="_${FUNCNAME[0]}"
   local source
-  ! isiTerm2 && return 0
+  isiTerm2 || return 0
   __environment buildEnvironmentLoad TERM || return $?
   # iTerm2 customizations
   set +ue
