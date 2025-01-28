@@ -168,7 +168,7 @@ _commentArgumentSpecification() {
   [ -f "$functionDefinitionFile" ] || __throwArgument "$usage" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || __throwArgument "$usage" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(newestFile "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
-    __catchEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile"
+    __catchEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile" || return $?
     for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       __catchEnvironment "$usage" printf "" >"$file" || return $?
     done
@@ -241,7 +241,7 @@ _commentArgumentSpecificationParseLine() {
   shift 2
 
   argumentName=
-  savedLine="$(_command "$@")"
+  savedLine="$(decorate each code "$@")"
   while [ "$#" -gt 0 ]; do
     argument="$1"
     case "$argument" in
@@ -410,8 +410,8 @@ ___commentArgumentName() {
 _commentArgumentTypeFromSpec() {
   local usage="$1" specification="$2" argumentType argumentRepeat="${4-}"
 
-  argumentType=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentType undefined)
-  [ -n "$argumentRepeat" ] || argumentRepeat=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentRepeat false)
+  argumentType=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentType undefined) || return $?
+  [ -n "$argumentRepeat" ] || argumentRepeat=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentRepeat false) || return $?
   __catchEnvironment "$usage" printf "%s%s%s" "$3" "$argumentType" "$(_choose "$argumentRepeat" '*' '')" || return $?
 }
 
@@ -448,9 +448,7 @@ _commentArgumentType() {
     argumentRepeat="$(environmentValueRead "$argumentSpec" argumentRepeat false)"
     isBoolean "$argumentRepeat" || __throwEnvironment "$usage" "$argumentSpec non-boolean argumentRepeat" || return $?
     if $argumentRepeat; then
-      {
-        __catchEnvironment "$usage" environmentValueWrite argumentRepeatName "$argumentNamed"
-      } >>"$stateFile" || return $?
+      __catchEnvironment "$usage" environmentValueWrite argumentRepeatName "$argumentNamed" >>"$stateFile" || return $?
     fi
   fi
   _commentArgumentTypeFromSpec "$usage" "$argumentSpec" "!" "$argumentRepeat" || return $?
@@ -470,7 +468,7 @@ _commentArgumentsRemainder() {
   shift && shift && shift
   __commentArgumentSpecificationMagic "$usage" "$specification" || return $?
   while read -d '' -r name; do
-    value="$(__catchEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")"
+    value="$(__catchEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")" || return $?
     if [ -z "$value" ]; then
       __throwArgument "$usage" "$name is required" || return $?
     fi
@@ -479,7 +477,7 @@ _commentArgumentsRemainder() {
     if [ -f "$specification/remainder" ]; then
       __catchEnvironment "$usage" environmentValueWrite _remainder "$@" >>"$stateFile" || return $?
     else
-      __throwArgument "$usage" "Unknown arguments $#: $(_command "$@")" || return $?
+      __throwArgument "$usage" "Unknown arguments $#: $(decorate each code "$@")" || return $?
     fi
   fi
   printf "%s\n" "$stateFile" "$@"

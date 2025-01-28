@@ -86,11 +86,12 @@ __apkUninstall() {
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 __apkUpgrade() {
   local usage="_${FUNCNAME[0]}"
-  local quietLog upgradeLog result
+  local quietLog upgradeLog result clean=()
 
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   upgradeLog=$(__catchEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
-  __catchEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog"
+  clean+=("$quietLog" "$upgradeLog")
+  __catchEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog" || _undo $? dumpPipe "apk upgrade failed" <"$quietLog" || _clean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
       __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?

@@ -7,6 +7,7 @@
 # Install a simple profile
 # Some containers do not have bash installed by default
 # Usage: {fn} installationCommand ... -- runCommand ...
+# Requires: sh printf dirname chmod exec bash
 __needBash() {
   export LC_TERMINAL
   export TERM

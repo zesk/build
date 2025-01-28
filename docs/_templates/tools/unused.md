@@ -7,3 +7,4 @@ Hides these from [New and uncategorized functions](./todo.md)
 {runHook}
 {consoleNameValue}
 {mapEnvironment2}
+{bashLintFilesInteractive}

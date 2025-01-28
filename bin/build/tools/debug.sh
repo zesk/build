@@ -262,7 +262,7 @@ _debuggingStack() {
 plumber() {
   local usage="_${FUNCNAME[0]}"
 
-  local __before __after __changed __ignore __pattern __command
+  local __before __after __changed __ignore __pattern __cmd
   local __result=0
   local __ignore=(OLDPWD _ resultCode LINENO PWD BASH_COMMAND BASH_ARGC BASH_ARGV BUILD_DEBUG)
 
@@ -302,14 +302,14 @@ plumber() {
     declare -p >"$__after"
     __pattern="$(quoteGrepPattern "^($(joinArguments '|' "${__ignore[@]}"))=")"
     __changed="$(diff "$__before" "$__after" | grep -e '^declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern")" || :
-    __command="$(decorate each code "$@")"
+    __cmd="$(decorate each code "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
-      decorate warning "$__command set $(decorate value "COLUMNS, LINES")" 1>&2
+      decorate warning "$__cmd set $(decorate value "COLUMNS, LINES")" 1>&2
       unset COLUMNS LINES
       __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $__changed" || return $?
     fi
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$__changed" | dumpPipe "$(decorate bold-orange "found leak"): $__command" 1>&2
+      printf "%s\n" "$__changed" | dumpPipe "$(decorate bold-orange "found leak"): $__cmd" 1>&2
       __result=$(_code leak)
     fi
   else
@@ -338,7 +338,7 @@ housekeeper() {
   local usage="_${FUNCNAME[0]}"
 
   local watchPaths path
-  local __before __after __changed __ignore __pattern __command
+  local __before __after __changed __ignore __pattern __cmd
   local __result=0
   local __ignore=()
 
@@ -395,9 +395,9 @@ housekeeper() {
     else
       __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' || :)"
     fi
-    __command=$(decorate code "$(_command "$@")")
+    __cmd=$(decorate each code "$@")
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$__changed" | dumpPipe "$__command modified files" 1>&2
+      printf "%s\n" "$__changed" | dumpPipe "$__cmd modified files" 1>&2
       __result=$(_code leak)
     fi
   else

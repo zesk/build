@@ -60,8 +60,8 @@ __toolsMain() {
     # Only require when running as a shell command
     set -eou pipefail
     # Run remaining command line arguments
-    BUILD_HOME="$BUILD_HOME" "$@"
+    BUILD_HOME="$BUILD_HOME" "$@" || return $?
   fi
 }
 
-__toolsMain "$@"
+__toolsMain "$@" || exit $?

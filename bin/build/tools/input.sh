@@ -24,7 +24,7 @@ inputConfigurationAdd() {
     grep -v "$pattern" >"$target.new" <"$target"
     __catchEnvironment "$usage" mv -f "$target.new" "$target" || _clean $? "$target.new" || return $?
   fi
-  __catchEnvironment "$usage" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target"
+  __catchEnvironment "$usage" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target" || return $?
 }
 _inputConfigurationAdd() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

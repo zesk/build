@@ -218,9 +218,9 @@ _bashSanitizeCheckCopyright() {
   if fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- - >"$matches"; then
     set +v
     while IFS=":" read -r file pattern; do
-      error="$(decorate error "No pattern found")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
+      error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
-    __throwEnvironment "$usage" found debugging || _clean $? "$matches" || return $?
+    __throwEnvironment "$usage" used debugging || _clean $? "$matches" || return $?
   fi
   set +v
 }
@@ -238,14 +238,14 @@ _bashSanitizeCheckDebugging() {
   if fileMatches 'set ["]\?-x' -- "${debugPatterns[@]+${debugPatterns[@]}}" -- - >"$matches"; then
     dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
     while IFS=":" read -r file line remain; do
-      file="$(decorate code "$file")" error="$(decorate error "debugging found")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain}"
+      file="$(decorate code "$file")" error="$(decorate error "debugging used")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain}"
     done <"$matches"
-    __throwEnvironment "$usage" found debugging || return $?
+    __throwEnvironment "$usage" used debugging || return $?
   fi
 }
 
 # Usage: {fn} [ directory ... ]
-# Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files found.
+# Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files used.
 # Security: Loads bash files
 # Load a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
@@ -287,22 +287,230 @@ _bashSourcePath() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Usage: {fn} functionName file1 ...
+bashFunctionDefined() {
+  local usage="_${FUNCNAME[0]}"
+
+  local files=() function=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$function" ]; then
+          function="$(usageArgumentString "$usage" "functionName" "${1-}")" || return $?
+        else
+          files+=("$(usageArgumentFile "$usage" "file" "${1-}")") || return $?
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+  done
+  [ -n "$function" ] || __throwArgument "$usage" "functionName is required" || retrun $?
+  [ ${#files[@]} -gt 0 ] || __throwArgument "$usage" "Requires at least one file" || retrun $?
+
+  grep -q -e "^$(quoteGrepPattern "$function")() {" "${files[@]}"
+}
+_bashFunctionDefined() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Usage: {fn} script
-# Checks a bash script to ensure all dependencies are met, outputs a list of unmet dependencies
+# Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
 # Scans a bash script for lines which look like:
 #
 # Depends: token1 token2
 #
-# Each dependency token is:
+# Each requirement token is:
 #
 # - a bash function which MUST be defined
 # - a shell script (executable) which must be present
 #
-# If all dependencies are met, exit status of 0.
-# If any dependencies are not met, exit status of 1 and a list of unmet dependencies are listed
+# If all requirements are met, exit status of 0.
+# If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
 #
-# Argument: --require - Flag. Optional. Requires at least one or more dependencies to be listed and met to pass
-bashCheckDepends() {
+# Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
+bashCheckRequires() {
+  local usage="_${FUNCNAME[0]}"
+
+  local requireFlag=false reportFlag=false unusedFlag=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --report)
+        reportFlag=true
+        ;;
+      --unused)
+        unusedFlag=true
+        ;;
+      --require)
+        requireFlag=true
+        ;;
+      *)
+        files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+  done
+
+  ! $requireFlag || [ "${#files[@]}" -gt 0 ] || __throwArgument "$usage" "No files supplied but at least one is required" || return $?
+
+  local requirements
+
+  requirements=$(fileTemporaryName "$usage")
+  __catchEnvironment "$usage" bashGetRequires >"$requirements" || _clean $? "$requirements" || return $?
+
+  local requirement binaries=() total=0 defined=() missing=() required=()
+  while read -r requirement; do
+    total=$((total + 1))
+    if ! bashFunctionDefined "$requirement" "${files[@]}"; then
+      if whichExists "$requirement" || [ "$(type -t "$requirement")" = "builtin" ]; then
+        binaries+=("$requirement")
+      else
+        missing+=("$requirement")
+      fi
+    else
+      defined+=("$requirement")
+    fi
+    required+=("$requirement")
+  done <"$requirements"
+  __catchEnvironment "$usage" rm -rf "$requirements" || return $?
+
+  local external=() used=() tempUnused=() unused=() handlers=()
+  if "$unusedFlag"; then
+    while read -r functionName; do
+      if inArray "$functionName" "${defined[@]}"; then
+        external+=("$functionName")
+      else
+        if bashShowUsage --check "$functionName" "${files[@]}"; then
+          used+=("$functionName")
+          defined+=("$functionName")
+        else
+          tempUnused+=("$functionName")
+        fi
+      fi
+    done < <(bashListFunctions "${files[@]}")
+
+    for functionName in "${tempUnused[@]+"${tempUnused[@]}"}"; do
+      local handlerFor
+      handlerFor="${functionName#_}"
+      if [ "$handlerFor" != "$functionName" ]; then
+        if inArray "$handlerFor" "${defined[@]+"${defined[@]}"}"; then
+          handlers+=("$functionName")
+          continue
+        fi
+      fi
+      unused+=("$functionName")
+    done
+  fi
+
+  ! $requireFlag || [ "$total" -gt 0 ] || __throwEnvironment "$usage" "No requirements used"
+
+  if $reportFlag; then
+    __bashCheckReport "Functions" green "${defined[@]+"${defined[@]}"}"
+    __bashCheckReport "Binaries" magenta "${binaries[@]+"${binaries[@]}"}"
+    __bashCheckReport "Missing" orange "${missing[@]+"${missing[@]}"}"
+    if $unusedFlag; then
+      __bashCheckReport "Used" green "${used[@]+"${used[@]}"}"
+      __bashCheckReport "Handlers" subtle "${handlers[@]+"${handlers[@]}"}"
+      __bashCheckReport "External" blue "${external[@]+"${external[@]}"}"
+      __bashCheckReport "Unused" yellow "${unused[@]+"${unused[@]}"}"
+    fi
+  fi
+  if [ ${#missing[@]} -gt 0 ]; then
+    __throwEnvironment "$usage" "Not defined: $(decorate each code "${missing[@]}")" || return $?
+  fi
+  if [ ${#unused[@]} -gt 0 ]; then
+    __throwEnvironment "$usage" "Unused: $(decorate each code "${unused[@]}")" || return $?
+  fi
+}
+_bashCheckRequires() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+__bashCheckReport() {
+  local label="$1" color="$2" && shift 2
+  [ $# -eq 0 ] || printf "%s [%s]\n%s\n" "$(decorate "$color" "$label"):" "$(decorate value "$#")" "$(printf -- "- %s\n" "$@")"
+  [ $# -ne 0 ] || printf "%s [%s]\n" "$(decorate "$color" "$label"):" "$(decorate red "NONE")"
+}
+
+# Pipe to strip comments from a bash file
+bashStripComments() {
+  sed '/^\s*#/d'
+}
+
+# Show function usage in files
+# Argument: functionName - String. Required. Function which should be called somewhere within a file.
+# Argument: file - File. Required. File to search for function usage.
+# Exit code: 0 - Function is used within the file
+# Exit code: 1 - Function is *not* used within the file
+# This check is simplistic and does not verify actual coverage or code paths.
+# Requires: __throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep
+bashShowUsage() {
+  local usage="_${FUNCNAME[0]}"
+
+  local functionName="" files=() checkFlags=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --check)
+        checkFlags=(-q)
+        ;;
+      *)
+        if [ -z "$functionName" ]; then
+          functionName=$(usageArgumentString "$usage" "functionName" "$1") || return $?
+        else
+          files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+  done
+
+  local quoted
+  quoted=$(quoteGrepPattern "$functionName")
+  cat "${files[@]}" | bashStripComments | grep -v "^${quoted}()" | grep "${checkFlags[@]+"${checkFlags[@]}"}" -e "\b${quoted}\b"
+}
+_bashShowUsage() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} script ...
+# Argument: script - File. Required. Bash script to fetch requires tokens from.
+# Gets a list of the `Requires:` comments in a bash file
+# Returns a unique list of tokens
+bashGetRequires() {
   local usage="_${FUNCNAME[0]}"
 
   local requireFlag=false
@@ -318,9 +526,6 @@ bashCheckDepends() {
         "$usage" 0
         return $?
         ;;
-      --require)
-        requireFlag=true
-        ;;
       *)
         files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
         ;;
@@ -331,15 +536,84 @@ bashCheckDepends() {
 
   ! $requireFlag || [ "${#files[@]}" -gt 0 ] || __throwArgument "$usage" "No files supplied but at least one is required" || return $?
 
-  local file
+  local requirements
 
-  # dependencies=$(fileTemporaryName "$usage")
   while read -r matchLine; do
-    echo "$matchLine"
-    #| tee "$dependencies"
-  done < <(grep -e '[:space:]*#[:space:]*Depends:[:space:]*' "${files[@]}" | trimSpace)
+    local tokens
+    matchLine="${matchLine#*Requires:}"
+    matchLine=${matchLine# }
+    read -r -a tokens <<<"$matchLine"
+    printf "%s\n" "${tokens[@]}"
+  done < <(grep -e '[[:space:]]*#[[:space:]]*Requires:[[:space:]]*' "${files[@]}" | trimSpace) | sort -u
 }
-_bashCheckDepends() {
+_bashGetRequires() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# List functions in a given shell file
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: file - File. Optional. File(s) to list bash functions defined within.
+# Requires: __bashListFunctions __throwArgument decorate usageArgumentFile
+bashListFunctions() {
+  local usage="_${FUNCNAME[0]}"
+
+  # stdin
+  [ $# -gt 0 ] || __bashListFunctions
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        local file
+        file=$(usageArgumentFile "$usage" "file" "$1") || return $?
+        __bashListFunctions <"$file"
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+  done
+}
+_bashListFunctions() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Actually lists bash functions in a file
+# Requires: grep read printf sort
+__bashListFunctions() {
+  local functionLine
+  grep -e "^[A-Za-z_]*[A-Za-z0-9_]*() {$" | while read -r functionLine; do
+    functionLine="${functionLine%() {}"
+    printf "%s\n" "$functionLine"
+  done | sort -u
+}
+
+# IDENTICAL bashFunctionComment 18
+
+# Extract a bash comment from a file
+# Argument: source - File. Required. File where the function is defined.
+# Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
+# Requires: grep cut reverseFileLines __help
+# Requires: usageDocument
+bashFunctionComment() {
+  local source="${1-}" functionName="${2-}"
+  local maxLines=1000
+  __help "_${FUNCNAME[0]}" "$@" || return 0
+  grep -m 1 -B $maxLines "$functionName() {" "$source" | grep -v -e '( IDENTICAL | _IDENTICAL_ |DOC TEMPLATE:|Internal:)' |
+    reverseFileLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
+    reverseFileLines | grep -E '^#' | cut -c 3-
+}
+_bashFunctionComment() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

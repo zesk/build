@@ -427,7 +427,7 @@ Reverses a pipe's input lines to output using an awk trick.
 
 Not recommended on big files.
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/reverseFileLines.sh`
 
 #### Arguments
 

@@ -25,25 +25,33 @@
 # But maintains file` descriptors for `logFile`.
 #
 rotateLog() {
-  local argument logFile count index dryRun
   local this="${FUNCNAME[0]}"
   local usage="_$this"
 
-  logFile=
-  count=
-  dryRun=
+  local logFile="" count="" dryRun=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    case "$1" in
-      --dry-run) dryRun=1 ;;
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --dry-run)
+        dryRun=true
+        ;;
       *)
         if [ -z "$logFile" ]; then
           logFile="$argument"
         elif [ -z "$count" ]; then
           count="$argument"
         else
-          __throwArgument "$usage" "$this: Unknown argument $(decorate value "$argument")"
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
@@ -55,10 +63,10 @@ rotateLog() {
   isInteger "$count" || __throwArgument "$usage" "$this count $(decorate value "$count") must be a positive integer" || return $?
   [ "$count" -gt 0 ] || __throwArgument "$usage" "$this count $(decorate value "$count") must be a positive integer greater than zero" || return $?
 
-  index="$count"
+  local index="$count"
   if [ "$count" -gt 1 ]; then
     if [ -f "$logFile.$count" ]; then
-      if test "$dryRun"; then
+      if "$dryRun"; then
         printf "%s \"%s\"\n" rm "$(escapeDoubleQuotes "$logFile.$count")"
       else
         rm "$logFile.$count" || __throwEnvironment "$usage" "$this Can not remove $logFile.$count" || return $?
@@ -69,7 +77,7 @@ rotateLog() {
   index=$((index - 1))
   while [ "$index" -ge 1 ]; do
     if [ -f "$logFile.$index" ]; then
-      if test "$dryRun"; then
+      if "$dryRun"; then
         printf "%s \"%s\" \"%s\"\n" mv "$(escapeDoubleQuotes "$logFile.$index")" "$(escapeDoubleQuotes "$logFile.$((index + 1))")"
       else
         mv "$logFile.$index" "$logFile.$((index + 1))" || __throwEnvironment "$usage" "$this Failed to mv $logFile.$index -> $logFile.$((index + 1))" || return $?
@@ -79,7 +87,7 @@ rotateLog() {
   done
 
   index=1
-  if test "$dryRun"; then
+  if "$dryRun"; then
     printf "%s \"%s\" \"%s\"\n" cp "$(escapeDoubleQuotes "$logFile")" "$(escapeDoubleQuotes "$logFile.$index")"
     printf "printf \"\">\"%s\"\n" "$(escapeDoubleQuotes "$logFile")"
   else

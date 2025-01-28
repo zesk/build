@@ -51,7 +51,7 @@ terraformInstall() {
   __help "$usage" "$@" || return 0
   ! whichExists "$binary" || return 0
   if aptIsInstalled; then
-    __catchEnvironment "$usage" packageInstall gnupg software-properties-common curl figlet
+    __catchEnvironment "$usage" packageInstall gnupg software-properties-common curl figlet || return $?
     __catchEnvironment "$usage" aptKeyAddHashicorp || return $?
   fi
   __catchEnvironment "$usage" packageInstall "$binary" "$@" || return $?

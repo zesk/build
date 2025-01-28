@@ -173,7 +173,7 @@ documentationIndex_Generate() {
     return $?
   fi
   if [ -z "$cacheDirectory" ]; then
-    __throwArgument "$usage" "cacheDirectory required"
+    __throwArgument "$usage" "cacheDirectory required" || return $?
     return $?
   fi
   if ! start=$(beginTiming); then
@@ -351,8 +351,7 @@ documentationIndex_FunctionIterator() {
         if [ -z "$cacheDirectory" ]; then
           cacheDirectory="$1"
           if [ ! -d "$cacheDirectory" ]; then
-            __throwArgument "$usage" "cacheDirectory must be a directory"
-            return $?
+            __throwArgument "$usage" "cacheDirectory must be a directory" || return $?
           fi
           if ! functionIndexPath="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
             __throwArgument "$usage" "Unable to generate index at path $(decorate file "$cacheDirectory")" || return $?
@@ -366,7 +365,6 @@ documentationIndex_FunctionIterator() {
   done
   if [ -z "$cacheDirectory" ]; then
     __throwArgument "$usage" "cacheDirectory required" || return $?
-    return $?
   fi
   local functionName settingsFile
   find "$functionIndexPath/index" -type f -print | sort | while read -r functionName; do

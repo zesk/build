@@ -92,14 +92,15 @@ _parseBoolean() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# _IDENTICAL_ _text 18
+
 # Summary: Quote grep -e patterns for shell use
 #
 # Usage: {fn} text
 # Argument: text - Text to quote
 # Output: string quoted and appropriate to insert in a grep search or replacement phrase
 # Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
-#
+# Requires: printf sed
 quoteGrepPattern() {
   value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//[/\\[}"
@@ -1181,10 +1182,10 @@ listCleanDuplicates() {
   local item items removed=() separator="" showRemoved=false IFS
 
   # _IDENTICAL_ argument-case-header 5
-  local saved=("$@") nArguments=$#
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument argumentIndex=$((nArguments - $# + 1))
-    argument="$(usageArgumentString "$usage" "argument #$argumentIndex (Arguments: $(_command "${usage#_}" "${saved[@]}"))" "$1")" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -1207,7 +1208,7 @@ listCleanDuplicates() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing argument #$argumentIndex: $argument (Arguments: $(_command "${usage#_}" "${saved[@]}"))" || return $?
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   newItems=()

@@ -46,7 +46,133 @@ Has security implications. Use with caution and ensure your directory is protect
 
 #### Arguments
 
-- `directory ...` - Required. Directory. Directory to `source` all `.sh` files found.
+- `directory ...` - Required. Directory. Directory to `source` all `.sh` files used.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Code analysis
+
+### `bashFunctionDefined` - undocumented
+
+No documentation for `bashFunctionDefined`.
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `bashGetRequires` - Returns a unique list of tokens
+
+Returns a unique list of tokens
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- `script` - File. Required. Bash script to fetch requires tokens from.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `bashCheckRequires` - Checks a bash script to ensure all requirements are met,
+
+Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
+Scans a bash script for lines which look like:
+
+
+Each requirement token is:
+
+- a bash function which MUST be defined
+- a shell script (executable) which must be present
+
+If all requirements are met, exit status of 0.
+If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- `--require` - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Depends
+
+    token1 token2
+    
+### `bashStripComments` - Pipe to strip comments from a bash file
+
+Pipe to strip comments from a bash file
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `bashShowUsage` - Show function usage in files
+
+Show function usage in files
+This check is simplistic and does not verify actual coverage or code paths.
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- `functionName` - String. Required. Function which should be called somewhere within a file.
+- `file` - File. Required. File to search for function usage.
+
+#### Exit codes
+
+- `0` - Function is used within the file
+- `1` - Function is *not* used within the file
+### `bashListFunctions` - List functions in a given shell file
+
+List functions in a given shell file
+
+- Location: `bin/build/tools/bash.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `file` - File. Optional. File(s) to list bash functions defined within.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `bashFunctionComment` - Extract a bash comment from a file
+
+Extract a bash comment from a file
+
+- Location: `bin/build/identical/bashFunctionComment.sh`
+
+#### Arguments
+
+- `source` - File. Required. File where the function is defined.
+- `functionName` - String. Required. The name of the bash function to extract the documentation for.
 
 #### Exit codes
 
@@ -145,37 +271,6 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
 
-### `bashCheckDepends` - Checks a bash script to ensure all dependencies are met,
-
-Checks a bash script to ensure all dependencies are met, outputs a list of unmet dependencies
-Scans a bash script for lines which look like:
-
-
-Each dependency token is:
-
-- a bash function which MUST be defined
-- a shell script (executable) which must be present
-
-If all dependencies are met, exit status of 0.
-If any dependencies are not met, exit status of 1 and a list of unmet dependencies are listed
-
-- Location: `bin/build/tools/bash.sh`
-
-#### Arguments
-
-- `--require` - Flag. Optional. Requires at least one or more dependencies to be listed and met to pass
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Depends
-
-    token1 token2
-    
-
 ## Debug
 
 ### `bashDebugInterruptFile` - Adds a trap to capture the debugging stack on interrupt
@@ -221,47 +316,3 @@ When called twice, fails on the second invocation and dumps a call stack to stde
 #### Environment
 
 __BUILD_RECURSION
-
-## Simple comment extraction
-
-### `bashFunctionComment` - Extract a bash comment from a file
-
-Extract a bash comment from a file
-
-- Location: `bin/build/identical/bashFunctionComment.sh`
-
-#### Arguments
-
-- `source` - File. Required. File where the function is defined.
-- `functionName` - String. Required. The name of the bash function to extract the documentation for.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-## Deprecated
-
-### `bashLintFilesInteractive` - Run checks interactively until errors are all fixed.
-
-Run checks interactively until errors are all fixed.
-
-- Location: `bin/build/tools/test.sh`
-
-#### Usage
-
-    [ fileToCheck ... ]
-    
-
-#### Arguments
-
-- `--exec binary` - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
-- `--delay delaySeconds` - Optional. Integer. Delay in seconds between checks in interactive mode.
-- `fileToCheck ...` - Optional. File. Shell file to validate.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error

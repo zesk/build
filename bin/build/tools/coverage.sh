@@ -199,7 +199,7 @@ __bashCoverageReportProcessStats() {
     targetFile="$reportBase/$file.html"
     requireFileDirectory "$targetFile" || return $?
     [ -f "$targetFile" ] || __catchEnvironment "$usage" touch "$targetFile" || return $?
-    __catchEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all"
+    __catchEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all" || return $?
     index=$((index + 1))
     statusMessage decorate info "Line $index/$totalLines ..."
   done
@@ -233,7 +233,7 @@ __bashCoverageReportConvertFiles() {
   local fileTemplateVariables=(content file_classes total name coverage coveredLines notCoveredLines coverableLines notCoverableLines)
   local pageTemplateVariables=(title content head foot body_classes relativeTop)
 
-  home=$(__catchEnvironment "$usage" buildHome)
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   coveredTemplate=$(__bashCoverageReportTemplate "covered.html") || return $?
   notCoveredTemplate=$(__bashCoverageReportTemplate "not-covered.html") || return $?
   pageTemplate=$(__bashCoverageReportTemplate "page.html") || return $?

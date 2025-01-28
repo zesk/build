@@ -361,7 +361,7 @@ wrapLines() {
     strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
-      __throwArgument "$usage" "$width is too small to support prefix and suffix characters (${#strippedText})"
+      __throwArgument "$usage" "$width is too small to support prefix and suffix characters (${#strippedText})" || return $?
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing

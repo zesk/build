@@ -350,7 +350,8 @@ interactiveManager() {
   done
   if $didClear; then
     clear
-    _list "$(decorate success "All files now pass:")" "${files[@]}"
+    decorate success "All files now pass:"
+    printf -- "- %s\n" "${files[@]}"
   fi
 }
 _interactiveManager() {
@@ -652,7 +653,7 @@ interactiveBashSource() {
             approved=true
           fi
         else
-          __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")"
+          __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")" || return $?
         fi
         if $verboseFlag; then
           if $approved; then

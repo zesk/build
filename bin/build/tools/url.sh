@@ -428,7 +428,7 @@ __urlOpenInnerLoop() {
   fi
 }
 
-# IDENTICAL urlFetch 126
+# IDENTICAL urlFetch 127
 
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -442,8 +442,8 @@ __urlOpenInnerLoop() {
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Required. FileDirectory. Target file.
 # Requires: _return whichExists printf decorate
-# Requires: usageArgumentExecutable usageArgumentString
-# Requires: __throwArgument __catchArgument _command
+# Requires: usageArgumentString
+# Requires: __throwArgument __catchArgument
 # Requires: __throwEnvironment __catchEnvironment
 urlFetch() {
   local usage="_${FUNCNAME[0]}"
@@ -483,7 +483,8 @@ urlFetch() {
         ;;
       --binary)
         shift
-        binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+        binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
         ;;
       --argument-format)
         format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
@@ -559,13 +560,13 @@ _urlFetch() {
 __urlOpen() {
   local usage="${FUNCNAME[0]#_}" binary
 
-  binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_URL_BINARY)
+  binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_URL_BINARY) || return $?
   if [ -z "$binary" ]; then
     while IFS='' read -d$'\n' -r binary; do
       if whichExists "$binary"; then
         break
       fi
-    done < <(__catchEnvironment "$usage" __urlBinary)
+    done < <(__catchEnvironment "$usage" __urlBinary) || return $?
     if [ -z "$binary" ]; then
       printf "%s %s\n" "OPEN: " "$(consoleLink "$url")"
       return 0

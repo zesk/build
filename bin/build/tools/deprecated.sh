@@ -40,23 +40,23 @@ runHookOptional() {
 # Deprecated: 2025-01-25
 __failArgument() {
   _deprecated "${FUNCNAME[0]}"
-  __throwArgument "$@"
+  __throwArgument "$@" || return $?
 }
 
 # Deprecated: 2025-01-25
 __failEnvironment() {
   _deprecated "${FUNCNAME[0]}"
-  __throwEnvironment "$@"
+  __throwEnvironment "$@" || return $?
 }
 
 # Deprecated: 2025-01-25
 __usageEnvironment() {
   _deprecated "${FUNCNAME[0]}"
-  __catchEnvironment "$@"
+  __catchEnvironment "$@" || return $?
 }
 
 # Deprecated: 2025-01-25
 __usageArgument() {
   _deprecated "${FUNCNAME[0]}"
-  __catchArgument "$@"
+  __catchArgument "$@" || return $?
 }

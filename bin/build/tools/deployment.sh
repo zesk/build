@@ -303,7 +303,7 @@ deployRemoteFinish() {
   fi
 
   if $revertFlag && $cleanupFlag; then
-    __throwArgument "$usage" "--cleanup and --revert are mutually exclusive"
+    __throwArgument "$usage" "--cleanup and --revert are mutually exclusive" || return $?
   fi
 
   start=$(beginTiming)
@@ -806,7 +806,7 @@ __deploySSHOptions() {
 # Usage: {fn} applicationPath remotePath buildTarget [ userHost ... ]
 # Create base directories and upload package
 __deployUploadPackage() {
-  local start makeDirectory userHost
+  local start userHost
   local applicationPath=$1 remotePath=$2 buildTarget=$3
 
   shift 3 || :
@@ -816,13 +816,18 @@ __deployUploadPackage() {
   for userHost in "$@"; do
     start=$(beginTiming) || :
     printf "%s: %s\n" "$(decorate green "$userHost")" "$(decorate info "Setting up")"
-    __catchEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(for makeDirectory in "$applicationPath" "$remotePath"; do
-      printf -- 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$makeDirectory" "$makeDirectory" "$makeDirectory"
-    done) || return $?
+    __catchEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(__deployCreateDirectoryCommands "$applicationPath" "$remotePath") || return $?
     printf "%s: %s %s\n" "$(decorate green "$userHost")" "$(decorate info "Uploading to")" "$(decorate red "$remotePath/$buildTarget")"
     if ! printf -- '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
       __throwEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
     fi
     reportTiming "$start" "Deployment setup completed on $(decorate green "$userHost") in " || :
+  done
+}
+
+__deployCreateDirectoryCommands() {
+  while [ $# -gt 0 ]; do
+    printf -- 'if [ ! -d "%s" ]; then mkdir -p "%s" && echo "Created %s"; fi\n' "$1" "$1" "$1"
+    shift
   done
 }

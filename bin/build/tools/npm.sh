@@ -53,13 +53,19 @@ npmInstall() {
   fi
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
+  local clean=() quietLog
+
   version="${1-${BUILD_NPM_VERSION:-latest}}"
-  quietLog=$(buildQuietLog "$usage") || __throwEnvironment "buildQuietLog $usage"
-  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1
+
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  clean+=("$quietLog")
+  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || _clean $? "${clean[@]}" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1 || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _npmInstall() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

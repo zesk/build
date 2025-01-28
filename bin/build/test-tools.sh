@@ -60,7 +60,7 @@ testSuite() {
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
   __catchEnvironment "$usage" printf -- "%s started on %s %s\n" "$(decorate bold-magenta "${usage#_}")" "$startString" "$load" | tee "$quietLog" || return $?
   start=$(__catchEnvironment "$usage" beginTiming) || return $?
-  BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode)
+  BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode) || return $?
   BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
   BUILD_DEBUG="${BUILD_DEBUG#,}"
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOME BUILD_COLORS || return $?
@@ -276,7 +276,7 @@ testSuite() {
       printf "%s\n" "PASSED" >"$continueFile"
     fi
   else
-    __throwEnvironment "$usage" "No tests match: $(decorate value "${matchTests[*]}")"
+    __throwEnvironment "$usage" "No tests match: $(decorate value "${matchTests[*]}")" || return $?
   fi
   [ -z "$statsFile" ] || __testStats "$statsFile"
   reportTiming "$allTestStart" "Completed in"

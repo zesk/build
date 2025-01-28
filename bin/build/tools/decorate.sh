@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL decorate 168
+# IDENTICAL decorate 169
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -77,6 +77,7 @@ decorations() {
 _decorations() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || decorations --help
 }
 
 # Singular decoration function
@@ -86,14 +87,14 @@ _decorations() {
 # stdout: Decorated text
 # Requires: isFunction _argument awk __catchEnvironment usageDocument
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}"
+  local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   shift || __catchArgument "$usage" "Requires at least one argument" || return $?
-  local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
     extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
     # When this next line calls `__catchArgument` it results in an infinite loop
-    isFunction "$extend" || _argument "Unknown decoration name: $what ($extend)" || return $?
+    # shellcheck disable=SC2119
+    isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
     __catchEnvironment "$usage" "$extend" "$@" || return $?
     return $?
   fi

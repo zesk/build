@@ -43,13 +43,18 @@ Run-related:
 
 # Sugar Functions References
 
-## Sugar utilties
+## Sugar utilities
 
-{_integer} {isBoolean}
+{isBoolean}
 
 {_code}
 
 {_choose}
+
+## Cleanup
+
+{_clean}
+{_undo}
 
 ## Fail with an error code
 
@@ -58,7 +63,3 @@ Run-related:
 ## Run-related
 
 {__execute} {__echo} {__environment} {__argument}
-
-## Decorations
-
-{_list} {_format} {_command}

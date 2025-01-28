@@ -292,7 +292,7 @@ usageArgumentInteger() {
   args=("$@")
   args[3]="${4-}"
   [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "Need 4 arguments" || return $?
-  __catchArgumentHelper integer "${args[@]}" isInteger
+  __catchArgumentHelper integer "${args[@]}" isInteger || return $?
 }
 
 # Validates a value is an unsigned integer
@@ -308,10 +308,10 @@ usageArgumentUnsignedInteger() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger
+  __catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger || return $?
 }
 
 # Validates a value is an unsigned integer and greater than zero (NOT zero)
@@ -327,7 +327,7 @@ usageArgumentPositiveInteger() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   __catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
@@ -347,10 +347,10 @@ usageArgumentFile() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "file" "${args[@]}" test -f
+  __catchArgumentHelper "file" "${args[@]}" test -f || return $?
 }
 
 # Validates a value is not blank and exists in the file system
@@ -367,10 +367,10 @@ usageArgumentExists() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "file or directory" "${args[@]}" test -e
+  __catchArgumentHelper "file or directory" "${args[@]}" test -e || return $?
 }
 
 # Validates a value is not blank and is a link
@@ -387,10 +387,10 @@ usageArgumentLink() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "link" "${args[@]}" test -L
+  __catchArgumentHelper "link" "${args[@]}" test -L || return $?
 }
 
 # Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
@@ -406,7 +406,7 @@ usageArgumentDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
@@ -447,10 +447,10 @@ usageArgumentFileDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments"
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "file" "${args[@]}" fileDirectoryExists
+  __catchArgumentHelper "file" "${args[@]}" fileDirectoryExists || return $?
 }
 
 # Validates a value is not blank and is an environment file which is loaded immediately.

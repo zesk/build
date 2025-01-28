@@ -96,7 +96,7 @@ Document a function and generate a function template (markdown)
 
 - `file` - Required. File in which the function is defined
 - `function` - Required. The function name which is defined in `file`
-- `template` - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
+- `template` - Required. A markdown template to use to map values.
 
 #### Exit codes
 

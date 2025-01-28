@@ -41,8 +41,10 @@ urlMatchesLocalFileSize() {
   done
 
   localSize=$(__catchEnvironment "$usage" fileSize "$file") || return $?
+  remoteSize=$(__catchEnvironment "$usage" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
-  remoteSize=$(__catchEnvironment "$usage" urlContentLength "$url")
+  isPositiveInteger "$remoteSize" || __failEnvironment "$usage" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
+
   [ "$localSize" -eq "$remoteSize" ]
 }
 _urlMatchesLocalFileSize() {
@@ -186,7 +188,7 @@ websiteScrape() {
   aa+=(-r --level=5 -t 10 --random-wait --force-directories --html-extension)
   aa+=(--no-parent --convert-links --backup-converted --page-requisites)
   pid=$(
-    __catchEnvironment "$usage" wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
+    wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!
   ) || _clean $? "$logFile" || return $?
   statusMessage decorate success "Launched scraping process $(decorate code "$pid") ($progressFile)"

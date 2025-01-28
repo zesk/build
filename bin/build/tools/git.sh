@@ -126,7 +126,7 @@ gitTagAgain() {
 gitVersionList() {
   local usage="_${FUNCNAME[0]}"
   [ -d "./.git" ] || __throwEnvironment "$usage" "No .git directory at $(pwd), stopping" || return $?
-  __catchEnvironment "$usage" git tag | grep -e '^v[0-9.]*$' | versionSort "$@"
+  __catchEnvironment "$usage" git tag | grep -e '^v[0-9.]*$' | versionSort "$@" || return $?
 }
 _gitVersionList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -476,7 +476,7 @@ __gitCommitReleaseNotesUpdate() {
   local usage="_gitCommit"
   local comment="$1" notes="$2" pattern displayNotes
 
-  home=$(__catchEnvironment "$usage" buildHome)
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   displayNotes="${notes#"$home"/}"
   pattern="$(quoteGrepPattern "$comment")"
   __catchEnvironment "$usage" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate value "$displayNotes") $(decorate decoration)")" "$(decorate reset)" || return $?
@@ -761,12 +761,12 @@ gitInstallHook() {
           done
           if [ -f "${fromTo[1]}" ]; then
             if diff -q "${fromTo[@]}" >/dev/null; then
-              ! $verbose || consoleNameValue 5 "No changes:" "$(_list "" "${relFromTo[@]}")" || :
+              ! $verbose || decorate pair 15 "No changes:" "${relFromTo[@]}"
               return 0
             fi
-            ! $verbose || consoleNameValue 5 "Changed:" "$(_list "" "${relFromTo[@]}")" || :
+            ! $verbose || decorate pair 15 "Changed:" "${relFromTo[@]}"
           else
-            ! $verbose || consoleNameValue 5 "Installing" "${relFromTo[1]}" || :
+            ! $verbose || decorate pair 15 "Installing" "${relFromTo[1]}"
           fi
           statusMessage --last printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
           __catchEnvironment "$usage" cp -f "${fromTo[@]}" || return $?
@@ -777,7 +777,7 @@ gitInstallHook() {
         fi
         ;;
     esac
-    shift || :
+    shift
   done
 }
 _gitInstallHook() {

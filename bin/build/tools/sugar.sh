@@ -61,7 +61,7 @@ ___catchCode() {
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __catchEnvironment() {
-  __catchCode 1 "$@"
+  __catchCode 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
@@ -69,7 +69,7 @@ __catchEnvironment() {
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 __catchArgument() {
-  __catchCode 2 "$@"
+  __catchCode 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
@@ -90,6 +90,7 @@ __throwArgument() {
 
 # Run `handler` with an environment error
 # Usage: {fn} handler quietLog message ...
+# Requires: isFunction _argument buildFailed debuggingStack __throwEnvironment
 __catchEnvironmentQuiet() {
   local handler="${1-}" quietLog="${2-}"
   isFunction "$handler" || _argument "${FUNCNAME[0]} \"$handler\" is not handler function $(debuggingStack)" || return $?
@@ -100,11 +101,24 @@ __catchEnvironmentQuiet() {
 # Usage: {fn} command ...
 # Argument: function - Required. String. Function which is deprecated.
 # Example:     {fn} "${FUNCNAME[0]}"
+# Requires: printf date
 _deprecated() {
   export BUILD_HOME
   printf "DEPRECATED: %s\n" "$@" 1>&2
   [ ! -d "$BUILD_HOME" ] || printf -- "$(date "+%F %T"),%s\n" "$@" >>"${BUILD_HOME}/.deprecated"
 }
+
+# Usage: {fn} command ...
+# Suppress stdout without piping. Handy when you just want a behavior not the output. e.g. `muzzle pushd`
+# Argument: command - Required. Callable. Thing to muzzle.
+# Argument: ... - Optional. Arguments. Additional arguments.
+# Example:     {fn} pushd
+# Example:     __catchEnvironment "$handler" phpBuild || _undo $? {fn} popd || return $?
+muzzle() {
+  "$@" >/dev/null
+}
+
+# IDENTICAL _undo 38
 
 # Run a function and preserve exit code
 # Returns `exitCode`
@@ -118,6 +132,8 @@ _deprecated() {
 # Example: undo+=(-- deleteLargeResource "$thing")
 # Example: thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
 # Example: undo+=(-- deleteMassiveResource "$thing")
+# Requires: isPositiveInteger __catchArgument decorate __execute
+# Requires: usageDocument
 _undo() {
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
@@ -129,7 +145,7 @@ _undo() {
         args=()
         ;;
       *)
-        isCallable "${1-}" || __catchArgument "$__usage" "Not callable $(decorate value "$1") (#$__count: $(decorate each code "${__saved[@]}"))" || return "$exitCode"
+
         args+=("$1")
         ;;
     esac
@@ -140,14 +156,4 @@ _undo() {
 __undo() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Usage: {fn} command ...
-# Suppress stdout without piping. Handy when you just want a behavior not the output. e.g. `muzzle pushd`
-# Argument: command - Required. Callable. Thing to muzzle.
-# Argument: ... - Optional. Arguments. Additional arguments.
-# Example:     {fn} pushd
-# Example:     __catchEnvironment "$handler" phpBuild || _undo $? {fn} popd || return $?
-muzzle() {
-  "$@" >/dev/null
 }

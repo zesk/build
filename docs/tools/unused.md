@@ -99,3 +99,25 @@ right-aligned to the `characterWidth` given and colored using `decorate label`; 
 #### Environment
 
 Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+### `bashLintFilesInteractive` - Run checks interactively until errors are all fixed.
+
+Run checks interactively until errors are all fixed.
+
+- Location: `bin/build/tools/test.sh`
+
+#### Usage
+
+    [ fileToCheck ... ]
+    
+
+#### Arguments
+
+- `--exec binary` - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
+- `--delay delaySeconds` - Optional. Integer. Delay in seconds between checks in interactive mode.
+- `fileToCheck ...` - Optional. File. Shell file to validate.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

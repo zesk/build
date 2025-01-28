@@ -114,7 +114,7 @@ nodePackageManager() {
 
   manager=$(__catchEnvironment "$usage" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
   [ -n "$manager" ] || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is blank" || return $?
-  nodePackageManagerValid "$manager" || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(_list nodePackageManagerValid)" || return $?
+  nodePackageManagerValid "$manager" || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(nodePackageManagerValid)" || return $?
 
   if [ $# -eq 0 ]; then
     printf "%s\n" "$manager"
@@ -161,7 +161,7 @@ nodePackageManager() {
     local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
     isFunction "$managerArgumentFormatter" || __throwEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
     IFS=$'\n' read -r -d "" -a arguments < <("$managerArgumentFormatter" "$usage" "$action" "${flags[@]+"${flags[@]}"}") || :
-    ! $debugFlag || _command "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || :
+    ! $debugFlag || decorate each code "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || :
     __catchEnvironment "$usage" "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || return $?
   fi
 }

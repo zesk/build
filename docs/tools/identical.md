@@ -58,8 +58,10 @@ This is best used as a pre-commit check, for example. Wink!
 - `--exclude pattern` - Optional. String. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 - `--cd directory` - Optional. Directory. Change to this directory before running. Defaults to current directory.
 - `--repair directory` - Optional. Directory. Any files in onr or more directories can be used to repair other files.
+- `--skip file` - Optional. Directory. Ignore this file for repairs.
 - `--ignore-singles` - Optional. Flag. Skip the check to see if single entries exist.
 - `--no-map` - Optional. Flag. Do not map __BASE__, __FILE__, __DIR__ tokens.
+- `--debug` - Optional. Additional debugging information is output.
 - `--help` - Optional. Flag. This help.
 
 #### Exit codes

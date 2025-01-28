@@ -56,24 +56,21 @@ awsInstall() {
       ;;
   esac
   {
-    local buildDir quietLog clean
-    clean=()
-    {
-      buildDir="$(__catchEnvironment "$usage" buildCacheDirectory awsCache.$$)" &&
-        quietLog="$(__catchEnvironment "$usage" buildQuietLog awsInstall)" &&
-        buildDir=$(__catchEnvironment "$usage" requireDirectory "$buildDir")
-    } || return $?
-    clean+=("$buildDir" "$quietLog")
-    {
-      local zipFile=awscliv2.zip
-      local version
-      __catchEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" &&
-        __catchEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" &&
-        __catchEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" &&
-        version="$(__catchEnvironment "$usage" aws --version)" &&
-        printf "%s %s\n" "$version" "$(__catchEnvironment "$usage" reportTiming "$start" OK)"
-    }
-    _clean $? "${clean[@]}" || return $?
+    local buildDir quietLog clean=()
+    buildDir="$(__catchEnvironment "$usage" buildCacheDirectory awsCache.$$)" || return $?
+    clean+=("$buildDir")
+    quietLog="$(__catchEnvironment "$usage" buildQuietLog awsInstall)" || _clean $? "${clean[@]}" || return $?
+    clean+=("$quietLog")
+    buildDir=$(__catchEnvironment "$usage" requireDirectory "$buildDir") || _clean $? "${clean[@]}" || return $?
+    clean+=("$buildDir")
+
+    local zipFile=awscliv2.zip version
+    __catchEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" || _clean $? "${clean[@]}" || return $?
+    version="$(__catchEnvironment "$usage" aws --version)" || _clean $? "${clean[@]}" || return $?
+    printf "%s %s\n" "$version" "$(__catchEnvironment "$usage" reportTiming "$start" OK)" || return $?
+    __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   }
 }
 _awsInstall() {

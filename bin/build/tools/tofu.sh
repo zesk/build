@@ -62,7 +62,7 @@ tofuInstall() {
 
   __help "$usage" "$@" || return 0
   ! whichExists "$binary" || return 0
-  __catchEnvironment "$usage" packageInstall apt-transport-https ca-certificates curl gnupg
+  __catchEnvironment "$usage" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
   __catchEnvironment "$usage" aptKeyAddOpenTofu || return $?
   __catchEnvironment "$usage" packageInstall "$binary" "$@" || return $?
   whichExists "$binary" || __throwEnvironment "$usage" "No $binary binary found - installation failed" || return $?

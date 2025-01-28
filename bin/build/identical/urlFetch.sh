@@ -33,8 +33,8 @@
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Required. FileDirectory. Target file.
 # Requires: _return whichExists printf decorate
-# Requires: usageArgumentExecutable usageArgumentString
-# Requires: __throwArgument __catchArgument _command
+# Requires: usageArgumentString
+# Requires: __throwArgument __catchArgument
 # Requires: __throwEnvironment __catchEnvironment
 urlFetch() {
   local usage="_${FUNCNAME[0]}"
@@ -74,7 +74,8 @@ urlFetch() {
         ;;
       --binary)
         shift
-        binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+        binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
         ;;
       --argument-format)
         format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?

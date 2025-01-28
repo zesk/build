@@ -96,6 +96,7 @@ usageDocumentComplex() {
   return "$exitCode"
 }
 _usageDocumentComplex() {
+  # _IDENTICAL_ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -141,7 +142,9 @@ usageDocumentSimple() {
 # Exit Code: 0 - If success
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
-#
+# Requires: __catchEnvironment beginTiming __throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
+# Requires: basename decorate statusMessage fileTemporaryName rm grep cut source listTokens _clean
+# Requires: mapEnvironment shaPipe printf
 documentationTemplateCompile() {
   local usage="_${FUNCNAME[0]}"
 
@@ -212,15 +215,21 @@ documentationTemplateCompile() {
   base="${base%%.md}"
   statusMessage decorate info "Generating $(decorate code "$base") $(decorate info "...")"
 
-  documentTokensFile=$(mktemp)
-  mappedDocumentTemplate=$(mktemp)
+  local clean=()
+  documentTokensFile=$(fileTemporaryName "$usage") || return $?
+  clean+=("$documentTokensFile")
+
+  mappedDocumentTemplate=$(fileTemporaryName "$usage") || _clean $? "${clean[@]}" return $?
+
+  clean+=("$mappedDocumentTemplate")
+
   if ! envChecksum=$(
     set -a
     [ ! -f "$targetFile" ] || title="$(grep -E '^# ' -m 1 <"$targetFile" | cut -c 3-)"
     title="${title:-notitle}"
     for envFile in "${envFiles[@]+${envFiles[@]}}"; do
       # shellcheck source=/dev/null
-      . "$envFile"
+      source "$envFile"
     done
     mapEnvironment <"$documentTemplate" >"$mappedDocumentTemplate"
     if [ ${#envFiles[@]} -gt 0 ]; then
@@ -229,23 +238,23 @@ documentationTemplateCompile() {
       printf %s 'no-environment'
     fi
   ); then
-    __throwEnvironment "$usage" "listTokens failed" || return $?
+    __throwEnvironment "$usage" "listTokens failed" || _clean $? "${clean[@]}" return $?
   fi
   if ! listTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
-    __throwEnvironment "$usage" "listTokens failed" || return $?
+    __throwEnvironment "$usage" "listTokens failed" || _clean $? "${clean[@]}" return $?
   fi
   #
   # Look at source file for each function
   #
   if ! envChecksumCache=$(requireDirectory "$cacheDirectory/envChecksum"); then
-    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
+    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || _clean $? "${clean[@]}" || return $?
   fi
   envChecksumCache="$envChecksumCache/$envChecksum"
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
   if ! compiledTemplateCache=$(requireDirectory "$cacheDirectory/compiledTemplateCache"); then
-    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || return $?
+    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || _clean $? "${clean[@]}" || return $?
   fi
   # Environment change will affect this template
   # Function template change will affect this template
@@ -254,7 +263,7 @@ documentationTemplateCompile() {
   if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
     if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
       printf "%s (mapped) -> %s %s" "$(decorate warning "$documentTemplate")" "$(decorate success "$targetFile")" "$(decorate error "(no tokens found)")"
-      cp "$mappedDocumentTemplate" "$targetFile"
+      __catchEnvironment "$usage" cp "$mappedDocumentTemplate" "$targetFile" || _clean $? "${clean[@]}" || return $?
     fi
   else
     checkFiles=()
@@ -272,14 +281,14 @@ documentationTemplateCompile() {
       while read -r tokenName; do
         compiledFunctionTarget="$compiledTemplateCache/$tokenName"
         if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
-          __catchEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || return $?
+          __catchEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
           continue
         fi
         if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && isNewestFile "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
           statusMessage decorate info "Skip $tokenName and use cache"
         else
-          __catchEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || return $?
-          __catchEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || return $?
+          __catchEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
+          __catchEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
         fi
         environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
       done <"$documentTokensFile"
@@ -291,14 +300,13 @@ documentationTemplateCompile() {
         #shellcheck source=/dev/null
         source "$compiledFunctionEnv" || __throwEnvironment "$usage" "source $compiledFunctionEnv compiled for $targetFile" || return $?
         mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
-      ) || __throwEnvironment "$usage" "mapEnvironment $tokenName" || return $?
+      ) || __throwEnvironment "$usage" "mapEnvironment $tokenName" || _clean $? "${clean[@]}" || return $?
       __catchEnvironment "$usage" cp "$compiledFunctionEnv" "$envChecksumCache" || return $?
     else
       message="Cached"
     fi
   fi
-  rm -f "$documentTokensFile" || :
-  rm -f "$mappedDocumentTemplate" || :
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   statusMessage decorate info "$(reportTiming "$start" "$message" "$targetFile" in)"
 }
 _documentationTemplateCompile() {
@@ -468,13 +476,12 @@ _documentationTemplateDirectoryCompile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Document a function and generate a function template (markdown)
 #
 # Usage: bashDocumentFunction file function template
 # Argument: file - Required. File in which the function is defined
 # Argument: function - Required. The function name which is defined in `file`
-# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
+# Argument: template - Required. A markdown template to use to map values.
 # Exit code: 0 - Success
 # Exit code: 1 - Template file not found
 # Short description: Simple bash function documentation
@@ -482,7 +489,7 @@ _documentationTemplateDirectoryCompile() {
 # See: _bashDocumentation_Template
 # See: bashDocumentFunction
 # See: repeat
-#
+# Requires: __throwArgument fileTemporaryName __catchEnvironment bashDocumentation_Extract __dumpNameValue  _bashDocumentation_Template rm
 bashDocumentFunction() {
   local usage="_${FUNCNAME[0]}"
   local envFile file=$1 fn=$2 template=$3 home exitCode
@@ -495,10 +502,11 @@ bashDocumentFunction() {
   fi
   _bashDocumentation_Template "$template" "$envFile"
   exitCode=$?
-  rm "$envFile" || :
+  __catchEnvironment "$usage" rm -rf "$envFile" || return $?
   return $exitCode
 }
 _bashDocumentFunction() {
+  # IDENTICAL usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -608,21 +616,6 @@ __dumpNameValuePrefix() {
 #
 __dumpAliasedValue() {
   printf -- 'export "%s"="%s%s%s"\n' "$1" '$\{' "$2" '}'
-}
-
-# IDENTICAL bashFunctionComment 13
-
-# Extract a bash comment from a file
-# Argument: source - File. Required. File where the function is defined.
-# Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
-# Notes: Keep this free of any extraneous dependencies
-# Requires: grep cut reverseFileLines
-bashFunctionComment() {
-  local source="${1-}" functionName="${2-}"
-  local maxLines=1000
-  grep -m 1 -B $maxLines "$functionName() {" "$source" | grep -v -e '( IDENTICAL | _IDENTICAL_ |DOC TEMPLATE:|Internal:)' |
-    reverseFileLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
-    reverseFileLines | grep -E '^#' | cut -c 3-
 }
 
 #

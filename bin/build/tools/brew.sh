@@ -43,22 +43,24 @@ __brewUninstall() {
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 __brewUpgrade() {
   local usage="_${FUNCNAME[0]}"
-  local quietLog upgradeLog result
+  local quietLog upgradeLog result clean=()
 
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   upgradeLog=$(__catchEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
+  clean+=("$quietLog" "$upgradeLog")
   __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
   __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __catchEnvironment "$usage" brew upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog"
+  __catchEnvironment "$usage" brew upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || _undo $? dumpPipe "apk upgrade failed" <"$quietLog" || _clean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?
+      __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || _clean $? "${clean[@]}" || return $?
     fi
     result=restart
   else
-    __catchEnvironment "$usage" pacakgeNeedRestartFlag "" || return $?
+    __catchEnvironment "$usage" pacakgeNeedRestartFlag "" || _clean $? "${clean[@]}" || return $?
     result=ok
   fi
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   printf "%s\n" "$result"
 }
 ___brewUpgrade() {

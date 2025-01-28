@@ -43,7 +43,7 @@ bashDebug() {
   bashDebuggerDisable
 }
 _bashDebug() {
-  # _IDENTICAL_ usageDocument 1
+  # _IDENTICAL_ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -143,7 +143,7 @@ _bashDebugTrap() {
     *) ;;
   esac
 
-  local __where __command __item __value __rightArrow="➡️"
+  local __where __cmd __item __value __rightArrow="➡️"
 
   export BUILD_HOME __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_DEBUG_LAST
 
@@ -163,13 +163,13 @@ _bashDebugTrap() {
   _bashDebugWatch
   printf -- "%s %s\n" "$(decorate green ">")" "$(decorate code "$BASH_COMMAND")"
   local __error="" __exitCode=0
-  while read -n 1 -s -r -p "${__error}bashDebug $(decorate code "[$__BUILD_BASH_DEBUG_LAST]")> " __command; do
-    local __aa=("$__command")
+  while read -n 1 -s -r -p "${__error}bashDebug $(decorate code "[$__BUILD_BASH_DEBUG_LAST]")> " __cmd; do
+    local __aa=("$__cmd")
     __exitCode=0
-    case "$__command" in
+    case "$__cmd" in
       "." | " " | "" | $'\r')
-        __command="${__BUILD_BASH_DEBUG_LAST:0:1}"
-        if [ -z "$__command" ]; then
+        __cmd="${__BUILD_BASH_DEBUG_LAST:0:1}"
+        if [ -z "$__cmd" ]; then
           __error="$(decorate error "No last command")"
           __exitCode=1
           __aa=()
@@ -180,7 +180,7 @@ _bashDebugTrap() {
         fi
         ;;
     esac
-    statusMessage printf -- "Execute: $(decorate code "$__command")"
+    statusMessage printf -- "Execute: $(decorate code "$__cmd")"
     [ "${#__aa[@]}" -eq 0 ] || __bashDebugExecuteCommand "${__aa[@]}" || __exitCode=$?
     case $__exitCode in
       0)
@@ -220,14 +220,14 @@ _bashDebugTrap() {
 }
 
 __bashDebugExecuteCommand() {
-  local __command="$1" __arg="${2-}"
+  local __cmd="$1" __arg="${2-}"
 
   export __BUILD_BASH_DEBUG_LAST
 
-  # statusMessage printf -- "%s [%s] %s" __bashDebugExecuteCommand "$__command" "$__arg"
+  # statusMessage printf -- "%s [%s] %s" __bashDebugExecuteCommand "$__cmd" "$__arg"
   # Uses calling scope
   __error=""
-  case "$__command" in
+  case "$__cmd" in
     "*")
       statusMessage printf -- ""
       if bashDebugInterruptFile 2>/dev/null; then
@@ -287,7 +287,7 @@ __bashDebugExecuteCommand() {
       return 1
       ;;
     *)
-      __error="[$(decorate error " $__command ")]($(decorate value "$(characterToInteger "$__command")")) No such command"
+      __error="[$(decorate error " $__cmd ")]($(decorate value "$(characterToInteger "$__cmd")")) No such command"
       return 1
       ;;
   esac
@@ -347,9 +347,9 @@ __bashDebugCommandUnwatch() {
 }
 
 __bashDebugCommandEvaluate() {
-  local __command="$1"
+  local __cmd="$1"
 
-  printf "%s \"%s\"\n" "$(decorate warning "Evaluating")" "$(decorate code "$__command")" >/dev/stdout
+  printf "%s \"%s\"\n" "$(decorate warning "Evaluating")" "$(decorate code "$__cmd")" >/dev/stdout
 
   # Save debugger FDs for later
   exec 20<&0 21>&1 22>&2
@@ -360,7 +360,7 @@ __bashDebugCommandEvaluate() {
   set +eu
   set +o pipefail
 
-  eval "$__command" || printf -- "%s\n" "EXIT $(decorate error "[$?]")" 1>&2
+  eval "$__cmd" || printf -- "%s\n" "EXIT $(decorate error "[$?]")" 1>&2
 
   set -eou pipefail
 
@@ -375,12 +375,12 @@ __bashDebugCommandEvaluate() {
   exec 0<&20 1>&21 2>&22
 
   export __BUILD_BASH_DEBUG_LAST
-  __BUILD_BASH_DEBUG_LAST="!$__command"
+  __BUILD_BASH_DEBUG_LAST="!$__cmd"
 }
 
 __bashDebugCommandEvaluateLoop() {
-  while read -r -p "$(decorate info "Shell"): " __command; do
-    [ -n "$__command" ] || break
-    __bashDebugCommandEvaluate "$__command"
+  while read -r -p "$(decorate info "Shell"): " __cmd; do
+    [ -n "$__cmd" ] || break
+    __bashDebugCommandEvaluate "$__cmd"
   done
 }

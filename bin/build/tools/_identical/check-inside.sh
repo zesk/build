@@ -93,7 +93,7 @@ _identicalCheckInsideLoop() {
           diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
           isBadFile=true
         else
-          statusMessage decorate success "Verified $(decorate file "$searchFile"), lines $lineNumber-$((lineNumber + tokenLineCount))"
+          statusMessage printf -- "%s %s in %s, lines %d-%d" "$(decorate success "Verified")" "$(decorate code "$token")" "$(decorate file "$searchFile")" "$lineNumber" "$((lineNumber + tokenLineCount))"
         fi
         if $mapFile; then
           rm -rf "$countFile" || return $?
@@ -101,8 +101,8 @@ _identicalCheckInsideLoop() {
       fi
       if $isBadFile; then
         if [ ${#repairSources[@]} -gt 0 ]; then
-          statusMessage --last decorate info repairSources "${#repairSources[@]}" "${repairSources[@]+"${repairSources[@]}"}"
-          statusMessage --last decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\""
+          # statusMessage --last decorate info repairSources "${#repairSources[@]}" "${repairSources[@]+"${repairSources[@]}"}"
+          statusMessage --last decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\" (${#repairSources[@]} repair $(plural ${#repairSources[@]} directory directories))"
           if ! __identicalCheckRepair "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}" 1>&2; then
             badFiles+=("$tokenFileName")
             badFiles+=("$searchFile")
@@ -185,7 +185,7 @@ _identicalCheckSinglesChecker() {
         knownSinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate info "$(decorate file "$targetFile")")"):$lineNumber")
       else
         lonelySingles+=("$token")
-        lonelySinglesFiles+=("$tokenFile")
+        lonelySinglesFiles+=("$targetFile")
         lonelySinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate notice "$(decorate file "$targetFile")")"):$lineNumber")
         exitCode="$identicalCode"
       fi

@@ -12,39 +12,41 @@
 
 # IDENTICAL _tinySugar EOF
 
-# Run `usage` with an argument error
-# Usage: {fn} usage ...
+# Run `handler` with an argument error
+# Usage: {fn} handler ...
 __throwArgument() {
-  local usage="${1-}"
-  shift && "$usage" 2 "$@" || return $?
+  local handler="${1-}"
+  shift && "$handler" 2 "$@" || return $?
 }
 
-# Run `usage` with an environment error
-# Usage: {fn} usage ...
+# Run `handler` with an environment error
+# Usage: {fn} handler ...
 __throwEnvironment() {
-  local usage="${1-}"
-  shift && "$usage" 1 "$@" || return $?
+  local handler="${1-}"
+  shift && "$handler" 1 "$@" || return $?
 }
 
-# Run `command`, upon failure run `usage` with an argument error
-# Usage: {fn} usage command ...
-# Argument: usage - Required. String. Failure command
+# Run `command`, upon failure run `handler` with an argument error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwArgument
 __catchArgument() {
-  local usage="${1-}"
-  shift && "$@" || __throwArgument "$usage" "$@" || return $?
+  local handler="${1-}"
+  shift && "$@" || __throwArgument "$handler" "$@" || return $?
 }
 
-# Run `command`, upon failure run `usage` with an environment error
-# Usage: {fn} usage command ...
-# Argument: usage - Required. String. Failure command
+# Run `command`, upon failure run `handler` with an environment error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwEnvironment
 __catchEnvironment() {
-  local usage="${1-}"
-  shift && "$@" || __throwEnvironment "$usage" "$@" || return $?
+  local handler="${1-}"
+  shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
+
+# _IDENTICAL_ _errors 18
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
@@ -62,6 +64,18 @@ _argument() {
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?
+}
+
+# _IDENTICAL_ __environment 10
+
+# Run `command ...` (with any arguments) and then `_environment` if it fails.
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Failed
+# Requires: _environment
+__environment() {
+  "$@" || _environment "$@" || return $?
 }
 
 # Usage: {fn} exitCode item ...

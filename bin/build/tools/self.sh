@@ -405,7 +405,7 @@ Build() {
     ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
     __catchEnvironment "$usage" "$home/$run" "$@" || return $?
   else
-    __catchEnvironment "$usage" bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@"
+    __catchEnvironment "$usage" bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@" || return $?
   fi
   return 0
 }

@@ -11,41 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 164
-
-# Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
-# Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
-# Argument: separator - Optional. String.
-# Argument: prefix - Optional. String.
-# Argument: suffix - Optional. String.
-# Argument: title - Optional. String.
-# Argument: item - Optional. String. One or more items to list.
-# Requires: printf
-_format() {
-  local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}" n=/dev/null
-  sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
-  # shellcheck disable=SC2015
-  shift 2>"$n" && shift 2>"$n" && shift 2>"$n" && shift 2>"$n" || :
-  if [ $# -eq 0 ]; then
-    printf -- "%s\n" "$title"
-  else
-    printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
-  fi
-}
-
-# Output a titled list
-# Usage: {fn} title [ items ... ]
-# Requires: _format
-_list() {
-  _format "\n" "- " "\n" "$@"
-}
-
-# Output a command, quoting individual arguments
-# Usage: {fn} command [ argument ... ]
-# Requires: _format
-_command() {
-  _format "" " \"" "\"" "$@"
-}
+# IDENTICAL _sugar 137
 
 # Usage: {fn} name ...
 # Argument: name ... - Optional. String. Exit code value to output.
@@ -122,14 +88,7 @@ _clean() {
   return "$exitCode"
 }
 
-# Return `environment` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ...
-# Argument: message ... - String. Optional. Message to output.
-# Exit Code: 1
-# Requires: _return
-_environment() {
-  _return 1 "$@" || return $?
-}
+# _IDENTICAL_ _errors 18
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
@@ -140,22 +99,36 @@ _argument() {
   _return 2 "$@" || return $?
 }
 
-# Run `command ...` (with any arguments) and then `_return` if it fails.
-# Usage: {fn} command ...
-# Argument: command ... - Any command and arguments to run.
-# Requires: _return _command
+# Return `environment` error code always. Outputs `message ...` to `stderr`.
+# Usage: {fn} message ...
+# Argument: message ... - String. Optional. Message to output.
+# Exit Code: 1
+# Requires: _return
+_environment() {
+  _return 1 "$@" || return $?
+}
+
+# _IDENTICAL_ __execute 9
+
+# Usage: {fn} __execute binary [ ... ]
+# Argument: binary - Required. Executable.
+# Argument: ... - Any arguments are passed to binary
+# Run binary and output failed command upon error
+# Requires: _return
 __execute() {
-  "$@" || _return $? "$(_command "$@")" || return $?
+  "$@" || _return "$?" "$@" || return $?
 }
 
 # Output the `command ...` to stdout prior to running, then `__execute` it
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: Any
-# Requires: printf _command __execute
+# Requires: printf decorate __execute
 __echo() {
-  printf -- "➡️ %s\n" "$(_command "$@")" && __execute "$@" || return $?
+  printf -- "➡️ %s\n" "$(decorate each code "$@")" && __execute "$@" || return $?
 }
+
+# _IDENTICAL_  __environment 10
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
 # Usage: {fn} command ...

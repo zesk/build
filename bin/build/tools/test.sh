@@ -408,7 +408,7 @@ bashLintFiles() {
   fi
   if [ "${#failedFiles[@]}" -gt 0 ]; then
     {
-      statusMessage --last _list "$(decorate warning "Files failed:")" "${failedFiles[@]}"
+      statusMessage --last printf -- "%s\n%s\n" "$(decorate warning "Files failed:")" "$(printf -- "- %s\n" "${failedFiles[@]}")"
       decorate info "# ${#failedFiles[@]} $(plural ${#failedFiles[@]} error errors)"
     } 1>&2
     if $interactive; then
@@ -850,7 +850,7 @@ findUncaughtAssertions() {
   {
     find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'assert[A-Z]' | grep -E -v "$suffixCheck" || :
     find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '_(clean|undo|argument|environment|return)' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '__(execute|try)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '__(execute|catch|throw)' | grep -E -v "$suffixCheck" || :
   } >"$tempFile"
 
   if [ -s "$tempFile" ]; then
@@ -862,7 +862,7 @@ findUncaughtAssertions() {
         problemFile="${problemFile%:*}"
         if [ "$problemFile" != "$lastProblemFile" ]; then
           # IDENTICAL findUncaughtAssertions-loop 3
-          if test $listFlag && [ -n "$lastProblemFile" ]; then
+          if $listFlag && [ -n "$lastProblemFile" ]; then
             printf -- "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
           fi
           problemFiles+=("$problemFile")
@@ -872,7 +872,7 @@ findUncaughtAssertions() {
         problemLines+=("$problemLine")
       done < <(cut -d : -f 1,2 <"$tempFile" | sort -u)
       # IDENTICAL findUncaughtAssertions-loop 3
-      if test $listFlag && [ -n "$lastProblemFile" ]; then
+      if $listFlag && [ -n "$lastProblemFile" ]; then
         printf -- "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
       fi
       if [ ${#problemFiles[@]} -gt 0 ] && [ -n "$binary" ]; then

@@ -207,7 +207,8 @@ identicalCheck() {
   return "$exitCode"
 }
 _identicalCheck() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # _IDENTICAL_ usageDocumentComplex 1
+  usageDocumentComplex "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} usage repairSource ... -- directory findArgs ...
@@ -295,8 +296,8 @@ identicalCheckShell() {
 
   aa=()
   # Ordering here matters so declare from inside scope to outside scope
-  #  aa+=(--prefix '# ''DOC TEMPLATE:')
-  #  aa+=(--prefix '# ''_IDENTICAL_')
+  aa+=(--prefix '# ''DOC TEMPLATE:')
+  aa+=(--prefix '# ''_IDENTICAL_')
   aa+=(--prefix '# ''IDENTICAL')
   singles=()
   while [ $# -gt 0 ]; do

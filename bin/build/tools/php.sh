@@ -364,7 +364,7 @@ phpComposer() {
 
   local installArgs=("--ignore-platform-reqs") quietLog composerBin
 
-  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")"
+  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
   bigText "Install vendor" >>"$quietLog"
 
   if $forceDocker; then

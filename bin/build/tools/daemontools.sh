@@ -133,7 +133,7 @@ _daemontoolsSuperviseWait() {
   local total=10 stayQuietFor=5
 
   local start
-  start=$(__catchEnvironment "$usage" date +%s)
+  start=$(__catchEnvironment "$usage" date +%s) || return $?
   while [ ! -d "$1/supervise" ]; do
     sleep 1 || __throwEnvironment "$usage" "interrupted" || return $?
     local elapsed
@@ -298,7 +298,7 @@ daemontoolsTerminate() {
     statusMessage --last decorate warning "daemontools is not running"
   else
     statusMessage decorate warning "Shutting down processes ..."
-    printf "\n%s\n\n" "$(_list "processIds" "${processIds[@]}")"
+    printf "%s\n%s\n" "processIds" "$(printf -- "- %s\n" "${processIds[@]}")"
     __environment processWait --verbose --signals TERM,QUIT,KILL --timeout "$timeout" "${processIds[@]}" || return $?
     remaining="$(daemontoolsProcessIds)"
     if [ -n "$remaining" ]; then

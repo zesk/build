@@ -129,7 +129,7 @@ __installCheck() {
 __installPackageConfiguration() {
   local rel="$1"
   shift
-  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
+  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
 # IDENTICAL _installRemotePackage 301
@@ -417,7 +417,7 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 # Requires: grep printf chmod wait
-# Requires: _environment isUnsignedInteger dumpPipe _clean
+# Requires: _environment isUnsignedInteger cat _clean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   local log="$myBinary.$$.log"
@@ -431,7 +431,7 @@ __installRemotePackageLocal() {
   if ! isUnsignedInteger "$pid"; then
     _environment "Unable to run $myBinary.$$" || return $?
   fi
-  wait "$pid" || _environment "$(dumpPipe "install log failed: $pid" <"$log")" || _clean $? "$log" || return $?
+  wait "$pid" || _environment "$(printf "%s\n%s\n" "install log failed: $pid" "$(cat "$log")")" || _clean $? "$log" || return $?
   _clean 0 "$log" || return $?
 }
 
@@ -451,7 +451,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL urlFetch 126
+# IDENTICAL urlFetch 127
 
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -465,8 +465,8 @@ usageArgumentString() {
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Required. FileDirectory. Target file.
 # Requires: _return whichExists printf decorate
-# Requires: usageArgumentExecutable usageArgumentString
-# Requires: __throwArgument __catchArgument _command
+# Requires: usageArgumentString
+# Requires: __throwArgument __catchArgument
 # Requires: __throwEnvironment __catchEnvironment
 urlFetch() {
   local usage="_${FUNCNAME[0]}"
@@ -506,7 +506,8 @@ urlFetch() {
         ;;
       --binary)
         shift
-        binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+        binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
         ;;
       --argument-format)
         format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
@@ -634,19 +635,24 @@ usageDocumentSimple() {
   return "$exitCode"
 }
 
-# IDENTICAL bashFunctionComment 13
+# IDENTICAL bashFunctionComment 18
 
 # Extract a bash comment from a file
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
-# Notes: Keep this free of any extraneous dependencies
-# Requires: grep cut reverseFileLines
+# Requires: grep cut reverseFileLines __help
+# Requires: usageDocument
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
+  __help "_${FUNCNAME[0]}" "$@" || return 0
   grep -m 1 -B $maxLines "$functionName() {" "$source" | grep -v -e '( IDENTICAL | _IDENTICAL_ |DOC TEMPLATE:|Internal:)' |
     reverseFileLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
     reverseFileLines | grep -E '^#' | cut -c 3-
+}
+_bashFunctionComment() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL reverseFileLines 12
@@ -669,7 +675,7 @@ reverseFileLines() {
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath
 realPath() {
-  [ -e "$1" ] || __argument "Not a file: $1" || return $?
+  [ -e "$1" ] || _argument "Not a file: $1" || return $?
   if whichExists realpath; then
     realpath "$@"
   else
@@ -760,7 +766,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 168
+# IDENTICAL decorate 169
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -833,6 +839,7 @@ decorations() {
 _decorations() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || decorations --help
 }
 
 # Singular decoration function
@@ -842,14 +849,14 @@ _decorations() {
 # stdout: Decorated text
 # Requires: isFunction _argument awk __catchEnvironment usageDocument
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}"
+  local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   shift || __catchArgument "$usage" "Requires at least one argument" || return $?
-  local lp dp style
   if ! style=$(_caseStyles "$what"); then
     local extend
     extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
     # When this next line calls `__catchArgument` it results in an infinite loop
-    isFunction "$extend" || _argument "Unknown decoration name: $what ($extend)" || return $?
+    # shellcheck disable=SC2119
+    isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
     __catchEnvironment "$usage" "$extend" "$@" || return $?
     return $?
   fi
@@ -958,41 +965,43 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 61
+# IDENTICAL _tinySugar 75
 
-# Run `usage` with an argument error
-# Usage: {fn} usage ...
+# Run `handler` with an argument error
+# Usage: {fn} handler ...
 __throwArgument() {
-  local usage="${1-}"
-  shift && "$usage" 2 "$@" || return $?
+  local handler="${1-}"
+  shift && "$handler" 2 "$@" || return $?
 }
 
-# Run `usage` with an environment error
-# Usage: {fn} usage ...
+# Run `handler` with an environment error
+# Usage: {fn} handler ...
 __throwEnvironment() {
-  local usage="${1-}"
-  shift && "$usage" 1 "$@" || return $?
+  local handler="${1-}"
+  shift && "$handler" 1 "$@" || return $?
 }
 
-# Run `command`, upon failure run `usage` with an argument error
-# Usage: {fn} usage command ...
-# Argument: usage - Required. String. Failure command
+# Run `command`, upon failure run `handler` with an argument error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwArgument
 __catchArgument() {
-  local usage="${1-}"
-  shift && "$@" || __throwArgument "$usage" "$@" || return $?
+  local handler="${1-}"
+  shift && "$@" || __throwArgument "$handler" "$@" || return $?
 }
 
-# Run `command`, upon failure run `usage` with an environment error
-# Usage: {fn} usage command ...
-# Argument: usage - Required. String. Failure command
+# Run `command`, upon failure run `handler` with an environment error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwEnvironment
 __catchEnvironment() {
-  local usage="${1-}"
-  shift && "$@" || __throwEnvironment "$usage" "$@" || return $?
+  local handler="${1-}"
+  shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
+
+# _IDENTICAL_ _errors 18
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
 # Usage: {fn} message ..`.
@@ -1012,6 +1021,18 @@ _environment() {
   _return 1 "$@" || return $?
 }
 
+# _IDENTICAL_ __environment 10
+
+# Run `command ...` (with any arguments) and then `_environment` if it fails.
+# Usage: {fn} command ...
+# Argument: command ... - Any command and arguments to run.
+# Exit Code: 0 - Success
+# Exit Code: 1 - Failed
+# Requires: _environment
+__environment() {
+  "$@" || _environment "$@" || return $?
+}
+
 # Usage: {fn} exitCode item ...
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
@@ -1019,6 +1040,57 @@ _environment() {
 _clean() {
   local r="${1-}" && shift && rm -rf "$@"
   return "$r"
+}
+
+# _IDENTICAL_ __execute 9
+
+# Usage: {fn} __execute binary [ ... ]
+# Argument: binary - Required. Executable.
+# Argument: ... - Any arguments are passed to binary
+# Run binary and output failed command upon error
+# Requires: _return
+__execute() {
+  "$@" || _return "$?" "$@" || return $?
+}
+
+# IDENTICAL _undo 38
+
+# Run a function and preserve exit code
+# Returns `exitCode`
+# Usage: {fn} exitCode undoFunction ...
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
+# Argument: -- - Flag. Optional. Used to delimit multiple commands.
+# As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
+# Example: local undo thing
+# Example: thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
+# Example: undo+=(-- deleteLargeResource "$thing")
+# Example: thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+# Example: undo+=(-- deleteMassiveResource "$thing")
+# Requires: isPositiveInteger __catchArgument decorate __execute
+# Requires: usageDocument
+_undo() {
+  local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
+  shift
+  isPositiveInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --)
+        [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+        args=()
+        ;;
+      *)
+
+        args+=("$1")
+        ;;
+    esac
+    shift
+  done
+  return "$exitCode"
+}
+__undo() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Final line will be rewritten on update

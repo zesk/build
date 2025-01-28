@@ -49,7 +49,7 @@ Quote a sed command for search and replace
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -78,7 +78,7 @@ needSlash='$.*/[\]^'
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Usage
 
@@ -141,7 +141,7 @@ Quote bash strings for inclusion as single-quoted for eval
 
 $\Quote grep -e patterns for shell use
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/identical/_text.sh`
 
 #### Arguments
 

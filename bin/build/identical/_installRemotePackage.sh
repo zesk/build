@@ -293,7 +293,7 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 # Requires: grep printf chmod wait
-# Requires: _environment isUnsignedInteger dumpPipe _clean
+# Requires: _environment isUnsignedInteger cat _clean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   local log="$myBinary.$$.log"
@@ -307,6 +307,6 @@ __installRemotePackageLocal() {
   if ! isUnsignedInteger "$pid"; then
     _environment "Unable to run $myBinary.$$" || return $?
   fi
-  wait "$pid" || _environment "$(dumpPipe "install log failed: $pid" <"$log")" || _clean $? "$log" || return $?
+  wait "$pid" || _environment "$(printf "%s\n%s\n" "install log failed: $pid" "$(cat "$log")")" || _clean $? "$log" || return $?
   _clean 0 "$log" || return $?
 }

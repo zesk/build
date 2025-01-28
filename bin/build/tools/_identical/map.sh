@@ -7,22 +7,26 @@
 
 # Usage: {fn} usageFunction fileNameToUse
 # stdin: converts magic attributes
+# Requires: quoteSedReplacement
 _identicalMapAttributesFilter() {
-  local usage="${1-}" file="${2-}" base home full dir extension
+  local usage="${1-}" file="${2-}" base home full dir aa=()
 
-  home=$(__catchEnvironment "$usage" buildHome)
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   home="${home%/}/"
-  full=$(realPath "$file")
-  base=$(basename "$full")
+  full=$(__catchEnvironment "$usage" realPath "$file") || return $?
+  aa+=(-e 's/__FULL__/'"$(quoteSedReplacement "$full")"'/g')
+
+  base=$(__catchEnvironment "$usage" basename "$full") || return $?
+  aa+=(-e 's/__EXTENSION__/'"$(quoteSedReplacement "${base##*.}")"'/g')
+  aa+=(-e 's/__BASE__/'"$(quoteSedReplacement "$base")"'/g')
+
   file="${file#"$home"}"
-  extension="${base##*.}"
-  dir=$(dirname -- "$file")
-  __catchEnvironment "$usage" sed \
-    -e 's/__EXTENSION__/'"$(quoteSedReplacement "$extension")"'/g' \
-    -e 's/__DIRECTORY__/'"$(quoteSedReplacement "$dir")"'/g' \
-    -e 's/__FILE__/'"$(quoteSedReplacement "$file")"'/g' \
-    -e 's/__FULL__/'"$(quoteSedReplacement "$full")"'/g' \
-    -e 's/__BASE__/'"$(quoteSedReplacement "$base")"'/g'
+  aa+=(-e 's/__FILE__/'"$(quoteSedReplacement "$file")"'/g')
+
+  dir=$(__catchEnvironment "$usage" dirname -- "$file") || return $?
+  aa+=(-e 's/__DIRECTORY__/'"$(quoteSedReplacement "$dir")"'/g')
+
+  __catchEnvironment "$usage" sed "${aa[@]}" || return $?
 }
 
 # Usage: {fn} usageFunction fileToModify fileNameToUse

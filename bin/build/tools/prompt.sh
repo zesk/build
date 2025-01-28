@@ -26,14 +26,13 @@ __bashPromptList() {
 __bashPromptAdd() {
   local usage="$1" && shift
 
-  local first=false debug=false verbose=false found
+  local first=false verbose=false found
 
   export __BASH_PROMPT_MODULES
   if ! isArray "__BASH_PROMPT_MODULES"; then
     __BASH_PROMPT_MODULES=()
   fi
 
-  ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")"
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -42,9 +41,6 @@ __bashPromptAdd() {
     case "$argument" in
       --verbose)
         verbose=true
-        ;;
-      --debug)
-        debug=true
         ;;
       --first)
         first=true
@@ -57,39 +53,33 @@ __bashPromptAdd() {
         found=false
         ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found=true
         if $first; then
-          ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
           if $found; then
             if [ "${__BASH_PROMPT_MODULES[0]-}" != "$argument" ]; then
               return 0
             fi
             __bashPromptRemove "$usage" "$argument" || return $?
-            ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
             ! $verbose || decorate info "Moving bash module to first: $(decorate code "$argument")"
           else
             ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
           fi
           __BASH_PROMPT_MODULES=("$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
         else
-          ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
           if $found; then
             if [ "${__BASH_PROMPT_MODULES[${#__BASH_PROMPT_MODULES[@]} - 1]}" != "$argument" ]; then
               return 0
             fi
             __bashPromptRemove "$usage" "$argument" || return $?
-            ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
             ! $verbose || decorate info "Moving bash module to last: $(decorate code "$argument")"
           else
             ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
           fi
           __BASH_PROMPT_MODULES=("${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" "$argument")
         fi
-        ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
-  ! $debug || decorate info "$LINENO: $(_command MODULES: "${__BASH_PROMPT_MODULES[@]}")"
   return 0
 }
 
@@ -109,7 +99,7 @@ __bashPromptRemove() {
       modules+=("$current")
     fi
   done
-  $found || __throwEnvironment "$usage" "$module was not found in $(_list modules: "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
+  $found || __throwEnvironment "$usage" "$module was not found in modules: $(decorate each code "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
   __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }
 

@@ -57,20 +57,6 @@ testChoose() {
   assertOutputEquals --line "$LINENO" B _choose false A B || return $?
 }
 
-testFormat() {
-  assertOutputEquals --line "$LINENO" "§" _format || return $?
-  assertOutputEquals --line "$LINENO" "§" _format a || return $?
-  assertOutputEquals --line "$LINENO" "§" _format a b || return $?
-  assertOutputEquals --line "$LINENO" "§" _format a b c || return $?
-  assertOutputEquals --line "$LINENO" "d" _format a b c d || return $?
-  assertOutputEquals --line "$LINENO" "i" _format a b c i || return $?
-  assertOutputEquals --line "$LINENO" "dabic" _format a b c d i || return $?
-  assertOutputEquals --line "$LINENO" "dabicbocbacbucbyc" _format a b c d i o a u y || return $?
-  assertOutputEquals --line "$LINENO" "d%sbicbocbacbucbyc" _format %s b c d i o a u y || return $?
-  assertOutputEquals --line "$LINENO" "d%s%dic%doc%dac%duc%dyc" _format %s %d c d i o a u y || return $?
-  assertOutputEquals --line "$LINENO" "d%s%di%f%do%f%da%f%du%f%dy%f" _format %s %d %f d i o a u y || return $?
-}
-
 testExitCode() {
   local code char digit
 
@@ -114,7 +100,7 @@ testExitCodeCase() {
 }
 
 testSugar() {
-  local code expected actual
+  local code
 
   # __execute running stuff
   export SUGAR_FILE
@@ -140,11 +126,6 @@ testSugar() {
   assertEquals --line "$LINENO" $(($(wc -l <"$SUGAR_FILE") + 0)) 3 || return $?
   rm -rf "$SUGAR_FILE"
   unset SUGAR_FILE
-
-  expected="$(printf "Hello\n- a\n- b\n- c\n- d e\n")"
-  actual="$(_list "Hello" "a" "b" "c" "d e")"
-  assertEquals --line "$LINENO" "${#expected}" "${#actual}" "Actual: \"$(decorate code "$actual")\" Expected: \"$(decorate code "$expected")\"" || return $?
-  assertEquals --line "$LINENO" "$expected" "$actual" || return $?
 
   # _return
   for code in $(seq 0 7 255); do

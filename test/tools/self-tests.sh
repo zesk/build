@@ -5,6 +5,20 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testBuildRunner() {
+  assertExitCode --stderr-match "Hello, world" --line "$LINENO" 1 Build --verbose _return 1 "Hello, world" || return $?
+  assertExitCode --stderr-match "Hello, world" --line "$LINENO" 99 Build --verbose _return 99 || return $?
+}
+testBinBuildRequires() {
+  local home
+
+  home=$(__environment buildHome) || return $?
+
+  bashCheckRequires --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
+  bashCheckRequires --require --unused --report "$home/bin/build/map.sh" || return $?
+  bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
+}
+
 testBuildEnvironmentLoadAll() {
   local home loadIt nonBlankEnvs=(
     APACHE_HOME
@@ -57,7 +71,7 @@ testBuildFunctions() {
   fun=$(__environment mktemp) || return $?
   buildFunctions >"$fun" || _environment "buildFunctions failed" || return $?
 
-  assertFileContains "$fun" buildFunctions assertExitCode __environment _argument _environment _command _format __catch housekeeper || return $?
+  assertFileContains "$fun" buildFunctions assertExitCode __environment _argument _environment __catch housekeeper || return $?
 
   __environment rm -f "$fun" || return $?
 }

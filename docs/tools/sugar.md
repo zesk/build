@@ -27,7 +27,6 @@ This is universally used throughout.
 ### `__execute` - Run binary and output failed command upon error
 
 Run binary and output failed command upon error
-Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 
 - Location: `bin/build/identical/__execute.sh`
 
@@ -75,15 +74,15 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__catchEnvironment` - Run `command`, upon failure run `usage` with an environment error
+### `__catchEnvironment` - Run `command`, upon failure run `handler` with an environment error
 
-Run `command`, upon failure run `usage` with an environment error
+Run `command`, upon failure run `handler` with an environment error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
-- `usage` - Required. String. Failure command
+- `handler` - Required. String. Failure command
 - `command` - Required. Command to run.
 
 #### Exit codes
@@ -106,15 +105,15 @@ Run `handler` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__catchArgument` - Run `command`, upon failure run `usage` with an argument error
+### `__catchArgument` - Run `command`, upon failure run `handler` with an argument error
 
-Run `command`, upon failure run `usage` with an argument error
+Run `command`, upon failure run `handler` with an argument error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
-- `usage` - Required. String. Failure command
+- `handler` - Required. String. Failure command
 - `command` - Required. Command to run.
 
 #### Exit codes
@@ -122,11 +121,11 @@ Run `command`, upon failure run `usage` with an argument error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__throwEnvironment` - Run `usage` with an environment error
+### `__throwEnvironment` - Run `handler` with an environment error
 
-Run `usage` with an environment error
+Run `handler` with an environment error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
@@ -137,11 +136,11 @@ Run `usage` with an environment error
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `__throwArgument` - Run `usage` with an argument error
+### `__throwArgument` - Run `handler` with an argument error
 
-Run `usage` with an argument error
+Run `handler` with an argument error
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/_tinySugar.sh`
 
 #### Arguments
 
@@ -158,7 +157,7 @@ Run a function and preserve exit code
 Returns `exitCode`
 As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/identical/_undo.sh`
 
 #### Arguments
 

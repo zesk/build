@@ -10,23 +10,23 @@
 {bashLibraryHome}
 {bashSourcePath}
 
+## Code analysis
+
+{bashFunctionDefined}
+{bashGetRequires}
+{bashCheckRequires}
+{bashStripComments}
+{bashShowUsage}
+{bashListFunctions}
+{bashFunctionComment}
+
 ## Linting
 
 {bashSanitize}
 {bashLintFiles}
 {bashLint}
 
-{bashCheckDepends}
-
 ## Debug
 
 {bashDebugInterruptFile}
 {bashRecursionDebug}
-
-## Simple comment extraction
-
-{bashFunctionComment}
-
-## Deprecated
-
-{bashLintFilesInteractive}
