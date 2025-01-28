@@ -26,13 +26,13 @@
 usageTemplate() {
   local usage="_${FUNCNAME[0]}" __saved=("$@")
 
-  [ $# -ge 5 ] || __failArgument "$usage" "Requires 5 or more arguments" || return $?
+  [ $# -ge 5 ] || __throwArgument "$usage" "Requires 5 or more arguments" || return $?
 
   local binName options="$2" delimiter="$3" description="$4" exitCode
 
   binName="$(trimSpace "$1")"
   exitCode=$(usageArgumentUnsignedInteger "$usage" "exitCode" "$5") || return $?
-  shift 5 || __failArgument "$usage" "shift 5" || return $?
+  shift 5 || __throwArgument "$usage" "shift 5" || return $?
 
   local usageString
   if [ "$exitCode" -eq 0 ]; then
