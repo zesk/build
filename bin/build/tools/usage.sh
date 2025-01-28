@@ -263,6 +263,22 @@ __catchArgumentHelper() {
   printf "%s\n" "$variableValue"
 }
 
+# IDENTICAL usageArgumentCore 14
+
+# Require an argument to be non-blank
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+# Exit Code: 2 - If `value` is blank
+# Exit code: 0 - If `value` is non-blank
+usageArgumentString() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  [ -n "${1-}" ] || __throwArgument "$usage" "blank" "$argument" || return $?
+  printf "%s\n" "$1"
+}
+
 # Validates a value is an integer
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if usage fails
@@ -464,21 +480,6 @@ usageArgumentLoadEnvironmentFile() {
     "$usageFunction" "$returnCode" "source $envFile -> $bashEnv failed" || return $?
   fi
   printf "%s\n" "$envFile"
-}
-
-#
-# Require an argument to be non-blank
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
-# Argument: argument - Required. String. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is blank
-# Exit code: 0 - If `value` is non-blank
-usageArgumentString() {
-  local usage="$1" argument="$2"
-  shift 2 || :
-  [ -n "${1-}" ] || __throwArgument "$usage" "blank" "$argument" || return $?
-  printf "%s\n" "$1"
 }
 
 #

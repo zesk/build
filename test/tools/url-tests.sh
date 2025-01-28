@@ -107,3 +107,18 @@ testUrlOpen() {
 
   unset BUILD_URL_BINARY
 }
+
+testFetch() {
+  local targetFile
+
+  assertExitCode --line "$LINENO" 0 urlFetch --help || return $?
+
+  targetFile=$(mktemp)
+  assertFileExists --line "$LINENO" "$targetFile" || return $?
+  assertFileSize --line "$LINENO" 0 "$targetFile" || return $?
+  assertExitCode --line "$LINENO" 0 urlFetch 'https://example.com' "$targetFile" || return $?
+  assertFileExists --line "$LINENO" "$targetFile" || return $?
+  assertNotFileSize --line "$LINENO" 0 "$targetFile" || return $?
+  assertFileContains --line "$LINENO" "$targetFile" "https://www.iana.org/domains/example" || return $?
+  __environment rm -rf "$targetFile" || return $?
+}

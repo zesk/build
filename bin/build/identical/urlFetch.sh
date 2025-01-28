@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Original of realPath
+# Original of urlFetch
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
@@ -19,7 +19,7 @@
 # --private-key=file
 # --private-key-type=type
 
-# IDENTICAL __fetch EOF
+# IDENTICAL urlFetch EOF
 
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -36,10 +36,10 @@
 # Requires: usageArgumentExecutable usageArgumentString
 # Requires: __throwArgument __catchArgument _command
 # Requires: __throwEnvironment __catchEnvironment
-__fetch() {
-  local usage="$1" && shift
+urlFetch() {
+  local usage="_${FUNCNAME[0]}"
 
-  local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format=""
+  local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target=""
 
   wgetExists=$(whichExists wget && printf true || printf false)
 
@@ -110,8 +110,8 @@ __fetch() {
           shift
           break
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
         fi
         ;;
     esac
@@ -135,10 +135,14 @@ __fetch() {
     fi
   fi
   [ -n "$binary" ] || __throwEnvironment "$usage" "wget or curl required" || return $?
-  [ -z "$format" ] || format="$binary"
+  [ -n "$format" ] || format="$binary"
   case "$format" in
-    wget) __catchEnvironment "$usage" "$binary" --no-verbose --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
+    wget) __catchEnvironment "$usage" "$binary" -q --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
     curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
     *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
   esac
+}
+_urlFetch() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

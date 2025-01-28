@@ -81,26 +81,47 @@ testInstallInstallBuildSelf() {
   unset BUILD_COMPANY
 }
 
+# Test that urlFetch works for remote installs
+testInstallBinBuildNetwork() {
+  local testDir testBinBuild section home matches
+  local handler=_return
+
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
+
+  testDir=$(mktemp -d)
+  testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
+  __catchEnvironment "$handler" cd "$testDir" || return $?
+
+  __catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
+  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$handler" echo '# this make the file different' >>"$testBinBuild" || return $?
+
+  assertDirectoryDoesNotExist --line "$LINENO" "$testDir/bin/build" || return $?
+  assertFileDoesNotExist --line "$LINENO" "$testDir/bin/build/tools.sh" || return $?
+
+  assertExitCode --line "$LINENO" 0 "$testBinBuild" --force --url 'https://github.com/zesk/build/archive/refs/tags/v0.21.0.tar.gz' || return $?
+  assertDirectoryExists --line "$LINENO" "$testDir/bin/build" || return $?
+  assertFileExists --line "$LINENO" "$testDir/bin/build/tools.sh" || return $?
+}
+
 #
 # fn: {base}
 # Usage: {fn} buildHome
 #
 testInstallBinBuild() {
-  local usage="_${FUNCNAME[0]}"
-  local testDir testBinBuild section buildHome matches
+  local handler="_${FUNCNAME[0]}"
+  local testDir testBinBuild section home matches
 
-  export BUILD_HOME
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOME || return $?
-  buildHome="${BUILD_HOME-}"
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
   section=0
   testDir=$(mktemp -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-  __catchEnvironment "$usage" cd "$testDir" || return $?
+  __catchEnvironment "$handler" cd "$testDir" || return $?
 
-  __catchEnvironment "$usage" mkdir -p bin/pipeline || return $?
-  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  __catchEnvironment "$usage" echo '# this make the file different' >>"$testBinBuild" || return $?
+  __catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
+  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$handler" echo '# this make the file different' >>"$testBinBuild" || return $?
 
   # --------------------------------------------------------------------------------
   #
@@ -127,7 +148,7 @@ testInstallBinBuild() {
     --stdout-match "Installed"
   )
 
-  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$buildHome/bin/build" || return $?
+  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$home/bin/build" || return $?
   assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
   assertFileContains --line "$LINENO" "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
 
@@ -138,7 +159,7 @@ testInstallBinBuild() {
   # --------------------------------------------------------------------------------
   #
   clearLine
-  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (missing), missing, different name"
   section=$((section + 1))
   bigText "Section #$section"
@@ -166,11 +187,11 @@ testInstallBinBuild() {
   )
   clearLine
 
-  # pause "$(pwd)/bin/pipeline/we-like-head-rubs.sh --mock $buildHome/bin/build"
+  # pause "$(pwd)/bin/pipeline/we-like-head-rubs.sh --mock $home/bin/build"
   # assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
-  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
+  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
 
-  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   clearLine
   boxedHeading "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
@@ -197,7 +218,7 @@ testInstallBinBuild() {
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testBinBuild" || return $?
   assertDirectoryExists --line "$LINENO" bin/build || return $?
 
-  __catchEnvironment "$usage" cp "$buildHome/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (correct), bin/build exists, different name"
   section=$((section + 1))
   bigText "Section #$section"
@@ -216,7 +237,7 @@ testInstallBinBuild() {
     --stdout-no-match "does not ignore"
     --stdout-no-match ".gitignore"
   )
-  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$buildHome/bin/build" || return $?
+  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
   # Check
 
   rm -rf "$testDir" || :
@@ -224,7 +245,7 @@ testInstallBinBuild() {
   decorate success Success
 }
 _testInstallBinBuild() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  handlerDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 testBuildEnvironmentLoad() {

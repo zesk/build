@@ -8,7 +8,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-# IDENTICAL _installRemotePackage EOF
+# IDENTICAL _installRemotePackage 301
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -238,7 +238,7 @@ __installRemotePackageDirectory() {
     __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __catchEnvironment "$usage" __fetch "$usage" "$url" "$target" || return $?
+  __catchEnvironment "$usage" urlFetch "$url" "$target" || return $?
   [ -f "$target" ] || __throwEnvironment "$usage" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
