@@ -156,9 +156,9 @@ __execute() {
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: Any
-# Requires: printf decorate __execute
+# Requires: printf decorate __execute __decorateExtensionQuote __decorateExtensionEach
 __echo() {
-  printf -- "➡️ %s\n" "$(decorate each code "$@")" && __execute "$@" || return $?
+  printf -- "➡️ %s\n" "$(decorate each quote "$@")" && __execute "$@" || return $?
 }
 
 # _IDENTICAL_  __environment 10

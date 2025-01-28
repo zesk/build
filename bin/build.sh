@@ -82,9 +82,9 @@ __buildBuild() {
   else
     decorate error "No colors ${BUILD_COLORS-¢}"
   fi
-  consoleNameValue "$width" "TERM" "${TERM-¢}"
-  consoleNameValue "$width" "DISPLAY" "${DISPLAY-}"
-  consoleNameValue "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
+  decorate pair "$width" "TERM" "${TERM-¢}"
+  decorate pair "$width" "DISPLAY" "${DISPLAY-}"
+  decorate pair "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
 
   if ! ./bin/update-md.sh --skip-commit; then
     __catchEnvironment "$usage" "Can not update the Markdown files" || return $?

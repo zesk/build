@@ -766,7 +766,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 169
+# IDENTICAL decorate 180
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -935,6 +935,17 @@ __decorateExtensionEach() {
     shift
   done
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
+}
+
+# fn: decorate quote
+# Double-quote all arguments as properly quoted bash string
+# Mostly $ and " are problematic within a string
+# Requires: printf decorate
+__decorateExtensionQuote() {
+  local text="$*"
+  text="${text//\"/\\\"}"
+  text="${text//\$/\\\$}"
+  printf -- "\"%s\"\n" "$text"
 }
 
 # IDENTICAL _return 26

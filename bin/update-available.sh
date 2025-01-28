@@ -76,7 +76,8 @@ __addNoteTo() {
 #
 # Usage: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-#
+# Requires: __catchEnvironment __throwArgument beginTiming isDarwin whichExists statusMessage
+# Requires: decorate __decorateExtensionEach
 __updateAvailable() {
   local usage="_${FUNCNAME[0]}"
   local packageLists

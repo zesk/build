@@ -248,3 +248,14 @@ __decorateExtensionEach() {
   done
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
 }
+
+# fn: decorate quote
+# Double-quote all arguments as properly quoted bash string
+# Mostly $ and " are problematic within a string
+# Requires: printf decorate
+__decorateExtensionQuote() {
+  local text="$*"
+  text="${text//\"/\\\"}"
+  text="${text//\$/\\\$}"
+  printf -- "\"%s\"\n" "$text"
+}

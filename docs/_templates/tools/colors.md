@@ -20,9 +20,14 @@ Zesk Build now supports two color modes for light and dark terminals with relate
 {decorate}
 {decorations}
 
+## Extensions
+
+{__decorateExtensionEach}
+{__decorateExtensionQuote}
+
 ## Semantic color commands
 
-Color commands intended to convey status of messages. Try `colorTest` to see all colors.
+Color commands intended to convey status of messages. Try `semanticColorTest` to see all colors.
 
 - `decorate info` - Informational messages
 - `decorate notice` - Notice messages

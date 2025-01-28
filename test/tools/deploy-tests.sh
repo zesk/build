@@ -101,8 +101,8 @@ _simplePHPServer() {
     "$(decorate magenta "$decoration")" "$(decorate blue "$decoration")" \
     "$(decorate success "Starting PHP Server")" \
     "$(decorate cyan "$decoration")" \
-    "$(consoleNameValue 40 "Server Root" "$PHP_SERVER_ROOT")" \
-    "$(consoleNameValue 40 "Server Host" "$PHP_SERVER_HOST:$PHP_SERVER_PORT")" \
+    "$(decorate pair 40 "Server Root" "$PHP_SERVER_ROOT")" \
+    "$(decorate pair 40 "Server Host" "$PHP_SERVER_HOST:$PHP_SERVER_PORT")" \
     "$(decorate blue "$decoration")" "$(decorate magenta "$decoration")"
 
   php -S "$PHP_SERVER_HOST:$PHP_SERVER_PORT" -t "$PHP_SERVER_ROOT" &
@@ -205,7 +205,7 @@ testDeployApplication() {
   if ! d="$(_testDeployApplicationSetup "$home")"; then
     _environment _testDeployApplicationSetup failed || return $?
   fi
-  consoleNameValue 20 "Deploy Root" "$d"
+  decorate pair 20 "Deploy Root" "$d"
 
   export PHP_SERVER_ROOT
   PHP_SERVER_ROOT="$d/live-app/public"
@@ -222,7 +222,7 @@ testDeployApplication() {
       __environment "Simple PHP Server not running after $maxWaitTime seconds, failing" || return $?
     fi
   done
-  consoleNameValue 20 "PHP Process" "$PHP_SERVER_PID"
+  decorate pair 20 "PHP Process" "$PHP_SERVER_PID"
 
   decorate info _simplePHPServer started "$PHP_SERVER_PID"
   # shellcheck disable=SC2064
@@ -233,7 +233,7 @@ testDeployApplication() {
     _environment "Unable to find starting value $startingValue" || return $?
   fi
 
-  consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
   assertEquals "$startingValue" "$(_simplePHPRequest)" "initial state of PHP server" || return $?
 
   for t in 1a 2b 3c 4d; do
@@ -304,7 +304,7 @@ testDeployApplication() {
     #      buildFailed "$quietLog" || return $?
     #    fi
     #
-    consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+    decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
     _waitForValue "$t" || return $?
 
     assertEquals "$t" "$(_simplePHPRequest)" "PHP application new version $t" || return $?
@@ -342,7 +342,7 @@ testDeployApplication() {
 
   t=4d
   for t in 4d 3c 2b; do
-    consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+    decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
     _waitForValue "$t" || return $?
 
     assertEquals --line "$LINENO" "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
@@ -356,7 +356,7 @@ testDeployApplication() {
   t=1a
   assertEquals --line "$LINENO" "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
 
-  consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
   _waitForValue "$t" || return $?
 
   assertEquals --line "$LINENO" "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
@@ -370,7 +370,7 @@ testDeployApplication() {
   __testSection Jump versions to end $t
   deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" || return $?
 
-  consoleNameValue 40 _simplePHPRequest "$(_simplePHPRequest)"
+  decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
   _waitForValue "$t" || return $?
 
   assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?

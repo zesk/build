@@ -204,16 +204,16 @@ __newRelease() {
   if hasHook version-live; then
     liveVersion=$(__catchEnvironment "$usage" hookRun version-live) || return $?
     [ -n "$currentVersion" ] || __throwEnvironment "$usage" "version-live hook returned empty string" || return $?
-    consoleNameValue $width "Live:" "$liveVersion"
+    decorate pair $width "Live:" "$liveVersion"
   else
     liveVersion=$currentVersion
   fi
   notes="$(__catchEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
   nextVersion=$(nextMinorVersion "$liveVersion")
-  consoleNameValue $width "Current:" "$currentVersion"
+  decorate pair $width "Current:" "$currentVersion"
 
   if [ -n "$newVersion" ] && [ "$currentVersion" != "$newVersion" ]; then
-    consoleNameValue "$width" "New:" "$(decorate bold-green "$newVersion")"
+    decorate pair "$width" "New:" "$(decorate bold-green "$newVersion")"
     local checkVersion="$liveVersion"
     [ -n "$checkVersion" ] || checkVersion="$lastVersion"
     lastVersion="$(printf "%s\n" "$liveVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
@@ -240,8 +240,8 @@ __newRelease() {
   fi
   versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
-    consoleNameValue $width "Ready to deploy:" "$currentVersion"
-    consoleNameValue $width "Release notes:" "$notes"
+    decorate pair $width "Ready to deploy:" "$currentVersion"
+    decorate pair $width "Release notes:" "$notes"
     if $isInteractive; then
       __catchEnvironment "$usage" hookRun version-already "$currentVersion" "$notes" || return $?
     fi

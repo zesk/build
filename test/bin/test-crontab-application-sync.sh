@@ -100,8 +100,8 @@ find_count() {
   return 0
 }
 printBasics() {
-  consoleNameValue 40 "Test application directory:" "$1"
-  consoleNameValue 40 "Top environment file:" "$2"
+  decorate pair 40 "Test application directory:" "$1"
+  decorate pair 40 "Top environment file:" "$2"
 }
 
 # Argument: --show - Print the displayed test crontab file to stdout

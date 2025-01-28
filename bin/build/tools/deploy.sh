@@ -304,8 +304,8 @@ deployMigrateDirectoryToLink() {
   fi
   {
     decorate success "Successfully migrated:"
-    consoleNameValue 20 "Link:" "$applicationPath"
-    consoleNameValue 20 "Installed:" "$deployHome/$appVersion/app"
+    decorate pair 20 "Link:" "$applicationPath"
+    decorate pair 20 "Installed:" "$deployHome/$appVersion/app"
     # Move directory, then re-link
   }
   reportTiming "$start" "Completed in"

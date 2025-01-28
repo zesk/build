@@ -168,6 +168,9 @@ __deprecatedTokensByVersion() {
   local deprecatedTokens=()
   deprecatedTokens=()
 
+  # v0.22.0
+  deprecatedTokens+=(_format _command _list)
+
   # v0.17.0
   # deprecatedToken+=(' --env ')
 

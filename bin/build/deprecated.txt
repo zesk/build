@@ -1,3 +1,6 @@
+# v0.22.0
+consoleNameValue|decorate pair
+
 # v0.21.0
 runOptionalHook|hookRunOptional|-name|*.sh|-or|-name|*.md
 runHook|hookRun|-name|*.sh|-or|-name|*.md

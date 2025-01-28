@@ -308,10 +308,10 @@ deployRemoteFinish() {
 
   start=$(beginTiming)
   width=50
-  consoleNameValue $width "Host:" "$(uname -n)"
-  consoleNameValue $width "Deployment path:" "$deployHome"
-  consoleNameValue $width "Application path:" "$applicationPath"
-  consoleNameValue $width "Application ID:" "$applicationId"
+  decorate pair $width "Host:" "$(uname -n)"
+  decorate pair $width "Deployment path:" "$deployHome"
+  decorate pair $width "Application path:" "$applicationPath"
+  decorate pair $width "Application ID:" "$applicationId"
 
   if $cleanupFlag; then
     __catchEnvironment "$usage" cd "$applicationPath" || return $?
@@ -676,13 +676,13 @@ deployToRemote() {
 
     local nameWidth=50
     {
-      consoleNameValue $nameWidth "Current IP:" "$currentIP"
-      consoleNameValue $nameWidth "Deploy Home:" "$deployHome"
-      consoleNameValue $nameWidth "Application Path:" "$applicationPath"
-      consoleNameValue $nameWidth "Application ID:" "$applicationId"
-      consoleNameValue $nameWidth "Package:" "$buildTarget"
+      decorate pair $nameWidth "Current IP:" "$currentIP"
+      decorate pair $nameWidth "Deploy Home:" "$deployHome"
+      decorate pair $nameWidth "Application Path:" "$applicationPath"
+      decorate pair $nameWidth "Application ID:" "$applicationId"
+      decorate pair $nameWidth "Package:" "$buildTarget"
       for userHost in "${userHosts[@]}"; do
-        consoleNameValue $nameWidth "Host:" "${userHost}"
+        decorate pair $nameWidth "Host:" "${userHost}"
       done
     } || :
 

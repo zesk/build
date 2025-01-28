@@ -788,14 +788,14 @@ awsIPAccess() {
     fi
     local width=40
 
-    consoleNameValue "$width" ID "$developerId" || :
-    consoleNameValue "$width" IP "$currentIP" || :
-    consoleNameValue "$width" "Security Groups" "${securityGroups[@]}" || :
-    consoleNameValue "$width" Region "$AWS_REGION" || :
+    decorate pair "$width" ID "$developerId" || :
+    decorate pair "$width" IP "$currentIP" || :
+    decorate pair "$width" "Security Groups" "${securityGroups[@]}" || :
+    decorate pair "$width" Region "$AWS_REGION" || :
     if [ ${#pp[@]} -eq 0 ]; then
-      consoleNameValue "$width" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
+      decorate pair "$width" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
     else
-      consoleNameValue "$width" Profile "${pp[1]}" || :
+      decorate pair "$width" Profile "${pp[1]}" || :
     fi
   fi
   local service

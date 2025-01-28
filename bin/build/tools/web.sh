@@ -43,7 +43,7 @@ urlMatchesLocalFileSize() {
   localSize=$(__catchEnvironment "$usage" fileSize "$file") || return $?
   remoteSize=$(__catchEnvironment "$usage" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
-  isPositiveInteger "$remoteSize" || __failEnvironment "$usage" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
+  isPositiveInteger "$remoteSize" || __throwEnvironment "$usage" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
 
   [ "$localSize" -eq "$remoteSize" ]
 }

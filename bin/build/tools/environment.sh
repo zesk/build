@@ -450,24 +450,24 @@ environmentFileShow() {
 
   printf -- "%s %s %s %s%s\n" "$(decorate info "Application")" "$(decorate magenta "$APPLICATION_VERSION")" "$(decorate info "on")" "$(decorate bold-red "$APPLICATION_BUILD_DATE")" "$(decorate info "...")"
   if buildDebugEnabled; then
-    consoleNameValue "$width" Checksum "$APPLICATION_ID"
-    consoleNameValue "$width" Tag "$APPLICATION_TAG"
-    consoleNameValue "$width" Timestamp "$BUILD_TIMESTAMP"
+    decorate pair "$width" Checksum "$APPLICATION_ID"
+    decorate pair "$width" Tag "$APPLICATION_TAG"
+    decorate pair "$width" Timestamp "$BUILD_TIMESTAMP"
   fi
   missing=()
   for name in "${variables[@]}"; do
     if [ -z "${!name:-}" ]; then
-      consoleNameValue "$width" "$name" "** No value **" 1>&2
+      decorate pair "$width" "$name" "** No value **" 1>&2
       missing+=("$name")
     else
-      consoleNameValue "$width" "$name" "${!name}"
+      decorate pair "$width" "$name" "${!name}"
     fi
   done
   for name in "${buildEnvironment[@]+"${buildEnvironment[@]}"}"; do
     if [ -z "${!name:-}" ]; then
-      consoleNameValue "$width" "$name" "** Blank **"
+      decorate pair "$width" "$name" "** Blank **"
     else
-      consoleNameValue "$width" "$name" "${!name}"
+      decorate pair "$width" "$name" "${!name}"
     fi
   done
   [ ${#missing[@]} -eq 0 ] || __catchEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?

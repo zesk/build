@@ -266,7 +266,7 @@ semanticColorTest() {
   if [ -z "$BUILD_COLORS_MODE" ]; then
     decorate error "BUILD_COLORS_MODE not set"
   else
-    printf "%s%s\n" "$(consoleNameValue 25 "BUILD_COLORS_MODE:" "$BUILD_COLORS_MODE")" "$extra"
+    printf "%s%s\n" "$(decorate pair 25 "BUILD_COLORS_MODE:" "$BUILD_COLORS_MODE")" "$extra"
   fi
   local i colors=(
     info
@@ -286,24 +286,17 @@ semanticColorTest() {
   done
 }
 
+# fn: decorate pair
+# Summary: Output a name value pair (decorate extension)
 #
-# Summary: Output a name value pair
+# The name is output left-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
 #
-# Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
-# right-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
-#
-# Usage: consoleNameValue characterWidth name [ value ... ]
-# Argument: characterWidth - Required. Number of characters to format the value for spacing
+# Usage: decorate pair [ characterWidth ] name [ value ... ]
+# Argument: characterWidth - Optional. Number of characters to format the value for spacing. Uses environment variable BUILD_PAIR_WIDTH if not set.
 # Argument: name - Required. Name to output
-# Argument: value ... - Optional. One or more Value to output
-#
+# Argument: value ... - Optional. One or more Values to output as values for `name` (single line)
+# Environment: BUILD_PAIR_WIDTH
 # shellcheck disable=SC2120
-consoleNameValue() {
-  local characterWidth=$1 name=$2
-  shift 2 && printf "%s %s\n" "$(decorate label "$(alignLeft "$characterWidth" "$name")")" "$(decorate value "$@")"
-}
-
-# Will replace `consoleNameValue` with `decorate pair 80 foo bar`
 __decorateExtensionPair() {
   local width name
 
@@ -315,7 +308,7 @@ __decorateExtensionPair() {
   fi
   name="${1-}" && shift
   [ -n "$name" ] || return 0
-  printf "%s %s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate value "$@")"
+  printf "%s %s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each value "$@")"
 }
 
 #

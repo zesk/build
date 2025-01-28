@@ -176,7 +176,7 @@ testEnvironmentValueWriteArray() {
   assertEquals --line "$LINENO" "NAME=([0]=\"\")" "$(environmentValueWriteArray NAME "")" || return $?
   assertEquals --line "$LINENO" "NAME=([0]=\"One\" [1]=\"Two\")" "$(environmentValueWriteArray NAME "One" "Two")" || return $?
 
-  consoleNameValue 20 envFile "$envFile"
+  decorate pair 20 envFile "$envFile"
   index=0
   declare -a restoredValue
   for testArrayText in "${testArrays[@]}"; do

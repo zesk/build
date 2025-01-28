@@ -319,9 +319,9 @@ A simple example to show some standard patterns:
       export MANPATH
       __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
     
-      ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "$width" "$name: Easy mode enabled" || return $?
-      ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "path" "$path" || return $?
-      ! $easyFlag || __catchEnvironment "$usage" consoleNameValue "target" "$target" || return $?
+      ! $easyFlag || __catchEnvironment "$usage" decorate pair "$width" "$name: Easy mode enabled" || return $?
+      ! $easyFlag || __catchEnvironment "$usage" decorate pair "path" "$path" || return $?
+      ! $easyFlag || __catchEnvironment "$usage" decorate pair "target" "$target" || return $?
     
       # Trouble debugging
     

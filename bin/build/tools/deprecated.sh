@@ -60,3 +60,59 @@ __usageArgument() {
   _deprecated "${FUNCNAME[0]}"
   __catchArgument "$@" || return $?
 }
+
+#
+# Summary: Output a name value pair
+#
+# Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
+# right-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
+#
+# Usage: decorate pair characterWidth name [ value ... ]
+# Argument: characterWidth - Required. Number of characters to format the value for spacing
+# Argument: name - Required. Name to output
+# Argument: value ... - Optional. One or more Value to output
+#
+# Use: decorate pair
+# shellcheck disable=SC2120
+consoleNameValue() {
+  _deprecated "${FUNCNAME[0]}"
+  local characterWidth=$1 name=$2
+  shift 2 && printf "%s %s\n" "$(decorate label "$(alignLeft "$characterWidth" "$name")")" "$(decorate value "$@")"
+}
+
+# Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
+# Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
+# Argument: separator - Optional. String.
+# Argument: prefix - Optional. String.
+# Argument: suffix - Optional. String.
+# Argument: title - Optional. String.
+# Argument: item - Optional. String. One or more items to list.
+# Requires: printf
+_format() {
+  _deprecated "${FUNCNAME[0]}"
+  local sep="${1-}" prefix="${2-}" suffix="${3-}" title="${4-"§"}" n=/dev/null
+  sep="${sep//%/%%}" && prefix="${prefix//%/%%}" && suffix="${suffix//%/%%}"
+  # shellcheck disable=SC2015
+  shift 2>"$n" && shift 2>"$n" && shift 2>"$n" && shift 2>"$n" || :
+  if [ $# -eq 0 ]; then
+    printf -- "%s\n" "$title"
+  else
+    printf -- "%s$sep%s\n" "$title" "$(printf -- "$prefix%s$suffix" "$@")"
+  fi
+}
+
+# Output a titled list
+# Usage: {fn} title [ items ... ]
+# Requires: _format
+_list() {
+  _deprecated "${FUNCNAME[0]}"
+  _format "\n" "- " "\n" "$@"
+}
+
+# Output a command, quoting individual arguments
+# Usage: {fn} command [ argument ... ]
+# Requires: _format
+_command() {
+  _deprecated "${FUNCNAME[0]}"
+  _format "" " \"" "\"" "$@"
+}
