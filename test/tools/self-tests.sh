@@ -9,13 +9,14 @@ testBuildRunner() {
   assertExitCode --stderr-match "Hello, world" --line "$LINENO" 1 Build --verbose _return 1 "Hello, world" || return $?
   assertExitCode --stderr-match "Hello, world" --line "$LINENO" 99 Build --verbose _return 99 || return $?
 }
+
 testBinBuildRequires() {
   local home
 
   home=$(__environment buildHome) || return $?
 
-  bashCheckRequires --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
-  bashCheckRequires --require --unused --report "$home/bin/build/map.sh" || return $?
+  bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
+  bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
   bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
 }
 

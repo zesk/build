@@ -22,44 +22,55 @@
 # Argument: environmentName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: _argument read environmentVariables __environment sed _environment cat rm
+# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
+# Requires: usageArgumentString
 mapEnvironment() {
-  local __arg __sedFile __prefix='{' __suffix='}'
+  local usage="_${FUNCNAME[0]}"
+  local __sedFile __prefix='{' __suffix='}'
 
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    __arg="$1"
-    [ -n "$__arg" ] || _argument "blank argument" || return $?
-    case "$__arg" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --prefix)
         shift
-        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
-        __prefix="$1"
+        __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --suffix)
         shift
-        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
-        __suffix="$1"
+        __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         break
         ;;
     esac
-    shift || _argument "shift failed after $__arg" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local __ee=("$@") __e
   if [ $# -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  __sedFile=$(__environment mktemp) || return $?
-  if __environment _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile"; then
-    if ! sed -f "$__sedFile"; then
-      _environment "sed failed" || ! cat "$__sedFile" 1>&2 || ! rm -f "$__sedFile" || return $?
-    fi
-  fi
-  rm -f "$__sedFile" || :
+  __sedFile=$(__catchEnvironment "$usage" mktemp) || return $?
+  __catchEnvironment "$usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$usage" sed -f "$__sedFile" || __throwEnvironment "$usage" "$(cat "$__sedFile")" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$usage" rm -rf "$__sedFile" || return $?
+}
+_mapEnvironment() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Helper function

@@ -48,9 +48,48 @@ Output a list of build-in decoration styles, one per line
 - `1` - Environment error
 - `2` - Argument error
 
+## Extensions
+
+### `__decorateExtensionEach` - Runs the following command on each subsequent argument to allow
+
+Runs the following command on each subsequent argument to allow for formatting with spaces
+
+- Location: `bin/build/identical/decorate.sh`
+
+#### Usage
+
+    decorate each decoration argument1 argument2 ...
+    
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `decorate quote` - Double-quote all arguments as properly quoted bash string
+
+Double-quote all arguments as properly quoted bash string
+Mostly $ and " are problematic within a string
+
+- Location: `bin/build/identical/decorate.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
 ## Semantic color commands
 
-Color commands intended to convey status of messages. Try `colorTest` to see all colors.
+Color commands intended to convey status of messages. Try `semanticColorTest` to see all colors.
 
 - `decorate info` - Informational messages
 - `decorate notice` - Notice messages

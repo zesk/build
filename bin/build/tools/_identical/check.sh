@@ -287,7 +287,9 @@ __identicalCheckMatchFile() {
 # Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
 # Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
-# Argument: --help - Flag. Optional. I need somebody.
+# Argument: --internal - Flag. Optional. Do updates for `# _IDENTICAL_` and `# DOC TEMPLATE:` prefixes first.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
@@ -295,15 +297,18 @@ identicalCheckShell() {
   local argument single singleFile aa
 
   aa=()
-  # Ordering here matters so declare from inside scope to outside scope
-  aa+=(--prefix '# ''DOC TEMPLATE:')
-  aa+=(--prefix '# ''_IDENTICAL_')
-  aa+=(--prefix '# ''IDENTICAL')
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      --internal)
+        if [ "${#aa[@]}" -eq 0 ]; then
+          # Ordering here matters so declare from inside scope to outside scope
+          aa+=(--prefix '# ''DOC TEMPLATE:')
+          aa+=(--prefix '# ''_IDENTICAL_')
+        fi
+        ;;
       --singles)
         shift
         singleFile=$(usageArgumentFile "$usage" singlesFile "${1-}") || return $?
@@ -333,6 +338,7 @@ identicalCheckShell() {
     esac
     shift || :
   done
+  aa+=(--prefix '# ''IDENTICAL')
   __catchEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {

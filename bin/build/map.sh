@@ -44,81 +44,40 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _sugar 137
+# IDENTICAL _tinySugar 75
 
-# Usage: {fn} name ...
-# Argument: name ... - Optional. String. Exit code value to output.
-# Print one or more an exit codes by name.
-#
-# Valid codes:
-#
-# - `environment` - generic issue with environment
-# - `argument` - issue with arguments
-# - `assert` - assertion failed
-# - `identical` - identical check failed
-# - `leak` - function leaked globals
-# - `test` - test failed
-# - `exit` - exit function immediately
-# - `internal` - internal errors
-#
-# Unknown error code is 254, end of range is 255 which is not used.
-#
-# ### Error codes reference (`_code`):
-#
-# - 1 - environment or general error
-# - 2 - argument error
-# - 97 - assert - ASCII 97 = `a`
-# - 105 - identical - ASCII 105 = `i`
-# - 108 - leak - ASCII 108 = `l`
-# - 116 - test - ASCII 116 = `t`
-# - 120 - exit - ASCII 120 = `x`
-# - 253 - internal
-# - 254 - unknown
-#
-# See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
-# Requires: usageDocument printf
-_code() {
-  local k && while [ $# -gt 0 ]; do
-    case "$1" in
-      --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;;
-      environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; test) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
-    esac && shift && printf -- "%d\n" "$k"
-  done
+# Run `handler` with an argument error
+# Usage: {fn} handler ...
+__throwArgument() {
+  local handler="${1-}"
+  shift && "$handler" 2 "$@" || return $?
 }
 
-# Boolean test
-# Returns 0 if `value` is boolean `false` or `true`.
-# Usage: {fn} value
-# Is this a boolean? (`true` or `false`)
-# Exit Code: 0 - if value is a boolean
-# Exit Code: 1 - if value is not a boolean
-# Requires: usageDocument printf
-isBoolean() {
-  case "${1-}" in true | false) ;; *) return 1 ;; esac
+# Run `handler` with an environment error
+# Usage: {fn} handler ...
+__throwEnvironment() {
+  local handler="${1-}"
+  shift && "$handler" 1 "$@" || return $?
 }
 
-# Boolean selector
-# Usage: {fn} testValue trueChoice falseChoice
-# Requires: isBoolean _argument printf
-_choose() {
-  local testValue="${1-}" && shift
-  isBoolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
-  "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
+# Run `command`, upon failure run `handler` with an argument error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
+# Argument: command - Required. Command to run.
+# Requires: __throwArgument
+__catchArgument() {
+  local handler="${1-}"
+  shift && "$@" || __throwArgument "$handler" "$@" || return $?
 }
 
-# Usage: {fn} exitCode item ...
-# Argument: exitCode - Required. Integer. Exit code to return.
-# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger _argument __environment
-_clean() {
-  local exitCode="${1-}" && shift
-  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
-  while [ $# -gt 0 ]; do
-    [ ! -f "$1" ] || __environment rm "$1" || return $?
-    [ ! -d "$1" ] || __environment rm -rf "$1" || return $?
-    shift
-  done
-  return "$exitCode"
+# Run `command`, upon failure run `handler` with an environment error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. String. Failure command
+# Argument: command - Required. Command to run.
+# Requires: __throwEnvironment
+__catchEnvironment() {
+  local handler="${1-}"
+  shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
 
 # _IDENTICAL_ _errors 18
@@ -141,27 +100,7 @@ _environment() {
   _return 1 "$@" || return $?
 }
 
-# _IDENTICAL_ __execute 9
-
-# Usage: {fn} __execute binary [ ... ]
-# Argument: binary - Required. Executable.
-# Argument: ... - Any arguments are passed to binary
-# Run binary and output failed command upon error
-# Requires: _return
-__execute() {
-  "$@" || _return "$?" "$@" || return $?
-}
-
-# Output the `command ...` to stdout prior to running, then `__execute` it
-# Usage: {fn} command ...
-# Argument: command ... - Any command and arguments to run.
-# Exit Code: Any
-# Requires: printf decorate __execute __decorateExtensionQuote __decorateExtensionEach
-__echo() {
-  printf -- "➡️ %s\n" "$(decorate each quote "$@")" && __execute "$@" || return $?
-}
-
-# _IDENTICAL_  __environment 10
+# _IDENTICAL_ __environment 10
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
 # Usage: {fn} command ...
@@ -173,14 +112,13 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# Run `command ...` (with any arguments) and then `_argument` if it fails.
-# Usage: {fn} command ...FUNCNAME
-# Argument: command ... - Any command and arguments to run.
-# Exit Code: 0 - Success
-# Exit Code: 2 - Failed
-# Requires: _argument
-__argument() {
-  "$@" || _argument "$@" || return $?
+# Usage: {fn} exitCode item ...
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: rm
+_clean() {
+  local r="${1-}" && shift && rm -rf "$@"
+  return "$r"
 }
 
 # IDENTICAL quoteSedPattern 29
@@ -248,7 +186,6 @@ usageDocumentSimple() {
   return "$exitCode"
 }
 
-
 # IDENTICAL bashFunctionComment 18
 
 # Extract a bash comment from a file
@@ -269,6 +206,285 @@ _bashFunctionComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# IDENTICAL __help 31
+
+# Usage: {fn} [ --only ] usageFunction arguments
+# Simple help argument handler.
+#
+# Easy `--help` handler for any function useful when it's the only option.
+#
+# Useful for utilities which single argument types, single arguments, and no arguments (except for `--help`)
+#
+# Oddly one of the few functions we can not offer the `--help` flag for.
+#
+# Argument: --only - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+# Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     __help "$usage" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+# Depends: __throwArgument
+__help() {
+  local usage="${1-}" && shift
+  if [ "$usage" = "--only" ]; then
+    usage="${1-}" && shift
+    [ "$#" -eq 1 ] && [ "$1" = "--help" ] || __throwArgument "$usage" "Only argument allowed is \`--help\`" || return $?
+  fi
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--help" ]; then
+      "$usage" 0
+      return 1
+    fi
+    shift
+  done
+  return 0
+}
+
+# IDENTICAL _type 46
+
+# Usage: {fn} argument ...
+# Test if an argument is a positive integer (non-zero)
+#
+# Exit Code: 0 - if it is a positive integer
+# Exit Code: 1 - if it is not a positive integer
+# Requires: __catchArgument isUnsignedInteger usageDocument
+isPositiveInteger() {
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
+  if isUnsignedInteger "$1"; then
+    [ "$1" -gt 0 ] || return 1
+    return 0
+  fi
+  if [ "$1" = "--help" ]; then
+    "$usage" 0
+    return 0
+  fi
+  return 1
+}
+_isPositiveInteger() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Test if argument are bash functions
+# Usage: {fn} string0
+# Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
+# If no arguments are passed, returns exit code 1.
+# Exit code: 0 - argument is bash function
+# Exit code: 1 - argument is not a bash function
+# Requires: __catchArgument isUnsignedInteger usageDocument type
+isFunction() {
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
+  # Skip illegal options "--" and "-foo"
+  [ "$1" = "${1#-}" ] || return 1
+  case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
+}
+_isFunction() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# IDENTICAL usageArgumentCore 14
+
+# Require an argument to be non-blank
+# Usage: {fn} usage argument [ value ]
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+# Exit Code: 2 - If `value` is blank
+# Exit code: 0 - If `value` is non-blank
+usageArgumentString() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  [ -n "${1-}" ] || __throwArgument "$usage" "blank" "$argument" || return $?
+  printf "%s\n" "$1"
+}
+
+# IDENTICAL decorate 180
+
+# Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
+#
+# Usage: hasColors
+# Exit Code: 0 - Console or output supports colors
+# Exit Code; 1 - Colors are likely not supported by console
+# Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
+# Requires: isPositiveInteger tput
+hasColors() {
+  local usage="_${FUNCNAME[0]}"
+  local termColors
+  export BUILD_COLORS TERM
+
+  [ "${1-}" != "--help" ] || ! "$usage" 0 || return 0
+  # Values allowed for this global are true and false
+  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
+  BUILD_COLORS="${BUILD_COLORS-}"
+  if [ -z "$BUILD_COLORS" ]; then
+    BUILD_COLORS=false
+    case "${TERM-}" in "" | "dumb" | "unknown") BUILD_COLORS=true ;; *)
+      termColors="$(tput colors 2>/dev/null)"
+      isPositiveInteger "$termColors" || termColors=2
+      [ "$termColors" -lt 8 ] || BUILD_COLORS=true
+      ;;
+    esac
+  elif [ "$BUILD_COLORS" = "1" ]; then
+    # Backwards
+    BUILD_COLORS=true
+  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
+    BUILD_COLORS=false
+  fi
+  [ "${BUILD_COLORS-}" = "true" ]
+}
+_hasColors() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || hasColors --help
+}
+
+#
+# Semantics-based
+#
+# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
+# Requires: hasColors printf
+__decorate() {
+  local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
+  export BUILD_COLORS_MODE BUILD_COLORS
+  if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && hasColors; then
+    if [ "${BUILD_COLORS_MODE-}" = "dark" ]; then
+      start="$dp"
+    fi
+    if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
+    return 0
+  fi
+  [ $# -gt 0 ] || return 0
+  if [ -n "$prefix" ]; then printf -- "%s: %s\n" "$prefix" "$*"; else printf -- "%s\n" "$*"; fi
+}
+
+# Output a list of build-in decoration styles, one per line
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+decorations() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  printf "%s\n" reset \
+    underline no-underline bold no-bold \
+    black black-contrast blue cyan green magenta orange red white yellow \
+    bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow \
+    code info notice success warning error subtle label value decoration
+}
+_decorations() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  ! false || decorations --help
+}
+
+# Singular decoration function
+# Usage: decorate style [ text ... ]
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
+# Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
+# stdout: Decorated text
+# Requires: isFunction _argument awk __catchEnvironment usageDocument
+decorate() {
+  local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  shift || __catchArgument "$usage" "Requires at least one argument" || return $?
+  if ! style=$(_caseStyles "$what"); then
+    local extend
+    extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
+    # When this next line calls `__catchArgument` it results in an infinite loop
+    # shellcheck disable=SC2119
+    isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
+    __catchEnvironment "$usage" "$extend" "$@" || return $?
+    return $?
+  fi
+  read -r lp dp text <<<"$style" || :
+  local p='\033['
+  __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" "$@"
+}
+_decorate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Enables timing
+# Usage: {fn} style
+# Exit Code: 1 - not found
+# Exit Code: 0 - found
+# stdout: 1, 2, or 3 tokens + newline: lightColor darkColor text
+# Requires: printf
+_caseStyles() {
+  case "$1" in
+    reset) lp='0' ;;
+      # styles
+    underline) lp='4' ;;
+    no-underline) lp='24' ;;
+    bold) lp='1' ;;
+    no-bold) lp='21' ;;
+      # colors
+    black) lp='109;7' ;;
+    black-contrast) lp='107;30' ;;
+    blue) lp='94' ;;
+    cyan) lp='36' ;;
+    green) lp='92' ;;
+    magenta) lp='35' ;;
+    orange) lp='33' ;;
+    red) lp='31' ;;
+    white) lp='48;5;0;37' ;;
+    yellow) lp='48;5;16;38;5;11' ;;
+      # bold-colors
+    bold-black) lp='1;109;7' ;;
+    bold-black-contrast) lp='1;107;30' ;;
+    bold-blue) lp='1;94' ;;
+    bold-cyan) lp='1;36' ;;
+    bold-green) lp='92' ;;
+    bold-magenta) lp='1;35' ;;
+    bold-orange) lp='1;33' ;;
+    bold-red) lp='1;31' ;;
+    bold-white) lp='1;48;5;0;37' ;;
+    bold-yellow) lp='1;48;5;16;38;5;11' ;;
+      # semantic-colors
+    code) lp='1;97;44' ;;
+    info) lp='38;5;20' && dp='1;33' && text="Info" ;;
+    notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
+    success) lp='42;30' && dp='0;32' && text="Success" ;;
+    warning) lp='1;93;41' && text="Warning" ;;
+    error) lp='1;91' && text="ERROR" ;;
+    subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;
+    label) lp='34;103' && dp='1;96' ;;
+    value) lp='1;40;97' && dp='1;97' ;;
+    decoration) lp='45;97' && dp='45;30' ;;
+    *)
+      return 1
+      ;;
+  esac
+  printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
+}
+
+# Usage: decorate each decoration argument1 argument2 ...
+# Runs the following command on each subsequent argument to allow for formatting with spaces
+# Requires: decorate printf
+__decorateExtensionEach() {
+  local code="$1" formatted=()
+
+  shift || return 0
+  while [ $# -gt 0 ]; do
+    formatted+=("$(decorate "$code" "$1")")
+    shift
+  done
+  IFS=" " printf -- "%s\n" "${formatted[*]-}"
+}
+
+# fn: decorate quote
+# Double-quote all arguments as properly quoted bash string
+# Mostly $ and " are problematic within a string
+# Requires: printf decorate
+__decorateExtensionQuote() {
+  local text="$*"
+  text="${text//\"/\\\"}"
+  text="${text//\$/\\\$}"
+  printf -- "\"%s\"\n" "$text"
+}
+
 # IDENTICAL reverseFileLines 12
 
 # Reverses a pipe's input lines to output using an awk trick.
@@ -283,7 +499,7 @@ reverseFileLines() {
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 
-# IDENTICAL mapEnvironment 68
+# IDENTICAL mapEnvironment 79
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -296,44 +512,55 @@ reverseFileLines() {
 # Argument: environmentName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: _argument read environmentVariables __environment sed _environment cat rm
+# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
+# Requires: usageArgumentString
 mapEnvironment() {
-  local __arg __sedFile __prefix='{' __suffix='}'
+  local usage="_${FUNCNAME[0]}"
+  local __sedFile __prefix='{' __suffix='}'
 
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    __arg="$1"
-    [ -n "$__arg" ] || _argument "blank argument" || return $?
-    case "$__arg" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --prefix)
         shift
-        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
-        __prefix="$1"
+        __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --suffix)
         shift
-        [ -n "${1-}" ] || _argument "blank $__arg argument" || return $?
-        __suffix="$1"
+        __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         break
         ;;
     esac
-    shift || _argument "shift failed after $__arg" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
   done
 
   local __ee=("$@") __e
   if [ $# -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  __sedFile=$(__environment mktemp) || return $?
-  if __environment _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile"; then
-    if ! sed -f "$__sedFile"; then
-      _environment "sed failed" || ! cat "$__sedFile" 1>&2 || ! rm -f "$__sedFile" || return $?
-    fi
-  fi
-  rm -f "$__sedFile" || :
+  __sedFile=$(__catchEnvironment "$usage" mktemp) || return $?
+  __catchEnvironment "$usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$usage" sed -f "$__sedFile" || __throwEnvironment "$usage" "$(cat "$__sedFile")" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$usage" rm -rf "$__sedFile" || return $?
+}
+_mapEnvironment() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Helper function

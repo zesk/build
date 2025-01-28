@@ -63,11 +63,11 @@ right-aligned to the `characterWidth` given and colored using `decorate label`; 
 
 
 
-- Location: `bin/build/tools/colors.sh`
+- Location: `bin/build/tools/deprecated.sh`
 
 #### Usage
 
-    consoleNameValue characterWidth name [ value ... ]
+    decorate pair characterWidth name [ value ... ]
     
 
 #### Arguments
@@ -115,6 +115,49 @@ Run checks interactively until errors are all fixed.
 - `--exec binary` - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
 - `--delay delaySeconds` - Optional. Integer. Delay in seconds between checks in interactive mode.
 - `fileToCheck ...` - Optional. File. Shell file to validate.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `_list` - Output a titled list
+
+Output a titled list
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `_command` - Output a command, quoting individual arguments
+
+Output a command, quoting individual arguments
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- `separator` - Optional. String.
+- `prefix` - Optional. String.
+- `suffix` - Optional. String.
+- `title` - Optional. String.
+- `item` - Optional. String. One or more items to list.
 
 #### Exit codes
 

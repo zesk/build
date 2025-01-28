@@ -53,17 +53,21 @@ usageDocumentComplex() {
   fi
   __catchArgument "$usage" isInteger "$exitCode" || __catchArgument "$usage" "$(debuggingStack)" || return $?
 
-  if buildDebugEnabled "fast-usage"; then
-    local color="error" verb="Failed"
-    if [ "$exitCode" -eq 0 ]; then
-      color="success"
-      verb="Success"
-    else
-      exec 1>&2
-    fi
-    statusMessage --last decorate "$color" "[$exitCode]" "$verb" "$@"
-    return "$exitCode"
-  fi
+  local color="success"
+  [ "$exitCode" -eq 0 ] || color="error"
+  case "$exitCode" in
+    0 | 2)
+      if buildDebugEnabled "fast-usage"; then
+        printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")" 1>&2
+        return "$exitCode"
+      fi
+      ;;
+    *)
+      [ "$exitCode" -eq 0 ] || color="error"
+      printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")" 1>&2
+      return "$exitCode"
+      ;;
+  esac
 
   local variablesFile
   variablesFile=$(fileTemporaryName "$usage") || return $?

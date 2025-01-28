@@ -16,62 +16,38 @@
 #------------------------------------------------------------------------------
 #
 
-# Summary: Create a temporary file (or directory) or fail using usageFunction
-# Utility function to replace this common code
-#
-#     variable=$(__catchEnvironment "$usage" mktemp) || return $?
-#
-# with
-#
-#     variable=$(fileTemporaryName "$usage") || return $?
-#
-# DOC TEMPLATE: assert-common 14
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
-# Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
-# Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # Output usage messages to console
 #
 # Should look into an actual file template, probably
 # See: usageDocument
 #
 # Do not call usage functions here to avoid recursion
-#
+# Usage: {fn} binName options delimiter description exitCode
 usageTemplate() {
-  local this="${FUNCNAME[0]}"
-  local usageString binName options delimiter description exitCode
+  local usage="_${FUNCNAME[0]}" __saved=("$@")
 
-  [ $# -ge 5 ] || _argument "$(printf -- "%s %s %s" "$(decorate error "$this")" "$(decorate code "$(printf -- " \"%s\"" "$@")")" "$(decorate error "missing arguments - passed $# need 5")")" || return $?
+  [ $# -ge 5 ] || __failArgument "$usage" "Requires 5 or more arguments" || return $?
+
+  local binName options="$2" delimiter="$3" description="$4" exitCode
+
   binName="$(trimSpace "$1")"
-  options="$2"
-  delimiter="$3"
-  description="$4"
-  exitCode="${5-0}"
-  isInteger "$exitCode" || _argument "$(printf "%s: exit code is not integer \"%s\"\n%s" "$this" "$exitCode" "$(debuggingStack)")" || return $?
+  exitCode=$(usageArgumentUnsignedInteger "$usage" "exitCode" "$5") || return $?
+  shift 5 || __failArgument "$usage" "shift 5" || return $?
+
+  local usageString
   if [ "$exitCode" -eq 0 ]; then
     usageString="$(decorate bold-green Usage)"
   else
     usageString="$(decorate bold-red Usage)"
   fi
-  shift 5 || _argument "$this: shift 5" || return $?
   if [ ${#@} -gt 0 ]; then
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"
-    elif [ "$exitCode" != "$(_code argument)" ]; then
-      printf "%s (-> %s)\n" "$(decorate error "$@")" "$(decorate code " $exitCode ")"
+    elif [ "$exitCode" != 2 ]; then
+      printf "%s %s\n" "$(decorate code "[$exitCode]")" "$(decorate error "$@")"
       return "$exitCode"
     else
-      printf "%s (-> %s)\n\n" "$(decorate error "$@")" "$(decorate code " $exitCode ")"
+      printf "%s %s %s\n" "$(decorate code "[$exitCode]")" "$(decorate warning Argument)" "$(decorate error "$@")"
     fi
   fi
   description=${description:-"No description"}
@@ -94,6 +70,10 @@ usageTemplate() {
     debuggingStack
   fi
   return "$exitCode"
+}
+_usageTemplate() {
+  # _IDENTICAL_ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Parses input stream and generates an argument documentation list
