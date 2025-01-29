@@ -10,7 +10,6 @@
 # _IDENTICAL_ _errors EOF
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 # Requires: _return
@@ -19,7 +18,6 @@ _argument() {
 }
 
 # Return `environment` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 # Requires: _return

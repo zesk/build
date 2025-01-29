@@ -30,14 +30,9 @@ Run binary and output failed command upon error
 
 - Location: `bin/build/identical/__execute.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
-- `binary` - Required. Executable.
-- `...` - Any arguments are passed to binary
+- `binary ...` - Required. Executable. Any arguments are passed to `binary`.
 
 #### Exit codes
 
@@ -49,10 +44,6 @@ _mapEnvironment
 Run a command, fail using a handler
 
 - Location: `bin/build/tools/sugar.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -71,10 +62,6 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 
 - Location: `bin/build/tools/sugar.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `code` - Required. Integer. Exit code to return
@@ -92,10 +79,6 @@ Run `command`, upon failure run `handler` with an environment error
 
 - Location: `bin/build/identical/_tinySugar.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `handler` - Required. String. Failure command
@@ -112,10 +95,6 @@ Run `handler` with an environment error
 
 - Location: `bin/build/tools/sugar.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -130,10 +109,6 @@ _mapEnvironment
 Run `command`, upon failure run `handler` with an argument error
 
 - Location: `bin/build/identical/_tinySugar.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -151,10 +126,6 @@ Run `handler` with an environment error
 
 - Location: `bin/build/identical/_tinySugar.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -169,10 +140,6 @@ _mapEnvironment
 Run `handler` with an argument error
 
 - Location: `bin/build/identical/_tinySugar.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -190,10 +157,6 @@ Returns `exitCode`
 As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 
 - Location: `bin/build/identical/_undo.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -220,10 +183,6 @@ Suppress stdout without piping. Handy when you just want a behavior not the outp
 
 - Location: `bin/build/tools/sugar.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `command` - Required. Callable. Thing to muzzle.
@@ -247,10 +206,6 @@ _mapEnvironment
 Logs all deprecated functions to application root in a file called `.deprecated`
 
 - Location: `bin/build/tools/sugar.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

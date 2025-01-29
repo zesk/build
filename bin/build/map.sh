@@ -19,12 +19,12 @@
 # IDENTICAL _return 26
 
 # Usage: {fn} [ exitCode [ message ... ] ]
-# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: exitCode - Required. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
-  local r="${1-:1}" && shift
+  local r="${1-:1}" && shift 2>/dev/null
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }
@@ -205,7 +205,7 @@ _bashFunctionComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 32
+# IDENTICAL __help 34
 
 # Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
@@ -217,6 +217,8 @@ _bashFunctionComment() {
 # Oddly one of the few functions we can not offer the `--help` flag for.
 #
 # Argument: --only - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+# Argument: usageFunction - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+# Argument: arguments ... - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0

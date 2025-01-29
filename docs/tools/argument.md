@@ -44,10 +44,6 @@ Output is a temporary `stateFile` on line 1
 
 - Location: `bin/build/tools/argument.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `this` - Required. Function. Function to collect arguments for. Assume usage function is "_$this".
@@ -65,10 +61,6 @@ _mapEnvironment
 Handle `exit` -> 0
 
 - Location: `bin/build/tools/argument.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

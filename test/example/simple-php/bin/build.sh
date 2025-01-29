@@ -5,10 +5,9 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL __build 12
+# IDENTICAL __build 11
 
 # Load build tools (installing if needed) and run command
-# Usage: {fn} [ relativeHome installerPath [ command ... ] ]
 # Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary.
 # Argument: relativeHome - Required. Directory. Path to application home.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
@@ -19,10 +18,9 @@ __build() {
   __install "$installerPath/install-bin-build.sh" "bin/build/tools.sh" "$relative" "$@" || return $?
 }
 
-# IDENTICAL __install 26
+# IDENTICAL __install 25
 
 # Load build tools (installing if needed) and run command
-# Usage: {fn} [ relativeHome installer source [ command ... ] ]
 # Argument: installer - Required. File. Installation binary.
 # Argument: source - Required. File. Include file which should exist after installation.
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
@@ -50,12 +48,12 @@ __install() {
 # IDENTICAL _return 26
 
 # Usage: {fn} [ exitCode [ message ... ] ]
-# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: exitCode - Required. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
-  local r="${1-:1}" && shift
+  local r="${1-:1}" && shift 2>/dev/null
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }

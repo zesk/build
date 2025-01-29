@@ -429,7 +429,7 @@ Generates a temporary file which is removed
 
 No documentation for `usageDocument`.
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/tools/documentation.sh`
 
 #### Arguments
 

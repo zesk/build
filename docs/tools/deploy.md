@@ -15,10 +15,6 @@ Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
 - Location: `bin/build/tools/deploy.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `applicationHome` - Required. Directory. Application home to get the version from.
@@ -36,10 +32,6 @@ If this is called on a non-deployment system, use the application root instead o
 `deployHome` for compatibility.
 
 - Location: `bin/build/tools/deploy.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -60,10 +52,6 @@ Does a deploy version exist? versionName is the version identifier for deploymen
 
 - Location: `bin/build/tools/deploy.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `deployHome` - Required. Directory. Deployment database home.
@@ -80,10 +68,6 @@ Get the previous version of the supplied version
 
 - Location: `bin/build/tools/deploy.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -97,10 +81,6 @@ _mapEnvironment
 Get the next version of the supplied version
 
 - Location: `bin/build/tools/deploy.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -128,10 +108,6 @@ Deploy an application from a deployment repository
 This acts on the local file system only but used in tandem with `deployment.sh` functions.
 
 - Location: `bin/build/tools/deploy/application.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -169,10 +145,6 @@ Deploy current application to target path
 
 - Location: `bin/build/tools/deploy.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -187,10 +159,6 @@ _mapEnvironment
 Automatically convert application deployments using non-links to links.
 
 - Location: `bin/build/tools/deploy.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -210,10 +178,6 @@ passed as an argument is the place where the **new** application should be linke
 in order to activate it.
 
 - Location: `bin/build/tools/deploy.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -241,10 +205,6 @@ Current working directory on undo is `applicationHome/`
 Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 
 - Location: `bin/build/tools/deployment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -304,10 +264,6 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 
 ## Hook documentation
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -317,10 +273,6 @@ _mapEnvironment
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -334,10 +286,6 @@ _mapEnvironment
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -347,10 +295,6 @@ _mapEnvironment
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `message` - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
@@ -366,10 +310,6 @@ _mapEnvironment
 
 BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -381,10 +321,6 @@ _mapEnvironment
 #### Exit codes
 
 - `0` - This SHOULD exit successfully always 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `applicationPath` - This is the target for the current application
@@ -392,10 +328,6 @@ _mapEnvironment
 #### Exit codes
 
 - `0` - This is called to replace the running application in-place 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -411,10 +343,6 @@ _mapEnvironment
 
 - `0` - Continue with deployment
 - `Non-zero` - Any non-zero exit code will run `deploy-revert` hook on all systems and cancel deployment 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -424,10 +352,6 @@ _mapEnvironment
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -439,10 +363,6 @@ _mapEnvironment
 #### Exit codes
 
 - `0` - This SHOULD exit successfully always 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.

@@ -8,9 +8,8 @@
 # DOES NOT USE zesk-build-hook-header because this may be installed as a git hook as well so
 # it determines where it is installed and finds the build directory appropriately
 
-# IDENTICAL __source 20
+# IDENTICAL __source 19
 
-# Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Required. Directory. Path to application root.
@@ -30,9 +29,8 @@ __source() {
   "${a[@]}" || return $?
 }
 
-# IDENTICAL __tools 9
+# IDENTICAL __tools 8
 
-# Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
@@ -58,12 +56,12 @@ __where() {
 # IDENTICAL _return 26
 
 # Usage: {fn} [ exitCode [ message ... ] ]
-# Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
+# Argument: exitCode - Required. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
-  local r="${1-:1}" && shift
+  local r="${1-:1}" && shift 2>/dev/null
   isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
   printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
 }

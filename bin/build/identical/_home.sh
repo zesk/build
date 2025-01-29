@@ -9,6 +9,7 @@
 # IDENTICAL _home EOF
 
 # Usage: {fn} user
+# Argument: user - String. Required. User name to look up.
 # Summary: Quick user database look up
 # Look user up, output user home
 # Environment: APPLICATION_USER

@@ -54,7 +54,7 @@ Output a list of build-in decoration styles, one per line
 
 Runs the following command on each subsequent argument to allow for formatting with spaces
 
-- Location: `bin/build/identical/decorate.sh`
+- Location: `bin/build/tools/colors.sh`
 
 #### Arguments
 

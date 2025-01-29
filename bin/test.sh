@@ -7,9 +7,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL __source 20
+# IDENTICAL __source 19
 
-# Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Required. Directory. Path to application root.
@@ -29,9 +28,8 @@ __source() {
   "${a[@]}" || return $?
 }
 
-# IDENTICAL __tools 9
+# IDENTICAL __tools 8
 
-# Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
