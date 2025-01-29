@@ -83,7 +83,7 @@ usageDocumentComplex() {
     source "$variablesFile"
     set +a
 
-      [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
+    [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
     local bashDebug=false
     if isBashDebug; then
       bashDebug=true
@@ -194,8 +194,8 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -363,8 +363,8 @@ documentationTemplateFunctionCompile() {
         elif [ -z "$functionTemplate" ]; then
           functionTemplate=$1
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -441,8 +441,8 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -656,6 +656,8 @@ bashDocumentation_Extract() {
 
   [ -f "$definitionFile" ] || __throwArgument "$usage" "$definitionFile is not a file" || return $?
   [ -n "$fn" ] || __throwArgument "function name is blank" || return $?
+
+  set +o pipefail
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   base="$(__catchEnvironment "$usage" basename "$definitionFile")" || return $?

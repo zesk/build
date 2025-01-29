@@ -987,7 +987,6 @@ _characterClassReport() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# See: cannon.sh
 # Usage: cannon [ --path directory ] [ --help ] fromText toText [ findArgs ... ]
 # Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
 #
@@ -1005,6 +1004,7 @@ _characterClassReport() {
 # Exit Code: 1 - searchText is not blank
 # Exit Code: 1 - mktemp failed
 # Exit Code: 2 - Arguments are identical
+# See: cannon.sh
 cannon() {
   local usage="_${FUNCNAME[0]}"
 
