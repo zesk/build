@@ -30,7 +30,8 @@ __help() {
   local usage="${1-}" && shift
   if [ "$usage" = "--only" ]; then
     usage="${1-}" && shift
-    [ "$#" -eq 1 ] && [ "$1" = "--help" ] || __throwArgument "$usage" "Only argument allowed is \`--help\`" || return $?
+    [ $# -gt 0 ] || return 0
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$usage" "Only argument allowed is --help: \"${1-}\"" || return $?
   fi
   while [ $# -gt 0 ]; do
     if [ "$1" = "--help" ]; then

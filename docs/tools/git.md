@@ -14,8 +14,7 @@ Installs the `git` binary
 
 #### Usage
 
-    gitInstall [ package ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -37,8 +36,7 @@ This adds the directory passed to that directory in the local user's environment
 
 #### Usage
 
-    gitEnsureSafeDirectory [ directory ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -60,8 +58,7 @@ Delete git tag locally and at origin
 
 #### Usage
 
-    gitTagDelete [ tag ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -78,8 +75,7 @@ Remove a tag everywhere and tag again on the current branch
 
 #### Usage
 
-    gitTagDelete [ tag ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -102,6 +98,10 @@ When this tool succeeds the git repository contains a tag with the suffix and an
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Exit codes
 
 - `0` - Success
@@ -121,8 +121,7 @@ them sorted by version correctly.
 
 #### Usage
 
-    gitVersionList
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -140,8 +139,7 @@ Get the last reported version.
 
 #### Usage
 
-    gitVersionLast [ ignorePattern ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -158,6 +156,10 @@ Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character pre
 Delete the old tag as well
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -177,6 +179,10 @@ Does a branch exist locally or remotely?
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `branch ...` - String. Required. List of branch names to check.
@@ -190,6 +196,10 @@ Does a branch exist locally or remotely?
 Does a branch exist remotely?
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -205,6 +215,10 @@ Does a branch exist locally?
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `branch ...` - String. Required. List of branch names to check.
@@ -213,6 +227,10 @@ Does a branch exist locally?
 
 - `0` - All branches passed exist
 - `1` - At least one branch does not exist locally
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -231,6 +249,10 @@ BUILD_BRANCH_FORMAT
 Merge the current branch with another, push to remote, and then return to the original branch.
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -252,6 +274,10 @@ Get the commit hash
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -270,6 +296,10 @@ Comment wisely. Does not duplicate comments. Check your release notes.
 Example:
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -302,8 +332,7 @@ Current repository should be clean and have no modified files.
 
 #### Usage
 
-    gitMainly
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -318,6 +347,10 @@ Current repository should be clean and have no modified files.
 Finds `.git` directory above or at `startingDirectory`
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -343,6 +376,10 @@ Hook types:
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -366,6 +403,10 @@ When running within your hook, pass additional arguments so they can be preserve
     gitInstallHook --application "$myHome" pre-commit "$@" || return $?
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -399,6 +440,10 @@ Hook types:
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--copy` - Flag. Optional. Copy the hook but do not execute it.
@@ -424,6 +469,10 @@ usually have to `git push --force`
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -442,6 +491,10 @@ Has a git repository been changed from HEAD?
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -458,8 +511,7 @@ Show changed files from HEAD
 
 #### Usage
 
-    gitShowChanges
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -487,8 +539,7 @@ Show changed files from HEAD with their status prefix character:
 
 #### Usage
 
-    gitShowStatus
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -505,6 +556,10 @@ Are we currently inside a git hook?
 Tests non-blank strings in our environment.
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -525,6 +580,10 @@ List remote hosts for the current git repository
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -539,6 +598,10 @@ List remote hosts for the current git repository
 Get the current branch name
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -555,6 +618,10 @@ Does git have any tags?
 May need to `git pull --tags`, or no tags exist.
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -574,6 +641,10 @@ Set up a pre-commit hook
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -588,6 +659,10 @@ Set up a pre-commit hook
 Output a display for pre-commit files changed
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -604,6 +679,10 @@ Does this commit have the following file extensions?
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -619,6 +698,10 @@ List the file(s) of an extension
 
 - Location: `bin/build/tools/git.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -633,6 +716,10 @@ List the file(s) of an extension
 Clean up after our pre-commit (deletes cache directory)
 
 - Location: `bin/build/tools/git.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

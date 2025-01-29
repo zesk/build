@@ -12,8 +12,7 @@ Check if an element exists in an array
 
 #### Usage
 
-    inArray element [ arrayElement0 arrayElement1 ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -37,6 +36,10 @@ Test if an argument is a positive floating point number
 
 - Location: `bin/build/tools/type.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -56,6 +59,10 @@ Test if an argument is a floating point number
 
 - Location: `bin/build/tools/type.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -73,6 +80,10 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if an argument is a signed integer
 
 - Location: `bin/build/tools/type.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -92,6 +103,10 @@ Test if an argument is an unsigned integer
 
 - Location: `bin/update-available.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -110,6 +125,10 @@ Test if an argument is a positive integer (non-zero)
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -124,6 +143,10 @@ Test if an argument is a floating point number
 (`1e3` notation NOT supported)
 
 - Location: `bin/build/tools/type.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -144,6 +167,10 @@ If no arguments are passed, returns exit code 1.
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `string` - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
@@ -158,6 +185,10 @@ Test if all arguments are executable binaries
 If no arguments are passed, returns exit code 1.
 
 - Location: `bin/build/tools/platform/_isExecutable.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -174,6 +205,10 @@ If no arguments are passed, returns exit code 1.
 
 - Location: `bin/build/tools/type.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `string` - Required. Path to binary to test if it is executable.
@@ -189,6 +224,10 @@ Succeeds when all arguments are "true"-ish
 
 - Location: `bin/build/tools/type.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -203,6 +242,10 @@ Succeeds when all arguments are "true"-ish
 Is a variable declared as an array?
 
 - Location: `bin/build/tools/type.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

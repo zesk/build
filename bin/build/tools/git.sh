@@ -286,7 +286,7 @@ gitTagVersion() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -406,7 +406,7 @@ gitCommit() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -432,7 +432,7 @@ gitCommit() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   if ! isBoolean "$openLinks"; then
@@ -664,7 +664,7 @@ gitInstallHooks() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -691,7 +691,7 @@ gitInstallHooks() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
   if [ ${#hookNames[@]} -eq 0 ]; then
     hookNames=("${types[@]}")
@@ -1006,7 +1006,7 @@ gitBranchMergeCurrent() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -1025,7 +1025,7 @@ gitBranchMergeCurrent() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   [ -n "$targetBranch" ] || __throwArgument "$usage" "branch required" || return $?

@@ -27,7 +27,7 @@ bashCoverage() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -46,7 +46,7 @@ bashCoverage() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
@@ -74,7 +74,7 @@ bashCoverageReport() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -94,7 +94,7 @@ bashCoverageReport() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   [ -n "$target" ] || target="$home/test-coverage"

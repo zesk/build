@@ -14,8 +14,7 @@ Repeat a string
 
 #### Usage
 
-    repeat count string [ ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -42,8 +41,7 @@ Output a bar as wide as the console using the `=` symbol.
 
 #### Usage
 
-    echoBar [ alternateChar [ offset ] ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -74,8 +72,7 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 #### Usage
 
-    wrapLines [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -98,8 +95,7 @@ Format text and align it right using spaces.
 
 #### Usage
 
-    alignRight characterWidth text [ ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -126,8 +122,7 @@ Format text and align it left using spaces.
 
 #### Usage
 
-    alignLeft characterWidth text [ ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -154,8 +149,7 @@ Heading for section output
 
 #### Usage
 
-    boxedHeading [ --size size ] text [ ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -227,8 +221,7 @@ smmono12 (--bigger) toilet
 
 #### Usage
 
-    bigText [ --bigger ] Text to output
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -246,6 +239,10 @@ Outputs a label before a bigText for output.
 This function will strip any ANSI from the label to calculate correct string sizes.
 
 - Location: `bin/build/tools/decoration.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -281,6 +278,10 @@ Output a line and fill columns with a character
 
 - Location: `bin/build/tools/decoration.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -295,6 +296,10 @@ Output a line and fill columns with a character
 Replace an absolute path prefix with an icon if it matches HOME or BUILD_HOME
 
 - Location: `bin/build/tools/decoration.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

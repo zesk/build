@@ -16,6 +16,10 @@ Essentially converts the slash `/` to a `..`, so convert your source appropriate
 
 - Location: `bin/build/tools/directory.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `directory` - String. A path to convert.
@@ -31,6 +35,10 @@ Is a path an absolute path?
 
 - Location: `bin/build/tools/directory.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -44,6 +52,10 @@ Is a path an absolute path?
 Does a directory exist and is it empty?
 
 - Location: `bin/build/tools/directory.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -60,6 +72,10 @@ Does a directory exist and is it empty?
 Does the file's directory exist?
 
 - Location: `bin/build/tools/directory.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -78,6 +94,10 @@ Given a list of files, ensure their parent directories exist
 Creates the directories for all files passed in.
 
 - Location: `bin/build/tools/directory.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -99,6 +119,10 @@ Given a list of directories, ensure they exist and create them if they do not.
 
 - Location: `bin/build/tools/directory.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `dir1` - One or more directories to create
@@ -119,6 +143,10 @@ Copy directory over another sort-of-atomically
 
 - Location: `bin/build/tools/directory.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -134,6 +162,10 @@ Copy directory over another sort-of-atomically
 Utility for specific implementations of `directoryParent`
 
 - Location: `bin/build/tools/directory.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -153,6 +185,10 @@ Utility for specific implementations of `directoryParent`
 Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)
 
 - Location: `bin/build/tools/directory.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

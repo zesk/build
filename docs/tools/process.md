@@ -10,6 +10,10 @@ Wait for processes not owned by this process to exit, and send signals to termin
 
 - Location: `bin/build/tools/process.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `processId` - Integer. Required. Wait for process ID to exit.

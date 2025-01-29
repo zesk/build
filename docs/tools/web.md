@@ -11,6 +11,10 @@ Compare a remote file size with a local file size
 
 - Location: `bin/build/tools/web.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `url` - Required. URL. URL to check.
@@ -26,6 +30,10 @@ Compare a remote file size with a local file size
 Get the size of a remote URL
 
 - Location: `bin/build/tools/web.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -46,6 +54,10 @@ Get the size of a remote URL
 List IPv4 Addresses associated with this system using `ifconfig`
 
 - Location: `bin/build/tools/web.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -68,6 +80,10 @@ Fetch Time to First Byte and other stats
 
 - Location: `bin/build/tools/web.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -84,6 +100,10 @@ SIte is stored in a directory called `host` for the URL requested
 This is not final yet and may not work properly.
 
 - Location: `bin/build/tools/web.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

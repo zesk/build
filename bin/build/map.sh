@@ -168,11 +168,10 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL usageDocumentSimple 16
+# IDENTICAL usageDocumentSimple 15
 
 # Output a simple error message for a function
-# Requires: bashFunctionComment
-# Requires: decorate read printf
+# Requires: bashFunctionComment decorate read printf
 usageDocumentSimple() {
   local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
 
@@ -206,7 +205,7 @@ _bashFunctionComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 31
+# IDENTICAL __help 32
 
 # Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
@@ -227,7 +226,8 @@ __help() {
   local usage="${1-}" && shift
   if [ "$usage" = "--only" ]; then
     usage="${1-}" && shift
-    [ "$#" -eq 1 ] && [ "$1" = "--help" ] || __throwArgument "$usage" "Only argument allowed is \`--help\`" || return $?
+    [ $# -gt 0 ] || return 0
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$usage" "Only argument allowed is --help: \"${1-}\"" || return $?
   fi
   while [ $# -gt 0 ]; do
     if [ "$1" = "--help" ]; then
@@ -526,7 +526,7 @@ mapEnvironment() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -546,7 +546,7 @@ mapEnvironment() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   local __ee=("$@") __e

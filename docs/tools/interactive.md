@@ -13,6 +13,10 @@ Not ready for prime time yet - written not tested.
 
 - Location: `bin/build/tools/interactive.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `verificationCallable` - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
@@ -34,6 +38,10 @@ No documentation for `interactiveCountdown`.
 
 - Location: `bin/build/tools/interactive.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -50,6 +58,10 @@ No documentation for `confirmYesNo`.
 
 - Location: `bin/build/tools/interactive.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -63,6 +75,10 @@ No documentation for `confirmYesNo`.
 Pause for user input
 
 - Location: `bin/build/tools/interactive.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -83,6 +99,10 @@ This function does not modify the source or destination.
 
 - Location: `bin/build/tools/interactive.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--map` - Flag. Optional. Map environment values into file before copying.
@@ -99,6 +119,10 @@ Copy file from source to destination
 Supports mapping the file using the current environment, or escalated privileges.
 
 - Location: `bin/build/tools/interactive.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -120,6 +144,10 @@ Loads files or a directory of `.sh` files using `source` to make the code availa
 Has security implications. Use with caution and ensure your directory is protected.
 
 - Location: `bin/build/tools/interactive.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

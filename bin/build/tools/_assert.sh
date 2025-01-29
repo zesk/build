@@ -208,7 +208,7 @@ _assertConditionHelper() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
   [ -n "$tester" ] || __throwArgument "$usage" "--test required ($*)" || return $?
 
@@ -344,7 +344,7 @@ __assertFileContainsHelper() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   displayName="${displayName:-"$file"}"

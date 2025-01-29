@@ -12,6 +12,10 @@ Are we on Mac OS X?
 
 - Location: `bin/build/tools/darwin.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -27,6 +31,10 @@ Display a dialog using `osascript` with the choices provided. Typically this is 
 Outputs the selected button text upon exit.
 
 - Location: `bin/build/tools/darwin.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

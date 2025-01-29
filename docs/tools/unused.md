@@ -8,6 +8,10 @@ This is a sample function with example code and patterns used in Zesk Build.
 
 - Location: `bin/build/tools/example.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -32,6 +36,10 @@ No documentation for `runHookOptional`.
 
 - Location: `bin/build/tools/deprecated.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -46,6 +54,10 @@ No documentation for `runHookOptional`.
 Not keeping this around will break old scripts, so don't be a ...
 
 - Location: `bin/build/tools/deprecated.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -67,8 +79,7 @@ right-aligned to the `characterWidth` given and colored using `decorate label`; 
 
 #### Usage
 
-    decorate pair characterWidth name [ value ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -81,6 +92,10 @@ right-aligned to the `characterWidth` given and colored using `decorate label`; 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -107,8 +122,7 @@ Run checks interactively until errors are all fixed.
 
 #### Usage
 
-    [ fileToCheck ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -127,6 +141,10 @@ Output a titled list
 
 - Location: `bin/build/tools/deprecated.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -142,6 +160,10 @@ Output a command, quoting individual arguments
 
 - Location: `bin/build/tools/deprecated.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -151,6 +173,10 @@ Output a command, quoting individual arguments
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `separator` - Optional. String.

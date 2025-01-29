@@ -13,6 +13,10 @@ Covert resulting files using `bashCoverageReport`
 
 - Location: `bin/build/tools/coverage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -30,6 +34,10 @@ Covert resulting files using `bashCoverageReport`
 Generate a coverage report using the coverage statistics file
 
 - Location: `bin/build/tools/coverage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

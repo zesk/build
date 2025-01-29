@@ -10,8 +10,7 @@
 # IDENTICAL usageDocumentSimple EOF
 
 # Output a simple error message for a function
-# Requires: bashFunctionComment
-# Requires: decorate read printf
+# Requires: bashFunctionComment decorate read printf
 usageDocumentSimple() {
   local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
 

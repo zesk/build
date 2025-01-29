@@ -28,7 +28,11 @@ This is universally used throughout.
 
 Run binary and output failed command upon error
 
-- Location: `bin/build/identical/_sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -45,6 +49,10 @@ Run binary and output failed command upon error
 Run a command, fail using a handler
 
 - Location: `bin/build/tools/sugar.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -63,6 +71,10 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 
 - Location: `bin/build/tools/sugar.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `code` - Required. Integer. Exit code to return
@@ -80,6 +92,10 @@ Run `command`, upon failure run `handler` with an environment error
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `handler` - Required. String. Failure command
@@ -96,6 +112,10 @@ Run `handler` with an environment error
 
 - Location: `bin/build/tools/sugar.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -110,6 +130,10 @@ Run `handler` with an environment error
 Run `command`, upon failure run `handler` with an argument error
 
 - Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -127,6 +151,10 @@ Run `handler` with an environment error
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -141,6 +169,10 @@ Run `handler` with an environment error
 Run `handler` with an argument error
 
 - Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -158,6 +190,10 @@ Returns `exitCode`
 As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 
 - Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -184,6 +220,10 @@ Suppress stdout without piping. Handy when you just want a behavior not the outp
 
 - Location: `bin/build/tools/sugar.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `command` - Required. Callable. Thing to muzzle.
@@ -207,6 +247,10 @@ Suppress stdout without piping. Handy when you just want a behavior not the outp
 Logs all deprecated functions to application root in a file called `.deprecated`
 
 - Location: `bin/build/tools/sugar.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

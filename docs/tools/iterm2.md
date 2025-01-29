@@ -6,6 +6,10 @@ Is the current console iTerm2?
 
 - Location: `bin/build/tools/iterm2.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -20,6 +24,10 @@ Is the current console iTerm2?
 Load $HOME/.iterm2_shell_integration.bash if it exists
 
 - Location: `bin/build/tools/iterm2.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -40,6 +48,10 @@ TERM
 Set the badge for the iTerm2 console
 
 - Location: `bin/build/tools/iterm2.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

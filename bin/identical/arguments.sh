@@ -39,7 +39,7 @@ __documentTemplateFunction() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -61,11 +61,11 @@ __documentTemplateFunction() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   local start
@@ -90,11 +90,70 @@ __documentTemplateFunction() {
 
   reportTiming "$start" "Completed in"
 }
+
 ___documentTemplateFunction() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  local usage="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argument-case-header-blank 4
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      # IDENTICAL profileNameArgumentHandlerCase 6
+      --profile)
+        shift
+        [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
+        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+        pp=("$argument" "$profileName")
+        ;;
+      # IDENTICAL regionArgumentHandler 5
+      --region)
+        shift
+        [ -z "$region" ] || __throwArgument "$usage" "$argument already specified: $region"
+        region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local start
+
+  # IDENTICAL startBeginTiming 1
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+
+  # IDENTICAL profileNameArgumentValidation 4
+  if [ -z "$profileName" ]; then
+    profileName="$(__catchEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
+    [ -n "$profileName" ] || profileName="default"
+  fi
+
+  # IDENTICAL regionArgumentValidation 7
+  if [ -z "$region" ]; then
+    export AWS_REGION
+    __catchEnvironment "$usage" buildEnvironmentLoad AWS_REGION || return $?
+    region="${AWS_REGION-}"
+    [ -n "$region" ] || __throwArgument "$usage" "AWS_REGION or --region is required" || return $?
+  fi
+  awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
+
+  reportTiming "$start" "Completed in"
 }
 
+__documentTemplateFunction2() {
+  # Source IDENTICAL usageDocument HERE
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 ___documentTemplateFunction2() {
   # Source IDENTICAL usageDocument HERE
   # IDENTICAL usageDocument 1

@@ -7,7 +7,8 @@
 
 testBuildRunner() {
   assertExitCode --stderr-match "Hello, world" --line "$LINENO" 1 Build --verbose _return 1 "Hello, world" || return $?
-  assertExitCode --stderr-match "Hello, world" --line "$LINENO" 99 Build --verbose _return 99 || return $?
+  assertExitCode --stderr-match "welcome our" --line "$LINENO" 99 Build --verbose _return 99 "I. for one, welcome our ..." || return $?
+  assertExitCode --stderr-match "bad arg" --line "$LINENO" 2 Build --verbose _return "NaN" "bad arg" || return $?
 }
 
 testBinBuildRequires() {

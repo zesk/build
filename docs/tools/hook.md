@@ -25,6 +25,10 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 - Location: `bin/build/tools/hook.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home.
@@ -61,6 +65,10 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 - Location: `bin/build/tools/hook.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home.
@@ -86,6 +94,10 @@ Identical to `hookRun` but returns exit code zero if the hook does not exist.
 
 - Location: `bin/build/tools/hook.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home.
@@ -110,6 +122,10 @@ BUILD_HOOK_PATH
 Identical to `hookRun` but returns exit code zero if the hook does not exist.
 
 - Location: `bin/build/tools/hook.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -138,6 +154,10 @@ Find the path to a hook. The search path is:
 If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
 
 - Location: `bin/build/tools/hook.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

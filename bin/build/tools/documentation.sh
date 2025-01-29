@@ -54,17 +54,17 @@ usageDocumentComplex() {
   __catchArgument "$usage" isInteger "$exitCode" || __catchArgument "$usage" "$(debuggingStack)" || return $?
 
   local color="success"
-  [ "$exitCode" -eq 0 ] || color="error"
   case "$exitCode" in
     0 | 2)
       if buildDebugEnabled "fast-usage"; then
-        printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")" 1>&2
+        [ "$exitCode" -eq 0 ] || exec 1>&2 && color="warning"
+        printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
         return "$exitCode"
       fi
       ;;
     *)
-      [ "$exitCode" -eq 0 ] || color="error"
-      printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")" 1>&2
+      [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
+      printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
       return "$exitCode"
       ;;
   esac
@@ -83,7 +83,7 @@ usageDocumentComplex() {
     source "$variablesFile"
     set +a
 
-    [ "$exitCode" -eq 0 ] || exec 1>&2
+      [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
     local bashDebug=false
     if isBashDebug; then
       bashDebug=true
@@ -91,7 +91,7 @@ usageDocumentComplex() {
       __buildDebugDisable
     fi
     bashRecursionDebug
-    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$@"
+    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$(decorate "$color" "$@")"
     if $bashDebug; then
       __buildDebugEnable
     fi
@@ -104,11 +104,10 @@ _usageDocumentComplex() {
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL usageDocumentSimple 16
+# IDENTICAL usageDocumentSimple 15
 
 # Output a simple error message for a function
-# Requires: bashFunctionComment
-# Requires: decorate read printf
+# Requires: bashFunctionComment decorate read printf
 usageDocumentSimple() {
   local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
 
@@ -168,7 +167,7 @@ documentationTemplateCompile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -195,13 +194,13 @@ documentationTemplateCompile() {
         elif [ -z "$targetFile" ]; then
           targetFile=$1
         else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   # Validate arguments
@@ -343,7 +342,7 @@ documentationTemplateFunctionCompile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -364,13 +363,13 @@ documentationTemplateFunctionCompile() {
         elif [ -z "$functionTemplate" ]; then
           functionTemplate=$1
         else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   local settingsFile
@@ -417,7 +416,7 @@ documentationTemplateDirectoryCompile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -442,13 +441,13 @@ documentationTemplateDirectoryCompile() {
         elif [ -z "$targetDirectory" ]; then
           targetDirectory="$1"
         else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   # IDENTICAL startBeginTiming 1

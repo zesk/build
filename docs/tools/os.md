@@ -12,6 +12,10 @@ Get the port number associated with a service
 
 - Location: `bin/build/tools/os.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `service` - A unix service typically found in `/etc/services`
@@ -42,6 +46,10 @@ Backup when `/etc/services` does not exist.
 
 - Location: `bin/build/tools/os.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `service` - A unix service typically found in `/etc/services`
@@ -64,6 +72,10 @@ No documentation for `whichExists`.
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `binary` - Required. String. Binary to find in the system `PATH`.
@@ -76,6 +88,10 @@ No documentation for `whichExists`.
 $\Run a binary count times
 
 - Location: `bin/build/tools/os.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -93,6 +109,10 @@ $\Run a binary count times
 Makes all `*.sh` files executable
 
 - Location: `bin/build/tools/os.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -116,6 +136,10 @@ Modify the PATH environment variable to add a path.
 
 - Location: `bin/build/tools/os.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list
@@ -132,6 +156,10 @@ Modify the PATH environment variable to add a path.
 Remove a path from the PATH environment variable
 
 - Location: `bin/build/tools/os.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -152,8 +180,7 @@ Maintains ordering.
 
 #### Usage
 
-    pathCleanDuplicates
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -173,6 +200,10 @@ Modify the MANPATH environment variable to add a path.
 
 - Location: `bin/build/tools/os.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list
@@ -189,6 +220,10 @@ Modify the MANPATH environment variable to add a path.
 Remove a path from the MANPATH environment variable
 
 - Location: `bin/build/tools/os.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -209,8 +244,7 @@ Maintains ordering.
 
 #### Usage
 
-    manPathCleanDuplicates
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -229,6 +263,10 @@ Maintains ordering.
 Outputs value of resident memory used by a process, value is in kilobytes
 
 - Location: `bin/build/tools/process.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -252,6 +290,10 @@ Outputs value of resident memory used by a process, value is in kilobytes
 Outputs value of virtual memory allocated for a process, value is in kilobytes
 
 - Location: `bin/build/tools/process.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -281,8 +323,7 @@ Format something neatly as JSON
 
 #### Usage
 
-    JSON < inputFile > outputFile
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -298,6 +339,10 @@ Format something neatly as JSON
 Get the load average using uptime
 
 - Location: `bin/build/tools/os.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

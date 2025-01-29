@@ -16,8 +16,7 @@ Platform agnostic tar cfz which ignores owner and attributes
 
 #### Usage
 
-    tarCreate target files
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -38,6 +37,10 @@ e.g. `tar -xf '*/file.json'` or `tar -xf --wildcards '*/file.json'` depending on
 `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments.
 
 - Location: `bin/build/tools/tar.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

@@ -23,6 +23,10 @@ If no arguments are passed, the default behavior is to set up the `~/.ssh` direc
 
 - Location: `bin/build/tools/ssh.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `host0` - String. Optional. One ore more hosts to add to the known hosts file
@@ -44,6 +48,10 @@ Add .ssh key for current user
 You will need the password for this server for the current user.
 
 - Location: `bin/build/tools/ssh.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

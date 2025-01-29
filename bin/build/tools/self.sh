@@ -29,7 +29,7 @@ installInstallBinary() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -69,12 +69,12 @@ installInstallBinary() {
           applicationHome=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
         else
           # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   [ -n "$installBinName" ] || __throwArgument "$usage" "--bin is required" || return $?
@@ -326,7 +326,7 @@ buildEnvironmentLoad() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -354,7 +354,7 @@ buildEnvironmentLoad() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 }
 _buildEnvironmentLoad() {
@@ -375,18 +375,22 @@ _buildEnvironmentLoad() {
 Build() {
   local usage="_${FUNCNAME[0]}"
 
-  local run="bin/build/tools.sh" vv=() verboseFlag=false
+  local run="bin/build/tools.sh" vv=() verboseFlag=false startDirectory=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
         return $?
+        ;;
+      --start)
+        shift
+        startDirectory=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
         ;;
       --verbose)
         vv+=("$argument")
@@ -397,17 +401,21 @@ Build() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
-  local home
-  if ! home=$(bashLibraryHome "$run" 2>/dev/null); then
+
+  [ -n "$startDirectory" ] || startDirectory=$(__catchEnvironment "$usage" pwd) || return $?
+
+  local home code=0
+  if home=$(bashLibraryHome "$run" "$startDirectory" 2>/dev/null); then
     home=$(__catchEnvironment "$usage" buildHome) || return $?
-    ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
-    __catchEnvironment "$usage" "$home/$run" "$@" || return $?
+    ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
+    "$home/$run" "$@" || code=$?
   else
-    __catchEnvironment "$usage" bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@" || return $?
+    bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@" || code=$?
   fi
-  return 0
+  ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate each code "$home/$run" "$@")" "$(decorate notice "Exit code: $code")"
+  return $code
 }
 _Build() {
   # _IDENTICAL_ usageDocument 1
@@ -435,7 +443,7 @@ buildEnvironmentGet() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -448,7 +456,7 @@ buildEnvironmentGet() {
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 }
 _buildEnvironmentGet() {
@@ -471,7 +479,7 @@ buildQuietLog() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)

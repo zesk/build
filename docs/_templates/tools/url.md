@@ -10,3 +10,4 @@
 {urlOpen}
 {urlOpener}
 {urlFilter}
+{urlFetch}

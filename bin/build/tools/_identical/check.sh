@@ -60,7 +60,7 @@ identicalCheck() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -112,11 +112,11 @@ identicalCheck() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   [ ${#findArgs[@]} -gt 0 ] || __throwArgument "$usage" "Need to specify at least one --extension" || return $?
@@ -294,19 +294,18 @@ __identicalCheckMatchFile() {
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
   local usage="_${FUNCNAME[0]}"
-  local argument single singleFile aa
+  local argument single singleFile aa=() pp=()
 
-  aa=()
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --internal)
-        if [ "${#aa[@]}" -eq 0 ]; then
+        if [ "${#pp[@]}" -eq 0 ]; then
           # Ordering here matters so declare from inside scope to outside scope
-          aa+=(--prefix '# ''DOC TEMPLATE:')
-          aa+=(--prefix '# ''_IDENTICAL_')
+          pp+=(--prefix '# ''DOC TEMPLATE:')
+          pp+=(--prefix '# ''_IDENTICAL_')
         fi
         ;;
       --singles)
@@ -338,8 +337,8 @@ identicalCheckShell() {
     esac
     shift || :
   done
-  aa+=(--prefix '# ''IDENTICAL')
-  __catchEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" --extension sh "$@" || return $?
+  pp+=(--prefix '# ''IDENTICAL')
+  __catchEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

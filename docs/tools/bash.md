@@ -12,6 +12,10 @@ Run or source a library
 
 - Location: `bin/build/tools/bash.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -27,10 +31,18 @@ Output the home for a library in the parent path
 
 - Location: `bin/build/tools/bash.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `libraryRelativePath` - String. Required. Path of file to find from the home directory.
 - `startDirectory` - Directory. Optional. Place to start searching. Uses `pwd` if not specified.
+
+#### Examples
+
+    libFound=$(bashLibraryHome "bin/watcher/server.py")
 
 #### Exit codes
 
@@ -43,6 +55,10 @@ Load a directory of `.sh` files using `source` to make the code available.
 Has security implications. Use with caution and ensure your directory is protected.
 
 - Location: `bin/build/tools/bash.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -62,6 +78,10 @@ No documentation for `bashFunctionDefined`.
 
 - Location: `bin/build/tools/bash.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -75,7 +95,11 @@ No documentation for `bashFunctionDefined`.
 
 Returns a unique list of tokens
 
-- Location: `bin/build/tools/bash.sh`
+- Location: `bin/build/tools/bash/requires.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -100,7 +124,11 @@ Each requirement token is:
 If all requirements are met, exit status of 0.
 If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
 
-- Location: `bin/build/tools/bash.sh`
+- Location: `bin/build/tools/bash/requires.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -122,6 +150,10 @@ Pipe to strip comments from a bash file
 
 - Location: `bin/build/tools/bash.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -138,6 +170,10 @@ This check is simplistic and does not verify actual coverage or code paths.
 
 - Location: `bin/build/tools/bash.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `functionName` - String. Required. Function which should be called somewhere within a file.
@@ -152,6 +188,10 @@ This check is simplistic and does not verify actual coverage or code paths.
 List functions in a given shell file
 
 - Location: `bin/build/tools/bash.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -169,6 +209,10 @@ Extract a bash comment from a file
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `source` - File. Required. File where the function is defined.
@@ -182,7 +226,32 @@ Extract a bash comment from a file
 
 ## Linting
 
+### `bashSanitize` - Sanitize bash files for code quality.
 
+Sanitize bash files for code quality.
+
+Placing a `.debugging` file in your project with a list of permitted files which contain debugging (`set` with `-x`)
+
+- Location: `bin/build/tools/bash/sanitize.sh`
+
+#### Usage
+
+_mapEnvironment
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `--` - Flag. Optional. Interactive mode on fixing errors.
+- `--home home` - Optional. Directory. Sanitize files starting here. (Defaults to `buildHome`)
+- `--interactive` - Flag. Optional. Interactive mode on fixing errors.
+- `--check checkDirectory` - Optional. Directory. Check shell scripts in this directory for common errors.
+- `...` - Additional arguments are passed to `bashLintFiles` `validateFileContents`
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `bashLintFiles` - Check files for the existence of a string
 
 Run `bashLint` on a set of bash files.
@@ -191,8 +260,7 @@ Run `bashLint` on a set of bash files.
 
 #### Usage
 
-    bashLintFiles [ --exec binary ] [ file0 ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -232,6 +300,10 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 - Location: `bin/build/tools/test.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `script` - Shell script to validate
@@ -260,6 +332,12 @@ determine where the problem or loop exists.
 
 - Location: `bin/build/tools/debug.sh`
 
+#### Usage
+
+_mapEnvironment
+
+[42;30m[1;91m[0m
+
 [92mUsage[0m: [38;5;20misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
 
     [94m--prefix  [1;40;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
@@ -281,6 +359,10 @@ It will fail upon a second call; to reset call with `--end`
 When called twice, fails on the second invocation and dumps a call stack to stderr.
 
 - Location: `bin/build/tools/debug.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

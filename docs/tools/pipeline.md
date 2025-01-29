@@ -21,8 +21,7 @@ If `.env.local` exists, it is also loaded in a similar manner.
 
 #### Usage
 
-    environmentFileLoad .env --optional .env.local where
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -56,6 +55,10 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 - Location: `bin/build/tools/hook.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home.
@@ -80,6 +83,10 @@ BUILD_HOOK_PATH
 Identical to `hookRun` but returns exit code zero if the hook does not exist.
 
 - Location: `bin/build/tools/hook.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -108,6 +115,10 @@ Check if one or more hook exists. All hooks must exist to succeed.
 
 - Location: `bin/build/tools/hook.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
@@ -133,6 +144,10 @@ If a file named `hookName` with the extension `.sh` is found which is executable
 
 - Location: `bin/build/tools/hook.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
@@ -153,8 +168,7 @@ Outputs the offset in seconds from January 1, 1970.
 
 #### Usage
 
-    beginTiming
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -181,9 +195,7 @@ Outputs a nice colorful message showing the number of seconds elapsed as well as
 
 #### Usage
 
-    reportTiming "$startTime" outputText...
-    reportTiming start [ message ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -214,8 +226,7 @@ Outputs debugging information after build fails:
 
 #### Usage
 
-    buildFailed logFile
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -251,8 +262,7 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 
 #### Usage
 
-    versionSort [ -r ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -272,6 +282,10 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 Get the current IP address of a host
 
 - Location: `bin/build/tools/pipeline.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -300,6 +314,10 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 - Location: `bin/build/tools/pipeline.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `keyDate` - Required. Date. Formatted like `YYYY-MM-DD`
@@ -327,6 +345,10 @@ Create environment file `.env` for build.
 
 - Location: `bin/build/tools/environment.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `requiredEnvironment ...` - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
@@ -351,6 +373,10 @@ Display and validate application variables.
 
 - Location: `bin/build/tools/environment.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `environmentName` - EnvironmentVariable. Optional. A required environment variable name
@@ -366,6 +392,10 @@ Display and validate application variables.
 Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
 
 - Location: `bin/build/tools/environment.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -402,6 +432,10 @@ This acts on the local file system only but used in tandem with `deployment.sh` 
 
 - Location: `bin/build/tools/deploy/application.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. This help.
@@ -432,6 +466,10 @@ Get the next version of the supplied version
 
 - Location: `bin/build/tools/deploy.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -447,6 +485,10 @@ Get the previous version of the supplied version
 
 - Location: `bin/build/tools/deploy.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -460,6 +502,10 @@ Get the previous version of the supplied version
 Does a deploy version exist? versionName is the version identifier for deployments
 
 - Location: `bin/build/tools/deploy.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -479,6 +525,10 @@ that does not exist.
 Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
 - Location: `bin/build/tools/deploy.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

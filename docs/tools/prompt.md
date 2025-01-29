@@ -31,6 +31,10 @@ Modules are any binary or executable to run each prompt, and can be added or rem
 
 - Location: `bin/build/tools/prompt.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--reset` - Flag. Optional. Remove all prompt modules.
@@ -63,6 +67,10 @@ Options are:
 
 - Location: `bin/build/tools/prompt.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -87,6 +95,10 @@ Also shows the change in Zesk Build version numbers
 
 - Location: `bin/build/tools/prompt.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -101,6 +113,10 @@ Also shows the change in Zesk Build version numbers
 Show current application and path as a badge
 
 - Location: `bin/build/tools/prompt.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

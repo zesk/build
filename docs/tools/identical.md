@@ -10,6 +10,10 @@ Repair an identical `token` in `destination` from `source`
 
 - Location: `bin/build/tools/_identical/repair.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--prefix prefix` - Required. A text prefix to search for to identify identical sections (e.g. `# IDENICAL`) (may specify more than one)
@@ -51,6 +55,10 @@ This is best used as a pre-commit check, for example. Wink!
 
 - Location: `bin/build/tools/_identical/check.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--extension extension` - Required. String. One or more extensions to search for in the current directory.
@@ -85,12 +93,17 @@ This allows for overlapping identical sections within templates with the intent:
 
 - Location: `bin/build/tools/_identical/check.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--singles singlesFiles` - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
 - `--single singleToken` - Optional. String. One or more tokens which cam be singles.
 - `--repair directory` - Optional. Directory. Any files in onr or more directories can be used to repair other files.
-- `--help` - Flag. Optional. I need somebody.
+- `--internal` - Flag. Optional. Do updates for `# _IDENTICAL_` and `# DOC TEMPLATE:` prefixes first.
+- `--help` - Optional. Flag. Display this help.
 - `--interactive` - Flag. Optional. Interactive mode on fixing errors.
 - `...` - Optional. Additional arguments are passed directly to `identicalCheck`.
 

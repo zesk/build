@@ -15,6 +15,10 @@ When this tool succeeds the `npm` binary is available in the local operating sys
 
 - Location: `bin/build/tools/npm.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.

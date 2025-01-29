@@ -66,7 +66,7 @@ _installRemotePackage() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -75,11 +75,11 @@ _installRemotePackage() {
         ;;
       --source)
         shift
-        source="$1"
+        source=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --name)
         shift
-        name="$1"
+        name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --debug)
         __installRemotePackageDebug "$argument"
@@ -89,7 +89,7 @@ _installRemotePackage() {
         ;;
       --replace)
         shift
-        newName="$1"
+        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
         __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
@@ -118,26 +118,27 @@ _installRemotePackage() {
       --version-function)
         shift
         [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         versionFunction="$1"
         ;;
       --url-function)
         shift
         [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         urlFunction="$1"
         ;;
       --check-function)
         shift
         [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         checkFunction="$1"
         ;;
       *)
         __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
         ;;
     esac
-    shift || __throwArgument "$usage" "missing argument #$__index: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 
   local installFlag=false message

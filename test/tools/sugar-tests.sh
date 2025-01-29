@@ -148,7 +148,7 @@ testSugar() {
   assertExitCode --line "$LINENO" --stderr-match foo 1 __execute _environment "foo" || return $?
   assertExitCode --line "$LINENO" --stderr-match foo 2 __execute _argument "foo" || return $?
   # __echo
-  assertExitCode --line "$LINENO" --stdout-match " printf \"%s\" \"Hello\"" --stdout-match "Hello" 0 __echo printf "%s" "Hello" || return $?
+  assertExitCode --line "$LINENO" --stdout-match " \"printf\" \"%s\" \"Hello\"" --stdout-match "Hello" 0 __echo printf "%s" "Hello" || return $?
 }
 
 testMoreSugar() {

@@ -16,8 +16,7 @@ Fetch the modification time of a file as a timestamp
 
 #### Usage
 
-    modificationTime filename0 [ filename1 ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -37,6 +36,10 @@ Fetch the modification time in seconds from now of a file as a timestamp
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -54,6 +57,10 @@ Fetch the modification time in seconds from now of a file as a timestamp
 Is this an empty (zero-sized) file?
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -73,6 +80,10 @@ Otherwise return `1``
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `sourceFile` - File to check
@@ -91,6 +102,10 @@ Otherwise return `1``
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `sourceFile` - File to check
@@ -107,6 +122,10 @@ Return the oldest file in the list.
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `file0` - One or more files to examine
@@ -121,6 +140,10 @@ Return the oldest file in the list.
 Return the newest file in the list
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -138,6 +161,10 @@ Prints days (integer) since modified
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -151,6 +178,10 @@ Prints days (integer) since modified
 Prints seconds since modified
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -168,6 +199,10 @@ Lists files in a directory recursively along with their modification time in sec
 Output is unsorted.
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -196,6 +231,10 @@ List the most recently modified file in a directory
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `directory - Required. Directory. Must exists` - directory to list.
@@ -211,6 +250,10 @@ List the most recently modified file in a directory
 List the most recently modified timestamp in a directory
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -229,6 +272,10 @@ Find the newest file in a directory
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `directory` - Directory. Required. Directory to search for the newest file.
@@ -243,6 +290,10 @@ Find the newest file in a directory
 Find the oldest file in a directory
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -262,6 +313,10 @@ Outputs the file owner for each file passed on the command line
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `file` - File to get the owner for
@@ -276,6 +331,10 @@ Outputs the file group for each file passed on the command line
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `file` - File to get the owner for
@@ -289,6 +348,10 @@ Outputs the file group for each file passed on the command line
 Outputs value of virtual memory allocated for a process, value is in kilobytes
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -307,6 +370,10 @@ Outputs one of `type` output or enhancements:
 - `link-directory`, `link-file`, `directory`, `integer`, `unknown`
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -328,8 +395,7 @@ No documentation for `realPath`.
 
 #### Usage
 
-    realPath argument
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -346,6 +412,10 @@ Renames a link forcing replacement, and works on different versions of `mv` whic
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -361,6 +431,10 @@ Normalizes segments of `/./` and `/../` in a path without using `realPath`
 Removes dot and dot-dot paths from a path correctly
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -379,6 +453,10 @@ Removes dot and dot-dot paths from a path correctly
 Generate a temporary file name using mktemp, and fail using a function
 
 - Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -402,6 +480,10 @@ Used to move files, temporarily, sometimes and then move back easily.
 Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -428,6 +510,10 @@ Reverses a pipe's input lines to output using an awk trick.
 Not recommended on big files.
 
 - Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -456,6 +542,10 @@ Find one or more patterns in a list of files, with a list of file name pattern e
 
 - Location: `bin/build/tools/file.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -475,6 +565,10 @@ Find one or more patterns in a list of files, with a list of file name pattern e
 Find list of files which do NOT match a specific pattern or patterns and output them
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -498,6 +592,10 @@ Find list of files which do NOT match a specific pattern or patterns and output 
 Create a link
 
 - Location: `bin/build/tools/file.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

@@ -27,6 +27,10 @@ Sets `kitty` incrementor to 2 and outputs `2`
 
 - Location: `bin/build/tools/utilities.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `count` - Optional. Integer. Sets the value for any following named variables to this value.
@@ -55,6 +59,10 @@ Extension parsing is done by removing the final dot from the filename:
 
 - Location: `bin/build/tools/os.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. This help.
@@ -72,6 +80,10 @@ Extension parsing is done by removing the final dot from the filename:
 Single reader, multiple writers
 
 - Location: `bin/build/tools/utilities.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

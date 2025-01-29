@@ -15,8 +15,7 @@
 # Exit Code: 1 - System is not an alpine system or apk is not installed
 apkIsInstalled() {
   local usage="_${FUNCNAME[0]}"
-
-  _arguments "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" --none "$@" || return "$(_argumentReturn $?)"
+  __help --only "$usage" "$@" || return 0
   isAlpine && whichExists apk
 }
 _apkIsInstalled() {
@@ -30,10 +29,7 @@ _apkIsInstalled() {
 # Argument: --help - Optional. Flag. Display this help.
 isAlpine() {
   local usage="_${FUNCNAME[0]}"
-  if [ $# -gt 0 ]; then
-    "$usage" 0
-    return $?
-  fi
+  __help --only "$usage" "$@" || return 0
   [ -f /etc/alpine-release ]
 }
 _isAlpine() {

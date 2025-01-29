@@ -16,8 +16,7 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 #### Usage
 
-    validateFileExtensionContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -50,6 +49,10 @@ By default, any directory which begins with a dot `.` will be ignored.
 
 - Location: `bin/build/tools/test.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `file0 - Required` - a item to look for matches in. Use `-` to read file list from `stdin`.
@@ -71,6 +74,10 @@ Check files to ensure `eval`s in code have been checked
 
 - Location: `bin/build/tools/security.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -85,6 +92,10 @@ Check files to ensure `eval`s in code have been checked
 Search bash files for assertions which do not terminate a function and are likely an error
 
 - Location: `bin/build/tools/test.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -104,6 +115,10 @@ Load test tools and make `testSuite` function available
 
 - Location: `bin/build/tools/test.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -115,6 +130,10 @@ Load test tools and make `testSuite` function available
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--one test` - Optional. Add one test suite to run.
@@ -147,6 +166,10 @@ Fake a value for testing
 
 - Location: `bin/build/tools/test.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `globalName` - EnvironmentVariable. Required. Global to change temporarily to a value.
@@ -164,6 +187,10 @@ Fake a value for testing
 Fake `hasConsoleAnimation` for testing
 
 - Location: `bin/build/tools/colors.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

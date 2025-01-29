@@ -190,7 +190,7 @@ _installRemotePackage() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -199,11 +199,11 @@ _installRemotePackage() {
         ;;
       --source)
         shift
-        source="$1"
+        source=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --name)
         shift
-        name="$1"
+        name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --debug)
         __installRemotePackageDebug "$argument"
@@ -213,7 +213,7 @@ _installRemotePackage() {
         ;;
       --replace)
         shift
-        newName="$1"
+        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
         __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
         __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
@@ -242,26 +242,27 @@ _installRemotePackage() {
       --version-function)
         shift
         [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         versionFunction="$1"
         ;;
       --url-function)
         shift
         [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         urlFunction="$1"
         ;;
       --check-function)
         shift
         [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         checkFunction="$1"
         ;;
       *)
         __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
         ;;
     esac
-    shift || __throwArgument "$usage" "missing argument #$__index: $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 
   local installFlag=false message
@@ -479,7 +480,7 @@ urlFetch() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -544,12 +545,12 @@ urlFetch() {
           break
         else
           # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
-    shift || __throwArgument "$usage" "missing #$__index/$__count: $argument $(decorate each code "${__saved[@]}")" || return $?
+    shift
   done
 
   if [ -n "$user" ]; then
@@ -580,7 +581,7 @@ _urlFetch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 31
+# IDENTICAL __help 32
 
 # Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
@@ -601,7 +602,8 @@ __help() {
   local usage="${1-}" && shift
   if [ "$usage" = "--only" ]; then
     usage="${1-}" && shift
-    [ "$#" -eq 1 ] && [ "$1" = "--help" ] || __throwArgument "$usage" "Only argument allowed is \`--help\`" || return $?
+    [ $# -gt 0 ] || return 0
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$usage" "Only argument allowed is --help: \"${1-}\"" || return $?
   fi
   while [ $# -gt 0 ]; do
     if [ "$1" = "--help" ]; then
@@ -617,11 +619,10 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL usageDocumentSimple 16
+# IDENTICAL usageDocumentSimple 15
 
 # Output a simple error message for a function
-# Requires: bashFunctionComment
-# Requires: decorate read printf
+# Requires: bashFunctionComment decorate read printf
 usageDocumentSimple() {
   local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
 
@@ -704,18 +705,25 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL whichExists 12
+# IDENTICAL whichExists 19
 
 # Usage: {fn} binary ...
 # Argument: binary - Required. String. Binary to find in the system `PATH`.
 # Exit code: 0 - If all values are found
+# Exit code: 1 - If any value is not found
+# Requires: __throwArgument which decorate
 whichExists() {
-  local __count=$# && [ $# -gt 0 ] || _argument "no arguments" || return $?
+  local usage="_${FUNCNAME[0]}"
+  local __saved=("$@") __count=$#
+  [ $# -gt 0 ] || __throwArgument "$usage" "no arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ -n "${1-}" ] || _argument "blank argument #$((__count - $# + 1))" || return $?
+    [ -n "${1-}" ] || __throwArgument "$usage"  "blank argument #$((__count - $# + 1)) ($(decorate each code "${__saved[@]}"))" || return $?
     which "$1" >/dev/null || return 1
     shift
   done
+}
+_whichExists() {
+  usageDocument "${BASH_SOURCE{0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL _type 46

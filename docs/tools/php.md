@@ -14,6 +14,10 @@ When this tool succeeds the `php` binary is available in the local operating sys
 
 - Location: `bin/build/tools/php.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `package` - Additional packages to install
@@ -40,8 +44,7 @@ This tools does not install the `composer` binary into the local environment.
 
 #### Usage
 
-    composer.sh [ --help ] [ installDirectory ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -84,6 +87,10 @@ Files are specified from the application root directory.
 
 - Location: `bin/build/tools/php.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 --skip-tag |- ` --no-tag` - Optional. Flag. Do not tag the release.
@@ -109,6 +116,10 @@ Outputs the path to the PHP log file
 
 - Location: `bin/build/tools/php.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -123,6 +134,10 @@ Outputs the path to the PHP log file
 Test a docker-based PHP application during build
 
 - Location: `bin/build/tools/php.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -140,6 +155,10 @@ Outputs the path to the PHP ini file
 
 - Location: `bin/build/tools/php.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -154,6 +173,10 @@ Outputs the path to the PHP ini file
 Tail the PHP log
 
 - Location: `bin/build/tools/php.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

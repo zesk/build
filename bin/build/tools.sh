@@ -43,6 +43,7 @@ __toolsMain() {
   local source="${BASH_SOURCE[0]}" internalError=253
   local toolsPath="${source%/*}/tools"
   local toolsFiles=("../env/BUILD_HOME") toolsList="$toolsPath/tools.conf" toolFile
+  local exitCode=0
 
   export BUILD_HOME
   unset BUILD_HOME
@@ -60,8 +61,9 @@ __toolsMain() {
     # Only require when running as a shell command
     set -eou pipefail
     # Run remaining command line arguments
-    BUILD_HOME="$BUILD_HOME" "$@" || return $?
+    BUILD_HOME="$BUILD_HOME" "$@" || exitCode=$?
   fi
+  return $exitCode
 }
 
-__toolsMain "$@" || exit $?
+__toolsMain "$@"

@@ -33,6 +33,10 @@ To run commands directly; note this is slower for larger scripts and can be used
 
 ## `identical-repair.sh` repair with semantics
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -56,6 +60,10 @@ The `../..` is the relative path from the script to the project root directory. 
 Installs Zesk Build from GitHub
 
 - Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

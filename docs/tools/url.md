@@ -23,8 +23,7 @@ Now works on multiple URLs, output is separated by a blank line for new entries
 
 #### Usage
 
-    urlParse url
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -47,8 +46,7 @@ Gets the component of one or more URLs
 
 #### Usage
 
-    urlParseItem component url0 [ url1 ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -70,6 +68,10 @@ Checks a URL is valid
 
 - Location: `bin/build/tools/url.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `url ...` - String. URL. Required. A Uniform Resource Locator
@@ -85,6 +87,10 @@ Open a URL using the operating system
 Usage urlOpen [ --help ]
 
 - Location: `bin/build/tools/url.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -104,6 +110,10 @@ Open URLs which appear in a stream (but continue to output the stream)
 
 - Location: `bin/build/tools/url.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -120,11 +130,43 @@ URLs are explicitly trimmed at quote, whitespace and escape boundaries.
 
 - Location: `bin/build/tools/url.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--show-file` - Boolean. Optional. Show the file name in the output (suffix with `: `)
 - `--file name - String. Optional. The file name to display` - can be any text.
 - `file` - File. Optional. A file to read and output URLs found.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `urlFetch` - undocumented
+
+No documentation for `urlFetch`.
+
+- Location: `bin/build/identical/urlFetch.sh`
+
+#### Usage
+
+_mapEnvironment
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `--header header` - String. Optional. Send a header in the format 'Name: Value'
+- `--wget` - Flag. Optional. Force use of wget. If unavailable, fail.
+- `--curl` - Flag. Optional. Force use of curl. If unavailable, fail.
+- `--binary binaryName` - Callable. Use this binary instead. If the base name of the file is not `curl` or `wget` you MUST supply `--argument-format`.
+- `--argument-format format` - Optional. String. Supply `curl` or `wget` for parameter formatting.
+- `--user userName` - Optional. String. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
+- `--password password` - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
+- `url` - Required. URL. URL to fetch to target file.
+- `file` - Required. FileDirectory. Target file.
 
 #### Exit codes
 

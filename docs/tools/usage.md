@@ -16,6 +16,10 @@ No documentation for `usageDocument`.
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -36,8 +40,7 @@ Simplifies documentation and keeps it with the code.
 
 #### Usage
 
-    usageDocument functionDefinitionFile functionName exitCode [ message ... ]
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -57,6 +60,10 @@ Output a simple error message for a function
 
 - Location: `bin/build/install-bin-build.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -69,8 +76,7 @@ Output a simple error message for a function
 
 #### Usage
 
-    usageArguments delimiter
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -92,6 +98,10 @@ use with maximumFieldLength 1 to generate widths
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `nSpaces` - Required. Integer. Number of spaces to indent arguments.
@@ -104,15 +114,7 @@ use with maximumFieldLength 1 to generate widths
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `usageTemplate` - Create a temporary file (or directory) or fail using usageFunction
-
-Utility function to replace this common code
-
-    variable=$(__catchEnvironment "$usage" mktemp) || return $?
-
-with
-
-    variable=$(fileTemporaryName "$usage") || return $?
+### `usageTemplate` - Output usage messages to console
 
 Output usage messages to console
 
@@ -122,22 +124,13 @@ Do not call usage functions here to avoid recursion
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
-- `--help` - Optional. Flag. Display this help.
-- `--line lineNumber` - Optional. Integer. Line number of calling function.
-- `--debug` - Optional. Flag. Debugging
-- `--display` - Optional. String. Display name for the condition.
-- `--success` - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-- `--stderr-match` - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-- `--stdout-no-match` - Optional. String. One or more strings which must match stderr.
-- `--stdout-match` - Optional. String. One or more strings which must match stdout.
-- `--stdout-no-match` - Optional. String. One or more strings which must match stdout.
-- `--stderr-ok` - Optional. Flag. Output to stderr will not cause the test to fail.
-- `--leak globalName` - Zero or more. String. Allow global leaks for these globals.
-- `--skip-plumber` - Optional. Flag. Skip plumber check for function calls.
-- `--dump` - Optional. Flag. Output stderr and stdout after test regardless.
-- `--dump-binary` - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+- No arguments.
 
 #### Exit codes
 
@@ -155,6 +148,10 @@ Runs `usage` on failure
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usageFunction` - Required. `bash` function already defined to output usage
@@ -170,6 +167,10 @@ Runs `usage` on failure
 Requires environment variables to be set and non-blank
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -191,6 +192,10 @@ Upon success, outputs the file name
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -208,6 +213,10 @@ Validates a value is not blank and is a file.
 Upon success, outputs the file name
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -227,6 +236,10 @@ Upon success, outputs the file name
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -243,6 +256,10 @@ Upon success, outputs the file name
 Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -261,6 +278,10 @@ Validates a value is not blank and is a directory. Upon success, outputs the dir
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -277,6 +298,10 @@ Validates a value is not blank and is a directory. Upon success, outputs the dir
 Validates a value is not blank and is a directory and does `realPath` on it.
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -296,6 +321,10 @@ Validates a value is not blank and is an environment file which is loaded immedi
 Upon success, outputs the file name to stdout, outputs a console message to stderr
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -317,6 +346,10 @@ Do not require argument to be non-blank
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -331,6 +364,10 @@ Do not require argument to be non-blank
 Require an argument to be non-blank
 
 - Location: `bin/build/install-bin-build.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -348,6 +385,10 @@ Validates a value is ok for an environment variable name
 Upon success, outputs the name
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -369,6 +410,10 @@ Require an argument to be a boolean value
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -384,6 +429,10 @@ Require an argument to be a boolean value
 Validates a value is an integer
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -402,6 +451,10 @@ Validates a value is an unsigned integer and greater than zero (NOT zero)
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usageFunction` - Required. Function. Run if usage fails
@@ -418,6 +471,10 @@ Validates a value is an unsigned integer and greater than zero (NOT zero)
 Validates a value is an unsigned integer
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -439,6 +496,10 @@ Require an argument to be a callable
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -455,6 +516,10 @@ Require an argument to be a function
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -470,6 +535,10 @@ Require an argument to be a function
 Require an argument to be a executable
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -490,6 +559,10 @@ Require an argument to be a URL
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -509,6 +582,10 @@ Throw an missing argument error
 
 - Location: `bin/build/tools/usage.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `usage` - Required. Function. Usage function to call upon failure.
@@ -522,6 +599,10 @@ Throw an missing argument error
 Throw an unknown argument error
 
 - Location: `bin/build/tools/usage.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

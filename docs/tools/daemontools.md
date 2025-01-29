@@ -12,6 +12,10 @@ Print the daemontools service home path
 
 - Location: `bin/build/tools/daemontools.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -25,6 +29,10 @@ Print the daemontools service home path
 Install daemontools and dependencies
 
 - Location: `bin/build/tools/daemontools.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -43,6 +51,10 @@ Install a daemontools service which runs a binary as the file owner.
 Installs a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.
 
 - Location: `bin/build/tools/daemontools.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -63,6 +75,10 @@ Is daemontools running?
 
 - Location: `bin/build/tools/daemontools.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -77,6 +93,10 @@ Is daemontools running?
 List any processes associated with daemontools supervisors
 
 - Location: `bin/build/tools/daemontools.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -93,6 +113,10 @@ Remove a daemontools service by name
 
 - Location: `bin/build/tools/daemontools.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `serviceName` - String. Required. Service name to remove.
@@ -108,6 +132,10 @@ Restart the daemontools processes from scratch.
 Dangerous. Stops any running services and restarts them.
 
 - Location: `bin/build/tools/daemontools.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -129,6 +157,10 @@ Allows control across user boundaries. (e.g. user can control root services)
 Specify actions more than once on the command line to specify more than one set of permissions.
 
 - Location: `bin/build/tools/daemontools.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -160,6 +192,10 @@ Run the daemontools root daemon
 
 - Location: `bin/build/tools/daemontools.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -174,6 +210,10 @@ Run the daemontools root daemon
 Terminate daemontools as gracefully as possible
 
 - Location: `bin/build/tools/daemontools.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
