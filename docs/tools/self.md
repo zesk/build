@@ -12,10 +12,6 @@ Prints the build home directory (usually same as the application root)
 
 - Location: `bin/build/tools/self.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -41,10 +37,6 @@ created by build's default.
 Modifies local environment. Not usually run within a subshell.
 
 - Location: `bin/build/tools/self.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -72,10 +64,6 @@ Modifies local environment. Not usually run within a subshell.
 
 - Location: `bin/build/tools/self.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `envName` - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
@@ -97,10 +85,6 @@ Avoid infinite loops here, call down.
 
 - Location: `bin/build/tools/self.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `arguments ...` - Required. Command to run in new context.
@@ -115,10 +99,6 @@ _mapEnvironment
 Prints the list of functions defined in Zesk Build
 
 - Location: `bin/build/tools/self.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -143,10 +123,6 @@ Appends any passed in arguments as path segments.
 
 - Location: `bin/build/tools/self.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `pathSegment` - One or more directory or file path, concatenated as path segments using `/`
@@ -166,10 +142,6 @@ Generate the path for a quiet log in the build cache directory, creating it if n
 
 - Location: `bin/build/tools/self.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `name` - String. Required. The log file name to create. Trims leading `_` if present.
@@ -188,10 +160,6 @@ _mapEnvironment
 Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
 
 - Location: `bin/build/tools/self.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -215,10 +183,6 @@ Installs `install-bin-build.sh` the first time in a new project, and modifies it
 
 - Location: `bin/build/tools/self.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. This help.
@@ -234,10 +198,6 @@ _mapEnvironment
 - `2` - Argument error
 
 # Intalling Zesk Build
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -257,10 +217,6 @@ _mapEnvironment
 Needs internet access and creates a directory `./bin/build`
 
 # Package Installation
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -287,10 +243,6 @@ _mapEnvironment
 Installs an installer the first time in a new project, and modifies it to work in the application path.
 
 - Location: `bin/build/tools/self.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
