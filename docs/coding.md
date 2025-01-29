@@ -306,7 +306,7 @@ A simple example to show some standard patterns:
             ;;
         esac
         # _IDENTICAL_ argument-esac-shift 1
-        shift || __throwArgument "$usage" "missing #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        shift
       done
     
       local start
@@ -378,7 +378,7 @@ A simple example to show some standard patterns:
             ;;
         esac
         # _IDENTICAL_ argument-esac-shift 1
-        shift || __throwArgument "$usage" "missing #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        shift
       done
     
       reportTiming "$start" "Completed in"

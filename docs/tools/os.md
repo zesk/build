@@ -70,7 +70,7 @@ _mapEnvironment
 
 No documentation for `whichExists`.
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/whichExists.sh`
 
 #### Usage
 
@@ -83,6 +83,7 @@ _mapEnvironment
 #### Exit codes
 
 - `0` - If all values are found
+- `1` - If any value is not found
 ### `runCount` - Run a binary count times
 
 $\Run a binary count times

@@ -58,7 +58,7 @@ _mapEnvironment
 
 Output a simple error message for a function
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/usageDocumentSimple.sh`
 
 #### Usage
 
@@ -363,7 +363,7 @@ _mapEnvironment
 
 Require an argument to be non-blank
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/usageArgumentCore.sh`
 
 #### Usage
 

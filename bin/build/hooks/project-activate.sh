@@ -20,7 +20,7 @@ __hookProjectActivate() {
   local usage="_${FUNCNAME[0]}" home otherName="" otherHome tools="bin/build/tools.sh"
   local symbol="🍎"
 
-  otherHome=$(usageArgumentString "$usage" "otherHomeDirectory" "${1-}") || return $?
+  otherHome=$(usageArgumentEmptyString "$usage" "otherHomeDirectory" "${1-}") || return $?
   otherHome=${otherHome%/} # Strip trailing slash
   if [ -d "$otherHome" ] && [ -x "$otherHome/$tools" ]; then
     # Fetch old application name
@@ -40,7 +40,7 @@ __hookProjectActivateContext() {
   local usage="_${FUNCNAME[0]}" home
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-  bashSourceInteractive --vebose --prefix "Activate" "$home/bin/developer.sh" "$home/bin/developer/" || return $?
+  interactiveBashSource --verbose --prefix "Activate" "$home/bin/developer.sh" "$home/bin/developer/" || return $?
 }
 ___hookProjectActivateContext() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -51,6 +51,6 @@ if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
   # Only require when running as a shell command
   __hookProjectActivate "$@"
 else
-  __hookProjectActivate
-  __hookProjectActivateContext
+  __hookProjectActivate "$OLDPWD" || decorate warning "Project activation failed" || :
+  __hookProjectActivateContext || decorate warning "Project context activation failed" || :
 fi

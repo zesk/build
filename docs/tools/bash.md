@@ -207,7 +207,7 @@ _mapEnvironment
 
 Extract a bash comment from a file
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/bashFunctionComment.sh`
 
 #### Usage
 

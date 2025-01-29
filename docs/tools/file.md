@@ -391,7 +391,7 @@ _mapEnvironment
 
 No documentation for `realPath`.
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/realPath.sh`
 
 #### Usage
 
@@ -452,7 +452,7 @@ _mapEnvironment
 
 Generate a temporary file name using mktemp, and fail using a function
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/fileTemporaryName.sh`
 
 #### Usage
 
@@ -509,7 +509,7 @@ Reverses a pipe's input lines to output using an awk trick.
 
 Not recommended on big files.
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/reverseFileLines.sh`
 
 #### Usage
 
