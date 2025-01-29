@@ -151,7 +151,6 @@ bashPromptModule_binBuild() {
   source "$gitHome/$tools" || __environment "Failed to load $showGitHome/$tools" || return $?
   # buildHome will be changed here
 
-  newMessage="$(hookRunOptional --application "$home" project-activate "$home")"
   currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
 
   pathSuffix=
@@ -166,6 +165,9 @@ bashPromptModule_binBuild() {
     fi
   fi
   [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
+
+  hookSourceOptional project-activate "$home" || _environment "project-activate failed" || return $?
+
   printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")" "$pathSuffix"
 }
 

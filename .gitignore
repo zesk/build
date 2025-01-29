@@ -21,4 +21,6 @@
 # For now - too big
 /etc/packages/
 /.idea/*/
-/bin/.approved.*
+/bin/*.sh.approved
+/bin/developer/.approved
+/bin/developer-undo/.approved

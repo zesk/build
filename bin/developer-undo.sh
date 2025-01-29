@@ -13,3 +13,5 @@ __buildAliasesUndo() {
 }
 
 __buildAliasesUndo
+
+unset buildPreRelease

@@ -5,11 +5,9 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL zesk-build-hook-header 3
+# IDENTICAL zesk-build-hook-source-header 2
 # shellcheck source=/dev/null
-set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
-
 #
 # The `project-activate` hook runs when this project is activated in the console (and another project was previously active)
 # Use the time now to overwrite environment variables which MUST change here or MUST be active here to work, etc.
@@ -37,10 +35,12 @@ ___hookProjectActivate() {
 }
 
 __hookProjectActivateContext() {
-  local usage="_${FUNCNAME[0]}" home
+  local usage="_${FUNCNAME[0]}" home  item items=() candidates=("bin/developer.sh" "bin/developer/")
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-  interactiveBashSource --verbose --prefix "Activate" "$home/bin/developer.sh" "$home/bin/developer/" || return $?
+  for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done
+
+  [ ${#items[@]} -eq 0 ] || interactiveBashSource --verbose --prefix "Activate" "${items[@]}" || return $?
 }
 ___hookProjectActivateContext() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
