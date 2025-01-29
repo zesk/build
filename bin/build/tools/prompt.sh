@@ -123,7 +123,7 @@ bashPromptModule_ApplicationPath() {
 #
 # Run-Hook: project-activate
 bashPromptModule_binBuild() {
-  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion oldMessage newMessage buildMessage currentVersion showHome showGitHome
+  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showHome showGitHome
   export HOME
 
   __environment buildEnvironmentLoad HOME || return $?
@@ -145,11 +145,13 @@ bashPromptModule_binBuild() {
     fi
   fi
 
-  oldMessage="$(hookRunOptional --application "$home" project-deactivate "$gitHome")" || oldMessage="$home: $(decorate error project-deactivate FAILED): $?" || :
-  [ -z "$oldMessage" ] || printf -- "%s @ %s" "$oldMessage" "$(decorate code "$home")"
+  hookRunOptional --application "$home" project-deactivate "$gitHome" || _environment "project-deactivate failed" || :
+
   # shellcheck source=/dev/null
   source "$gitHome/$tools" || __environment "Failed to load $showGitHome/$tools" || return $?
   # buildHome will be changed here
+
+  hookSourceOptional --application "$gitHome" project-activate "$home" || _environment "project-activate failed" || :
 
   currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
 
@@ -165,8 +167,6 @@ bashPromptModule_binBuild() {
     fi
   fi
   [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
-
-  hookSourceOptional project-activate "$home" || _environment "project-activate failed" || return $?
 
   printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")" "$pathSuffix"
 }
