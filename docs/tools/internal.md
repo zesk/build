@@ -34,3 +34,18 @@ Test Zesk Build
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `buildPreRelease` - undocumented
+
+No documentation for `buildPreRelease`.
+
+- Location: `bin/developer.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

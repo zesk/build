@@ -83,16 +83,15 @@ _usageTemplate() {
 # Usage: usageArguments delimiter
 # Argument: delimiter - Required. String. The character to separate name value pairs in the input
 usageArguments() {
-  local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription lastLine
+  local separatorChar="${1-" "}" requiredPrefix optionalPrefix argument lineTokens argDescription lastLine=false
 
   optionalPrefix=${2-"$(decorate blue)"}
   requiredPrefix=${3-"$(decorate red)"}
 
   lineTokens=()
-  lastLine=
   while true; do
     if ! IFS="$separatorChar" read -r -a lineTokens; then
-      lastLine=1
+      lastLine=true
     fi
     if [ ${#lineTokens[@]} -gt 0 ]; then
       argument="${lineTokens[0]}"
@@ -109,7 +108,7 @@ usageArguments() {
         printf " %s[ %s ]" "$optionalPrefix" "$argument"
       fi
     fi
-    if test $lastLine; then
+    if $lastLine; then
       break
     fi
   done

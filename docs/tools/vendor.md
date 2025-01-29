@@ -10,6 +10,10 @@ Open a file in a shell using the program we are using. Supports VSCode and PHPSt
 
 - Location: `bin/build/tools/vendor.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -30,6 +34,10 @@ Are we within the JetBrains PHPStorm terminal?
 
 - Location: `bin/build/tools/vendor.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -43,6 +51,10 @@ Are we within the JetBrains PHPStorm terminal?
 Are we within the JetBrains PyCharm terminal?
 
 - Location: `bin/build/tools/vendor.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -58,6 +70,10 @@ Are we within the Microsoft Visual Studio Code terminal?
 
 - Location: `bin/build/tools/vendor.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -71,6 +87,10 @@ Are we within the Microsoft Visual Studio Code terminal?
 Install Homebrew
 
 - Location: `bin/build/tools/brew.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -87,6 +107,10 @@ Are we currently in the BitBucket pipeline?
 
 - Location: `bin/build/tools/bitbucket.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - No arguments.
@@ -100,6 +124,10 @@ Are we currently in the BitBucket pipeline?
 Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
 
 - Location: `bin/build/tools/vendor.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 

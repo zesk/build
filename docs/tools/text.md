@@ -17,10 +17,6 @@ Returns true if all `characters` are of `className`
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -39,10 +35,6 @@ Quote a sed command for search and replace
 
 - Location: `bin/build/tools/sed.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -57,11 +49,7 @@ _mapEnvironment
 Quote a string to be used in a sed pattern on the command line.
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Arguments
 
@@ -85,11 +73,7 @@ _mapEnvironment
 
 needSlash='$.*/[\]^'
 
-- Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Arguments
 
@@ -114,10 +98,6 @@ _mapEnvironment
 Quote bash strings for inclusion as single-quoted for eval
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -146,11 +126,7 @@ _mapEnvironment
 
 $\Quote grep -e patterns for shell use
 
-- Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/identical/_text.sh`
 
 #### Arguments
 
@@ -177,10 +153,6 @@ Quote strings for inclusion in shell quoted strings
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `text` - Text to quote
@@ -204,10 +176,6 @@ _mapEnvironment
 Quote strings for inclusion in shell quoted strings
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -233,10 +201,6 @@ Quote strings for inclusion in shell quoted strings
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `text` - Text to quote
@@ -261,10 +225,6 @@ Converts strings to shell escaped strings
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -279,10 +239,6 @@ _mapEnvironment
 Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -299,10 +255,6 @@ Remove fields from left to right from a text file as a pipe
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `fieldCount` - Optional. Integer. Number of field to remove. Default is just first `1`.
@@ -318,10 +270,6 @@ _mapEnvironment
 Strip ANSI console escape sequences from a file
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -356,10 +304,6 @@ listTokens
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
@@ -391,10 +335,6 @@ If any text passed contains a token which can be mapped, succeed.
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--prefix` - Optional. String. Token prefix defaults to `{`.
@@ -412,10 +352,6 @@ _mapEnvironment
 Maps a string using an environment file
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -438,10 +374,6 @@ Maps a string using an environment file
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `mapFile` - Required. File. a file containing bash environment definitions
@@ -452,10 +384,6 @@ _mapEnvironment
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `environmentName` - Optional. String. Map this value only. If not specified, all environment variables are mapped.
@@ -479,10 +407,6 @@ Pipe to output some text before any output, otherwise, nothing is output.
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -497,10 +421,6 @@ _mapEnvironment
 Pipe to output some text after any output, otherwise, nothing is output.
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -519,10 +439,6 @@ _mapEnvironment
 Remove words from the end of a phrase
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -543,10 +459,6 @@ _mapEnvironment
 Trim spaces and only spaces from arguments or a pipe
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -576,10 +488,6 @@ Removes any blank lines from the beginning of a stream
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -595,10 +503,6 @@ Removes any blank lines from the end of a stream
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -613,10 +517,6 @@ _mapEnvironment
 Ensures blank lines are singular
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -635,10 +535,6 @@ _mapEnvironment
 Check if an element exists in an array
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -661,10 +557,6 @@ Check if one string is a substring of another set of strings (case-sensitive)
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `needle` - Required. String. Thing to search for, not blank.
@@ -679,10 +571,6 @@ _mapEnvironment
 Check if one string is a substring of another set of strings (case-insensitive)
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -699,10 +587,6 @@ Does needle exist as a substring of haystack?
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `haystack` - Required. String. String to search.
@@ -717,10 +601,6 @@ Outputs the integer offset of `needle` if found as substring in `haystack`
 If `haystack` is not found, -1 is output
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -738,10 +618,6 @@ Given a input file, determine the maximum length of fieldIndex, using separatorC
 Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -764,10 +640,6 @@ Outputs the maximum line length passed into stdin
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -788,10 +660,6 @@ Outputs the `singular` value to standard out when the value of `number` is one. 
 Example:
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -816,10 +684,6 @@ Parses text and determines if it's true-ish
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -838,10 +702,6 @@ Convert text to lowercase
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -856,10 +716,6 @@ _mapEnvironment
 Convert text to uppercase
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -877,10 +733,6 @@ Generates a checksum of standard input and outputs a SHA1 checksum in hexadecima
 You can use this as a pipe or pass in arguments which are files to be hashed.
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -922,10 +774,6 @@ The `cacheDirectory`
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `cacheDirectory` - Optional. Directory. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
@@ -958,10 +806,6 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -991,10 +835,6 @@ Output arguments joined by a character
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `separator` - Required. String. Single character to join elements.
@@ -1016,10 +856,6 @@ Add an item to the beginning or end of a text-delimited list
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `listValue` - Required. Path value to modify.
@@ -1039,10 +875,6 @@ Remove one or more items from a text-delimited list
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `listValue` - Required. List value to modify.
@@ -1059,10 +891,6 @@ _mapEnvironment
 Removes duplicates from a list and maintains ordering.
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -1083,10 +911,6 @@ Write a report of the character classes
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -1104,10 +928,6 @@ List the valid character classes allowed in `isCharacterClass`
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -1122,10 +942,6 @@ _mapEnvironment
 Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -1143,10 +959,6 @@ Requires a single character to be passed
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -1161,10 +973,6 @@ _mapEnvironment
 Does this character match one or more character classes?
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -1182,10 +990,6 @@ Ensure that every character in a text string passes all character class tests
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `text` - Text to validate
@@ -1201,10 +1005,6 @@ _mapEnvironment
 Unquote a string
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

@@ -10,10 +10,6 @@ Check if an element exists in an array
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `element` - Thing to search for
@@ -36,10 +32,6 @@ Test if an argument is a positive floating point number
 
 - Location: `bin/build/tools/type.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -59,10 +51,6 @@ Test if an argument is a floating point number
 
 - Location: `bin/build/tools/type.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -80,10 +68,6 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if an argument is a signed integer
 
 - Location: `bin/build/tools/type.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -103,10 +87,6 @@ Test if an argument is an unsigned integer
 
 - Location: `bin/update-available.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -123,11 +103,7 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 
 Test if an argument is a positive integer (non-zero)
 
-- Location: `bin/build/install-bin-build.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/identical/_type.sh`
 
 #### Arguments
 
@@ -143,10 +119,6 @@ Test if an argument is a floating point number
 (`1e3` notation NOT supported)
 
 - Location: `bin/build/tools/type.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -165,11 +137,7 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if argument are bash functions
 If no arguments are passed, returns exit code 1.
 
-- Location: `bin/build/install-bin-build.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/identical/_type.sh`
 
 #### Arguments
 
@@ -186,10 +154,6 @@ If no arguments are passed, returns exit code 1.
 
 - Location: `bin/build/tools/platform/_isExecutable.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `string` - Required. Path to binary to test if it is executable.
@@ -204,10 +168,6 @@ Test if all arguments are callable as a command
 If no arguments are passed, returns exit code 1.
 
 - Location: `bin/build/tools/type.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -224,10 +184,6 @@ Succeeds when all arguments are "true"-ish
 
 - Location: `bin/build/tools/type.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -242,10 +198,6 @@ _mapEnvironment
 Is a variable declared as an array?
 
 - Location: `bin/build/tools/type.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

@@ -409,9 +409,10 @@ _statusMessage() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
+  export COLUMNS
   local _ columns
   read -r _ columns < <(stty size 2>/dev/null) || :
-  isInteger "$columns" && printf "%d" "$columns" || printf "%d" 120
+  isInteger "$columns" && printf "%d" "$columns" || isInteger "${COLUMNS-}" && printf "%d" ${COLUMNS-} || printf "%d" 120
 }
 
 #
@@ -425,9 +426,10 @@ consoleColumns() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
+  export ROWS
   local rows _
   read -r rows _ < <(stty size 2>/dev/null) || :
-  isInteger "$rows" && printf "%d" "$rows" || printf "%d" 80
+  isInteger "$rows" && printf "%d" "$rows" || isInteger "${ROWS-}" && printf "%d" "${ROWS-}" || printf "%d" 80
 }
 
 #

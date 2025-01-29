@@ -1259,7 +1259,7 @@ _listCleanDuplicates() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 79
+# IDENTICAL mapEnvironment 81
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -1309,14 +1309,16 @@ mapEnvironment() {
     shift
   done
 
-  local __ee=("$@") __e
+  local __ee=("$@") __e __usage="$usage"
+  unset usage
+
   if [ $# -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  __sedFile=$(__catchEnvironment "$usage" mktemp) || return $?
-  __catchEnvironment "$usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || _clean $? "$__sedFile" || return $?
-  __catchEnvironment "$usage" sed -f "$__sedFile" || __throwEnvironment "$usage" "$(cat "$__sedFile")" || _clean $? "$__sedFile" || return $?
-  __catchEnvironment "$usage" rm -rf "$__sedFile" || return $?
+  __sedFile=$(__catchEnvironment "$__usage" mktemp) || return $?
+  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" rm -rf "$__sedFile" || return $?
 }
 _mapEnvironment() {
   # _IDENTICAL_ usageDocument 1

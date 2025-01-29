@@ -10,6 +10,10 @@ Install tofu binary
 
 - Location: `bin/build/tools/tofu.sh`
 
+#### Usage
+
+_mapEnvironment
+
 #### Arguments
 
 - `package` - Additional packages to install using `packageInstall`
@@ -24,6 +28,10 @@ Install tofu binary
 Uninstall tofu binary and apt sources keys
 
 - Location: `bin/build/tools/tofu.sh`
+
+#### Usage
+
+_mapEnvironment
 
 #### Arguments
 
@@ -45,8 +53,7 @@ Add keys to enable apt to download tofu directly from hashicorp.com
 
 #### Usage
 
-    aptKeyAddHashicorp
-    
+_mapEnvironment
 
 #### Arguments
 
@@ -64,8 +71,7 @@ Add keys to enable apt to download tofu directly from hashicorp.com
 
 #### Usage
 
-    aptKeyAddHashicorp
-    
+_mapEnvironment
 
 #### Arguments
 

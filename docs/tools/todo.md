@@ -8,10 +8,6 @@ Does text have one or more prefixes?
 
 - Location: `bin/build/tools/text.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `text` - Optional. String. String to match.

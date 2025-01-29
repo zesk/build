@@ -32,6 +32,7 @@ buildPreRelease() {
     if gitRepositoryChanged; then
       statusMessage decorate info "Committing changes ..."
       gitCommit -- "buildPreRelease $(hookVersionCurrent)"
+      statusMessage decorate info --last "Committed and ready to release."
     else
       statusMessage decorate info --last "No changes to commit."
     fi

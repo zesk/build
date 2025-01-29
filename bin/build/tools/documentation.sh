@@ -676,7 +676,7 @@ bashDocumentation_Extract() {
   #
   __catchEnvironment "$usage" bashFunctionComment "$definitionFile" "$fn" >"$tempDoc" || return $?
 
-  local desc=() lastName="" values=() foundNames=() lastName="" desc=() dumper line
+  local desc=() lastName="" values=() foundNames=() lastName="" dumper line
   while IFS= read -r line; do
     local name="${line%%:*}" value
     if [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
@@ -746,6 +746,11 @@ bashDocumentation_Extract() {
   fi
   if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "argument" "No arguments."
+  else
+    if ! inArray "usage" "${foundNames[@]+${foundNames[@]}}"; then
+      __dumpAliasedValue usage argument
+      printf "%s\n" "export usage; usage=\"{fn} \$(printf \"%s\\n\" \"\$usage\" | sed 's/ - /^/1' | usageArguments '^')\""
+    fi
   fi
   printf "# DocMap: %s\n" "$docMap"
 }

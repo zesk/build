@@ -14,10 +14,6 @@ If this fails it will output an error and exit.
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -59,10 +55,6 @@ If this fails it will output an error and exit.
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -103,10 +95,6 @@ Assert one string contains another (case-sensitive)
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -136,10 +124,6 @@ _mapEnvironment
 Assert one string does not contains another (case-sensitive)
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -173,10 +157,6 @@ _mapEnvironment
 Assert `leftValue > rightValue`
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -216,10 +196,6 @@ File `bin/build/tools/assert.sh`, function `assertGreaterThan` was reviewed 2023
 Assert `leftValue >= rightValue`
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -261,10 +237,6 @@ Assert `leftValue < rightValue`
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -302,10 +274,6 @@ File `bin/build/tools/assert.sh`, function `assertLessThan` was reviewed 2023-11
 Assert `leftValue <= rightValue`
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -350,10 +318,6 @@ If this fails it will output an error and exit.
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `expectedExitCode` - A numeric exit code expected from the command
@@ -389,10 +353,6 @@ Assert a process runs and exits with an exit code which does not match the passe
 If this fails it will output an error and exit.
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -432,10 +392,6 @@ Assert output of a binary equals a string
 If this fails it will output an error and exit.
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -478,10 +434,6 @@ If this fails it will output the command result to stdout.
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -523,10 +475,6 @@ Run a command and expect the output to not contain the occurrence of a string.
 If this fails it will output the command result to stdout.
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -575,10 +523,6 @@ $\Test that a directory exists
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -619,10 +563,6 @@ None
 $\Test that a directory does not exist
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -665,10 +605,6 @@ $\Test that a directory exists
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -710,10 +646,6 @@ $\Test that a directory does not exist
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -753,10 +685,6 @@ File `bin/build/tools/assert.sh`, function `assertDirectoryNotEmpty` was reviewe
 $\Test that a file exists
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -799,10 +727,6 @@ $\Test that a file does not exist
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -844,10 +768,6 @@ File `bin/build/tools/assert.sh`, function `assertFileDoesNotExist` was reviewed
 Assert a file contains one or more strings
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -895,10 +815,6 @@ Assert a file does not contains any occurrence of one or more strings
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -940,10 +856,6 @@ Assert a file has an expected size in bytes
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -981,10 +893,6 @@ If the file does not exist, this will fail.
 Assert a file does NOT have an expected size in bytes
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -1025,10 +933,6 @@ Assert a file is empty (zero sized)
 
 - Location: `bin/build/tools/assert.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -1065,10 +969,6 @@ If the file does not exist, this will fail.
 Assert a file is non-empty (non-zero sized)
 
 - Location: `bin/build/tools/assert.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -1109,10 +1009,6 @@ If the file does not exist, this will fail.
 Outputs 40 random hexadecimal characters, lowercase.
 
 - Location: `bin/build/tools/text.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
