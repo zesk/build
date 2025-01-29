@@ -6,3 +6,4 @@
 
 {__buildDocumentationBuild}
 {__buildTestSuite}
+{buildPreRelease}

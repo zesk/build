@@ -93,12 +93,15 @@ __deprecatedCleanup() {
 
   # END OF CANNONS
   if $doCannon; then
+    statusMessage --last decorate info "Deprecated cannon ..."
     __deprecatedCannonsByVersion || exitCode=$?
   fi
   if $doSpelling; then
+    statusMessage --last decorate info "Spelling cannon ..."
     __misspellingCannon || exitCode=$?
   fi
   if $doTokens; then
+    statusMessage --last decorate info "Finding deprecated tokens ..."
     __deprecatedTokensByVersion || exitCode=$?
   fi
   statusMessage --last reportTiming "$start" "Deprecated process took"
@@ -236,7 +239,7 @@ __misspellingCannon() {
   local start exitCode=0
   start=$(__environment beginTiming) || return $?
   # START OF MISSPELLING CANNON
-  __deprecatedCannon 'decorate' 'decorate' || exitCode=$?
+  __deprecatedCannon 'decoreate' 'decorate' || exitCode=$?
   # END OF MISSPELLING CANNON
   statusMessage --last reportTiming "$start" "Misspelling cannon took"
   return "$exitCode"
