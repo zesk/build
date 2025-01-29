@@ -9,6 +9,7 @@
 # IDENTICAL _clearLine EOF
 
 # Simple blank line generator for scripts
+# Usage: {fn}
 # Requires: read stty printf seq sed
 _clearLine() {
   local width

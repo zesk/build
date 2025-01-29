@@ -10,10 +10,6 @@ Gets the RGB console color using an `xterm` escape sequence supported by some te
 
 - Location: `bin/build/tools/console.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--foreground` - Optional. Flag. Get the console text color.
@@ -29,10 +25,6 @@ _mapEnvironment
 Print the suggested color mode for the current environment
 
 - Location: `bin/build/tools/console.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -50,10 +42,6 @@ Column count in current console
 Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
 
 - Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -82,10 +70,6 @@ Output the number of columns in the terminal. Default is 60 if not able to be de
 
 - Location: `bin/build/tools/colors.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -111,10 +95,6 @@ Fetch the brightness of the console using `consoleGetColor`
 
 - Location: `bin/build/tools/console.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--foreground` - Optional. Flag. Get the console text color.
@@ -135,10 +115,6 @@ Set the title of the window for the console
 
 - Location: `bin/build/tools/console.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -153,10 +129,6 @@ _mapEnvironment
 No documentation for `consoleDefaultTitle`.
 
 - Location: `bin/build/tools/console.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -175,10 +147,6 @@ No way to test ability, I think. Maybe `tput`.
 
 - Location: `bin/build/tools/console.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -193,10 +161,6 @@ _mapEnvironment
 Output a local file link to the console
 
 - Location: `bin/build/tools/console.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -213,10 +177,6 @@ Are console links (likely) supported?
 Unfortunately there's no way to test for this feature currently
 
 - Location: `bin/build/tools/console.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

@@ -8,7 +8,6 @@
 
 # IDENTICAL __source EOF
 
-# Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Required. Directory. Path to application root.

@@ -16,10 +16,6 @@ Uses a cache at `buildCacheDirectory`
 
 - Location: `bin/build/tools/documentation/build.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--git` - Merge current branch in with `docs` branch
@@ -43,10 +39,6 @@ Map template files using our identical functionality
 
 - Location: `bin/build/tools/documentation/template.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -62,10 +54,6 @@ Get an internal template name
 
 - Location: `bin/build/tools/documentation/template.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -80,10 +68,6 @@ _mapEnvironment
 List unlinked functions in documentation index
 
 - Location: `bin/build/tools/documentation/template.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -102,10 +86,6 @@ _mapEnvironment
 Document a function and generate a function template (markdown)
 
 - Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -132,10 +112,6 @@ The process:
 
 - Location: `bin/build/tools/documentation.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--env-file envFile` - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
@@ -158,10 +134,6 @@ Generate documentation for a single function.
 Template is output to stdout.
 
 - Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -188,10 +160,6 @@ If the `cacheDirectory` is supplied, it's used to store values and hashes of the
 to regenerate each time.
 
 - Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -220,10 +188,6 @@ Use with documentationIndex_Lookup
 
 - Location: `bin/build/tools/documentation/index.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `codePath` - Required. Directory. Path where code is stored (should remain identical between invocations)
@@ -239,10 +203,6 @@ _mapEnvironment
 Looks up information in the function index
 
 - Location: `bin/build/tools/documentation/index.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -276,10 +236,6 @@ Use with documentationIndex_Lookup
 
 - Location: `bin/build/tools/documentation/index.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `cacheDirectory` - Required. Cache directory where the indexes live.
@@ -296,10 +252,6 @@ _mapEnvironment
 List of functions which are not linked to anywhere in the documentation index
 
 - Location: `bin/build/tools/documentation/index.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -327,10 +279,6 @@ Within your function, add an ignore reason if you wish:
 
 - Location: `bin/build/tools/documentation/index.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `cacheDirectory` - Required. Directory. Index cache directory.
@@ -348,10 +296,6 @@ Output a list of all functions in the index as pairs:
 
 - Location: `bin/build/tools/documentation/index.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `cacheDirectory` - Required. Directory. Index cache directory.
@@ -367,10 +311,6 @@ List of functions which are not linked to anywhere in the documentation index
 
 - Location: `bin/build/tools/documentation/index.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `cacheDirectory` - Required. Directory. Index cache directory.
@@ -379,10 +319,6 @@ _mapEnvironment
 
 - `0` - The settings file is unlinked within the documentation (not defined anywhere)
 - `1` - The settings file is linked within the documentation
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -421,10 +357,6 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
 - Location: `bin/build/tools/documentation.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `definitionFile` - File in which function is defined
@@ -444,10 +376,6 @@ Note this function succeeds if it finds all occurrences of each function, but
 may output partial results with a failure.
 
 - Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -477,10 +405,6 @@ Succeeds IFF only one version of a function is found.
 
 - Location: `bin/build/tools/documentation.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `directory` - The directory to search
@@ -507,10 +431,6 @@ No documentation for `usageDocument`.
 
 - Location: `bin/build/install-bin-build.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -529,10 +449,6 @@ Utility to export multi-line values as Bash variables
 
 - Location: `bin/build/tools/documentation.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `name` - Shell value to output
@@ -543,10 +459,6 @@ _mapEnvironment
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `variable` - shell variable to set
@@ -566,10 +478,6 @@ Format code blocks (does markdown_FormatList)
 
 - Location: `bin/build/tools/documentation.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -584,10 +492,6 @@ _mapEnvironment
 Format usage blocks (indents as a code block)
 
 - Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -604,10 +508,6 @@ Format argument blocks (does markdown_FormatList)
 
 - Location: `bin/build/tools/documentation.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -622,10 +522,6 @@ _mapEnvironment
 Format depends blocks (indents as a code block)
 
 - Location: `bin/build/tools/documentation.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

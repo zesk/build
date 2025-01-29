@@ -10,7 +10,10 @@
 # IDENTICAL __installCheck EOF
 
 # Check the directory after installation and output the version
-# Usage: {fn} name versionFile usageFunction installPath
+# Argument: name - String. Requires. Installed name.
+# Argument: versionFile - RelativeFile. Required. Relative path to version file, containing `.id` and `.version` jq selectors.
+# Argument: usageFunction - Function. Required. Call this on failure.
+# Argument: installPath - Directory. Required. Path to check for installation.
 # Requires: dirname
 # Requires: decorate printf __throwEnvironment read jq
 __installCheck() {

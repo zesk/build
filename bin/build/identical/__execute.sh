@@ -9,9 +9,7 @@
 
 # _IDENTICAL_ __execute EOF
 
-# Usage: {fn} __execute binary [ ... ]
-# Argument: binary - Required. Executable.
-# Argument: ... - Any arguments are passed to binary
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: _return
 __execute() {

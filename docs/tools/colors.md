@@ -23,10 +23,6 @@ Semantics-based
 
 - Location: `bin/build/identical/decorate.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -41,10 +37,6 @@ _mapEnvironment
 Output a list of build-in decoration styles, one per line
 
 - Location: `bin/build/identical/decorate.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -64,10 +56,6 @@ Runs the following command on each subsequent argument to allow for formatting w
 
 - Location: `bin/build/identical/decorate.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -83,10 +71,6 @@ Double-quote all arguments as properly quoted bash string
 Mostly $ and " are problematic within a string
 
 - Location: `bin/build/identical/decorate.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -157,10 +141,6 @@ Set colors to deal with dark or light-background consoles
 
 - Location: `bin/build/tools/colors.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -184,10 +164,6 @@ Clears current line of text in the console
 Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
 
 - Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -215,10 +191,6 @@ This is intended for messages on a line which are then overwritten using clearLi
 Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
 
 - Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -249,10 +221,6 @@ Exit Code; 1 - Colors are likely not supported by console
 
 - Location: `bin/build/identical/decorate.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -270,10 +238,6 @@ Exit Code; 1 - Does not support console animation
 
 - Location: `bin/build/tools/colors.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -286,10 +250,6 @@ _mapEnvironment
 Converts backticks, bold and italic to console colors.
 
 - Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -306,10 +266,6 @@ Return an integer between 0 and 100
 Colors are between 0 and 255
 
 - Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -331,10 +287,6 @@ No documentation for `colorComboTest`.
 
 - Location: `bin/build/tools/colors.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -349,10 +301,6 @@ _mapEnvironment
 If you want to explore what colors are available in your terminal, try this.
 
 - Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -369,10 +317,6 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 
 - Location: `bin/build/tools/colors.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -387,10 +331,6 @@ _mapEnvironment
 Outputs sample sentences for the `action` commands to see what they look like.
 
 - Location: `bin/build/tools/colors.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

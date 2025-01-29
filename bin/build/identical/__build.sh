@@ -11,7 +11,6 @@
 # IDENTICAL __build EOF
 
 # Load build tools (installing if needed) and run command
-# Usage: {fn} [ relativeHome installerPath [ command ... ] ]
 # Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary.
 # Argument: relativeHome - Required. Directory. Path to application home.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.

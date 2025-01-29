@@ -5,7 +5,6 @@
 
 # IDENTICAL __source 20
 
-# Usage: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Required. Directory. Path to application root.
@@ -27,7 +26,6 @@ __source() {
 
 # IDENTICAL __tools 9
 
-# Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
@@ -38,7 +36,6 @@ __tools() {
 
 # IDENTICAL _return 26
 
-# Usage: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
@@ -52,8 +49,7 @@ _return() {
 # Test if an argument is an unsigned integer
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
-# Original: is_uint
-# Usage: {fn} argument ...
+# Argument: value - String. Required. Value to check if it is an unsigned integer.
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return

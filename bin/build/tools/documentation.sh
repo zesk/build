@@ -714,7 +714,7 @@ bashDocumentation_Extract() {
     fi
   done <"$tempDoc"
   if [ "${#values[@]}" -gt 0 ]; then
-    if ! inArray "$lastName" "${foundNames[@]+${foundNames[@]}}"; then
+    if ! inArray "$lastName" "${foundNames[@]+"${foundNames[@]}"}"; then
       foundNames+=("$lastName")
       dumper=__dumpNameValue
     else
@@ -722,11 +722,11 @@ bashDocumentation_Extract() {
     fi
     "$dumper" "$lastName" "${values[@]}" | tee -a "$docMap"
   fi
-  printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
+  printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
   if [ "${#desc[@]}" -gt 0 ]; then
     __dumpNameValue "description" "${desc[@]}"
-    printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+${foundNames[@]}}")"
-    if ! inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
+    printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
+    if ! inArray "summary" "${foundNames[@]+"${foundNames[@]}"}"; then
       local summary
       summary="$(trimWords 10 "${desc[0]}")"
       [ -n "$summary" ] || summary="undocumented"
@@ -738,20 +738,23 @@ bashDocumentation_Extract() {
     __dumpNameValue "description" "No documentation for \`$fn\`."
     __dumpNameValue "summary" "undocumented"
   fi
-  if ! inArray "exit_code" "${foundNames[@]+${foundNames[@]}}"; then
+  if ! inArray "exit_code" "${foundNames[@]+"${foundNames[@]}"}"; then
     __dumpNameValue "exit_code" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
   fi
-  if ! inArray "fn" "${foundNames[@]+${foundNames[@]}}"; then
+  if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
     __dumpNameValue "fn" "$fn"
   fi
   if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "argument" "No arguments."
+    __dumpAliasedValue "usage" "fn"
   else
-    if ! inArray "usage" "${foundNames[@]+${foundNames[@]}}"; then
+    if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
       __dumpAliasedValue usage argument
-      printf "%s\n" "export usage; usage=\"{fn} \$(printf \"%s\\n\" \"\$usage\" | sed 's/ - /^/1' | usageArguments '^')\""
+      printf "%s\n" "export usage; usage=\"\$fn \$(printf \"%s\\n\" \"\$usage\" | sed 's/ - /^/1' | usageArguments '^')\""
     fi
   fi
+  __dumpNameValue "foundNames" "${foundNames[*]}"
+
   printf "# DocMap: %s\n" "$docMap"
 }
 _bashDocumentation_Extract() {

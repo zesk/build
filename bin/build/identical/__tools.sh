@@ -8,7 +8,6 @@
 #
 # IDENTICAL __tools EOF
 
-# Usage: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
