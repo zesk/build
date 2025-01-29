@@ -46,10 +46,9 @@ __catchEnvironment() {
   shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
 
-# _IDENTICAL_ _errors 18
+# _IDENTICAL_ _errors 16
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 # Requires: _return
@@ -58,7 +57,6 @@ _argument() {
 }
 
 # Return `environment` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 # Requires: _return

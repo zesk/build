@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 137
+# IDENTICAL _sugar 133
 
 # Usage: {fn} name ...
 # Argument: name ... - Optional. String. Exit code value to output.
@@ -88,10 +88,9 @@ _clean() {
   return "$exitCode"
 }
 
-# _IDENTICAL_ _errors 18
+# _IDENTICAL_ _errors 16
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 # Requires: _return
@@ -100,7 +99,6 @@ _argument() {
 }
 
 # Return `environment` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 # Requires: _return
@@ -108,11 +106,9 @@ _environment() {
   _return 1 "$@" || return $?
 }
 
-# _IDENTICAL_ __execute 9
+# _IDENTICAL_ __execute 7
 
-# Usage: {fn} __execute binary [ ... ]
-# Argument: binary - Required. Executable.
-# Argument: ... - Any arguments are passed to binary
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: _return
 __execute() {

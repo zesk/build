@@ -83,7 +83,7 @@ __buildDocumentationBuild() {
   if [ "${1-}" != "--clean" ]; then
     local newestParts newestDocs
     newestParts=$(directoryNewestFile "$home/docs/_templates/_parts")
-    newestDocs=$(directoryNewestFile "$home/docs ")
+    newestDocs=$(directoryNewestFile "$home/docs")
     if isNewestFile "$newestParts" "$newestDocs"; then
       documentationTemplateUpdate "$home/docs" "$home/docs/_templates/_parts" || return $?
     fi

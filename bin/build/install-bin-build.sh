@@ -989,7 +989,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 75
+# IDENTICAL _tinySugar 73
 
 # Run `handler` with an argument error
 # Usage: {fn} handler ...
@@ -1025,10 +1025,9 @@ __catchEnvironment() {
   shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
 
-# _IDENTICAL_ _errors 18
+# _IDENTICAL_ _errors 16
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ..`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 # Requires: _return
@@ -1037,7 +1036,6 @@ _argument() {
 }
 
 # Return `environment` error code always. Outputs `message ...` to `stderr`.
-# Usage: {fn} message ...
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 # Requires: _return
@@ -1066,11 +1064,7 @@ _clean() {
   return "$r"
 }
 
-# _IDENTICAL_ __execute 9
-
-# Usage: {fn} __execute binary [ ... ]
-# Argument: binary - Required. Executable.
-# Argument: ... - Any arguments are passed to binary
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: _return
 __execute() {
