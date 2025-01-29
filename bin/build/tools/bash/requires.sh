@@ -136,7 +136,7 @@ bashCheckRequires() {
       [ -n "$functionName" ] || continue
       if [ "${#ignorePrefixes[@]}" -gt 0 ] && beginsWith "$functionName" "${ignorePrefixes[@]}"; then
         ignored+=("$functionName")
-      elif inArray "$functionName" "${defined[@]}"; then
+      elif inArray "$functionName" "${defined[@]+"${defined[@]}"}"; then
         external+=("$functionName")
       else
         if bashShowUsage --check "$functionName" "${files[@]}"; then

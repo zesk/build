@@ -173,7 +173,7 @@ __installPackageConfiguration() {
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
-# Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString
+# Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
 
@@ -242,19 +242,19 @@ _installRemotePackage() {
       --version-function)
         shift
         [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         versionFunction="$1"
         ;;
       --url-function)
         shift
         [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         urlFunction="$1"
         ;;
       --check-function)
         shift
         [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isCallable "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         checkFunction="$1"
         ;;
       *)
