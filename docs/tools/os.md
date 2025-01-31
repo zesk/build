@@ -12,10 +12,6 @@ Get the port number associated with a service
 
 - Location: `bin/build/tools/os.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `service` - A unix service typically found in `/etc/services`
@@ -46,10 +42,6 @@ Backup when `/etc/services` does not exist.
 
 - Location: `bin/build/tools/os.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `service` - A unix service typically found in `/etc/services`
@@ -70,11 +62,7 @@ _mapEnvironment
 
 No documentation for `whichExists`.
 
-- Location: `bin/build/identical/whichExists.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -89,10 +77,6 @@ _mapEnvironment
 $\Run a binary count times
 
 - Location: `bin/build/tools/os.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -110,10 +94,6 @@ _mapEnvironment
 Makes all `*.sh` files executable
 
 - Location: `bin/build/tools/os.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -137,10 +117,6 @@ Modify the PATH environment variable to add a path.
 
 - Location: `bin/build/tools/os.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list
@@ -158,10 +134,6 @@ Remove a path from the PATH environment variable
 
 - Location: `bin/build/tools/os.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `path` - Requires. String. The path to be removed from the `PATH` environment.
@@ -178,10 +150,6 @@ Cleans the path and removes non-directory entries and duplicates
 Maintains ordering.
 
 - Location: `bin/build/tools/os.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -201,10 +169,6 @@ Modify the MANPATH environment variable to add a path.
 
 - Location: `bin/build/tools/os.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--first` - Optional. Place any paths after this flag first in the list
@@ -221,10 +185,6 @@ _mapEnvironment
 Remove a path from the MANPATH environment variable
 
 - Location: `bin/build/tools/os.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -243,10 +203,6 @@ Maintains ordering.
 
 - Location: `bin/build/tools/os.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -264,10 +220,6 @@ _mapEnvironment
 Outputs value of resident memory used by a process, value is in kilobytes
 
 - Location: `bin/build/tools/process.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -291,10 +243,6 @@ _mapEnvironment
 Outputs value of virtual memory allocated for a process, value is in kilobytes
 
 - Location: `bin/build/tools/process.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -322,10 +270,6 @@ Format something neatly as JSON
 
 - Location: `bin/build/tools/os.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -340,10 +284,6 @@ _mapEnvironment
 Get the load average using uptime
 
 - Location: `bin/build/tools/os.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

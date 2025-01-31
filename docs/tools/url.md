@@ -21,10 +21,6 @@ Now works on multiple URLs, output is separated by a blank line for new entries
 
 - Location: `bin/build/tools/url.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `url` - a Uniform Resource Locator used to specify a database connection
@@ -43,10 +39,6 @@ _mapEnvironment
 Gets the component of one or more URLs
 
 - Location: `bin/build/tools/url.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -68,10 +60,6 @@ Checks a URL is valid
 
 - Location: `bin/build/tools/url.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `url ...` - String. URL. Required. A Uniform Resource Locator
@@ -87,10 +75,6 @@ Open a URL using the operating system
 Usage urlOpen [ --help ]
 
 - Location: `bin/build/tools/url.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -110,10 +94,6 @@ Open URLs which appear in a stream (but continue to output the stream)
 
 - Location: `bin/build/tools/url.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -130,10 +110,6 @@ URLs are explicitly trimmed at quote, whitespace and escape boundaries.
 
 - Location: `bin/build/tools/url.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--show-file` - Boolean. Optional. Show the file name in the output (suffix with `: `)
@@ -149,11 +125,7 @@ _mapEnvironment
 
 No documentation for `urlFetch`.
 
-- Location: `bin/build/identical/urlFetch.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

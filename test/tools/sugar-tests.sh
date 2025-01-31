@@ -67,7 +67,7 @@ testExitCode() {
   assertEquals --line "$LINENO" "$(printf "%d\n" 97 97)" "$(_code assert assert)" || return $?
   assertEquals --line "$LINENO" "105" "$(_code identical)" || return $?
   assertEquals --line "$LINENO" "108" "$(_code leak)" || return $?
-  assertEquals --line "$LINENO" "116" "$(_code test)" || return $?
+  assertEquals --line "$LINENO" "116" "$(_code timeout)" || return $?
   assertEquals --line "$LINENO" "253" "$(_code internal)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj1)" || return $?
@@ -85,16 +85,8 @@ testExitCode() {
 testExitCodeCase() {
   local code char digit
 
-  assertEquals --line "$LINENO" 254 "$(_code EnViRoNmEnT)" || return $?
-  assertEquals --line "$LINENO" 1 "$(_code environment)" || return $?
-  assertEquals --line "$LINENO" 2 "$(_code argument)" || return $?
-  assertEquals --line "$LINENO" "" "$(_code)" || return $?
-  assertEquals --line "$LINENO" "97" "$(_code assert)" || return $?
-  assertEquals --line "$LINENO" "$(printf "%d\n" 97 97)" "$(_code assert assert)" || return $?
-  assertEquals --line "$LINENO" "105" "$(_code identical)" || return $?
-  assertEquals --line "$LINENO" "108" "$(_code leak)" || return $?
-  assertEquals --line "$LINENO" "116" "$(_code test)" || return $?
-  assertEquals --line "$LINENO" "253" "$(_code internal)" || return $?
+  assertEquals --line "$LINENO" "254" "$(_code EnViRoNmEnT)" || return $?
+  assertEquals --line "$LINENO" "254" "$(_code Internal)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsFa01324kjadksfj)" || return $?
   assertEquals --line "$LINENO" "254" "$(_code adsfa01324kjadksfj1)" || return $?
 }

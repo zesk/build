@@ -7,9 +7,24 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# This function is not used is are here simply to provide documentation.
+
+# fn: errorHandler
+# Argument: exitCode - Integer. Required. The exit code to handle.
+# Argument: message ... - EmptyString. Optional. The message to display to the user about what caused the error.
+# The main error handler signature used in Zesk Build.
+#
+# Some code patterns:
+#
+#     usageRequireBinary "$handler" mariadb || return $?
+#
+__errorHandler() {
+  return 0
+}
+
 # IDENTICAL zesk-build-hook-header 3
-# shellcheck source=/dev/null
 set -eou pipefail
+# shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # DOC TEMPLATE: --help 1

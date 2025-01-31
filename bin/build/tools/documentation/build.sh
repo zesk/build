@@ -172,6 +172,9 @@ documentationBuild() {
     done
   fi
 
+  # At this point, everything is valid so we call our failure hook on failure
+  usage="__${FUNCNAME[0]}"
+
   #
   # Generate or update indexes
   #
@@ -216,9 +219,15 @@ documentationBuild() {
     fileLinkPattern=${functionLinkPattern%%#.*}
     __catchEnvironment "$usage" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
-  reportTiming "$start" "Completed in" || :
+  message=$(__catchEnvironment "$usage" reportTiming "$start" "in") || return $?
+  hookRunOptional documentation-complete "$message" || return $?
 }
 _documentationBuild() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+__documentationBuild() {
+  hookRunOptional documentation-error "$@" || :
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

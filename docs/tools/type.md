@@ -85,7 +85,7 @@ Thanks to [F. Hauri - Give Up GitHub (isuint_Case)](https://stackoverflow.com/qu
 
 Test if an argument is an unsigned integer
 
-- Location: `bin/update-available.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -103,7 +103,7 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 
 Test if an argument is a positive integer (non-zero)
 
-- Location: `bin/build/identical/_type.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -137,7 +137,7 @@ Thanks to [F. Hauri - Give Up GitHub (isnum_Case)](https://stackoverflow.com/que
 Test if argument are bash functions
 If no arguments are passed, returns exit code 1.
 
-- Location: `bin/build/identical/_type.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

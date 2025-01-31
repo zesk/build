@@ -9,6 +9,7 @@ The `tools.sh` shell is the only include you need in your scripts:
 
 Once included, all functions here are available for use:
 
+
 ## Reference
 
 - [Apt Package Manager](./apt.md)
@@ -30,9 +31,13 @@ Once included, all functions here are available for use:
 - [Docker](./docker.md)
 - [Documentation](./documentation.md)
 - [Environment](./environment.md)
-- [File](./fo;e.md)
+- [File](./file.md)
+- [Function interfaces](./interface.md)
+- [Floating Point](./float.md)
 - [Git](./git.md)
 - [GitHub](./github.md)
+- [Hook API](./hook.md)
+- [Hooks](./hooks.md)
 - [Identical](./identical.md)
 - [Installation](./install.md)
 - [Interactive](./interactive.md)
@@ -54,12 +59,12 @@ Once included, all functions here are available for use:
 - [Type](./type.md)
 - [URL](./url.md)
 - [Usage](./usage.md)
-- [Utilities](./usage.md)
+- [Utilities](./utilities.md)
 - [Vendor](./vendor.md)
 - [Version](./version.md)
 - [Web](./web.md)
 
 ## Templates
 
-- [Function Template](../__function.md)
-- [Binary Template](../__binary.md)
+- [Function Template](../../bin/build/tools/documentation/__function.md)
+- [Binary Template](../../bin/build/tools/documentation/__binary.md)

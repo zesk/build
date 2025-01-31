@@ -499,7 +499,7 @@ __testRun() {
 
   __testRunShellInitialize
 
-  errorTest=$(_code test)
+  errorTest=$(_code assert)
   stickyCode=0
   shift || :
 
@@ -579,7 +579,7 @@ __testFailed() {
 
   __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
 
-  errorCode="$(_code test)"
+  errorCode="$(_code assert)"
   export IFS
   printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")"
   for name in IFS HOME LINES COLUMNS OSTYPE PPID PID PWD TERM; do

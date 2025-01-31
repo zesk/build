@@ -63,7 +63,7 @@ __installBinBuildURL() {
 
 # Checks Zesk Build version on GitHub
 __installBinBuildVersion() {
-  local usage="$1" installPath="$2" packagePath="$3" jsonFile version url
+  local usage="$1" installPath="$2" packagePath="$3" jsonFile version url upIcon="☝️" okIcon="👌"
 
   export ___TEMP_BIN_BUILD_URL
 
@@ -73,12 +73,12 @@ __installBinBuildVersion() {
   version=$(__installJSONField "$usage" .tag_name "$jsonFile") || return $?
   [ -n "$version" ] || __throwEnvironment "$usage" "Fetched version was blank" || return $?
   if [ -d "$packagePath" ] && [ -f "$packagePath/build.json" ]; then
-    myVersion=$(jq .version <"$packagePath/build.json")
+    myVersion=$(jq -r .version <"$packagePath/build.json")
     if [ "$myVersion" = "$version" ]; then
-      printf -- "%s 👌 " "$(decorate info "$version")"
+      printf -- "%s %s" "$okIcon" "$(decorate info "$version")"
       return 0
     fi
-    printf -- "%s ☝️ %s " "$(decorate error "$myVersion")" "$(decorate success "$version")"
+    printf -- "%s %s️ %s" "$(decorate error "$myVersion")" "$upIcon" "$(decorate success "$version")"
   fi
 
   # URL caching
@@ -141,23 +141,30 @@ __installPackageConfiguration() {
 # will overwrite {source} with the latest version after installation.
 #
 # INTERNAL: URL can be determined programmatically using `urlFunction`.
-# INTERNAL: `versionFunction` can be used to avoid upgrades when versions have not changed.
+# INTERNAL:
+# INTERNAL: `versionFunction` can be used to avoid upgrades when versions have not changed. `versionFunction` can return a string which is appended to the message:
+# INTERNAL:
+# INTERNAL:      "{name} Newest version installed {versionFunctionOutput}"
 # INTERNAL:
 # INTERNAL: Calling signature for `version-function`:
 # INTERNAL:
-# INTERNAL:    versionFunction usageFunction applicationHome installPath
-# INTERNAL:    usageFunction - Function. Required. Function to call when an error occurs.
-# INTERNAL:    applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
-# INTERNAL:    installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# INTERNAL:    Usage: version-function handler applicationHome installPath
+# INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
+# INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+# INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# INTERNAL:
+# INTERNAL: `version-function` should exit 0 to halt the
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
-# INTERNAL:    urlFunction usageFunction
-# INTERNAL:    usageFunction - Function. Required. Function to call when an error occurs.
+# INTERNAL:    Usage: url-function handler
+# INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:
 # INTERNAL: Calling signature for `check-function`:
 # INTERNAL:
-# INTERNAL:    checkFunction usageFunction installPath
+# INTERNAL:    Usage: check-function handler installPath
+# INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
+# INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # INTERNAL:
 # INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 # INTERNAL:
@@ -186,7 +193,7 @@ _installRemotePackage() {
 
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
-  local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" fetchArguments=()
+  local installArgs=() url="" localPath="" forceFlag=false installReason="" urlFunction="" checkFunction="" fetchArguments=()
   local name="${FUNCNAME[1]}"
 
   # _IDENTICAL_ argument-case-header 5
@@ -224,6 +231,7 @@ _installRemotePackage() {
         ;;
       --force)
         forceFlag=true
+        installReason="(--force specified)"
         ;;
       --mock | --local)
         [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
@@ -277,10 +285,13 @@ _installRemotePackage() {
   installPath="$applicationHome/$packagePath"
 
   if ! $forceFlag && [ -n "$versionFunction" ]; then
-    if "$versionFunction" "$usage" "$applicationHome" "$installPath"; then
-      decorate info "Versions match, no upgrade required."
+    local newVersion=""
+    if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$installPath"); then
+      printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
       return 0
     fi
+    forceFlag=true
+    installReason="(newer version available: $newVersion)"
   fi
 
   if [ -z "$url" ]; then
@@ -296,12 +307,14 @@ _installRemotePackage() {
   fi
 
   if [ ! -d "$installPath" ]; then
+    [ -n "$installReason" ] || installReason="not installed"
     if $forceFlag; then
-      printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "directory does not exist")"
+      printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "$installReason")"
     fi
     installFlag=true
   elif $forceFlag; then
-    printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "directory exists")"
+    [ -n "$installReason" ] || installReason="directory exists"
+    printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "$installReason")"
     installFlag=true
   fi
   binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"

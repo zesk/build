@@ -80,7 +80,7 @@ usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
 
 use with maximumFieldLength 1 to generate widths
 
-- Location: `bin/build/tools/usage.sh`
+- Location: `bin/build/tools/usage/format.sh`
 
 #### Arguments
 
@@ -102,7 +102,7 @@ Should look into an actual file template, probably
 
 Do not call usage functions here to avoid recursion
 
-- Location: `bin/build/tools/usage.sh`
+- Location: `bin/build/tools/usage/format.sh`
 
 #### Arguments
 

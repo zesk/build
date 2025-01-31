@@ -8,29 +8,75 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
+# These next three functions are not used and are here simply to provide documentation.
+
+# Used to check the remote version against the local version of a package to be installed.
+# fn: packageVersionFunction
+# Argument: handler - Function. Required. Function to call when an error occurs. Signature `errorHandler`.
+# Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+# Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# `versionFunction` should exit 0 to halt the installation, in addition it should output the current version as a decorated string.
+# stdout: version information
+# Exit Code: 0 - Do not upgrade, version is same as remote (stdout is found, current version)
+# Exit Code: 1 - Do upgrade, version changed. (stdout is version change details)
+# See: _installRemotePackage
+__packageVersionFunction() {
+  return 0
+}
+
+# fn: packageUrlFunction
+# Prints the remote URL for a package, or exits non-zero on error.
+#
+# Takes a single argument, the error handler, a function.
+#
+# Argument: handler - Function. Required. Function to call when an error occurs.
+# See: _installRemotePackage
+__packageUrlFunction() {
+  printf "%s\n" "https://localhost:1234/download.tar.gz"
+}
+
+# fn: packageCheckFunction
+# Verify an installation afterwards.
+#
+# Argument: handler - Function. Required. Function to call when an error occurs.
+# Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+#
+# If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
+# See: _installRemotePackage
+__packageCheckFunction() {
+  return 0
+}
+
 # IDENTICAL _installRemotePackage 301
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
 #
 # INTERNAL: URL can be determined programmatically using `urlFunction`.
-# INTERNAL: `versionFunction` can be used to avoid upgrades when versions have not changed.
+# INTERNAL:
+# INTERNAL: `versionFunction` can be used to avoid upgrades when versions have not changed. `versionFunction` can return a string which is appended to the message:
+# INTERNAL:
+# INTERNAL:      "{name} Newest version installed {versionFunctionOutput}"
 # INTERNAL:
 # INTERNAL: Calling signature for `version-function`:
 # INTERNAL:
-# INTERNAL:    versionFunction usageFunction applicationHome installPath
-# INTERNAL:    usageFunction - Function. Required. Function to call when an error occurs.
-# INTERNAL:    applicationHome - Required. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
-# INTERNAL:    installPath - Required. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# INTERNAL:    Usage: version-function handler applicationHome installPath
+# INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
+# INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+# INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# INTERNAL:
+# INTERNAL: `version-function` should exit 0 to halt the
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
-# INTERNAL:    urlFunction usageFunction
-# INTERNAL:    usageFunction - Function. Required. Function to call when an error occurs.
+# INTERNAL:    Usage: url-function handler
+# INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:
 # INTERNAL: Calling signature for `check-function`:
 # INTERNAL:
-# INTERNAL:    checkFunction usageFunction installPath
+# INTERNAL:    Usage: check-function handler installPath
+# INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
+# INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # INTERNAL:
 # INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 # INTERNAL:
@@ -59,7 +105,7 @@ _installRemotePackage() {
 
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
-  local installArgs=() url="" localPath="" forceFlag=false urlFunction="" checkFunction="" fetchArguments=()
+  local installArgs=() url="" localPath="" forceFlag=false installReason="" urlFunction="" checkFunction="" fetchArguments=()
   local name="${FUNCNAME[1]}"
 
   # _IDENTICAL_ argument-case-header 5
@@ -97,6 +143,7 @@ _installRemotePackage() {
         ;;
       --force)
         forceFlag=true
+        installReason="(--force specified)"
         ;;
       --mock | --local)
         [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
@@ -150,10 +197,13 @@ _installRemotePackage() {
   installPath="$applicationHome/$packagePath"
 
   if ! $forceFlag && [ -n "$versionFunction" ]; then
-    if "$versionFunction" "$usage" "$applicationHome" "$installPath"; then
-      decorate info "Versions match, no upgrade required."
+    local newVersion=""
+    if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$installPath"); then
+      printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
       return 0
     fi
+    forceFlag=true
+    installReason="(newer version available: $newVersion)"
   fi
 
   if [ -z "$url" ]; then
@@ -169,12 +219,14 @@ _installRemotePackage() {
   fi
 
   if [ ! -d "$installPath" ]; then
+    [ -n "$installReason" ] || installReason="not installed"
     if $forceFlag; then
-      printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "directory does not exist")"
+      printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "$installReason")"
     fi
     installFlag=true
   elif $forceFlag; then
-    printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "directory exists")"
+    [ -n "$installReason" ] || installReason="directory exists"
+    printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "$installReason")"
     installFlag=true
   fi
   binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"

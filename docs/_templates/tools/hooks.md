@@ -11,6 +11,12 @@ These run within the current project regardless of where Zesk Build is loaded:
 {hookVersionCurrent}
 {hookVersionLive}
 
+## Application hooks
+
+{__hookNotify}
+{__hookDocumentationComplete}
+{__hookDocumentationError}
+
 # Version hooks
 
 These hooks interact with `new-release.sh` and deployment tools but are intended to be used anywhere.

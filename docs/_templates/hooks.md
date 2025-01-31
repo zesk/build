@@ -35,6 +35,7 @@ Most hooks are optional unless specified.
 ## [Application Hooks](hooks/application.md)
 
 - `maintenance` - Turn on or off maintenance
+- `notify` - Notify
 
 ## Vendor Hooks
 

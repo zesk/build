@@ -618,7 +618,9 @@ __dumpNameValuePrefix() {
 # Argument: `alias` - The shell variable to assign to `variable`
 #
 __dumpAliasedValue() {
-  printf -- 'export "%s"="%s%s%s"\n' "$1" '$\{' "$2" '}'
+  # SC2016 -- expressions do not expand in single quotes, yes, we know
+  # shellcheck disable=SC2016
+  printf -- 'export "%s"="%s%s%s"\n' "$1" '${' "$2" '}'
 }
 
 #
@@ -663,6 +665,9 @@ bashDocumentation_Extract() {
   base="$(__catchEnvironment "$usage" basename "$definitionFile")" || return $?
   tempDoc=$(fileTemporaryName "$usage") || return $?
   docMap=$(fileTemporaryName "$usage") || return $?
+
+  # Hides 'unused' messages so shellcheck should succeed
+  printf '%s\n' '# shellcheck disable=SC2034'
 
   __dumpNameValue "applicationHome" "$home" | tee -a "$docMap"
   __dumpNameValue "applicationFile" "${definitionFile#"${home%/}"/}" | tee -a "$docMap"
@@ -722,7 +727,6 @@ bashDocumentation_Extract() {
     fi
     "$dumper" "$lastName" "${values[@]}" | tee -a "$docMap"
   fi
-  printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
   if [ "${#desc[@]}" -gt 0 ]; then
     __dumpNameValue "description" "${desc[@]}"
     printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
@@ -744,22 +748,30 @@ bashDocumentation_Extract() {
   if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
     __dumpNameValue "fn" "$fn"
   fi
+  # Trims trailing space from `fn`
+  printf '%s\n' "fn=\"\${fn%\$'\n'}\""
   if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "argument" "No arguments."
     __dumpAliasedValue "usage" "fn"
   else
     if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
       __dumpAliasedValue usage argument
-      printf "%s\n" "export usage; usage=\"\$fn \$(printf \"%s\\n\" \"\$usage\" | sed 's/ - /^/1' | usageArguments '^')\""
+      printf "%s\n" "export usage; usage=\"\$fn\$(__bashDocumentationDefaultArguments \"\$usage\")\""
     fi
   fi
   __dumpNameValue "foundNames" "${foundNames[*]}"
 
   printf "# DocMap: %s\n" "$docMap"
+  printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
 }
 _bashDocumentation_Extract() {
   # _IDENTICAL_ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Formats arguments for markdown
+__bashDocumentationDefaultArguments() {
+  printf "%s\n" "$*" | sed 's/ - /^/1' | usageArguments '^' '' ''
 }
 
 #

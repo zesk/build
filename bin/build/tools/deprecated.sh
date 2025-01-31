@@ -6,7 +6,7 @@
 #
 # You should stop using these. Soon. Now. Yesterday.
 #
-# This file should be ignored by the other deprecated.sh
+# This file *should* be ignored by the other deprecated.sh
 #
 
 #
@@ -61,7 +61,8 @@ __usageArgument() {
   __catchArgument "$@" || return $?
 }
 
-#
+# Deprecated: 2025-01-30
+# Deprecated: v0.22.0
 # Summary: Output a name value pair
 #
 # Utility function which is similar to `usageGenerator` except it operates on a line at a time. The name is output
@@ -80,6 +81,8 @@ consoleNameValue() {
   shift 2 && printf "%s %s\n" "$(decorate label "$(alignLeft "$characterWidth" "$name")")" "$(decorate value "$@")"
 }
 
+# Deprecated: v0.22.0
+# Deprecated: 2025-01-30
 # Usage: {fn} [ separator [ prefix [ suffix [ title [ item ... ] ] ] ]
 # Formats a titled list as {title}{separator}{prefix}{item}{suffix}{prefix}{item}{suffix}...
 # Argument: separator - Optional. String.
@@ -101,6 +104,8 @@ _format() {
   fi
 }
 
+# Deprecated: 2025-01-30
+# Deprecated: v0.22.0
 # Output a titled list
 # Usage: {fn} title [ items ... ]
 # Requires: _format
@@ -109,6 +114,8 @@ _list() {
   _format "\n" "- " "\n" "$@"
 }
 
+# Deprecated: 2025-01-30
+# Deprecated: v0.22.0
 # Output a command, quoting individual arguments
 # Usage: {fn} command [ argument ... ]
 # Requires: _format

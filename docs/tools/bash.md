@@ -12,10 +12,6 @@ Run or source a library
 
 - Location: `bin/build/tools/bash.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -30,10 +26,6 @@ _mapEnvironment
 Output the home for a library in the parent path
 
 - Location: `bin/build/tools/bash.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -56,10 +48,6 @@ Has security implications. Use with caution and ensure your directory is protect
 
 - Location: `bin/build/tools/bash.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `directory ...` - Required. Directory. Directory to `source` all `.sh` files used.
@@ -78,10 +66,6 @@ No documentation for `bashFunctionDefined`.
 
 - Location: `bin/build/tools/bash.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -96,10 +80,6 @@ _mapEnvironment
 Returns a unique list of tokens
 
 - Location: `bin/build/tools/bash/requires.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -126,10 +106,6 @@ If any requirements are not met, exit status of 1 and a list of unmet requiremen
 
 - Location: `bin/build/tools/bash/requires.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--require` - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
@@ -150,10 +126,6 @@ Pipe to strip comments from a bash file
 
 - Location: `bin/build/tools/bash.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -170,10 +142,6 @@ This check is simplistic and does not verify actual coverage or code paths.
 
 - Location: `bin/build/tools/bash.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `functionName` - String. Required. Function which should be called somewhere within a file.
@@ -189,10 +157,6 @@ List functions in a given shell file
 
 - Location: `bin/build/tools/bash.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -207,11 +171,7 @@ _mapEnvironment
 
 Extract a bash comment from a file
 
-- Location: `bin/build/identical/bashFunctionComment.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -234,10 +194,6 @@ Placing a `.debugging` file in your project with a list of permitted files which
 
 - Location: `bin/build/tools/bash/sanitize.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -257,10 +213,6 @@ _mapEnvironment
 Run `bashLint` on a set of bash files.
 
 - Location: `bin/build/tools/test.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -300,10 +252,6 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 - Location: `bin/build/tools/test.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `script` - Shell script to validate
@@ -332,18 +280,14 @@ determine where the problem or loop exists.
 
 - Location: `bin/build/tools/debug.sh`
 
-#### Usage
+[0;32m[1;91m[0m
 
-_mapEnvironment
+[92mUsage[0m: [1;33misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
 
-[42;30m[1;91m[0m
-
-[92mUsage[0m: [38;5;20misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
-
-    [94m--prefix  [1;40;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
-    [94m--suffix  [1;40;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[0m
-    [94m--token   [1;40;97mOptional. String. Classes permitted in a token[0m
-    [94mtext      [1;40;97mOptional. String. Text to search for mapping tokens.[0m
+    [94m--prefix  [1;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
+    [94m--suffix  [1;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[0m
+    [94m--token   [1;97mOptional. String. Classes permitted in a token[0m
+    [94mtext      [1;97mOptional. String. Text to search for mapping tokens.[0m
 
 Check if text contains mappable tokens
 If any text passed contains a token which can be mapped, succeed.
@@ -359,10 +303,6 @@ It will fail upon a second call; to reset call with `--end`
 When called twice, fails on the second invocation and dumps a call stack to stderr.
 
 - Location: `bin/build/tools/debug.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
