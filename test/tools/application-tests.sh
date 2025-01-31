@@ -8,17 +8,16 @@
 #
 
 testApplicationHome() {
-  local savedHome
+  __mockValue XDG_STATE_HOME
+  export XDG_STATE_HOME
 
-  export HOME
-  savedHome=$HOME
-  HOME=$(__environment mktemp -d) || return $?
+  XDG_STATE_HOME=$(__environment mktemp -d) || return $?
 
-  decorate info "New Home is $HOME"
-  assertFileDoesNotExist --line "$LINENO" "$HOME/.applicationHome" || return $?
+  decorate info "New XDG_STATE_HOME is $XDG_STATE_HOME"
+  assertFileDoesNotExist --line "$LINENO" "$XDG_STATE_HOME/.applicationHome" || return $?
   assertExitCode --stdout-match "Application home set" --line "$LINENO" 0 applicationHome "$HOME" || return $?
-  assertFileContains --line "$LINENO" "$HOME/.applicationHome" "$HOME" || return $?
-  __environment rm -rf "$HOME" || return $?
+  assertFileContains --line "$LINENO" "$XDG_STATE_HOME/.applicationHome" "$HOME" || return $?
+  __environment rm -rf "$XDG_STATE_HOME" || return $?
 
-  HOME=$savedHome
+  __mockValue XDG_STATE_HOME "" --end
 }

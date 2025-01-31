@@ -98,3 +98,16 @@ tomorrowDate() {
 todayDate() {
   date -u +%F
 }
+
+# Is a date valid?
+dateValid() {
+  local date="${1-}"
+  [ "${date:4:1}${date:6:1}" = "--" ] || return 1
+  local year="${date:0:4}" month="${date:4:2}" day="${date:6:2}"
+  ! isUnsignedInteger "$year" || ! isUnsignedInteger "${month#0}" || ! isUnsignedInteger "${day#0}" || return 1
+  [ "$year" -lt 1900 ] || [ "$month" -lt 1 ] || [ "$month" -gt 12 ] || [ "$day" -lt 1 ] || [ "$day" -gt 31 ] || return 1
+}
+_dateValid() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

@@ -74,7 +74,7 @@ testExitCode() {
 
   assertExitCode --stderr-match non-integer --stderr-match "message for return" "$(_code argument)" _return notInt "message for return"
 
-  for code in assert identical leak "test"; do
+  for code in assert identical leak "timeout"; do
     char="${code:0:1}"
     digit=$(_code "$code")
     assertEquals --line "$LINENO" "$digit" "$(characterToInteger "$char")" characterToInteger "$char" || return $?

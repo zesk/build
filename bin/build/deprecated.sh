@@ -271,7 +271,7 @@ __deprecatedConfiguration() {
   export HOME
 
   local newHome
-  newHome=$(__environment buildEnvironmentGet "BUILD_CACHE") || return $?
+  newHome=$(__environment buildEnvironmentGet "BUILD_CACHE_HOME") || return $?
 
   [ -d "$HOME" ] || _environment HOME is not set || return $?
 

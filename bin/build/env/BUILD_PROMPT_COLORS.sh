@@ -9,6 +9,6 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Bash Prompt
 # See: bashPrompt
-# Type: List
+# Type: ColonDelimitedList
 export BUILD_PROMPT_COLORS
 BUILD_PROMPT_COLORS="${BUILD_PROMPT_COLORS-}"

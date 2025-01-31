@@ -51,7 +51,7 @@ Modifies local environment. Not usually run within a subshell.
 #### Environment
 
 $envName
-BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
+BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 ### `buildEnvironmentLoad` - Load one or more environment settings from the environment file
 
 Load one or more environment settings from the environment file path.
@@ -77,7 +77,7 @@ Modifies local environment. Not usually run within a subshell.
 #### Environment
 
 $envName
-BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
+BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 ### `buildEnvironmentContext` - Run a command and ensure the build tools context matches
 
 Run a command and ensure the build tools context matches the current project

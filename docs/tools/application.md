@@ -6,10 +6,6 @@ Set, or cd to current project code home
 
 - Location: `bin/build/tools/application.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -25,10 +21,6 @@ Set aliases `G` and `g` default for `applicationHome`
 Localize as you wish for your own shell
 
 - Location: `bin/build/tools/application.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

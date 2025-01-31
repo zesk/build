@@ -77,7 +77,7 @@ _mapEnvironment
 
 #### Environment
 
-BUILD_HOOK_PATH
+BUILD_HOOK_DIRS
 ### `hookRunOptional` - Identical to `hookRun` but returns exit code zero if the
 
 Identical to `hookRun` but returns exit code zero if the hook does not exist.
@@ -106,7 +106,7 @@ _mapEnvironment
 
 #### Environment
 
-BUILD_HOOK_PATH
+BUILD_HOOK_DIRS
 ### `hasHook` - Determine if a hook exists
 
 Does a hook exist in the local project?
@@ -130,7 +130,7 @@ _mapEnvironment
 
 #### Environment
 
-BUILD_HOOK_PATH
+BUILD_HOOK_DIRS
 ### `whichHook` - Find the path to a hook binary file
 
 Does a hook exist in the local project?

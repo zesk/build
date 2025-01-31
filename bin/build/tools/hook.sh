@@ -120,7 +120,7 @@ __hookRunner() {
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional hookRun hookSource hookSourceOptional
 # Test: testHookSystem
-# Environment: BUILD_HOOK_PATH
+# Environment: BUILD_HOOK_DIRS
 hookRun() {
   __hookRunner "_${FUNCNAME[0]}" --require -- "$@"
 }
@@ -142,7 +142,7 @@ _hookRun() {
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional hookRun
 # Test: testHookSystem
-# Environment: BUILD_HOOK_PATH
+# Environment: BUILD_HOOK_DIRS
 hookRunOptional() {
   __hookRunner "_${FUNCNAME[0]}" -- "$@"
 }
@@ -173,7 +173,7 @@ _hookRunOptional() {
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional
 # Test: testHookSystem
-# Environment: BUILD_HOOK_PATH
+# Environment: BUILD_HOOK_DIRS
 hookSource() {
   __hookRunner "_${FUNCNAME[0]}" --source --require -- "$@"
 }
@@ -211,7 +211,7 @@ _hookSourceOptional() {
 # Argument: hookName0 - one or more hook names which must exist
 # Exit Code: 0 - If all hooks exist
 # Test: testHookSystem
-# Environment: BUILD_HOOK_PATH
+# Environment: BUILD_HOOK_DIRS
 hasHook() {
   local usage="_${FUNCNAME[0]}"
   local argument
@@ -260,11 +260,11 @@ whichHook() {
   local argument
   local applicationHome binary hookPath extension hookPaths=()
 
-  export BUILD_HOOK_PATH
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_PATH || return $?
+  export BUILD_HOOK_DIRS
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
 
-  IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_PATH" || :
-  [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_PATH is blank" || return $?
+  IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_DIRS" || :
+  [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_DIRS is blank" || return $?
 
   applicationHome="$(__catchEnvironment "$usage" buildHome)" || return $?
   while [ $# -gt 0 ]; do

@@ -2,7 +2,7 @@
 # Time when a build was initiated, set upon first invocation if not already
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Deployment
-# Type: DateTime
+# Type: Date
 
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/BUILD_TIMESTAMP.sh"

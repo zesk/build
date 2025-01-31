@@ -32,7 +32,11 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 {usageArgumentFileDirectory}
 {usageArgumentDirectory}
 {usageArgumentRealDirectory}
+{usageArgumentRemoteDirectory}
+{usageArgumentApplicationDirectory}
 {usageArgumentLoadEnvironmentFile}
+{usageArgumentDirectoryList}
+{usageArgumentApplicationDirectoryList}
 
 ## Argument check: Strings
 
@@ -53,11 +57,24 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 {usageArgumentFunction}
 {usageArgumentExecutable}
 
-## Argument check: URL
+## Complex String Types
 
 {usageArgumentURL}
+{usageArgumentDate}
+{usageArgumentSecret}
 
 ## Argument Errors (fail)
 
 {usageArgumentMissing}
 {usageArgumentUnknown}
+
+
+{buildEnvironmentGetDirectory}
+{dateValid}
+
+## Lists 
+
+{usageArgumentArray}
+{usageArgumentColonDelimitedList}
+{usageArgumentCommaDelimitedList}
+{usageArgumentList}

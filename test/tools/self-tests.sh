@@ -28,7 +28,7 @@ testBuildEnvironmentLoadAll() {
     APPLICATION_CODE
     APPLICATION_CODE
     APPLICATION_NAME
-    BUILD_CACHE
+    BUILD_CACHE_HOME
     BUILD_COMPANY
     BUILD_COMPANY_LINK
     BUILD_DOCKER_BITBUCKET_IMAGE
@@ -64,6 +64,15 @@ testBuildEnvironmentLoadAll() {
         assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
       fi
     ) || return $?
+
+    local envFile="$home/bin/build/env/$loadIt.sh"
+    assertFileContains --line "$LINENO" "$envFile" "# Type:" "# Category:" || return $?
+
+    local type
+    type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
+
+    validator="usageArgument$type"
+    isFunction "$validator" || _environment "$type is not a known type in $(decorate file "$envFile")" || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' -exec basename {} \; | cut -d . -f 1) || return $?
 }
 
@@ -225,8 +234,9 @@ testInstallBinBuild() {
     --stdout-match "we-like-head-rubs.sh"
     --stdout-no-match "install-bin-build.sh"
 
-    --stdout-no-match "Installed"
-    --stdout-match "already installed"
+    --stdout-match "Installed"
+    --stdout-no-match "already installed"
+    --stdout-match "newer version available"
 
     --stdout-match "does not ignore"
     --stdout-match ".gitignore"
@@ -244,11 +254,11 @@ testInstallBinBuild() {
 
   # .gitignore errors reversed
   matches=(
-    --stdout-match "we-like-head-rubs.sh"
+    --stdout-match "Newest version installed"
     --stdout-no-match "install-bin-build.sh"
 
     --stdout-no-match "Installed"
-    --stdout-match "already installed"
+    --stdout-no-match "already installed"
 
     --stdout-no-match "does not ignore"
     --stdout-no-match ".gitignore"
@@ -270,18 +280,18 @@ testBuildEnvironmentLoad() {
   tempDir=$(__environment mktemp -d) || return $?
 
   target="$tempDir/FOO.sh"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
   __environment touch "$target" || return $?
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
   printf "%s\n" "#!/usr/bin/env bash" >"$target"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
   __environment chmod +x "$target" || return $?
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
 
   assertEquals --line "$LINENO" "${FOO-}" "" || return $?
 
   printf "%s\n" "export FOO" "FOO=hello" >>"$target"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --leak FOO --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
 
   assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
 
@@ -294,18 +304,18 @@ testBuildEnvironmentGet() {
   tempDir=$(__environment mktemp -d) || return $?
 
   target="$tempDir/FOO.sh"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
   __environment touch "$target" || return $?
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
   printf "%s\n" "#!/usr/bin/env bash" >"$target"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
   __environment chmod +x "$target" || return $?
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
 
   assertEquals --line "$LINENO" "${FOO-}" "" || return $?
 
   printf "%s\n" "export FOO" "FOO=hello" >>"$target"
-  BUILD_ENVIRONMENT_PATH="$tempDir" assertExitCode --leak FOO --line "$LINENO" --stdout-match "hello" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO --line "$LINENO" --stdout-match "hello" 0 buildEnvironmentGet FOO || return $?
 
   assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
 

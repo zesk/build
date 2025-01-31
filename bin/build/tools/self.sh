@@ -294,15 +294,17 @@ _buildHome() {
 _buildEnvironmentPath() {
   local paths=() home
 
-  export BUILD_ENVIRONMENT_PATH BUILD_HOME
+  export BUILD_ENVIRONMENT_DIRS BUILD_HOME
   if [ -z "$BUILD_HOME" ]; then
     home=$(__environment buildHome) || return $?
   else
     home="$BUILD_HOME"
   fi
-  printf "%s\n" "$home/bin/build/env" "$home/bin/env"
-  IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_PATH-}" || :
-  printf "%s\n" "${paths[@]+"${paths[@]}"}"
+  # shellcheck source=/dev/null
+  source "$home/bin/build/env/BUILD_ENVIRONMENT_DIRS.sh" || _environment "BUILD_ENVIRONMENT_DIRS.sh fail" || return $?
+
+  IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_DIRS-}" || :
+  printf "%s\n" "${paths[@]+"${paths[@]}"}" "$home/bin/build/env"
 }
 
 #
@@ -317,7 +319,7 @@ _buildEnvironmentPath() {
 # Modifies local environment. Not usually run within a subshell.
 #
 # Environment: $envName
-# Environment: BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
+# Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
@@ -433,7 +435,7 @@ _Build() {
 # Modifies local environment. Not usually run within a subshell.
 #
 # Environment: $envName
-# Environment: BUILD_ENVIRONMENT_PATH - `:` separated list of paths to load env files
+# Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentGet() {
   local usage="_${FUNCNAME[0]}"
@@ -460,6 +462,59 @@ buildEnvironmentGet() {
   done
 }
 _buildEnvironmentGet() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Load and print one or more environment settings which represents a directory which should be created.
+#
+# Usage: {fn} [ envName ... ]
+# Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+#
+# If BOTH files exist, both are sourced, so application environments should anticipate values
+# created by build's default.
+#
+# Modifies local environment. Not usually run within a subshell.
+#
+# Environment: $envName
+# Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
+#
+buildEnvironmentGetDirectory() {
+  local usage="_${FUNCNAME[0]}"
+
+  local createFlag=true existsFlag=false
+
+  [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one environment variable" || return $?
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --exists)
+        existsFlag=true
+        ;;
+      --no-create)
+        createFlag=false
+        ;;
+      *)
+        local path
+        path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument") || return $?
+        ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$path") || return $?
+        ! $existsFlag || [ -d "$path" ] || __throwEnvironment "$usage" "$argument -> $path does not exist" || return $?
+        printf "%s\n" "$path"
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+}
+_buildEnvironmentGetDirectory() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -47,7 +47,7 @@ _mapEnvironment
 
 #### Environment
 
-BUILD_HOOK_PATH
+BUILD_HOOK_DIRS
 ### `hookSource` - Run a project hook
 
 Run a hook in the project located at `./bin/hooks/`
@@ -86,7 +86,7 @@ _mapEnvironment
 
 #### Environment
 
-BUILD_HOOK_PATH
+BUILD_HOOK_DIRS
 
 ### `hookRunOptional` - Identical to `hookRun` but returns exit code zero if the
 
@@ -116,7 +116,7 @@ _mapEnvironment
 
 #### Environment
 
-BUILD_HOOK_PATH
+BUILD_HOOK_DIRS
 ### `hookSourceOptional` - Identical to `hookRun` but returns exit code zero if the
 
 Identical to `hookRun` but returns exit code zero if the hook does not exist.

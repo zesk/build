@@ -7,6 +7,16 @@
 # Test: ./test/tools/usage-tests.sh
 # Docs: ./docs/_templates/tools/usage.md
 
+# Throw an unknown argument error
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentUnknown() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" "$@" || return $?
+}
 
 #
 # Summary: Check that one or more binaries are installed
@@ -239,6 +249,94 @@ usageArgumentDirectory() {
   printf "%s\n" "${directory%/}"
 }
 
+# Validates a value as a directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentDirectoryList() {
+  local usage="$1" args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    return $?
+  fi
+  local directories=() directory result=() index=0
+  IFS=":" read -r -a directories <<<"$3" || :
+  for directory in "${directories[@]+"${directories[@]}"}"; do
+    [ -n "$directory" ] || continue
+    [ -d "$directory" ] || __throwArgument "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
+    result+=("$directory")
+    index=$((index + 1))
+  done
+  printf "%s\n" "$(joinArguments ":" "${result[@]+"${result[@]}"}")"
+}
+
+# Validates a value as an application-relative directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentApplicationDirectoryList() {
+  local usage="$1" args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    return $?
+  fi
+
+  local home directories=() directory result=() index=0
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  IFS=":" read -r -a directories <<<"$3" || :
+  for directory in "${directories[@]+"${directories[@]}"}"; do
+    [ -n "$directory" ] || continue
+    directory="${directory#./}"
+    directory="${directory#/}"
+    directory="${directory%/}"
+    [ -d "${home%/}/$directory" ] || __throwArgument "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+    result+=("$directory")
+    index=$((index + 1))
+  done
+  printf "%s\n" "$(joinArguments ":" "${result[@]+"${result[@]}"}")"
+}
+
+# Validates a value as an application-relative directory. Upon success, outputs the full path.
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentApplicationDirectory() {
+  local usage="$1" args
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    return $?
+  fi
+  local home directory="$3"
+
+  [ -z "$directory" ] || __throwArgument "$usage" "$2 is blank" || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  directory="${directory#./}"
+  directory="${directory#/}"
+  directory="${directory%/}"
+  [ -d "${home%/}/$directory" ] || __throwArgument "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+  printf "%s\n" "${home%/}/$directory"
+}
+
 # Validates a value is not blank and is a directory and does `realPath` on it.
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if usage fails
@@ -407,17 +505,6 @@ usageArgumentEnvironmentVariable() {
   printf "%s\n" "$1"
 }
 
-# Throw an unknown argument error
-# Usage: {fn} usage argument
-# Argument: usage - Required. Function. Usage function to call upon failure.
-# Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
-usageArgumentUnknown() {
-  local usage="$1" argument="$2"
-  shift 2 || :
-  __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" "$@" || return $?
-}
-
 # Throw an missing argument error
 # Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
@@ -427,4 +514,74 @@ usageArgumentMissing() {
   local usage="$1" argument="$2"
   shift 2 || :
   __throwArgument "$usage" "missing argument $(decorate label "$argument")" "$@" || return $?
+}
+
+# Secrets are things which should be kept secret
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentSecret() {
+  usageArgumentString "$@"
+}
+
+# List delimited with commas `,`
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentCommaDelimitedList() {
+  usageArgumentEmptyString "$@"
+}
+
+# List delimited with colons `:`
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentColonDelimitedList() {
+  usageArgumentEmptyString "$@"
+}
+
+# List delimited with spaces ` `
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentList() {
+  usageArgumentEmptyString "$@"
+}
+
+# Placeholder for array types
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentArray() {
+  usageArgumentEmptyString "$@"
+}
+
+# A remote path is one which exists in another file system
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentRemoteDirectory() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  local path="${1-}"
+  [ "${path:0:1}" = "/" ] || __throwArgument "$usage" "$argument \"${1-}\" is not a valid remote path" || return $?
+  printf "%s\n" "$1"
+}
+
+# A remote path is one which exists in another file system
+# Usage: {fn} usage argument
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Exit Code: 2 - Always
+usageArgumentDate() {
+  local usage="$1" argument="$2"
+  shift 2 || :
+  dateValid "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a valid date" || return $?
+  printf "%s\n" "$1"
 }

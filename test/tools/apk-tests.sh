@@ -21,15 +21,15 @@ testIsApkInstalled() {
     __mockValue BUILD_DEBUG
 
   apkIsInstalled --help >/dev/null || return $?
-  echo "${BASH_SOURCE[0]}:$LINENO"
+#  echo "${BASH_SOURCE[0]}:$LINENO"
   assertExitCode --line "$LINENO" 0 apkIsInstalled --help || return $?
-  echo "${BASH_SOURCE[0]}:$LINENO"
+#  echo "${BASH_SOURCE[0]}:$LINENO"
   if isAlpine; then
-    echo "${BASH_SOURCE[0]}:$LINENO"
+#    echo "${BASH_SOURCE[0]}:$LINENO"
     assertExitCode --line "$LINENO" 0 apkIsInstalled || return $?
-    echo "${BASH_SOURCE[0]}:$LINENO"
+#    echo "${BASH_SOURCE[0]}:$LINENO"
   fi
-  echo "${BASH_SOURCE[0]}:$LINENO"
+#  echo "${BASH_SOURCE[0]}:$LINENO"
 
     __mockValue BUILD_DEBUG "" --end
 

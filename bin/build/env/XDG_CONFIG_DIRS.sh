@@ -6,6 +6,6 @@
 # See: https://specifications.freedesktop.org/basedir-spec/latest/
 
 # shellcheck source=/dev/null
-source "${BASH_SOURCE[0]%/}/XDG_DATA_HOME.sh"
+source "${BASH_SOURCE[0]%/*}/XDG_CONFIG_HOME.sh"
 export XDG_CONFIG_DIRS
-XDG_CONFIG_DIRS=${XDG_CONFIG_DIRS-"$XDG_CONFIG_HOME"}
+XDG_CONFIG_DIRS=${XDG_CONFIG_DIRS-"${XDG_CONFIG_HOME-}"}

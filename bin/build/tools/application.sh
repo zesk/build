@@ -7,17 +7,19 @@
 
 __applicationHomeFile() {
   local f home
-  home=$(__environment buildHome) || return $?
+
+  home=$(__environment buildEnvironmentGetDirectory XDG_STATE_HOME) || return $?
   f="$home/.applicationHome"
-  [ -f "$f" ] || touch "$f"
+  [ -f "$f" ] || __environment touch "$f" || return $?
   printf "%s\n" "$f"
 }
 
 __applicationHomeGo() {
   local usage="$1" && shift
-  local home label userHome oldHome=""
+  local file home label userHome oldHome=""
 
-  home=$(trimSpace "$(head -n 1 "$(__applicationHomeFile)")") || return $?
+  file=$(__environment __applicationHomeFile) || return $?
+  home=$(trimSpace "$(__environment head -n 1 "$file")") || return $?
   if [ -z "$home" ]; then
     __throwEnvironment "$usage" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi

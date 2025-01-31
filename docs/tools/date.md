@@ -10,11 +10,6 @@ Converts a date (`YYYY-MM-DD`) to another format.
 
 - Location: `bin/build/tools/date.sh`
 
-#### Usage
-
-    dateToFormat date format
-    
-
 #### Arguments
 
 - `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
@@ -39,11 +34,6 @@ Converts a date to an integer timestamp
 
 - Location: `bin/build/tools/date.sh`
 
-#### Usage
-
-    dateToTimestamp date
-    
-
 #### Arguments
 
 - `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
@@ -65,11 +55,6 @@ Compatible with BSD and GNU date.
 timestampToDate 1681966800 %F
 
 - Location: `bin/build/tools/date.sh`
-
-#### Usage
-
-    timestampToDate integerTimestamp format
-    
 
 #### Arguments
 
