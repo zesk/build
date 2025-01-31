@@ -16,13 +16,19 @@ __applicationHomeFile() {
 
 __applicationHomeGo() {
   local usage="$1" && shift
-  local home label userHome
+  local home label userHome oldHome=""
 
   home=$(trimSpace "$(head -n 1 "$(__applicationHomeFile)")") || return $?
   if [ -z "$home" ]; then
     __throwEnvironment "$usage" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi
   [ -d "$home" ] || __throwEnvironment "$usage" "Application home directory deleted $(decorate code "$home")" || return $?
+
+  oldHome=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  if [ -d "$oldHome" ] && [ "$oldHome" != "$home" ]; then
+    hookSourceOptional --application "$oldHome" project-deactivate || :
+  fi
   __catchEnvironment "$usage" cd "$home" || return $?
   label="Working in"
   if [ $# -gt 0 ]; then
@@ -73,6 +79,7 @@ applicationHome() {
   home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
   printf "%s\n" "$home" >"$(__applicationHomeFile)"
   __applicationHomeGo "$usage" "${__saved[0]-} Application home set to" || return $?
+  hookSourceOptional --application "$home" project-activate || :
 }
 _applicationHome() {
   # _IDENTICAL_ usageDocument 1
