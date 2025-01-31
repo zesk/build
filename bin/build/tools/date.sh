@@ -4,7 +4,9 @@
 #
 # Depends on no other .sh files
 # Shell Dependencies: date
-# o ./docs/_templates/tools/date.md
+#
+# Docs: ./docs/_templates/tools/date.md
+# Test: ./test/tools/date-tests.sh
 #
 
 # Converts a date (`YYYY-MM-DD`) to another format.
@@ -102,10 +104,16 @@ todayDate() {
 # Is a date valid?
 dateValid() {
   local date="${1-}"
-  [ "${date:4:1}${date:6:1}" = "--" ] || return 1
-  local year="${date:0:4}" month="${date:4:2}" day="${date:6:2}"
-  ! isUnsignedInteger "$year" || ! isUnsignedInteger "${month#0}" || ! isUnsignedInteger "${day#0}" || return 1
-  [ "$year" -lt 1900 ] || [ "$month" -lt 1 ] || [ "$month" -gt 12 ] || [ "$day" -lt 1 ] || [ "$day" -gt 31 ] || return 1
+  __environment [ "${date:4:1}${date:7:1}" = "--" ] || return 1
+  local year="${date:0:4}" month="${date:5:2}" day="${date:8:2}"
+  __environment isUnsignedInteger "$year" || return $?
+  __environment isUnsignedInteger "${month#0}" || return $?
+  __environment isUnsignedInteger "${day#0}" || return $?
+  __environment [ "$year" -gt 1600 ] || return $?
+  __environment [ "${month#0}" -ge 1 ] || return $?
+  __environment [ "${month#0}" -le 12 ] || return $?
+  __environment [ "${day#0}" -ge 1 ] || return $?
+  __environment [ "${day#0}" -le 31 ] || return $?
 }
 _dateValid() {
   # _IDENTICAL_ usageDocument 1
