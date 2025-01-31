@@ -148,7 +148,7 @@ darwinNotification() {
   title="$(escapeDoubleQuotes "$title")"
 
   # https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW224
-  script="display notification \"${message[*]}\" with title \"$title\""
+  script="display notification \"${messageText}\" with title \"$title\""
   [ -z "$soundName" ] || script="$script sound name \"$(escapeDoubleQuotes "$soundName")\""
 
   __catchEnvironment "$usage" /usr/bin/osascript -e "$script" || return $?

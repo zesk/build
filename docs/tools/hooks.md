@@ -43,6 +43,42 @@ Application deployed version
 - `1` - Environment error
 - `2` - Argument error
 
+## Application hooks
+
+#### Arguments
+
+- `--sound soundName` - Play a sound
+- `--title title` - Set the title of the notification
+- `message ...` - Display this message (one per line) in the notification.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+BUILD_NOTIFY_SOUND - Play this sound if none is specified.
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
 # Version hooks
 
 These hooks interact with `new-release.sh` and deployment tools but are intended to be used anywhere.

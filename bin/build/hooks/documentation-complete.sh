@@ -19,7 +19,7 @@ __hookDocumentationComplete() {
   local name
 
   name=$(buildEnvironmentGet APPLICATION_NAME) || return $?
-  hookRunOptional notify "${name}\n\n""Documentation built $*"
+  hookRunOptional notify --title "$name Documentation" "Built successfully $*"
 }
 
 __hookDocumentationComplete "$@"

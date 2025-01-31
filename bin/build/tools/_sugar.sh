@@ -24,7 +24,7 @@
 # - `assert` - assertion failed
 # - `identical` - identical check failed
 # - `leak` - function leaked globals
-# - `test` - test failed
+# - `timeout` - timeout exceeded
 # - `exit` - exit function immediately
 # - `internal` - internal errors
 #
@@ -37,7 +37,7 @@
 # - 97 - assert - ASCII 97 = `a`
 # - 105 - identical - ASCII 105 = `i`
 # - 108 - leak - ASCII 108 = `l`
-# - 116 - test - ASCII 116 = `t`
+# - 116 - timeout - ASCII 116 = `t`
 # - 120 - exit - ASCII 120 = `x`
 # - 253 - internal
 # - 254 - unknown
@@ -48,7 +48,7 @@ _code() {
   local k && while [ $# -gt 0 ]; do
     case "$1" in
       --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;;
-      environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; test) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
+      environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
     esac && shift && printf -- "%d\n" "$k"
   done
 }

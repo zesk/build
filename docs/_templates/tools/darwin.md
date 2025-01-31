@@ -8,3 +8,11 @@ Tools to work with Darwin, Mac OS X's version of UNIX.
 
 {isDarwin}
 {darwinDialog}
+{darwinNotification}
+
+## Sounds in Darwin
+
+{darwinSoundDirectory}
+{darwinSoundInstall}
+{darwinSoundNames}
+{darwinSoundValid}

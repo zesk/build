@@ -21,7 +21,7 @@ __hookDocumentationError() {
 
   shift
   name=$(buildEnvironmentGet APPLICATION_NAME) || return $?
-  hookRunOptional notify "$(printf "%s\n\n%s\n\n%s" "$name" "Documentation failed with code \"$exitCode\":" "$*")"
+  hookRunOptional notify --title "$name Documentation" "Failed with code \"$exitCode\": $*"
 }
 
 __hookDocumentationError "$@"

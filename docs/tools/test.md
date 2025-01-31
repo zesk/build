@@ -4,37 +4,7 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-### `validateFileExtensionContents` - Check files for the existence of a string
 
-Search for item extensions and ensure that text is found in each item.
-
-This can be run on any directory tree to test files in any application.
-
-By default, any directory which begins with a dot `.` will be ignored.
-
-- Location: `bin/build/tools/test.sh`
-
-#### Arguments
-
-- `extension0 - Required` - the extension to search for (`*.extension`)
-- `--` - Required. Separates extensions from text
-- `text0` - Required. Text which must exist in each item with the extension given.
-- `--` - Optional. Final delimiter to specify find arguments.
-- `findArgs` - Optional. Limit find to additional conditions.
-
-#### Examples
-
-    validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2025'
-
-#### Exit codes
-
-- `0` - All found files contain all text strings
-- `1` - One or more files does not contain all text strings
-- `2` - Arguments error (missing extension or text)
-
-#### Environment
-
-This operates in the current working directory
 ### `validateFileContents` - Check files for the existence of a string or strings
 
 Search for item extensions and ensure that text is found in each item.
@@ -60,21 +30,7 @@ By default, any directory which begins with a dot `.` will be ignored.
 - `0` - All found files contain all text string or strings
 - `1` - One or more files does not contain all text string or strings
 - `2` - Arguments error (missing extension or text)
-### `evalCheck` - Check files to ensure `eval`s in code have been checked
 
-Check files to ensure `eval`s in code have been checked
-
-- Location: `bin/build/tools/security.sh`
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `findUncaughtAssertions` - Search bash files for assertions which do not terminate a
 
 Search bash files for assertions which do not terminate a function and are likely an error
@@ -93,23 +49,7 @@ Search bash files for assertions which do not terminate a function and are likel
 
 ## Test Subsystem
 
-### `testTools` - Load test tools and make `testSuite` function available
 
-Load test tools and make `testSuite` function available
-
-- Location: `bin/build/tools/test.sh`
-
-#### Arguments
-
-- `--help` - Optional. Flag. Display this help.
-- `binary` - Optional. Callable. Run this program after loading test tools.
-- `...` - Optional. Arguments for binary.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 #### Arguments
 
 - `--one test` - Optional. Add one test suite to run.
@@ -136,24 +76,7 @@ Load test tools and make `testSuite` function available
 
 ## Mocking help
 
-### `__mockValue` - Fake a value for testing
 
-Fake a value for testing
-
-- Location: `bin/build/tools/test.sh`
-
-#### Arguments
-
-- `globalName` - EnvironmentVariable. Required. Global to change temporarily to a value.
-- `saveGlobalName` - EnvironmentVariable. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
-- `--end` - Flag. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
-- `value` - EmptyString. Required. Force the value of `globalName` to this value temporarily. Saves the original value in global `saveGlobalName`.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `__mockConsoleAnimation` - Fake `hasConsoleAnimation` for testing
 
 Fake `hasConsoleAnimation` for testing

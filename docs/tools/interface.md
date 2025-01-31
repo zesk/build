@@ -14,30 +14,11 @@ A typical usage is:
 
 The `$handler` is defined here:
 
-### `errorHandler` - The main error handler signature used in Zesk Build.
 
-The main error handler signature used in Zesk Build.
-
-Some code patterns:
-
-    usageRequireBinary "$handler" mariadb || return $?
-
-- Location: `bin/identical/arguments.sh`
-
-#### Arguments
-
-- `exitCode` - Integer. Required. The exit code to handle.
-- `message ...` - EmptyString. Optional. The message to display to the user about what caused the error.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 
 ## Installation function signatures
 
-These are all used in - [function errorHandler]() - [errorHandler]().
+These are all used in - [function ]() - []().
 
 ### `packageVersionFunction` - Used to check the remote version against the local version
 
@@ -55,23 +36,7 @@ Used to check the remote version against the local version of a package to be in
 #### Exit codes
 
 - `0` - Do not upgrade, version is same as remote (stdout is found, current version)
-- `1` - Do upgrade, version changed. (stdout is version change details) ### `packageUrlFunction` - Prints the remote URL for a package, or exits non-zero
-
-Prints the remote URL for a package, or exits non-zero on error.
-
-Takes a single argument, the error handler, a function.
-
-- Location: `bin/build/identical/_installRemotePackage.sh`
-
-#### Arguments
-
-- `handler` - Function. Required. Function to call when an error occurs.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error ### `packageCheckFunction` - Verify an installation afterwards.
+- `1` - Do upgrade, version changed. (stdout is version change details)  ### `packageCheckFunction` - Verify an installation afterwards.
 
 Verify an installation afterwards.
 

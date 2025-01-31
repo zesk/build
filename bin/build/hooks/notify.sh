@@ -39,7 +39,6 @@ __hookNotify() {
         shift
         soundName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
-      # IDENTICAL profileNameArgumentHandlerCase 6
       --title)
         shift
         title=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?

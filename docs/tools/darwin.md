@@ -42,3 +42,84 @@ Outputs the selected button text upon exit.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `darwinNotification` - Display a notification for the user
+
+Display a notification for the user
+
+- Location: `bin/build/tools/darwin.sh`
+
+#### Arguments
+
+- `--title` - String. Optional. Title of the notification.
+- `--sound` - String. Optional. Sound to play with the notification. Represents a sound base name found in `/Library/Sounds/`.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Sounds in Darwin
+
+### `darwinSoundDirectory` - Directory for user sounds
+
+Directory for user sounds
+
+- Location: `bin/build/tools/darwin.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `darwinSoundInstall` - Install a sound file for notifications
+
+Install a sound file for notifications
+
+- Location: `bin/build/tools/darwin.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `soundFile ...` - File. Required. Sound file(s) to install in user library.
+- `--create` - Optional. Flag. Create sound directory if it does not exist.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `darwinSoundNames` - List valid sound names usable for notifications in Darwin
+
+List valid sound names usable for notifications in Darwin
+
+- Location: `bin/build/tools/darwin.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `darwinSoundValid` - Is a Darwin sound name valid?
+
+Is a Darwin sound name valid?
+
+- Location: `bin/build/tools/darwin.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
