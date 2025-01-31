@@ -34,7 +34,7 @@ set -eou pipefail
 # See: docs/_templates/deprecated.md
 __deprecatedCleanup() {
   local usage="_${FUNCNAME[0]}" exitCode=0
-  local doCannon=true doTokens=true doSpelling=true
+  local doCannon=true doTokens=true doSpelling=true doConfiguration=true
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -47,6 +47,18 @@ __deprecatedCleanup() {
         "$usage" 0
         return $?
         ;;
+      --configuration)
+        doConfiguration=true
+        ;;
+      --no-configuration)
+        doConfiguration=false
+        ;;
+      --just-configuration)
+        doConfiguration="true"
+        doCannon=false
+        doSpelling=false
+        doTokens=false
+        ;;
       --cannon)
         doCannon=true
         ;;
@@ -54,6 +66,7 @@ __deprecatedCleanup() {
         doCannon=false
         ;;
       --just-cannon)
+        doConfiguration=false
         doCannon="true"
         doSpelling=false
         doTokens=false
@@ -65,6 +78,7 @@ __deprecatedCleanup() {
         doTokens=false
         ;;
       --just-tokens)
+        doConfiguration=false
         doCannon=false
         doTokens="true"
         doSpelling=false
@@ -76,6 +90,7 @@ __deprecatedCleanup() {
         doSpelling=false
         ;;
       --just-spelling)
+        doConfiguration=false
         doCannon=false
         doTokens=false
         doSpelling="true"
@@ -103,6 +118,10 @@ __deprecatedCleanup() {
   if $doTokens; then
     statusMessage --last decorate info "Finding deprecated tokens ..."
     __deprecatedTokensByVersion || exitCode=$?
+  fi
+  if $doConfiguration; then
+    statusMessage --last decorate info "Cleaning up configuration ..."
+    __deprecatedConfiguration || exitCode=$?
   fi
   statusMessage --last reportTiming "$start" "Deprecated process took"
   return "$exitCode"
@@ -243,6 +262,30 @@ __misspellingCannon() {
   # END OF MISSPELLING CANNON
   statusMessage --last reportTiming "$start" "Misspelling cannon took"
   return "$exitCode"
+}
+
+#
+# --configuration
+#
+__deprecatedConfiguration() {
+  export HOME
+
+  local newHome
+  newHome=$(__environment buildEnvironmentGet "BUILD_CACHE") || return $?
+
+  [ -d "$HOME" ] || _environment HOME is not set || return $?
+
+  if [ -f "$HOME/.applicationHome" ]; then
+    __echo mv "$HOME/.applicationHome" "$newHome"
+  fi
+  local oldHome="$HOME/.build"
+  if [ -d "$oldHome" ]; then
+    if [ -d "$newHome" ]; then
+      decorate warning "Both $oldHome and $newHome exist - merge manually"
+    else
+      __echo mv "$oldHome" "$newHome"
+    fi
+  fi
 }
 
 # IDENTICAL __source 19

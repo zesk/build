@@ -224,8 +224,8 @@ testDeployBuildEnvironment() {
     # Important to clear these
     # For tests which depend on export environments make sure to reset THOSE glboals at start of test
     # Should likely clear test environment somehow
-    export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
-    unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+    export APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
+    unset APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
 
     d=$(mktemp -d)
     __environment pushd "$d" >/dev/null || return $?
@@ -243,19 +243,19 @@ testDeployBuildEnvironment() {
     sampleId=abcdef
 
     args=(--id "$sampleId")
-    matches=(--stderr-match home --stderr-match non-blank --stderr-match "DEPLOY_REMOTE_PATH")
+    matches=(--stderr-match home --stderr-match non-blank --stderr-match "DEPLOY_REMOTE_HOME")
     assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
     APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
     args=(--id "$sampleId" --home "$sampleHome")
-    matches=(--stderr-match home --stderr-match non-blank --stderr-match "APPLICATION_REMOTE_PATH")
+    matches=(--stderr-match home --stderr-match non-blank --stderr-match "APPLICATION_REMOTE_HOME")
     assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-    DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
+    DEPLOY_REMOTE_HOME="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
     args=(--id "$sampleId" --home "$sampleHome" --application "$sampleApplication")
     matches=(--stderr-match "user hosts" --stderr-match "DEPLOY_USER_HOSTS")
     assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment "${args[@]}" || return $?
-    APPLICATION_REMOTE_PATH="$sampleApplication" DEPLOY_REMOTE_PATH="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
+    APPLICATION_REMOTE_HOME="$sampleApplication" DEPLOY_REMOTE_HOME="$sampleHome" APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 2 deployBuildEnvironment || return $?
 
     # this is the point we WOULD succeed but instead just run the dry run which outputs the script which can be used to
     # generate the other tests
@@ -264,15 +264,15 @@ testDeployBuildEnvironment() {
     assertExitCode --line "$LINENO" "${matches[@]}" 0 deployBuildEnvironment --dry-run "${args[@]}" || return $?
 
     DEPLOY_USER_HOSTS="www-data@remote0 www-data@remote1" \
-      APPLICATION_REMOTE_PATH="$sampleApplication" \
-      DEPLOY_REMOTE_PATH="$sampleHome" \
+      APPLICATION_REMOTE_HOME="$sampleApplication" \
+      DEPLOY_REMOTE_HOME="$sampleHome" \
       APPLICATION_ID="$sampleId" assertExitCode --line "$LINENO" "${matches[@]}" 0 deployBuildEnvironment --dry-run || return $?
 
     __environment popd >/dev/null || return $?
     rm -rf "$d" || :
 
-    __echo unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
-    export APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
-    unset APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET
+    __echo unset APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
+    export APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
+    unset APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
   ) || return $?
 }

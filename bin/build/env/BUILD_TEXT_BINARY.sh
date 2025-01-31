@@ -6,4 +6,5 @@
 # See: __brewStandardPackages
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Console
+# Type: Callable
 export BUILD_TEXT_BINARY="${BUILD_TEXT_BINARY-}"

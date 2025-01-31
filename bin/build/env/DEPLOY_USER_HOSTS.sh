@@ -3,5 +3,6 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Deployment
 # See: deployApplication
+# Type: String
 export DEPLOY_USER_HOSTS
 DEPLOY_USER_HOSTS="${DEPLOY_USER_HOSTS-}"

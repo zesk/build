@@ -20,12 +20,12 @@ deployedHostArtifact="./.deployed-hosts"
 # Argument: --first - Optional. Flag. When it is the first deployment, use this flag.
 # Argument: --home deployPath - Required. Directory. Path where the deployments database is on remote system. Uses
 # Argument: --id applicationId - Required. String. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_ID` environment.
-# Argument: --application applicationPath - Required. String. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_PATH` environment.
+# Argument: --application applicationPath - Required. String. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_HOME` environment.
 # Argument: --target targetPackage - Optional. Filename. Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.
 # Loads `./.build.env` if it exists.
 # File: `./.build.env`
-# Environment: DEPLOY_REMOTE_PATH - path on remote host for deployment data
-# Environment: APPLICATION_REMOTE_PATH - path on remote host for application
+# Environment: DEPLOY_REMOTE_HOME - path on remote host for deployment data
+# Environment: APPLICATION_REMOTE_HOME - path on remote host for application
 # Environment: DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
 # Environment: APPLICATION_ID - Version to be deployed
 # Environment: BUILD_TARGET - The application package name
@@ -113,7 +113,7 @@ deployBuildEnvironment() {
     envFilesLoaded+=("$envFile")
   done
 
-  buildEnvironmentLoad APPLICATION_ID DEPLOY_REMOTE_PATH APPLICATION_REMOTE_PATH DEPLOY_USER_HOSTS BUILD_TARGET || :
+  buildEnvironmentLoad APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET || :
 
   ##
   ## APPLICATION_ID --id
@@ -124,19 +124,19 @@ deployBuildEnvironment() {
   [ -n "$applicationId" ] || __throwArgument "$usage" 'Requires non-blank `--id` or `APPLICATION_ID`' || return $?
 
   ##
-  ## $DEPLOY_REMOTE_PATH --home
+  ## $DEPLOY_REMOTE_HOME --home
   ##
 
-  deployHome="${deployHome:-$DEPLOY_REMOTE_PATH}"
+  deployHome="${deployHome:-$DEPLOY_REMOTE_HOME}"
   # shellcheck disable=SC2016
-  [ -n "$deployHome" ] || __throwArgument "$usage" 'Requires non-blank `--home` or `DEPLOY_REMOTE_PATH`' || return $?
+  [ -n "$deployHome" ] || __throwArgument "$usage" 'Requires non-blank `--home` or `DEPLOY_REMOTE_HOME`' || return $?
 
   ##
-  ## $APPLICATION_REMOTE_PATH --application
+  ## $APPLICATION_REMOTE_HOME --application
   ##
-  applicationPath="${applicationPath:-$APPLICATION_REMOTE_PATH}"
+  applicationPath="${applicationPath:-$APPLICATION_REMOTE_HOME}"
   # shellcheck disable=SC2016
-  [ -n "$applicationPath" ] || __throwArgument "$usage" 'Requires non-blank `--application` or `APPLICATION_REMOTE_PATH`' || return $?
+  [ -n "$applicationPath" ] || __throwArgument "$usage" 'Requires non-blank `--application` or `APPLICATION_REMOTE_HOME`' || return $?
 
   ##
   ## $DEPLOY_USER_HOSTS --home or just non-flagged arguments

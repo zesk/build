@@ -259,7 +259,7 @@ buildCacheDirectory() {
   local usage="_${FUNCNAME[0]}"
   local cache suffix
 
-  cache=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_CACHE) || return $?
+  cache=$(__catchEnvironment "$usage" buildEnvironmentGet XDG_CACHE_HOME) || return $?
   suffix="$(printf "%s/" "$@")"
   suffix="${suffix%/}"
   suffix="$(printf "%s/%s" "${cache%/}" "${suffix%/}")"

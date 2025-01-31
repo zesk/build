@@ -15,6 +15,7 @@
 # linux/arm/v7,
 # linux/arm/v6
 # See: dockerPlatformDefault
+# Type: String
 export BUILD_DOCKER_PLATFORM
 BUILD_DOCKER_PLATFORM=${BUILD_DOCKER_PLATFORM-}
 

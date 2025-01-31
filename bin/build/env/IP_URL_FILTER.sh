@@ -5,5 +5,6 @@
 # Type: String
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: pipeline
+# Type: String
 export IP_URL_FILTER
 IP_URL_FILTER="${IP_URL_FILTER-}"

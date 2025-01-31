@@ -6,10 +6,9 @@
 # Test: ./test/tools/application-tests.sh
 
 __applicationHomeFile() {
-  local f
-  export HOME
-  [ -d "${HOME-}" ] || __throwEnvironment "$usage" "HOME needs to be defined to use applicationHome" || return $?
-  f="${HOME-}/.applicationHome"
+  local f home
+  home=$(__environment buildHome) || return $?
+  f="$home/.applicationHome"
   [ -f "$f" ] || touch "$f"
   printf "%s\n" "$f"
 }
@@ -37,6 +36,7 @@ __applicationHomeGo() {
   fi
   userHome="${HOME%/}"
   printf "%s %s\n" "$(decorate label "$label")" "$(decorate value "${home//"$userHome"/~}")"
+  hookSourceOptional --application "$home" project-activate || :
   return 0
 }
 
@@ -79,7 +79,6 @@ applicationHome() {
   home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
   printf "%s\n" "$home" >"$(__applicationHomeFile)"
   __applicationHomeGo "$usage" "${__saved[0]-} Application home set to" || return $?
-  hookSourceOptional --application "$home" project-activate || :
 }
 _applicationHome() {
   # _IDENTICAL_ usageDocument 1

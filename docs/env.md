@@ -32,8 +32,8 @@
 
 # Deployment
 
-- `APPLICATION_REMOTE_PATH` - Path on remote system. Used in `deployApplication`. No default.
-- `DEPLOY_REMOTE_PATH` - Path on remote system. Used in `deployApplication`. No default.
+- `APPLICATION_REMOTE_HOME` - Path on remote system. Used in `deployApplication`. No default.
+- `DEPLOY_REMOTE_HOME` - Path on remote system. Used in `deployApplication`. No default.
 - `DEPLOY_USER_HOSTS` - List of user@host strings. Used in `deployApplication`. No default.
 
 # AWS related

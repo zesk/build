@@ -3,4 +3,5 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Bash
 # See: bashPrompt
+# Type: Callable
 PROMPT_COMMAND="${PROMPT_COMMAND-}"

@@ -2,5 +2,6 @@
 # Path on the remote server where the application is served
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Deployment
-export APPLICATION_REMOTE_PATH
-APPLICATION_REMOTE_PATH="${APPLICATION_REMOTE_PATH-}"
+# Type: RemoteDirectory
+export APPLICATION_REMOTE_HOME
+APPLICATION_REMOTE_HOME="${APPLICATION_REMOTE_HOME-}"

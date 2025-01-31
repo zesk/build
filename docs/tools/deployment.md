@@ -24,7 +24,7 @@ _mapEnvironment
 - `--first` - Optional. Flag. When it is the first deployment, use this flag.
 - `--home deployPath` - Required. Directory. Path where the deployments database is on remote system. Uses
 - `--id applicationId` - Required. String. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_ID` environment.
-- `--application applicationPath` - Required. String. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_PATH` environment.
+- `--application applicationPath` - Required. String. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_HOME` environment.
 - `--target targetPackage` - Optional. Filename. Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.
 
 #### Exit codes
@@ -35,8 +35,8 @@ _mapEnvironment
 
 #### Environment
 
-DEPLOY_REMOTE_PATH - path on remote host for deployment data
-APPLICATION_REMOTE_PATH - path on remote host for application
+DEPLOY_REMOTE_HOME - path on remote host for deployment data
+APPLICATION_REMOTE_HOME - path on remote host for application
 DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
 APPLICATION_ID - Version to be deployed
 BUILD_TARGET - The application package name
