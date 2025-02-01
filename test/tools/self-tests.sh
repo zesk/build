@@ -55,6 +55,7 @@ testBuildEnvironmentLoadAll() {
 
   home=$(__environment buildHome) || return $?
 
+  find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' | dumpPipe "All env files found"
   while read -r loadIt; do
     (
       export "${loadIt?}"
