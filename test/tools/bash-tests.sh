@@ -96,3 +96,26 @@ testBashSourceInteractive() {
   export BUILD_PROMPT_MOCK=yes
 
 }
+
+_testFunc() {
+  return 1
+}
+testBashPipeBehavior() {
+  local temp
+
+  temp=$(mktemp) || return $?
+
+  set -o pipefail
+  if _testFunc | tee "$temp"; then
+    echo "Success: $?"
+  else
+    echo "Fail: $?"
+  fi
+
+  set +o pipefail
+  if _testFunc | tee "$temp"; then
+    echo "Success: $?"
+  else
+    echo "Fail: $?"
+  fi
+}

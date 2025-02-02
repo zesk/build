@@ -444,8 +444,8 @@ __confirmYesNo() {
 
   parseBoolean "${1-}" || exitCode=$?
   case "$exitCode" in
-    0) statusMessage printf -- "%s%s" "$prefix" "$(decorate success "Yes")" ;;
-    1) statusMessage printf -- "%s%s" "$prefix" "$(decorate warning "[ ** NO ** ]")" ;;
+    0) statusMessage printf -- "%s%s" "$prefix" "$(decorate success "Yes") $exitCode" ;;
+    1) statusMessage printf -- "%s%s" "$prefix" "$(decorate warning "[ ** NO ** ]") $exitCode" ;;
     *) return 2 ;;
   esac
   return "$exitCode"
@@ -533,7 +533,7 @@ confirmYesNo() {
     esac
     exitCode=0
   done
-  __confirmYesNo "$default" "$reason"
+  __confirmYesNo "$default" "$reason" || return $?
 }
 _confirmYesNo() {
   # _IDENTICAL_ usageDocument 1

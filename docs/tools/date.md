@@ -4,6 +4,21 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `dateValid` - Is a date valid?
+
+Is a date valid?
+
+- Location: `bin/build/tools/date.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 ### `dateToFormat` - Platform agnostic date conversion
 
 Converts a date (`YYYY-MM-DD`) to another format.

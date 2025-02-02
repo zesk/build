@@ -34,3 +34,4 @@ To enable:
 
 {bashPromptModule_binBuild}
 {bashPromptModule_ApplicationPath}
+{bashPromptModule_dotFilesWatcher}

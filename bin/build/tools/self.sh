@@ -504,7 +504,7 @@ buildEnvironmentGetDirectory() {
         ;;
       *)
         local path
-        path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument") || return $?
+        path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
         ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$path") || return $?
         ! $existsFlag || [ -d "$path" ] || __throwEnvironment "$usage" "$argument -> $path does not exist" || return $?
         printf "%s\n" "$path"

@@ -103,79 +103,12 @@ __bashPromptRemove() {
   __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }
 
-#
-# Show current application and path as a badge
-#
-bashPromptModule_ApplicationPath() {
-  local folderIcon="📂"
-  local path applicationPath
-  path=$(__environment pwd) || return $?
-  applicationPath=$(decoratePath "$path")
-  if [ "$applicationPath" != "$path" ]; then
-    iTerm2Badge -i "$(printf -- "%s\n%s %s\n" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"
-  fi
-}
-
-#
-# Check which bin/build we are running and keep local to current project
-# When changing projects, runs the `project-activate` hook in the new project
-# Also shows the change in Zesk Build version numbers
-#
-# Run-Hook: project-activate
-bashPromptModule_binBuild() {
-  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showHome showGitHome
-  export HOME
-
-  __environment buildEnvironmentLoad HOME || return $?
-  home=$(__environment buildHome) || return $?
-  showHome="${home//$HOME/~}"
-  gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
-  [ "$home" != "$gitHome" ] || return 0
-  showGitHome="${gitHome//$HOME/~}"
-  [ -x "$gitHome/$tools" ] || return 0
-  local oldVersion newVersion newestVersion
-  oldVersion="$(jq -r .version "$home/$version")"
-  newVersion="$(jq -r .version "$gitHome/$version")"
-  newestVersion="$(printf -- "%s\n" "$oldVersion" "$newVersion" | versionSort | tail -n 1)"
-  if [ "$oldVersion" != "$newVersion" ]; then
-    if [ "$oldVersion" = "$newestVersion" ]; then
-      buildMessage="$(printf -- "build %s -> %s " "$(decorate green "$oldVersion")" "$(decorate yellow "$newVersion")")"
-    else
-      buildMessage="$(printf -- "build %s -> %s " "$(decorate blue "$oldVersion")" "$(decorate green "$newVersion")")"
-    fi
-  fi
-
-  hookRunOptional --application "$home" project-deactivate "$gitHome" || _environment "project-deactivate failed" || :
-
-  # shellcheck source=/dev/null
-  source "$gitHome/$tools" || __environment "Failed to load $showGitHome/$tools" || return $?
-  # buildHome will be changed here
-
-  hookSourceOptional --application "$gitHome" project-activate "$home" || _environment "project-activate failed" || :
-
-  currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
-
-  pathSuffix=
-  if [ -d "$gitHome/bin" ]; then
-    __environment pathConfigure --last "$gitHome/bin" || return $?
-    pathSuffix="$pathSuffix +$(decorate cyan "$showGitHome/bin")"
-  fi
-  if isFunction pathRemove; then
-    if [ -d "$home/bin" ]; then
-      pathRemove "$home/bin"
-      pathSuffix="$pathSuffix -$(decorate magenta "$showHome/bin")"
-    fi
-  fi
-  [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
-
-  printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")" "$pathSuffix"
-}
-
 # Usage: {fn} [ --first | --last | module ] [ --colors colorsText ]
 # Argument: --reset - Flag. Optional. Remove all prompt modules.
 # Argument: --list - Flag. Optional. List the current modules.
 # Argument: --first - Flag. Optional. Add all subsequent modules first to the list.
 # Argument: --last - Flag. Optional. Add all subsequent modules last to the list.
+# Argument: --label promptLabel - String. Optional. Display this label on each prompt.
 # Argument: module - String. Optional. Module to enable or disable. To disable, specify `-module`
 # Argument: --colors colorsText - String. Optional. Set the prompt colors
 # Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to standard in.

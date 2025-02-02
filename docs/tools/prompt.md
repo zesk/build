@@ -31,16 +31,13 @@ Modules are any binary or executable to run each prompt, and can be added or rem
 
 - Location: `bin/build/tools/prompt.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--reset` - Flag. Optional. Remove all prompt modules.
 - `--list` - Flag. Optional. List the current modules.
 - `--first` - Flag. Optional. Add all subsequent modules first to the list.
 - `--last` - Flag. Optional. Add all subsequent modules last to the list.
+- `--label promptLabel` - String. Optional. Display this label on each prompt.
 - `module` - String. Optional. Module to enable or disable. To disable, specify `-module`
 - `--colors colorsText` - String. Optional. Set the prompt colors
 - `--skip-terminal` - Flag. Optional. Skip the check for a terminal attached to standard in.
@@ -67,10 +64,6 @@ Options are:
 
 - Location: `bin/build/tools/prompt.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -87,40 +80,20 @@ To enable:
 
     bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
 
-### `bashPromptModule_binBuild` - Check which bin/build we are running and keep local to
 
-Check which bin/build we are running and keep local to current project
-When changing projects, runs the `project-activate` hook in the new project
-Also shows the change in Zesk Build version numbers
-
-- Location: `bin/build/tools/prompt.sh`
-
-#### Usage
-
-_mapEnvironment
-
-#### Arguments
-
-- No arguments.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 ### `bashPromptModule_ApplicationPath` - Show current application and path as a badge
 
 Show current application and path as a badge
 
-- Location: `bin/build/tools/prompt.sh`
-
-#### Usage
-
-_mapEnvironment
+- Location: `bin/build/tools/prompt/application-path.sh`
 
 #### Arguments
 
 - No arguments.
+
+#### Examples
+
+    bashPrompt bashPromptModule_ApplicationPath
 
 #### Exit codes
 

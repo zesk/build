@@ -25,9 +25,11 @@ buildPreRelease() {
   __execute "$home/bin/build/deprecated.sh" || exitCode=$?
   statusMessage decorate info "Identical repair (internal, long) ..."
   __execute "$home/bin/build/identical-repair.sh" --internal || exitCode=$?
-  statusMessage decorate info "Documentation"
-  __execute "$home/bin/documentation.sh" || exitCode=$?
+  statusMessage decorate info "Linting"
   find "$home" -name '*.sh' ! -path '*/.*/*' | bashLintFiles || exitCode=$?
+  statusMessage decorate info "Documentation"
+  __execute "$home/bin/documentation.sh" --clean || exitCode=$?
+  __execute "$home/bin/documentation.sh" || exitCode=$?
   if [ "$exitCode" -eq 0 ]; then
     if gitRepositoryChanged; then
       statusMessage decorate info "Committing changes ..."

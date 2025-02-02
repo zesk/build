@@ -258,6 +258,37 @@ Validates a value is not blank and is a directory and does `realPath` on it.
 
 - `2` - Argument error
 - `0` - Success
+### `usageArgumentRemoteDirectory` - A remote path is one which exists in another file
+
+A remote path is one which exists in another file system
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+
+#### Exit codes
+
+- `2` - Always
+### `usageArgumentApplicationDirectory` - Validates a value as an application-relative directory. Upon success, outputs
+
+Validates a value as an application-relative directory. Upon success, outputs the full path.
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
 ### `usageArgumentLoadEnvironmentFile` - Validates a value is not blank and is an environment
 
 Validates a value is not blank and is an environment file which is loaded immediately.
@@ -272,6 +303,40 @@ Upon success, outputs the file name to stdout, outputs a console message to stde
 - `variableName` - Required. String. Name of variable being tested
 - `variableValue` - Required. String. Required only in that if it's blank, it fails.
 - `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+### `usageArgumentDirectoryList` - Validates a value as a directory search list. Upon success,
+
+Validates a value as a directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
+
+#### Exit codes
+
+- `2` - Argument error
+- `0` - Success
+### `usageArgumentApplicationDirectoryList` - Validates a value as an application-relative directory search list. Upon
+
+Validates a value as an application-relative directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usageFunction` - Required. Function. Run if usage fails
+- `variableName` - Required. String. Name of variable being tested
+- `variableValue` - Required. String. Required only in that if it's blank, it fails.
+- `noun` - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
 
 #### Exit codes
 
@@ -451,7 +516,7 @@ Require an argument to be a executable
 - `2` - If `value` is not `isExecutable`
 - `0` - If `value` is `isExecutable`
 
-## Argument check: URL
+## Complex String Types
 
 ### `usageArgumentURL` - Require an argument to be a URL
 
@@ -469,6 +534,34 @@ Require an argument to be a URL
 
 - `0` - If `value` is `urlValid`
 - `2` - If `value` is not `urlValid`
+### `usageArgumentDate` - A remote path is one which exists in another file
+
+A remote path is one which exists in another file system
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+
+#### Exit codes
+
+- `2` - Always
+### `usageArgumentSecret` - Secrets are things which should be kept secret
+
+Secrets are things which should be kept secret
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+
+#### Exit codes
+
+- `2` - Always
 
 ## Argument Errors (fail)
 
@@ -489,6 +582,108 @@ Throw an missing argument error
 ### `usageArgumentUnknown` - Throw an unknown argument error
 
 Throw an unknown argument error
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+
+#### Exit codes
+
+- `2` - Always
+
+
+### `buildEnvironmentGetDirectory` - Load and print one or more environment settings which represents
+
+Load and print one or more environment settings which represents a directory which should be created.
+
+
+If BOTH files exist, both are sourced, so application environments should anticipate values
+created by build's default.
+
+Modifies local environment. Not usually run within a subshell.
+
+- Location: `bin/build/tools/self.sh`
+
+#### Arguments
+
+- `envName` - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+$envName
+BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
+### `dateValid` - Is a date valid?
+
+Is a date valid?
+
+- Location: `bin/build/tools/date.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Lists 
+
+### `usageArgumentArray` - Placeholder for array types
+
+Placeholder for array types
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+
+#### Exit codes
+
+- `2` - Always
+### `usageArgumentColonDelimitedList` - undocumented
+
+No documentation for `usageArgumentColonDelimitedList`.
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+
+#### Exit codes
+
+- `2` - Always
+### `usageArgumentCommaDelimitedList` - List delimited with commas `,`
+
+List delimited with commas `,`
+
+- Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `usage` - Required. Function. Usage function to call upon failure.
+- `argument` - Required. String. Name of the argument used in error messages.
+
+#### Exit codes
+
+- `2` - Always
+### `usageArgumentList` - List delimited with spaces ` `
+
+List delimited with spaces ` `
 
 - Location: `bin/build/tools/usage.sh`
 
