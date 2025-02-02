@@ -98,24 +98,47 @@ testBashSourceInteractive() {
 }
 
 _testFunc() {
+  echo hello
   return 1
+}
+_pipeRan() {
+  export PIPE_RAN_FILE
+  echo "yes" >"$PIPE_RAN_FILE"
+  tee "$@"
 }
 testBashPipeBehavior() {
   local temp
 
+  export TEST_PIPE_RAN PIPE_RAN_FILE
+
   temp=$(mktemp) || return $?
 
+  PIPE_RAN_FILE="$temp.ran"
+
+  printf -- "" >"$PIPE_RAN_FILE"
+
   set -o pipefail
-  if _testFunc | tee "$temp"; then
-    echo "Success: $?"
-  else
-    echo "Fail: $?"
-  fi
+  exitCode=0
+  _testFunc | _pipeRan "$temp" || exitCode=$?
+  echo "set -o pipefail - exit $exitCode"
+
+  assertNotEquals --line "$LINENO" --display "pipe fail causes both to fail" 0 "$exitCode" || return $?
+  assertFileContains --line "$LINENO" "$temp" hello || return $?
+  assertFileContains --line "$LINENO" "$PIPE_RAN_FILE" yes || return $?
+
+  printf -- "" >"$PIPE_RAN_FILE"
+  assertFileDoesNotContain --line "$LINENO" "$PIPE_RAN_FILE" yes || return $?
 
   set +o pipefail
-  if _testFunc | tee "$temp"; then
-    echo "Success: $?"
-  else
-    echo "Fail: $?"
-  fi
+  exitCode=0
+  _testFunc | _pipeRan "$temp" || exitCode=$?
+  echo "set +o pipefail - exit $exitCode"
+
+  assertEquals --line "$LINENO" --display "pipe fail does not matter" 0 "$exitCode" || return $?
+  assertFileContains --line "$LINENO" "$temp" hello || return $?
+  assertFileContains --line "$LINENO" "$PIPE_RAN_FILE" yes || return $?
+  rm -rf "$temp" "$PIPE_RAN_FILE"
+
+  unset TEST_PIPE_RAN PIPE_RAN_FILE
+
 }

@@ -23,15 +23,16 @@ Examples:
 
 ## Functions
 
-{bashPrompt}
-{bashPromptColorScheme}
+{bashPrompt} {bashPromptColorScheme}
 
 ## Bash Prompt Modules
+
+- [`bashPromptModule_binBuild`](#bashPromptModule_binBuild)
+- [`bashPromptModule_ApplicationPath`](#bashPromptModule_ApplicationPath)
+- [`bashPromptModule_dotFilesWatcher`](#bashPromptModule_dotFilesWatcher)
 
 To enable:
 
     bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
 
-{bashPromptModule_binBuild}
-{bashPromptModule_ApplicationPath}
-{bashPromptModule_dotFilesWatcher}
+{bashPromptModule_binBuild} {bashPromptModule_ApplicationPath} {bashPromptModule_dotFilesWatcher}
