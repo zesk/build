@@ -74,7 +74,7 @@ testBuildEnvironmentLoadAll() {
 
     validator="usageArgument$type"
     isFunction "$validator" || _environment "$type is not a known type in $(decorate file "$envFile")" || return $?
-  done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' -exec basename {} \; | cut -d . -f 1) || return $?
+  done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?
 }
 
 testBuildFunctions() {
@@ -147,7 +147,7 @@ testInstallBinBuild() {
 
   __catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
   __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  __catchEnvironment "$handler" echo '# this make the file different' >>"$testBinBuild" || return $?
+  __catchEnvironment "$handler" printf -- '%s\n' '# this make the file different' >>"$testBinBuild" || return $?
 
   # --------------------------------------------------------------------------------
   #
