@@ -6,6 +6,11 @@
 #
 # Zesk Developer scripts
 
+__buildAnnounce() {
+  decorate info "Added aliases $(decorate each code t tools IdenticalRepair)"
+  decorate info "Available functions $(decorate each code buildPreRelease)"
+}
+
 __buildAliases() {
   local home
 
@@ -14,6 +19,13 @@ __buildAliases() {
   # shellcheck disable=SC2139
   alias t="$home/bin/build/tools.sh"
   alias tools=t
+  # shellcheck disable=SC2139
+  alias IdenticalRepair="$home/bin/build/identical-repair.sh"
+}
+__buildAliasesUndo() {
+  unalias t 2>/dev/null
+  unalias tools 2>/dev/null
+  unalias IdenticalRepair 2>/dev/null
 }
 
 buildPreRelease() {
@@ -43,3 +55,6 @@ buildPreRelease() {
 }
 
 __buildAliases
+__buildAnnounce
+
+unset __buildAliases __buildAnnounce

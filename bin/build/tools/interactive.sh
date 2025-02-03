@@ -657,24 +657,22 @@ interactiveBashSource() {
         if [ -f "$sourcePath" ]; then
           verb="file"
           if __interactiveApproved "$usage" "$sourcePath.approved" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+            statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" source "$sourcePath" || return $?
             approved=true
           fi
         elif [ -d "$sourcePath" ]; then
           verb="path"
           if __interactiveApproved "$usage" "$sourcePath/.approved" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+            statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
             approved=true
           fi
         else
           __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")" || return $?
         fi
-        if $verboseFlag; then
-          if $approved; then
-            statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
-          else
-            statusMessage decorate subtle "Skipping $verb $(decorate file "$sourcePath")" || :
-          fi
+        if $verboseFlag && ! $approved; then
+          statusMessage decorate subtle "Skipping $verb $(decorate file "$sourcePath")" || :
         fi
         ;;
     esac

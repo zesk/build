@@ -6,12 +6,6 @@
 #
 # Zesk Developer scripts
 
-__buildAliasesUndo() {
-
-  unalias t 2>/dev/null
-  unalias tools 2>/dev/null
-}
-
 __buildAliasesUndo
 
-unset buildPreRelease
+unset buildPreRelease __buildAliasesUndo
