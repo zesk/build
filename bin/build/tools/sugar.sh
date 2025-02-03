@@ -105,7 +105,7 @@ __catchEnvironmentQuiet() {
 _deprecated() {
   export BUILD_HOME
   printf "DEPRECATED: %s\n" "$@" 1>&2
-  [ ! -d "$BUILD_HOME" ] || printf -- "$(date "+%F %T"),%s\n" "$@" >>"${BUILD_HOME}/.deprecated"
+  [ ! -d "$BUILD_HOME" ] || printf -- "$(date "+%F %T"),%s\n%s\n" "$*" "$(debuggingStack)" >>"${BUILD_HOME}/.deprecated"
 }
 
 # Usage: {fn} command ...

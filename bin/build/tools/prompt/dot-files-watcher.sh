@@ -47,13 +47,13 @@ bashPromptModule_dotFilesWatcher() {
 
   [ $((${#askFiles[@]} + ${#askDirectories[@]})) -gt 0 ] || return 0
 
-  printf "%s: %s\n" "$(decorate error "New $(plural ${#askFiles[@]} file files)") found" "$(decorate each file "${askFiles[@]}")"
-  printf "%s: %s\n" "$(decorate error "New $(plural ${#askDirectories[@]} directory directories)") found" "$(decorate each file "${askDirectories[@]}")"
+  [ ${#askFiles[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate error "New $(plural ${#askFiles[@]} file files)") found" "$(decorate each file "${askFiles[@]}")"
+  [ ${#askDirectories[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate error "New $(plural ${#askDirectories[@]} directory directories)") found" "$(decorate each file "${askDirectories[@]}")"
   [ ${#foundFiles[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(plural ${#foundFiles[@]} file files)")" "$(decorate each file "${foundFiles[@]}")"
   [ ${#foundDirectories[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(plural ${#foundDirectories[@]} directory directories)")" "$(decorate each quote "${foundDirectories[@]}")"
 
   set -o pipefail
-  if confirmYesNo --no --timeout 10 "Approve all?" | tee "$askFile.$$"; then
+  if confirmYesNo --no --timeout 3 "Approve?" | tee "$askFile.$$"; then
     printf "%s\n" "${unapproved[@]}" >>"$dataFile"
     if sort -u "$dataFile" >>"$dataFile.sorted"; then
       mv -f "$dataFile.sorted" "$dataFile"
@@ -117,7 +117,7 @@ dotFilesApproved() {
         return 0
         ;;
       *)
-        __failArgument "$usage" "Unknown approved list: $1" || return $?
+        __throwArgument "$usage" "Unknown approved list: $1" || return $?
         ;;
     esac
   done

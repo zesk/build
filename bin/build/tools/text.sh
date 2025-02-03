@@ -1351,7 +1351,7 @@ _mapEnvironmentGenerateSedFile() {
 # Argument: text - Text to quote
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-# needSlash='$.*/[\]^'
+# Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedPattern() {
   local value
@@ -1365,7 +1365,7 @@ quoteSedPattern() {
 # Argument: text - Text to quote
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
-# needSlash='$.*/[\]^'
+# Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedReplacement() {
   local value separator="${2-/}"
