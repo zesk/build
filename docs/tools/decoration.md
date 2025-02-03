@@ -12,10 +12,6 @@ Repeat a string
 
 - Location: `bin/build/tools/decoration.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `count` - Required, integer count of times to repeat
@@ -38,10 +34,6 @@ _mapEnvironment
 Output a bar as wide as the console using the `=` symbol.
 
 - Location: `bin/build/tools/decoration.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -70,10 +62,6 @@ consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 
 - Location: `bin/build/tools/decoration.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `prefix` - Prefix each line with this text
@@ -92,10 +80,6 @@ _mapEnvironment
 Format text and align it right using spaces.
 
 - Location: `bin/build/tools/decoration.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -120,10 +104,6 @@ Format text and align it left using spaces.
 
 - Location: `bin/build/tools/decoration.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `characterWidth` - Characters to align left
@@ -146,10 +126,6 @@ _mapEnvironment
 Heading for section output
 
 - Location: `bin/build/tools/decoration.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -219,10 +195,6 @@ smmono12 (--bigger) toilet
 
 - Location: `bin/build/tools/decoration.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -239,10 +211,6 @@ Outputs a label before a bigText for output.
 This function will strip any ANSI from the label to calculate correct string sizes.
 
 - Location: `bin/build/tools/decoration.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -278,10 +246,6 @@ Output a line and fill columns with a character
 
 - Location: `bin/build/tools/decoration.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -296,10 +260,6 @@ _mapEnvironment
 Replace an absolute path prefix with an icon if it matches HOME or BUILD_HOME
 
 - Location: `bin/build/tools/decoration.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

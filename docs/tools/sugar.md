@@ -28,7 +28,7 @@ This is universally used throughout.
 
 Run binary and output failed command upon error
 
-- Location: `bin/build/tools/_sugar.sh`
+- Location: `bin/build/identical/__execute.sh`
 
 #### Arguments
 

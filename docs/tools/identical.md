@@ -10,10 +10,6 @@ Repair an identical `token` in `destination` from `source`
 
 - Location: `bin/build/tools/_identical/repair.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--prefix prefix` - Required. A text prefix to search for to identify identical sections (e.g. `# IDENICAL`) (may specify more than one)
@@ -55,10 +51,6 @@ This is best used as a pre-commit check, for example. Wink!
 
 - Location: `bin/build/tools/_identical/check.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--extension extension` - Required. String. One or more extensions to search for in the current directory.
@@ -92,10 +84,6 @@ This allows for overlapping identical sections within templates with the intent:
 - `_IDENTICAL_` - used in templates which must be included in OTHER templates
 
 - Location: `bin/build/tools/_identical/check.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

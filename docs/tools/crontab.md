@@ -28,10 +28,6 @@ Any files not found are skipped. Note that environment values are not carried be
 
 - Location: `bin/build/tools/crontab.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--env-file environmentFile` - Top-level environment file to pass variables into the user `crontab` template

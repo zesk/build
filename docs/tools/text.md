@@ -124,7 +124,7 @@ Quote bash strings for inclusion as single-quoted for eval
     
 ### `quoteGrepPattern` - Quote grep -e patterns for shell use
 
-$\Quote grep -e patterns for shell use
+Quote grep -e patterns for shell use
 
 - Location: `bin/build/identical/_text.sh`
 
@@ -828,7 +828,7 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 #### See Also
 
-- [Source {fn}]({sourceLink})
+- [{fn}]({sourceLink})
 ### `joinArguments` - Output arguments joined by a character
 
 Output arguments joined by a character

@@ -171,7 +171,7 @@ List functions in a given shell file
 
 Extract a bash comment from a file
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/bashFunctionComment.sh`
 
 #### Arguments
 
@@ -280,14 +280,14 @@ determine where the problem or loop exists.
 
 - Location: `bin/build/tools/debug.sh`
 
-[0;32m[1;91m[0m
+[42;30m[1;91m[0m
 
-[92mUsage[0m: [1;33misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
+[92mUsage[0m: [38;5;20misMappable[0m [94m[ --prefix ][0m [94m[ --suffix ][0m [94m[ --token ][0m [94m[ text ][0m
 
-    [94m--prefix  [1;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
-    [94m--suffix  [1;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[0m
-    [94m--token   [1;97mOptional. String. Classes permitted in a token[0m
-    [94mtext      [1;97mOptional. String. Text to search for mapping tokens.[0m
+    [94m--prefix  [1;40;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
+    [94m--suffix  [1;40;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[0m
+    [94m--token   [1;40;97mOptional. String. Classes permitted in a token[0m
+    [94mtext      [1;40;97mOptional. String. Text to search for mapping tokens.[0m
 
 Check if text contains mappable tokens
 If any text passed contains a token which can be mapped, succeed.

@@ -10,10 +10,6 @@ Is apt-get installed?
 
 - Location: `bin/build/tools/apt.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -28,10 +24,6 @@ _mapEnvironment
 No documentation for `aptNonInteractive`.
 
 - Location: `bin/build/tools/apt.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -51,10 +43,6 @@ Get APT source list path
 
 - Location: `bin/build/tools/apt.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -69,10 +57,6 @@ _mapEnvironment
 Add keys to enable apt to download terraform directly from hashicorp.com
 
 - Location: `bin/build/tools/apt.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -90,10 +74,6 @@ Remove apt keys
 
 - Location: `bin/build/tools/apt.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `keyName` - Required. String. One or more key names to remove.
@@ -107,10 +87,6 @@ _mapEnvironment
 Get key ring directory path
 
 - Location: `bin/build/tools/apt.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

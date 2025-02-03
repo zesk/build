@@ -15,10 +15,6 @@ exported variables
 
 - Location: `bin/build/identical/environmentVariables.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -41,10 +37,6 @@ First letter MUST NOT be a digit
 
 - Location: `bin/build/tools/environment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -63,10 +55,6 @@ List environment variables related to security
 
 - Location: `bin/build/tools/environment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -81,10 +69,6 @@ _mapEnvironment
 List environment variables related to application deployments
 
 - Location: `bin/build/tools/environment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -103,10 +87,6 @@ _mapEnvironment
 Safely load an environment file (no code execution)
 
 - Location: `bin/build/tools/environment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -129,10 +109,6 @@ Write a value to a state file as NAME="value"
 
 - Location: `bin/build/tools/environment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -153,10 +129,6 @@ Bash outputs on different versions:
 
 - Location: `bin/build/tools/environment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -171,10 +143,6 @@ _mapEnvironment
 No documentation for `environmentValueRead`.
 
 - Location: `bin/build/tools/environment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -193,10 +161,6 @@ Outputs array elements, one per line.
 
 - Location: `bin/build/tools/environment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `stateFile` - Required. File. File to access, must exist.
@@ -213,10 +177,6 @@ Convert an array value which was loaded already
 
 - Location: `bin/build/tools/environment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -232,10 +192,6 @@ List lines of environment values set in a bash state file
 
 - Location: `bin/build/tools/environment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -250,10 +206,6 @@ _mapEnvironment
 List names of environment values set in a bash state file
 
 - Location: `bin/build/tools/environment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -272,10 +224,6 @@ _mapEnvironment
 Create environment file `.env` for build.
 
 - Location: `bin/build/tools/environment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -301,10 +249,6 @@ Check application environment is populated correctly.
 Also verifies that `environmentApplicationVariables` and `environmentApplicationLoad` are defined.
 
 - Location: `bin/build/tools/environment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

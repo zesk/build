@@ -12,10 +12,6 @@ Install nodejs
 
 - Location: `bin/build/tools/node.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -30,10 +26,6 @@ _mapEnvironment
 Uninstall nodejs
 
 - Location: `bin/build/tools/node.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -53,10 +45,6 @@ Installs the selected package manager for node
 
 - Location: `bin/build/tools/node.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -72,10 +60,6 @@ Installs the selected package manager for node
 
 - Location: `bin/build/tools/node.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -90,10 +74,6 @@ _mapEnvironment
 Is the passed node package manager name valid?
 
 - Location: `bin/build/tools/node.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -111,10 +91,6 @@ Provides an abstraction to libraries to support any node package manager.
 Optionally will output the current node package manager when no arguments are passed.
 
 - Location: `bin/build/tools/node.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -138,10 +114,6 @@ If this fails it will output the installation log.
 When this tool succeeds the `yarn` binary is available in the local operating system.
 
 - Location: `bin/build/tools/yarn.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -168,10 +140,6 @@ If this fails it will output the installation log.
 When this tool succeeds the `npm` binary is available in the local operating system.
 
 - Location: `bin/build/tools/npm.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

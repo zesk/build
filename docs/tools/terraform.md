@@ -10,10 +10,6 @@ Install terraform binary
 
 - Location: `bin/build/tools/terraform.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to install using `packageInstall`
@@ -28,10 +24,6 @@ _mapEnvironment
 Remove terraform binary
 
 - Location: `bin/build/tools/terraform.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -51,10 +43,6 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 - Location: `bin/build/tools/terraform.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -68,10 +56,6 @@ _mapEnvironment
 Add keys to enable apt to download terraform directly from hashicorp.com
 
 - Location: `bin/build/tools/terraform.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

@@ -12,10 +12,6 @@ Dump a MariaDB database to raw SQL
 
 - Location: `bin/build/tools/mariadb.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.

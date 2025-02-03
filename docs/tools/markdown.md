@@ -4,11 +4,6 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
-#### Usage
-
-    markdown_removeUnfinishedSections < inputFile > outputFile
-    
-
 #### Arguments
 
 - None

@@ -15,10 +15,6 @@ When this tool succeeds it outputs the path to the current release notes file
 
 - Location: `bin/build/tools/version.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `version` - Optional. String. Version for the release notes path. If not specified uses the current version.
@@ -58,10 +54,6 @@ also added to `git` the first time.
 
 - Location: `bin/build/tools/version.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--non-interactive` - Optional. If new version is needed, use default version
@@ -77,10 +69,6 @@ Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 
 - Location: `bin/build/tools/version.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `lastVersion` - Required. String. Version to calculate the next minor version.
@@ -95,10 +83,6 @@ _mapEnvironment
 Check if something matches a version
 
 - Location: `bin/build/tools/version.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

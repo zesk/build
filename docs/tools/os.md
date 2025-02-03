@@ -62,7 +62,7 @@ Backup when `/etc/services` does not exist.
 
 No documentation for `whichExists`.
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/whichExists.sh`
 
 #### Arguments
 
@@ -74,7 +74,7 @@ No documentation for `whichExists`.
 - `1` - If any value is not found
 ### `runCount` - Run a binary count times
 
-$\Run a binary count times
+Run a binary count times
 
 - Location: `bin/build/tools/os.sh`
 

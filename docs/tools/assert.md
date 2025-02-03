@@ -519,7 +519,7 @@ File `bin/build/tools/assert.sh`, function `assertOutputDoesNotContain` was revi
 
 ### `assertDirectoryExists` - Test that a directory exists
 
-$\Test that a directory exists
+Test that a directory exists
 
 - Location: `bin/build/tools/assert.sh`
 
@@ -560,7 +560,7 @@ None
 - This fails if `directory` is anything but a `directory`
 ### `assertDirectoryDoesNotExist` - Test that a directory does not exist
 
-$\Test that a directory does not exist
+Test that a directory does not exist
 
 - Location: `bin/build/tools/assert.sh`
 
@@ -601,7 +601,7 @@ None
 File `bin/build/tools/assert.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12.
 ### `assertDirectoryEmpty` - Test that a directory exists
 
-$\Test that a directory exists
+Test that a directory exists
 
 - Location: `bin/build/tools/assert.sh`
 
@@ -642,7 +642,7 @@ None
 - This fails if `directory` is anything but a `directory`
 ### `assertDirectoryNotEmpty` - Test that a directory does not exist
 
-$\Test that a directory does not exist
+Test that a directory does not exist
 
 - Location: `bin/build/tools/assert.sh`
 
@@ -682,7 +682,7 @@ File `bin/build/tools/assert.sh`, function `assertDirectoryNotEmpty` was reviewe
 
 ### `assertFileExists` - Test that a file exists
 
-$\Test that a file exists
+Test that a file exists
 
 - Location: `bin/build/tools/assert.sh`
 
@@ -723,7 +723,7 @@ None
 - This fails if `file` is anything but a `file`
 ### `assertFileDoesNotExist` - Test that a file does not exist
 
-$\Test that a file does not exist
+Test that a file does not exist
 
 - Location: `bin/build/tools/assert.sh`
 

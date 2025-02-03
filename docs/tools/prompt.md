@@ -140,3 +140,50 @@ Watches your HOME directory for `.` files which are added and unknown to you.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+## dotFilesWatcher Tools
+
+Example during setup:
+
+   dotFilesApproved bash > "$(dotFilesApprovedFile)"
+
+And then in your bash prompt:
+
+   bashPrompt bashPromptModule_dotFilesWatcher
+
+Any new dot files which appear will then show a warning in your console.
+
+### `dotFilesApprovedFile` - The dot files approved file. Add files to this to
+
+The dot files approved file. Add files to this to approve.
+
+- Location: `bin/build/tools/prompt/dot-files-watcher.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+XDG_DATA_HOME
+### `dotFilesApproved` - The lists
+
+The lists
+
+- Location: `bin/build/tools/prompt/dot-files-watcher.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

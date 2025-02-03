@@ -19,10 +19,6 @@ Supported managers:
 
 - Location: `bin/build/tools/package.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - One or more packages to install
@@ -44,10 +40,6 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 
 - Location: `bin/build/tools/aws.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -72,10 +64,6 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 
 - Location: `bin/build/tools/install.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to install (using apt)
@@ -94,10 +82,6 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 
 - Location: `bin/build/tools/install.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to install (using apt)
@@ -112,10 +96,6 @@ _mapEnvironment
 Installs the `git` binary
 
 - Location: `bin/build/tools/git.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -136,10 +116,6 @@ When this tool succeeds the `mariadb` binary is available in the local operating
 
 - Location: `bin/build/tools/install.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to install
@@ -159,10 +135,6 @@ If this fails it will output the installation log.
 When this tool succeeds the `npm` binary is available in the local operating system.
 
 - Location: `bin/build/tools/npm.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -187,10 +159,6 @@ When this tool succeeds the `php` binary is available in the local operating sys
 
 - Location: `bin/build/tools/php.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to install
@@ -209,10 +177,6 @@ When this tool succeeds the `python` binary is available in the local operating 
 
 - Location: `bin/build/tools/install.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to install
@@ -226,10 +190,6 @@ _mapEnvironment
 Install terraform binary
 
 - Location: `bin/build/tools/terraform.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -247,10 +207,6 @@ Uninstalls the `git` binary
 
 - Location: `bin/build/tools/git.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to uninstall
@@ -266,10 +222,6 @@ Uninstall mariadb
 
 - Location: `bin/build/tools/install.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -284,10 +236,6 @@ _mapEnvironment
 Core as part of some systems - so this succeeds and it still exists
 
 - Location: `bin/build/tools/npm.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -308,10 +256,6 @@ When this tool succeeds the `php` binary is no longer available in the local ope
 
 - Location: `bin/build/tools/php.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - Additional packages to install
@@ -325,10 +269,6 @@ _mapEnvironment
 Uninstall python
 
 - Location: `bin/build/tools/install.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -344,10 +284,6 @@ _mapEnvironment
 Remove terraform binary
 
 - Location: `bin/build/tools/terraform.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

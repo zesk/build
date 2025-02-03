@@ -384,9 +384,9 @@ trimWords() {
 #
 # Usage: maximumFieldLength [ fieldIndex [ separatorChar ] ] < fieldBasedFile
 #
-# Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
+# Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
 #
-# Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
+# Defaults to first field (fieldIndex of `1`), space separator (separatorChar is ` `)
 #
 # Argument: - `fieldIndex` - The field to compute the maximum length for
 # Argument: - `separatorChar` - The separator character to delineate fields
@@ -420,7 +420,8 @@ maximumLineLength() {
 }
 
 #
-# Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
+# Outputs the `singular` value to standard out when the value of `number` is one.
+# Otherwise, outputs the `plural` value to standard out.
 #
 # Short description: Output numeric messages which are grammatically accurate
 # Usage: plural number singular plural
@@ -667,8 +668,8 @@ mapValue() {
           shift
           break
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -843,7 +844,7 @@ _characterFromInteger() {
 # Ensure that every character in a text string passes all character class tests
 # Usage: {fn} text class0 [ ... ]
 # Argument: text - Text to validate
-# Argument: class0 - One ore more character classes that the characters in string should match
+# Argument: class0 - One or more character classes that the characters in string should match
 # Note: This is slow.
 stringValidate() {
   local usage="_${FUNCNAME[0]}"

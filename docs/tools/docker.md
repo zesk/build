@@ -11,10 +11,6 @@ are insideDocker or not; use this to confirm platform implementation
 
 - Location: `bin/build/tools/docker.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -30,10 +26,6 @@ Are we inside a docker container right now?
 
 - Location: `bin/build/tools/docker.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -48,10 +40,6 @@ Ensure an environment file is compatible with non-quoted docker environment file
 
 - Location: `bin/build/tools/docker.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `filename` - Docker environment file to check for common issues
@@ -60,10 +48,6 @@ _mapEnvironment
 
 - `1` - if errors occur
 - `0` - if file is valid
-#### Usage
-
-_mapEnvironment
-
 #### Exit codes
 
 - `1` - If already inside docker, or the environment file passed is not valid
@@ -78,10 +62,6 @@ BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image
 Ensure an environment file is compatible with non-quoted docker environment files
 
 - Location: `bin/build/tools/docker.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -102,10 +82,6 @@ Any output to stderr is errors in the file but is written to be compatible with 
 
 - Location: `bin/build/tools/docker.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `filename` - Docker environment file to check for common issues
@@ -121,10 +97,6 @@ Takes any environment file and makes it bash-compatible
 Outputs the compatible env to stdout
 
 - Location: `bin/build/tools/docker.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -143,10 +115,6 @@ Outputs the compatible env to stdout
 
 - Location: `bin/build/tools/docker.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `envFile` - Required. File. One or more files to convert.
@@ -162,10 +130,6 @@ Fetch the default platform for docker
 
 - Location: `bin/build/tools/docker.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -180,10 +144,6 @@ _mapEnvironment
 List docker images which are currently pulled
 
 - Location: `bin/build/tools/docker.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

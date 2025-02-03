@@ -15,10 +15,6 @@ Confirms that `binary` is installed after installation succeeds.
 
 - Location: `bin/build/tools/package.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--manager packageManager` - Optional. String. Package manager to use. (apk, apt, brew)
@@ -47,10 +43,6 @@ The assumption here is that `packageUninstall` will install the desired `binary`
 Confirms that `binary` is installed after installation succeeds.
 
 - Location: `bin/build/tools/package.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -81,10 +73,6 @@ Update packages lists and sources
 
 - Location: `bin/build/tools/package.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -101,10 +89,6 @@ _mapEnvironment
 Upgrade packages lists and sources
 
 - Location: `bin/build/tools/package.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -130,10 +114,6 @@ Supported managers:
 
 - Location: `bin/build/tools/package.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - One or more packages to install
@@ -151,10 +131,6 @@ _mapEnvironment
 Removes packages using the current package manager.
 
 - Location: `bin/build/tools/package.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -178,10 +154,6 @@ Is a package installed?
 
 - Location: `bin/build/tools/package.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - String. Required. One or more packages to check if they are installed
@@ -195,10 +167,6 @@ _mapEnvironment
 List installed packages on this system using package manager
 
 - Location: `bin/build/tools/package.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -214,10 +182,6 @@ _mapEnvironment
 List installed packages on this system using package manager
 
 - Location: `bin/build/tools/package.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -237,10 +201,6 @@ Is the package manager supported?
 
 - Location: `bin/build/tools/package.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -256,10 +216,6 @@ Determine the default manager
 
 - Location: `bin/build/tools/package.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -274,10 +230,6 @@ _mapEnvironment
 INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 
 - Location: `bin/build/tools/package.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

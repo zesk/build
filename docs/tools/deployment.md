@@ -13,10 +13,6 @@ Not possible to deploy to different paths on different hosts, currently. Hosts a
 
 - Location: `bin/build/tools/deployment.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--env-file envFile - Optional. File. Environment file to load` - can handle any format.
@@ -51,10 +47,6 @@ Current working directory on undo is `applicationHome/`
 Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 
 - Location: `bin/build/tools/deployment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -110,10 +102,6 @@ The `userAtHost` can be passed as follows:
     deployDeployAction --deploy 5125ab12 /var/www/DEPLOY/coolApp/ /var/www/apps/coolApp/ "www-data@host0 www-data@host1 stageuser@host3" "www-data@host4"
 
 - Location: `bin/build/tools/deployment.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

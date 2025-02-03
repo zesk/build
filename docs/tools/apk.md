@@ -12,10 +12,6 @@ Is this an Alpine system and is apk installed?
 
 - Location: `bin/build/tools/apk.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -29,10 +25,6 @@ _mapEnvironment
 Open an Alpine container shell
 
 - Location: `bin/build/tools/apk.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -49,13 +41,9 @@ Is this an Alpine system?
 
 - Location: `bin/build/tools/apk.sh`
 
-#### Usage
-
-_mapEnvironment
-
 [42;30m[1;91m[0m
 
-[92mUsage[0m: [38;5;20misMappable[0m [94m[ --prefix ] [94m[ --suffix ] [94m[ --token ] [94m[ text ]
+[92mUsage[0m: [38;5;20misMappable[0m [94m[ --prefix ][0m [94m[ --suffix ][0m [94m[ --token ][0m [94m[ text ][0m
 
     [94m--prefix  [1;40;97mOptional. String. Token prefix defaults to [1;97;44m{[0m.[0m
     [94m--suffix  [1;40;97mOptional. String. Token suffix defaults to [1;97;44m}[0m.[0m

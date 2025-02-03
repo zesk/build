@@ -12,10 +12,6 @@ Install a script to run upon initialization.
 
 - Location: `bin/build/tools/sysvinit.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `binary` - Required. String. Binary to install at startup.
@@ -30,10 +26,6 @@ _mapEnvironment
 Remove an initialization script
 
 - Location: `bin/build/tools/sysvinit.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

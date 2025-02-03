@@ -21,10 +21,6 @@ But maintains file` descriptors for `logFile`.
 
 - Location: `bin/build/tools/log.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `logFile` - Required. A log file which exists.
@@ -41,10 +37,6 @@ Rotate log files
 For all log files in logPath with extension `.log`, rotate them safely
 
 - Location: `bin/build/tools/log.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

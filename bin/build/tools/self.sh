@@ -247,14 +247,13 @@ _buildFunctions() {
 
 # Path to cache directory for build system.
 #
-# Defaults to `$HOME/.build` unless `$HOME` is not a directory.
+# Defaults to `$XDG_CACHE_HOME/.build` unless `$XDG_CACHE_HOME` is not a directory.
 #
 # Appends any passed in arguments as path segments.
 #
 # Example:     logFile=$({fn} test.log)
-# Usage: {fn} [ pathSegment ... ]
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
-#
+# Environment: XDG_CACHE_HOME
 buildCacheDirectory() {
   local usage="_${FUNCNAME[0]}"
   local cache suffix

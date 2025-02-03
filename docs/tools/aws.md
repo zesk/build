@@ -24,10 +24,6 @@ Installs x86 or aarch64 binary based on `$HOSTTYPE`.
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `package` - One or more packages to install using `apt-get` prior to installing AWS
@@ -58,10 +54,6 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -89,10 +81,6 @@ This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-e
 Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 
 - Location: `bin/build/tools/aws.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -122,10 +110,6 @@ services are looked up in /etc/services and match /tcp services only for port se
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--profile profileName` - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
@@ -154,10 +138,6 @@ Modify an EC2 Security Group and add or remove an IP/port combination to the gro
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--remove - Optional. Flag. Remove instead of add` - only `group`, and `description` required.
@@ -181,10 +161,6 @@ Note that passing no parameters returns success.
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `region ...` - String. Required. The AWS Region to validate.
@@ -198,10 +174,6 @@ _mapEnvironment
 List AWS profiles available in the credentials file
 
 - Location: `bin/build/tools/aws.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -227,10 +199,6 @@ If not found, returns with exit code 1.
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--help` - Optional. Flag. Display this help.
@@ -254,10 +222,6 @@ If the AWS credentials file is not found, it is created
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
@@ -278,10 +242,6 @@ If the AWS credentials file is not found, succeeds.
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
@@ -301,10 +261,6 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 Both forms can be used, but the profile should be supplied once and only once.
 
 - Location: `bin/build/tools/aws.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -336,10 +292,6 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 
 - Location: `bin/build/tools/aws.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
@@ -358,10 +310,6 @@ If the AWS credentials file is not found, returns exit code 1 and outputs nothin
 If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
 
 - Location: `bin/build/tools/aws.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 

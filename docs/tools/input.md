@@ -8,10 +8,6 @@ Add configuration to `~/.inputrc` for a key binding
 
 - Location: `bin/build/tools/input.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `keyStroke` - Required. String.

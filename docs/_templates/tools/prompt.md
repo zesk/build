@@ -36,3 +36,18 @@ To enable:
     bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
 
 {bashPromptModule_binBuild} {bashPromptModule_ApplicationPath} {bashPromptModule_dotFilesWatcher}
+
+## dotFilesWatcher Tools
+
+Example during setup:
+
+   dotFilesApproved bash > "$(dotFilesApprovedFile)"
+
+And then in your bash prompt:
+
+   bashPrompt bashPromptModule_dotFilesWatcher
+
+Any new dot files which appear will then show a warning in your console.
+
+{dotFilesApprovedFile}
+{dotFilesApproved}
