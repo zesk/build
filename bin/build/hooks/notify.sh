@@ -78,5 +78,8 @@ __hookNotify() {
     printf "%s\n" "$*" | wrapLines "$(decorate notice "NOTIFY:") $(decorate info)" "$(decorate reset)"
   fi
 }
+___hookNotify() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 __hookNotify "$@"
