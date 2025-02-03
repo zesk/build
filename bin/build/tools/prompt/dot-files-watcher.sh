@@ -27,13 +27,16 @@ bashPromptModule_dotFilesWatcher() {
   while read -r item; do
     local base
     base=$(basename "$item")
-    if inArray "$base" "${ok[@]+"${ok[@]}"}"; then
-      continue
-    fi
     if [ -d "$item" ]; then
       base="${base%/}/"
+      if inArray "$base" "${ok[@]+"${ok[@]}"}"; then
+        continue
+      fi
       inArray "$base" "${asked[@]}" && foundDirectories+=("$base") || askDirectories+=("$base")
     elif [ -f "$item" ]; then
+      if inArray "$base" "${ok[@]+"${ok[@]}"}"; then
+        continue
+      fi
       inArray "$base" "${asked[@]}" && foundFiles+=("$base") || askFiles+=("$base")
     else
       decorate warning "Unknown handled dot file type: $(decorate value "$(betterType "$item")")"
@@ -52,6 +55,11 @@ bashPromptModule_dotFilesWatcher() {
   set -o pipefail
   if confirmYesNo --no --timeout 10 "Approve all?" | tee "$askFile.$$"; then
     printf "%s\n" "${unapproved[@]}" >>"$dataFile"
+    if sort -u "$dataFile" >>"$dataFile.sorted"; then
+      mv -f "$dataFile.sorted" "$dataFile"
+    else
+      rm -f "$dataFile.sorted"
+    fi
     statusMessage --last decorate success "Approved."
   else
     if grep -q TIMEOUT "$askFile.$$"; then
