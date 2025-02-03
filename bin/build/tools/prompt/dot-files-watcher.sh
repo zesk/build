@@ -17,6 +17,7 @@ bashPromptModule_dotFilesWatcher() {
   for item in dataFile askFile; do
     [ -f "${!item}" ] || touch "${!item}" || _environment "Can not create $item: ${!item}" || return 1
   done
+  [ "$(modificationSeconds "$askFile")" -lt 60 ] || printf -- "" >"$askFile"
 
   local item ok=() asked=()
   while read -r item; do ok+=("$item"); done < <(sort -u "$dataFile")
@@ -48,15 +49,16 @@ bashPromptModule_dotFilesWatcher() {
   [ ${#foundFiles[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(plural ${#foundFiles[@]} file files)")" "$(decorate each file "${foundFiles[@]}")"
   [ ${#foundDirectories[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(plural ${#foundDirectories[@]} directory directories)")" "$(decorate each quote "${foundDirectories[@]}")"
 
+  set -o pipefail
   if confirmYesNo --no --timeout 10 "Approve all?" | tee "$askFile.$$"; then
     printf "%s\n" "${unapproved[@]}" >>"$dataFile"
     statusMessage --last decorate success "Approved."
   else
     if grep -q TIMEOUT "$askFile.$$"; then
-      statusMessage --last decorate success "Not approved, will not ask for 1 minute."
+      statusMessage --last decorate warning "Not approved, will not ask for 1 minute."
       printf "%s\n" "${unapproved[@]}" | sort >"$askFile"
     else
-      statusMessage --last decorate success "Not approved."
+      statusMessage --last decorate error "Not approved."
     fi
   fi
   rm -f "$askFile.$$" || :

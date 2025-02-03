@@ -163,7 +163,7 @@ _bashDebugTrap() {
   _bashDebugWatch
   printf -- "%s %s\n" "$(decorate green ">")" "$(decorate code "$BASH_COMMAND")"
   local __error="" __exitCode=0
-  while read -n 1 -s -r -p "${__error}bashDebug $(decorate code "[$__BUILD_BASH_DEBUG_LAST]")> " __cmd; do
+  while read -n 1 -s -r -p "${__error}bashDebug $(decorate code "[$__BUILD_BASH_DEBUG_LAST]")> " __cmd </dev/tty; do
     local __aa=("$__cmd")
     __exitCode=0
     case "$__cmd" in

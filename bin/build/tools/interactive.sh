@@ -27,7 +27,7 @@
 pause() {
   local prompt="${1-"PAUSE > "}"
   statusMessage printf -- "%s" "$prompt"
-  read -n 1 -s -r prompt
+  read -n 1 -s -r prompt </dev/tty
 }
 
 ####################################################################################################
@@ -206,50 +206,62 @@ _copyFile() {
 # Exit Code: 0 - Something would change
 # Exit Code: 1 - Nothing would change
 copyFileWouldChange() {
-  local arg source actualSource destination
-  local mapFlag
+  local usage="_${FUNCNAME[0]}"
 
-  mapFlag=false
+  local mapFlag=false source=""
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    arg="$1"
-    [ -n "$arg" ] || _argument "blank argument" || return $?
-    case "$arg" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --map)
         mapFlag=true
         ;;
       *)
-        source="$1"
-        if [ ! -f "$source" ]; then
-          _environment "copyFileWouldChange: source \"$source\" does not exist" || return $?
-        fi
-        shift || _argument "Missing destination" || return $?
-        destination=$(usageArgumentFileDirectory _argument "destination" "$1") || return $?
-        shift || _argument "shift failed" || return $?
-        [ $# -eq 0 ] || _argument "Unknown argument $1" || return $?
-        if [ ! -f "$destination" ]; then
-          return 0
-        fi
-        if $mapFlag; then
-          actualSource=$(mktemp)
-          if ! mapEnvironment <"$source" >"$actualSource"; then
-            rm -f "$actualSource" || :
-            _environment "Failed to mapEnvironment $source" || return $?
-          fi
+        if [ -z "$source" ]; then
+          source=$(usageArgumentFile "$usage" "source" "$1") || return $?
         else
-          actualSource="$source"
+          local actualSource destination
+
+          destination=$(usageArgumentFileDirectory "$usage" "destination" "$1") || return $?
+          shift
+          if [ $# -gt 0 ]; then
+            # _IDENTICAL_ argumentUnknown 1
+            __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          fi
+          if [ ! -f "$destination" ]; then
+            return 0
+          fi
+          if $mapFlag; then
+            actualSource=$(fileTemporaryName "$usage") || return $?
+            __catchEnvironment "$usage" mapEnvironment <"$source" >"$actualSource" || _clean $? "$actualSource" || return $?
+          else
+            actualSource="$source"
+          fi
+          if ! diff -q "$actualSource" "$destination" >/dev/null; then
+            return 0
+          fi
+          if $mapFlag; then
+            __catchEnvironment "$usage" rm -f "$actualSource" || return $?
+          fi
+          return 1
         fi
-        if ! diff -q "$actualSource" "$destination" >/dev/null; then
-          return 0
-        fi
-        if $mapFlag; then
-          __environment rm -f "$actualSource" || return $?
-        fi
-        return 1
         ;;
     esac
-    shift || _argument "shift failed" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
-  _argument "Missing source" || return $?
+  __failArgument "$usage" "Missing source" || return $?
+}
+_copyFileWouldChange() {
+  # IDENTICAL usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} verificationCallable fileToCheck ...
@@ -406,7 +418,7 @@ __interactiveCountdownReadBoolean() {
 
   exitCode=2
   while [ "$exitCode" -ge 2 ]; do
-    while ! read -n 1 -s -r "${rr[@]+"${rr[@]}"}" value; do
+    while ! read -n 1 -s -r "${rr[@]+"${rr[@]}"}" value </dev/tty; do
       if [ -z "$timeout" ]; then
         return 2
       fi

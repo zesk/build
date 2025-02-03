@@ -28,7 +28,7 @@ buildPreRelease() {
   statusMessage decorate info "Linting"
   find "$home" -name '*.sh' ! -path '*/.*/*' | bashLintFiles || exitCode=$?
   statusMessage decorate info "Documentation"
-  __execute "$home/bin/documentation.sh" --clean || exitCode=$?
+  # __execute "$home/bin/documentation.sh" --clean || exitCode=$?
   __execute "$home/bin/documentation.sh" || exitCode=$?
   if [ "$exitCode" -eq 0 ]; then
     if gitRepositoryChanged; then
