@@ -367,8 +367,8 @@ __installRemotePackageDebug() {
 }
 
 # Install the package directory
-# Requires: uname pushd popd rm tar
-# Requires: __catchEnvironment __throwEnvironment
+# Requires: uname pushd popd rm tar dirname
+# Requires: __catchEnvironment __throwEnvironment urlFetch
 __installRemotePackageDirectory() {
   local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName

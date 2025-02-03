@@ -54,8 +54,7 @@ bashPrompt --colors "$(decorate bold-cyan):$(decorate bold-magenta):$(decorate g
 
 #### Environment
 
-PROMPT_COMMAND
-### `bashPromptColorScheme` - Color schemes for prompts
+PROMPT_COMMAND ### `bashPromptColorScheme` - Color schemes for prompts
 
 Color schemes for prompts
 Options are:
@@ -76,12 +75,35 @@ Options are:
 
 ## Bash Prompt Modules
 
+- [`bashPromptModule_binBuild`](#bashPromptModule_binBuild)
+- [`bashPromptModule_ApplicationPath`](#bashPromptModule_ApplicationPath)
+- [`bashPromptModule_dotFilesWatcher`](#bashPromptModule_dotFilesWatcher)
+
 To enable:
 
     bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
 
+### `bashPromptModule_binBuild` - Check which bin/build we are running and keep local to
 
-### `bashPromptModule_ApplicationPath` - Show current application and path as a badge
+Check which bin/build we are running and keep local to current project. Activates when we switch between projects.
+- Re-sources `bin/build` so versions do not conflict.
+- Runs hook `project-deactivate` in the old project (using that `bin/build` library)
+- Runs the `project-activate` hook in the new project
+- Adds the current project's `bin` directory to the `PATH`
+- Removes the old project's `bin` directory from the `PATH`
+- Displays the change in Zesk Build version
+
+- Location: `bin/build/tools/prompt/bin-build.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error ### `bashPromptModule_ApplicationPath` - Show current application and path as a badge
 
 Show current application and path as a badge
 
@@ -94,6 +116,24 @@ Show current application and path as a badge
 #### Examples
 
     bashPrompt bashPromptModule_ApplicationPath
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error ### `bashPromptModule_dotFilesWatcher` - Watches your HOME directory for `.` files which are added
+
+Watches your HOME directory for `.` files which are added and unknown to you.
+
+- Location: `bin/build/tools/prompt/dot-files-watcher.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Examples
+
+    bashPrompt bashPromptModule_dotFilesWatcher
 
 #### Exit codes
 

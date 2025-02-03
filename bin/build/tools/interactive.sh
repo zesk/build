@@ -238,26 +238,28 @@ copyFileWouldChange() {
           if [ ! -f "$destination" ]; then
             return 0
           fi
+          local exitCode=1
           if $mapFlag; then
             actualSource=$(fileTemporaryName "$usage") || return $?
             __catchEnvironment "$usage" mapEnvironment <"$source" >"$actualSource" || _clean $? "$actualSource" || return $?
+            if ! diff -q "$actualSource" "$destination" >/dev/null; then
+              exitCode=0
+            fi
+            __catchEnvironment "$usage" rm -f "$actualSource" || return $?
           else
             actualSource="$source"
+            if ! diff -q "$actualSource" "$destination" >/dev/null; then
+              exitCode=0
+            fi
           fi
-          if ! diff -q "$actualSource" "$destination" >/dev/null; then
-            return 0
-          fi
-          if $mapFlag; then
-            __catchEnvironment "$usage" rm -f "$actualSource" || return $?
-          fi
-          return 1
+          return "$exitCode"
         fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  __failArgument "$usage" "Missing source" || return $?
+  __throwArgument "$usage" "Missing source" || return $?
 }
 _copyFileWouldChange() {
   # IDENTICAL usageDocument 1

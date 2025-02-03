@@ -12,7 +12,7 @@ bashPromptModule_dotFilesWatcher() {
   local askFile dataFile
 
   askFile="$(buildEnvironmentGetDirectory "XDG_STATE_HOME")/dotFilesWatcher-asked" 2>/dev/null || return 1
-  dataFile="$(dotFilesApproved)" || return 1
+  dataFile="$(dotFilesApprovedFile)" || return 1
 
   for item in dataFile askFile; do
     [ -f "${!item}" ] || touch "${!item}" || _environment "Can not create $item: ${!item}" || return 1
@@ -72,6 +72,58 @@ bashPromptModule_dotFilesWatcher() {
   rm -f "$askFile.$$" || :
 }
 
-dotFilesApproved() {
+# The dot files approved file. Add files to this to approve.
+# Environment: XDG_DATA_HOME
+dotFilesApprovedFile() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" "$(buildEnvironmentGetDirectory "XDG_DATA_HOME")/dotFilesWatcher"
+}
+_dotFilesApprovedFile() {
+  ! true || dotFilesApprovedFile --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# The lists
+__dotFilesApproved() {
+  local items=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      "bash") items+=(".bash_profile" ".bash_history" ".inputrc" ".ssh/" ".cache/" ".config/" ".local/") ;;
+      "git") items+=(".git-credentials" ".gitconfig" ".gitignore_global") ;;
+      "darwin") items+=(".DS_Store" ".MacOSX/" ".TemporaryItems/" ".Trash/") ;;
+      "mysql") items+=(".my.cnf" ".mylogin.cnf" ".mysql_history") ;;
+    esac
+    shift
+  done
+  printf -- "%s\n" "${items[@]}" | sort -u
+}
+
+# Lists of dot files which can be added to the dotFilesApprovedFile
+# Argument: listType - String. Optional. One of `all`, `bash`, `git`, `darwin`, or `mysql`
+# If none specified, returns `bash` list.
+# Special value `all` returns all values
+dotFilesApproved() {
+  local usage="_${FUNCNAME[0]}"
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      "all")
+        __dotFilesApproved bash darwin git mysql
+        return 0
+        ;;
+      "bash" | "darwin" | "git" | "mysql")
+        __dotFilesApproved "$1"
+        return 0
+        ;;
+      *)
+        __failArgument "$usage" "Unknown approved list: $1" || return $?
+        ;;
+    esac
+  done
+  __dotFilesApproved bash
+}
+_dotFilesApproved() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -33,7 +33,15 @@ To run commands directly; note this is slower for larger scripts and can be used
 
 ## `identical-repair.sh` repair with semantics
 
+#### Arguments
 
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## `install-bin-build.sh`
 

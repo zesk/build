@@ -10,10 +10,6 @@ Dump the function and include stacks and the current environment
 
 - Location: `bin/build/tools/debug.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `-x` - Optional. Flag. Show exported variables. (verbose)
@@ -28,10 +24,6 @@ _mapEnvironment
 Is build debugging enabled?
 
 - Location: `bin/build/tools/debug.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -62,10 +54,6 @@ Example:     buildDebugStart || :
 
 - Location: `bin/build/tools/debug.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `moduleName` - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
@@ -90,10 +78,6 @@ Stop build debugging if it is enabled
 
 - Location: `bin/build/tools/debug.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -110,10 +94,6 @@ Returns whether the shell has the debugging flag set
 Useful if you need to temporarily enable or disable it.
 
 - Location: `bin/build/tools/debug.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -144,10 +124,6 @@ Outputs `1` always
 
 - Location: `bin/build/tools/debug.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -162,10 +138,6 @@ _mapEnvironment
 Dump a pipe with a title and stats
 
 - Location: `bin/build/tools/test.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -187,10 +159,6 @@ Dumps output as hex
 
 - Location: `bin/build/tools/test.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -211,10 +179,6 @@ Output a file for debugging
 
 - Location: `bin/build/tools/test.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -229,10 +193,6 @@ _mapEnvironment
 Run command and detect any global or local leaks
 
 - Location: `bin/build/tools/debug.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -249,10 +209,6 @@ Run a command and ensure files are not modified
 
 - Location: `bin/build/tools/debug.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `--path path` - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
@@ -268,10 +224,6 @@ Check output for content and trigger environment error if found
 Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
 
 - Location: `bin/build/tools/debug.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
@@ -321,10 +273,6 @@ Debugger accepts the following keystrokes:
 
 - Location: `bin/build/tools/debugger.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - `commandToDebug` - Callable. Required. Command to debug.
@@ -342,10 +290,6 @@ Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 
 - Location: `bin/build/tools/debugger.sh`
 
-#### Usage
-
-_mapEnvironment
-
 #### Arguments
 
 - No arguments.
@@ -361,10 +305,6 @@ Enables the debugger immediately
 Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 
 - Location: `bin/build/tools/debugger.sh`
-
-#### Usage
-
-_mapEnvironment
 
 #### Arguments
 
