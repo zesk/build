@@ -47,7 +47,6 @@ Quote a sed command for search and replace
 ### `quoteSedPattern` - Quote sed search strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
-needSlash='$.*/[\]^'
 
 - Location: `bin/build/identical/quoteSedPattern.sh`
 
@@ -58,6 +57,7 @@ needSlash='$.*/[\]^'
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+    needSlash=$(quoteSedPattern '$.*/[\]^')
 
 #### Sample Output
 
@@ -71,7 +71,7 @@ needSlash='$.*/[\]^'
 - `2` - Argument error
 ### `quoteSedReplacement` - Quote sed replacement strings for shell use
 
-needSlash='$.*/[\]^'
+Quote sed replacement strings for shell use
 
 - Location: `bin/build/identical/quoteSedPattern.sh`
 
@@ -82,6 +82,7 @@ needSlash='$.*/[\]^'
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
+    needSlash=$(quoteSedPattern '$.*/[\]^')
 
 #### Sample Output
 
@@ -126,7 +127,7 @@ Quote bash strings for inclusion as single-quoted for eval
 
 Quote grep -e patterns for shell use
 
-- Location: `bin/build/identical/_text.sh`
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -611,11 +612,11 @@ If `haystack` is not found, -1 is output
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `maximumFieldLength` - Given a input file, determine the maximum length of fieldIndex,
+### `maximumFieldLength` - Given an input file, determine the maximum length of fieldIndex,
 
-Given a input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
+Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
 
-Defaults to first field (fieldIndex=1), space separator (separatorChar=" ")
+Defaults to first field (fieldIndex of `1`), space separator (separatorChar is ` `)
 
 - Location: `bin/build/tools/text.sh`
 
@@ -654,7 +655,8 @@ Outputs the maximum line length passed into stdin
 
 ### `plural` - Outputs the `singular` value to standard out when the value
 
-Outputs the `singular` value to standard out when the value of `number` is one. Otherwise outputs the `plural` value to standard out.
+Outputs the `singular` value to standard out when the value of `number` is one.
+Otherwise, outputs the `plural` value to standard out.
 
 
 Example:
@@ -828,7 +830,7 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 #### See Also
 
-- [{fn}]({sourceLink})
+{SEE:cannon.sh}
 ### `joinArguments` - Output arguments joined by a character
 
 Output arguments joined by a character
@@ -993,7 +995,7 @@ Ensure that every character in a text string passes all character class tests
 #### Arguments
 
 - `text` - Text to validate
-- `class0` - One ore more character classes that the characters in string should match
+- `class0` - One or more character classes that the characters in string should match
 
 #### Exit codes
 

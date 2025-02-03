@@ -48,6 +48,7 @@
 {isSubstring}
 {isSubstringInsensitive}
 {substringFound}
+{beginsWith}
 {stringOffset}
 {maximumFieldLength}
 {maximumLineLength}
