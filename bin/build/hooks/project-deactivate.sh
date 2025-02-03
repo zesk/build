@@ -16,14 +16,13 @@ __hookProjectDeactivateContext() {
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done
 
-  [ ${#items[@]} -eq 0 ] || interactiveBashSource --prefix "Deactivate" || return $?
+  [ ${#items[@]} -eq 0 ] || interactiveBashSource --prefix "Deactivate" "${items[@]}" || return $?
 }
 ___hookProjectDeactivateContext() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# shellcheck source=/dev/null
-if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
+if [ "$(basename "${0##-}")" != "$(basename "${BASH_SOURCE[0]}")" ]; then
   __hookProjectDeactivateContext || decorate warning "Project context deactivation failed" || :
 fi

@@ -657,14 +657,14 @@ interactiveBashSource() {
         if [ -f "$sourcePath" ]; then
           verb="file"
           if __interactiveApproved "$usage" "$sourcePath.approved" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
-            statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
+            ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" source "$sourcePath" || return $?
             approved=true
           fi
         elif [ -d "$sourcePath" ]; then
           verb="path"
           if __interactiveApproved "$usage" "$sourcePath/.approved" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
-            statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
+            ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
             approved=true
           fi

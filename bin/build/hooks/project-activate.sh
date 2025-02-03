@@ -46,7 +46,6 @@ ___hookProjectActivateContext() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# shellcheck source=/dev/null
 if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
   # Only require when running as a shell command
   __hookProjectActivate "$@"
