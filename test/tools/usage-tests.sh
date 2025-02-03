@@ -17,8 +17,9 @@ testUsageFunctions() {
 
 __sampleArgs() {
   cat <<EOF
-  --name value is required
-  --value name
+--name^Required. String. Name of the thing.
+--thing thing^required. String. Name of the thing.
+--value name^Optional. URL. URL of the thing.
 EOF
 }
 
@@ -26,9 +27,9 @@ testUsageArguments1() {
   local results
 
   results=$(__environment mktemp) || return $?
-  __sampleArgs | usageArguments " " "" "" >"$results"
+  __sampleArgs | usageArguments "^" "" "" >"$results"
 
-  assertEquals " --name [ --value ]" "$(cat "$results")" || return $?
+  assertEquals --line "$LINENO" " --name --thing thing [ --value name ]" "$(cat "$results")" || return $?
 
   __environment rm "$results" || return $?
 }
