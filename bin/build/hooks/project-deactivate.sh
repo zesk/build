@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Hook: project-activate
+# Hook: project-deactivate
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
@@ -9,7 +9,7 @@
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-#
+# Run the developer-undo.sh file or developer-undo/ directory of shell files
 __hookProjectDeactivateContext() {
   local usage="_${FUNCNAME[0]}" home item items=() candidates=("$home/bin/developer-undo.sh" "$home/bin/developer-undo/")
 
