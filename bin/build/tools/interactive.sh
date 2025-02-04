@@ -700,7 +700,7 @@ interactiveBashSource() {
           __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")" || return $?
         fi
         if $verboseFlag && ! $approved; then
-          statusMessage decorate subtle "Skipping $verb $(decorate file "$sourcePath")" || :
+          statusMessage --last decorate subtle "Skipping unapproved $verb $(decorate file "$sourcePath")" || :
         fi
         ;;
     esac
