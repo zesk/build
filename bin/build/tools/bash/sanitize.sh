@@ -83,6 +83,10 @@ bashSanitize() {
     statusMessage decorate info "+x $(decorate file "$shellFile")"
   done < <(__catchEnvironment "$usage" makeShellFilesExecutable) || _undo $? "${undo[@]}" || return $?
 
+  if [ ${#checkAssertions[@]} -eq 0 ]; then
+    checkAssertions+=("$(pwd)")
+  fi
+
   statusMessage --last decorate success Checking assertions ...
   _bashSanitizeCheckAssertions "$usage" "${checkAssertions[@]+"${checkAssertions[@]}"}" || _undo $? "${undo[@]}" || return $?
 
@@ -114,22 +118,16 @@ _bashSanitizeCheckLint() {
 
 _bashSanitizeCheckAssertions() {
   local usage="$1" && shift
-  local item checkAssertions directory
-
-  checkAssertions=("$@")
-  while read -r item; do
-    checkAssertions+=("$(__catchEnvironment "$usage" dirname "${item}")") || return $?
-  done < <(find "." -type f -name '.check-assertions' ! -path "*/.*/*")
-
-  for directory in "${checkAssertions[@]+"${checkAssertions[@]}"}"; do
-    statusMessage --first decorate warning "Checking assertions in $(decorate code "${directory}") ... "
-    if ! findUncaughtAssertions "$directory" --list; then
+  while [ $# -gt 0 ]; do
+    statusMessage --first decorate warning "Checking assertions in $(decorate file "$1") ... "
+    if ! findUncaughtAssertions "$1" --list; then
       # When ready - add --interactive here as well
-      findUncaughtAssertions "$directory" --exec "$executor" &
-      __throwEnvironment "$usage" findUncaughtAssertions "$directory" --list || return $?
+      findUncaughtAssertions "$1" --exec "$executor" &
+      __throwEnvironment "$usage" findUncaughtAssertions "$1" --list || return $?
     else
       decorate success "all files passed"
     fi
+    shift
   done
 }
 

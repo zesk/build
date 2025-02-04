@@ -385,10 +385,10 @@ __interactiveApprovedFile() {
     else
       approved=false
     fi
-    printf -- "%s\n" "$approved""$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$approvedFile" || __throwEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
+    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$approvedFile" || __throwEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
   fi
   approved=$(head -n 1 "$approvedFile")
-  if ! isBoolean "$approved" && "$approved"; then
+  if ! isBoolean "$approved" || ! "$approved"; then
     return 1
   fi
   # Allows identical files in different projects to be approved once

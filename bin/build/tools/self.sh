@@ -513,7 +513,7 @@ buildEnvironmentGetDirectory() {
         subdirectory="${path%/}/$subdirectory"
         ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$subdirectory") || return $?
         ! $existsFlag || [ -d "$subdirectory" ] || __throwEnvironment "$usage" "$argument -> $subdirectory does not exist" || return $?
-        printf "%s\n" "$subdirectory"
+        printf "%s\n" "${subdirectory%/}"
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
