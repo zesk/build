@@ -372,23 +372,51 @@ _interactiveManager() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} usage approvedFile verb confirmYesNoArguments ...
-__interactiveApproved() {
-  local usage="$1" approvedFile="$2" verb="$3" approved displayFile
+__interactiveApprovedFile() {
+  local usage="$1" approvedHome="$2" sourceFile="$3" verb="$4" approved displayFile approvedFile approvedHome
 
-  shift 3 || __catchArgument "$usage" "shift 3" || return $?
-  displayFile=$(decorate file "$sourcePath")
+  shift 4
+  approvedFile="$approvedHome/$(__catchEnvironment "$usage" shaPipe <"$sourceFile")" || return $?
+  displayFile=$(decorate file "$sourceFile")
   if [ ! -f "$approvedFile" ]; then
-    if confirmYesNo --timeout 30 --attempts 10 --info "$@" "$verb $(decorate file "$sourcePath")?"; then
+    if confirmYesNo "$@" "$verb $(decorate file "$sourcePath")?"; then
       approved=true
       statusMessage --last printf "%s [%s] %s" "$(decorate success "Approved")" "$(decorate file "$displayFile")" "$(decorate subtle "(will not ask in the future)")"
     else
       approved=false
     fi
-    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" >"$approvedFile" || __throwEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
+    printf -- "%s\n" "$approved""$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$approvedFile" || __throwEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
   fi
   approved=$(head -n 1 "$approvedFile")
-  isBoolean "$approved" && "$approved"
+  if ! isBoolean "$approved" && "$approved"; then
+    return 1
+  fi
+  # Allows identical files in different projects to be approved once
+  if ! grep -q "$sourceFile" <"$approvedFile"; then
+    printf "%s\n" "$sourceFile" >>"$approvedFile"
+  fi
+  return 0
+}
+
+# Usage: {fn} usage approvedFile verb confirmYesNoArguments ...
+__interactiveApproved() {
+  local usage="$1" sourcePath="$2" approved displayFile approvedFile approvedHome
+
+  shift 2 || __catchArgument "$usage" "shift" || return $?
+  approvedHome=$(__catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
+
+  if [ -d "$sourcePath" ]; then
+    local sourceFile approved=true
+    while read -r sourceFile; do
+      if ! __interactiveApprovedFile "$usage" "$approvedHome" "$sourceFile" "$@"; then
+        approved=false
+        break
+      fi
+    done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
+    "$approved"
+  else
+    __interactiveApprovedFile "$usage" "$approvedHome" "$sourcePath" "$@"
+  fi
 }
 
 # Maybe move this to its own thing if needed later
@@ -656,14 +684,14 @@ interactiveBashSource() {
         displayPath="$(decorate file "$sourcePath")"
         if [ -f "$sourcePath" ]; then
           verb="file"
-          if __interactiveApproved "$usage" "$sourcePath.approved" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+          if __interactiveApproved "$usage" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
             ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" source "$sourcePath" || return $?
             approved=true
           fi
         elif [ -d "$sourcePath" ]; then
           verb="path"
-          if __interactiveApproved "$usage" "$sourcePath/.approved" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+          if __interactiveApproved "$usage" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
             ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
             approved=true

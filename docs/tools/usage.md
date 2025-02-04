@@ -610,6 +610,7 @@ Modifies local environment. Not usually run within a subshell.
 #### Arguments
 
 - `envName` - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+- `subdirectory` - Optional. String. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
 
 #### Exit codes
 

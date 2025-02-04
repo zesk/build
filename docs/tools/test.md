@@ -125,6 +125,9 @@ Load test tools and make `testSuite` function available
 - `--list` - Optional. Flag. List all test names (which match if applicable).
 - `--messy` - Optional. Do not delete test artifact files afterwards.
 - `--fail executor` - Optional. Callable. One or more programs to run on the failed test files.
+- `--show-tags` - Optional. Flag. Of the matched tests, display the tags that they have, if any. Unique list.
+- `--skip-tag tagName` - Optional. String. Skip tests tagged with this name.
+- `--tag tagName` - Optional. String. Include tests (only) tagged with this name.
 - `--env-file environmentFile` - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
 - `testFunctionPattern` - Optional. String. Test function (or substring of function name) to run.
 

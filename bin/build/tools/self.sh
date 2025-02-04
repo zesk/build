@@ -469,6 +469,7 @@ _buildEnvironmentGet() {
 #
 # Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+# Argument: subdirectory - Optional. String. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
 #
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
@@ -481,7 +482,7 @@ _buildEnvironmentGet() {
 buildEnvironmentGetDirectory() {
   local usage="_${FUNCNAME[0]}"
 
-  local createFlag=true existsFlag=false
+  local createFlag=true existsFlag=false subdirectory=""
 
   [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one environment variable" || return $?
   # _IDENTICAL_ argument-case-header 5
@@ -498,15 +499,21 @@ buildEnvironmentGetDirectory() {
       --exists)
         existsFlag=true
         ;;
+      --subdirectory)
+        shift
+        subdirectory=$(usageArgumentString "$usage" "$argument" "${1-}")
+        ;;
       --no-create)
         createFlag=false
         ;;
       *)
         local path
         path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
-        ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$path") || return $?
-        ! $existsFlag || [ -d "$path" ] || __throwEnvironment "$usage" "$argument -> $path does not exist" || return $?
-        printf "%s\n" "$path"
+        [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
+        subdirectory="${path%/}/$subdirectory"
+        ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$subdirectory") || return $?
+        ! $existsFlag || [ -d "$subdirectory" ] || __throwEnvironment "$usage" "$argument -> $subdirectory does not exist" || return $?
+        printf "%s\n" "$subdirectory"
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1

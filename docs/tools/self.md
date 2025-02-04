@@ -117,7 +117,7 @@ BUILD_HOME
 
 Path to cache directory for build system.
 
-Defaults to `$HOME/.build` unless `$HOME` is not a directory.
+Defaults to `$XDG_CACHE_HOME/.build` unless `$XDG_CACHE_HOME` is not a directory.
 
 Appends any passed in arguments as path segments.
 
@@ -136,6 +136,10 @@ Appends any passed in arguments as path segments.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+XDG_CACHE_HOME
 ### `buildQuietLog` - Generate the path for a quiet log in the build
 
 Generate the path for a quiet log in the build cache directory, creating it if necessary.
