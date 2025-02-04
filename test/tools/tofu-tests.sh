@@ -7,6 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Tag: package-install
 testInstallOpenTofu() {
   __checkFunctionInstallsAndUninstallsBinary tofu tofuInstall tofuUninstall || return $?
 }

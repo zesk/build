@@ -87,6 +87,7 @@ testIdenticalLineParsing() {
   assertEquals "$(__identicalLineParse foo '<!-- IDENTICAL' '31:<!-- IDENTICAL header 2 -->')" "31 header 2" || return $?
 }
 
+# Tag: slow
 testIdenticalChecks() {
   local identicalCheckArgs identicalError
 

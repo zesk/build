@@ -80,6 +80,7 @@ testMapPortability() {
   unset DUDE WILD
 }
 
+# Tag: slow
 testAdditionalBins() {
   local binTest
   local aa

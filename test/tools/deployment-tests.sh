@@ -28,11 +28,7 @@ __prepareSampleApplicationDeployment() {
 }
 
 #
-#
-#
 # deployRemoteFinish
-#
-#
 #
 testDeployRemoteFinish() {
   local tempDirectory id oldId matches finishArgs
@@ -145,8 +141,10 @@ testDeployRemoteFinish() {
 #
 # deployToRemote
 #
+
 #
-#
+# Tag: slow
+# Why slow?
 testDeployToRemote() {
   local args matches
   local sampleHome sampleId sampleApplication onlyOne
@@ -215,14 +213,14 @@ testDeployToRemote() {
 # deployBuildEnvironment
 #
 #
-#
+# Tag: slow
 testDeployBuildEnvironment() {
   local d args matches
   local sampleHome sampleId sampleApplication
 
   (
     # Important to clear these
-    # For tests which depend on export environments make sure to reset THOSE glboals at start of test
+    # For tests which depend on export environments make sure to reset THOSE globals at start of test
     # Should likely clear test environment somehow
     export APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
     unset APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET

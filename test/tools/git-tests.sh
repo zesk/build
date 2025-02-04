@@ -60,6 +60,7 @@ testGitCommitFailures() {
   rm -rf "$tempDirectory" || :
 }
 
+# Tag: package-install
 testGitInstallation() {
   __checkFunctionInstallsAndUninstallsBinary git gitInstall gitUninstall || return $?
 }

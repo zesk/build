@@ -93,6 +93,7 @@ _testUsageArgumentHelperFail() {
   done
 }
 
+# Tag: slow
 testUsageArgumentFunctions() {
   local d intTests unsignedIntTests positiveIntTests
 

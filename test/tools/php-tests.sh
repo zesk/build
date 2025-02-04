@@ -5,6 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Tag: package-install
 testPHPInstallation() {
   __checkFunctionInstallsAndUninstallsBinary php phpInstall phpUninstall || return $?
 }
@@ -23,7 +24,7 @@ _testComposerTempDirectory() {
 
 #
 # Side-effect: installs scripts
-#
+# Tag: package-install
 testPHPComposerInstallation() {
   local d oldDir
 
@@ -50,7 +51,9 @@ testPHPComposerInstallation() {
 # Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.
 # Argument: --verbose - Optional. Flag. Be chatty.
 # Argument: --keep - Optional. Flag. Do not delete artifacts when done, print created values.
-#
+# Tag: slow
+# Tag: php-install simple-php
+# Tag: package-install
 testPHPBuild() {
   local here testPath manifest appName home
 

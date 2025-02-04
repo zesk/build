@@ -17,6 +17,7 @@ testVersionLive() {
   assertExitCode --line "$LINENO" 0 hookRun version-live || return $?
 }
 
+# Tag: slow
 testHookSystem() {
   local testDir here randomApp randomDefault path
   local hook exitCode f

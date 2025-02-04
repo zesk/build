@@ -7,6 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Tag: package-install
 testYarnInstallation() {
   if whichExists yarn; then
     decorate warning "Yarn is already installed, skipping"

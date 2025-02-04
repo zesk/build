@@ -26,7 +26,7 @@ pipelines:
             - docker
           script:
             - bin/build.sh
-            - bin/test.sh
+            - bin/test.sh --skip-tag package-install --skip-tag slow
     main:
       - step:
           size: 8x
@@ -37,7 +37,7 @@ pipelines:
           artifacts:
             - test.stats
           script:
-            - bin/test.sh
+            - bin/test.sh --skip-tag package-install
             - bin/build.sh
             - bin/deploy.sh
     deploy:

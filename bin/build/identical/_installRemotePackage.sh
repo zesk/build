@@ -200,6 +200,7 @@ _installRemotePackage() {
     local newVersion=""
     if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$installPath"); then
       printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
+      __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
       return 0
     fi
     forceFlag=true

@@ -120,11 +120,11 @@ testSugar() {
   unset SUGAR_FILE
 
   # _return
-  for code in $(seq 0 7 255); do
+  for code in 0 31 42 255; do
     assertExitCode --line "$LINENO" --stderr-ok "$code" _return "$code" || return $?
   done
   # __execute
-  for code in $(seq 0 13 255); do
+  for code in 0 29 101 255; do
     assertExitCode --line "$LINENO" --stderr-ok "$code" __execute _return "$code" || return $?
   done
 

@@ -197,7 +197,7 @@ testInstallBinBuild() {
 
   assertDirectoryDoesNotExist --line "$LINENO" bin/build || return $?
 
-  touch .gitignore || return $?
+  touch "$testDir/.gitignore" || return $?
   testBinBuild=bin/pipeline/we-like-head-rubs.sh
   assertExitCode 0 mv bin/pipeline/install-bin-build.sh "$testBinBuild" || return $?
   # Test
@@ -232,12 +232,11 @@ testInstallBinBuild() {
   : Already installed
 
   matches=(
-    --stdout-match "we-like-head-rubs.sh"
+    --stdout-no-match "we-like-head-rubs.sh"
     --stdout-no-match "install-bin-build.sh"
 
-    --stdout-match "Installed"
-    --stdout-no-match "already installed"
-    --stdout-match "newer version available"
+    --stdout-match "Newest version installed"
+    --stdout-no-match "already"
 
     --stdout-match "does not ignore"
     --stdout-match ".gitignore"
@@ -258,8 +257,7 @@ testInstallBinBuild() {
     --stdout-match "Newest version installed"
     --stdout-no-match "install-bin-build.sh"
 
-    --stdout-no-match "Installed"
-    --stdout-no-match "already installed"
+    --stdout-no-match "already"
 
     --stdout-no-match "does not ignore"
     --stdout-no-match ".gitignore"
@@ -323,6 +321,7 @@ testBuildEnvironmentGet() {
   unset FOO
 }
 
+# Tag: package-install php-install simple-php
 testUnderscoreUnderscoreBuild() {
   local testPath home
 

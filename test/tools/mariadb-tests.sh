@@ -23,6 +23,7 @@ testMariaDump() {
   unset MARIADB_BINARY_DUMP
 }
 
+# Tag: package-install
 testMariaDBInstallation() {
   __checkFunctionInstallsAndUninstallsBinary mariadb mariadbInstall mariadbUninstall || return $?
 }

@@ -12,6 +12,7 @@ _testAWSIPAccessUsage() {
   return "$1"
 }
 
+# Tag: slow
 testAWSIPAccess() {
   local quietLog=$1 id key start
 

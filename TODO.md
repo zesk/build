@@ -5,56 +5,46 @@
 - Move `docs` to something not Bash-based perhaps
 - Work on 30-minute build timing or make it faster somehow
 - Start writing some tutorials on how to get it set up and working (video?)
+- Move away from `.check-assertions` and `.debugging` markers and instead use some configuration file
+- Move `.approved` files into the state directory
 
 ## Slowest tests 2025
 
-- 76 seconds - `testDeployApplication`
-- 73 seconds - `testDeployToRemote`
-- 69 seconds - `testPHPBuild`
-- 69 seconds - `testDeployRemoteFinish`
-- 55 seconds - `testDeployBuildEnvironment`
-- 52 seconds - `testAWSIPAccess`
-- 47 seconds - `testHookSystem`
-- 39 seconds - `testAdditionalBins`
-- 35 seconds - `testIsUpToDate` - **Not sure why slow**
-- ADDRESSED: 35 seconds - `testEnvironmentNameValid`
-- 34 seconds - `testServiceToPort`
-- 34 seconds - `testPackageAPI`
-- 33 seconds - `testServiceToPortStandard`
-- 33 seconds - `testInstallTerraform`
-- 32 seconds - `testUsageArgumentFunctions`
-- 31 seconds - `testWrapperShellScripts`
-- 31 seconds - `testLogFileRotate1`
-- 31 seconds - `testLogFileRotate`
-- 29 seconds - `testIdenticalCheckAndRepairMap`
-- 28 seconds - `testBashPrompt`
-- 27 seconds - `testSugar`
-- 26 seconds - `testInstallOpenTofu`
-- 25 seconds - `testGitVersionList`
-- 24 seconds - `testHooksWhichSeemBenign`
-- 24 seconds - `testDaemontools`
-- 24 seconds - `testBadNumericSamples`
-- 23 seconds - `testGitInstallation`
-- 22 seconds - `testIdenticalChecks`
-- 21 seconds - `testFileMatches`
-- 20 seconds - `testRepeat2`
-- 18 seconds - `testValidateCharacterClass`
-- 18 seconds - `testRunCount`
-- 18 seconds - `testPythonInstallation`
-- 18 seconds - `testAwsEnvironmentFromCredentials`
-- 16 seconds - `testProcessWait`
-- 16 seconds - `testIterm2`
-- 15 seconds - `testEnvironmentFileLoad`
-- 15 seconds - `testBuildEnvironmentLoadAll`
-- 14 seconds - `testVersionNext`
-- 14 seconds - `testInstallBinBuild`
-- 14 seconds - `testBuildEnvironmentGet`
-- 12 seconds - `testNodeInstallation`
-- 12 seconds - `testAWSExpiration`
-- 11 seconds - `testUnsignedNumberSamples`
-- 11 seconds - `testUnsignedIntegerSamples`
-- 11 seconds - `testUnderscoreUnderscoreBuild`
-- 11 seconds - `testTestSuite`
+- 60 seconds - `testDeployApplication`
+- 52 seconds - `testIdenticalChecks`
+- 43 seconds - `testPHPBuild`
+- 42 seconds - `testDeployToRemote`
+- 38 seconds - `testHookSystem`
+- 38 seconds - `testAWSIPAccess`
+- 34 seconds - `testUsageArgumentFunctions`
+- 34 seconds - `testAdditionalBins`
+- 33 seconds - `testDeployBuildEnvironment`
+- 31 seconds - `testBuildEnvironmentLoadAll`
+- 27 seconds - `testIdenticalCheckAndRepairMap`
+- 25 seconds - `testPackageAPI`
+- 24 seconds - `testWrapperShellScripts`
+- 24 seconds - `testGitVersionList`
+- 23 seconds - `testLogFileRotate1`
+- 22 seconds - `testSugar`
+- 22 seconds - `testLogFileRotate`
+- 22 seconds - `testInstallTerraform`
+- 21 seconds - `testBadNumericSamples`
+- 20 seconds - `testIsUpToDate`
+- 20 seconds - `testDeployRemoteFinish`
+- 19 seconds - `testFileMatches`
+- 19 seconds - `testDaemontools`
+- 18 seconds - `testInstallOpenTofu`
+- 18 seconds - `testHooksWhichSeemBenign`
+- 16 seconds - `testValidateCharacterClass`
+- 15 seconds - `testAwsEnvironmentFromCredentials`
+- 14 seconds - `testUnsignedIntegerSamples`
+- 14 seconds - `testPythonInstallation`
+- 14 seconds - `testIdenticalCheckSingles`
+- 13 seconds - `testProcessWait`
+- 12 seconds - `testVersionNext`
+- 12 seconds - `testUnsignedNumberSamples`
 - 11 seconds - `testSignedNumberSamples`
-- 11 seconds - `testMariaDBInstallation`
-- 11 seconds - `testLinkCreate`
+- 11 seconds - `testServiceToPort`
+- 11 seconds - `testRunCount`
+- 11 seconds - `testInstallBinBuild`
+- 10 seconds - `testBashPrompt`
