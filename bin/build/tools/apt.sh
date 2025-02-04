@@ -127,7 +127,7 @@ aptKeyAdd() {
 
   [ -n "$repoUrl" ] || repoUrl="https://$host/"
 
-  signFileText="$(joinArguments "," "${signFiles[@]}")"
+  signFileText="$(listJoin "," "${signFiles[@]}")"
   statusMessage decorate info "Configuring repository ... "
 
   [ -n "$listName" ] || listName="${names[0]}"

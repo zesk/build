@@ -1,7 +1,8 @@
 # Text Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## Patterns
 
@@ -23,13 +24,6 @@
 {removeFields}
 
 {stripAnsi}
-
-{listTokens}
-
-{isMappable}
-{mapValue}
-{mapValueTrim}
-{mapEnvironment}
 
 {printfOutputPrefix}
 {printfOutputSuffix}
@@ -65,11 +59,6 @@
 {shaPipe}
 {cachedShaPipe}
 {cannon}
-{joinArguments}
-{listAppend}
-{listRemove}
-{listCleanDuplicates}
-
 # Characters
 
 {characterClassReport}

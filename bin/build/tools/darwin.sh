@@ -16,7 +16,7 @@ darwinSoundDirectory() {
   local usage="_${FUNCNAME[0]}" home
 
   isDarwin || __throwEnvironment "$usage" "Only on Darwin" || return $?
-  home=$(__catchEnvironment "$usage" buildEnvironmentGet HOME) || return $?
+  home=$(__catchEnvironment "$usage" userHome) || return $?
   printf "%s\n" "$home/Library/Sounds"
 }
 _darwinSoundDirectory() {

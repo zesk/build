@@ -24,6 +24,7 @@ Examples:
 ## Functions
 
 {bashPrompt} {bashPromptColorScheme}
+{bashPromptMarkers}
 
 ## Bash Prompt Modules
 

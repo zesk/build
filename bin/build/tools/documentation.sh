@@ -146,7 +146,7 @@ usageDocumentSimple() {
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
 # Requires: __catchEnvironment beginTiming __throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
-# Requires: basename decorate statusMessage fileTemporaryName rm grep cut source listTokens _clean
+# Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens _clean
 # Requires: mapEnvironment shaPipe printf
 documentationTemplateCompile() {
   local usage="_${FUNCNAME[0]}"
@@ -241,10 +241,10 @@ documentationTemplateCompile() {
       printf %s 'no-environment'
     fi
   ); then
-    __throwEnvironment "$usage" "listTokens failed" || _clean $? "${clean[@]}" return $?
+    __throwEnvironment "$usage" "mapTokens failed" || _clean $? "${clean[@]}" return $?
   fi
-  if ! listTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
-    __throwEnvironment "$usage" "listTokens failed" || _clean $? "${clean[@]}" return $?
+  if ! mapTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
+    __throwEnvironment "$usage" "mapTokens failed" || _clean $? "${clean[@]}" return $?
   fi
   #
   # Look at source file for each function

@@ -47,3 +47,8 @@ __renameLink() {
 __realPath() {
   readlink -f -n "$@"
 }
+
+# Requires: hostname
+__hostname() {
+  hostname -f
+}

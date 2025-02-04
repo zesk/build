@@ -8,16 +8,16 @@
 #
 
 testSSHAddKnownHosts() {
-  local tempHome originalHome
+  local tempHome
   local output
   local sampleDomainA sampleDomainB
 
+  __mockValue HOME
+
   export HOME
 
-  __environment buildEnvironmentLoad HOME || return $?
-
-  originalHome="$HOME"
   tempHome="$(mktemp -d)" || return $?
+
   HOME="$tempHome"
 
   sampleDomainA=github.com
@@ -44,9 +44,7 @@ testSSHAddKnownHosts() {
   assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
   assertZeroFileSize "$output" || return $?
 
-  HOME="$originalHome"
-
-  unset BUILD_DEBUG
+  __mockValue HOME "" --end
 
   return 0
 }

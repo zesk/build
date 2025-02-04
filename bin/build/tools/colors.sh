@@ -411,9 +411,16 @@ _statusMessage() {
 # Side Effect: MAY define two environment variables
 consoleColumns() {
   export COLUMNS
-  local _ columns
-  read -r _ columns < <(stty size 2>/dev/null) || :
-  isInteger "$columns" && printf "%d" "$columns" || printf "%d" 120
+  local size
+  IFS=" " read -r -a size < <(stty size </dev/tty 2>/dev/null) || :
+  isInteger "${size[1]}" && printf "%d" "${size[1]}" || printf "%d" 120
+  # Debugging here - outputs size dynamically
+  #
+  #     tail -F "$(buildHome)/consoleColumns"
+  # Uncomment here:
+
+  # export BUILD_HOME
+  # [ ! -d "${BUILD_HOME}" ] || printf "%s %s %s\n" "${size[@]+${size[@]}}" "$(stty size </dev/tty 2>&1)" >>"$BUILD_HOME/${FUNCNAME[0]}"
 }
 
 #

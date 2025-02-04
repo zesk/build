@@ -59,3 +59,10 @@ __renameLink() {
 __realPath() {
   realpath "$@"
 }
+
+# some flavors of BSD (i.e. NetBSD and OpenBSD) don't have the -f option
+# Put these in __platform when you discover it
+# Requires: hostname
+__hostname() {
+  hostname -f
+}

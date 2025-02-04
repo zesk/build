@@ -18,6 +18,18 @@
 #             |_|
 #
 
+# DEPRECATED 2025-02-04
+listTokens() {
+  _deprecated "${FUNCNAME[0]}"
+  mapTokens "$@"
+}
+
+# DEPRECATED 2025-02-04
+joinArguments() {
+  _deprecated "${FUNCNAME[0]}"
+  listJoin "$@"
+}
+
 # DEPRECATED 2024-11-29
 _integer() {
   _deprecated "${FUNCNAME[0]}"

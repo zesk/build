@@ -446,9 +446,9 @@ documentationIndex_LinkDocumentationPaths() {
     __throwEnvironment "$usage" "mktemp failed" || return $?
   fi
   # subshell to hide environment tokens
-  if ! listTokens <"$documentTemplate" >"$documentTokensFile"; then
+  if ! mapTokens <"$documentTemplate" >"$documentTokensFile"; then
     rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-    __throwEnvironment "$usage" "listTokens failed" || return $?
+    __throwEnvironment "$usage" "mapTokens failed" || return $?
   fi
   checkFiles=("$documentTemplate")
   __catchEnvironment "$usage" touch "$modifiedCountFile" || return $?

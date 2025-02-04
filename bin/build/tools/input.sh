@@ -13,11 +13,10 @@
 inputConfigurationAdd() {
   local usage="_${FUNCNAME[0]}"
   local target=".input""rc" keyStroke="${1-}" action="${2-}" pattern
-  export HOME
+  local home
 
-  __catchArgument "$usage" buildEnvironmentLoad HOME || return $?
-  [ -d "$HOME" ] || __throwEnvironment "$usage" "HOME is not a directory $(decorate code "$HOME")" || return $?
-  target="$HOME/$target"
+  home="$(__catchEnvironment "$usage" userHome)" || return $?
+  target="$home/$target"
   [ -f "$target" ] || __catchEnvironment "$usage" touch "$target" || return $?
   pattern="^$(quoteGrepPattern "\"$keyStroke\":")"
   if grep -q -e "$pattern" <"$target"; then

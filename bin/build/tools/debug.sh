@@ -301,7 +301,7 @@ plumber() {
   declare -p >"$__before"
   if "$@"; then
     declare -p >"$__after"
-    __pattern="$(quoteGrepPattern "^($(joinArguments '|' "${__ignore[@]}"))=")"
+    __pattern="$(quoteGrepPattern "^($(listJoin '|' "${__ignore[@]}"))=")"
     __changed="$(diff "$__before" "$__after" | grep -e '^declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern")" || :
     __cmd="$(decorate each code "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then

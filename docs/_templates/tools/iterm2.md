@@ -3,3 +3,6 @@
 {isiTerm2}
 {iTerm2Init}
 {iTerm2Badge}
+{iTerm2Attention}
+{iTerm2Aliases}
+{iTerm2PromptSupport}

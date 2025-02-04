@@ -65,7 +65,7 @@ testSuite() {
   # Color mode
   export BUILD_COLORS BUILD_COLORS_MODE
   BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode) || return $?
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
   # Start tracing
   printf "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog"
@@ -498,7 +498,7 @@ __testStats() {
   IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $2 }')
   printf -- "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
   printf -- "\n"
-  boxedHeading "Functions asserted"
+  boxedHeading "Functions asserted (cumulative)"
   cat "$(__assertedFunctions)"
   lines=$(($(wc -l <"$(__assertedFunctions)") + 0))
   decorate info "$lines $(plural "$lines" "function" "functions")"

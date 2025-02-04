@@ -139,13 +139,11 @@ awsCredentialsFile() {
   usageRequireBinary "$usage" mkdir chmod touch || return $?
 
   if [ -z "$home" ]; then
-    export HOME
-    __catchEnvironment "$usage" buildEnvironmentLoad HOME || return $?
-    home="$HOME"
+    home="$(__catchEnvironment "$usage" userHome)" || return $?
   fi
   if [ ! -d "$home" ]; then
     # Argument is validated above MUST be environment
-    ! "$verbose" || _environment "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
+    ! "$verbose" || __throwEnvironment "$usage" "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
     return 1
   fi
   local credentialsPath credentials="$HOME/.aws/credentials"
@@ -380,8 +378,8 @@ awsCredentialsAdd() {
         elif [ -z "$secret" ]; then
           secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -450,8 +448,8 @@ awsCredentialsRemove() {
         if [ -z "$profileName" ]; then
           profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac

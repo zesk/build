@@ -27,7 +27,7 @@
 pause() {
   local prompt="${1-"PAUSE > "}"
   statusMessage printf -- "%s" "$prompt"
-  read -n 1 -s -r prompt </dev/tty
+  bashPromptUser
 }
 
 ####################################################################################################
@@ -448,7 +448,7 @@ __interactiveCountdownReadBoolean() {
 
   exitCode=2
   while [ "$exitCode" -ge 2 ]; do
-    while ! read -n 1 -s -r "${rr[@]+"${rr[@]}"}" value </dev/tty; do
+    while ! value=$(bashPromptUser -n 1 -s "${rr[@]+"${rr[@]}"}"); do
       if [ -z "$timeout" ]; then
         return 2
       fi

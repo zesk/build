@@ -50,7 +50,7 @@ Simplifies documentation and keeps it with the code.
 
 Output a simple error message for a function
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/usageDocumentSimple.sh`
 
 #### Arguments
 
@@ -364,7 +364,7 @@ Do not require argument to be non-blank
 
 Require an argument to be non-blank
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/usageArgumentCore.sh`
 
 #### Arguments
 

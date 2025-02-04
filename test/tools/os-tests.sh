@@ -130,7 +130,7 @@ testExtensionLists() {
   assertFileContains --line "$LINENO" "$target/sh" "$me" || return $?
   assertFileContains --line "$LINENO" "$target/php" "test/example/simple-php/bin/cron.php" || return $?
   assertFileContains --line "$LINENO" "$target/env" "test/example/bad.env" || return $?
-  assertFileContains --line "$LINENO" "$target/md" "test/example/listTokensBad.md" || return $?$()
+  assertFileContains --line "$LINENO" "$target/md" "test/example/mapTokensBad.md" || return $?$()
   assertFileContains --line "$LINENO" "$target/txt" "test/example/identical-source.txt" || return $?
 
   rm -rf "$target" || return $?

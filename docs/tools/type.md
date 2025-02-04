@@ -85,7 +85,7 @@ Thanks to [F. Hauri - Give Up GitHub (isuint_Case)](https://stackoverflow.com/qu
 
 Test if an argument is an unsigned integer
 
-- Location: `bin/build/tools/example.sh`
+- Location: `bin/update-available.sh`
 
 #### Arguments
 

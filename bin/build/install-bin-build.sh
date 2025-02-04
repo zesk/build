@@ -8,6 +8,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
+# Debugging: cfceff925ac8d39b504c08b80f299b8b0c4d2ace
 
 # URL of latest release
 __installBinBuildLatest() {
@@ -933,10 +934,10 @@ _decorations() {
 # Requires: isFunction _argument awk __catchEnvironment usageDocument
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
-  shift || __catchArgument "$usage" "Requires at least one argument" || return $?
+  shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
   if ! style=$(_caseStyles "$what"); then
-    local extend
-    extend="__decorateExtension$(printf "%s" "${what:0:1}" | awk '{print toupper($0)}')${what:1}"
+    local extend func="${what/-/_}"
+    extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `__catchArgument` it results in an infinite loop
     # shellcheck disable=SC2119
     isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?

@@ -273,7 +273,7 @@ usageArgumentDirectoryList() {
     result+=("$directory")
     index=$((index + 1))
   done
-  printf "%s\n" "$(joinArguments ":" "${result[@]+"${result[@]}"}")"
+  printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
 }
 
 # Validates a value as an application-relative directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
@@ -306,7 +306,7 @@ usageArgumentApplicationDirectoryList() {
     result+=("$directory")
     index=$((index + 1))
   done
-  printf "%s\n" "$(joinArguments ":" "${result[@]+"${result[@]}"}")"
+  printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
 }
 
 # Validates a value as an application-relative directory. Upon success, outputs the full path.

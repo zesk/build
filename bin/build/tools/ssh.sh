@@ -34,16 +34,15 @@
 sshAddKnownHost() {
   local usage="_${FUNCNAME[0]}"
 
-  local sshKnown=".ssh/known_hosts" exitCode=0 verbose=false verboseArgs=()
+  local sshKnown=".ssh/known_hosts" exitCode=0 verbose=false verboseArgs=() home
 
-  __catchEnvironment "$usage" buildEnvironmentLoad HOME || return $?
-  [ -d "$HOME" ] || __throwEnvironment "$usage" "HOME directory does not exist: $HOME" || return $?
+  home=$(__catchEnvironment "$usage" userHome) || return $?
 
-  sshKnown="$HOME/$sshKnown"
+  sshKnown="$home/$sshKnown"
   __catchEnvironment "$usage" requireFileDirectory "$sshKnown" || return $?
   [ -f "$sshKnown" ] || touch "$sshKnown" || __throwEnvironment "$usage" "Unable to create $sshKnown" || return $?
 
-  chmod 700 "$HOME/.ssh" && chmod 600 "$sshKnown" || __throwEnvironment "$usage" "Failed to set mode on .ssh correctly" || return $?
+  chmod 700 "$home/.ssh" && chmod 600 "$sshKnown" || __throwEnvironment "$usage" "Failed to set mode on .ssh correctly" || return $?
 
   local output
   output=$(fileTemporaryName "$usage") || return $?
@@ -101,21 +100,14 @@ _sshAddKnownHost() {
 # Argument: server- Servers to connect to to set up authorization
 #
 # You will need the password for this server for the current user.
-#
+# Requires: userHome __catchEnvironment __throwEnvironment
 sshSetup() {
-  local arg sshHomePath flagForce servers keyType keyBits
-  local usage
+  local sshHomePath flagForce servers keyType keyBits
+  local usage="_${FUNCNAME[0]}"
 
-  usage="_${FUNCNAME[0]}"
+  home=$(__catchEnvironment "$usage" userHome) || return $?
 
-  __catchEnvironment "$usage" buildEnvironmentLoad HOME || return $?
-  [ -d "${HOME-}" ] || __throwEnvironment "$usage" "HOME is not defined and is required" || return $?
-
-  sshHomePath="$HOME/.ssh/"
-  flagForce=0
-  servers=()
-  keyType=ed25519
-  keyBits=2048
+  local sshHomePath="$home/.ssh/" flagForce=false servers=() keyType=ed25519 keyBits=2048
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -129,23 +121,18 @@ sshSetup() {
         return $?
         ;;
       --type)
-        shift || __throwArgument "$usage" "missing $arg" || return $?
-        case "$1" in
-          ed25519 | rsa | dsa)
-            keyType=$1
-            ;;
-          *)
-            __throwArgument "$usage" "Key type $1 is not known: ed25519 | rsa | dsa" || return $?
-            ;;
-        esac
+        shift
+        keyType="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        case "$keyType" in ed25519 | rsa | dsa) ;; *) __throwArgument "$usage" "Key type $1 is not known: ed25519 | rsa | dsa" || return $? ;; esac
         ;;
       --bits)
-        shift || __throwArgument "$usage" "missing $arg" || return $?
+        shift
         minBits=512
-        [ "$(("$1" + 0))" -ge "$minBits" ] || __throwArgument "$usage" "Key bits is too small $minBits: $1 -> $(("$1" + 0))" || return $?
+        keyBits=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        [ "$keyBits" -ge "$minBits" ] || __throwArgument "$usage" "Key bits must be at least $minBits: $keyBits" || return $?
         ;;
       --force)
-        flagForce=1
+        flagForce=true
         ;;
       *)
         servers+=("$arg")
@@ -155,28 +142,40 @@ sshSetup() {
     shift
   done
 
-  [ -d "$sshHomePath" ] || mkdir -p .ssh/ || __throwEnvironment "$usage" "Can not create $sshHomePath" || return $?
+  [ -d "$sshHomePath" ] || mkdir -p "$sshHomePath" || __throwEnvironment "$usage" "Can not create $sshHomePath" || return $?
   __catchEnvironment "$usage" chmod 700 "$sshHomePath" || return $?
-  __catchEnvironment "$usage" cd "$sshHomePath" || return $?
+
   user="$(whoami)" || __throwEnvironment "$usage" "whoami failed" || return $?
   keyName="$user@$(uname -n)" || __throwEnvironment "$usage" "uname -n failed" || return $?
-  if [ $flagForce = 0 ] && [ -f "$keyName" ]; then
+  if $flagForce && [ -f "$keyName" ]; then
     [ ${#servers[@]} -gt 0 ] || _argument "Key $keyName already exists, exiting." || return $?
   else
+    local newKeys=("$keyName" "${keyName}.pub")
     statusMessage decorate info "Generating $keyName (keyType $keyType $keyBits keyBits)"
-    __catchEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b $keyBits -C "$keyName" -q -N "" || return $?
-    __catchEnvironment "$usage" cp "$keyName" id_"$keyType" || return $?
-    __catchEnvironment "$usage" cp "$keyName".pub id_"$keyType".pub || return $?
+    __catchEnvironment "$usage" muzzle pushd "$sshHomePath" || return $?
+    __catchEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b "$keyBits" -C "$keyName" -q -N "" || _undo $? muzzle popd || return $?
+    __catchEnvironment "$usage" muzzle popd || _clean $? "${newKeys[@]}" || return $?
+
+    targetKeys=("id_${keyType}" "id_${keyType}.pub")
+    local index
+    for index in "${!targetKeys[@]}"; do
+      __catchEnvironment "$usage" cp "${newKeys[index]}" "${targetKeys[index]}" || _clean $? "${targetKeys[@]}" "${newKeys[@]}" || return $?
+    done
   fi
-  for s in "${servers[@]}"; do
-    echo "Uploading key and modifying authorized_keys with $s"
-    echo "(Please enter password twice)"
-    if ! printf "cd .ssh\n""put %s\n""quit" "$keyName.pub" | sftp "$s" >/dev/null; then
-      __throwEnvironment "$usage" "$s failed to upload key" || return $?
+  local server
+  for server in "${servers[@]}"; do
+    local showServer
+
+    showServer=$(decorate value "$server")
+    statusMessage --last printf "%s\n" "Pushing to $showServer – (Please authenticate with sftp)"
+    if ! printf "cd .ssh\n""put %s\n""quit" "$keyName.pub" | sftp "$server" >/dev/null; then
+      __throwEnvironment "$usage" "failed to upload key to $showServer" || return $?
     fi
-    if ! printf "cd ~\\n""cd .ssh\n""cat *pub > authorized_keys\n""exit" | ssh -T "$s" >/dev/null; then
-      __throwEnvironment "$usage" "$s failed to add to authorized keys" || return $?
+    statusMessage decorate info "Configuring $server ..."
+    if ! printf "cd ~\\n""cd .ssh\n""cat *pub > authorized_keys\n""exit" | ssh -T "$server" >/dev/null; then
+      __throwEnvironment "$usage" "failed to add to authorized_keys on $showServer" || return $?
     fi
+    statusMessage decorate success "Completed $server"
   done
 }
 _sshSetup() {

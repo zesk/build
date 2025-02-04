@@ -127,7 +127,7 @@ Quote bash strings for inclusion as single-quoted for eval
 
 Quote grep -e patterns for shell use
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/identical/_text.sh`
 
 #### Arguments
 
@@ -299,9 +299,9 @@ None.
 
 Thanks to [commandlinefu tripleee](https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc).
 
-### `listTokens` - listTokens
+### `mapTokens` - mapTokens
 
-listTokens
+mapTokens
 
 - Location: `bin/build/tools/text.sh`
 
@@ -596,6 +596,20 @@ Does needle exist as a substring of haystack?
 #### Exit codes
 
 - `0` - IFF ANY needle matches as a substring of haystack
+### `beginsWith` - Does text have one or more prefixes?
+
+Does text have one or more prefixes?
+
+- Location: `bin/build/tools/text.sh`
+
+#### Arguments
+
+- `text` - Optional. String. String to match.
+- `prefixText` - Required. String. One or more. Does this prefix exist in our `text`?
+
+#### Exit codes
+
+- `0` - If `text` has any prefix
 ### `stringOffset` - Outputs the integer offset of `needle` if found as substring
 
 Outputs the integer offset of `needle` if found as substring in `haystack`
@@ -831,7 +845,7 @@ This can break your files so use with caution. Blank searchText is not allowed.
 #### See Also
 
 - [{fn}]({sourceLink})
-### `joinArguments` - Output arguments joined by a character
+### `listJoin` - Output arguments joined by a character
 
 Output arguments joined by a character
 

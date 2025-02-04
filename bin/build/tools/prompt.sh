@@ -208,7 +208,7 @@ bashPrompt() {
       fi
       updated+=("$command")
     done
-    PROMPT_COMMAND="$(joinArguments ";" "${updated[@]}")"
+    PROMPT_COMMAND="$(listJoin ";" "${updated[@]}")"
   else
     PROMPT_COMMAND="$theCommand"
   fi
@@ -220,6 +220,61 @@ bashPrompt() {
   PS1="$(__bashPromptGeneratePS1)"
 }
 _bashPrompt() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Prompt the user properly honoring any attached console
+# Arguments are the same as read, except:
+# `-r` is implied and does not need to be specified
+bashPromptUser() {
+  local word
+
+  export __BASH_PROMPT_MARKERS
+  # Technically the reading program will not receive these bytes as they will be sent to the tty
+  printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
+  read -r "$@" word </dev/tty
+  printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
+  printf "%s\n" "$word"
+}
+
+# Set markers for terminal integration
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: prefix - Optional. EmptyString. Prefix for all prompts.
+# Argument: suffix - Optional. EmptyString. Suffix for all prompts.
+# Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
+bashPromptMarkers() {
+  local usage="_${FUNCNAME[0]}"
+
+  local markers=()
+
+  export __BASH_PROMPT_MARKERS
+  __catchEnvironment "$usage" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        markers+=("$1")
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  [ "${#markers[@]}" -le 2 ] || __throwArgument "$usage" "Maximum two markers supported (prefix suffix)"
+  [ "${#markers[@]}" -eq 0 ] || __BASH_PROMPT_MARKERS=("${markers[@]}")
+  printf "%s\n" "${__BASH_PROMPT_MARKERS[@]}"
+}
+_bashPromptMarkers() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -246,19 +301,21 @@ bashPromptColorScheme() {
 # - " "
 # - CWD
 # - " "
-# - exit status ">" or "X"
+# - exit status ">" or "@"
 # - " "
 __bashPromptGeneratePS1() {
   local colors reset
   export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
   reset="$(decorate reset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
-  printf -- "%s%s@%s %s %s " \
+  printf -- "%s%s%s@%s %s %s %s" \
+    "\${__BASH_PROMPT_MARKERS[0]-}" \
     "\${__BASH_PROMPT_PREVIOUS[1]-}" \
     "\[${colors[2]-}\]\u\[${reset}\]" \
     "\[${colors[3]-}\]\h" \
     "\[${colors[4]-}\]\w\[${reset}\]" \
-    "\[\${__BASH_PROMPT_PREVIOUS[2]-}\]\${__BASH_PROMPT_PREVIOUS[3]-}\[${reset}\]"
+    "\[\${__BASH_PROMPT_PREVIOUS[2]-}\]\${__BASH_PROMPT_PREVIOUS[3]-}\[${reset}\]" \
+    "\${__BASH_PROMPT_MARKERS[1]-}"
 }
 
 # This is the main command running each command prompt
