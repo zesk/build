@@ -187,7 +187,7 @@ _waitForValue() {
   return $exitCode
 }
 
-# Tag: slow deployment php-install
+# Tag: slow deployment php-install package-install
 testDeployApplication() {
   local d quietLog migrateVersion startingValue firstArgs home lastOne t
 

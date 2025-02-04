@@ -28,6 +28,7 @@ export globalTestFailure=
 # Argument: --list - Optional. Flag. List all test names (which match if applicable).
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files.
+# Argument: --show-tags - Optional. Flag. Of the matched tests, display the tags that they have, if any. Unique list.
 # Argument: --skip-tag tagName - Optional. String. Skip tests tagged with this name.
 # Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
 # Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
@@ -70,7 +71,7 @@ testSuite() {
   printf "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog"
 
   local tags=() skipTags=() runner=()
-  local showIntro=true listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false
+  local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false
   local testPaths=() messyOption="" checkTests=() matchTests=() failExecutors=()
 
   # _IDENTICAL_ argument-case-header 5
@@ -86,6 +87,7 @@ testSuite() {
         ;;
       -l | --show)
         showFlag=true
+        beQuiet=true
         ;;
       --debugger)
         bashDebuggerEnable
@@ -94,7 +96,7 @@ testSuite() {
         verboseMode=true
         ;;
       --show-tags)
-        showIntro=false
+        beQuiet=true
         showTags=true
         ;;
       --tag)
@@ -127,10 +129,10 @@ testSuite() {
       -1 | --one)
         shift
         checkTests+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        printf "%s %s\n" "$(decorate warning "Adding one suite:")" "$(decorate bold-red "$1")"
         ;;
       --list)
         verboseMode=false
+        beQuiet=true
         listFlag=true
         ;;
       --fail)
@@ -160,15 +162,20 @@ testSuite() {
   #
   # Intro statement to console
   #
-  local intro
-  intro=$(printf -- "%s started on %s %s\n" "$(decorate bold-magenta "${usage#_}")" "$startString" "$load")
-  if "$verboseMode" && "$showIntro"; then
-    local mode="$BUILD_COLORS_MODE" intro
-    [ -n "$mode" ] || mode=none
-    hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
-    statusMessage printf -- "%s" "$intro"
+  if ! $beQuiet; then
+    if [ ${#checkTests[@]} -gt 0 ]; then
+      printf "%s %s\n" "$(decorate warning "Adding ${#checkTests[@]} $(plural ${#checkTests[@]} suite suites):")" "$(decorate bold-red "${checkTests[@]}")"
+    fi
+    local intro
+    intro=$(printf -- "%s started on %s %s\n" "$(decorate bold-magenta "${usage#_}")" "$startString" "$load")
+    if "$verboseMode"; then
+      local mode="$BUILD_COLORS_MODE" intro
+      [ -n "$mode" ] || mode=none
+      hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
+      statusMessage printf -- "%s" "$intro"
+    fi
+    printf "%s\n" "$intro" >>"$quietLog"
   fi
-  printf "%s\n" "$intro" >>"$quietLog"
 
   #
   # Load all tests
