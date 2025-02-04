@@ -53,7 +53,6 @@ bigText() {
   local usage="_${FUNCNAME[0]}"
   local fonts binary index=0
 
-  __catchEnvironment "$usage" muzzle packageUpdate || return $?
   __catchEnvironment "$usage" muzzle packageInstall || return $?
   binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
   case "$binary" in

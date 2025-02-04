@@ -103,7 +103,7 @@ Code:
 
 Usage:
 
-    tempFile=(__catchEnvironment "$usage" mktemp) || return $?
+    tempFile=(fileTemporaryName "$usage") || return $?
     __throwEnvironment "$usage" "No deployment application directory exists" || return $?
 
 See:
