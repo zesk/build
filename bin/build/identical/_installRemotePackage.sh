@@ -143,7 +143,7 @@ _installRemotePackage() {
         ;;
       --force)
         forceFlag=true
-        installReason="(--force specified)"
+        installReason="--force specified"
         ;;
       --mock | --local)
         [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
@@ -204,7 +204,7 @@ _installRemotePackage() {
       return 0
     fi
     forceFlag=true
-    installReason="(newer version available: $newVersion)"
+    installReason="newer version available: $newVersion"
   fi
 
   if [ -z "$url" ]; then
@@ -274,7 +274,7 @@ __installRemotePackage() {
 
 # Debug is enabled, show why
 # Requires: decorate
-# Debugging: OK
+# Debugging: dd1d7b110084e1d6903111b0d5e5b0975a010d0d
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }

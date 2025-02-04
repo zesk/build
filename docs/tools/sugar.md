@@ -27,14 +27,12 @@ This is universally used throughout.
 ### `__execute` - Run binary and output failed command upon error
 
 Run binary and output failed command upon error
-Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
-- `binary` - Required. Executable.
-- `...` - Any arguments are passed to binary
+- `binary ...` - Required. Executable. Any arguments are passed to `binary`.
 
 #### Exit codes
 
@@ -79,7 +77,7 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 
 Run `command`, upon failure run `handler` with an environment error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -110,7 +108,7 @@ Run `handler` with an environment error
 
 Run `command`, upon failure run `handler` with an argument error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -126,7 +124,7 @@ Run `command`, upon failure run `handler` with an argument error
 
 Run `handler` with an environment error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -141,7 +139,7 @@ Run `handler` with an environment error
 
 Run `handler` with an argument error
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -158,7 +156,7 @@ Run a function and preserve exit code
 Returns `exitCode`
 As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 
-- Location: `bin/build/tools/sugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

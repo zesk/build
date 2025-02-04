@@ -92,6 +92,8 @@ buildFailed() {
   _environment "Build failed:" "$@" || return $?
 }
 
+# IDENTICAL versionSort 51
+
 # Summary: Sort versions in the format v0.0.0
 #
 # Sorts semantic versions prefixed with a `v` character; intended to be used as a pipe.
@@ -102,25 +104,43 @@ buildFailed() {
 #
 # Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume
 #
-# Usage: versionSort [ -r ]
-# Argument: -r - Reverse the sort order (optional)
+# Argument: -r | --reverse - Reverse the sort order (optional)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:    git tag | grep -e '^v[0-9.]*$' | versionSort
-#
+# Requires: __throwArgument sort usageDocument
 versionSort() {
-  local r=
   local usage="_${FUNCNAME[0]}"
 
-  if [ $# -gt 0 ]; then
-    if [ "$1" = "-r" ]; then
-      r=r
-      shift || __throwArgument "$usage" "shift failed" || return $?
-    else
-      __throwArgument "$usage" "Unknown argument: $1" || return $?
-    fi
-  fi
-  sort -t . -k 1.2,1n$r -k 2,2n$r -k 3,3n$r
+  local reverse=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      -r | --reverse)
+        reverse="r"
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  sort -t . -k "1.2,1n$reverse" -k "2,2n$reverse" -k "3,3n$reverse"
 }
 _versionSort() {
+  # Fix SC2120
+  ! false || versionSort --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

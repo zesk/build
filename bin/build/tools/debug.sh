@@ -49,6 +49,7 @@ buildDebugEnabled() {
 # Usage: {fn} [ setArgs ]
 # Turn on debugging and additional `set` arguments
 # Actually does 'set -x` - should be only occurrence.
+# Debugging: 9497d5cc396db1a6769106b61e72cb2bb5bb1f67
 # Depends: -
 __buildDebugEnable() {
   set "-x${1-}" # Debugging
@@ -421,14 +422,14 @@ _housekeeper() {
 # Example:     source "$include" > >(outputTrigger source "$include") || return $?
 outputTrigger() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local error message verbose name
 
-  name="${FUNCNAME[1]}}"
-  verbose=false
+  local name="${FUNCNAME[1]}}" verbose=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
@@ -447,24 +448,30 @@ outputTrigger() {
         break
         ;;
     esac
-    shift || __throwArgument "$usage" "shift argument $argument" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 
-  error=$(mktemp) || __throwEnvironment "$usage" "mktemp" "$@" || return $?
-  lineCount=0
+  local error lineCount=0
+
+  error=$(fileTemporaryName "$usage") || return $?
   while read -r line; do
     printf "%s\n" "$line" >>"$error"
     lineCount=$((lineCount + 1))
   done
+
+  local lineText
   lineText="$lineCount $(plural "$lineCount" line lines)"
   if [ ! -s "$error" ]; then
     rm -rf "$error" || :
     ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$lineText")" || :
     return 0
   fi
-  message=$(dumpFile "$error") || message="dumpFile $error failed"
+
+  local message
+  message=$(__catchEnvironment "$usage" dumpPipe <"$error") || return $?
   rm -rf "$error" || :
-  _environment "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
+  __throwEnvironment "$usage" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
 }
 _outputTrigger() {
   # _IDENTICAL_ usageDocument 1

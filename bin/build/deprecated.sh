@@ -21,6 +21,9 @@ set -eou pipefail
 #
 # There are three flags to control the three processes, you can set them using arguments (all three cleanups are by default enabled)
 #
+# Argument: --no-configuration - Optional. Flag. Do not fix any configuration issues from past versions.
+# Argument: --just-configuration - Optional. Flag. Just fix any configuration issues from past versions. (Sets all other flags to false)
+# Argument: --configuration - Optional. Flag. Do the fix any configuration issues from past versions. (other flags remain unchanged)
 # Argument: --no-cannon - Optional. Flag. Do not do the cannon to replace tokens in code.
 # Argument: --just-cannon - Optional. Flag. Just do the cannon to replace tokens in code. (Sets all other flags to false)
 # Argument: --cannon - Optional. Flag. Do the cannon  to replace tokens in code. (other flags remain unchanged)
@@ -286,6 +289,12 @@ __deprecatedConfiguration() {
       __echo mv "$oldHome" "$newHome"
     fi
   fi
+
+  local exitCode=0 home
+  home=$(buildHome)
+  find "$home" -name '.check-assertions' | outputTrigger "$(decorate error ".check-assertions is deprecated")" || exitCode=$?
+  find "$home" -name '.debugging' | outputTrigger "$(decorate error ".debugging is deprecated")" || exitCode=$?
+  return "$exitCode"
 }
 
 # IDENTICAL __source 19

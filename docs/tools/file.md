@@ -319,7 +319,7 @@ Outputs one of `type` output or enhancements:
 
 No documentation for `realPath`.
 
-- Location: `bin/build/identical/realPath.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -368,7 +368,7 @@ Removes dot and dot-dot paths from a path correctly
 
 Generate a temporary file name using mktemp, and fail using a function
 
-- Location: `bin/build/identical/fileTemporaryName.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -417,7 +417,7 @@ Reverses a pipe's input lines to output using an awk trick.
 
 Not recommended on big files.
 
-- Location: `bin/build/identical/reverseFileLines.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

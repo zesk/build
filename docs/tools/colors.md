@@ -21,7 +21,7 @@ Zesk Build now supports two color modes for light and dark terminals with relate
 
 Semantics-based
 
-- Location: `bin/build/identical/decorate.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -36,7 +36,7 @@ Semantics-based
 
 Output a list of build-in decoration styles, one per line
 
-- Location: `bin/build/identical/decorate.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -54,7 +54,7 @@ Output a list of build-in decoration styles, one per line
 
 Runs the following command on each subsequent argument to allow for formatting with spaces
 
-- Location: `bin/build/identical/decorate.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -70,7 +70,7 @@ Runs the following command on each subsequent argument to allow for formatting w
 Double-quote all arguments as properly quoted bash string
 Mostly $ and " are problematic within a string
 
-- Location: `bin/build/identical/decorate.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -219,7 +219,7 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 Exit Code; 1 - Colors are likely not supported by console
 
-- Location: `bin/build/identical/decorate.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

@@ -157,20 +157,25 @@ _bashSanitizeCheckCopyright() {
 }
 
 _bashSanitizeCheckDebugging() {
-  local file line usage="$1" && shift
-  local debugPatterns=() matches="" remain
+  local usage="$1" && shift
 
-  while read -r file; do
-    while read -r line; do
-      debugPatterns+=("$line")
-    done <"$file"
-  done < <(find "." -type f -name '.debugging' ! -path "*/.*/*")
+  local matches
   matches=$(fileTemporaryName "$usage") || return $?
-  if fileMatches 'set ["]\?-x' -- "${debugPatterns[@]+${debugPatterns[@]}}" -- - >"$matches"; then
-    dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
+
+  if fileMatches 'set ["]\?-x' -- -- - >"$matches"; then
+    local file line remain debugHash found=false
     while IFS=":" read -r file line remain; do
-      file="$(decorate code "$file")" error="$(decorate error "debugging used")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain}"
+      debugHash="$(sed -e "${line}p" | shaPipe)"
+      if grep -q -e "Debugging: $debugHash" "$file"; then
+        continue
+      fi
+      found=true
+      debugHash=$debugHash file="$(decorate code "$file")" error="$(decorate error "debugging used")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain} # Debugging: {debugHash}"
     done <"$matches"
-    __throwEnvironment "$usage" used debugging || return $?
+    $found || return 0
+    dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
+    __catchEnvironment "$usage" rm -rf "$matches" || return $?
+    __throwEnvironment "$usage" "Debugging found" || return $?
   fi
+  __catchEnvironment "$usage" rm -rf "$matches" || return $?
 }
