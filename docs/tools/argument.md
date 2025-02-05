@@ -11,7 +11,7 @@ To handle a possible `--help` ending the arguments early:
     # Argument: fileName - Required. FileDirectory. File to generate.
     myMagic() {
         local json fileName
-        stateFile=$(_arguments "$bin/../bin/build/tools/text.sh" "$_mapEnvironmentGenerateSedFile" "$@") || return "$(_argumentReturn $?)"
+        stateFile=$(_arguments "$bin/../bin/build/tools/map.sh" "$_mapEnvironmentGenerateSedFile" "$@") || return "$(_argumentReturn $?)"
         # shellcheck source=/dev/null
         source "$stateFile"
         # fileName set to a valid file, json is set to true or false

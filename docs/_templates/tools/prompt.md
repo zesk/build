@@ -25,6 +25,7 @@ Examples:
 
 {bashPrompt} {bashPromptColorScheme}
 {bashPromptMarkers}
+{bashPromptUser}
 
 ## Bash Prompt Modules
 

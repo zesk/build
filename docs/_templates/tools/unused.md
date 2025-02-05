@@ -11,3 +11,5 @@ Hides these from [New and uncategorized functions](./todo.md)
 {_list}
 {_command}
 {_format}
+{joinArguments}
+{listTokens}

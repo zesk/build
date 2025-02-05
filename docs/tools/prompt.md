@@ -72,6 +72,24 @@ Options are:
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `bashPromptMarkers` - Set markers for terminal integration
+
+Set markers for terminal integration
+Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
+
+- Location: `bin/build/tools/prompt.sh`
+
+#### Arguments
+
+- `--help` - Optional. Flag. Display this help.
+- `prefix` - Optional. EmptyString. Prefix for all prompts.
+- `suffix` - Optional. EmptyString. Suffix for all prompts.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Bash Prompt Modules
 
