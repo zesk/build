@@ -19,7 +19,7 @@ Arguments are the same as read, except:
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `joinArguments` - DEPRECATED 2025-02-04
+### `listJoin` - DEPRECATED 2025-02-04
 
 DEPRECATED 2025-02-04
 
@@ -34,7 +34,7 @@ DEPRECATED 2025-02-04
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `listTokens` - DEPRECATED 2025-02-04
+### `mapTokens` - DEPRECATED 2025-02-04
 
 DEPRECATED 2025-02-04
 

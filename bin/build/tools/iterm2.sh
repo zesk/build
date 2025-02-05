@@ -152,9 +152,11 @@ _iTerm2Aliases() {
 # Attract the operator
 # Usage: {fn} [ true | false | ! | fireworks ]
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+# Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing.
 iTerm2Attention() {
   local usage="_${FUNCNAME[0]}"
-  local message=() wrongTerminalFails=true
+
+  local wrongTerminalFails=true verboseFlag=false didSomething=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -167,6 +169,9 @@ iTerm2Attention() {
         "$usage" 0
         return $?
         ;;
+      --verbose | -v)
+        verboseFlag=true
+        ;;
       # IDENTICAL wrongTerminalFails 3
       --ignore | -i)
         wrongTerminalFails=false
@@ -175,12 +180,16 @@ iTerm2Attention() {
         local result=0
         parseBoolean "$argument" || result=$?
         case "$result" in 0 | 1)
+          ! $verboseFlag || statusMessage decorate info "Requesting attention: $result"
           _iTerm2_setValue RequestAttention "$result"
+          didSomething=true
           ;;
         *)
           case "$argument" in
-            "!" | "attention")
-              _iTerm2_setValue RequestAttention "attention"
+            "!" | "fireworks")
+              ! $verboseFlag || statusMessage decorate info "Requesting fireworks"
+              _iTerm2_setValue RequestAttention "fireworks"
+              didSomething=true
               ;;
             *)
               # _IDENTICAL_ argumentUnknown 1
@@ -194,6 +203,8 @@ iTerm2Attention() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+
+  $didSomething || __throwArgument "$usage" "Requires at least one argument" || return $?
 }
 _iTerm2Attention() {
   # _IDENTICAL_ usageDocument 1
