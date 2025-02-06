@@ -383,8 +383,9 @@ iTerm2Init() {
   local usage="_${FUNCNAME[0]}"
   isiTerm2 || __throwEnvironment "$usage" "Not iTerm2" || return $?
   __catchEnvironment "$usage" buildEnvironmentLoad TERM || return $?
+  home=$(__catchEnvironment "$usage" userHome) || return $?
   # iTerm2 customizations
-  __catchEnvironment "$usage" iTerm2Aliases || return $?
+  [ ! -d "$home/.iterm2" ] || __catchEnvironment "$usage" iTerm2Aliases || return $?
   __catchEnvironment "$usage" iTerm2PromptSupport || return $?
 }
 _iTerm2Init() {
