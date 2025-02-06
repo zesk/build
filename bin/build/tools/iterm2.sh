@@ -149,6 +149,117 @@ _iTerm2Aliases() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+iTerm2ColorNames() {
+  printf "%s\n" fg bg bold link selbg selfg curbg curfg underline tab black red green yellow blue magenta cyan white br_black br_red br_green br_yellow br_blue br_magenta br_cyan br_white
+}
+
+# Usage: {fn} handler verboseFlag colorSetting
+__iTerm2SetColors() {
+  local usage="$1" verboseFlag="$2" argument="$3"
+
+  local colorName colorValue
+  IFS="=" read -r colorName colorValue <<<"$argument" || :
+  if [ ${#colorNames[@]} -eq 0 ]; then
+    local item
+    while read -r item; do colorNames+=("$item"); done < <(iTerm2ColorNames)
+  fi
+  inArray "$colorName" "${colorNames[@]}" || __throwArgument "$usage" "Unknown color name: $(decorate code "$colorName")" || return $?
+  local colorSpace colorCode=""
+  IFS=":" read -r colorSpace colorCode <<<"$colorValue" || :
+  if [ -z "$colorCode" ]; then
+    colorCode=$colorValue
+    colorSpace=""
+  else
+    case "$colorSpace" in
+      srgb | rgb | p3) ;; *) __throwArgument "$usage" "Invalid color space $(decorate error "$colorSpace") in $(decorate code "$colorValue")" || return $? ;;
+    esac
+  fi
+  colorCode=$(uppercase "$colorCode")
+  case "$colorCode" in
+    [[:xdigit:]]*) ;;
+    *) __throwArgument "$usage" "Invalid hexadecimal color: $(decorate error "$colorCode") in $(decorate code "$colorValue")" || return $? ;;
+  esac
+  ! $verboseFlag || statusMessage decorate info "Setting color $colorName to $colorCode"
+  _iTerm2_setValue SetColors "$colorName=$colorCode"
+}
+
+# Set terminal colors
+# Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+# Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing.
+# Argument: --skip-errors - Flag. Optional. Skip errors in color settings and continue - if loading a file containing a color scheme will load most of the file and skip any color settings with errors.
+# Argument: colorSetting ... - String. Required. colorName=colorFormat string
+#
+# Color names permitted are:
+# - fg bg bold link selbg selfg curbg curfg underline tab
+# - black red green yellow blue magenta cyan white
+# - br_black br_red br_green br_yellow br_blue br_magenta br_cyan br_white
+#
+# colorFormat is one of:
+# - `RGB` - Three hex [0-9A-F] values (hex3)
+# - `RRGGBB` - Six hex values (like CSS colors) (hex6)
+# - `cs:hex3` or `cs:hex6` - Where cs is one of `srgb`, `rgb`, or `p3`
+#
+# Color spaces:
+# - `srgb` - The default color space
+# - 1rgb - Apple's device-independent colorspace
+# - `p3` - Apple's large-gamut colorspace
+#
+# If no arguments are supplied which match a valid color setting values are read one-per-line from stdin
+iTerm2SetColors() {
+  local usage="_${FUNCNAME[0]}"
+
+  local wrongTerminalFails=true verboseFlag=false didSomething=false colorNames=() exitCode=0
+  local skipErrors=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --skip-errors)
+        skipErrors=true
+        ;;
+      --verbose | -v)
+        verboseFlag=true
+        ;;
+      # IDENTICAL wrongTerminalFails 3
+      --ignore | -i)
+        wrongTerminalFails=false
+        ;;
+      -*)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+      *)
+        __iTerm2SetColors "$usage" "$verboseFlag" "$argument" || exitCode=$?
+        didSomething=true
+        [ $exitCode = 0 ] || $skipErrors || return $exitCode
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  if ! $didSomething; then
+    ! $verboseFlag || statusMessage decorate info "Reading colors from stdin"
+    local colorSetting
+    while read -r colorSetting; do
+      __iTerm2SetColors "$usage" "$verboseFlag" "$colorSetting" || exitCode=$?
+      [ $exitCode = 0 ] || $skipErrors || return $exitCode
+    done
+  fi
+  return $exitCode
+}
+_iTerm2SetColors() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Attract the operator
 # Usage: {fn} [ true | false | ! | fireworks ]
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
@@ -181,11 +292,21 @@ iTerm2Attention() {
         parseBoolean "$argument" || result=$?
         case "$result" in 0 | 1)
           ! $verboseFlag || statusMessage decorate info "Requesting attention: $result"
-          _iTerm2_setValue RequestAttention "$result"
+          # Success (exit code 0) sends 1 to start attraction
+          # 0 -> 1, 1 -> 0
+          _iTerm2_setValue RequestAttention "$((result - 1))"
           didSomething=true
           ;;
         *)
           case "$argument" in
+            "start")
+              _iTerm2_setValue RequestAttention 1
+              didSomething=true
+              ;;
+            "stop")
+              _iTerm2_setValue RequestAttention 1
+              didSomething=true
+              ;;
             "!" | "fireworks")
               ! $verboseFlag || statusMessage decorate info "Requesting fireworks"
               _iTerm2_setValue RequestAttention "fireworks"

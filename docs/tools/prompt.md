@@ -90,6 +90,23 @@ Outputs the current marker settings, one per line (0, 1, or 2 lines will be outp
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `bashPromptUser` - Prompt the user properly honoring any attached console
+
+Prompt the user properly honoring any attached console
+Arguments are the same as read, except:
+`-r` is implied and does not need to be specified
+
+- Location: `bin/build/tools/prompt.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ## Bash Prompt Modules
 

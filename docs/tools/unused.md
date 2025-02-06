@@ -154,3 +154,33 @@ Output a command, quoting individual arguments
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `joinArguments` - DEPRECATED 2025-02-04
+
+DEPRECATED 2025-02-04
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `listTokens` - DEPRECATED 2025-02-04
+
+DEPRECATED 2025-02-04
+
+- Location: `bin/build/tools/deprecated.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

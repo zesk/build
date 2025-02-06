@@ -66,6 +66,7 @@ Attract the operator
 #### Arguments
 
 --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+--verbose |- ` -v` - Flag. Optional. Verbose mode. Show what you are doing.
 
 #### Exit codes
 
