@@ -40,6 +40,7 @@ buildPreRelease() {
   statusMessage decorate info "Linting"
   find "$home" -name '*.sh' ! -path '*/.*/*' | bashLintFiles || exitCode=$?
 
+  local exitCode=0
   # __execute "$home/bin/documentation.sh" --clean || exitCode=$?
   __execute "$home/bin/documentation.sh" || exitCode=$?
   if [ "$exitCode" -eq 0 ]; then
