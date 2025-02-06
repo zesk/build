@@ -4,6 +4,26 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+### `isTTYAvailable` - Quiet test for a TTY.
+
+Quiet test for a TTY.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+- `__BUILD_HAS_TTY` - Cached value of `false` or `true`. Any other value forces computation during this call.
+
 ### `consoleGetColor` - Get the console foreground or background color
 
 Gets the RGB console color using an `xterm` escape sequence supported by some terminals. (usually for background colors)

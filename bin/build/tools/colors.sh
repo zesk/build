@@ -400,7 +400,7 @@ _statusMessage() {
 }
 
 # Quiet test for a TTY.
-# Environment: __BUILD_HAS_TTY
+# Environment: - __BUILD_HAS_TTY - Cached value of `false` or `true`. Any other value forces computation during this call.
 # Credits: Tim Perry
 # URL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional
 isTTYAvailable() {

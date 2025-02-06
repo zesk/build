@@ -92,10 +92,9 @@ decorate() {
   if ! style=$(_caseStyles "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
-    # When this next line calls `__catchArgument` it results in an infinite loop
-    # shellcheck disable=SC2119
-    isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    __catchEnvironment "$usage" "$extend" "$@" || return $?
+    # When this next line calls `__catchArgument` it results in an infinite loop - KMD - huh? 2025-02-02
+    # __catchEnvironment will validate our function for us so ask for forgiveness
+    __catchEnvironment "$usage" "$extend" "$@" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
     return $?
   fi
   read -r lp dp text <<<"$style" || :

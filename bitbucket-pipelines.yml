@@ -25,8 +25,6 @@ pipelines:
           services:
             - docker
           script:
-            - printf "%s\n" "$(bin/build/tools.sh isTTYAvailable 2>&1 || :)"
-            - printf "%s\n" "$(bin/build/tools.sh consoleColumns 2>&1 || :)"
             - bin/build.sh
             - bin/test.sh --skip-tag package-install --skip-tag slow
     main:
