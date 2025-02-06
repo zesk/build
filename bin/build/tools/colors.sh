@@ -410,10 +410,13 @@ _statusMessage() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
-  export COLUMNS
-  local size
-  IFS=" " read -r -a size < <(stty size </dev/tty 2>/dev/null) || :
-  isInteger "${size[1]}" && printf "%d" "${size[1]}" || printf "%d" 120
+  if [ ! -e /dev/tty ]; then
+    printf "%d" 120
+  else
+    local size
+    IFS=" " read -r -a size < <(stty size </dev/tty 2>/dev/null) || :
+    isInteger "${size[1]}" && printf "%d" "${size[1]}" || printf "%d" 120
+  fi
   # Debugging here - outputs size dynamically
   #
   #     tail -F "$(buildHome)/consoleColumns"
@@ -434,10 +437,13 @@ consoleColumns() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
-  export ROWS
-  local rows _
-  read -r rows _ < <(stty size 2>/dev/null) || :
-  isInteger "$rows" && printf "%d" "$rows" || printf "%d" 80
+  if [ ! -e /dev/tty ]; then
+    printf "%d" 120
+  else
+    local rows _
+    IFS=" " read -r rows _ < <(stty size </dev/tty 2>/dev/null) || :
+    isInteger "$rows" && printf "%d" "$rows" || printf "%d" 80
+  fi
 }
 
 #
