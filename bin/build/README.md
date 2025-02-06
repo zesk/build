@@ -18,7 +18,6 @@ This toolkit assumes:
 - Binaries from this project installed at `./bin/build/` (required)
 - Files containing bash code end with `.sh`
 - **Release notes** are located in a dedicated subdirectory (may be configured per-project), files are named `v1.0.0.md` which match version names (`v1.0.0`) (required)
-- A central `$HOME/.build` directory may be created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used. (configurable)
 
 To use in your pipeline:
 
@@ -96,7 +95,7 @@ For more complex (and more robust error handling) see `__install` and `__tools` 
 
 ## Artifacts: Build Directory and `.deploy`
 
-A `.build` directory is created at a configured location set by the environment variable `BUILD_CACHE`. If not set, it uses a default location your `$HOME` directory, or the project root (if `$HOME` is not set).
+A `.build` directory is created at a configured location set by the environment variable `BUILD_CACHE`. If not set, it uses `XDG_CACHE_HOME` directory, which defaults to a standard directory.
 
 You can preserve the build directory post-build to see any details. Most failures will still output the log, but they will not be output to your primary build log unless a failure occurs.
 
