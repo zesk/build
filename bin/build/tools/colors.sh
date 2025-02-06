@@ -399,6 +399,25 @@ _statusMessage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Quiet test for a TTY.
+# Environment: __BUILD_HAS_TTY
+# Credits: Tim Perry
+# URL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional
+isTTYAvailable() {
+  export __BUILD_HAS_TTY
+
+  if [ "${__BUILD_HAS_TTY-}" != "true" ] && [ "${__BUILD_HAS_TTY-}" != "false" ]; then
+    if bash -c ": >/dev/tty" >/dev/null 2>/dev/null; then
+      __BUILD_HAS_TTY=true
+      return 0
+    else
+      __BUILD_HAS_TTY=false
+      return 1
+    fi
+  fi
+  "$__BUILD_HAS_TTY"
+}
+
 #
 # Column count in current console
 #
@@ -410,7 +429,7 @@ _statusMessage() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
-  if [ ! -e /dev/tty ]; then
+  if ! isTTYAvailable; then
     printf "%d" 120
   else
     local size
@@ -437,7 +456,7 @@ consoleColumns() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
-  if [ ! -e /dev/tty ]; then
+  if ! isTTYAvailable; then
     printf "%d" 120
   else
     local rows _

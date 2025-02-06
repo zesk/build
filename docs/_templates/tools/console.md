@@ -4,6 +4,7 @@
 [⬅ Top](index.md) [⬅ Parent ](../index.md)
 <hr />
 
+{isTTYAvailable}
 {consoleGetColor}
 {consoleConfigureColorMode}
 {consoleColumns}
