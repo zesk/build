@@ -379,6 +379,7 @@ _iTerm2Badge() {
 # Add iTerm2 support to console
 # Environment: LC_TERMINAL
 # Environment: TERM
+# See: iTerm2Aliases iTerm2PromptSupport
 iTerm2Init() {
   local usage="_${FUNCNAME[0]}"
   isiTerm2 || __throwEnvironment "$usage" "Not iTerm2" || return $?
