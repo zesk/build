@@ -15,9 +15,16 @@ testUserHome() {
   assertNotExitCode --dump --stderr-match "not a directory" --line "$LINENO" 0 userHome || return $?
 
   HOME=$(pwd)
+
+  local cleanHome
+
+  cleanHome="${HOME%/}"
   assertDirectoryExists "$HOME" || return $?
-  assertExitCode --stdout-match "$HOME" --line "$LINENO" 0 userHome || return $?
-  assertEquals --line "$LINENO" "$HOME" "$(userHome)" || return $?
+  assertExitCode --stdout-match "$cleanHome" --line "$LINENO" 0 userHome || return $?
+  assertEquals --line "$LINENO" "$cleanHome" "$(userHome)" || return $?
+  assertEquals --line "$LINENO" "$cleanHome/extra" "$(userHome extra)" || return $?
+  assertEquals --line "$LINENO" "$cleanHome/extra/dir/to/look" "$(userHome extra dir to look)" || return $?
+  assertEquals --line "$LINENO" "$cleanHome/extra/dir/to/look" "$(userHome extra/dir/to/look/)" || return $?
 
   __mockValue HOME "" --end
 }

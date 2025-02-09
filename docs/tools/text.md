@@ -1,7 +1,8 @@
 # Text Functions
 
-[⬅ Return to index](index.md)
-[⬅ Return to top](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Top](index.md) [⬅ Parent ](../index.md)
+<hr />
 
 ## Patterns
 
@@ -47,8 +48,9 @@ Quote a sed command for search and replace
 ### `quoteSedPattern` - Quote sed search strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
+needSlash='$.*/[\]^'
 
-- Location: `bin/build/identical/quoteSedPattern.sh`
+- Location: `bin/build/map.sh`
 
 #### Arguments
 
@@ -57,7 +59,6 @@ Quote a string to be used in a sed pattern on the command line.
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-    needSlash=$(quoteSedPattern '$.*/[\]^')
 
 #### Sample Output
 
@@ -71,9 +72,9 @@ Quote a string to be used in a sed pattern on the command line.
 - `2` - Argument error
 ### `quoteSedReplacement` - Quote sed replacement strings for shell use
 
-Quote sed replacement strings for shell use
+needSlash='$.*/[\]^'
 
-- Location: `bin/build/identical/quoteSedPattern.sh`
+- Location: `bin/build/map.sh`
 
 #### Arguments
 
@@ -82,7 +83,6 @@ Quote sed replacement strings for shell use
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
-    needSlash=$(quoteSedPattern '$.*/[\]^')
 
 #### Sample Output
 
@@ -127,7 +127,7 @@ Quote bash strings for inclusion as single-quoted for eval
 
 Quote grep -e patterns for shell use
 
-- Location: `bin/build/identical/_text.sh`
+- Location: `bin/build/tools/text.sh`
 
 #### Arguments
 
@@ -298,109 +298,6 @@ None.
 #### Credits
 
 Thanks to [commandlinefu tripleee](https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc).
-
-### `mapTokens` - mapTokens
-
-mapTokens
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
-- `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Local cache
-
-None.
-
-#### Environment
-
-None.
-
-#### Depends
-
-    sed quoteSedPattern
-    
-
-### `isMappable` - Check if text contains mappable tokens
-
-Check if text contains mappable tokens
-If any text passed contains a token which can be mapped, succeed.
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `--prefix` - Optional. String. Token prefix defaults to `{`.
-- `--suffix` - Optional. String. Token suffix defaults to `}`.
-- `--token` - Optional. String. Classes permitted in a token
-- `text` - Optional. String. Text to search for mapping tokens.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `mapValue` - Maps a string using an environment file
-
-Maps a string using an environment file
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `--help` - Optional. Flag. Display this help.
-- `mapFile` - Required. File. a file containing bash environment definitions
-- `value` - Optional. String. One or more values to map using said environment file
-- `--prefix` - Optional. String. Token prefix defaults to `{`.
-- `--suffix` - Optional. String. Token suffix defaults to `}`.
-- `--search-filter` - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
-- `--replace-filter` - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `mapValueTrim` - Maps a string using an environment file
-
-Maps a string using an environment file
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `mapFile` - Required. File. a file containing bash environment definitions
-- `value` - Optional. String. One or more values to map using said environment file.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-#### Arguments
-
-- `environmentName` - Optional. String. Map this value only. If not specified, all environment variables are mapped.
-- `--prefix` - Optional. String. Prefix character for tokens, defaults to `{`.
-- `--suffix` - Optional. String. Suffix character for tokens, defaults to `}`.
-- `--help` - Optional. Flag. Display this help.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
-#### Environment
-
-Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 
 ### `printfOutputPrefix` - Pipe to output some text before any output, otherwise, nothing
 
@@ -819,8 +716,9 @@ The `cacheDirectory`
 Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
 
 This can break your files so use with caution. Blank searchText is not allowed.
+The term `cannon` is not a mistake - it will break something at some point.
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/tools/map.sh`
 
 #### Arguments
 
@@ -844,81 +742,7 @@ This can break your files so use with caution. Blank searchText is not allowed.
 
 #### See Also
 
-- [{fn}]({sourceLink})
-### `listJoin` - Output arguments joined by a character
-
-Output arguments joined by a character
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `separator` - Required. String. Single character to join elements.
-- `text0` - Optional. String. One or more strings to join
-
-#### Sample Output
-
-    text
-    
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `listAppend` - Add an item to the beginning or end of a
-
-Add an item to the beginning or end of a text-delimited list
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `listValue` - Required. Path value to modify.
-- `separator` - Required. Separator string for item values (typically `:`)
-- `--first` - Optional. Place any items after this flag first in the list
-- `--last` - Optional. Place any items after this flag last in the list. Default.
-- `item` - the path to be added to the `listValue`
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `listRemove` - Remove one or more items from a text-delimited list
-
-Remove one or more items from a text-delimited list
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `listValue` - Required. List value to modify.
-- `separator` - Required. Separator string for item values (typically `:`)
-- `item` - the item to be removed from the `listValue`
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-### `listCleanDuplicates` - Removes duplicates from a list and maintains ordering.
-
-Removes duplicates from a list and maintains ordering.
-
-- Location: `bin/build/tools/text.sh`
-
-#### Arguments
-
-- `--help` - Optional. Flag. This help.
-- `--removed` - Optional. Flag. Show removed items instead of the new list.
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-
+{SEE:cannon.sh}
 # Characters
 
 ### `characterClassReport` - Write a report of the character classes
