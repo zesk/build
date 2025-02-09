@@ -234,6 +234,8 @@ and adds the `documentationPath` to it
 
 Use with documentationIndex_Lookup
 
+TODO This should probably be a generic "set variable function" and then use it for documentationPath
+
 - Location: `bin/build/tools/documentation/index.sh`
 
 #### Arguments
@@ -247,9 +249,9 @@ Use with documentationIndex_Lookup
 - `0` - If success
 - `1` - Issue with file generation
 - `2` - Argument error
-### `documentationIndex_SetUnlinkedDocumentationPath` - List of functions which are not linked to anywhere in
+### `documentationIndex_SetUnlinkedDocumentationPath` - Set the unlinked documentation path
 
-List of functions which are not linked to anywhere in the documentation index
+Set the unlinked documentation path
 
 - Location: `bin/build/tools/documentation/index.sh`
 
@@ -314,6 +316,7 @@ List of functions which are not linked to anywhere in the documentation index
 #### Arguments
 
 - `cacheDirectory` - Required. Directory. Index cache directory.
+- `--underscore` - Flag. Optional. List underscore functions.
 
 #### Exit codes
 

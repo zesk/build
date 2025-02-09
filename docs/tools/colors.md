@@ -260,24 +260,6 @@ Converts backticks, bold and italic to console colors.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-### `colorBrightness` - Return an integer between 0 and 100
-
-Return an integer between 0 and 100
-Colors are between 0 and 255
-
-- Location: `bin/build/tools/colors.sh`
-
-#### Arguments
-
-- `redValue` - Integer. Optional. Red RGB value (0-255)
-- `greenValue` - Integer. Optional. Red RGB value (0-255)
-- `blueValue` - Integer. Optional. Red RGB value (0-255)
-
-#### Exit codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
 
 ## Color tests
 
@@ -335,6 +317,93 @@ Outputs sample sentences for the `action` commands to see what they look like.
 #### Arguments
 
 - No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+## Color tools
+
+### `colorFormat` - Take r g b decimal values and convert them to
+
+Take r g b decimal values and convert them to hex color values
+Takes arguments or stdin values in groups of 3.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- `red` - UnsignedInteger. Optional. Red component.
+- `green` - UnsignedInteger. Optional. Blue component.
+- `blue` - UnsignedInteger. Optional. Green component.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `colorMultiply` - undocumented
+
+No documentation for `colorMultiply`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- `factor` - floatValue. Required. Red RGB value (0-255)
+- `redValue` - Integer. Required. Red RGB value (0-255)
+- `greenValue` - Integer. Required. Red RGB value (0-255)
+- `blueValue` - Integer. Required. Red RGB value (0-255)
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `colorNormalize` - Originally written in Python
+
+Originally written in Python
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `colorParse` - undocumented
+
+No documentation for `colorParse`.
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `colorBrightness` - Return an integer between 0 and 100
+
+Return an integer between 0 and 100
+Colors are between 0 and 255
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- `redValue` - Integer. Optional. Red RGB value (0-255)
+- `greenValue` - Integer. Optional. Red RGB value (0-255)
+- `blueValue` - Integer. Optional. Red RGB value (0-255)
 
 #### Exit codes
 

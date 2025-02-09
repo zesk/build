@@ -26,7 +26,7 @@ __bashPromptList() {
 __bashPromptAdd() {
   local usage="$1" && shift
 
-  local first=false verbose=false found
+  local first=false last=false verbose=false found
 
   export __BASH_PROMPT_MODULES
   if ! isArray "__BASH_PROMPT_MODULES"; then
@@ -44,31 +44,32 @@ __bashPromptAdd() {
         ;;
       --first)
         first=true
+        last=false
         ;;
       --last)
         first=false
+        last=true
         ;;
       *)
         isCallable "$argument" || __throwArgument "$usage" "$argument must be executable or a function" || return $?
-        found=false
-        ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found=true
+        ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found="$argument"
         if $first; then
-          if $found; then
-            if [ "${__BASH_PROMPT_MODULES[0]-}" != "$argument" ]; then
+          if [ -n "$found" ]; then
+            if [ "${__BASH_PROMPT_MODULES[0]-}" = "$found" ]; then
               return 0
             fi
-            __bashPromptRemove "$usage" "$argument" || return $?
+            __bashPromptRemove "$usage" "$found" || return $?
             ! $verbose || decorate info "Moving bash module to first: $(decorate code "$argument")"
           else
             ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
           fi
           __BASH_PROMPT_MODULES=("$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
         else
-          if $found; then
-            if [ "${__BASH_PROMPT_MODULES[${#__BASH_PROMPT_MODULES[@]} - 1]}" != "$argument" ]; then
+          if [ -n "$found" ]; then
+            if ! $last || [ "${__BASH_PROMPT_MODULES[${#__BASH_PROMPT_MODULES[@]} - 1]}" = "$argument" ]; then
               return 0
             fi
-            __bashPromptRemove "$usage" "$argument" || return $?
+            __bashPromptRemove "$usage" "$found" || return $?
             ! $verbose || decorate info "Moving bash module to last: $(decorate code "$argument")"
           else
             ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
@@ -289,6 +290,8 @@ bashPromptColorScheme() {
   __help "$usage" "$@" || return 0
   case "${1-}" in
     forest) colors="$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)" ;;
+    light) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
+    dark) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-white)" ;;
     *) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
   esac
   printf -- "%s" "$colors"

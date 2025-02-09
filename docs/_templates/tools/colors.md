@@ -86,7 +86,6 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 {hasColors}
 {hasConsoleAnimation}
 {simpleMarkdownToConsole}
-{colorBrightness}
 
 ## Color tests
 
@@ -94,3 +93,11 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 {allColorTest}
 {colorTest}
 {semanticColorTest}
+
+## Color tools
+
+{colorFormat}
+{colorMultiply}
+{colorNormalize}
+{colorParse}
+{colorBrightness}

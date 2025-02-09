@@ -22,6 +22,7 @@
 {escapeBash}
 {replaceFirstPattern}
 {removeFields}
+{clampDigits}
 
 {stripAnsi}
 
@@ -59,6 +60,7 @@
 {shaPipe}
 {cachedShaPipe}
 {cannon}
+
 # Characters
 
 {characterClassReport}

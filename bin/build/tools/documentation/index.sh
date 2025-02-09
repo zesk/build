@@ -396,6 +396,8 @@ _documentationIndex_FunctionIterator() {
 #
 # Use with documentationIndex_Lookup
 #
+# TODO This should probably be a generic "set variable function" and then use it for documentationPath
+#
 # Exit Code: 0 - If success
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error

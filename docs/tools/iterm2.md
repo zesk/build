@@ -123,3 +123,81 @@ It also reports the host, user and current directory back to iTerm2 on every pro
 
 __ITERM2_HOST
 __ITERM2_HOST_TIME
+
+## iTerm2 Colors
+
+### `iTerm2ColorNames` - Solely the color names (e.g blue), not anything else
+
+Solely the color names (e.g blue), not anything else
+
+- Location: `bin/build/tools/iterm2.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `iTerm2ColorTypes` - Colors for various UI elements
+
+Colors for various UI elements
+
+- Location: `bin/build/tools/iterm2.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `iTerm2IsColorName` - Is it a color name?
+
+Is it a color name?
+
+- Location: `bin/build/tools/iterm2.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `iTerm2IsColorType` - This is faster than inArray etc.
+
+This is faster than inArray etc.
+
+- Location: `bin/build/tools/iterm2.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+### `iTerm2SetColors` - undocumented
+
+No documentation for `iTerm2SetColors`.
+
+- Location: `bin/build/tools/iterm2.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error

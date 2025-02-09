@@ -6,7 +6,7 @@
 
 # Sets the console colors based on the project you are currently in
 #
-# Example:     bashPrompt bashPromptModule_iTerm2Colors
+# Example:     bashPrompt --last bashPromptModule_iTerm2Colors
 # Requires: buildHome statusMessage buildEnvironmentGetDirectory requireDirectory cachedShaPipe decorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
 bashPromptModule_iTerm2Colors() {
   local debug=false home
@@ -42,7 +42,7 @@ bashPromptModule_iTerm2Colors() {
 
       local mode
       mode=$(__environment consoleConfigureColorMode) || :
-      [ -z "$mode" ] || BUILD_COLORS_MODE="$mode"
+      [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --colors "$(bashPromptColorScheme "$mode")"
       break
     else
       ! $debug || statusMessage --last decorate info "$schemeFile does not exist"

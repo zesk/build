@@ -113,6 +113,25 @@ Arguments are the same as read, except:
 - [`bashPromptModule_binBuild`](#bashPromptModule_binBuild)
 - [`bashPromptModule_ApplicationPath`](#bashPromptModule_ApplicationPath)
 - [`bashPromptModule_dotFilesWatcher`](#bashPromptModule_dotFilesWatcher)
+- [`bashPromptModule_iTerm2Colors](#### `bashPromptModule_iTerm2Colors` - Sets the console colors based on the project you are
+
+Sets the console colors based on the project you are currently in
+
+- Location: `bin/build/tools/prompt/iterm2-colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Examples
+
+    bashPrompt bashPromptModule_iTerm2Colors
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error)
 
 To enable:
 
@@ -138,7 +157,9 @@ Check which bin/build we are running and keep local to current project. Activate
 
 - `0` - Success
 - `1` - Environment error
-- `2` - Argument error ### `bashPromptModule_ApplicationPath` - Show current application and path as a badge
+- `2` - Argument error 
+
+### `bashPromptModule_ApplicationPath` - Show current application and path as a badge
 
 Show current application and path as a badge
 
@@ -156,7 +177,9 @@ Show current application and path as a badge
 
 - `0` - Success
 - `1` - Environment error
-- `2` - Argument error ### `bashPromptModule_dotFilesWatcher` - Watches your HOME directory for `.` files which are added
+- `2` - Argument error 
+
+### `bashPromptModule_dotFilesWatcher` - Watches your HOME directory for `.` files which are added
 
 Watches your HOME directory for `.` files which are added and unknown to you.
 
@@ -169,6 +192,26 @@ Watches your HOME directory for `.` files which are added and unknown to you.
 #### Examples
 
     bashPrompt bashPromptModule_dotFilesWatcher
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error 
+
+### `bashPromptModule_iTerm2Colors` - Sets the console colors based on the project you are
+
+Sets the console colors based on the project you are currently in
+
+- Location: `bin/build/tools/prompt/iterm2-colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Examples
+
+    bashPrompt bashPromptModule_iTerm2Colors
 
 #### Exit codes
 

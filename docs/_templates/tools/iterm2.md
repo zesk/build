@@ -6,3 +6,11 @@
 {iTerm2Attention}
 {iTerm2Aliases}
 {iTerm2PromptSupport}
+
+## iTerm2 Colors
+
+{iTerm2ColorNames}
+{iTerm2ColorTypes}
+{iTerm2IsColorName}
+{iTerm2IsColorType}
+{iTerm2SetColors}

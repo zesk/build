@@ -265,6 +265,21 @@ Remove fields from left to right from a text file as a pipe
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+### `clampDigits` - Clamp digits between two integers
+
+Clamp digits between two integers
+
+- Location: `bin/build/tools/colors.sh`
+
+#### Arguments
+
+- No arguments.
+
+#### Exit codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
 
 ### `stripAnsi` - Strip ANSI console escape sequences from a file
 
@@ -743,6 +758,7 @@ The term `cannon` is not a mistake - it will break something at some point.
 #### See Also
 
 - [{fn}]({sourceLink})
+
 # Characters
 
 ### `characterClassReport` - Write a report of the character classes

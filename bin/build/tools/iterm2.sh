@@ -101,8 +101,8 @@ __iTerm2UpdateState() {
 iTerm2PromptSupport() {
   local usage="_${FUNCNAME[0]}"
 
-  __catchEnvironment "$usage" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
   __catchEnvironment "$usage" bashPrompt --first __iTerm2PreExecution --last __iTerm2UpdateState || return $?
+  __catchEnvironment "$usage" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
 }
 _iTerm2PromptSupport() {
   # _IDENTICAL_ usageDocument 1
@@ -489,8 +489,8 @@ iTerm2Init() {
   __catchEnvironment "$usage" buildEnvironmentLoad TERM || return $?
   home=$(__catchEnvironment "$usage" userHome) || return $?
   # iTerm2 customizations
-  [ ! -d "$home/.iterm2" ] || __catchEnvironment "$usage" iTerm2Aliases || return $?
   __catchEnvironment "$usage" iTerm2PromptSupport "${ii[@]+"${ii[@]}"}" || return $?
+  [ ! -d "$home/.iterm2" ] || __catchEnvironment "$usage" iTerm2Aliases || return $?
 }
 _iTerm2Init() {
   # _IDENTICAL_ usageDocument 1
