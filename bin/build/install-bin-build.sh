@@ -8,7 +8,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Debugging: cfceff925ac8d39b504c08b80f299b8b0c4d2ace
+# Debugging: da39a3ee5e6b4b0d3255bfef95601890afd80709
 
 # URL of latest release
 __installBinBuildLatest() {
@@ -698,13 +698,13 @@ usageDocument() {
 # IDENTICAL usageDocumentSimple 15
 
 # Output a simple error message for a function
-# Requires: bashFunctionComment decorate read printf
+# Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
   local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
 
   case "$exitCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
   [ $# -eq 0 ] || [ "$exitCode" -ne 0 ]
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$exitCode")" "$(decorate "$color" "$*")"
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$exitCode")")" "$(decorate "$color" "$*")"
   while read -r line; do
     printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
     prefix=""
@@ -1030,6 +1030,14 @@ __decorateExtensionQuote() {
   text="${text//\"/\\\"}"
   text="${text//\$/\\\$}"
   printf -- "\"%s\"\n" "$text"
+}
+
+# _IDENTICAL_ exitString 6
+
+# Output the exit code as a string
+# Winner of the one-line bash award 10 years running
+exitString() {
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # IDENTICAL _return 26

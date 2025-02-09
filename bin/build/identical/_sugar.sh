@@ -17,40 +17,33 @@
 # Argument: name ... - Optional. String. Exit code value to output.
 # Print one or more an exit codes by name.
 #
-# Valid codes:
+# Known codes:
 #
-# - `environment` - generic issue with environment
-# - `argument` - issue with arguments
-# - `assert` - assertion failed
-# - `identical` - identical check failed
-# - `leak` - function leaked globals
-# - `timeout` - timeout exceeded
-# - `exit` - exit function immediately
-# - `internal` - internal errors
+# - `environment` (1) - generic issue with environment
+# - `argument` (2) - issue with arguments
+# - `assert` (97) - assertion failed (ASCII 97 = `a`)
+# - `identical` (105) - identical check failed (ASCII 105 = `i`)
+# - `leak` (108) - function leaked globals (ASCII 108 = `l`)
+# - `timeout` (116) - timeout exceeded (ASCII 116 = `t`)
+# - `exit` - (120) exit function immediately (ASCII 120 = `x`)
+# - `internal` - (253) internal errors
 #
-# Unknown error code is 254, end of range is 255 which is not used.
-#
-# ### Error codes reference (`_code`):
-#
-# - 1 - environment or general error
-# - 2 - argument error
-# - 97 - assert - ASCII 97 = `a`
-# - 105 - identical - ASCII 105 = `i`
-# - 108 - leak - ASCII 108 = `l`
-# - 116 - timeout - ASCII 116 = `t`
-# - 120 - exit - ASCII 120 = `x`
-# - 253 - internal
-# - 254 - unknown
+# Unknown error code is 254, end of range is 255 which is not used. Use `exitString` to get a string from an exit code integer.
 #
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 # Requires: usageDocument printf
+# See: exitString
+# Exit Code: 0
 _code() {
-  local k && while [ $# -gt 0 ]; do
-    case "$1" in
-      --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;;
-      environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;;
-    esac && shift && printf -- "%d\n" "$k"
-  done
+  local k && while [ $# -gt 0 ]; do case "$1" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
+}
+
+# _IDENTICAL_ exitString 6
+
+# Output the exit code as a string
+# Winner of the one-line bash award 10 years running
+exitString() {
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # Boolean test

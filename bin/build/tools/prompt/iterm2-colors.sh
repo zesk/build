@@ -37,7 +37,7 @@ bashPromptModule_iTerm2Colors() {
         decorate info "Applying colors from $(deorate file "$schemeFile")"
       fi
 
-      iTerm2SetColors --verbose --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d') || :
+      iTerm2SetColors --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d') || :
       __BUILD_ITERM2_COLORS="$hash"
 
       local mode

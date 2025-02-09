@@ -23,12 +23,13 @@
 #
 # Do not call usage functions here to avoid recursion
 # Usage: {fn} binName options delimiter description exitCode
+# Requires: exitString __throwArgument trimSpace usageArgumentUnsignedInteger __throwArgument decorate printf
 usageTemplate() {
   local usage="_${FUNCNAME[0]}" __saved=("$@")
 
   [ $# -ge 5 ] || __throwArgument "$usage" "Requires 5 or more arguments" || return $?
 
-  local binName options="$2" delimiter="$3" description="$4" exitCode
+  local binName options="$2" delimiter="$3" description="$4" exitCode exit_code=""
 
   binName="$(trimSpace "$1")"
   exitCode=$(usageArgumentUnsignedInteger "$usage" "exitCode" "$5") || return $?
@@ -44,7 +45,7 @@ usageTemplate() {
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"
     elif [ "$exitCode" != 2 ]; then
-      printf "%s %s\n" "$(decorate code "[$exitCode]")" "$(decorate error "$@")"
+      printf "%s %s\n" "$(decorate code "[$(exitString "$exitCode")]")" "$(decorate error "$@")"
       return "$exitCode"
     else
       printf "%s %s %s\n" "$(decorate code "[$exitCode]")" "$(decorate warning Argument)" "$(decorate error "$@")"
@@ -54,12 +55,13 @@ usageTemplate() {
   nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
 
   if [ -n "$delimiter" ] && [ -n "$options" ]; then
-    printf -- "%s: %s%s\n\n%s\n\n%s\n" \
+    printf -- "%s: %s%s\n\n%s\n\n%s\n%s\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
       "$(printf "%s" "$options" | usageArguments "$delimiter")" \
       "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | wrapLines "    " "$(decorate reset)")" \
-      "$description"
+      "$description" \
+      "$exit_code" | trimTail
   else
     printf "%s: %s\n\n%s\n\n" \
       "$usageString" \

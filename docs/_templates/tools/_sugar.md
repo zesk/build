@@ -48,6 +48,7 @@ Run-related:
 {isBoolean}
 
 {_code}
+{exitString}
 
 {_choose}
 
