@@ -328,7 +328,8 @@ documentationIndex_UnlinkedIterator() {
   done
 }
 _documentationIndex_UnlinkedIteratorUsage() {
-  usageDocument "${BASH_SOURCE[0]}" documentationIndex_UnlinkedIterator "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -377,7 +378,8 @@ documentationIndex_FunctionIterator() {
   done
 }
 _documentationIndex_FunctionIterator() {
-  usageDocument "${BASH_SOURCE[0]}" documentationIndex_UnlinkedIterator "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Update the documentationPath for all functions defined in documentTemplate
