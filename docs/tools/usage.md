@@ -364,7 +364,7 @@ Do not require argument to be non-blank
 
 Require an argument to be non-blank
 
-- Location: `bin/build/identical/usageArgumentCore.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

@@ -28,7 +28,7 @@ This is universally used throughout.
 
 Run binary and output failed command upon error
 
-- Location: `bin/build/identical/__execute.sh`
+- Location: `bin/build/identical/_sugar.sh`
 
 #### Arguments
 
@@ -77,7 +77,7 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 
 Run `command`, upon failure run `handler` with an environment error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -108,7 +108,7 @@ Run `handler` with an environment error
 
 Run `command`, upon failure run `handler` with an argument error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -124,7 +124,7 @@ Run `command`, upon failure run `handler` with an argument error
 
 Run `handler` with an environment error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -139,7 +139,7 @@ Run `handler` with an environment error
 
 Run `handler` with an argument error
 
-- Location: `bin/build/identical/_tinySugar.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 
@@ -156,7 +156,7 @@ Run a function and preserve exit code
 Returns `exitCode`
 As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 
-- Location: `bin/build/identical/_undo.sh`
+- Location: `bin/build/install-bin-build.sh`
 
 #### Arguments
 

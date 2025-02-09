@@ -742,7 +742,7 @@ The term `cannon` is not a mistake - it will break something at some point.
 
 #### See Also
 
-{SEE:cannon.sh}
+- [{fn}]({sourceLink})
 # Characters
 
 ### `characterClassReport` - Write a report of the character classes

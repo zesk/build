@@ -160,8 +160,8 @@ documentationIndex_Generate() {
         elif [ -z "$cacheDirectory" ]; then
           cacheDirectory="$(__catchEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -269,7 +269,7 @@ documentationIndex_ShowUnlinked() {
 }
 
 #
-# List of functions which are not linked to anywhere in the documentation index
+# Set the unlinked documentation path
 #
 # Usage: {fn} cacheDirectory target
 # Argument: cacheDirectory - Required. Directory. Index cache directory.
@@ -293,17 +293,18 @@ documentationIndex_SetUnlinkedDocumentationPath() {
 #
 # Usage: {fn} cacheDirectory
 # Argument: cacheDirectory - Required. Directory. Index cache directory.
+# Argument: --underscore - Flag. Optional. List underscore functions.
 # Exit Code: 0 - The settings file is unlinked within the documentation (not defined anywhere)
 # Exit Code: 1 - The settings file is linked within the documentation
 #
 documentationIndex_UnlinkedIterator() {
   local cacheDirectory
   local functionName settingsFile
-  local flagUnderscore=
+  local flagUnderscore=false
   while [ $# -gt 0 ]; do
     case $1 in
       --underscore)
-        flagUnderscore=1
+        flagUnderscore=true
         ;;
       *)
         if ! cacheDirectory=$(usageArgumentDirectory _documentationIndex_UnlinkedIteratorUsage cacheDirectory "$1"); then
@@ -316,7 +317,7 @@ documentationIndex_UnlinkedIterator() {
 
   documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     # Skip functions beginning with underscores always
-    if [ -z "$flagUnderscore" ] && [ "$functionName" != "${functionName#_}" ]; then
+    if $flagUnderscore && [ "$functionName" != "${functionName#_}" ]; then
       continue
     fi
     if grep -q "'documentationPathUnlinked'" "$settingsFile"; then
@@ -428,8 +429,8 @@ documentationIndex_LinkDocumentationPaths() {
         elif [ -z "$documentationPath" ]; then
           documentationPath="$1"
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac

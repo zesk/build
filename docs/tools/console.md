@@ -22,8 +22,7 @@ Quiet test for a TTY.
 
 #### Environment
 
-- `__BUILD_HAS_TTY` - Cached value of `false` or `true`. Any other value forces computation during this call.
-
+- __BUILD_HAS_TTY - Cached value of `false` or `true`. Any other value forces computation during this call.
 ### `consoleGetColor` - Get the console foreground or background color
 
 Gets the RGB console color using an `xterm` escape sequence supported by some terminals. (usually for background colors)
