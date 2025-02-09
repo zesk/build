@@ -36,8 +36,13 @@ bashPromptModule_iTerm2Colors() {
       if buildDebugEnabled iterm2-colors; then
         decorate info "Applying colors from $(deorate file "$schemeFile")"
       fi
+      saveBackground=$(fileTemporaryName _return) || return 0
+      iTerm2SetColors --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d' | grep 'bg=' | cut -f 2 -d = >"$saveBackground") || :
+      bg="$(cat "$saveBackground")"
+      rm -rf "$saveBackground"
 
-      iTerm2SetColors --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d') || :
+      decorate info "Background is now $bg"
+
       __BUILD_ITERM2_COLORS="$hash"
 
       local mode

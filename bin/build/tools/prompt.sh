@@ -234,14 +234,15 @@ _bashPrompt() {
 # Arguments are the same as read, except:
 # `-r` is implied and does not need to be specified
 bashPromptUser() {
-  local word
+  local word exitCode=0
 
   export __BASH_PROMPT_MARKERS
   # Technically the reading program will not receive these bytes as they will be sent to the tty
   printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
-  read -r "$@" word </dev/tty
+  read -r "$@" word </dev/tty || exitCode=$?
   printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
   printf "%s\n" "$word"
+  return $exitCode
 }
 
 # Set markers for terminal integration

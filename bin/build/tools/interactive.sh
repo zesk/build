@@ -431,8 +431,7 @@ __interactiveCountdownReadBoolean() {
   fi
   shift
 
-  attempts=$(usageArgumentInteger "$usage" "attempts" "${1-}") || return $?
-  shift
+  attempts=$(usageArgumentInteger "$usage" "attempts" "${1-}") && shift || return $?
 
   extras="${1-}" && shift
 
@@ -554,7 +553,7 @@ confirmYesNo() {
 
   local exitCode=0
 
-  while __interactiveCountdownReadBoolean "$usage" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
+  while __echo __interactiveCountdownReadBoolean "$usage" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
     case "$exitCode" in
       0 | 1)
         __confirmYesNo "$((exitCode - 1))"
