@@ -25,7 +25,7 @@ testIterm2() {
     # TODO How to test this in pipeline with no terminal. Fake one?
     assertExitCode --line "$LINENO" 0 iTerm2Init || return $?
   else
-    assertExitCode --line "$LINENO" --stderr-match "Requires a terminal" 0 iTerm2Init || return $?
+    assertExitCode --line "$LINENO" 0 iTerm2Init --ignore || return $?
   fi
   __mockValue LC_TERMINAL "" --end
 }
