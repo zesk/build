@@ -759,7 +759,7 @@ bashDocumentation_Extract() {
       printf "%s\n" "export usage; usage=\"\$fn\$(__bashDocumentationDefaultArguments \"\$usage\")\""
     fi
   fi
-  __dumpNameValue "foundNames" "${foundNames[*]}"
+  __dumpNameValue "foundNames" "${foundNames[*]-}"
 
   printf "# DocMap: %s\n" "$docMap"
   printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"

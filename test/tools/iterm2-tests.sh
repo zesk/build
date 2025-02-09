@@ -21,7 +21,10 @@ testIterm2() {
   LC_TERMINAL=iTerm2
   assertExitCode --line "$LINENO" 0 isiTerm2 || return $?
   assertExitCode --dump-binary --line "$LINENO" --stdout-match "Zm9v" 0 iTerm2Badge "foo" </dev/null || return $?
-  assertExitCode --line "$LINENO" 0 iTerm2Init || return $?
-
+  if [ -t 0 ]; then
+    assertExitCode --line "$LINENO" 0 iTerm2Init || return $?
+  else
+    assertNotExitCode --line "$LINENO" --stderr-match "Requires a terminal" 0 iTerm2Init || return $?
+  fi
   __mockValue LC_TERMINAL "" --end
 }

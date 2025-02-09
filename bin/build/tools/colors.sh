@@ -494,6 +494,186 @@ colorBrightness() {
   printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
 }
 _colorBrightness() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Credit: Mark Ransom
+# URL: https://stackoverflow.com/questions/141855/programmatically-lighten-a-color
+# Originally written in Python
+# Requires: bc printf tee cut clampDigits
+__colorNormalize() {
+  local red=$1 green=$2 blue=$3 threshold=255
+
+  maxColor=$red
+  [ "$green" -le "$maxColor" ] || maxColor=$green
+  [ "$blue" -le "$maxColor" ] || maxColor=$blue
+  if [ "$maxColor" -le "$threshold" ]; then
+    printf "%d\n" "$red" "$green" "$blue"
+    return
+  fi
+  local total=$((red + green + blue))
+  if [ $total -gt $((3 * threshold)) ]; then
+    printf "%d\n" "$threshold" "$threshold" "$threshold"
+    return
+  fi
+  local fThreshold=255.999
+  printf "%s\n" "f=(3*$fThreshold-$total)/(3*$maxColor-$total)" "gray=$fThreshold-f*$maxColor" "m=gray*f" "$red+m" "$green+m" "$blue+m" | tee bc.log | bc --scale=2 | cut -f 1 -d . | clampDigits 0 255
+}
+
+# Redistribute color values to make brightness adjustments more balanced
+# Requires: bc __catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
+colorNormalize() {
+  local usage="_${FUNCNAME[0]}"
+
+  __catchEnvironment "$usage" packageWhich bc bc || return $?
+  local red green blue
+  if [ $# -eq 0 ]; then
+    local done=false
+    while ! $done; do
+      IFS=$'\n' read -d'' -r red green blue || done=true
+      red=$(usageArgumentUnsignedInteger "$usage" "redValue" "$red") || return $?
+      green=$(usageArgumentUnsignedInteger "$usage" "greenValue" "$green") || return $?
+      blue=$(usageArgumentUnsignedInteger "$usage" "blueValue" "$blue") || return $?
+      __colorNormalize "$red" "$green" "$blue"
+    done
+  else
+    while [ $# -gt 0 ]; do
+      red=$(usageArgumentUnsignedInteger "$usage" "redValue" "${1-}") && shift || return $?
+      green=$(usageArgumentUnsignedInteger "$usage" "greenValue" "${1-}") && shift || return $?
+      blue=$(usageArgumentUnsignedInteger "$usage" "blueValue" "${1-}") && shift || return $?
+      __colorNormalize "$red" "$green" "$blue"
+    done
+  fi
+}
+_colorNormalize() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Clamp digits between two integers
+clampDigits() {
+  local min="${1-}" max="${2-}" number
+
+  while read -r number; do
+    isInteger "$number" || continue
+    if isInteger "$min" && [ "$number" -lt "$min" ]; then
+      printf -- "%d\n" "$min"
+    elif isInteger "$max" && [ "$number" -gt "$max" ]; then
+      printf -- "%d\n" "$max"
+    else
+      printf -- "%d\n" "$number"
+    fi
+    shift
+  done
+}
+
+__colorHexToInteger() {
+  local color="${1-}"
+  printf "%d\n" "0x${color:0:2}" "0x${color:2:2}" "0x${color:4:2}" 2>/dev/null
+}
+
+__colorParse() {
+  local color="$1"
+  case "${#color}" in
+    3) __colorHexToInteger "${color:0:1}${color:0:1}${color:1:1}${color:1:1}${color:2:1}${color:2:1}" ;;
+    6) __colorHexToInteger "$color" ;;
+    *) printf "%s\n" "hex-length" 1>&2 && return 1 ;;
+  esac
+}
+__colorParseArgument() {
+  local argument="${1-}"
+  case "$argument" in
+    [[:xdigit:]]*) __colorParse "$argument" || return 1 ;;
+    [[:alpha:]]*:[[:xdigit:]]*) __colorParse "${argument#*:}" || return 1 ;;
+    *) printf -- "%s\n" "invalid-color" 1>&2 && return 1 ;;
+  esac
+}
+
+# Take r g b decimal values and convert them to hex color values
+# stdin: list:UnsignedInteger
+# Argument: red - UnsignedInteger. Optional. Red component.
+# Argument: green - UnsignedInteger. Optional. Blue component.
+# Argument: blue - UnsignedInteger. Optional. Green component.
+# Takes arguments or stdin values in groups of 3.
+colorFormat() {
+  local usage="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      local r g b
+
+      r=$(usageArgumentUnsignedInteger "$usage" "red" "${1-}") && shift || return $?
+      g=$(usageArgumentUnsignedInteger "$usage" "green" "${1-}") && shift || return $?
+      b=$(usageArgumentUnsignedInteger "$usage" "blue" "${1-}") && shift || return $?
+
+      # shellcheck disable=SC2059
+      printf -- "$format" "$r" "$g" "$b"
+    done
+  else
+    local done=false
+    while ! $done; do
+      IFS=$'\n' read -d"" -r r g b || done=true
+      # shellcheck disable=SC2059
+      isUnsignedInteger "$r" && isUnsignedInteger "$g" && isUnsignedInteger "$b" && printf -- "$format" "$r" "$g" "$b"
+    done
+  fi
+}
+_colorFormat() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Parse a color and output R G B decimal values
+# stdin: list:colors
+# Argument: color - String. Optional. Color to parse.
+# Takes arguments or stdin.
+colorParse() {
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      __colorParseArgument "$1" || return $?
+      shift
+    done
+  else
+    local color
+    while read -r color; do
+      __colorParseArgument "$color" || return $?
+    done
+  fi
+}
+_colorParse() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Argument: factor - floatValue. Required. Red RGB value (0-255)
+# Argument: redValue - Integer. Required. Red RGB value (0-255)
+# Argument: greenValue - Integer. Required. Red RGB value (0-255)
+# Argument: blueValue - Integer. Required. Red RGB value (0-255)
+colorMultiply() {
+  local usage="_${FUNCNAME[0]}"
+  local factor colors=()
+
+  __catchEnvironment "$usage" packageWhich bc bc || return $?
+  factor=$(usageArgumentString "$usage" "factor" "${1-}") && shift || return $?
+
+  local red green blue
+  if [ $# -gt 0 ]; then
+    colors=("$@")
+  else
+    local color && while read -r color; do colors+=("$color"); done
+  fi
+
+  set -- "${colors[@]+"${colors[@]}"}"
+  while [ $# -gt 0 ]; do
+    local red green blue
+    red=$(usageArgumentUnsignedInteger "$usage" "redValue" "${1-}") && shift || return $?
+    green=$(usageArgumentUnsignedInteger "$usage" "greenValue" "${1-}") && shift || return $?
+    blue=$(usageArgumentUnsignedInteger "$usage" "blueValue" "${1-}") && shift || return $?
+    bc <<<"m=$factor;$red*m;$green*m;$blue*m" | cut -d . -f 1
+  done
+}
+_colorMultiply() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

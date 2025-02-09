@@ -91,7 +91,7 @@ __catchArgumentHelper() {
   shift || :
   noun="${1:-"$defaultNoun"}"
   shift || :
-  [ -n "$variableValue" ] || __throwArgument "$usageFunction" "$variableName $noun is required" || return $?
+  [ -n "$variableValue" ] || __throwArgument "$usageFunction" "$variableName $noun is required ($(decorate code "$variableValue"))" || return $?
 
   # Remaining parameters are the test
   "$@" "$variableValue" || __throwArgument "$usageFunction" "$variableName is not $noun (\"$(decorate code "$variableValue")$(decorate error '")')" || return $?

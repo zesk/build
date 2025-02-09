@@ -149,21 +149,48 @@ _iTerm2Aliases() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Solely the color names (e.g blue), not anything else
 iTerm2ColorNames() {
-  printf "%s\n" fg bg bold link selbg selfg curbg curfg underline tab black red green yellow blue magenta cyan white br_black br_red br_green br_yellow br_blue br_magenta br_cyan br_white
+  printf "%s\n" black red green yellow blue magenta cyan white
+}
+
+# Is it a color name?
+iTerm2IsColorName() {
+  case "$1" in
+    black | red | green | yellow | blue | magenta | cyan | white) return 0 ;; *) return 1 ;;
+  esac
+}
+
+# This is faster than inArray etc.
+iTerm2IsColorType() {
+  case "$1" in
+    fg | bg | selbg | selfg | curbg | curfg) return 0 ;;
+    bold | link | underline) return 0 ;;
+    tab) return 0 ;;
+    black | red | green | yellow | blue | magenta | cyan | white) return 0 ;;
+    br_black | br_red | br_green | br_yellow | br_blue | br_magenta | br_cyan | br_white) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# Colors for various UI elements
+iTerm2ColorTypes() {
+  local colors
+  printf "%s\n" fg bg selbg selfg curbg curfg # Selection and maybe current line?
+  printf "%s\n" bold link underline           # Formatting
+  printf "%s\n" tab                           # Tab color! - awesome
+  read -r -d"" -a colors < <(iTerm2ColorNames)
+  printf -- "%s\n" "${colors[@]}"
+  printf -- "%s\n" "${colors[@]}" | wrapLines "br_" ""
 }
 
 # Usage: {fn} handler verboseFlag colorSetting
 __iTerm2SetColors() {
   local usage="$1" verboseFlag="$2" argument="$3"
 
-  local colorName colorValue
-  IFS="=" read -r colorName colorValue <<<"$argument" || :
-  if [ ${#colorNames[@]} -eq 0 ]; then
-    local item
-    while read -r item; do colorNames+=("$item"); done < <(iTerm2ColorNames)
-  fi
-  inArray "$colorName" "${colorNames[@]}" || __throwArgument "$usage" "Unknown color name: $(decorate code "$colorName")" || return $?
+  local colorType colorValue
+  IFS="=" read -r colorType colorValue <<<"$argument" || :
+  iTerm2IsColorType "$colorType" || __throwArgument "$usage" "Unknown color type: $(decorate code "$colorType")" || return $?
   local colorSpace colorCode=""
   IFS=":" read -r colorSpace colorCode <<<"$colorValue" || :
   if [ -z "$colorCode" ]; then
@@ -179,8 +206,8 @@ __iTerm2SetColors() {
     [[:xdigit:]]*) ;;
     *) __throwArgument "$usage" "Invalid hexadecimal color: $(decorate error "$colorCode") in $(decorate code "$colorValue")" || return $? ;;
   esac
-  ! $verboseFlag || statusMessage decorate info "Setting color $colorName to $colorCode"
-  _iTerm2_setValue SetColors "$colorName=$colorCode"
+  ! $verboseFlag || statusMessage decorate info "Setting color $(decorate label "$colorType") to $(decorate value "$colorCode")"
+  _iTerm2_setValue SetColors "$colorType=$colorCode"
 }
 
 # Set terminal colors
@@ -208,8 +235,8 @@ __iTerm2SetColors() {
 iTerm2SetColors() {
   local usage="_${FUNCNAME[0]}"
 
-  local wrongTerminalFails=true verboseFlag=false didSomething=false colorNames=() exitCode=0
-  local skipErrors=false
+  local wrongTerminalFails=true verboseFlag=false
+  local skipErrors=false colorSettings=() fillMissing=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -225,6 +252,9 @@ iTerm2SetColors() {
       --skip-errors)
         skipErrors=true
         ;;
+      --fill)
+        fillMissing=true
+        ;;
       --verbose | -v)
         verboseFlag=true
         ;;
@@ -237,22 +267,67 @@ iTerm2SetColors() {
         __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         ;;
       *)
-        __iTerm2SetColors "$usage" "$verboseFlag" "$argument" || exitCode=$?
-        didSomething=true
-        [ $exitCode = 0 ] || $skipErrors || return $exitCode
+        colorSettings+=("$(usageArgumentString "$usage" "colorSetting" "$1")") || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  if ! $didSomething; then
+
+  local colorSetting
+  if [ 0 -eq "${#colorSettings[@]}" ]; then
     ! $verboseFlag || statusMessage decorate info "Reading colors from stdin"
-    local colorSetting
     while read -r colorSetting; do
-      __iTerm2SetColors "$usage" "$verboseFlag" "$colorSetting" || exitCode=$?
-      [ $exitCode = 0 ] || $skipErrors || return $exitCode
+      colorSetting=$(trimSpace "$colorSetting")
+      [ -n "$colorSetting" ] || continue
+      [ "$colorSetting" = "${colorSetting#\#}" ] || continue
+      colorSettings+=("$colorSetting")
     done
   fi
+
+  local didColors=() needColors=() exitCode=0
+  for colorSetting in "${colorSettings[@]+"${colorSettings[@]}"}"; do
+    if __iTerm2SetColors "$usage" "$verboseFlag" "$colorSetting"; then
+      if $fillMissing; then
+        local colorName="${colorSetting%%=*}" colorValue="${colorSetting#*=}"
+        local nonBrightColorName="${colorName#br_}"
+        if iTerm2IsColorName "$colorName"; then
+          needColors+=("br_$colorName" "$colorValue")
+        elif iTerm2IsColorName "$nonBrightColorName"; then
+          needColors+=("$nonBrightColorName" "$colorValue")
+        fi
+        didColors+=("$colorName")
+      fi
+    else
+      exitCode=$?
+      $skipErrors || return $exitCode
+    fi
+  done
+
+  ! $verboseFlag || statusMessage decorate info "Need colors: $(decorate each code "${needColors[@]+"${needColors[@]}"}")"
+  if ! "$fillMissing" || [ ${#needColors[@]} -eq 0 ]; then
+    return $exitCode
+  fi
+
+  ! $verboseFlag || statusMessage decorate info "Filling in missing colors: $(decorate each code "${needColors[@]}")"
+  set -- "${needColors[@]}"
+  while [ $# -gt 0 ]; do
+    local colorName="$1" colorValue colorMod
+    if inArray "$colorName" "${didColors[@]}"; then
+      ! $verboseFlag || statusMessage decorate notice "No need to fill $(decorate value "$colorName")"
+      continue
+    fi
+    if [ "${colorName#br_}" != "$colorName" ]; then
+      colorMod=0.7
+    else
+      colorMod=1.3
+    fi
+    colorValue="$(colorParse <<<"$colorValue" | colorMultiply "$colorMod" | colorFormat)"
+    __iTerm2SetColors "$usage" "$verboseFlag" "$colorName=$colorValue" || exitCode=$?
+    ! $verboseFlag || statusMessage decorate notice "Filled $(decorate code "$colorName") with $(decorate value "$colorMod") $(decorate blue "$2") -> $(decorate bold-blue "$colorValue")"
+    shift 2
+  done
+
   return $exitCode
 }
 _iTerm2SetColors() {
@@ -382,12 +457,40 @@ _iTerm2Badge() {
 # See: iTerm2Aliases iTerm2PromptSupport
 iTerm2Init() {
   local usage="_${FUNCNAME[0]}"
-  isiTerm2 || __throwEnvironment "$usage" "Not iTerm2" || return $?
+
+  local ignoreErrors=false ii=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --ignore | -i)
+        ignoreErrors=true
+        ii=(--ignore)
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  isiTerm2 || $ignoreErrors && return 0 || __throwEnvironment "$usage" "Not iTerm2" || return $?
+
   __catchEnvironment "$usage" buildEnvironmentLoad TERM || return $?
   home=$(__catchEnvironment "$usage" userHome) || return $?
   # iTerm2 customizations
   [ ! -d "$home/.iterm2" ] || __catchEnvironment "$usage" iTerm2Aliases || return $?
-  __catchEnvironment "$usage" iTerm2PromptSupport || return $?
+  __catchEnvironment "$usage" iTerm2PromptSupport "${ii[@]+"${ii[@]}"}" || return $?
 }
 _iTerm2Init() {
   # _IDENTICAL_ usageDocument 1
