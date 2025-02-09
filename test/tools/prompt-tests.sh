@@ -26,8 +26,11 @@ testBashPrompt() {
   for leak in "${leaks[@]}"; do
     ll+=(--leak "$leak")
   done
+
+  bashPrompt --skip-terminal --colors "::::"
   assertExitCode --line "$LINENO" "${ll[@]}" 0 bashPrompt --skip-terminal --colors "::::" || return $?
   matches=(--stdout-match __testBashPromptA --stdout-match __testBashPromptB --stdout-match __testBashPromptC)
+  bashPrompt --skip-terminal --first __testBashPromptA __testBashPromptB __testBashPromptC __testBashPromptA __testBashPromptB __testBashPromptC --list
   assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --first __testBashPromptA __testBashPromptB __testBashPromptC __testBashPromptA __testBashPromptB __testBashPromptC --list || return $?
 
   # Remove A

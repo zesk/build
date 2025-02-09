@@ -51,6 +51,7 @@ __bashPromptAdd() {
         last=true
         ;;
       *)
+        local found=""
         isCallable "$argument" || __throwArgument "$usage" "$argument must be executable or a function" || return $?
         ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found="$argument"
         if $first; then
@@ -121,7 +122,7 @@ __bashPromptRemove() {
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
-  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false
+  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false listFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -139,12 +140,7 @@ bashPrompt() {
         label="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
         ;;
       --list)
-        # IDENTICAL bashPromptAddArguments 3
-        if [ ${#addArguments[@]} -gt 0 ]; then
-          __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
-        fi
-        addArguments=()
-        __bashPromptList
+        listFlag=true
         ;;
       --skip-terminal)
         skipTerminal=true
@@ -190,6 +186,15 @@ bashPrompt() {
   # IDENTICAL bashPromptAddArguments 3
   if [ ${#addArguments[@]} -gt 0 ]; then
     __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
+  fi
+
+  if $listFlag; then
+    # IDENTICAL bashPromptAddArguments 3
+    if [ ${#addArguments[@]} -gt 0 ]; then
+      __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
+    fi
+    addArguments=()
+    __bashPromptList
   fi
 
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
