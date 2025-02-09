@@ -284,15 +284,17 @@ _bashPromptMarkers() {
 # Color schemes for prompts
 # Options are:
 # - forest
-# - default
+# - light (default)
+# - dark
 bashPromptColorScheme() {
-  local colors
+  local colors exitColor
   __help "$usage" "$@" || return 0
+  exitColor="$(decorate bold-green):$(decorate bold-red)"
   case "${1-}" in
     forest) colors="$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)" ;;
-    light) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
-    dark) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-white)" ;;
-    *) colors="$(decorate green):$(decorate red):$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
+    light) colors="$exitColor:$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
+    dark) colors="$exitColor:$(decorate magenta):$(decorate blue):$(decorate bold-white)" ;;
+    *) colors="$exitColor:$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
   esac
   printf -- "%s" "$colors"
 }
