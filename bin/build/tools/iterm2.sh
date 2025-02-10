@@ -210,6 +210,69 @@ __iTerm2SetColors() {
   _iTerm2_setValue SetColors "$colorType=$colorCode"
 }
 
+# Output an image to the console
+iTerm2Image() {
+  local usage="_${FUNCNAME[0]}"
+
+  local wrongTerminalFails=true images=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      # IDENTICAL wrongTerminalFails 3
+      --ignore | -i)
+        wrongTerminalFails=false
+        ;;
+      -*)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+      *)
+        images+=("$(usageArgumentFile "$usage" "imageFile" "$1")") || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  if [ "${#images[@]}" -gt 0 ]; then
+    set -- "${images[@]}"
+    while [ $# -gt 0 ]; do
+      __catchEnvironment "$usage" __iTerm2Image "$1" "$1" || return $?
+      shift
+    done
+  else
+    local image
+
+    image=$(fileTemporaryName "$usage") || return $?
+    __catchEnvironment "$usage" cat >"$image" || return $?
+    __catchEnvironment "$usage" __iTerm2Image "$image" || return $?
+    __catchEnvironment "$usage" rm -rf "$image" || return $?
+  fi
+}
+_iTerm2Image() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Dump image
+__iTerm2Image() {
+  local binary="$1" name="${2-}" fileValue=""
+
+  [ -z "$name" ] || fileValue="${fileValue}name=$(printf -- "%s" "$name" | base64);"
+  fileValue="${fileValue}size=$(fileSize "$binary")};inline=1:$(base64 <"$binary")"
+
+  statusMessage --last _iTerm2_setValue File "$fileValue"
+}
+
 # Set terminal colors
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing.

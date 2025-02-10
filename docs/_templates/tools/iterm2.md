@@ -4,8 +4,8 @@
 {iTerm2Init}
 {iTerm2Badge}
 {iTerm2Attention}
-{iTerm2Aliases}
 {iTerm2PromptSupport}
+{iTerm2Image}
 
 ## iTerm2 Colors
 
@@ -14,3 +14,7 @@
 {iTerm2IsColorName}
 {iTerm2IsColorType}
 {iTerm2SetColors}
+'gpw'
+## Aliases for iTerm tools
+
+{iTerm2Aliases}
