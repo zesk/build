@@ -498,7 +498,7 @@ colorBrightness() {
       read -r color || done=true
       colors+=("$color")
       if [ ${#colors[@]} -eq 3 ]; then
-        __colorBrightness "$usage" "${colors[@]}"
+        __colorBrightness "$usage" "${colors[@]}" || return $?
         colors=()
       fi
     done
@@ -506,7 +506,7 @@ colorBrightness() {
     __throwArgument "$usage" "Requires 3 arguments" || return $?
   fi
   while [ $# -ge 3 ]; do
-    __colorBrightness "$usage" "$1" "$2" "$3"
+    __colorBrightness "$usage" "$1" "$2" "$3" || return $?
     shift 3
   done
 }

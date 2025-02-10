@@ -34,11 +34,11 @@ EOF
 testColorBrightness() {
   local expected r g b
   _colorBrightnessValues | while read -r expected r g b; do
-    assertEquals "$expected" "$(echo "$r $g $b" | colorBrightness)" "echo $r $g $b \| colorBrightness failed to be $expected" || return $?
-    assertEquals "$expected" "$(colorBrightness "$r" "$g" "$b")" "colorBrightness $r $g $b failed to be $expected" || return $?
+    assertEquals --line "$LINENO" "$expected" "$(printf "%d\n" "$r $g $b" | colorBrightness)" "echo $r $g $b \| colorBrightness failed to be $expected" || return $?
+    assertEquals --line "$LINENO" "$expected" "$(colorBrightness "$r" "$g" "$b")" "colorBrightness $r $g $b failed to be $expected" || return $?
   done
   _colorBrightnessBadValues | while read -r expected r g b; do
-    assertNotExitCode --stderr-ok 0 colorBrightness "$r" "$g" "$b" || return $?
+    assertNotExitCode --line "$LINENO" --stderr-ok 0 colorBrightness "$r" "$g" "$b" || return $?
   done
 }
 
