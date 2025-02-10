@@ -4,17 +4,27 @@ Pipeline and build-related tools which are useful across a variety of projects.
 
 This toolkit makes the following assumptions:
 
-- You are using this with another project to help with your pipeline, build or operations
 - Binaries from this project installed at `./bin/build/`
 - Optional `hook` binaries can be placed in your project at `./bin/hooks/`
 - Files containing bash code end with `.sh`
-- Your project has release notes located in a dedicated subdirectory, files named `v1.0.0.md` where prefix matches tag names (`v1.0.0`)
-- A central `$HOME/.build` directory is created to store temporary files and log files; after running certain scripts it can be safely discarded or re-used.
+- Your project has release notes located in a dedicated subdirectory, files named `v1.0.0.md` (for version `1.0.0`)
 
 To use in your pipeline:
 
 - copy `./bin/build/install-bin-build.sh` into your project (changing the last line `../..` if needed) manually
 - run it before you need your `./bin/build` directory
+
+## Features overview
+
+- Application deployment support
+- Support for application hooks and environment
+- Bash prompt support with colors and extensions
+- Bash documentation framework with automatic documentation
+- Comprehensive argument validation
+- Generic package interface for system configuration
+- Advanced Bash debugger features
+- Complete testing and assertion framework
+- Safe environment files support
 
 ## Zesk Build Functionality
 
@@ -33,7 +43,8 @@ To use in your pipeline:
 - [Usage formatting](./guide/usage.md)
 - [Documentation](./guide/documentation.md)
 - [Functions to be documented](./tools/todo.md)
-- [Bash `test` Cheatsheet](./test-cheatsheet.md)
+- [`test` Cheatsheet](./test-cheatsheet.md)
+- [Bash Cheatsheet](./bash-cheatsheet.md)
 
 ## Zesk Build Reference
 

@@ -59,7 +59,8 @@ PROMPT_COMMAND ### `bashPromptColorScheme` - Color schemes for prompts
 Color schemes for prompts
 Options are:
 - forest
-- default
+- light (default)
+- dark
 
 - Location: `bin/build/tools/prompt.sh`
 
@@ -125,7 +126,7 @@ Sets the console colors based on the project you are currently in
 
 #### Examples
 
-    bashPrompt bashPromptModule_iTerm2Colors
+    bashPrompt --last bashPromptModule_iTerm2Colors
 
 #### Exit codes
 
@@ -211,7 +212,7 @@ Sets the console colors based on the project you are currently in
 
 #### Examples
 
-    bashPrompt bashPromptModule_iTerm2Colors
+    bashPrompt --last bashPromptModule_iTerm2Colors
 
 #### Exit codes
 

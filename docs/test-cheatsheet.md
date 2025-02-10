@@ -39,8 +39,8 @@ Expression combinations:
 - `-d FILE` - FILE exists and is a directory
 - `-f FILE` - FILE exists and is a regular file
 - `-p FILE` - FILE exists and is a named pipe
-- `-L FILE` - FILE exists and is a symbolic link (same as -h)
-- `-h FILE` - FILE exists and is a symbolic link (same as -L)
+- `-L FILE` - FILE exists and is a symbolic link (same as `-h`)
+- `-h FILE` - FILE exists and is a symbolic link (same as `-L`)
 - `-S FILE` - FILE exists and is a socket
 
 # File bits
@@ -64,12 +64,12 @@ Expression combinations:
 
 # Test if a file descriptor is a terminal
 
-- `-t FD` - file descriptor FD is opened on a terminal
+- `-t FD` - file descriptor `FD` is opened on a terminal
 
-Except for -h and -L, all FILE-related tests dereference symbolic links.
+Except for `-h` and `-L`, all `FILE`-related tests dereference symbolic links.
 
-Beware that parentheses need to be escaped (e.g., by backslashes) for shells. INTEGER may also be -l STRING, which evaluates to the length of STRING.
+Beware that parentheses need to be escaped (e.g., by backslashes) for shells. 
 
-Binary -a and -o are ambiguous. Use 'test EXPR1 && test EXPR2' or 'test EXPR1 || test EXPR2' instead.
+Binary `-a` and `-o` are ambiguous. Use `test EXPR1 && test EXPR2` or `test EXPR1 || test EXPR2` instead.
 
 [Source](https://github.com/zesk/build/docs/test-cheatsheet.md)

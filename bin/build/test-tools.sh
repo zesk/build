@@ -371,7 +371,7 @@ __testSuiteInitialize() {
   __TEST_SUITE_TRACE=initialization
 
   # Add a trap
-  trap '__testCleanupMess' EXIT QUIT TERM
+  trap '__testCleanupMess' EXIT QUIT TERM ERR
   # If someone interrupts find out where it was running
   bashDebugInterruptFile
 }

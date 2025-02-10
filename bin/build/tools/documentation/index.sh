@@ -317,7 +317,7 @@ documentationIndex_UnlinkedIterator() {
 
   documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     # Skip functions beginning with underscores always
-    if $flagUnderscore && [ "$functionName" != "${functionName#_}" ]; then
+    if ! $flagUnderscore && [ "$functionName" != "${functionName#_}" ]; then
       continue
     fi
     if grep -q "'documentationPathUnlinked'" "$settingsFile"; then
