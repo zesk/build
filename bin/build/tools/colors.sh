@@ -468,6 +468,17 @@ simpleMarkdownToConsole() {
   _toggleCharacterToColor '`' "$(decorate code)" | _toggleCharacterToColor '**' "$(decorate red)" | _toggleCharacterToColor '*' "$(decorate cyan)"
 }
 
+# Argument: r - UnsignedInteger. Required.
+# Argument: g - UnsignedInteger. Required.
+# Argument: b - UnsignedInteger. Required.
+__colorBrightness() {
+  local usage="$1" r g b
+  r=$(usageArgumentUnsignedInteger "$usage" "red" "$2") || return $?
+  g=$(usageArgumentUnsignedInteger "$usage" "green" "$3") || return $?
+  b=$(usageArgumentUnsignedInteger "$usage" "blue" "$4") || return $?
+  printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+}
+
 # Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11
 # Return an integer between 0 and 100
 # Colors are between 0 and 255
@@ -481,17 +492,23 @@ colorBrightness() {
   local r g b
 
   if [ $# -eq 0 ]; then
+    local done=false color colors=()
     # 0.299 R + 0.587 G + 0.114 B
-    read -r r g b || :
-  elif [ $# -eq 3 ]; then
-    r=$1 g=$2 b=$3
-  else
+    while ! $done; do
+      read -r color || done=true
+      colors+=("$color")
+      if [ ${#colors[@]} -eq 3 ]; then
+        __colorBrightness "$usage" "${colors[@]}"
+        colors=()
+      fi
+    done
+  elif [ $# -lt 3 ]; then
     __throwArgument "$usage" "Requires 3 arguments" || return $?
   fi
-  __catchArgument "$usage" isUnsignedInteger "$r" || return $?
-  __catchArgument "$usage" isUnsignedInteger "$g" || return $?
-  __catchArgument "$usage" isUnsignedInteger "$b" || return $?
-  printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
+  while [ $# -ge 3 ]; do
+    __colorBrightness "$usage" "$1" "$2" "$3"
+    shift 3
+  done
 }
 _colorBrightness() {
   # _IDENTICAL_ usageDocument 1

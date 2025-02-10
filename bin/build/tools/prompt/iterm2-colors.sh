@@ -4,7 +4,15 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-# Sets the console colors based on the project you are currently in
+# Sets the console colors based on the project you are currently in.
+# Place an iterm2 colors configuration file (values of `bg=FFF` etc. one per line, comments allowed)
+#
+# Will fill in missing bright or non-bright colors which are unspecified. (`blue` implies `br_blue` and so on)
+#
+# Sets `BUILD_COLORS_MODE` based on background color
+# See: consoleConfigureColorMode
+# File: ./etc/iterm2-colors.conf
+# File: ./.iterm2-colors.conf
 #
 # Example:     bashPrompt --last bashPromptModule_iTerm2Colors
 # Requires: buildHome statusMessage buildEnvironmentGetDirectory requireDirectory cachedShaPipe decorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
@@ -27,27 +35,26 @@ bashPromptModule_iTerm2Colors() {
       cacheDir=$(requireDirectory "$cacheDir/.iTerm2Colors") || break
 
       hash=$(cachedShaPipe "$cacheDir" <"$schemeFile") || :
-      ! $debug || statusMessage decorate info "$schemeFile -> \"$hash\""
+      ! $debug || statusMessage --last decorate info "$schemeFile -> \"$hash\""
       [ -n "$hash" ] || break
 
       hash="$schemeFile:$hash"
       [ "$hash" != "${__BUILD_ITERM2_COLORS-}" ] || return 0
 
-      if buildDebugEnabled iterm2-colors; then
-        decorate info "Applying colors from $(deorate file "$schemeFile")"
-      fi
-      saveBackground=$(fileTemporaryName _return) || return 0
-      iTerm2SetColors --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d' | grep 'bg=' | cut -f 2 -d = >"$saveBackground") || :
-      bg="$(cat "$saveBackground")"
-      rm -rf "$saveBackground"
+      ! $debug || decorate info "Applying colors from $(decorate file "$schemeFile")"
 
-      decorate info "Background is now $bg"
+      saveBackground=$(fileTemporaryName _return) || return 0
+      iTerm2SetColors --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d' | tee "$saveBackground") || :
+      bg="$(grep -e '^bg=' "$saveBackground" | tail -n 1 | cut -f 2 -d =)"
+      rm -rf "$saveBackground"
 
       __BUILD_ITERM2_COLORS="$hash"
 
       local mode
-      mode=$(__environment consoleConfigureColorMode) || :
+      mode=$(__environment consoleConfigureColorMode "$bg") || :
       [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --colors "$(bashPromptColorScheme "$mode")"
+
+      ! $debug || decorate info "Background is now $bg and mode is $mode"
       break
     else
       ! $debug || statusMessage --last decorate info "$schemeFile does not exist"

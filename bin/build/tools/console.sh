@@ -75,11 +75,10 @@ consoleGetColor() {
     for color in "${colors[@]+${colors[@]}}"; do
       case "$color" in
         [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])
-          printf -- "%d " $(((0x$color + 0) / 256))
+          printf -- "%d\n" $(((0x$color + 0) / 256))
           ;;
       esac
     done
-    printf -- "\n"
   fi
 
 }
@@ -104,14 +103,17 @@ consoleBrightness() {
 
 #
 # Usage: {fn}
-#
+# Argument: backgroundColor - Optional. String. Background color.
 # Print the suggested color mode for the current environment
 #
 consoleConfigureColorMode() {
-  local brightness colorMode
-
-  colorMode=light
-  if brightness=$(consoleBrightness --background); then
+  local colorMode="light" color="${1-}" brightness
+  if [ -n "$color" ]; then
+    brightness=$(colorParse <<<"$color" | colorBrightness)
+  else
+    brightness=$(consoleBrightness --background)
+  fi
+  if isInteger "$brightness"; then
     if [ "$brightness" -lt 50 ]; then
       colorMode=dark
     fi
