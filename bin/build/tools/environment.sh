@@ -320,7 +320,7 @@ environmentFileLoad() {
     shift
   done
   $hasOne || __throwArgument "$usage" "Requires at least one environmentFile" || return $?
-  ! $debugMode || printf "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[@]}"
+  ! $debugMode || printf -- "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[*]}"
   for environmentFile in "${ff[@]}"; do
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
     line=1
@@ -349,7 +349,7 @@ environmentFileLoad() {
       toExport+=("$name=$value")
       ! $debugMode || printf "toExport: %s=%s\n" "$name" "$value"
       line=$((line + 1))
-    done < <(environmentLines <"$environmentFile") || :
+    done < <(environmentLines <"$environmentFile" || :)
   done
   if [ "${#toExport[@]}" -gt 0 ]; then
     for value in "${toExport[@]}"; do

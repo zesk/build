@@ -15,7 +15,7 @@ testDotEnvConfigure() {
   tempDir="$(__environment buildCacheDirectory)/$$.dotEnvConfig" || return $?
 
   __environment mkdir -p "$tempDir" || return $?
-  __environment cd "$tempDir" || return $?
+  __environment muzzle pushd "$tempDir" || return $?
   decorate info "$(pwd)"
   assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
 
@@ -40,8 +40,9 @@ testDotEnvConfigure() {
   __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
   __environment touch .env.local || return $?
 
-  environmentFileLoad .env --optional .env.local "$tempDir" || return $?
-  assertExitCode --line "$LINENO" 0 environmentFileLoad .env --optional .env.local "$tempDir" || return $?
+  #echo "PWD is $(pwd)"
+  #environmentFileLoad --debug .env --optional .env.local || return $?
+  assertExitCode --line "$LINENO" 0 environmentFileLoad .env --optional .env.local || return $?
 
   assertEquals --line "$LINENO" "NEW-$magic" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "$magic" "${TESTENVLOCALWORKS-}" || return $?
