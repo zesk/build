@@ -125,7 +125,7 @@ URLs are explicitly trimmed at quote, whitespace and escape boundaries.
 
 No documentation for `urlFetch`.
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/urlFetch.sh`
 
 #### Arguments
 

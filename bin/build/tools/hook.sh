@@ -45,7 +45,7 @@ __hookRunner() {
 
   # Parse user flags first (this is so users can not accidentally use these, only us)
 
-  local applicationHome="" whichArgs=()
+  local applicationHome="" whichArgs=() nextSource=""
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -57,10 +57,14 @@ __hookRunner() {
         "$usage" 0
         return $?
         ;;
+      --next)
+        shift
+        whichArgs+=("$argument" "$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+        ;;
       --application)
         shift || :
         applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
-        whichArgs=(--application "$applicationHome")
+        whichArgs+=(--application "$applicationHome")
         ;;
       *)
         local hook binary="$argument"
@@ -111,6 +115,7 @@ __hookRunner() {
 #
 # Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
+# Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: hookName - String. Required. Hook name to run.
 # Argument: arguments - Optional. Arguments are passed to `hookName`.
 # DOC TEMPLATE: --help 1
@@ -132,6 +137,7 @@ _hookRun() {
 # Identical to `hookRun` but returns exit code zero if the hook does not exist.
 #
 # Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
+# Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
 # Argument: hookName - String. Required. Hook name to run.
 # Argument: arguments - Optional. Arguments are passed to `hookName`.
@@ -258,7 +264,7 @@ _hasHook() {
 whichHook() {
   local usage="_${FUNCNAME[0]}"
   local argument
-  local applicationHome binary hookPath extension hookPaths=()
+  local applicationHome binary hookPath extension hookPaths=() nextSource=""
 
   export BUILD_HOOK_DIRS
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
@@ -272,14 +278,27 @@ whichHook() {
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
       --application)
-        shift || :
-        applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
+        shift
+        applicationHome=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --next)
+        shift
+        nextSource=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+        nextSource=$(__catchEnvironment "$usage" realPath "$nextSource") || return $?
         ;;
       *)
         for hookPath in "${hookPaths[@]}"; do
+          local appPath="${applicationHome%/}/${hookPath%/}"
+          [ -d "$appPath" ] || continue
           for extension in "" ".sh"; do
-            binary="${hookPath%%/}/$1$extension"
+            binary="$appPath/$1$extension"
             if [ -x "$binary" ]; then
+              if [ -n "$nextSource" ]; then
+                if [ "$binary" = "$nextSource" ]; then
+                  nextSource=""
+                fi
+                break
+              fi
               printf "%s\n" "$binary"
               return 0
             fi

@@ -421,7 +421,7 @@ iTerm2SetColors() {
         ;;
       --skip-errors)
         skipColorErrors=true
-          ;;
+        ;;
       --fill)
         fillMissing=true
         ;;
@@ -745,12 +745,18 @@ iTerm2Init() {
     __throwEnvironment "$usage" "Not iTerm2" || return $?
   fi
 
+  local home
   __catchEnvironment "$usage" buildEnvironmentLoad TERM || return $?
   home=$(__catchEnvironment "$usage" userHome) || return $?
+
   # iTerm2 customizations
   local ii=()
   ! $ignoreErrors || ii=(--ignore)
   __catchEnvironment "$usage" iTerm2PromptSupport "${ii[@]+"${ii[@]}"}" || return $?
+  export BUILD_HOOK_DIRS
+  buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
+  # Intercept notify
+  BUILD_HOOK_DIRS=$(listAppend "${BUILD_HOOK_DIRS[@]}" ":" --first "bin/build/tools/iterm2/hooks")
   [ ! -d "$home/.iterm2" ] || __catchEnvironment "$usage" iTerm2Aliases || return $?
 }
 _iTerm2Init() {

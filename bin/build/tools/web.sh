@@ -31,8 +31,8 @@ urlMatchesLocalFileSize() {
         elif [ -z "$file" ]; then
           file="$(usageArgumentFile "$usage" "file" "$1")" || return $?
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac

@@ -35,7 +35,7 @@ ___hookProjectActivate() {
 }
 
 __hookProjectActivateContext() {
-  local usage="_${FUNCNAME[0]}" home  item items=() candidates=("bin/developer.sh" "bin/developer/")
+  local usage="_${FUNCNAME[0]}" home item items=() candidates=("bin/developer.sh" "bin/developer/")
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done

@@ -404,8 +404,8 @@ renameLink() {
         elif [ -z "$to" ]; then
           to=$(usageArgumentString "$usage" "to $(betterType "$1")" "$1") || return $?
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
@@ -696,8 +696,8 @@ linkCreate() {
         elif [ -z "$linkName" ]; then
           linkName=$(usageArgumentString "$usage" "linkName" "$argument") || return $?
         else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         ;;
     esac
