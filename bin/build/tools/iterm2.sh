@@ -421,7 +421,7 @@ iTerm2SetColors() {
         ;;
       --skip-errors)
         skipColorErrors=true
-        ;;
+          ;;
       --fill)
         fillMissing=true
         ;;
