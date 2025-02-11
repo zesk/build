@@ -75,6 +75,61 @@ _bigText() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+bigTextAt() {
+  local usage="_${FUNCNAME[0]}"
+  local message="" x="" y=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$x" ]; then
+          x=$(usageArgumentInteger "$usage" "xOffset" "$argument") || return $?
+        elif [ -z "$y" ]; then
+          y=$(usageArgumentInteger "$usage" "yOffset" "$argument") || return $?
+        else
+          message=$(__catchEnvironment "$usage" bigText "$@") || return $?
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  [ -n "$x" ] || __throwArgument "$usage" "Missing x" || return $?
+  [ -n "$y" ] || __throwArgument "$usage" "Missing y" || return $?
+  local maxX maxY theX="$x" theY="$y" saveX saveY
+  maxX=$(__catchEnvironment "$usage" consoleColumns) || return $?
+  maxY=$(__catchEnvironment "$usage" consoleRows) || return $?
+  [ "$x" -lt "$maxX" ] || __throwArgument "$usage" "$x -gt $maxX exceeds column width" || return $?
+  [ "$y" -lt "$maxY" ] || __throwArgument "$usage" "$y -gt $maxY exceeds row height" || return $?
+  [ "$x" -gt "-$maxX" ] || __throwArgument "$usage" "$x -lt -$maxX exceeds negative column width" || return $?
+  [ "$y" -gt "-$maxY" ] || __throwArgument "$usage" "$y -lt -$maxY exceeds negative row height" || return $?
+  IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
+  [ "$theX" -ge 0 ] || theX=$((maxX + theX))
+  [ "$theY" -ge 0 ] || theY=$((maxY + theY))
+  local outputLine
+  while read -r outputLine; do
+    __catchEnvironment "$usage" cursorSet "$theX" "$theY" || return $?
+    __catchEnvironment "$usage" printf "%s" "$outputLine" || return $?
+    theY=$((theY + 1))
+    [ "$theY" -le "$maxY" ] || break
+  done < <(printf "%s\n" "$message")
+  __catchEnvironment "$usage" cursorSet "$saveX" "$saveY" || return $?
+}
+_bigTextAt() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Usage: {fn} [ --top | --bottom ] [ --prefix prefix ] label Text ...
 # Argument: --top - Optional. Flag. Place label at the top.
@@ -136,8 +191,8 @@ labeledBigText() {
         ;;
       *)
         if [ "$argument" != "${argument#-}" ]; then
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         label="$argument"
         plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __throwArgument "$usage" "Unable to clean label" || return $?
@@ -250,8 +305,8 @@ echoBar() {
         ;;
       *)
         if [ $# -gt 2 ]; then
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         barText="$argument"
         shift

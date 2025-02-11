@@ -372,112 +372,6 @@ _interactiveManager() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__interactiveApprovedFile() {
-  local usage="$1" approvedHome="$2" sourceFile="$3" verb="$4" approved displayFile approvedFile approvedHome
-
-  shift 4
-  approvedFile="$approvedHome/$(__catchEnvironment "$usage" shaPipe <"$sourceFile")" || return $?
-  displayFile=$(decorate file "$sourceFile")
-  if [ ! -f "$approvedFile" ]; then
-    if confirmYesNo "$@" "$verb $(decorate file "$sourcePath")?"; then
-      approved=true
-      statusMessage --last printf "%s [%s] %s" "$(decorate success "Approved")" "$(decorate file "$displayFile")" "$(decorate subtle "(will not ask in the future)")"
-    else
-      approved=false
-    fi
-    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$approvedFile" || __throwEnvironment "$usage" "Unable to write $(decorate file "$approvedFile")" || return $?
-  fi
-  approved=$(head -n 1 "$approvedFile")
-  if ! isBoolean "$approved" || ! "$approved"; then
-    return 1
-  fi
-  # Allows identical files in different projects to be approved once
-  if ! grep -q "$sourceFile" <"$approvedFile"; then
-    printf "%s\n" "$sourceFile" >>"$approvedFile"
-  fi
-  return 0
-}
-
-# Usage: {fn} usage approvedFile verb confirmYesNoArguments ...
-__interactiveApproved() {
-  local usage="$1" sourcePath="$2" approved displayFile approvedFile approvedHome
-
-  shift 2 || __catchArgument "$usage" "shift" || return $?
-  approvedHome=$(__catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
-
-  if [ -d "$sourcePath" ]; then
-    local sourceFile approved=true
-    while read -r sourceFile; do
-      if ! __interactiveApprovedFile "$usage" "$approvedHome" "$sourceFile" "$@"; then
-        approved=false
-        break
-      fi
-    done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
-    "$approved"
-  else
-    __interactiveApprovedFile "$usage" "$approvedHome" "$sourcePath" "$@"
-  fi
-}
-
-# Maybe move this to its own thing if needed later
-# Usage: {fn} timeout attempts extras message
-__interactiveCountdownReadBoolean() {
-  local usage="$1" && shift
-  local timeout="" rr=() extras icon="⏳" attempts
-
-  if [ "$1" != "" ]; then
-    rr=(-t 1)
-    timeout=$(usageArgumentPositiveInteger "$usage" "timeout" "${1-}") || return $?
-  fi
-  shift
-
-  attempts=$(usageArgumentInteger "$usage" "attempts" "${1-}") && shift || return $?
-
-  extras="${1-}" && shift
-
-  local value start now elapsed=0 message="$*" counter=1 exitCode=0 prefix="" timingSuffix=""
-  start=$(__environment beginTiming) || return $?
-  width="$timeout"
-  width="${#width}"
-
-  # IDENTICAL __interactiveCountdownReadBooleanStatus 3
-  [ "$attempts" -le 1 ] || prefix="$(decorate value "[🧪$counter/$attempts]") "
-  [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
-  statusMessage printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix"
-
-  exitCode=2
-  while [ "$exitCode" -ge 2 ]; do
-    while ! value=$(bashPromptUser -n 1 -s "${rr[@]+"${rr[@]}"}"); do
-      if [ -z "$timeout" ]; then
-        return 2
-      fi
-      now=$(__environment beginTiming) || return $?
-      elapsed=$((now - start))
-      if [ "$elapsed" -gt "$timeout" ]; then
-        return 10
-      fi
-      # IDENTICAL __interactiveCountdownReadBooleanStatus 3
-      [ "$attempts" -le 1 ] || prefix="$(decorate value "[🧪$counter/$attempts]") "
-      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
-      statusMessage printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix"
-    done
-    exitCode=0
-    parseBoolean "$value" || exitCode=$?
-    [ "$exitCode" -ge 2 ] || break
-    counter=$((counter + 1))
-    if [ "$attempts" -gt 0 ]; then
-      if [ $counter -gt "$attempts" ]; then
-        return 11
-      fi
-      # IDENTICAL __interactiveCountdownReadBooleanStatus 3
-      [ "$attempts" -le 1 ] || prefix="$(decorate value "[🧪$counter/$attempts]") "
-      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
-      statusMessage printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix"
-    fi
-  done
-  return "$exitCode"
-}
-
 __confirmYesNo() {
   local prefix="${2-}" exitCode=0
 
@@ -553,7 +447,7 @@ confirmYesNo() {
 
   local exitCode=0
 
-  while __echo __interactiveCountdownReadBoolean "$usage" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
+  while __interactiveCountdownReadBoolean "$usage" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
     case "$exitCode" in
       0 | 1)
         __confirmYesNo "$((exitCode - 1))"
@@ -584,7 +478,7 @@ _confirmYesNo() {
 interactiveCountdown() {
   local usage="_${FUNCNAME[0]}"
 
-  local prefix="" counter="" binary=""
+  local prefix="" counter="" binary="" runner=("statusMessage" "printf" -- "%s")
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -601,6 +495,9 @@ interactiveCountdown() {
         # shift here never fails as [ #$ -gt 0 ]
         shift
         prefix="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --badge)
+        runner=(bigTextAt "-5" "5")
         ;;
       *)
         if [ -z "$counter" ]; then
@@ -624,7 +521,7 @@ interactiveCountdown() {
   [ -z "$prefix" ] || prefix="$prefix "
 
   while [ "$now" -lt "$end" ]; do
-    statusMessage printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $counter ")"
+    "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $counter ")")"
     sleep 1
     now=$(__catchEnvironment "$usage" beginTiming) || return $?
     counter=$((end - now))
@@ -644,6 +541,7 @@ _interactiveCountdown() {
 # Argument: --info - Optional. Flag. Show user what they should do (press a key).
 # Argument: --no-info - Optional. Flag. Hide user info (what they should do ... press a key)
 # Argument: --verbose - Optional. Flag. Show what is done as status messages.
+# Argument: --clear - Optional. Flag. Clear the approval status for file given.
 # Argument: --prefix - Optional. String. Display this text before each status messages.
 # Security: Loads bash files
 # Loads files or a directory of `.sh` files using `source` to make the code available.
@@ -651,7 +549,7 @@ _interactiveCountdown() {
 interactiveBashSource() {
   local usage="_${FUNCNAME[0]}"
 
-  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30)
+  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 7) clearFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -670,6 +568,9 @@ interactiveBashSource() {
       --no-info)
         aa=()
         ;;
+      --clear)
+        clearFlag=true
+        ;;
       --verbose)
         verboseFlag=true
         ;;
@@ -681,16 +582,21 @@ interactiveBashSource() {
       *)
         local sourcePath="$argument" verb="" approved=false
         displayPath="$(decorate file "$sourcePath")"
+        if "$clearFlag"; then
+          __interactiveApproveClear "$usage" "$sourcePath" || return $?
+          ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
+          return 0
+        fi
         if [ -f "$sourcePath" ]; then
           verb="file"
-          if __interactiveApproved "$usage" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+          if __interactiveApprove "$usage" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
             ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" source "$sourcePath" || return $?
             approved=true
           fi
         elif [ -d "$sourcePath" ]; then
           verb="path"
-          if __interactiveApproved "$usage" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+          if __interactiveApprove "$usage" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
             ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
             __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
             approved=true

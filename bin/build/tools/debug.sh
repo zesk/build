@@ -300,9 +300,11 @@ plumber() {
 
   declare -p >"$__before"
   if "$@"; then
+    local __rawChanged
     declare -p >"$__after"
-    __pattern="$(quoteGrepPattern "^($(listJoin '|' "${__ignore[@]}"))=")"
-    __changed="$(diff "$__before" "$__after" | grep -e '^declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern")" || :
+    __pattern="$(quoteGrepPattern "^($(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}"))=")"
+    __changed="$(diff "$__before" "$__after" | grep -e '^declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern" || :)"
+    __rawChanged=$__changed
     __cmd="$(decorate each code "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
       decorate warning "$__cmd set $(decorate value "COLUMNS, LINES")" 1>&2
@@ -310,7 +312,7 @@ plumber() {
       __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $__changed" || return $?
     fi
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$__changed" | dumpPipe "$(decorate bold-orange "found leak"): $__cmd" 1>&2
+      printf "%s\n" "$__changed" | dumpPipe "$(decorate bold-orange "found leak"): $__cmd: $__rawChanged" 1>&2
       __result=$(_code leak)
     fi
   else

@@ -60,15 +60,19 @@ testSuite() {
   startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
   allTestStart=$(__catchEnvironment "$usage" beginTiming) || return $?
 
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
+
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
+
+  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  __catchEnvironment "$usage" touch "$quietLog" || return $?
+
+  # Start tracing
+  __catchEnvironment "$usage" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || return $?
 
   # Color mode
   export BUILD_COLORS BUILD_COLORS_MODE
   BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode) || return $?
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
-
-  # Start tracing
-  printf "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog"
 
   local tags=() skipTags=() runner=()
   local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false
@@ -785,16 +789,13 @@ __testCleanup() {
 }
 
 __testCleanupMess() {
-  local fn exitCode=$? messyOption="${1-}"
+  local exitCode=$? messyOption="${1-}"
 
   export __TEST_SUITE_CLEAN_EXIT
 
   __TEST_SUITE_CLEAN_EXIT="${__TEST_SUITE_CLEAN_EXIT-}"
   if [ "$__TEST_SUITE_CLEAN_EXIT" != "true" ]; then
-    printf -- "%s\n" "Stack:"
-    for fn in "${FUNCNAME[@]}"; do
-      printf -- "#%d %s\n" "$(incrementor "${FUNCNAME[0]}")" "$fn"
-    done
+    printf -- "%s\n%s\n" "Stack:" "$(debuggingStack)"
     printf "\n%s\n" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $__TEST_SUITE_TRACE"
   fi
   if [ "$messyOption" = "true" ]; then
