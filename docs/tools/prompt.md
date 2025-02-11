@@ -116,7 +116,12 @@ Arguments are the same as read, except:
 - [`bashPromptModule_dotFilesWatcher`](#bashPromptModule_dotFilesWatcher)
 - [`bashPromptModule_iTerm2Colors](#### `bashPromptModule_iTerm2Colors` - Sets the console colors based on the project you are
 
-Sets the console colors based on the project you are currently in
+Sets the console colors based on the project you are currently in.
+Place an iterm2 colors configuration file (values of `bg=FFF` etc. one per line, comments allowed)
+
+Will fill in missing bright or non-bright colors which are unspecified. (`blue` implies `br_blue` and so on)
+
+Sets `BUILD_COLORS_MODE` based on background color
 
 - Location: `bin/build/tools/prompt/iterm2-colors.sh`
 
@@ -202,7 +207,12 @@ Watches your HOME directory for `.` files which are added and unknown to you.
 
 ### `bashPromptModule_iTerm2Colors` - Sets the console colors based on the project you are
 
-Sets the console colors based on the project you are currently in
+Sets the console colors based on the project you are currently in.
+Place an iterm2 colors configuration file (values of `bg=FFF` etc. one per line, comments allowed)
+
+Will fill in missing bright or non-bright colors which are unspecified. (`blue` implies `br_blue` and so on)
+
+Sets `BUILD_COLORS_MODE` based on background color
 
 - Location: `bin/build/tools/prompt/iterm2-colors.sh`
 

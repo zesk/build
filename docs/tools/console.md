@@ -47,7 +47,7 @@ Print the suggested color mode for the current environment
 
 #### Arguments
 
-- No arguments.
+- `backgroundColor` - Optional. String. Background color.
 
 #### Exit codes
 

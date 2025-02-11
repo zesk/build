@@ -226,7 +226,7 @@ for sort - -k 1.c,1 - the `c` is the 1-based character index, so 2 means skip th
 
 Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume
 
-- Location: `bin/build/install-bin-build.sh`
+- Location: `bin/build/identical/versionSort.sh`
 
 #### Arguments
 

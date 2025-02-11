@@ -539,8 +539,11 @@ iTerm2Attention() {
         ignoreErrors=true
         ;;
       *)
-        # IDENTICAL handle-iTerm2ignore 1
-        isiTerm2 || $ignoreErrors && return 0 || __throwEnvironment "$usage" "Not iTerm2" || return $?
+        # IDENTICAL handle-iTerm2ignore 4
+        if ! isiTerm2; then
+          ! $ignoreErrors || return 0
+          __throwEnvironment "$usage" "Not iTerm2" || return $?
+        fi
 
         local result=0
 

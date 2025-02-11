@@ -48,9 +48,8 @@ Quote a sed command for search and replace
 ### `quoteSedPattern` - Quote sed search strings for shell use
 
 Quote a string to be used in a sed pattern on the command line.
-needSlash='$.*/[\]^'
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Arguments
 
@@ -59,6 +58,7 @@ needSlash='$.*/[\]^'
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+    needSlash=$(quoteSedPattern '$.*/[\]^')
 
 #### Sample Output
 
@@ -72,9 +72,9 @@ needSlash='$.*/[\]^'
 - `2` - Argument error
 ### `quoteSedReplacement` - Quote sed replacement strings for shell use
 
-needSlash='$.*/[\]^'
+Quote sed replacement strings for shell use
 
-- Location: `bin/build/map.sh`
+- Location: `bin/build/identical/quoteSedPattern.sh`
 
 #### Arguments
 
@@ -83,6 +83,7 @@ needSlash='$.*/[\]^'
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
+    needSlash=$(quoteSedPattern '$.*/[\]^')
 
 #### Sample Output
 
@@ -127,7 +128,7 @@ Quote bash strings for inclusion as single-quoted for eval
 
 Quote grep -e patterns for shell use
 
-- Location: `bin/build/tools/text.sh`
+- Location: `bin/build/identical/_text.sh`
 
 #### Arguments
 

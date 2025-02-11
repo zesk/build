@@ -127,6 +127,7 @@ Has security implications. Use with caution and ensure your directory is protect
 - `--info` - Optional. Flag. Show user what they should do (press a key).
 - `--no-info` - Optional. Flag. Hide user info (what they should do ... press a key)
 - `--verbose` - Optional. Flag. Show what is done as status messages.
+- `--clear` - Optional. Flag. Clear the approval status for file given.
 - `--prefix` - Optional. String. Display this text before each status messages.
 
 #### Exit codes

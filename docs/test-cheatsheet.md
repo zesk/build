@@ -1,6 +1,6 @@
 # test Cheat Sheet
 
-An blank EXPRESSION is false.
+An blank `EXPRESSION` is false.
 
 Expression combinations:
 
