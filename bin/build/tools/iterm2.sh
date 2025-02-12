@@ -101,7 +101,7 @@ __iTerm2UpdateState() {
 iTerm2PromptSupport() {
   local usage="_${FUNCNAME[0]}"
 
-  __catchEnvironment "$usage" bashPrompt --first __iTerm2PreExecution --last __iTerm2UpdateState || return $?
+  __catchEnvironment "$usage" bashPrompt --skip-terminal --first __iTerm2PreExecution --last __iTerm2UpdateState || return $?
   __catchEnvironment "$usage" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
 }
 _iTerm2PromptSupport() {

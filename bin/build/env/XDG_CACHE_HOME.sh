@@ -6,7 +6,11 @@
 # See: https://specifications.freedesktop.org/basedir-spec/latest/
 
 # shellcheck source=/dev/null
-source "${BASH_SOURCE[0]%/*}/XDG_DATA_HOME.sh"
+source "${BASH_SOURCE[0]%/*}/HOME.sh"
 set -u # Requires $XDG_DATA_HOME below
 export XDG_CACHE_HOME
-XDG_CACHE_HOME="${XDG_CACHE_HOME-"$XDG_DATA_HOME/.cache"}"
+if [ -z "$HOME" ]; then
+  XDG_CACHE_HOME="${XDG_CACHE_HOME-}"
+else
+  XDG_CACHE_HOME="${XDG_CACHE_HOME-"$HOME/.cache"}"
+fi
