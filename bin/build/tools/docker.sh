@@ -355,7 +355,7 @@ _dockerLocalContainer() {
 dockerImages() {
   local usage="_${FUNCNAME[0]}"
 
-  local filter=()
+  local filter=() debugFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -367,6 +367,9 @@ dockerImages() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --debug)
+        debugFlag=true
         ;;
       --filter)
         shift
@@ -384,7 +387,12 @@ dockerImages() {
 
   usageRequireBinary "$usage" docker || return $?
   __catchEnvironment "$usage" packageWhich jq jq || return $?
-  docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
+  if $debugFlag; then
+    __echo docker images --format json "${filter[@]+"${filter[@]}"}"
+    docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
+  else
+    docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
+  fi
 }
 _dockerImages() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

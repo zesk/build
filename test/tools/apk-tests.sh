@@ -18,20 +18,20 @@ testIsAlpine() {
 }
 
 testIsApkInstalled() {
-    __mockValue BUILD_DEBUG
+  __mockValue BUILD_DEBUG
 
-  apkIsInstalled --help >/dev/null || return $?
-#  echo "${BASH_SOURCE[0]}:$LINENO"
+  apkIsInstalled --help || return $?
+  #  echo "${BASH_SOURCE[0]}:$LINENO"
   assertExitCode --line "$LINENO" 0 apkIsInstalled --help || return $?
-#  echo "${BASH_SOURCE[0]}:$LINENO"
+  #  echo "${BASH_SOURCE[0]}:$LINENO"
   if isAlpine; then
-#    echo "${BASH_SOURCE[0]}:$LINENO"
+    #    echo "${BASH_SOURCE[0]}:$LINENO"
     assertExitCode --line "$LINENO" 0 apkIsInstalled || return $?
-#    echo "${BASH_SOURCE[0]}:$LINENO"
+    #    echo "${BASH_SOURCE[0]}:$LINENO"
   fi
-#  echo "${BASH_SOURCE[0]}:$LINENO"
+  #  echo "${BASH_SOURCE[0]}:$LINENO"
 
-    __mockValue BUILD_DEBUG "" --end
+  __mockValue BUILD_DEBUG "" --end
 
 }
 
@@ -47,6 +47,9 @@ testAlpineContainer() {
 
 testDebugAlpineContainer() {
   if whichExists docker; then
+    docker images --help
+    dockerImages --debug --filter alpine:latest
+
     # __echo alpineContainer echo "FOO=\"foo\"" # TODO - parse error: Invalid numeric literal at line 2, column 0 on BitBucket pipelines
     # WTF? Where is this coming from?
     alpineContainer echo "FOO=\"foo\"" || :
@@ -56,9 +59,8 @@ testDebugAlpineContainer() {
     # shellcheck disable=SC2016
     dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- echo '$(uname)' || :
     echo "${BASH_SOURCE[0]}:$LINENO"
-    dockerImages --filter alpine:latest
+    dockerImages --debug --filter alpine:latest
     echo "${BASH_SOURCE[0]}:$LINENO"
-    docker images --format json
     echo "${BASH_SOURCE[0]}:$LINENO"
     docker images --format json --filter "reference=alpine:latest"
     echo "${BASH_SOURCE[0]}:$LINENO"
