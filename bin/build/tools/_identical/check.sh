@@ -207,8 +207,8 @@ identicalCheck() {
   return "$exitCode"
 }
 _identicalCheck() {
-  # _IDENTICAL_ usageDocumentComplex 1
-  usageDocumentComplex "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} usage repairSource ... -- directory findArgs ...
