@@ -10,13 +10,13 @@
 testCursorGetSet() {
   if isTTYAvailable; then
     local x y
-    IFS=$'\n' read -r -d '' x y < <(cursorGet) || :
-    assertExitCode --line "$LINENO" 0 isUnsignedInteger "$x" || return $?
-    assertExitCode --line "$LINENO" 0 isUnsignedInteger "$y" || return $?
+    IFS=$'\n' read -r -d '' x y < <(cursorGet)
+    assertExitCode --display "$x is not unsigned integer" --line "$LINENO" 0 isUnsignedInteger "$x" || return $?
+    assertExitCode --display "$y is not unsigned integer" --line "$LINENO" 0 isUnsignedInteger "$y" || return $?
     assertExitCode --line "$LINENO" 0 cursorSet 0 0 || return $?
-    assertNotExitCode --line "$LINENO" 0 cursorSet 0 0 || return $?
-    assertExitCode --line "$LINENO" cursorSet 1 1 || return $?
-    assertExitCode --line "$LINENO" cursorSet "$(consoleColumns)" "$(consoleRows)" || return $?
-    assertExitCode --line "$LINENO" cursorSet "$x" "$y" || return $?
+    #    assertNotExitCode --line "$LINENO" 0 cursorSet 0 0 || return $?
+    assertExitCode --line "$LINENO" 0 cursorSet 1 1 || return $?
+    assertExitCode --line "$LINENO" 0 cursorSet "$(consoleColumns)" "$(consoleRows)" || return $?
+    assertExitCode --line "$LINENO" 0 cursorSet "$x" "$y" || return $?
   fi
 }

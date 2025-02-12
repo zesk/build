@@ -13,7 +13,7 @@ testIterm2() {
   LC_TERMINAL=wrong
   assertExitCode --stderr-match "Not iTerm2" --line "$LINENO" 1 iTerm2Init || return $?
   assertNotExitCode --line "$LINENO" 0 isiTerm2 || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match "does not support" 0 iTerm2Badge "foo" || return $?
+  assertNotExitCode --line "$LINENO" --stderr-match "Not iTerm2" 0 iTerm2Badge "foo" || return $?
   assertExitCode --line "$LINENO" 0 iTerm2Badge -i "foo" || return $?
   assertExitCode --line "$LINENO" 0 iTerm2Badge --ignore "foo" || return $?
   assertExitCode --line "$LINENO" 0 iTerm2Badge --help || return $?

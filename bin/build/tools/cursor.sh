@@ -11,6 +11,7 @@
 # Output is <x> <newline> <y> <newline>
 # stdout: UnsignedInteger
 # Escape: ESC `[6n`
+# Example:     IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
 cursorGet() {
   local usage="_${FUNCNAME[0]}"
 

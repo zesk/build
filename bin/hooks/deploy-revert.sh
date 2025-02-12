@@ -78,4 +78,4 @@ __hookDeployRevert() {
   ! buildDebugEnabled || decorate success "${BASH_SOURCE[0]} is a noop and should be replaced or deleted."
 }
 
-__hookDeployRevert "$@"
+__tools ../.. __hookDeployRevert "$@"
