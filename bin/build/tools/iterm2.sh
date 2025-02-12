@@ -430,7 +430,7 @@ iTerm2SetColors() {
         ;;
       # IDENTICAL case-iTerm2ignore 3
       --ignore | -i)
-        ignoreErrors=false
+        ignoreErrors=true
         ;;
       -*)
         # _IDENTICAL_ argumentUnknown 1
