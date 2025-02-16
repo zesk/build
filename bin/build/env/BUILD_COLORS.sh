@@ -4,5 +4,5 @@
 # Type: Boolean
 # Values: true|false|""
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Category: Console
+# Category: Decoration
 export BUILD_COLORS="${BUILD_COLORS-}"

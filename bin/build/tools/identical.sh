@@ -17,7 +17,7 @@ __identicalLineParse() {
 
   lineNumber=${identicalLine%%:*}
   if ! isUnsignedInteger "$lineNumber"; then
-    _environment "__identicalLineParse: \"$identicalLine\" no line number" || return $?
+    _environment "__identicalLineParse: \"$identicalLine\" no line number: \"$lineNumber\"" || return $?
   fi
   identicalLine=${identicalLine#*:}
   identicalLine="$(trimSpace "${identicalLine##*"$prefix"}")"

@@ -412,7 +412,7 @@ __installRemotePackageDirectoryLocal() {
     tempPath="$installPath.aboutToDelete.$$"
     __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
     __catchEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
-    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$tempPath" "$installPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
     __catchEnvironment "$usage" rm -rf "$tempPath" || :
   else
     tempPath=$(__catchEnvironment "$usage" dirname "$installPath") || return $?
@@ -526,8 +526,9 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL urlFetch 127
+# IDENTICAL urlFetch 128
 
+# Fetch URL content
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
@@ -856,7 +857,7 @@ _isFunction() {
 #
 # Usage: hasColors
 # Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - Colors are likely not supported by console
+# Exit Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {

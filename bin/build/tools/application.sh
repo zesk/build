@@ -43,9 +43,12 @@ __applicationHomeGo() {
 }
 
 #
-# Set, or cd to current project code home
-# Usage: {fn} [ directory ]
+# Set, or cd to current application home directory.
 #
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: directory - Directory. Optional. Set the application home to this directory.
+# Argument: --go - Flag. Optional. Change to the current saved application home directory.
 applicationHome() {
   local usage="_${FUNCNAME[0]}"
 
@@ -90,7 +93,8 @@ _applicationHome() {
 #
 # Set aliases `G` and `g` default for `applicationHome`
 # Localize as you wish for your own shell
-#
+# Argument: goAlias - String. Alias for `applicationHome --go`. Default is `g`.
+# Argument: setAlias - String. Alias for `applicationHome`. Default is `G`.
 applicationHomeAliases() {
   local usage="_${FUNCNAME[0]}"
   local goAlias="${1-g}" setAlias="${2-G}"

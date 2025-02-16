@@ -6,9 +6,9 @@ Pipeline, build, and operations tools useful for any project.
 - Build, deployment and management tools for pipelines and production systems (system setup, services, cron, permissions separations)
 - Operating system differences supported automatically
 
-This code toolkit depends solely on `bash` and a few other binaries (`jq`, `curl`) and a conscientious decision has been made to not depend on any other language libraries, as of 2025 support for Bash 3 and 4 remains stable.
+This code toolkit depends solely on [`bash`](https://www.gnu.org/software/bash/manual/bash.html) and a few other binaries (`jq`, `curl`) and a conscientious decision has been made to not depend on any other language libraries, as of 2025 support for Bash 3 and 4 remains stable.
 
-Depends on: 
+Depends on:
 
 - `curl` or `wget` - Remote installation
 - `jq` - Parsing JSON files
@@ -48,7 +48,7 @@ Zesk Build makes the following assumptions about your project structure:
 
 Internally Zesk Build is organized:
 
-- `bin/build/env/*.sh` - All external environment variables are referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files. 
+- `bin/build/env/*.sh` - All external environment variables are referenced here. Projects should override default *behavior* with `./bin/env/*.sh` files.
 - `bin/build/tools/*.sh` - Build tools function implementations and template files (`.md` files)
 - `bin/build/hooks/*.sh` - All default hooks are here - if your application does not implement them - these are used.
 

@@ -4,7 +4,7 @@
 # THe default is `$(buildHome)/bin/env`. Make sure to append to this as a `:`-list.
 # Type: DirectoryList
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Category: Configuration
+# Category: Build Configuration
 # See: https://specifications.freedesktop.org/basedir-spec/latest/
 
 # shellcheck source=/dev/null

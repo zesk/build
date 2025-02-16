@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # BUILD_HOME at . where this is installed at ./bin/build
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Category: Build
+# Category: Build Configuration
 # Type: Directory
 export BUILD_HOME
 

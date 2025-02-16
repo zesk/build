@@ -3,6 +3,6 @@
 # See: __decorateExtensionPair
 # Type: PositiveInteger
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Category: Decorate
+# Category: Decoration
 export BUILD_PAIR_WIDTH
 BUILD_PAIR_WIDTH="${BUILD_PAIR_WIDTH-40}"

@@ -3,6 +3,7 @@
 #
 # Copyright &copy; 2025 Market Acumen Inc.
 #
+# Requires: docker
 image: atlassian/default-image:4
 
 pipelines:

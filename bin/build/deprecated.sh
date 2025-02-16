@@ -143,7 +143,10 @@ ___deprecatedCleanup() {
 
 # list of ignore flags for `find`
 __deprecatedIgnore() {
-  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" -name 'deprecated.md' ! -name 'unused.md' "!" -path '*/docs/release/*' ! -path "*/.*/*"
+  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" \
+    -name 'deprecated.md' ! -name 'unused.md' \
+    "!" -path 'documentation/*/release/*' \
+    "!" -path "*/.*/*"
 }
 
 # Find files which match a token
@@ -151,7 +154,7 @@ __deprecatedFind() {
   local ignoreStuff=()
   read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || [ "${#ignoreStuff[@]}" -gt 0 ] || _environment "__deprecatedIgnore empty?" || return $?
   while [ "$#" -gt 0 ]; do
-    if find . -type f -name '*.sh' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
+    if find . -type f -name '*.sh' -or -name '*.md' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
       return 0
     fi
     shift

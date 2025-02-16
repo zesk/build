@@ -603,7 +603,7 @@ _isEmptyFile() {
 
 # Usage: {fn} directory
 _directoryGamutFile() {
-  local gamutModified="" remain comparer="$1" gamut="" directory="${2-.}"
+  local gamutModified="" remain comparer="$1" gamut="" directory="${2-.}" && shift 2
   while read -r modified file; do
     isPositiveInteger "$modified" || __throwEnvironment "$usage" "stat -lt output a non-integer: \"$modified\" \"$file\"" || return $?
     # shellcheck disable=SC1073 disable=SC1072 disable=SC1009
@@ -611,13 +611,15 @@ _directoryGamutFile() {
       gamutModified="$modified"
       gamut="$file"
     fi
-  done < <(find "$directory" -type f ! -path "*/.*/*" -exec stat -lt '%s' {} \+ | removeFields 5)
+  done < <(find "$directory" -type f ! -path "*/.*/*" "$@" -exec stat -lt '%s' {} \+ | removeFields 5)
   [ -n "$gamut" ] || return 1
   printf "%s\n" "$gamut"
 }
+
+# Argument: --find findArgs ... -- - Optional. ArgumentsDoubleDashDelimited. Arguments delimited by a double-dash (or end of argument list)
 _directoryGamutFileWrapper() {
   local usage="$1" comparator="$2" && shift 2
-  local directory=""
+  local directory="" findArgs=()
 
   # IDENTICAL startBeginTiming 1
   start=$(__catchEnvironment "$usage" beginTiming) || return $?
@@ -633,10 +635,18 @@ _directoryGamutFileWrapper() {
         "$usage" 0
         return $?
         ;;
+      --find)
+        shift
+        while [ $# -gt 0 ]; do
+          [ "$1" != "--" ] || break
+          findArgs+=("$1")
+          shift
+        done
+        ;;
       *)
         directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
-        if ! _directoryGamutFile "$comparator" "$directory"; then
-          __throwEnvironment "$usage" "No files in $(decorate file "$directory")" || return $?
+        if ! _directoryGamutFile "$comparator" "$directory" "${findArgs[@]+"${findArgs[@]}"}"; then
+          __throwEnvironment "$usage" "No files in $(decorate file "$directory") ("${findArgs[*]-}")" || return $?
         fi
         ;;
     esac
@@ -648,6 +658,7 @@ _directoryGamutFileWrapper() {
 
 # Find the oldest file in a directory
 # Argument: directory - Directory. Required. Directory to search for the oldest file.
+# Argument: --find findArgs ... -- - Optional. Arguments. Arguments delimited by a double-dash (or end of argument list)
 directoryOldestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-lt" "$@"
 }
@@ -658,6 +669,7 @@ _directoryOldestFile() {
 
 # Find the newest file in a directory
 # Argument: directory - Directory. Required. Directory to search for the newest file.
+# Argument: --find findArgs ... -- - Optional. Arguments. Arguments delimited by a double-dash (or end of argument list)
 directoryNewestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-gt" "$@"
 }

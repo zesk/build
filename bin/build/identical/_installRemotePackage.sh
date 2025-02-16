@@ -320,7 +320,7 @@ __installRemotePackageDirectoryLocal() {
     tempPath="$installPath.aboutToDelete.$$"
     __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
     __catchEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
-    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" || _undo $? mv -f "$tempPath" "$installPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
     __catchEnvironment "$usage" rm -rf "$tempPath" || :
   else
     tempPath=$(__catchEnvironment "$usage" dirname "$installPath") || return $?

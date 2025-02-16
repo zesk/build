@@ -1,0 +1,14 @@
+site_name: "{APPLICATION_NAME}"
+repo_url: https://github.com/{GITHUB_REPOSITORY_OWNER}/{GITHUB_REPOSITORY_NAME}
+# edit_uri_template: "blob/main/documentation/docs/{path}"
+site_description: "Toolkit for build, testing, system management, and deployment written in Bash"
+site_author: "{BUILD_COMPANY}"
+nav:
+  - Home: "index.md"
+  - "tools/index.md"
+  - Environment: "env/index.md"
+  - "guide/index.md"
+  - Releases: "release/index.md"
+  - about.md
+not_in_nav: |
+  nada.md

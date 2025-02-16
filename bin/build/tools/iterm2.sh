@@ -651,6 +651,8 @@ __iTerm2Version() {
   printf "%s\n" "$version"
 }
 
+# Output the iTerm2 version
+# Requires: stty
 iTerm2Version() {
   local usage="_${FUNCNAME[0]}"
 
@@ -686,24 +688,44 @@ iTerm2Version() {
     __throwEnvironment "$usage" "Not iTerm2" || return $?
   fi
 
-  # iTerm-proprietary, then
-  # Devices status
-  local version
+  local savedTTY undo=()
 
+  savedTTY=$(__catchEnvironment "$usage" stty -g) || return $?
+  undo=(stty "$savedTTY")
+
+  stty -echo -icanon raw || _undo $? "${undo[@]}" || return $?
+
+  # [1337n - iTerm version
+  # [5n - Device status - (Responds with esc [ 0 n.) All terminals support this.
+  # Send two to support non-iTerm terminals
+  printf "\e[1337n""\e[5n"
+
+  local version
   version=$(__iTerm2Version)
   case "$version" in
     "0" | "3")
-      version=$(__iTerm2Version)
-      printf "%s\n" "$version"
+      stty "$savedTTY" || :
+      __throwEnvironment "$usage" "iTerm2 did not respond to DSR 1337: $version" || return $?
       ;;
     *)
-      __throwEnvironment "$usage" "iTerm2 did not respond to DSR 1337" || return $?
+      # Read device status
+      muzzle __iTerm2Version || :
       ;;
   esac
+  stty "$savedTTY" || :
+  printf "%s\n" "$version"
 }
 _iTerm2Version() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Sends a notification message via Mac OS X from iTerm2
+# Argument: message - String. Required. Text to display.
+iTerm2Notify() {
+  local usage="_${FUNCNAME[0]}"
+  [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
+  printf "\e]9;%s\007" "$*"
 }
 
 # Add iTerm2 support to console

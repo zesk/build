@@ -29,12 +29,9 @@
 # Exit Code: 2 - Argument error
 documentationBuild() {
   local usage="_${FUNCNAME[0]}"
-  local cacheDirectory start docArgs indexArgs=()
+  local cacheDirectory start indexArgs=()
   local functionLinkPattern fileLinkPattern documentationTemplate
-  local start envFile verbose
-  local company companyLink home applicationName
-  local templatePath sourcePaths targetPath actionFlag unlinkedTemplate unlinkedTarget seeFunction seeFile seePrefix
-  local pageTemplate functionTemplate cleanFlag=false
+  local home
 
   export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
 
@@ -45,7 +42,10 @@ documentationBuild() {
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
+  local start
   start=$(beginTiming) || __throwEnvironment "$usage" beginTiming || return $?
+
+  local seeFunction seeFile seePrefix
 
   cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
   cacheDirectory=$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
@@ -53,18 +53,11 @@ documentationBuild() {
   seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
   seePrefix="./docs"
 
-  company=${BUILD_COMPANY-}
-  companyLink=${BUILD_COMPANY_LINK-}
-  applicationName="${APPLICATION_NAME-}"
-  sourcePaths=()
-  targetPath=
-  actionFlag=
-  unlinkedTemplate=
-  unlinkedTarget=
-  actionFlag=
-  verbose=false
-  pageTemplate=
-  functionTemplate=
+  local company=${BUILD_COMPANY-} companyLink=${BUILD_COMPANY_LINK-} applicationName="${APPLICATION_NAME-}"
+  local sourcePaths=() cleanFlag=false
+  local targetPath="" actionFlag="" unlinkedTemplate="" unlinkedTarget="" actionFlag="" verbose=false pageTemplate=""
+  local docArgs=() templatePath="" company="" applicationName="" functionTemplate=""
+
   # Default option settings
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -193,21 +186,28 @@ documentationBuild() {
   #
   # Build docs
   #
+  local clean=()
 
   if [ -n "$unlinkedTemplate" ]; then
     [ -n "$unlinkedTarget" ] || __throwArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
+    local envFile
     envFile=$(_buildDocumentationGenerateEnvironment "$company" "$companyLink" "$applicationName") || return $?
     __catchEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
+    docArgs+=(--env-file "$envFile")
     if [ "$actionFlag" = "--unlinked-update" ]; then
+      __catchEnvironment rm -rf "$envFile" || return $?
       printf "\n"
       return 0
     fi
+    clean+=("$envFile")
   else
     ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
 
-  __catchEnvironment "$usage" documentationTemplateDirectoryCompile --env-file "$envFile" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "$envFile" || return $?
+  __catchEnvironment "$usage" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "${clean[@]+"${clean[@]}"}" || return $?
+  [ ${#clean[@]} -eq 0 ] || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  clean=()
 
   #
   # {SEE:foo} gets linked in final documentation where it exists (rewrites file currently)

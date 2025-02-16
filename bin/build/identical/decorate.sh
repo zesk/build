@@ -84,7 +84,7 @@ EOF
 #
 # Usage: hasColors
 # Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - Colors are likely not supported by console
+# Exit Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
@@ -235,8 +235,10 @@ _caseStyles() {
   printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
 }
 
+# fn: decorate each
 # Usage: decorate each decoration argument1 argument2 ...
-# Runs the following command on each subsequent argument to allow for formatting with spaces
+# Runs the following command on each subsequent argument for formatting
+# Example:     decorate each code "$@"
 # Requires: decorate printf
 __decorateExtensionEach() {
   local code="$1" formatted=()

@@ -4,6 +4,6 @@
 # Type: String
 # Default: latest
 # See: phpComposer
-# Category: Development
+# Category: Installation
 export BUILD_COMPOSER_VERSION
 BUILD_COMPOSER_VERSION="${BUILD_COMPOSER_VERSION-latest}"

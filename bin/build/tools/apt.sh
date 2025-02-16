@@ -14,6 +14,7 @@ aptIsInstalled() {
   whichExists apt apt-get dpkg && [ -f /etc/debian_version ]
 }
 
+# Run apt non-interactively
 aptNonInteractive() {
   DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get "$@"
 }
@@ -156,6 +157,7 @@ _aptKeyAdd() {
 #
 # Usage: {fn} keyName [ ... ]
 # Argument: keyName - Required. String. One or more key names to remove.
+# Argument: --skip - Flag. Optional.a Do not do `apt-get update` afterwards to update the database.
 # Exit Code: 1 - if environment is awry
 # Exit Code: 0 - Apt key is installed AOK
 #

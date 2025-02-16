@@ -51,7 +51,3 @@ File `{applicationFile}`, function `{fn}` was reviewed {reviewed}.
 ## Errors
 
 {error}
-
-[⬅ Return to top](index.md)
-
-Copyright &copy; 2025 [{vendor}](https://marketacumen.com/?crcat=code&crsource=zesk/build&crcampaign=docs&crkeyword={title})

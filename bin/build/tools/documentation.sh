@@ -76,9 +76,10 @@ usageDocumentComplex() {
     __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || _clean $? "$variablesFile" || return $?
   fi
   (
-    local description="" argument=""
+    local description="" argument="" base
 
     set -a
+    base="$(basename "$functionDefinitionFile")"
     # shellcheck source=/dev/null
     source "$variablesFile"
     set +a
@@ -91,7 +92,7 @@ usageDocumentComplex() {
       __buildDebugDisable
     fi
     bashRecursionDebug
-    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$(decorate "$color" "$@")"
+    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s\n" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$(decorate "$color" "$@")"
     if $bashDebug; then
       __buildDebugEnable
     fi
@@ -256,9 +257,7 @@ documentationTemplateCompile() {
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
-  if ! compiledTemplateCache=$(requireDirectory "$cacheDirectory/compiledTemplateCache"); then
-    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || _clean $? "${clean[@]}" || return $?
-  fi
+  compiledTemplateCache=$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory/compiledTemplateCache") || _clean $? "${clean[@]}" || return $?
   # Environment change will affect this template
   # Function template change will affect this template
 
@@ -269,13 +268,20 @@ documentationTemplateCompile() {
       __catchEnvironment "$usage" cp "$mappedDocumentTemplate" "$targetFile" || _clean $? "${clean[@]}" || return $?
     fi
   else
+    local checkTokens=()
     checkFiles=()
     while read -r tokenName; do
+      if inArray "$tokenName" "${checkTokens[@]+"${checkTokens[@]}"}"; then
+        continue
+      fi
+      checkTokens+=("$tokenName")
       if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
         continue
       fi
-      # Source file of any token in the documentTemplate change will affect this template
-      checkFiles+=("$settingsFile")
+      if ! inArray "$settingsFile" "${checkFiles[@]}"; then
+        # Source file of any token in the documentTemplate change will affect this template
+        checkFiles+=("$settingsFile")
+      fi
     done <"$documentTokensFile"
     if $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
       message="Generated"

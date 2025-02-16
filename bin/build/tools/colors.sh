@@ -100,11 +100,9 @@ _consoleColorMode() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn}
+# Does the console support animation?
 # Exit Code: 0 - Supports console animation
-# Exit Code; 1 - Does not support console animation
-#
+# Exit Code: 1 - Does not support console animation
 hasConsoleAnimation() {
   # Important: This can *not* use buildEnvironmentLoad - leads to infinite loops
   export CI

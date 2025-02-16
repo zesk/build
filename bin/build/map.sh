@@ -315,7 +315,7 @@ usageArgumentString() {
 #
 # Usage: hasColors
 # Exit Code: 0 - Console or output supports colors
-# Exit Code; 1 - Colors are likely not supported by console
+# Exit Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {

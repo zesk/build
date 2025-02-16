@@ -56,5 +56,5 @@ testDocSections() {
   assertFileContains --line "$LINENO" "$doc" 'No arguments' || return $?
 
   __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitCommit "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
-  assertFileContains --line "$LINENO" "$doc" '#### Arguments' '--help' || return $?
+  assertFileContains --line "$LINENO" "$doc" '### Arguments' '--help' || return $?
 }

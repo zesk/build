@@ -7,6 +7,39 @@
 # Docs: ./docs/_templates/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
+bashBuiltins() {
+  printf "%s\n" ":" "." "[" "alias" "bg" "bind" "break" "builtin" "case" "cd" "command" "compgen" "complete" "continue" "declare" "dirs" "disown" "echo" "enable" "eval" "exec" "exit" "export" "fc" "fg" "getopts" \
+    "hash" "help" "history" "if" "jobs" "kill" "let" "local" "logout" "popd" "printf" "pushd" "pwd" "read" "readonly" "return" "set" "shift" "shopt" "source" "suspend" "test" "times" "trap" "type" "typeset" \
+    "ulimit" "umask" "unalias" "unset" "until" "wait" "while"
+}
+
+# Argument: builtin - String. Required. String to check if it's a bash builtin.
+# Exit Code: 0 - Yes, this string is a bash builtin command.
+# Exit Code: 1 - No, this is not a bash builtin command
+isBashBuiltin() {
+  local usage="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __throwArgument "$usage" "Need builtin" || return $?
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  case "${1-}" in
+    ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "fc" | "fg" | "getopts")
+      return 0
+      ;;
+    "hash" | "help" | "history" | "if" | "jobs" | "kill" | "let" | "local" | "logout" | "popd" | "printf" | "pushd" | "pwd" | "read" | "readonly" | "return" | "set" | "shift" | "shopt" | "source" | "suspend" | "test" | "times" | "trap" | "type" | "typeset")
+      return 0
+      ;;
+    "ulimit" | "umask" | "unalias" | "unset" | "until" | "wait" | "while")
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+_isBashBuiltin() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Output the home for a library in the parent path
 # Usage: {fn} libraryRelativePath [ startDirectory ]
 # Argument: libraryRelativePath - String. Required. Path of file to find from the home directory.

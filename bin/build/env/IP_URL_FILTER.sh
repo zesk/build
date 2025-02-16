@@ -4,7 +4,7 @@
 # See: ipLookup
 # Type: String
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Category: pipeline
+# Category: Build Configuration
 # Type: String
 export IP_URL_FILTER
 IP_URL_FILTER="${IP_URL_FILTER-}"

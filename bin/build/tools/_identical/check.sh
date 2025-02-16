@@ -192,6 +192,7 @@ identicalCheck() {
   # Singles checks
   #
   if ! $ignoreSingles; then
+    confirmYesNo "Singles check? $stateFile"
     _identicalCheckSinglesChecker "$usage" "$stateFile" || exitCode=$?
   fi
 

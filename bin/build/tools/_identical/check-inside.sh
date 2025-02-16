@@ -125,7 +125,7 @@ _identicalCheckInsideLoop() {
       statusMessage decorate info "$(printf -- "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(decorate code "$token")" "$(decorate value "$(decorate file "$searchFile")")")"
     fi
   done < <(grep -n -e "$quotedPrefix" <"$searchFile" || :)
-  environmentValueWriteArray "badFiles" "${badFiles[@]+"${badFiles[@]}"}" >>"$stateFile" || return $?
+  [ ${#badFiles[@]} -eq 0 ] || environmentValueWriteArray "badFiles" "${badFiles[@]+"${badFiles[@]}"}" >>"$stateFile" || return $?
   [ ${#badFiles[@]} -eq 0 ]
 }
 

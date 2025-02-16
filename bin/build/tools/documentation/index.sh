@@ -133,11 +133,10 @@ __documentationIndex_GeneratePath() {
 documentationIndex_Generate() {
   local usage="_${FUNCNAME[0]}"
 
-  local codePath cacheDirectory
-  local start shellFile functionName lineNumber fileCacheMarker functionIndex fileIndex
+  local forceFlag=false
 
-  codePath=
-  cacheDirectory=
+  local codePath="" cacheDirectory=""
+
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -148,6 +147,9 @@ documentationIndex_Generate() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --force)
+        forceFlag=true
         ;;
       *)
         if [ -z "$codePath" ]; then
@@ -176,22 +178,42 @@ documentationIndex_Generate() {
     __throwArgument "$usage" "cacheDirectory required" || return $?
     return $?
   fi
+
+  local start
   if ! start=$(beginTiming); then
     return $?
   fi
-  functionIndex="$cacheDirectory/index"
+  local functionIndex="$cacheDirectory/index"
   if [ ! -d "$functionIndex" ]; then
     __catchEnvironment "$usage" mkdir -p "$functionIndex" || return $?
   fi
   if [ ! -d "$cacheDirectory/files" ]; then
     __catchEnvironment "$usage" mkdir -p "$cacheDirectory/files" || return $?
   fi
+
+  local newestFile="$cacheDirectory/newest" cachedSavedNewestFileModified
+
+  [ -f "$newestFile" ] || __catchEnvironment "$usage" touch "$newestFile" || return $?
+  cachedSavedNewestFileModified="$(head -n 1 "$newestFile")"
+  if ! $forceFlag && newestFile=$(directoryNewestFile --find -name '*.sh' -- "$codePath"); then
+    local newestFileModified
+    if newestFileModified=$(modificationTime "$newestFile") && isUnsignedInteger "$cachedSavedNewestFileModified"; then
+      if [ "$newestFileModified" -lt "$cachedSavedNewestFileModified" ]; then
+        statusMessage decorate info "$(decorate file "$codePath") nothing changed"
+        return 0
+      fi
+    fi
+    printf "%s\n" "$newestFileModified" "$newestFile" >>"$cacheDirectory/newest"
+  fi
+
+  local shellFile
   if ! find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' | while read -r shellFile; do
+    local fileIndex
     fileIndex="$cacheDirectory/files/$(basename "$shellFile")"
     if [ ! -f "$fileIndex" ] || ! grep -q "$shellFile" "$fileIndex"; then
       printf -- "%s\n" "$shellFile" >>"$fileIndex"
     fi
-    fileCacheMarker="$cacheDirectory/code/${shellFile#/}"
+    local fileCacheMarker="$cacheDirectory/code/${shellFile#/}"
     if [ ! -d "$fileCacheMarker" ]; then
       __catchEnvironment "$usage" mkdir -p "$fileCacheMarker" || return $?
     elif isNewestFile "$fileCacheMarker/.marker" "$shellFile"; then
@@ -199,8 +221,7 @@ documentationIndex_Generate() {
       continue
     fi
     pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$shellFile" | while read -r functionName; do
-      lineNumber="${functionName%%:*}"
-      functionName="${functionName#*:}"
+      local lineNumber="${functionName%%:*}" functionName="${functionName#*:}"
       statusMessage decorate info "$(printf -- "Found %s at %s:%s\n" "$(decorate code "$functionName")" "$(decorate magenta "$(decorate file "$shellFile")")" "$(decorate red "$lineNumber")")"
       if ! bashDocumentation_Extract "$shellFile" "$functionName" >"$fileCacheMarker/$functionName"; then
         rm -f "$fileCacheMarker/$functionName" || :
@@ -209,6 +230,7 @@ documentationIndex_Generate() {
       fi
       printf "%s\n%s\n" "$shellFile" "$lineNumber" >"$functionIndex/$functionName"
     done || :
+    local count
     touch "$fileCacheMarker/.marker"
     count="$(find "$fileCacheMarker" -type f | wc -l | trimSpace)"
     count=$((count - 1))

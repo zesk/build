@@ -3,6 +3,7 @@
 # See: yarnInstall
 # Type: String
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Category: Installation
+# Category: Vendor
+# Vendor: yarn
 export BUILD_YARN_VERSION
 BUILD_YARN_VERSION="${BUILD_YARN_VERSION-}"

@@ -114,9 +114,9 @@ showContext() {
   elif isVisualStudioCode; then
     printf "%s\n" code
   elif [ -n "${EDITOR-}" ]; then
-    printf "EDITOR=%s \$EDITOR\n" "$EDITOR"
+    printf "EDITOR=%s\n" "$EDITOR"
   elif [ -n "${VISUAL-}" ]; then
-    printf "VISUAL=%s \$VISUAL\n" "$VISUAL"
+    printf "VISUAL=%sx\n" "$VISUAL"
   else
     return 1
   fi

@@ -85,6 +85,25 @@ __bashPromptAdd() {
   return 0
 }
 
+bashPromptColorsFormat() {
+  local index color colors=()
+  local all=()
+
+  while read -r color; do all+=("$color"); done < <(decorations)
+  IFS=":" read -r -a colors <<<"$1:::::" || :
+  for index in "${!colors[@]}"; do
+    color="${colors[index]}"
+    if inArray "$color" "${all[@]}"; then
+      colors[index]="$(decorate "$color")"
+    else
+      colors[index]=""
+    fi
+    [ "$index" -le 4 ] || unset "colors[$index]"
+  done
+  colors+=("$(decorate reset)")
+  printf "%s\n" "$(listJoin ":" "${colors[@]}")"
+}
+
 # Usage: {fn} usageFunction removeModule
 # Fails if not found
 __bashPromptRemove() {
@@ -112,12 +131,11 @@ __bashPromptRemove() {
 # Argument: --last - Flag. Optional. Add all subsequent modules last to the list.
 # Argument: --label promptLabel - String. Optional. Display this label on each prompt.
 # Argument: module - String. Optional. Module to enable or disable. To disable, specify `-module`
-# Argument: --colors colorsText - String. Optional. Set the prompt colors
+# Argument: --colors colorsText - String. Optional. Set the prompt colors.
 # Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to standard in.
 # Bash prompt creates a prompt and adds return code status display and modules
 # Modules are any binary or executable to run each prompt, and can be added or removed here
-# - `consoleDefaultTitle`
-# Example: bashPrompt --colors "$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)"
+# Example: bashPrompt --colors "bold-cyan:bold-magenta:green:orange:code"
 # Environment: PROMPT_COMMAND
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
@@ -199,8 +217,10 @@ bashPrompt() {
 
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
 
-  [ -z "$colorsText" ] || BUILD_PROMPT_COLORS="${colorsText}"
-  [ -n "${BUILD_PROMPT_COLORS-}" ] || BUILD_PROMPT_COLORS="$(bashPromptColorScheme default)"
+  if [ -z "${BUILD_PROMPT_COLORS-}" ] || [ -n "$colorsText" ]; then
+    [ -n "$colorsText" ] || colorsText=$(bashPromptColorScheme default)
+    BUILD_PROMPT_COLORS=$(bashPromptColorsFormat "${colorsText}")
+  fi
 
   local theCommand="__bashPromptCommand"
   if [ -n "${PROMPT_COMMAND-}" ]; then
@@ -295,12 +315,12 @@ _bashPromptMarkers() {
 bashPromptColorScheme() {
   local colors exitColor
   __help "$usage" "$@" || return 0
-  exitColor="$(decorate bold-green):$(decorate bold-red)"
+  exitColor="bold-green:bold-red"
   case "${1-}" in
-    forest) colors="$(decorate bold-cyan):$(decorate bold-magenta):$(decorate green):$(decorate orange):$(decorate code)" ;;
-    light) colors="$exitColor:$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
-    dark) colors="$exitColor:$(decorate magenta):$(decorate blue):$(decorate bold-white)" ;;
-    *) colors="$exitColor:$(decorate magenta):$(decorate blue):$(decorate bold-black)" ;;
+    forest) colors="bold-cyan:bold-magenta:green:orange:code" ;;
+    light) colors="$exitColor:magenta:blue:bold-black" ;;
+    dark) colors="$exitColor:magenta:blue:bold-white" ;;
+    *) colors="$exitColor:magenta:blue:bold-black" ;;
   esac
   printf -- "%s" "$colors"
 }
@@ -317,18 +337,23 @@ bashPromptColorScheme() {
 __bashPromptGeneratePS1() {
   local colors reset
   export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
-  reset="$(decorate reset)"
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
+  reset="$(decorate reset)"
   printf -- "%s%s%s@%s %s %s %s" \
-    "\${__BASH_PROMPT_MARKERS[0]-}" \
+    "\[\${__BASH_PROMPT_MARKERS[0]-}\]" \
     "\${__BASH_PROMPT_PREVIOUS[1]-}" \
     "\[${colors[2]-}\]\u\[${reset}\]" \
     "\[${colors[3]-}\]\h" \
     "\[${colors[4]-}\]\w\[${reset}\]" \
     "\[\${__BASH_PROMPT_PREVIOUS[2]-}\]\${__BASH_PROMPT_PREVIOUS[3]-}\[${reset}\]" \
-    "\${__BASH_PROMPT_MARKERS[1]-}"
+    "\[\${__BASH_PROMPT_MARKERS[1]-}\]"
 }
 
+# __BASH_PROMPT_PREVIOUS
+# 0 - exit status
+# 1 - prompt prefix
+# 2 - last statement prefix
+# 3 - last statement symbol
 # This is the main command running each command prompt
 __bashPromptCommand() {
   __BASH_PROMPT_PREVIOUS=("$?" "${__BASH_PROMPT_PREVIOUS[1]-}")

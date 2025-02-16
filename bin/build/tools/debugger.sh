@@ -94,6 +94,7 @@ _bashDebugWatch() {
   [ "${#__BUILD_BASH_DEBUG_WATCH[@]}" -gt 0 ] || return 0
   local __item __index=0
   for __item in "${__BUILD_BASH_DEBUG_WATCH[@]}"; do
+    local __value
     if ! __value="$(eval "printf \"%s\n\" \"$__item\"" 2>/dev/null)"; then
       __value="$(decorate red "unbound")"
     else

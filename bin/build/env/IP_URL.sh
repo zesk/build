@@ -3,6 +3,6 @@
 # See: ipLookup
 # Type: URL
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Category: pipeline
+# Category: Build Configuration
 export IP_URL
 IP_URL="${IP_URL-}"

@@ -5,7 +5,7 @@
 # Zesk Build tools
 #
 # Test: o test/tools/self-tests.sh
-# Docs: o docs/_templates/tools/self.md
+# Docs: o docs/_templates/tools/build.md
 
 # Installs an installer the first time in a new project, and modifies it to work in the application path.
 # Argument: --help - Optional. Flag. This help.

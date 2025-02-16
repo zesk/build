@@ -11,6 +11,48 @@
 # Docs: o ./docs/_templates/tools/markdown.md
 # Test: o ./test/tools/markdown-tests.sh
 
+# Add an indent to all markdown headings
+markdownIndentHeading() {
+  local usage="_${FUNCNAME[0]}"
+
+  local direction=1
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        direction=$(usageArgumentPositiveInteger "$usage" "direction" "$1") || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local line append
+
+  append=$(repeat "$direction" "#")
+  while IFS="" read -r line; do
+    if [ "${line:0:1}" = "#" ]; then
+      printf "%s\n" "$append$line"
+    else
+      printf "%s\n" "$line"
+    fi
+  done
+}
+_markdownIndentHeading() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Given a file containing Markdown, remove header and any section which has a variable still
 #

@@ -190,7 +190,9 @@ urlValid() {
   done
 }
 
-# Open URLs which appear in a stream (but continue to output the stream)
+# Open URLs which appear in a stream
+# (but continue to output the stream)
+# Argument: --exec - Executable. Optional. If not supplied uses `urlOpen`.
 # stdin: text
 # stdout: text
 urlOpener() {
@@ -428,8 +430,9 @@ __urlOpenInnerLoop() {
   fi
 }
 
-# IDENTICAL urlFetch 127
+# IDENTICAL urlFetch 128
 
+# Fetch URL content
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'

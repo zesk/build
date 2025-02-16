@@ -63,43 +63,323 @@ isUnsignedInteger() {
 # <-- END of IDENTICAL _return
 
 __buildDocumentationBuildDirectory() {
-  local home="$1" subPath="$2" template="$3"
-  shift 3
-  documentationBuild --source "$home/bin" --template "$home/docs/_templates/$subPath" --unlinked-template "$home/docs/_templates/tools/todo.md" --unlinked-target "$home/docs/tools/todo.md" --target "$home/docs/$subPath" --function-template "$template" --page-template "$home/docs/_templates/__main.md" --see-prefix "./docs" "$@" || return $?
+  local usage="$1" home="$2" aa=() target
+  shift 2
+
+  local prefix="$home/documentation/source"
+  while read -r markdownFile; do
+    target="$home/documentation/docs${markdownFile#"$prefix"}"
+    __catchEnvironment "$usage" muzzle requireFileDirectory "$target" || return $?
+    __catchEnvironment "$usage" cp "$markdownFile" "$target" || return $?
+  done < <(find "$prefix" -name '*.md' ! -path '*/tools/*')
+
+  source="$home/documentation/source/tools"
+  target="$home/documentation/docs/tools"
+
+  __catchEnvironment "$usage" muzzle requireDirectory "$target" || return $?
+
+  local markdownFile
+  while read -r markdownFile; do
+    markdownFile=${markdownFile#"$source"}
+    markdownFile="${target}/${markdownFile#/}"
+    if [ ! -f "$markdownFile" ]; then
+      __catchEnvironment "$usage" muzzle requireFileDirectory "$markdownFile" || return $?
+      __catchEnvironment "$usage" touch "$markdownFile" || return $?
+    fi
+  done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
+
+  functionTemplate="$(__catchEnvironment "$usage" documentationTemplate "function")" || return $?
+
+  aa+=(--source "$home/bin")
+  aa+=(--template "$source")
+  aa+=(--unlinked-template "$home/documentation/source/tools/todo.md" --unlinked-target "$home/documentation/docs/tools/todo.md")
+  aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
+  aa+=(--see-prefix "./documentation/docs")
+  aa+=(--target "$target")
+
+  documentationBuild "${aa[@]}" "$@" || return $?
+}
+
+__buildDocumentationBuildRelease() {
+  local usage="$1" home="$2" release currentNotes notesPath
+  local target="$home/documentation/docs/release/index.md"
+  local recentNotes=10 index
+
+  currentNotes=$(releaseNotes)
+
+  printf -- "%s\n" "# Release Notes" "" >"$target"
+
+  index=0
+  notesPath=$(dirname "$currentNotes")
+  while IFS="" read -r release; do
+    local version=${release##*/}
+    version="${version%.*}"
+    if [ $index -lt $recentNotes ]; then
+      printf "%s\n" "" "$(markdownIndentHeading <"$release")" >>"$target"
+    elif [ $index -eq $recentNotes ]; then
+      printf -- "%s\n" "" "# Past releases" "" >>"$target"
+    fi
+    if [ $index -ge $recentNotes ]; then
+      printf -- "- [%s](%s)\n" "$version" "./$version.md" >>"$target"
+    fi
+    index=$((index + 1))
+  done < <(find "$notesPath" -name "*.md" | versionSort -r)
+}
+
+__buildDocumentationBuildEnv() {
+  local usage="$1" home="$2" cleanFlag="$3" moreTemplate cacheDirectory appName target
+
+  lineTemplate="$home/documentation/template/env-line.md"
+  moreTemplate="$home/documentation/template/env-more.md"
+  source="$home/documentation/source/env/index.md"
+  target="$home/documentation/docs/env"
+  appName=$(__catchEnvironment "$usage" buildEnvironmentGet APPLICATION_CODE) || return $?
+  cacheDirectory=$(__catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "$appName/.environmentVariables" XDG_CACHE_HOME) || return $?
+
+  if "$cleanFlag"; then
+    __catchEnvironment "$usage" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
+    return 0
+  fi
+  __catchEnvironment "$usage" muzzle requireDirectory "$target" || return $?
+  __catchEnvironment "$usage" cat "$source" >"$target/index.md" || return $?
+  local envFile categories=()
+
+  [ -f "$cacheDirectory/categories" ] || __catchEnvironment "$usage" touch "$cacheDirectory/categories" || return $?
+  while IFS="" read -r item; do categories+=("$item"); done <"$cacheDirectory/categories"
+
+  statusMessage decorate info "Iterating through env files ..."
+  __catchEnvironment "$usage" cp "$cacheDirectory/categories" "$cacheDirectory/categories.unsorted" || return $?
+  while read -r envFile; do
+    local envTarget name="${envFile##*/}"
+
+    set -a
+    name="${name%.sh}"
+    envTarget="$cacheDirectory/$name"
+    moreTarget="$cacheDirectory/more.$name"
+    if [ -f "$envTarget" ] && isNewestFile "$envTarget" "$envFile" "$lineTemplate" "$moreTemplate"; then
+      statusMessage decorate notice "Cached $(basename "$envFile") ..."
+      continue
+    else
+      statusMessage decorate info "Generated $(basename "$envFile") ..."
+    fi
+
+    local description type lines more="" shortDesc
+    description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
+    lines=$(($(printf "%s\n" "$description" | wc -l) + 0))
+
+    local categoryName categoryFileName
+
+    categoryName="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Category:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
+    [ -n "$categoryName" ] || categoryName="Uncategorized"
+    categoryFileName="${categoryName// /_}"
+
+    type="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Type:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
+    if [ "$lines" -le 2 ]; then
+      shortDesc="${description//$'\n'/ }"
+      more=""
+    else
+      more="[notes](#$name)"
+      shortDesc="$(printf "%s\n" "$description" | head -n 1)"
+    fi
+
+    if ! inArray "$categoryName" "${categories[@]}"; then
+      __catchEnvironment "$usage" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || return $?
+      categories+=("$categoryName")
+    fi
+    __catchEnvironment "$usage" printf "%s\n" "$name" >>"$cacheDirectory/category.$categoryFileName" || return $?
+
+    description=$shortDesc category="$categoryName" more="$more" type="$type" mapEnvironment <"$lineTemplate" >"$envTarget"
+    if [ -n "$more" ]; then
+      category="$categoryName" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget"
+    fi
+    printf "%s\n" "$name" >>"$cacheDirectory/mores"
+  done < <(find "$home/bin/build/env" -maxdepth 1 -name "*.sh")
+  __catchEnvironment "$usage" sort -u <"$cacheDirectory/categories.unsorted" >"$cacheDirectory/categories" || return $?
+  __catchEnvironment "$usage" rm -rf "$cacheDirectory/categories.unsorted" || return $?
+
+  local targetFile
+
+  targetFile="$target/index.md"
+  local categoryName
+  while IFS="" read -r categoryName; do
+    categoryFileName="${categoryName// /_}"
+    statusMessage decorate info "Processing $(basename "$categoryName") ..."
+    local name
+    if [ -f "$cacheDirectory/category.$categoryFileName" ]; then
+      printf "%s\n" "## $categoryName" "" >>"$targetFile"
+      while IFS="" read -r name; do
+        printf "%s\n" "$(cat "$cacheDirectory/$name")" >>"$targetFile"
+      done < <(sort -u "$cacheDirectory/category.$categoryFileName")
+      printf "\n" >>"$targetFile"
+    fi
+  done <"$cacheDirectory/categories"
+
+  local name
+  while IFS="" read -r name; do
+    if [ -f "$cacheDirectory/more.$name" ]; then
+      printf "\n" >>"$targetFile"
+      cat "$cacheDirectory/more.$name" >>"$targetFile"
+    fi
+  done < <(sort -u "$cacheDirectory/mores")
+}
+
+__mkdocsConfiguration() {
+  local usage="$1" token source="mkdocs.template.yml" target="mkdocs.yml"
+
+  [ -f "$source" ] || __throwEnvironment "$usage" "missing $source" || return $?
+  while IFS="" read -r token; do
+    # skip lowercase
+    [ "$token" != "$(lowercase "$token")" ] || continue
+    __catchEnvironment "$usage" buildEnvironmentLoad "$token" || return $?
+    export "${token?}"
+  done < <(mapTokens <"$source")
+  __catchEnvironment "$usage" mapEnvironment <"$source" >"$target" || return $?
 }
 
 # Build the build documentation
+# fn: {base}
+# Argument: --templates-only - Flag. Just template identical updates.
+# Argument: --derived-only - Flag. Just derived files only.
+# Argument: --reference-only - Flag. Just tools documentation.
+# Argument: --clean - Flag. Clean caches.
 # See: documentationBuild
 __buildDocumentationBuild() {
   local usage="_${FUNCNAME[0]}"
-  local here="${BASH_SOURCE[0]%/*}" home
+  local here="${BASH_SOURCE[0]%/*}" home start
 
-  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
-  lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
-  home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
-  example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" mapEnvironment <"$home/docs/_templates/coding.md" >"$home/docs/coding.md"
+  export APPLICATION_NAME
 
-  if [ "${1-}" != "--clean" ]; then
-    local newestParts newestDocs
-    newestParts=$(directoryNewestFile "$home/docs/_templates/_parts")
-    newestDocs=$(directoryNewestFile "$home/docs")
-    if isNewestFile "$newestParts" "$newestDocs"; then
-      documentationTemplateUpdate "$home/docs" "$home/docs/_templates/_parts" || return $?
-    fi
-  fi
-  # This was more complex before fix it later
-  for f in "$home/docs/_templates/"*.md; do
-    local name target
-    name=$(basename "$f") target="$home/docs/$name"
-    [ "${name#_}" = "$name" ] || continue
-    if isNewestFile "$f" "$target"; then
-      cp "$f" "$target"
-    fi
+  local da=()
+  local cleanFlag=false updateDerived=true updateTemplates=false updateReference=true makeDocumentation=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --templates-only)
+        updateDerived=false
+        updateTemplates="true"
+        updateReference=false
+        makeDocumentation=false
+        ;;
+      --derived-only)
+        updateDerived="true"
+        updateTemplates=false
+        updateReference=false
+        makeDocumentation=false
+        ;;
+      --reference-only)
+        updateDerived=false
+        updateTemplates=false
+        updateReference="true"
+        makeDocumentation=false
+        ;;
+      --clean)
+        cleanFlag=true
+        ;;
+      --force)
+        da+=("$argument")
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 
-  __catchEnvironment "$usage" __buildDocumentationBuildDirectory "$home" "tools" "$(documentationTemplate "function")" "$@" || return $?
+  # Greeting
+  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
+  statusMessage lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
+  home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
 
+  # --clean
+  if $cleanFlag; then
+    # Clean env cache
+    __catchEnvironment "$usage" __buildDocumentationBuildEnv "$usage" "$home" "true" || return $?
+    # Clean reference cache
+    __buildDocumentationBuildDirectory "$usage" "$home" --clean || return $?
+    return 0
+  fi
+
+  # Ensure we have our target
+  __catchEnvironment "$usage" muzzle requireDirectory "$home/documentation/docs" || return $?
+
+  # Templates should be up-to-date if making documentation
+  if ! $updateTemplates && $makeDocumentation; then
+    local newestTemplate newestDocs
+    newestTemplate=$(directoryNewestFile "$home/documentation/template")
+    newestDocs=$(directoryNewestFile "$home/documentation/source")
+    if isNewestFile "$newestTemplate" "$newestDocs"; then
+      updateTemplates=true
+    fi
+  fi
+
+  if $updateTemplates; then
+    statusMessage decorate notice "Updating document templates ..."
+    documentationTemplateUpdate "$home/documentation/source" "$home/documentation/template" || return $?
+  fi
+
+  if $updateDerived; then
+    local file
+
+    statusMessage decorate notice "Updating release page ..."
+    __buildDocumentationBuildRelease "$usage" "$home" || return $?
+
+    statusMessage decorate notice "Updating mkdocs.yml ..."
+
+    __catchEnvironment "$usage" muzzle pushd "./documentation" || return $?
+    __mkdocsConfiguration "$usage" || return $?
+    __catchEnvironment "$usage" muzzle popd || return $?
+
+    local sourceHome="$home/documentation/source" targetHome="$home/documentation/docs"
+    while IFS="" read -r file; do
+      file=${file#"$sourceHome"}
+      statusMessage decorate notice "Updating $file ..."
+      __catchEnvironment "$usage" requireFileDirectory "$targetHome/$file" || return $?
+      __catchEnvironment "$usage" cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
+    done < <(
+      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*"
+      printf "%s\n" "$sourceHome/tools/index.md"
+    )
+
+    # Coding
+    example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" mapEnvironment <"$home/documentation/source/reference/coding.md" >"$home/documentation/docs/reference/coding.md"
+
+    statusMessage decorate notice "Updating env/index.md ..."
+    __catchEnvironment "$usage" __buildDocumentationBuildEnv "$usage" "$home" "false" || return $?
+  fi
+
+  if "$updateReference"; then
+    __catchEnvironment "$usage" __buildDocumentationBuildDirectory "$usage" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
+  fi
+
+  if "$makeDocumentation"; then
+    if ! whichExists mkdocs; then
+      __catchEnvironment "$usage" pythonInstall || return $?
+
+      whichExists pip || __failEnvioronment "$usage" "python does not install pip?" || return $?
+      whichExists mkdocs || __catchEnvironment "$usage" pip install mkdocs || return $?
+      whichExists mkdocs || __failEnvioronment "$usage" "mkdocs not found after installation?" || return $?
+    fi
+    __catchEnvironment "$usage" muzzle pushd "./documentation" || return $?
+    __mkdocsConfiguration "$usage" || return $?
+
+    __catchEnvironment "$usage" mkdocs build || return $?
+    __catchEnvironment "$usage" muzzle popd || return $?
+  fi
+
+  statusMessage --last reportTiming "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
 }
 ___buildDocumentationBuild() {
   # _IDENTICAL_ usageDocument 1
