@@ -256,13 +256,9 @@ _buildFunctions() {
 # Environment: XDG_CACHE_HOME
 buildCacheDirectory() {
   local usage="_${FUNCNAME[0]}"
-  local cache suffix
-
-  cache=$(__catchEnvironment "$usage" buildEnvironmentGet XDG_CACHE_HOME) || return $?
-  suffix="$(printf "%s/" "$@")"
-  suffix="${suffix%/}"
-  suffix="$(printf "%s/%s" "${cache%/}" "${suffix%/}")"
-  printf "%s\n" "${suffix%/}"
+  local suffix
+  suffix="$(printf "%s/" ".build" "$@")"
+  __catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
 }
 _buildCacheDirectory() {
   # _IDENTICAL_ usageDocument 1

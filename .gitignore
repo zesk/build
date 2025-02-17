@@ -23,3 +23,5 @@
 /.idea/*/
 ORIGINALS/
 /documentation/docs/
+/documentation/mkdocs.yml
+/documentation/site/

@@ -126,103 +126,6 @@ __buildDocumentationBuildRelease() {
   done < <(find "$notesPath" -name "*.md" | versionSort -r)
 }
 
-__buildDocumentationBuildEnv() {
-  local usage="$1" home="$2" cleanFlag="$3" moreTemplate cacheDirectory appName target
-
-  lineTemplate="$home/documentation/template/env-line.md"
-  moreTemplate="$home/documentation/template/env-more.md"
-  source="$home/documentation/source/env/index.md"
-  target="$home/documentation/docs/env"
-  appName=$(__catchEnvironment "$usage" buildEnvironmentGet APPLICATION_CODE) || return $?
-  cacheDirectory=$(__catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "$appName/.environmentVariables" XDG_CACHE_HOME) || return $?
-
-  if "$cleanFlag"; then
-    __catchEnvironment "$usage" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
-    return 0
-  fi
-  __catchEnvironment "$usage" muzzle requireDirectory "$target" || return $?
-  __catchEnvironment "$usage" cat "$source" >"$target/index.md" || return $?
-  local envFile categories=()
-
-  [ -f "$cacheDirectory/categories" ] || __catchEnvironment "$usage" touch "$cacheDirectory/categories" || return $?
-  while IFS="" read -r item; do categories+=("$item"); done <"$cacheDirectory/categories"
-
-  statusMessage decorate info "Iterating through env files ..."
-  __catchEnvironment "$usage" cp "$cacheDirectory/categories" "$cacheDirectory/categories.unsorted" || return $?
-  while read -r envFile; do
-    local envTarget name="${envFile##*/}"
-
-    set -a
-    name="${name%.sh}"
-    envTarget="$cacheDirectory/$name"
-    moreTarget="$cacheDirectory/more.$name"
-    if [ -f "$envTarget" ] && isNewestFile "$envTarget" "$envFile" "$lineTemplate" "$moreTemplate"; then
-      statusMessage decorate notice "Cached $(basename "$envFile") ..."
-      continue
-    else
-      statusMessage decorate info "Generated $(basename "$envFile") ..."
-    fi
-
-    local description type lines more="" shortDesc
-    description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
-    lines=$(($(printf "%s\n" "$description" | wc -l) + 0))
-
-    local categoryName categoryFileName
-
-    categoryName="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Category:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
-    [ -n "$categoryName" ] || categoryName="Uncategorized"
-    categoryFileName="${categoryName// /_}"
-
-    type="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Type:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
-    if [ "$lines" -le 2 ]; then
-      shortDesc="${description//$'\n'/ }"
-      more=""
-    else
-      more="[notes](#$name)"
-      shortDesc="$(printf "%s\n" "$description" | head -n 1)"
-    fi
-
-    if ! inArray "$categoryName" "${categories[@]}"; then
-      __catchEnvironment "$usage" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || return $?
-      categories+=("$categoryName")
-    fi
-    __catchEnvironment "$usage" printf "%s\n" "$name" >>"$cacheDirectory/category.$categoryFileName" || return $?
-
-    description=$shortDesc category="$categoryName" more="$more" type="$type" mapEnvironment <"$lineTemplate" >"$envTarget"
-    if [ -n "$more" ]; then
-      category="$categoryName" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget"
-    fi
-    printf "%s\n" "$name" >>"$cacheDirectory/mores"
-  done < <(find "$home/bin/build/env" -maxdepth 1 -name "*.sh")
-  __catchEnvironment "$usage" sort -u <"$cacheDirectory/categories.unsorted" >"$cacheDirectory/categories" || return $?
-  __catchEnvironment "$usage" rm -rf "$cacheDirectory/categories.unsorted" || return $?
-
-  local targetFile
-
-  targetFile="$target/index.md"
-  local categoryName
-  while IFS="" read -r categoryName; do
-    categoryFileName="${categoryName// /_}"
-    statusMessage decorate info "Processing $(basename "$categoryName") ..."
-    local name
-    if [ -f "$cacheDirectory/category.$categoryFileName" ]; then
-      printf "%s\n" "## $categoryName" "" >>"$targetFile"
-      while IFS="" read -r name; do
-        printf "%s\n" "$(cat "$cacheDirectory/$name")" >>"$targetFile"
-      done < <(sort -u "$cacheDirectory/category.$categoryFileName")
-      printf "\n" >>"$targetFile"
-    fi
-  done <"$cacheDirectory/categories"
-
-  local name
-  while IFS="" read -r name; do
-    if [ -f "$cacheDirectory/more.$name" ]; then
-      printf "\n" >>"$targetFile"
-      cat "$cacheDirectory/more.$name" >>"$targetFile"
-    fi
-  done < <(sort -u "$cacheDirectory/mores")
-}
-
 __mkdocsConfiguration() {
   local usage="$1" token source="mkdocs.template.yml" target="mkdocs.yml"
 
@@ -251,7 +154,7 @@ __buildDocumentationBuild() {
 
   export APPLICATION_NAME
 
-  local da=()
+  local da=() ea=()
   local cleanFlag=false updateDerived=true updateTemplates=false updateReference=true makeDocumentation=false
 
   # _IDENTICAL_ argument-case-header 5
@@ -286,8 +189,17 @@ __buildDocumentationBuild() {
       --clean)
         cleanFlag=true
         ;;
+      --verbose)
+        da+=("$argument")
+        ea+=("$argument")
+        ;;
+      --filter)
+        da+=("$argument")
+        while [ $# -gt 0 ] && [ "$1" != "--" ]; do da+=("$1") && shift; done
+        ;;
       --force)
         da+=("$argument")
+        ea+=("$argument")
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
@@ -306,7 +218,7 @@ __buildDocumentationBuild() {
   # --clean
   if $cleanFlag; then
     # Clean env cache
-    __catchEnvironment "$usage" __buildDocumentationBuildEnv "$usage" "$home" "true" || return $?
+    __catchEnvironment "$usage" documentationBuildEnvironment --clean || return $?
     # Clean reference cache
     __buildDocumentationBuildDirectory "$usage" "$home" --clean || return $?
     return 0
@@ -354,10 +266,13 @@ __buildDocumentationBuild() {
     )
 
     # Coding
-    example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" mapEnvironment <"$home/documentation/source/reference/coding.md" >"$home/documentation/docs/reference/coding.md"
+    local example
+
+    example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$usage" "generating example" || return $?
+    example="$example" __catchEnvironment "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/docs/guide/coding.md" || return $?
 
     statusMessage decorate notice "Updating env/index.md ..."
-    __catchEnvironment "$usage" __buildDocumentationBuildEnv "$usage" "$home" "false" || return $?
+    __catchEnvironment "$usage" documentationBuildEnvironment "${ea[@]+"${ea[@]}"}" || return $?
   fi
 
   if "$updateReference"; then

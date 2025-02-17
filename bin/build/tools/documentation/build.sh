@@ -79,6 +79,12 @@ documentationBuild() {
         shift
         applicationName=$(usageArgumentString "$usage" "$argument" "${1-}")
         ;;
+      --filter)
+        docArgs+=("$argument")
+        shift
+        while [ $# -gt 0 ] && [ "$1" != "--" ]; do docArgs+=("$1") && shift; done
+        docArgs+=("--")
+        ;;
       --template)
         [ -z "$templatePath" ] || __throwArgument "$usage" "$argument already supplied" || return $?
         shift
@@ -130,10 +136,15 @@ documentationBuild() {
       --force)
         if ! inArray "$argument" "${docArgs[@]}"; then
           docArgs+=("$argument")
+          indexArgs+=("$argument")
         fi
         ;;
       --verbose)
         verbose=true
+        if ! inArray "$argument" "${docArgs[@]}"; then
+          docArgs+=("$argument")
+          indexArgs+=("$argument")
+        fi
         ;;
       # _IDENTICAL_ --help 4
       --help)
@@ -146,7 +157,7 @@ documentationBuild() {
     esac
     shift
   done
-
+  bashDebugInterruptFile
   if $cleanFlag; then
     __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
     reportTiming "$start" "Emptied documentation cache in" || :
@@ -205,7 +216,7 @@ documentationBuild() {
     ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
 
-  __catchEnvironment "$usage" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "${clean[@]+"${clean[@]}"}" || return $?
+  __catchEnvironment "$usage" __echo documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "${clean[@]+"${clean[@]}"}" || return $?
   [ ${#clean[@]} -eq 0 ] || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   clean=()
 
@@ -228,6 +239,17 @@ _documentationBuild() {
 }
 __documentationBuild() {
   hookRunOptional documentation-error "$@" || :
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Argument: suffix - String. Optional. Directory suffix - created if does not exist.
+documentationBuildCache() {
+  local code
+  code=$(buildEnvironmentGet "APPLICATION_CODE") || return $?
+  buildCacheDirectory ".documentationBuild/${code-default}/${1-}"
+}
+_documentationBuildCache() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

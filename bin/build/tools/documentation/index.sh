@@ -133,9 +133,9 @@ __documentationIndex_GeneratePath() {
 documentationIndex_Generate() {
   local usage="_${FUNCNAME[0]}"
 
-  local forceFlag=false
+  local forceFlag=false verboseFlag=false
 
-  local codePath="" cacheDirectory=""
+  local codePath="" cacheDirectory="" filterArgs=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -150,6 +150,13 @@ documentationIndex_Generate() {
         ;;
       --force)
         forceFlag=true
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      --filter)
+        shift
+        while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
         ;;
       *)
         if [ -z "$codePath" ]; then
@@ -180,35 +187,36 @@ documentationIndex_Generate() {
   fi
 
   local start
-  if ! start=$(beginTiming); then
-    return $?
-  fi
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+
   local functionIndex="$cacheDirectory/index"
-  if [ ! -d "$functionIndex" ]; then
-    __catchEnvironment "$usage" mkdir -p "$functionIndex" || return $?
-  fi
-  if [ ! -d "$cacheDirectory/files" ]; then
-    __catchEnvironment "$usage" mkdir -p "$cacheDirectory/files" || return $?
-  fi
+  [ -d "$functionIndex" ] || __catchEnvironment "$usage" mkdir -p "$functionIndex" || return $?
 
-  local newestFile="$cacheDirectory/newest" cachedSavedNewestFileModified
+  [ -d "$cacheDirectory/files" ] || __catchEnvironment "$usage" mkdir -p "$cacheDirectory/files" || return $?
 
-  [ -f "$newestFile" ] || __catchEnvironment "$usage" touch "$newestFile" || return $?
+  local newestFileState="$cacheDirectory/newest" cachedSavedNewestFileModified newestFile
+
+  [ -f "$newestFileState" ] || __catchEnvironment "$usage" touch "$newestFileState" || return $?
   cachedSavedNewestFileModified="$(head -n 1 "$newestFile")"
-  if ! $forceFlag && newestFile=$(directoryNewestFile --find -name '*.sh' -- "$codePath"); then
-    local newestFileModified
+
+  if newestFile=$(directoryNewestFile --find -name '*.sh' -- "$codePath") && ! $forceFlag; then
+    local newestFileModified seconds
     if newestFileModified=$(modificationTime "$newestFile") && isUnsignedInteger "$cachedSavedNewestFileModified"; then
       if [ "$newestFileModified" -lt "$cachedSavedNewestFileModified" ]; then
         statusMessage decorate info "$(decorate file "$codePath") nothing changed"
         return 0
       fi
     fi
-    printf "%s\n" "$newestFileModified" "$newestFile" >>"$cacheDirectory/newest"
+    seconds=$(modificationSeconds "$newestFile")
+    ! $verboseFlag || statusMessage decorate info "Newest file is $(decorate file "$newestFile") modified $seconds $(plural "$seconds" second seconds) ago" || return $?
+    printf "%s\n" "$newestFileModified" "$newestFile" >"$newestFileState"
   fi
 
-  local shellFile
-  if ! find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' | while read -r shellFile; do
+  local shellFile foundOne=false
+  while read -r shellFile; do
+    [ -n "$shellFile" ] || continue
     local fileIndex
+    foundOne=true
     fileIndex="$cacheDirectory/files/$(basename "$shellFile")"
     if [ ! -f "$fileIndex" ] || ! grep -q "$shellFile" "$fileIndex"; then
       printf -- "%s\n" "$shellFile" >>"$fileIndex"
@@ -235,7 +243,9 @@ documentationIndex_Generate() {
     count="$(find "$fileCacheMarker" -type f | wc -l | trimSpace)"
     count=$((count - 1))
     statusMessage decorate success "Generated $count functions for $shellFile "
-  done; then
+  done < <(find "$codePath" -type f -name '*.sh' ! -path '*/.*/*')
+
+  if ! $foundOne; then
     __throwEnvironment "$usage" "No shell files found in $(decorate file "$codePath")" || return $?
   fi
   statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"

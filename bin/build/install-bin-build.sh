@@ -366,7 +366,7 @@ __installRemotePackage() {
 
 # Debug is enabled, show why
 # Requires: decorate
-# Debugging: dd1d7b110084e1d6903111b0d5e5b0975a010d0d
+# Debugging: 32d4d8d55438f3ee975344ed5322e9aedc762648
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }
@@ -851,7 +851,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 180
+# IDENTICAL decorate 182
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1008,8 +1008,10 @@ _caseStyles() {
   printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
 }
 
+# fn: decorate each
 # Usage: decorate each decoration argument1 argument2 ...
-# Runs the following command on each subsequent argument to allow for formatting with spaces
+# Runs the following command on each subsequent argument for formatting
+# Example:     decorate each code "$@"
 # Requires: decorate printf
 __decorateExtensionEach() {
   local code="$1" formatted=()

@@ -181,6 +181,9 @@ documentationTemplateCompile() {
         envFiles+=("$envFile")
         envFileArgs+=("$argument" "$envFile")
         ;;
+      --verbose)
+        verboseFlag=true
+        ;;
       --force)
         forceFlag=true
         ;;
@@ -283,7 +286,7 @@ documentationTemplateCompile() {
         checkFiles+=("$settingsFile")
       fi
     done <"$documentTokensFile"
-    if $forceFlag || ! isNewestFile "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
+    if $forceFlag || isEmptyFile "$targetFile" || ! isNewestFile "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
       message="Generated"
       compiledFunctionEnv=$(fileTemporaryName "$usage") || return $?
       # subshell to hide environment tokens
@@ -393,6 +396,9 @@ _documentationTemplateFunctionCompile() {
 }
 
 # Usage: {fn} cacheDirectory documentDirectory functionTemplate targetDirectory
+# Argument: --filter filterArgs ... --  - Arguments. Optional. Passed to `find` and allows filtering list.
+# Argument: --force - Flag. Optional. Force generation of files.
+# Argument: --verbose - Flag. Optional. Output more messages.
 # Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
 # Argument: documentDirectory - Required. Directory containing documentation templates
 # Argument: templateFile - Required. Function template file to generate documentation for functions
@@ -416,7 +422,7 @@ _documentationTemplateFunctionCompile() {
 documentationTemplateDirectoryCompile() {
   local usage="_${FUNCNAME[0]}"
 
-  local cacheDirectory="" templateDirectory="" functionTemplate="" targetDirectory="" passArgs=()
+  local cacheDirectory="" templateDirectory="" functionTemplate="" targetDirectory="" passArgs=() filterArgs=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -431,6 +437,14 @@ documentationTemplateDirectoryCompile() {
         ;;
       --force)
         passArgs+=("$argument")
+        ;;
+      --verbose)
+        verboseFlag=true
+        passArgs+=("$argument")
+        ;;
+      --filter)
+        shift
+        while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
         ;;
       --env-file)
         passArgs+=("$argument")
@@ -466,18 +480,24 @@ documentationTemplateDirectoryCompile() {
   functionTemplate=$(usageArgumentFile "$usage" "functionTemplate" "$functionTemplate") || return $?
   targetDirectory=$(usageArgumentDirectory "$usage" "targetDirectory" "$targetDirectory") || return $?
 
+  ! $verboseFlag || decorate pair cacheDirectory "$cacheDirectory"
+  ! $verboseFlag || decorate pair templateDirectory "$templateDirectory"
+  ! $verboseFlag || decorate pair functionTemplate "$functionTemplate"
+  ! $verboseFlag || decorate pair targetDirectory "$targetDirectory"
+
   local exitCode=0 fileCount=0 templateFile=""
   while read -r templateFile; do
     local base="${templateFile#"$templateDirectory/"}"
     [ "$base" != "$templateFile" ] || __throwEnvironment "$usage" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
     local targetFile="$targetDirectory/$base"
+    ! $verboseFlag || statusMessage decorate info Compiling "$templateFile"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       decorate error "Failed to generate $targetFile" 1>&2
       exitCode=1
       break
     fi
     fileCount=$((fileCount + 1))
-  done < <(find "$templateDirectory" -type f -name '*.md' ! -path "*/.*/*" ! -name '_*')
+  done < <(find "$templateDirectory" -type f -name '*.md' ! -path "*/.*/*" ! -name '_*' "${filterArgs[@]+"${filterArgs[@]}"}")
   statusMessage --last reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(decorate info "$targetDirectory") "
   return $exitCode
 }

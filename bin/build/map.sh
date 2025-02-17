@@ -309,7 +309,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL decorate 180
+# IDENTICAL decorate 182
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -466,8 +466,10 @@ _caseStyles() {
   printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
 }
 
+# fn: decorate each
 # Usage: decorate each decoration argument1 argument2 ...
-# Runs the following command on each subsequent argument to allow for formatting with spaces
+# Runs the following command on each subsequent argument for formatting
+# Example:     decorate each code "$@"
 # Requires: decorate printf
 __decorateExtensionEach() {
   local code="$1" formatted=()
