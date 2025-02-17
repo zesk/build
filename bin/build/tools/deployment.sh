@@ -505,8 +505,8 @@ deployToRemote() {
 
   [ -d "$HOME" ] || __throwEnvironment "$usage" "No HOME defined or not a directory: $HOME" || return $?
 
-  # DEBUGGING # decorate warning "ARGS: $*"
-  local deployFlag=false revertFlag=false debuggingFlag=false cleanupFlag=false userHosts=() applicationId="" deployHome="" applicationPath="" buildTarget="" remoteArgs=() firstFlags=() addSSHHosts=true showCommands=false currentIP=""
+  local deployFlag=false revertFlag=false debuggingFlag=false cleanupFlag=false
+  local userHosts=() applicationId="" deployHome="" applicationPath="" buildTarget="" remoteArgs=() firstFlags=() addSSHHosts=true showCommands=false currentIP=""
 
   while [ $# -gt 0 ]; do
     local argument="$1"

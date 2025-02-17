@@ -120,7 +120,7 @@ _simplePHPRequest() {
   local indexFile
   local indexValue
 
-  indexFile="$(buildCacheDirectory PHP_REQUEST_INDEX)"
+  indexFile="$(__environment buildCacheDirectory)/PHP_REQUEST_INDEX" || return $?
   indexValue="$([ -f "$indexFile" ] && cat "$indexFile" || printf 0)"
   indexValue=$((indexValue + 1))
   curl -s "http://$PHP_SERVER_HOST:$PHP_SERVER_PORT/index.php?request=$indexValue"
@@ -134,7 +134,7 @@ _warmupServer() {
   while ! value="$(_simplePHPRequest)" || [ -z "$value" ]; do
     sleep 1
     delta=$(($(beginTiming) - start))
-    if [ "$delta" -gt 5 ]; then
+    if [ "$delta" -gt 5000 ]; then
       _environment "_warmupServer failed" || return $?
     fi
     printf "%s" "$(decorate green .)"
@@ -146,9 +146,8 @@ _warmupServer() {
 errorTimeout=20
 
 _waitForValueTimeout() {
-  local start delta value
+  local delta value
 
-  start=$(beginTiming)
   statusMessage decorate info "Waiting for value $1 ... "
   while true; do
     if ! value="$(_simplePHPRequest)"; then
@@ -210,7 +209,7 @@ testDeployApplication() {
 
   export PHP_SERVER_ROOT
   PHP_SERVER_ROOT="$d/live-app/public"
-  local start elapsed maxWaitTime=15
+  local start elapsed maxWaitTime=15000
 
   start=$(beginTiming)
   if ! _simplePHPServer; then

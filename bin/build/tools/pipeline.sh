@@ -24,11 +24,24 @@
 # Example:     init=$(beginTiming)
 # Example:     ...
 # Example:     reportTiming "$init" "Completed in"
-#
+# Requires: __timestamp, _environment
 beginTiming() {
-  local start
-  start=$(date "+%s" 2>/dev/null) || _environment date "+%s%3N" || return $?
-  printf "%d" "$((start + 0))"
+  __timestamp 2>/dev/null || _environment __timestamp || return $?
+}
+
+# Format a timout output (milliseconds) as seconds
+timingFormat() {
+  while [ $# -gt 0 ]; do
+    isUnsignedInteger "$1" || __throwArgument "$usage" "Not an integer" || return $?
+    seconds=$((delta / 1000))
+    remainder=$((delta % 1000))
+    printf -- "%d.%03d\n" "$seconds" "$remainder"
+    shift
+  done
+}
+_timingFormat() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Outputs the timing in magenta optionally prefixed by a message in green
@@ -44,20 +57,24 @@ beginTiming() {
 # Example:    ...
 # Example:    reportTiming "$init" "Deploy completed in"
 reportTiming() {
-  local start prefix delta
   local usage="_${FUNCNAME[0]}"
 
-  start="${1-}"
-  __catchArgument "$usage" isInteger "$start" || return $?
+  local start="${1-}"
+  isInteger "$start" || __throwArgument "$usage" "Not an integer: \"$start\"" || return $?
   shift
-  prefix=
+  local prefix=
   if [ $# -gt 0 ]; then
     prefix="$(decorate green "$@") "
   fi
+  local delta value seconds
   delta=$(($(beginTiming) - start))
-  printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$delta $(plural $delta second seconds)")"
+  value=$(timingFormat "$delta")
+  seconds=2
+  [ "$value" != "1.000" ] || seconds=1
+  printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$seconds" second seconds)")"
 }
 _reportTiming() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -172,7 +172,7 @@ testDeployToRemote() {
   matches=(--stderr-match twice)
   for onlyOne in --application --id --home --target; do
     args=("$onlyOne" "$sampleApplication" "$onlyOne" "$sampleApplication")
-    assertExitCode --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+    assertExitCode --dump --line "$LINENO" "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
   done
   for onlyOne in --deploy --revert --cleanup; do
     args=("$onlyOne" "$onlyOne")
@@ -230,11 +230,11 @@ testDeployBuildEnvironment() {
 
     assertExitCode --line "$LINENO" --stderr-match "blank" 2 deployBuildEnvironment --id || return $?
 
-    assertExitCode --line "$LINENO"  --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
+    assertExitCode --line "$LINENO" --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
 
-    assertExitCode --line "$LINENO"  --stderr-match "blank" 2 deployBuildEnvironment "" --id || return $?
+    assertExitCode --line "$LINENO" --stderr-match "blank" 2 deployBuildEnvironment "" --id || return $?
 
-    assertExitCode --line "$LINENO"  --stderr-match "APPLICATION_ID" 2 deployBuildEnvironment || return $?
+    assertExitCode --line "$LINENO" --stderr-match "APPLICATION_ID" 2 deployBuildEnvironment || return $?
 
     sampleHome=/var/DEPLOY
     sampleApplication=/var/app

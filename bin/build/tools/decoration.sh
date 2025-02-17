@@ -53,12 +53,17 @@ bigText() {
   local usage="_${FUNCNAME[0]}"
   local fonts binary index=0
 
-  __catchEnvironment "$usage" muzzle packageInstall || return $?
   binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  if [ -z "$binary" ]; then
+    __catchEnvironment "$usage" muzzle packageInstall || return $?
+    binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  fi
   case "$binary" in
     figlet) fonts=("standard" "big") ;;
     toilet) fonts=("smblock" "smmono12") ;;
-    *) __throwEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $? ;;
+    *)
+      __throwEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
+      ;;
   esac
   if ! muzzle packageWhich "$binary" "$binary"; then
     decorate green "BIG TEXT: $*"

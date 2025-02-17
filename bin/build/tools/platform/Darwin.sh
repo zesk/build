@@ -52,3 +52,8 @@ __realPath() {
 __hostname() {
   hostname -f
 }
+
+# Mac OS X has python3 installed by default so this should not be an issue
+__timestamp() {
+  python3 -c 'import time; print(int(time.time() * 1000))'
+}

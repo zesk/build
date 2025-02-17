@@ -530,7 +530,7 @@ _buildEnvironmentGetDirectory() {
 buildQuietLog() {
   local usage="_${FUNCNAME[0]}"
 
-  local logFile flagMake=true
+  local flagMake=true
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -547,7 +547,8 @@ buildQuietLog() {
         flagMake=false
         ;;
       *)
-        logFile="$(__catchEnvironment "$usage" buildCacheDirectory "${1#_}.log")" || return $?
+        local logFile
+        logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/${1#_}.log" || return $?
         ! "$flagMake" || __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
         __catchEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
         return 0

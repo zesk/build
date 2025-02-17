@@ -135,8 +135,7 @@ githubRelease() {
 
   __catchEnvironment "$usage" hookRunOptional github-release-before || return $?
 
-  resultsFile="$(buildCacheDirectory results.json)" || __throwEnvironment "$usage" "Unable create cache directory" || return $?
-  __catchEnvironment "$usage" requireFileDirectory "$resultsFile" || return $?
+  resultsFile="$(buildCacheDirectory)/results.json" || __throwEnvironment "$usage" "Unable create cache directory" || return $?
 
   decorate decoration "$(echoBar)" || :
   bigText "$releaseName" | wrapLines "$(decorate magenta)" "$(decorate reset)" || :

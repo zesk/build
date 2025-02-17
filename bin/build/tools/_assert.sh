@@ -28,7 +28,7 @@ __resultText() {
 # Save and report the timing since the last call
 _assertTiming() {
   local timingFile stamp _now
-  timingFile=$(__environment buildCacheDirectory ".${FUNCNAME[0]}") || return $?
+  timingFile="$(__environment buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
 
   _now="$(date +%s)"
   if [ -f "$timingFile" ]; then
@@ -49,7 +49,7 @@ __assertedFunctions() {
   local usage="_${FUNCNAME[0]}"
   local logFile
 
-  logFile=$(__catchEnvironment "$usage" buildCacheDirectory "$usage") || return $?
+  logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/$usage" || return $?
   __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
   if [ $# -eq 0 ]; then
     __catchEnvironment "$usage" touch "$logFile" || return $?

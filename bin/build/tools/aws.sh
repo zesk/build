@@ -524,7 +524,7 @@ awsSecurityGroupIPModify() {
   local usage="_${FUNCNAME[0]}"
   local start
 
-  start=$(__catchEnvironment "$usage" beginTiming) || __throwEnvironment "$usage" "beginTiming" || return $?
+  start=$(__catchEnvironment "$usage" beginTiming) || return $?
 
   local pp=() profileName="" group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile region=""
 

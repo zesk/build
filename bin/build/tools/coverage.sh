@@ -100,7 +100,6 @@ bashCoverageReport() {
   [ -n "$target" ] || target="$home/test-coverage"
   if [ -z "$reportCache" ]; then
     reportCache=$(__catchEnvironment "$usage" buildCacheDirectory ".bashCoverageReport") || return $?
-    reportCache=$(__catchEnvironment "$usage" requireDirectory "$reportCache") || return $?
   fi
   target=$(__catchEnvironment "$usage" requireDirectory "$target") || return $?
 

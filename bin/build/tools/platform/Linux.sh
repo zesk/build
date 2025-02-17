@@ -66,3 +66,10 @@ __realPath() {
 __hostname() {
   hostname -f
 }
+
+# Mac OS X has python3 installed by default so this should not be an issue
+__timestamp() {
+  local timestamp milliseconds
+  read -r timestamp milliseconds < <(date '+%s %3N')
+  printf "%d\n" $((timestamp * 1000 + milliseconds))
+}

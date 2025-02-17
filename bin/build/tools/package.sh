@@ -110,7 +110,7 @@ __packageUpFunction() {
 
   local name quietLog
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
-  name=$(__catchEnvironment "$usage" buildCacheDirectory ".packageUpdate") || return $?
+  name="$(__catchEnvironment "$usage" buildCacheDirectory)/.packageUpdate" || return $?
   __catchEnvironment "$usage" requireFileDirectory "$name" || return $?
 
   if $forceFlag; then
@@ -568,7 +568,7 @@ packageNeedRestartFlag() {
   local usage="_${FUNCNAME[0]}"
   local quietLog restartFlag
 
-  restartFlag=$(__catchEnvironment "$usage" buildCacheDirectory ".needRestart") || return $?
+  restartFlag="$(__catchEnvironment "$usage" buildCacheDirectory)/.needRestart" || return $?
   if [ $# -eq 0 ]; then
     if [ -f "$restartFlag" ]; then
       __catchEnvironment "$usage" cat "$restartFlag" || return $?
