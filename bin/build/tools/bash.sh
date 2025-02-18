@@ -293,11 +293,12 @@ __bashListFunctions() {
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # Argument: variableName - string. Required. Get this variable value
+# Argument: --prefix - flag. Optional. Find variables with the prefix `variableName`
 # Gets a list of the variable values from a bash function comment
 bashFunctionCommentVariable() {
   local usage="_${FUNCNAME[0]}"
 
-  local source="" functionName="" variableName=""
+  local source="" functionName="" variableName="" prefixFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -309,6 +310,9 @@ bashFunctionCommentVariable() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --prefix)
+        prefixFlag=true
         ;;
       *)
         if [ -z "$source" ]; then
@@ -324,13 +328,18 @@ bashFunctionCommentVariable() {
     shift
   done
 
-  local matchLine
+  local matchLine grepSuffix="" trimSuffix=":"
+  if $prefixFlag; then
+    grepSuffix="[-_[:alnum:]]*"
+    trimSuffix=""
+  fi
   while read -r matchLine; do
-    matchLine="${matchLine#*"$variableName":}"
+    matchLine="${matchLine#*"$variableName$trimSuffix"}"
     matchLine=${matchLine# }
     printf "%s\n" "${matchLine}"
-  done < <(bashFunctionComment "$source" "$functionName" | grep -e "[[:space:]]*#[[:space:]]*$variableName:[[:space:]]*" | trimSpace || :)
+  done < <(bashFunctionComment "$source" "$functionName" | grep -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | trimSpace || :)
 }
+
 _bashFunctionCommentVariable() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

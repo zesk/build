@@ -73,3 +73,13 @@ __timestamp() {
   read -r timestamp milliseconds < <(date '+%s %3N')
   printf "%d\n" $((timestamp * 1000 + milliseconds))
 }
+
+if isAlpine; then
+  __testPlatformName() {
+    printf -- "%s\n" "alpine"
+  }
+else
+  __testPlatformName() {
+    printf -- "%s\n" "linux"
+  }
+fi

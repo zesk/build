@@ -57,3 +57,7 @@ __hostname() {
 __timestamp() {
   python3 -c 'import time; print(int(time.time() * 1000))'
 }
+
+__testPlatformName() {
+  printf -- "%s\n" "darwin"
+}

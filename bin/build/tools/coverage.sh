@@ -334,7 +334,7 @@ __bashCoverageReportConvertFiles() {
 
 # Usage: {fn} line uncoveredTexts template
 __bashCoveragePartialLine() {
-  local line="$1" template="$3" codes=() code index replace
+  local line="$1" template="$3" codes=() code index search replace
 
   IFS=$'\n' read -d '' -r -a codes < <(printf -- "%s\n" "$2") || :
   if [ "${#codes[@]}" -eq 0 ]; then
@@ -342,16 +342,16 @@ __bashCoveragePartialLine() {
   else
     index=0
     for code in "${codes[@]}"; do
-      code="$(quoteGrepPattern "$code")"
       replace="%%%%$index%%%%"
-      line="${line//$code/$replace}"
+      line="${line//"$code"/"$replace"}"
       index=$((index + 1))
     done
     line=$(__htmlCode "$line")
     index=0
     for code in "${codes[@]}"; do
       replace="$(content="$(__htmlCode "$code")" mapEnvironment content <"$template")"
-      line="${line//%%%%$index%%%%/$replace}"
+      search="%%%%$index%%%%"
+      line="${line//"$search"/"$replace"}"
       index=$((index + 1))
     done
   fi

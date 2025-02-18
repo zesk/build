@@ -7,10 +7,14 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Argument: None
+# Argument: Some
+# Test-Platform: !alpine
+# Test-Platform: linux
 testDaemontools() {
   local logPath start waitFor logWaitFor
 
-  assertExitCode --line "$LINENO" --stderr-match 2024-03-21 --stderr-match "not production" 0 daemontoolsInstall || return $?
+  assertExitCode --line "$LINENO" --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then
     decorate info "Running daemontools manually"

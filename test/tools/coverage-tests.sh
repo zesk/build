@@ -24,14 +24,15 @@ testCoverageNeedToUpdate() {
 }
 
 testCoverageReportThing() {
-  local codes expected
+  local codes expected template
 
   codes=$(printf "%s\n" "return" "1")
 
+  template="$(__bashCoverageReportTemplate "not-covered.html")"
   expected='&nbsp;&nbsp;[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]&nbsp;||&nbsp;<em>return</em>&nbsp;<em>1</em>'
-  assertEquals --line "$LINENO" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$(__bashCoverageReportTemplate "not-covered.html")")" "$expected" || return $?
+  assertEquals --line "$LINENO" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" "$expected" || return $?
 
   codes=$(printf "%s\n" '[ $# -gt 0 ]')
   expected='&nbsp;&nbsp;<em>[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]</em>&nbsp;||&nbsp;return&nbsp;1'
-  assertEquals --line "$LINENO" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$(__bashCoverageReportTemplate "not-covered.html")")" "$expected" || return $?
+  assertEquals --line "$LINENO" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" "$expected" || return $?
 }

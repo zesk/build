@@ -356,13 +356,14 @@ testSuite() {
       #  ▘ ▘▝▀▘▘ ▘▘ ▘▝▀▘▘
 
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
+      flags=$(__testLoadFlags "$sectionFile" "$item")
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
 
-      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" || return $?
+      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
 
       runTime=$(($(timingStart) - testStart))
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
-      __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
+      __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" "$flags" || __throwEnvironment "$usage" "... continuing" || :
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(decorate reset)"
     if $continueFlag; then
@@ -651,6 +652,10 @@ __testDebugTermDisplay() {
   )"
 }
 
+__testLoadFlags() {
+  bashFunctionComment "$source" "$functionName"
+}
+
 #
 # Load one or more test files and run the tests defined within
 #
@@ -709,7 +714,12 @@ __testRunShellInitialize() {
   shopt -s shift_verbose failglob
 }
 
-#
+# Outputs the platform name
+# Requires: __testPlatformName
+_testPlatform() {
+  printf "%s\n" __testPlatformName
+}
+
 # Load one or more test files and run the tests defined within
 #
 # Usage: {fn} filename [ ... ]
@@ -717,8 +727,9 @@ __testRunShellInitialize() {
 #
 __testRun() {
   local usage="_${FUNCNAME[0]}"
-  local quietLog="$1"
-  local tests testName __testDirectory resultCode stickyCode __TEST_SUITE_RESULT
+  local quietLog="$1" __test="${2-}" __flags="${3-}" platform
+
+  local tests testName __testDirectory __TEST_SUITE_RESULT
   local __test __tests tests __testStart
   local __beforeFunctions errorTest
 
@@ -727,25 +738,32 @@ __testRun() {
 
   __testRunShellInitialize
 
+  platform="$(__testPlatformName)"
+  [ -n "$platform" ] || __throwEnvironment "$usage" "No platform defined?" || return $?
+
   errorTest=$(_code assert)
   stickyCode=0
-  shift || :
+  shift 3 || :
 
   # Renamed to avoid clobbering by tests
   __testDirectory=$(pwd)
 
   __TEST_SUITE_RESULT=AOK
-  while [ $# -gt 0 ]; do
-    __test="$1"
-    shift
-    # Test
-    __testSection "$__test" || :
-    printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
 
-    printf "%s\n" "Running $__test" >>"$quietLog"
+  # Test
+  __testSection "$__test" || :
+  printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
+
+  printf "%s\n" "Running $__test" >>"$quietLog"
+
+  local resultCode=0 stickyCode=0
+  __TEST_SUITE_TRACE="$__test"
+  __testStart=$(timingStart)
+  if isSubstringInsensitive ";Platform:!$platform;" ";${flags};"; then
+    printf "%s\n" "Skipping Platform:!$platform $__test" >>"$quietLog"
+    __TEST_SUITE_RESULT="skip Platform $platform disallowed"
     resultCode=0
-    __TEST_SUITE_TRACE="$__test"
-    __testStart=$(timingStart)
+  else
     if plumber "$__test" "$quietLog"; then
       printf "%s\n" "SUCCESS $__test" >>"$quietLog"
     else
@@ -753,26 +771,26 @@ __testRun() {
       printf "%s\n" "FAILED $__test" >>"$quietLog"
       stickyCode=$errorTest
     fi
+  fi
 
-    # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
-    # documentation-tests.sh change this apparently
-    # Instead of preventing this usage, just work around it
-    __catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
-    local timingText
-    timingText="$(timingReport "$__testStart")"
-    if [ "$resultCode" = "$(_code leak)" ]; then
-      resultCode=0
-      printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
-    elif [ "$resultCode" -eq 0 ]; then
-      printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
-    else
-      printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
-      buildFailed "$quietLog" || :
-      __TEST_SUITE_RESULT="test $__test failed"
-      stickyCode=$errorTest
-      break
-    fi
-  done
+  # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
+  # documentation-tests.sh change this apparently
+  # Instead of preventing this usage, just work around it
+  __catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
+  local timingText
+  timingText="$(timingReport "$__testStart")"
+  if [ "$resultCode" = "$(_code leak)" ]; then
+    resultCode=0
+    printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
+  elif [ "$resultCode" -eq 0 ]; then
+    printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
+  else
+    printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
+    buildFailed "$quietLog" || :
+    __TEST_SUITE_RESULT="test $__test failed"
+    stickyCode=$errorTest
+  fi
+
   if [ "$stickyCode" -eq 0 ] && __TEST_SUITE_RESULT=$(__testDidAnythingFail); then
     # Should probably reset test status but ...
     stickyCode=$errorTest
@@ -869,29 +887,24 @@ __testSuiteTAP_line() {
   local status="$1" && shift
   local usage="_return"
   local tapFile="${1-}"
+
+  export __TEST_SUITE_RESULT
+
   [ -f "$tapFile" ] && shift 1 || __throwEnvironment "$usage" "tapFile does not exist: $tapFile" || return $?
 
-  local functionName="${1-}" source="${2-}" functionLine="${3-}"
-  shift 3 || __throwArgument "$usage" "Missing functionName source or functionLine" || return $?
+  local functionName="${1-}" source="${2-}" functionLine="${3-}" flags="${4-}"
+  shift 4 || __throwArgument "$usage" "Missing functionName source or functionLine" || return $?
 
   local directive="" value
-  directive=$(bashFunctionCommentVariable "$source" "$functionName" "TAP-Directive") || :
-  value=$(bashFunctionCommentVariable "$source" "$functionName" "Test-Skip") || :
-  if parseBoolean "$value"; then
-    directive="skip $directive"
+  if isSubstringInsensitive ";Skip:true;" ";$flags;"; then
+    directive="skip in test comment"
   fi
-  local search
-  for search in "Test-Ignore" "TODO"; do
-    value=$(bashFunctionCommentVariable "$source" "$functionName" "$search") || :
-    if parseBoolean "$value"; then
-      directive="TODO ($search) $directive"
-      break
-    fi
-  done
+  if isSubstringInsensitive ";Ignore:true;" ";$flags;"; then
+    directive="TODO Ignore test comment"
+  fi
   value=$(bashFunctionCommentVariable "$source" "$functionName" "TODO") || :
-  if parseBoolean "$value"; then
-    directive="TODO (Test-Ignore) $directive"
-  fi
+  [ -z "$value" ] || directive="TODO ${value//$'\n'/ }"
+  [ -z "$directive" ] || directive="$__TEST_SUITE_RESULT"
   [ -z "$directive" ] || directive="# $directive"
   printf -- "%s %d %s%s\n" "$status" "$(incrementor TAP_TEST)" "$functionName @ $source:$functionLine" "$directive" >>"$tapFile"
 }
@@ -899,6 +912,8 @@ __testSuiteTAP_line() {
 # Argument: tapFile - File. Required. The target output file.
 # Argument: functionName - String. Required. Test function.
 # Argument: functionFile - File. Required. File where test is defined.
+# Argument: functionLine - UnsignedInteger. Required. Line number where test is defined.
+# Argument: flags - SemicolonList. Required. Flags from the test in the form
 __testSuiteTAP_ok() {
   __testSuiteTAP_line "ok" "$@"
 }
@@ -906,7 +921,7 @@ __testSuiteTAP_ok() {
 # Argument: tapFile - File. Required. The target output file.
 # Argument: functionName - String. Required. Test function.
 # Argument: functionFile - File. Required. File where test is defined.
-# Argument: functionLine - Integer. Required. Line number where test is defined.
+# Argument: functionLine - UnsignedInteger. Required. Line number where test is defined.
 __testSuiteTAP_not_ok() {
   __testSuiteTAP_line "not ok" "$@"
 }

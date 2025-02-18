@@ -333,11 +333,14 @@ testAwsEnvironmentFromCredentials() {
 
 testAWSProfiles() {
   local list firstName='test-aws' secondName='never-gonna-let-you-down'
-  export HOME AWS_PROFILE
-  local savedHome savedAWS_PROFILE
 
-  savedAWS_PROFILE=${AWS_PROFILE-none}
-  savedHome=$HOME
+  muzzle buildCacheDirectory || return $?
+
+  __mockValue HOME
+  __mockValue AWS_PROFILE
+
+  export HOME AWS_PROFILE
+
   HOME=$(__environment mktemp -d) || return $?
 
   list=$(__environment mktemp) || return $?
@@ -386,10 +389,6 @@ testAWSProfiles() {
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
 
-  HOME="$savedHome"
-  if [ "$savedAWS_PROFILE" != "none" ]; then
-    AWS_PROFILE=$savedAWS_PROFILE
-  else
-    unset AWS_PROFILE
-  fi
+  __mockValue HOME "" --end
+  __mockValue AWS_PROFILE "" --end
 }

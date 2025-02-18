@@ -7,17 +7,21 @@
 # Docs: o ./docs/_templates/ops/daemontools.md
 # Test: o ./test/tools/daemontools-tests.sh
 
-#
 # Install daemontools and dependencies
 # Platform: `docker` containers will not install `daemontools-run` as it kills the container
 daemontoolsInstall() {
   local packages
 
-  packages=(daemontools svtools)
-  if insideDocker; then
-    decorate warning "daemontools-run can not be installed because Docker exits 2024-03-21" 1>&2
+  if isAlpine; then
+    # not working, actually
+    packages=(daemontools-encore)
   else
-    packages+=(daemontools-run)
+    packages=(daemontools svtools)
+    if insideDocker; then
+      decorate warning "daemontools-run can not be installed because Docker exits 2024-03-21" 1>&2
+    else
+      packages+=(daemontools-run)
+    fi
   fi
   __environment packageInstall "${packages[@]}" || return $?
   if insideDocker; then
@@ -195,16 +199,14 @@ _daemontoolsRemoveService() {
 # Usage: {fn}
 # Is daemontools running?
 daemontoolsIsRunning() {
-  local this="${FUNCNAME[0]}"
-  local usage="_$this"
+  local usage="_${FUNCNAME[0]}"
   local processIds processId
 
   [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
-  [ 0 -ne "${#processIds[@]}" ] || return 1
-  ! kill -0 "${processIds[@]}" || return 0
-  return 1
+  [ "${#processIds[@]}" -gt 0 ] || return 1
+  __throwEnvironment "$usage" kill -0 "${processIds[@]}" || return $?
 }
 _daemontoolsIsRunning() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -236,7 +238,7 @@ daemontoolsExecute() {
   __environment requireDirectory "$home" >/dev/null || return $?
   __environment chmod 775 "$home" || return $?
   __environment chown root:root "$home" || return $?
-  __environment bash -c 'svscanboot &' || return $?
+  __environment muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
