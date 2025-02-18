@@ -14,6 +14,8 @@ export globalTestFailure=
 # fn: {base}
 # Run Zesk Build test suites
 #
+# Supports argument flags in tests:
+# `TAP-Directive` `Test-Skip` `TODO`
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
 # Argument: --one test - Optional. Add one test suite to run.
 # Argument: --show - Optional. Flag. List all test suites.
@@ -32,6 +34,7 @@ export globalTestFailure=
 # Argument: --skip-tag tagName - Optional. String. Skip tests tagged with this name.
 # Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
 # Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
+# Argument: --tap tapFile - Optional. FileDirectory. Output test results in TAP format to `tapFile`.
 # Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.
 # Hook: bash-test-start
 # Hook: bash-test-pass
