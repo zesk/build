@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: contextOpen ./docs/_templates/tools/github.md
+# Docs: contextOpen ./documentation/source/tools/github.md
 # Test: contextOpen ./test/bin/github-tests.sh
 #
 
@@ -142,7 +142,7 @@ githubRelease() {
   decorate decoration "$(echoBar)" || :
   printf "%s %s (%s) %s\n" "$(decorate green Tagging)" "$(decorate code "$releaseName")" "$(decorate magenta "$commitish")" "$(decorate green "and pushing ... ")" || :
 
-  start=$(beginTiming)
+  start=$(timingStart)
 
   statusMessage decorate warning "Deleting any trace of the $releaseName tag"
   git tag -d "$releaseName" 2>/dev/null || :
@@ -153,7 +153,7 @@ githubRelease() {
   __catchEnvironment "$usage" git push origin --tags --quiet || return $?
   __catchEnvironment "$usage" git push github --tags --force --quiet || return $?
   __catchEnvironment "$usage" git push github --all --force --quiet || return $?
-  reportTiming "$start" "Completed in" || :
+  timingReport "$start" "Completed in" || :
 
   # passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github)
   # that's good enough

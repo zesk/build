@@ -6,7 +6,7 @@
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/documentation.md
+# Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
 # Summary: Link `{SEE:name}` tokens in documentation
@@ -23,7 +23,7 @@ documentationIndex_SeeLinker() {
   local matchingFile matchingToken cleanToken
   local seePattern='\{SEE:([^}]+)\}'
 
-  start=$(beginTiming)
+  start=$(timingStart)
   # Argument parsing
   cacheDirectory=
   documentationDirectory=
@@ -124,7 +124,7 @@ documentationIndex_SeeLinker() {
     statusMessage --last decorate warning "No matching see directives found" || :
   fi
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
-  statusMessage --last reportTiming "$start" "See completed in" || :
+  statusMessage --last timingReport "$start" "See completed in" || :
 }
 _documentationIndex_SeeLinker() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

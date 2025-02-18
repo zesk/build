@@ -74,14 +74,14 @@ __addNoteTo() {
 #
 # Usage: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-# Requires: __catchEnvironment __throwArgument beginTiming isDarwin whichExists statusMessage
+# Requires: __catchEnvironment __throwArgument timingStart isDarwin whichExists statusMessage
 # Requires: decorate __decorateExtensionEach
 __updateAvailable() {
   local usage="_${FUNCNAME[0]}"
   local packageLists
 
   local start
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   local forceFlag=false
   # _IDENTICAL_ argument-case-header 5
@@ -152,7 +152,7 @@ __updateAvailable() {
 
   __catchEnvironment muzzle popd || return $?
 
-  statusMessage --last reportTiming "$start" "completed in"
+  statusMessage --last timingReport "$start" "completed in"
 }
 ___updateAvailable() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -4,7 +4,7 @@
 #
 # cursor.sh
 #
-# Docs: ./docs/_templates/tools/cursor.md
+# Docs: ./documentation/source/tools/cursor.md
 # Test: ./test/tools/cursor-tests.sh
 
 # Get the current cursor position

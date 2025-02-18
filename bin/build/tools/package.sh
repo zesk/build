@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/package.md
+# Docs: ./documentation/source/tools/package.md
 # Test: ./test/tools/package-tests.sh
 
 # Usage: {fn} usageFunction functionSuffix [ --help ] [ --manager packageManager ] [ --force ] ...
@@ -123,9 +123,9 @@ __packageUpFunction() {
       return 0
     fi
   fi
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" "$packageFunction" "$@" || return $?
-  statusMessage --last reportTiming "$start" "$verb in"
+  statusMessage --last timingReport "$start" "$verb in"
   date +%s >"$name" || :
 }
 
@@ -359,7 +359,7 @@ packageInstall() {
 
   local start quietLog installed
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
   installed="$(__catchEnvironment "$usage" mktemp)" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
@@ -396,7 +396,7 @@ packageInstall() {
   local installFunction="__${manager}Install"
   isFunction "$installFunction" || __throwEnvironment "$usage" "$installFunction is not defined" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" "$installFunction" "${actualPackages[@]}" || return $?
-  reportTiming "$start" OK
+  timingReport "$start" OK
 }
 _packageInstall() {
   # _IDENTICAL_ usageDocument 1
@@ -491,7 +491,7 @@ packageUninstall() {
 
   local start quietLog standardPackages=()
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   local package
@@ -505,7 +505,7 @@ packageUninstall() {
 
   statusMessage decorate info "Uninstalling ${packages[*]} ... "
   __catchEnvironmentQuiet "$usage" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
-  statusMessage --last reportTiming "$start" "Uninstallation of ${packages[*]} completed in" || :
+  statusMessage --last timingReport "$start" "Uninstallation of ${packages[*]} completed in" || :
 }
 _packageUninstall() {
   # _IDENTICAL_ usageDocument 1

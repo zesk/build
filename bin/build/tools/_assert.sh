@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: contextOpen ./docs/_templates/tools/assert.md
+# Docs: contextOpen ./documentation/source/tools/assert.md
 # Test: contextOpen ./test/tools/assert-tests.sh
 
 # Format test text, special display for blank strings

@@ -3,7 +3,7 @@
 # Homebrew
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Docs: ./docs/_templates/tools/apk.md
+# Docs: ./documentation/source/tools/apk.md
 # Test: ./test/tools/apk-tests.sh
 #
 

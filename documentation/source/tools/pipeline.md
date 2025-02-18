@@ -17,8 +17,8 @@
 
 ## Reporting timing
 
-{beginTiming}
-{reportTiming}
+{timingStart}
+{timingReport}
 
 ## Build Utilities
 

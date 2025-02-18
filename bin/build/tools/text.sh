@@ -4,7 +4,7 @@
 #
 # Shell Dependencies: awk sed date sort printf
 #
-# Docs: o ./docs/_templates/tools/text.md
+# Docs: o ./documentation/source/tools/text.md
 # Test: o ./test/tools/text-tests.sh
 #
 ###############################################################################

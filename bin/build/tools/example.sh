@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/example.md
+# Docs: ./documentation/source/tools/example.md
 # Test: ./test/tools/example-tests.sh
 
 # Current Code Cleaning:
@@ -75,7 +75,7 @@ exampleFunction() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
 
   # Load MANPATH environment
@@ -92,7 +92,7 @@ exampleFunction() {
 
   # DEBUG LINE
   printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code "$@")" # DEBUG LINE
-  reportTiming "$start" "Completed in"
+  timingReport "$start" "Completed in"
 }
 _exampleFunction() {
   # _IDENTICAL_ usageDocument 1
@@ -204,7 +204,7 @@ __hookGitPostCommit() {
     shift
   done
 
-  reportTiming "$start" "Completed in"
+  timingReport "$start" "Completed in"
   __catchEnvironment "$usage" gitInstallHook post-commit || return $?
 
   __catchEnvironment "$usage" gitMainly || return $?

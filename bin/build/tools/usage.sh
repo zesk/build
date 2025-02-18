@@ -5,7 +5,7 @@
 # usage - argument checking code
 #
 # Test: ./test/tools/usage-tests.sh
-# Docs: ./docs/_templates/tools/usage.md
+# Docs: ./documentation/source/tools/usage.md
 
 # Throw an unknown argument error
 # Usage: {fn} usage argument

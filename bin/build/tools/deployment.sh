@@ -7,7 +7,7 @@
 #  ▌ ▌▛▀ ▙▄▘▐ ▌ ▌▚▄▌▌▐ ▌▛▀ ▌ ▌▐ ▖
 #  ▝▀▘▝▀▘▌   ▘▝▀ ▗▄▘▘▝ ▘▝▀▘▘ ▘ ▀
 #
-# Docs: o ./docs/_templates/tools/deployment.md
+# Docs: o ./documentation/source/tools/deployment.md
 # Test: o ./test/tools/deployment-tests.sh
 
 deployedHostArtifact="./.deployed-hosts"
@@ -306,7 +306,7 @@ deployRemoteFinish() {
     __throwArgument "$usage" "--cleanup and --revert are mutually exclusive" || return $?
   fi
 
-  start=$(beginTiming)
+  start=$(timingStart)
   width=50
   decorate pair $width "Host:" "$(uname -n)"
   decorate pair $width "Deployment path:" "$deployHome"
@@ -346,7 +346,7 @@ deployRemoteFinish() {
     #
     __catchEnvironment "$usage" deployApplication "${deployArguments[@]}" || return $?
   fi
-  reportTiming "$start" "Remote deployment finished in"
+  timingReport "$start" "Remote deployment finished in"
 }
 _deployRemoteFinish() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -501,7 +501,7 @@ deployToRemote() {
 
   __catchEnvironment "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
-  initTime=$(__catchEnvironment "$usage" beginTiming) || return $?
+  initTime=$(__catchEnvironment "$usage" timingStart) || return $?
 
   [ -d "$HOME" ] || __throwEnvironment "$usage" "No HOME defined or not a directory: $HOME" || return $?
 
@@ -693,7 +693,7 @@ deployToRemote() {
     # wrapLines "COMMANDS: $(decorate code)" "$(decorate reset)" <"$temporaryCommandsFile"
     for userHost in "${userHosts[@]}"; do
       local start
-      start=$(beginTiming) || :
+      start=$(timingStart) || :
 
       host="${userHost##*@}"
       printf "%s %s: %s\n%s\n" "$(decorate info "Deploying the code to")" "$(decorate green "$userHost")" "$(decorate red "$applicationPath")" "$(decorate info "$host output BEGIN :::")"
@@ -706,10 +706,10 @@ deployToRemote() {
       fi
       decorate info "::: END $host output"
       printf "%s\n" "$host" >>"$deployedHostArtifact" || __throwEnvironment "$usage" "Unable to write $host to $deployedHostArtifact" || return $?
-      statusMessage reportTiming "$start" "Deployed to $(decorate green "$userHost")" || :
+      statusMessage timingReport "$start" "Deployed to $(decorate green "$userHost")" || :
     done
 
-    statusMessage --last reportTiming "$initTime" "Deploy completed in" || :
+    statusMessage --last timingReport "$initTime" "Deploy completed in" || :
     return 0
   fi
 
@@ -737,7 +737,7 @@ deployToRemote() {
   local exitCode
   exitCode=0
   for userHost in "${userHosts[@]}"; do
-    start=$(beginTiming)
+    start=$(timingStart)
     host="${userHost##*@}"
     if grep -q "$host" "$deployedHostArtifact"; then
       printf "%s %s (%s) " "$(decorate success "$verb")" "$(decorate code "$userHost")" "$(decorate bold-red "$applicationPath")"
@@ -748,10 +748,10 @@ deployToRemote() {
     else
       printf "%s %s\n" "$(decorate code "$host")" "$(decorate success "no artifact, so no $verb")"
     fi
-    reportTiming "$start" "$verb $(decorate value "$host") in"
+    timingReport "$start" "$verb $(decorate value "$host") in"
   done
   buildDebugStop deployment || :
-  statusMessage --last reportTiming "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
+  statusMessage --last timingReport "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
   return "$exitCode"
 }
 _deployToRemote() {
@@ -814,14 +814,14 @@ __deployUploadPackage() {
   # Create directories and upload the app.tar.gz
   #
   for userHost in "$@"; do
-    start=$(beginTiming) || :
+    start=$(timingStart) || :
     printf "%s: %s\n" "$(decorate green "$userHost")" "$(decorate info "Setting up")"
     __catchEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(__deployCreateDirectoryCommands "$applicationPath" "$remotePath") || return $?
     printf "%s: %s %s\n" "$(decorate green "$userHost")" "$(decorate info "Uploading to")" "$(decorate red "$remotePath/$buildTarget")"
     if ! printf -- '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
       __throwEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
     fi
-    reportTiming "$start" "Deployment setup completed on $(decorate green "$userHost") in " || :
+    timingReport "$start" "Deployment setup completed on $(decorate green "$userHost") in " || :
   done
 }
 

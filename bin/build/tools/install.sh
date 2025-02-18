@@ -65,13 +65,13 @@ _pipInstall() {
   if whichExists "$name"; then
     return 0
   fi
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   __catchEnvironment "$usage" pythonInstall || return $?
   statusMessage decorate info "Installing $name ... "
   __catchEnvironmentQuiet "$usage" "$quietLog" pip install "$name" "$@" || return $?
   whichExists "$name" || __throwEnvironment "$usage" "$name not found after install" || return $?
-  statusMessage --last reportTiming "$start" "Installed $name in"
+  statusMessage --last timingReport "$start" "Installed $name in"
 }
 
 # Utility to install python dependencies via pip
@@ -87,12 +87,12 @@ _pipUninstall() {
     return 0
   fi
   packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage decorate info "Removing $name ... "
   __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
   ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
-  statusMessage --last reportTiming "$start" "Uninstalled $name in"
+  statusMessage --last timingReport "$start" "Uninstalled $name in"
 }
 
 # Install `docker-compose`
@@ -134,12 +134,12 @@ dockerComposeUninstall() {
     return 0
   fi
   packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage decorate info "Removing $name ... "
   __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
   ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
-  statusMessage --last reportTiming "$start" "Uninstalled $name in"
+  statusMessage --last timingReport "$start" "Uninstalled $name in"
 }
 _dockerComposeUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

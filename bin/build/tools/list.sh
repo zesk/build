@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/list.md
+# Docs: ./documentation/source/tools/list.md
 # Test: ./test/tools/list-tests.sh
 #
 #  ▜ ▗    ▐

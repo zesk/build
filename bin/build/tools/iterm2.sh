@@ -11,7 +11,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/iterm2.md
+# Docs: ./documentation/source/tools/iterm2.md
 # Test: ./test/tools/iterm2-tests.sh
 
 # Is the current console iTerm2?

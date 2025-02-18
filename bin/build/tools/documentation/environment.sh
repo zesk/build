@@ -4,7 +4,7 @@
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/documentation.md
+# Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
 # Build documentation for ./bin/env (or bin/build/env) directory.

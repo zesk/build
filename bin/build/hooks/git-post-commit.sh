@@ -109,14 +109,14 @@ __gitPushHelper() {
 # fn: {base}
 __hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}" hookName="post-commit" start
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
   __catchEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
   __catchEnvironment "$usage" hookRunOptional "$hookName" || return $?
   __gitPushHelper "$usage" || return $?
   # __catchEnvironment "$usage" gitMainly && __gitPushHelper "$usage" || return $?
-  statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(reportTiming "$start" "completed in")"
+  statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(timingReport "$start" "completed in")"
 }
 ___hookGitPostCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

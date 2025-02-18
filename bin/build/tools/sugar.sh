@@ -5,7 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# Docs: contextOpen ./docs/_templates/tools/sugar.md
+# Docs: contextOpen ./documentation/source/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
 # IDENTICAL __execute 10

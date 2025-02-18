@@ -92,7 +92,7 @@ isUnsignedInteger() {
 __hookGitPreCommit() {
   local usage="_${FUNCNAME[0]}" hookName="pre-commit" start
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
   __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
@@ -116,7 +116,7 @@ __hookGitPreCommit() {
   done
 
   gitPreCommitCleanup || :
-  statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(reportTiming "$start" "completed in")"
+  statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(timingReport "$start" "completed in")"
 }
 ___hookGitPreCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

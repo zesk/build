@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/map.md
+# Docs: ./documentation/source/tools/map.md
 # Test: ./test/tools/map-tests.sh
 #
 #  ▛▚▀▖▝▀▖▛▀▖

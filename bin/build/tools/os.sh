@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/os.md
+# Docs: o ./documentation/source/tools/os.md
 # Test: o ./test/tools/os-tests.sh
 
 #

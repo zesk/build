@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/file.md
+# Docs: o ./documentation/source/tools/file.md
 # Test: o ./test/tools/file-tests.sh
 #
 #
@@ -622,7 +622,7 @@ _directoryGamutFileWrapper() {
   local directory="" findArgs=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#

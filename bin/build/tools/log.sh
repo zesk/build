@@ -6,7 +6,7 @@
 #
 # Depends: documentation.sh colors.sh
 # bin: find
-# Docs: o ./docs/_templates/tools/log.md
+# Docs: o ./documentation/source/tools/log.md
 # Test: o ./test/tools/log-tests.sh
 
 #

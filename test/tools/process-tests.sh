@@ -20,10 +20,10 @@ slowDaemon() {
   timingFactor="$(_timingFactor)"
   this="${FUNCNAME[0]}"
 
-  start=$(beginTiming) || _environment "$this beginTiming failed" || return $?
+  start=$(timingStart) || _environment "$this timingStart failed" || return $?
   decorate success "Started $this for $timingFactor seconds"
   sleep "$timingFactor"
-  reportTiming "$start" "$this finished in"
+  timingReport "$start" "$this finished in"
 }
 
 testProcessWait() {

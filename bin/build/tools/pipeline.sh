@@ -4,7 +4,7 @@
 #
 # Depends: colors.sh text.sh
 #
-# Docs: o ./docs/_templates/tools/pipeline.md
+# Docs: o ./documentation/source/tools/pipeline.md
 # Test: o ./test/tools/pipeline-tests.sh
 
 ###############################################################################
@@ -14,69 +14,6 @@
 # ░▀░░░▀▀▀░▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
 #
 #------------------------------------------------------------------------------
-
-#
-# Summary: Start a timer for a section of the build
-#
-# Outputs the offset in seconds from January 1, 1970.
-#
-# Usage: beginTiming
-# Example:     init=$(beginTiming)
-# Example:     ...
-# Example:     reportTiming "$init" "Completed in"
-# Requires: __timestamp, _environment
-beginTiming() {
-  __timestamp 2>/dev/null || _environment __timestamp || return $?
-}
-
-# Format a timout output (milliseconds) as seconds
-timingFormat() {
-  while [ $# -gt 0 ]; do
-    isUnsignedInteger "$1" || __throwArgument "$usage" "Not an integer" || return $?
-    seconds=$((delta / 1000))
-    remainder=$((delta % 1000))
-    printf -- "%d.%03d\n" "$seconds" "$remainder"
-    shift
-  done
-}
-_timingFormat() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Outputs the timing in magenta optionally prefixed by a message in green
-#
-# Usage: reportTiming "$startTime" outputText...
-# Summary: Output the time elapsed
-# Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
-# Usage: reportTiming start [ message ... ]
-# Argument: start - Unix timestamp seconds of start timestamp
-# Argument: message - Any additional arguments are output before the elapsed value computed
-# Exit code: 0 - Exits with exit code zero
-# Example:    init=$(beginTiming)
-# Example:    ...
-# Example:    reportTiming "$init" "Deploy completed in"
-reportTiming() {
-  local usage="_${FUNCNAME[0]}"
-
-  local start="${1-}"
-  isInteger "$start" || __throwArgument "$usage" "Not an integer: \"$start\"" || return $?
-  shift
-  local prefix=
-  if [ $# -gt 0 ]; then
-    prefix="$(decorate green "$@") "
-  fi
-  local delta value seconds
-  delta=$(($(beginTiming) - start))
-  value=$(timingFormat "$delta")
-  seconds=2
-  [ "$value" != "1.000" ] || seconds=1
-  printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$seconds" second seconds)")"
-}
-_reportTiming() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 # Summary: Output debugging information when the build fails
 #

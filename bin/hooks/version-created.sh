@@ -19,11 +19,20 @@ source "${BASH_SOURCE[0]%/*}/../build/tools.sh"
 # Environment: BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
 #
 __buildVersionCreated() {
-  local home
+  local usage="_return"
+  local home newDeprecated deprecatedConfiguration
 
-  home=$(__environment buildHome) || return $?
-  __environment gitBranchify || return $?
-  __environment "$home/bin/build/hooks/version-created.sh" "$@" || return $?
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" gitBranchify || return $?
+
+  deprecatedConfiguration="$home/bin/build/deprecated.txt"
+  [ -f "$deprecatedConfiguration" ] || __throwEnvironment "$usage" "Missing $deprecatedConfiguration" || return $?
+  newDeprecated=$(fileTemporaryName "$usage") || return $?
+
+  __catchEnvironment "$usage" printf -- "%s\n\n" "# $1" >"$newDeprecated" || return $?
+  cat "$deprecatedConfiguration" >>"$newDeprecated"
+  __catchEnvironment "$usage" mv -f "$newDeprecated" "$deprecatedConfiguration" || return $?
+  __catchEnvironment "$usage" "$home/bin/build/hooks/version-created.sh" "$@" || return $?
 }
 
 __buildVersionCreated "$@"

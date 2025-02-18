@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/hooks.md
+# Docs: ./documentation/source/tools/hooks.md
 # Test: ./test/tools/hooks-tests.sh
 
 # Runs a hook in the current Zesk Build context

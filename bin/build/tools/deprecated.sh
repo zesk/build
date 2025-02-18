@@ -19,6 +19,20 @@
 #
 
 # DEPRECATED 2025-02-18
+# nounAction naming
+beginTiming() {
+  _deprecated "${FUNCNAME[0]}"
+  timingStart "$@"
+}
+
+# DEPRECATED 2025-02-18
+# nounAction naming
+reportTiming() {
+  _deprecated "${FUNCNAME[0]}"
+  timingReport "$@"
+}
+
+# DEPRECATED 2025-02-18
 # Better name
 bashPromptUser() {
   _deprecated "${FUNCNAME[0]}"
@@ -39,7 +53,7 @@ joinArguments() {
 }
 
 # DEPRECATED 2024-11-29
-# First-class name
+# public name
 _integer() {
   _deprecated "${FUNCNAME[0]}"
   isUnsignedInteger "$@"

@@ -129,11 +129,11 @@ _simplePHPRequest() {
 _warmupServer() {
   local start delta value
 
-  start=$(beginTiming)
+  start=$(timingStart)
   statusMessage decorate info "Warming server ... "
   while ! value="$(_simplePHPRequest)" || [ -z "$value" ]; do
     sleep 1
-    delta=$(($(beginTiming) - start))
+    delta=$(($(timingStart) - start))
     if [ "$delta" -gt 5000 ]; then
       _environment "_warmupServer failed" || return $?
     fi
@@ -211,13 +211,13 @@ testDeployApplication() {
   PHP_SERVER_ROOT="$d/live-app/public"
   local start elapsed maxWaitTime=15000
 
-  start=$(beginTiming)
+  start=$(timingStart)
   if ! _simplePHPServer; then
     decorate error _simplePHPServer failed
     buildFailed "$quietLog" || return $?
   fi
   while ! _isSimplePHPServerRunning; do
-    elapsed=$(($(beginTiming) - start))
+    elapsed=$(($(timingStart) - start))
     if [ "$elapsed" -gt "$maxWaitTime" ]; then
       __environment "Simple PHP Server not running after $maxWaitTime seconds, failing" || return $?
     fi

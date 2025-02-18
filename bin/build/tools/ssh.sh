@@ -7,7 +7,7 @@
 # Depends: colors.sh
 # bin: git
 #
-# Docs: contextOpen ./docs/_templates/tools/ssh.md
+# Docs: contextOpen ./documentation/source/tools/ssh.md
 # Test: contextOpen ./test/bin/ssh-tests.sh
 
 #

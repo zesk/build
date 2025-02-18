@@ -5,7 +5,7 @@
 # Depends on no other .sh files
 # Shell Dependencies: awk sed date echo sort printf
 #
-# Docs: contextOpen ./docs/_templates/tools/url.md
+# Docs: contextOpen ./documentation/source/tools/url.md
 # Test: contextOpen ./test/tools/url-tests.sh
 #
 # ##############################################################################

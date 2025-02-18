@@ -209,7 +209,7 @@ phpBuild() {
   [ ${#missingFile[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing files: ${missingFile[*]}" || return $?
 
   local initTime
-  initTime=$(__catchEnvironment "$usage" beginTiming) || return $?
+  initTime=$(__catchEnvironment "$usage" timingStart) || return $?
 
   #
   # Everything above here is basically argument parsing and validation
@@ -292,7 +292,7 @@ phpBuild() {
   __catchEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || _undo $? muzzle popd || _clean $? "${clean[@]}" || return $?
   __catchEnvironment "$usage" muzzle popd || _clean $? "${clean[@]}" || return $?
 
-  statusMessage --last reportTiming "$initTime" "PHP built $(decorate code "$targetName") in"
+  statusMessage --last timingReport "$initTime" "PHP built $(decorate code "$targetName") in"
 }
 _phpBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?
@@ -332,7 +332,7 @@ phpComposer() {
   local usage="_${FUNCNAME[0]}"
 
   local start dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest} composerDirectory="." cacheDir=".composer" forceDocker=false
-  start=$(beginTiming)
+  start=$(timingStart)
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -389,7 +389,7 @@ phpComposer() {
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1 || _undo $? muzzle popd || buildFailed "$quietLog" || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
-  statusMessage --last reportTiming "$start" "${FUNCNAME[0]} completed in" || :
+  statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }
 _phpComposer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -448,7 +448,7 @@ phpTest() {
 
   local init quietLog
 
-  init=$(__catchEnvironment "$usage" beginTiming) || return $?
+  init=$(__catchEnvironment "$usage" timingStart) || return $?
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
 
   buildDebugStart "${FUNCNAME[0]}" || :
@@ -459,7 +459,7 @@ phpTest() {
   statusMessage decorate info "Building test container" || :
 
   local start undo=()
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   __catchEnvironment "$usage" _phpTestSetup "$usage" "$home" || return $?
 
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
@@ -467,15 +467,15 @@ phpTest() {
   __catchEnvironment "$usage" hookRunOptional test-setup || _undo "$?" "${undo[@]}" || return $?
 
   __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" build || _undo "$?" "${undo[@]}" || return $?
-  statusMessage reportTiming "$start" "Built in" || :
+  statusMessage timingReport "$start" "Built in" || :
 
   statusMessage decorate info "Bringing up containers ..." || _undo "$?" "${undo[@]}" || return $?
 
-  start=$(__catchEnvironment "$usage" beginTiming) || _undo "$?" "${undo[@]}" || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || _undo "$?" "${undo[@]}" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" up -d || _undo "$?" "${undo[@]}" || return $?
-  statusMessage reportTiming "$start" "Up in" || :
+  statusMessage timingReport "$start" "Up in" || :
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   local reason=""
   if ! hookRun test-runner; then
     reason="test-runner hook failed"
@@ -484,18 +484,18 @@ phpTest() {
     _phpTestResult "  Success " "$(decorate green)" "☘️ " "💙" 18 4
   fi
   decorate info "Bringing down containers ..." || :
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   __catchEnvironment "$usage" docker-compose "${dca[@]}" down || _phpTestCleanup "$usage" || __throwEnvironment "$usage" "docker-compose down" || return $?
 
   # Reset test environment ASAP
   _phpTestCleanup "$usage" || return $?
-  statusMessage reportTiming "$start" "Down in" || :
+  statusMessage timingReport "$start" "Down in" || :
   if ! hookRunOptional test-cleanup; then
     reason="test-cleanup ALSO failed"
   fi
   [ -z "$reason" ] || __throwEnvironment "$usage" "$reason" || return $?
   buildDebugStop "${FUNCNAME[0]}" || :
-  statusMessage reportTiming "$init" "PHP Test completed in" || return $?
+  statusMessage timingReport "$init" "PHP Test completed in" || return $?
 }
 _phpTest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

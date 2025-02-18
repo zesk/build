@@ -35,14 +35,14 @@ testAWSIPAccess() {
 
   # Work using environment variables
   __testSection "CLI IP and env credentials"
-  start=$(beginTiming)
+  start=$(timingStart)
   if ! awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
   if ! awsIPAccess --revoke --services 22,3306 --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
-  reportTiming "$start" "Succeeded in"
+  timingReport "$start" "Succeeded in"
 
   # copy env to locals
   id=$AWS_ACCESS_KEY_ID
@@ -53,11 +53,11 @@ testAWSIPAccess() {
   unset AWS_SECRET_ACCESS_KEY
 
   __testSection "CLI IP and no credentials - fails"
-  start=$(beginTiming)
+  start=$(timingStart)
   if awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
     buildFailed "$quietLog" || return $?
   fi
-  reportTiming "$start" "Succeeded in"
+  timingReport "$start" "Succeeded in"
 
   mkdir "$HOME/.aws"
   {
@@ -112,7 +112,7 @@ testAWSExpiration() {
 
   oldDate="${AWS_ACCESS_KEY_DATE-NOPE}"
 
-  start=$(beginTiming)
+  start=$(timingStart)
   __testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
   thisYear=$(($(date +%Y) + 0))
   thisMonth="$(date +%m)"
@@ -172,7 +172,7 @@ testAWSExpiration() {
   __testSection todayDate $expirationDays
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
-  reportTiming "$start" Done
+  timingReport "$start" Done
 
   if [ "$oldDate" = "NOPE" ]; then
     unset AWS_ACCESS_KEY_DATE

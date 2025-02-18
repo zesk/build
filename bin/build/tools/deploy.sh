@@ -10,7 +10,7 @@
 #
 # deploy tools - see `deploy/application.sh'
 # Related: o ./deploy/application.sh
-# Docs: o ./docs/_templates/tools/deploy.md
+# Docs: o ./documentation/source/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
 
 #
@@ -245,7 +245,7 @@ deployMigrateDirectoryToLink() {
 
   usage="_${FUNCNAME[0]}"
 
-  start=$(beginTiming) || :
+  start=$(timingStart) || :
   deployHome=
   applicationPath=
   while [ $# -gt 0 ]; do
@@ -308,7 +308,7 @@ deployMigrateDirectoryToLink() {
     decorate pair 20 "Installed:" "$deployHome/$appVersion/app"
     # Move directory, then re-link
   }
-  reportTiming "$start" "Completed in"
+  timingReport "$start" "Completed in"
 }
 _deployMigrateDirectoryToLink() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

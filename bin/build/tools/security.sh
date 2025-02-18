@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 #
-# Docs: o ./docs/_templates/tools/security.md
+# Docs: o ./documentation/source/tools/security.md
 # Test: o ./test/tools/security-tests.sh
 
 __doEvalCheck() {

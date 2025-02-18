@@ -73,7 +73,7 @@ __buildDeploy() {
 
   usage="${FUNCNAME[0]#_}"
 
-  start=$(beginTiming) || __throwEnvironment "$usage" "beginTiming" || return $?
+  start=$(timingStart) || __throwEnvironment "$usage" "timingStart" || return $?
 
   statusMessage decorate info "Fetching deep copy of repository ..." || :
   __catchEnvironment "$usage" git fetch --unshallow || return $?
@@ -96,7 +96,7 @@ __buildDeploy() {
     gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
     __throwEnvironment "$usage" "githubRelease" || return $?
   fi
-  reportTiming "$start" "Release completed in" || :
+  timingReport "$start" "Release completed in" || :
 }
 _buildDeploy() {
   usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"

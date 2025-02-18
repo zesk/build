@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/_sugar.md
+# Docs: o ./documentation/source/tools/_sugar.md
 # Test: o ./test/tools/sugar-tests.sh
 #
 # -- CUT BELOW HERE --

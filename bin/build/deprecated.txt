@@ -1,5 +1,9 @@
-# v0.23.2
+# v0.25.0
+beginTiming|timingStart
+reportTiming|timingReport
 bashPromptUser|bashUserInput
+
+# v0.24.0
 joinArguments|listJoin
 listTokens|mapTokens
 

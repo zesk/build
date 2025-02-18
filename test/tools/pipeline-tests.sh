@@ -10,7 +10,7 @@
 testIsUpToDate() {
   local thisYear thisMonth expirationDays start testDate
 
-  start=$(beginTiming)
+  start=$(timingStart)
   __testSection "isUpToDate testing: BUILD_DEBUG=${BUILD_DEBUG-}"
   thisYear=$(($(date +%Y) + 0))
   thisMonth="$(date +%m)"
@@ -74,5 +74,5 @@ testIsUpToDate() {
   expirationDays=2
   assertExitCode --line "$LINENO" 0 isUpToDate "$testDate" "$expirationDays" || return $?
 
-  reportTiming "$start" Done
+  timingReport "$start" Done
 }

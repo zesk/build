@@ -4,7 +4,7 @@
 #
 # Depends: colors.sh text.sh
 #
-# Docs: o ./docs/_templates/tools/hook.md
+# Docs: o ./documentation/source/tools/hook.md
 # Test: o ./test/tools/hook-tests.sh
 
 #

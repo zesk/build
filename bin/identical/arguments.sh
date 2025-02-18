@@ -86,7 +86,7 @@ __documentTemplateFunction() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -103,7 +103,7 @@ __documentTemplateFunction() {
   fi
   awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
 
-  reportTiming "$start" "Completed in"
+  timingReport "$start" "Completed in"
 }
 
 ___documentTemplateFunction() {
@@ -144,7 +144,7 @@ ___documentTemplateFunction() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -161,7 +161,7 @@ ___documentTemplateFunction() {
   fi
   awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
 
-  reportTiming "$start" "Completed in"
+  timingReport "$start" "Completed in"
 }
 
 __documentTemplateFunction2() {

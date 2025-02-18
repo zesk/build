@@ -41,7 +41,7 @@ awsInstall() {
   fi
 
   local start
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   __catchEnvironment "$usage" packageWhich unzip unzip || return $?
   __catchEnvironment "$usage" packageWhich curl curl "$@" || return $?
 
@@ -69,7 +69,7 @@ awsInstall() {
     __catchEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || _clean $? "${clean[@]}" || return $?
     __catchEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" || _clean $? "${clean[@]}" || return $?
     version="$(__catchEnvironment "$usage" aws --version)" || _clean $? "${clean[@]}" || return $?
-    printf "%s %s\n" "$version" "$(__catchEnvironment "$usage" reportTiming "$start" OK)" || return $?
+    printf "%s %s\n" "$version" "$(__catchEnvironment "$usage" timingReport "$start" OK)" || return $?
     __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   }
 }
@@ -524,7 +524,7 @@ awsSecurityGroupIPModify() {
   local usage="_${FUNCNAME[0]}"
   local start
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   local pp=() profileName="" group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile region=""
 
@@ -648,7 +648,7 @@ awsSecurityGroupIPModify() {
     if ! aws "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         rm -f "$tempErrorFile" || :
-        printf "%s %s\n" "$(decorate yellow "duplicate")" "$(reportTiming "$start" "found in")"
+        printf "%s %s\n" "$(decorate yellow "duplicate")" "$(timingReport "$start" "found in")"
         return 0
       else
         wrapLines "$(decorate error "ERROR : : : : ") $(decorate code)" "$(decorate blue ": : : : ERROR")$(decorate reset)" <"$tempErrorFile" 1>&2
@@ -657,7 +657,7 @@ awsSecurityGroupIPModify() {
       fi
     fi
   fi
-  reportTiming "$start" "Completed in"
+  timingReport "$start" "Completed in"
 }
 _awsSecurityGroupIPModify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

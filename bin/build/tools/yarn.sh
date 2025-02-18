@@ -53,7 +53,7 @@ yarnInstall() {
   fi
   local home start
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 
@@ -68,7 +68,7 @@ yarnInstall() {
   statusMessage decorate info "Installing yarn ... " || return $?
   __catchEnvironment "$usage" yarn install || _undo $? muzzle popd || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
-  statusMessage --last reportTiming "$start" "Installed yarn in" || return $?
+  statusMessage --last timingReport "$start" "Installed yarn in" || return $?
 }
 _yarnInstall() {
   # _IDENTICAL_ usageDocument 1

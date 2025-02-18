@@ -5,7 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # bin: printf
-# Docs: contextOpen ./docs/_templates/tools/float.md
+# Docs: contextOpen ./documentation/source/tools/float.md
 # Test: contextOpen ./test/tools/float-tests.sh
 
 # Usage: {fn} float

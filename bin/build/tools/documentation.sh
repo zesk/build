@@ -8,7 +8,7 @@
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/documentation.md
+# Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
 usageDocument() {
@@ -146,7 +146,7 @@ usageDocumentSimple() {
 # Exit Code: 0 - If success
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
-# Requires: __catchEnvironment beginTiming __throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
+# Requires: __catchEnvironment timingStart __throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
 # Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens _clean
 # Requires: mapEnvironment shaPipe printf
 documentationTemplateCompile() {
@@ -159,7 +159,7 @@ documentationTemplateCompile() {
   local tokenName documentTokensFile envChecksum envChecksumCache compiledTemplateCache
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   forceFlag=false
   envFiles=()
@@ -319,7 +319,7 @@ documentationTemplateCompile() {
     fi
   fi
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
-  statusMessage decorate info "$(reportTiming "$start" "$message" "$targetFile" in)"
+  statusMessage decorate info "$(timingReport "$start" "$message" "$targetFile" in)"
 }
 _documentationTemplateCompile() {
   usageDocument "${BASH_SOURCE[0]}" "documentationTemplateCompile" "$@"
@@ -471,7 +471,7 @@ documentationTemplateDirectoryCompile() {
   done
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   local cacheDirectory templateDirectory functionTemplate targetDirectory
 
@@ -498,7 +498,7 @@ documentationTemplateDirectoryCompile() {
     fi
     fileCount=$((fileCount + 1))
   done < <(find "$templateDirectory" -type f -name '*.md' ! -path "*/.*/*" ! -name '_*' "${filterArgs[@]+"${filterArgs[@]}"}")
-  statusMessage --last reportTiming "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(decorate info "$targetDirectory") "
+  statusMessage --last timingReport "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(decorate info "$targetDirectory") "
   return $exitCode
 }
 _documentationTemplateDirectoryCompile() {

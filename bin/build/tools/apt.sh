@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/apt.md
+# Docs: o ./documentation/source/tools/apt.md
 # Test: o ./test/tools/apt-tests.sh
 
 #
@@ -46,7 +46,7 @@ aptKeyAdd() {
   local name url host index IFS file listTarget
   local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
   ring=$(_usageAptKeyRings "$usage") || return $?
 
@@ -145,7 +145,7 @@ aptKeyAdd() {
   else
     statusMessage --first decorate success "skipped ... "
   fi
-  statusMessage --last reportTiming "$start" "Added $title to sources in"
+  statusMessage --last timingReport "$start" "Added $title to sources in"
 }
 _aptKeyAdd() {
   # _IDENTICAL_ usageDocument 1
@@ -192,7 +192,7 @@ aptKeyRemove() {
 
   local start ring sourcesPath
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   ring=$(_usageAptKeyRings "$usage") || return $?
   sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
@@ -217,7 +217,7 @@ aptKeyRemove() {
   else
     statusMessage decorate success "Skipped update ... "
   fi
-  statusMessage reportTiming "$start" "Removed ${names[*]} from sources in "
+  statusMessage timingReport "$start" "Removed ${names[*]} from sources in "
 }
 _aptKeyRemove() {
   # _IDENTICAL_ usageDocument 1

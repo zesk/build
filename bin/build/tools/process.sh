@@ -40,7 +40,7 @@ processWait() {
   local processIds=() requireFlag=false verboseFlag=false timeout=-1 signalTimeout=1 signals=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#

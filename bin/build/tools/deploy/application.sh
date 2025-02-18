@@ -8,7 +8,7 @@
 #  ▌ ▌▛▀ ▙▄▘▐ ▌ ▌▚▄▌
 #  ▝▀▘▝▀▘▌   ▘▝▀ ▗▄▘
 #
-# Docs: o ./docs/_templates/tools/deploy.md
+# Docs: o ./documentation/source/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
 
 # Deploy an application from a deployment repository

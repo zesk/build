@@ -5,8 +5,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Depends: nothing
-# Docs: o ./docs/_templates/tools/vendor.md
-# Test: o ./docs/_templates/tools/vendor.md
+# Docs: o ./documentation/source/tools/vendor.md
+# Test: o ./documentation/source/tools/vendor.md
 
 export XPC_SERVICE_NAME
 export VSCODE_SHELL_INTEGRATION

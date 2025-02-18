@@ -125,7 +125,7 @@ identicalCheck() {
   local start failureCode exitCode=0 clean=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   failureCode="$(_code identical)"
 
   rootDir=$(__catchEnvironment "$usage" realPath "$rootDir") || return $?
@@ -203,7 +203,7 @@ identicalCheck() {
   fi
   isEmptyFile "$resultsFile" || cat "$resultsFile" 1>&2
   rm -rf "$resultsFile" "$searchFileList"
-  statusMessage --last reportTiming "$start" "Completed in"
+  statusMessage --last timingReport "$start" "Completed in"
   return "$exitCode"
 }
 _identicalCheck() {

@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/directory.md
+# Docs: o ./documentation/source/tools/directory.md
 # Test: o ./test/tools/directory-tests.sh
 
 # Is a path an absolute path?

@@ -58,7 +58,7 @@ testSuite() {
   local startString allTestStart quietLog
 
   startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
-  allTestStart=$(__catchEnvironment "$usage" beginTiming) || return $?
+  allTestStart=$(__catchEnvironment "$usage" timingStart) || return $?
 
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
@@ -147,7 +147,7 @@ testSuite() {
         statusMessage decorate warning "Cleaning tests and exiting ... "
         __TEST_SUITE_CLEAN_EXIT=true
         __testCleanup || return $?
-        statusMessage reportTiming "$allTestStart" "Cleaned in"
+        statusMessage timingReport "$allTestStart" "Cleaned in"
         printf "\n"
         return 0
         ;;
@@ -284,12 +284,12 @@ testSuite() {
     local item tagFilteredTests=() beforeCount afterCount sectionStart
 
     ! $verboseMode || statusMessage decorate info "$(printf "%s %d %s and %d %s to skip" "Applying" "${#tags[@]}" "$(plural ${#tags[@]} tag tags)" "${#skipTags[@]}" "$(plural ${#skipTags[@]} tag tags)")"
-    sectionStart=$(__catchEnvironment "$usage" beginTiming) || return $?
+    sectionStart=$(__catchEnvironment "$usage" timingStart) || return $?
     while read -r item; do tagFilteredTests+=("$item"); done < <(__catchEnvironment "$usage" __testSuiteFilterTags "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || return $?
     if $verboseMode; then
       beforeCount="$(decorate notice "${#filteredTests[@]} $(plural ${#filteredTests[@]} "test" "tests")")"
       afterCount="$(decorate value "${#tagFilteredTests[@]} $(plural ${#tagFilteredTests[@]} "test" "tests")")"
-      statusMessage printf -- "%s %s -> %s (%s)" "$(decorate info Tags)" "$beforeCount" "$afterCount" "$(reportTiming "$sectionStart")"
+      statusMessage printf -- "%s %s -> %s (%s)" "$(decorate info Tags)" "$beforeCount" "$afterCount" "$(timingReport "$sectionStart")"
     fi
     filteredTests=("${tagFilteredTests[@]+"${tagFilteredTests[@]}"}")
   fi
@@ -324,7 +324,7 @@ testSuite() {
       if [ "$sectionName" != "$sectionNameHeading" ]; then
         clearLine
         __testHeading "$sectionName"
-        reportTiming "$allTestStart" "elapsed"
+        timingReport "$allTestStart" "elapsed"
         sectionNameHeading="$sectionName"
       fi
 
@@ -348,7 +348,7 @@ testSuite() {
     __throwEnvironment "$usage" "No tests match" "${message[@]}" || return $?
   fi
   [ -z "$statsFile" ] || __testStats "$statsFile"
-  reportTiming "$allTestStart" "Completed in"
+  timingReport "$allTestStart" "Completed in"
 
   _textExit 0
 }
@@ -698,7 +698,7 @@ __testRun() {
     printf "%s\n" "Running $__test" >>"$quietLog"
     resultCode=0
     __TEST_SUITE_TRACE="$__test"
-    __testStart=$(beginTiming)
+    __testStart=$(timingStart)
     if plumber "$__test" "$quietLog"; then
       printf "%s\n" "SUCCESS $__test" >>"$quietLog"
     else
@@ -712,7 +712,7 @@ __testRun() {
     # Instead of preventing this usage, just work around it
     __catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
     local timingText
-    timingText="$(reportTiming "$__testStart")"
+    timingText="$(timingReport "$__testStart")"
     if [ "$resultCode" = "$(_code leak)" ]; then
       resultCode=0
       printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"

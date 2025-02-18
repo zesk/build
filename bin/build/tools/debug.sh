@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # bin: set test
-# Docs: o ./docs/_templates/tools/debug.md
+# Docs: o ./documentation/source/tools/debug.md
 # Test: o ./test/tools/debug-tests.sh
 
 #

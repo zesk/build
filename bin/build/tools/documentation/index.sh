@@ -6,7 +6,7 @@
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/documentation.md
+# Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
 # Looks up information in the function index
@@ -187,7 +187,7 @@ documentationIndex_Generate() {
   fi
 
   local start
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   local functionIndex="$cacheDirectory/index"
   [ -d "$functionIndex" ] || __catchEnvironment "$usage" mkdir -p "$functionIndex" || return $?
@@ -248,7 +248,7 @@ documentationIndex_Generate() {
   if ! $foundOne; then
     __throwEnvironment "$usage" "No shell files found in $(decorate file "$codePath")" || return $?
   fi
-  statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(reportTiming "$start" in)"
+  statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(timingReport "$start" in)"
 }
 _documentationIndex_Generate() {
   # _IDENTICAL_ usageDocument 1
@@ -440,7 +440,7 @@ documentationIndex_LinkDocumentationPaths() {
   local settingsFile
   local documentTokensFile modifiedCountFile processed total
 
-  start=$(beginTiming) || __catchEnvironment "$usage" "beginTiming failed" || return $?
+  start=$(timingStart) || __catchEnvironment "$usage" "timingStart failed" || return $?
   local cacheDirectory="" documentTemplate="" documentationPath=""
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -512,7 +512,7 @@ documentationIndex_LinkDocumentationPaths() {
   fi
   total="$(trimSpace "$(wc -l <"$documentTokensFile")")"
   rm "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-  statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" "for" "$(decorate code "$documentationPath")" "in" "$(reportTiming "$start")")"
+  statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" "for" "$(decorate code "$documentationPath")" "in" "$(timingReport "$start")")"
 }
 _documentationIndex_LinkDocumentationPaths() {
   # _IDENTICAL_ usageDocument 1

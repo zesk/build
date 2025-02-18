@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # bin: head grep
-# Docs: contextOpen ./docs/_templates/tools/docker.md
+# Docs: contextOpen ./documentation/source/tools/docker.md
 # Test: contextOpen ./test/tools/docker-tests.sh
 
 ###############################################################################

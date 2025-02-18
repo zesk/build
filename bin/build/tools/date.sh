@@ -5,7 +5,7 @@
 # Depends on no other .sh files
 # Shell Dependencies: date
 #
-# Docs: ./docs/_templates/tools/date.md
+# Docs: ./documentation/source/tools/date.md
 # Test: ./test/tools/date-tests.sh
 #
 

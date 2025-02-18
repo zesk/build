@@ -5,7 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # bin: mariadb
-# Docs: ./docs/_templates/tools/mariadb.md
+# Docs: ./documentation/source/tools/mariadb.md
 # Test: ./test/tools/mariadb-tests.sh
 
 # Dump a MariaDB database to raw SQL

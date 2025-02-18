@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/darwin.md
+# Docs: o ./documentation/source/tools/darwin.md
 # Test: o ./test/tools/darwin-tests.sh
 #
 

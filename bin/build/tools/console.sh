@@ -4,7 +4,7 @@
 #
 # Depends: usage.sh
 # bin: printf stty
-# Docs: o ./docs/_templates/tools/console.md
+# Docs: o ./documentation/source/tools/console.md
 # Test: o ./test/tools/console-tests.sh
 
 # Summary: Get the console foreground or background color

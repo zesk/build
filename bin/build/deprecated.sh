@@ -107,7 +107,7 @@ __deprecatedCleanup() {
     shift
   done
 
-  start=$(__environment beginTiming) || return $?
+  start=$(__environment timingStart) || return $?
 
   # END OF CANNONS
   if $doCannon; then
@@ -126,7 +126,7 @@ __deprecatedCleanup() {
     statusMessage --last decorate info "Cleaning up configuration ..."
     __deprecatedConfiguration || exitCode=$?
   fi
-  statusMessage --last reportTiming "$start" "Deprecated process took"
+  statusMessage --last timingReport "$start" "Deprecated process took"
   return "$exitCode"
 }
 ___deprecatedCleanup() {
@@ -175,7 +175,7 @@ __deprecatedTokens() {
   local ignoreStuff exitCode=0 start results
   read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
   results=$(__environment mktemp) || return $?
-  start=$(__environment beginTiming) || return $?
+  start=$(__environment timingStart) || return $?
   for deprecatedToken in "$@"; do
     statusMessage decorate info "Looking for deprecated token $(decorate code "$deprecatedToken") ..."
     if find . -type f "${ignoreStuff[@]+"${ignoreStuff[@]}"}" -print0 | xargs -0 grep -l -e "$deprecatedToken" >"$results"; then
@@ -185,7 +185,7 @@ __deprecatedTokens() {
     fi
   done
   __environment rm -rf "$results" || return $?
-  statusMessage --last reportTiming "$start" "Deprecated token scan took"
+  statusMessage --last timingReport "$start" "Deprecated token scan took"
   return "$exitCode"
 }
 
@@ -230,7 +230,7 @@ __deprecatedCannonsByVersion() {
   set -eou pipefail
 
   home=$(__environment buildHome) || return $?
-  start=$(__environment beginTiming) || return $?
+  start=$(__environment timingStart) || return $?
 
   while read -r line; do
     local IFS tokens=() trimmed
@@ -252,7 +252,7 @@ __deprecatedCannonsByVersion() {
       printf -- "\n"
     fi
   done <"$home/bin/build/deprecated.txt"
-  statusMessage --last reportTiming "$start" "Deprecated cannon took"
+  statusMessage --last timingReport "$start" "Deprecated cannon took"
   return "$exitCode"
 }
 
@@ -262,11 +262,11 @@ __deprecatedCannonsByVersion() {
 # Fingers don't always hit the keys right
 __misspellingCannon() {
   local start exitCode=0
-  start=$(__environment beginTiming) || return $?
+  start=$(__environment timingStart) || return $?
   # START OF MISSPELLING CANNON
   __deprecatedCannon 'decoreate' 'decorate' || exitCode=$?
   # END OF MISSPELLING CANNON
-  statusMessage --last reportTiming "$start" "Misspelling cannon took"
+  statusMessage --last timingReport "$start" "Misspelling cannon took"
   return "$exitCode"
 }
 

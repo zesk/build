@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs:  ./docs/_templates/tools/application.md
+# Docs:  ./documentation/source/tools/application.md
 # Test: ./test/tools/application-tests.sh
 
 __applicationHomeFile() {

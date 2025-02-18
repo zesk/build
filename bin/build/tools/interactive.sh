@@ -6,7 +6,7 @@
 #
 # Depends: text.sh colors.sh
 # bin: test echo printf
-# Docs: o ./docs/_templates/tools/interactive.md
+# Docs: o ./documentation/source/tools/interactive.md
 # Test: o ./test/tools/interactive-tests.sh
 
 ####################################################################################################
@@ -515,7 +515,7 @@ interactiveCountdown() {
 
   local start end now
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   end=$((start + counter))
   now=$start
   [ -z "$prefix" ] || prefix="$prefix "
@@ -523,7 +523,7 @@ interactiveCountdown() {
   while [ "$now" -lt "$end" ]; do
     "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $counter ")")"
     sleep 1
-    now=$(__catchEnvironment "$usage" beginTiming) || return $?
+    now=$(__catchEnvironment "$usage" timingStart) || return $?
     counter=$((end - now))
   done
   statusMessage printf -- "%s" ""

@@ -6,7 +6,7 @@
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/version.md
+# Docs: o ./documentation/source/tools/version.md
 # Test: o ./test/tools/version-tests.sh
 
 # Check if something matches a version

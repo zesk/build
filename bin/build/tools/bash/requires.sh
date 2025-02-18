@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/bash.md
+# Docs: ./documentation/source/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
 # Usage: {fn} script ...

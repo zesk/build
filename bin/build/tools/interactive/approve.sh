@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: ./docs/_templates/tools/interactive.md
+# Docs: ./documentation/source/tools/interactive.md
 # Test: ./test/tools/interactive-tests.sh
 
 ####################################################################################################
@@ -133,7 +133,7 @@ __interactiveCountdownReadBoolean() {
   extras="${1-}" && shift
 
   local value start now elapsed=0 message="$*" counter=1 exitCode=0 prefix="" timingSuffix=""
-  start=$(__environment beginTiming) || return $?
+  start=$(__environment timingStart) || return $?
   width="$timeout"
   width="${#width}"
 
@@ -148,7 +148,7 @@ __interactiveCountdownReadBoolean() {
       if [ -z "$timeout" ]; then
         return 2
       fi
-      now=$(__environment beginTiming) || return $?
+      now=$(__environment timingStart) || return $?
       elapsed=$((now - start))
       if [ "$elapsed" -gt "$timeout" ]; then
         return 10

@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/coverage.md
+# Docs: o ./documentation/source/tools/coverage.md
 # Test: o ./test/tools/coverage-tests.sh
 #
 
@@ -21,7 +21,7 @@ bashCoverage() {
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -51,7 +51,7 @@ bashCoverage() {
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
   __catchEnvironment "$usage" __bashCoverageWrapper "$target" "$@" || return $?
-  ! $verbose || reportTiming "$start" "Coverage completed in"
+  ! $verbose || timingReport "$start" "Coverage completed in"
 }
 _bashCoverage() {
   # _IDENTICAL_ usageDocument 1
@@ -67,7 +67,7 @@ bashCoverageReport() {
   local reportCache target file line dataPath commandFile files=() home
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   # _IDENTICAL_ argument-case-header 5

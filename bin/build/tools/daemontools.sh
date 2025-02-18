@@ -372,32 +372,28 @@ _daemontoolsRestart() {
 #
 daemontoolsManager() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local intervalSeconds chirpSeconds statFile serviceHome
-  local directory svcBin svcBinFlags statBin secondsNoun
-  local lastChirp now
-  local fileAction index
-  local currentActions action
-  local services files actions
-
-  services=()
-  files=()
-  actions=()
 
   __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
-  currentActions=("restart")
-  intervalSeconds=10
-  chirpSeconds=0
-  statFile=
-  serviceHome="$DAEMONTOOLS_HOME"
-  svcBin=$(which svc) || __throwEnvironment "$usage" "Requires daemontools - svc not found in PATH: $PATH" || return $?
-  statBin=$(which svstat) || __throwEnvironment "$usage" "Requires daemontools - svstat not found in PATH: $PATH" || return $?
+  local services=() files=() actions=()
+  local currentActions=("restart") intervalSeconds=10 chirpSeconds=0 statFile="" serviceHome="${DAEMONTOOLS_HOME-}" svcBin statBin service="" file=""
 
+  usageRequireBinary "$usage" svc svstat || return $?
+
+  svcBin=$(__catchEnvironment "$usage" which svc) || return $?
+  statBin=$(__catchEnvironment "$usage" which svstat) || return $?
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
       --chirp)
         shift
         chirpSeconds=$(usageArgumentPositiveInteger "$usage" chirpSeconds "${1-}") || return $?
@@ -440,15 +436,16 @@ daemontoolsManager() {
     esac
     shift
   done
+
   [ "${#services[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one service and file pair" || return $?
-  start=$(beginTiming) || __throwEnvironment "$usage" beginTiming || return $?
+
+  local start lastChirp
+
+  start=$(__catchEnvironment "$usage" date +%s) || return $?
   lastChirp=$start
-  secondsNoun=seconds
-  if [ "$intervalSeconds" -eq 1 ]; then
-    secondsNoun=second
-  fi
-  printf "%s: pid %d: (every %d %s)\n" "$(basename "${BASH_SOURCE[0]}")" "$$" "$intervalSeconds" "$secondsNoun"
-  index=0
+  printf "%s: pid %d: (every %d %s)\n" "$(basename "${BASH_SOURCE[0]}")" "$$" "$intervalSeconds" "$(plural "$intervalSeconds" second seconds)"
+
+  local index=0
   while [ $index -lt ${#files[@]} ]; do
     printf "    service: %s file: %s actions: %s\n" "${services[$index]}" "${files[$index]}" "${actions[$index]}"
     index=$((index + 1))
@@ -460,9 +457,7 @@ daemontoolsManager() {
     fi
     index=0
     while [ $index -lt ${#files[@]} ]; do
-      service="${services[$index]}"
-      file="${files[$index]}"
-      action=${actions[$index]}
+      local service="${services[$index]}" file="${files[$index]}" action=${actions[$index]} directory fileAction svcBinFlags
       index=$((index + 1))
       directory="$(dirname "$file")"
       [ -d "$directory" ] || __throwEnvironment "$usage" "Parent directory deleted, exiting: $directory" || return $?
@@ -500,6 +495,7 @@ daemontoolsManager() {
       break
     fi
     if [ "$chirpSeconds" -gt 0 ]; then
+      local now
       now=$(date +%s)
       if [ "$((now - lastChirp))" -gt "$chirpSeconds" ]; then
         printf "pid %d: %s has been alive for %d seconds\n" "$$" "${BASH_SOURCE[0]}" "$((now - start))"

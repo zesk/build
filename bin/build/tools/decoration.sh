@@ -4,7 +4,7 @@
 #
 # Shell Dependencies: awk sed date echo sort printf
 #
-# Docs: o ./docs/_templates/tools/decoration.md
+# Docs: o ./documentation/source/tools/decoration.md
 # Test: o ./test/tools/decoration-tests.sh
 
 # Display large text in the console for banners and important messages

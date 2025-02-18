@@ -5,7 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # bin: git
 #
-# Docs: ./docs/_templates/tools/git.md
+# Docs: ./documentation/source/tools/git.md
 # Test: ./test/bin/git-tests.sh
 #
 
@@ -278,7 +278,7 @@ gitTagVersion() {
   maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
   local init start versionSuffix
 
-  init=$(__catchEnvironment "$usage" beginTiming) || return $?
+  init=$(__catchEnvironment "$usage" timingStart) || return $?
   start=$init
   versionSuffix=""
 
@@ -307,11 +307,11 @@ gitTagVersion() {
 
   statusMessage decorate info "Pulling tags from origin "
   __catchEnvironment "$usage" git pull --tags origin >/dev/null || return $?
-  statusMessage reportTiming "$start" "Pulled tags in"
+  statusMessage timingReport "$start" "Pulled tags in"
 
   statusMessage decorate info "Pulling tags from origin "
   __catchEnvironment "$usage" git pull --tags origin >/dev/null || return $?
-  statusMessage reportTiming "$start" "Pulled tags in"
+  statusMessage timingReport "$start" "Pulled tags in"
 
   local currentVersion previousVersion releaseNotes
   local tagPrefix index tryVersion
@@ -365,7 +365,7 @@ gitTagVersion() {
   __catchEnvironment "$usage" git push --tags --quiet || return $?
   statusMessage decorate info "Fetching version $(decorate code "$tryVersion") ... " || return $?
   __catchEnvironment "$usage" git fetch -q || return $?
-  statusMessage --last reportTiming "$init" "Tagged version completed in" || return $?
+  statusMessage --last timingReport "$init" "Tagged version completed in" || return $?
 }
 _gitTagVersion() {
   # _IDENTICAL_ usageDocument 1

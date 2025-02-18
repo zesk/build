@@ -4,7 +4,7 @@
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/documentation.md
+# Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
 # Build documentation for Bash functions
@@ -43,7 +43,7 @@ documentationBuild() {
   __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
   local start
-  start=$(beginTiming) || __throwEnvironment "$usage" beginTiming || return $?
+  start=$(timingStart) || __throwEnvironment "$usage" timingStart || return $?
 
   local seeFunction seeFile seePrefix
 
@@ -160,7 +160,7 @@ documentationBuild() {
   bashDebugInterruptFile
   if $cleanFlag; then
     __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
-    reportTiming "$start" "Emptied documentation cache in" || :
+    timingReport "$start" "Emptied documentation cache in" || :
     return 0
   fi
   cacheDirectory=$(requireDirectory "$cacheDirectory") || __throwEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
@@ -192,7 +192,7 @@ documentationBuild() {
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r documentationTemplate; do
     __catchEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$documentationTemplate" "$targetPath${documentationTemplate#"$templatePath"}" || return $?
   done
-  statusMessage --last reportTiming "$start" "Indexes completed in" || :
+  statusMessage --last timingReport "$start" "Indexes completed in" || :
 
   #
   # Build docs
@@ -230,7 +230,7 @@ documentationBuild() {
     fileLinkPattern=${functionLinkPattern%%#.*}
     __catchEnvironment "$usage" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
-  message=$(__catchEnvironment "$usage" reportTiming "$start" "in") || return $?
+  message=$(__catchEnvironment "$usage" timingReport "$start" "in") || return $?
   hookRunOptional documentation-complete "$message" || return $?
 }
 _documentationBuild() {

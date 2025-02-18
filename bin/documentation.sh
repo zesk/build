@@ -150,7 +150,7 @@ __buildDocumentationBuild() {
   local usage="_${FUNCNAME[0]}"
   local here="${BASH_SOURCE[0]%/*}" home start
 
-  start=$(__catchEnvironment "$usage" beginTiming) || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || return $?
 
   export APPLICATION_NAME
 
@@ -294,7 +294,7 @@ __buildDocumentationBuild() {
     __catchEnvironment "$usage" muzzle popd || return $?
   fi
 
-  statusMessage --last reportTiming "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
+  statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
 }
 ___buildDocumentationBuild() {
   # _IDENTICAL_ usageDocument 1

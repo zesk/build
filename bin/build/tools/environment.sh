@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/environment.md
+# Docs: o ./documentation/source/tools/environment.md
 # Test: o ./test/tools/environment-tests.sh
 #
 

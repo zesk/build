@@ -8,7 +8,7 @@
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/tools/markdown.md
+# Docs: o ./documentation/source/tools/markdown.md
 # Test: o ./test/tools/markdown-tests.sh
 
 # Add an indent to all markdown headings

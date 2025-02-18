@@ -6,7 +6,7 @@
 #
 # Shell Dependencies: awk sed date echo sort printf
 #
-# Docs: o ./docs/_templates/tools/type.md
+# Docs: o ./documentation/source/tools/type.md
 # Test: o ./test/tools/type-tests.sh
 #
 
