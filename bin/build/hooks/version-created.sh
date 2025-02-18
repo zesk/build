@@ -19,10 +19,11 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Environment: BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
 #
 __hookVersionCreated() {
-  currentVersion=$1
-  shift
-  releaseNotes=$1
-  shift
+  local currentVersion releaseNotes
+  local usage="_return"
+
+  currentVersion=$(usageArgumentString "$usage" version "${1-}") && shift || return $?
+  releaseNotes=$(usageArgumentFile "$usage" releaseNotes "${1-}") && shift || return $?
 
   export BUILD_VERSION_NO_OPEN
 
