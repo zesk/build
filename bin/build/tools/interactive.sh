@@ -27,7 +27,7 @@
 pause() {
   local prompt="${1-"PAUSE > "}"
   statusMessage printf -- "%s" "$prompt"
-  bashPromptUser
+  bashUserInput
 }
 
 ####################################################################################################

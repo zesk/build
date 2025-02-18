@@ -145,7 +145,7 @@ ___deprecatedCleanup() {
 __deprecatedIgnore() {
   printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" \
     -name 'deprecated.md' ! -name 'unused.md' \
-    "!" -path 'documentation/*/release/*' \
+    "!" -path '*/documentation/*/release/*' \
     "!" -path "*/.*/*"
 }
 

@@ -1,4 +1,5 @@
 # v0.23.2
+bashPromptUser|bashUserInput
 joinArguments|listJoin
 listTokens|mapTokens
 

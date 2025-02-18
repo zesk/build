@@ -253,9 +253,13 @@ _bashPrompt() {
 # Prompt the user properly honoring any attached console
 # Arguments are the same as read, except:
 # `-r` is implied and does not need to be specified
-bashPromptUser() {
-  local word exitCode=0
+bashUserInput() {
+  local usage="_${FUNCNAME[0]}"
+  local word="" exitCode=0
 
+  if ! isTTYAvailable; then
+    __throwEnvironment "$usage" "No TTY available for user input" || return $?
+  fi
   export __BASH_PROMPT_MARKERS
   # Technically the reading program will not receive these bytes as they will be sent to the tty
   printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
@@ -263,6 +267,10 @@ bashPromptUser() {
   printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
   printf "%s\n" "$word"
   return $exitCode
+}
+_bashUserInput() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set markers for terminal integration

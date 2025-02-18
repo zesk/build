@@ -18,7 +18,15 @@
 #             |_|
 #
 
+# DEPRECATED 2025-02-18
+# Better name
+bashPromptUser() {
+  _deprecated "${FUNCNAME[0]}"
+  bashUserInput "$@"
+}
+
 # DEPRECATED 2025-02-04
+# Better name
 listTokens() {
   _deprecated "${FUNCNAME[0]}"
   mapTokens "$@"
@@ -31,6 +39,7 @@ joinArguments() {
 }
 
 # DEPRECATED 2024-11-29
+# First-class name
 _integer() {
   _deprecated "${FUNCNAME[0]}"
   isUnsignedInteger "$@"
@@ -38,12 +47,14 @@ _integer() {
 
 # Not keeping this around will break old scripts, so don't be a ...
 # Deprecated: 2025-01-15
+# nounAction naming
 runHook() {
   _deprecated "${FUNCNAME[0]}"
   hookRun "$@"
 }
 
 # Deprecated: 2025-01-15
+# nounAction naming
 runHookOptional() {
   _deprecated "${FUNCNAME[0]}"
   hookRunOptional "$@"

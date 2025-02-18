@@ -144,7 +144,7 @@ __interactiveCountdownReadBoolean() {
 
   exitCode=2
   while [ "$exitCode" -ge 2 ]; do
-    while ! value=$(bashPromptUser -p "$prompt" -n 1 -s "${rr[@]+"${rr[@]}"}"); do
+    while ! value=$(bashUserInput -p "$prompt" -n 1 -s "${rr[@]+"${rr[@]}"}"); do
       if [ -z "$timeout" ]; then
         return 2
       fi
