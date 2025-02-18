@@ -136,15 +136,48 @@ bashRecursionDebug() {
 # Requires: trap
 # Argument: --help
 bashDebugInterruptFile() {
-  local usage="_${FUNCNAME[0]}" name="__bashDebugInterruptFile" traps
-  __help "$usage" --only "$@" || return 0
-  traps=$(fileTemporaryName "$usage")
-  trap >"$traps" || _clean "$?" "$traps" || __throwEnvironment "trap failed" || return $?
-  if grep "$name" "$traps" | grep -q " SIGINT"; then
-    __throwEnvironment "$usage" "Already installed" || _clean "$?" "$traps" || return $?
+  local usage="_${FUNCNAME[0]}" name="__bashDebugInterruptFile" traps=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --interrupt)
+        inArray INT "${traps[@]+"${traps[@]}"}" || traps+=("INT")
+        ;;
+      --error)
+        inArray ERR "${traps[@]+"${traps[@]}"}" || traps+=("ERR")
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  [ "${#traps[@]}" -gt 0 ] || traps+=("INT")
+
+  local currentTraps installed=()
+  currentTraps=$(fileTemporaryName "$usage") || return $?
+  trap >"$currentTraps" || _clean "$?" "$currentTraps" || __throwEnvironment "trap listing failed" || return $?
+  for trap in "${traps[@]}"; do
+    if grep "$name" "$currentTraps" | grep -q " SIG${trap}"; then
+      installed+=("$trap")
+    fi
+  done
+  if [ "${#installed[@]}" -eq "${#traps[@]}" ]; then
+    __throwEnvironment "$usage" "Already installed" || _clean $? "$currentTraps" || return $?
   fi
-  __catchEnvironment "$usage" rm -rf "$traps" || return $?
-  __catchEnvironment "$usage" trap __bashDebugInterruptFile INT || return $?
+  __catchEnvironment "$usage" rm -rf "$currentTraps" || return $?
+  __catchEnvironment "$usage" trap __bashDebugInterruptFile "${traps[@]}" || return $?
 }
 _bashDebugInterruptFile() {
   ! false || bashDebugInterruptFile --help
@@ -155,9 +188,8 @@ _bashDebugInterruptFile() {
 __bashDebugInterruptFile() {
   export BUILD_HOME
 
-  trap - INT
-  debuggingStack >"$BUILD_HOME/.interrupt" || :
-  exit 99
+  debuggingStack >>"$BUILD_HOME/.interrupt" || :
+  exit 122
 }
 
 #

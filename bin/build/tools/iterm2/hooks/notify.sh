@@ -7,7 +7,7 @@
 
 set -eou pipefail
 # shellcheck source=/dev/null
-source "${BASH_SOURCE[0]%/*}/../../../tools.sh" || exit 99
+source "${BASH_SOURCE[0]%/*}/../../../tools.sh" || exit 121
 
 # fn: {base}
 #
@@ -17,7 +17,7 @@ source "${BASH_SOURCE[0]%/*}/../../../tools.sh" || exit 99
 # Argument: --sound soundName - Play a sound
 # Argument: --title title - Set the title of the notification
 # Argument: message ... - Display this message (one per line) in the notification.
-__hookiTerm2Notify() {
+__iTerm2Notify() {
   export BUILD_HOOK_DIRS
   buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
   if isiTerm2; then
@@ -28,4 +28,4 @@ __hookiTerm2Notify() {
   echo "BUILD_HOOK_DIRS=$BUILD_HOOK_DIRS"
 }
 
-__hookiTerm2Notify "$@"
+__iTerm2Notify "$@"

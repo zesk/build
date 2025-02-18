@@ -21,6 +21,8 @@ __buildAliases() {
   alias tools=t
   # shellcheck disable=SC2139
   alias IdenticalRepair="$home/bin/build/identical-repair.sh"
+
+
 }
 __buildAliasesUndo() {
   unalias t 2>/dev/null
