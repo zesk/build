@@ -27,22 +27,22 @@ __resultText() {
 
 # Save and report the timing since the last call
 _assertTiming() {
-  local timingFile stamp _now
+  local timingFile
+
   timingFile="$(__environment buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
 
-  _now="$(date +%s)"
   if [ -f "$timingFile" ]; then
+    local stamp
     stamp="$(head -n 1 <"$timingFile")"
     if isUnsignedInteger "$stamp"; then
-      stamp=$((_now - stamp))
-      decorate value "$(printf -- "%d %s\n" "$stamp" "$(plural "$stamp" second seconds)")"
+      reportTiming "$stamp"
     else
       decorate error "Timestamp saved was invalid: $stamp"
     fi
   else
     decorate info "First test"
   fi
-  printf -- "%d\n" "$_now" >"$timingFile"
+  printf -- "%d\n" "$(timingStart)" >"$timingFile"
 }
 
 __assertedFunctions() {

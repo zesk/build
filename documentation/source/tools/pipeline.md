@@ -8,18 +8,6 @@
 
 {dotEnvConfigure}
 
-## Hooks
-
-{hookRun}
-{hookRunOptional}
-{hasHook}
-{whichHook}
-
-## Reporting timing
-
-{timingStart}
-{timingReport}
-
 ## Build Utilities
 
 {buildFailed}
