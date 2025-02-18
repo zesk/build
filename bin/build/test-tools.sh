@@ -329,10 +329,10 @@ testSuite() {
       fi
 
       local testStart
-      testStart=$(__environment date +%s) || return $?
+      testStart=$(__environment timingStart) || return $?
       __catchEnvironment "$usage" hookRunOptional bash-test-start "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
-      runTime=$(($(date +%s) - testStart))
+      runTime=$(($(timingStart) - testStart))
       ! $doStats || printf "%d %s\n" "$runTime" "$item" >>"$statsFile"
       __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
     done
@@ -491,15 +491,26 @@ __testFunctionWasTested() {
   ! $verboseMode || statusMessage decorate info "$(plural "${#__fns[@]}" "Function" "Functions") were tested: $(decorate code "${__fns[@]}")"
 }
 
+__testStatsFormat() {
+  local milliseconds functionName
+  while read -r milliseconds functionName; do
+    if isUnsignedInteger "$milliseconds"; then
+      printf -- "%s %s" "$(decorate value "$(alignRight 6 "$(timingFormat "$milliseconds")")")" "$(decorate code "$functionName")"
+    else
+      printf "%s %s\n" "$milliseconds" "$functionName"
+    fi
+  done
+}
+
 __testStats() {
   local statsFile="$1" targetFile zeroTests
   targetFile="$(buildHome)/test.stats"
   sort -rn <"$statsFile" >"$targetFile"
   rm -rf "$statsFile" || :
   boxedHeading "Slowest tests"
-  head -n 50 <"$targetFile"
+  head -n 50 <"$targetFile" | __testStatsFormat
   boxedHeading "Fastest tests"
-  grep -v -e '^0 ' "$targetFile" | tail -n 20
+  grep -v -e '^0 ' "$targetFile" | tail -n 20 | __testStatsFormat
   boxedHeading "Zero-second tests"
   IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $2 }')
   printf -- "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
