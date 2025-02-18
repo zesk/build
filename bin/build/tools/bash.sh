@@ -290,6 +290,52 @@ __bashListFunctions() {
   done | sort -u
 }
 
+# Argument: source - File. Required. File where the function is defined.
+# Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
+# Argument: variableName - string. Required. Get this variable value
+# Gets a list of the variable values from a bash function comment
+bashFunctionCommentVariable() {
+  local usage="_${FUNCNAME[0]}"
+
+  local source="" functionName="" variableName=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$source" ]; then
+          source="$(usageArgumentFile "$usage" "source" "${1-}")" || return $?
+        elif [ -z "$functionName" ]; then
+          functionName=$(usageArgumentString "$usage" "functionName" "${1-}") || return $?
+        elif [ -z "$variableName" ]; then
+          variableName=$(usageArgumentString "$usage" "variableName" "${1-}") || return $?
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local matchLine
+  while read -r matchLine; do
+    matchLine="${matchLine#*"$variableName":}"
+    matchLine=${matchLine# }
+    printf "%s\n" "${matchLine}"
+  done < <(bashFunctionComment "$source" "$functionName" | grep -e "[[:space:]]*#[[:space:]]*$variableName:[[:space:]]*" | trimSpace || :)
+}
+_bashFunctionCommentVariable() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # IDENTICAL bashFunctionComment 18
 
 # Extract a bash comment from a file

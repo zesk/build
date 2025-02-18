@@ -69,8 +69,8 @@ timingReport() {
     prefix="$(decorate green "$@") "
   fi
   local delta value seconds
-  delta=$(($(timingStart) - start))
-  value=$(timingFormat "$delta")
+  delta=$(($(timingStart) - start)) || return $?
+  value=$(timingFormat "$delta") || return $?
   seconds=2
   [ "$value" != "1.000" ] || seconds=1
   printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$seconds" second seconds)")"

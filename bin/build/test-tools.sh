@@ -27,7 +27,7 @@ export globalTestFailure=
 # Argument: --no-stats - Optional. Flag. Do not generate a test.stats file showing test timings when completed.
 # Argument: --list - Optional. Flag. List all test names (which match if applicable).
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
-# Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files.
+# Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
 # Argument: --show-tags - Optional. Flag. Of the matched tests, display the tags that they have, if any. Unique list.
 # Argument: --skip-tag tagName - Optional. String. Skip tests tagged with this name.
 # Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
@@ -75,7 +75,7 @@ testSuite() {
   BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode) || return $?
 
   local tags=() skipTags=() runner=()
-  local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false
+  local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile=""
   local testPaths=() messyOption="" checkTests=() matchTests=() failExecutors=()
 
   # _IDENTICAL_ argument-case-header 5
@@ -102,6 +102,10 @@ testSuite() {
       --show-tags)
         beQuiet=true
         showTags=true
+        ;;
+      --tap)
+        shift
+        tapFile=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}") || return $?
         ;;
       --tag)
         shift
@@ -142,6 +146,9 @@ testSuite() {
       --fail)
         shift
         failExecutors+=("$(usageArgumentCallable "$usage" "failExecutor" "${1-}")") || return $?
+        # shellcheck disable=SC2015
+        while [ $# -gt 0 ]; do [ "$1" != "--" ] && failExecutors+=("$1") && shift || break; done
+        failExecutors+=("--")
         ;;
       --clean)
         statusMessage decorate warning "Cleaning tests and exiting ... "
@@ -308,6 +315,14 @@ testSuite() {
     return 0
   fi
 
+  #    ▀▛▘     ▐  ▗        ▜
+  #     ▌▞▀▖▞▀▘▜▀ ▄ ▛▀▖▞▀▌ ▐ ▞▀▖▞▀▖▛▀▖
+  #     ▌▛▀ ▝▀▖▐ ▖▐ ▌ ▌▚▄▌ ▐ ▌ ▌▌ ▌▙▄▘
+  #     ▘▝▀▘▀▀  ▀ ▀▘▘ ▘▗▄▘  ▘▝▀ ▝▀ ▌
+
+  [ -z "$tapFile" ] || __testSuiteTAP_plan "$tapFile" "${#filteredTests[@]}" || return $?
+  [ -z "$tapFile" ] || failExecutors+=("__testSuiteTAP_not_ok" "$tapFile" --)
+
   local runTime
   if [ ${#filteredTests[@]} -gt 0 ]; then
     __TEST_SUITE_TRACE=options
@@ -328,12 +343,23 @@ testSuite() {
         sectionNameHeading="$sectionName"
       fi
 
-      local testStart
+      local testStart testLine
       testStart=$(__environment timingStart) || return $?
       __catchEnvironment "$usage" hookRunOptional bash-test-start "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
+
+      #  ▛▀▖
+      #  ▙▄▘▌ ▌▛▀▖▛▀▖▞▀▖▙▀▖
+      #  ▌▚ ▌ ▌▌ ▌▌ ▌▛▀ ▌
+      #  ▘ ▘▝▀▘▘ ▘▘ ▘▝▀▘▘
+
+      echo "$item $sectionFile"
+      testLine=$(__testGetLine "$item" <"$sectionFile") || :
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
+
+      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" || return $?
+
       runTime=$(($(timingStart) - testStart))
-      ! $doStats || printf "%d %s\n" "$runTime" "$item" >>"$statsFile"
+      ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
       __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
     done
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(decorate reset)"
@@ -495,7 +521,7 @@ __testStatsFormat() {
   local milliseconds functionName
   while read -r milliseconds functionName; do
     if isUnsignedInteger "$milliseconds"; then
-      printf -- "%s %s" "$(decorate value "$(alignRight 6 "$(timingFormat "$milliseconds")")")" "$(decorate code "$functionName")"
+      printf -- "%s %s\n" "$(decorate value "$(alignRight 6 "$(timingFormat "$milliseconds")")")" "$(decorate code "$functionName")"
     else
       printf "%s %s\n" "$milliseconds" "$functionName"
     fi
@@ -512,7 +538,8 @@ __testStats() {
   boxedHeading "Fastest tests"
   grep -v -e '^0 ' "$targetFile" | tail -n 20 | __testStatsFormat
   boxedHeading "Zero-second tests"
-  IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $2 }')
+  set +o pipefail
+  IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $2 }') || :
   printf -- "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
   printf -- "\n"
   boxedHeading "Functions asserted (cumulative)"
@@ -542,25 +569,32 @@ __testGetLine() {
   line=$(grep -n "$1() {" | cut -d : -f 1)
   if isPositiveInteger "$line"; then
     printf "%d\n" "$line"
+    return 0
   fi
   return 1
 }
 
 __testSuiteExecutor() {
-  local item="${1-}" line
+  local item="${1-}"
   local file="${2-}"
-  local executorArgs
+  local line="${3-}"
+  local executor=()
 
-  shift 2 || _argument "Missing item or section" || return $?
+  shift 3 || _argument "Missing item file or line" || return $?
 
-  line=$(__testGetLine "$item" <"$file") || :
   [ -z "$line" ] || line=":$line"
 
   statusMessage decorate error "Test $item failed in $file" || :
   while [ $# -gt 0 ]; do
-    read -r -a executorArgs < <(printf "%s\n" "$1") || :
-    statusMessage decorate info "Running" "${executorArgs[@]}" "$file$line"
-    "${executorArgs[@]}" "$file$line"
+    if [ "$1" = "--" ]; then
+      if [ "${#executor[@]}" -gt 0 ]; then
+        statusMessage decorate info "Running" "${executor[@]}" "$item" "$file" "$line"
+        "${executor[@]}" "$item" "$file" "$line"
+      fi
+      executor=()
+    else
+      executor+=("$1")
+    fi
     shift
   done
   clearLine
@@ -822,6 +856,57 @@ _textExit() {
     __TEST_SUITE_CLEAN_EXIT=true
   fi
   exit "$@"
+}
+
+__testSuiteTAP_plan() {
+  local tapFile="${1-}" testCount="$2"
+  printf -- "%d%s%d\n" "$(incrementor 1 TAP_TEST)" ".." "$testCount" >"$tapFile"
+}
+
+__testSuiteTAP_line() {
+  local status="$1" && shift
+  local usage="_return"
+  local tapFile="${1-}"
+  [ -f "$tapFile" ] && shift 1 || __throwEnvironment "$usage" "tapFile does not exist: $tapFile" || return $?
+
+  local functionName="${1-}" source="${2-}" functionLine="${3-}"
+  shift 3 || __throwArgument "$usage" "Missing functionName source or functionLine" || return $?
+
+  local directive="" value
+  directive=$(bashFunctionCommentVariable "$source" "$functionName" "TAP-Directive") || :
+  value=$(bashFunctionCommentVariable "$source" "$functionName" "Test-Skip") || :
+  if parseBoolean "$value"; then
+    directive="skip $directive"
+  fi
+  local search
+  for search in "Test-Ignore" "TODO"; do
+    value=$(bashFunctionCommentVariable "$source" "$functionName" "$search") || :
+    if parseBoolean "$value"; then
+      directive="TODO ($search) $directive"
+      break
+    fi
+  done
+  value=$(bashFunctionCommentVariable "$source" "$functionName" "TODO") || :
+  if parseBoolean "$value"; then
+    directive="TODO (Test-Ignore) $directive"
+  fi
+  [ -z "$directive" ] || directive="# $directive"
+  printf -- "%s %d %s%s\n" "$status" "$(incrementor TAP_TEST)" "$functionName @ $source:$functionLine" "$directive" >>"$tapFile"
+}
+
+# Argument: tapFile - File. Required. The target output file.
+# Argument: functionName - String. Required. Test function.
+# Argument: functionFile - File. Required. File where test is defined.
+__testSuiteTAP_ok() {
+  __testSuiteTAP_line "ok" "$@"
+}
+
+# Argument: tapFile - File. Required. The target output file.
+# Argument: functionName - String. Required. Test function.
+# Argument: functionFile - File. Required. File where test is defined.
+# Argument: functionLine - Integer. Required. Line number where test is defined.
+__testSuiteTAP_not_ok() {
+  __testSuiteTAP_line "not ok" "$@"
 }
 
 # TODO: https://github.com/Perl-Toolchain-Gang/Test-Harness/blob/master/reference/Test-Harness-2.64/lib/Test/Harness/TAP.pod#php

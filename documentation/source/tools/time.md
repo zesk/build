@@ -1,0 +1,5 @@
+# Time 
+
+{timingStart}
+{timingFormat}
+{timingReport}

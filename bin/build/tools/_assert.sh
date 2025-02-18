@@ -35,14 +35,17 @@ _assertTiming() {
     local stamp
     stamp="$(head -n 1 <"$timingFile")"
     if isUnsignedInteger "$stamp"; then
-      reportTiming "$stamp"
+      if ! timingReport "$stamp"; then
+        rm -f "$timingFile" || :
+        return
+      fi
     else
       decorate error "Timestamp saved was invalid: $stamp"
     fi
   else
     decorate info "First test"
   fi
-  printf -- "%d\n" "$(timingStart)" >"$timingFile"
+  timingStart >"$timingFile" || :
 }
 
 __assertedFunctions() {
