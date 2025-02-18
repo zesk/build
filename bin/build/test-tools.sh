@@ -355,7 +355,6 @@ testSuite() {
       #  ▌▚ ▌ ▌▌ ▌▌ ▌▛▀ ▌
       #  ▘ ▘▝▀▘▘ ▘▘ ▘▝▀▘▘
 
-      echo "$item $sectionFile"
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
 
