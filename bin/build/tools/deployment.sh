@@ -344,9 +344,10 @@ deployRemoteFinish() {
     #  ┃ ┃┏━┛┏━┛┃  ┃ ┃━┏┛┏━┃┏━┛┏━┛┃  ┃┃  ┏━┃ ┃ ┃┃ ┃┃ ┃
     #  ━━ ━━┛┛  ━━┛━━┛ ┛ ┛ ┛┛  ┛  ━━┛┛━━┛┛ ┛ ┛ ┛━━┛┛ ┛
     #
+    statusMessage decorate info "Deploying application ..."
     __catchEnvironment "$usage" deployApplication "${deployArguments[@]}" || return $?
   fi
-  timingReport "$start" "Remote deployment finished in"
+  statusMessage --last timingReport "$start" "Remote deployment finished in"
 }
 _deployRemoteFinish() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

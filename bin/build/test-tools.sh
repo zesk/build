@@ -653,7 +653,16 @@ __testDebugTermDisplay() {
 }
 
 __testLoadFlags() {
-  bashFunctionComment "$source" "$functionName"
+  local source="$1" functionName="$2"
+  local values=()
+  while read -r variableLine; do
+    local flags flag
+    IFS=" " read -r -a flags <<<"$(trimSpace "${variableLine#*:}")"
+    [ "${#flags[@]}" -eq 0 ] || for flag in "${flags[@]}"; do
+      [ -z "$flag" ] || values+=("$(trimSpace "${variableLine%%:*}"):$flag")
+    done
+  done < <(bashFunctionCommentVariable --prefix "$source" "$functionName" "Test-")
+  [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
 }
 
 #
@@ -759,7 +768,7 @@ __testRun() {
   local resultCode=0 stickyCode=0
   __TEST_SUITE_TRACE="$__test"
   __testStart=$(timingStart)
-  if isSubstringInsensitive ";Platform:!$platform;" ";${flags};"; then
+  if isSubstringInsensitive ";Platform:!$platform;" ";$__flags;"; then
     printf "%s\n" "Skipping Platform:!$platform $__test" >>"$quietLog"
     __TEST_SUITE_RESULT="skip Platform $platform disallowed"
     resultCode=0
@@ -892,14 +901,14 @@ __testSuiteTAP_line() {
 
   [ -f "$tapFile" ] && shift 1 || __throwEnvironment "$usage" "tapFile does not exist: $tapFile" || return $?
 
-  local functionName="${1-}" source="${2-}" functionLine="${3-}" flags="${4-}"
+  local functionName="${1-}" source="${2-}" functionLine="${3-}" __flags="${4-}"
   shift 4 || __throwArgument "$usage" "Missing functionName source or functionLine" || return $?
 
   local directive="" value
-  if isSubstringInsensitive ";Skip:true;" ";$flags;"; then
+  if isSubstringInsensitive ";Skip:true;" ";$__flags;"; then
     directive="skip in test comment"
   fi
-  if isSubstringInsensitive ";Ignore:true;" ";$flags;"; then
+  if isSubstringInsensitive ";Ignore:true;" ";$__flags;"; then
     directive="TODO Ignore test comment"
   fi
   value=$(bashFunctionCommentVariable "$source" "$functionName" "TODO") || :

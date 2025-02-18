@@ -137,7 +137,7 @@ _ipLookup() {
 #
 # Summary: Test whether the key needs to be updated
 # Usage: {fn} [ --name name ] keyDate upToDateDays
-# Argument: keyDate - Required. Date. Formatted like `YYYY-MM-DD`
+# Argument: keyDate - Required. Date. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
 # Argument: --name name - Optional. Name of the expiring item for error messages.
 # Argument: upToDateDays - Required. Integer. Days that key expires after `keyDate`.
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
@@ -175,7 +175,7 @@ isUpToDate() {
     esac
     shift || __throwArgument "shift $argument" || return $?
   done
-
+  keyDate="${keyDate:0:10}"
   [ -z "$name" ] || name="$name "
   todayTimestamp=$(dateToTimestamp "$(todayDate)") || __throwEnvironment "$usage" "Unable to generate todayDate" || return $?
   [ -n "$keyDate" ] || __throwArgument "$usage" "missing keyDate" || return $?

@@ -357,9 +357,9 @@ packageInstall() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
-  local start quietLog installed
+  local __start quietLog installed
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  __start=$(__catchEnvironment "$usage" timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
   installed="$(__catchEnvironment "$usage" mktemp)" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
@@ -396,7 +396,7 @@ packageInstall() {
   local installFunction="__${manager}Install"
   isFunction "$installFunction" || __throwEnvironment "$usage" "$installFunction is not defined" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" "$installFunction" "${actualPackages[@]}" || return $?
-  timingReport "$start" OK
+  timingReport "$__start" OK
 }
 _packageInstall() {
   # _IDENTICAL_ usageDocument 1

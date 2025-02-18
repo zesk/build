@@ -7,10 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# Argument: None
-# Argument: Some
 # Test-Platform: !alpine
-# Test-Platform: linux
 testDaemontools() {
   local logPath start waitFor logWaitFor
 

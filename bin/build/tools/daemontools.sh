@@ -205,8 +205,9 @@ daemontoolsIsRunning() {
   [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
-  [ "${#processIds[@]}" -gt 0 ] || return 1
-  __throwEnvironment "$usage" kill -0 "${processIds[@]}" || return $?
+  [ 0 -ne "${#processIds[@]}" ] || return 1
+  ! kill -0 "${processIds[@]}" || return 0
+  return 1
 }
 _daemontoolsIsRunning() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
