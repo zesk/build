@@ -14,6 +14,7 @@ _loadTools() {
   if ! . "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
     return 1
   fi
+  testTools :
 }
 _subprocessClearValue() {
   printf "%s" "" >"$savedValue"

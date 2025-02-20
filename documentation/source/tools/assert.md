@@ -4,6 +4,8 @@
 [⬅ Parent ](../)
 <hr />
 
+These functions are solely available after you call `testSuite`.
+
 ## Equality
 
 {assertEquals}
@@ -52,7 +54,3 @@
 
 {assertZeroFileSize}
 {assertNotZeroFileSize}
-
-## Random
-
-{randomString}

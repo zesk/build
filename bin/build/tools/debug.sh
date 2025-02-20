@@ -511,3 +511,58 @@ _outputTrigger() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+__listOpenFiles() {
+  local pid="$1"
+  if [ -d "/proc/$pid" ]; then
+    ls -la "/proc/$pid/fd/"
+  else
+    lsof -a -d 0-2147483647 -p "$pid"
+  fi
+}
+
+__listChildPids() {
+  local pid="$1"
+  pgrep -P "$pid"
+}
+
+# Output current open files
+debugOpenFiles() {
+  local usage="_${FUNCNAME[0]}"
+
+  local name="${FUNCNAME[1]}}" target=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        [ -z "$target" ] || __throwArgument "$usage" "target already specified" || return $?
+        target=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}") || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  [ -n "$target" ] || __throwArgument "$usage" "Missing --target" || return $?
+  printf "%s\n" "PID: $$" >>"$target"
+  __listOpenFiles "$$" >"$target"
+  local child children=()
+
+  read -r -a children < <(__listChildPids "$$") || :
+  for child in "${children[@]}"; do
+    printf "%s\n" "Child PID: $child" >>"$target"
+    __listOpenFiles "$child" >>"$target"
+  done
+}
+_debugOpenFiles() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

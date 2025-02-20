@@ -70,3 +70,7 @@
 {isCharacterClasses}
 {stringValidate}
 {unquote}
+
+## Random
+
+{randomString}

@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
-#
 # test-tools.sh
 #
 # Test tools
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
-#
 
 export __TEST_SUITE_TRACE
 export globalTestFailure=
 
-#
-# fn: {base}
-# Run Zesk Build test suites
+# Run bash test suites
 #
 # Supports argument flags in tests:
 # `TAP-Directive` `Test-Skip` `TODO`
@@ -358,7 +354,7 @@ testSuite() {
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       flags=$(__testLoadFlags "$sectionFile" "$item")
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
-
+      debugOpenFiles "$home/.test-open-files"
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
 
       runTime=$(($(timingStart) - testStart))
@@ -388,6 +384,8 @@ _testSuite() {
 }
 
 __testSuiteInitialize() {
+  statusMessage decorate info "Initializing test suite ..."
+
   # Add fast-usage to debugging
   export BUILD_DEBUG
   BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
@@ -409,6 +407,7 @@ __testSuiteInitialize() {
 
   # If someone interrupts find out where it was running
   bashDebugInterruptFile
+  whichPackage lsof lsof || return $?
 }
 
 __testSuiteShowTags() {

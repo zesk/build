@@ -112,6 +112,8 @@ testCrontabApplicationSync() {
   local argument
   local verboseFlag keepFlag showFlag testEnv tempDir results
 
+  testTools :
+
   verboseFlag=
   keepFlag=
   showFlag=

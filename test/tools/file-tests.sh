@@ -211,6 +211,8 @@ testLinkCreate() {
 
   home=$(__environment buildHome) || return $?
 
+  find "$home/bin/build/" -maxdepth 1 -name 'wacky.*' -exec rm {} \; || :
+
   target="wacky.$$"
   assertFileDoesNotExist --line "$LINENO" "$home/bin/build/$target" || return $?
   assertExitCode --line "$LINENO" 0 linkCreate --help || return $?

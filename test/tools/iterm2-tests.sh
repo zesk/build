@@ -7,8 +7,10 @@
 
 testIterm2() {
   __mockValue LC_TERMINAL
+  __mockValue TERM
 
   export LC_TERMINAL
+  export TERM
 
   LC_TERMINAL=wrong
   assertExitCode --stderr-match "Not iTerm2" --line "$LINENO" 1 iTerm2Init || return $?
@@ -19,6 +21,8 @@ testIterm2() {
   assertExitCode --line "$LINENO" 0 iTerm2Badge --help || return $?
 
   LC_TERMINAL=iTerm2
+  TERM=xterm
+
   assertExitCode --line "$LINENO" 0 isiTerm2 || return $?
   assertExitCode --dump-binary --line "$LINENO" --stdout-match "Zm9v" 0 iTerm2Badge "foo" </dev/null || return $?
   if [ -t 0 ]; then
@@ -28,4 +32,5 @@ testIterm2() {
     assertExitCode --line "$LINENO" 0 iTerm2Init --ignore || return $?
   fi
   __mockValue LC_TERMINAL "" --end
+  __mockValue TERM "" --end
 }
