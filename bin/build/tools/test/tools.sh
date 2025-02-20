@@ -407,7 +407,7 @@ __testSuiteInitialize() {
 
   # If someone interrupts find out where it was running
   bashDebugInterruptFile
-  whichPackage lsof lsof || return $?
+  packageWhich lsof lsof || return $?
 }
 
 __testSuiteShowTags() {
