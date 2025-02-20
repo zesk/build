@@ -72,6 +72,7 @@ terraformUninstall() {
   local usage="_${FUNCNAME[0]}"
 
   __help "$usage" "$@" || return 0
+  whichExists terraform || return 0
   __catchEnvironment "$usage" packageWhichUninstall terraform terraform "$@" || return $?
   __catchEnvironment "$usage" aptKeyRemoveHashicorp || return $?
   __catchEnvironment "$usage" packageUpdate --force || return $?
