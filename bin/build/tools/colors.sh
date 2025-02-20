@@ -327,6 +327,23 @@ clearLine() {
   fi
 }
 
+# Outputs a line and fills the remainder with space
+plasterLines() {
+  local line curX curY rows character=" "
+  IFS=$'\n' read -r -d '' _ curY < <(cursorGet)
+  rows=$(consoleRows)
+  columns=$(consoleColumns)
+  while IFS="" read -r line; do
+    cursorSet 1 "$curY"
+    printf "%s" "$line"
+    IFS=$'\n' read -r -d '' curX _ < <(cursorGet)
+    printf "%s" "$(repeat $((columns - curX)) "$character")"
+    curY=$((curY + 1))
+    [ $curY -le "$rows" ] || break
+  done
+  printf "\n"
+}
+
 # IDENTICAL _clearLine 8
 
 # Simple blank line generator for scripts

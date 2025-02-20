@@ -164,7 +164,7 @@ _aptKeyAdd() {
 aptKeyRemove() {
   local usage="_${FUNCNAME[0]}"
 
-  local names=() skipUpdate=false
+  local names=() skipUpdate=false verboseFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -176,6 +176,9 @@ aptKeyRemove() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --verbose)
+        verboseFlag=true
         ;;
       --skip)
         skipUpdate=true
@@ -204,20 +207,20 @@ aptKeyRemove() {
   for name in "${names[@]}"; do
     for file in "$ring/$name.gpg" "$sourcesPath/$name.list"; do
       if [ -f "$file" ]; then
-        statusMessage decorate warning "Removing $(decorate code "$file") ... "
+        ! $verboseFlag || statusMessage decorate warning "Removing $(decorate code "$file") ... "
         __catchEnvironment "$usage" rm -f "$file" || return $?
       else
-        statusMessage decorate success "Already deleted $(decorate code "$file") ... "
+        ! $verboseFlag || statusMessage decorate success "Already deleted $(decorate code "$file") ... "
       fi
     done
   done
   if ! $skipUpdate; then
-    statusMessage decorate success "Updating apt sources ... "
+    ! $verboseFlag || statusMessage decorate success "Updating apt sources ... "
     __catchEnvironment "$usage" packageUpdate --force || return $?
   else
-    statusMessage decorate success "Skipped update ... "
+    ! $verboseFlag || statusMessage decorate success "Skipped update ... "
   fi
-  statusMessage timingReport "$start" "Removed ${names[*]} from sources in "
+  ! $verboseFlag || statusMessage timingReport "$start" "Removed ${names[*]} from sources in "
 }
 _aptKeyRemove() {
   # _IDENTICAL_ usageDocument 1

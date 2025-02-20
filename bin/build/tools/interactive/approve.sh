@@ -2,6 +2,8 @@
 #
 # Interactivity: Approvals
 #
+# Support functions here
+#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/interactive.md

@@ -34,7 +34,7 @@ testIsVersion() {
 }
 
 testReleaseNotesSimple() {
-  assertExitCode --leak BUILD_RELEASE_NOTES --stdout-match "docs/release" --line "$LINENO" 0 releaseNotes || return $?
+  assertExitCode --leak BUILD_RELEASE_NOTES --stdout-match "documentation/source/release" --line "$LINENO" 0 releaseNotes || return $?
   unset BUILD_RELEASE_NOTES
 }
 
@@ -72,16 +72,25 @@ testReleaseNotes() {
   local home
 
   home=$(buildHome)
-  __assertPathsEquals "$LINENO" "$home/docs/release/1.0.md" "$(releaseNotes "1.0")" || return $?
+
+  # BUILD DOCS DEFAULT PATH
+  __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
   export BUILD_RELEASE_NOTES
+
   BUILD_RELEASE_NOTES=./foo
   __assertPathsEquals "$LINENO" "$home/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+
   BUILD_RELEASE_NOTES=./foo/
   __assertPathsEquals "$LINENO" "$home/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+
   BUILD_RELEASE_NOTES=/foo/
   __assertPathsEquals "$LINENO" "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+
   BUILD_RELEASE_NOTES=/foo
   __assertPathsEquals "$LINENO" "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+
   unset BUILD_RELEASE_NOTES
-  __assertPathsEquals "$LINENO" "$home/docs/release/1.0.md" "$(releaseNotes "1.0")" || return $?
+  # BUILD DOCS DEFAULT PATH
+  __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
+
 }

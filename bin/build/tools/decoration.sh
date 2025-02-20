@@ -500,10 +500,8 @@ alignLeft() {
 boxedHeading() {
   local usage="_${FUNCNAME[0]}"
 
-  local bar spaces text=() textString emptyBar nLines shrink width
+  local text=() decoration="decoration" inside="decoration" shrink=0 nLines=1
 
-  nLines=1
-  shrink=0
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -514,6 +512,14 @@ boxedHeading() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --outside)
+        shift
+        decoration=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --inside)
+        shift
+        inside=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --shrink)
         shift
@@ -529,27 +535,46 @@ boxedHeading() {
     esac
     shift
   done
+
+  local bar
   # Default is -2
   shrink=$((-(shrink + 2)))
   bar="+$(echoBar '' $shrink)+"
-  emptyBar="|$(echoBar ' ' $shrink)|"
+
+  local textString
 
   # convert to string
   textString="${text[*]}"
 
+  local spaces width
+
   width=${#bar}
-  spaces=$((width - ${#textString} - 4))
+  spaces=$((width - $(plainLength "$textString") - 4))
   if [ "$spaces" -gt 0 ]; then
     spaces="$(repeat "$spaces" " ")"
   else
     textString="${textString:0:$((width - 4))}"
     spaces=""
   fi
-  decorate decoration "$bar"
-  runCount "$nLines" decorate decoration "$emptyBar"
-  printf "%s%s%s\n" "$(decorate decoration "| ")" "$(decorate decoration "$textString")" "$(decorate decoration "$spaces |")"
-  runCount "$nLines" decorate decoration "$emptyBar"
-  decorate decoration "$bar"
+
+  local endBar emptyBar
+
+  endBar="$(decorate "$decoration" "|")"
+  if [ -n "$inside" ]; then
+    textString="$(decorate "$inside" " $textString ")"
+    spaces="$(decorate "$inside" "$spaces")"
+    emptyBar="$endBar$(decorate "$inside" "$(echoBar ' ' "$shrink")")$endBar"
+  else
+    emptyBar="|$(echoBar ' ' $shrink)|"
+    textString=" $textString "
+  fi
+
+  bar=$(decorate "$decoration" "$bar")
+  printf "%s\n" "$bar"
+  runCount "$nLines" decorate "$decoration" "$emptyBar"
+  printf "%s%s%s\n" "$endBar" "$textString$spaces" "$endBar"
+  runCount "$nLines" decorate "$decoration" "$emptyBar"
+  printf "%s\n" "$bar"
 }
 _boxedHeading() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -30,7 +30,7 @@ markdownIndentHeading() {
         ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
-        direction=$(usageArgumentPositiveInteger "$usage" "direction" "$1") || return $?
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1

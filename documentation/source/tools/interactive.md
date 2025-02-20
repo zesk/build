@@ -8,19 +8,18 @@
 
 {interactiveManager}
 
-## User prompts
+## Interactive utilities
 
+{interactiveLoop}
 {interactiveCountdown}
-
-{confirmYesNo} {pause}
+{confirmYesNo} 
+{pause}
+{interactiveBashSource}
 
 ## Copy files
 
 {copyFileWouldChange} {copyFile}
 
-## Load bash files but get approval first
-
-{interactiveBashSource}
 
 ## Examples
 

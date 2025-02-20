@@ -445,6 +445,8 @@ plural() {
     else
       printf %s "${3-}"
     fi
+  elif isNumber "$count"; then
+    printf %s "${3-}"
   else
     printf "%s: %s\n" "plural argument is not numeric" "$count" 1>&2
     return 1
@@ -496,6 +498,13 @@ uppercase() {
 #
 stripAnsi() {
   sed $'s,\x1B\[[0-9;]*[a-zA-Z],,g'
+}
+
+# Length of an unformatted string
+plainLength() {
+  local text
+  text="$(stripAnsi <<<"$*")"
+  printf "%d\n" "${#text}"
 }
 
 # Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff

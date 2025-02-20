@@ -514,7 +514,7 @@ _outputTrigger() {
 
 __listOpenFiles() {
   local pid="$1"
-  if [ -d "/proc/$pid" ]; then
+  if [ -d "/proc/$pid/fd" ]; then
     ls -la "/proc/$pid/fd/"
   else
     lsof -a -d 0-2147483647 -p "$pid"

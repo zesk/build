@@ -266,8 +266,133 @@ _copyFileWouldChange() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} verificationCallable fileToCheck ...
-# Argument: verificationCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
+# Usage: {fn} loopCallable arguments ...
+# Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
+# Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
+# Argument: --until exitCode - Optional. Integer. Check until exit code matches this.
+# Argument: arguments ... - Optional. Arguments to loopCallable
+# Run checks interactively until errors are all fixed.
+loopExecute() {
+  local usage="_${FUNCNAME[0]}"
+
+  local loopCallable="" sleepDelay=10 title="" until=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --title)
+        shift
+        title=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --until)
+        shift
+        until+=("$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --delay)
+        shift
+        sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        if [ -z "$loopCallable" ]; then
+          loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
+          shift
+          break
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  [ -n "$loopCallable" ] || __throwArgument "$usage" "No loopCallable" || return $?
+  [ -n "$title" ] || title="$(decorate each code "$loopCallable" "$@")"
+  [ ${#until[@]} -gt 0 ] || until=("0")
+
+  local done=false exitCode=0 outputBuffer statusLine rowCount outsideColor
+
+  outsideColor="code"
+  outputBuffer=$(fileTemporaryName "$usage") || return $?
+  iterations=1
+  statusLine="Running first iteration ..."
+  rowCount=$(consoleRows)
+  while ! $done; do
+    local saveY suffix
+
+    if [ $iterations = 1 ]; then
+      clear
+      suffix=$(decorate notice "(first run)")
+    else
+      cursorSet 1 1
+      suffix=$(decorate warning "(loading)")
+    fi
+
+    __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
+    printf "%s\n" "$statusLine" | plasterLines
+    IFS=$'\n' read -r -d '' _ saveY < <(cursorGet)
+
+    local start showRows
+
+    start=$(__catchEnvironment "$usage" timingStart) || return $?
+    showRows=$((rowCount - saveY))
+    exitCode=0
+    if [ $iterations = 1 ]; then
+      "$loopCallable" "$@" 2>&1 || exitCode=$?
+    else
+      "$loopCallable" "$@" >"$outputBuffer" 2>&1 || exitCode=$?
+    fi
+
+    # Compute status line
+    local elapsed seconds nLines
+    nLines=$(($(wc -l <"$outputBuffer") + 0))
+    elapsed=$(($(__catchEnvironment "$usage" timingStart) - start)) || return $?
+    seconds=$(timingFormat "$elapsed")
+    seconds="$seconds $(plural "$seconds" second seconds)"
+
+    local exitString
+    exitString="$(decorate value "$exitCode") $(decorate label "[$(exitString "$exitCode")]")"
+    statusLine="$(decorate blue "[#$iterations]") $exitString, $nLines $(plural "$nLines" line lines), $seconds"
+    cursorSet 1 1
+
+    if inArray "$exitCode" "${until[@]}"; then
+      __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
+      printf "%s\n" "$statusLine" | plasterLines || return $?
+      __catchEnvironment "$usage" plasterLines <"$outputBuffer" || return $?
+      cursorSet 1 "$((rowCount - 1))"
+      bigText "Success"
+      done=true
+    else
+      __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" | plasterLines || return $?
+      printf "%s\n" "$statusLine" | plasterLines || return $?
+      (
+        tail -n "$showRows" <"$outputBuffer"
+        [ "$showRows" -lt "$nLines" ] || repeat "$((showRows - nLines))" "\n"
+      ) | plasterLines
+      elapsed=$((elapsed / 1000))
+      if [ "$elapsed" -lt "$sleepDelay" ]; then
+        cursorSet 1 "$((saveY - 1))"
+        __catchEnvironment "$usage" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
+      fi
+    fi
+    iterations=$((iterations + 1))
+    rowCount=$(consoleRows)
+  done
+  __catchEnvironment "$usage" rm -rf "$outputBuffer" || return $?
+}
+_loopExecute() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} loopCallable fileToCheck ...
+# Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
 # Argument: --exec binary - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
 # Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
 # Argument: fileToCheck ... - Optional. File. Shell file to validate. May also supply file names via stdin.
@@ -276,7 +401,7 @@ _copyFileWouldChange() {
 interactiveManager() {
   local usage="_${FUNCNAME[0]}"
 
-  local binary="" repairFunction"" verificationCallable="" files=() sleepDelay=15
+  local binary="" repairFunction"" loopCallable="" files=() sleepDelay=15
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -302,8 +427,8 @@ interactiveManager() {
         repairFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
-        if [ -z "$verificationCallable" ]; then
-          verificationCallable=$(usageArgumentCallable "$usage" "verificationCallable" "$1") || return $?
+        if [ -z "$loopCallable" ]; then
+          loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
         else
           files+=("$(usageArgumentFile "$usage" "fileToCheck" "$1")") || return $?
         fi
@@ -313,7 +438,7 @@ interactiveManager() {
     shift
   done
 
-  [ -n "$verificationCallable" ] || __throwArgument "$usage" "No verificationCallable" || return $?
+  [ -n "$loopCallable" ] || __throwArgument "$usage" "No loopCallable" || return $?
 
   if [ "${#files[@]}" -eq 0 ]; then
     while read -r file; do files+=("$(usageArgumentFile "$usage" "fileToCheck (stdin)" "$1")"); done
@@ -334,16 +459,16 @@ interactiveManager() {
   local file nextMessage=""
   for file in "${files[@]}"; do
     triedRepair=false
-    while ! "$verificationCallable" "$file" >"$output" 2>&1; do
+    while ! "$loopCallable" "$file" >"$output" 2>&1; do
       didClear=true
       clear
-      message="$(decorate code "$file") failed $(decorate error "$verificationCallable")"
+      message="$(decorate code "$file") failed $(decorate error "$loopCallable")"
       if ! $triedRepair && [ -n "$repairFunction" ]; then
         triedRepair=true
         if ! "$repairFunction" "$file" >"$output"; then
           message="$message ($repairFunction failed)"
         fi
-        if ! "$verificationCallable" "$file" >"$output"; then
+        if ! "$loopCallable" "$file" >"$output"; then
           message="$message (not repaired)"
         fi
       fi
@@ -369,6 +494,7 @@ interactiveManager() {
   fi
 }
 _interactiveManager() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -492,7 +618,6 @@ interactiveCountdown() {
         return $?
         ;;
       --prefix)
-        # shift here never fails as [ #$ -gt 0 ]
         shift
         prefix="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
         ;;
@@ -516,12 +641,12 @@ interactiveCountdown() {
   local start end now
 
   start=$(__catchEnvironment "$usage" timingStart) || return $?
-  end=$((start + counter))
+  end=$((start + counter * 1000))
   now=$start
   [ -z "$prefix" ] || prefix="$prefix "
 
   while [ "$now" -lt "$end" ]; do
-    "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $counter ")")"
+    "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $((counter / 1000)) ")")"
     sleep 1
     now=$(__catchEnvironment "$usage" timingStart) || return $?
     counter=$((end - now))
@@ -549,7 +674,7 @@ _interactiveCountdown() {
 interactiveBashSource() {
   local usage="_${FUNCNAME[0]}"
 
-  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 7) clearFlag=false
+  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30) clearFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#

@@ -168,9 +168,8 @@ _packageUpdate() {
 # Example:     packageWhich mariadb mariadb-client
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: binary - Required. String. The binary to look for
-# Argument: packageName ... - Required. String. The package name to install if the binary is not found in the `$PATH`.
+# Argument: packageName ... - Optional. String. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.
 # Environment: Technically this will install the binary and any related files as a package.
-#
 packageWhich() {
   local usage="_${FUNCNAME[0]}"
   local binary="" packages=() manager="" forceFlag=false
@@ -214,19 +213,17 @@ packageWhich() {
   # IDENTICAL managerArgumentValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ "${#packages[@]}" -gt 0 ] || packages+=("$binary")
 
   if ! $forceFlag; then
     [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
-    [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Missing packages" || return $?
-    if whichExists "$binary"; then
-      return 0
-    fi
+    # Already installed
+    ! whichExists "$binary" || return 0
   fi
+  # Install packages
   __environment packageInstall --force "${packages[@]}" || return $?
-  if whichExists "$binary"; then
-    return 0
-  fi
-  __throwEnvironment "$usage" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
+  # Ensure binary now exists, otherwise fail
+  whichExists "$binary" || __throwEnvironment "$usage" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
 _packageWhich() {
   # _IDENTICAL_ usageDocument 1

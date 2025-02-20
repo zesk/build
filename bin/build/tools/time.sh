@@ -18,7 +18,7 @@
 timingStart() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-  __timestamp 2>/dev/null || __throwEnvironment "$usage" __timestamp || return $?
+  __timestamp 2>/dev/null
 }
 _timingStart() {
   ! false || timingStart --help
@@ -31,13 +31,16 @@ timingFormat() {
   local usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     local delta="$1" seconds remainder text
-    isUnsignedInteger "$delta" || __throwArgument "$usage" "Not an integer: \"$delta\"" || return $?
-    seconds=$((delta / 1000))
-    remainder=$((delta % 1000))
-    text=$(printf -- "%d.%03d\n" "$seconds" "$remainder")
-    # Lazy but works
-    text=${text%0} && text=${text%0} && text=${text%0} && text=${text%.}
-    printf "%s\n" "$text"
+    if isUnsignedInteger "$delta"; then
+      seconds=$((delta / 1000))
+      remainder=$((delta % 1000))
+      text=$(printf -- "%d.%03d\n" "$seconds" "$remainder")
+      # Lazy but works
+      text=${text%0} && text=${text%0} && text=${text%0} && text=${text%.}
+      printf "%s\n" "$text"
+    else
+      printf "(**%s**)\n" "$delta"
+    fi
     shift
   done
 }
@@ -62,18 +65,21 @@ timingReport() {
   local usage="_${FUNCNAME[0]}"
 
   local start="${1-}"
-  isInteger "$start" || __throwArgument "$usage" "Not an integer: \"$start\"" || return $?
   shift
-  local prefix=
-  if [ $# -gt 0 ]; then
-    prefix="$(decorate green "$@") "
+  if isUnsignedInteger "$start"; then
+    local prefix=
+    if [ $# -gt 0 ]; then
+      prefix="$(decorate green "$@") "
+    fi
+    local delta value seconds
+    delta=$(($(timingStart) - start)) || return $?
+    value=$(timingFormat "$delta") || return $?
+    seconds=2
+    [ "$value" != "1.000" ] || seconds=1
+    printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$seconds" second seconds)")"
+  else
+    printf "%s %s %s\n" "$*" "$(decorate red "$start")" "$(decorate warning "(not integer)")"
   fi
-  local delta value seconds
-  delta=$(($(timingStart) - start)) || return $?
-  value=$(timingFormat "$delta") || return $?
-  seconds=2
-  [ "$value" != "1.000" ] || seconds=1
-  printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$seconds" second seconds)")"
 }
 _timingReport() {
   # _IDENTICAL_ usageDocument 1

@@ -233,8 +233,9 @@ _assertConditionHelper() {
   if $debugFlag; then
     __buildDebugEnable v
   fi
-  "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile"
-  exitCode=$?
+  exitCode=0
+  "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile" || exitCode=$?
+
   if $debugFlag; then
     __buildDebugDisable v
   fi

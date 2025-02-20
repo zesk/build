@@ -258,6 +258,7 @@ testSuite() {
   if $continueFlag; then
     # If the continue file exists, the file contains the next test name on line 1
     startTest="$([ ! -f "$continueFile" ] || head -n 1 "$continueFile")"
+    [ "$startTest" != "PASSED" ] || startTest=""
   fi
 
   [ "${#tests[@]}" -gt 0 ] || __throwEnvironment "$usage" "No tests found" || return $?
@@ -772,13 +773,27 @@ __testRun() {
     __TEST_SUITE_RESULT="skip Platform $platform disallowed"
     resultCode=0
   else
-    if plumber "$__test" "$quietLog"; then
-      printf "%s\n" "SUCCESS $__test" >>"$quietLog"
+    local captureStderr
+    captureStderr=$(fileTemporaryName "$usage") || return $?
+    #     ▖   ▐        ▐
+    #  ▄▄▖▝▚▖ ▜▀ ▞▀▖▞▀▘▜▀
+    #     ▞▘  ▐ ▖▛▀ ▝▀▖▐ ▖
+    #          ▀ ▝▀▘▀▀  ▀
+    if plumber "$__test" "$quietLog" 2>"$captureStderr"; then
+      if isEmptyFile "$captureStderr"; then
+        printf "%s\n" "SUCCESS $__test" >>"$quietLog"
+      else
+        resultCode=97
+        printf "%s\n" "stderr-SUCCESS $__test has STDERR:" >>"$quietLog"
+        dumpPipe <"$captureStderr" >>"$quietLog"
+        stickyCode=$errorTest
+      fi
     else
       resultCode=$?
       printf "%s\n" "FAILED $__test" >>"$quietLog"
       stickyCode=$errorTest
     fi
+    rm -rf "$captureStderr" || :
   fi
 
   # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here
