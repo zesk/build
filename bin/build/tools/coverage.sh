@@ -21,7 +21,7 @@ bashCoverage() {
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -67,7 +67,7 @@ bashCoverageReport() {
   local reportCache target file line dataPath commandFile files=() home
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   # _IDENTICAL_ argument-case-header 5

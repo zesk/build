@@ -109,7 +109,7 @@ __gitPushHelper() {
 # fn: {base}
 __hookGitPostCommit() {
   local usage="_${FUNCNAME[0]}" hookName="post-commit" start
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
   __catchEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"

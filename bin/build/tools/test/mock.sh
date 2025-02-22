@@ -16,6 +16,7 @@ __mockValue() {
   local usage="_${FUNCNAME[0]}"
   local me="$usage ${1-} ${2-}" global="${1-}"
   local saveGlobal="${2:-"__MOCK_${global}"}" value="${3-}"
+  printf "%s\n" "MOCK: Saving $global into $saveGlobal"
   [ $# -le 3 ] || IFS=';' __throwArgument "$usage" "$me requires no more than 3 arguments: [$#]: $*" || return $?
   if [ "$value" = "--end" ]; then
     # shellcheck disable=SC2163

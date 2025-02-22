@@ -53,7 +53,7 @@ yarnInstall() {
   fi
   local home start
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 

@@ -46,7 +46,7 @@ aptKeyAdd() {
   local name url host index IFS file listTarget
   local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
   ring=$(_usageAptKeyRings "$usage") || return $?
 
@@ -195,7 +195,7 @@ aptKeyRemove() {
 
   local start ring sourcesPath
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   ring=$(_usageAptKeyRings "$usage") || return $?
   sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?

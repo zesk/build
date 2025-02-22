@@ -187,7 +187,7 @@ documentationIndex_Generate() {
   fi
 
   local start
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   local functionIndex="$cacheDirectory/index"
   [ -d "$functionIndex" ] || __catchEnvironment "$usage" mkdir -p "$functionIndex" || return $?

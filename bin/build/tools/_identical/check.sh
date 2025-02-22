@@ -125,7 +125,7 @@ identicalCheck() {
   local start failureCode exitCode=0 clean=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   failureCode="$(_code identical)"
 
   rootDir=$(__catchEnvironment "$usage" realPath "$rootDir") || return $?

@@ -278,7 +278,7 @@ gitTagVersion() {
   maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
   local init start versionSuffix
 
-  init=$(__catchEnvironment "$usage" timingStart) || return $?
+  init=$(timingStart) || return $?
   start=$init
   versionSuffix=""
 

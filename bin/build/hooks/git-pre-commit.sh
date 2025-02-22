@@ -92,7 +92,7 @@ isUnsignedInteger() {
 __hookGitPreCommit() {
   local usage="_${FUNCNAME[0]}" hookName="pre-commit" start
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
   __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?

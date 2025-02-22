@@ -150,7 +150,7 @@ __buildDocumentationBuild() {
   local usage="_${FUNCNAME[0]}"
   local here="${BASH_SOURCE[0]%/*}" home start
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   export APPLICATION_NAME
 

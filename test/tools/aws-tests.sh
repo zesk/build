@@ -12,52 +12,60 @@ _testAWSIPAccessUsage() {
   return "$1"
 }
 
+__awsTestSetup() {
+  __mockValue HOME
+  __mockValue AWS_PROFILE
+  __mockValue AWS_ACCESS_KEY_ID "" "$AWS_ACCESS_KEY_ID"
+  __mockValue AWS_SECRET_ACCESS_KEY "" "$AWS_SECRET_ACCESS_KEY"
+}
+
+__awsTestCleanup() {
+  # restore all set for other tests
+  __mockValue HOME "" --end
+  __mockValue AWS_PROFILE "" --end
+  __mockValue AWS_ACCESS_KEY_ID "" --end
+  __mockValue AWS_SECRET_ACCESS_KEY "" --end
+}
+
 # Tag: slow
 testAWSIPAccess() {
   local quietLog=$1 id key start
 
-  local oldHome oldAWSProfile
+  if [ -z "$quietLog" ]; then
+    _argument "testAWSIPAccess missing log" || return $?
+  fi
 
-  export HOME AWS_PROFILE
+  export HOME AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 
-  oldAWSProfile=${AWS_PROFILE-unset}
-  oldHome=$HOME
+  # copy env to locals
+  id=$AWS_ACCESS_KEY_ID
+  key=$AWS_SECRET_ACCESS_KEY
+
+  __awsTestSetup
 
   HOME=$(__environment mktemp -d) || return $?
   usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
-  if [ -z "$quietLog" ]; then
-    _argument "testAWSIPAccess missing log" || return $?
-  fi
   if [ -d "$HOME/.aws" ]; then
     _environment "No .aws directory should exist already" || return $?
   fi
 
   # Work using environment variables
   __testSection "CLI IP and env credentials"
-  start=$(timingStart)
-  if ! awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  if ! awsIPAccess --revoke --services 22,3306 --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  timingReport "$start" "Succeeded in"
 
-  # copy env to locals
-  id=$AWS_ACCESS_KEY_ID
-  key=$AWS_SECRET_ACCESS_KEY
+  echo "${BASH_SOURCE[0]}:${FUNCNAME[0]}:$LINENO" # DEBUG
+  awsIPAccess --verbose --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
-  # delete them
+  assertExitCode --dump --line "$LINENO" 0 awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  echo "${BASH_SOURCE[0]}:${FUNCNAME[0]}:$LINENO" # DEBUG
+  assertExitCode --dump --line "$LINENO" 0 awsIPAccess --revoke --services 22,3306 --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  echo "${BASH_SOURCE[0]}:${FUNCNAME[0]}:$LINENO" # DEBUG
+
   unset AWS_ACCESS_KEY_ID
   unset AWS_SECRET_ACCESS_KEY
 
   __testSection "CLI IP and no credentials - fails"
-  start=$(timingStart)
-  if awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" >>"$quietLog"; then
-    buildFailed "$quietLog" || return $?
-  fi
-  timingReport "$start" "Succeeded in"
+  assertNotExitCode --line "$LINENO" --stderr-ok --dump 0 awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   mkdir "$HOME/.aws"
   {
@@ -70,28 +78,21 @@ testAWSIPAccess() {
   echo "AWS_CONFIG_FILE: ${AWS_CONFIG_FILE-}"
   echo "AWS_SHARED_CREDENTIALS_FILE: ${AWS_SHARED_CREDENTIALS_FILE-}"
   echo "AWS_PROFILE: ${AWS_PROFILE-}"
+
   # Work using environment variables
   assertExitCode --line "$LINENO" 0 awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
   assertExitCode --line "$LINENO" 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   __testSection "Generated IP and file system credentials"
+
   # Work using environment variables
   assertExitCode --line "$LINENO" 0 awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
   assertExitCode --line "$LINENO" 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
-  rm "$HOME/.aws/credentials"
-  rmdir "$HOME/.aws"
+  rm -rf "$HOME"
 
   # restore all set for other tests
-  export AWS_ACCESS_KEY_ID=$id
-  export AWS_SECRET_ACCESS_KEY=$key
-
-  if [ "$oldAWSProfile" = "unset" ]; then
-    unset AWS_PROFILE
-  else
-    AWS_PROFILE="$oldAWSProfile"
-  fi
-  HOME="$oldHome"
+  __awsTestCleanup
 }
 
 _isAWSKeyUpToDateTest() {
@@ -194,24 +195,21 @@ testAwsRegionValid() {
 }
 
 testAwsEnvironmentFromCredentials() {
-  local savedHome credFile firstKey firstId year matches savedID savedKey
+  local credFile firstKey firstId year matches
 
-  export HOME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE
-  local oldHome savedProfile
+  export HOME AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 
-  savedProfile=${AWS_PROFILE-NONE}
-  oldHome=$HOME
-
-  savedID=${AWS_ACCESS_KEY_ID-NONE}
-  savedKey=${AWS_SECRET_ACCESS_KEY-NONE}
+  # copy env to locals
+  __awsTestSetup
 
   AWS_ACCESS_KEY_ID=
   AWS_SECRET_ACCESS_KEY=
-  savedHome=$HOME
 
   year=$(date +%Y)
-  HOME=$(__environment mktemp -d) || return $?
   # Fake home
+
+  HOME=$(__environment mktemp -d) || return $?
+
   credFile="$HOME/.aws/credentials"
 
   assertNotExitCode --line "$LINENO" 0 awsHasEnvironment || return $?
@@ -285,8 +283,6 @@ testAwsEnvironmentFromCredentials() {
 
   assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --profile hello-world --force || return $?
 
-  # dumpPipe credentials post hello-world 2 <"$credFile"
-
   assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
   assertEquals --line "$LINENO" --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
 
@@ -299,9 +295,6 @@ testAwsEnvironmentFromCredentials() {
     --stdout-match AWS_ACCESS_KEY_ID
     --stdout-match "$AWS_ACCESS_KEY_ID"
   )
-  __echo awsCredentialsFile
-  __echo __awsCredentialsExtractProfile "hello-world" <"$(awsCredentialsFile)"
-  awsEnvironmentFromCredentials hello-world | dumpPipe "awsEnvironmentFromCredentials hello-world"
   assertExitCode --line "$LINENO" "${matches[@]}" 0 awsEnvironmentFromCredentials --profile hello-world || return $?
   matches=(
     --stdout-match AWS_SECRET_ACCESS_KEY
@@ -309,26 +302,11 @@ testAwsEnvironmentFromCredentials() {
     --stdout-match AWS_ACCESS_KEY_ID
     --stdout-match "$AWS_ACCESS_KEY_ID"
   )
-  awsEnvironmentFromCredentials default | dumpPipe "awsEnvironmentFromCredentials default"
   assertExitCode --line "$LINENO" "${matches[@]}" 0 awsEnvironmentFromCredentials --profile default || return $?
-  HOME="$savedHome"
 
-  if [ "$savedID" = "NONE" ]; then
-    unset AWS_ACCESS_KEY_ID
-  else
-    AWS_ACCESS_KEY_ID=$savedID
-  fi
-  if [ "$savedKey" = "NONE" ]; then
-    unset AWS_SECRET_ACCESS_KEY
-  else
-    AWS_SECRET_ACCESS_KEY=$savedKey
-  fi
-  if [ "$savedProfile" = "NONE" ]; then
-    unset AWS_PROFILE
-  else
-    AWS_PROFILE=$savedProfile
-  fi
+  rm -rf "$HOME"
 
+  __awsTestCleanup
 }
 
 testAWSProfiles() {

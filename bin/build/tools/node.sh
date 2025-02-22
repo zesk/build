@@ -91,7 +91,7 @@ nodeUninstall() {
   fi
   local start name quietLog
   name=$(decorate code node)
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   statusMessage --first decorate info "Uninstalling $name ... " || return $?

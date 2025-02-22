@@ -41,7 +41,7 @@ awsInstall() {
   fi
 
   local start
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   __catchEnvironment "$usage" packageWhich unzip unzip || return $?
   __catchEnvironment "$usage" packageWhich curl curl "$@" || return $?
 
@@ -524,8 +524,6 @@ awsSecurityGroupIPModify() {
   local usage="_${FUNCNAME[0]}"
   local start
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
-
   local pp=() profileName="" group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile region=""
 
   # _IDENTICAL_ argument-case-header 5
@@ -587,6 +585,8 @@ awsSecurityGroupIPModify() {
     shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
 
+  __catchEnvironment "$usage" awsInstall || return $?
+
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
@@ -610,7 +610,7 @@ awsSecurityGroupIPModify() {
     done
   fi
 
-  tempErrorFile=$(mktemp) || __throwEnvironment mktemp || return $?
+  tempErrorFile=$(fileTemporaryName "$usage") || return $?
 
   #
   # 3 modes: Add, Remove, Register
@@ -622,7 +622,8 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    __catchEnvironment "$usage" aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || return $?
+    __catchEnvironment "$usage" aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" | tee "$tempErrorFile" || _undo $? dumpPipe "ERRORS" <"$tempErrorFile" 1>&2 || return $?
+
     foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     __catchEnvironment "$usage" rm -f "$tempErrorFile" || return $?
 
@@ -634,21 +635,22 @@ awsSecurityGroupIPModify() {
       # Register: No IP found, add it
       mode="--add"
     elif [ "$mode" = "--register" ] && [ "$foundIP" = "$ip" ]; then
-      __awwSGOutput "$(decorate success "IP already registered:")" "$foundIP" "$group" "$port"
+      __awsSGOutput "$(decorate success "IP already registered:")" "$foundIP" "$group" "$port"
       return 0
     else
-      __awwSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
+      __awsSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
       __catchEnvironment "$usage" aws "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" || return $?
     fi
   fi
   if [ "$mode" != "--remove" ]; then
     local json
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
-    __awwSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
-    if ! aws "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" >/dev/null 2>"$tempErrorFile"; then
+    __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
+
+    if ! aws "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         rm -f "$tempErrorFile" || :
-        printf "%s %s\n" "$(decorate yellow "duplicate")" "$(timingReport "$start" "found in")"
+        printf "%s\n" "$(decorate yellow "duplicate")"
         return 0
       else
         wrapLines "$(decorate error "ERROR : : : : ") $(decorate code)" "$(decorate blue ": : : : ERROR")$(decorate reset)" <"$tempErrorFile" 1>&2
@@ -657,14 +659,13 @@ awsSecurityGroupIPModify() {
       fi
     fi
   fi
-  timingReport "$start" "Completed in"
 }
 _awsSecurityGroupIPModify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Helper for awsSecurityGroupIPModify
-__awwSGOutput() {
+__awsSGOutput() {
   local title="$1" ip="$2" group="$3" port="$4"
   printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$foundIP")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
 }
@@ -792,8 +793,9 @@ awsIPAccess() {
     decorate pair "$width" Region "$AWS_REGION" || :
     if [ ${#pp[@]} -eq 0 ]; then
       decorate pair "$width" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
+      decorate pair "$width" AWS_SECRET_ACCESS_KEY "${#AWS_SECRET_ACCESS_KEY} characters" || :
     else
-      decorate pair "$width" Profile "${pp[1]}" || :
+      decorate pair "$width" Profile "${pp[1]-NO PROFILE}" || :
     fi
   fi
   local service

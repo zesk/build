@@ -340,7 +340,7 @@ loopExecute() {
 
     local start showRows
 
-    start=$(__catchEnvironment "$usage" timingStart) || return $?
+    start=$(timingStart) || return $?
     showRows=$((rowCount - saveY))
     exitCode=0
     if [ $iterations = 1 ]; then
@@ -350,15 +350,15 @@ loopExecute() {
     fi
 
     # Compute status line
-    local elapsed seconds nLines
+    local elapsed seconds nLines stamp
     nLines=$(($(wc -l <"$outputBuffer") + 0))
     elapsed=$(($(__catchEnvironment "$usage" timingStart) - start)) || return $?
     seconds=$(timingFormat "$elapsed")
     seconds="$seconds $(plural "$seconds" second seconds)"
-
+    stamp=$(date "+%F %T")
     local exitString
     exitString="$(decorate value "$exitCode") $(decorate label "[$(exitString "$exitCode")]")"
-    statusLine="$(decorate blue "[#$iterations]") $exitString, $nLines $(plural "$nLines" line lines), $seconds"
+    statusLine="$(decorate blue "[#$iterations]") $(decorate yellow "$stamp") $exitString, $nLines $(plural "$nLines" line lines), $seconds"
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then
@@ -640,7 +640,7 @@ interactiveCountdown() {
 
   local start end now
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   end=$((start + counter * 1000))
   now=$start
   [ -z "$prefix" ] || prefix="$prefix "
@@ -648,7 +648,7 @@ interactiveCountdown() {
   while [ "$now" -lt "$end" ]; do
     "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $((counter / 1000)) ")")"
     sleep 1
-    now=$(__catchEnvironment "$usage" timingStart) || return $?
+    now=$(timingStart) || return $?
     counter=$((end - now))
   done
   statusMessage printf -- "%s" ""

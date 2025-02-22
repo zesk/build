@@ -296,16 +296,18 @@ semanticColorTest() {
 # Environment: BUILD_PAIR_WIDTH
 # shellcheck disable=SC2120
 __decorateExtensionPair() {
-  local width name
-
+  local width="" name
   if isUnsignedInteger "${1-}"; then
     width="$1" && shift
   fi
   if [ -z "$width" ]; then
-    width=$(buildEnvironmentGet BUILD_PAIR_WIDTH)
+    width=$(buildEnvironmentGet BUILD_PAIR_WIDTH) || width=40
   fi
-  name="${1-}" && shift
-  [ -n "$name" ] || return 0
+  name="${1-}"
+  shift 2>/dev/null || :
+  if [ -z "$name" ]; then
+    return 0
+  fi
   printf "%s %s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each value "$@")"
 }
 

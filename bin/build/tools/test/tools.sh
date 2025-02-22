@@ -57,7 +57,7 @@ testSuite() {
   local startString allTestStart quietLog
 
   startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
-  allTestStart=$(__catchEnvironment "$usage" timingStart) || return $?
+  allTestStart=$(timingStart) || return $?
 
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
@@ -258,7 +258,7 @@ testSuite() {
   if $continueFlag; then
     # If the continue file exists, the file contains the next test name on line 1
     startTest="$([ ! -f "$continueFile" ] || head -n 1 "$continueFile")"
-    [ "$startTest" != "PASSED" ] || startTest=""
+    [ "$startTest" != "PASSED" ]
   fi
 
   [ "${#tests[@]}" -gt 0 ] || __throwEnvironment "$usage" "No tests found" || return $?
@@ -291,7 +291,7 @@ testSuite() {
     local item tagFilteredTests=() beforeCount afterCount sectionStart
 
     ! $verboseMode || statusMessage decorate info "$(printf "%s %d %s and %d %s to skip" "Applying" "${#tags[@]}" "$(plural ${#tags[@]} tag tags)" "${#skipTags[@]}" "$(plural ${#skipTags[@]} tag tags)")"
-    sectionStart=$(__catchEnvironment "$usage" timingStart) || return $?
+    sectionStart=$(timingStart) || return $?
     while read -r item; do tagFilteredTests+=("$item"); done < <(__catchEnvironment "$usage" __testSuiteFilterTags "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || return $?
     if $verboseMode; then
       beforeCount="$(decorate notice "${#filteredTests[@]} $(plural ${#filteredTests[@]} "test" "tests")")"
@@ -343,8 +343,8 @@ testSuite() {
         sectionNameHeading="$sectionName"
       fi
 
-      local testStart testLine
-      testStart=$(__environment timingStart) || return $?
+      local __testStart testLine
+      __testStart=$(timingStart)
       __catchEnvironment "$usage" hookRunOptional bash-test-start "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
 
       #  ▛▀▖
@@ -358,7 +358,7 @@ testSuite() {
       debugOpenFiles "$home/.test-open-files"
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
 
-      runTime=$(($(timingStart) - testStart))
+      runTime=$(($(timingStart) - __testStart))
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
       __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" "$flags" || __throwEnvironment "$usage" "... continuing" || :
     done
@@ -784,14 +784,18 @@ __testRun() {
         printf "%s\n" "SUCCESS $__test" >>"$quietLog"
       else
         resultCode=97
+        stickyCode=$errorTest
         printf "%s\n" "stderr-SUCCESS $__test has STDERR:" >>"$quietLog"
         dumpPipe <"$captureStderr" >>"$quietLog"
-        stickyCode=$errorTest
       fi
     else
       resultCode=$?
-      printf "%s\n" "FAILED $__test" >>"$quietLog"
       stickyCode=$errorTest
+      printf "%s\n" "FAILED $__test" >>"$quietLog"
+      if ! isEmptyFile "$captureStderr"; then
+        printf "%s\n" "stderr-FAILED $__test has STDERR:" 1>&2"$quietLog"
+        dumpPipe <"$captureStderr" >>"$quietLog"
+      fi
     fi
     rm -rf "$captureStderr" || :
   fi

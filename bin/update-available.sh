@@ -81,7 +81,7 @@ __updateAvailable() {
   local packageLists
 
   local start
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   local forceFlag=false
   # _IDENTICAL_ argument-case-header 5

@@ -502,7 +502,7 @@ deployToRemote() {
 
   __catchEnvironment "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
-  initTime=$(__catchEnvironment "$usage" timingStart) || return $?
+  initTime=$(timingStart) || return $?
 
   [ -d "$HOME" ] || __throwEnvironment "$usage" "No HOME defined or not a directory: $HOME" || return $?
 

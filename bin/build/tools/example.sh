@@ -75,7 +75,7 @@ exampleFunction() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
 
   # Load MANPATH environment

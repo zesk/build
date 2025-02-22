@@ -209,7 +209,7 @@ phpBuild() {
   [ ${#missingFile[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing files: ${missingFile[*]}" || return $?
 
   local initTime
-  initTime=$(__catchEnvironment "$usage" timingStart) || return $?
+  initTime=$(timingStart) || return $?
 
   #
   # Everything above here is basically argument parsing and validation
@@ -448,7 +448,7 @@ phpTest() {
 
   local init quietLog
 
-  init=$(__catchEnvironment "$usage" timingStart) || return $?
+  init=$(timingStart) || return $?
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
 
   buildDebugStart "${FUNCNAME[0]}" || :
@@ -459,7 +459,7 @@ phpTest() {
   statusMessage decorate info "Building test container" || :
 
   local start undo=()
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   __catchEnvironment "$usage" _phpTestSetup "$usage" "$home" || return $?
 
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
@@ -475,7 +475,7 @@ phpTest() {
   __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" up -d || _undo "$?" "${undo[@]}" || return $?
   statusMessage timingReport "$start" "Up in" || :
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   local reason=""
   if ! hookRun test-runner; then
     reason="test-runner hook failed"
@@ -484,7 +484,7 @@ phpTest() {
     _phpTestResult "  Success " "$(decorate green)" "☘️ " "💙" 18 4
   fi
   decorate info "Bringing down containers ..." || :
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   __catchEnvironment "$usage" docker-compose "${dca[@]}" down || _phpTestCleanup "$usage" || __throwEnvironment "$usage" "docker-compose down" || return $?
 
   # Reset test environment ASAP

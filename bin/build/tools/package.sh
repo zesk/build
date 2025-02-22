@@ -123,7 +123,7 @@ __packageUpFunction() {
       return 0
     fi
   fi
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" "$packageFunction" "$@" || return $?
   statusMessage --last timingReport "$start" "$verb in"
   date +%s >"$name" || :
@@ -356,7 +356,7 @@ packageInstall() {
 
   local __start quietLog installed
 
-  __start=$(__catchEnvironment "$usage" timingStart) || return $?
+  __start=$(timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
   installed="$(__catchEnvironment "$usage" mktemp)" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
@@ -488,7 +488,7 @@ packageUninstall() {
 
   local start quietLog standardPackages=()
 
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   local package

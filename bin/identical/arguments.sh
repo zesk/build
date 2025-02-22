@@ -86,7 +86,7 @@ __documentTemplateFunction() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -144,7 +144,7 @@ ___documentTemplateFunction() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then

@@ -14,11 +14,12 @@
 # Example:     init=$(timingStart)
 # Example:     ...
 # Example:     timingReport "$init" "Completed in"
-# Requires: __timestamp, _environment
+# Requires: __timestamp, _environment date
+# Should never fail, unless date is not installed
 timingStart() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-  __timestamp 2>/dev/null
+  __timestamp 2>/dev/null || printf "%s\n" "$(($(date +%s) * 1000))"
 }
 _timingStart() {
   ! false || timingStart --help

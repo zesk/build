@@ -159,7 +159,7 @@ documentationTemplateCompile() {
   local tokenName documentTokensFile envChecksum envChecksumCache compiledTemplateCache
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   forceFlag=false
   envFiles=()
@@ -471,7 +471,7 @@ documentationTemplateDirectoryCompile() {
   done
 
   # IDENTICAL startBeginTiming 1
-  start=$(__catchEnvironment "$usage" timingStart) || return $?
+  start=$(timingStart) || return $?
 
   local cacheDirectory templateDirectory functionTemplate targetDirectory
 

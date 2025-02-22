@@ -513,17 +513,11 @@ _outputTrigger() {
 }
 
 __listOpenFiles() {
-  local pid="$1"
-  if [ -d "/proc/$pid/fd" ]; then
-    ls -la "/proc/$pid/fd/"
-  else
-    lsof -a -d 0-2147483647 -p "$pid"
-  fi
+  lsof -a -d 0-2147483647 -p "$1"
 }
 
-__listChildPids() {
-  local pid="$1"
-  pgrep -P "$pid"
+__listChildProcessIDs() {
+  pgrep -P "$1"
 }
 
 # Output current open files
@@ -532,6 +526,7 @@ debugOpenFiles() {
 
   local name="${FUNCNAME[1]}}" target=""
 
+  muzzle packageWhich lsof || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -556,7 +551,7 @@ debugOpenFiles() {
   __listOpenFiles "$$" >"$target"
   local child children=()
 
-  read -r -a children < <(__listChildPids "$$") || :
+  read -r -a children < <(__listChildProcessIDs "$$") || :
   for child in "${children[@]}"; do
     printf "%s\n" "Child PID: $child" >>"$target"
     __listOpenFiles "$child" >>"$target"
