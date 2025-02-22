@@ -11,6 +11,7 @@
 __needBash() {
   export LC_TERMINAL
   export TERM
+  echo 14
   verboseFlag=false
   title="${1-}"
   shift
@@ -23,6 +24,7 @@ __needBash() {
     install="$install $1"
     shift
   done
+  echo 27
   if [ -z "$(which bash)" ]; then
     ! $verboseFlag || printf -- "%s" "Installing bash ..."
     if ! ${install# } >/dev/null; then
@@ -31,11 +33,13 @@ __needBash() {
     fi
     ! $verboseFlag || printf -- "\r                  \r"
   fi
+  echo 36
   if [ ! -f "$HOME/.bashrc" ]; then
     here=$(dirname "$0")
     printf -- "%s\n" "#!/usr/bin/env bash" "source $here/tools.sh" "bashPrompt consoleDefaultTitle" "cd \$HOME/build" "iTerm2Badge -i \"$title\"" >"$HOME/.bashrc"
     chmod +x "$HOME/.bashrc"
   fi
+  echo 41
   if [ $# -gt 0 ]; then
     cc="\"$1\""
     shift
@@ -46,10 +50,14 @@ __needBash() {
       cc="${cc} \"$(printf "%s\n" "$1" | sed 's/"/\\"/g')\""
       shift
     done
+    echo 53
+    echo bash -c "\"$cc\""
     exec bash -c "$cc"
   else
     exec bash
   fi
 }
 
+echo 61
 __needBash "$@"
+echo 63
