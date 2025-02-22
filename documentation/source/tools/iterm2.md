@@ -31,6 +31,7 @@ Most commands take the `--ignore` parameter if you wish to ignore errors when th
 {iTerm2Image}
 {iTerm2Download}
 {iTerm2Version}
+{iTerm2Notify}
 
 # iTerm2 Colors
 

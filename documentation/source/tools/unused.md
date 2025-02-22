@@ -2,6 +2,9 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{beginTiming}
+{reportTiming}
+
 {exampleFunction}
 {runHookOptional}
 {runHook}
@@ -13,3 +16,4 @@ Hides these from [New and uncategorized functions](./todo.md)
 {_format}
 {joinArguments}
 {listTokens}
+{bashPromptUser}

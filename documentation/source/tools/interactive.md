@@ -10,7 +10,7 @@
 
 ## Interactive utilities
 
-{interactiveLoop}
+{loopExecute}
 {interactiveCountdown}
 {confirmYesNo} 
 {pause}

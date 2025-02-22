@@ -6,6 +6,7 @@ Hooks are called to enable custom actions at specific times which can be overwri
 [⬅ Parent ](../)
 <hr />
 
+{hasHook}
 {hookRun}
 {hookSource}
 

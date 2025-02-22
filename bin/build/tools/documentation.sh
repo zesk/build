@@ -281,7 +281,7 @@ documentationTemplateCompile() {
       if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
         continue
       fi
-      if ! inArray "$settingsFile" "${checkFiles[@]}"; then
+      if [ "${#checkFiles[@]}" -eq 0 ] || ! inArray "$settingsFile" "${checkFiles[@]}"; then
         # Source file of any token in the documentTemplate change will affect this template
         checkFiles+=("$settingsFile")
       fi
@@ -422,7 +422,9 @@ _documentationTemplateFunctionCompile() {
 documentationTemplateDirectoryCompile() {
   local usage="_${FUNCNAME[0]}"
 
-  local cacheDirectory="" templateDirectory="" functionTemplate="" targetDirectory="" passArgs=() filterArgs=()
+  local cacheDirectory="" templateDirectory="" functionTemplate="" targetDirectory=""
+  local passArgs=() filterArgs=()
+  local verboseFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#

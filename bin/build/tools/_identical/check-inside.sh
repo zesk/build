@@ -55,8 +55,8 @@ _identicalCheckInsideLoop() {
     if [ -f "$tokenFile" ]; then
       local tokenLineCount tokenLineCount
 
-      tokenLineCount=$(head -1 "$tokenFile")
-      tokenFileName=$(tail -1 "$tokenFile")
+      tokenLineCount=$(head -n 1 "$tokenFile")
+      tokenFileName=$(tail -n 1 "$tokenFile")
       if [ ! -f "$countFile" ]; then
         statusMessage printf -- "%s: %s\n" "$(decorate info "$token")" "$(decorate error "Token counts do not match:")" 1>&2
         printf -- "    %s has %s specified\n" "$(decorate code "$(decorate file "$tokenFileName")")" "$(decorate success "$tokenLineCount")" 1>&2

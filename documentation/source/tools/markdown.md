@@ -6,3 +6,4 @@
 
 {markdown_removeUnfinishedSections}
 {markdown_FormatList}
+{markdownIndentHeading}

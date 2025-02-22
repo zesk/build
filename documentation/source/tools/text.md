@@ -24,10 +24,13 @@
 {removeFields}
 {clampDigits}
 
-{stripAnsi}
-
 {printfOutputPrefix}
 {printfOutputSuffix}
+
+## Cleanup ANSI text
+
+{stripAnsi}
+{plainLength}
 
 ### Space trimming
 

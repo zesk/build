@@ -23,7 +23,9 @@ Examples:
 
 ## Functions
 
-{bashPrompt} {bashPromptColorScheme}
+{bashPrompt} 
+{bashPromptColorScheme}
+{bashPromptColorsFormat}
 {bashPromptMarkers}
 {bashUserInput}
 

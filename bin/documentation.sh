@@ -272,7 +272,7 @@ __buildDocumentationBuild() {
     example="$example" __catchEnvironment "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/docs/guide/coding.md" || return $?
 
     statusMessage decorate notice "Updating env/index.md ..."
-    __catchEnvironment "$usage" documentationBuildEnvironment "${ea[@]+"${ea[@]}"}" || return $?
+    __catchEnvironment "$usage" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
   fi
 
   if "$updateReference"; then
