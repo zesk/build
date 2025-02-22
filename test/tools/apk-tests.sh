@@ -37,10 +37,15 @@ testIsApkInstalled() {
 
 testAlpineContainer() {
   if whichExists docker; then
+    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     assertExitCode --line "$LINENO" 0 alpineContainer echo "FOO=\"foo\"" || return $?
+    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     local value
+    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     value=$(trimSpace "$(alpineContainer echo "FOO=\"foo\"")")
+    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     assertEquals --line "$LINENO" "$value" "FOO=\"foo\"" || return $?
+    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
   fi
   return 0
 }
