@@ -42,7 +42,7 @@ testAlpineContainer() {
 
     echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
     docker images --help 1>&2
-    docker images --format json
+    docker images --format json 1>&2
 
     value=$(trimSpace "$(alpineContainer echo "FOO=\"foo\"")")
 

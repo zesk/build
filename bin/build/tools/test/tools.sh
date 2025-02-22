@@ -355,7 +355,6 @@ testSuite() {
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       flags=$(__testLoadFlags "$sectionFile" "$item")
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
-      debugOpenFiles "$home/.test-open-files"
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
 
       runTime=$(($(timingStart) - __testStart))
@@ -408,7 +407,6 @@ __testSuiteInitialize() {
 
   # If someone interrupts find out where it was running
   bashDebugInterruptFile
-  packageWhich lsof lsof || return $?
 }
 
 __testSuiteShowTags() {
