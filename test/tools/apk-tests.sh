@@ -42,6 +42,8 @@ testAlpineContainer() {
     echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     local value
     echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
+    alpineContainer echo "FOO=\"foo\"" 1>&2
+    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     value=$(trimSpace "$(alpineContainer echo "FOO=\"foo\"")")
     echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     assertEquals --line "$LINENO" "$value" "FOO=\"foo\"" || return $?
