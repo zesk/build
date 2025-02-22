@@ -55,7 +55,7 @@ bigText() {
 
   binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
   if [ -z "$binary" ]; then
-    __catchEnvironment "$usage" muzzle packageInstall "$binary" || return $?
+    __catchEnvironment "$usage" muzzle packageInstall || return $?
     binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
   fi
   case "$binary" in
