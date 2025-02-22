@@ -355,7 +355,7 @@ _dockerLocalContainer() {
 dockerImages() {
   local usage="_${FUNCNAME[0]}"
 
-  local filter=() debugFlag=false
+  local filter=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -367,9 +367,6 @@ dockerImages() {
       --help)
         "$usage" 0
         return $?
-        ;;
-      --debug)
-        debugFlag=true
         ;;
       --filter)
         shift
@@ -386,14 +383,48 @@ dockerImages() {
   done
 
   usageRequireBinary "$usage" docker || return $?
-  __catchEnvironment "$usage" packageWhich jq jq || return $?
-  set +o pipefail
-  if $debugFlag; then
-    docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
-  else
-    docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
-  fi
+
+  # Do not use --format json as it is not backwards compatible
+  docker images "${filter[@]+"${filter[@]}"}" | awk '{ print $1 ":" $2 }' | grep -v 'REPOSITORY:'
 }
 _dockerImages() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Old versions of docker or hosted:
+#
+# Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
+#
+# List images
+#
+# Options:
+#   -a, --all             Show all images (default hides intermediate images)
+#       --digests         Show digests
+#   -f, --filter filter   Filter output based on conditions provided
+#       --format string   Pretty-print images using a Go template
+#       --no-trunc        Don't truncate output
+#   -q, --quiet           Only show image IDs
+
+# Docker version 27.3.1, build ce12230
+# Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
+#
+# List images
+#
+# Aliases:
+#   docker image ls, docker image list, docker images
+#
+# Options:
+#   -a, --all             Show all images (default hides intermediate images)
+#       --digests         Show digests
+#   -f, --filter filter   Filter output based on conditions provided
+#       --format string   Format output using a custom template:
+#                         'table':            Print output in table format with column headers (default)
+#                         'table TEMPLATE':   Print output in table format using the given Go template
+#                         'json':             Print in JSON format
+#                         'TEMPLATE':         Print output using the given Go template.
+#                         Refer to https://docs.docker.com/go/formatting/ for more information about formatting
+#                         output with templates
+#       --no-trunc        Don't truncate output
+#   -q, --quiet           Only show image IDs
+#       --tree            List multi-platform images as a tree (EXPERIMENTAL)
+#
