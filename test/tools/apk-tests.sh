@@ -37,41 +37,16 @@ testIsApkInstalled() {
 
 testAlpineContainer() {
   if whichExists docker; then
-    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     assertExitCode --line "$LINENO" 0 alpineContainer echo "FOO=\"foo\"" || return $?
-    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
     local value
-    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
-    alpineContainer echo "FOO=\"foo\"" 1>&2
-    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
+
+    echo "${BASH_SOURCE[0]}:$LINENO" 1>&2
+    docker images --help 1>&2
+    docker images --format json
+
     value=$(trimSpace "$(alpineContainer echo "FOO=\"foo\"")")
-    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
+
     assertEquals --line "$LINENO" "$value" "FOO=\"foo\"" || return $?
-    echo "${BASH_SOURCE[0]}:$LINENO:${FUNCNAME[0]}" 1>&2
   fi
   return 0
-}
-
-testDebugAlpineContainer() {
-  if whichExists docker; then
-    docker images --help
-    dockerImages --debug --filter alpine:latest
-
-    # __echo alpineContainer echo "FOO=\"foo\"" # TODO - parse error: Invalid numeric literal at line 2, column 0 on BitBucket pipelines
-    # WTF? Where is this coming from?
-    alpineContainer echo "FOO=\"foo\"" || :
-    echo "${BASH_SOURCE[0]}:$LINENO"
-    buildEnvironmentLoad LC_TERMINAL TERM || :
-    echo "${BASH_SOURCE[0]}:$LINENO"
-    # shellcheck disable=SC2016
-    dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- echo '$(uname)' || :
-    echo "${BASH_SOURCE[0]}:$LINENO"
-    dockerImages --debug --filter alpine:latest
-    echo "${BASH_SOURCE[0]}:$LINENO"
-    echo "${BASH_SOURCE[0]}:$LINENO"
-    docker images --format json --filter "reference=alpine:latest"
-    echo "${BASH_SOURCE[0]}:$LINENO"
-    docker images --format json --filter "reference=alpine:latest" | jq -r '.Repository + ":" + .Tag'
-    echo "${BASH_SOURCE[0]}:$LINENO"
-  fi
 }

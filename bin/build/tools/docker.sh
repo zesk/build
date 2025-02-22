@@ -318,7 +318,7 @@ dockerLocalContainer() {
         extraArgs+=("$1")
         ;;
     esac
-    shift || :
+    shift
   done
   [ -n "$platform" ] || platform=$(dockerPlatformDefault)
 
@@ -387,8 +387,8 @@ dockerImages() {
 
   usageRequireBinary "$usage" docker || return $?
   __catchEnvironment "$usage" packageWhich jq jq || return $?
+  set +o pipefail
   if $debugFlag; then
-    __echo docker images --format json "${filter[@]+"${filter[@]}"}"
     docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
   else
     docker images --format json "${filter[@]+"${filter[@]}"}" | jq -r '.Repository + ":" + .Tag'
