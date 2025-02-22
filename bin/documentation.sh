@@ -264,6 +264,7 @@ __buildDocumentationBuild() {
       find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*"
       printf "%s\n" "$sourceHome/tools/index.md"
     )
+    version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC" __catchEnvironment "$usage" mapEnvironment <"$sourceHome/index.md" >"$targetHome/index.md" || return $?
 
     # Coding
     local example

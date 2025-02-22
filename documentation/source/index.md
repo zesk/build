@@ -1,4 +1,6 @@
-# Zesk Build
+# Zesk Build {version}
+
+Documentation up to date as of {timestamp}.
 
 ## Contents
 
