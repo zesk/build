@@ -48,16 +48,14 @@
 #     ▐█▄█▘▗▄█▄▖▝█▄█▌  █  ▝█▄▄▌ ▟▀▙  ▐▙▄
 #     ▝▘▀▘ ▝▀▀▀▘ ▞▀▐▌  ▀   ▝▀▀ ▝▀ ▀▘  ▀▀
 #                ▜█▛▘
-#
+# Environment: BUILD_TEXT_BINARY
 bigText() {
-  local usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"f
+
   local fonts binary index=0
 
   binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
-  if [ -z "$binary" ]; then
-    __catchEnvironment "$usage" muzzle packageInstall || return $?
-    binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
-  fi
+  [ -n "$binary" ] || __throwEnvironment "$usage" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
     figlet) fonts=("standard" "big") ;;
     toilet) fonts=("smblock" "smmono12") ;;
@@ -65,7 +63,7 @@ bigText() {
       __throwEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
       ;;
   esac
-  if ! muzzle packageWhich "$binary" "$binary"; then
+  if ! whichExists "$binary"; then
     decorate green "BIG TEXT: $*"
     return 0
   fi

@@ -8,7 +8,7 @@
 
 __buildAnnounce() {
   decorate info "Added aliases $(decorate each code t tools IdenticalRepair)"
-  decorate info "Available functions $(decorate each code buildPreRelease)"
+  decorate info "Available functions $(decorate each code buildPreRelease buildAddTool)"
 }
 
 __buildAliases() {
@@ -22,8 +22,8 @@ __buildAliases() {
   # shellcheck disable=SC2139
   alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
-
 }
+
 __buildAliasesUndo() {
   unalias t 2>/dev/null
   unalias tools 2>/dev/null
@@ -55,6 +55,33 @@ buildPreRelease() {
     fi
   fi
   return "$exitCode"
+}
+
+buildAddTool() {
+  local usage="_return" home file
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      *[^[:alnum:]]*)
+        __throwArgument "$usage" "Invalid name: $1" || return $?
+        ;;
+    esac
+    for file in "bin/build/tools/$1.sh" "test/tools/$1-tests.sh"; do
+      if [ ! -f "$home/$file" ]; then
+        touch "$home/$file"
+        chmod +x "$home/$file"
+      fi
+      git add "$home/$file"
+    done
+    file="documentation/source/tools/$1.md"
+    if [ ! -f "$home/$file" ]; then
+      touch "$home/$file"
+    fi
+    git add "$home/$file"
+    shift
+  done
 }
 
 __buildAliases
