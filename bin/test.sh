@@ -47,6 +47,7 @@ __buildTestSuite() {
 
   testHome="$(__environment realPath "$here/..")" || return $?
   __environment bashSourcePath "$testHome/test/support" || return $?
+  __environment packageInstall || return $?
   testTools testSuite --tests "$testHome/test/tools" "$@" || __throwEnvironment "$usage" "testTools" || return $?
 }
 ___buildTestSuite() {
