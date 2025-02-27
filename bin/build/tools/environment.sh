@@ -422,7 +422,7 @@ environmentApplicationLoad() {
 # Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name.
 environmentFileShow() {
   local usage="_${FUNCNAME[0]}"
-  local missing name buildEnvironment
+  local name
   local width=40
   local variables=()
 
@@ -445,7 +445,7 @@ environmentFileShow() {
     esac
     shift
   done
-  buildEnvironment=("$@")
+  local buildEnvironment=("$@")
   environmentVariableNameValid "$@" || __catchArgument "$usage" "Invalid variable name" || return $?
 
   printf -- "%s %s %s %s%s\n" "$(decorate info "Application")" "$(decorate magenta "$APPLICATION_VERSION")" "$(decorate info "on")" "$(decorate bold-red "$APPLICATION_BUILD_DATE")" "$(decorate info "...")"
@@ -454,7 +454,7 @@ environmentFileShow() {
     decorate pair "$width" Tag "$APPLICATION_TAG"
     decorate pair "$width" Timestamp "$BUILD_TIMESTAMP"
   fi
-  missing=()
+  local name missing=()
   for name in "${variables[@]}"; do
     if [ -z "${!name:-}" ]; then
       decorate pair "$width" "$name" "** No value **" 1>&2
@@ -470,9 +470,10 @@ environmentFileShow() {
       decorate pair "$width" "$name" "${!name}"
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || __catchEnvironment "$usage" "Missing environment" "${missing[@]}" || return $?
+  [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing environment $(decorate each code "${missing[@]}")" || return $?
 }
 _environmentFileShow() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
