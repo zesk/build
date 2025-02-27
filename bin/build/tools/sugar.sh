@@ -44,7 +44,7 @@ ___catch() {
 # Argument: command - Required. String. Command to run.
 # Requires: isInteger _argument isFunction isCallable
 __catchCode() {
-  local __count=$# __saved=("$@") usage="_${FUNCNAME[0]}" code="${1-0}" handler="${2-}" command="${3?}"
+  local __count=$# __saved=("$@") usage="_${FUNCNAME[0]}" code="${1-0}" handler="${2-}" command="${3-}"
   isInteger "$code" || __throwArgument "$usage" "Not integer: $code (#$__count $(decorate each code "${__saved[@]}"))" || return $?
   isFunction "$handler" || __throwArgument "$usage" "Not a function $(decorate code "$handler"): $(debuggingStack)" || return $?
   isCallable "$command" || __throwArgument "$usage" "Not callable $(decorate code "$command")" || return $?

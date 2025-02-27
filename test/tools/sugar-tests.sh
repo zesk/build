@@ -26,6 +26,19 @@ _wasRun() {
   return "$exitCode"
 }
 
+__alwaysFail() {
+  return 1
+}
+
+test__catchCode() {
+  assertNotExitCode --stderr-match "Not a function" 0 __catchCode || return $?
+  assertNotExitCode --stderr-match "Not integer" 0 __catchCode 12n || return $?
+  assertNotExitCode --stderr-match "Not callable" 0 __catchCode 12 _return "not-callable-thing" || return $?
+  assertExitCode 0 __catchCode 12 _return printf -- "" || return $?
+  assertExitCode --stdout-match "Hello, world" 0 __catchCode 12 _return printf -- "Hello, world" || return $?
+  assertExitCode --stderr-match "__alwaysFail" 12 __catchCode 12 _return __alwaysFail || return $?
+}
+
 testBoolean() {
   assertExitCode 0 isBoolean true || return $?
   assertExitCode 0 isBoolean false || return $?
