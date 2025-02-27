@@ -50,7 +50,7 @@
 #                ▜█▛▘
 # Environment: BUILD_TEXT_BINARY
 bigText() {
-  local usage="_${FUNCNAME[0]}"f
+  local usage="_${FUNCNAME[0]}"
 
   local fonts binary index=0
 
