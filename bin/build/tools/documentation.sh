@@ -561,6 +561,7 @@ _bashDocumentation_Template() {
   local template="$1" envFile
   [ -f "$template" ] || _argument "Template $template not found" || return $?
   shift || :
+  set +m
   (
     # subshell this does not affect anything except these commands
     set -aeou pipefail
@@ -580,7 +581,7 @@ _bashDocumentation_Template() {
     done < <(environmentVariables)
     # shellcheck source=/dev/null
     mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || return $?
-  ) || _environment "$template failed" || return $?
+  ) 2>/dev/null || _environment "$template failed" || return $?
 }
 
 #

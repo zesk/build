@@ -14,30 +14,53 @@ testDocumentation() {
   testOutput=$(mktemp)
   assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
 
-  (
-    bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
-    set -a
-    # shellcheck source=/dev/null
-    source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
-    set +a
-    assertEquals "Assert two strings are not equal"$'\n' "${summary}" || return $?
-    assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n\n' "${description}" || return $?
+  bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
+  set -a
+  # shellcheck source=/dev/null
+  source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
+  set +a
+  assertEquals "Assert two strings are not equal"$'\n' "${summary}" || return $?
+  assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n\n' "${description}" || return $?
 
-    bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertEquals)" assertEquals >"$testOutput" || return $?
-    set -a
-    # shellcheck source=/dev/null
-    source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
-    set +a
-    echoBar '='
-    assertEquals $'Assert two strings are equal.\n\nIf this fails it will output an error and exit.\n\n\n' "${description}" || return $?
-    echoBar -
-    desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
-    assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
-    echoBar '='
-    assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
+  bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertEquals)" assertEquals >"$testOutput" || return $?
+  set -a
+  # shellcheck source=/dev/null
+  source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
+  set +a
+  echoBar '='
+  assertEquals $'Assert two strings are equal.\n\nIf this fails it will output an error and exit.\n\n\n' "${description}" || return $?
+  echoBar -
+  desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
+  assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
+  echoBar '='
+  assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
 
-    rm "$testOutput" || :
-  ) || _environment "subshell failed" || return $?
+  rm "$testOutput" || :
+}
+
+__isolateTest() {
+  local testOutput="$1"
+
+  bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertNotEquals)" assertNotEquals >"$testOutput" || return $?
+  set -a
+  # shellcheck source=/dev/null
+  source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
+  set +a
+  assertEquals "Assert two strings are not equal"$'\n' "${summary}" || return $?
+  assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n\n' "${description}" || return $?
+
+  bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertEquals)" assertEquals >"$testOutput" || return $?
+  set -a
+  # shellcheck source=/dev/null
+  source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
+  set +a
+  echoBar '='
+  assertEquals $'Assert two strings are equal.\n\nIf this fails it will output an error and exit.\n\n\n' "${description}" || return $?
+  echoBar -
+  desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
+  assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
+  echoBar '='
+  assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
 }
 
 # Running testDocSections ...
@@ -45,7 +68,6 @@ testDocumentation() {
 # ✅ : assertFileContains Line 49: /tmp/tmp.nzr2txaaOC contains strings: ("No arguments" ) [5 seconds]
 # /tmp/tmp.wRninBVNxi: line 2: fg: no job control
 # ✅ : assertFileContains Line 52: /tmp/tmp.nzr2txaaOC contains strings: ("#### Arguments" "--help" ) [4 seconds]
-
 
 testDocSections() {
   local doc home
