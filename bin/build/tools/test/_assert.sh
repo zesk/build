@@ -29,8 +29,13 @@ __resultText() {
 _assertTiming() {
   local timingFile
 
-  timingFile="$(__environment buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
+  export __BUILD_SAVED_CACHE_DIRECTORY
 
+  if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
+    __BUILD_SAVED_CACHE_DIRECTORY="$(__environment buildCacheDirectory)" || return $?
+  fi
+
+  timingFile="$__BUILD_SAVED_CACHE_DIRECTORY/.${FUNCNAME[0]}" || return $?
   if [ -f "$timingFile" ]; then
     local stamp
     stamp="$(head -n 1 <"$timingFile")"
@@ -43,7 +48,7 @@ _assertTiming() {
       decorate error "Timestamp saved was invalid: $stamp"
     fi
   else
-    decorate info "First test"
+    decorate info "First test ($__BUILD_SAVED_CACHE_DIRECTORY)"
   fi
   timingStart >"$timingFile" || :
 }
