@@ -8,7 +8,6 @@
 #
 #
 
-#
 # Test if all arguments are executable binaries
 # Usage: {fn} string0 [ string1 ... ]
 # Argument: string - Required. Path to binary to test if it is executable.

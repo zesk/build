@@ -52,7 +52,7 @@ _bashGetRequires() {
 # Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
 # Scans a bash script for lines which look like:
 #
-# Depends: token1 token2
+# Requires: token1 token2
 #
 # Each requirement token is:
 #

@@ -10,6 +10,6 @@
 # See `bitbucketContainer` for arguments and usage.
 # See: bitbucketContainer
 __binBitbucketContainer() {
-  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" bitbucketContainer "$@"
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" bitbucketContainer ./bin/build/bash-build.sh "$@"
 }
 __binBitbucketContainer "$@"

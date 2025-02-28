@@ -66,10 +66,12 @@ __packageListFunction() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it seems to be installed.
+# Argument: --verbose - Optional. Flag. Force even if it seems to be installed.
+# Argument: --show-log - Optional. Flag. Show the log of the package manager.
 __packageUpFunction() {
   local usage="$1" suffix="$2" verb
 
-  local manager="" forceFlag=false start lastModified
+  local manager="" forceFlag=false verboseFlag=false start lastModified showLog=false
 
   verb=$(lowercase "$suffix")
   shift 2
@@ -93,6 +95,12 @@ __packageUpFunction() {
       --force)
         forceFlag=true
         ;;
+      --show-log)
+        showLog=true
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
       *)
         break
         ;;
@@ -108,24 +116,36 @@ __packageUpFunction() {
   local packageFunction="__${manager}${suffix}"
   isFunction "$packageFunction" || __throwEnvironment "$usage" "$packageFunction is not a defined function" || return $?
 
-  local name quietLog
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
+  local name
   name="$(__catchEnvironment "$usage" buildCacheDirectory)/.packageUpdate" || return $?
   __catchEnvironment "$usage" requireFileDirectory "$name" || return $?
 
   if $forceFlag; then
-    statusMessage decorate info "Forcing $manager $verb ..."
+    ! $verboseFlag || statusMessage decorate info "Forcing $manager $verb ..."
   elif [ -f "$name" ]; then
     local lastModified
     lastModified="$(modificationSeconds "$name")"
     # once an hour, technically
-    if [ "$lastModified" -lt 3600 ]; then
+    local threshold=3600
+    if [ "$lastModified" -lt "$threshold" ]; then
+      ! $verboseFlag || statusMessage --last decorate info "Updated $lastModified (threshold is $threshold) seconds ago. System is up to date."
       return 0
     fi
   fi
   start=$(timingStart) || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" "$packageFunction" "$@" || return $?
-  statusMessage --last timingReport "$start" "$verb in"
+  ! $verboseFlag || statusMessage decorate warning "${suffix} ..."
+
+  if ! $showLog; then
+    local quietLog
+    quietLog=$(__catchEnvironment "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
+    exec 3>&1
+    exec 1>"$quietLog"
+  fi
+  __catchEnvironment "$usage" "$packageFunction" "$@" || return $?
+  if ! $showLog; then
+    exec 1>&3
+  fi
+  ! $verboseFlag || statusMessage --last timingReport "$start" "$verb in"
   date +%s >"$name" || :
 }
 
@@ -133,6 +153,7 @@ __packageUpFunction() {
 # Usage: {fn} [ --help ] [ --manager packageManager ] [ --force ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Argument: --verbose - Optional. Flag. Display progress to the terminal.
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it was updated recently.
 packageUpgrade() {
@@ -144,9 +165,9 @@ _packageUpgrade() {
 }
 
 # Update packages lists and sources
-# Usage: {fn} [ --help ] [ --manager packageManager ] [ --force ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Argument: --verbose - Optional. Flag. Display progress to the terminal.
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 # Argument: --force - Optional. Flag. Force even if it was updated recently.
 packageUpdate() {
@@ -172,7 +193,7 @@ _packageUpdate() {
 # Environment: Technically this will install the binary and any related files as a package.
 packageWhich() {
   local usage="_${FUNCNAME[0]}"
-  local binary="" packages=() manager="" forceFlag=false
+  local binary="" packages=() manager="" forceFlag=false vv=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -187,6 +208,9 @@ packageWhich() {
         ;;
       --force)
         forceFlag=true
+        ;;
+      --verbose)
+        vv=("$argument")
         ;;
       # IDENTICAL managerArgumentHandler 5
       --manager)
@@ -221,7 +245,7 @@ packageWhich() {
     ! whichExists "$binary" || return 0
   fi
   # Install packages
-  __environment packageInstall --force "${packages[@]}" || return $?
+  __environment packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
   # Ensure binary now exists, otherwise fail
   whichExists "$binary" || __throwEnvironment "$usage" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
@@ -247,7 +271,7 @@ _packageWhich() {
 packageWhichUninstall() {
   local usage="_${FUNCNAME[0]}"
 
-  local binary="" packages=() manager="" foundPath
+  local binary="" packages=() manager="" foundPath vv=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -266,7 +290,9 @@ packageWhichUninstall() {
         manager=$(usageArgumentString "$usage" "$argument" "${1-}")
         packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
         ;;
-
+      --verbose)
+        vv=("$argument")
+        ;;
       *)
         if [ -z "$binary" ]; then
           binary=$(usageArgumentString "$usage" "binary" "$argument") || return $?
@@ -288,7 +314,7 @@ packageWhichUninstall() {
   if ! whichExists "$binary"; then
     return 0
   fi
-  __catchEnvironment "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
+  __catchEnvironment "$usage" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
   if foundPath="$(which "$binary")" && [ -n "$foundPath" ]; then
     __throwEnvironment "$usage" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
   fi
@@ -313,12 +339,14 @@ _packageWhichUninstall() {
 # Summary: Install packages using a package manager
 # Argument: package - One or more packages to install
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-#
-# shellcheck disable=SC2120
+# Argument: --verbose - Optional. Flag. Display progress to the terminal.
+# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
+# Argument: --force - Optional. Flag. Force even if it was updated recently.
+# Argument: --show-log - Optional. Flag. Show package manager logs.
 packageInstall() {
   local usage="_${FUNCNAME[0]}"
 
-  local forceFlag=false packages=() manager=""
+  local forceFlag=false packages=() manager="" verboseFlag=false showLog=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -340,6 +368,13 @@ packageInstall() {
       --force)
         forceFlag=true
         ;;
+      --verbose)
+        verboseFlag=true
+        vv+=(--show-log)
+        ;;
+      --show-log)
+        vv+=(--show-log)
+        ;;
       *)
         if ! inArray "$argument" "${packages[@]+"${packages[@]}"}"; then
           packages+=("$argument")
@@ -357,9 +392,8 @@ packageInstall() {
   local __start quietLog installed
 
   __start=$(timingStart) || return $?
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
   installed="$(__catchEnvironment "$usage" mktemp)" || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" packageUpdate || return $?
+  __catchEnvironment "$usage" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
   __catchEnvironment "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
 
   local standardPackages=() actualPackages=() package installed installFunction
@@ -385,15 +419,25 @@ packageInstall() {
   fi
   if [ "${#actualPackages[@]}" -eq 0 ]; then
     if [ "${#packages[@]}" -gt 0 ]; then
-      decorate success "Already installed: ${packages[*]}"
+      ! $verboseFlag || statusMessage --last decorate success "Already installed: ${packages[*]}"
     fi
     return 0
   fi
-  statusMessage decorate info "Installing ${packages[*]+"${packages[*]}"} ... "
+  ! $verboseFlag || statusMessage decorate info "Installing ${packages[*]+"${packages[*]}"} ... "
   local installFunction="__${manager}Install"
   isFunction "$installFunction" || __throwEnvironment "$usage" "$installFunction is not defined" || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" "$installFunction" "${actualPackages[@]}" || return $?
-  timingReport "$__start" OK
+
+  if ! $showLog; then
+    local quietLog
+    quietLog=$(__catchEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
+    exec 3>&1
+    exec 1>"$quietLog"
+  fi
+  __catchEnvironment "$usage" "$installFunction" "${actualPackages[@]}" || return $?
+  if ! $showLog; then
+    exec 1>&3
+  fi
+  ! $verboseFlag || statusMessage --last timingReport "$__start" "Installed ${packages[*]+"${packages[*]}"} in"
 }
 _packageInstall() {
   # _IDENTICAL_ usageDocument 1

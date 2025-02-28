@@ -26,7 +26,7 @@ __hookPreCommitShell() {
   __catchEnvironment "$usage" gitPreCommitListExtension sh | wrapLines "- $(decorate bold-magenta)" "$(decorate reset)" || return $?
   changed=()
   while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
-  __catchEnvironment "$usage" bashSanitize "${changed[@]}" || return $?
+  __catchEnvironment "$usage" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
 }
 ___hookPreCommitShell() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

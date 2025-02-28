@@ -791,7 +791,7 @@ __testRun() {
       stickyCode=$errorTest
       printf "%s\n" "FAILED $__test" >>"$quietLog"
       if ! isEmptyFile "$captureStderr"; then
-        printf "%s\n" "stderr-FAILED $__test has STDERR:" 1>&2"$quietLog"
+        printf "%s\n" "stderr-FAILED $__test has STDERR:" >>"$quietLog"
         dumpPipe <"$captureStderr" >>"$quietLog"
       fi
     fi

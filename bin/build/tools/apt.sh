@@ -265,7 +265,12 @@ _usageAptPermissions() {
 
 # Install apt packages
 __aptInstall() {
-  aptNonInteractive install -y "$@"
+  # No way to hide the message
+  #
+  #     debconf: delaying package configuration, since apt-utils is not installed
+  #
+  # so just hide it always
+  aptNonInteractive install -y "$@" 2> >(grep -v 'apt-utils is not installed' 1>&2) || return $?
 }
 
 # Uninstall apt packages
@@ -292,7 +297,7 @@ __aptUpgrade() {
 # See: packageUpdate
 # package.sh: true
 __aptUpdate() {
-  aptNonInteractive update -y "$@"
+  aptNonInteractive update -y "$@" || return $?
 }
 
 # Usage: {fn}

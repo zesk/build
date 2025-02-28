@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Most Linux fall here: Alpine Ubuntu Debian FreeBSD
+#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
