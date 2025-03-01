@@ -133,6 +133,8 @@ testIdenticalCheckSingles() {
 
   identicalError=$(_code identical)
 
+  assertEquals --line "$LINENO" 105 "$identicalError" || return $?
+
   #
   # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
   #

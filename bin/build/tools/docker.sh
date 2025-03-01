@@ -234,7 +234,7 @@ _dockerEnvFromBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+
 # Run a build container using given docker image.
 #
 # Runs ARM64 by default.

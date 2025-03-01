@@ -145,7 +145,7 @@ __packageUpFunction() {
   if ! $showLog; then
     exec 1>&3
   fi
-  ! $verboseFlag || statusMessage --last timingReport "$start" "$verb in"
+  ! $verboseFlag || statusMessage --last timingReport "$start" "$suffix $(decorate subtle "completed in")"
   date +%s >"$name" || :
 }
 
@@ -209,7 +209,7 @@ packageWhich() {
       --force)
         forceFlag=true
         ;;
-      --verbose)
+      --show-log | --verbose)
         vv=("$argument")
         ;;
       # IDENTICAL managerArgumentHandler 5
@@ -370,7 +370,6 @@ packageInstall() {
         ;;
       --verbose)
         verboseFlag=true
-        vv+=(--show-log)
         ;;
       --show-log)
         vv+=(--show-log)
@@ -394,6 +393,8 @@ packageInstall() {
   __start=$(timingStart) || return $?
   installed="$(__catchEnvironment "$usage" mktemp)" || return $?
   __catchEnvironment "$usage" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
+  local __installStart
+  __installStart=$(timingStart) || return $?
   __catchEnvironment "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
 
   local standardPackages=() actualPackages=() package installed installFunction
@@ -437,7 +438,8 @@ packageInstall() {
   if ! $showLog; then
     exec 1>&3
   fi
-  ! $verboseFlag || statusMessage --last timingReport "$__start" "Installed ${packages[*]+"${packages[*]}"} in"
+  ! $verboseFlag || statusMessage timingReport "$__installStart" "Installed ${packages[*]+"${packages[*]}"} in"
+  ! $verboseFlag || printf -- " %s\n" "($(timingReport "$__start" "total"))"
 }
 _packageInstall() {
   # _IDENTICAL_ usageDocument 1

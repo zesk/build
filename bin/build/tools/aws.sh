@@ -68,7 +68,7 @@ awsInstall() {
     __catchEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" || _clean $? "${clean[@]}" || return $?
     __catchEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || _clean $? "${clean[@]}" || return $?
     __catchEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" || _clean $? "${clean[@]}" || return $?
-    version="$(__catchEnvironment "$usage" aws --version)" || _clean $? "${clean[@]}" || return $?
+    version="$(__catchEnvironment "$usage" __awsWrapper --version)" || _clean $? "${clean[@]}" || return $?
     printf "%s %s\n" "$version" "$(__catchEnvironment "$usage" timingReport "$start" OK)" || return $?
     __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   }
@@ -530,6 +530,7 @@ awsSecurityGroupIPModify() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
+
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
@@ -582,10 +583,13 @@ awsSecurityGroupIPModify() {
         __throwArgument "unknown argument: $argument" || return $?
         ;;
     esac
-    shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 
-  __catchEnvironment "$usage" awsInstall || return $?
+  [ -n "$profileName" ] || awsHasEnvironment || __throwEnvironment "$usage" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
+
+  ! whichExists aws || __catchEnvironment "$usage" awsInstall || return $?
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
@@ -594,6 +598,7 @@ awsSecurityGroupIPModify() {
     region="${AWS_REGION-}"
     [ -n "$region" ] || __throwArgument "$usage" "AWS_REGION or --region is required" || return $?
   fi
+
   awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
 
   [ -n "$mode" ] || __throwArgument "$usage" "--add, --remove, or --register is required" || return $?
@@ -615,16 +620,18 @@ awsSecurityGroupIPModify() {
   #
   # 3 modes: Add, Remove, Register
   #
-
+  # PAGER=cat "aws" "--no-paginate" "ec2" "describe-security-groups" "--region" "us-east-2" "--group-id" "sg-01bbe46ae4419a3ec" "--output" "text" "--query" "SecurityGroups[*].IpPermissions[*]"
+  # PAGER=cat aws --no-paginate ec2 describe-security-groups --region us-east-2 --group-id sg-01bbe46ae4419a3ec --output text --query 'SecurityGroups[*].IpPermissions[*]'
   #
   # Remove + Register
   #
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    __catchEnvironment "$usage" aws "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" | tee "$tempErrorFile" || _undo $? dumpPipe "ERRORS" <"$tempErrorFile" 1>&2 || return $?
+    __catchEnvironment "$usage" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || _clean "$?" "$tempErrorFile" || return $?
 
-    foundIP=$(grep "$description" "$tempErrorFile" | head -1 | awk '{ print $2 }') || :
+    foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
+
     __catchEnvironment "$usage" rm -f "$tempErrorFile" || return $?
 
     if [ -z "$foundIP" ]; then
@@ -639,7 +646,7 @@ awsSecurityGroupIPModify() {
       return 0
     else
       __awsSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      __catchEnvironment "$usage" aws "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" || return $?
+      __catchEnvironment "$usage" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" || return $?
     fi
   fi
   if [ "$mode" != "--remove" ]; then
@@ -647,15 +654,12 @@ awsSecurityGroupIPModify() {
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
 
-    if ! aws "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile"; then
+    if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile"; then
       if grep -q "Duplicate" "$tempErrorFile"; then
-        rm -f "$tempErrorFile" || :
         printf "%s\n" "$(decorate yellow "duplicate")"
-        return 0
+        rm -f "$tempErrorFile"
       else
-        wrapLines "$(decorate error "ERROR : : : : ") $(decorate code)" "$(decorate blue ": : : : ERROR")$(decorate reset)" <"$tempErrorFile" 1>&2
-        rm -f "$tempErrorFile" || :
-        __throwEnvironment "$usage" "Failed to authorize-security-group-ingress" || return $?
+        __throwEnvironment "$usage" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || _clean $? "$tempErrorFile" || return $?
       fi
     fi
   fi
@@ -668,6 +672,19 @@ _awsSecurityGroupIPModify() {
 __awsSGOutput() {
   local title="$1" ip="$2" group="$3" port="$4"
   printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$foundIP")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
+}
+
+# Requires: aws env
+__awsWrapper() {
+  local command=(aws --no-paginate) configFile=".aws/config"
+
+  # AWS_SHARED_CREDENTIALS_FILE
+  # AWS_CONFIG_FILE
+  home=$(userHome) || return $?
+  [ -f "$configFile" ] || configFile=""
+  # env -u unsets a variable name
+  [ -n "${AWS_PROFILE-}" ] || command=(env -u AWS_PROFILE "${command[@]}")
+  AWS_CONFIG_FILE="$configFile" AWS_PROFILE="${AWS_PROFILE-}" AWS_PAGER="" "${command[@]}" "$@"
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
@@ -814,11 +831,9 @@ awsIPAccess() {
         port=$(serviceToPort "$service") || __throwEnvironment "$usage" "serviceToPort $service failed 2nd round?" || return $?
       fi
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
-      if $optionRevoke; then
-        __catchEnvironment "$usage" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" --remove "${sgArgs[@]}" || return $?
-      else
-        __catchEnvironment "$usage" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" --register "${sgArgs[@]}" || return $?
-      fi
+
+      local actionArg="--register" && ! $optionRevoke || actionArg="--remove"
+      __catchEnvironment "$usage" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" "$actionArg" "${sgArgs[@]}" || return $?
     done
   done
 }

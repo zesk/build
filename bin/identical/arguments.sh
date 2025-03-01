@@ -179,7 +179,3 @@ ___documentTemplateFunctionSimple() {
   # _IDENTICAL_ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-___documentTemplateFunctionComplex() {
-  # _IDENTICAL_ usageDocumentComplex 1
-  usageDocumentComplex "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}

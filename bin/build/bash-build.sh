@@ -29,13 +29,19 @@ __bashBuild() {
   if home=$(userHome); then
     local extraCommands=() rcFile="$home/.bashrc"
     if [ "${1-}" = "--rc-extras" ]; then
-      shift && while [ $# -gt 0 ]; do [ "$1" != "--" ] && extraCommands+=("$1") && shift || shift && break; done
+      shift
+      while [ $# -gt 0 ]; do
+        if [ "$1" == "--" ]; then
+          shift && break
+        fi
+        extraCommands+=("$1") && shift
+      done
     fi
     tools="$(realPath "$tools")" || return $?
     if [ ! -f "$rcFile" ]; then
-      __bashRunCommandsDefault "$tools" >"$rcFile" || _environment "Failed to create $rcFile" || return $?
+      __bashRunCommandsDefault "$tools" "${extraCommands[@]+"${extraCommands[@]}"}" >"$rcFile" || _environment "Failed to create $rcFile" || return $?
     else
-      __bashRunCommandsAppendIfNeeded "$tools" "$rcFile" || _environment "Failed to update $rcFile" || return $?
+      __bashRunCommandsAppendIfNeeded "$tools" "$rcFile" "${extraCommands[@]+"${extraCommands[@]}"}" || _environment "Failed to update $rcFile" || return $?
     fi
   fi
   exec bash "$@"

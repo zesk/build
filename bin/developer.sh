@@ -8,7 +8,7 @@
 
 __buildAnnounce() {
   decorate info "Added aliases $(decorate each code t tools IdenticalRepair)"
-  decorate info "Available functions $(decorate each code buildPreRelease buildAddTool)"
+  decorate info "Available functions $(decorate each code buildPreRelease buildAddTool buildContainer)"
 }
 
 __buildAliases() {
@@ -57,6 +57,7 @@ buildPreRelease() {
   return "$exitCode"
 }
 
+# Argument: name - String. Optional. Name of tool to add.
 buildAddTool() {
   local usage="_return" home file
 
@@ -82,6 +83,23 @@ buildAddTool() {
     git add "$home/$file"
     shift
   done
+}
+
+# Argument: image - String. Optional. Image to load
+# Load Zesk Build in a preconfigured container
+# Starts in `/root/build`
+# Loads .env.STAGING first
+buildContainer() {
+  local image="${1-ubuntu:latest}"
+  local name="${image%:latest}"
+  local ee=(
+    "bashPrompt --label \"$name\" bashPromptModule_binBuild bashPromptModule_ApplicationPath bashPromptModule_dotFilesWatcher bashPromptModule_iTerm2Colors"
+    "approved=\$(dotFilesApprovedFile)"
+    "[ -f \"\$approved\" ] || dotFilesApproved bash mysql >>\$approved"
+    "packageWhich --verbose shasum apt-rdepends"
+    "cd ~/build"
+  )
+  dockerLocalContainer --image "$image" --path /root/build --env-file .env.STAGING /root/build/bin/build/bash-build.sh --rc-extras "${ee[@]}" -- "$@"
 }
 
 __buildAliases

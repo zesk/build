@@ -53,13 +53,10 @@ testAWSIPAccess() {
   # Work using environment variables
   __testSection "CLI IP and env credentials"
 
-  echo "${BASH_SOURCE[0]}:${FUNCNAME[0]}:$LINENO" # DEBUG
   awsIPAccess --verbose --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   assertExitCode --dump --line "$LINENO" 0 awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
-  echo "${BASH_SOURCE[0]}:${FUNCNAME[0]}:$LINENO" # DEBUG
   assertExitCode --dump --line "$LINENO" 0 awsIPAccess --revoke --services 22,3306 --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
-  echo "${BASH_SOURCE[0]}:${FUNCNAME[0]}:$LINENO" # DEBUG
 
   unset AWS_ACCESS_KEY_ID
   unset AWS_SECRET_ACCESS_KEY

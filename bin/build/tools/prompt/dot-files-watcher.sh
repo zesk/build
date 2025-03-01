@@ -43,7 +43,7 @@ bashPromptModule_dotFilesWatcher() {
       continue
     fi
     unapproved+=("$base")
-  done < <(find "$HOME" -name ".*" -maxdepth 1 | sort)
+  done < <(find "$HOME" -maxdepth 1 -name ".*" | sort)
 
   [ $((${#askFiles[@]} + ${#askDirectories[@]})) -gt 0 ] || return 0
 
@@ -89,7 +89,7 @@ __dotFilesApproved() {
   local items=()
   while [ $# -gt 0 ]; do
     case "$1" in
-      "bash") items+=(".bash_profile" ".bash_history" ".inputrc" ".ssh/" ".cache/" ".config/" ".local/") ;;
+      "bash") items+=(".bash_profile" ".bashrc" ".profile" ".bash_history" ".inputrc" ".ssh/" ".cache/" ".config/" ".local/") ;;
       "git") items+=(".git-credentials" ".gitconfig" ".gitignore_global") ;;
       "darwin") items+=(".DS_Store" ".MacOSX/" ".TemporaryItems/" ".Trash/") ;;
       "mysql") items+=(".my.cnf" ".mylogin.cnf" ".mysql_history") ;;
