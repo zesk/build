@@ -41,6 +41,7 @@ _assertTiming() {
     stamp="$(head -n 1 <"$timingFile")"
     if isUnsignedInteger "$stamp"; then
       if ! timingReport "$stamp"; then
+        printf "%s\n" "$(decorate error "$(dumpPipe --vanish "$timingFile" "Deleting bad timing")")"
         rm -f "$timingFile" || :
         return
       fi
@@ -50,7 +51,7 @@ _assertTiming() {
   else
     decorate info "First test ($__BUILD_SAVED_CACHE_DIRECTORY)"
   fi
-  timingStart >"$timingFile" || :
+  timingStart >"$timingFile" && sync -f
 }
 
 __assertedFunctions() {

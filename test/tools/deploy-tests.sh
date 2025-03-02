@@ -188,6 +188,8 @@ _waitForValue() {
 
 # Tag: slow deployment php-install package-install
 testDeployApplication() {
+  exec 2>&1
+
   local d quietLog migrateVersion startingValue firstArgs home lastOne t
 
   set -eou pipefail

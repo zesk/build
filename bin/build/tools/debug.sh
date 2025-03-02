@@ -503,8 +503,7 @@ outputTrigger() {
   fi
 
   local message
-  message=$(__catchEnvironment "$usage" dumpPipe <"$error") || return $?
-  rm -rf "$error" || :
+  message=$(__catchEnvironment "$usage" dumpPipe --vanish "$error") || return $?
   __throwEnvironment "$usage" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
 }
 _outputTrigger() {

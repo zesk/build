@@ -789,9 +789,9 @@ __testRun() {
     else
       resultCode=$?
       stickyCode=$errorTest
-      printf "%s\n" "FAILED $__test" >>"$quietLog"
+      printf "%s\n" "FAILED [$resultCode] $__test" >>"$quietLog"
       if ! isEmptyFile "$captureStderr"; then
-        printf "%s\n" "stderr-FAILED $__test has STDERR:" >>"$quietLog"
+        printf "%s\n" "stderr-FAILED [$resultCode] $__test has STDERR:" >>"$quietLog"
         dumpPipe <"$captureStderr" >>"$quietLog"
       fi
     fi
@@ -811,7 +811,7 @@ __testRun() {
     printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
   else
     printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
-    buildFailed "$quietLog" || :
+    buildFailed --tail "$quietLog" || :
     __TEST_SUITE_RESULT="test $__test failed"
     stickyCode=$errorTest
   fi
