@@ -6,3 +6,5 @@
 
 {cursorGet}
 {cursorSet}
+{plasterLines}
+{bigTextAt}

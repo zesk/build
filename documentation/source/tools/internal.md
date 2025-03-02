@@ -7,3 +7,6 @@
 {__buildDocumentationBuild}
 {__buildTestSuite}
 {buildPreRelease}
+
+{buildAddTool}
+{buildContainer}

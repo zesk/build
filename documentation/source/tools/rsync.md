@@ -1,1 +1,3 @@
 # rsync Tools
+
+{rsyncInstall}

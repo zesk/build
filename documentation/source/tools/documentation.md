@@ -7,6 +7,9 @@
 ## Building documentation
 
 {documentationBuild}
+{documentationBuildCache}
+{documentationBuildEnvironment}
+
 {documentationTemplateUpdate}
 {documentationTemplate}
 {documentationUnlinked}
