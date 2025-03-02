@@ -811,7 +811,7 @@ __testRun() {
     printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
   else
     printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
-    buildFailed --tail "$quietLog" || :
+    buildFailed "$quietLog" || :
     __TEST_SUITE_RESULT="test $__test failed"
     stickyCode=$errorTest
   fi
