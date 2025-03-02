@@ -530,7 +530,6 @@ awsSecurityGroupIPModify() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
       # _IDENTICAL_ --help 4
@@ -598,7 +597,7 @@ awsSecurityGroupIPModify() {
     region="${AWS_REGION-}"
     [ -n "$region" ] || __throwArgument "$usage" "AWS_REGION or --region is required" || return $?
   fi
-
+  awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
   awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
 
   [ -n "$mode" ] || __throwArgument "$usage" "--add, --remove, or --register is required" || return $?

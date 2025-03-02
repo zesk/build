@@ -117,7 +117,7 @@ documentationBuildEnvironment() {
       shortDesc="$(printf "%s\n" "$description" | head -n 1)"
     fi
 
-    if ! inArray "$categoryName" "${categories[@]}"; then
+    if [ "${#categories[@]}" -eq 0 ] || ! inArray "$categoryName" "${categories[@]}"; then
       __catchEnvironment "$usage" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || return $?
       categories+=("$categoryName")
     fi
