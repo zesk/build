@@ -38,12 +38,12 @@ buildFailed() {
 
   shift
   failBar="$(decorate reset)$(decorate magenta "$(repeat 80 "❌")")"
-  statusMessage printf -- "%s"
+  statusMessage printf -- "%s" ""
   bigText "Failed" | wrapLines "    " "  " | wrapLines --fill "*" "" "$(decorate error)" "$(decorate reset)"
   # shellcheck disable=SC2094
-  statusMessage --last printf -- "\n%s\n%s\n" \
-    "$failBar" \
-    "$(dumpPipe --tail "$(basename "$quietLog")" "$@" --lines "$showLines" <"$quietLog")"
+  statusMessage --last printf -- "%s\n" "$failBar"
+  # shellcheck disable=SC2094
+  dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
   _environment "Build failed:" "$@" || return $?
 }
 
