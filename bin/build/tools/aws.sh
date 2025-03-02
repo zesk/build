@@ -598,7 +598,6 @@ awsSecurityGroupIPModify() {
     [ -n "$region" ] || __throwArgument "$usage" "AWS_REGION or --region is required" || return $?
   fi
   awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
-  awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
 
   [ -n "$mode" ] || __throwArgument "$usage" "--add, --remove, or --register is required" || return $?
 
