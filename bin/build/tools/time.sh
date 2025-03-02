@@ -68,16 +68,13 @@ timingReport() {
   local start="${1-}"
   shift
   if isUnsignedInteger "$start"; then
-    local prefix=
+    local prefix=""
     if [ $# -gt 0 ]; then
       prefix="$(decorate green "$@") "
     fi
-    local delta value seconds
-    delta=$(($(timingStart) - start)) || return $?
-    value=$(timingFormat "$delta") || return $?
-    seconds=2
-    [ "$value" != "1.000" ] || seconds=1
-    printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$seconds" second seconds)")"
+    local value
+    value=$(timingFormat "$(($(timingStart) - start))") || :
+    printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$value" second seconds)")"
   else
     printf "%s %s %s\n" "$*" "$(decorate red "$start")" "$(decorate warning "(not integer)")"
   fi
