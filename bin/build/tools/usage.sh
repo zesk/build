@@ -246,7 +246,8 @@ usageArgumentDirectory() {
     return $?
   fi
   directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
-  printf "%s\n" "${directory%/}"
+  [ "${#directory}" -le 1 ] || directory="${directory%/}"
+  printf "%s\n" "${directory}"
 }
 
 # Validates a value as a directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
