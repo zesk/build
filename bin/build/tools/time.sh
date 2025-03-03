@@ -72,9 +72,15 @@ timingReport() {
     if [ $# -gt 0 ]; then
       prefix="$(decorate green "$@") "
     fi
-    local value
-    value=$(timingFormat "$(($(timingStart) - start))") || :
-    printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$value" second seconds)")"
+    local value end delta
+    end=$(timingStart)
+    delta=$((end - start))
+    if [ "$delta" -lt 0 ]; then
+      printf "%s%s\n" "$prefix" "$(decorate red "$end - $start => $delta NEGATIVE")"
+    else
+      value=$(timingFormat "$delta") || :
+      printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$value" second seconds)")"
+    fi
   else
     printf "%s %s %s\n" "$*" "$(decorate red "$start")" "$(decorate warning "(not integer)")"
   fi

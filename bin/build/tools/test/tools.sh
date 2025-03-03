@@ -761,6 +761,8 @@ __testRun() {
   __testSection "$__test" || :
   printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
 
+  __environment requireFileDirectory "$quietLog" || return $?
+
   printf "%s\n" "Running $__test" >>"$quietLog"
 
   local resultCode=0 stickyCode=0
