@@ -645,16 +645,17 @@ _directoryGamutFileWrapper() {
         [ $# -gt 0 ] || break
         ;;
       *)
+        [ -z "$directory" ] || __throwArgument "$usage" "Directory already supplied" || return $?
         directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
-        if ! _directoryGamutFile "$comparator" "$directory" "${findArgs[@]+"${findArgs[@]}"}"; then
-          __throwEnvironment "$usage" "No files in $(decorate file "$directory") ("${findArgs[*]-}")" || return $?
-        fi
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$directory" ] || __throwArgument "$usage" "directory is required" || return $?
+  if ! _directoryGamutFile "$comparator" "$directory" "${findArgs[@]+"${findArgs[@]}"}"; then
+    __throwEnvironment "$usage" "No files in $(decorate file "$directory") ("${findArgs[*]-}")" || return $?
+  fi
 }
 
 # Find the oldest file in a directory
