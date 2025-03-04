@@ -99,8 +99,6 @@ testIdenticalChecks() {
   assertExitCode --line "$LINENO" --stdout-match Verified 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL' || return $?
 
   clearLine && decorate info "same file mismatch"
-  identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL'
-  echo "Exit code: $?"
   assertExitCode --dump --line "$LINENO" --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
 
   clearLine && decorate info "overlap failure"

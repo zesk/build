@@ -137,6 +137,7 @@ __identicalCheckRepair() {
   fileA=$(realPath "$fileA") || _argument "realPath fileA $fileA" || return $?
   fileB=$(realPath "$fileB") || _argument "realPath fileB $fileB" || return $?
   shift 4 || _argument "Unable to shift 4 in ${FUNCNAME[0]}" || return $?
+  [ "$fileA" != "$fileB" ] || _environment "Repair in same file not possible: $(decorate file "$fileA")  (Prefix: $(decorate code "$prefix"))" || return $?
   while [ $# -gt 0 ]; do
     checkPath="$1"
     statusMessage decorate info "Checking path $checkPath ..."
@@ -151,7 +152,7 @@ __identicalCheckRepair() {
     fi
     shift
   done
-  _environment "No repair found between $fileA and $fileB" || return $?
+  _environment "No repair found between $(decorate file "$fileA") and $(decorate file "$fileB") (Prefix: $(decorate code "$prefix"))" || return $?
 }
 
 _identicalCheckSinglesChecker() {
