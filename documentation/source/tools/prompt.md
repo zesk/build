@@ -35,6 +35,7 @@ Examples:
 - [`bashPromptModule_ApplicationPath`](#bashPromptModule_ApplicationPath)
 - [`bashPromptModule_dotFilesWatcher`](#bashPromptModule_dotFilesWatcher)
 - [`bashPromptModule_iTerm2Colors](#{bashPromptModule_iTerm2Colors})
+- [`bashPromptModule_reloadChanges](#{bashPromptModule_iTerm2Colors})
 
 To enable:
 
@@ -47,6 +48,8 @@ To enable:
 {bashPromptModule_dotFilesWatcher} 
 
 {bashPromptModule_iTerm2Colors}
+
+{bashPromptModule_reloadChanges}
 
 ## dotFilesWatcher Tools
 
@@ -62,3 +65,7 @@ Any new dot files which appear will then show a warning in your console.
 
 {dotFilesApprovedFile}
 {dotFilesApproved}
+
+## reloadChanges Tools
+
+{reloadChanges}

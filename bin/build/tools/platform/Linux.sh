@@ -69,11 +69,11 @@ __hostname() {
   hostname -f
 }
 
-# Mac OS X has python3 installed by default so this should not be an issue
+# Date support for %3N helps with milliseconds
 __timestamp() {
-  local timestamp milliseconds
-  read -r timestamp milliseconds < <(date '+%s %3N')
-  printf "%d\n" $((timestamp * 1000 + milliseconds))
+  local value
+  value=$(date '+%s:%3N')
+  printf "%d\n" $((${value:*} * 1000 + ${value%*:}))
 }
 
 if isAlpine; then

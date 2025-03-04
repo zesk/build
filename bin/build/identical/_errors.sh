@@ -6,7 +6,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-
 # _IDENTICAL_ _errors EOF
 
 # Return `argument` error code always. Outputs `message ...` to `stderr`.

@@ -28,6 +28,7 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 
 {usageArgumentExists}
 {usageArgumentFile}
+{usageArgumentRealFile}
 {usageArgumentLink}
 {usageArgumentFileDirectory}
 {usageArgumentDirectory}

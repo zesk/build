@@ -77,7 +77,6 @@ exampleFunction() {
   # IDENTICAL startBeginTiming 1
   start=$(timingStart) || return $?
 
-
   # Load MANPATH environment
   export MANPATH
   __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
@@ -98,7 +97,6 @@ _exampleFunction() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # IDENTICAL __source 19
 

@@ -174,7 +174,7 @@ usageArgumentPositiveInteger() {
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if usage fails
 # Argument: variableName - Required. String. Name of variable being tested
-# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: variableValue - Required. String. Value to test.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
@@ -188,6 +188,27 @@ usageArgumentFile() {
   fi
   __catchArgumentHelper "file" "${args[@]}" test -f || return $?
 }
+
+# Validates a value is not blank and is a file and does `realPath` on it.
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Value to test.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentRealFile() {
+  local usage="$1" args value
+  args=("$@")
+  args[3]="${4-}"
+  if [ ${#args[@]} -ne 4 ]; then
+    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+  fi
+
+  value="$(__catchArgumentHelper "file" "${args[@]}" test -f)" || return $?
+  __catchEnvironment "$usage" realPath "$value" || return $?
+}
+
 
 # Validates a value is not blank and exists in the file system
 # Upon success, outputs the file name

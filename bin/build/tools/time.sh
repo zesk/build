@@ -19,7 +19,7 @@
 timingStart() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-  __timestamp 2>/dev/null || printf "%s\n" "$(($(date +%s) * 1000))"
+  __timestamp
 }
 _timingStart() {
   ! false || timingStart --help

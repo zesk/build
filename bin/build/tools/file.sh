@@ -642,6 +642,7 @@ _directoryGamutFileWrapper() {
           findArgs+=("$1")
           shift
         done
+        [ $# -gt 0 ] || break
         ;;
       *)
         directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?

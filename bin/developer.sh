@@ -104,5 +104,6 @@ buildContainer() {
 
 __buildAliases
 __buildAnnounce
+reloadChanges bin/build/tools.sh bin "Zesk Build"
 
 unset __buildAliases __buildAnnounce

@@ -46,12 +46,12 @@ _assertTiming() {
         return
       fi
     else
-      decorate error "Timestamp saved was invalid: $stamp"
+      decorate error "Timestamp saved was invalid: $(dumpPipe timingFile <"$timingFile")"
     fi
   else
     decorate info "First test ($__BUILD_SAVED_CACHE_DIRECTORY)"
   fi
-  timingStart >"$timingFile" && sync -f
+  timingStart 1>&2 >"$timingFile" && sync -f 1>&2 >>"$timingFile" || printf "%s\n" "$? error from timingStart/sync" >>"$timingFile" || :
 }
 
 __assertedFunctions() {
