@@ -71,9 +71,11 @@ __hostname() {
 
 # Date support for %3N helps with milliseconds
 __timestamp() {
-  local value
-  value=$(date '+%s:%3N')
-  printf "%d\n" $((${value:*} * 1000 + ${value%*:}))
+  local sec ms
+  sec=$(date '+%s:%3N')
+  local ms="${sec#*:}"
+  ms=${ms#0}
+  printf "%d\n" $((${sec%:*} * 1000 + ${ms#0}))
 }
 
 if isAlpine; then
