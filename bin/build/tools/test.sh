@@ -208,7 +208,7 @@ dumpPipe() {
       local name
       name=$(decorate file "$(basename "$item")" "$item")
       # Recursion - only when --vanish is a parameter
-      __catchEnvironment "$usage" dumpPipe "--${endBinary}" --lines "$showLines" "${names[@]}" "$name" <"$item" || return $?
+      __catchEnvironment "$usage" dumpPipe "--${endBinary}" --lines "$showLines" "${names[@]+"${names[@]}"}" "$name" <"$item" || return $?
       __catchEnvironment "$usage" rm -rf "$item" || return $?
     done
     return 0
