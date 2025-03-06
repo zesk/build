@@ -206,3 +206,13 @@ testHousekeeper() {
 
   __environment rm -rf "$testDir" || return $?
 }
+
+testDumpPipe() {
+  local ff usage="_return"
+
+  ff=$(fileTemporaryName "$usage") || return $?
+  decorate code "Hello, world" >>"$ff"
+  assertFileExists --line "$LINENO" "$ff" || return $?
+  assertExitCode --line "$LINENO" 0 dumpPipe --vanish "$ff" || return $?
+  assertFileDoesNotExist --line "$LINENO" "$ff" || return $?
+}
