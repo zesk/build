@@ -8,6 +8,7 @@
 
 {environmentVariables}
 {environmentVariableNameValid}
+{environmentOutput}
 
 ## Variable lists
 

@@ -368,7 +368,7 @@ _environmentFileLoad() {
 
 # List environment variables related to security
 environmentSecureVariables() {
-  printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
+  printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
 }
 
 # List environment variables related to application deployments
@@ -536,6 +536,21 @@ environmentFileApplicationVerify() {
   [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
 }
 _environmentFileApplicationVerify() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Output all exported environment variables, hiding secure ones and ones prefixed with underscore
+# See: environmentSecureVariables
+environmentOutput() {
+  local hideSecure="_" secureVar
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  while read -r secureVar; do
+    hideSecure="$hideSecure\|$secureVar"
+  done < <(environmentSecureVariables)
+  declare -px | removeFields 2 | grep '=' | grep -v -e "^($hideSecure)=" | grep -v '^_'
+}
+_environmentOutput() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

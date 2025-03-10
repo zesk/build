@@ -258,3 +258,31 @@ testEnvironmentValueReadDefault() {
 
   __environment rm -rf "$envFile" || return $?
 }
+
+testEnvironmentOutput() {
+  local envFile
+
+  envFile=$(fileTemporaryName "_return") || return $?
+
+  export ZESK_BUILD_ROCKS
+  export __HIDE_THIS_STUFF
+  export _HIDE_THIS_STUFF
+
+  ZESK_BUILD_ROCKS="$(date)"
+  __HIDE_THIS_STUFF=FAIL
+  _HIDE_THIS_STUFF=FAIL
+
+  __environment environmentOutput >>"$envFile" || return $?
+
+  assertFileContains --line "$LINENO" "$envFile" ZESK_BUILD_ROCKS= || return $?
+  assertFileDoesNotContain --line "$LINENO" "$envFile" "FAIL" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$envFile" "HIDE_THIS" || return $?
+  assertExitCode --line "$LINENO" 0 grep -e "^ZESK_BUILD_ROCKS=" "$envFile" || return $?
+  while read -r envName; do
+    assertExitCode --line "$LINENO" 0 grep -v -e "^$envName=" "$envFile" || return $?
+  done < <(environmentSecureVariables)
+
+  unset ZESK_BUILD_ROCKS __HIDE_THIS_STUFF _HIDE_THIS_STUFF
+
+  __environment rm -rf "$envFile" || return $?
+}
