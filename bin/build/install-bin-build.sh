@@ -288,17 +288,6 @@ _installRemotePackage() {
   applicationHome=$(__catchEnvironment "$usage" realPath "$myPath/$relative") || return $?
   installPath="$applicationHome/$packagePath"
 
-  if ! $forceFlag && [ -n "$versionFunction" ]; then
-    local newVersion=""
-    if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$installPath"); then
-      printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
-      __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
-      return 0
-    fi
-    forceFlag=true
-    installReason="newer version available: $newVersion"
-  fi
-
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
       url=$(__catchEnvironment "$usage" "$urlFunction" "$usage") || return $?
@@ -317,7 +306,17 @@ _installRemotePackage() {
       printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate blue "$installReason")"
     fi
     installFlag=true
-  elif $forceFlag; then
+  elif ! $forceFlag && [ -n "$versionFunction" ]; then
+    local newVersion=""
+    if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$installPath"); then
+      printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
+      __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
+      return 0
+    fi
+    forceFlag=true
+    installReason="newer version available: $newVersion"
+  fi
+  if $forceFlag; then
     [ -n "$installReason" ] || installReason="directory exists"
     printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "$installReason")"
     installFlag=true
@@ -366,7 +365,7 @@ __installRemotePackage() {
 
 # Debug is enabled, show why
 # Requires: decorate
-# Debugging: 32d4d8d55438f3ee975344ed5322e9aedc762648
+# Debugging: da39a3ee5e6b4b0d3255bfef95601890afd80709
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }
@@ -441,6 +440,7 @@ __installRemotePackageGitCheck() {
 # Requires: grep printf chmod wait
 # Requires: _environment isUnsignedInteger cat _clean
 __installRemotePackageLocal() {
+  local source="$1" myBinary="$2" relTop="$3"
   local source="$1" myBinary="$2" relTop="$3"
   local log="$myBinary.$$.log"
   {

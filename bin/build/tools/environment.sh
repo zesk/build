@@ -566,3 +566,9 @@ _environmentOutput() {
 environmentVariables() {
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
 }
+
+# Adds an environment variable file to a project
+environmentAddFile() {
+  local usage="_${FUNCNAME[0]}"
+
+}

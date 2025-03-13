@@ -216,3 +216,13 @@ testDumpPipe() {
   assertExitCode --line "$LINENO" 0 dumpPipe --vanish "$ff" || return $?
   assertFileDoesNotExist --line "$LINENO" "$ff" || return $?
 }
+
+testOutputTrigger() {
+  local usage="_return"
+
+  assertExitCode --stderr-match YoYoBaby --line "$LINENO" 1 outputTrigger --name YoYoBaby <<<"Hello" || return $?
+  local temp
+  temp=$(fileTemporaryName "$usage") || return $?
+  assertExitCode --line "$LINENO" 0 outputTrigger --name YoYoBaby <"$temp" || return $?
+  __usageEnvironemtn "$usage" rm -rf "$temp" || return $?
+}
