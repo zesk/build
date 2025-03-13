@@ -9,6 +9,7 @@
 {environmentVariables}
 {environmentVariableNameValid}
 {environmentOutput}
+{environmentAddFile}
 
 ## Variable lists
 

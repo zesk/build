@@ -570,5 +570,53 @@ environmentVariables() {
 # Adds an environment variable file to a project
 environmentAddFile() {
   local usage="_${FUNCNAME[0]}"
+  local name environmentNames=()
 
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        name=$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1") || return $?
+        environmentNames+=("$name")
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  new
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ ${#environmentNames[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $(decorate code environmentVariable)" || return $?
+
+  local year company
+
+  year=$(__catchEnvironment "$usage" date +%Y) || return $?
+  company=$(buildEnvironmentGet BUILD_COMPANY)
+  for name in "${environmentNames[@]}"; do
+    local path="$home/bin/env/$name.sh"
+    if [ -f "$path" ] && ! isEmptyFile "$path"; then
+      if [ ! -x "$path" ]; then
+        statusMessage --last decorate warning "Making $(decorate file "$path") executable ..."
+        __catchEnvironment "$usage" chmod +x "$path" || return $?
+      else
+        statusMessage --last decorate info "Exists: $(decorate file "$path")"
+      fi
+    else
+      __catchEnvironment "$usage" printf -- "%s\n" "#!/usr/bin/env bash" "# Copyright &copy; $year $company" "# Type: String" "# All about $name and how it is used" "export $name" "$name=\"\${$name-}\"" >"$path" || return $?
+      __catchEnvironment "$usage" chmod +x "$path" || return $?
+      statusMessage --last decorate success "Created $(decorate file "$path")"
+    fi
+  done
+}
+_environmentAddFile() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

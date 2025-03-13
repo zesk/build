@@ -224,5 +224,5 @@ testOutputTrigger() {
   local temp
   temp=$(fileTemporaryName "$usage") || return $?
   assertExitCode --line "$LINENO" 0 outputTrigger --name YoYoBaby <"$temp" || return $?
-  __usageEnvironemtn "$usage" rm -rf "$temp" || return $?
+  __usageEnvironment "$usage" rm -rf "$temp" || return $?
 }
