@@ -454,11 +454,13 @@ gitCommit() {
   fi
   __catchEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __throwEnvironment "$usage" "No changes to commit" || return $?
+  local notes
+  notes="$(releaseNotes)" || __throwEnvironment "$usage" "No releaseNotes?" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then
-    local notes
     statusMessage decorate info "Updating release notes ..."
-    notes="$(releaseNotes)" || __throwEnvironment "$usage" "No releaseNotes?" || return $?
-    __catchEnvironment "$usage" __gitCommitReleaseNotesUpdate "$comment" "$notes" || return $?
+    __catchEnvironment "$usage" __gitCommitReleaseNotesUpdate "$usage" "$notes" "$comment" || return $?
+  else
+    comment=$(__gitCommitReleaseNotesGetLastComment "$usage" "$notes") || return $?
   fi
   outputHandler="cat"
   ! $openLinks || outputHandler="urlOpener"
@@ -473,8 +475,8 @@ gitCommit() {
   return 0
 }
 __gitCommitReleaseNotesUpdate() {
-  local usage="_gitCommit"
-  local comment="$1" notes="$2" pattern displayNotes
+  local usage="$1" notes="$2" comment="$3"
+  local pattern displayNotes
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   displayNotes="${notes#"$home"/}"
@@ -489,6 +491,10 @@ __gitCommitReleaseNotesUpdate() {
     __catchEnvironment "$usage" statusMessage printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
     __catchEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
   fi
+}
+__gitCommitReleaseNotesGetLastComment() {
+  local usage="$1" notes="$2"
+  grep -e '^- ' "$notes" | tail -n 1 | cut -c 3-
 }
 _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
