@@ -461,6 +461,7 @@ gitCommit() {
     __catchEnvironment "$usage" __gitCommitReleaseNotesUpdate "$usage" "$notes" "$comment" || return $?
   else
     comment=$(__gitCommitReleaseNotesGetLastComment "$usage" "$notes") || return $?
+    [ -z "$comment" ] || __catchEnvironment "$usage" printf -- "%s from %s:\n%s\n" "$(decorate info "Using last release note line")" "$(decorate file "$notes")" "$(boxedHeading "$comment")" || return $?
   fi
   outputHandler="cat"
   ! $openLinks || outputHandler="urlOpener"
@@ -476,15 +477,14 @@ gitCommit() {
 }
 __gitCommitReleaseNotesUpdate() {
   local usage="$1" notes="$2" comment="$3"
-  local pattern displayNotes
+  local pattern
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-  displayNotes="${notes#"$home"/}"
   pattern="$(quoteGrepPattern "$comment")"
-  __catchEnvironment "$usage" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate value "$displayNotes") $(decorate decoration)")" "$(decorate reset)" || return $?
+  __catchEnvironment "$usage" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration)")" "$(decorate reset)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __catchEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
-    __catchEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(decorate info "Adding comment")" "$(decorate code "$displayNotes")" "$(boxedHeading "$comment")" || return $?
+    __catchEnvironment "$usage" printf -- "%s to %s:\n%s\n" "$(decorate info "Adding comment")" "$(decorate file "$notes")" "$(boxedHeading "$comment")" || return $?
     __catchEnvironment "$usage" git add "$notes" || return $?
     __catchEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
   else
