@@ -24,8 +24,8 @@ __iTerm2Notify() {
     iTerm2Attention !
     iTerm2Attention start
   fi
-  __echo hookRunOptional --next "${BASH_SOURCE[0]}" "notify" "$@"
-  echo "BUILD_HOOK_DIRS=$BUILD_HOOK_DIRS"
+  hookRunOptional --next "${BASH_SOURCE[0]}" "notify" "$@"
+  # echo "BUILD_HOOK_DIRS=$BUILD_HOOK_DIRS"
 }
 
 __iTerm2Notify "$@"

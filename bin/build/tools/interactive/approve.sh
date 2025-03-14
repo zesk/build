@@ -119,14 +119,18 @@ __interactiveApproveClear() {
 }
 
 # Maybe move this to its own thing if needed later
-# Usage: {fn} timeout attempts extras message
+# Usage: {fn} usage timeout attempts extras message
 __interactiveCountdownReadBoolean() {
   local usage="$1" && shift
-  local timeout="" rr=() extras icon="⏳" attempts prompt
+  local timeout="" rr=() extras icon="⏳" attempts prompt width=0
 
   if [ "$1" != "" ]; then
     rr=(-t 1)
     timeout=$(usageArgumentPositiveInteger "$usage" "timeout" "${1-}") || return $?
+    width="$timeout"
+    width="${#width}"
+    # milliseconds
+    timeout=$((timeout * 1000))
   fi
   shift
 
@@ -136,12 +140,10 @@ __interactiveCountdownReadBoolean() {
 
   local value start now elapsed=0 message="$*" counter=1 exitCode=0 prefix="" timingSuffix=""
   start=$(__environment timingStart) || return $?
-  width="$timeout"
-  width="${#width}"
 
   # IDENTICAL __interactiveCountdownReadBooleanStatus 3
   [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
-  [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
+  [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
   prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
 
   exitCode=2
@@ -157,7 +159,7 @@ __interactiveCountdownReadBoolean() {
       fi
       # IDENTICAL __interactiveCountdownReadBooleanStatus 3
       [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
-      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
       prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
       statusMessage printf -- "%s" ""
     done
@@ -172,7 +174,7 @@ __interactiveCountdownReadBoolean() {
       fi
       # IDENTICAL __interactiveCountdownReadBooleanStatus 3
       [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
-      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$((timeout - elapsed))")")"
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
       prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
     fi
   done

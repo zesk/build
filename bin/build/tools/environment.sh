@@ -591,7 +591,7 @@ environmentAddFile() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  new
+
   local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   [ ${#environmentNames[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $(decorate code environmentVariable)" || return $?

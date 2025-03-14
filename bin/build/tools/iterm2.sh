@@ -281,7 +281,7 @@ iTerm2Image() {
 
     image=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" cat >"$image" || return $?
-    __catchEnvironment "$usage" __echo __iTerm2Image "$image" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")" || return $?
+    __catchEnvironment "$usage" __iTerm2Image "$image" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")" || return $?
     __catchEnvironment "$usage" rm -rf "$image" || return $?
   fi
 }
