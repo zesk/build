@@ -377,41 +377,50 @@ environmentApplicationVariables() {
 }
 
 #
-# Loads application environment variables, set them to their default values if needed, and outputs the list of variables set.
+# Loads application environment variables, set them to their default values if needed, and outputs the list of variables and values.
 # Environment: BUILD_TIMESTAMP
 # Environment: APPLICATION_BUILD_DATE
 # Environment: APPLICATION_VERSION
 # Environment: APPLICATION_ID
 # Environment: APPLICATION_TAG
 environmentApplicationLoad() {
-  local hook here env
+  local usage="_${FUNCNAME[0]}"
+  local hook home env
   local variables=()
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
   export "${variables[@]}"
 
-  here=$(dirname "${BASH_SOURCE[0]}") || _environment "dirname ${BASH_SOURCE[0]}" || return $?
+  here=$(__catchEnvironment "$usage" buildHome) || return $?
 
   for env in "${variables[@]}"; do
     # shellcheck source=/dev/null
-    source "$here/../env/$env.sh" || _environment "source $env.sh" || return $?
+    source "$here/bin/build/env/$env.sh" || __throwEnvironment "$usage" "source $env.sh" || return $?
   done
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
-    APPLICATION_VERSION="$(__environment hookRun "$hook")" || return $?
+    APPLICATION_VERSION="$(__catchEnvironment "$usage" hookRun "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_ID-}" ]; then
     hook=application-id
-    APPLICATION_ID="$(__environment hookRun "$hook")" || return $?
+    APPLICATION_ID="$(__catchEnvironment "$usage" hookRun "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_TAG-}" ]; then
     hook=application-tag
-    APPLICATION_TAG="$(__environment hookRun "$hook")" || return $?
+    APPLICATION_TAG="$(__catchEnvironment "$usage" hookRun "$hook")" || return $?
     if [ -z "${APPLICATION_TAG-}" ]; then
       APPLICATION_TAG=$APPLICATION_ID
     fi
   fi
-  printf -- "%s\n" "${variables[@]}"
+  local variable
+  for variable in "${variables[@]}" "$@"; do
+    __catchEnvironment "$usage" environmentValueWrite "$variable" "${!variable-}" || return $?
+  done
+}
+_environmentApplicationLoad() {
+  ! false || environmentApplicationLoad --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Display and validate application variables.
@@ -426,11 +435,13 @@ environmentFileShow() {
   local width=40
   local variables=()
 
-  IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationLoad) || :
+  IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
   for name in "${variables[@]+"${variables[@]}"}"; do
     environmentVariableNameValid "$name" || __catchArgument "$usage" "Invalid environment name $(decorate code "$name")" 1>&2
   done
   export "${variables[@]}"
+
+  __catchEnvironment "$usage" muzzle environmentApplicationLoad || return $?
 
   # Will be exported to the environment file, only if defined
   while [ $# -gt 0 ]; do
@@ -492,15 +503,11 @@ _environmentFileShow() {
 #
 environmentFileApplicationMake() {
   local usage="_${FUNCNAME[0]}"
-  local variables=()
-  local variableNames name
 
-  variableNames=$(fileTemporaryName "$usage") || return $?
-  environmentApplicationLoad >"$variableNames" || __throwEnvironment "$usage" "environmentApplicationLoad" || return $?
   environmentFileApplicationVerify "$@" || __throwArgument "$usage" "Verify failed" || return $?
-  IFS=$'\n' read -d '' -r -a variables <"$variableNames" || :
-  __catchEnvironment "$usage" rm -rf "$variableNames" || return $?
-  for name in "${variables[@]+"${variables[@]}"}" "$@"; do
+  environmentApplicationLoad
+  while [ $# -gt 0 ]; do
+    local name="$1"
     [ "$name" != "--" ] || continue
     __catchEnvironment "$usage" environmentValueWrite "$name" "${!name-}" || return $?
   done
@@ -521,7 +528,7 @@ environmentFileApplicationVerify() {
   local missing name requireEnvironment
   local requireEnvironment=()
 
-  IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationLoad) || :
+  IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationVariables) || :
   while [ $# -gt 0 ]; do
     case "$1" in --) shift && break ;; *) requireEnvironment+=("$1") ;; esac
     shift
