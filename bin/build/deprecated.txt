@@ -113,7 +113,7 @@ validateShellScripts|bashLintFiles
 validateShellScript|bashLint
 
 # v0.11.2
-_environmentOutput|outputTrigger
+# _environmentOutput|outputTrigger
 
 # v0.11.1
 showEnvironment|environmentFileShow
