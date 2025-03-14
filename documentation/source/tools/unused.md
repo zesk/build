@@ -17,3 +17,4 @@ Hides these from [New and uncategorized functions](./todo.md)
 {joinArguments}
 {listTokens}
 {isExecutableHack}
+{bashPromptUser}

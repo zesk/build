@@ -4,6 +4,10 @@
 [⬅ Parent ](../)
 <hr />
 
+## User interaction
+
+{bashUserInput}
+
 ## Loading
 
 {bashLibrary}

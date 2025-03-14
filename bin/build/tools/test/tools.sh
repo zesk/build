@@ -779,7 +779,7 @@ __testRun() {
     #  ▄▄▖▝▚▖ ▜▀ ▞▀▖▞▀▘▜▀
     #     ▞▘  ▐ ▖▛▀ ▝▀▖▐ ▖
     #          ▀ ▝▀▘▀▀  ▀
-    if plumber "$__test" "$quietLog" 2>"$captureStderr"; then
+    if plumber "$__test" "$quietLog" 2> >(tee -a "$captureStderr"); then
       if isEmptyFile "$captureStderr"; then
         printf "%s\n" "SUCCESS $__test" >>"$quietLog"
       else

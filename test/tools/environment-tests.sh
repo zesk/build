@@ -38,7 +38,7 @@ testDotEnvConfigure() {
 
   __environment environmentValueWrite TESTENVLOCALWORKS "$magic" >>"$tempEnv" || return $?
   __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
-  __environment touch .env.local || return $?
+  __environment touch "$tempDir/.env.local" || return $?
 
   #echo "PWD is $(pwd)"
   #environmentFileLoad --debug .env --optional .env.local || return $?
@@ -47,9 +47,8 @@ testDotEnvConfigure() {
   assertEquals --line "$LINENO" "NEW-$magic" "${TESTENVWORKS-}" || return $?
   assertEquals --line "$LINENO" "$magic" "${TESTENVLOCALWORKS-}" || return $?
 
-  __environment cd .. || return $?
+  __environment muzzle popd || return $?
   __environment rm -rf "$tempDir" || return $?
-  decorate success environmentFileLoad .env --optional .env.local works AOK
 
   unset TESTENVWORKS TESTENVLOCALWORKS
 }
@@ -70,17 +69,24 @@ testEnvironmentFileLoad() {
   tempDir="$(__environment buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
 
   __environment mkdir -p "$tempDir" || return $?
+  [ -d "$tempDir" ] || _environment "Creating $tempDir failed" || return $?
+
   __environment muzzle pushd "$tempDir" || return $?
+  [ -d "$tempDir" ] || _environment "$tempDir disappeared" || return $?
 
   envFile="$tempDir/.env"
 
   assertNotExitCode --stderr-match "is not file" --line "$LINENO" 0 environmentFileLoad "$envFile" || return $?
 
+  [ -d "$tempDir" ] || _environment "$tempDir disappeared" || return $?
   __environment touch "$envFile" || return $?
   assertExitCode --line "$LINENO" 0 environmentFileLoad "$envFile" || return $?
   assertEquals --line "$LINENO" "${TESTVAR-}" "" || return $?
 
   envFile="$tempDir/.env.local"
+  assertExitCode --line "$LINENO" 0 environmentFileLoad --optional .env.local || _environment "environmentFileLoad --optional .env.local failed" || return $?
+
+  [ -d "$tempDir" ] || _environment "$tempDir disappeared" || return $?
   __environment touch "$envFile" || return $?
   assertExitCode --line "$LINENO" 0 environmentFileLoad .env --optional .env.local || _environment "environmentFileLoad .env --optional .env.local failed with both .env" || return $?
 
