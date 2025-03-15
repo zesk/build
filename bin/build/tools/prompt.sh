@@ -375,10 +375,14 @@ __bashPromptCommand() {
     __BASH_PROMPT_PREVIOUS+=("${colors[1]-}")
     __BASH_PROMPT_PREVIOUS+=("§")
   fi
+  local debug=false
+  ! buildDebugEnabled bashPrompt || debug=true
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
     if isFunction "$promptCommand"; then
+      ! $debug || decorate warning "Running $(decorate code "$promptCommand")"
       "$promptCommand"
     else
+      ! $debug || decorate warning "Sourcing $(decorate code "$promptCommand")"
       # shellcheck source=/dev/null
       . "$promptCommand"
     fi

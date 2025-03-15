@@ -13,7 +13,7 @@ bashPromptModule_reloadChanges() {
   local home
 
   home=$(buildHome) || return $?
-  cacheFile="$(__reloadChangesCacheFile "$usage")"
+  cacheFile="$(__reloadChangesCacheFile "$usage")" || return $?
   [ -f "$cacheFile" ] || return 0
 
   local argument pathIndex=0
@@ -134,7 +134,7 @@ reloadChanges() {
     name="${pathNames[*]}"
   fi
 
-  cacheFile="$(__reloadChangesCacheFile "$usage")"
+  cacheFile="$(__reloadChangesCacheFile "$usage")" || return $?
   printf "%s\n" "$name" "$source" "${paths[@]}" "--" >>"$cacheFile"
 
   decorate success "Watching $(decorate file "$path") as $(decorate value "$name")"
