@@ -13,41 +13,53 @@
 
 ## Slowest tests 2025
 
-- 60 seconds - `testDeployApplication`
-- 52 seconds - `testIdenticalChecks`
-- 43 seconds - `testPHPBuild`
-- 42 seconds - `testDeployToRemote`
-- 38 seconds - `testHookSystem`
-- 38 seconds - `testAWSIPAccess`
-- 34 seconds - `testUsageArgumentFunctions`
-- 34 seconds - `testAdditionalBins`
-- 33 seconds - `testDeployBuildEnvironment`
-- 31 seconds - `testBuildEnvironmentLoadAll`
-- 27 seconds - `testIdenticalCheckAndRepairMap`
-- 25 seconds - `testPackageAPI`
-- 24 seconds - `testWrapperShellScripts`
-- 24 seconds - `testGitVersionList`
-- 23 seconds - `testLogFileRotate1`
-- 22 seconds - `testSugar`
-- 22 seconds - `testLogFileRotate`
-- 22 seconds - `testInstallTerraform`
-- 21 seconds - `testBadNumericSamples`
-- 20 seconds - `testIsUpToDate`
-- 20 seconds - `testDeployRemoteFinish`
-- 19 seconds - `testFileMatches`
-- 19 seconds - `testDaemontools`
-- 18 seconds - `testInstallOpenTofu`
-- 18 seconds - `testHooksWhichSeemBenign`
-- 16 seconds - `testValidateCharacterClass`
-- 15 seconds - `testAwsEnvironmentFromCredentials`
-- 14 seconds - `testUnsignedIntegerSamples`
-- 14 seconds - `testPythonInstallation`
-- 14 seconds - `testIdenticalCheckSingles`
-- 13 seconds - `testProcessWait`
-- 12 seconds - `testVersionNext`
-- 12 seconds - `testUnsignedNumberSamples`
-- 11 seconds - `testSignedNumberSamples`
-- 11 seconds - `testServiceToPort`
-- 11 seconds - `testRunCount`
-- 11 seconds - `testInstallBinBuild`
-- 10 seconds - `testBashPrompt`
+- 81.283 testDeployToRemote
+- 61.936 testDeployApplication
+- 55.622 testDeployBuildEnvironment
+- 53.482 testIdenticalChecks
+- 52.711 testHookSystem
+- 45.741 testAWSIPAccess
+- 44.642 testUsageArgumentFunctions
+- 42.04 testBuildEnvironmentLoadAll
+- 41.934 testPHPBuild
+- 37.705 testLogFileRotate1
+- 37.45 testLogFileRotate
+- 33.429 testAdditionalBins
+- 32.793 testIdenticalCheckAndRepairMap
+- 28.876 testIsUpToDate
+- 27.622 testDeployRemoteFinish
+- 26.053 testBadNumericSamples
+- 25.65 testPackageAPI
+- 24.031 testWrapperShellScripts
+- 23.334 testDocSections
+- 22.598 testRunCount
+- 21.804 testServiceToPort
+- 21.288 testVersionNext
+- 20.092 testFileMatches
+- 19.438 testDaemontools
+- 18.317 test__catchCode
+- 15.679 testAwsEnvironmentFromCredentials
+- 15.661 testIdenticalCheckSingles
+- 15.267 testUnsignedIntegerSamples
+- 14.945 testValidateCharacterClass
+- 14.739 testHooksWhichSeemBenign
+- 14.211 testUnsignedNumberSamples
+- 14.19 testIterm2
+- 14.076 testBashPrompt
+- 13.185 testSignedNumberSamples
+- 12.705 testLinkCreate
+- 12.571 testMapPrefixSuffix
+- 12.456 testServiceToPortStandard
+- 12.369 testSugar
+- 12.332 testEnvironmentFileLoad
+- 11.931 testProcessWait
+- 10.549 testExecutableCallable
+- 10.537 testInstallBinBuild
+- 10.498 testListAppend
+- 10.371 testGitCommitFailures
+- 10.316 testRepeat2
+- 10.267 testIsMappable
+- 10.173 testIsTrue
+- 9.331 testSignedIntegerSamples
+- 9.059 testIncrementor
+- 8.828 testNotExecutable

@@ -6,8 +6,8 @@
 #
 # Zesk Developer scripts
 
-if isFunction __buildAliasesUndo; then
-  __buildAliasesUndo
+if isFunction __buildConfigureUndo; then
+  __buildConfigureUndo
 fi
 
-unset buildPreRelease __buildAliasesUndo 2>/dev/null
+unset __buildConfigureUndo 2>/dev/null

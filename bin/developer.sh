@@ -6,12 +6,16 @@
 #
 # Zesk Developer scripts
 
+developerTrack "${BASH_SOURCE[0]}"
+
+__buildFunctions() {
+  developerTrack "${BASH_SOURCE[0]}" --list
+}
 __buildAnnounce() {
-  decorate info "Added aliases $(decorate each code t tools IdenticalRepair)"
-  decorate info "Available functions $(decorate each code buildPreRelease buildAddTool buildContainer)"
+  developerAnnounce < <(__buildFunctions)
 }
 
-__buildAliases() {
+__buildConfigure() {
   local home
 
   home=$(__environment buildHome) || return $?
@@ -22,12 +26,12 @@ __buildAliases() {
   # shellcheck disable=SC2139
   alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
+  reloadChanges bin/build/tools.sh bin "Zesk Build"
+  decorate info "Watching $(decorate file "$home/bin") for changes to reload"
 }
 
-__buildAliasesUndo() {
-  unalias t 2>/dev/null
-  unalias tools 2>/dev/null
-  unalias IdenticalRepair 2>/dev/null
+__buildConfigureUndo() {
+  developerUndo < <(__buildFunctions)
 }
 
 buildPreRelease() {
@@ -85,6 +89,26 @@ buildAddTool() {
   done
 }
 
+# read urls one per line
+githubURLsToCSV() {
+  local url
+  home=$(buildHome) || return $?
+  while read -r url; do
+    if ! repo=$(githubURLParse "$url"); then
+      printf -- "\"%s\",\"%s\",\"%s\"\n" "-" "$url" "" || return $?
+    else
+      local date hasReleases=true
+      date=$(githubPublishDate "$repo") || return $?
+      if [ "$date" = "null" ]; then
+        hasReleases=false
+        date=$(githubLatest "$repo" | jq -r .pushed_at) || return $?
+      fi
+      printf -- "\"%s\",\"%s\",\"%s\"\n" "$date" "$url" "$hasReleases" || return $?
+      sleep 1
+    fi
+  done
+}
+
 # Argument: image - String. Optional. Image to load
 # Load Zesk Build in a preconfigured container
 # Starts in `/root/build`
@@ -102,8 +126,7 @@ buildContainer() {
   dockerLocalContainer --image "$image" --path /root/build --env-file .env.STAGING /root/build/bin/build/bash-build.sh --rc-extras "${ee[@]}" -- "$@"
 }
 
-__buildAliases
+__buildConfigure
 __buildAnnounce
-reloadChanges bin/build/tools.sh bin "Zesk Build"
 
-unset __buildAliases __buildAnnounce
+unset __buildConfigure __buildAnnounce

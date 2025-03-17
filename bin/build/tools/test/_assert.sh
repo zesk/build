@@ -123,7 +123,7 @@ _assertConditionHelper() {
   local pairs=() debugFlag=false
   local success=true file="" lineNumber="" linePrefix="" displayName="" tester="" formatter="__resultFormatter"
   local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
-  local doPlumber=true leaks=()
+  local doPlumber="" leaks=()
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
@@ -201,13 +201,17 @@ _assertConditionHelper() {
         dumpBinaryFlag=true
         dumpFlag=true
         ;;
+      --plumber)
+        doPlumber=true
+        ;;
       --skip-plumber)
         doPlumber=false
         leaks=()
         ;;
       --leak)
         shift
-        leaks+=(--leak "$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
+        doPlumber=true
+        leaks+=(--leak "$(usageArgumentString "$usage" "$argument globalName" "${1-}")") || return $?
         ;;
       --code1)
         code1=true
@@ -219,6 +223,12 @@ _assertConditionHelper() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+  if [ -z "$doPlumber" ]; then
+    doPlumber=false
+    if parseBoolean "$(buildEnvironmentGet "TEST_PLUMBER")"; then
+      doPlumber=true
+    fi
+  fi
   [ -n "$tester" ] || __throwArgument "$usage" "--test required ($*)" || return $?
 
   outputFile=$(fileTemporaryName "$usage") || return $?

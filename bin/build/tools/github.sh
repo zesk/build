@@ -13,24 +13,140 @@
 #
 # Get the latest release version
 #
-# Usage: {fn} projectName [ ... ]
-#
-githubLatestRelease() {
-  local usage="_${FUNCNAME[0]}"
+# Argument: handler - Function. Error handler.
+# Argument: query - Query to jq to extract the JSON result
+# Argument: suffix - API suffix to call (blank OK)
+# Argument: ownerRepository - The github `owner/repository` to query
+# Now supports `GITHUB_ACCESS_TOKEN`
+# Environment: GITHUB_ACCESS_TOKEN
+__githubAPI() {
+  local handler="$1" query="$2" suffix="${3-}" && shift 3
 
-  [ $# -gt 0 ] || __throwArgument "$usage" "projectName required" || return $?
+  [ $# -gt 0 ] || __throwArgument "$handler" "projectName required" || return $?
 
   if ! packageWhich curl curl; then
-    __throwEnvironment "$usage" "curl is a required dependency" || return $?
+    __throwEnvironment "$handler" "curl is a required dependency" || return $?
   fi
+
+  local accessToken hh=() details=()
+  accessToken=$(__catchEnvironment "$handler" buildEnvironmentGet GITHUB_ACCESS_TOKEN) || return $?
+  if [ -n "$accessToken" ]; then
+    hh+=(-H "Authorization: token $accessToken")
+    details+=("$(decorate green Authenticated)")
+  fi
+
   while [ $# -gt 0 ]; do
-    if ! curl -o - -s "https://api.github.com/repos/$1/releases/latest" | jq -r .name; then
-      __throwEnvironment "$usage" "API call failed for $1" || return $?
+    local url="https://api.github.com/repos/$1${suffix}"
+    if ! curl "${hh[@]+"${hh[@]}"}" -o - -s "$url" | jq -r "$query"; then
+      __throwEnvironment "$handler" "API call failed for $1 ($(decorate code "$url")) ${details[*]-}" || return $?
     fi
     shift
   done
 }
+
+#
+# Get the latest release structure
+#
+# Argument: handler - Function. Error handler.
+# Argument: query - Query to jq to extract the JSON result
+# Argument: ownerRepository - The github `owner/repository` to query
+__githubLatestVariable() {
+  local handler="$1" query="$2" && shift 2
+  __githubAPI "$handler" "$query" "/releases/latest" "$@"
+}
+
+# Parse a GitHub URL and return the owner and project name
+# Argument: url - URL. Required. URL to parse.
+githubURLParse() {
+  local usage="_${FUNCNAME[0]}"
+
+  [ $# -gt 0 ] || __throwArgument "$usage" "url required" || return $?
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        local url path
+        url=$(usageArgumentURL "$usage" "url" "$1") || return $?
+        local host
+        host=$(urlParseItem host "$url") || return $?
+        if [ "$host" != "github.com" ]; then
+          __throwArgument "$usage" "Not a github site: $(decorate code "$url")" || return $?
+        fi
+        path=$(urlParseItem path "$url") || return $?
+        # Trim ends of slashes
+        path="${path#/}"
+        path="${path%/}"
+        local owner repository _
+        IFS='/' read -d '' -r owner repository _ <<<"$path" || :
+        [ -n "$owner" ] || __throwArgument "usage" "Blank owner" || return $?
+        [ -n "$repository" ] || __throwArgument "usage" "Blank repository" || return $?
+        printf "%s/%s\n" "$owner" "$repository"
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+}
+_githubURLParse() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Output the publish date for the latest release of ownerRepository
+# Argument: ownerRepository - String. Github `owner/repository` string
+githubPublishDate() {
+  local usage="_${FUNCNAME[0]}"
+  __githubLatestVariable "$usage" ".published_at" "$@"
+}
+_githubPublishDate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Get the latest release version
+#
+# Argument: projectName - String. Required. Github project name in the form of `owner/repository`
+# Environment: GITHUB_ACCESS_TOKEN
+githubLatestRelease() {
+  local usage="_${FUNCNAME[0]}"
+
+  __githubLatestVariable "$usage" ".name" "$@"
+}
 _githubLatestRelease() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Get a project JSON structure
+# Environment: GITHUB_ACCESS_TOKEN
+githubProjectJSON() {
+  __githubLatestVariable "$usage" "." "$@"
+}
+_githubProjectJSON() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Get the latest JSON structure
+#
+# Argument: projectName - String. Required. Github project name in the form of `owner/repository`
+# Environment: GITHUB_ACCESS_TOKEN
+githubLatest() {
+  local usage="_${FUNCNAME[0]}"
+
+  __githubAPI "$usage" "." "" "$@"
+}
+_githubLatest() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -60,6 +176,7 @@ _githubLatestRelease() {
 #  - Found here: https://github.com/settings/tokens
 #
 # Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
+# Environment: GITHUB_ACCESS_TOKEN
 githubRelease() {
   local usage="_${FUNCNAME[0]}"
   local start argument descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName

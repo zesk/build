@@ -76,7 +76,6 @@ __reloadChangesCacheFile() {
 # Argument: --source source - Required. File. Source file to source upon change.
 # Argument: --name name - Optional. String. The name to call this when changes occur.
 # Argument: --path path - Required. Directory. OneOrMore. A directory to scan for changes in `.sh` files
-# Argument: --extension extension - Optional. String. An additional extension (or extensions, if specified more than once) to monitor for changes.
 reloadChanges() {
   local usage="_${FUNCNAME[0]}"
 
@@ -97,6 +96,14 @@ reloadChanges() {
         [ -z "$source" ] || __throwArgument "$usage" "--source only can be supplied once" || return $?
         shift
         source="$(usageArgumentRealFile "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --stop)
+        bashPrompt -bashPromptModule_reloadChanges
+        if cacheFile="$(__reloadChangesCacheFile "$usage")"; then
+          __catchEnvironment "$usage" rm -rf "$cacheFile" || return $?
+        fi
+        statusMessage --last decorate success "Disabled reloadChanges ..."
+        return 0
         ;;
       --name)
         shift
@@ -135,6 +142,8 @@ reloadChanges() {
   fi
 
   cacheFile="$(__reloadChangesCacheFile "$usage")" || return $?
+  __reloadChangesRemove "$usage" "$cacheFile" "$name" || return $?
+
   printf "%s\n" "$name" "$source" "${paths[@]}" "--" >>"$cacheFile"
 
   decorate success "Watching $(decorate file "$path") as $(decorate value "$name")"
@@ -143,4 +152,16 @@ reloadChanges() {
 _reloadChanges() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+__reloadChangesRemove() {
+  local handler="$1" file="$2" name="$3" firstLine
+
+  while read -r firstLine; do
+    local lineNumber firstLine="${firstLine%:*}" aa=()
+    while read -r lineNumber; do
+      aa+=("-e" "${lineNumber}d")
+    done < <(seq "$((lineNumber + 1))" "$((lineNumber + 4))")
+    __catchEnvironment "$handler" sed "${aa[@]}" <"$file" >"$file.$$" || _clean $? "$file.$$" || return $?
+    __catchEnvironment "$handler" cp -f "$file.$$" "$file" || return $?
+  done < <(grep -m 1 -n -e "^$(quoteGrepPattern "$name")$" "$file")
 }

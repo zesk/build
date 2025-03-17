@@ -10,6 +10,7 @@
 - [Decoration](./decoration.md)
 - [Deploy](./deploy.md)
 - [Deployment](./deployment.md)
+- [Developer](./developer.md)
 - [Directory](./directory.md)
 - [Documentation](./documentation.md)
 - [Environment](./environment.md)

@@ -4,5 +4,8 @@
 [⬅ Parent ](../)
 <hr />
 
+{githubParseURL}
+{githubProjectJSON
+{githubLatest}
 {githubLatestRelease}
 {githubRelease}

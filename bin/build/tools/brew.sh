@@ -7,6 +7,11 @@
 # Test: ./test/tools/apk-tests.sh
 #
 
+#
+__brewWrapper() {
+  HOMEBREW_VERBOSE="" brew "$@"
+}
+
 # Install Homebrew
 brewInstall() {
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -22,12 +27,12 @@ brewInstall() {
 
 # Install brew packages
 __brewInstall() {
-  brew install "$@"
+  __brewWrapper install "$@"
 }
 
 # Uninstall brew packages
 __brewUninstall() {
-  brew uninstall "$@"
+  __brewWrapper uninstall "$@"
 }
 
 #
@@ -50,7 +55,7 @@ __brewUpgrade() {
   clean+=("$quietLog" "$upgradeLog")
   __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
   __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __catchEnvironment "$usage" brew upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || _undo $? dumpPipe "apk upgrade failed" <"$quietLog" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || _undo $? dumpPipe "apk upgrade failed" <"$quietLog" || _clean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
       __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || _clean $? "${clean[@]}" || return $?
@@ -72,7 +77,16 @@ ___brewUpgrade() {
 # See: packageUpdate
 # package.sh: true
 __brewUpdate() {
-  brew update
+  local usage="_return" temp returnCode
+  temp=$(fileTemporaryName "$usage") || return $?
+  if __brewWrapper update 2>"$temp"; then
+    rm -rf "$temp" || :
+    return 0
+  fi
+  returnCode=$?
+  cat "$temp" 1>&2
+  rm -rf "$temp" || :
+  return $returnCode
 }
 
 # Usage: {fn}
@@ -82,7 +96,7 @@ __brewInstalledList() {
   local usage="_${FUNCNAME[0]}"
   whichExists brew || __throwEnvironment "$usage" "brew not installed - can not list" || return $?
   [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
-  brew list -1 | grep -v '^[^A-Za-z]'
+  __brewWrapper list -1 | grep -v '^[^A-Za-z]'
 }
 ___brewInstalledList() {
   # _IDENTICAL_ usageDocument 1
@@ -95,7 +109,7 @@ ___brewInstalledList() {
 __brewAvailableList() {
   local usage="_${FUNCNAME[0]}"
   whichExists brew || __throwEnvironment "$usage" "brew not installed - can not list" || return $?
-  brew search --formula '/.*/'
+  __brewWrapper search --formula '/.*/'
 }
 ___brewAvailableList() {
   # _IDENTICAL_ usageDocument 1

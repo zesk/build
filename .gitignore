@@ -25,3 +25,4 @@ ORIGINALS/
 /documentation/docs/
 /documentation/mkdocs.yml
 /documentation/site/
+/documentation/source/*.csv

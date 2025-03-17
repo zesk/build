@@ -68,13 +68,13 @@ _testUsageArgumentHelperSuccess() {
   local usageFunction
 
   usageFunction="$1"
-  shift || :
+  shift
 
   while [ $# -gt 0 ]; do
     printf "%s" "" >"$TEST_USAGE"
     assertExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || return $?
     assertEquals "" "$(cat "$TEST_USAGE")" || return $?
-    shift || :
+    shift
   done
 }
 
@@ -83,13 +83,13 @@ _testUsageArgumentHelperFail() {
 
   export TEST_USAGE
   usageFunction="$1"
-  shift || :
+  shift
 
   while [ $# -gt 0 ]; do
     printf "%s" "" >"$TEST_USAGE"
     assertNotExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || _environment "$usageFunction $(decorate warning "fail $1")" || return $?
     assertEquals "yes" "$(cat "$TEST_USAGE")" || _environment "$usageFunction did not write $(decorate code "$TEST_USAGE")" || return $?
-    shift || :
+    shift
   done
 }
 
