@@ -502,14 +502,16 @@ _environmentFileShow() {
 # Environment: APPLICATION_ID - reserved and set to `hookRun application-tag`
 #
 environmentFileApplicationMake() {
-  local usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}" applicationEnvironment
 
+  applicationEnvironment="$(__catchEnvironment "$usage" environmentApplicationLoad)" || return $?
   environmentFileApplicationVerify "$@" || __throwArgument "$usage" "Verify failed" || return $?
-  environmentApplicationLoad
+  __catchEnvironment "$usage" printf -- "%s\n" "$applicationEnvironment" || return $?
   while [ $# -gt 0 ]; do
     local name="$1"
     [ "$name" != "--" ] || continue
     __catchEnvironment "$usage" environmentValueWrite "$name" "${!name-}" || return $?
+    shift
   done
 }
 _environmentFileApplicationMake() {
