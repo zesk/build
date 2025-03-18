@@ -63,7 +63,7 @@ pipelines:
             - docker
           script:
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
-            - bin/test.sh "${aa[@]+"${aa[@]}"}"
+            - TEST_PLUMBER=true BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
     coverage:
       - step:
           size: 8x

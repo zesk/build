@@ -365,7 +365,7 @@ __installRemotePackage() {
 
 # Debug is enabled, show why
 # Requires: decorate
-# Debugging: da39a3ee5e6b4b0d3255bfef95601890afd80709
+# Debugging: a2c19d33c1693764ff521a0880aeffd7485a040f
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }

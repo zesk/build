@@ -419,7 +419,6 @@ _decorate() {
 # stdout: 1, 2, or 3 tokens + newline: lightColor darkColor text
 # Requires: printf
 _caseStyles() {
-  local text="${2-}}"
   case "$1" in
     reset) lp='0' ;;
       # styles
