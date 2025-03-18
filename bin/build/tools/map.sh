@@ -225,7 +225,7 @@ _mapEnvironmentGenerateSedFile() {
 # Example:     {fn} master main ! -path '*/old-version/*')
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --path directory - Optional. Directory. Run cannon operation starting in this directory.
+# Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
 # Argument: findArgs ... - Optional. FindArgument. Any additional arguments are meant to filter files.
@@ -238,7 +238,7 @@ _mapEnvironmentGenerateSedFile() {
 cannon() {
   local usage="_${FUNCNAME[0]}"
 
-  local search="" directory="." replace=""
+  local search="" cannonPath="." replace=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -253,7 +253,7 @@ cannon() {
         ;;
       --path)
         shift
-        directory=$(usageArgumentDirectory "$usage" "$argument" "${1-}")
+        cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}")
         ;;
       *)
         if [ -z "$search" ]; then
@@ -275,7 +275,7 @@ cannon() {
   replaceQuoted=$(quoteSedPattern "$replace")
   [ "$searchQuoted" != "$replaceQuoted" ] || __throwArgument "$usage" "from = to \"$search\" are identical" || return $?
   cannonLog=$(fileTemporaryName "$usage") || return $?
-  if ! find "$directory" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
+  if ! find "$cannonPath" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
     printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
     rm "$cannonLog" || :
     return 0
@@ -286,10 +286,10 @@ cannon() {
 
   count="$(($(wc -l <"$cannonLog.found") + 0))"
   if [ "$count" -eq 0 ]; then
-    printf "%s" "$(decorate info "Modified (NO) files")"
+    statusMessage --inline decorate warning "Modified (NO) files"
   else
     __catchEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || _clean $? "$cannonLog" || return $?
-    printf "%s" "$(decorate success "Modified $(decorate code "$count $(plural "$count" file files)")")"
+    statusMessage --last decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
     exitCode=1
   fi
   __catchEnvironment "$usage" rm -f "$cannonLog" "$cannonLog.found" || return $?

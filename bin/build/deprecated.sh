@@ -225,35 +225,10 @@ __deprecatedTokensByVersion() {
 # --cannons
 #
 __deprecatedCannonsByVersion() {
-  local start home exitCode=0 version="No version yet"
-
-  set -eou pipefail
+  local home
 
   home=$(__environment buildHome) || return $?
-  start=$(__environment timingStart) || return $?
-
-  while read -r line; do
-    local IFS tokens=() trimmed
-    trimmed=$(__environment trimSpace "$line") || return $?
-    [ -n "$trimmed" ] || continue
-    if [ "${trimmed:0:1}" = "#" ]; then
-      version="$(__environment trimSpace "${trimmed:1}")" || return $?
-      continue
-    fi
-    IFS="|" read -r -a tokens <<<"$line" || :
-    if [ "${#tokens[@]}" -le 1 ]; then
-      decorate error "Bad line: $line" || :
-      exitCode=1
-      continue
-    fi
-    statusMessage printf -- "%s: %s -> %s %s" "$(decorate bold-magenta "$version")" "$(decorate code "${tokens[0]}")" "$(decorate code "${tokens[1]}")"
-    if ! __deprecatedCannon "${tokens[@]}"; then
-      exitCode=1
-      printf -- "\n"
-    fi
-  done <"$home/bin/build/deprecated.txt"
-  statusMessage --last timingReport "$start" "Deprecated cannon took"
-  return "$exitCode"
+  deprecatedCannonFile __deprecatedIgnore "$home/bin/build/deprecated.txt"
 }
 
 #

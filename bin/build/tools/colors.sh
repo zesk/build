@@ -356,16 +356,30 @@ _clearLine() {
   read -d' ' -r width < <(stty size) || width=80 && printf "\r%s\r" "$(seq -s' ' "$((width + 1))" | sed 's/[0-9]//g')"
 }
 
-#
-# Output a status line
+# Output a status message
 #
 # This is intended for messages on a line which are then overwritten using clearLine
 #
-# Summary: Output a status message with no newline
+# Summary: Output a status message and display correctly on consoles with animation and in log files
 # Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
 # Usage: statusMessage command ...
 # Argument: command - Required. Commands which output a message.
 # Argument: --last - Optional. Flag. Last message to be output, so output a newline as well at the end.
+# Argument: --first - Optional. Flag. First message to be output, only clears line if available.
+# Argument: --inline - Optional. Flag. Inline message displays with newline when animation is NOT available.
+#
+# When `hasConsoleAnimation` is true:
+#
+# `--first` - clears the line and outputs the message starting at the left column, no newline
+# `--last` - clears the line and outputs the message starting at the left column, with a newline
+# `--inline` - Outputs the message at the cursor without a newline
+#
+# When `hasConsoleAnimation` is false:
+#
+# `--first` - outputs the message starting at the cursor, no newline
+# `--last` - outputs the message starting at the cursor, with a newline
+# `--inline` - Outputs the message at the cursor with a newline
+#
 # Environment: Intended to be run on an interactive console. Should support $(tput cols).
 # Example:     statusMessage decorate info "Loading ..."
 # Example:     bin/load.sh >>"$loadLogFile"
@@ -392,6 +406,13 @@ statusMessage() {
           __catchEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
           return 0
         fi
+        ;;
+      --inline)
+        shift
+        local suffix="\n"
+        ! hasConsoleAnimation || suffix=""
+        __catchEnvironment "$usage" printf -- "%s$suffix" "$("$@")" || return $?
+        return 0
         ;;
       --last)
         if hasConsoleAnimation; then
