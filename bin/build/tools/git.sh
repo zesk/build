@@ -454,16 +454,14 @@ gitCommit() {
   fi
   __catchEnvironment "$usage" cd "$home" || return $?
   gitRepositoryChanged || __throwEnvironment "$usage" "No changes to commit" || return $?
-  if [ -n "$comment" ]; then
-    local notes
-    notes="$(releaseNotes)" || __throwEnvironment "$usage" "No releaseNotes?" || return $?
-    if $updateReleaseNotes; then
-      statusMessage decorate info "Updating release notes ..."
-      __catchEnvironment "$usage" __gitCommitReleaseNotesUpdate "$usage" "$notes" "$comment" || return $?
-    else
-      comment=$(__gitCommitReleaseNotesGetLastComment "$usage" "$notes") || return $?
-      [ -z "$comment" ] || __catchEnvironment "$usage" printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(boxedHeading "$comment")" || return $?
-    fi
+  local notes
+  notes="$(releaseNotes)" || __throwEnvironment "$usage" "No releaseNotes?" || return $?
+  if $updateReleaseNotes && [ -n "$comment" ]; then
+    statusMessage decorate info "Updating release notes ..."
+    __catchEnvironment "$usage" __gitCommitReleaseNotesUpdate "$usage" "$notes" "$comment" || return $?
+  elif [ -z "$comment" ]; then
+    comment=$(__gitCommitReleaseNotesGetLastComment "$usage" "$notes") || return $?
+    [ -z "$comment" ] || __catchEnvironment "$usage" printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(boxedHeading "$comment")" || return $?
   fi
   outputHandler="cat"
   ! $openLinks || outputHandler="urlOpener"
