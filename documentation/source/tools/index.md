@@ -22,6 +22,7 @@
 - [Identical](./identical.md)
 - [Installation](./install.md)
 - [Interactive](./interactive.md)
+- [JSON](./json.md)
 - [Log](./log.md)
 - [Operating System](./os.md)
 - [Pipeline](./pipeline.md)
