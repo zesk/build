@@ -20,7 +20,7 @@
 # Exit Code: 1 - Field was not found or is blank
 # Requires: jq whichExists __throwEnvironment printf rm decorate head
 jsonField() {
-  local handler="$1" jsonFile="$2" value message && shift 3
+  local handler="$1" jsonFile="$2" value message && shift 2
 
   [ -f "$jsonFile" ] || __throwEnvironment "$handler" "$jsonFile is not a file" || return $?
   whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
