@@ -6,9 +6,8 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Note how _IDENTICAL_ is on the outer block and IDENTICAL is on the inner one - IMPORTANT
 
-# _IDENTICAL_ exitString 6
+# _IDENTICAL_ exitString EOF
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running

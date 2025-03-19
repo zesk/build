@@ -29,19 +29,33 @@ __installBinBuildJSON() {
   printf "%s\n" "$jsonFile"
 }
 
-__installJSONField() {
-  local usage="$1" selector="$2" jsonFile="$3" value message
-  if ! value=$(jq -r "$selector" <"$jsonFile"); then
-    message="$(printf -- "%s\n%s\n" "Unable to fetch selector from JSON:" "$(cat "$jsonFile")")"
-    rm -f "$jsonFile" || :
-    __throwEnvironment "$usage" "$message" || return $?
+# _IDENTICAL_ jsonField 22
+
+# Fetch a non-blank field from a JSON file with error handling
+# Argument: handler - Function. Required. Error handler.
+# Argument: jsonFile - File. Required. A JSON file to parse
+# Argument: ... - Arguments. Optional. Passed directly to jq
+# stdout: selected field
+# stderr: error messages
+# Exit Code: 0 - Field was found and was non-blank
+# Exit Code: 1 - Field was not found or is blank
+# Requires: jq whichExists __throwEnvironment printf rm decorate head
+jsonField() {
+  local handler="$1" jsonFile="$2" value message && shift 3
+
+  [ -f "$jsonFile" ] || __throwEnvironment "$handler" "$jsonFile is not a file" || return $?
+  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  if ! value=$(jq -r "$@" <"$jsonFile"); then
+    message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
+    __throwEnvironment "$handler" "$message" || return $?
   fi
+  [ -z "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")"
   printf -- "%s\n" "$value"
 }
 
 __githubInstallationURL() {
   local usage="$1" jsonFile="$2"
-  url=$(__installJSONField "$usage" .tarball_url "$jsonFile") || return $?
+  url=$(jsonField "$usage" "$jsonFile" .tarball_url) || return $?
   printf -- "%s\n" "$url"
 }
 
@@ -71,8 +85,7 @@ __installBinBuildVersion() {
   jsonFile=$(__installBinBuildJSON "$usage") || return $?
 
   # Version comparison
-  version=$(__installJSONField "$usage" .tag_name "$jsonFile") || return $?
-  [ -n "$version" ] || __throwEnvironment "$usage" "Fetched version was blank" || return $?
+  version=$(jsonField "$usage" "$jsonFile" .tag_name) || return $?
   if [ -d "$packagePath" ] && [ -f "$packagePath/build.json" ]; then
     local latest
     myVersion=$(jq -r .version <"$packagePath/build.json")
@@ -764,16 +777,16 @@ realPath() {
 # IDENTICAL fileTemporaryName 19
 
 # Generate a temporary file name using mktemp, and fail using a function
-# Argument: usage - Function. Required. Function to call if mktemp fails
+# Argument: handler - Function. Required. Function to call if mktemp fails. Function Type: _return
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
 # Requires: __help __catchEnvironment mktemp usageDocument
 fileTemporaryName() {
-  local usage="_${FUNCNAME[0]}"
-  __help "$usage" "$@" || return 0
-  usage="$1" && shift
-  __catchEnvironment "$usage" mktemp "$@" || return $?
+  local handler="_${FUNCNAME[0]}"
+  __help "$handler" "$@" || return 0
+  handler="$1" && shift
+  __catchEnvironment "$handler" mktemp "$@" || return $?
 }
 _fileTemporaryName() {
   # _IDENTICAL_ usageDocument 1
@@ -782,7 +795,7 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL whichExists 19
+# IDENTICAL whichExists 20
 
 # Usage: {fn} binary ...
 # Argument: binary - Required. String. Binary to find in the system `PATH`.
@@ -794,13 +807,14 @@ whichExists() {
   local __saved=("$@") __count=$#
   [ $# -gt 0 ] || __throwArgument "$usage" "no arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ -n "${1-}" ] || __throwArgument "$usage"  "blank argument #$((__count - $# + 1)) ($(decorate each code "${__saved[@]}"))" || return $?
+    [ -n "${1-}" ] || __throwArgument "$usage" "blank argument #$((__count - $# + 1)) ($(decorate each code "${__saved[@]}"))" || return $?
     which "$1" >/dev/null || return 1
     shift
   done
 }
 _whichExists() {
-  usageDocument "${BASH_SOURCE{0]}" "${FUNCNAME[0]#_}" "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL _type 46

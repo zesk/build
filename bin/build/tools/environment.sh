@@ -490,9 +490,11 @@ _environmentFileShow() {
 
 #
 # Usage: {fn} [ requiredEnvironment ... ] [ -- optionalEnvironment ...] "
-# Argument: requiredEnvironment ... - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
-# Argument: -- - Optional. Divider. Divides the requiredEnvironment values from the optionalEnvironment
-# Argument: optionalEnvironment ... - Optional. One or more environment variables which are included if blank or not
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: requiredVariable ... - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+# Argument: -- - Optional. Divider. Divides the requiredEnvironment values from the optionalEnvironment. Should appear once and only once.
+# Argument: optionalVariable ... - Optional. One or more environment variables which are included if blank or not
 #
 # Create environment file `.env` for build.
 #
@@ -502,17 +504,53 @@ _environmentFileShow() {
 # Environment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 # Environment: APPLICATION_TAG - reserved and set to `hookRun application-id`
 # Environment: APPLICATION_ID - reserved and set to `hookRun application-tag`
-#
 environmentFileApplicationMake() {
-  local usage="_${FUNCNAME[0]}" loaded
+  local usage="_${FUNCNAME[0]}"
+
+  local required=() optional=() isOptional=false variableName="requiredVariable"
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --)
+        if $isOptional; then
+          __throwArgument "$usage" "Double -- found in argument list ($(decorate each quote "${__saved[@]}"))" || return $?
+        fi
+        isOptional=true
+        variableName="optionalVariable"
+        ;;
+      *)
+        local variable
+        variable="$(usageArgumentEnvironmentVariable "$usage" "$variableName" "$1")" || return $?
+        if $isOptional; then
+          optional+=("$variable")
+        else
+          required+=("$variable")
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  set -- "${required[@]+"${required[@]}"}" # Copy to "$@"
+
+  local loaded
 
   loaded="$(__catchEnvironment "$usage" environmentApplicationLoad "$@" && __catchEnvironment "$usage" environmentFileApplicationVerify "$@")" || return $?
   __catchEnvironment "$usage" printf -- "%s\n" "$loaded" || return $?
-  while [ $# -gt 0 ]; do
-    local name="$1"
-    [ "$name" != "--" ] || continue
+
+  local name
+  for name in "$@" "${optional[@]+"${optional[@]}"}"; do
     __catchEnvironment "$usage" environmentValueWrite "$name" "${!name-}" || return $?
-    shift
   done
 }
 _environmentFileApplicationMake() {

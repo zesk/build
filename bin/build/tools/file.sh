@@ -757,16 +757,16 @@ _linkCreate() {
 # IDENTICAL fileTemporaryName 19
 
 # Generate a temporary file name using mktemp, and fail using a function
-# Argument: usage - Function. Required. Function to call if mktemp fails
+# Argument: handler - Function. Required. Function to call if mktemp fails. Function Type: _return
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
 # Requires: __help __catchEnvironment mktemp usageDocument
 fileTemporaryName() {
-  local usage="_${FUNCNAME[0]}"
-  __help "$usage" "$@" || return 0
-  usage="$1" && shift
-  __catchEnvironment "$usage" mktemp "$@" || return $?
+  local handler="_${FUNCNAME[0]}"
+  __help "$handler" "$@" || return 0
+  handler="$1" && shift
+  __catchEnvironment "$handler" mktemp "$@" || return $?
 }
 _fileTemporaryName() {
   # _IDENTICAL_ usageDocument 1

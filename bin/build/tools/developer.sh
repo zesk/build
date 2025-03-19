@@ -43,7 +43,6 @@ developerUndo() {
 # stdout: list of function|alias|environment
 developerTrack() {
   local usage="_${FUNCNAME[0]}"
-  export CI=1
   local source="" listChanges=false verboseFlag=false
 
   # _IDENTICAL_ argument-case-header 5

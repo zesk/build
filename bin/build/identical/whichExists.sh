@@ -17,11 +17,12 @@ whichExists() {
   local __saved=("$@") __count=$#
   [ $# -gt 0 ] || __throwArgument "$usage" "no arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ -n "${1-}" ] || __throwArgument "$usage"  "blank argument #$((__count - $# + 1)) ($(decorate each code "${__saved[@]}"))" || return $?
+    [ -n "${1-}" ] || __throwArgument "$usage" "blank argument #$((__count - $# + 1)) ($(decorate each code "${__saved[@]}"))" || return $?
     which "$1" >/dev/null || return 1
     shift
   done
 }
 _whichExists() {
-  usageDocument "${BASH_SOURCE{0]}" "${FUNCNAME[0]#_}" "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
