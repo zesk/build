@@ -49,7 +49,7 @@ jsonField() {
     message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
     __throwEnvironment "$handler" "$message" || return $?
   fi
-  [ -z "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")"
+  [ -n "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
   printf -- "%s\n" "$value"
 }
 
