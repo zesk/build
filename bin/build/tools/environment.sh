@@ -496,17 +496,18 @@ _environmentFileShow() {
 #
 # Create environment file `.env` for build.
 #
+# Note that this does NOT change or modify the current environment.
+#
 # Environment: APPLICATION_VERSION - reserved and set to `hookRun version-current` if not set already
 # Environment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.
 # Environment: APPLICATION_TAG - reserved and set to `hookRun application-id`
 # Environment: APPLICATION_ID - reserved and set to `hookRun application-tag`
 #
 environmentFileApplicationMake() {
-  local usage="_${FUNCNAME[0]}" environmentApplicationLoad
+  local usage="_${FUNCNAME[0]}" loaded
 
-  environmentApplicationLoad="$(__catchEnvironment "$usage" environmentApplicationLoad)" || return $?
-  environmentFileApplicationVerify "$@" || __throwArgument "$usage" "Verify failed" || return $?
-  __catchEnvironment "$usage" printf -- "%s\n" "$environmentApplicationLoad" || return $?
+  loaded="$(__catchEnvironment "$usage" environmentApplicationLoad "$@" && __catchEnvironment "$usage" environmentFileApplicationVerify "$@")" || return $?
+  __catchEnvironment "$usage" printf -- "%s\n" "$loaded" || return $?
   while [ $# -gt 0 ]; do
     local name="$1"
     [ "$name" != "--" ] || continue
