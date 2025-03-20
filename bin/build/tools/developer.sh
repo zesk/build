@@ -9,6 +9,7 @@
 developerAnnounce() {
   local aa=() ff=() item itemType
   while read -r item; do
+    [ -n "$item" ] || continue
     [ "$item" = "${item#_}" ] || continue
     itemType=$(type -t "$item")
     case "$itemType" in
@@ -26,6 +27,7 @@ developerAnnounce() {
 developerUndo() {
   local item
   while read -r item; do
+    [ -n "$item" ] || continue
     local itemType
     itemType=$(type -t "$item")
     case "$itemType" in
