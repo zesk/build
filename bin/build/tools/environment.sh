@@ -261,8 +261,6 @@ environmentFileLoad() {
   local ff=() environmentFile environmentLine name value required=true ignoreList=() secureList=() toExport=() line=1
   local verboseMode=false debugMode=false hasOne=false
 
-  set -eou pipefail
-
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -320,6 +318,10 @@ environmentFileLoad() {
     shift
   done
   $hasOne || __throwArgument "$usage" "Requires at least one environmentFile" || return $?
+
+  # If all files are optional, do nothing
+  [ "${#ff[@]}" -gt 0 ] || return 0
+
   ! $debugMode || printf -- "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[*]}"
   for environmentFile in "${ff[@]}"; do
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
