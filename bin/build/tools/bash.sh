@@ -371,11 +371,12 @@ _bashFunctionComment() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --only - Optional. Flag. Show ONLY comment lines. (Reverse of lines when not specified.)
+# Argument: file - Optional. File. File(s) to filter.
 # stdin: a bash file
 # stdout: bash file without line-comments `#`
 bashCommentFilter() {
   local usage="_${FUNCNAME[0]}"
-  local ff=(-v)
+  local ff=(-v) files=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -392,15 +393,14 @@ bashCommentFilter() {
         ff=()
         ;;
       *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
-  grep "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#'
+  grep "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}"
 }
 _bashCommentFilter() {
   # _IDENTICAL_ usageDocument 1

@@ -91,32 +91,30 @@ checkDockerEnvFile() {
 #
 # Usage: {fn} filename [ ... ]
 # Argument: handler - Function. Required. Error handler.
-# Argument: pass - Boolean. Required.
-# Argument: passConvertFunction - Function. Required. Conversion function when `filename` is a Docker file and pass is `true`, or is not a Docker file and pass is `false`.
-# Argument: failConvertFunction - Function. Required. Conversion function when `filename` is a Docker file and pass is `false`, or is not a Docker file and pass is `true`.
+# Argument: passConvertFunction - Function. Required. Conversion function when `filename` is a Docker environment file.
+# Argument: failConvertFunction - Function. Required. Conversion function when `filename` is a NOT a Docker environment file.
 # Argument: filename - Optional. File. One or more files to convert.
 # stdin: environment file
 # stdout: bash-compatible environment statements
 __anyEnvToFunctionEnv() {
-  local usage="$1" pass="$2" passConvertFunction="$3" failConvertFunction="$4" && shift 4
+  local usage="$1" passConvertFunction="$2" failConvertFunction="$3" && shift 3
 
   if [ $# -gt 0 ]; then
     local file
     for file in "$@"; do
-      local convert="$passConvertFunction"
       if checkDockerEnvFile "$file" 2>/dev/null; then
-        ! $pass || convert="$failConvertFunction"
-        __catchEnvironment "$usage" "$convert" "$file" || return $?
+        printf -- "%s\n" "checkDockerEnvFile=true" "converter=$passConvertFunction"
+        __catchEnvironment "$usage" "$passConvertFunction" <"$file" || return $?
       else
-        ! $pass || convert="$failConvertFunction"
-        __catchEnvironment "$usage" "$convert" "$file" || return $?
+        printf -- "%s\n" "checkDockerEnvFile=\"false\"" "converter=\"$failConvertFunction\""
+        __catchEnvironment "$usage" "$failConvertFunction" <"$file" || return $?
       fi
     done
   else
     local temp
     temp=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" muzzle tee "$temp" || return $?
-    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$pass" "$passConvertFunction" "$failConvertFunction" "$temp" || _clean $? "$temp" || return $?
+    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$passConvertFunction" "$failConvertFunction" "$temp" || _clean $? "$temp" || return $?
     __catchEnvironment "$usage" rm "$temp" || return $?
     return 0
   fi
@@ -130,7 +128,7 @@ __anyEnvToFunctionEnv() {
 # Argument: envFile - Required. File. One or more files to convert.
 #
 anyEnvToDockerEnv() {
-  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" true dockerEnvFromBashEnv bashCommentFilter "$@" || return $?
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter dockerEnvFromBashEnv "$@" || return $?
 }
 _anyEnvToDockerEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -146,7 +144,7 @@ _anyEnvToDockerEnv() {
 # stdin: environment file
 # stdout: bash-compatible environment statements
 anyEnvToBashEnv() {
-  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" false dockerEnvToBash cat "$@" || return $?
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" dockerEnvToBash cat "$@" || return $?
 }
 _anyEnvToBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -221,12 +219,18 @@ _dockerEnvToBashPipe() {
 #
 dockerEnvFromBashEnv() {
   local usage="_${FUNCNAME[0]}"
-  local file envLine tempFile
+  local file envLine tempFile clean=()
 
   tempFile=$(fileTemporaryName "$usage") || return $?
+  clean=("$tempFile")
+  if [ $# -eq 0 ]; then
+    __catchEnvironment "$usage" muzzle tee "$tempFile.bash" || _clean $? "${clean[@]}" || return $?
+    clean+=("$tempFile.bash")
+    set -- "$tempFile.bash"
+  fi
   for file in "$@"; do
-    [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || return $?
-    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$usage" "$file is not a valid bash file" || return $?
+    [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || _clean $? "${clean[@]}" || return $?
+    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$usage" "$file is not a valid bash file" || _clean $? "${clean[@]}" || return $?
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}
