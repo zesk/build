@@ -328,7 +328,7 @@ _commentArgumentSpecificationParseLine() {
   fi
 }
 __commentArgumentSpecificationParseLine() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -403,7 +403,7 @@ _commentArgumentName() {
   return 0
 }
 ___commentArgumentName() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -455,7 +455,7 @@ _commentArgumentType() {
   return 0
 }
 __commentArgumentType() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

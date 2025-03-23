@@ -165,13 +165,8 @@ ___documentTemplateFunction() {
 }
 
 __documentTemplateFunction2() {
-  # Source IDENTICAL usageDocument HERE
-  # IDENTICAL usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-___documentTemplateFunction2() {
-  # Source IDENTICAL usageDocument HERE
-  # IDENTICAL usageDocument 1
+  # Source _IDENTICAL_ usageDocument HERE
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

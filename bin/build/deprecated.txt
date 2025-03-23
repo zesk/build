@@ -6,6 +6,7 @@ IDENTICAL argument-esac-shift|_IDENTICAL_ argument-esac-shift
 IDENTICAL argument-case-header|_IDENTICAL_ argument-case-header
 IDENTICAL argument-case-header-blank|_IDENTICAL_ argument-case-blank-argument-header
 IDENTICAL argument-case-blank-argument-header|_IDENTICAL_ argument-case-blank-argument-header
+IDENTICAL usageDocument |_IDENTICAL_ usageDocument |
 
 # v0.25.6
 

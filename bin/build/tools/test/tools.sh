@@ -378,8 +378,7 @@ testSuite() {
   _textExit 0
 }
 _testSuite() {
-  # Hey, different
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -713,7 +712,7 @@ __testLoad() {
   printf "%s\n" "${__tests[@]}"
 }
 ___testLoad() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -828,7 +827,7 @@ __testRun() {
   return "$stickyCode"
 }
 ___testRun() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

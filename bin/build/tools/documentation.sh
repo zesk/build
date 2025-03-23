@@ -537,7 +537,7 @@ bashDocumentFunction() {
   return $exitCode
 }
 _bashDocumentFunction() {
-  # IDENTICAL usageDocument 1
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
