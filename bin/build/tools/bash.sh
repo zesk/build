@@ -348,6 +348,8 @@ _bashFunctionCommentVariable() {
 # IDENTICAL bashFunctionComment 18
 
 # Extract a bash comment from a file
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # Requires: grep cut reverseFileLines __help
@@ -361,6 +363,46 @@ bashFunctionComment() {
     reverseFileLines | grep -E '^#' | cut -c 3-
 }
 _bashFunctionComment() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Filter comments from a bash stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --only - Optional. Flag. Show ONLY comment lines. (Reverse of lines when not specified.)
+# stdin: a bash file
+# stdout: bash file without line-comments `#`
+bashCommentFilter() {
+  local usage="_${FUNCNAME[0]}"
+  local ff=(-v)
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --only)
+        ff=()
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  grep "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#'
+}
+_bashCommentFilter() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

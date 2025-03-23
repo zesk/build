@@ -148,3 +148,23 @@ testDotEnvCommentHandling() {
   __environment printf "%s\n" "# COMMENT=yes" "     # COMMENT_LEADING_SPACES=yes" "${tab}${tab}${tab}#${tab}COMMENT_LEADING_TABS=yes" "${tab} #${tab} COMMENT_LEADING_BOTH=yes" "BAZ=FIZ" "FIZZ=BUZZ" >"$testEnv" || return $?
   assertExitCode --stdout-match "COMMENT=yes" --stdout-match "COMMENT_LEADING_SPACES=yes" --stdout-match "COMMENT_LEADING_TABS=yes" --stdout-match "BAZ=\"FIZ\"" 0 dockerEnvToBash <"$testEnv" || return $?
 }
+
+testEnvCommentHandling() {
+  local testEnv home tab=$'\t' testFile testEnvBash
+
+  testEnv=$(__environment mktemp) || return $?
+  testEnvBash="$testEnv.bash" || return $?
+
+  __environment printf -- "%s\n" "# Comment" "WORD=born" >"$testEnv" || return $?
+  __environment printf -- "%s\n" "# Comment" "WORD=\"born\"" >"$testEnvBash" || return $?
+
+  for testFile in "$testEnv" "$testEnvBash"; do
+    assertExitCode --stdout-match "WORD=\"born\"" --stdout-match "# Comment" --line "$LINENO" 0 anyEnvToBashEnv "$testFile" || return $?
+    assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" --line "$LINENO" 0 anyEnvToDockerEnv "$testFile" || return $?
+  done
+  assertExitCode --stdout-match "WORD=born" --stdout-match "# Comment" --line "$LINENO" 0 dockerEnvToBash "$testEnv" || return $?
+
+  assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" --line "$LINENO" 0 dockerEnvFromBashEnv "$testEnvBash" || return $?
+
+  __environment rm -rf "$testEnv" "$testEnvBash" || return $?
+}

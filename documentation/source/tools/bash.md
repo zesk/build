@@ -24,6 +24,7 @@
 {bashListFunctions}
 {bashFunctionComment}
 {bashFunctionCommentVariable}
+{bashCommentFilter}
 
 ## Builtins
 

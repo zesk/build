@@ -85,26 +85,30 @@ checkDockerEnvFile() {
 }
 
 #
-# Takes any environment file and makes it bash-compatible
+# Takes any environment file and makes it compatible with BASH or Docker
 #
 # Outputs the compatible env to stdout
 #
 # Usage: {fn} filename [ ... ]
+# Argument: handler - Function. Required. Error handler.
+# Argument: pass - Boolean. Required.
+# Argument: passConvertFunction - Function. Required. Conversion function when `filename` is a Docker file and pass is `true`, or is not a Docker file and pass is `false`.
+# Argument: failConvertFunction - Function. Required. Conversion function when `filename` is a Docker file and pass is `false`, or is not a Docker file and pass is `true`.
 # Argument: filename - Optional. File. One or more files to convert.
 # stdin: environment file
 # stdout: bash-compatible environment statements
 __anyEnvToFunctionEnv() {
-  local usage="$1" pass="$2" function="$3" && shift 3
+  local usage="$1" pass="$2" passConvertFunction="$3" failConvertFunction="$4" && shift 4
 
   if [ $# -gt 0 ]; then
     local file
     for file in "$@"; do
-      local convert="$function"
+      local convert="$passConvertFunction"
       if checkDockerEnvFile "$file" 2>/dev/null; then
-        ! $pass || convert="cat"
+        ! $pass || convert="$failConvertFunction"
         __catchEnvironment "$usage" "$convert" "$file" || return $?
       else
-        $pass || convert="cat"
+        ! $pass || convert="$failConvertFunction"
         __catchEnvironment "$usage" "$convert" "$file" || return $?
       fi
     done
@@ -112,7 +116,7 @@ __anyEnvToFunctionEnv() {
     local temp
     temp=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" muzzle tee "$temp" || return $?
-    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$pass" "$function" "$temp" || _clean $? "$temp" || return $?
+    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$pass" "$passConvertFunction" "$failConvertFunction" "$temp" || _clean $? "$temp" || return $?
     __catchEnvironment "$usage" rm "$temp" || return $?
     return 0
   fi
@@ -126,7 +130,7 @@ __anyEnvToFunctionEnv() {
 # Argument: envFile - Required. File. One or more files to convert.
 #
 anyEnvToDockerEnv() {
-  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" true dockerEnvFromBashEnv "$@" || return $?
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" true dockerEnvFromBashEnv bashCommentFilter "$@" || return $?
 }
 _anyEnvToDockerEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -142,7 +146,7 @@ _anyEnvToDockerEnv() {
 # stdin: environment file
 # stdout: bash-compatible environment statements
 anyEnvToBashEnv() {
-  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" false dockerEnvToBash "$@" || return $?
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" false dockerEnvToBash cat "$@" || return $?
 }
 _anyEnvToBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
