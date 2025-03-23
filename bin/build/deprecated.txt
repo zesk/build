@@ -1,4 +1,11 @@
+# v0.25.8
+
 # v0.25.7
+IDENTICAL argumentUnknown|_IDENTICAL_ argumentUnknown
+IDENTICAL argument-esac-shift|_IDENTICAL_ argument-esac-shift
+IDENTICAL argument-case-header|_IDENTICAL_ argument-case-header
+IDENTICAL argument-case-header-blank|_IDENTICAL_ argument-case-blank-argument-header
+IDENTICAL argument-case-blank-argument-header|_IDENTICAL_ argument-case-blank-argument-header
 
 # v0.25.6
 

@@ -128,7 +128,7 @@ _assertConditionHelper() {
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
   set -eou pipefail
-  # _IDENTICAL_ argument-case-header-blank 4
+  # _IDENTICAL_ argument-case-blank-argument-header 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))

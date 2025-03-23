@@ -103,10 +103,10 @@ __anyEnvToFunctionEnv() {
     local file
     for file in "$@"; do
       if checkDockerEnvFile "$file" 2>/dev/null; then
-        printf -- "%s\n" "checkDockerEnvFile=true" "converter=$passConvertFunction"
+        # printf -- "%s\n" "checkDockerEnvFile=true" "converter=$passConvertFunction"
         __catchEnvironment "$usage" "$passConvertFunction" <"$file" || return $?
       else
-        printf -- "%s\n" "checkDockerEnvFile=\"false\"" "converter=\"$failConvertFunction\""
+        # printf -- "%s\n" "checkDockerEnvFile=\"false\"" "converter=\"$failConvertFunction\""
         __catchEnvironment "$usage" "$failConvertFunction" <"$file" || return $?
       fi
     done

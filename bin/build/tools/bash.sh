@@ -348,8 +348,6 @@ _bashFunctionCommentVariable() {
 # IDENTICAL bashFunctionComment 18
 
 # Extract a bash comment from a file
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # Requires: grep cut reverseFileLines __help
@@ -400,7 +398,13 @@ bashCommentFilter() {
     shift
   done
 
-  grep "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}"
+  # Allow blank files or no matches
+  # grep - 1 - no lines selected
+  # grep - 0 - lines selected
+  local exitCode=0
+  grep "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}" || exitCode=$?
+  [ "$exitCode" -ne 1 ] || exitCode=0
+  return "$exitCode"
 }
 _bashCommentFilter() {
   # _IDENTICAL_ usageDocument 1

@@ -296,7 +296,7 @@ echoBar() {
   local barText="" width count delta=""
 
   width=$(consoleColumns) || __throwEnvironment "$usage" consoleColumns || return $?
-  # _IDENTICAL_ argument-case-header-blank 4
+  # _IDENTICAL_ argument-case-blank-argument-header 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
