@@ -1,7 +1,7 @@
 # Function signatures for callbacks
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 The following function signatures are used prevalently as callbacks:

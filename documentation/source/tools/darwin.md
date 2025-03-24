@@ -3,7 +3,7 @@
 Tools to work with Darwin, Mac OS X's version of UNIX.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {isDarwin}

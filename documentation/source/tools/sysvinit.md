@@ -3,7 +3,7 @@
 For systems with an `/etc/init.d` start up script system.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {sysvInitScriptInstall}

@@ -1,7 +1,7 @@
 # Color Tools
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 All console functions in the form `decorate style` where `style` is a color name or a semantic meaning behave similarly:

@@ -1,7 +1,7 @@
 # AWS Tools
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
        ▄▄    ▄▄      ▄▄   ▄▄▄▄

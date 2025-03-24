@@ -3,7 +3,7 @@
 `apt` integration is via `packageInstall` and related. See (packages)[./package.md].
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {aptIsInstalled}

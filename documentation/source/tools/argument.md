@@ -19,7 +19,7 @@ To handle a possible `--help` ending the arguments early:
     }
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {_arguments}

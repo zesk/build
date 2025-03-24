@@ -3,7 +3,7 @@
 Wrapper around [apt](./apt.md), [apk](./apk.md), and [brew](./brew.md) currently.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 ## Conditional installation

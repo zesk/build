@@ -3,7 +3,7 @@
 Hooks are called to enable custom actions at specific times which can be overwritten or intercepted by the application.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {hasHook}

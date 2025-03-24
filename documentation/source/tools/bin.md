@@ -3,7 +3,7 @@
 These are found in the `bin/build` directory and have equivalent functions.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 These utilities can be accessed via the shell in the PATH:

@@ -1,7 +1,7 @@
 # Git Functions
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 ## git Installation

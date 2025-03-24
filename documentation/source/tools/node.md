@@ -1,7 +1,7 @@
 # node Functions
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 > Environment variables: `NODE_PACKAGE_MANAGER`

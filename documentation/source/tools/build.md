@@ -6,7 +6,7 @@
 - Access known environment variables with defaults, and installing `install-bin-build.sh` in new projects.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {buildHome}

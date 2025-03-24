@@ -1,7 +1,7 @@
 # Assert Tools
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 These functions are solely available after you call `testSuite`.

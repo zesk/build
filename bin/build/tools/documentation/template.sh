@@ -20,7 +20,7 @@ documentationTemplateUpdate() {
     shift
   done
   failCount=0
-  while ! identicalCheck "${repairArgs[@]}" --extension md --prefix '<!-- TEMPLATE' --cd "$templatePath"; do
+  while ! identicalCheck "${repairArgs[@]}" --ignore-singles --extension md --prefix '<!-- TEMPLATE' --cd "$templatePath"; do
     failCount=$((failCount + 1))
     if [ $failCount -gt 4 ]; then
       __catchEnvironment "$usage" "identicalCheck --repair failed" || return $?

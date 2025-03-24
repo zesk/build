@@ -5,7 +5,7 @@ The concept of a "usage" function is one that fails, and displays a reasonable e
 Essentially a `usage` function is a failure handler. If you need a simple `usage` function use `_return`.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 ## Usage formatting

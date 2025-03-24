@@ -3,7 +3,7 @@
 Install software as `root` or superuser.
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {packageInstall}

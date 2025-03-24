@@ -155,7 +155,7 @@ __buildDocumentationBuild() {
   export APPLICATION_NAME
 
   local da=() ea=()
-  local cleanFlag=false updateDerived=true updateTemplates=false updateReference=true makeDocumentation=false
+  local cleanFlag=false updateDerived=true updateTemplates=true updateReference=true makeDocumentation=true
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -185,6 +185,12 @@ __buildDocumentationBuild() {
         updateTemplates=false
         updateReference="true"
         makeDocumentation=false
+        ;;
+      --mkdocs-only)
+        updateDerived=false
+        updateTemplates=false
+        updateReference=false
+        makeDocumentation="true"
         ;;
       --clean)
         cleanFlag=true

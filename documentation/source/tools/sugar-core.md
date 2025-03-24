@@ -1,7 +1,7 @@
 # Sugar Core
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 Sugar refers to syntactic sugar - code which makes other code more readable.

@@ -3,7 +3,7 @@
 Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 {daemontoolsHome}

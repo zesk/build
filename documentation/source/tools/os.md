@@ -1,7 +1,7 @@
 # Operating System Functions
 
 <!-- TEMPLATE header 2 -->
-[⬅ Parent ](../)
+[⬅ Parent ](../index.md)
 <hr />
 
 ## Services
