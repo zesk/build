@@ -67,8 +67,8 @@ isUnsignedInteger() {
 __addNoteTo() {
   statusMessage decorate info "Adding note to $1"
   cp "$1" bin/build
-  printf -- "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
-  git add "bin/build/$1"
+  printf -- "\n%s" "(this file is a copy - please modify the original)" | tee "bin/build/$1" >"./documentation/source/$1"
+  git add "bin/build/$1" "./documentation/source/$1"
 }
 
 #

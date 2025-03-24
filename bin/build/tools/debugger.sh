@@ -121,7 +121,7 @@ __bashDebugStep() {
 }
 
 __bashDebugWhere() {
-  local index="${1-0}" __where
+  local index="${1:-0}" __where
   export BUILD_HOME
   __where="$(realPath "${BASH_SOURCE[index + 2]}")"
   __where="${__where#"$BUILD_HOME"}"

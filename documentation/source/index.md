@@ -7,7 +7,7 @@ Documentation up to date as of {timestamp}.
 - [Functions](./tools/index.md) - Tons of handy functions. (`./bin/build/tools/*.sh`)
 - [Scripts and tools](./tools/bin.md) - Scripts universally useful everywhere. (`./bin/build/*.sh`)
 - [Hooks](./tools/hooks.md) - Hooks are a way to customize default behaviors in build scripts. (`./bin/hooks/*.sh`)
-- [Environment Variables](./env/) - All environment variables known by Zesk Build. (`./bin/env/*.sh`)
+- [Environment Variables](./env/index.md) - All environment variables known by Zesk Build. (`./bin/env/*.sh`)
 
 ## Introduction
 
@@ -42,17 +42,17 @@ To use in your pipeline:
 
 ## Zesk Build Guides
 
-- [Coding Practices](./reference/coding.md)
+- [Coding Practices](./guide/coding.md)
 - [Usage formatting](./guide/usage.md)
 - [Documentation](./guide/documentation.md)
 - [Functions to be documented](./tools/todo.md)
-- [`test` Cheatsheet](./test-cheatsheet.md)
-- [Bash Cheatsheet](./bash-cheatsheet.md)
+- [`test` Cheatsheet](./guide/test-cheatsheet.md)
+- [Bash Cheatsheet](./guide/bash-cheatsheet.md)
 
 ## Deprecated
 
-- [Deprecated functionality](./deprecated.md)
+- [Deprecated functionality](./tools/deprecated.md)
 
 ## Copyright and License
 
-Copyright &copy; 2025 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](../LICENSE.md).
+Copyright &copy; 2025 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](./LICENSE.md).

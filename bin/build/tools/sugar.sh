@@ -45,7 +45,7 @@ ___catch() {
 # Requires: isInteger _argument isFunction isCallable
 __catchCode() {
   local __count=$# __saved=("$@") usage="_${FUNCNAME[0]}" code="${1-0}" handler="${2-}" command="${3-}"
-  isInteger "$code" || __throwArgument "$usage" "Not integer: $code (#$__count $(decorate each code "${__saved[@]}"))" || return $?
+  isInteger "$code" || __throwArgument "$usage" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code "${__saved[@]}"))" || return $?
   isFunction "$handler" || __throwArgument "$usage" "Not a function $(decorate code "$handler"): $(debuggingStack)" || return $?
   isCallable "$command" || __throwArgument "$usage" "Not callable $(decorate code "$command")" || return $?
   shift 3
@@ -116,6 +116,53 @@ _deprecated() {
 # Example:     __catchEnvironment "$handler" phpBuild || _undo $? {fn} popd || return $?
 muzzle() {
   "$@" >/dev/null
+}
+
+#
+# map a return value from one value to another
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: value - Integer. A return value.
+# Argument: from - Integer. When value matches `from`, instead return `to`
+# Argument: to - Integer. The value to return when `from` matches `value`
+# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+mapReturn() {
+  local usage="_${FUNCNAME[0]}" value="" from="" to=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$value" ]; then
+          value=$(usageArgumentUnsignedInteger "$usage" "value" "$1") || return $?
+        elif [ -z "$from" ]; then
+          from=$(usageArgumentUnsignedInteger "$usage" "from" "$1") || return $?
+        elif [ -z "$to" ]; then
+          to=$(usageArgumentUnsignedInteger "$usage" "to" "$1") || return $?
+          if [ "$value" -eq "$from" ]; then
+            return "$to"
+          fi
+          from="" && to=""
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  return "${value:-0}"
+}
+_mapReturn() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL _undo 38

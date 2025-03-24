@@ -10,6 +10,8 @@
 
 ## Filters
 
+{grepSafe}
+
 {sedReplacePattern}
 {quoteSedPattern}
 {quoteSedReplacement}

@@ -322,21 +322,36 @@ testAWSProfiles() {
 
   AWS_PROFILE=
 
+  local credentials
+
+  credentials="$(awsCredentialsFile)"
+  assertFileDoesNotExist --line "$LINENO" "$credentials" || return $?
+
+  credentials="$(awsCredentialsFile --create)" || return $?
+  assertFileExists --line "$LINENO" "$credentials" || return $?
+
   assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
 
   __environment awsProfilesList >"$list" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || _undo $? dumpPipe awsProfilesList <"$list" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || _undo $? dumpPipe awsProfilesList <"$list" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
+  local testKey="AKIAZ0123456789ABCDE" testPassword="haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU"
+
+  __echo assertExitCode --line "$LINENO" 0 awsCredentialsAdd --skip-comments --profile "$firstName" "$testKey" "$testPassword" || return $?
+  __echo assertFileContains --line "$LINENO" "$credentials" "$testKey" "$testPassword" || return $?
+  __echo assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
+
   # Exists
-  assertNotExitCode --stderr-match 'exists in' --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$firstName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
+  assertNotExitCode --stderr-match 'exists in' --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" "$testKey" "$testPassword" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$firstName" "$testKey" "$testPassword" || return $?
+  assertFileContains --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$secondName" AKIAZ0123456789ABCDE haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$secondName" "$testKey" "$testPassword" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?

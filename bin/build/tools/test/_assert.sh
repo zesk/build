@@ -300,10 +300,10 @@ _assertConditionHelper() {
   else
     _assertFailure "$this" "$displayName $message" || exitCode=$?
   fi
-  if $dumpFlag; then
+  if ! $testPassed || $dumpFlag; then
     if $dumpBinaryFlag; then
-      dumpBinary <"$outputFile" | dumpPipe "$stdoutTitle" || :
-      dumpBinary <"$errorFile" | dumpPipe "$stderrTitle" || :
+      dumpBinary "$stdoutTitle" <"$outputFile" | dumpPipe "$stdoutTitle" || :
+      dumpBinary "$stderrTitle" <"$errorFile" | dumpPipe "$stderrTitle" || :
     else
       dumpPipe --tail "$stdoutTitle" <"$outputFile" || :
       dumpPipe --tail "$stderrTitle" <"$errorFile" || :

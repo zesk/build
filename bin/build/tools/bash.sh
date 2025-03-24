@@ -398,13 +398,7 @@ bashCommentFilter() {
     shift
   done
 
-  # Allow blank files or no matches
-  # grep - 1 - no lines selected
-  # grep - 0 - lines selected
-  local exitCode=0
-  grep "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}" || exitCode=$?
-  [ "$exitCode" -ne 1 ] || exitCode=0
-  return "$exitCode"
+  grepSafe "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}"
 }
 _bashCommentFilter() {
   # _IDENTICAL_ usageDocument 1

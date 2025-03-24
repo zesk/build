@@ -30,6 +30,17 @@ __alwaysFail() {
   return 1
 }
 
+testMapReturn() {
+  assertExitCode --line "$LINENO" 99 mapReturn 1 1 99 || return $?
+  assertExitCode --line "$LINENO" 99 mapReturn 1 1 99 1 98 || return $?
+  assertExitCode --line "$LINENO" 99 mapReturn 99 1 99 2 98 || return $?
+  assertExitCode --line "$LINENO" 98 mapReturn 2 1 99 2 98 || return $?
+  local i
+  for i in $(seq 1 10); do
+    assertExitCode --line "$LINENO" $((i + 1)) mapReturn "$i" 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 11 || return $?
+  done
+}
+
 test__catchCode() {
   assertNotExitCode --stderr-match "Not a function" 0 __catchCode || return $?
   assertNotExitCode --stderr-match "Not integer" 0 __catchCode 12n || return $?

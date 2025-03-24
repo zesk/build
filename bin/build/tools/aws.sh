@@ -342,15 +342,15 @@ _awsCredentialsHasProfile() {
 # If the AWS credentials file is not found, it is created
 #
 # Summary: Write an AWS profile to the AWS credentials file
-# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ] id secret
 # Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
 # Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists
-# Argument: id - The AWS_ACCESS_KEY_ID to write
-# Argument: key - The AWS_SECRET_ACCESS_KEY to write
+# Argument: --skip-comments - Flag. Optional. Do not write comments to the credentials file (just update the record)
+# Argument: key - The AWS_ACCESS_KEY_ID to write
+# Argument: secret - The AWS_SECRET_ACCESS_KEY to write
 awsCredentialsAdd() {
   local usage="_${FUNCNAME[0]}"
 
-  local forceFlag=false profileName="" key="" secret=""
+  local forceFlag=false profileName="" key="" secret="" skipComments=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -365,6 +365,9 @@ awsCredentialsAdd() {
         ;;
       --force)
         forceFlag=true
+        ;;
+      --skip-comments)
+        skipComments=true
         ;;
       # IDENTICAL --profileHandler 5
       --profile)
@@ -391,21 +394,24 @@ awsCredentialsAdd() {
     profileName="$(__catchEnvironment "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
+  [ -n "$key" ] || __throwArgument "$usage" "key is required" || return $?
+  [ -n "$secret" ] || __throwArgument "$usage" "secret is required" || return $?
 
-  local credentials
-  credentials="$(__catchEnvironment "$usage" awsCredentialsFile --create)" || return $?
-  if awsCredentialsHasProfile "$profileName"; then
-    $forceFlag || __throwEnvironment "$usage" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
-    _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" || return $?
-  fi
   local lines=(
-    ""
-    "# ${FUNCNAME[0]} Added profile $profileName ($(date))"
     "[$profileName]"
     "aws_access_key_id = $key"
     "aws_secret_access_key = $secret"
   )
-  printf -- "%s\n" "${lines[@]}" >>"$credentials" || return $?
+  local credentials
+  credentials="$(__catchEnvironment "$usage" awsCredentialsFile --create)" || return $?
+  if awsCredentialsHasProfile "$profileName"; then
+    "$skipComments" || lines=("" "# ${FUNCNAME[0]} replaced $profileName on $(date -u)" "${lines[@]}")
+    $forceFlag || __throwEnvironment "$usage" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
+    _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "$(printf -- "%s\n" "${lines[@]}")" || return $?
+  else
+    "$skipComments" || lines=("" "# ${FUNCNAME[0]} added $profileName on $(date -u)" "${lines[@]}") || __throwEnvironment "$usage" "Generating comment line failed" || return $?
+    __catchEnvironment "$usage" printf -- "%s\n" "${lines[@]}" >>"$credentials" || return $?
+  fi
 }
 _awsCredentialsAdd() {
   # _IDENTICAL_ usageDocument 1
@@ -466,7 +472,7 @@ awsCredentialsRemove() {
   credentials="$(__catchEnvironment "$usage" awsCredentialsFile --path)" || return $?
   [ -f "$credentials" ] || return 0
   if awsCredentialsHasProfile "$profileName"; then
-    _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" || return $?
+    _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "" || return $?
   fi
 }
 _awsCredentialsRemove() {
@@ -497,13 +503,13 @@ _awsCredentialsFromEnvironment() {
 }
 
 _awsCredentialsRemoveSection() {
-  local usage="$1" credentials="$2" profileName=$3
+  local usage="$1" credentials="$2" profileName="$3" newCredentials="$4"
   local pattern="\[\s*$profileName\s*\]" temp lines total
   total=$((0 + $(__catchEnvironment "$usage" wc -l <"$credentials"))) || return $?
   temp=$(fileTemporaryName "$usage") || return $?
-  lines=$((0 + $(grep -m 1 -B 32767 "$credentials" -e "$pattern" | grep -v -e "$pattern" | __catchEnvironment "$usage" tee "$temp" | wc -l))) || _clean $? "$temp" || return $?
-  printf -- "# Removed profile %s (%s)\n" "$profileName" "$(date)" >>"$temp"
-  __catchEnvironment "$usage" grep -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' >>"$temp" || _clean $? "$temp" || return $?
+  lines=$((0 + $(grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | grepSafe -v -e "$pattern" | __catchEnvironment "$usage" tee "$temp" | wc -l))) || _clean $? "$temp" || return $?
+  __catchEnvironment "$usage" printf -- "%s" "$newCredentials" >>"$temp" || _clean $? "$temp" || return $?
+  __catchEnvironment "$usage" grepSafe -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' >>"$temp" || _clean $? "$temp" || return $?
   __catchEnvironment "$usage" cp -f "$temp" "$credentials" || _clean $? "$temp" || return $?
   __catchEnvironment "$usage" rm -rf "$temp" || return $?
 }

@@ -18,6 +18,17 @@
 #------------------------------------------------------------------------------
 #
 
+# `grep` but returns 0 when nothing matches
+# See: grep
+# Allow blank files or no matches
+# grep - 1 - no lines selected
+# grep - 0 - lines selected
+# Argument: ... - Arguments. Passed directly to `grep`.
+# Requires: grep mapReturn
+grepSafe() {
+  grep "$@" || mapReturn $? 1 0 || return $?
+}
+
 # Check if text contains mappable tokens
 # If any text passed contains a token which can be mapped, succeed.
 # Argument: --prefix - Optional. String. Token prefix defaults to `{`.
