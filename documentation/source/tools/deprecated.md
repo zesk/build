@@ -1,5 +1,6 @@
 # Deprecated Tools
 
+{deprecatedFilePrependVersion}
 {deprecatedIgnore}
 {deprecatedCannonFile}
 {deprecatedFind}
