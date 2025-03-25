@@ -20,19 +20,15 @@ source "${BASH_SOURCE[0]%/*}/../build/tools.sh"
 #
 __buildVersionCreated() {
   local usage="_return"
-  local home newDeprecated deprecatedConfiguration
+  local home
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   __catchEnvironment "$usage" gitBranchify || return $?
 
-  deprecatedConfiguration="$home/bin/build/deprecated.txt"
-  [ -f "$deprecatedConfiguration" ] || __throwEnvironment "$usage" "Missing $deprecatedConfiguration" || return $?
-  newDeprecated=$(fileTemporaryName "$usage") || return $?
+  # deprecated.txt add version comment
+  __catchEnvironment "$usage" deprecatedFilePrependVersion "$home/bin/build/deprecated.txt" "$1" || return $?
 
-  __catchEnvironment "$usage" printf -- "%s\n\n" "# $1" >"$newDeprecated" || return $?
-  cat "$deprecatedConfiguration" >>"$newDeprecated"
-  __catchEnvironment "$usage" mv -f "$newDeprecated" "$deprecatedConfiguration" || return $?
-  __catchEnvironment "$usage" "$home/bin/build/hooks/version-created.sh" "$@" || return $?
+  hookRunOptional --next "${BASH_SOURCE[0]}" "version-created" "$@"
 }
 
 __buildVersionCreated "$@"

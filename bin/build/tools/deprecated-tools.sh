@@ -5,6 +5,53 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+#
+# Take a deprecated.txt file and add a comment with the current version number to the top
+# Argument: target - File. Required. File to update.
+# Argument: version - String. Required. Version to place at the top of the file.
+deprecatedFilePrependVersion() {
+  local usage="_${FUNCNAME[0]}"
+
+  local target="" version=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$target" ]; then
+          target="$(usageArgumentFile "$usage" "target" "${1-}")" || return $?
+        elif [ -z "$version" ]; then
+          version="$(usageArgumentString "$usage" "version" "$1")" || return $?
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  [ -n "$target" ] || __throwArgument "$usage" "Missing target" || return $?
+  [ -n "$version" ] || __throwArgument "$usage" "Missing version" || return $?
+
+  local newTarget
+
+  newTarget=$(fileTemporaryName "$usage") || _clean $? "$newTarget" || return $?
+  __catchEnvironment "$usage" printf -- "%s\n\n" "# $version" >"$newTarget" || _clean $? "$newTarget" || return $?
+  __catchEnvironment "$usage" cat "$target" >>"$newTarget" || _clean $? "$newTarget" || return $?
+  __catchEnvironment "$usage" mv -f "$newTarget" "$target" || _clean $? "$newTarget" || return $?
+}
+_deprecatedFilePrependVersion() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Output a list of tokens for `find` to ignore in deprecated calls
 # Skips dot directories and release notes by default and any file named `deprecated.sh` `deprecated.txt` or `deprecated.md`.
 #
